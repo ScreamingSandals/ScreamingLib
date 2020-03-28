@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version> <!-- increment on version update! -->
     <modules>
         <module>scoreboards</module>
+        <module>nms</module>
     </modules>
 
     <properties>
