@@ -12,6 +12,7 @@
         <module>scoreboards</module>
         <module>nms</module>
         <module>signs</module>
+        <module>update_checker</module>
     </modules>
 
     <properties>
