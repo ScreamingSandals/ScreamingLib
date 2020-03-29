@@ -8,21 +8,24 @@ import java.util.Map;
 
 @Data
 public abstract class BaseManager<T> {
-    public Map<T, Scoreboard> activeScoreboards = new HashMap<>();
-    public Map<String, Scoreboard> savedScoreboards = new HashMap<>();
+    private Map<T, Scoreboard> activeScoreboards = new HashMap<>();
+    private Map<String, Scoreboard> savedScoreboards = new HashMap<>();
 
     public void destroy() {
-        hideFromAllOwners();
+        hideAllScoreboards();
 
         activeScoreboards.clear();
         savedScoreboards.clear();
     }
 
     public void showScoreboard(T player, Scoreboard scoreboard) {
+        activeScoreboards.remove(player);
+
+        activeScoreboards.put(player, scoreboard);
     }
 
-    public void hideScoreboard(T player, Scoreboard scoreboard) {
-
+    public void hideScoreboard(T player) {
+        activeScoreboards.remove(player);
     }
 
     public void saveScoreboard(String name, Scoreboard scoreboard) {
@@ -33,20 +36,7 @@ public abstract class BaseManager<T> {
         savedScoreboards.remove(name);
     }
 
-    public void showToAllOwners() {
+    public void hideAllScoreboards() {
 
     }
-
-    public void hideFromAllOwners() {
-
-    }
-
-    public void showToOwner(T owner) {
-
-    }
-
-    public void hideFromOwner(T owner) {
-
-    }
-
 }

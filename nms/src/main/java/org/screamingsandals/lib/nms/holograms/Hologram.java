@@ -17,7 +17,6 @@ import static org.screamingsandals.lib.nms.utils.ClassStorage.getField;
 import static org.screamingsandals.lib.nms.utils.ClassStorage.getMethod;
 
 public class Hologram {
-
 	public static final int VISIBILITY_DISTANCE_SQUARED = 4096;
 
 	private List<Player> viewers = new ArrayList<>();

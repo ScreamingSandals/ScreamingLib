@@ -2,9 +2,10 @@ package org.screamingsandals.lib.scoreboards.scoreboard;
 
 import lombok.Data;
 import org.bukkit.scoreboard.DisplaySlot;
+import org.screamingsandals.lib.scoreboards.content.Content;
 
 import java.util.List;
-import java.util.SortedMap;
+import java.util.Map;
 
 @Data
 public class ScoreboardCreator {
@@ -16,36 +17,40 @@ public class ScoreboardCreator {
         content = new Content(scoreboard);
     }
 
-    public ScoreboardCreator get() {
+    public static ScoreboardCreator get() {
         return new ScoreboardCreator();
     }
 
-    public ScoreboardCreator get(String scoreboardName) {
+    public static ScoreboardCreator get(String scoreboardName) {
         ScoreboardCreator scoreboardCreator = get();
         scoreboardCreator.getScoreboard().setScoreboardName(scoreboardName);
 
         return scoreboardCreator;
     }
 
-    public ScoreboardCreator get(String scoreboardName, List<String> teams) {
+    public static ScoreboardCreator get(String scoreboardName, List<String> teams) {
         final ScoreboardCreator scoreboardCreator = get();
         final Scoreboard scoreboard = scoreboardCreator.getScoreboard();
         scoreboard.setScoreboardName(scoreboardName);
 
         teams.forEach(scoreboardCreator::addTeam);
-        return this;
+        return scoreboardCreator;
     }
 
     public Scoreboard create(Content content) {
-        content.create();
+        content.paintAll();
         setContent(content);
 
         return scoreboard;
     }
 
-    public Scoreboard create(String displayedName, DisplaySlot displaySlot, SortedMap<String, Integer> lines) {
+    public Scoreboard create(String displayedName, DisplaySlot displaySlot, List<Map.Entry<String, Integer>> lines) {
         Content content = new Content(scoreboard);
-        content.create();
+        content.setDisplayedName(displayedName);
+        content.setDisplaySlot(displaySlot);
+        content.setLines(lines);
+
+        content.paintAll();
         setContent(content);
 
         return scoreboard;
