@@ -15,6 +15,7 @@
         <module>update_checker</module>
         <module>debug</module>
         <module>lang</module>
+        <module>config</module>
     </modules>
 
     <properties>
