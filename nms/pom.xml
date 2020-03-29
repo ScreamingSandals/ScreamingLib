@@ -10,7 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>nms</artifactId>
-    <version>1.1.5</version>  <!-- increment on each commit change! -->
 
     <dependencies>
         <dependency>
