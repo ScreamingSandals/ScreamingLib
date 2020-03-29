@@ -13,6 +13,7 @@
         <module>nms</module>
         <module>signs</module>
         <module>update_checker</module>
+        <module>debug</module>
     </modules>
 
     <properties>
