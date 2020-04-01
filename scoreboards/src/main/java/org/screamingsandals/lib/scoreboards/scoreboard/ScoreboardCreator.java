@@ -37,7 +37,7 @@ public class ScoreboardCreator {
         return scoreboardCreator;
     }
 
-    public Scoreboard create(String displayedName, DisplaySlot displaySlot, List<Map.Entry<String, Integer>> lines) {
+    public Content create(String displayedName, DisplaySlot displaySlot, List<Map.Entry<String, Integer>> lines) {
         Content content = new Content(scoreboard);
         content.setDisplayedName(displayedName);
         content.setDisplaySlot(displaySlot);
@@ -46,7 +46,7 @@ public class ScoreboardCreator {
         content.paintAll();
         setContent(content);
 
-        return scoreboard;
+        return content;
     }
 
     public ScoreboardCreator setScoreboardName(String scoreboardName) {

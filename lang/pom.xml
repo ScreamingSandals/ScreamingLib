@@ -5,7 +5,7 @@
     <parent>
         <artifactId>ScreamingLib</artifactId>
         <groupId>org.screamingsandals.lib</groupId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -23,6 +23,12 @@
             <artifactId>waterfall-api</artifactId>
             <version>${waterfall.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.screamingsandals.lib</groupId>
+            <artifactId>config</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

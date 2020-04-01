@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Test extends JavaPlugin implements Listener {
     public static ScoreboardManager scoreboardManager;
-    public Scoreboard scoreboard;
+    public Content scoreboardContent;
 
     @Override
     public void onEnable() {
@@ -28,9 +28,9 @@ public class Test extends JavaPlugin implements Listener {
         list.add("Blbost5");
         list.add("Blbost3");
         list.add("Blbost6");
-        scoreboard = ScoreboardCreator.get("Blbost").create("Kokotina!", DisplaySlot.SIDEBAR, Content.sortLines(list));
+        scoreboardContent = ScoreboardCreator.get("Blbost").create("Kokotina!", DisplaySlot.SIDEBAR, Content.sortLines(list));
 
-        scoreboardManager.saveScoreboard(scoreboard.getScoreboardName(), scoreboard);
+        scoreboardManager.saveScoreboard(scoreboardContent.getScoreboard().getScoreboardName(), scoreboardContent);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class Test extends JavaPlugin implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                scoreboardManager.showScoreboard(event.getPlayer(), scoreboard);
+                scoreboardManager.showScoreboard(event.getPlayer(), scoreboardContent);
             }
         }.runTaskLater(this, 2L);
     }

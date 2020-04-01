@@ -15,6 +15,11 @@ public abstract class BungeeConfigAdapter implements ConfigAdapter {
     private final File configFile;
     private Configuration configuration;
 
+    public static BungeeConfigAdapter create(File configFile) {
+        return new BungeeConfigAdapter(configFile) {
+        };
+    }
+
     @Override
     public void load() {
         try {

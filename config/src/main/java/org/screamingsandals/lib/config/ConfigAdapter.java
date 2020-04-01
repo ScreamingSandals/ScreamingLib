@@ -1,7 +1,5 @@
 package org.screamingsandals.lib.config;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -91,6 +89,7 @@ public interface ConfigAdapter {
 
     /**
      * sets the value to the config map
+     *
      * @param key identifier
      * @param obj value
      */

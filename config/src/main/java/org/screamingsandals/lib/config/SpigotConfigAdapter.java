@@ -12,6 +12,11 @@ public abstract class SpigotConfigAdapter implements ConfigAdapter {
     private final File configFile;
     private YamlConfiguration yamlConfiguration;
 
+    public static SpigotConfigAdapter create(File configFile) {
+        return new SpigotConfigAdapter(configFile) {
+        };
+    }
+
     @Override
     public void load() {
         yamlConfiguration = new YamlConfiguration();

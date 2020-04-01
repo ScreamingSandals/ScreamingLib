@@ -2,13 +2,14 @@ package org.screamingsandals.lib.lang.files;
 
 import lombok.Data;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.config.BungeeConfigAdapter;
+import org.screamingsandals.lib.config.ConfigAdapter;
+import org.screamingsandals.lib.config.SpigotConfigAdapter;
 import org.screamingsandals.lib.lang.Language;
-import org.screamingsandals.lib.lang.files.config.ConfigAdapter;
 import org.screamingsandals.lib.lang.storage.Storage;
 
+import java.io.File;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,9 +32,8 @@ public class FileStorage {
             return false;
         }
 
-        for (String file : filesInFolder) {
-            ConfigAdapter config = ConfigAdapter.create(
-                    new InputStreamReader(getResourceAsStream(file), StandardCharsets.UTF_8));
+        for (var file : filesInFolder) {
+            ConfigAdapter config = create(new File(file));
             String langCode = config.getString("language_code");
 
             languageFiles.put(langCode, config);
@@ -42,8 +42,8 @@ public class FileStorage {
             }
         }
 
-        HashMap<String, Storage> availableLanguages = new HashMap<>();
-        for (String key : languageFiles.keySet()) {
+        final HashMap<String, Storage> availableLanguages = new HashMap<>();
+        for (var key : languageFiles.keySet()) {
             ConfigAdapter config = languageFiles.get(key);
             Storage storage = new Storage(config, key, fallbackStorage);
 
@@ -54,13 +54,11 @@ public class FileStorage {
         return true;
     }
 
-    private InputStream getResourceAsStream(String resource) {
+    private ConfigAdapter create(File file) {
         if (Language.isSpigot()) {
-            Plugin plugin = (Plugin) this.plugin;
-            return plugin.getResource(resource);
+            return SpigotConfigAdapter.create(file);
         } else {
-            net.md_5.bungee.api.plugin.Plugin plugin = (net.md_5.bungee.api.plugin.Plugin) this.plugin;
-            return plugin.getResourceAsStream(resource);
+            return BungeeConfigAdapter.create(file);
         }
     }
 
