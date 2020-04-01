@@ -14,6 +14,7 @@ public class Content {
     private String displayedName;
     private DisplaySlot displaySlot;
     private List<Map.Entry<String, Integer>> lines = new ArrayList<>();
+    private ContentAnimation contentAnimation = new ContentAnimation();
 
     public static List<Map.Entry<String, Integer>> sortLines(List<String> lines) {
         final List<Map.Entry<String, Integer>> sortedLines = new ArrayList<>();
