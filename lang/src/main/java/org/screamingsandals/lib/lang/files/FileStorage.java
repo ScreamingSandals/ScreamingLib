@@ -32,8 +32,8 @@ public class FileStorage {
             return false;
         }
 
-        for (var file : filesInFolder) {
-            ConfigAdapter config = create(new File(file));
+        for (var languageFile : filesInFolder) {
+            ConfigAdapter config = create(new File(languageFile));
             String langCode = config.getString("language_code");
 
             languageFiles.put(langCode, config);

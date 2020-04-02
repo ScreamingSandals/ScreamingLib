@@ -56,6 +56,11 @@ public class Message {
         return this;
     }
 
+    public Message replaceAll(Map<String, Object> replacements) {
+        replaces.putAll(replacements);
+        return this;
+    }
+
     public Message key(String key) {
         this.key = key;
         return this;
@@ -129,7 +134,7 @@ public class Message {
     public String get() {
         String message = storage.translate(key, def, prefix);
 
-        for (Map.Entry<String, Object> replace : replaces.entrySet()) {
+        for (var replace : replaces.entrySet()) {
             message = message.replaceAll("%" + replace.getKey() + "%", replace.getValue().toString());
         }
 
@@ -141,7 +146,7 @@ public class Message {
         List<String> toReturn = new ArrayList<>();
 
         for (String toTranslate : messages) {
-            for (Map.Entry<String, Object> replace : replaces.entrySet()) {
+            for (var replace : replaces.entrySet()) {
                 toTranslate = toTranslate.replaceAll("%" + replace.getKey() + "%", replace.getValue().toString());
                 toReturn.add(toTranslate);
             }
@@ -156,8 +161,8 @@ public class Message {
 
     public Message send(Object sender) {
         if (sender instanceof Collection) {
-            for (Object rec : (Collection<?>) sender) {
-                send(rec);
+            for (var recipient : (Collection<?>) sender) {
+                send(recipient);
             }
             return this;
         }
@@ -171,8 +176,8 @@ public class Message {
 
     public Message send(Object sender, String permissions) {
         if (sender instanceof Collection) {
-            for (Object rec : (Collection<?>) sender) {
-                send(rec, permissions);
+            for (Object recipient : (Collection<?>) sender) {
+                send(recipient, permissions);
             }
             return this;
         }
@@ -189,7 +194,7 @@ public class Message {
 
     public Message sendActionBar(Object sender) {
         if (sender instanceof Collection) {
-            for (Object rec : (Collection<?>) sender) {
+            for (var rec : (Collection<?>) sender) {
                 sendActionBar(rec);
             }
             return this;
