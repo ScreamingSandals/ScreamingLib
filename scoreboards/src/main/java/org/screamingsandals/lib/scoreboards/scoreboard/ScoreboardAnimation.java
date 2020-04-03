@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.scoreboards.content;
+package org.screamingsandals.lib.scoreboards.scoreboard;
 
 import lombok.Data;
 import org.bukkit.plugin.Plugin;
@@ -8,13 +8,13 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.*;
 
 @Data
-public class ContentAnimation {
+public class ScoreboardAnimation {
     private Map<Integer, Animation> activeAnimations = new HashMap<>();
 
     @Data
     public static class Animation {
         private final Plugin plugin;
-        private final Content content;
+        private final Scoreboard scoreboard;
         private final long animationTicks;
         private final int animatedLine;
 

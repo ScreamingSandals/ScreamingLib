@@ -7,10 +7,7 @@ import org.screamingsandals.lib.nms.utils.InstanceMethod;
 import org.screamingsandals.lib.nms.utils.Version;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.*;
 import static org.screamingsandals.lib.nms.utils.ClassStorage.getField;
@@ -23,7 +20,7 @@ public class Hologram {
 	private List<String> lines = new ArrayList<>();
 	private Location loc;
 	private List<ArmorStandNMS> entities = new ArrayList<>();
-	private boolean touchable = false;
+	private boolean touchable;
 	private List<TouchHandler> handlers = new ArrayList<>();
 	private HologramManager manager;
 
@@ -177,14 +174,14 @@ public class Hologram {
 				if (i < this.entities.size() && this.entities.get(i) != null) {
 					ArmorStandNMS stand = this.entities.get(i);
 					stand.setCustomName(line);
-					Object metadataPacket = PacketPlayOutEntityMetadata
+					Object metadataPacket = Objects.requireNonNull(PacketPlayOutEntityMetadata)
 						.getConstructor(int.class, DataWatcher, boolean.class).newInstance(stand.getId(),
 							stand.getDataWatcher(), false);
 					packets.add(metadataPacket);
 					if (positionChanged) {
 						Location localLoc = loc.clone().add(0, (this.lines.size() - i) * .30, 0);
-						stand.setLocation(localLoc);;
-						Object teleportPacket = PacketPlayOutEntityTeleport
+						stand.setLocation(localLoc);
+						Object teleportPacket = Objects.requireNonNull(PacketPlayOutEntityTeleport)
 							.getConstructor(Entity).newInstance(stand.getHandler());
 						packets.add(teleportPacket);
 					}
@@ -199,11 +196,11 @@ public class Hologram {
 					stand.setBasePlate(false);
 					stand.setGravity(false);
 					stand.setMarker(!touchable);
-					Object spawnLivingPacket = PacketPlayOutSpawnEntityLiving.getConstructor(EntityLiving)
+					Object spawnLivingPacket = Objects.requireNonNull(PacketPlayOutSpawnEntityLiving).getConstructor(EntityLiving)
 						.newInstance(stand.getHandler());
 					packets.add(spawnLivingPacket);
 					if (Version.isVersion(1, 15)) {
-						Object metadataPacket = PacketPlayOutEntityMetadata
+						Object metadataPacket = Objects.requireNonNull(PacketPlayOutEntityMetadata)
 							.getConstructor(int.class, DataWatcher, boolean.class).newInstance(stand.getId(),
 								stand.getDataWatcher(), false);
 						packets.add(metadataPacket);
@@ -223,8 +220,8 @@ public class Hologram {
 				}
 			}
 
-			Object destroyPacket = PacketPlayOutEntityDestroy.getConstructor(int[].class)
-				.newInstance(forRemoval.stream().mapToInt(i -> i).toArray());
+			Object destroyPacket = Objects.requireNonNull(PacketPlayOutEntityDestroy).getConstructor(int[].class)
+				.newInstance((Object) forRemoval.stream().mapToInt(i -> i).toArray());
 
 			packets.add(destroyPacket);
 
@@ -264,16 +261,16 @@ public class Hologram {
 		IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		int[] removal = new int[entities.size()];
 		for (int i = 0; i < entities.size(); i++) {
-			removal[i] = (int) entities.get(i).getId();
+			removal[i] = entities.get(i).getId();
 		}
-		return PacketPlayOutEntityDestroy.getConstructor(int[].class).newInstance(removal);
+		return Objects.requireNonNull(PacketPlayOutEntityDestroy).getConstructor(int[].class).newInstance((Object) removal);
 	}
 
 	public List<Object> getAllSpawnPackets() throws InstantiationException, IllegalAccessException,
 		IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		List<Object> packets = new ArrayList<>();
 		for (ArmorStandNMS entity : entities) {
-			packets.add(PacketPlayOutSpawnEntityLiving.getConstructor(EntityLiving).newInstance(entity.getHandler()));
+			packets.add(Objects.requireNonNull(PacketPlayOutSpawnEntityLiving).getConstructor(EntityLiving).newInstance(entity.getHandler()));
 			if (Version.isVersion(1, 15)) {
 				Object metadataPacket = PacketPlayOutEntityMetadata
 					.getConstructor(int.class, DataWatcher, boolean.class).newInstance(

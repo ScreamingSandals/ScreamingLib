@@ -5,6 +5,8 @@ import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.*;
 
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
+
 public class Title {
 	public static void sendTitle(Player player, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
 		try {
@@ -16,7 +18,7 @@ public class Title {
 				Object subtitleComponent = getMethod(ChatSerializer, "a,field_150700_a", String.class)
 					.invokeStatic("{\"text\": \"" + subtitle + "\"}");
 				
-				Object titlePacket = PacketPlayOutTitle.getConstructor(EnumTitleAction, IChatBaseComponent)
+				Object titlePacket = Objects.requireNonNull(PacketPlayOutTitle).getConstructor(EnumTitleAction, IChatBaseComponent)
 					.newInstance(findEnumConstant(EnumTitleAction, "TITLE"), titleComponent);
 				Object subtitlePacket = PacketPlayOutTitle.getConstructor(EnumTitleAction, IChatBaseComponent)
 					.newInstance(findEnumConstant(EnumTitleAction, "SUBTITLE"), subtitleComponent);

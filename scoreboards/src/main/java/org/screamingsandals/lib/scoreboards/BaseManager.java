@@ -1,16 +1,20 @@
 package org.screamingsandals.lib.scoreboards;
 
 import lombok.Data;
-import org.screamingsandals.lib.scoreboards.content.Content;
+import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Score;
 import org.screamingsandals.lib.scoreboards.scoreboard.Scoreboard;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Data
 public abstract class BaseManager<T> {
-    private Map<T, Content> activeScoreboards = new HashMap<>();
-    private Map<String, Content> savedScoreboards = new HashMap<>();
+    private BaseManager<T> instance;
+    private Map<T, Scoreboard> activeScoreboards = new HashMap<>();
+    private Map<T, List<Scoreboard>> savedScoreboards = new HashMap<>();
 
     public void destroy() {
         hideAllScoreboards();
@@ -19,22 +23,40 @@ public abstract class BaseManager<T> {
         savedScoreboards.clear();
     }
 
-    public void showScoreboard(T player, Content content) {
+    public void showScoreboard(T player, Scoreboard scoreboard) {
         activeScoreboards.remove(player);
 
-        activeScoreboards.put(player, content);
+        activeScoreboards.put(player, scoreboard);
     }
 
     public void hideScoreboard(T player) {
         activeScoreboards.remove(player);
     }
 
-    public void saveScoreboard(String name, Content content) {
-        savedScoreboards.put(name, content);
+    public void saveScoreboard(T player, Scoreboard scoreboard) {
+        if (savedScoreboards.containsKey(player)) {
+            savedScoreboards.get(player).add(scoreboard);
+        } else {
+            List<Scoreboard> scoreboards = new ArrayList<>();
+            scoreboards.add(scoreboard);
+
+            savedScoreboards.put(player, scoreboards);
+        }
     }
 
-    public void deleteScoreboard(String name) {
-        savedScoreboards.remove(name);
+    public void deleteScoreboard(T player) {
+        savedScoreboards.remove(player);
+    }
+
+    public Scoreboard getSavedScoreboard(T player, String name) {
+        if (savedScoreboards.containsKey(player)) {
+            for (var scoreboard : savedScoreboards.get(player)) {
+                if (scoreboard.getScoreboardName().equalsIgnoreCase(name)) {
+                    return scoreboard;
+                }
+            }
+        }
+        return null;
     }
 
     public void hideAllScoreboards() {

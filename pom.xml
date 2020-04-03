@@ -7,7 +7,7 @@
     <groupId>org.screamingsandals.lib</groupId>
     <artifactId>ScreamingLib</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.2</version> <!-- increment on version update! -->
+    <version>1.0.3</version> <!-- increment on version update! -->
 
     <modules>
         <module>scoreboards</module>
@@ -39,7 +39,7 @@
         </repository>
         <repository>
             <id>placeholderapi</id>
-            <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+            <url>http://repo.extendedclip.com/scoreboard/repositories/placeholderapi/</url>
         </repository>
     </repositories>
 

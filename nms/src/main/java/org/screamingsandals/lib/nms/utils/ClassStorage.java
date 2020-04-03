@@ -104,15 +104,15 @@ public class ClassStorage {
 				Method method = clazz.getMethod(name.trim(), params);
 				return new ClassMethod(method);
 			} catch (Throwable t) {
-				Class<?> claz2 = clazz;
+				Class<?> clazz2 = clazz;
 				do {
 					try {
-						Method method = claz2.getDeclaredMethod(name.trim(), params);
+						Method method = clazz2.getDeclaredMethod(name.trim(), params);
 						method.setAccessible(true);
 						return new ClassMethod(method);
-					} catch (Throwable t2) {
+					} catch (Throwable ignored) {
 					}
-				} while ((claz2 = claz2.getSuperclass()) != null && claz2 != Object.class);
+				} while ((clazz2 = clazz2.getSuperclass()) != null && clazz2 != Object.class);
 			}
 		}
 		return new ClassMethod(null);
