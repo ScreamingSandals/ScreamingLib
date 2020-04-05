@@ -1,18 +1,18 @@
 package org.screamingsandals.lib.scoreboards.scoreboard;
 
 import lombok.Data;
-import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Data
-public class Scoreboard {
+public class Scoreboard implements Serializable {
     private final ScoreboardHolder scoreboardHolder;
-    private String displayedName;
-    private DisplaySlot displaySlot;
-    private List<Map.Entry<String, Integer>> lines = new ArrayList<>();
     private ScoreboardAnimation scoreboardAnimation = new ScoreboardAnimation();
 
     public Scoreboard() {
@@ -31,14 +31,15 @@ public class Scoreboard {
     }
 
     public void paintAll() {
-        for (int i = 0; i < lines.size(); i++) {
+        for (int i = 0; i < scoreboardHolder.getLines().size(); i++) {
            paintLine(i);
         }
     }
 
     public void paintLine(int line) {
         final Objective objective = getObjective();
-        objective.setDisplaySlot(displaySlot);
+        final var lines = scoreboardHolder.getLines();
+        objective.setDisplaySlot(scoreboardHolder.getDisplaySlot());
 
         if (!lines.isEmpty()) {
             final Map.Entry<String, Integer> entry = lines.get(line);
@@ -49,7 +50,8 @@ public class Scoreboard {
 
     private Objective getObjective() {
         final org.bukkit.scoreboard.Scoreboard bukkitScoreboard = scoreboardHolder.getBukkitScoreboard();
-        final String name = scoreboardHolder.getScoreboardName();
+        final var name = scoreboardHolder.getName();
+        final var displayedName = scoreboardHolder.getDisplayedName();
         Objective objective = bukkitScoreboard.getObjective(name);
 
         return Objects.requireNonNullElseGet(objective, () -> bukkitScoreboard.registerNewObjective(name, "dummy", displayedName));
@@ -57,9 +59,5 @@ public class Scoreboard {
 
     public org.bukkit.scoreboard.Scoreboard getBukkitScoreboard() {
         return getScoreboardHolder().getBukkitScoreboard();
-    }
-
-    public String getScoreboardName() {
-        return getScoreboardHolder().getScoreboardName();
     }
 }

@@ -1,8 +1,6 @@
 package org.screamingsandals.lib.scoreboards;
 
 import lombok.Data;
-import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Score;
 import org.screamingsandals.lib.scoreboards.scoreboard.Scoreboard;
 
 import java.util.ArrayList;
@@ -12,7 +10,6 @@ import java.util.Map;
 
 @Data
 public abstract class BaseManager<T> {
-    private BaseManager<T> instance;
     private Map<T, Scoreboard> activeScoreboards = new HashMap<>();
     private Map<T, List<Scoreboard>> savedScoreboards = new HashMap<>();
 
@@ -51,12 +48,25 @@ public abstract class BaseManager<T> {
     public Scoreboard getSavedScoreboard(T player, String name) {
         if (savedScoreboards.containsKey(player)) {
             for (var scoreboard : savedScoreboards.get(player)) {
-                if (scoreboard.getScoreboardName().equalsIgnoreCase(name)) {
+                if (scoreboard.getName().equalsIgnoreCase(name)) {
                     return scoreboard;
                 }
             }
         }
         return null;
+    }
+
+    public List<Scoreboard> getSavedScoreboards(T player, String name) {
+        final List<Scoreboard> scoreboards = new ArrayList<>();
+        if (savedScoreboards.containsKey(player)) {
+            for (var scoreboard : savedScoreboards.get(player)) {
+                if (scoreboard.getName().equalsIgnoreCase(name)) {
+                    scoreboards.add(scoreboard);
+                }
+            }
+        }
+
+        return scoreboards;
     }
 
     public void hideAllScoreboards() {

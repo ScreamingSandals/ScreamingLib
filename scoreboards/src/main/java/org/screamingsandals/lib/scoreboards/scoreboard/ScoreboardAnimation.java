@@ -5,15 +5,16 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.io.Serializable;
 import java.util.*;
 
 @Data
-public class ScoreboardAnimation {
+public class ScoreboardAnimation implements Serializable {
     private Map<Integer, Animation> activeAnimations = new HashMap<>();
 
     @Data
     public static class Animation {
-        private final Plugin plugin;
+        private final transient Plugin plugin;
         private final Scoreboard scoreboard;
         private final long animationTicks;
         private final int animatedLine;
@@ -21,7 +22,7 @@ public class ScoreboardAnimation {
         private List<String> animationContent = new ArrayList<>();
         private String active;
         private String next;
-        private BukkitTask animationTask;
+        private transient BukkitTask animationTask;
 
         public void addLine(String animation) {
             animationContent.add(animation);

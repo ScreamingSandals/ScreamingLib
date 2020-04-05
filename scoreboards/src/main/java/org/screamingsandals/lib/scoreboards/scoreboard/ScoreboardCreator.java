@@ -20,7 +20,7 @@ public class ScoreboardCreator {
 
     public static ScoreboardCreator get(String scoreboardName) {
         ScoreboardCreator scoreboardCreator = get();
-        scoreboardCreator.getScoreboard().getScoreboardHolder().setScoreboardName(scoreboardName);
+        scoreboardCreator.getScoreboard().getScoreboardHolder().setName(scoreboardName);
 
         return scoreboardCreator;
     }
@@ -28,16 +28,17 @@ public class ScoreboardCreator {
     public static ScoreboardCreator get(String scoreboardName, List<String> teams) {
         final ScoreboardCreator scoreboardCreator = get();
         final ScoreboardHolder scoreboardHolder = scoreboardCreator.getScoreboard().getScoreboardHolder();
-        scoreboardHolder.setScoreboardName(scoreboardName);
+        scoreboardHolder.setName(scoreboardName);
 
         teams.forEach(scoreboardCreator::addTeam);
         return scoreboardCreator;
     }
 
     public Scoreboard create(String displayedName, DisplaySlot displaySlot, List<Map.Entry<String, Integer>> lines) {
-        scoreboard.setDisplayedName(displayedName);
-        scoreboard.setDisplaySlot(displaySlot);
-        scoreboard.setLines(lines);
+        final var scoreboardHolder = scoreboard.getScoreboardHolder();
+        scoreboardHolder.setDisplayedName(displayedName);
+        scoreboardHolder.setDisplaySlot(displaySlot);
+        scoreboardHolder.setLines(lines);
 
         scoreboard.paintAll();
         setScoreboard(scoreboard);
@@ -46,7 +47,7 @@ public class ScoreboardCreator {
     }
 
     public ScoreboardCreator setScoreboardName(String scoreboardName) {
-        scoreboard.getScoreboardHolder().setScoreboardName(scoreboardName);
+        scoreboard.getScoreboardHolder().setName(scoreboardName);
         return this;
     }
 
