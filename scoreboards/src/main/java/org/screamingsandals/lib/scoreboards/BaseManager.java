@@ -48,7 +48,7 @@ public abstract class BaseManager<T> {
     public Scoreboard getSavedScoreboard(T player, String name) {
         if (savedScoreboards.containsKey(player)) {
             for (var scoreboard : savedScoreboards.get(player)) {
-                if (scoreboard.getName().equalsIgnoreCase(name)) {
+                if (scoreboard.getScoreboardHolder().getName().equalsIgnoreCase(name)) {
                     return scoreboard;
                 }
             }
@@ -60,7 +60,7 @@ public abstract class BaseManager<T> {
         final List<Scoreboard> scoreboards = new ArrayList<>();
         if (savedScoreboards.containsKey(player)) {
             for (var scoreboard : savedScoreboards.get(player)) {
-                if (scoreboard.getName().equalsIgnoreCase(name)) {
+                if (scoreboard.getScoreboardHolder().getName().equalsIgnoreCase(name)) {
                     scoreboards.add(scoreboard);
                 }
             }
