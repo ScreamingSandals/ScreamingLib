@@ -20,35 +20,32 @@ public class BossbarCreator {
     public static Bossbar get(String name, String title) {
         var bossbarCreator = get();
         var bossbarHolder = bossbarCreator.getBossbar().getBossbarHolder();
-        Bossbar bossbar = new Bossbar();
 
-        bossbar.setName(name);
+        bossbarCreator.getBossbar().setName(name);
         bossbarHolder.setTitle(title);
-        return bossbar;
+        return bossbarCreator.getBossbar();
     }
 
     public static Bossbar get(String name, String title, BarColor barColor, BarStyle barStyle) {
         var bossbarCreator = get();
         var bossbarHolder = bossbarCreator.getBossbar().getBossbarHolder();
-        Bossbar bossbar = new Bossbar();
 
-        bossbar.setName(name);
+        bossbarCreator.getBossbar().setName(name);
         bossbarHolder.setTitle(title);
         bossbarHolder.setBarColor(barColor);
         bossbarHolder.setBarStyle(barStyle);
-        return bossbar;
+        return bossbarCreator.getBossbar();
     }
 
     public static Bossbar get(String name, String title, BarColor barColor, BarStyle barStyle, BarFlag barFlag) {
         var bossbarCreator = get();
         var bossbarHolder = bossbarCreator.getBossbar().getBossbarHolder();
-        Bossbar bossbar = new Bossbar();
 
-        bossbar.setName(name);
+        bossbarCreator.getBossbar().setName(name);
         bossbarHolder.setTitle(title);
         bossbarHolder.setBarColor(barColor);
         bossbarHolder.setBarStyle(barStyle);
         bossbarHolder.addFlag(barFlag);
-        return bossbar;
+        return bossbarCreator.getBossbar();
     }
 }

@@ -23,8 +23,9 @@ public abstract class BaseManager<T> {
     public void showBossbar(T player, Bossbar bossbar) {
         if (activeBossbars.containsKey(player)) {
             activeBossbars.get(player).getBossbarHolder().setVisible(false);
+            activeBossbars.remove(player);
         }
-        activeBossbars.remove(player);
+
         activeBossbars.put(player, bossbar);
     }
 
