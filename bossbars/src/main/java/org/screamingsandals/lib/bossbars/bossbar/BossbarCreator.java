@@ -7,43 +7,41 @@ import org.bukkit.boss.BarStyle;
 
 @Data
 public class BossbarCreator {
-    private BossbarHolder bossbarHolder;
+    private Bossbar bossbar;
 
     public BossbarCreator() {
-        bossbarHolder = new BossbarHolder();
+        bossbar = new Bossbar();
     }
 
-    public BossbarCreator get() {
+    public static BossbarCreator get() {
         return new BossbarCreator();
     }
 
-    public Bossbar get(String name, String title) {
+    public static Bossbar get(String name, String title) {
         var bossbarCreator = get();
-        var bossbarHolder = bossbarCreator.getBossbarHolder();
+        var bossbarHolder = bossbarCreator.getBossbar().getBossbarHolder();
         Bossbar bossbar = new Bossbar();
 
         bossbar.setName(name);
         bossbarHolder.setTitle(title);
-        bossbar.setBossbarHolder(bossbarHolder);
         return bossbar;
     }
 
-    public Bossbar get(String name, String title, BarColor barColor, BarStyle barStyle) {
+    public static Bossbar get(String name, String title, BarColor barColor, BarStyle barStyle) {
         var bossbarCreator = get();
-        var bossbarHolder = bossbarCreator.getBossbarHolder();
+        var bossbarHolder = bossbarCreator.getBossbar().getBossbarHolder();
         Bossbar bossbar = new Bossbar();
 
         bossbar.setName(name);
         bossbarHolder.setTitle(title);
         bossbarHolder.setBarColor(barColor);
         bossbarHolder.setBarStyle(barStyle);
-        bossbar.setBossbarHolder(bossbarHolder);
         return bossbar;
     }
 
-    public Bossbar get(String name, String title, BarColor barColor, BarStyle barStyle, BarFlag barFlag) {
+    public static Bossbar get(String name, String title, BarColor barColor, BarStyle barStyle, BarFlag barFlag) {
         var bossbarCreator = get();
-        var bossbarHolder = bossbarCreator.getBossbarHolder();
+        var bossbarHolder = bossbarCreator.getBossbar().getBossbarHolder();
         Bossbar bossbar = new Bossbar();
 
         bossbar.setName(name);
@@ -51,7 +49,6 @@ public class BossbarCreator {
         bossbarHolder.setBarColor(barColor);
         bossbarHolder.setBarStyle(barStyle);
         bossbarHolder.addFlag(barFlag);
-        bossbar.setBossbarHolder(bossbarHolder);
         return bossbar;
     }
 }

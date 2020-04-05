@@ -20,7 +20,7 @@ public class ScoreboardCreator {
 
     public static ScoreboardCreator get(String scoreboardName) {
         ScoreboardCreator scoreboardCreator = get();
-        scoreboardCreator.getScoreboard().getScoreboardHolder().setName(scoreboardName);
+        scoreboardCreator.getScoreboard().setName(scoreboardName);
 
         return scoreboardCreator;
     }
@@ -28,7 +28,7 @@ public class ScoreboardCreator {
     public static ScoreboardCreator get(String scoreboardName, List<String> teams) {
         final ScoreboardCreator scoreboardCreator = get();
         final ScoreboardHolder scoreboardHolder = scoreboardCreator.getScoreboard().getScoreboardHolder();
-        scoreboardHolder.setName(scoreboardName);
+        scoreboardCreator.getScoreboard().setName(scoreboardName);
 
         teams.forEach(scoreboardCreator::addTeam);
         return scoreboardCreator;
@@ -47,7 +47,7 @@ public class ScoreboardCreator {
     }
 
     public ScoreboardCreator setScoreboardName(String scoreboardName) {
-        scoreboard.getScoreboardHolder().setName(scoreboardName);
+        scoreboard.setName(scoreboardName);
         return this;
     }
 

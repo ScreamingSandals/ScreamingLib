@@ -11,7 +11,6 @@ import java.util.Map;
 @Data
 public class ScoreboardHolder {
     private transient org.bukkit.scoreboard.Scoreboard bukkitScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-    private String name;
     private String displayedName;
     private DisplaySlot displaySlot;
     private List<Map.Entry<String, Integer>> lines = new ArrayList<>();

@@ -13,6 +13,7 @@ import java.util.Objects;
 @Data
 public class Scoreboard implements Serializable {
     private final ScoreboardHolder scoreboardHolder;
+    private String name;
     private ScoreboardAnimation scoreboardAnimation = new ScoreboardAnimation();
 
     public Scoreboard() {
@@ -50,7 +51,6 @@ public class Scoreboard implements Serializable {
 
     private Objective getObjective() {
         final org.bukkit.scoreboard.Scoreboard bukkitScoreboard = scoreboardHolder.getBukkitScoreboard();
-        final var name = scoreboardHolder.getName();
         final var displayedName = scoreboardHolder.getDisplayedName();
         Objective objective = bukkitScoreboard.getObjective(name);
 

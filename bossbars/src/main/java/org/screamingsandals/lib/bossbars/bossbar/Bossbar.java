@@ -6,6 +6,10 @@ import java.io.Serializable;
 
 @Data
 public class Bossbar implements Serializable {
+    private final BossbarHolder bossbarHolder;
     private String name;
-    private BossbarHolder bossbarHolder;
+
+    public Bossbar() {
+        bossbarHolder = new BossbarHolder();
+    }
 }
