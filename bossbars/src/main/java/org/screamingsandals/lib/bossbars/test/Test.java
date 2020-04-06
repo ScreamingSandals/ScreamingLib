@@ -36,8 +36,6 @@ public class Test extends JavaPlugin implements Listener {
         final String text = "WHATSUP BITCHEEEZ!";
 
         bossbar = BossbarCreator.get("test", text, BarColor.GREEN, BarStyle.SOLID);
-        bossbar.getBossbarHolder().setVisible(true);
-
         bossbarManager.saveBossbar(player, bossbar);
 
         new BukkitRunnable() {

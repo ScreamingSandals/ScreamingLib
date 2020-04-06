@@ -2,6 +2,7 @@ package org.screamingsandals.lib.lang.storage;
 
 import lombok.Data;
 import org.screamingsandals.lib.config.ConfigAdapter;
+import org.screamingsandals.lib.lang.Language;
 import org.screamingsandals.lib.lang.Utils;
 
 import java.util.ArrayList;
@@ -19,8 +20,7 @@ public class Storage {
         this.configuration = configuration;
         this.languageCode = languageCode;
         this.fallbackStorage = fallbackStorage;
-
-        prefix = Utils.colorize(configuration.getString("prefix"));
+        this.prefix = getPrefixFromConfig();
     }
 
     public Storage(ConfigAdapter configuration, String languageCode) {
@@ -111,5 +111,13 @@ public class Storage {
         }
         toReturn += translate(key, def);
         return toReturn;
+    }
+
+    private String getPrefixFromConfig() {
+        if (Language.getInstance().getCustomPrefix() == null) {
+            return Utils.colorize(configuration.getString("prefix"));
+        } else {
+            return Language.getInstance().getCustomPrefix();
+        }
     }
 }

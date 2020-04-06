@@ -25,6 +25,7 @@ public class Language extends I {
     @Getter
     private static Language instance;
     private final Object plugin;
+    private String customPrefix;
     private String globalLanguage;
     private File customDataFolder;
     private FileStorage fileStorage;

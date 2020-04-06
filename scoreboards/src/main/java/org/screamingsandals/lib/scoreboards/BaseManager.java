@@ -41,8 +41,12 @@ public abstract class BaseManager<T> {
         }
     }
 
-    public void deleteScoreboard(T player) {
+    public void deleteSavedScoreboards(T player) {
         savedScoreboards.remove(player);
+    }
+
+    public void hideAllScoreboards() {
+
     }
 
     public Scoreboard getSavedScoreboard(T player, String name) {
@@ -56,20 +60,11 @@ public abstract class BaseManager<T> {
         return null;
     }
 
-    public List<Scoreboard> getSavedScoreboards(T player, String name) {
+    public List<Scoreboard> getSavedScoreboards(T player) {
         final List<Scoreboard> scoreboards = new ArrayList<>();
         if (savedScoreboards.containsKey(player)) {
-            for (var scoreboard : savedScoreboards.get(player)) {
-                if (scoreboard.getName().equalsIgnoreCase(name)) {
-                    scoreboards.add(scoreboard);
-                }
-            }
+            scoreboards.addAll(savedScoreboards.get(player));
         }
-
         return scoreboards;
-    }
-
-    public void hideAllScoreboards() {
-
     }
 }

@@ -11,6 +11,7 @@ public class BossbarCreator {
 
     public BossbarCreator() {
         bossbar = new Bossbar();
+        bossbar.getBossbarHolder().setVisible(true);
     }
 
     public static BossbarCreator get() {

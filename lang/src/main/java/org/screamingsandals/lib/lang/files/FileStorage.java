@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.lang.files;
 
 import lombok.Data;
-import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.config.BungeeConfigAdapter;
 import org.screamingsandals.lib.config.ConfigAdapter;
 import org.screamingsandals.lib.config.SpigotConfigAdapter;
@@ -9,7 +8,6 @@ import org.screamingsandals.lib.lang.Language;
 import org.screamingsandals.lib.lang.storage.Storage;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 

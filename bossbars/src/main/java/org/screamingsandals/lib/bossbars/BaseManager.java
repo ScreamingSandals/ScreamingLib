@@ -44,8 +44,12 @@ public abstract class BaseManager<T> {
         }
     }
 
-    public void deleteBossbars(T player) {
+    public void deleteSavedBossbars(T player) {
         savedBossbars.remove(player);
+    }
+
+    public void hideAllScoreboards() {
+
     }
 
     public Bossbar getBossbar(T player, String name) {
@@ -59,20 +63,11 @@ public abstract class BaseManager<T> {
         return null;
     }
 
-    public List<Bossbar> getSavedScoreboards(T player, String name) {
+    public List<Bossbar> getSavedBossbars(T player) {
         final List<Bossbar> bossbars = new ArrayList<>();
         if (savedBossbars.containsKey(player)) {
-            for (var bossbar : savedBossbars.get(player)) {
-                if (bossbar.getName().equalsIgnoreCase(name)) {
-                    bossbars.add(bossbar);
-                }
-            }
+            bossbars.addAll(savedBossbars.get(player));
         }
-
         return bossbars;
-    }
-
-    public void hideAllScoreboards() {
-
     }
 }
