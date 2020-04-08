@@ -23,7 +23,10 @@ public class CommandMapWrapper {
     }
 
     public void registerCommand(Command command) {
+        Debug.info("Registering command in wrapper: " + command.getName(), true);
         simpleCommandMap.register(command.getName(), command);
+        Debug.info("Done!", true);
+        Debug.info("Is command really registered? " + isCommandRegistered(command.getName()), true);
     }
 
     /**
@@ -43,7 +46,7 @@ public class CommandMapWrapper {
      *
      * @param commandName name of the command
      */
-    public void removeRegisteredCommand(String commandName) {
+    public void unregisterCommand(String commandName) {
         getRegisteredCommands().remove(commandName);
     }
 
@@ -52,14 +55,14 @@ public class CommandMapWrapper {
         if (PaperLib.isPaper()) {
             return (SimpleCommandMap) server.getCommandMap();
         } else {
-            Debug.info("BukkitManager>> Paper not found, using reflection");
+            Debug.info("CommandMapWrapper>> Paper not found, using reflection");
             try {
                 Class<?> clazz = server.getClass();
                 Field field = clazz.getDeclaredField("commandMap");
                 field.setAccessible(true);
                 return (SimpleCommandMap) field.get(server);
             } catch (Exception ex) {
-                Debug.info("BukkitManager>> Cannot get the CommandMap instance!");
+                Debug.info("CommandMapWrapper>> Cannot get the CommandMap instance!");
                 ex.printStackTrace();
             }
         }
@@ -73,11 +76,11 @@ public class CommandMapWrapper {
         if (PaperLib.isPaper()) {
             toReturn = simpleCommandMap.getKnownCommands();
         } else {
-            Debug.info("CommandManager>> Paper not found, using reflection", false);
+            Debug.info("CommandMapWrapper>> Paper not found, using reflection", false);
             try {
                 if (simpleCommandMap != null) {
                     Class<?> clazz;
-                    Debug.info("Trying to get knownCommands");
+                    Debug.info("CommandMapWrapper>> Trying to get knownCommands");
                     if (PaperLib.isVersion(13, 1)) {
                         clazz = simpleCommandMap.getClass().getSuperclass();
                     } else {
@@ -89,7 +92,7 @@ public class CommandMapWrapper {
                     toReturn = (Map<String, Command>) knownCommands.get(simpleCommandMap);
                 }
             } catch (Exception ex) {
-                Debug.info("CommandManager>> Cannot get the knownCommands Map!", false);
+                Debug.info("CommandMapWrapper>> Cannot get the knownCommands Map!", false);
                 ex.printStackTrace();
             }
         }
