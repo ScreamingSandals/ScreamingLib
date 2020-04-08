@@ -23,7 +23,7 @@ public class BossbarHolder implements Serializable {
     private BarStyle barStyle = BarStyle.SOLID;
     @Getter(AccessLevel.PRIVATE)
     @Setter(AccessLevel.PRIVATE)
-    private List<BarFlag> barFlags = new ArrayList<>();
+    private List<BarFlag> barFlags = new LinkedList<>();
 
     private transient double progress;
     private transient BossBar bukkitBossbar;

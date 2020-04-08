@@ -3,10 +3,7 @@ package org.screamingsandals.lib.bossbars;
 import lombok.Data;
 import org.screamingsandals.lib.bossbars.bossbar.Bossbar;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
 public abstract class BaseManager<T> {
@@ -37,7 +34,7 @@ public abstract class BaseManager<T> {
         if (savedBossbars.containsKey(player)) {
             savedBossbars.get(player).add(bossbar);
         } else {
-            List<Bossbar> bossbars = new ArrayList<>();
+            List<Bossbar> bossbars = new LinkedList<>();
             bossbars.add(bossbar);
 
             savedBossbars.put(player, bossbars);
@@ -64,7 +61,7 @@ public abstract class BaseManager<T> {
     }
 
     public List<Bossbar> getSavedBossbars(T player) {
-        final List<Bossbar> bossbars = new ArrayList<>();
+        final List<Bossbar> bossbars = new LinkedList<>();
         if (savedBossbars.containsKey(player)) {
             bossbars.addAll(savedBossbars.get(player));
         }
