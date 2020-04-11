@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.commands.common;
+package org.screamingsandals.lib.commands.common.language;
 
 public class CommandsLanguage {
 
