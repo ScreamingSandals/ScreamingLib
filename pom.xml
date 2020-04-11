@@ -7,7 +7,7 @@
     <groupId>org.screamingsandals.lib</groupId>
     <artifactId>ScreamingLib</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.8</version> <!-- increment on version update! && run mvn -N versions:update-child-modules -->
+    <version>1.0.9</version> <!-- increment on version update! && run mvn -N versions:update-child-modules -->
 
     <modules>
         <module>scoreboards</module>
