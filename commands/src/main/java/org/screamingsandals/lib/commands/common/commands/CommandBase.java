@@ -18,18 +18,19 @@ public abstract class CommandBase<T, Y> {
     private String usage;
     private List<SubCommand> subCommands = new LinkedList<>();
 
+    //COMMANDS
+    private Execute.PlayerCommand<T> playerCommandExecutor;
+    private Execute.ConsoleCommand<Y> consoleCommandExecutor;
+    private CompleteTab.PlayerCommandComplete<T> playerCommandComplete;
+    private CompleteTab.ConsoleCommandComplete<Y> consoleCommandComplete;
+
     //sub commands
-    private Map<SubCommand, Execute.PlayerSubCommand<T>> playerSubCommands = new HashMap<>();
-    private Map<SubCommand, Execute.ConsoleSubCommand<Y>> consoleSubCommands = new HashMap<>();
+    private Map<SubCommand, Execute.PlayerSubCommand<T>> playerSubExecutors = new HashMap<>();
+    private Map<SubCommand, Execute.ConsoleSubCommand<Y>> consoleSubExecutor = new HashMap<>();
     private Map<SubCommand, CompleteTab.PlayerSubCommandComplete<T>> playerSubCompletes = new HashMap<>();
     private Map<SubCommand, CompleteTab.ConsoleSubCommandComplete<Y>> consoleSubCompletes = new HashMap<>();
     private Map<SubCommand, CompleteTab.SubCommandComplete<?>> handleAllSubCompletes = new HashMap<>();
-
-    //COMMANDS
-    private Execute.PlayerCommand<T> playerCommand;
-    private Execute.ConsoleCommand<Y> consoleCommand;
-    private CompleteTab.PlayerCommandComplete<T> playerCommandComplete;
-    private CompleteTab.ConsoleCommandComplete<Y> consoleCommandComplete;
+    private CompleteTab.SubCommandComplete<?> subCommandComplete;
 
     public CommandBase<T, Y> setPermissions(String permission) {
         this.permission = permission;
@@ -84,9 +85,9 @@ public abstract class CommandBase<T, Y> {
     }
 
     public CommandBase<T, Y> handlePlayerCommand(Execute.PlayerCommand<T> execute) {
-        if (handleSimpleAdding(playerCommand)) {
+        if (handleSimpleAdding(playerCommandExecutor)) {
             Debug.info("Registerd command with name " + name, true);
-            this.playerCommand = execute;
+            this.playerCommandExecutor = execute;
         } else {
             Debug.info("you are dumb as fuck!", true);
         }
@@ -94,8 +95,8 @@ public abstract class CommandBase<T, Y> {
     }
 
     public CommandBase<T, Y> handleConsoleCommand(Execute.ConsoleCommand<Y> execute) {
-        if (handleSimpleAdding(consoleCommand)) {
-            this.consoleCommand = execute;
+        if (handleSimpleAdding(consoleCommandExecutor)) {
+            this.consoleCommandExecutor = execute;
         }
         return this;
     }
@@ -115,19 +116,19 @@ public abstract class CommandBase<T, Y> {
     }
 
     public CommandBase<T, Y> handleSubPlayerCommand(String name, Execute.PlayerSubCommand<T> execute) {
-        final SubCommand subCommand = handleAdding(name, playerSubCommands);
+        final SubCommand subCommand = handleAdding(name, playerSubExecutors);
 
         if (subCommand != null) {
-            playerSubCommands.put(subCommand, execute);
+            playerSubExecutors.put(subCommand, execute);
         }
         return this;
     }
 
     public CommandBase<T, Y> handleSubConsoleCommand(String name, Execute.ConsoleSubCommand<Y> execute) {
-        final SubCommand subCommand = handleAdding(name, consoleSubCommands);
+        final SubCommand subCommand = handleAdding(name, consoleSubExecutor);
 
         if (subCommand != null) {
-            consoleSubCommands.put(subCommand, execute);
+            consoleSubExecutor.put(subCommand, execute);
         }
         return this;
     }
@@ -150,7 +151,7 @@ public abstract class CommandBase<T, Y> {
         return this;
     }
 
-    public CommandBase<T, Y> handleAllSubCompletes(String name, CompleteTab.SubCommandComplete<CommandSender> complete) {
+    public CommandBase<T, Y> handleAllSubTab(String name, CompleteTab.SubCommandComplete<CommandSender> complete) {
         final SubCommand subCommand = handleAdding(name, handleAllSubCompletes);
 
         if (subCommand != null) {

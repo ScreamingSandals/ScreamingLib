@@ -15,13 +15,13 @@ import java.util.Map;
 @Data
 public class BukkitManager implements CommandManager {
     private final Plugin plugin;
-    private final CommandMapWrapper commandMapWrapper;
+    private final BukkitCommandMap bukkitCommandMap;
     private Map<String, BukkitCommandWrapper> commands = new HashMap<>();
     private HashMap<BukkitCommandWrapper, SubCommand> subCommands = new HashMap<>();
 
     public BukkitManager(Plugin plugin) {
         this.plugin = plugin;
-        commandMapWrapper = new CommandMapWrapper(plugin);
+        this.bukkitCommandMap = new BukkitCommandMap(plugin);
     }
 
     @Override
@@ -33,18 +33,19 @@ public class BukkitManager implements CommandManager {
         Debug.info("Got job! Registering: " + commandName, true);
 
         if (!commands.containsKey(commandName) && !isCommandRegistered(commandName)) {
-            commandMapWrapper.registerCommand(bukkitCommandWrapper.getCommandInstance());
+            bukkitCommandMap.registerCommand(bukkitCommandWrapper.getCommandInstance());
+            commands.put(commandName, bukkitCommandWrapper);
         }
     }
 
     @Override
     public boolean isCommandRegistered(String commandName) {
-        return commandMapWrapper.isCommandRegistered(commandName);
+        return bukkitCommandMap.isCommandRegistered(commandName);
     }
 
     @Override
     public void unregisterCommand(String commandName) {
-        commandMapWrapper.unregisterCommand(commandName);
+        bukkitCommandMap.unregisterCommand(commandName);
 
         commands.remove(commandName);
     }

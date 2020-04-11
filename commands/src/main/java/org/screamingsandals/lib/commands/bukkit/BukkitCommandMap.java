@@ -13,11 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class CommandMapWrapper {
+public class BukkitCommandMap {
     private final Plugin plugin;
     private final SimpleCommandMap simpleCommandMap;
 
-    public CommandMapWrapper(Object plugin) {
+    public BukkitCommandMap(Object plugin) {
         this.plugin = (Plugin) plugin;
         this.simpleCommandMap = createCommandMapInstance();
     }

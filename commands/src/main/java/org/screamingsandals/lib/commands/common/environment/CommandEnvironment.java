@@ -3,6 +3,7 @@ package org.screamingsandals.lib.commands.common.environment;
 import lombok.Data;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.commands.bukkit.BukkitManager;
+import org.screamingsandals.lib.commands.bungee.BungeeManager;
 import org.screamingsandals.lib.commands.common.language.CommandsLanguage;
 import org.screamingsandals.lib.commands.common.language.DefaultLanguage;
 import org.screamingsandals.lib.commands.common.manager.CommandManager;
@@ -26,7 +27,7 @@ public abstract class CommandEnvironment {
             commandManager = new BukkitManager((Plugin) plugin);
         } catch (Throwable ignored) {
             try {
-                //commandManager = new BungeeManager((net.md_5.bungee.api.plugin.Plugin) plugin); //TODO
+                commandManager = new BungeeManager((net.md_5.bungee.api.plugin.Plugin) plugin);
                 Class.forName("net.md_5.bungee.api.plugin.PluginManager");
             } catch (Throwable ignored2) {
                 Debug.warn("Your server type is not supported!");
