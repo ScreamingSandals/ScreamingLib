@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.commands.common.commands.subcommands;
+package org.screamingsandals.lib.commands.common.commands;
 
 import lombok.Data;
 

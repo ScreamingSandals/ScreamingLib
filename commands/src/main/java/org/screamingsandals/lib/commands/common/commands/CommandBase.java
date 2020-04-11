@@ -2,16 +2,11 @@ package org.screamingsandals.lib.commands.common.commands;
 
 import lombok.Data;
 import org.bukkit.command.CommandSender;
-import org.screamingsandals.lib.commands.common.commands.subcommands.SubCommand;
-import org.screamingsandals.lib.commands.common.functions.CommandValue;
 import org.screamingsandals.lib.commands.common.functions.CompleteTab;
 import org.screamingsandals.lib.commands.common.functions.Execute;
 import org.screamingsandals.lib.debug.Debug;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Data
@@ -24,11 +19,11 @@ public abstract class CommandBase<T, Y> {
     private List<SubCommand> subCommands = new LinkedList<>();
 
     //sub commands
-    private Map<SubCommand, Execute.PlayerSubCommand<T>> playerSubCommands;
-    private Map<SubCommand, Execute.ConsoleSubCommand<Y>> consoleSubCommands;
-    private Map<SubCommand, CompleteTab.PlayerSubCommandComplete<T>> playerSubCompletes;
-    private Map<SubCommand, CompleteTab.ConsoleSubCommandComplete<Y>> consoleSubCompletes;
-    private Map<SubCommand, CompleteTab.SubCommandComplete<?>> handleAllSubCompletes;
+    private Map<SubCommand, Execute.PlayerSubCommand<T>> playerSubCommands = new HashMap<>();
+    private Map<SubCommand, Execute.ConsoleSubCommand<Y>> consoleSubCommands = new HashMap<>();
+    private Map<SubCommand, CompleteTab.PlayerSubCommandComplete<T>> playerSubCompletes = new HashMap<>();
+    private Map<SubCommand, CompleteTab.ConsoleSubCommandComplete<Y>> consoleSubCompletes = new HashMap<>();
+    private Map<SubCommand, CompleteTab.SubCommandComplete<?>> handleAllSubCompletes = new HashMap<>();
 
     //COMMANDS
     private Execute.PlayerCommand<T> playerCommand;
@@ -68,6 +63,8 @@ public abstract class CommandBase<T, Y> {
             Debug.warn("SubCommand " + name + " is already registered!", true);
         }
 
+        Debug.info("Registered sub command " + subCommand.getName(), true);
+
         return this;
     }
 
@@ -88,10 +85,11 @@ public abstract class CommandBase<T, Y> {
 
     public CommandBase<T, Y> handlePlayerCommand(Execute.PlayerCommand<T> execute) {
         if (handleSimpleAdding(playerCommand)) {
+            Debug.info("Registerd command with name " + name, true);
             this.playerCommand = execute;
+        } else {
+            Debug.info("you are dumb as fuck!", true);
         }
-
-        this.playerCommand = execute;
         return this;
     }
 
@@ -99,30 +97,20 @@ public abstract class CommandBase<T, Y> {
         if (handleSimpleAdding(consoleCommand)) {
             this.consoleCommand = execute;
         }
-
-        this.consoleCommand = execute;
         return this;
     }
 
     public CommandBase<T, Y> handlePlayerTab(CompleteTab.PlayerCommandComplete<T> complete) {
-        if (playerCommandComplete != null) {
-            Debug.warn("You can't use another handler, one is already defined!", true);
-            Debug.warn("Command: " + name, true);
-            return this;
+        if (handleSimpleAdding(playerCommandComplete)) {
+            this.playerCommandComplete = complete;
         }
-
-        this.playerCommandComplete = complete;
         return this;
     }
 
     public CommandBase<T, Y> handleConsoleTab(CompleteTab.ConsoleCommandComplete<Y> complete) {
-        if (consoleCommandComplete != null) {
-            Debug.warn("You can't use another handler, one is already defined!", true);
-            Debug.warn("Command: " + name, true);
-            return this;
+        if (handleSimpleAdding(consoleCommandComplete)) {
+            this.consoleCommandComplete = complete;
         }
-
-        this.consoleCommandComplete = complete;
         return this;
     }
 
@@ -210,8 +198,8 @@ public abstract class CommandBase<T, Y> {
         return subCommand;
     }
 
-    private boolean handleSimpleAdding(CommandValue handler) {
-        if (handler == null) {
+    private boolean handleSimpleAdding(Object handler) {
+        if (handler != null) {
             Debug.warn("You can't use another handler, one is already defined!", true);
             Debug.warn("Command: " + name, true);
             return false;

@@ -2,26 +2,22 @@ package org.screamingsandals.lib.commands.common.environment;
 
 import lombok.Data;
 import org.bukkit.plugin.Plugin;
-import org.screamingsandals.lib.commands.common.manager.CommandManager;
 import org.screamingsandals.lib.commands.bukkit.BukkitManager;
+import org.screamingsandals.lib.commands.common.language.CommandsLanguage;
+import org.screamingsandals.lib.commands.common.language.DefaultLanguage;
+import org.screamingsandals.lib.commands.common.manager.CommandManager;
 import org.screamingsandals.lib.debug.Debug;
-import org.screamingsandals.lib.lang.Language;
 
 @Data
 public abstract class CommandEnvironment {
     private final Object plugin;
-    private Language language;
     private static CommandEnvironment instance;
+    private CommandsLanguage commandLanguage;
     private CommandManager commandManager;
 
-    public CommandEnvironment(Object plugin, Language language) {
-        this.plugin = plugin;
-        this.language = language;
-        instance = this;
-    }
-
     public CommandEnvironment(Object plugin) {
-       this(plugin, null);
+        this.plugin = plugin;
+        instance = this;
     }
 
     public void load() {
@@ -36,6 +32,8 @@ public abstract class CommandEnvironment {
                 Debug.warn("Your server type is not supported!");
             }
         }
+
+        commandLanguage = new DefaultLanguage();
     }
 
     public static CommandEnvironment getInstance() {

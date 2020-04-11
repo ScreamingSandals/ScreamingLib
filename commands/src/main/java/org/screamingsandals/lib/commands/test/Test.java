@@ -25,20 +25,13 @@ public class Test extends JavaPlugin {
                 .setDescription("This is a test shitstorm!")
                 .setUsage("/shitstorm")
                 .registerSubCommand("biatch", "my.awesome.plugin.biatch")
-                .registerSubCommand("wtf", "my.awesome.plugin.wtf")
+                .registerSubCommand("oi", "my.awesome.plugin.wtf")
                 .registerSubCommand("idk", "my.awesome.plugin.idk")
-                .handlePlayerCommand((player, args) -> {
-                    if (args.size() == 2) {
-                        if (args.get(1).contains("start")) {
-                            player.sendMessage("WELL HELLO THERE, STARTING SHITSTORM!");
-                        }
-                    }
-                })
+                .handlePlayerCommand((player, args) -> player.sendMessage("oi"))
                 .handleSubPlayerCommand("biatch", (player, args) -> {
                     player.sendMessage("WHAT THE HELLL");
                     player.sendMessage(args.toString());
                 })
-                .handleSubPlayerCommand("biatch", this::execute)
                 .handlePlayerTab((player, args) -> new LinkedList<>())
                 .handleConsoleCommand((console, args) -> console.sendMessage("YOU CANT DO THIS."))
                 .handleSubPlayerCommand("oi", ((player, args) -> player.sendMessage("asda")))

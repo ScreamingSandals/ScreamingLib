@@ -4,7 +4,7 @@ import lombok.Data;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.commands.bukkit.command.BukkitCommandBase;
 import org.screamingsandals.lib.commands.bukkit.command.BukkitCommandWrapper;
-import org.screamingsandals.lib.commands.common.commands.subcommands.SubCommand;
+import org.screamingsandals.lib.commands.common.commands.SubCommand;
 import org.screamingsandals.lib.commands.common.manager.CommandManager;
 import org.screamingsandals.lib.commands.common.wrapper.CommandWrapper;
 import org.screamingsandals.lib.debug.Debug;
@@ -17,6 +17,7 @@ public class BukkitManager implements CommandManager {
     private final Plugin plugin;
     private final CommandMapWrapper commandMapWrapper;
     private Map<String, BukkitCommandWrapper> commands = new HashMap<>();
+    private HashMap<BukkitCommandWrapper, SubCommand> subCommands = new HashMap<>();
 
     public BukkitManager(Plugin plugin) {
         this.plugin = plugin;
@@ -46,9 +47,5 @@ public class BukkitManager implements CommandManager {
         commandMapWrapper.unregisterCommand(commandName);
 
         commands.remove(commandName);
-    }
-
-    public void registerSubCommand(CommandWrapper<?, ?> commandWrapper, SubCommand subCommand) {
-
     }
 }
