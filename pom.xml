@@ -19,6 +19,7 @@
         <module>config</module>
         <module>bossbars</module>
         <module>commands</module>
+        <module>gamecore</module>
     </modules>
 
     <properties>
