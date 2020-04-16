@@ -1,0 +1,3 @@
+dependencies {
+    compileOnly 'me.clip:placeholderapi:2.10.4'
+}
