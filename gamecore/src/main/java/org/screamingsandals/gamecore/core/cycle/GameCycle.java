@@ -1,4 +1,76 @@
 package org.screamingsandals.gamecore.core.cycle;
 
-public abstract class GameCycle {
+import com.google.common.base.Preconditions;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.screamingsandals.gamecore.core.GameFrame;
+import org.screamingsandals.gamecore.core.GameState;
+import org.screamingsandals.gamecore.core.phase.GamePhase;
+
+import java.util.*;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+public abstract class GameCycle extends BukkitRunnable {
+    private final GameFrame gameFrame;
+    private GamePhase currentPhase;
+    private Map<GameState, GamePhase> gamePhases = new HashMap<>();
+    private List<GamePhase> customPhases = new LinkedList<>();
+
+    @Override
+    public void run() {
+        final GameState gameState = gameFrame.getActiveState();
+        if (currentPhase != null && currentPhase.getPhaseType() == gameState) {
+            currentPhase.tick();
+            return;
+        }
+
+        switch (gameState) {
+            case LOADING: {
+                gameFrame.setActiveState(GameState.WAITING);
+                currentPhase = gamePhases.get(GameState.LOADING);
+                break;
+            }
+            case WAITING: {
+                currentPhase = gamePhases.get(GameState.WAITING);
+                break;
+            }
+            case PRE_GAME_COUNTDOWN: {
+                currentPhase = gamePhases.get(GameState.PRE_GAME_COUNTDOWN);
+                break;
+            }
+            case IN_GAME: {
+                currentPhase = gamePhases.get(GameState.IN_GAME);
+                break;
+            }
+            case DEATHMATCH: {
+                currentPhase = gamePhases.get(GameState.DEATHMATCH);
+                break;
+            }
+            case AFTER_GAME_COUNTDOWN: {
+                currentPhase = gamePhases.get(GameState.AFTER_GAME_COUNTDOWN);
+            }
+            case RESTART: {
+                currentPhase = gamePhases.get(GameState.RESTART);
+                break;
+            }
+            case MAINTENANCE: {
+                currentPhase = gamePhases.get(GameState.MAINTENANCE);
+            }
+            case CUSTOM: {
+                final Iterator<GamePhase> iterator = customPhases.iterator();
+                if (iterator.hasNext()) {
+                    currentPhase = iterator.next();
+                }
+                break;
+            }
+            case DISABLED: {
+                return;
+            }
+        }
+
+        //Fire event with current phase
+        Preconditions.checkNotNull(currentPhase).tick();
+    }
 }

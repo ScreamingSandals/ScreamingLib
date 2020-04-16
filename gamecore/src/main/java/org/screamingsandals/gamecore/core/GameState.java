@@ -9,6 +9,7 @@ public enum GameState {
     AFTER_GAME_COUNTDOWN("game"),
     RESTART("restart"),
     MAINTENANCE("maintenance"),
+    CUSTOM("custom"),
     DISABLED("disabled");
 
     private String name;
