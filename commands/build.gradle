@@ -1,5 +1,6 @@
 dependencies {
     compileOnly 'me.clip:placeholderapi:2.10.4'
+    implementation 'io.papermc:paperlib:1.0.2'
     compileOnly project(':lang')
     implementation project(':debug')
 }
