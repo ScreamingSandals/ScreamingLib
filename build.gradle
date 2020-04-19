@@ -8,8 +8,15 @@ allprojects {
 buildscript {
     repositories {
         jcenter()
+
         maven {
+            name 'screamingsandals'
             url = 'https://repo.screamingsandals.org'
+        }
+
+        maven {
+            name 'papermc'
+            url = 'https://papermc.io/repo/repository/maven-public/'
         }
     }
     dependencies {

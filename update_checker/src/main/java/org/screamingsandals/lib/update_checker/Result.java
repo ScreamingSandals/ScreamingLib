@@ -24,7 +24,7 @@ public class Result {
 			int check = Integer.parseInt(checkVersion);
 
 			return check > current;
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException ignored) {
 		}
 		return false;
 	}

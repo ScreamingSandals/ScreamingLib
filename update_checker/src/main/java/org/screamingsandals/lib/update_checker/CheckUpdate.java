@@ -26,7 +26,7 @@ public class CheckUpdate {
 				Map<String, Object> data = yml.load(body);
 				consumer.accept(new Result(data.get("name").toString()));
 			});
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 	}
 }

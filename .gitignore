@@ -5,6 +5,8 @@
 gradle-app.setting
 !gradle-wrapper.jar
 .gradletasknamecache
+!src/**/target/
+**/target/
 
 # Eclipse
 /bin
