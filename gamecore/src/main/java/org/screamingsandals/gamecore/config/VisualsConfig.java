@@ -4,6 +4,7 @@ import org.screamingsandals.lib.config.DefaultConfigBuilder;
 import org.screamingsandals.lib.config.SpigotConfigAdapter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public abstract class VisualsConfig extends SpigotConfigAdapter {
@@ -75,8 +76,8 @@ public abstract class VisualsConfig extends SpigotConfigAdapter {
     public void checkDefaults() {
         DefaultConfigBuilder.start(this)
                 .put(PATH_SCOREBOARDS_ENABLED, true)
-                .put(PATH_SCOREBOARDS_NAME, "&aBed&cWars")
-                .put(PATH_SCOREBOARDS_CONTENT_LOBBY, new LinkedList<>() {
+                .put(PATH_SCOREBOARDS_NAME, "&aYourFuckingGame!")
+                .put(PATH_SCOREBOARDS_CONTENT_LOBBY, new ArrayList<>() {
                     {
                         add(" ");
                         add("&eMap: &a%game%");
@@ -84,7 +85,7 @@ public abstract class VisualsConfig extends SpigotConfigAdapter {
                         add("&4Need more %playersToStart% players!"); //if line contains playersToStart, remove that line if playersToStart == 0 and replace with STARTING!
                     }
                 })
-                .put(PATH_SCOREBOARDS_CONTENT_GAME, new LinkedList<>() {
+                .put(PATH_SCOREBOARDS_CONTENT_GAME, new ArrayList<>() {
                     {
                         add(" ");
                         add("&eMap: &a%game%");
@@ -93,7 +94,7 @@ public abstract class VisualsConfig extends SpigotConfigAdapter {
                         add("My ass is amazing!");
                     }
                 })
-                .put(PATH_SCOREBOARDS_CONTENT_DEATHMATCH, new LinkedList<>() {
+                .put(PATH_SCOREBOARDS_CONTENT_DEATHMATCH, new ArrayList<>() {
                     {
                         add(" ");
                         add("&c&lDEATHMATCH");

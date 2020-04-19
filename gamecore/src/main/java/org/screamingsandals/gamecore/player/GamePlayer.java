@@ -61,16 +61,16 @@ public class GamePlayer {
         final ScoreboardManager scoreboardManager = activeGame.getScoreboardManager();
         final String scoreboardDisplayedName = m(VisualsConfig.PATH_SCOREBOARDS_NAME).get();
         Scoreboard lobbyScoreboard = ScoreboardCreator.get(GameState.WAITING.getName())
-                .create(scoreboardDisplayedName, DisplaySlot.SIDEBAR, Scoreboard.sortLines(new ArrayList<>()));
+                .create(scoreboardDisplayedName, DisplaySlot.SIDEBAR, Scoreboard.sortLines(m(VisualsConfig.PATH_SCOREBOARDS_CONTENT_LOBBY).getList()));
 
         Scoreboard gameScoreboard = ScoreboardCreator.get(GameState.IN_GAME.getName())
-                .create(scoreboardDisplayedName, DisplaySlot.SIDEBAR, Scoreboard.sortLines(new ArrayList<>()));
+                .create(scoreboardDisplayedName, DisplaySlot.SIDEBAR, Scoreboard.sortLines(m(VisualsConfig.PATH_SCOREBOARDS_CONTENT_GAME).getList()));
 
         Scoreboard deathmatchScoreboard = ScoreboardCreator.get(GameState.DEATHMATCH.getName())
-                .create(scoreboardDisplayedName, DisplaySlot.SIDEBAR, Scoreboard.sortLines(new ArrayList<>()));
+                .create(scoreboardDisplayedName, DisplaySlot.SIDEBAR, Scoreboard.sortLines(m(VisualsConfig.PATH_SCOREBOARDS_CONTENT_DEATHMATCH).getList()));
 
         Scoreboard end_gameScoreboard = ScoreboardCreator.get(GameState.AFTER_GAME_COUNTDOWN.getName())
-                .create(scoreboardDisplayedName, DisplaySlot.SIDEBAR, Scoreboard.sortLines(new ArrayList<>()));
+                .create(scoreboardDisplayedName, DisplaySlot.SIDEBAR, Scoreboard.sortLines(m(VisualsConfig.PATH_SCOREBOARDS_CONTENT_END_GAME).getList()));
 
         scoreboardManager.saveScoreboard(this, lobbyScoreboard);
         scoreboardManager.saveScoreboard(this, gameScoreboard);
