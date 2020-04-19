@@ -1,6 +1,5 @@
 package org.screamingsandals.gamecore.resources;
 
-import com.sun.tools.javac.Main;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,7 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.screamingsandals.gamecore.GameCore;
 import org.screamingsandals.gamecore.core.adapter.LocationAdapter;
@@ -20,8 +18,6 @@ import org.screamingsandals.gamecore.team.GameTeam;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.screamingsandals.lib.lang.I.m;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -33,6 +29,7 @@ public abstract class ResourceSpawner implements Serializable, Runnable {
     private int maxSpeed;
     private int maxSpawned;
     private int spawnCount;
+    private String name;
     private Type type;
     private Hologram hologram;
 
@@ -44,15 +41,15 @@ public abstract class ResourceSpawner implements Serializable, Runnable {
     private transient List<Item> spawnedItems = new ArrayList<>();
     private transient BukkitTask bukkitTask;
 
-
     public ResourceSpawner(LocationAdapter location, int spawnSpeed, int maxSpeed,
-                           int maxSpawned, GameTeam gameTeam, Type type, Hologram hologram) {
+                           int maxSpawned, GameTeam gameTeam, String name, Type type, Hologram hologram) {
         this.location = location;
         this.spawnLocation = location.getLocation().add(0, 0.05, 0);
         this.spawnSpeed = spawnSpeed;
         this.maxSpeed = maxSpeed;
         this.maxSpawned = maxSpawned;
         this.gameTeam = gameTeam;
+        this.name = name;
         this.type = type;
         this.hologram = hologram;
     }
@@ -73,15 +70,11 @@ public abstract class ResourceSpawner implements Serializable, Runnable {
 
     @Override
     public void run() {
-        if (!gameTeam.isAlive()) {
+        if (!gameTeam.isAlive() || isMaxSpawned()) {
             stop();
             return;
         }
 
-        if (isMaxSpawned()) {
-            stop();
-            return;
-        }
         spawn();
     }
 
@@ -127,15 +120,9 @@ public abstract class ResourceSpawner implements Serializable, Runnable {
     @AllArgsConstructor
     public static class Type {
         private String name;
-        private String translateKey;
         private Material material;
         private ChatColor chatColor;
         private double spread;
-
-        public String getTranslatedName() {
-            final String translatedName = m(translateKey).get();
-            return translatedName == null ? name : translatedName;
-        }
 
         public ItemStack getItemStack() {
             return getItemStack(1);
@@ -145,7 +132,7 @@ public abstract class ResourceSpawner implements Serializable, Runnable {
             final ItemStack itemStack = new ItemStack(material, amount);
             final ItemMeta itemMeta = itemStack.getItemMeta();
 
-            itemMeta.setDisplayName(getTranslatedName());
+            itemMeta.setDisplayName(name);
             itemStack.setItemMeta(itemMeta);
             return itemStack;
         }

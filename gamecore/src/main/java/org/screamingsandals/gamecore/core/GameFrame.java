@@ -7,6 +7,7 @@ import org.screamingsandals.gamecore.core.cycle.GameCycle;
 import org.screamingsandals.gamecore.core.data.JsonDataSaver;
 import org.screamingsandals.gamecore.player.GamePlayer;
 import org.screamingsandals.gamecore.resources.ResourceSpawner;
+import org.screamingsandals.gamecore.resources.ResourceTypes;
 import org.screamingsandals.gamecore.store.GameStore;
 import org.screamingsandals.gamecore.team.GameTeam;
 import org.screamingsandals.gamecore.visuals.ScoreboardManager;
@@ -32,6 +33,7 @@ public abstract class GameFrame {
     private List<GameTeam> teams = new LinkedList<>();
     private List<GameStore> stores = new LinkedList<>();
     private List<ResourceSpawner> spawners = new LinkedList<>();
+    private ResourceTypes resourceTypes;
     private GameState activeState = GameState.DISABLED;
     private GameState previousState;
 
@@ -79,7 +81,7 @@ public abstract class GameFrame {
     }
 
     public void loadDefaults() {
-
+        resourceTypes = ResourceTypes.load(this);
     }
 
     public void start() {

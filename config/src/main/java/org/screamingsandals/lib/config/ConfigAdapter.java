@@ -105,7 +105,7 @@ public interface ConfigAdapter {
      */
     void load();
 
-    default void checkOrSet(AtomicBoolean modify, String path, java.io.Serializable value) {
+    default void checkOrSet(AtomicBoolean modify, String path, Object value) {
         if (!isSet(path)) {
             set(path, value);
             modify.set(true);

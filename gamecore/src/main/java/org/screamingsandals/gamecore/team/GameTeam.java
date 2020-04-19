@@ -11,10 +11,10 @@ import java.util.List;
 
 @Data
 public abstract class GameTeam implements Serializable {
+    private LocationAdapter spawnLocation;
     private String teamName;
     private TeamColor teamColor;
     private int maxPlayers;
-    private LocationAdapter spawnLocation;
 
     //don't save this shit, not needed
     private transient boolean alive = false;
@@ -23,10 +23,17 @@ public abstract class GameTeam implements Serializable {
 
     public void join(GamePlayer gamePlayer) {
         gamePlayer.setGameTeam(this);
+        teamPlayers.add(gamePlayer);
     }
 
     public void leave(GamePlayer gamePlayer) {
         gamePlayer.setGameTeam(null);
+        teamPlayers.remove(gamePlayer);
+    }
+
+    public void removeAllPlayers() {
+        teamPlayers.forEach(gamePlayer -> gamePlayer.setGameTeam(null));
+        teamPlayers.clear();
     }
 
     public int countPlayersInTeam() {

@@ -4,8 +4,7 @@ import org.screamingsandals.lib.config.DefaultConfigBuilder;
 import org.screamingsandals.lib.config.SpigotConfigAdapter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 
 public abstract class VisualsConfig extends SpigotConfigAdapter {
   /*
@@ -77,31 +76,12 @@ public abstract class VisualsConfig extends SpigotConfigAdapter {
         DefaultConfigBuilder.start(this)
                 .put(PATH_SCOREBOARDS_ENABLED, true)
                 .put(PATH_SCOREBOARDS_NAME, "&aYourFuckingGame!")
-                .put(PATH_SCOREBOARDS_CONTENT_LOBBY, new ArrayList<>() {
-                    {
-                        add(" ");
-                        add("&eMap: &a%game%");
-                        add("&fPlayers: &2%players%&f/&2%maxplayers%");
-                        add("&4Need more %playersToStart% players!"); //if line contains playersToStart, remove that line if playersToStart == 0 and replace with STARTING!
-                    }
-                })
-                .put(PATH_SCOREBOARDS_CONTENT_GAME, new ArrayList<>() {
-                    {
-                        add(" ");
-                        add("&eMap: &a%game%");
-                        add(" ");
-                        add("%teams%"); //if line contains %teams%, delete it and put teams after it
-                        add("My ass is amazing!");
-                    }
-                })
-                .put(PATH_SCOREBOARDS_CONTENT_DEATHMATCH, new ArrayList<>() {
-                    {
-                        add(" ");
-                        add("&c&lDEATHMATCH");
-                        add(" ");
-                        add("%teams%"); //if line contains %teams%, delete it and put teams after it
-                        add("Another ass?!");
-                    }
-                });
+                //if line contains playersToStart, remove that line if playersToStart == 0 and replace with STARTING!
+                .put(PATH_SCOREBOARDS_CONTENT_LOBBY, List.of(" ", "&eMap: &a%game%", "&fPlayers: &2%players%&f/&2%maxplayers%", "&4Need more %playersToStart% players!"))
+                //if line contains %teams%, delete it and put teams after it
+                .put(PATH_SCOREBOARDS_CONTENT_GAME, List.of(" ", "&eMap: &a%game%", " ", "%teams%", "My ass is amazing!"))
+                .put(PATH_SCOREBOARDS_CONTENT_DEATHMATCH, List.of(" ", "&c&lDEATHMATCH", " ", "%teams%", "My ass is amazing!"))
+                .put(PATH_SCOREBOARDS_CONTENT_END_GAME, List.of(" ", "%isWinner%", " ", "some ", "content")) //replace %isWinner% with "You won" or "You lost"
+                .end();
     }
 }

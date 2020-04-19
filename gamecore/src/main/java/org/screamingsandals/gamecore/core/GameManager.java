@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,14 +19,11 @@ import java.util.stream.Stream;
 public class GameManager<T extends GameFrame> {
     private final File dataFolder;
     private final Class<T> type;
-    //private final ItemSpawnerTypes itemSpawnerTypes;
     private Map<String, T> registeredGames = new HashMap<>();
 
     public GameManager(File dataFolder, Class<T> type) {
         this.dataFolder = dataFolder;
         this.type = type;
-        //itemSpawnerTypes = ItemSpawnerTypes.load();
-
     }
 
     public void loadGames() {

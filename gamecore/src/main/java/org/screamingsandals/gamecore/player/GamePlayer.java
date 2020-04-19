@@ -14,8 +14,6 @@ import org.screamingsandals.gamecore.visuals.ScoreboardManager;
 import org.screamingsandals.lib.scoreboards.scoreboard.Scoreboard;
 import org.screamingsandals.lib.scoreboards.scoreboard.ScoreboardCreator;
 
-import java.util.ArrayList;
-
 import static org.screamingsandals.lib.lang.I.m;
 
 @Data
@@ -58,6 +56,7 @@ public class GamePlayer {
 
     public void createScoreboards() {
         //Creating scoreboards event!
+        //move this to the minigame itself, not core?
         final ScoreboardManager scoreboardManager = activeGame.getScoreboardManager();
         final String scoreboardDisplayedName = m(VisualsConfig.PATH_SCOREBOARDS_NAME).get();
         Scoreboard lobbyScoreboard = ScoreboardCreator.get(GameState.WAITING.getName())

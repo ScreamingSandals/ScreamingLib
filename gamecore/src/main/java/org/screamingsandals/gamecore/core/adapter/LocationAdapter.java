@@ -1,6 +1,7 @@
 package org.screamingsandals.gamecore.core.adapter;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.screamingsandals.lib.debug.Debug;
@@ -19,6 +20,20 @@ public class LocationAdapter implements Serializable {
 
     public LocationAdapter() {
         location = constructLocation();
+    }
+
+    public LocationAdapter(WorldAdapter worldAdapter, double x, double y, double z, float pitch, float yaw) {
+        this.worldAdapter =worldAdapter;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.pitch = pitch;
+        this.yaw = yaw;
+    }
+
+    public static LocationAdapter create(Location location) {
+        return new LocationAdapter(WorldAdapter.create(location.getWorld()),
+                location.getX(), location.getY(), location.getZ(), location.getPitch(), location.getYaw());
     }
 
     public World getWorld() {

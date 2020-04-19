@@ -18,7 +18,7 @@ public final class DefaultConfigBuilder {
 		return new DefaultConfigBuilder(adapter, "", new AtomicBoolean());
 	}
 	
-	public DefaultConfigBuilder put(String path, Serializable defaultValue) {
+	public DefaultConfigBuilder put(String path, Object defaultValue) {
 		var fullPath = path;
 		if (!this.path.isEmpty()) {
 			fullPath = this.path + "." + fullPath;

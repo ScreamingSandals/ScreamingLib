@@ -9,7 +9,7 @@ import org.screamingsandals.lib.debug.Debug;
 public class GameCore {
     private final Plugin plugin;
     private static GameCore instance;
-    private GameManager gameManager;
+    private GameManager<?> gameManager;
 
     public GameCore(Plugin plugin) {
         this.plugin = plugin;
@@ -18,7 +18,7 @@ public class GameCore {
         Debug.setFallbackName("GameCore");
     }
 
-    public static GameManager getGameManager() {
+    public static GameManager<?> getGameManager() {
         return instance.gameManager;
     }
 

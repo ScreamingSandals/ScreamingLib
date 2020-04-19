@@ -67,6 +67,8 @@ public abstract class GameCycle extends BukkitRunnable {
                 break;
             }
             case DISABLED: {
+                //why are we running?!
+                cancel();
                 return;
             }
         }
