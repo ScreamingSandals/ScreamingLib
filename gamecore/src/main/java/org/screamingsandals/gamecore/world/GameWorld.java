@@ -17,6 +17,8 @@ import java.util.Map;
 public abstract class GameWorld {
     private LocationAdapter position1;
     private LocationAdapter position2;
+    private LocationAdapter spawn;
+    private LocationAdapter spectatorSpawn;
     private transient Map<Location, BlockData> originalBlocks = new HashMap<>();
     private transient Map<Location, BlockData> destroyedBlocks = new HashMap<>();
     private transient Map<Location, BlockData> placedBlocks = new HashMap<>();

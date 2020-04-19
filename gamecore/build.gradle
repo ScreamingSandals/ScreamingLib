@@ -2,7 +2,9 @@ dependencies {
     implementation 'io.papermc:paperlib:1.0.2'
     implementation 'com.google.code.gson:gson:2.8.6'
     compileOnly 'me.clip:placeholderapi:2.10.4'
-    compileOnly project(':lang')
-    compileOnly project(':debug')
-    compileOnly project(':debug')
+    implementation project(':lang')
+    implementation project(':debug')
+    implementation project(':config')
+    implementation project(':scoreboards')
+    implementation project(':bossbars')
 }

@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -100,11 +101,7 @@ public class Debug {
     }
 
     private static void aLog(Level level, String message) {
-        if (aLogger != null) {
-            aLogger.log(level, message);
-        } else {
-            Logger.getAnonymousLogger(fallbackName).log(level, message);
-        }
+        Objects.requireNonNullElseGet(aLogger, () -> Logger.getAnonymousLogger(fallbackName)).log(level, message);
     }
 
     private static boolean isBukkit() {

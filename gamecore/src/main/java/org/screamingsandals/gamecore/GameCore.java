@@ -2,6 +2,7 @@ package org.screamingsandals.gamecore;
 
 import lombok.Data;
 import org.screamingsandals.gamecore.core.GameManager;
+import org.screamingsandals.lib.debug.Debug;
 
 @Data
 public class GameCore {
@@ -10,6 +11,8 @@ public class GameCore {
 
     public GameCore() {
         instance = this;
+
+        Debug.setFallbackName("GameCore");
     }
 
     public static GameManager getGameManager() {

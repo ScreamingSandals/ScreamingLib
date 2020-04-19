@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class GameManager<T extends GameFrame> {
 
     }
 
-    public void load() {
+    public void loadGames() {
         if (dataFolder.exists()) {
             try (Stream<Path> stream = Files.walk(Paths.get(new File(getDataFolder(), "arenas").getAbsolutePath()))) {
                 List<String> results = stream.filter(Files::isRegularFile).map(Path::toString).collect(Collectors.toList());
@@ -44,8 +45,8 @@ public class GameManager<T extends GameFrame> {
                             final T game = dataSaver.load();
 
                             if (game.checkIntegrity()) {
-                                //TODO
-                                return;
+                                Debug.warn("Cannot load game " + game.getDisplayedName() + "!");
+                                continue;
                             }
 
                             registerGame(game.getGameName(), game);
@@ -58,36 +59,36 @@ public class GameManager<T extends GameFrame> {
         }
     }
 
-    public void unload() {
-        for (T game : registeredGames.values()) {
-            game.stop();
+    public void unloadGames() {
+        for (var game : registeredGames.values()) {
+            unregisterGame(game);
         }
-
-        registeredGames.clear();
     }
 
     public void registerGame(String gameName, T gameFrame) {
         registeredGames.put(gameName, gameFrame);
+
+        gameFrame.start();
     }
 
     public void unregisterGame(String gameName) {
-        final T game = registeredGames.get(gameName);
-        if (game != null) {
-            game.stop();
+        final var gameFrame = registeredGames.get(gameName);
+        if (gameFrame != null) {
+            gameFrame.stop();
         }
 
         registeredGames.remove(gameName);
     }
 
-    public void unregisterGame(T game) {
-        final String gameName = game.getGameName();
-        game.stop();
+    public void unregisterGame(T gameFrame) {
+        final String gameName = gameFrame.getGameName();
+        gameFrame.stop();
 
         registeredGames.remove(gameName);
     }
 
     public T getFirstAvailableGame() {
-        for (T game : registeredGames.values()) {
+        for (var game : registeredGames.values()) {
             if (game.getActiveState() == GameState.WAITING) {
                 return game;
             }

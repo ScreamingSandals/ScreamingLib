@@ -10,21 +10,20 @@ public abstract class GamePhase {
     private final GameCycle gameCycle;
     private final GameFrame gameFrame;
     private final GameState phaseType;
+    private final int runTime;
     private int elapsedTime;
-    private int remainingTime;
-    private int runTime;
 
-    public GamePhase(GameCycle gameCycle, GameState phaseType) {
+    public GamePhase(GameCycle gameCycle, GameState phaseType, int runTime) {
         this.gameCycle = gameCycle;
         this.gameFrame = gameCycle.getGameFrame();
         this.phaseType = phaseType;
+        this.runTime = runTime;
 
         prepare(gameFrame);
     }
 
     public void tick() {
         elapsedTime++;
-        remainingTime = runTime - elapsedTime;
     }
 
     public void prepare(GameFrame gameFrame) {
@@ -32,6 +31,10 @@ public abstract class GamePhase {
     }
 
     public boolean hasFinished() {
-        return remainingTime > runTime;
+        return elapsedTime == runTime;
+    }
+
+    public int countRemainingTime() {
+        return runTime - elapsedTime;
     }
 }

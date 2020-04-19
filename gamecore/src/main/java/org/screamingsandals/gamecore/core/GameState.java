@@ -3,10 +3,10 @@ package org.screamingsandals.gamecore.core;
 public enum GameState {
     LOADING("loading"),
     WAITING("lobby"),
-    PRE_GAME_COUNTDOWN("game"),
+    PRE_GAME_COUNTDOWN("starting"),
     IN_GAME("game"),
     DEATHMATCH("deathmatch"),
-    AFTER_GAME_COUNTDOWN("game"),
+    AFTER_GAME_COUNTDOWN("end_game"),
     RESTART("restart"),
     MAINTENANCE("maintenance"),
     CUSTOM("custom"),

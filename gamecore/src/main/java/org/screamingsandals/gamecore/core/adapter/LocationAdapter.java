@@ -15,14 +15,10 @@ public class LocationAdapter implements Serializable {
     private double z;
     private float pitch;
     private float yaw;
+    private transient Location location;
 
-    public Location getBukkitLocation() {
-        if (worldAdapter.isWorldExists()) {
-            Debug.warn("World " + worldAdapter.getWorldName() + " is null!");
-            return null;
-        }
-
-        return new Location(worldAdapter.getWorld(), x, y, z, pitch, yaw);
+    public LocationAdapter() {
+        location = constructLocation();
     }
 
     public World getWorld() {
@@ -30,7 +26,15 @@ public class LocationAdapter implements Serializable {
     }
 
     public boolean isLocationValid() {
-        Location location = getBukkitLocation();
         return location != null;
+    }
+
+    private Location constructLocation() {
+        if (worldAdapter.isWorldExists()) {
+            Debug.warn("World " + worldAdapter.getWorldName() + " is null!", true);
+            return null;
+        }
+
+        return new Location(worldAdapter.getWorld(), x, y, z, pitch, yaw);
     }
 }

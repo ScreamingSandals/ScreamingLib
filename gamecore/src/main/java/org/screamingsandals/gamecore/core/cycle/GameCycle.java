@@ -62,6 +62,7 @@ public abstract class GameCycle extends BukkitRunnable {
                 final Iterator<GamePhase> iterator = customPhases.iterator();
                 if (iterator.hasNext()) {
                     currentPhase = iterator.next();
+                    iterator.remove();
                 }
                 break;
             }
@@ -72,5 +73,15 @@ public abstract class GameCycle extends BukkitRunnable {
 
         //Fire event with current phase
         Preconditions.checkNotNull(currentPhase).tick();
+    }
+
+    public void stop() {
+        kickAllPlayers();
+
+        cancel();
+    }
+
+    public void kickAllPlayers() {
+
     }
 }
