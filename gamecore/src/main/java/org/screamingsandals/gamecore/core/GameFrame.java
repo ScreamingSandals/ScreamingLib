@@ -59,7 +59,7 @@ public abstract class GameFrame {
     }
 
     public void save() {
-        JsonDataSaver<GameFrame> dataSaver = new JsonDataSaver<>(dataFile, GameFrame.class);
+        final JsonDataSaver<GameFrame> dataSaver = new JsonDataSaver<>(dataFile, GameFrame.class);
         dataSaver.save(this);
     }
 
@@ -141,7 +141,8 @@ public abstract class GameFrame {
     }
 
     public void leave(GamePlayer gamePlayer) {
-
+        gamePlayer.setActiveGame(null);
+        gameCycle.kickPlayer(gamePlayer);
     }
 
     //Prepare game stuff

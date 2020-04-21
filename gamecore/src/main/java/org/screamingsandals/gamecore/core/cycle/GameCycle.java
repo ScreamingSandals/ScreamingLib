@@ -4,9 +4,12 @@ import com.google.common.base.Preconditions;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.screamingsandals.gamecore.GameCore;
 import org.screamingsandals.gamecore.core.GameFrame;
 import org.screamingsandals.gamecore.core.GameState;
 import org.screamingsandals.gamecore.core.phase.GamePhase;
+import org.screamingsandals.gamecore.events.core.game.GameCoreGameTickEvent;
+import org.screamingsandals.gamecore.player.GamePlayer;
 
 import java.util.*;
 
@@ -22,6 +25,7 @@ public abstract class GameCycle extends BukkitRunnable {
     public void run() {
         final GameState gameState = gameFrame.getActiveState();
         if (currentPhase != null && currentPhase.getPhaseType() == gameState) {
+            GameCore.fireEvent(new GameCoreGameTickEvent(gameFrame, currentPhase));
             currentPhase.tick();
             return;
         }
@@ -73,7 +77,7 @@ public abstract class GameCycle extends BukkitRunnable {
             }
         }
 
-        //Fire event with current phase
+        GameCore.fireEvent(new GameCoreGameTickEvent(gameFrame, currentPhase));
         Preconditions.checkNotNull(currentPhase).tick();
     }
 
@@ -84,6 +88,10 @@ public abstract class GameCycle extends BukkitRunnable {
     }
 
     public void kickAllPlayers() {
+
+    }
+
+    public void kickPlayer(GamePlayer gamePlayer) {
 
     }
 }

@@ -1,7 +1,10 @@
 package org.screamingsandals.gamecore.core;
 
 import lombok.Data;
+import org.screamingsandals.gamecore.GameCore;
 import org.screamingsandals.gamecore.core.data.JsonDataSaver;
+import org.screamingsandals.gamecore.events.core.game.GameCoreGameLoadEvent;
+import org.screamingsandals.gamecore.events.core.game.GameCoreGameUnloadEvent;
 import org.screamingsandals.lib.debug.Debug;
 
 import java.io.File;
@@ -62,24 +65,33 @@ public class GameManager<T extends GameFrame> {
     }
 
     public void registerGame(String gameName, T gameFrame) {
-        registeredGames.put(gameName, gameFrame);
+        if (GameCore.fireEvent(new GameCoreGameLoadEvent(gameFrame))) {
+            return;
+        }
 
+        registeredGames.put(gameName, gameFrame);
         gameFrame.start();
     }
 
     public void unregisterGame(String gameName) {
         final var gameFrame = registeredGames.get(gameName);
-        if (gameFrame != null) {
-            gameFrame.stop();
-        }
 
-        registeredGames.remove(gameName);
+        unregisterGame(gameFrame);
     }
 
     public void unregisterGame(T gameFrame) {
-        final String gameName = gameFrame.getGameName();
-        gameFrame.stop();
+        if (gameFrame == null) {
+            Debug.warn("GameFrame is null!", true);
+            return;
+        }
 
+        if (GameCore.fireEvent(new GameCoreGameUnloadEvent(gameFrame))) {
+            return;
+        }
+
+        final String gameName = gameFrame.getGameName();
+
+        gameFrame.stop();
         registeredGames.remove(gameName);
     }
 
