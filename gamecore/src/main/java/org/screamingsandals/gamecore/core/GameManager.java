@@ -2,7 +2,7 @@ package org.screamingsandals.gamecore.core;
 
 import lombok.Data;
 import org.screamingsandals.gamecore.GameCore;
-import org.screamingsandals.gamecore.core.data.JsonDataSaver;
+import org.screamingsandals.gamecore.core.data.file.JsonDataSource;
 import org.screamingsandals.gamecore.events.core.game.GameCoreGameLoadEvent;
 import org.screamingsandals.gamecore.events.core.game.GameCoreGameUnloadEvent;
 import org.screamingsandals.lib.debug.Debug;
@@ -29,6 +29,22 @@ public class GameManager<T extends GameFrame> {
         this.type = type;
     }
 
+    public T loadGame(File gameFile) {
+        if (gameFile.exists() && gameFile.isFile()) {
+            JsonDataSource<T> dataSaver = new JsonDataSource<>(gameFile, type);
+            final T game = dataSaver.load();
+
+            if (game.checkIntegrity()) {
+                Debug.warn("Cannot load game " + game.getDisplayedName() + "!");
+                return null;
+            }
+
+            registerGame(game.getGameName(), game);
+            return game;
+        }
+        return null;
+    }
+
     public void loadGames() {
         if (dataFolder.exists()) {
             try (Stream<Path> stream = Files.walk(Paths.get(new File(getDataFolder(), "arenas").getAbsolutePath()))) {
@@ -37,20 +53,7 @@ public class GameManager<T extends GameFrame> {
                 if (results.isEmpty()) {
                     Debug.info("No arenas has been found!", true);
                 } else {
-                    for (var result : results) {
-                        final File file = new File(result);
-                        if (file.exists() && file.isFile()) {
-                            JsonDataSaver<T> dataSaver = new JsonDataSaver<>(file, type);
-                            final T game = dataSaver.load();
-
-                            if (game.checkIntegrity()) {
-                                Debug.warn("Cannot load game " + game.getDisplayedName() + "!");
-                                continue;
-                            }
-
-                            registerGame(game.getGameName(), game);
-                        }
-                    }
+                    results.forEach(result -> loadGame(new File(result)));
                 }
             } catch (IOException e) {
                 e.printStackTrace(); // maybe remove after testing
@@ -58,7 +61,7 @@ public class GameManager<T extends GameFrame> {
         }
     }
 
-    public void unloadGames() {
+    public void unregisterGames() {
         for (var game : registeredGames.values()) {
             unregisterGame(game);
         }

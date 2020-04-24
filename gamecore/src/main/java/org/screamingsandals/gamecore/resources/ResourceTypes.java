@@ -2,11 +2,11 @@ package org.screamingsandals.gamecore.resources;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.screamingsandals.gamecore.core.GameFrame;
-import org.screamingsandals.gamecore.core.data.JsonDataSaver;
+import org.screamingsandals.gamecore.core.data.file.JsonDataSource;
 
 import java.io.File;
 import java.io.Serializable;
@@ -14,15 +14,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ResourceTypes implements Serializable, Cloneable {
+    private final transient GameFrame gameFrame;
     private transient File dataFile;
-    private transient JsonDataSaver<ResourceTypes> dataSaver;
-    private transient GameFrame gameFrame;
+    private transient JsonDataSource<ResourceTypes> dataSaver;
     private Map<String, ResourceSpawner.Type> spawnerTypes = new HashMap<>();
 
     public static ResourceTypes load(GameFrame gameFrame) {
-        ResourceTypes resourceTypes = new ResourceTypes();
+        ResourceTypes resourceTypes = new ResourceTypes(gameFrame);
         resourceTypes = resourceTypes.getDataSaver().load();
 
         if (resourceTypes.getSpawnerTypes() == null) {

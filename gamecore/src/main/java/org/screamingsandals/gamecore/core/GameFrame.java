@@ -3,15 +3,16 @@ package org.screamingsandals.gamecore.core;
 
 import lombok.Data;
 import org.screamingsandals.gamecore.GameCore;
+import org.screamingsandals.gamecore.config.GameConfig;
 import org.screamingsandals.gamecore.core.cycle.GameCycle;
-import org.screamingsandals.gamecore.core.data.JsonDataSaver;
 import org.screamingsandals.gamecore.player.GamePlayer;
 import org.screamingsandals.gamecore.resources.ResourceSpawner;
 import org.screamingsandals.gamecore.resources.ResourceTypes;
 import org.screamingsandals.gamecore.store.GameStore;
 import org.screamingsandals.gamecore.team.GameTeam;
+import org.screamingsandals.gamecore.visuals.BossbarManager;
 import org.screamingsandals.gamecore.visuals.ScoreboardManager;
-import org.screamingsandals.gamecore.world.GameWorld;
+import org.screamingsandals.gamecore.world.BaseWorld;
 import org.screamingsandals.lib.debug.Debug;
 
 import java.io.File;
@@ -23,13 +24,15 @@ public abstract class GameFrame {
     //Game stuff
     private String gameName;
     private String displayedName;
-    private GameWorld arenaWorld;
-    private GameWorld lobbyWorld;
+    private BaseWorld arenaWorld;
+    private BaseWorld lobbyWorld;
     private int minPlayers;
     private int minPlayersToStart;
-    private int runTime;
+    private int gameTime;
     private int lobbyTime;
     private int startTime;
+    private int endTime;
+    private int deathmatchTime;
     private List<GameTeam> teams = new LinkedList<>();
     private List<GameStore> stores = new LinkedList<>();
     private List<ResourceSpawner> spawners = new LinkedList<>();
@@ -39,6 +42,7 @@ public abstract class GameFrame {
 
     //internal shits
     private File dataFile;
+    private GameConfig gameConfig;
 
     private transient int maxPlayers;
     private transient GameCycle gameCycle;
@@ -46,6 +50,7 @@ public abstract class GameFrame {
     private transient List<GamePlayer> spectators = new LinkedList<>();
 
     private transient ScoreboardManager scoreboardManager = new ScoreboardManager(this);
+    private transient BossbarManager bossbarManager = new BossbarManager(this);
 
     private GameFrame(String gameName) {
         this.gameName = gameName;
@@ -56,11 +61,6 @@ public abstract class GameFrame {
 
     public static GameFrame getGame(String gameName) {
         return null;
-    }
-
-    public void save() {
-        final JsonDataSaver<GameFrame> dataSaver = new JsonDataSaver<>(dataFile, GameFrame.class);
-        dataSaver.save(this);
     }
 
     public void reload() {
@@ -77,7 +77,7 @@ public abstract class GameFrame {
         return arenaWorld.worldExists()
                 && lobbyWorld.worldExists()
                 && maxPlayers != 0
-                && runTime != 0;
+                && gameTime != 0;
     }
 
     public void loadDefaults() {
@@ -143,19 +143,8 @@ public abstract class GameFrame {
     public void leave(GamePlayer gamePlayer) {
         gamePlayer.setActiveGame(null);
         gameCycle.kickPlayer(gamePlayer);
-    }
 
-    //Prepare game stuff
-    private void buildTeams() {
-        for (var team : teams) {
-            team.setActiveGame(this);
-        }
-    }
-
-    private void countMaxPlayers() {
-        for (var team : teams) {
-            maxPlayers += team.getMaxPlayers();
-        }
+        playersInGame.remove(gamePlayer);
     }
 
     public void setActiveState(GameState gameState) {
@@ -183,5 +172,18 @@ public abstract class GameFrame {
         }
 
         return lowestTeam;
+    }
+
+    //Prepare game stuff
+    private void buildTeams() {
+        for (var team : teams) {
+            team.setActiveGame(this);
+        }
+    }
+
+    private void countMaxPlayers() {
+        for (var team : teams) {
+            maxPlayers += team.getMaxPlayers();
+        }
     }
 }

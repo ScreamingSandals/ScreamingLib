@@ -105,4 +105,11 @@ public class BossbarHolder implements Serializable {
 
         bukkitBossbar.setProgress(editableProgress / 100);
     }
+
+    public void updateAll() {
+        bukkitBossbar.setTitle(title);
+        bukkitBossbar.setColor(barColor);
+        bukkitBossbar.setProgress(progress);
+        bukkitBossbar.setStyle(barStyle);
+    }
 }

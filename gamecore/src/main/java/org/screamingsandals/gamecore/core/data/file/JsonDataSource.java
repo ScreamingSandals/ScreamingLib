@@ -1,14 +1,15 @@
-package org.screamingsandals.gamecore.core.data;
+package org.screamingsandals.gamecore.core.data.file;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.screamingsandals.gamecore.core.data.DataSource;
 import org.screamingsandals.lib.debug.Debug;
 
 import java.io.*;
 
-public class JsonDataSaver<T> extends DataSaver<T> {
+public class JsonDataSource<T> extends DataSource<T> {
 
-    public JsonDataSaver(File file, Class<T> tClass) {
+    public JsonDataSource(File file, Class<T> tClass) {
         super(file, tClass);
     }
 
@@ -52,7 +53,7 @@ public class JsonDataSaver<T> extends DataSaver<T> {
         return getGson().fromJson(reader, type);
     }
 
-    private Gson getGson() {
+    public static Gson getGson() {
         return new GsonBuilder()
                 .serializeNulls()
                 .create();

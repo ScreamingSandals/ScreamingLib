@@ -6,11 +6,11 @@ import java.io.File;
 import java.io.IOException;
 
 @Data
-public abstract class DataSaver<T> {
+public abstract class DataSource<T> {
     private final File file;
     private Class<T> tClass;
 
-    public DataSaver(File file, Class<T> tClass) {
+    public DataSource(File file, Class<T> tClass) {
         this.file = file;
         this.tClass = tClass;
     }

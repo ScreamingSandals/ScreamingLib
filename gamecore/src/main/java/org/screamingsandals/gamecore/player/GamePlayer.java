@@ -23,6 +23,13 @@ public class GamePlayer {
     private GameFrame activeGame;
     private boolean spectator;
 
+    public void destroy() {
+        activeGame.leave(this);
+        gameTeam.leave(this);
+
+        destroyScoreboards();
+    }
+
     public boolean isInGame() {
         return activeGame != null;
     }

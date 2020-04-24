@@ -5,21 +5,44 @@ import lombok.Data;
 import net.md_5.bungee.api.ChatColor;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 //You can create custom command messages with this!
 @Data
 public abstract class CommandsLanguage {
-    private String noPermissions = "&cYou don't have enough permissions for this command!";
-    private String somethingsFucked = "&cThis command failed. Something is wrong, huh?!";
+    private Map<LangKey, String> languages = new HashMap<>();
 
-    public void sendMessage(Object receiver, String text) {
+    public void loadDefaults() {
+        languages.put(LangKey.NO_PERMISSIONS, "&cYou don't have enough permissions for this command!");
+        languages.put(LangKey.COMMAND_DOES_NOT_EXISTS, "&cOh my, this command does not exists..");
+        languages.put(LangKey.SOMETHINGS_FUCKED, "&cThis command failed. Something is wrong, huh?!");
+        languages.put(LangKey.NOT_FOR_CONSOLE, "&cWell well well, this is not for console...");
+    }
+
+    public String get(LangKey langKey) {
+        return languages.get(langKey);
+    }
+
+    public void add(LangKey langKey, String string) {
+        languages.put(langKey, string);
+    }
+
+    public enum LangKey {
+        NO_PERMISSIONS,
+        COMMAND_DOES_NOT_EXISTS,
+        SOMETHINGS_FUCKED,
+        NOT_FOR_CONSOLE;
+    }
+
+    public void sendMessage(Object receiver, LangKey langKey) {
         if (receiver instanceof Collection) {
             for (Object rec : (Collection<?>) receiver) {
-                sendMessage(rec, text);
+                sendMessage(rec, langKey);
             }
         }
         try {
-            receiver.getClass().getMethod("sendMessage", String.class).invoke(receiver, colorize(text));
+            receiver.getClass().getMethod("sendMessage", String.class).invoke(receiver, colorize(get(langKey)));
         } catch (Throwable ignored) {
         }
     }

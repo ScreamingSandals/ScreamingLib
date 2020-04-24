@@ -70,11 +70,16 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
                     if (sender instanceof ProxiedPlayer) {
                         ProxiedPlayer player = (ProxiedPlayer) sender;
                         if (!player.hasPermission(commandBase.getPermission())) {
-                            commandsLanguage.sendMessage(player, commandsLanguage.getNoPermissions());
+                            commandsLanguage.sendMessage(player, CommandsLanguage.LangKey.NO_PERMISSIONS);
                         }
                         result = handlePlayerCommand(player, args);
                     } else {
-                        result = handleConsoleCommand(sender, args);
+                        try {
+                            result = handleConsoleCommand(sender, args);
+                        } catch (Throwable ignored) {
+                            commandsLanguage.sendMessage(sender, CommandsLanguage.LangKey.NOT_FOR_CONSOLE);
+                            result = true;
+                        }
                     }
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
@@ -83,7 +88,7 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
 
                 if (!result) {
                     final CommandsLanguage commandsLanguage = Commands.getInstance().getCommandLanguage();
-                    commandsLanguage.sendMessage(sender, commandsLanguage.getSomethingsFucked()); //lol
+                    commandsLanguage.sendMessage(sender, CommandsLanguage.LangKey.SOMETHINGS_FUCKED); //lol
                 }
             }
 
@@ -115,7 +120,7 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
         }
 
         if (args.length >= 1 && playerSubExecutors.keySet().size() <= 0) {
-            player.sendMessage("Command not found!");
+            commandsLanguage.sendMessage(player, CommandsLanguage.LangKey.COMMAND_DOES_NOT_EXISTS);
             return false;
         }
 
@@ -128,7 +133,7 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
             }
 
             if (!player.hasPermission(subCommand.getPermission())) {
-                commandsLanguage.sendMessage(player, commandsLanguage.getNoPermissions());
+                commandsLanguage.sendMessage(player, CommandsLanguage.LangKey.NO_PERMISSIONS);
                 return true;
             }
 
@@ -154,7 +159,7 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
         }
 
         if (args.length >= 1 && playerSubExecutors.keySet().size() <= 0) {
-            console.sendMessage("Command not found!");
+            commandsLanguage.sendMessage(console, CommandsLanguage.LangKey.COMMAND_DOES_NOT_EXISTS);
             return false;
         }
 
@@ -265,7 +270,7 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
         return toReturn;
     }
 
-    private abstract class Builder extends Command implements TabExecutor {
+    private abstract static class Builder extends Command implements TabExecutor {
 
         public Builder(String name, String[] aliases) {
             super(name, null, aliases);
