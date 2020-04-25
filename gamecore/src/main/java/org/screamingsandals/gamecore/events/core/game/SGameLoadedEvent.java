@@ -1,20 +1,17 @@
-package org.screamingsandals.gamecore.events.core;
+package org.screamingsandals.gamecore.events.core.game;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.gamecore.GameCore;
+import org.screamingsandals.gamecore.core.GameFrame;
 
-/**
- * Fired when game-core instance is loaded successfully
- */
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class GameCoreLoadedEvent extends Event {
+public class SGameLoadedEvent extends Event {
     private static final HandlerList handlerList = new HandlerList();
-    private final GameCore gameCore;
+    private final GameFrame gameFrame;
 
     @Override
     public @NotNull HandlerList getHandlers() {

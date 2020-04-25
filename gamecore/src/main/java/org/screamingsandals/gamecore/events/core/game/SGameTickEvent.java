@@ -1,4 +1,4 @@
-package org.screamingsandals.gamecore.events.core.phase;
+package org.screamingsandals.gamecore.events.core.game;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,11 +10,10 @@ import org.screamingsandals.gamecore.core.phase.GamePhase;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class GameCorePhaseChangeEvent extends Event {
+public class SGameTickEvent extends Event {
     private static final HandlerList handlerList = new HandlerList();
     private final GameFrame gameFrame;
     private final GamePhase currentPhase;
-    private final GamePhase nextPhase;
 
     @Override
     public @NotNull HandlerList getHandlers() {

@@ -8,7 +8,7 @@ import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.gamecore.core.GameFrame;
 import org.screamingsandals.gamecore.core.GameManager;
-import org.screamingsandals.gamecore.events.core.GameCoreLoadedEvent;
+import org.screamingsandals.gamecore.events.core.SCoreLoadedEvent;
 import org.screamingsandals.lib.debug.Debug;
 
 import java.io.File;
@@ -30,7 +30,7 @@ public class GameCore {
         GameManager<T> gameManager = new GameManager<>(gamesFolder, tClass);
         this.gameManager = gameManager;
 
-        fireEvent(new GameCoreLoadedEvent(this));
+        fireEvent(new SCoreLoadedEvent(this));
     }
 
     public static GameManager<?> getGameManager() {

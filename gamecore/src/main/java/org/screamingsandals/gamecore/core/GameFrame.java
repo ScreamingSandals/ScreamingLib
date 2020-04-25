@@ -5,6 +5,11 @@ import lombok.Data;
 import org.screamingsandals.gamecore.GameCore;
 import org.screamingsandals.gamecore.config.GameConfig;
 import org.screamingsandals.gamecore.core.cycle.GameCycle;
+import org.screamingsandals.gamecore.events.core.game.SGameDisabledEvent;
+import org.screamingsandals.gamecore.events.core.game.SGameDisablingEvent;
+import org.screamingsandals.gamecore.events.core.game.SGameLoadedEvent;
+import org.screamingsandals.gamecore.events.core.game.SGameLoadingEvent;
+import org.screamingsandals.gamecore.events.core.state.SGameStateChangedEvent;
 import org.screamingsandals.gamecore.player.GamePlayer;
 import org.screamingsandals.gamecore.resources.ResourceSpawner;
 import org.screamingsandals.gamecore.resources.ResourceTypes;
@@ -12,7 +17,8 @@ import org.screamingsandals.gamecore.store.GameStore;
 import org.screamingsandals.gamecore.team.GameTeam;
 import org.screamingsandals.gamecore.visuals.BossbarManager;
 import org.screamingsandals.gamecore.visuals.ScoreboardManager;
-import org.screamingsandals.gamecore.world.BaseWorld;
+import org.screamingsandals.gamecore.world.GameWorld;
+import org.screamingsandals.gamecore.world.LobbyWorld;
 import org.screamingsandals.lib.debug.Debug;
 
 import java.io.File;
@@ -24,8 +30,8 @@ public abstract class GameFrame {
     //Game stuff
     private String gameName;
     private String displayedName;
-    private BaseWorld arenaWorld;
-    private BaseWorld lobbyWorld;
+    private GameWorld gameWorld;
+    private LobbyWorld lobbyWorld;
     private int minPlayers;
     private int minPlayersToStart;
     private int gameTime;
@@ -43,6 +49,7 @@ public abstract class GameFrame {
     //internal shits
     private File dataFile;
     private GameConfig gameConfig;
+    private GameCycle.Type cycleType;
 
     private transient int maxPlayers;
     private transient GameCycle gameCycle;
@@ -59,23 +66,18 @@ public abstract class GameFrame {
         loadDefaults();
     }
 
-    public static GameFrame getGame(String gameName) {
+    public static <T> T getGame(String gameName) {
         return null;
     }
 
     public void reload() {
         stop();
-
-        if (!checkIntegrity()) {
-            return;
-        }
-
-        scoreboardManager = new ScoreboardManager(this);
+        start();
     }
 
     public boolean checkIntegrity() {
-        return arenaWorld.worldExists()
-                && lobbyWorld.worldExists()
+        return gameWorld.exists()
+                && lobbyWorld.exists()
                 && maxPlayers != 0
                 && gameTime != 0;
     }
@@ -90,22 +92,25 @@ public abstract class GameFrame {
             return;
         }
 
-        //fire event- game is loading
-        //This is last chance to stop loading the game
+        if (GameCore.fireEvent(new SGameLoadingEvent(this))) {
+            return;
+        }
 
         setGameState(GameState.LOADING);
 
-        //buildTeams();
-        //countMaxPlayers();
+        buildTeams();
+        countMaxPlayers();
 
         //gameCycle = new BungeeGameCycle(this);
         //BaseEnvironment.getTasker().runTaskRepeater(gameCycle, 0, 1, TimeUnit.SECONDS);
 
-        //update game events
+        GameCore.fireEvent(new SGameLoadedEvent(this));
     }
 
     public void stop() {
-        //fire event - game is stopping
+        if (GameCore.fireEvent(new SGameDisablingEvent(this))) {
+            return;
+        }
 
         gameCycle.stop();
         if (!gameCycle.isCancelled()) {
@@ -117,13 +122,18 @@ public abstract class GameFrame {
         spectators.clear();
         maxPlayers = 0;
 
+        scoreboardManager.destroy();
+        bossbarManager.destroy();
+
         setGameState(GameState.DISABLED);
-        //fire event - game stopped!
+        GameCore.fireEvent(new SGameDisabledEvent(this));
     }
 
     public void setGameState(GameState gameState) {
         previousState = activeState;
         activeState = gameState;
+
+        GameCore.fireEvent(new SGameStateChangedEvent(this, activeState, previousState));
     }
 
     public void join(GamePlayer gamePlayer) {
@@ -145,11 +155,6 @@ public abstract class GameFrame {
         gameCycle.kickPlayer(gamePlayer);
 
         playersInGame.remove(gamePlayer);
-    }
-
-    public void setActiveState(GameState gameState) {
-        previousState = activeState;
-        activeState = gameState;
     }
 
     //Working with players

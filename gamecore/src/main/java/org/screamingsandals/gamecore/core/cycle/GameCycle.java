@@ -8,7 +8,7 @@ import org.screamingsandals.gamecore.GameCore;
 import org.screamingsandals.gamecore.core.GameFrame;
 import org.screamingsandals.gamecore.core.GameState;
 import org.screamingsandals.gamecore.core.phase.GamePhase;
-import org.screamingsandals.gamecore.events.core.game.GameCoreGameTickEvent;
+import org.screamingsandals.gamecore.events.core.game.SGameTickEvent;
 import org.screamingsandals.gamecore.player.GamePlayer;
 
 import java.util.*;
@@ -25,14 +25,12 @@ public abstract class GameCycle extends BukkitRunnable {
     public void run() {
         final GameState gameState = gameFrame.getActiveState();
         if (currentPhase != null && currentPhase.getPhaseType() == gameState) {
-            GameCore.fireEvent(new GameCoreGameTickEvent(gameFrame, currentPhase));
-            currentPhase.tick();
-            return;
+            tick();
         }
 
         switch (gameState) {
             case LOADING: {
-                gameFrame.setActiveState(GameState.WAITING);
+                gameFrame.setGameState(GameState.WAITING);
                 currentPhase = gamePhases.get(GameState.LOADING);
                 break;
             }
@@ -77,8 +75,7 @@ public abstract class GameCycle extends BukkitRunnable {
             }
         }
 
-        GameCore.fireEvent(new GameCoreGameTickEvent(gameFrame, currentPhase));
-        Preconditions.checkNotNull(currentPhase).tick();
+        tick();
     }
 
     public void stop() {
@@ -87,11 +84,22 @@ public abstract class GameCycle extends BukkitRunnable {
         cancel();
     }
 
+    private void tick() {
+        GameCore.fireEvent(new SGameTickEvent(gameFrame, currentPhase));
+        Preconditions.checkNotNull(currentPhase).tick();
+    }
+
     public void kickAllPlayers() {
 
     }
 
     public void kickPlayer(GamePlayer gamePlayer) {
+        gameFrame.leave(gamePlayer);
+    }
 
+    public enum Type {
+        SINGLE_GAME_BUNGEE,
+        MULTI_GAME_BUNGEE,
+        MULTI_GAME
     }
 }

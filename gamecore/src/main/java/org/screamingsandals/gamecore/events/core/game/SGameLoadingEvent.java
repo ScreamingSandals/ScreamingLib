@@ -10,7 +10,7 @@ import org.screamingsandals.gamecore.core.GameFrame;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class GameCoreGameLoadEvent extends Event implements Cancellable {
+public class SGameLoadingEvent extends Event implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
     private final GameFrame gameFrame;
     private boolean cancelled;

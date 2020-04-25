@@ -3,8 +3,8 @@ package org.screamingsandals.gamecore.core;
 import lombok.Data;
 import org.screamingsandals.gamecore.GameCore;
 import org.screamingsandals.gamecore.core.data.file.JsonDataSource;
-import org.screamingsandals.gamecore.events.core.game.GameCoreGameLoadEvent;
-import org.screamingsandals.gamecore.events.core.game.GameCoreGameUnloadEvent;
+import org.screamingsandals.gamecore.events.core.game.SGameLoadingEvent;
+import org.screamingsandals.gamecore.events.core.game.SGameDisabledEvent;
 import org.screamingsandals.lib.debug.Debug;
 
 import java.io.File;
@@ -68,12 +68,11 @@ public class GameManager<T extends GameFrame> {
     }
 
     public void registerGame(String gameName, T gameFrame) {
-        if (GameCore.fireEvent(new GameCoreGameLoadEvent(gameFrame))) {
+        if (GameCore.fireEvent(new SGameLoadingEvent(gameFrame))) {
             return;
         }
 
         registeredGames.put(gameName, gameFrame);
-        gameFrame.start();
     }
 
     public void unregisterGame(String gameName) {
@@ -88,7 +87,7 @@ public class GameManager<T extends GameFrame> {
             return;
         }
 
-        if (GameCore.fireEvent(new GameCoreGameUnloadEvent(gameFrame))) {
+        if (GameCore.fireEvent(new SGameDisabledEvent(gameFrame))) {
             return;
         }
 

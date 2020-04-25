@@ -7,11 +7,9 @@ import java.io.IOException;
 
 @Data
 public abstract class DataSource<T> {
-    private final File file;
     private Class<T> tClass;
 
-    public DataSource(File file, Class<T> tClass) {
-        this.file = file;
+    public DataSource(Class<T> tClass) {
         this.tClass = tClass;
     }
 
@@ -27,7 +25,7 @@ public abstract class DataSource<T> {
        return false;
     }
 
-    public boolean checkFile() {
+    public boolean checkFile(File file) {
         if (!file.exists()) {
             try {
                 return file.createNewFile();

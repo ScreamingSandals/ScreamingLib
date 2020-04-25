@@ -19,7 +19,7 @@ public abstract class BaseWorld {
     private transient Map<Location, BlockData> destroyedBlocks = new HashMap<>();
     private transient Map<Location, BlockData> placedBlocks = new HashMap<>();
 
-    public boolean worldExists() {
+    public boolean exists() {
         return position1.getWorld() != null;
     }
 

@@ -1,23 +1,25 @@
 package org.screamingsandals.gamecore.core.data.file;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.screamingsandals.gamecore.core.data.DataSource;
+import org.screamingsandals.gamecore.core.data.JsonUtils;
 import org.screamingsandals.lib.debug.Debug;
 
 import java.io.*;
 
 public class JsonDataSource<T> extends DataSource<T> {
+    private final File file;
 
     public JsonDataSource(File file, Class<T> tClass) {
-        super(file, tClass);
+        super(tClass);
+
+        this.file = file;
     }
 
     @Override
     public T load() {
-        if (checkFile()) {
-            try (Reader reader = new FileReader(getFile())) {
-                return deserialize(reader, getTClass());
+        if (checkFile(file)) {
+            try (Reader reader = new FileReader(file)) {
+                return JsonUtils.deserialize(reader, getTClass());
             } catch (IOException e) {
                 Debug.warn("Some error occurred while parsing data!");
                 e.printStackTrace();
@@ -28,9 +30,9 @@ public class JsonDataSource<T> extends DataSource<T> {
 
     @Override
     public void save(Object object) {
-        if (checkFile()) {
-            try (FileWriter writer = new FileWriter(getFile())) {
-                serialize(object, writer);
+        if (checkFile(file)) {
+            try (FileWriter writer = new FileWriter(file)) {
+                JsonUtils.serializePretty(object, writer);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -39,23 +41,9 @@ public class JsonDataSource<T> extends DataSource<T> {
 
     @Override
     public boolean delete() {
-        if (getFile().exists()) {
-            return getFile().delete();
+        if (file.exists()) {
+            return file.delete();
         }
         return false;
-    }
-
-    private void serialize(Object instance, Writer writer) {
-        new GsonBuilder().serializeNulls().setPrettyPrinting().create().toJson(instance, writer);
-    }
-
-    private <Y> Y deserialize(Reader reader, Class<Y> type) {
-        return getGson().fromJson(reader, type);
-    }
-
-    public static Gson getGson() {
-        return new GsonBuilder()
-                .serializeNulls()
-                .create();
     }
 }
