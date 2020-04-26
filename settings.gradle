@@ -21,3 +21,6 @@ project(':nms').projectDir = file('nms')
 project(':scoreboards').projectDir = file('scoreboards')
 project(':signs').projectDir = file('signs')
 project(':update_checker').projectDir = file('update_checker')
+include 'storage'
+include 'tasker'
+

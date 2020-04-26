@@ -82,6 +82,8 @@ public abstract class GameCycle extends BukkitRunnable {
         kickAllPlayers();
 
         cancel();
+
+        currentPhase = null;
     }
 
     private void tick() {

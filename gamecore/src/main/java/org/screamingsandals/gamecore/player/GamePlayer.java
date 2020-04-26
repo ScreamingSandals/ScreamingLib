@@ -50,7 +50,7 @@ public class GamePlayer {
     public void makeSpectator() {
         //game events
         spectator = true;
-        teleport(activeGame.getArenaWorld().getSpectatorSpawn());
+        teleport(activeGame.getGameWorld().getSpectatorSpawn());
     }
 
     public void teleport(LocationAdapter locationAdapter) {

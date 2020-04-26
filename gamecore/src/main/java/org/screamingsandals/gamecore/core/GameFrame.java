@@ -1,6 +1,7 @@
 package org.screamingsandals.gamecore.core;
 
 
+import com.google.common.base.Preconditions;
 import lombok.Data;
 import org.screamingsandals.gamecore.GameCore;
 import org.screamingsandals.gamecore.config.GameConfig;
@@ -101,8 +102,7 @@ public abstract class GameFrame {
         buildTeams();
         countMaxPlayers();
 
-        //gameCycle = new BungeeGameCycle(this);
-        //BaseEnvironment.getTasker().runTaskRepeater(gameCycle, 0, 1, TimeUnit.SECONDS);
+        Preconditions.checkNotNull(gameCycle).runTaskTimer(GameCore.getPlugin(), 0, 20); //We expect that dev provided valid game-cycle
 
         GameCore.fireEvent(new SGameLoadedEvent(this));
     }
@@ -112,11 +112,11 @@ public abstract class GameFrame {
             return;
         }
 
-        gameCycle.stop();
+        Preconditions.checkNotNull(gameCycle).stop();
+
         if (!gameCycle.isCancelled()) {
             Debug.warn("Something is fucked up, game is not stopped!");
         }
-        gameCycle = null;
 
         playersInGame.clear();
         spectators.clear();
@@ -126,6 +126,7 @@ public abstract class GameFrame {
         bossbarManager.destroy();
 
         setGameState(GameState.DISABLED);
+
         GameCore.fireEvent(new SGameDisabledEvent(this));
     }
 

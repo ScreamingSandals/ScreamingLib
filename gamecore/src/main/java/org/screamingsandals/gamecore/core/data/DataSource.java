@@ -1,17 +1,15 @@
 package org.screamingsandals.gamecore.core.data;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.File;
 import java.io.IOException;
 
 @Data
+@AllArgsConstructor
 public abstract class DataSource<T> {
-    private Class<T> tClass;
-
-    public DataSource(Class<T> tClass) {
-        this.tClass = tClass;
-    }
+    private final Class<T> tClass;
 
     public T load() {
       return null;
