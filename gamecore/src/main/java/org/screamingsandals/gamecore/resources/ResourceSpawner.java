@@ -136,6 +136,7 @@ public abstract class ResourceSpawner implements Serializable, Runnable {
             itemStack.setItemMeta(itemMeta);
             return itemStack;
         }
+
     }
 
     @Data

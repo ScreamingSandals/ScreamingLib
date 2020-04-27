@@ -13,7 +13,7 @@ public class GameConfig implements ConfigAdapter {
 
     }
 
-    public interface Key {
+    public interface DefaultKey {
         String GAME_TIME = "game_time";
     }
 

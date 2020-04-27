@@ -3,19 +3,19 @@ package org.screamingsandals.gamecore.core.cycle;
 import com.google.common.base.Preconditions;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.screamingsandals.gamecore.GameCore;
 import org.screamingsandals.gamecore.core.GameFrame;
 import org.screamingsandals.gamecore.core.GameState;
 import org.screamingsandals.gamecore.core.phase.GamePhase;
 import org.screamingsandals.gamecore.events.core.game.SGameTickEvent;
 import org.screamingsandals.gamecore.player.GamePlayer;
+import org.screamingsandals.lib.tasker.BaseTask;
 
 import java.util.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public abstract class GameCycle extends BukkitRunnable {
+public abstract class GameCycle extends BaseTask {
     private final GameFrame gameFrame;
     private GamePhase currentPhase;
     private Map<GameState, GamePhase> gamePhases = new HashMap<>();
@@ -70,7 +70,7 @@ public abstract class GameCycle extends BukkitRunnable {
             }
             case DISABLED: {
                 //why are we running?!
-                cancel();
+                stop();
                 return;
             }
         }
@@ -81,7 +81,7 @@ public abstract class GameCycle extends BukkitRunnable {
     public void stop() {
         kickAllPlayers();
 
-        cancel();
+        stop();
 
         currentPhase = null;
     }

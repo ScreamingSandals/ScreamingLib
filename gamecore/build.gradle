@@ -7,4 +7,6 @@ dependencies {
     implementation project(':config')
     implementation project(':scoreboards')
     implementation project(':bossbars')
+    implementation project(':tasker')
+    implementation project(':storage')
 }

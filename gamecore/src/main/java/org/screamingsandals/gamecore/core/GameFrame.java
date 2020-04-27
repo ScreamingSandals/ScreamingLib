@@ -1,6 +1,5 @@
 package org.screamingsandals.gamecore.core;
 
-
 import com.google.common.base.Preconditions;
 import lombok.Data;
 import org.screamingsandals.gamecore.GameCore;
@@ -25,6 +24,7 @@ import org.screamingsandals.lib.debug.Debug;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Data
 public abstract class GameFrame {
@@ -84,7 +84,7 @@ public abstract class GameFrame {
     }
 
     public void loadDefaults() {
-        resourceTypes = ResourceTypes.load(this);
+        resourceTypes = ResourceTypes.load(this, new File(GameCore.getPlugin().getDataFolder(), "resources.json"));
     }
 
     public void start() {
@@ -102,7 +102,7 @@ public abstract class GameFrame {
         buildTeams();
         countMaxPlayers();
 
-        Preconditions.checkNotNull(gameCycle).runTaskTimer(GameCore.getPlugin(), 0, 20); //We expect that dev provided valid game-cycle
+        Preconditions.checkNotNull(gameCycle).runTaskRepeater(0, 1, TimeUnit.SECONDS); //We expect that dev provided valid game-cycle
 
         GameCore.fireEvent(new SGameLoadedEvent(this));
     }
@@ -114,8 +114,11 @@ public abstract class GameFrame {
 
         Preconditions.checkNotNull(gameCycle).stop();
 
-        if (!gameCycle.isCancelled()) {
+        if (!gameCycle.hasStopped()) {
             Debug.warn("Something is fucked up, game is not stopped!");
+
+            //last try
+            gameCycle.stop();
         }
 
         playersInGame.clear();

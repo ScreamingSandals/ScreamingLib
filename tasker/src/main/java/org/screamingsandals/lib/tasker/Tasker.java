@@ -1,13 +1,14 @@
 package org.screamingsandals.lib.tasker;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public interface Tasker {
-    HashMap<BaseTask, Object> runningTasks = new HashMap<>();
+    Map<BaseTask, Object> runningTasks = new HashMap<>();
 
-    default HashMap<BaseTask, Object> getRunningTasks() {
-        return new HashMap<>(runningTasks);
+    default Map<BaseTask, Object> getRunningTasks() {
+        return runningTasks;
     }
 
     default void destroy() {
@@ -29,6 +30,8 @@ public interface Tasker {
         runningTasks.remove(baseTask);
     }
 
+    boolean hasStopped(BaseTask baseTask);
+
     BaseTask runTask(BaseTask baseTask);
 
     BaseTask runTaskAsync(BaseTask baseTask);
@@ -48,5 +51,13 @@ public interface Tasker {
             default:
                 return delay;
         }
+    }
+
+    static Tasker getSpigot(Object plugin) {
+        return new TaskerWrapper.SpigotTasker(plugin);
+    }
+
+    static Tasker getBungee(Object plugin) {
+        return new TaskerWrapper.BungeeTasker(plugin);
     }
 }

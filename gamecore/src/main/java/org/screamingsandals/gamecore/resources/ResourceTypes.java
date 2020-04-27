@@ -1,8 +1,6 @@
 package org.screamingsandals.gamecore.resources;
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.screamingsandals.gamecore.core.GameFrame;
@@ -14,23 +12,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ResourceTypes implements Serializable, Cloneable {
-    private final transient GameFrame gameFrame;
-    private transient File dataFile;
+    private transient GameFrame gameFrame;
     private transient JsonDataSource<ResourceTypes> dataSaver;
     private Map<String, ResourceSpawner.Type> spawnerTypes = new HashMap<>();
 
-    public static ResourceTypes load(GameFrame gameFrame) {
-        ResourceTypes resourceTypes = new ResourceTypes(gameFrame);
-        resourceTypes = resourceTypes.getDataSaver().load();
+    public ResourceTypes(GameFrame gameFrame, File file) {
+        this.gameFrame = gameFrame;
+        this.dataSaver = new JsonDataSource<>(file, ResourceTypes.class);
+    }
 
-        if (resourceTypes.getSpawnerTypes() == null) {
-            resourceTypes.createDefaultTypes();
-            resourceTypes.save();
+    public static ResourceTypes load(GameFrame gameFrame, File file) {
+        final JsonDataSource<ResourceTypes> dataSaver = new JsonDataSource<>(file, ResourceTypes.class);
+        ResourceTypes toReturn = dataSaver.load();
+
+        if (toReturn == null) {
+            toReturn = new ResourceTypes(gameFrame, file);
+            toReturn.createDefaultTypes();
+            toReturn.save();
         }
 
-        return resourceTypes;
+        toReturn.setDataSaver(dataSaver);
+        toReturn.setGameFrame(gameFrame);
+        return toReturn;
     }
 
     public void save() {

@@ -10,6 +10,7 @@ import org.screamingsandals.gamecore.core.GameFrame;
 import org.screamingsandals.gamecore.core.GameManager;
 import org.screamingsandals.gamecore.events.core.SCoreLoadedEvent;
 import org.screamingsandals.lib.debug.Debug;
+import org.screamingsandals.lib.tasker.Tasker;
 
 import java.io.File;
 
@@ -18,12 +19,15 @@ public class GameCore {
     private final Plugin plugin;
     private static GameCore instance;
     private GameManager<?> gameManager;
+    private final Tasker tasker;
 
     public GameCore(Plugin plugin) {
         this.plugin = plugin;
         instance = this;
 
         Debug.setFallbackName("GameCore");
+
+        tasker = Tasker.getSpigot(plugin);
     }
 
     public <T extends GameFrame> void load(File gamesFolder, Class<T> tClass) {
