@@ -3,29 +3,29 @@ package org.screamingsandals.gamecore.resources;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitTask;
-import org.screamingsandals.gamecore.GameCore;
 import org.screamingsandals.gamecore.core.adapter.LocationAdapter;
 import org.screamingsandals.gamecore.team.GameTeam;
+import org.screamingsandals.lib.tasker.BaseTask;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public abstract class ResourceSpawner implements Serializable, Runnable {
+public abstract class ResourceSpawner implements Serializable {
     //spawner settings
     private LocationAdapter location;
     private Location spawnLocation;
     private int spawnSpeed;
+    private TimeUnit spawnTime;
     private int maxSpeed;
     private int maxSpawned;
     private int spawnCount;
@@ -39,7 +39,7 @@ public abstract class ResourceSpawner implements Serializable, Runnable {
     //utils shit
     private transient int remainingToSpawn;
     private transient List<Item> spawnedItems = new ArrayList<>();
-    private transient BukkitTask bukkitTask;
+    private transient BaseTask baseTask;
 
     public ResourceSpawner(LocationAdapter location, int spawnSpeed, int maxSpeed,
                            int maxSpawned, GameTeam gameTeam, String name, Type type, Hologram hologram) {
@@ -59,25 +59,26 @@ public abstract class ResourceSpawner implements Serializable, Runnable {
     }
 
     public void start() {
-        bukkitTask = Bukkit.getScheduler().runTaskTimer(GameCore.getPlugin(), this, 0L, spawnSpeed);
+        baseTask = new BaseTask() {
+            @Override
+            public void run() {
+                if (!gameTeam.isAlive() || isMaxSpawned()) {
+                    stop();
+                    return;
+                }
+
+                spawn();
+            }
+        };
+
+        baseTask.runTaskRepeater(0L, spawnSpeed, spawnTime);
     }
 
     public void stop() {
-        if (bukkitTask != null && !bukkitTask.isCancelled()) {
-            bukkitTask.cancel();
+        if (baseTask != null && !baseTask.hasStopped()) {
+            baseTask.stop();
         }
     }
-
-    @Override
-    public void run() {
-        if (!gameTeam.isAlive() || isMaxSpawned()) {
-            stop();
-            return;
-        }
-
-        spawn();
-    }
-
 
     private void spawn() {
         final Item item = spawnLocation.getWorld().dropItem(spawnLocation, type.getItemStack(spawnCount));
