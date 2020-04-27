@@ -3,6 +3,7 @@ package org.screamingsandals.lib.gamecore.core.cycle;
 import com.google.common.base.Preconditions;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameState;
@@ -20,6 +21,7 @@ public abstract class GameCycle extends BaseTask {
     private GamePhase currentPhase;
     private Map<GameState, GamePhase> gamePhases = new HashMap<>();
     private List<GamePhase> customPhases = new LinkedList<>();
+    private Type type;
 
     @Override
     public void run() {
@@ -97,6 +99,24 @@ public abstract class GameCycle extends BaseTask {
 
     public void kickPlayer(GamePlayer gamePlayer) {
         gameFrame.leave(gamePlayer);
+    }
+
+    public void addPhase(GameState gameState, GamePhase gamePhase) {
+        if (gamePhases.get(gameState) != null) {
+            Debug.warn("GamePhase for state " + gameState + " is already defined!");
+            return;
+        }
+
+        gamePhase.setPhaseType(gameState);
+        gamePhases.put(gameState, gamePhase);
+    }
+
+    public void removePhase(GameState gameState) {
+        gamePhases.remove(gameState);
+    }
+
+    public void addCustomPhase(GamePhase gamePhase) {
+        customPhases.add(gamePhase);
     }
 
     public enum Type {

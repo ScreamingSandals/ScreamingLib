@@ -60,7 +60,7 @@ public abstract class GameFrame {
     private transient ScoreboardManager scoreboardManager = new ScoreboardManager(this);
     private transient BossbarManager bossbarManager = new BossbarManager(this);
 
-    private GameFrame(String gameName) {
+    public GameFrame(String gameName) {
         this.gameName = gameName;
         this.dataFile = new File(GameCore.getGameManager().getDataFolder(), gameName + ".json");
 
@@ -87,7 +87,13 @@ public abstract class GameFrame {
         resourceTypes = ResourceTypes.load(this, new File(GameCore.getPlugin().getDataFolder(), "resources.json"));
     }
 
+    public void prepare() {
+
+    }
+
     public void start() {
+        prepare();
+
         if (!checkIntegrity()) {
             Debug.warn("Arena " + gameName + " cannot be loaded, something is wrong with it!");
             return;

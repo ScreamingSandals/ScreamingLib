@@ -9,14 +9,13 @@ import org.screamingsandals.lib.gamecore.core.cycle.GameCycle;
 public abstract class GamePhase {
     private final GameCycle gameCycle;
     private final GameFrame gameFrame;
-    private final GameState phaseType;
     private final int runTime;
+    private  GameState phaseType;
     private int elapsedTime;
 
-    public GamePhase(GameCycle gameCycle, GameState phaseType, int runTime) {
+    public GamePhase(GameCycle gameCycle, int runTime) {
         this.gameCycle = gameCycle;
         this.gameFrame = gameCycle.getGameFrame();
-        this.phaseType = phaseType;
         this.runTime = runTime;
 
         prepare(gameFrame);
