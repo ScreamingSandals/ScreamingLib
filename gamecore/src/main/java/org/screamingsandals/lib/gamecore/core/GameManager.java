@@ -72,6 +72,7 @@ public class GameManager<T extends GameFrame> {
             return;
         }
 
+        gameFrame.start();
         registeredGames.put(gameName, gameFrame);
     }
 

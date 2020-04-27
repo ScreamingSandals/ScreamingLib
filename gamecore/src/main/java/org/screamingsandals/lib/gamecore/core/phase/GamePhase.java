@@ -10,7 +10,7 @@ public abstract class GamePhase {
     private final GameCycle gameCycle;
     private final GameFrame gameFrame;
     private final int runTime;
-    private  GameState phaseType;
+    private GameState phaseType;
     private int elapsedTime;
 
     public GamePhase(GameCycle gameCycle, int runTime) {
@@ -35,5 +35,9 @@ public abstract class GamePhase {
 
     public int countRemainingTime() {
         return runTime - elapsedTime;
+    }
+
+    public void reset() {
+        elapsedTime = 0;
     }
 }

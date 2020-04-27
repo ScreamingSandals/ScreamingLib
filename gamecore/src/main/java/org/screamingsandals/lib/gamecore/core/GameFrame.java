@@ -2,13 +2,13 @@ package org.screamingsandals.lib.gamecore.core;
 
 import com.google.common.base.Preconditions;
 import lombok.Data;
+import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.config.GameConfig;
 import org.screamingsandals.lib.gamecore.core.cycle.GameCycle;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisabledEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisablingEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadedEvent;
-import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadingEvent;
 import org.screamingsandals.lib.gamecore.events.core.state.SGameStateChangedEvent;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
 import org.screamingsandals.lib.gamecore.resources.ResourceSpawner;
@@ -19,7 +19,6 @@ import org.screamingsandals.lib.gamecore.visuals.BossbarManager;
 import org.screamingsandals.lib.gamecore.visuals.ScoreboardManager;
 import org.screamingsandals.lib.gamecore.world.GameWorld;
 import org.screamingsandals.lib.gamecore.world.LobbyWorld;
-import org.screamingsandals.lib.debug.Debug;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -88,25 +87,18 @@ public abstract class GameFrame {
     }
 
     public void prepare() {
-
+        setGameState(GameState.LOADING);
+        buildTeams();
+        countMaxPlayers();
     }
 
     public void start() {
-        prepare();
-
         if (!checkIntegrity()) {
             Debug.warn("Arena " + gameName + " cannot be loaded, something is wrong with it!");
             return;
         }
 
-        if (GameCore.fireEvent(new SGameLoadingEvent(this))) {
-            return;
-        }
-
-        setGameState(GameState.LOADING);
-
-        buildTeams();
-        countMaxPlayers();
+        prepare();
 
         Preconditions.checkNotNull(gameCycle).runTaskRepeater(0, 1, TimeUnit.SECONDS); //We expect that dev provided valid game-cycle
 
@@ -150,9 +142,6 @@ public abstract class GameFrame {
         //update game events
 
         gamePlayer.setActiveGame(this);
-        //gamePlayer.createScoreboards();
-        //build bossbars
-
         gamePlayer.teleport(lobbyWorld.getSpawn());
 
         //update game events

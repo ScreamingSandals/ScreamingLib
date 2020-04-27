@@ -30,7 +30,7 @@ public class GameCore {
         tasker = Tasker.getSpigot(plugin);
     }
 
-    public <T extends GameFrame> void load(File gamesFolder, T game, Class<T> tClass) {
+    public <T extends GameFrame> void load(File gamesFolder, Class<T> tClass) {
         GameManager<T> gameManager = new GameManager<>(gamesFolder, tClass);
         this.gameManager = gameManager;
 

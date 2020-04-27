@@ -27,6 +27,11 @@ public abstract class GameCycle extends BaseTask {
     public void run() {
         final GameState gameState = gameFrame.getActiveState();
         if (currentPhase != null && currentPhase.getPhaseType() == gameState) {
+            if (gameState == GameState.WAITING && gameFrame.getPlayersInGame().size() == 0) {
+                //Don't tick if players in game = 0, and we are waiting
+                return;
+            }
+
             tick();
         }
 
