@@ -8,19 +8,13 @@ allprojects {
 buildscript {
     repositories {
         jcenter()
-
         maven {
             name 'screamingsandals'
             url = 'https://repo.screamingsandals.org'
         }
-
-        maven {
-            name 'papermc'
-            url = 'https://papermc.io/repo/repository/maven-public/'
-        }
     }
     dependencies {
-        classpath 'org.screamingsandals.gradle.builder:screaming-plugin-builder:1.0.1'
+        classpath 'org.screamingsandals.gradle.builder:screaming-plugin-builder:1.0.2'
     }
 }
 
