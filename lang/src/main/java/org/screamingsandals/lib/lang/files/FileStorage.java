@@ -25,14 +25,16 @@ public class FileStorage {
     }
 
     public boolean load() {
-        List<String> filesInFolder = Language.getResourceFolderFiles("languages");
+        final List<String> filesInFolder = Language.getResourceFolderFiles("languages");
         if (filesInFolder.size() <= 0) {
             return false;
         }
 
         for (var languageFile : filesInFolder) {
-            ConfigAdapter config = create(new File(languageFile));
-            String langCode = config.getString("language_code");
+            final ConfigAdapter config = create(new File(languageFile));
+            config.load();
+
+            final String langCode = config.getString("language_code");
 
             languageFiles.put(langCode, config);
             if (langCode.equalsIgnoreCase(Language.FALLBACK_LANGUAGE)) {
