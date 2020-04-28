@@ -1,5 +1,7 @@
 package org.screamingsandals.lib.config;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -110,5 +112,22 @@ public interface ConfigAdapter {
             set(path, value);
             modify.set(true);
         }
+    }
+
+    /**
+     * Just a little utility method for creating files
+     * @param dataFolder folder where to create the file
+     * @param fileName filename (config.yml for example)
+     * @return the created file
+     * @throws IOException if something fucks up
+     */
+    static File createConfigFile(File dataFolder, String fileName) throws IOException {
+        dataFolder.mkdirs();
+
+        File configFile = new File(dataFolder, fileName);
+        if (!configFile.exists()) {
+            configFile.createNewFile();
+        }
+        return configFile;
     }
 }
