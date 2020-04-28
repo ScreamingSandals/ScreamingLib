@@ -1,10 +1,8 @@
 package org.screamingsandals.lib.gamecore.config;
 
-import org.screamingsandals.lib.config.DefaultConfigBuilder;
 import org.screamingsandals.lib.config.SpigotConfigAdapter;
 
 import java.io.File;
-import java.util.List;
 
 public abstract class VisualsConfig extends SpigotConfigAdapter {
   /*
@@ -69,19 +67,5 @@ public abstract class VisualsConfig extends SpigotConfigAdapter {
      */
     public VisualsConfig(File configFile) {
         super(configFile);
-    }
-
-
-    public void checkDefaults() {
-        DefaultConfigBuilder.start(this)
-                .put(PATH_SCOREBOARDS_ENABLED, true)
-                .put(PATH_SCOREBOARDS_NAME, "&aYourFuckingGame!")
-                //if line contains playersToStart, remove that line if playersToStart == 0 and replace with STARTING!
-                .put(PATH_SCOREBOARDS_CONTENT_LOBBY, List.of(" ", "&eMap: &a%game%", "&fPlayers: &2%players%&f/&2%maxplayers%", "&4Need more %playersToStart% players!"))
-                //if line contains %teams%, delete it and put teams after it
-                .put(PATH_SCOREBOARDS_CONTENT_GAME, List.of(" ", "&eMap: &a%game%", " ", "%teams%", "My ass is amazing!"))
-                .put(PATH_SCOREBOARDS_CONTENT_DEATHMATCH, List.of(" ", "&c&lDEATHMATCH", " ", "%teams%", "My ass is amazing!"))
-                .put(PATH_SCOREBOARDS_CONTENT_END_GAME, List.of(" ", "%isWinner%", " ", "some ", "content")) //replace %isWinner% with "You won" or "You lost"
-                .end();
     }
 }

@@ -2,7 +2,7 @@ defaultTasks 'screamCompile'
 
 allprojects {
     group = 'org.screamingsandals.lib'
-    version = '1.1.5'
+    version = '1.1.6'
 }
 
 buildscript {
