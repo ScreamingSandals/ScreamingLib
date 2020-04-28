@@ -11,6 +11,8 @@ include(':scoreboards')
 include(':bossbars')
 include(':signs')
 include(':update_checker')
+include 'storage'
+include 'tasker'
 project(':bossbars').projectDir = file('bossbars')
 project(':commands').projectDir = file('commands')
 project(':config').projectDir = file('config')
@@ -21,6 +23,7 @@ project(':nms').projectDir = file('nms')
 project(':scoreboards').projectDir = file('scoreboards')
 project(':signs').projectDir = file('signs')
 project(':update_checker').projectDir = file('update_checker')
-include 'storage'
-include 'tasker'
+project(':storage').projectDir = file('storage')
+project(':tasker').projectDir = file('tasker')
+
 

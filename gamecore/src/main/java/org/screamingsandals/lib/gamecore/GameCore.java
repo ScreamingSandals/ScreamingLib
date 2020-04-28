@@ -9,6 +9,7 @@ import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameManager;
+import org.screamingsandals.lib.gamecore.error.ErrorManager;
 import org.screamingsandals.lib.gamecore.events.core.SCoreLoadedEvent;
 import org.screamingsandals.lib.tasker.Tasker;
 
@@ -17,22 +18,23 @@ import java.io.File;
 @Data
 public class GameCore {
     private final Plugin plugin;
+    private final Tasker tasker;
+    private final ErrorManager errorManager;
     private static GameCore instance;
     private GameManager<?> gameManager;
-    private final Tasker tasker;
 
     public GameCore(Plugin plugin) {
         this.plugin = plugin;
         instance = this;
 
-        Debug.setFallbackName("GameCore");
-
         tasker = Tasker.getSpigot(plugin);
+        errorManager = new ErrorManager();
+
+        Debug.setFallbackName("GameCore");
     }
 
     public <T extends GameFrame> void load(File gamesFolder, Class<T> tClass) {
-        GameManager<T> gameManager = new GameManager<>(gamesFolder, tClass);
-        this.gameManager = gameManager;
+        this.gameManager = new GameManager<>(gamesFolder, tClass);
 
         fireEvent(new SCoreLoadedEvent(this));
     }
