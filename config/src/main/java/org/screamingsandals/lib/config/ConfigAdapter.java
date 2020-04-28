@@ -2,6 +2,7 @@ package org.screamingsandals.lib.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -107,7 +108,7 @@ public interface ConfigAdapter {
      */
     void load();
 
-    default void checkOrSet(AtomicBoolean modify, String path, Object value) {
+    default void checkOrSet(AtomicBoolean modify, String path, Serializable value) {
         if (!isSet(path)) {
             set(path, value);
             modify.set(true);

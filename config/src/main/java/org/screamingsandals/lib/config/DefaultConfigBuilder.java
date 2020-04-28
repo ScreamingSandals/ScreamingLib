@@ -1,11 +1,11 @@
 package org.screamingsandals.lib.config;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DefaultConfigBuilder {
@@ -18,7 +18,7 @@ public final class DefaultConfigBuilder {
 		return new DefaultConfigBuilder(adapter, "", new AtomicBoolean());
 	}
 	
-	public DefaultConfigBuilder put(String path, Object defaultValue) {
+	public DefaultConfigBuilder put(String path, Serializable defaultValue) {
 		var fullPath = path;
 		if (!this.path.isEmpty()) {
 			fullPath = this.path + "." + fullPath;
@@ -39,6 +39,7 @@ public final class DefaultConfigBuilder {
 	public void end() {
 		if (this.path.isEmpty() && modify.get()) {
 			adapter.save();
+			adapter.load();
 		}
 	}
 }
