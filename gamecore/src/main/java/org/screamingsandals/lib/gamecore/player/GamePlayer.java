@@ -11,9 +11,12 @@ import org.screamingsandals.lib.gamecore.team.GameTeam;
 import org.screamingsandals.lib.gamecore.visuals.ScoreboardManager;
 import org.screamingsandals.lib.scoreboards.scoreboard.Scoreboard;
 
+import java.util.UUID;
+
 @Data
 public class GamePlayer {
     private final Player bukkitPlayer;
+    private final UUID uuid;
     private GameTeam gameTeam;
     private GameFrame activeGame;
     private boolean spectator;

@@ -1,14 +1,14 @@
 package org.screamingsandals.lib.gamecore.core;
 
 import lombok.Data;
+import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.data.file.JsonDataSource;
-import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadingEvent;
+import org.screamingsandals.lib.gamecore.error.ErrorManager;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisabledEvent;
-import org.screamingsandals.lib.debug.Debug;
+import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadingEvent;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,15 +55,15 @@ public class GameManager<T extends GameFrame> {
                 } else {
                     results.forEach(result -> loadGame(new File(result)));
                 }
-            } catch (IOException e) {
-                e.printStackTrace(); // maybe remove after testing
+            } catch (Exception e) {
+                GameCore.getInstance().getErrorManager().addError(ErrorManager.newEntry(ErrorManager.Type.GAME_LOADING_ERROR, e));
             }
         }
     }
 
     public void unregisterGames() {
         for (var game : registeredGames.values()) {
-            unregisterGame(game);
+            unregisterGame(game, false);
         }
     }
 
@@ -79,16 +79,16 @@ public class GameManager<T extends GameFrame> {
     public void unregisterGame(String gameName) {
         final var gameFrame = registeredGames.get(gameName);
 
-        unregisterGame(gameFrame);
+        unregisterGame(gameFrame, true);
     }
 
-    public void unregisterGame(T gameFrame) {
+    public void unregisterGame(T gameFrame, boolean event) {
         if (gameFrame == null) {
             Debug.warn("GameFrame is null!", true);
             return;
         }
 
-        if (GameCore.fireEvent(new SGameDisabledEvent(gameFrame))) {
+        if (!event && GameCore.fireEvent(new SGameDisabledEvent(gameFrame))) {
             return;
         }
 
@@ -110,8 +110,8 @@ public class GameManager<T extends GameFrame> {
     public T castGame(GameFrame gameFrame) {
         try {
             return type.cast(gameFrame);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } catch (Throwable tr) {
+            tr.printStackTrace();
         }
         return null;
     }

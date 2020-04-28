@@ -2,18 +2,18 @@ package org.screamingsandals.lib.gamecore.events.player;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.gamecore.core.GameFrame;
-import org.screamingsandals.lib.gamecore.player.GamePlayer;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class SPlayerLeftGameEvent extends Event {
+public class SPlayerPreRegisterEvent extends Event implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
-    private final GameFrame gameFrame;
-    private final GamePlayer gamePlayer;
+    private final Player player;
+    private boolean cancelled;
 
     @Override
     public @NotNull HandlerList getHandlers() {

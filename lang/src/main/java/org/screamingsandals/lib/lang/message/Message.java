@@ -132,27 +132,35 @@ public class Message {
     }
 
     public String get() {
-        String message = storage.translate(key, def, prefix);
+        try {
+            String message = storage.translate(key, def, prefix);
 
-        for (var replace : replaces.entrySet()) {
-            message = message.replaceAll("%" + replace.getKey() + "%", replace.getValue().toString());
+            for (var replace : replaces.entrySet()) {
+                message = message.replaceAll("%" + replace.getKey() + "%", replace.getValue().toString());
+            }
+
+            return message;
+        } catch (Throwable ignored) {
+            return null;
         }
-
-        return message;
     }
 
     public List<String> getList() {
-        List<String> messages = storage.translateList(key, defList, prefix);
-        List<String> toReturn = new ArrayList<>();
+        try {
+            final List<String> messages = storage.translateList(key, defList, prefix);
+            final List<String> toReturn = new ArrayList<>();
 
-        for (String toTranslate : messages) {
-            for (var replace : replaces.entrySet()) {
-                toTranslate = toTranslate.replaceAll("%" + replace.getKey() + "%", replace.getValue().toString());
-                toReturn.add(toTranslate);
+            for (String toTranslate : messages) {
+                for (var replace : replaces.entrySet()) {
+                    toTranslate = toTranslate.replaceAll("%" + replace.getKey() + "%", replace.getValue().toString());
+                    toReturn.add(toTranslate);
+                }
             }
-        }
 
-        return toReturn;
+            return toReturn;
+        } catch (Throwable ignored) {
+            return null;
+        }
     }
 
     public String toString() {
