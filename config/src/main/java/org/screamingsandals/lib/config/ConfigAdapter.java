@@ -122,7 +122,7 @@ public interface ConfigAdapter {
      * @return the created file
      * @throws IOException if something fucks up
      */
-    static File createConfigFile(File dataFolder, String fileName) throws IOException {
+    static File createFile(File dataFolder, String fileName) throws IOException {
         dataFolder.mkdirs();
 
         File configFile = new File(dataFolder, fileName);

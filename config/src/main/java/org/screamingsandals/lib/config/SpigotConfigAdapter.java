@@ -4,16 +4,32 @@ import lombok.Data;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
 @Data
 public abstract class SpigotConfigAdapter implements ConfigAdapter {
-    private final File configFile;
+    private File configFile;
+    private InputStream inputStream;
     private YamlConfiguration yamlConfiguration;
+
+    public SpigotConfigAdapter(File configFile) {
+        this.configFile = configFile;
+    }
+
+    public SpigotConfigAdapter(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
 
     public static SpigotConfigAdapter create(File configFile) {
         return new SpigotConfigAdapter(configFile) {
+        };
+    }
+
+    public static SpigotConfigAdapter create(InputStream inputStream) {
+        return new SpigotConfigAdapter(inputStream) {
         };
     }
 
@@ -22,6 +38,11 @@ public abstract class SpigotConfigAdapter implements ConfigAdapter {
         yamlConfiguration = new YamlConfiguration();
 
         try {
+            if (inputStream != null) {
+                yamlConfiguration.load(new InputStreamReader(inputStream));
+                return;
+            }
+
             yamlConfiguration.load(configFile);
         } catch (Exception e) {
             e.printStackTrace();

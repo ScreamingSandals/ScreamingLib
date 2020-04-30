@@ -47,8 +47,8 @@ public class GameManager<T extends GameFrame> {
 
     public void loadGames() {
         if (dataFolder.exists()) {
-            try (Stream<Path> stream = Files.walk(Paths.get(new File(getDataFolder(), "arenas").getAbsolutePath()))) {
-                List<String> results = stream.filter(Files::isRegularFile).map(Path::toString).collect(Collectors.toList());
+            try (Stream<Path> stream = Files.walk(Paths.get(dataFolder.getAbsolutePath()))) {
+                final List<String> results = stream.filter(Files::isRegularFile).map(Path::toString).collect(Collectors.toList());
 
                 if (results.isEmpty()) {
                     Debug.info("No arenas has been found!", true);

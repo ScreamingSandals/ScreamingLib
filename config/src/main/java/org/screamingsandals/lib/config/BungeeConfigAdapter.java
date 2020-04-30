@@ -6,22 +6,42 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Data
 public abstract class BungeeConfigAdapter implements ConfigAdapter {
-    private final File configFile;
+    private File configFile;
+    private InputStream inputStream;
     private Configuration configuration;
+
+    public BungeeConfigAdapter(File configFile) {
+        this.configFile = configFile;
+    }
+
+    public BungeeConfigAdapter(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
 
     public static BungeeConfigAdapter create(File configFile) {
         return new BungeeConfigAdapter(configFile) {
         };
     }
 
+    public static BungeeConfigAdapter create(InputStream inputStream) {
+        return new BungeeConfigAdapter(inputStream) {
+        };
+    }
+
     @Override
     public void load() {
+        if (inputStream != null) {
+            configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(inputStream);
+            return;
+        }
+
         try {
             configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
         } catch (Exception e) {
@@ -31,6 +51,10 @@ public abstract class BungeeConfigAdapter implements ConfigAdapter {
 
     @Override
     public void save() {
+        if (configFile == null) {
+            return;
+        }
+
         try {
             ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, configFile);
             load();

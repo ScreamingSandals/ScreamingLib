@@ -62,12 +62,13 @@ public class Language extends I {
     }
 
     public static List<String> getResourceFolderFiles(String folder) {
-        List<String> toReturn = new ArrayList<>();
+        final List<String> toReturn = new ArrayList<>();
         try {
-            CodeSource codeSource = instance.plugin.getClass().getProtectionDomain().getCodeSource();
+            final CodeSource codeSource = instance.plugin.getClass().getProtectionDomain().getCodeSource();
             if (codeSource != null) {
-                URL url = codeSource.getLocation();
-                ZipInputStream zipInputStream = new ZipInputStream(url.openStream());
+                final URL url = codeSource.getLocation();
+                final ZipInputStream zipInputStream = new ZipInputStream(url.openStream());
+
                 while (true) {
                     ZipEntry zipEntry = zipInputStream.getNextEntry();
                     if (zipEntry == null) {
