@@ -13,28 +13,15 @@ import java.io.Serializable;
 
 @Data
 public abstract class GameStore implements Serializable {
-    private final LocationAdapter storeLocation;
-    private final String shopName;
-    private final File shopFile;
-    private final GameTeam gameTeam;
-    private final StoreType storeType;
+    private LocationAdapter storeLocation;
+    private String shopName;
+    private File shopFile;
+
+    private GameTeam gameTeam;
+    private StoreType storeType;
     private EntityType entityType;
-    private Villager.Profession profession = Villager.Profession.FARMER;
 
     private transient LivingEntity livingEntity;
-
-    public GameStore(LocationAdapter storeLocation, File shopFile, String shopName, GameTeam gameTeam, StoreType storeType, EntityType entityType) {
-        if (entityType == null || !entityType.isAlive()) {
-            entityType = EntityType.VILLAGER;
-        }
-
-        this.storeLocation = storeLocation;
-        this.shopFile = shopFile;
-        this.gameTeam = gameTeam;
-        this.shopName = shopName;
-        this.storeType = storeType;
-        this.entityType = entityType;
-    }
 
     public void setEntityType(EntityType entityType) {
         if (entityType != null && entityType.isAlive()) {
@@ -48,9 +35,7 @@ public abstract class GameStore implements Serializable {
             if (shopName != null) {
                 livingEntity.setCustomName(shopName);
                 livingEntity.setCustomNameVisible(true);
-            }
-            if (livingEntity instanceof Villager) {
-                ((Villager) livingEntity).setProfession(profession);
+                livingEntity.setRemoveWhenFarAway(false);
             }
         }
         return livingEntity;
@@ -70,5 +55,62 @@ public abstract class GameStore implements Serializable {
             livingEntity = null;
         }
         return entity;
+    }
+
+    @Data
+    public static class StoreBuilder {
+        private LocationAdapter storeLocation;
+        private String shopName;
+        private File shopFile;
+
+        private GameTeam gameTeam;
+        private StoreType storeType;
+        private EntityType entityType;
+        private Villager.Profession profession = Villager.Profession.FARMER;
+
+        public static StoreBuilder create() {
+            return new StoreBuilder();
+        }
+
+        public StoreBuilder setLocation(LocationAdapter location) {
+            storeLocation = location;
+            return this;
+        }
+
+        public StoreBuilder setName(String shopName) {
+            this.shopName = shopName;
+            return this;
+        }
+
+        public StoreBuilder setShopFile(File shopFile) {
+            this.shopFile = shopFile;
+            return this;
+        }
+
+        public StoreBuilder setGameTeam(GameTeam gameTeam) {
+            this.gameTeam = gameTeam;
+            return this;
+        }
+
+        public StoreBuilder setStoreType(StoreType storeType) {
+            this.storeType = storeType;
+            return this;
+        }
+
+        public StoreBuilder setEntityType(EntityType entityType) {
+            EntityType toSet = entityType;
+            if (toSet == null || !toSet.isAlive()) {
+                toSet = EntityType.VILLAGER;
+            }
+
+            this.entityType = toSet;
+            return this;
+        }
+
+        public StoreBuilder setProfession(Villager.Profession profession) {
+            this.profession = profession;
+            return this;
+        }
+
     }
 }

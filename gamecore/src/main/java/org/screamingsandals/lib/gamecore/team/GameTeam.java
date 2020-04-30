@@ -36,6 +36,11 @@ public abstract class GameTeam implements Serializable {
         teamPlayers.clear();
     }
 
+    public boolean isSame(GameTeam gameTeam) {
+        return gameTeam.getTeamName().equalsIgnoreCase(teamName)
+                && gameTeam.getTeamColor() == teamColor;
+    }
+
     public int countPlayersInTeam() {
         return teamPlayers.size();
     }

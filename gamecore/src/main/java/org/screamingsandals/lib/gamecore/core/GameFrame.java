@@ -79,7 +79,9 @@ public abstract class GameFrame {
         return gameWorld.exists()
                 && lobbyWorld.exists()
                 && maxPlayers != 0
-                && gameTime != 0;
+                && gameTime != 0
+                && teams.size() > 0
+                && stores.size() > 0;
     }
 
     public void loadDefaults() {

@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.gamecore.store;
 
 public enum StoreType {
-    DEFAULT,
+    GENERIC,
     UPGRADES,
     CUSTOM
 }

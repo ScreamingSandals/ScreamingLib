@@ -30,8 +30,8 @@ public class FileStorage {
 
         final HashMap<String, Storage> availableLanguages = new HashMap<>();
         for (var key : languageFiles.keySet()) {
-            ConfigAdapter config = languageFiles.get(key);
-            Storage storage = new Storage(config, key, fallbackStorages.getOrDefault(key, null));
+            final ConfigAdapter config = languageFiles.get(key);
+            final Storage storage = new Storage(config, key, fallbackStorages.getOrDefault(key, null));
 
             availableLanguages.put(key, storage);
         }
@@ -44,7 +44,7 @@ public class FileStorage {
         return true;
     }
 
-    public void registerLanguage(String languagePath) {
+    private void registerLanguage(String languagePath) {
         final File dataFolder = Utils.getDataFolder(plugin);
         final String languagePathIS = "/" + languagePath;
         ConfigAdapter configAdapter;
@@ -65,7 +65,7 @@ public class FileStorage {
         languageFiles.put(key, configAdapter);
     }
 
-    public void registerFallbackStorage(String path) {
+    private void registerFallbackStorage(String path) {
         ConfigAdapter configAdapter = loadFromInputStream(getClass().getResourceAsStream(path));
 
         final String key = configAdapter.getString("language_code");

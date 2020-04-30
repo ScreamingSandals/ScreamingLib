@@ -16,7 +16,7 @@ public abstract class VisualsConfig extends SpigotConfigAdapter {
     public static String PATH_SCOREBOARDS_ENABLED = "scoreboards.enabled";
     public static String PATH_SCOREBOARDS_NAME = "scoreboards.name";
     public static String PATH_SCOREBOARDS_CONTENT_LOBBY = "scoreboards.content.lobby";
-    public static String PATH_SCOREBOARDS_CONTENT_GAME = "scoreboards.content.game";
+    public static String PATH_SCOREBOARDS_CONTENT_IN_GAME = "scoreboards.content.in-game";
     public static String PATH_SCOREBOARDS_CONTENT_DEATHMATCH = "scoreboards.content.deathmatch";
     public static String PATH_SCOREBOARDS_CONTENT_END_GAME = "scoreboards.content.end-game";
     //SCOREBOARDS
@@ -37,6 +37,7 @@ public abstract class VisualsConfig extends SpigotConfigAdapter {
     //BOSSBARS
 
     //TITLES
+    public static String PATH_TITLES_ENABLED = "titles.enabled";
     public static String PATH_TITLES_LOBBY_FADE_IN = "titles.lobby.fade-in";
     public static String PATH_TITLES_LOBBY_FADE_OUT = "titles.lobby.fade-out";
     public static String PATH_TITLES_LOBBY_STAY = "titles.lobby.stay";
