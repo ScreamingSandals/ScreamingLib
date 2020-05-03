@@ -28,6 +28,8 @@ public class LocationAdapter implements Serializable {
         this.z = z;
         this.pitch = pitch;
         this.yaw = yaw;
+
+        location = constructLocation();
     }
 
     public static LocationAdapter create(Location location) {

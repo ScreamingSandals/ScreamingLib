@@ -25,6 +25,14 @@ public class BukkitManager implements CommandManager {
     }
 
     @Override
+    public void destroy() {
+        commands.keySet().forEach(this::unregisterCommand);
+        commands.clear();
+
+        subCommands.clear();
+    }
+
+    @Override
     public void registerCommand(CommandWrapper<?, ?> commandWrapper) {
         final BukkitCommandWrapper bukkitCommandWrapper = (BukkitCommandWrapper) commandWrapper;
         final BukkitCommandBase bukkitCommandBase = bukkitCommandWrapper.getCommandBase();

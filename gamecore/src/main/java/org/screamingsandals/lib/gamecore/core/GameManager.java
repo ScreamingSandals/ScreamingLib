@@ -56,7 +56,7 @@ public class GameManager<T extends GameFrame> {
                     results.forEach(result -> loadGame(new File(result)));
                 }
             } catch (Exception e) {
-                GameCore.getInstance().getErrorManager().addError(ErrorManager.newEntry(ErrorManager.Type.GAME_LOADING_ERROR, e));
+                GameCore.getInstance().getErrorManager().newError(ErrorManager.newEntry(ErrorManager.Type.GAME_LOADING_ERROR, e));
             }
         } else {
             Debug.info("No arenas has been found!", true);

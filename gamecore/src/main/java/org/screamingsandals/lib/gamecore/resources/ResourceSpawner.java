@@ -16,6 +16,7 @@ import org.screamingsandals.lib.tasker.BaseTask;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @EqualsAndHashCode(callSuper = false)
@@ -23,13 +24,12 @@ import java.util.concurrent.TimeUnit;
 public abstract class ResourceSpawner implements Serializable {
     //spawner settings
     private LocationAdapter location;
-    private Location spawnLocation;
     private int spawnSpeed;
     private TimeUnit spawnTime;
     private int maxSpeed;
     private int maxSpawned;
     private int spawnCount;
-    private String name;
+    private UUID identifier;
     private Type type;
     private Hologram hologram;
 
@@ -37,24 +37,25 @@ public abstract class ResourceSpawner implements Serializable {
     private GameTeam gameTeam;
 
     //utils shit
+    private transient Location spawnLocation;
     private transient int remainingToSpawn;
     private transient List<Item> spawnedItems = new ArrayList<>();
     private transient BaseTask baseTask;
 
     public ResourceSpawner(LocationAdapter location, int spawnSpeed, int maxSpeed,
-                           int maxSpawned, GameTeam gameTeam, String name, Type type, Hologram hologram) {
+                           int maxSpawned, GameTeam gameTeam, Type type, Hologram hologram) {
         this.location = location;
-        this.spawnLocation = location.getLocation().add(0, 0.05, 0);
         this.spawnSpeed = spawnSpeed;
         this.maxSpeed = maxSpeed;
         this.maxSpawned = maxSpawned;
         this.gameTeam = gameTeam;
-        this.name = name;
+        this.identifier = UUID.randomUUID();
         this.type = type;
         this.hologram = hologram;
     }
 
     public void setup() {
+        this.spawnLocation = location.getLocation().add(0, 0.05, 0);
         remainingToSpawn = maxSpawned;
     }
 

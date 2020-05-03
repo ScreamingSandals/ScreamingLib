@@ -47,7 +47,7 @@ public class GameCore {
 
             fireEvent(new SCoreLoadedEvent(this));
         } catch (Exception exception) {
-            errorManager.addError(ErrorManager.newEntry(ErrorManager.Type.GAME_CORE_ERROR, exception));
+            errorManager.newError(ErrorManager.newEntry(ErrorManager.Type.GAME_CORE_ERROR, exception));
             throw new GameCoreException("Whoopsie, something went wrong with GameCore!");
         }
     }

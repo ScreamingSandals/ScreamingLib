@@ -29,6 +29,10 @@ public abstract class GameStore implements Serializable {
         }
     }
 
+    public static <T> T get(StoreBuilder storeBuilder) {
+        return null;
+    }
+
     public LivingEntity spawn() {
         if (livingEntity == null) {
             livingEntity = (LivingEntity) storeLocation.getWorld().spawnEntity(storeLocation.getLocation(), entityType);

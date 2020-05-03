@@ -41,4 +41,8 @@ public class PlayerManager {
     public boolean isPlayerRegistered(Player player) {
         return registeredPlayers.containsKey(player);
     }
+
+    public GamePlayer getRegistered(Player player) {
+        return registeredPlayers.get(player);
+    }
 }

@@ -17,8 +17,8 @@ public class ErrorManager {
         activeErrors.clear();
     }
 
-    public void addError(GameFrame gameFrame, Entry entry) {
-        addError(entry);
+    public void newError(GameFrame gameFrame, Entry entry) {
+        newError(entry);
 
         if (isError(gameFrame)) {
             activeErrors.get(gameFrame).add(entry);
@@ -39,7 +39,7 @@ public class ErrorManager {
         return activeErrors.containsKey(gameFrame);
     }
 
-    public void addError(Entry entry) {
+    public void newError(Entry entry) {
         errorLog.add(entry);
         writeError(entry);
     }

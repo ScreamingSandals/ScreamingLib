@@ -16,7 +16,7 @@ public class PlayerListener implements Listener {
         final GamePlayer gamePlayer = GameCore.getPlayerManager().registerPlayer(player);
 
         if (gamePlayer == null) {
-            player.kickPlayer("YAAHOOO, can't dooo. Maintenance maybe?");
+            player.kickPlayer("YAAHOOO, can't dooo. Maintenance maybe?"); //TODO - language
         }
     }
 

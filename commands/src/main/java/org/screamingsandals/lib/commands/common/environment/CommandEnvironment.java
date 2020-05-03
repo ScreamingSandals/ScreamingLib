@@ -4,10 +4,21 @@ import lombok.Data;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.commands.bukkit.BukkitManager;
 import org.screamingsandals.lib.commands.bungee.BungeeManager;
+import org.screamingsandals.lib.commands.common.RegisterCommand;
+import org.screamingsandals.lib.commands.common.functions.ScreamingCommand;
 import org.screamingsandals.lib.commands.common.language.CommandsLanguage;
 import org.screamingsandals.lib.commands.common.language.DefaultLanguage;
 import org.screamingsandals.lib.commands.common.manager.CommandManager;
 import org.screamingsandals.lib.debug.Debug;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 @Data
 public abstract class CommandEnvironment {
@@ -30,11 +41,54 @@ public abstract class CommandEnvironment {
                 commandManager = new BungeeManager((net.md_5.bungee.api.plugin.Plugin) plugin);
                 Class.forName("net.md_5.bungee.api.plugin.PluginManager");
             } catch (Throwable ignored2) {
-                Debug.warn("Your server type is not supported!");
+                Debug.warn("Your server type is not supported!", true);
             }
         }
 
         commandLanguage = new DefaultLanguage();
+
+        try {
+            loadScreamingCommands();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void destroy() {
+        commandManager.destroy();
+    }
+
+    private void loadScreamingCommands() throws URISyntaxException, IOException {
+        final JarFile jarFile = new JarFile(new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()));
+        final String packageName = plugin.getClass().getPackage().getName().replaceAll("\\.", "/");
+        final List<JarEntry> entries = Collections.list(jarFile.entries());
+
+        entries.forEach(jarEntry -> {
+            try {
+                if (!jarEntry.getName().endsWith(".class") || !jarEntry.getName().contains(packageName)) {
+                    return;
+                }
+
+                final Class<?> clazz = Class.forName(jarEntry.getName()
+                        .replace("/", ".")
+                        .replace(".class", ""));
+
+                if (!ScreamingCommand.class.isAssignableFrom(clazz)) {
+                    return;
+                }
+
+                if (clazz.getDeclaredAnnotation(RegisterCommand.class) == null) {
+                    return;
+                }
+
+                final Constructor<?> constructor = clazz.getConstructor();
+                final Object object = constructor.newInstance();
+
+                object.getClass().getDeclaredMethod("register").invoke(object);
+                System.out.println("Invoked");
+            } catch (Exception | NoClassDefFoundError ignored) {
+            }
+        });
     }
 
     public static CommandEnvironment getInstance() {

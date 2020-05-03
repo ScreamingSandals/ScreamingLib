@@ -26,6 +26,14 @@ public class BungeeManager implements CommandManager {
     }
 
     @Override
+    public void destroy() {
+        commands.keySet().forEach(this::unregisterCommand);
+        commands.clear();
+
+        subCommands.clear();
+    }
+
+    @Override
     public void registerCommand(CommandWrapper<?, ?> commandWrapper) {
         final BungeeCommandWrapper bungeeCommandWrapper = (BungeeCommandWrapper) commandWrapper;
         final BungeeCommandBase bungeeCommandBase = bungeeCommandWrapper.getCommandBase();

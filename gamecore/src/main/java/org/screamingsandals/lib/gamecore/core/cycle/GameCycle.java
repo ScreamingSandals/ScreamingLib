@@ -28,11 +28,11 @@ public abstract class GameCycle extends BaseTask {
         final GameState gameState = gameFrame.getActiveState();
         if (currentPhase != null && currentPhase.getPhaseType() == gameState) {
             if (gameState == GameState.WAITING && gameFrame.getPlayersInGame().size() == 0) {
-                //Don't tick if players in game = 0, and we are waiting
                 return;
             }
 
             tick();
+            return;
         }
 
         switch (gameState) {
@@ -59,6 +59,7 @@ public abstract class GameCycle extends BaseTask {
             }
             case AFTER_GAME_COUNTDOWN: {
                 currentPhase = gamePhases.get(GameState.AFTER_GAME_COUNTDOWN);
+                break;
             }
             case RESTART: {
                 currentPhase = gamePhases.get(GameState.RESTART);
@@ -66,6 +67,7 @@ public abstract class GameCycle extends BaseTask {
             }
             case MAINTENANCE: {
                 currentPhase = gamePhases.get(GameState.MAINTENANCE);
+                break;
             }
             case CUSTOM: {
                 final Iterator<GamePhase> iterator = customPhases.iterator();
