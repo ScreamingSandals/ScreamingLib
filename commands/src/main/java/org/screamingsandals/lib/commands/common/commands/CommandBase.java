@@ -1,36 +1,30 @@
 package org.screamingsandals.lib.commands.common.commands;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.bukkit.command.CommandSender;
-import org.screamingsandals.lib.commands.common.functions.CompleteTab;
-import org.screamingsandals.lib.commands.common.functions.Execute;
+import org.screamingsandals.lib.commands.common.interfaces.CompleteTab;
+import org.screamingsandals.lib.commands.common.interfaces.Execute;
 import org.screamingsandals.lib.debug.Debug;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 
+@EqualsAndHashCode(callSuper = false)
 @Data
-public abstract class CommandBase<T, Y> {
+public abstract class CommandBase<T, Y> extends SubCommandBase<T, Y> {
     private String name;
     private String permission;
     private List<String> aliases;
     private String description;
     private String usage;
-    private List<SubCommand> subCommands = new LinkedList<>();
 
     //COMMANDS
     private Execute.PlayerCommand<T> playerCommandExecutor;
     private Execute.ConsoleCommand<Y> consoleCommandExecutor;
     private CompleteTab.PlayerCommandComplete<T> playerCommandComplete;
     private CompleteTab.ConsoleCommandComplete<Y> consoleCommandComplete;
-
-    //sub commands
-    private Map<SubCommand, Execute.PlayerSubCommand<T>> playerSubExecutors = new HashMap<>();
-    private Map<SubCommand, Execute.ConsoleSubCommand<Y>> consoleSubExecutor = new HashMap<>();
-    private Map<SubCommand, CompleteTab.PlayerSubCommandComplete<T>> playerSubCompletes = new HashMap<>();
-    private Map<SubCommand, CompleteTab.ConsoleSubCommandComplete<Y>> consoleSubCompletes = new HashMap<>();
-    private Map<SubCommand, CompleteTab.SubCommandComplete<?>> handleAllSubCompletes = new HashMap<>();
-    private CompleteTab.SubCommandComplete<?> subCommandComplete;
 
     public CommandBase<T, Y> setPermissions(String permission) {
         this.permission = permission;
@@ -49,38 +43,6 @@ public abstract class CommandBase<T, Y> {
 
     public CommandBase<T, Y> setUsage(String usage) {
         this.usage = usage;
-        return this;
-    }
-
-    public CommandBase<T, Y> registerSubCommand(String name, String permission, List<String> aliases) {
-        SubCommand subCommand = new SubCommand();
-        subCommand.setName(name);
-        subCommand.setPermission(permission);
-        subCommand.setAliases(aliases);
-
-        if (!isSubCommandRegistered(name)) {
-            subCommands.add(subCommand);
-        } else {
-            Debug.warn("SubCommand " + name + " is already registered!", true);
-        }
-
-        Debug.info("Registered sub command " + subCommand.getName(), true);
-
-        return this;
-    }
-
-    public CommandBase<T, Y> registerSubCommand(String name, String permission) {
-        registerSubCommand(name, permission, Collections.emptyList());
-        return this;
-    }
-
-    public CommandBase<T, Y> registerSubCommand(String name) {
-        registerSubCommand(name, null, Collections.emptyList());
-        return this;
-    }
-
-    public CommandBase<T, Y> registerSubCommand(List<SubCommand> subCommands) {
-        subCommands.forEach(subCommand -> registerSubCommand(subCommand.getName(), subCommand.getPermission(), subCommand.getAliases()));
         return this;
     }
 
@@ -115,88 +77,49 @@ public abstract class CommandBase<T, Y> {
         return this;
     }
 
-    public CommandBase<T, Y> handleSubPlayerCommand(String name, Execute.PlayerSubCommand<T> execute) {
-        final SubCommand subCommand = handleAdding(name, playerSubExecutors);
+    public CommandBase<T, Y> addSubCommand(String name, String permission, List<String> aliases) {
+        super.addSubCommand(name, permission, aliases);
+        return this;
+    }
 
-        if (subCommand != null) {
-            playerSubExecutors.put(subCommand, execute);
-        }
+    public CommandBase<T, Y> addSubCommand(String name, String permission) {
+        addSubCommand(name, permission, Collections.emptyList());
+        return this;
+    }
+
+    public CommandBase<T, Y> addSubCommand(String name) {
+        addSubCommand(name, null, Collections.emptyList());
+        return this;
+    }
+
+    public CommandBase<T, Y> addSubCommand(List<SubCommand> subCommands) {
+        subCommands.forEach(subCommand -> addSubCommand(subCommand.getName(), subCommand.getPermission(), subCommand.getAliases()));
+        return this;
+    }
+
+    public CommandBase<T, Y> handleSubPlayerCommand(String name, Execute.PlayerSubCommand<T> execute) {
+        super.handleSubPlayerCommand(name, execute);
         return this;
     }
 
     public CommandBase<T, Y> handleSubConsoleCommand(String name, Execute.ConsoleSubCommand<Y> execute) {
-        final SubCommand subCommand = handleAdding(name, consoleSubExecutor);
-
-        if (subCommand != null) {
-            consoleSubExecutor.put(subCommand, execute);
-        }
+        super.handleSubConsoleCommand(name, execute);
         return this;
     }
 
     public CommandBase<T, Y> handleSubPlayerTab(String name, CompleteTab.PlayerSubCommandComplete<T> complete) {
-        final SubCommand subCommand = handleAdding(name, playerSubCompletes);
-
-        if (subCommand != null) {
-            playerSubCompletes.put(subCommand, complete);
-        }
+        super.handleSubPlayerTab(name, complete);
         return this;
     }
 
     public CommandBase<T, Y> handleSubConsoleTab(String name, CompleteTab.ConsoleSubCommandComplete<Y> complete) {
-        final SubCommand subCommand = handleAdding(name, consoleSubCompletes);
-
-        if (subCommand != null) {
-            consoleSubCompletes.put(subCommand, complete);
-        }
+        super.handleSubConsoleTab(name, complete);
         return this;
     }
 
     public CommandBase<T, Y> handleAllSubTab(String name, CompleteTab.SubCommandComplete<CommandSender> complete) {
-        final SubCommand subCommand = handleAdding(name, handleAllSubCompletes);
-
-        if (subCommand != null) {
-            handleAllSubCompletes.put(subCommand, complete);
-        }
+        super.handleAllSubTab(name, complete);
         return this;
-    }
-
-    public void register() {
-
-    }
-
-    public boolean isSubCommandRegistered(String name) {
-        for (var subCommand : subCommands) {
-            if (name.equalsIgnoreCase(subCommand.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public SubCommand getSubCommand(String name) {
-        for (var subCommand : subCommands) {
-            if (name.equalsIgnoreCase(subCommand.getName())) {
-                return subCommand;
-            }
-        }
-        return null;
-    }
-
-    private SubCommand handleAdding(String name, Map<?, ?> map) {
-        if (!isSubCommandRegistered(name)) {
-            Debug.warn("SubCommand " + name + " is not registered!", true);
-            Debug.warn("Can't handle anything.", true);
-            return null;
-        }
-
-        final SubCommand subCommand = getSubCommand(name);
-        if (map.containsKey(subCommand)) {
-            Debug.warn("You can't use another handler, one is already defined!", true);
-            Debug.warn("SubCommand: " + name, true);
-            return null;
-        }
-
-        return subCommand;
     }
 
     private boolean handleSimpleAdding(Object handler) {

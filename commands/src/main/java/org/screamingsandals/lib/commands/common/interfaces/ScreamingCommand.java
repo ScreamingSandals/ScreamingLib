@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.commands.common.functions;
+package org.screamingsandals.lib.commands.common.interfaces;
 
 /**
  * Interface for automatic command registration

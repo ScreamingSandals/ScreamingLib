@@ -2,7 +2,7 @@ package org.screamingsandals.lib.commands.test;
 
 import org.screamingsandals.lib.commands.common.CommandBuilder;
 import org.screamingsandals.lib.commands.common.RegisterCommand;
-import org.screamingsandals.lib.commands.common.functions.ScreamingCommand;
+import org.screamingsandals.lib.commands.common.interfaces.ScreamingCommand;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,10 +16,10 @@ public class BukkitTestCommand implements ScreamingCommand {
         CommandBuilder.bukkitCommand().create("shitstorm", "my.awesome.plugin", Arrays.asList("dickfest", "shitfest"))
                 .setDescription("This is a test shitstorm!")
                 .setUsage("/shitstorm")
-                .registerSubCommand("biatch", "my.awesome.plugin.biatch")
-                .registerSubCommand("kill", "my.awesome.plugin.kill")
-                .registerSubCommand("idk", "my.awesome.plugin.idk")
-                .registerSubCommand("oi", "my.awesome.plugin.idk")
+                .addSubCommand("biatch", "my.awesome.plugin.biatch")
+                .addSubCommand("kill", "my.awesome.plugin.kill")
+                .addSubCommand("idk", "my.awesome.plugin.idk")
+                .addSubCommand("oi", "my.awesome.plugin.idk")
                 .handlePlayerCommand((player, args) -> player.sendMessage("oi"))
                 .handleSubPlayerCommand("biatch", (player, args) -> {
                     player.sendMessage("WHAT THE HELLL");
@@ -29,6 +29,7 @@ public class BukkitTestCommand implements ScreamingCommand {
                 .handlePlayerTab((player, args) -> new LinkedList<>())
                 .handleConsoleCommand((console, args) -> console.sendMessage("YOU CANT DO THIS."))
                 .handleSubPlayerCommand("oi", ((player, args) -> player.sendMessage("asda")))
+                .handleSubConsoleCommand("oi", (console, args) -> console.sendMessage("asdasdasd"))
                 .handleSubPlayerTab("oi", ((player, args) -> Collections.emptyList()))
                 .register();
     }

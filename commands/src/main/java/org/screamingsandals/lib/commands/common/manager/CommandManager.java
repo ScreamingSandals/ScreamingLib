@@ -11,4 +11,6 @@ public interface CommandManager {
     boolean isCommandRegistered(String commandName);
 
     void unregisterCommand(String commandName);
+
+    CommandWrapper<?, ?> getRegisteredCommand(String commandName);
 }

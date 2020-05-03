@@ -27,7 +27,7 @@ public class BungeeManager implements CommandManager {
 
     @Override
     public void destroy() {
-        commands.keySet().forEach(this::unregisterCommand);
+        commands.values().forEach(command -> bungeeCommandMap.unregisterCommand(command.getCommandInstance()));
         commands.clear();
 
         subCommands.clear();
@@ -61,5 +61,10 @@ public class BungeeManager implements CommandManager {
         }
 
         commands.remove(commandName);
+    }
+
+    @Override
+    public CommandWrapper<?, ?> getRegisteredCommand(String commandName) {
+        return commands.get(commandName);
     }
 }

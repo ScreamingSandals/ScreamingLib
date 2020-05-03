@@ -8,8 +8,8 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 import org.screamingsandals.lib.commands.Commands;
 import org.screamingsandals.lib.commands.common.commands.SubCommand;
 import org.screamingsandals.lib.commands.common.environment.CommandEnvironment;
-import org.screamingsandals.lib.commands.common.functions.CompleteTab;
-import org.screamingsandals.lib.commands.common.functions.Execute;
+import org.screamingsandals.lib.commands.common.interfaces.CompleteTab;
+import org.screamingsandals.lib.commands.common.interfaces.Execute;
 import org.screamingsandals.lib.commands.common.language.CommandsLanguage;
 import org.screamingsandals.lib.commands.common.wrapper.CommandWrapper;
 
@@ -35,6 +35,7 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
 
     private final CompleteTab.SubCommandComplete<CommandSender> subCommandComplete;
 
+    @SuppressWarnings("unchecked")
     public BungeeCommandWrapper(BungeeCommandBase commandBase) {
         this.commandsLanguage = CommandEnvironment.getInstance().getCommandLanguage();
         this.commandBase = commandBase;

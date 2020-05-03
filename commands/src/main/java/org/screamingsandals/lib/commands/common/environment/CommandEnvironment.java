@@ -5,7 +5,7 @@ import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.commands.bukkit.BukkitManager;
 import org.screamingsandals.lib.commands.bungee.BungeeManager;
 import org.screamingsandals.lib.commands.common.RegisterCommand;
-import org.screamingsandals.lib.commands.common.functions.ScreamingCommand;
+import org.screamingsandals.lib.commands.common.interfaces.ScreamingCommand;
 import org.screamingsandals.lib.commands.common.language.CommandsLanguage;
 import org.screamingsandals.lib.commands.common.language.DefaultLanguage;
 import org.screamingsandals.lib.commands.common.manager.CommandManager;
@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -62,6 +63,7 @@ public abstract class CommandEnvironment {
         final JarFile jarFile = new JarFile(new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()));
         final String packageName = plugin.getClass().getPackage().getName().replaceAll("\\.", "/");
         final List<JarEntry> entries = Collections.list(jarFile.entries());
+        final List<Object> subCommands = new LinkedList<>();
 
         entries.forEach(jarEntry -> {
             try {
@@ -73,20 +75,28 @@ public abstract class CommandEnvironment {
                         .replace("/", ".")
                         .replace(".class", ""));
 
-                if (!ScreamingCommand.class.isAssignableFrom(clazz)) {
-                    return;
-                }
-
-                if (clazz.getDeclaredAnnotation(RegisterCommand.class) == null) {
+                if (!ScreamingCommand.class.isAssignableFrom(clazz) || clazz.getDeclaredAnnotation(RegisterCommand.class) == null) {
                     return;
                 }
 
                 final Constructor<?> constructor = clazz.getConstructor();
                 final Object object = constructor.newInstance();
 
+                if (clazz.getDeclaredAnnotation(RegisterCommand.class).subCommand()) {
+                    subCommands.add(object);
+                }
+
                 object.getClass().getDeclaredMethod("register").invoke(object);
-                System.out.println("Invoked");
             } catch (Exception | NoClassDefFoundError ignored) {
+            }
+        });
+
+
+        subCommands.forEach(subCommand -> {
+            try {
+                subCommand.getClass().getDeclaredMethod("register").invoke(subCommand);
+            } catch (Exception ignored) {
+                Debug.warn("Register method does not exists in the class" + subCommand.getClass().getName());
             }
         });
     }

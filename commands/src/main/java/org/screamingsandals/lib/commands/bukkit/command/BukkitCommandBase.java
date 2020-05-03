@@ -4,8 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.screamingsandals.lib.commands.common.environment.CommandEnvironment;
 import org.screamingsandals.lib.commands.common.commands.CommandBase;
+import org.screamingsandals.lib.commands.common.environment.CommandEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;

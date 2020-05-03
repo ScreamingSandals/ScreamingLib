@@ -26,7 +26,7 @@ public class BukkitManager implements CommandManager {
 
     @Override
     public void destroy() {
-        commands.keySet().forEach(this::unregisterCommand);
+        commands.keySet().forEach(bukkitCommandMap::unregisterCommand);
         commands.clear();
 
         subCommands.clear();
@@ -56,5 +56,10 @@ public class BukkitManager implements CommandManager {
         bukkitCommandMap.unregisterCommand(commandName);
 
         commands.remove(commandName);
+    }
+
+    @Override
+    public CommandWrapper<?, ?> getRegisteredCommand(String commandName) {
+        return commands.get(commandName);
     }
 }

@@ -18,10 +18,10 @@ public class TestBungee extends Plugin {
         CommandBuilder.bungeeCommand().create("shitstorm", "my.awesome.plugin", Arrays.asList("dickfest", "shitfest"))
                 .setDescription("This is a test shitstorm!")
                 .setUsage("/shitstorm")
-                .registerSubCommand("biatch", "my.awesome.plugin.biatch")
-                .registerSubCommand("kill", "my.awesome.plugin.kill")
-                .registerSubCommand("idk", "my.awesome.plugin.idk")
-                .registerSubCommand("oi", "my.awesome.plugin.idk")
+                .addSubCommand("biatch", "my.awesome.plugin.biatch")
+                .addSubCommand("kill", "my.awesome.plugin.kill")
+                .addSubCommand("idk", "my.awesome.plugin.idk")
+                .addSubCommand("oi", "my.awesome.plugin.idk")
                 .handlePlayerCommand((player, args) -> player.sendMessage("oi"))
                 .handleSubConsoleCommand("biatch", (player, args) -> {
                     player.sendMessage("WHAT THE HELLL");
