@@ -8,7 +8,6 @@ import org.screamingsandals.lib.commands.bungee.command.BungeeCommandWrapper;
 import org.screamingsandals.lib.commands.common.commands.SubCommand;
 import org.screamingsandals.lib.commands.common.manager.CommandManager;
 import org.screamingsandals.lib.commands.common.wrapper.CommandWrapper;
-import org.screamingsandals.lib.debug.Debug;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,8 +37,6 @@ public class BungeeManager implements CommandManager {
         final BungeeCommandWrapper bungeeCommandWrapper = (BungeeCommandWrapper) commandWrapper;
         final BungeeCommandBase bungeeCommandBase = bungeeCommandWrapper.getCommandBase();
         final String commandName = bungeeCommandBase.getName();
-
-        Debug.info("Got job! Registering: " + commandName, true);
 
         if (!commands.containsKey(commandName) && !isCommandRegistered(commandName)) {
             bungeeCommandMap.registerCommand(bungeeCommandWrapper.getCommandInstance());
