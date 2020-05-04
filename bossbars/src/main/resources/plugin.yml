@@ -1,6 +1,0 @@
-name: Bossbar-Test
-author: Frantisek Novosad (iamceph) <frantisek@nvsd.dev>
-version: ${project.version}
-api-version: 1.13
-website: https://hryozivot.net
-main: org.screamingsandals.lib.bossbars.test.Test

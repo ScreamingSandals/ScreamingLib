@@ -1,5 +1,0 @@
-name: CommandsTest
-author: Frantisek Novosad (iamceph) <frantisek@nvsd.dev>
-version: ${project.version}
-website: https://hryozivot.net
-main: org.screamingsandals.lib.commands.test.TestBungee
