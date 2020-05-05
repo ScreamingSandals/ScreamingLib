@@ -110,7 +110,7 @@ public abstract class GameFrame implements Serializable {
     }
 
     public void stop() {
-        if (GameCore.fireEvent(new SGameDisablingEvent(this))) {
+        if (!GameCore.fireEvent(new SGameDisablingEvent(this))) {
             return;
         }
 

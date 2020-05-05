@@ -78,7 +78,7 @@ public class GameManager<T extends GameFrame> {
     }
 
     public void registerGame(String gameName, T gameFrame) {
-        if (GameCore.fireEvent(new SGameLoadingEvent(gameFrame))) {
+        if (!GameCore.fireEvent(new SGameLoadingEvent(gameFrame))) {
             return;
         }
 
@@ -98,7 +98,7 @@ public class GameManager<T extends GameFrame> {
             return;
         }
 
-        if (!event && GameCore.fireEvent(new SGameDisabledEvent(gameFrame))) {
+        if (event && !GameCore.fireEvent(new SGameDisabledEvent(gameFrame))) {
             return;
         }
 

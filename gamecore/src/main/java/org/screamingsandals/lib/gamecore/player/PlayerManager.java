@@ -12,7 +12,7 @@ public class PlayerManager {
     private final Map<Player, GamePlayer> registeredPlayers = new HashMap<>();
 
     public GamePlayer registerPlayer(Player player) {
-        if (GameCore.fireEvent(new SPlayerPreRegisterEvent(player))) {
+        if (!GameCore.fireEvent(new SPlayerPreRegisterEvent(player))) {
             return null;
         }
 
