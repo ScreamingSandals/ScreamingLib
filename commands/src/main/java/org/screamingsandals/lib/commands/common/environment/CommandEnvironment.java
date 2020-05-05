@@ -104,8 +104,4 @@ public abstract class CommandEnvironment {
     public static CommandEnvironment getInstance() {
         return instance;
     }
-
-    public static void sendPluginMessage() {
-
-    }
 }
