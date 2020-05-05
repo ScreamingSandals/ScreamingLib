@@ -19,4 +19,5 @@ public class SGameTickEvent extends Event {
     public @NotNull HandlerList getHandlers() {
         return handlerList;
     }
+
 }

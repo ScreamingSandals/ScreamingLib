@@ -20,12 +20,10 @@ public class BukkitSubCommandBase extends SubCommandBase<Player, ConsoleCommandS
     private SubCommand subCommand;
     private BukkitCommandWrapper bukkitCommandWrapper;
 
-    public static BukkitSubCommandBase createSubCommand(String commandName, String name, String permission, List<String> aliases) {
-        final BukkitSubCommandBase bukkitSubCommandBase = new BukkitSubCommandBase();
-
-        bukkitSubCommandBase.setSubCommand(new SubCommand(name, permission, aliases));
-        bukkitSubCommandBase.setBukkitCommandWrapper((BukkitCommandWrapper) bukkitSubCommandBase.getCommandManager().getRegisteredCommand(commandName));
-        return bukkitSubCommandBase;
+    public BukkitSubCommandBase createSubCommand(String commandName, String name, String permission, List<String> aliases) {
+        subCommand = new SubCommand(name, permission, aliases);
+        bukkitCommandWrapper = (BukkitCommandWrapper) commandManager.getRegisteredCommand(commandName);
+        return this;
     }
 
     public BukkitSubCommandBase handleSubPlayerCommand(String name, Execute.PlayerSubCommand<Player> execute) {

@@ -26,8 +26,13 @@ public class GamePlayer {
     private boolean spectator;
 
     public void destroy() {
-        activeGame.leave(this);
-        gameTeam.leave(this);
+        if (gameTeam != null) {
+            gameTeam.leave(this);
+        }
+
+        if (gameTeam != null) {
+            gameTeam.leave(this);
+        }
 
         destroyScoreboards();
     }
@@ -73,11 +78,17 @@ public class GamePlayer {
 
 
     public void destroyScoreboards() {
+        if (activeGame == null) {
+            return;
+        }
         final ScoreboardManager scoreboardManager = activeGame.getScoreboardManager();
         scoreboardManager.deleteSavedScoreboards(this);
     }
 
     public Scoreboard getScoreboard(GameState gameState) {
+        if (activeGame == null) {
+            return null;
+        }
         final ScoreboardManager scoreboardManager = activeGame.getScoreboardManager();
         return scoreboardManager.getSavedScoreboard(this, gameState.getName());
     }

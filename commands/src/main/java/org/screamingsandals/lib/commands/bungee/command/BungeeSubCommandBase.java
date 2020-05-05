@@ -20,12 +20,10 @@ public class BungeeSubCommandBase extends SubCommandBase<ProxiedPlayer, CommandS
     private SubCommand subCommand;
     private BungeeCommandWrapper bungeeCommandWrapper;
 
-    public static BungeeSubCommandBase createSubCommand(String commandName, String name, String permission, List<String> aliases) {
-        final BungeeSubCommandBase bungeeSubCommandBase = new BungeeSubCommandBase();
-
-        bungeeSubCommandBase.setSubCommand(new SubCommand(name, permission, aliases));
-        bungeeSubCommandBase.setBungeeCommandWrapper((BungeeCommandWrapper) bungeeSubCommandBase.getCommandManager().getRegisteredCommand(commandName));
-        return bungeeSubCommandBase;
+    public BungeeSubCommandBase createSubCommand(String commandName, String name, String permission, List<String> aliases) {
+        subCommand = new SubCommand(name, permission, aliases);
+        bungeeCommandWrapper = (BungeeCommandWrapper) commandManager.getRegisteredCommand(commandName);
+        return this;
     }
 
     public BungeeSubCommandBase handleSubPlayerCommand(String name, Execute.PlayerSubCommand<ProxiedPlayer> execute) {
