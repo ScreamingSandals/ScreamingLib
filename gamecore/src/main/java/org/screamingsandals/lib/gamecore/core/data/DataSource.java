@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +16,7 @@ public abstract class DataSource<T> {
       return null;
     }
 
-    public void save(Object object) {
+    public void save(Serializable serializable) {
 
     }
 

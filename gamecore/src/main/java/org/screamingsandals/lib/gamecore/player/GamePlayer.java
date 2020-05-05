@@ -4,9 +4,13 @@ import io.papermc.lib.PaperLib;
 import lombok.Data;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameState;
 import org.screamingsandals.lib.gamecore.core.adapter.LocationAdapter;
+import org.screamingsandals.lib.gamecore.events.player.SPlayerSwitchedToPlayer;
+import org.screamingsandals.lib.gamecore.events.player.SPlayerSwitchedToSpectator;
+import org.screamingsandals.lib.gamecore.events.player.SPlayerTeleportEvent;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
 import org.screamingsandals.lib.gamecore.visuals.ScoreboardManager;
 import org.screamingsandals.lib.scoreboards.scoreboard.Scoreboard;
@@ -15,7 +19,7 @@ import java.util.UUID;
 
 @Data
 public class GamePlayer {
-    private final Player bukkitPlayer;
+    private final Player player;
     private final UUID uuid;
     private GameTeam gameTeam;
     private GameFrame activeGame;
@@ -40,23 +44,31 @@ public class GamePlayer {
     }
 
     public void makePlayer() {
-        //game events
         spectator = false;
-        teleport(gameTeam.getSpawnLocation());
+
+        if (isInGame()) {
+            teleport(gameTeam.getSpawnLocation());
+        } else {
+            //todo - teleport to mainlobby
+        }
+
+        GameCore.fireEvent(new SPlayerSwitchedToPlayer(this));
     }
 
     public void makeSpectator() {
-        //game events
         spectator = true;
         teleport(activeGame.getGameWorld().getSpectatorSpawn());
-    }
 
-    public void teleport(LocationAdapter locationAdapter) {
-        PaperLib.teleportAsync(bukkitPlayer, locationAdapter.getLocation());
+        GameCore.fireEvent(new SPlayerSwitchedToSpectator(this));
     }
 
     public void teleport(Location location) {
-        PaperLib.teleportAsync(bukkitPlayer, location);
+        GameCore.fireEvent(new SPlayerTeleportEvent(this, location, player.getLocation()));
+        PaperLib.teleportAsync(player, location);
+    }
+
+    public void teleport(LocationAdapter locationAdapter) {
+        teleport(locationAdapter.getLocation());
     }
 
 

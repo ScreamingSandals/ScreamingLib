@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.Writer;
 
 public class JsonUtils {
@@ -24,7 +25,7 @@ public class JsonUtils {
         return getGson().fromJson(reader, type);
     }
 
-    public static void serializePretty(Object instance, Writer writer) {
-        getPrettyGson().toJson(instance, writer);
+    public static void serializePretty(Serializable serializable, Writer writer) {
+        getPrettyGson().toJson(serializable, writer);
     }
 }

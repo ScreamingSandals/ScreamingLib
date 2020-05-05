@@ -39,9 +39,11 @@ public class ErrorManager {
         return activeErrors.containsKey(gameFrame);
     }
 
-    public void newError(Entry entry) {
+    public Entry newError(Entry entry) {
         errorLog.add(entry);
         writeError(entry);
+
+        return entry;
     }
 
     public void writeError(Entry entry) {

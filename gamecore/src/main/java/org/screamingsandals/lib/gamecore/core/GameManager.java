@@ -7,6 +7,7 @@ import org.screamingsandals.lib.gamecore.core.data.file.JsonDataSource;
 import org.screamingsandals.lib.gamecore.error.ErrorManager;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisabledEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadingEvent;
+import org.screamingsandals.lib.gamecore.events.core.game.SGameSavedEvent;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -31,7 +32,7 @@ public class GameManager<T extends GameFrame> {
 
     public T loadGame(File gameFile) {
         if (gameFile.exists() && gameFile.isFile()) {
-            JsonDataSource<T> dataSaver = new JsonDataSource<>(gameFile, type);
+            final JsonDataSource<T> dataSaver = new JsonDataSource<>(gameFile, type);
             final T game = dataSaver.load();
 
             if (game.checkIntegrity()) {
@@ -43,6 +44,13 @@ public class GameManager<T extends GameFrame> {
             return game;
         }
         return null;
+    }
+
+    public void saveGame(T gameFrame) {
+        final JsonDataSource<T> dataSaver = new JsonDataSource<>(dataFolder, type);
+        dataSaver.save(gameFrame);
+
+        GameCore.fireEvent(new SGameSavedEvent(gameFrame));
     }
 
     public void loadGames() {

@@ -29,10 +29,10 @@ public class JsonDataSource<T> extends DataSource<T> {
     }
 
     @Override
-    public void save(Object object) {
+    public void save(Serializable serializable) {
         if (checkFile(file)) {
             try (FileWriter writer = new FileWriter(file)) {
-                JsonUtils.serializePretty(object, writer);
+                JsonUtils.serializePretty(serializable, writer);
             } catch (IOException e) {
                 e.printStackTrace();
             }

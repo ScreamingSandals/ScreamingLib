@@ -5,6 +5,7 @@ import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
@@ -36,19 +37,19 @@ public class GameCore {
         errorManager = new ErrorManager();
         playerManager = new PlayerManager();
 
-        Debug.setFallbackName("GameCore");
+        Debug.setFallbackName("GameCore-" + plugin.getName());
     }
 
     public <T extends GameFrame> void load(File gamesFolder, Class<T> tClass) throws GameCoreException {
         try {
             this.gameManager = new GameManager<>(gamesFolder, tClass);
 
-            plugin.getServer().getPluginManager().registerEvents(new PlayerListener(), plugin);
+            registerListeners();
 
             fireEvent(new SCoreLoadedEvent(this));
         } catch (Exception exception) {
-            errorManager.newError(ErrorManager.newEntry(ErrorManager.Type.GAME_CORE_ERROR, exception));
-            throw new GameCoreException("Whoopsie, something went wrong with GameCore!");
+            final var entry = errorManager.newError(ErrorManager.newEntry(ErrorManager.Type.GAME_CORE_ERROR, exception));
+            throw new GameCoreException(entry.getDefaultMessage());
         }
     }
 
@@ -58,6 +59,15 @@ public class GameCore {
         errorManager.destroy();
 
         fireEvent(new SCoreUnloadedEvent(this));
+    }
+
+    private void registerListeners() {
+        registerListener(new PlayerListener());
+    }
+
+    private void registerListener(Listener listener) {
+        final var pluginManager = plugin.getServer().getPluginManager();
+        pluginManager.registerEvents(listener, plugin);
     }
 
     public static GameCore getInstance() {

@@ -15,18 +15,18 @@ public class ScoreboardManager extends BaseManager<GamePlayer> {
 
     @Override
     public void hideAllScoreboards() {
-        getActiveScoreboards().keySet().forEach(gamePlayer -> gamePlayer.getBukkitPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard()));
+        getActiveScoreboards().keySet().forEach(gamePlayer -> gamePlayer.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard()));
     }
 
     @Override
     public void showScoreboard(GamePlayer gamePlayer, Scoreboard scoreboard) {
         super.showScoreboard(gamePlayer, scoreboard);
-        gamePlayer.getBukkitPlayer().setScoreboard(scoreboard.getBukkitScoreboard());
+        gamePlayer.getPlayer().setScoreboard(scoreboard.getBukkitScoreboard());
     }
 
     @Override
     public void hideScoreboard(GamePlayer gamePlayer) {
         super.hideScoreboard(gamePlayer);
-        gamePlayer.getBukkitPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+        gamePlayer.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
     }
 }

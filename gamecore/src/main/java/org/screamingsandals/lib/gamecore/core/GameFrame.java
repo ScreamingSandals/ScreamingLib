@@ -21,12 +21,13 @@ import org.screamingsandals.lib.gamecore.world.GameWorld;
 import org.screamingsandals.lib.gamecore.world.LobbyWorld;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Data
-public abstract class GameFrame {
+public abstract class GameFrame implements Serializable {
     //Game stuff
     private String gameName;
     private String displayedName;
@@ -102,7 +103,8 @@ public abstract class GameFrame {
 
         prepare();
 
-        Preconditions.checkNotNull(gameCycle).runTaskRepeater(0, 1, TimeUnit.SECONDS); //We expect that dev provided valid game-cycle
+        Preconditions.checkNotNull(gameCycle, "GameFrame cannot be null!")
+                .runTaskRepeater(0, 1, TimeUnit.SECONDS); //We expect that dev provided valid game-cycle
 
         GameCore.fireEvent(new SGameLoadedEvent(this));
     }
