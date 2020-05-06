@@ -14,7 +14,7 @@ public abstract class SubCommandBase<T, Y> {
 
     //sub commands
     private Map<SubCommand, Execute.PlayerSubCommand<T>> playerSubExecutors = new HashMap<>();
-    private Map<SubCommand, Execute.ConsoleSubCommand<Y>> consoleSubExecutor = new HashMap<>();
+    private Map<SubCommand, Execute.ConsoleSubCommand<Y>> consoleSubExecutors = new HashMap<>();
     private Map<SubCommand, CompleteTab.PlayerSubCommandComplete<T>> playerSubCompletes = new HashMap<>();
     private Map<SubCommand, CompleteTab.ConsoleSubCommandComplete<Y>> consoleSubCompletes = new HashMap<>();
     private Map<SubCommand, CompleteTab.SubCommandComplete<?>> handleAllSubCompletes = new HashMap<>();
@@ -23,17 +23,23 @@ public abstract class SubCommandBase<T, Y> {
     public void register() {
     }
 
-    public SubCommandBase<T, Y> addSubCommand(String name, String permission, List<String> aliases) {
-        final var subCommand = new SubCommand(name, permission, aliases);
-
+    public SubCommandBase<T, Y> addSubCommand(SubCommand subCommand) {
+        final var name = subCommand.getName();
         if (isSubCommandRegistered(name)) {
             Debug.warn("SubCommand " + name + " is already registered!", true);
             return this;
         }
 
+        Debug.info("Adding subcommand right now! Name: " + name, true);
+
         subCommands.add(subCommand);
 
         return this;
+    }
+
+    public SubCommandBase<T, Y> addSubCommand(String name, String permission, List<String> aliases) {
+        final var subCommand = new SubCommand(name, permission, aliases);
+        return addSubCommand(subCommand);
     }
 
     public SubCommandBase<T, Y> addSubCommand(String name, String permission) {
@@ -59,10 +65,10 @@ public abstract class SubCommandBase<T, Y> {
     }
 
     public SubCommandBase<T, Y> handleSubConsoleCommand(String name, Execute.ConsoleSubCommand<Y> execute) {
-        final SubCommand subCommand = handleAdding(name, consoleSubExecutor);
+        final SubCommand subCommand = handleAdding(name, consoleSubExecutors);
 
         if (subCommand != null) {
-            consoleSubExecutor.put(subCommand, execute);
+            consoleSubExecutors.put(subCommand, execute);
         }
         return this;
     }

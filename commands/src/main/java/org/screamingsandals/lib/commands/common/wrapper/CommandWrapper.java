@@ -4,4 +4,6 @@ public interface CommandWrapper<T, K> {
     T getCommandBase();
 
     K getCommandInstance();
+
+    void reload();
 }

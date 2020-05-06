@@ -64,4 +64,9 @@ public class BungeeManager implements CommandManager {
     public CommandWrapper<?, ?> getRegisteredCommand(String commandName) {
         return commands.get(commandName);
     }
+
+    @Override
+    public void registerSubCommand(CommandWrapper<?, ?> commandWrapper, SubCommand subCommand) {
+        subCommands.put((BungeeCommandWrapper) commandWrapper, subCommand);
+    }
 }

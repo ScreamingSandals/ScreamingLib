@@ -43,6 +43,8 @@ public class BukkitManager implements CommandManager {
         if (!commands.containsKey(commandName) && !isCommandRegistered(commandName)) {
             bukkitCommandMap.registerCommand(bukkitCommandWrapper.getCommandInstance());
             commands.put(commandName, bukkitCommandWrapper);
+        } else {
+            Debug.info("Command " + commandName + " is already registered!", true);
         }
     }
 
@@ -60,6 +62,12 @@ public class BukkitManager implements CommandManager {
 
     @Override
     public CommandWrapper<?, ?> getRegisteredCommand(String commandName) {
+        System.out.println(commands.get(commandName));
         return commands.get(commandName);
+    }
+
+    @Override
+    public void registerSubCommand(CommandWrapper<?, ?> commandWrapper, SubCommand subCommand) {
+        subCommands.put((BukkitCommandWrapper) commandWrapper, subCommand);
     }
 }

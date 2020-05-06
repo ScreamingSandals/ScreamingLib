@@ -13,6 +13,7 @@ import org.screamingsandals.lib.commands.common.interfaces.CompleteTab;
 import org.screamingsandals.lib.commands.common.interfaces.Execute;
 import org.screamingsandals.lib.commands.common.language.CommandsLanguage;
 import org.screamingsandals.lib.commands.common.wrapper.CommandWrapper;
+import org.screamingsandals.lib.debug.Debug;
 
 import java.util.*;
 
@@ -29,12 +30,12 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
     private final CompleteTab.ConsoleCommandComplete<ConsoleCommandSender> consoleCommandComplete;
 
     //Internal shits for handling subcommands
-    private final Map<SubCommand, Execute.PlayerSubCommand<Player>> playerSubExecutors;
-    private final Map<SubCommand, Execute.ConsoleSubCommand<ConsoleCommandSender>> consoleSubExecutors;
-    private final Map<SubCommand, CompleteTab.PlayerSubCommandComplete<Player>> playerSubCompletes;
-    private final Map<SubCommand, CompleteTab.ConsoleSubCommandComplete<ConsoleCommandSender>> consoleSubCompletes;
+    private Map<SubCommand, Execute.PlayerSubCommand<Player>> playerSubExecutors;
+    private Map<SubCommand, Execute.ConsoleSubCommand<ConsoleCommandSender>> consoleSubExecutors;
+    private Map<SubCommand, CompleteTab.PlayerSubCommandComplete<Player>> playerSubCompletes;
+    private Map<SubCommand, CompleteTab.ConsoleSubCommandComplete<ConsoleCommandSender>> consoleSubCompletes;
 
-    private final CompleteTab.SubCommandComplete<CommandSender> subCommandComplete;
+    private CompleteTab.SubCommandComplete<CommandSender> subCommandComplete;
 
     @SuppressWarnings("unchecked")
     public BukkitCommandWrapper(BukkitCommandBase commandBase) {
@@ -50,7 +51,7 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
 
         //SUB-COMMANDS
         playerSubExecutors = commandBase.getPlayerSubExecutors();
-        consoleSubExecutors = commandBase.getConsoleSubExecutor();
+        consoleSubExecutors = commandBase.getConsoleSubExecutors();
         playerSubCompletes = commandBase.getPlayerSubCompletes();
         consoleSubCompletes = commandBase.getConsoleSubCompletes();
 
@@ -285,5 +286,21 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
         }
 
         return toReturn;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void reload() {
+        playerSubExecutors = commandBase.getPlayerSubExecutors();
+        consoleSubExecutors = commandBase.getConsoleSubExecutors();
+        playerSubCompletes = commandBase.getPlayerSubCompletes();
+        consoleSubCompletes = commandBase.getConsoleSubCompletes();
+
+        subCommandComplete = (CompleteTab.SubCommandComplete<CommandSender>) commandBase.getSubCommandComplete();
+
+        Debug.info(String.valueOf(playerSubExecutors.size()));
+        System.out.println(consoleSubExecutors.size());
+        System.out.println(playerSubCompletes.size());
+        System.out.println(consoleSubCompletes.size());
     }
 }

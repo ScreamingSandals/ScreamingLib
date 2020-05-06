@@ -28,12 +28,12 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
     private final CompleteTab.ConsoleCommandComplete<CommandSender> consoleCommandComplete;
 
     //Internal shits for handling subcommands
-    private final Map<SubCommand, Execute.PlayerSubCommand<ProxiedPlayer>> playerSubExecutors;
-    private final Map<SubCommand, Execute.ConsoleSubCommand<CommandSender>> consoleSubExecutors;
-    private final Map<SubCommand, CompleteTab.PlayerSubCommandComplete<ProxiedPlayer>> playerSubCompletes;
-    private final Map<SubCommand, CompleteTab.ConsoleSubCommandComplete<CommandSender>> consoleSubCompletes;
+    private Map<SubCommand, Execute.PlayerSubCommand<ProxiedPlayer>> playerSubExecutors;
+    private Map<SubCommand, Execute.ConsoleSubCommand<CommandSender>> consoleSubExecutors;
+    private Map<SubCommand, CompleteTab.PlayerSubCommandComplete<ProxiedPlayer>> playerSubCompletes;
+    private Map<SubCommand, CompleteTab.ConsoleSubCommandComplete<CommandSender>> consoleSubCompletes;
 
-    private final CompleteTab.SubCommandComplete<CommandSender> subCommandComplete;
+    private CompleteTab.SubCommandComplete<CommandSender> subCommandComplete;
 
     @SuppressWarnings("unchecked")
     public BungeeCommandWrapper(BungeeCommandBase commandBase) {
@@ -49,7 +49,7 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
 
         //SUB-COMMANDS
         playerSubExecutors = commandBase.getPlayerSubExecutors();
-        consoleSubExecutors = commandBase.getConsoleSubExecutor();
+        consoleSubExecutors = commandBase.getConsoleSubExecutors();
         playerSubCompletes = commandBase.getPlayerSubCompletes();
         consoleSubCompletes = commandBase.getConsoleSubCompletes();
 
@@ -269,6 +269,17 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
         }
 
         return toReturn;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void reload() {
+        playerSubExecutors = commandBase.getPlayerSubExecutors();
+        consoleSubExecutors = commandBase.getConsoleSubExecutors();
+        playerSubCompletes = commandBase.getPlayerSubCompletes();
+        consoleSubCompletes = commandBase.getConsoleSubCompletes();
+
+        subCommandComplete = (CompleteTab.SubCommandComplete<CommandSender>) commandBase.getSubCommandComplete();
     }
 
     private abstract static class Builder extends Command implements TabExecutor {

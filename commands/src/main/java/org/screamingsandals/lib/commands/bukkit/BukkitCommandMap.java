@@ -23,7 +23,7 @@ public class BukkitCommandMap {
     }
 
     public void registerCommand(Command command) {
-        Debug.info("Registering command in wrapper: " + command.getName(), true);
+        Debug.info("Registering command in command map: " + command.getName(), true);
         simpleCommandMap.register(command.getName(), command);
         Debug.info("Done!", true);
         Debug.info("Is command really registered? " + isCommandRegistered(command.getName()), true);

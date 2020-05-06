@@ -65,13 +65,13 @@ public abstract class CommandEnvironment {
         final List<JarEntry> entries = Collections.list(jarFile.entries());
         final List<Object> subCommands = new LinkedList<>();
 
-        entries.forEach(jarEntry -> {
+        entries.forEach(entry -> {
             try {
-                if (!jarEntry.getName().endsWith(".class") || !jarEntry.getName().contains(packageName)) {
+                if (!entry.getName().endsWith(".class") || !entry.getName().contains(packageName)) {
                     return;
                 }
 
-                final Class<?> clazz = Class.forName(jarEntry.getName()
+                final Class<?> clazz = Class.forName(entry.getName()
                         .replace("/", ".")
                         .replace(".class", ""));
 
@@ -84,8 +84,10 @@ public abstract class CommandEnvironment {
 
                 if (clazz.getDeclaredAnnotation(RegisterCommand.class).subCommand()) {
                     subCommands.add(object);
+                    return;
                 }
 
+                System.out.println("Registering command " + object.getClass().getName());
                 object.getClass().getDeclaredMethod("register").invoke(object);
             } catch (Exception | NoClassDefFoundError ignored) {
             }
@@ -94,9 +96,10 @@ public abstract class CommandEnvironment {
 
         subCommands.forEach(subCommand -> {
             try {
+                System.out.println("Registering subCommand " + subCommand.getClass().getName());
                 subCommand.getClass().getDeclaredMethod("register").invoke(subCommand);
-            } catch (Exception ignored) {
-                Debug.warn("Register method does not exists in the class" + subCommand.getClass().getName());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }

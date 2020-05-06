@@ -95,6 +95,10 @@ public class Language extends I {
         }
     }
 
+    public void setCustomPrefix(String customPrefix) {
+        this.customPrefix = Utils.colorize(customPrefix);
+    }
+
     private void initializeFileStorage() {
         fileStorage = new FileStorage(plugin);
 
