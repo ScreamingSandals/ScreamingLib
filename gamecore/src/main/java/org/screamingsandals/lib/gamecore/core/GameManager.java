@@ -13,6 +13,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,5 +125,13 @@ public class GameManager<T extends GameFrame> {
             tr.printStackTrace();
         }
         return null;
+    }
+
+    public Collection<T> getRegisteredGames() {
+        return registeredGames.values();
+    }
+
+    public Map<String, T> getRegisteredGamesMap() {
+        return registeredGames;
     }
 }

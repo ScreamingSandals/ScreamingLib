@@ -81,6 +81,7 @@ public class SubCommandBuilder {
             commandBase.getConsoleSubCompletes().put(subCommand, complete);
             return this;
         }
+
     }
 
     @Data

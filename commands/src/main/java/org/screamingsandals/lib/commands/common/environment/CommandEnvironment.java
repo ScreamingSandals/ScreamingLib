@@ -87,23 +87,23 @@ public abstract class CommandEnvironment {
                     return;
                 }
 
-                System.out.println("Registering command " + object.getClass().getName());
-                object.getClass().getDeclaredMethod("register").invoke(object);
-            } catch (Exception | NoClassDefFoundError ignored) {
+                invoke(object);
+            } catch (Exception ignored) {
             }
         });
 
-
-        subCommands.forEach(subCommand -> {
-            try {
-                subCommand.getClass().getDeclaredMethod("register").invoke(subCommand);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        subCommands.forEach(this::invoke);
     }
 
     public static CommandEnvironment getInstance() {
         return instance;
+    }
+
+    private void invoke(Object object) {
+        try {
+            object.getClass().getDeclaredMethod("register").invoke(object);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
