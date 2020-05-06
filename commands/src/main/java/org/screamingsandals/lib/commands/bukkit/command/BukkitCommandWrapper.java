@@ -13,7 +13,6 @@ import org.screamingsandals.lib.commands.common.interfaces.CompleteTab;
 import org.screamingsandals.lib.commands.common.interfaces.Execute;
 import org.screamingsandals.lib.commands.common.language.CommandsLanguage;
 import org.screamingsandals.lib.commands.common.wrapper.CommandWrapper;
-import org.screamingsandals.lib.debug.Debug;
 
 import java.util.*;
 
@@ -23,39 +22,10 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
     private final BukkitCommandBase commandBase;
     private Command commandInstance;
 
-    //Internal shits for handling commands
-    private final Execute.PlayerCommand<Player> playerCommand;
-    private final Execute.ConsoleCommand<ConsoleCommandSender> consoleCommand;
-    private final CompleteTab.PlayerCommandComplete<Player> playerCommandComplete;
-    private final CompleteTab.ConsoleCommandComplete<ConsoleCommandSender> consoleCommandComplete;
-
-    //Internal shits for handling subcommands
-    private Map<SubCommand, Execute.PlayerSubCommand<Player>> playerSubExecutors;
-    private Map<SubCommand, Execute.ConsoleSubCommand<ConsoleCommandSender>> consoleSubExecutors;
-    private Map<SubCommand, CompleteTab.PlayerSubCommandComplete<Player>> playerSubCompletes;
-    private Map<SubCommand, CompleteTab.ConsoleSubCommandComplete<ConsoleCommandSender>> consoleSubCompletes;
-
-    private CompleteTab.SubCommandComplete<CommandSender> subCommandComplete;
-
-    @SuppressWarnings("unchecked")
     public BukkitCommandWrapper(BukkitCommandBase commandBase) {
         this.commandsLanguage = CommandEnvironment.getInstance().getCommandLanguage();
         this.commandBase = commandBase;
         commandInstance = createCommandInstance();
-
-        //COMMANDS
-        playerCommand = commandBase.getPlayerCommandExecutor();
-        playerCommandComplete = commandBase.getPlayerCommandComplete();
-        consoleCommand = commandBase.getConsoleCommandExecutor();
-        consoleCommandComplete = commandBase.getConsoleCommandComplete();
-
-        //SUB-COMMANDS
-        playerSubExecutors = commandBase.getPlayerSubExecutors();
-        consoleSubExecutors = commandBase.getConsoleSubExecutors();
-        playerSubCompletes = commandBase.getPlayerSubCompletes();
-        consoleSubCompletes = commandBase.getConsoleSubCompletes();
-
-        subCommandComplete = (CompleteTab.SubCommandComplete<CommandSender>) commandBase.getSubCommandComplete();
     }
 
     public Command createCommandInstance() {
@@ -98,12 +68,14 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
                 return true;
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             @NotNull
             public List<String> tabComplete(@NotNull CommandSender commandSender, @NotNull String label, @NotNull String[] args) {
+                final var subComplete = (CompleteTab.SubCommandComplete<CommandSender>) commandBase.getSubCommandComplete();
                 try {
-                    if (subCommandComplete != null) {
-                        return subCommandComplete.complete(commandSender, Arrays.asList(args));
+                    if (subComplete != null) {
+                        return subComplete.complete(commandSender, Arrays.asList(args));
                     }
 
                     if (commandSender instanceof Player) {
@@ -127,17 +99,19 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
     }
 
     private boolean handlePlayerCommand(Player player, String[] args) {
-        List<String> convertedArgs = Arrays.asList(args);
+        final var command = commandBase.getPlayerCommandExecutor();
+        final var subExecutors = commandBase.getPlayerSubExecutors();
+        final List<String> convertedArgs = Arrays.asList(args);
 
         if (args.length == 0) {
-            if (playerCommand == null) {
+            if (command == null) {
                 return false;
             }
 
-            playerCommand.execute(player, convertedArgs);
+            command.execute(player, convertedArgs);
         }
 
-        if (args.length >= 1 && playerSubExecutors.keySet().size() <= 0) {
+        if (args.length >= 1 && subExecutors.keySet().size() <= 0) {
             commandsLanguage.sendMessage(player, CommandsLanguage.LangKey.COMMAND_DOES_NOT_EXISTS);
             return false;
         }
@@ -155,7 +129,7 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
                 return true;
             }
 
-            final Execute.PlayerSubCommand<Player> playerSubCommand = playerSubExecutors.get(subCommand);
+            final Execute.PlayerSubCommand<Player> playerSubCommand = subExecutors.get(subCommand);
             if (playerSubCommand == null) {
                 return false;
             }
@@ -166,17 +140,19 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
     }
 
     private boolean handleConsoleCommand(ConsoleCommandSender console, String[] args) {
-        List<String> convertedArgs = Arrays.asList(args);
+        final var command = commandBase.getConsoleCommandExecutor();
+        final var subExecutors = commandBase.getConsoleSubExecutors();
+        final List<String> convertedArgs = Arrays.asList(args);
 
         if (args.length == 0) {
-            if (consoleCommand == null) {
+            if (command == null) {
                 return false;
             }
 
-            consoleCommand.execute(console, convertedArgs);
+            command.execute(console, convertedArgs);
         }
 
-        if (args.length >= 1 && playerSubExecutors.keySet().size() <= 0) {
+        if (args.length >= 1 && subExecutors.keySet().size() <= 0) {
             commandsLanguage.sendMessage(console, CommandsLanguage.LangKey.COMMAND_DOES_NOT_EXISTS);
             return false;
         }
@@ -189,7 +165,7 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
                 return false;
             }
 
-            final Execute.ConsoleSubCommand<ConsoleCommandSender> consoleSubCommand = consoleSubExecutors.get(subCommand);
+            final Execute.ConsoleSubCommand<ConsoleCommandSender> consoleSubCommand = subExecutors.get(subCommand);
             if (consoleSubCommand == null) {
                 return false;
             }
@@ -200,22 +176,24 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
     }
 
     private List<String> handlePlayerTab(Player player, String[] args) {
+        final var complete = commandBase.getPlayerCommandComplete();
+        final var subCompletes = commandBase.getPlayerSubCompletes();
         final List<String> convertedArgs = Arrays.asList(args);
         final List<String> toReturn = new LinkedList<>();
 
         if (args.length == 0) {
-            if (playerCommandComplete == null) {
+            if (complete == null) {
                 return toReturn;
             }
 
-            toReturn.addAll(playerCommandComplete.complete(player, convertedArgs));
+            toReturn.addAll(complete.complete(player, convertedArgs));
         }
 
         if (args.length == 1) {
             final String subCommandName = args[0].toLowerCase();
             final SubCommand subCommand = commandBase.getSubCommand(subCommandName);
 
-            for (SubCommand found : playerSubExecutors.keySet()) {
+            for (SubCommand found : subCompletes.keySet()) {
                 if (subCommandName.startsWith(found.getName())) {
                     if (player.hasPermission(subCommand.getPermission())) {
                         toReturn.add(found.getName());
@@ -234,7 +212,7 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
                 return toReturn;
             }
 
-            final CompleteTab.PlayerSubCommandComplete<Player> playerComplete = playerSubCompletes.get(subCommand);
+            final CompleteTab.PlayerSubCommandComplete<Player> playerComplete = subCompletes.get(subCommand);
             if (playerComplete == null) {
                 return toReturn;
             }
@@ -246,21 +224,23 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
     }
 
     private List<String> handleConsoleComplete(ConsoleCommandSender console, String[] args) {
+        final var complete = commandBase.getConsoleCommandComplete();
+        final var subCompletes = commandBase.getConsoleSubCompletes();
         final List<String> convertedArgs = Arrays.asList(args);
         final List<String> toReturn = new LinkedList<>();
 
         if (args.length == 0) {
-            if (consoleCommandComplete == null) {
+            if (complete == null) {
                 return toReturn;
             }
 
-            toReturn.addAll(consoleCommandComplete.complete(console, convertedArgs));
+            toReturn.addAll(complete.complete(console, convertedArgs));
         }
 
         if (args.length == 1) {
             final String subCommandName = args[0].toLowerCase();
 
-            for (SubCommand found : playerSubExecutors.keySet()) {
+            for (SubCommand found : subCompletes.keySet()) {
                 if (subCommandName.startsWith(found.getName())) {
                     toReturn.add(found.getName());
                 }
@@ -277,7 +257,7 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
                 return toReturn;
             }
 
-            final CompleteTab.ConsoleSubCommandComplete<ConsoleCommandSender> consoleSubCommandComplete = consoleSubCompletes.get(subCommand);
+            final CompleteTab.ConsoleSubCommandComplete<ConsoleCommandSender> consoleSubCommandComplete = subCompletes.get(subCommand);
             if (consoleSubCommandComplete == null) {
                 return toReturn;
             }
@@ -286,21 +266,5 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
         }
 
         return toReturn;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void reload() {
-        playerSubExecutors = commandBase.getPlayerSubExecutors();
-        consoleSubExecutors = commandBase.getConsoleSubExecutors();
-        playerSubCompletes = commandBase.getPlayerSubCompletes();
-        consoleSubCompletes = commandBase.getConsoleSubCompletes();
-
-        subCommandComplete = (CompleteTab.SubCommandComplete<CommandSender>) commandBase.getSubCommandComplete();
-
-        Debug.info(String.valueOf(playerSubExecutors.size()));
-        System.out.println(consoleSubExecutors.size());
-        System.out.println(playerSubCompletes.size());
-        System.out.println(consoleSubCompletes.size());
     }
 }

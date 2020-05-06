@@ -21,39 +21,10 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
     private final BungeeCommandBase commandBase;
     private Command commandInstance;
 
-    //Internal shits for handling commands
-    private final Execute.PlayerCommand<ProxiedPlayer> playerCommand;
-    private final Execute.ConsoleCommand<CommandSender> consoleCommand;
-    private final CompleteTab.PlayerCommandComplete<ProxiedPlayer> playerCommandComplete;
-    private final CompleteTab.ConsoleCommandComplete<CommandSender> consoleCommandComplete;
-
-    //Internal shits for handling subcommands
-    private Map<SubCommand, Execute.PlayerSubCommand<ProxiedPlayer>> playerSubExecutors;
-    private Map<SubCommand, Execute.ConsoleSubCommand<CommandSender>> consoleSubExecutors;
-    private Map<SubCommand, CompleteTab.PlayerSubCommandComplete<ProxiedPlayer>> playerSubCompletes;
-    private Map<SubCommand, CompleteTab.ConsoleSubCommandComplete<CommandSender>> consoleSubCompletes;
-
-    private CompleteTab.SubCommandComplete<CommandSender> subCommandComplete;
-
-    @SuppressWarnings("unchecked")
     public BungeeCommandWrapper(BungeeCommandBase commandBase) {
         this.commandsLanguage = CommandEnvironment.getInstance().getCommandLanguage();
         this.commandBase = commandBase;
         commandInstance = createCommandInstance();
-
-        //COMMANDS
-        playerCommand = commandBase.getPlayerCommandExecutor();
-        playerCommandComplete = commandBase.getPlayerCommandComplete();
-        consoleCommand = commandBase.getConsoleCommandExecutor();
-        consoleCommandComplete = commandBase.getConsoleCommandComplete();
-
-        //SUB-COMMANDS
-        playerSubExecutors = commandBase.getPlayerSubExecutors();
-        consoleSubExecutors = commandBase.getConsoleSubExecutors();
-        playerSubCompletes = commandBase.getPlayerSubCompletes();
-        consoleSubCompletes = commandBase.getConsoleSubCompletes();
-
-        subCommandComplete = (CompleteTab.SubCommandComplete<CommandSender>) commandBase.getSubCommandComplete();
     }
 
     public Command createCommandInstance() {
@@ -93,10 +64,12 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
                 }
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-                if (subCommandComplete != null) {
-                    return subCommandComplete.complete(sender, Arrays.asList(args));
+                final var subComplete = (CompleteTab.SubCommandComplete<CommandSender>) commandBase.getSubCommandComplete();
+                if (subComplete != null) {
+                    return subComplete.complete(sender, Arrays.asList(args));
                 }
 
                 if (sender instanceof ProxiedPlayer) {
@@ -110,17 +83,19 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
     }
 
     private boolean handlePlayerCommand(ProxiedPlayer player, String[] args) {
-        List<String> convertedArgs = Arrays.asList(args);
+        final var command = commandBase.getPlayerCommandExecutor();
+        final var subExecutors = commandBase.getPlayerSubExecutors();
+        final List<String> convertedArgs = Arrays.asList(args);
 
         if (args.length == 0) {
-            if (playerCommand == null) {
+            if (command == null) {
                 return false;
             }
 
-            playerCommand.execute(player, convertedArgs);
+            command.execute(player, convertedArgs);
         }
 
-        if (args.length >= 1 && playerSubExecutors.keySet().size() <= 0) {
+        if (args.length >= 1 && subExecutors.keySet().size() <= 0) {
             commandsLanguage.sendMessage(player, CommandsLanguage.LangKey.COMMAND_DOES_NOT_EXISTS);
             return false;
         }
@@ -138,7 +113,7 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
                 return true;
             }
 
-            final Execute.PlayerSubCommand<ProxiedPlayer> playerSubCommand = playerSubExecutors.get(subCommand);
+            final Execute.PlayerSubCommand<ProxiedPlayer> playerSubCommand = subExecutors.get(subCommand);
             if (playerSubCommand == null) {
                 return false;
             }
@@ -149,17 +124,19 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
     }
 
     private boolean handleConsoleCommand(CommandSender console, String[] args) {
-        List<String> convertedArgs = Arrays.asList(args);
+        final var command = commandBase.getConsoleCommandExecutor();
+        final var subExecutors = commandBase.getConsoleSubExecutors();
+        final List<String> convertedArgs = Arrays.asList(args);
 
         if (args.length == 0) {
-            if (consoleCommand == null) {
+            if (command == null) {
                 return false;
             }
 
-            consoleCommand.execute(console, convertedArgs);
+            command.execute(console, convertedArgs);
         }
 
-        if (args.length >= 1 && playerSubExecutors.keySet().size() <= 0) {
+        if (args.length >= 1 && subExecutors.keySet().size() <= 0) {
             commandsLanguage.sendMessage(console, CommandsLanguage.LangKey.COMMAND_DOES_NOT_EXISTS);
             return false;
         }
@@ -172,7 +149,7 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
                 return false;
             }
 
-            final Execute.ConsoleSubCommand<CommandSender> consoleSubCommand = consoleSubExecutors.get(subCommand);
+            final Execute.ConsoleSubCommand<CommandSender> consoleSubCommand = subExecutors.get(subCommand);
             if (consoleSubCommand == null) {
                 return false;
             }
@@ -183,22 +160,24 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
     }
 
     private List<String> handlePlayerTab(ProxiedPlayer player, String[] args) {
+        final var complete = commandBase.getPlayerCommandComplete();
+        final var subCompletes = commandBase.getPlayerSubCompletes();
         final List<String> convertedArgs = Arrays.asList(args);
         final List<String> toReturn = new LinkedList<>();
 
         if (args.length == 0) {
-            if (playerCommandComplete == null) {
+            if (complete == null) {
                 return toReturn;
             }
 
-            toReturn.addAll(playerCommandComplete.complete(player, convertedArgs));
+            toReturn.addAll(complete.complete(player, convertedArgs));
         }
 
         if (args.length == 1) {
             final String subCommandName = args[0].toLowerCase();
             final SubCommand subCommand = commandBase.getSubCommand(subCommandName);
 
-            for (SubCommand found : playerSubExecutors.keySet()) {
+            for (SubCommand found : subCompletes.keySet()) {
                 if (subCommandName.startsWith(found.getName())) {
                     if (player.hasPermission(subCommand.getPermission())) {
                         toReturn.add(found.getName());
@@ -217,7 +196,7 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
                 return toReturn;
             }
 
-            final CompleteTab.PlayerSubCommandComplete<ProxiedPlayer> playerComplete = playerSubCompletes.get(subCommand);
+            final CompleteTab.PlayerSubCommandComplete<ProxiedPlayer> playerComplete = subCompletes.get(subCommand);
             if (playerComplete == null) {
                 return toReturn;
             }
@@ -229,21 +208,23 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
     }
 
     private List<String> handleConsoleComplete(CommandSender console, String[] args) {
+        final var complete = commandBase.getConsoleCommandComplete();
+        final var subCompletes = commandBase.getConsoleSubCompletes();
         final List<String> convertedArgs = Arrays.asList(args);
         final List<String> toReturn = new LinkedList<>();
 
         if (args.length == 0) {
-            if (consoleCommandComplete == null) {
+            if (complete == null) {
                 return toReturn;
             }
 
-            toReturn.addAll(consoleCommandComplete.complete(console, convertedArgs));
+            toReturn.addAll(complete.complete(console, convertedArgs));
         }
 
         if (args.length == 1) {
             final String subCommandName = args[0].toLowerCase();
 
-            for (SubCommand found : playerSubExecutors.keySet()) {
+            for (SubCommand found : subCompletes.keySet()) {
                 if (subCommandName.startsWith(found.getName())) {
                     toReturn.add(found.getName());
                 }
@@ -260,7 +241,7 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
                 return toReturn;
             }
 
-            final CompleteTab.ConsoleSubCommandComplete<CommandSender> consoleSubCommandComplete = consoleSubCompletes.get(subCommand);
+            final CompleteTab.ConsoleSubCommandComplete<CommandSender> consoleSubCommandComplete = subCompletes.get(subCommand);
             if (consoleSubCommandComplete == null) {
                 return toReturn;
             }
@@ -269,17 +250,6 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
         }
 
         return toReturn;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void reload() {
-        playerSubExecutors = commandBase.getPlayerSubExecutors();
-        consoleSubExecutors = commandBase.getConsoleSubExecutors();
-        playerSubCompletes = commandBase.getPlayerSubCompletes();
-        consoleSubCompletes = commandBase.getConsoleSubCompletes();
-
-        subCommandComplete = (CompleteTab.SubCommandComplete<CommandSender>) commandBase.getSubCommandComplete();
     }
 
     private abstract static class Builder extends Command implements TabExecutor {

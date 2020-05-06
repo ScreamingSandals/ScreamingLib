@@ -96,7 +96,6 @@ public abstract class CommandEnvironment {
 
         subCommands.forEach(subCommand -> {
             try {
-                System.out.println("Registering subCommand " + subCommand.getClass().getName());
                 subCommand.getClass().getDeclaredMethod("register").invoke(subCommand);
             } catch (Exception e) {
                 e.printStackTrace();

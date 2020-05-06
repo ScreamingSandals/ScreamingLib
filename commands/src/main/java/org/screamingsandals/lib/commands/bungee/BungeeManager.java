@@ -5,9 +5,9 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.screamingsandals.lib.commands.bungee.command.BungeeCommandBase;
 import org.screamingsandals.lib.commands.bungee.command.BungeeCommandWrapper;
-import org.screamingsandals.lib.commands.common.commands.SubCommand;
 import org.screamingsandals.lib.commands.common.manager.CommandManager;
 import org.screamingsandals.lib.commands.common.wrapper.CommandWrapper;
+import org.screamingsandals.lib.debug.Debug;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +16,7 @@ import java.util.Map;
 public class BungeeManager implements CommandManager {
     private final Plugin plugin;
     private final BungeeCommandMap bungeeCommandMap;
-    private Map<String, BungeeCommandWrapper> commands = new HashMap<>();
-    private HashMap<BungeeCommandWrapper, SubCommand> subCommands = new HashMap<>();
+    private final Map<String, BungeeCommandWrapper> commands = new HashMap<>();
 
     public BungeeManager(Plugin plugin) {
         this.plugin = plugin;
@@ -28,8 +27,6 @@ public class BungeeManager implements CommandManager {
     public void destroy() {
         commands.values().forEach(command -> bungeeCommandMap.unregisterCommand(command.getCommandInstance()));
         commands.clear();
-
-        subCommands.clear();
     }
 
     @Override
@@ -38,10 +35,13 @@ public class BungeeManager implements CommandManager {
         final BungeeCommandBase bungeeCommandBase = bungeeCommandWrapper.getCommandBase();
         final String commandName = bungeeCommandBase.getName();
 
-        if (!commands.containsKey(commandName) && !isCommandRegistered(commandName)) {
-            bungeeCommandMap.registerCommand(bungeeCommandWrapper.getCommandInstance());
-            commands.put(commandName, bungeeCommandWrapper);
+        if (isCommandRegistered(commandName) || commands.containsKey(commandName)) {
+            Debug.info("Command " + commandName + " is already registered!", true);
+            return;
         }
+
+        bungeeCommandMap.registerCommand(bungeeCommandWrapper.getCommandInstance());
+        commands.put(commandName, bungeeCommandWrapper);
     }
 
     @Override
@@ -63,10 +63,5 @@ public class BungeeManager implements CommandManager {
     @Override
     public CommandWrapper<?, ?> getRegisteredCommand(String commandName) {
         return commands.get(commandName);
-    }
-
-    @Override
-    public void registerSubCommand(CommandWrapper<?, ?> commandWrapper, SubCommand subCommand) {
-        subCommands.put((BungeeCommandWrapper) commandWrapper, subCommand);
     }
 }

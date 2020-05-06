@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Data
 public abstract class CommandBase<T, Y> extends SubCommandBase<T, Y> {
     private String name;

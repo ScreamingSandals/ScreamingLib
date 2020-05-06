@@ -23,10 +23,7 @@ public class BukkitCommandMap {
     }
 
     public void registerCommand(Command command) {
-        Debug.info("Registering command in command map: " + command.getName(), true);
         simpleCommandMap.register(command.getName(), command);
-        Debug.info("Done!", true);
-        Debug.info("Is command really registered? " + isCommandRegistered(command.getName()), true);
     }
 
     /**
@@ -51,7 +48,7 @@ public class BukkitCommandMap {
     }
 
     private SimpleCommandMap createCommandMapInstance() {
-        Server server = plugin.getServer();
+        final Server server = plugin.getServer();
         if (PaperLib.isPaper()) {
             return (SimpleCommandMap) server.getCommandMap();
         } else {

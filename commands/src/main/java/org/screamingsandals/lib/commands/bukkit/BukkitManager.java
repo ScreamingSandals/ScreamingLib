@@ -4,7 +4,6 @@ import lombok.Data;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.commands.bukkit.command.BukkitCommandBase;
 import org.screamingsandals.lib.commands.bukkit.command.BukkitCommandWrapper;
-import org.screamingsandals.lib.commands.common.commands.SubCommand;
 import org.screamingsandals.lib.commands.common.manager.CommandManager;
 import org.screamingsandals.lib.commands.common.wrapper.CommandWrapper;
 import org.screamingsandals.lib.debug.Debug;
@@ -16,8 +15,7 @@ import java.util.Map;
 public class BukkitManager implements CommandManager {
     private final Plugin plugin;
     private final BukkitCommandMap bukkitCommandMap;
-    private Map<String, BukkitCommandWrapper> commands = new HashMap<>();
-    private HashMap<BukkitCommandWrapper, SubCommand> subCommands = new HashMap<>();
+    private final Map<String, BukkitCommandWrapper> commands = new HashMap<>();
 
     public BukkitManager(Plugin plugin) {
         this.plugin = plugin;
@@ -28,8 +26,6 @@ public class BukkitManager implements CommandManager {
     public void destroy() {
         commands.keySet().forEach(bukkitCommandMap::unregisterCommand);
         commands.clear();
-
-        subCommands.clear();
     }
 
     @Override
@@ -38,14 +34,13 @@ public class BukkitManager implements CommandManager {
         final BukkitCommandBase bukkitCommandBase = bukkitCommandWrapper.getCommandBase();
         final String commandName = bukkitCommandBase.getName();
 
-        Debug.info("Got job! Registering: " + commandName, true);
-
-        if (!commands.containsKey(commandName) && !isCommandRegistered(commandName)) {
-            bukkitCommandMap.registerCommand(bukkitCommandWrapper.getCommandInstance());
-            commands.put(commandName, bukkitCommandWrapper);
-        } else {
+        if (isCommandRegistered(commandName) || commands.containsKey(commandName)) {
             Debug.info("Command " + commandName + " is already registered!", true);
+            return;
         }
+
+        bukkitCommandMap.registerCommand(bukkitCommandWrapper.getCommandInstance());
+        commands.put(commandName, bukkitCommandWrapper);
     }
 
     @Override
@@ -56,18 +51,11 @@ public class BukkitManager implements CommandManager {
     @Override
     public void unregisterCommand(String commandName) {
         bukkitCommandMap.unregisterCommand(commandName);
-
         commands.remove(commandName);
     }
 
     @Override
     public CommandWrapper<?, ?> getRegisteredCommand(String commandName) {
-        System.out.println(commands.get(commandName));
         return commands.get(commandName);
-    }
-
-    @Override
-    public void registerSubCommand(CommandWrapper<?, ?> commandWrapper, SubCommand subCommand) {
-        subCommands.put((BukkitCommandWrapper) commandWrapper, subCommand);
     }
 }

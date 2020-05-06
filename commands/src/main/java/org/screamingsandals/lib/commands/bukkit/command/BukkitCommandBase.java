@@ -10,7 +10,7 @@ import org.screamingsandals.lib.commands.common.environment.CommandEnvironment;
 import java.util.ArrayList;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class BukkitCommandBase extends CommandBase<Player, ConsoleCommandSender> {
 

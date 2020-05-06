@@ -30,10 +30,7 @@ public abstract class SubCommandBase<T, Y> {
             return this;
         }
 
-        Debug.info("Adding subcommand right now! Name: " + name, true);
-
         subCommands.add(subCommand);
-
         return this;
     }
 
