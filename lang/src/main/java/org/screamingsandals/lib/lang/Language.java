@@ -32,22 +32,27 @@ public class Language extends I {
     private HashMap<String, Storage> availableLanguages = new HashMap<>();
 
     public Language(Object plugin) {
-        this(plugin, null, null);
+        this(plugin, null, null, "");
     }
 
     public Language(Object plugin, String globalLanguage) {
-        this(plugin, globalLanguage, null);
+        this(plugin, globalLanguage, null, "");
+    }
+
+    public Language(Object plugin, String globalLanguage, String customPrefix) {
+        this(plugin, globalLanguage, null, customPrefix);
     }
 
     public Language(Object plugin, File customDataFolder) {
-        this(plugin, null, customDataFolder);
+        this(plugin, null, customDataFolder, "");
     }
 
-    public Language(Object plugin, String globalLanguage, File customDataFolder) {
+    public Language(Object plugin, String globalLanguage, File customDataFolder, String customPrefix) {
         instance = this;
         this.plugin = plugin;
         this.globalLanguage = globalLanguage;
         this.customDataFolder = customDataFolder;
+        this.customPrefix = customPrefix;
 
         initializeFileStorage();
     }
@@ -95,10 +100,6 @@ public class Language extends I {
         }
     }
 
-    public void setCustomPrefix(String customPrefix) {
-        this.customPrefix = Utils.colorize(customPrefix);
-    }
-
     private void initializeFileStorage() {
         fileStorage = new FileStorage(plugin);
 
@@ -106,6 +107,7 @@ public class Language extends I {
             Utils.sendPluginMessage(Utils.colorize("&cNo language file was found for plugin &e%pluginName%&c!"));
             return;
         }
+
         globalStorage = getStorage(globalLanguage);
 
         Utils.sendPluginMessage(Utils.colorize("&aSuccessfully loaded messages for plugin &e%pluginName%&a!"));

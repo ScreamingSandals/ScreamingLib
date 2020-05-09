@@ -1,23 +1,47 @@
 package org.screamingsandals.lib.gamecore.config;
 
-import org.screamingsandals.lib.config.ConfigAdapter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.screamingsandals.lib.gamecore.GameCore;
+import org.screamingsandals.lib.gamecore.core.GameFrame;
+import org.screamingsandals.lib.gamecore.error.ErrorManager;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class GameConfig implements ConfigAdapter {
-    private Map<String, Object> gameValues = new HashMap<>();
+@NoArgsConstructor
+public class GameConfig {
+    private transient GameFrame gameFrame;
+    private final Map<String, ValueHolder<?>> gameValues = new HashMap<>();
+
+    public GameConfig(GameFrame gameFrame) {
+        this.gameFrame = gameFrame;
+    }
 
     public void buildDefaults() {
+        gameValues.put(DefaultKeys.GAME_TIME, ValueHolder.get(DefaultKeys.GAME_TIME, 3600));
+        gameValues.put(DefaultKeys.LOBBY_TIME, ValueHolder.get(DefaultKeys.LOBBY_TIME, 60));
+        gameValues.put(DefaultKeys.START_TIME, ValueHolder.get(DefaultKeys.START_TIME, 10));
+        gameValues.put(DefaultKeys.DEATHMATCH_TIME, ValueHolder.get(DefaultKeys.DEATHMATCH_TIME, 600));
+        gameValues.put(DefaultKeys.END_GAME_TIME, ValueHolder.get(DefaultKeys.END_GAME_TIME, 5));
 
+        gameFrame.setGameTime(getValue(DefaultKeys.GAME_TIME));
+        gameFrame.setLobbyTime(getValue(DefaultKeys.LOBBY_TIME));
+        gameFrame.setStartTime(getValue(DefaultKeys.START_TIME));
+        gameFrame.setDeathmatchTime(getValue(DefaultKeys.DEATHMATCH_TIME));
+        gameFrame.setEndTime(getValue(DefaultKeys.END_GAME_TIME));
     }
 
-    public interface DefaultKey {
+    public interface DefaultKeys {
+        String LOBBY_TIME = "lobby_time";
+        String START_TIME = "start_time";
         String GAME_TIME = "game_time";
+        String DEATHMATCH_TIME = "deathmatch_time";
+        String END_GAME_TIME = "end_game_time";
     }
 
-    public void registerValue(String key, Object value) {
+    public void registerValue(String key, ValueHolder<?> value) {
         gameValues.putIfAbsent(key, value);
     }
 
@@ -25,157 +49,54 @@ public class GameConfig implements ConfigAdapter {
         gameValues.remove(key);
     }
 
-    @Override
-    public Object get(String key) {
+    public void replaceValue(String key, ValueHolder<?> valueHolder) {
+        gameValues.remove(key);
+        gameValues.put(key, valueHolder);
+    }
+
+    public ValueHolder<?> getValueHolder(String key) {
         return gameValues.get(key);
     }
 
-    @Override
-    public String getString(String key) {
-        final var value = gameValues.get(key);
-
-        if (value instanceof String) {
-            return (String) value;
+    @SuppressWarnings("unchecked")
+    public <T> T getValue(String key) {
+        try {
+            return (T) gameValues.get(key).getValue();
+        } catch (Exception e) {
+            GameCore.getErrorManager().writeError(new ErrorManager.Entry(ErrorManager.Type.GAME_CONFIG_ERROR, e), true);
         }
-
         return null;
     }
 
-    @Override
-    public String getString(String key, String def) {
-        final var value = gameValues.get(key);
-
-        if (value instanceof String) {
-            return (String) value;
+    @SuppressWarnings("unchecked")
+    public <T> T getValue(String key, T def) {
+        try {
+            return (T) gameValues.get(key).getValue();
+        } catch (Exception e) {
+            GameCore.getErrorManager().writeError(new ErrorManager.Entry(ErrorManager.Type.GAME_CONFIG_ERROR, e), true);
         }
-
         return def;
     }
 
-    @Override
-    public boolean getBoolean(String key) {
-        final var value = gameValues.get(key);
+    public Map<String, Object> getGameValues() {
+        return new HashMap<>(gameValues);
+    }
 
-        if (value instanceof Boolean) {
-            return (Boolean) value;
+    @Data
+    @AllArgsConstructor
+    public static class ValueHolder<T> {
+        private String key;
+        private T value;
+
+        public static <T> ValueHolder<T> get(String key, T value) {
+            return new ValueHolder<>(key, value);
         }
-
-        return false;
     }
 
-    @Override
-    public boolean getBoolean(String key, boolean def) {
-        final var value = gameValues.get(key);
-
-        if (value instanceof Boolean) {
-            return (Boolean) value;
-        }
-
-        return def;
-    }
-
-    @Override
-    public int getInt(String key) {
-        final var value = gameValues.get(key);
-
-        if (value instanceof Integer) {
-            return (Integer) value;
-        }
-
-        return 0;
-    }
-
-    @Override
-    public int getInt(String key, int def) {
-        final var value = gameValues.get(key);
-
-        if (value instanceof Integer) {
-            return (Integer) value;
-        }
-
-        return def;
-    }
-
-    @Override
-    public double getDouble(String key) {
-        final var value = gameValues.get(key);
-
-        if (value instanceof Double) {
-            return (Double) value;
-        }
-
-        return 0;
-    }
-
-    @Override
-    public double getDouble(String key, double def) {
-        final var value = gameValues.get(key);
-
-        if (value instanceof Double) {
-            return (Double) value;
-        }
-
-        return def;
-    }
-
-    @Override
-    public List<?> getList(String key) {
-        final var value = gameValues.get(key);
-
-        if (value instanceof List<?>) {
-            return (List<?>) value;
-        }
-
-        return null;
-    }
-
-    @Override
-    public List<Map<?, ?>> getMap(String key) {
-        final var value = gameValues.get(key);
-
-        if (value instanceof List<?>) {
-            return (List<Map<?, ?>>) value;
-        }
-
-        return null;
-    }
-
-    @Override
-    public List<String> getStringList(String key) {
-        final var value = gameValues.get(key);
-
-        if (value instanceof List<?>) {
-            return (List<String>) value;
-        }
-
-        return null;
-    }
-
-    @Override
-    public boolean isSet(String key) {
-        final var value = gameValues.get(key);
-
-        return value != null;
-    }
-
-    @Override
-    public void set(String key, Object obj) {
-        final var value = gameValues.get(key);
-
-        if (value != null) {
-            unregisterValue(key);
-        }
-
-        registerValue(key, obj);
-    }
-
-    @Override
-    public void save() {
-        //not used
-    }
-
-    @Override
-    public void load() {
-        //not used
+    //TODO
+    public enum PerArenaValue {
+        TRUE,
+        FALSE,
+        INHERIT;
     }
 }

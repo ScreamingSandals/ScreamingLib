@@ -114,7 +114,7 @@ public class Storage {
     }
 
     private String getPrefixFromConfig() {
-        if (Language.getInstance().getCustomPrefix() == null) {
+        if ("".equals(Language.getInstance().getCustomPrefix())) {
             return Utils.colorize(configuration.getString("prefix"));
         } else {
             return Utils.colorize(Language.getInstance().getCustomPrefix());
