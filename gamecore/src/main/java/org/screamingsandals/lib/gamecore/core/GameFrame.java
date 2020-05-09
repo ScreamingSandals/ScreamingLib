@@ -6,6 +6,7 @@ import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.config.GameConfig;
 import org.screamingsandals.lib.gamecore.core.cycle.GameCycle;
+import org.screamingsandals.lib.gamecore.error.ErrorManager;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisabledEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisablingEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadedEvent;
@@ -67,26 +68,93 @@ public abstract class GameFrame implements Serializable {
         loadDefaults();
     }
 
-    public static <T> T getGame(String gameName) {
-        return null;
-    }
-
     public void reload() {
         stop();
         start();
     }
 
     public boolean checkIntegrity() {
-        return gameWorld.exists()
-                && lobbyWorld.exists()
-                && maxPlayers != 0
+        if (!checkGameWorld()) {
+            return false;
+        }
+
+        if (!checkLobbyWorld()) {
+            return false;
+        }
+
+        return maxPlayers != 0
                 && gameTime != 0
                 && teams.size() > 0
                 && stores.size() > 0;
     }
 
+    public boolean checkGameWorld() {
+        if (gameWorld == null) {
+            final var type = ErrorManager.Type.GAME_WORLD_DOES_NOT_EXISTS;
+            GameCore.getErrorManager().newError(new ErrorManager.Entry(type, null));
+            return false;
+        }
+
+        if (!gameWorld.exists()) {
+            return false;
+        }
+
+        if (gameWorld.getPosition1() == null || gameWorld.getPosition2() == null) {
+            //TODO - error manager
+            return false;
+        }
+
+        if (gameWorld.getSpectatorSpawn() == null) {
+            //TODO - error manager
+            return false;
+        }
+
+        var gameWorldWorld = gameWorld.getWorldAdapter().getWorldName();
+        if (!gameWorldWorld.equals(gameWorld.getPosition1().getWorld().toString())
+                || !gameWorldWorld.equals(gameWorld.getPosition2().getWorld().toString())
+                || !gameWorldWorld.equals(gameWorld.getSpectatorSpawn().getWorld().toString())) {
+            //TODO - error manager
+            Debug.warn("World of arena is different than position1, position2 or spectator spawn. Please re-do them.", true);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkLobbyWorld() {
+        if (lobbyWorld == null) {
+            GameCore.getErrorManager().newError(new ErrorManager.Entry(ErrorManager.Type.LOBBY_WORLD_DOES_NOT_EXISTS, null));
+            return false;
+        }
+
+        if (!lobbyWorld.exists()) {
+            return false;
+        }
+
+        if (lobbyWorld.getPosition1() == null || lobbyWorld.getPosition2() == null) {
+            //TODO - error manager
+            return false;
+        }
+
+        if (lobbyWorld.getSpawn() == null) {
+            //TODO - error manager
+            return false;
+        }
+
+        var lobbyWorldWorld = lobbyWorld.getWorldAdapter().getWorldName();
+        if (!lobbyWorldWorld.equals(lobbyWorld.getPosition1().getWorld().toString())
+                || !lobbyWorldWorld.equals(lobbyWorld.getPosition2().getWorld().toString())
+                || !lobbyWorldWorld.equals(lobbyWorld.getSpawn().getWorld().toString())) {
+            //TODO - error manager
+            Debug.warn("World of arena is different than position1, position2 or spectator spawn. Please re-do them.", true);
+            return false;
+        }
+        return true;
+    }
+
     public void loadDefaults() {
         resourceTypes = ResourceTypes.load(this, new File(GameCore.getPlugin().getDataFolder(), "resources.json"));
+        gameConfig = new GameConfig(this);
+        gameConfig.buildDefaults();
     }
 
     public void prepare() {
@@ -97,27 +165,35 @@ public abstract class GameFrame implements Serializable {
 
     public void start() {
         if (!checkIntegrity()) {
+            //change to error manager
             Debug.warn("Arena " + gameName + " cannot be loaded, something is wrong with it!");
             return;
         }
 
         prepare();
 
-        Preconditions.checkNotNull(gameCycle, "GameFrame cannot be null!")
+        Preconditions.checkNotNull(gameCycle, "GameCycle cannot be null!")
                 .runTaskRepeater(0, 1, TimeUnit.SECONDS); //We expect that dev provided valid game-cycle
+
+        cycleType = gameCycle.getType();
 
         GameCore.fireEvent(new SGameLoadedEvent(this));
     }
 
     public void stop() {
+        if (activeState == GameState.DISABLED) {
+            return;
+        }
+
         if (!GameCore.fireEvent(new SGameDisablingEvent(this))) {
             return;
         }
 
-        Preconditions.checkNotNull(gameCycle).stop();
+        Preconditions.checkNotNull(gameCycle, "GameCycle cannot be null!").stop();
 
         if (!gameCycle.hasStopped()) {
-            Debug.warn("Something is fucked up, game is not stopped!");
+            //change to error manager
+            Debug.warn("Something is fucked up, game is not stopped!", true);
 
             //last try
             gameCycle.stop();

@@ -151,19 +151,17 @@ public class ClassStorage {
 		for (String name : names) {
 			try {
 				Field field = clazz.getField(name.trim());
-				Object result = field.get(instance);
-				return result;
-			} catch (Throwable t) {
-				Class<?> claz2 = clazz;
+				return field.get(instance);
+			} catch (Throwable ignored) {
+				Class<?> clazz1 = clazz;
 				do {
 					try {
-						Field field = claz2.getDeclaredField(name.trim());
+						Field field = clazz1.getDeclaredField(name.trim());
 						field.setAccessible(true);
-						Object result = field.get(instance);
-						return result;
-					} catch (Throwable t2) {
+						return field.get(instance);
+					} catch (Throwable ignored2) {
 					}
-				} while ((claz2 = claz2.getSuperclass()) != null && claz2 != Object.class);
+				} while ((clazz1 = clazz1.getSuperclass()) != null && clazz1 != Object.class);
 			}
 		}
 		return null;
@@ -192,22 +190,20 @@ public class ClassStorage {
 	public static Object setField(Class<?> clazz, String[] names, Object instance, Object set) {
 		for (String name : names) {
 			try {
-				Field field = clazz.getField(name.trim());
+				final Field field = clazz.getField(name.trim());
 				field.set(instance, set);
-				Object result = field.get(instance);
-				return result;
-			} catch (Throwable t) {
-				Class<?> claz2 = clazz;
+				return field.get(instance);
+			} catch (Throwable ignored) {
+				Class<?> clazz1 = clazz;
 				do {
 					try {
-						Field field = claz2.getDeclaredField(name.trim());
+						final Field field = clazz1.getDeclaredField(name.trim());
 						field.setAccessible(true);
 						field.set(instance, set);
-						Object result = field.get(instance);
-						return result;
-					} catch (Throwable t2) {
+						return field.get(instance);
+					} catch (Throwable ignored2) {
 					}
-				} while ((claz2 = claz2.getSuperclass()) != null && claz2 != Object.class);
+				} while ((clazz1 = clazz1.getSuperclass()) != null && clazz1 != Object.class);
 			}
 		}
 		return null;

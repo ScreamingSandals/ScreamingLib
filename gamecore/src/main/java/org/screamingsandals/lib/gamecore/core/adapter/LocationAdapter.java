@@ -21,6 +21,10 @@ public class LocationAdapter implements Serializable {
         location = constructLocation();
     }
 
+    public LocationAdapter(Location location) {
+        this(new WorldAdapter(location.getWorld().getName()), location.getX(), location.getY(), location.getZ(), location.getPitch(), location.getYaw());
+    }
+
     public LocationAdapter(WorldAdapter worldAdapter, double x, double y, double z, float pitch, float yaw) {
         this.worldAdapter =worldAdapter;
         this.x = x;

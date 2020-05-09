@@ -61,6 +61,11 @@ public class GameCore {
         fireEvent(new SCoreUnloadedEvent(this));
     }
 
+    public void reload() {
+        //TODO: reload all important things
+        gameManager.getRegisteredGames().forEach(GameFrame::reload);
+    }
+
     private void registerListeners() {
         registerListener(new PlayerListener());
     }
@@ -80,6 +85,10 @@ public class GameCore {
 
     public static PlayerManager getPlayerManager() {
         return instance.playerManager;
+    }
+
+    public static ErrorManager getErrorManager() {
+        return instance.errorManager;
     }
 
     public static Plugin getPlugin() {

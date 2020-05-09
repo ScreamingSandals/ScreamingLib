@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.screamingsandals.lib.gamecore.core.adapter.LocationAdapter;
+import org.screamingsandals.lib.gamecore.core.adapter.WorldAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ public abstract class BaseWorld {
     private LocationAdapter position1;
     private LocationAdapter position2;
     private LocationAdapter spawn;
+    private WorldAdapter worldAdapter;
     private transient Map<Location, BlockData> originalBlocks = new HashMap<>();
     private transient Map<Location, BlockData> destroyedBlocks = new HashMap<>();
     private transient Map<Location, BlockData> placedBlocks = new HashMap<>();

@@ -33,11 +33,11 @@ public class GameManager<T extends GameFrame> {
 
     public T loadGame(File gameFile) {
         if (gameFile.exists() && gameFile.isFile()) {
-            final JsonDataSource<T> dataSaver = new JsonDataSource<>(gameFile, type);
+            final var dataSaver = new JsonDataSource<>(gameFile, type);
             final T game = dataSaver.load();
 
             if (game.checkIntegrity()) {
-                Debug.warn("Cannot load game " + game.getDisplayedName() + "!");
+                Debug.warn("&cCannot load game &e" + game.getDisplayedName() + "&c!");
                 return null;
             }
 
@@ -48,7 +48,8 @@ public class GameManager<T extends GameFrame> {
     }
 
     public void saveGame(T gameFrame) {
-        final JsonDataSource<T> dataSaver = new JsonDataSource<>(dataFolder, type);
+        final var gameFile = new File(dataFolder, gameFrame.getGameName() + ".json");
+        final var dataSaver = new JsonDataSource<>(gameFile, type);
         dataSaver.save(gameFrame);
 
         GameCore.fireEvent(new SGameSavedEvent(gameFrame));
@@ -60,15 +61,15 @@ public class GameManager<T extends GameFrame> {
                 final List<String> results = stream.filter(Files::isRegularFile).map(Path::toString).collect(Collectors.toList());
 
                 if (results.isEmpty()) {
-                    Debug.info("No arenas has been found!", true);
+                    Debug.info("&cNo arenas has been found! &e:(", true);
                 } else {
                     results.forEach(result -> loadGame(new File(result)));
                 }
             } catch (Exception e) {
-                GameCore.getInstance().getErrorManager().newError(ErrorManager.newEntry(ErrorManager.Type.GAME_LOADING_ERROR, e));
+                GameCore.getErrorManager().newError(ErrorManager.newEntry(ErrorManager.Type.GAME_LOADING_ERROR, e), true);
             }
         } else {
-            Debug.info("No arenas has been found!", true);
+            Debug.info("&cNo arenas has been found! &e:(", true);
         }
     }
 

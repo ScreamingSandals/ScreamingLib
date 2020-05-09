@@ -8,4 +8,8 @@ import org.screamingsandals.lib.gamecore.core.adapter.LocationAdapter;
 @Data
 public class GameWorld extends BaseWorld {
     private LocationAdapter spectatorSpawn;
+
+    public static GameWorld get() {
+        return new GameWorld();
+    }
 }

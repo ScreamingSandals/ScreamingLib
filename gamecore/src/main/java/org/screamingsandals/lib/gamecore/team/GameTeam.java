@@ -21,6 +21,12 @@ public abstract class GameTeam implements Serializable {
     private transient List<GamePlayer> teamPlayers = new ArrayList<>();
     private transient GameFrame activeGame;
 
+    public GameTeam(String teamName, TeamColor teamColor, int maxPlayers) {
+        this.teamName = teamName;
+        this.teamColor = teamColor;
+        this.maxPlayers = maxPlayers;
+    }
+
     public void join(GamePlayer gamePlayer) {
         gamePlayer.setGameTeam(this);
         teamPlayers.add(gamePlayer);

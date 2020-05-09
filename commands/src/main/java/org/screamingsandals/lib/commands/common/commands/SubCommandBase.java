@@ -53,7 +53,7 @@ public abstract class SubCommandBase<T, Y> {
     }
 
     public SubCommandBase<T, Y> handleSubPlayerCommand(String name, Execute.PlayerSubCommand<T> execute) {
-        final SubCommand subCommand = handleAdding(name, playerSubExecutors);
+        final var subCommand = handleAdding(name, playerSubExecutors);
 
         if (subCommand != null) {
             playerSubExecutors.put(subCommand, execute);
@@ -62,7 +62,7 @@ public abstract class SubCommandBase<T, Y> {
     }
 
     public SubCommandBase<T, Y> handleSubConsoleCommand(String name, Execute.ConsoleSubCommand<Y> execute) {
-        final SubCommand subCommand = handleAdding(name, consoleSubExecutors);
+        final var subCommand = handleAdding(name, consoleSubExecutors);
 
         if (subCommand != null) {
             consoleSubExecutors.put(subCommand, execute);
@@ -71,7 +71,7 @@ public abstract class SubCommandBase<T, Y> {
     }
 
     public SubCommandBase<T, Y> handleSubPlayerTab(String name, CompleteTab.PlayerSubCommandComplete<T> complete) {
-        final SubCommand subCommand = handleAdding(name, playerSubCompletes);
+        final var subCommand = handleAdding(name, playerSubCompletes);
 
         if (subCommand != null) {
             playerSubCompletes.put(subCommand, complete);
@@ -80,7 +80,7 @@ public abstract class SubCommandBase<T, Y> {
     }
 
     public SubCommandBase<T, Y> handleSubConsoleTab(String name, CompleteTab.ConsoleSubCommandComplete<Y> complete) {
-        final SubCommand subCommand = handleAdding(name, consoleSubCompletes);
+        final var subCommand = handleAdding(name, consoleSubCompletes);
 
         if (subCommand != null) {
             consoleSubCompletes.put(subCommand, complete);
@@ -89,7 +89,7 @@ public abstract class SubCommandBase<T, Y> {
     }
 
     public SubCommandBase<T, Y> handleAllSubTab(String name, CompleteTab.SubCommandComplete<CommandSender> complete) {
-        final SubCommand subCommand = handleAdding(name, handleAllSubCompletes);
+        final var subCommand = handleAdding(name, handleAllSubCompletes);
 
         if (subCommand != null) {
             handleAllSubCompletes.put(subCommand, complete);
@@ -122,7 +122,7 @@ public abstract class SubCommandBase<T, Y> {
             return null;
         }
 
-        final SubCommand subCommand = getSubCommand(name);
+        final var subCommand = getSubCommand(name);
         if (map.containsKey(subCommand)) {
             Debug.warn("You can't use another handler, one is already defined!", true);
             Debug.warn("SubCommand: " + name, true);

@@ -174,14 +174,15 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
         }
 
         if (args.length == 1) {
-            final String subCommandName = args[0].toLowerCase();
-            final SubCommand subCommand = commandBase.getSubCommand(subCommandName);
+            final String typed = args[0].toLowerCase();
 
-            for (SubCommand found : subCompletes.keySet()) {
-                if (subCommandName.startsWith(found.getName())) {
-                    if (player.hasPermission(subCommand.getPermission())) {
-                        toReturn.add(found.getName());
-                    }
+            for (SubCommand found : commandBase.getSubCommands()) {
+                final var permission = found.getPermission();
+                final var name = found.getName();
+
+                if (name.startsWith(typed) && !permission.equals("")
+                        && (player.hasPermission(permission) || player.hasPermission("sbw.*"))) {
+                    toReturn.add(name);
                 }
             }
 
@@ -222,11 +223,14 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
         }
 
         if (args.length == 1) {
-            final String subCommandName = args[0].toLowerCase();
+            final String typed = args[0].toLowerCase();
 
-            for (SubCommand found : subCompletes.keySet()) {
-                if (subCommandName.startsWith(found.getName())) {
-                    toReturn.add(found.getName());
+            for (SubCommand found : commandBase.getSubCommands()) {
+                final var permission = found.getPermission();
+                final var name = found.getName();
+
+                if (name.startsWith(typed) && !permission.equals("")) {
+                    toReturn.add(name);
                 }
             }
 

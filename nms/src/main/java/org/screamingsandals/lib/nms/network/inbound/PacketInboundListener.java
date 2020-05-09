@@ -9,7 +9,6 @@ import io.netty.channel.ChannelHandlerContext;
 import static org.screamingsandals.lib.nms.utils.ClassStorage.*;
 
 public abstract class PacketInboundListener{
-
 	private static int ID = 0;
 
 	private final String channelName = PacketInboundListener.class.getCanonicalName() + "-" + ID++;
