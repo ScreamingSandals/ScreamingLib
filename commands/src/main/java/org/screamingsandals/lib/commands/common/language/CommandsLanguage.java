@@ -2,6 +2,7 @@ package org.screamingsandals.lib.commands.common.language;
 
 
 import lombok.Data;
+import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 
 import java.util.Collection;
@@ -11,31 +12,43 @@ import java.util.Map;
 //You can create custom command messages with this!
 @Data
 public abstract class CommandsLanguage {
-    private Map<LangKey, String> languages = new HashMap<>();
+    private Map<Key, String> languages = new HashMap<>();
 
     public void loadDefaults() {
-        languages.put(LangKey.NO_PERMISSIONS, "&cYou don't have enough permissions for this command!");
-        languages.put(LangKey.COMMAND_DOES_NOT_EXISTS, "&cOh my, this command does not exists..");
-        languages.put(LangKey.SOMETHINGS_FUCKED, "&cThis command failed. Something is wrong, huh?!");
-        languages.put(LangKey.NOT_FOR_CONSOLE, "&cWell well well, this is not for console...");
+        languages.put(Key.NO_PERMISSIONS, "&cYou don't have enough permissions for this command!");
+        languages.put(Key.COMMAND_DOES_NOT_EXISTS, "&cOh my, this command does not exists..");
+        languages.put(Key.SOMETHINGS_FUCKED, "&cThis command failed. Something is wrong, huh?!");
+        languages.put(Key.NOT_FOR_CONSOLE, "&cWell well well, this is not for console...");
     }
 
-    public String get(LangKey langKey) {
+    public String get(Key langKey) {
         return languages.get(langKey);
     }
 
-    public void add(LangKey langKey, String string) {
-        languages.put(langKey, string);
+    public void add(Key langKey, String value) {
+        languages.put(langKey, value);
     }
 
-    public enum LangKey {
-        NO_PERMISSIONS,
-        COMMAND_DOES_NOT_EXISTS,
-        SOMETHINGS_FUCKED,
-        NOT_FOR_CONSOLE;
+    public void replace(Key langKey, String value) {
+        languages.remove(langKey);
+        languages.put(langKey, value);
     }
 
-    public void sendMessage(Object receiver, LangKey langKey) {
+    public enum Key {
+        NO_PERMISSIONS("no_permissions"),
+        COMMAND_DOES_NOT_EXISTS("command_does_not_exists"),
+        SOMETHINGS_FUCKED("somethings_fucked"),
+        NOT_FOR_CONSOLE("not_for_console");
+
+        @Getter
+        private final String langKey;
+
+        Key(String langKey) {
+            this.langKey = langKey;
+        }
+    }
+
+    public void sendMessage(Object receiver, Key langKey) {
         if (receiver instanceof Collection) {
             for (Object rec : (Collection<?>) receiver) {
                 sendMessage(rec, langKey);

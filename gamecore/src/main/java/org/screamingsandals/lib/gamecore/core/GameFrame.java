@@ -6,7 +6,8 @@ import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.config.GameConfig;
 import org.screamingsandals.lib.gamecore.core.cycle.GameCycle;
-import org.screamingsandals.lib.gamecore.error.ErrorManager;
+import org.screamingsandals.lib.gamecore.error.ErrorType;
+import org.screamingsandals.lib.gamecore.error.GameError;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisabledEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisablingEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadedEvent;
@@ -36,11 +37,11 @@ public abstract class GameFrame implements Serializable {
     private LobbyWorld lobbyWorld;
     private int minPlayers;
     private int minPlayersToStart;
-    private int gameTime;
     private int lobbyTime;
     private int startTime;
-    private int endTime;
+    private int gameTime;
     private int deathmatchTime;
+    private int endTime;
     private List<GameTeam> teams = new LinkedList<>();
     private List<GameStore> stores = new LinkedList<>();
     private List<ResourceSpawner> spawners = new LinkedList<>();
@@ -90,12 +91,15 @@ public abstract class GameFrame implements Serializable {
 
     public boolean checkGameWorld() {
         if (gameWorld == null) {
-            final var type = ErrorManager.Type.GAME_WORLD_DOES_NOT_EXISTS;
-            GameCore.getErrorManager().newError(new ErrorManager.Entry(type, null));
+            GameCore.getErrorManager().newError(new GameError(this, ErrorType.GAME_WORLD_NOT_DEFINED, null));
             return false;
         }
 
         if (!gameWorld.exists()) {
+            final var type = ErrorType.GAME_WORLD_DOES_NOT_EXISTS;
+            type.getReplaceable().put("%world%", gameWorld.getWorldAdapter().getWorldName());
+
+            GameCore.getErrorManager().newError(new GameError(this, type, null));
             return false;
         }
 
@@ -122,7 +126,7 @@ public abstract class GameFrame implements Serializable {
 
     public boolean checkLobbyWorld() {
         if (lobbyWorld == null) {
-            GameCore.getErrorManager().newError(new ErrorManager.Entry(ErrorManager.Type.LOBBY_WORLD_DOES_NOT_EXISTS, null));
+            GameCore.getErrorManager().newError(new GameError(this, ErrorType.LOBBY_WORLD_DOES_NOT_EXISTS, null));
             return false;
         }
 
@@ -271,3 +275,4 @@ public abstract class GameFrame implements Serializable {
         }
     }
 }
+

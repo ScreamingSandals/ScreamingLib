@@ -9,7 +9,7 @@ import org.screamingsandals.lib.gamecore.core.adapter.LocationAdapter;
 public class GameWorld extends BaseWorld {
     private LocationAdapter spectatorSpawn;
 
-    public static GameWorld get() {
-        return new GameWorld();
+    public GameWorld(String worldName) {
+        super(worldName);
     }
 }

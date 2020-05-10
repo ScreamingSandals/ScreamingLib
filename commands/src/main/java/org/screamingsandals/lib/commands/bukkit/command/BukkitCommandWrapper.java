@@ -44,14 +44,14 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
                     if (commandSender instanceof Player) {
                         Player player = (Player) commandSender;
                         if (!player.hasPermission(commandBase.getPermission())) {
-                            commandsLanguage.sendMessage(player, CommandsLanguage.LangKey.NO_PERMISSIONS);
+                            commandsLanguage.sendMessage(player, CommandsLanguage.Key.NO_PERMISSIONS);
                         }
                         result = handlePlayerCommand((Player) commandSender, args);
                     } else {
                         try {
                             result = handleConsoleCommand((ConsoleCommandSender) commandSender, args);
                         } catch (Throwable ignored) {
-                            commandsLanguage.sendMessage(commandSender, CommandsLanguage.LangKey.NOT_FOR_CONSOLE);
+                            commandsLanguage.sendMessage(commandSender, CommandsLanguage.Key.NOT_FOR_CONSOLE);
                             result = true;
                         }
                     }
@@ -62,7 +62,7 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
 
                 if (!result) {
                     final CommandsLanguage commandsLanguage = Commands.getInstance().getCommandLanguage();
-                    commandsLanguage.sendMessage(commandSender, CommandsLanguage.LangKey.SOMETHINGS_FUCKED); //lol
+                    commandsLanguage.sendMessage(commandSender, CommandsLanguage.Key.SOMETHINGS_FUCKED); //lol
                 }
 
                 return true;
@@ -112,7 +112,7 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
         }
 
         if (args.length >= 1 && subExecutors.keySet().size() <= 0) {
-            commandsLanguage.sendMessage(player, CommandsLanguage.LangKey.COMMAND_DOES_NOT_EXISTS);
+            commandsLanguage.sendMessage(player, CommandsLanguage.Key.COMMAND_DOES_NOT_EXISTS);
             return false;
         }
 
@@ -125,7 +125,7 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
             }
 
             if (!player.hasPermission(subCommand.getPermission())) {
-                commandsLanguage.sendMessage(player, CommandsLanguage.LangKey.NO_PERMISSIONS);
+                commandsLanguage.sendMessage(player, CommandsLanguage.Key.NO_PERMISSIONS);
                 return true;
             }
 
@@ -153,7 +153,7 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
         }
 
         if (args.length >= 1 && subExecutors.keySet().size() <= 0) {
-            commandsLanguage.sendMessage(console, CommandsLanguage.LangKey.COMMAND_DOES_NOT_EXISTS);
+            commandsLanguage.sendMessage(console, CommandsLanguage.Key.COMMAND_DOES_NOT_EXISTS);
             return false;
         }
 

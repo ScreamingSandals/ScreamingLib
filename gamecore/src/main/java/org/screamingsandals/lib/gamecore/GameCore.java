@@ -10,7 +10,9 @@ import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameManager;
+import org.screamingsandals.lib.gamecore.error.BaseError;
 import org.screamingsandals.lib.gamecore.error.ErrorManager;
+import org.screamingsandals.lib.gamecore.error.ErrorType;
 import org.screamingsandals.lib.gamecore.events.core.SCoreLoadedEvent;
 import org.screamingsandals.lib.gamecore.events.core.SCoreUnloadedEvent;
 import org.screamingsandals.lib.gamecore.exceptions.GameCoreException;
@@ -28,6 +30,8 @@ public class GameCore {
     private final ErrorManager errorManager;
     private final PlayerManager playerManager;
     private GameManager<?> gameManager;
+    private boolean verbose = true;
+    private String adminPermissions = "gamecore.admin";
 
     public GameCore(Plugin plugin) {
         this.plugin = plugin;
@@ -40,6 +44,12 @@ public class GameCore {
         Debug.setFallbackName("GameCore-" + plugin.getName());
     }
 
+    public GameCore(Plugin plugin, String adminPermissions, boolean verbose) {
+        this(plugin);
+        this.adminPermissions = adminPermissions;
+        this.verbose = verbose;
+    }
+
     public <T extends GameFrame> void load(File gamesFolder, Class<T> tClass) throws GameCoreException {
         try {
             this.gameManager = new GameManager<>(gamesFolder, tClass);
@@ -48,7 +58,7 @@ public class GameCore {
 
             fireEvent(new SCoreLoadedEvent(this));
         } catch (Exception exception) {
-            final var entry = errorManager.newError(ErrorManager.newEntry(ErrorManager.Type.GAME_CORE_ERROR, exception));
+            final var entry = errorManager.newError(new BaseError(ErrorType.GAME_CORE_ERROR, exception));
             throw new GameCoreException(entry.getDefaultMessage());
         }
     }

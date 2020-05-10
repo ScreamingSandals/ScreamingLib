@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class LobbyWorld extends BaseWorld {
 
-    public static GameWorld get() {
-        return new GameWorld();
+    public LobbyWorld(String worldName) {
+        super(worldName);
     }
 }

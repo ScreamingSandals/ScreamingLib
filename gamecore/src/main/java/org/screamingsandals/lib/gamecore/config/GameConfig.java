@@ -3,9 +3,11 @@ package org.screamingsandals.lib.gamecore.config;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
-import org.screamingsandals.lib.gamecore.error.ErrorManager;
+import org.screamingsandals.lib.gamecore.error.BaseError;
+import org.screamingsandals.lib.gamecore.error.ErrorType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,20 +62,28 @@ public class GameConfig {
 
     @SuppressWarnings("unchecked")
     public <T> T getValue(String key) {
+        if (!gameValues.containsKey(key)) {
+            Debug.warn("It does not exists");
+            return null;
+        }
         try {
             return (T) gameValues.get(key).getValue();
         } catch (Exception e) {
-            GameCore.getErrorManager().writeError(new ErrorManager.Entry(ErrorManager.Type.GAME_CONFIG_ERROR, e), true);
+            GameCore.getErrorManager().newError(new BaseError(ErrorType.GAME_CONFIG_ERROR, e), true);
         }
         return null;
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getValue(String key, T def) {
+        if (!gameValues.containsKey(key)) {
+            Debug.warn("It does not exists");
+            return def;
+        }
         try {
             return (T) gameValues.get(key).getValue();
         } catch (Exception e) {
-            GameCore.getErrorManager().writeError(new ErrorManager.Entry(ErrorManager.Type.GAME_CONFIG_ERROR, e), true);
+            GameCore.getErrorManager().newError(new BaseError(ErrorType.GAME_CONFIG_ERROR, e), true);
         }
         return def;
     }

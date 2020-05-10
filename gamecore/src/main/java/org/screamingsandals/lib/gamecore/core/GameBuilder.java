@@ -4,6 +4,7 @@ import lombok.Data;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.debug.Debug;
+import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.core.adapter.WorldAdapter;
 import org.screamingsandals.lib.gamecore.store.GameStore;
@@ -15,18 +16,38 @@ import org.screamingsandals.lib.gamecore.world.LobbyWorld;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.screamingsandals.lib.lang.I.mpr;
+
 @Data
 public abstract class GameBuilder<T extends GameFrame> {
     private T gameFrame;
     private List<GameStore.StoreBuilder> storeBuilders = new LinkedList<>();
     private List<GameStore> gameStores = new LinkedList<>();
 
-    public void create(String arenaName) {
-
+    public boolean create(String arenaName, Player player) {
+        if (GameCore.getGameManager().isGameRegistered(arenaName)) {
+            mpr("core.errors.game-already-created").send(player);
+            return false;
+        }
+        return true;
     }
 
-    public T get(Player player) {
-        return gameFrame;
+    public void load(T gameFrame, Player player) {
+        if (gameFrame == null) {
+            mpr("core.errors.game-does-not-exists").send(player);
+        }
+        this.gameFrame = gameFrame;
+
+        final var gameStores = gameFrame.getStores();
+        if (gameStores == null) {
+            return;
+        }
+
+        this.gameStores.addAll(gameStores);
+    }
+
+    public void save(Player player) {
+
     }
 
     public boolean isCreated() {
@@ -92,7 +113,7 @@ public abstract class GameBuilder<T extends GameFrame> {
     public void setGameWorld(String worldName) {
         var gameWorld = gameFrame.getGameWorld();
         if (gameWorld == null) {
-            gameWorld = new GameWorld();
+            gameWorld = new GameWorld(worldName);
         }
 
         gameWorld.setWorldAdapter(new WorldAdapter(worldName));
@@ -103,7 +124,7 @@ public abstract class GameBuilder<T extends GameFrame> {
         var gameWorld = gameFrame.getGameWorld();
 
         if (gameWorld == null) {
-            gameWorld = new GameWorld();
+            gameWorld = new GameWorld(location.getWorld().getName());
             gameFrame.setGameWorld(gameWorld);
         }
 
@@ -115,7 +136,7 @@ public abstract class GameBuilder<T extends GameFrame> {
         var lobbyWorld = gameFrame.getLobbyWorld();
 
         if (lobbyWorld == null) {
-            lobbyWorld = new LobbyWorld();
+            lobbyWorld = new LobbyWorld(location.getWorld().getName());
             gameFrame.setLobbyWorld(lobbyWorld);
         }
 

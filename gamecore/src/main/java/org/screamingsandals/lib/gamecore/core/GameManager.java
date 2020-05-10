@@ -4,7 +4,8 @@ import lombok.Data;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.data.file.JsonDataSource;
-import org.screamingsandals.lib.gamecore.error.ErrorManager;
+import org.screamingsandals.lib.gamecore.error.ErrorType;
+import org.screamingsandals.lib.gamecore.error.GameError;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisabledEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadingEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameSavedEvent;
@@ -36,7 +37,14 @@ public class GameManager<T extends GameFrame> {
             final var dataSaver = new JsonDataSource<>(gameFile, type);
             final T game = dataSaver.load();
 
+            if (game == null) {
+                //TODO
+                Debug.warn("Somethings fucked");
+                return null;
+            }
+
             if (game.checkIntegrity()) {
+                //TODO
                 Debug.warn("&cCannot load game &e" + game.getDisplayedName() + "&c!");
                 return null;
             }
@@ -48,6 +56,11 @@ public class GameManager<T extends GameFrame> {
     }
 
     public void saveGame(T gameFrame) {
+        if (gameFrame == null) {
+            Debug.warn("nothing to save!"); //TODO
+            return;
+        }
+
         final var gameFile = new File(dataFolder, gameFrame.getGameName() + ".json");
         final var dataSaver = new JsonDataSource<>(gameFile, type);
         dataSaver.save(gameFrame);
@@ -66,7 +79,7 @@ public class GameManager<T extends GameFrame> {
                     results.forEach(result -> loadGame(new File(result)));
                 }
             } catch (Exception e) {
-                GameCore.getErrorManager().newError(ErrorManager.newEntry(ErrorManager.Type.GAME_LOADING_ERROR, e), true);
+                GameCore.getErrorManager().newError(new GameError(null, ErrorType.GAME_LOADING_ERROR, e), true);
             }
         } else {
             Debug.info("&cNo arenas has been found! &e:(", true);
@@ -108,6 +121,10 @@ public class GameManager<T extends GameFrame> {
 
         gameFrame.stop();
         registeredGames.remove(gameName);
+    }
+
+    public boolean isGameRegistered(String gameName) {
+        return registeredGames.containsKey(gameName);
     }
 
     public T getFirstAvailableGame() {
