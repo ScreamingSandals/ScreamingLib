@@ -7,6 +7,7 @@ import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameState;
+import org.screamingsandals.lib.gamecore.core.GameType;
 import org.screamingsandals.lib.gamecore.core.phase.GamePhase;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameTickEvent;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
@@ -21,7 +22,7 @@ public abstract class GameCycle extends BaseTask {
     private GamePhase currentPhase;
     private Map<GameState, GamePhase> gamePhases = new HashMap<>();
     private List<GamePhase> customPhases = new LinkedList<>();
-    private Type type;
+    private GameType gameType;
 
     @Override
     public void run() {
@@ -124,11 +125,5 @@ public abstract class GameCycle extends BaseTask {
 
     public void addCustomPhase(GamePhase gamePhase) {
         customPhases.add(gamePhase);
-    }
-
-    public enum Type {
-        SINGLE_GAME_BUNGEE,
-        MULTI_GAME_BUNGEE,
-        MULTI_GAME
     }
 }

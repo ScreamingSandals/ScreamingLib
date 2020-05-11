@@ -24,7 +24,7 @@ public abstract class GameBuilder<T extends GameFrame> {
     private List<GameStore.StoreBuilder> storeBuilders = new LinkedList<>();
     private List<GameStore> gameStores = new LinkedList<>();
 
-    public boolean create(String arenaName, Player player) {
+    public boolean create(String arenaName, GameType gameType, Player player) {
         if (GameCore.getGameManager().isGameRegistered(arenaName)) {
             mpr("core.errors.game-already-created").send(player);
             return false;

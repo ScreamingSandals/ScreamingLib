@@ -46,12 +46,6 @@ public class Message {
     }
 
     public Message replace(String placeholder, Object replacement) {
-        if (placeholder.startsWith("%")) {
-            placeholder = placeholder.substring(1);
-        }
-        if (placeholder.endsWith("%")) {
-            placeholder = placeholder.substring(0, placeholder.length() - 1);
-        }
         replaces.put(placeholder, replacement);
         return this;
     }
@@ -136,7 +130,7 @@ public class Message {
             String message = storage.translate(key, def, prefix);
 
             for (var replace : replaces.entrySet()) {
-                message = message.replaceAll("%" + replace.getKey() + "%", replace.getValue().toString());
+                message = message.replaceAll(replace.getKey(), replace.getValue().toString());
             }
 
             return message;
@@ -152,7 +146,7 @@ public class Message {
 
             for (String toTranslate : messages) {
                 for (var replace : replaces.entrySet()) {
-                    toTranslate = toTranslate.replaceAll("%" + replace.getKey() + "%", replace.getValue().toString());
+                    toTranslate = toTranslate.replaceAll(replace.getKey(), replace.getValue().toString());
                     toReturn.add(toTranslate);
                 }
             }
@@ -175,10 +169,7 @@ public class Message {
             return this;
         }
 
-        try {
-            sender.getClass().getMethod("sendMessage", String.class).invoke(sender, get());
-        } catch (Throwable ignored) {
-        }
+        internalSendToReceiver(sender, get());
         return this;
     }
 
@@ -193,10 +184,22 @@ public class Message {
         try {
             boolean hasPermissions = (boolean) sender.getClass().getMethod("hasPermission", String.class).invoke(sender, permissions);
             if (hasPermissions) {
-                sender.getClass().getMethod("sendMessage", String.class).invoke(sender, get());
+                internalSendToReceiver(sender, get());
             }
         } catch (Throwable ignored) {
         }
+        return this;
+    }
+
+    public Message sendList(Object sender) {
+        if (sender instanceof Collection) {
+            for (var recipient : (Collection<?>) sender) {
+                send(recipient);
+            }
+            return this;
+        }
+
+        getList().forEach(message -> internalSendToReceiver(sender, message));
         return this;
     }
 
@@ -213,5 +216,12 @@ public class Message {
         } catch (Throwable ignored) {
         }
         return this;
+    }
+
+    private void internalSendToReceiver(Object sender, String message) {
+        try {
+            sender.getClass().getMethod("sendMessage", String.class).invoke(sender, message);
+        } catch (Throwable ignored) {
+        }
     }
 }

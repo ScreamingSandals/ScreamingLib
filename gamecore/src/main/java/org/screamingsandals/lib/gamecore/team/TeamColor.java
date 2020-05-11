@@ -5,6 +5,8 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Optional;
+
 public enum TeamColor {
     BLACK(ChatColor.BLACK, "BLACK", Color.BLACK),
     BLUE(ChatColor.DARK_BLUE, "BLUE", Color.fromRGB(0, 0, 170)),
@@ -34,5 +36,15 @@ public enum TeamColor {
 
     public ItemStack getWool() {
         return new ItemStack(Material.valueOf(colorName + "_WOOL"));
+    }
+
+    public static Optional<TeamColor> get(String name) {
+        final var upperCaseName = name.toUpperCase();
+        for (TeamColor type : TeamColor.values()) {
+            if (type.name().equalsIgnoreCase(upperCaseName)) {
+                return Optional.of(type);
+            }
+        }
+        return Optional.empty();
     }
 }

@@ -52,7 +52,7 @@ public abstract class GameFrame implements Serializable {
     //internal shits
     private File dataFile;
     private GameConfig gameConfig;
-    private GameCycle.Type cycleType;
+    private GameType gameType;
 
     private transient int maxPlayers;
     private transient GameCycle gameCycle;
@@ -62,8 +62,9 @@ public abstract class GameFrame implements Serializable {
     private transient ScoreboardManager scoreboardManager = new ScoreboardManager(this);
     private transient BossbarManager bossbarManager = new BossbarManager(this);
 
-    public GameFrame(String gameName) {
+    public GameFrame(String gameName, GameType gameType) {
         this.gameName = gameName;
+        this.gameType = gameType;
         this.dataFile = new File(GameCore.getGameManager().getDataFolder(), gameName + ".json");
 
         loadDefaults();
@@ -179,7 +180,7 @@ public abstract class GameFrame implements Serializable {
         Preconditions.checkNotNull(gameCycle, "GameCycle cannot be null!")
                 .runTaskRepeater(0, 1, TimeUnit.SECONDS); //We expect that dev provided valid game-cycle
 
-        cycleType = gameCycle.getType();
+        gameType = gameCycle.getGameType();
 
         GameCore.fireEvent(new SGameLoadedEvent(this));
     }

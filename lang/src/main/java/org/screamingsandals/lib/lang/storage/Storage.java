@@ -61,7 +61,7 @@ public class Storage {
 
         for (String toTranslate : translatedList) {
             if (prefix != null && prefix.length() > 0) {
-                toReturn.add(toTranslate + prefix + " ");
+                toReturn.add(prefix + " " + Utils.colorize(toTranslate));
             }
         }
         return toReturn;

@@ -13,6 +13,7 @@ import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -29,7 +30,7 @@ public class Language extends I {
     private String globalLanguage;
     private File customDataFolder;
     private FileStorage fileStorage;
-    private HashMap<String, Storage> availableLanguages = new HashMap<>();
+    private Map<String, Storage> availableLanguages = new HashMap<>();
 
     public Language(Object plugin) {
         this(plugin, null, null, "");
