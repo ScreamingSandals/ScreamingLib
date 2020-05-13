@@ -12,25 +12,41 @@ import java.io.File;
 import java.io.Serializable;
 
 @Data
-public abstract class GameStore implements Serializable {
-    private LocationAdapter storeLocation;
+public class GameStore implements Serializable {
+    private final LocationAdapter storeLocation;
     private String shopName;
     private File shopFile;
 
     private GameTeam gameTeam;
     private StoreType storeType;
     private EntityType entityType;
+    private Villager.Profession profession = Villager.Profession.FARMER;
 
     private transient LivingEntity livingEntity;
+
+    public GameStore(LocationAdapter storeLocation, String shopName, File shopFile, StoreType storeType) {
+        this(storeLocation, shopName, shopFile, null, storeType);
+    }
+
+    public GameStore(LocationAdapter storeLocation, String shopName, File shopFile, GameTeam gameTeam, StoreType storeType) {
+        this(storeLocation, shopName, shopFile, gameTeam, storeType, null);
+    }
+
+    public GameStore(LocationAdapter storeLocation, String shopName, File shopFile, GameTeam gameTeam, StoreType storeType, EntityType entityType) {
+        this.storeLocation = storeLocation;
+        this.shopName = shopName;
+        this.shopFile = shopFile;
+        this.gameTeam = gameTeam;
+        this.storeType = storeType;
+        setEntityType(entityType);
+    }
 
     public void setEntityType(EntityType entityType) {
         if (entityType != null && entityType.isAlive()) {
             this.entityType = entityType;
+        } else {
+            this.entityType = EntityType.VILLAGER;
         }
-    }
-
-    public static <T> T get(StoreBuilder storeBuilder) {
-        return null;
     }
 
     public LivingEntity spawn() {
@@ -40,6 +56,9 @@ public abstract class GameStore implements Serializable {
                 livingEntity.setCustomName(shopName);
                 livingEntity.setCustomNameVisible(true);
                 livingEntity.setRemoveWhenFarAway(false);
+                if (livingEntity instanceof Villager) {
+                    ((Villager) livingEntity).setProfession(profession);
+                }
             }
         }
         return livingEntity;
@@ -59,62 +78,5 @@ public abstract class GameStore implements Serializable {
             livingEntity = null;
         }
         return entity;
-    }
-
-    @Data
-    public static class StoreBuilder {
-        private LocationAdapter storeLocation;
-        private String shopName;
-        private File shopFile;
-
-        private GameTeam gameTeam;
-        private StoreType storeType;
-        private EntityType entityType;
-        private Villager.Profession profession = Villager.Profession.FARMER;
-
-        public static StoreBuilder create() {
-            return new StoreBuilder();
-        }
-
-        public StoreBuilder setLocation(LocationAdapter location) {
-            storeLocation = location;
-            return this;
-        }
-
-        public StoreBuilder setName(String shopName) {
-            this.shopName = shopName;
-            return this;
-        }
-
-        public StoreBuilder setShopFile(File shopFile) {
-            this.shopFile = shopFile;
-            return this;
-        }
-
-        public StoreBuilder setGameTeam(GameTeam gameTeam) {
-            this.gameTeam = gameTeam;
-            return this;
-        }
-
-        public StoreBuilder setStoreType(StoreType storeType) {
-            this.storeType = storeType;
-            return this;
-        }
-
-        public StoreBuilder setEntityType(EntityType entityType) {
-            EntityType toSet = entityType;
-            if (toSet == null || !toSet.isAlive()) {
-                toSet = EntityType.VILLAGER;
-            }
-
-            this.entityType = toSet;
-            return this;
-        }
-
-        public StoreBuilder setProfession(Villager.Profession profession) {
-            this.profession = profession;
-            return this;
-        }
-
     }
 }

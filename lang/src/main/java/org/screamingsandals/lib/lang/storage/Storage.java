@@ -2,7 +2,7 @@ package org.screamingsandals.lib.lang.storage;
 
 import lombok.Data;
 import org.screamingsandals.lib.config.ConfigAdapter;
-import org.screamingsandals.lib.lang.Language;
+import org.screamingsandals.lib.lang.Base;
 import org.screamingsandals.lib.lang.Utils;
 
 import java.util.ArrayList;
@@ -114,10 +114,10 @@ public class Storage {
     }
 
     private String getPrefixFromConfig() {
-        if ("".equals(Language.getInstance().getCustomPrefix())) {
+        if ("".equals(Base.getInstance().getCustomPrefix())) {
             return Utils.colorize(configuration.getString("prefix"));
         } else {
-            return Utils.colorize(Language.getInstance().getCustomPrefix());
+            return Utils.colorize(Base.getInstance().getCustomPrefix());
         }
     }
 }

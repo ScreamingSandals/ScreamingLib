@@ -12,6 +12,10 @@ import org.screamingsandals.lib.gamecore.events.core.game.SGameDisabledEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisablingEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadedEvent;
 import org.screamingsandals.lib.gamecore.events.core.state.SGameStateChangedEvent;
+import org.screamingsandals.lib.gamecore.events.player.SPlayerJoinedGameEvent;
+import org.screamingsandals.lib.gamecore.events.player.SPlayerLeftGameEvent;
+import org.screamingsandals.lib.gamecore.events.player.SPlayerPreJoinGameEvent;
+import org.screamingsandals.lib.gamecore.placeholders.PlaceholderParser;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
 import org.screamingsandals.lib.gamecore.resources.ResourceSpawner;
 import org.screamingsandals.lib.gamecore.resources.ResourceTypes;
@@ -59,6 +63,7 @@ public abstract class GameFrame implements Serializable {
     private transient List<GamePlayer> playersInGame = new LinkedList<>();
     private transient List<GamePlayer> spectators = new LinkedList<>();
 
+    private transient PlaceholderParser placeholderParser = new PlaceholderParser(this);
     private transient ScoreboardManager scoreboardManager = new ScoreboardManager(this);
     private transient BossbarManager bossbarManager = new BossbarManager(this);
 
@@ -224,14 +229,13 @@ public abstract class GameFrame implements Serializable {
     }
 
     public void join(GamePlayer gamePlayer) {
-        //update game events
+        if (GameCore.fireEvent(new SPlayerPreJoinGameEvent(this, gamePlayer))) {
+            gamePlayer.setActiveGame(this);
+            gamePlayer.teleport(lobbyWorld.getSpawn());
 
-        gamePlayer.setActiveGame(this);
-        gamePlayer.teleport(lobbyWorld.getSpawn());
-
-        //update game events
-
-        //update scoreboards and bossbars
+            //update scoreboards and bossbars
+            GameCore.fireEvent(new SPlayerJoinedGameEvent(this, gamePlayer));
+        }
     }
 
     public void leave(GamePlayer gamePlayer) {
@@ -239,6 +243,8 @@ public abstract class GameFrame implements Serializable {
         gameCycle.kickPlayer(gamePlayer);
 
         playersInGame.remove(gamePlayer);
+
+        GameCore.fireEvent(new SPlayerLeftGameEvent(this, gamePlayer));
     }
 
     //Working with players
@@ -261,6 +267,15 @@ public abstract class GameFrame implements Serializable {
         }
 
         return lowestTeam;
+    }
+
+    public boolean isTeamRegistered(String teamName) {
+        for (var team : teams) {
+            if (team.getTeamName().equalsIgnoreCase(teamName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //Prepare game stuff

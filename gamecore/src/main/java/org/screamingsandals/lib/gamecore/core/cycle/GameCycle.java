@@ -26,7 +26,7 @@ public abstract class GameCycle extends BaseTask {
 
     @Override
     public void run() {
-        final GameState gameState = gameFrame.getActiveState();
+        final var gameState = gameFrame.getActiveState();
         if (currentPhase != null && currentPhase.getPhaseType() == gameState) {
             if (gameState == GameState.WAITING && gameFrame.getPlayersInGame().size() == 0) {
                 return;
@@ -99,6 +99,7 @@ public abstract class GameCycle extends BaseTask {
     private void tick() {
         GameCore.fireEvent(new SGameTickEvent(gameFrame, currentPhase));
         Preconditions.checkNotNull(currentPhase).tick();
+        gameFrame.getPlaceholderParser().reload();
     }
 
     public void kickAllPlayers() {

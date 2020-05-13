@@ -38,9 +38,9 @@ public class Utils {
     }
 
     public static void sendPluginMessage(String message) {
-        Object providedPlugin = Language.getInstance().getPlugin();
+        Object providedPlugin = Base.getInstance().getPlugin();
         String pluginName;
-        if (Language.isSpigot()) {
+        if (Base.isSpigot()) {
             Plugin plugin = (Plugin) providedPlugin;
             pluginName = plugin.getName();
 
@@ -54,7 +54,7 @@ public class Utils {
     }
 
     public static ConfigAdapter createConfigFile(File file) {
-        if (Language.isSpigot()) {
+        if (Base.isSpigot()) {
             return SpigotConfigAdapter.create(file);
         } else {
             return BungeeConfigAdapter.create(file);
@@ -62,7 +62,7 @@ public class Utils {
     }
 
     public static ConfigAdapter createConfigInputStream(InputStream inputStream) {
-        if (Language.isSpigot()) {
+        if (Base.isSpigot()) {
             return SpigotConfigAdapter.create(inputStream);
         } else {
             return BungeeConfigAdapter.create(inputStream);

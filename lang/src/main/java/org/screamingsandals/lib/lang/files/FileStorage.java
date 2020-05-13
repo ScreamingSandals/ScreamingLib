@@ -2,7 +2,7 @@ package org.screamingsandals.lib.lang.files;
 
 import lombok.Data;
 import org.screamingsandals.lib.config.ConfigAdapter;
-import org.screamingsandals.lib.lang.Language;
+import org.screamingsandals.lib.lang.Base;
 import org.screamingsandals.lib.lang.Utils;
 import org.screamingsandals.lib.lang.storage.Storage;
 
@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ScreamingSandals team
@@ -25,10 +26,10 @@ public class FileStorage {
     }
 
     public boolean load() {
-        final List<String> filesInFolder = Language.getResourceFolderFiles("languages");
+        final List<String> filesInFolder = Base.getResourceFolderFiles("languages");
         filesInFolder.forEach(this::registerLanguage);
 
-        final HashMap<String, Storage> availableLanguages = new HashMap<>();
+        final Map<String, Storage> availableLanguages = new HashMap<>();
         for (var key : languageFiles.keySet()) {
             final ConfigAdapter config = languageFiles.get(key);
             final Storage storage = new Storage(config, key, fallbackStorages.getOrDefault(key, null));
@@ -40,7 +41,7 @@ public class FileStorage {
             return false;
         }
 
-        Language.getInstance().setAvailableLanguages(new HashMap<>(availableLanguages));
+        Base.getInstance().setAvailableLanguages(new HashMap<>(availableLanguages));
         return true;
     }
 
@@ -73,14 +74,14 @@ public class FileStorage {
     }
 
     private ConfigAdapter loadFromFile(File file) {
-        final ConfigAdapter config = Utils.createConfigFile(file);
+        final var config = Utils.createConfigFile(file);
         config.load();
 
         return config;
     }
 
     private ConfigAdapter loadFromInputStream(InputStream inputStream) {
-        final ConfigAdapter config = Utils.createConfigInputStream(inputStream);
+        final var config = Utils.createConfigInputStream(inputStream);
         config.load();
 
         return config;
