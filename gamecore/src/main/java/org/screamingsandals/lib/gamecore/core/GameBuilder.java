@@ -21,7 +21,6 @@ import static org.screamingsandals.lib.lang.I.mpr;
 @Data
 public abstract class GameBuilder<T extends GameFrame> {
     private T gameFrame;
-    private List<GameStore.StoreBuilder> storeBuilders = new LinkedList<>();
     private List<GameStore> gameStores = new LinkedList<>();
 
     public boolean create(String arenaName, GameType gameType, Player player) {
