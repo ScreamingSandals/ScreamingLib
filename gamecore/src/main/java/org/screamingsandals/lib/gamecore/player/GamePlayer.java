@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameState;
-import org.screamingsandals.lib.gamecore.core.adapter.LocationAdapter;
+import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerSwitchedToPlayer;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerSwitchedToSpectator;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerTeleportEvent;

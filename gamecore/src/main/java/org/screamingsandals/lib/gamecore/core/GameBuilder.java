@@ -5,8 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
-import org.screamingsandals.lib.gamecore.core.adapter.LocationAdapter;
-import org.screamingsandals.lib.gamecore.core.adapter.WorldAdapter;
+import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
+import org.screamingsandals.lib.gamecore.adapter.WorldAdapter;
 import org.screamingsandals.lib.gamecore.store.GameStore;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
 import org.screamingsandals.lib.gamecore.world.BaseWorld;
@@ -46,7 +46,7 @@ public abstract class GameBuilder<T extends GameFrame> {
     }
 
     public void save(Player player) {
-
+        gameFrame.getStores().forEach(GameStore::kill);
     }
 
     public boolean isCreated() {

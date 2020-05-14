@@ -2,7 +2,7 @@ package org.screamingsandals.lib.gamecore.team;
 
 import lombok.Data;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
-import org.screamingsandals.lib.gamecore.core.adapter.LocationAdapter;
+import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
 
 import java.io.Serializable;

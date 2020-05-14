@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.gamecore.core.adapter;
+package org.screamingsandals.lib.gamecore.adapter;
 
 import lombok.Data;
 import org.bukkit.Location;
@@ -50,7 +50,7 @@ public class LocationAdapter implements Serializable {
     }
 
     private Location constructLocation() {
-        if (worldAdapter.isWorldExists()) {
+        if (!worldAdapter.isWorldExists()) {
             Debug.warn("World " + worldAdapter.getWorldName() + " is null!", true);
             return null;
         }

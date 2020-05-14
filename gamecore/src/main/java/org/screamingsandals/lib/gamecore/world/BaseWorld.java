@@ -5,8 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
-import org.screamingsandals.lib.gamecore.core.adapter.LocationAdapter;
-import org.screamingsandals.lib.gamecore.core.adapter.WorldAdapter;
+import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
+import org.screamingsandals.lib.gamecore.adapter.WorldAdapter;
 
 import java.util.HashMap;
 import java.util.Map;

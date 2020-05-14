@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.lang;
 
 import lombok.Data;
+import org.bukkit.ChatColor;
 import org.screamingsandals.lib.lang.files.FileStorage;
 import org.screamingsandals.lib.lang.storage.Storage;
 
@@ -117,5 +118,9 @@ public abstract class Base {
 
     public static Storage getGlobalStorage() {
         return instance.globalStorage;
+    }
+
+    public static String translateColors(String input) {
+        return ChatColor.translateAlternateColorCodes('&', input);
     }
 }

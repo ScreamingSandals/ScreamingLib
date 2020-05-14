@@ -2,7 +2,7 @@ package org.screamingsandals.lib.gamecore.world;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.gamecore.core.adapter.LocationAdapter;
+import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 
 @EqualsAndHashCode(callSuper = false)
 @Data

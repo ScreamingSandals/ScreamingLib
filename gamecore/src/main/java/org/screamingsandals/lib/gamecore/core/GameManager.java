@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 public class GameManager<T extends GameFrame> {
     private final File dataFolder;
     private final Class<T> type;
+    private final Map<String, Object> gameBuilders = new HashMap<>();
     private Map<String, T> registeredGames = new HashMap<>();
 
     public GameManager(File dataFolder, Class<T> type) {
@@ -151,5 +152,22 @@ public class GameManager<T extends GameFrame> {
 
     public Map<String, T> getRegisteredGamesMap() {
         return registeredGames;
+    }
+
+    public void registerBuilder(GameBuilder<T> gameBuilder) {
+        gameBuilders.put(gameBuilder.getGameFrame().getGameName(), gameBuilder);
+    }
+
+    public void unregisterBuilder(String gameName) {
+        gameBuilders.remove(gameName);
+    }
+
+    public boolean isBuilderRegistered(String gameName) {
+        return gameBuilders.containsKey(gameName);
+    }
+
+    @SuppressWarnings("unchecked")
+    public GameBuilder<T> getGameBuilder(String gameName) {
+        return (GameBuilder<T>) gameBuilders.get(gameName);
     }
 }

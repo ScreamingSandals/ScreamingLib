@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.gamecore.core.adapter;
+package org.screamingsandals.lib.gamecore.adapter;
 
 import lombok.Data;
 import org.bukkit.Bukkit;

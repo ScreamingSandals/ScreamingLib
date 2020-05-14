@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Data
@@ -254,7 +255,7 @@ public abstract class GameFrame implements Serializable {
         }
     }
 
-    public GameTeam getTeamWithLeastPlayers() {
+    public Optional<GameTeam> getTeamWithLeastPlayers() {
         GameTeam lowestTeam = null;
         for (var gameTeam : teams) {
             if (lowestTeam == null) {
@@ -266,7 +267,17 @@ public abstract class GameFrame implements Serializable {
             }
         }
 
-        return lowestTeam;
+        return lowestTeam != null ? Optional.of(lowestTeam) : Optional.empty();
+    }
+
+    public Optional<GameTeam> getRegisteredTeam(String teamName) {
+        for (var gameTeam : teams) {
+           if (gameTeam.getTeamName().equalsIgnoreCase(teamName)) {
+               return Optional.of(gameTeam);
+           }
+        }
+
+        return Optional.empty();
     }
 
     public boolean isTeamRegistered(String teamName) {

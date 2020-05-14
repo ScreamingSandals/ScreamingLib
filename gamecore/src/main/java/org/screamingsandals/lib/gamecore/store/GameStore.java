@@ -5,8 +5,9 @@ import org.bukkit.Chunk;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
-import org.screamingsandals.lib.gamecore.core.adapter.LocationAdapter;
+import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
+import org.screamingsandals.lib.lang.Base;
 
 import java.io.File;
 import java.io.Serializable;
@@ -50,12 +51,20 @@ public class GameStore implements Serializable {
     }
 
     public LivingEntity spawn() {
+        return spawn(shopName);
+    }
+
+    public LivingEntity spawn(String shopName) {
         if (livingEntity == null) {
             livingEntity = (LivingEntity) storeLocation.getWorld().spawnEntity(storeLocation.getLocation(), entityType);
+            livingEntity.setAI(false);
+            livingEntity.setInvulnerable(true);
+            livingEntity.setRemoveWhenFarAway(false);
+            livingEntity.setRotation(storeLocation.getYaw(), storeLocation.getPitch());
+
             if (shopName != null) {
-                livingEntity.setCustomName(shopName);
+                livingEntity.setCustomName(Base.translateColors(shopName));
                 livingEntity.setCustomNameVisible(true);
-                livingEntity.setRemoveWhenFarAway(false);
                 if (livingEntity instanceof Villager) {
                     ((Villager) livingEntity).setProfession(profession);
                 }

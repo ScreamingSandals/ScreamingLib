@@ -3,6 +3,7 @@ package org.screamingsandals.lib.gamecore.listeners.player;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.screamingsandals.lib.gamecore.GameCore;
@@ -25,5 +26,15 @@ public class PlayerListener implements Listener {
         final Player player = event.getPlayer();
 
         GameCore.getPlayerManager().unregisterPlayer(player);
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEntityEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        final var entity = event.getRightClicked();
+
     }
 }
