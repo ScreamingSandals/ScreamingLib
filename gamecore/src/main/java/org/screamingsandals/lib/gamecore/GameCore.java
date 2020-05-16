@@ -10,6 +10,7 @@ import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameManager;
+import org.screamingsandals.lib.gamecore.core.entities.EntityManager;
 import org.screamingsandals.lib.gamecore.error.BaseError;
 import org.screamingsandals.lib.gamecore.error.ErrorManager;
 import org.screamingsandals.lib.gamecore.error.ErrorType;
@@ -30,6 +31,7 @@ public class GameCore {
     private final ErrorManager errorManager;
     private final PlayerManager playerManager;
     private GameManager<?> gameManager;
+    private EntityManager entityManager;
     private boolean verbose = true;
     private String adminPermissions = "gamecore.admin";
 
@@ -40,6 +42,7 @@ public class GameCore {
         tasker = Tasker.getSpigot(plugin);
         errorManager = new ErrorManager();
         playerManager = new PlayerManager();
+        entityManager = new EntityManager();
 
         Debug.setFallbackName("GameCore-" + plugin.getName());
     }
@@ -64,7 +67,8 @@ public class GameCore {
     }
 
     public void destroy() {
-        gameManager.unregisterGames();
+        gameManager.unregisterAll();
+        entityManager.unregisterAll();
         tasker.destroy();
         errorManager.destroy();
 
@@ -99,6 +103,10 @@ public class GameCore {
 
     public static ErrorManager getErrorManager() {
         return instance.errorManager;
+    }
+
+    public static EntityManager getEntityManager() {
+        return instance.entityManager;
     }
 
     public static Plugin getPlugin() {

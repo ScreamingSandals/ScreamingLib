@@ -46,7 +46,7 @@ public class GameManager<T extends GameFrame> {
 
             if (game.checkIntegrity()) {
                 //TODO
-                Debug.warn("&cCannot load game &e" + game.getDisplayedName() + "&c!");
+                Debug.warn("&cCannot load game &e" + game.getGameName() + "&c!");
                 return null;
             }
 
@@ -75,7 +75,7 @@ public class GameManager<T extends GameFrame> {
                 final List<String> results = stream.filter(Files::isRegularFile).map(Path::toString).collect(Collectors.toList());
 
                 if (results.isEmpty()) {
-                    Debug.info("&cNo arenas has been found! &e:(", true);
+                    Debug.info("&cWe did not find any arena.. &e:(", true);
                 } else {
                     results.forEach(result -> loadGame(new File(result)));
                 }
@@ -83,11 +83,11 @@ public class GameManager<T extends GameFrame> {
                 GameCore.getErrorManager().newError(new GameError(null, ErrorType.GAME_LOADING_ERROR, e), true);
             }
         } else {
-            Debug.info("&cNo arenas has been found! &e:(", true);
+            Debug.info("&cWe did not find any arena.. &e:(", true);
         }
     }
 
-    public void unregisterGames() {
+    public void unregisterAll() {
         for (var game : registeredGames.values()) {
             unregisterGame(game, false);
         }
@@ -154,8 +154,8 @@ public class GameManager<T extends GameFrame> {
         return registeredGames;
     }
 
-    public void registerBuilder(GameBuilder<T> gameBuilder) {
-        gameBuilders.put(gameBuilder.getGameFrame().getGameName(), gameBuilder);
+    public void registerBuilder(String gameName, Object gameBuilder) {
+        gameBuilders.put(gameName, gameBuilder);
     }
 
     public void unregisterBuilder(String gameName) {
@@ -167,7 +167,7 @@ public class GameManager<T extends GameFrame> {
     }
 
     @SuppressWarnings("unchecked")
-    public GameBuilder<T> getGameBuilder(String gameName) {
-        return (GameBuilder<T>) gameBuilders.get(gameName);
+    public <E> E getGameBuilder(String gameName) {
+        return (E) gameBuilders.get(gameName);
     }
 }

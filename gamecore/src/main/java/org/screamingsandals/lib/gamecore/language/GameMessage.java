@@ -39,11 +39,14 @@ public class GameMessage extends Message {
     }
 
     public GameMessage game(GameFrame gameFrame) {
-        if (gameFrame == null) {
+        if (gameFrame == null || gameFrame.getPlaceholderParser() == null) {
             return this;
         }
 
         this.gameFrame = gameFrame;
+        final var parser = gameFrame.getPlaceholderParser();
+        parser.reload();
+
         replaces.putAll(gameFrame.getPlaceholderParser().getAvailable());
         return this;
     }

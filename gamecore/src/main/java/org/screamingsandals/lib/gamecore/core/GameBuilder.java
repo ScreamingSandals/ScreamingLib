@@ -21,13 +21,16 @@ import static org.screamingsandals.lib.lang.I.mpr;
 @Data
 public abstract class GameBuilder<T extends GameFrame> {
     private T gameFrame;
+    private String gameName;
     private List<GameStore> gameStores = new LinkedList<>();
 
-    public boolean create(String arenaName, GameType gameType, Player player) {
-        if (GameCore.getGameManager().isGameRegistered(arenaName)) {
+    public boolean create(String gameName, GameType gameType, Player player) {
+        if (GameCore.getGameManager().isGameRegistered(gameName)) {
             mpr("core.errors.game-already-created").send(player);
             return false;
         }
+
+        this.gameName = gameName;
         return true;
     }
 
@@ -46,7 +49,7 @@ public abstract class GameBuilder<T extends GameFrame> {
     }
 
     public void save(Player player) {
-        gameFrame.getStores().forEach(GameStore::kill);
+        gameFrame.getStores().forEach(GameStore::remove);
     }
 
     public boolean isCreated() {

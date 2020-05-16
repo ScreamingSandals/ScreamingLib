@@ -1,10 +1,10 @@
 package org.screamingsandals.lib.gamecore.store;
 
 import lombok.Data;
-import org.bukkit.Chunk;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
+import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
 import org.screamingsandals.lib.lang.Base;
@@ -70,22 +70,12 @@ public class GameStore implements Serializable {
                 }
             }
         }
+
+        GameCore.getEntityManager().registerEntity(livingEntity);
         return livingEntity;
     }
 
-    public LivingEntity kill() {
-        final LivingEntity entity = livingEntity;
-
-        if (livingEntity != null) {
-            final Chunk chunk = livingEntity.getLocation().getChunk();
-
-            if (!chunk.isLoaded()) {
-                chunk.load();
-            }
-
-            livingEntity.remove();
-            livingEntity = null;
-        }
-        return entity;
+    public void remove() {
+        GameCore.getEntityManager().unregisterEntity(livingEntity);
     }
 }
