@@ -3,7 +3,7 @@ package org.screamingsandals.lib.gamecore.store;
 import java.util.Optional;
 
 public enum StoreType {
-    GENERIC,
+    NORMAL,
     UPGRADES,
     CUSTOM;
 

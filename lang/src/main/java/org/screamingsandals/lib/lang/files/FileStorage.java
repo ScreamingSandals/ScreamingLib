@@ -7,7 +7,6 @@ import org.screamingsandals.lib.lang.Utils;
 import org.screamingsandals.lib.lang.storage.Storage;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,13 +52,13 @@ public class FileStorage {
         if (dataFolder != null && dataFolder.exists()) {
             final File langFile = new File(dataFolder, languagePath);
             if (langFile.exists()) {
-                configAdapter = loadFromFile(langFile);
+                configAdapter = loadConfig(langFile);
                 registerFallbackStorage(languagePathIS);
             } else {
-                configAdapter = loadFromInputStream(getClass().getResourceAsStream(languagePathIS));
+                configAdapter = loadConfig(getClass().getResourceAsStream(languagePathIS));
             }
         } else {
-            configAdapter = loadFromInputStream(getClass().getResourceAsStream(languagePathIS));
+            configAdapter = loadConfig(getClass().getResourceAsStream(languagePathIS));
         }
 
         final String key = configAdapter.getString("language_code");
@@ -67,22 +66,18 @@ public class FileStorage {
     }
 
     private void registerFallbackStorage(String path) {
-        ConfigAdapter configAdapter = loadFromInputStream(getClass().getResourceAsStream(path));
+        ConfigAdapter configAdapter = loadConfig(getClass().getResourceAsStream(path));
 
         final String key = configAdapter.getString("language_code");
         fallbackStorages.put(key, new Storage(configAdapter, key));
     }
 
-    private ConfigAdapter loadFromFile(File file) {
-        final var config = Utils.createConfigFile(file);
-        config.load();
+    private ConfigAdapter loadConfig(Object input) {
+        final var config = Utils.createConfig(input);
 
-        return config;
-    }
-
-    private ConfigAdapter loadFromInputStream(InputStream inputStream) {
-        final var config = Utils.createConfigInputStream(inputStream);
-        config.load();
+        if (config != null) {
+            config.load();
+        }
 
         return config;
     }

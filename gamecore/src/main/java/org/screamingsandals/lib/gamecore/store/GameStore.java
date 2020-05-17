@@ -6,8 +6,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
+import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
-import org.screamingsandals.lib.lang.Base;
+import org.screamingsandals.lib.lang.Utils;
 
 import java.io.File;
 import java.io.Serializable;
@@ -50,11 +51,11 @@ public class GameStore implements Serializable {
         }
     }
 
-    public LivingEntity spawn() {
-        return spawn(shopName);
+    public LivingEntity spawn(GameFrame gameFrame) {
+        return spawn(gameFrame, shopName);
     }
 
-    public LivingEntity spawn(String shopName) {
+    public LivingEntity spawn(GameFrame gameFrame, String shopName) {
         if (livingEntity == null) {
             livingEntity = (LivingEntity) storeLocation.getWorld().spawnEntity(storeLocation.getLocation(), entityType);
             livingEntity.setAI(false);
@@ -63,7 +64,7 @@ public class GameStore implements Serializable {
             livingEntity.setRotation(storeLocation.getYaw(), storeLocation.getPitch());
 
             if (shopName != null) {
-                livingEntity.setCustomName(Base.translateColors(shopName));
+                livingEntity.setCustomName(Utils.colorize(shopName));
                 livingEntity.setCustomNameVisible(true);
                 if (livingEntity instanceof Villager) {
                     ((Villager) livingEntity).setProfession(profession);
@@ -71,11 +72,11 @@ public class GameStore implements Serializable {
             }
         }
 
-        GameCore.getEntityManager().registerEntity(livingEntity);
+        GameCore.getEntityManager().register(gameFrame, livingEntity);
         return livingEntity;
     }
 
     public void remove() {
-        GameCore.getEntityManager().unregisterEntity(livingEntity);
+        GameCore.getEntityManager().unregister(livingEntity);
     }
 }

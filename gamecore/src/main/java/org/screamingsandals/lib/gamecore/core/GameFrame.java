@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Data
@@ -58,6 +59,7 @@ public abstract class GameFrame implements Serializable {
     private File dataFile;
     private GameConfig gameConfig;
     private GameType gameType;
+    private UUID uuid;
 
     private transient int maxPlayers;
     private transient GameCycle gameCycle;
@@ -72,6 +74,7 @@ public abstract class GameFrame implements Serializable {
         this.gameName = gameName;
         this.gameType = gameType;
         this.dataFile = new File(GameCore.getGameManager().getDataFolder(), gameName + ".json");
+        this.uuid = UUID.randomUUID();
 
         loadDefaults();
     }
