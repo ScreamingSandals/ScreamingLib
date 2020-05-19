@@ -8,16 +8,23 @@ import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.adapter.WorldAdapter;
 import org.screamingsandals.lib.gamecore.resources.ResourceSpawner;
+import org.screamingsandals.lib.gamecore.resources.SpawnerHologramHandler;
 import org.screamingsandals.lib.gamecore.resources.editor.SpawnerEditor;
 import org.screamingsandals.lib.gamecore.store.GameStore;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
+import org.screamingsandals.lib.gamecore.utils.GameUtils;
+import org.screamingsandals.lib.gamecore.visuals.holograms.HologramType;
 import org.screamingsandals.lib.gamecore.world.BaseWorld;
 import org.screamingsandals.lib.gamecore.world.GameWorld;
 import org.screamingsandals.lib.gamecore.world.LobbyWorld;
+import org.screamingsandals.lib.lang.Utils;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
 import static org.screamingsandals.lib.lang.I.mpr;
 
 @Data
@@ -107,8 +114,10 @@ public abstract class GameBuilder<T extends GameFrame> {
         gameFrame.getTeams().add(gameTeam);
     }
 
-    public void addSpawner(ResourceSpawner resourceSpawner) {
+    public void addSpawner(ResourceSpawner resourceSpawner, Player player) {
         gameFrame.getResourceManager().register(resourceSpawner);
+
+        buildHologram(resourceSpawner, gameFrame, player);
     }
 
     public void addStore(GameStore gameStore) {
@@ -154,6 +163,35 @@ public abstract class GameBuilder<T extends GameFrame> {
         }
 
         setWorldPosition(adapter, lobbyWorld, whichOne);
+    }
+
+    public void buildHologram(ResourceSpawner spawner, GameFrame currentGame, Player player) {
+        final List<String> lines = new ArrayList<>();
+        var period = spawner.getPeriod();
+        final var timeUnit = spawner.getTimeUnit();
+        final var team = spawner.getGameTeam();
+        final var maxSpawned = spawner.getMaxSpawned();
+
+        if (timeUnit == TimeUnit.MILLISECONDS) {
+            period = GameUtils.convertMilisecondsToTick(period);
+        }
+
+        lines.add(Utils.colorize("&a&lGameBuilder"));
+        lines.addAll(m("game-builder.spawners.hologram")
+                .replace("%color%", spawner.getType().getChatColor())
+                .replace("%type%", spawner.getType().getName())
+                .replace("%mat%", spawner.getType().getMaterial())
+                .replace("%spawnAmount%", spawner.getAmount())
+                .replace("%time-unit%", period + " " + GameUtils.convertTimeUnitToLanguage(period, timeUnit))
+                .replace("%team%", team == null ? GameUtils.convertNullToLanguage() : team.getTeamName())
+                .replace("%amount%", maxSpawned == -1 ? GameUtils.getInfinityLanguage() : maxSpawned)
+                .replace("%booleanValue%", spawner.isHologram())
+                .getList());
+
+        final var gameHologram = GameCore.getHologramManager()
+                .spawnTouchableHologram(currentGame, HologramType.BUILDER_SPAWNER, player, spawner.getLocation().getLocation(), lines);
+        gameHologram.setUuid(spawner.getUuid());
+        gameHologram.setHandler(new SpawnerHologramHandler());
     }
 
     private void setWorldPosition(LocationAdapter adapter, BaseWorld baseWorld, int whichOne) {

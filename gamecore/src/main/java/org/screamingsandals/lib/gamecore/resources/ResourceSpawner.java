@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class ResourceSpawner implements Serializable {
+public class ResourceSpawner implements Serializable, Cloneable {
     //spawner settings
     private LocationAdapter location;
     private int maxSpawned;
@@ -72,7 +72,11 @@ public class ResourceSpawner implements Serializable {
         baseTask = new BaseTask() {
             @Override
             public void run() {
-                if (gameTeam != null && !gameTeam.isAlive() || getMaxSpawned()) {
+                if (gameTeam != null && !gameTeam.isAlive()) {
+                    stop();
+                }
+
+                if (isMaxSpawned()) {
                     stop();
                     return;
                 }
@@ -104,21 +108,22 @@ public class ResourceSpawner implements Serializable {
         item.setPickupDelay(0);
         spawnedItems.add(item);
 
+        //TODO: calculate next spawn
         remainingToSpawn = maxSpawned - getSpawnedCount();
     }
 
-    public void setPeriod(int period) {
+    public void changePeriod(int period) {
         this.period = period;
 
         stop();
         start();
     }
 
-    public boolean getMaxSpawned() {
+    public boolean isMaxSpawned() {
         if (maxSpawned == -1) {
             return false;
         }
-        return getSpawnedCount() <= maxSpawned;
+        return getSpawnedCount() < maxSpawned;
     }
 
     public int getSpawnedCount() {
@@ -128,6 +133,10 @@ public class ResourceSpawner implements Serializable {
     public boolean isSame(ResourceSpawner resourceSpawner) {
         return resourceSpawner.getLocation().equals(location)
                 && resourceSpawner.getType().getMaterial().equals(type.getMaterial());
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     @Data

@@ -53,6 +53,8 @@ public interface Tasker {
 
     default long getBukkitTime(long delay, TimeUnit timeUnit) {
         switch (timeUnit) {
+            case MILLISECONDS:
+                return delay / 50;
             case SECONDS:
                 return delay * 20;
             case MINUTES:

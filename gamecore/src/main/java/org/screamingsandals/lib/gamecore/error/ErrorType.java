@@ -15,6 +15,7 @@ public enum ErrorType {
     GAME_WORLD_NOT_DEFINED("core.errors.game_world_does_not_exists", "&cGame world for the game &e%game% &cis not defined!", new HashMap<>()),
     GAME_WORLD_DOES_NOT_EXISTS("core.errors.game_world_does_not_exists", "&cGame world %world% for the game &e%game% &cdoes not exists!", new HashMap<>()),
     LOBBY_WORLD_DOES_NOT_EXISTS("core.errors.lobby_world_does_not_exists", "&cLobby world for the game &e%game% &cdoes not exists!", new HashMap<>()),
+    SPAWNER_EDITOR_FAILED("core.errors.spawner_editor_failed", "&cThis, we did not expected. &a&lPlease report this error log to GitHub or Discord!", new HashMap<>()),
     UNKNOWN("core.errors.unknown", "&cUnknown error occurred. Error code printed to console, please report it to our GitHub or Discord!", Collections.emptyMap());
 
     private final Map<String, String> replaceable;

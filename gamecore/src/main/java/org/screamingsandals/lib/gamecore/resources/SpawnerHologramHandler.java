@@ -3,6 +3,8 @@ package org.screamingsandals.lib.gamecore.resources;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.GameBuilder;
+import org.screamingsandals.lib.gamecore.error.ErrorType;
+import org.screamingsandals.lib.gamecore.error.GameError;
 import org.screamingsandals.lib.gamecore.resources.editor.SpawnerEditor;
 import org.screamingsandals.lib.gamecore.visuals.holograms.GameHologram;
 import org.screamingsandals.lib.nms.holograms.Hologram;
@@ -10,7 +12,7 @@ import org.screamingsandals.lib.nms.holograms.TouchHandler;
 
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.mpr;
 
-public class SpawnerHologramTouchHandler implements TouchHandler {
+public class SpawnerHologramHandler implements TouchHandler {
 
     @Override
     public void handle(Player player, Hologram hologram) {
@@ -43,16 +45,19 @@ public class SpawnerHologramTouchHandler implements TouchHandler {
 
         var gameBuilder = (GameBuilder) GameCore.getGameManager().getGameBuilder(game.getGameName());
         if (gameBuilder.getSpawnerEditor() != null) {
-            mpr("game-builder.spawners.already-editing").sendList(player);
+            mpr("game-builder.spawners.editor.already-active").sendList(player);
             return;
         }
 
-        var spawnerEditor = new SpawnerEditor(player, resourceSpawner.get());
-        gameBuilder.setSpawnerEditor(spawnerEditor);
-        mpr("game-builder.spawners.editor-started").sendList(player);
+        try {
+            gameBuilder.setSpawnerEditor(new SpawnerEditor(player, gameBuilder, resourceSpawner.get(), gameHologram));
+            mpr("game-builder.spawners.editor.started").sendList(player);
+        } catch (Exception e) {
+            GameCore.getErrorManager().newError(new GameError(gameBuilder.getGameFrame(), ErrorType.SPAWNER_EDITOR_FAILED, e));
+        }
     }
 
     private void handleGame(Player player, GameHologram gameHologram) {
-
+        //TODO: private team/player spawners
     }
 }

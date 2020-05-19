@@ -7,7 +7,10 @@ import org.screamingsandals.lib.nms.entity.ArmorStandNMS;
 import org.screamingsandals.lib.nms.utils.InstanceMethod;
 import org.screamingsandals.lib.nms.utils.Version;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.*;
 import static org.screamingsandals.lib.nms.utils.ClassStorage.getField;
@@ -25,8 +28,8 @@ public class Hologram {
     private List<TouchHandler> handlers = new ArrayList<>();
     private HologramManager manager;
 
-    public Hologram(HologramManager manager, List<Player> players, Location loc, List<String> lines) {
-        this(manager, players, loc, lines, false);
+    public Hologram(HologramManager manager, List<Player> players, Location location, List<String> lines) {
+        this(manager, players, location, lines, false);
     }
 
     public Hologram(HologramManager manager, List<Player> players, Location location, List<String> lines, boolean touchable) {
@@ -119,7 +122,7 @@ public class Hologram {
     }
 
     public Hologram removeLine() {
-        return removeLine(this.lines.size() - 1);
+        return removeLine(lines.size() - 1);
     }
 
     public Hologram removeLine(int index) {
@@ -165,7 +168,7 @@ public class Hologram {
     private void updateEntities(int startIndex, boolean justThisIndex) {
         try {
             final List<Object> packets = new ArrayList<>();
-            boolean positionChanged = !justThisIndex && this.lines.size() != this.entities.size();
+            boolean positionChanged = !justThisIndex && lines.size() != entities.size();
 
             for (int i = startIndex; (i < lines.size()) && (!justThisIndex || i == startIndex); i++) {
                 final String line = lines.get(i);
@@ -179,7 +182,7 @@ public class Hologram {
                     packets.add(metadataPacket);
 
                     if (positionChanged) {
-                        final Location editedLocation = location.clone().add(0, (this.lines.size() - i) * .30, 0);
+                        final Location editedLocation = location.clone().add(0, (lines.size() - i) * .30, 0);
                         armorStand.setLocation(editedLocation);
 
                         final Object teleportPacket = Objects.requireNonNull(PacketPlayOutEntityTeleport)
@@ -188,7 +191,7 @@ public class Hologram {
                         packets.add(teleportPacket);
                     }
                 } else {
-                    final Location editedLocation = location.clone().add(0, (this.lines.size() - i) * .30, 0);
+                    final Location editedLocation = location.clone().add(0, (lines.size() - i) * .30, 0);
                     final ArmorStandNMS armorStand = new ArmorStandNMS(editedLocation);
                     armorStand.setCustomName(line);
                     armorStand.setCustomNameVisible(true);

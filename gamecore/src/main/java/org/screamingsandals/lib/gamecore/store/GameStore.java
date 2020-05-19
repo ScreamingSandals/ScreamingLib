@@ -4,6 +4,7 @@ import lombok.Data;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
@@ -57,7 +58,7 @@ public class GameStore implements Serializable {
 
     public LivingEntity spawn(GameFrame gameFrame, String shopName) {
         if (livingEntity == null) {
-            livingEntity = (LivingEntity) storeLocation.getWorld().spawnEntity(storeLocation.getLocation(), entityType);
+            livingEntity = (LivingEntity) storeLocation.getWorld().spawnEntity(storeLocation.getLocation(), entityType, CreatureSpawnEvent.SpawnReason.CUSTOM);
             livingEntity.setAI(false);
             livingEntity.setInvulnerable(true);
             livingEntity.setRemoveWhenFarAway(false);
