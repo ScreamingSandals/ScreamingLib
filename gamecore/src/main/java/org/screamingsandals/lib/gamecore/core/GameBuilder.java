@@ -7,6 +7,8 @@ import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.adapter.WorldAdapter;
+import org.screamingsandals.lib.gamecore.resources.ResourceSpawner;
+import org.screamingsandals.lib.gamecore.resources.editor.SpawnerEditor;
 import org.screamingsandals.lib.gamecore.store.GameStore;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
 import org.screamingsandals.lib.gamecore.world.BaseWorld;
@@ -23,6 +25,7 @@ public abstract class GameBuilder<T extends GameFrame> {
     private T gameFrame;
     private String gameName;
     private List<GameStore> gameStores = new LinkedList<>();
+    private SpawnerEditor spawnerEditor;
 
     public boolean create(String gameName, GameType gameType, Player player) {
         if (GameCore.getGameManager().isGameRegistered(gameName)) {
@@ -56,8 +59,8 @@ public abstract class GameBuilder<T extends GameFrame> {
         return gameFrame != null;
     }
 
-    public boolean isReadyToSave() {
-        return gameFrame.checkIntegrity();
+    public boolean isReadyToSave(boolean fireError) {
+        return gameFrame.checkIntegrity(fireError);
     }
 
     public void setDisplayName(String displayName) {
@@ -102,6 +105,14 @@ public abstract class GameBuilder<T extends GameFrame> {
 
     public void addTeam(GameTeam gameTeam) {
         gameFrame.getTeams().add(gameTeam);
+    }
+
+    public void addSpawner(ResourceSpawner resourceSpawner) {
+        gameFrame.getResourceManager().register(resourceSpawner);
+    }
+
+    public void addStore(GameStore gameStore) {
+        gameFrame.getStores().add(gameStore);
     }
 
     public void removeTeam(String teamName) {

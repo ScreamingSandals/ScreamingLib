@@ -49,24 +49,20 @@ public class HologramManager implements Listener {
         };
     }
 
-    public Hologram spawnHologram(Player player, Location loc, String... lines) {
+    public Hologram spawnHologram(Player player, Location loc, List<String> lines) {
         return spawnHologram(Collections.singletonList(player), loc, lines);
     }
 
-    public Hologram spawnHologramTouchable(Player player, Location loc, String... lines) {
+    public Hologram spawnHologramTouchable(Player player, Location loc, List<String> lines) {
         return spawnHologramTouchable(Collections.singletonList(player), loc, lines);
     }
 
-    public Hologram spawnHologram(List<Player> players, Location loc, String... lines) {
+    public Hologram spawnHologram(List<Player> players, Location loc, List<String> lines) {
         return new Hologram(this, players, loc, lines);
     }
 
-    public Hologram spawnHologramTouchable(List<Player> players, Location loc, String... lines) {
+    public Hologram spawnHologramTouchable(List<Player> players, Location loc, List<String> lines) {
         return new Hologram(this, players, loc, lines, true);
-    }
-
-    public List<Hologram> getHolograms() {
-        return activeHolograms;
     }
 
     public void destroy() {

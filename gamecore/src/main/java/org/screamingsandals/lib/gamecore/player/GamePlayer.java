@@ -2,12 +2,13 @@ package org.screamingsandals.lib.gamecore.player;
 
 import io.papermc.lib.PaperLib;
 import lombok.Data;
+import lombok.ToString;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.gamecore.GameCore;
+import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameState;
-import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerSwitchedToPlayer;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerSwitchedToSpectator;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerTeleportEvent;
@@ -18,6 +19,7 @@ import org.screamingsandals.lib.scoreboards.scoreboard.Scoreboard;
 import java.util.UUID;
 
 @Data
+@ToString(exclude = {"activeGame"})
 public class GamePlayer {
     private final Player player;
     private final UUID uuid;

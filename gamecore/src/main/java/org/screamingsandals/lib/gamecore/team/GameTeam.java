@@ -1,8 +1,9 @@
 package org.screamingsandals.lib.gamecore.team;
 
 import lombok.Data;
-import org.screamingsandals.lib.gamecore.core.GameFrame;
+import lombok.ToString;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
+import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@ToString(exclude = {"activeGame"})
 public abstract class GameTeam implements Serializable {
     private LocationAdapter spawnLocation;
     private String teamName;

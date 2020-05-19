@@ -7,6 +7,8 @@ import org.screamingsandals.lib.gamecore.GameCore;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
+
 /**
  * Utility class for writing errors and logging them.
  * This will be used with our debug-paste tool
@@ -40,7 +42,7 @@ public class ErrorManager {
         GameCore.getPlayerManager().getRegisteredPlayers().forEach(gamePlayer -> {
             final var player = gamePlayer.getPlayer();
             if (player.hasPermission(GameCore.getInstance().getAdminPermissions())) {
-                player.sendMessage(error.getMessage());
+                player.sendMessage(m("prefix").get() + " " + error.getMessage());
             }
         });
     }

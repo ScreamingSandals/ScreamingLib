@@ -12,7 +12,18 @@ public interface Tasker {
     }
 
     default void destroy() {
-        getRunningTasks().keySet().forEach(this::destroyTask);
+        getRunningTasks().keySet().forEach(baseTask -> {
+            if (baseTask == null) {
+                return;
+            }
+
+            try {
+                Object task = runningTasks.get(baseTask);
+                task.getClass().getMethod("cancel").invoke(task);
+            } catch (Exception ignored) {
+            }
+        });
+
         runningTasks.clear();
     }
 

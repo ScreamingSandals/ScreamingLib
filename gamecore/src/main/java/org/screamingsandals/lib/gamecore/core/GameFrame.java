@@ -17,7 +17,7 @@ import org.screamingsandals.lib.gamecore.events.player.SPlayerLeftGameEvent;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerPreJoinGameEvent;
 import org.screamingsandals.lib.gamecore.placeholders.PlaceholderParser;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
-import org.screamingsandals.lib.gamecore.resources.ResourceSpawner;
+import org.screamingsandals.lib.gamecore.resources.ResourceManager;
 import org.screamingsandals.lib.gamecore.resources.ResourceTypes;
 import org.screamingsandals.lib.gamecore.store.GameStore;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
@@ -50,8 +50,6 @@ public abstract class GameFrame implements Serializable {
     private int endTime;
     private List<GameTeam> teams = new LinkedList<>();
     private List<GameStore> stores = new LinkedList<>();
-    private List<ResourceSpawner> spawners = new LinkedList<>();
-    private ResourceTypes resourceTypes;
     private GameState activeState = GameState.DISABLED;
     private GameState previousState;
 
@@ -66,6 +64,8 @@ public abstract class GameFrame implements Serializable {
     private transient List<GamePlayer> playersInGame = new LinkedList<>();
     private transient List<GamePlayer> spectators = new LinkedList<>();
 
+    //Manager
+    private ResourceManager resourceManager = new ResourceManager(this);
     private transient PlaceholderParser placeholderParser = new PlaceholderParser(this);
     private transient ScoreboardManager scoreboardManager = new ScoreboardManager(this);
     private transient BossbarManager bossbarManager = new BossbarManager(this);
@@ -84,12 +84,12 @@ public abstract class GameFrame implements Serializable {
         start();
     }
 
-    public boolean checkIntegrity() {
-        if (!checkGameWorld()) {
+    public boolean checkIntegrity(boolean fireError) {
+        if (!checkGameWorld(fireError)) {
             return false;
         }
 
-        if (!checkLobbyWorld()) {
+        if (!checkLobbyWorld(fireError)) {
             return false;
         }
 
@@ -99,9 +99,11 @@ public abstract class GameFrame implements Serializable {
                 && stores.size() > 0;
     }
 
-    public boolean checkGameWorld() {
+    public boolean checkGameWorld(boolean fireError) {
         if (gameWorld == null) {
-            GameCore.getErrorManager().newError(new GameError(this, ErrorType.GAME_WORLD_NOT_DEFINED, null));
+            if (fireError) {
+                GameCore.getErrorManager().newError(new GameError(this, ErrorType.GAME_WORLD_NOT_DEFINED, null));
+            }
             return false;
         }
 
@@ -109,7 +111,9 @@ public abstract class GameFrame implements Serializable {
             final var type = ErrorType.GAME_WORLD_DOES_NOT_EXISTS;
             type.getReplaceable().put("%world%", gameWorld.getWorldAdapter().getWorldName());
 
-            GameCore.getErrorManager().newError(new GameError(this, type, null));
+            if (fireError) {
+                GameCore.getErrorManager().newError(new GameError(this, type, null));
+            }
             return false;
         }
 
@@ -134,9 +138,11 @@ public abstract class GameFrame implements Serializable {
         return true;
     }
 
-    public boolean checkLobbyWorld() {
+    public boolean checkLobbyWorld(boolean fireError) {
         if (lobbyWorld == null) {
-            GameCore.getErrorManager().newError(new GameError(this, ErrorType.LOBBY_WORLD_DOES_NOT_EXISTS, null));
+            if (fireError) {
+                GameCore.getErrorManager().newError(new GameError(this, ErrorType.LOBBY_WORLD_DOES_NOT_EXISTS, null));
+            }
             return false;
         }
 
@@ -166,7 +172,8 @@ public abstract class GameFrame implements Serializable {
     }
 
     public void loadDefaults() {
-        resourceTypes = ResourceTypes.load(this, new File(GameCore.getPlugin().getDataFolder(), "resources.json"));
+        resourceManager.setResourceTypes(ResourceTypes.load(this,
+                new File(GameCore.getPlugin().getDataFolder(), "resources.json")));
         gameConfig = new GameConfig(this);
         gameConfig.buildDefaults();
     }
@@ -178,7 +185,7 @@ public abstract class GameFrame implements Serializable {
     }
 
     public void start() {
-        if (!checkIntegrity()) {
+        if (!checkIntegrity(true)) {
             //change to error manager
             Debug.warn("Arena " + gameName + " cannot be loaded, something is wrong with it!");
             return;

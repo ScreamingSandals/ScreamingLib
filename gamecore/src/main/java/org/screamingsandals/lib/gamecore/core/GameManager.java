@@ -44,7 +44,7 @@ public class GameManager<T extends GameFrame> {
                 return null;
             }
 
-            if (game.checkIntegrity()) {
+            if (game.checkIntegrity(true)) {
                 //TODO
                 Debug.warn("&cCannot load game &e" + game.getGameName() + "&c!");
                 return null;
@@ -162,8 +162,12 @@ public class GameManager<T extends GameFrame> {
         gameBuilders.remove(gameName);
     }
 
-    public boolean isBuilderRegistered(String gameName) {
+    public boolean isInBuilder(String gameName) {
         return gameBuilders.containsKey(gameName);
+    }
+
+    public boolean isInBuilder(GameFrame gameFrame) {
+        return gameBuilders.containsKey(gameFrame.getGameName());
     }
 
     @SuppressWarnings("unchecked")

@@ -21,17 +21,16 @@ import java.util.concurrent.TimeUnit;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public abstract class ResourceSpawner implements Serializable {
+public class ResourceSpawner implements Serializable {
     //spawner settings
     private LocationAdapter location;
-    private int spawnSpeed;
-    private TimeUnit spawnTime;
-    private int maxSpeed;
     private int maxSpawned;
-    private int spawnCount;
-    private UUID identifier;
+    private int amount;
+    private int period;
+    private TimeUnit timeUnit;
+    private UUID uuid;
     private Type type;
-    private Hologram hologram;
+    private boolean hologram;
 
     //game stuff
     private GameTeam gameTeam;
@@ -42,15 +41,23 @@ public abstract class ResourceSpawner implements Serializable {
     private transient List<Item> spawnedItems = new ArrayList<>();
     private transient BaseTask baseTask;
 
-    public ResourceSpawner(LocationAdapter location, int spawnSpeed, int maxSpeed,
-                           int maxSpawned, GameTeam gameTeam, Type type, Hologram hologram) {
+    public ResourceSpawner(LocationAdapter location, Type type) {
+        this(location, type, null, true, -1);
+    }
+
+    public ResourceSpawner(LocationAdapter location, Type type, boolean hologram) {
+        this(location, type, null, hologram, -1);
+    }
+
+    public ResourceSpawner(LocationAdapter location, Type type, GameTeam gameTeam, boolean hologram, int maxSpawned) {
         this.location = location;
-        this.spawnSpeed = spawnSpeed;
-        this.maxSpeed = maxSpeed;
+        this.type = type;
+        this.amount = type.getAmount();
+        this.period = type.getPeriod();
+        this.timeUnit = type.getTimeUnit();
         this.maxSpawned = maxSpawned;
         this.gameTeam = gameTeam;
-        this.identifier = UUID.randomUUID();
-        this.type = type;
+        this.uuid = UUID.randomUUID();
         this.hologram = hologram;
     }
 
@@ -60,19 +67,24 @@ public abstract class ResourceSpawner implements Serializable {
     }
 
     public void start() {
+        setup();
+
         baseTask = new BaseTask() {
             @Override
             public void run() {
-                if (!gameTeam.isAlive() || isMaxSpawned()) {
+                if (gameTeam != null && !gameTeam.isAlive() || getMaxSpawned()) {
                     stop();
                     return;
                 }
-
-                spawn();
+                try {
+                    spawn();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         };
 
-        baseTask.runTaskRepeater(0L, spawnSpeed, spawnTime);
+        baseTask.runTaskRepeater(1L, period, timeUnit);
     }
 
     public void stop() {
@@ -82,7 +94,7 @@ public abstract class ResourceSpawner implements Serializable {
     }
 
     private void spawn() {
-        final Item item = spawnLocation.getWorld().dropItem(spawnLocation, type.getItemStack(spawnCount));
+        final Item item = spawnLocation.getWorld().dropItem(spawnLocation, type.getItemStack(amount));
         final double spread = type.getSpread();
 
         if (spread != 1.0) {
@@ -95,14 +107,14 @@ public abstract class ResourceSpawner implements Serializable {
         remainingToSpawn = maxSpawned - getSpawnedCount();
     }
 
-    public void setSpawnSpeed(int spawnSpeed) {
-        this.spawnSpeed = spawnSpeed;
+    public void setPeriod(int period) {
+        this.period = period;
 
         stop();
         start();
     }
 
-    public boolean isMaxSpawned() {
+    public boolean getMaxSpawned() {
         if (maxSpawned == -1) {
             return false;
         }
@@ -122,9 +134,13 @@ public abstract class ResourceSpawner implements Serializable {
     @AllArgsConstructor
     public static class Type {
         private String name;
+        private String translateKey;
         private Material material;
         private ChatColor chatColor;
         private double spread;
+        private int amount;
+        private int period;
+        private TimeUnit timeUnit;
 
         public ItemStack getItemStack() {
             return getItemStack(1);
@@ -134,17 +150,10 @@ public abstract class ResourceSpawner implements Serializable {
             final ItemStack itemStack = new ItemStack(material, amount);
             final ItemMeta itemMeta = itemStack.getItemMeta();
 
-            itemMeta.setDisplayName(name);
+            itemMeta.setDisplayName(chatColor + name);
             itemStack.setItemMeta(itemMeta);
             return itemStack;
         }
-
-    }
-
-    @Data
-    @AllArgsConstructor
-    public static class Hologram {
-        private boolean enable;
     }
 }
 

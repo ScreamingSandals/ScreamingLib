@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.gamecore.resources;
 
 import lombok.Data;
+import lombok.ToString;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
@@ -10,8 +11,10 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Data
+@ToString(exclude = {"gameFrame"})
 public class ResourceTypes implements Serializable, Cloneable {
     private transient GameFrame gameFrame;
     private transient JsonDataSource<ResourceTypes> dataSaver;
@@ -42,10 +45,10 @@ public class ResourceTypes implements Serializable, Cloneable {
     }
 
     public void createDefaultTypes() {
-        ResourceSpawner.Type bronzeType = new ResourceSpawner.Type("Bronze", Material.BRICK, ChatColor.DARK_RED, 1);
-        ResourceSpawner.Type ironType = new ResourceSpawner.Type("Iron", Material.IRON_INGOT, ChatColor.GRAY, 1);
-        ResourceSpawner.Type goldType = new ResourceSpawner.Type("Gold", Material.GOLD_INGOT, ChatColor.GOLD, 1.2);
-        ResourceSpawner.Type diamondType = new ResourceSpawner.Type("Diamond", Material.DIAMOND, ChatColor.AQUA, 1.5);
+        ResourceSpawner.Type bronzeType = new ResourceSpawner.Type("Bronze", "game.materials.bronze", Material.BRICK, ChatColor.DARK_RED, 1, 1, 1, TimeUnit.SECONDS);
+        ResourceSpawner.Type ironType = new ResourceSpawner.Type("Iron", "game.materials.iron", Material.IRON_INGOT, ChatColor.GRAY, 1, 1, 10, TimeUnit.SECONDS);
+        ResourceSpawner.Type goldType = new ResourceSpawner.Type("Gold", "game.materials.gold", Material.GOLD_INGOT, ChatColor.GOLD, 1.1, 1, 24, TimeUnit.SECONDS);
+        ResourceSpawner.Type diamondType = new ResourceSpawner.Type("Diamond", "game.materials.diamond", Material.DIAMOND, ChatColor.AQUA, 1.3, 1, 50, TimeUnit.SECONDS);
 
         spawnerTypes = new HashMap<>();
         spawnerTypes.put(bronzeType.getName(), bronzeType);
@@ -54,8 +57,9 @@ public class ResourceTypes implements Serializable, Cloneable {
         spawnerTypes.put(diamondType.getName(), diamondType);
     }
 
-    public void registerType(String name, Material material, ChatColor chatColor, double spread) {
-        ResourceSpawner.Type resourceType = new ResourceSpawner.Type(name, material, chatColor, spread);
+    public void registerType(String name, String translateKey, Material material, ChatColor chatColor,
+                             double spread, int amount, int period, TimeUnit timeUnit) {
+        ResourceSpawner.Type resourceType = new ResourceSpawner.Type(name, translateKey, material, chatColor, spread, amount, period, timeUnit);
         spawnerTypes.put(name, resourceType);
     }
 

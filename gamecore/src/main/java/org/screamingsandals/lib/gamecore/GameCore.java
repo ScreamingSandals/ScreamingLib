@@ -5,6 +5,7 @@ import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.debug.Debug;
@@ -19,6 +20,7 @@ import org.screamingsandals.lib.gamecore.events.core.SCoreUnloadedEvent;
 import org.screamingsandals.lib.gamecore.exceptions.GameCoreException;
 import org.screamingsandals.lib.gamecore.listeners.player.PlayerListener;
 import org.screamingsandals.lib.gamecore.player.PlayerManager;
+import org.screamingsandals.lib.gamecore.visuals.holograms.HologramManager;
 import org.screamingsandals.lib.tasker.Tasker;
 
 import java.io.File;
@@ -30,8 +32,9 @@ public class GameCore {
     private final Tasker tasker;
     private final ErrorManager errorManager;
     private final PlayerManager playerManager;
+    private final EntityManager entityManager;
+    private final HologramManager hologramManager;
     private GameManager<?> gameManager;
-    private EntityManager entityManager;
     private boolean verbose = true;
     private String adminPermissions = "gamecore.admin";
 
@@ -43,6 +46,7 @@ public class GameCore {
         errorManager = new ErrorManager();
         playerManager = new PlayerManager();
         entityManager = new EntityManager();
+        hologramManager = new HologramManager(plugin);
 
         Debug.setFallbackName("GameCore-" + plugin.getName());
     }
@@ -71,6 +75,9 @@ public class GameCore {
         entityManager.unregisterAll();
         tasker.destroy();
         errorManager.destroy();
+        hologramManager.destroy();
+
+        plugin.getServer().getServicesManager().unregisterAll(plugin);
 
         fireEvent(new SCoreUnloadedEvent(this));
     }
@@ -84,9 +91,12 @@ public class GameCore {
         registerListener(new PlayerListener());
     }
 
-    private void registerListener(Listener listener) {
-        final var pluginManager = plugin.getServer().getPluginManager();
-        pluginManager.registerEvents(listener, plugin);
+    public static void registerListener(Listener listener) {
+        instance.plugin.getServer().getPluginManager().registerEvents(listener, instance.plugin);
+    }
+
+    public static void unregisterListener(Listener listener) {
+        HandlerList.unregisterAll(listener);
     }
 
     public static GameCore getInstance() {
@@ -107,6 +117,10 @@ public class GameCore {
 
     public static EntityManager getEntityManager() {
         return instance.entityManager;
+    }
+
+    public static HologramManager getHologramManager() {
+        return instance.hologramManager;
     }
 
     public static Plugin getPlugin() {

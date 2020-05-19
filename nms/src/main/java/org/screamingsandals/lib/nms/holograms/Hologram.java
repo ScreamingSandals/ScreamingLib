@@ -25,17 +25,18 @@ public class Hologram {
     private List<TouchHandler> handlers = new ArrayList<>();
     private HologramManager manager;
 
-    public Hologram(HologramManager manager, List<Player> players, Location loc, String[] lines) {
+    public Hologram(HologramManager manager, List<Player> players, Location loc, List<String> lines) {
         this(manager, players, loc, lines, false);
     }
 
-    public Hologram(HologramManager manager, List<Player> players, Location location, String[] lines, boolean touchable) {
+    public Hologram(HologramManager manager, List<Player> players, Location location, List<String> lines, boolean touchable) {
         this.manager = manager;
-        this.lines.addAll(Arrays.asList(lines));
+        this.lines.addAll(lines);
         this.location = location;
+        this.touchable = touchable;
+
         updateEntities();
         addViewers(players);
-        this.touchable = touchable;
     }
 
     public int getLinesCount() {
@@ -129,9 +130,9 @@ public class Hologram {
 
     public Hologram destroy() {
         lines.clear();
+        updateEntities();
         viewers.clear();
 
-        updateEntities();
         return this;
     }
 
@@ -238,8 +239,8 @@ public class Hologram {
 
     void update(Player player, List<Object> packets, boolean check_distance) {
         try {
-            if (!manager.getHolograms().contains(this)) {
-                manager.getHolograms().add(this);
+            if (!manager.getActiveHolograms().contains(this)) {
+                manager.getActiveHolograms().add(this);
             }
 
             if (player.getLocation().getWorld().equals(location.getWorld())) {
