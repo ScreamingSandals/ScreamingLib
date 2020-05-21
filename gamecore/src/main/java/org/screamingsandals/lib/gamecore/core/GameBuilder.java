@@ -59,6 +59,7 @@ public abstract class GameBuilder<T extends GameFrame> {
     }
 
     public void save(Player player) {
+        gameFrame.countMaxPlayers();
         gameFrame.getStores().forEach(GameStore::remove);
     }
 
@@ -222,5 +223,4 @@ public abstract class GameBuilder<T extends GameFrame> {
         }
         return false;
     }
-
 }

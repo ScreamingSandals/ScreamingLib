@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.debug.Debug;
+import org.screamingsandals.lib.gamecore.commands.SpawnerEditorCommand;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameManager;
 import org.screamingsandals.lib.gamecore.core.entities.EntityManager;
@@ -62,6 +63,7 @@ public class GameCore {
             this.gameManager = new GameManager<>(gamesFolder, tClass);
 
             registerListeners();
+            registerCoreCommands();
 
             fireEvent(new SCoreLoadedEvent(this));
         } catch (Exception exception) {
@@ -89,6 +91,10 @@ public class GameCore {
 
     private void registerListeners() {
         registerListener(new PlayerListener());
+    }
+
+    private void registerCoreCommands() {
+        new SpawnerEditorCommand().register();
     }
 
     public static void registerListener(Listener listener) {

@@ -88,17 +88,18 @@ public abstract class GameCycle extends BaseTask {
         tick();
     }
 
+    @Override
     public void stop() {
         kickAllPlayers();
 
-        stop();
+        super.stop();
 
         currentPhase = null;
     }
 
     private void tick() {
         GameCore.fireEvent(new SGameTickEvent(gameFrame, currentPhase));
-        Preconditions.checkNotNull(currentPhase).tick();
+        Preconditions.checkNotNull(currentPhase, "Current phase cannot be null!").tick();
         gameFrame.getPlaceholderParser().reload();
     }
 

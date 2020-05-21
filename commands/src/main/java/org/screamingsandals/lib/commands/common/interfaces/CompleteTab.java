@@ -1,32 +1,24 @@
 package org.screamingsandals.lib.commands.common.interfaces;
 
-import java.util.List;
-
-
 public interface CompleteTab {
 
     @FunctionalInterface
-    interface PlayerCommandComplete<T> {
-        List<String> complete(T player, List<String> args);
+    interface PlayerCommandComplete<T> extends Completable<T> {
     }
 
     @FunctionalInterface
-    interface PlayerSubCommandComplete<T> {
-        List<String> complete(T player, List<String> args);
+    interface PlayerSubCommandComplete<T> extends Completable<T> {
     }
 
     @FunctionalInterface
-    interface ConsoleCommandComplete<T> {
-        List<String> complete(T console, List<String> args);
+    interface ConsoleCommandComplete<T> extends Completable<T> {
     }
 
     @FunctionalInterface
-    interface ConsoleSubCommandComplete<T> {
-        List<String> complete(T console, List<String> args);
+    interface ConsoleSubCommandComplete<T> extends Completable<T> {
     }
 
     @FunctionalInterface
-    interface SubCommandComplete<T> {
-        List<String> complete(T commandSender, List<String> args);
+    interface SubCommandComplete<T> extends Completable<T> {
     }
 }

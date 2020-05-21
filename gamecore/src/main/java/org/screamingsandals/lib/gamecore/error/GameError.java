@@ -12,9 +12,8 @@ public class GameError extends BaseError {
         this.gameFrame = gameFrame;
 
         if (gameFrame != null) {
-            errorType.replacePlaceholders(gameFrame);
-            System.out.println(errorType.getReplaceable());
-            errorType.getReplaceable().forEach((key, value) -> setMessage(getMessage().replace(key, value)));
+            errorType.getReplaceable().putAll(gameFrame.getPlaceholderParser().getAvailable());
+            errorType.getReplaceable().forEach((key, value) -> setMessage(getMessage().replaceAll(key, value.toString())));
         }
     }
 }

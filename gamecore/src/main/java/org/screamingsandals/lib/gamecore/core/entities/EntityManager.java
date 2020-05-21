@@ -2,15 +2,14 @@ package org.screamingsandals.lib.gamecore.core.entities;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import io.papermc.lib.PaperLib;
 import lombok.Getter;
 import org.bukkit.entity.Entity;
-import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
-import org.screamingsandals.lib.gamecore.error.BaseError;
-import org.screamingsandals.lib.gamecore.error.ErrorType;
+import org.screamingsandals.lib.gamecore.world.BaseWorld;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 /*
 Support class for entity management.
@@ -26,22 +25,21 @@ public class EntityManager {
     }
 
     public void unregister(Entity entity) {
-        for (Entity found : registeredEntities.values()) {
+        registeredEntities.values().forEach(found -> {
             if (found.equals(entity)) {
                 internalUnregister(found);
-                break;
             }
-        }
+        });
     }
 
     public void unregisterAll(GameFrame gameFrame) {
         final List<Entity> entities = new LinkedList<>();
 
-        for (Map.Entry<GameFrame, Entity> entry : registeredEntities.entries()) {
-            if (entry.getKey().getUuid().equals(gameFrame.getUuid())) {
+        registeredEntities.entries().forEach(entry -> {
+            if (entry.getKey().getUuid() == gameFrame.getUuid()) {
                 entities.add(entry.getValue());
             }
-        }
+        });
 
         entities.forEach(this::internalUnregister);
         registeredEntities.removeAll(gameFrame);
@@ -54,19 +52,7 @@ public class EntityManager {
 
     private void internalUnregister(Entity entity) {
         if (entity != null && !entity.isDead()) {
-            final var location = entity.getLocation();
-            final var asyncChunk = PaperLib.getChunkAtAsync(location, false);
-
-            if (asyncChunk.isDone()) {
-                try {
-                    final var chunk = asyncChunk.get();
-                    chunk.load();
-                } catch (Exception e) {
-                    GameCore.getErrorManager().writeError(new BaseError(ErrorType.UNKNOWN, e), true);
-                    final var nonAsyncChunk = location.getChunk();
-                    nonAsyncChunk.load();
-                }
-            }
+            BaseWorld.getAndLoadChunkAsync(entity.getLocation());
             entity.remove();
         }
     }

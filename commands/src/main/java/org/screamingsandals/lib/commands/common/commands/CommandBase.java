@@ -2,8 +2,9 @@ package org.screamingsandals.lib.commands.common.commands;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.bukkit.command.CommandSender;
+import org.screamingsandals.lib.commands.common.interfaces.Completable;
 import org.screamingsandals.lib.commands.common.interfaces.CompleteTab;
+import org.screamingsandals.lib.commands.common.interfaces.Executable;
 import org.screamingsandals.lib.commands.common.interfaces.Execute;
 import org.screamingsandals.lib.debug.Debug;
 
@@ -21,10 +22,10 @@ public abstract class CommandBase<T, Y> extends SubCommandBase<T, Y> {
     private String usage;
 
     //COMMANDS
-    private Execute.PlayerCommand<T> playerCommandExecutor;
-    private Execute.ConsoleCommand<Y> consoleCommandExecutor;
-    private CompleteTab.PlayerCommandComplete<T> playerCommandComplete;
-    private CompleteTab.ConsoleCommandComplete<Y> consoleCommandComplete;
+    private Executable<T> playerExecutable;
+    private Executable<Y> consoleExecutable;
+    private Completable<T> playerCompletable;
+    private Completable<Y> consoleCompletable;
 
     public CommandBase<T, Y> setPermissions(String permission) {
         this.permission = permission;
@@ -47,9 +48,9 @@ public abstract class CommandBase<T, Y> extends SubCommandBase<T, Y> {
     }
 
     public CommandBase<T, Y> handlePlayerCommand(Execute.PlayerCommand<T> execute) {
-        if (handleSimpleAdding(playerCommandExecutor)) {
+        if (handleSimpleAdding(playerExecutable)) {
             Debug.info("Registerd command with name " + name, true);
-            this.playerCommandExecutor = execute;
+            this.playerExecutable = execute;
         } else {
             Debug.info("you are dumb as fuck!", true);
         }
@@ -57,22 +58,22 @@ public abstract class CommandBase<T, Y> extends SubCommandBase<T, Y> {
     }
 
     public CommandBase<T, Y> handleConsoleCommand(Execute.ConsoleCommand<Y> execute) {
-        if (handleSimpleAdding(consoleCommandExecutor)) {
-            this.consoleCommandExecutor = execute;
+        if (handleSimpleAdding(consoleExecutable)) {
+            this.consoleExecutable = execute;
         }
         return this;
     }
 
     public CommandBase<T, Y> handlePlayerTab(CompleteTab.PlayerCommandComplete<T> complete) {
-        if (handleSimpleAdding(playerCommandComplete)) {
-            this.playerCommandComplete = complete;
+        if (handleSimpleAdding(playerCompletable)) {
+            this.playerCompletable = complete;
         }
         return this;
     }
 
     public CommandBase<T, Y> handleConsoleTab(CompleteTab.ConsoleCommandComplete<Y> complete) {
-        if (handleSimpleAdding(consoleCommandComplete)) {
-            this.consoleCommandComplete = complete;
+        if (handleSimpleAdding(consoleCompletable)) {
+            this.consoleCompletable = complete;
         }
         return this;
     }
@@ -114,11 +115,6 @@ public abstract class CommandBase<T, Y> extends SubCommandBase<T, Y> {
 
     public CommandBase<T, Y> handleSubConsoleTab(String name, CompleteTab.ConsoleSubCommandComplete<Y> complete) {
         super.handleSubConsoleTab(name, complete);
-        return this;
-    }
-
-    public CommandBase<T, Y> handleAllSubTab(String name, CompleteTab.SubCommandComplete<CommandSender> complete) {
-        super.handleAllSubTab(name, complete);
         return this;
     }
 

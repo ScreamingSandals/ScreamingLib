@@ -1,12 +1,16 @@
 package org.screamingsandals.lib.gamecore.world;
 
+import io.papermc.lib.PaperLib;
 import lombok.Data;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
+import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.adapter.WorldAdapter;
+import org.screamingsandals.lib.gamecore.error.BaseError;
+import org.screamingsandals.lib.gamecore.error.ErrorType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,5 +47,35 @@ public abstract class BaseWorld {
 
     public boolean isLiquid(Material material) {
         return material == Material.WATER || material == Material.LAVA;
+    }
+
+    public void regen() {
+        placedBlocks.keySet().forEach(location -> {
+            getAndLoadChunkAsync(location);
+            location.getBlock().setType(Material.AIR);
+        });
+
+        destroyedBlocks.forEach((location, blockData) -> {
+            getAndLoadChunkAsync(location);
+            location.getBlock().setBlockData(blockData);
+        });
+
+        placedBlocks.clear();
+        destroyedBlocks.clear();
+    }
+
+    public static void getAndLoadChunkAsync(Location location) {
+        final var asyncChunk = PaperLib.getChunkAtAsync(location, false);
+
+        if (asyncChunk.isDone()) {
+            try {
+                final var chunk = asyncChunk.get();
+                chunk.load();
+            } catch (Exception e) {
+                GameCore.getErrorManager().writeError(new BaseError(ErrorType.UNKNOWN, e), true); //todo
+                final var nonAsyncChunk = location.getChunk();
+                nonAsyncChunk.load();
+            }
+        }
     }
 }

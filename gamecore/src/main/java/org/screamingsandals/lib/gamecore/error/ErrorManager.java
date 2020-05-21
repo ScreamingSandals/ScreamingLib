@@ -39,11 +39,13 @@ public class ErrorManager {
             error.getException().printStackTrace();
         }
 
-        GameCore.getPlayerManager().getRegisteredPlayers().forEach(gamePlayer -> {
-            final var player = gamePlayer.getPlayer();
-            if (player.hasPermission(GameCore.getInstance().getAdminPermissions())) {
-                player.sendMessage(m("prefix").get() + " " + error.getMessage());
-            }
-        });
+        if (GameCore.getInstance().isVerbose()) {
+            GameCore.getPlayerManager().getRegisteredPlayers().forEach(gamePlayer -> {
+                final var player = gamePlayer.getPlayer();
+                if (player.hasPermission(GameCore.getInstance().getAdminPermissions())) {
+                    player.sendMessage(m("prefix").get() + " " + error.getMessage());
+                }
+            });
+        }
     }
 }

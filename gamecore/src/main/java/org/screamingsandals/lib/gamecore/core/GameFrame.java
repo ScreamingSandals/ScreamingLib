@@ -28,10 +28,7 @@ import org.screamingsandals.lib.gamecore.world.LobbyWorld;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Data
@@ -118,12 +115,16 @@ public abstract class GameFrame implements Serializable {
         }
 
         if (gameWorld.getPosition1() == null || gameWorld.getPosition2() == null) {
-            //TODO - error manager
+            if (fireError) {
+                GameCore.getErrorManager().newError(new GameError(this, ErrorType.GAME_WORLD_NOT_DEFINED, null));
+            }
             return false;
         }
 
         if (gameWorld.getSpectatorSpawn() == null) {
-            //TODO - error manager
+            if (fireError) {
+                GameCore.getErrorManager().newError(new GameError(this, ErrorType.SPECTATOR_SPAWN_NOT_SET, null));
+            }
             return false;
         }
 
@@ -181,7 +182,6 @@ public abstract class GameFrame implements Serializable {
     public void prepare() {
         setGameState(GameState.LOADING);
         buildTeams();
-        countMaxPlayers();
     }
 
     public void start() {
@@ -259,25 +259,15 @@ public abstract class GameFrame implements Serializable {
     }
 
     //Working with players
-    public void teleportPlayersToTeamSpawn() {
-        for (var gamePlayer : playersInGame) {
-            gamePlayer.teleport(gamePlayer.getGameTeam().getSpawnLocation());
-        }
+    public void moveAllToTeamSpawns() {
+        playersInGame.forEach(gamePlayer -> gamePlayer.teleport(gamePlayer.getGameTeam().getSpawnLocation()));
     }
 
-    public Optional<GameTeam> getTeamWithLeastPlayers() {
-        GameTeam lowestTeam = null;
-        for (var gameTeam : teams) {
-            if (lowestTeam == null) {
-                lowestTeam = gameTeam;
-            }
+    public GameTeam getTeamWithLeastPlayers() {
+        final TreeMap<Integer, GameTeam> playersInTeams = new TreeMap<>();
+        teams.forEach(gameTeam -> playersInTeams.put(gameTeam.getTeamPlayers().size(), gameTeam));
 
-            if (lowestTeam.countPlayersInTeam() > lowestTeam.countPlayersInTeam()) {
-                lowestTeam = gameTeam;
-            }
-        }
-
-        return lowestTeam != null ? Optional.of(lowestTeam) : Optional.empty();
+        return playersInTeams.firstEntry().getValue();
     }
 
     public Optional<GameTeam> getRegisteredTeam(String teamName) {
@@ -286,7 +276,6 @@ public abstract class GameFrame implements Serializable {
                return Optional.of(gameTeam);
            }
         }
-
         return Optional.empty();
     }
 
@@ -300,13 +289,11 @@ public abstract class GameFrame implements Serializable {
     }
 
     //Prepare game stuff
-    private void buildTeams() {
-        for (var team : teams) {
-            team.setActiveGame(this);
-        }
+    protected void buildTeams() {
+        teams.forEach(gameTeam -> gameTeam.setActiveGame(this));
     }
 
-    private void countMaxPlayers() {
+    protected void countMaxPlayers() {
         for (var team : teams) {
             maxPlayers += team.getMaxPlayers();
         }

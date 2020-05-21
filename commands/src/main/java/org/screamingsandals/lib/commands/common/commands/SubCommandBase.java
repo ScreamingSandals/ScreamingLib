@@ -1,8 +1,9 @@
 package org.screamingsandals.lib.commands.common.commands;
 
 import lombok.Data;
-import org.bukkit.command.CommandSender;
+import org.screamingsandals.lib.commands.common.interfaces.Completable;
 import org.screamingsandals.lib.commands.common.interfaces.CompleteTab;
+import org.screamingsandals.lib.commands.common.interfaces.Executable;
 import org.screamingsandals.lib.commands.common.interfaces.Execute;
 import org.screamingsandals.lib.debug.Debug;
 
@@ -13,12 +14,10 @@ public abstract class SubCommandBase<T, Y> {
     private final List<SubCommand> subCommands = new LinkedList<>();
 
     //sub commands
-    private Map<SubCommand, Execute.PlayerSubCommand<T>> playerSubExecutors = new HashMap<>();
-    private Map<SubCommand, Execute.ConsoleSubCommand<Y>> consoleSubExecutors = new HashMap<>();
-    private Map<SubCommand, CompleteTab.PlayerSubCommandComplete<T>> playerSubCompletes = new HashMap<>();
-    private Map<SubCommand, CompleteTab.ConsoleSubCommandComplete<Y>> consoleSubCompletes = new HashMap<>();
-    private Map<SubCommand, CompleteTab.SubCommandComplete<?>> handleAllSubCompletes = new HashMap<>();
-    private CompleteTab.SubCommandComplete<?> subCommandComplete;
+    private Map<SubCommand, Executable<T>> playerSubExecutors = new HashMap<>();
+    private Map<SubCommand, Executable<Y>> consoleSubExecutors = new HashMap<>();
+    private Map<SubCommand, Completable<T>> playerSubCompletes = new HashMap<>();
+    private Map<SubCommand, Completable<Y>> consoleSubCompletes = new HashMap<>();
 
     public void register() {
     }
@@ -84,15 +83,6 @@ public abstract class SubCommandBase<T, Y> {
 
         if (subCommand != null) {
             consoleSubCompletes.put(subCommand, complete);
-        }
-        return this;
-    }
-
-    public SubCommandBase<T, Y> handleAllSubTab(String name, CompleteTab.SubCommandComplete<CommandSender> complete) {
-        final var subCommand = handleAdding(name, handleAllSubCompletes);
-
-        if (subCommand != null) {
-            handleAllSubCompletes.put(subCommand, complete);
         }
         return this;
     }

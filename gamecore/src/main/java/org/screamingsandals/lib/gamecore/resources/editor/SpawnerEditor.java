@@ -21,7 +21,7 @@ public class SpawnerEditor {
         this.gameBuilder = gameBuilder;
         this.originalSpawner = resourceSpawner;
         this.resourceSpawner = (ResourceSpawner) resourceSpawner.clone();
-        this.editorListener = new EditorListener(this);
+        this.editorListener = new EditorListener();
         this.gameHologram = gameHologram;
 
         GameCore.registerListener(editorListener);

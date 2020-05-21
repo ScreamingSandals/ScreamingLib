@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.gamecore.core;
 
 import lombok.Data;
+import org.bukkit.entity.Player;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.data.file.JsonDataSource;
@@ -9,15 +10,13 @@ import org.screamingsandals.lib.gamecore.error.GameError;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisabledEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadingEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameSavedEvent;
+import org.screamingsandals.lib.gamecore.resources.editor.SpawnerEditor;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -173,5 +172,25 @@ public class GameManager<T extends GameFrame> {
     @SuppressWarnings("unchecked")
     public <E> E getGameBuilder(String gameName) {
         return (E) gameBuilders.get(gameName);
+    }
+
+    public Optional<SpawnerEditor> getSpawnerEditor(Player player) {
+        if (gameBuilders.isEmpty()) {
+            return Optional.empty();
+        }
+
+        for (var builder : gameBuilders.values()) {
+            final var castedBuilder = (GameBuilder) builder;
+            if (castedBuilder.getSpawnerEditor() == null) {
+                continue;
+            }
+
+            final var editor = castedBuilder.getSpawnerEditor();
+            if (editor.getPlayer() == player) {
+                return Optional.of(editor);
+            }
+        }
+
+        return Optional.empty();
     }
 }

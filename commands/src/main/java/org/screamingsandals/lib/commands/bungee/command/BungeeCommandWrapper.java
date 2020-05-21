@@ -8,8 +8,8 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 import org.screamingsandals.lib.commands.Commands;
 import org.screamingsandals.lib.commands.common.commands.SubCommand;
 import org.screamingsandals.lib.commands.common.environment.CommandEnvironment;
-import org.screamingsandals.lib.commands.common.interfaces.CompleteTab;
-import org.screamingsandals.lib.commands.common.interfaces.Execute;
+import org.screamingsandals.lib.commands.common.interfaces.Completable;
+import org.screamingsandals.lib.commands.common.interfaces.Executable;
 import org.screamingsandals.lib.commands.common.language.CommandsLanguage;
 import org.screamingsandals.lib.commands.common.wrapper.CommandWrapper;
 
@@ -44,10 +44,10 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
                         if (!player.hasPermission(commandBase.getPermission())) {
                             commandsLanguage.sendMessage(player, CommandsLanguage.Key.NO_PERMISSIONS);
                         }
-                        result = handlePlayerCommand(player, args);
+                        result = handleCommand(player, args, commandBase.getPlayerExecutable(), commandBase.getPlayerSubExecutors());
                     } else {
                         try {
-                            result = handleConsoleCommand(sender, args);
+                            result = handleCommand(sender, args, commandBase.getConsoleExecutable(), commandBase.getConsoleSubExecutors());
                         } catch (Throwable ignored) {
                             commandsLanguage.sendMessage(sender, CommandsLanguage.Key.NOT_FOR_CONSOLE);
                             result = true;
@@ -64,105 +64,68 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
                 }
             }
 
-            @SuppressWarnings("unchecked")
             @Override
             public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-                final var subComplete = (CompleteTab.SubCommandComplete<CommandSender>) commandBase.getSubCommandComplete();
-                if (subComplete != null) {
-                    return subComplete.complete(sender, Arrays.asList(args));
-                }
-
                 if (sender instanceof ProxiedPlayer) {
-                    return handlePlayerTab((ProxiedPlayer) sender, args);
+                    return handleTab((ProxiedPlayer) sender, args, commandBase.getPlayerCompletable(), commandBase.getPlayerSubCompletes());
                 } else {
-                    return handleConsoleComplete(sender, args);
+                    return handleTab(sender, args, commandBase.getConsoleCompletable(), commandBase.getConsoleSubCompletes());
                 }
             }
 
         };
     }
 
-    private boolean handlePlayerCommand(ProxiedPlayer player, String[] args) {
-        final var command = commandBase.getPlayerCommandExecutor();
-        final var subExecutors = commandBase.getPlayerSubExecutors();
+    private <T> boolean handleCommand(T sender, String[] args, Executable<T> command, Map<SubCommand, Executable<T>> subCommands) {
         final List<String> convertedArgs = Arrays.asList(args);
+        final boolean areSubCommandsEmpty = commandBase.getSubCommands().isEmpty();
 
-        if (args.length == 0) {
-            if (command == null) {
-                return false;
-            }
-
-            command.execute(player, convertedArgs);
-        }
-
-        if (args.length >= 1 && subExecutors.keySet().size() <= 0) {
-            commandsLanguage.sendMessage(player, CommandsLanguage.Key.COMMAND_DOES_NOT_EXISTS);
+        if (!areSubCommandsEmpty && args.length >= 1 && subCommands.keySet().size() <= 0) {
+            commandsLanguage.sendMessage(sender, CommandsLanguage.Key.COMMAND_DOES_NOT_EXISTS);
             return false;
         }
 
         if (args.length >= 1) {
-            final String subCommandName = args[0].toLowerCase();
-            final SubCommand subCommand = commandBase.getSubCommand(subCommandName);
+            final var subCommandName = args[0].toLowerCase();
+            final var subCommand = commandBase.getSubCommand(subCommandName);
 
-            if (subCommand == null) {
-                return false;
-            }
-
-            if (!player.hasPermission(subCommand.getPermission())) {
-                commandsLanguage.sendMessage(player, CommandsLanguage.Key.NO_PERMISSIONS);
+            if (areSubCommandsEmpty) {
+                command.execute(sender, convertedArgs);
                 return true;
             }
 
-            final Execute.PlayerSubCommand<ProxiedPlayer> playerSubCommand = subExecutors.get(subCommand);
-            if (playerSubCommand == null) {
+            if (subCommand == null) {
                 return false;
             }
 
-            playerSubCommand.execute(player, convertedArgs);
-        }
-        return true;
-    }
+            if (sender instanceof ProxiedPlayer) {
+                final var player = (ProxiedPlayer) sender;
+                if (!player.hasPermission(subCommand.getPermission())) {
+                    commandsLanguage.sendMessage(player, CommandsLanguage.Key.NO_PERMISSIONS);
+                    return true;
+                }
+            }
 
-    private boolean handleConsoleCommand(CommandSender console, String[] args) {
-        final var command = commandBase.getConsoleCommandExecutor();
-        final var subExecutors = commandBase.getConsoleSubExecutors();
-        final List<String> convertedArgs = Arrays.asList(args);
-
-        if (args.length == 0) {
-            if (command == null) {
+            final var subExecutor = subCommands.get(subCommand);
+            if (subExecutor == null) {
                 return false;
             }
 
-            command.execute(console, convertedArgs);
+            subExecutor.execute(sender, convertedArgs);
+            return true;
         }
 
-        if (args.length >= 1 && subExecutors.keySet().size() <= 0) {
-            commandsLanguage.sendMessage(console, CommandsLanguage.Key.COMMAND_DOES_NOT_EXISTS);
+        if (command == null) {
             return false;
         }
 
-        if (args.length >= 1) {
-            final String subCommandName = args[0].toLowerCase();
-            final SubCommand subCommand = commandBase.getSubCommand(subCommandName);
-
-            if (subCommand == null) {
-                return false;
-            }
-
-            final Execute.ConsoleSubCommand<CommandSender> consoleSubCommand = subExecutors.get(subCommand);
-            if (consoleSubCommand == null) {
-                return false;
-            }
-
-            consoleSubCommand.execute(console, convertedArgs);
-        }
+        command.execute(sender, convertedArgs);
         return true;
     }
 
-    private List<String> handlePlayerTab(ProxiedPlayer player, String[] args) {
-        final var complete = commandBase.getPlayerCommandComplete();
-        final var subCompletes = commandBase.getPlayerSubCompletes();
-        final List<String> convertedArgs = Arrays.asList(args);
+    private <T> List<String> handleTab(T sender, String[] args, Completable<T> complete, Map<SubCommand, Completable<T>> subCompletes) {
+        final var convertedArgs = Arrays.asList(args);
+        final var areSubCommandsEmpty = commandBase.getSubCommands().isEmpty();
         final List<String> toReturn = new LinkedList<>();
 
         if (args.length == 0) {
@@ -170,18 +133,29 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
                 return toReturn;
             }
 
-            toReturn.addAll(complete.complete(player, convertedArgs));
+            toReturn.addAll(complete.complete(sender, convertedArgs));
         }
 
         if (args.length == 1) {
+            if (areSubCommandsEmpty) {
+                toReturn.addAll(complete.complete(sender, convertedArgs));
+                return toReturn;
+            }
+
             final String typed = args[0].toLowerCase();
 
-            for (SubCommand found : commandBase.getSubCommands()) {
+            for (var found : commandBase.getSubCommands()) {
                 final var permission = found.getPermission();
                 final var name = found.getName();
 
-                if (name.startsWith(typed) && !permission.equals("")
-                        && (player.hasPermission(permission) || player.hasPermission("sbw.*"))) {
+                if (sender instanceof ProxiedPlayer) {
+                    final var player = (ProxiedPlayer) sender;
+                    if (name.startsWith(typed)
+                            && !permission.equals("")
+                            && player.hasPermission(permission)) {
+                        toReturn.add(name);
+                    }
+                } else {
                     toReturn.add(name);
                 }
             }
@@ -190,67 +164,24 @@ public class BungeeCommandWrapper implements CommandWrapper<BungeeCommandBase, C
         }
 
         if (args.length > 1) {
-            final String subCommandName = args[0].toLowerCase();
-            final SubCommand subCommand = commandBase.getSubCommand(subCommandName);
+            if (commandBase.getSubCommands().isEmpty()) {
+                toReturn.addAll(complete.complete(sender, convertedArgs));
+                return toReturn;
+            }
+
+            final var subCommandName = args[0].toLowerCase();
+            final var subCommand = commandBase.getSubCommand(subCommandName);
 
             if (subCommand == null) {
                 return toReturn;
             }
 
-            final CompleteTab.PlayerSubCommandComplete<ProxiedPlayer> playerComplete = subCompletes.get(subCommand);
-            if (playerComplete == null) {
+            final var completable = subCompletes.get(subCommand);
+            if (completable == null) {
                 return toReturn;
             }
 
-            toReturn.addAll(playerComplete.complete(player, convertedArgs));
-        }
-
-        return toReturn;
-    }
-
-    private List<String> handleConsoleComplete(CommandSender console, String[] args) {
-        final var complete = commandBase.getConsoleCommandComplete();
-        final var subCompletes = commandBase.getConsoleSubCompletes();
-        final List<String> convertedArgs = Arrays.asList(args);
-        final List<String> toReturn = new LinkedList<>();
-
-        if (args.length == 0) {
-            if (complete == null) {
-                return toReturn;
-            }
-
-            toReturn.addAll(complete.complete(console, convertedArgs));
-        }
-
-        if (args.length == 1) {
-            final String typed = args[0].toLowerCase();
-
-            for (SubCommand found : commandBase.getSubCommands()) {
-                final var permission = found.getPermission();
-                final var name = found.getName();
-
-                if (name.startsWith(typed) && !permission.equals("")) {
-                    toReturn.add(name);
-                }
-            }
-
-            return toReturn;
-        }
-
-        if (args.length > 1) {
-            final String subCommandName = args[0].toLowerCase();
-            final SubCommand subCommand = commandBase.getSubCommand(subCommandName);
-
-            if (subCommand == null) {
-                return toReturn;
-            }
-
-            final CompleteTab.ConsoleSubCommandComplete<CommandSender> consoleSubCommandComplete = subCompletes.get(subCommand);
-            if (consoleSubCommandComplete == null) {
-                return toReturn;
-            }
-
-            toReturn.addAll(consoleSubCommandComplete.complete(console, convertedArgs));
+            toReturn.addAll(completable.complete(sender, convertedArgs));
         }
 
         return toReturn;

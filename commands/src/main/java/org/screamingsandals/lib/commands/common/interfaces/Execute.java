@@ -1,26 +1,20 @@
 package org.screamingsandals.lib.commands.common.interfaces;
 
-import java.util.List;
-
 public interface Execute {
 
     @FunctionalInterface
-    interface PlayerCommand<T> {
-        void execute(T player, List<String> args);
+    interface PlayerCommand<T> extends Executable<T> {
     }
 
     @FunctionalInterface
-    interface ConsoleCommand<T> {
-        void execute(T console, List<String> args);
+    interface ConsoleCommand<T> extends Executable<T> {
     }
 
     @FunctionalInterface
-    interface PlayerSubCommand<T> {
-        void execute(T player, List<String> args);
+    interface PlayerSubCommand<T> extends Executable<T> {
     }
 
     @FunctionalInterface
-    interface ConsoleSubCommand<T> {
-        void execute(T console, List<String> args);
+    interface ConsoleSubCommand<T> extends Executable<T> {
     }
 }

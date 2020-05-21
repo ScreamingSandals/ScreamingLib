@@ -12,7 +12,7 @@ public enum GameState {
     CUSTOM("custom"),
     DISABLED("disabled");
 
-    private String name;
+    private final String name;
 
     GameState(String name) {
         this.name = name;
