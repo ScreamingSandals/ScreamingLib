@@ -10,14 +10,17 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
+import org.screamingsandals.lib.gamecore.core.GameTimeUnit;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
+import org.screamingsandals.lib.gamecore.utils.StringUtils;
 import org.screamingsandals.lib.tasker.BaseTask;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+
+import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -27,7 +30,7 @@ public class ResourceSpawner implements Serializable, Cloneable {
     private int maxSpawned;
     private int amount;
     private int period;
-    private TimeUnit timeUnit;
+    private GameTimeUnit gameTimeUnit;
     private UUID uuid;
     private Type type;
     private boolean hologram;
@@ -54,7 +57,7 @@ public class ResourceSpawner implements Serializable, Cloneable {
         this.type = type;
         this.amount = type.getAmount();
         this.period = type.getPeriod();
-        this.timeUnit = type.getTimeUnit();
+        this.gameTimeUnit = type.getGameTimeUnit();
         this.maxSpawned = maxSpawned;
         this.gameTeam = gameTeam;
         this.uuid = UUID.randomUUID();
@@ -88,7 +91,9 @@ public class ResourceSpawner implements Serializable, Cloneable {
             }
         };
 
-        baseTask.runTaskRepeater(1L, period, timeUnit);
+
+        baseTask.runTaskRepeater(1L, GameTimeUnit.getTimeUnitValue(period, gameTimeUnit), gameTimeUnit.getTimeUnit());
+
     }
 
     public void stop() {
@@ -149,7 +154,18 @@ public class ResourceSpawner implements Serializable, Cloneable {
         private double spread;
         private int amount;
         private int period;
-        private TimeUnit timeUnit;
+        private GameTimeUnit gameTimeUnit;
+
+        public String getTranslatedName() {
+            if (translateKey != null) {
+                final var translatedName = m(translateKey).get();
+
+                if (!translatedName.equalsIgnoreCase(translateKey)) {
+                    return translatedName;
+                }
+            }
+            return chatColor + name;
+        }
 
         public ItemStack getItemStack() {
             return getItemStack(1);
@@ -159,9 +175,16 @@ public class ResourceSpawner implements Serializable, Cloneable {
             final ItemStack itemStack = new ItemStack(material, amount);
             final ItemMeta itemMeta = itemStack.getItemMeta();
 
-            itemMeta.setDisplayName(chatColor + name);
+            itemMeta.setDisplayName(getTranslatedName());
             itemStack.setItemMeta(itemMeta);
+
+            StringUtils.addInvisibleString(itemStack, name);
+
             return itemStack;
+        }
+
+        public boolean isSame(ItemStack itemStack) {
+            return itemStack.getType() == material && StringUtils.isInInvisibleString(itemStack, name);
         }
     }
 }

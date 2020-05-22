@@ -9,7 +9,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.debug.Debug;
-import org.screamingsandals.lib.gamecore.commands.SpawnerEditorCommand;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameManager;
 import org.screamingsandals.lib.gamecore.core.entities.EntityManager;
@@ -37,6 +36,7 @@ public class GameCore {
     private final HologramManager hologramManager;
     private GameManager<?> gameManager;
     private boolean verbose = true;
+    private String mainCommandName = "gc";
     private String adminPermissions = "gamecore.admin";
 
     public GameCore(Plugin plugin) {
@@ -52,8 +52,9 @@ public class GameCore {
         Debug.setFallbackName("GameCore-" + plugin.getName());
     }
 
-    public GameCore(Plugin plugin, String adminPermissions, boolean verbose) {
+    public GameCore(Plugin plugin, String mainCommandName, String adminPermissions, boolean verbose) {
         this(plugin);
+        this.mainCommandName = mainCommandName;
         this.adminPermissions = adminPermissions;
         this.verbose = verbose;
     }
@@ -94,7 +95,7 @@ public class GameCore {
     }
 
     private void registerCoreCommands() {
-        new SpawnerEditorCommand().register();
+
     }
 
     public static void registerListener(Listener listener) {

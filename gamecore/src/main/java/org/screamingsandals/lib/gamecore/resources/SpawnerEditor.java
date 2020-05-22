@@ -1,10 +1,8 @@
-package org.screamingsandals.lib.gamecore.resources.editor;
+package org.screamingsandals.lib.gamecore.resources;
 
 import lombok.Data;
 import org.bukkit.entity.Player;
-import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.GameBuilder;
-import org.screamingsandals.lib.gamecore.resources.ResourceSpawner;
 import org.screamingsandals.lib.gamecore.visuals.holograms.GameHologram;
 
 @Data
@@ -13,7 +11,6 @@ public class SpawnerEditor {
     private final GameBuilder<?> gameBuilder;
     private final ResourceSpawner originalSpawner;
     private final ResourceSpawner resourceSpawner;
-    private final EditorListener editorListener;
     private final GameHologram gameHologram;
 
     public SpawnerEditor(Player player, GameBuilder<?> gameBuilder, ResourceSpawner resourceSpawner, GameHologram gameHologram) throws CloneNotSupportedException {
@@ -21,10 +18,7 @@ public class SpawnerEditor {
         this.gameBuilder = gameBuilder;
         this.originalSpawner = resourceSpawner;
         this.resourceSpawner = (ResourceSpawner) resourceSpawner.clone();
-        this.editorListener = new EditorListener();
         this.gameHologram = gameHologram;
-
-        GameCore.registerListener(editorListener);
     }
 
     public void save() {
@@ -36,7 +30,6 @@ public class SpawnerEditor {
     }
 
     public void end() {
-        GameCore.unregisterListener(editorListener);
         gameBuilder.setSpawnerEditor(null);
     }
 }

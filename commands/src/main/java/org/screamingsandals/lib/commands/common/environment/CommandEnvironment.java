@@ -61,7 +61,7 @@ public abstract class CommandEnvironment {
 
     public void loadScreamingCommands(Class<?> toLoad) throws URISyntaxException, IOException {
         final JarFile jarFile = new JarFile(new File(toLoad.getProtectionDomain().getCodeSource().getLocation().toURI()));
-        final String packageName = plugin.getClass().getPackage().getName().replaceAll("\\.", "/");
+        final String packageName = toLoad.getPackage().getName().replaceAll("\\.", "/");
         final List<JarEntry> entries = Collections.list(jarFile.entries());
         final List<Object> subCommands = new LinkedList<>();
 

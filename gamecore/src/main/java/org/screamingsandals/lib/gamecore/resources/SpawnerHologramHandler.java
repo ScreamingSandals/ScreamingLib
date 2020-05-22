@@ -5,7 +5,6 @@ import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.GameBuilder;
 import org.screamingsandals.lib.gamecore.error.ErrorType;
 import org.screamingsandals.lib.gamecore.error.GameError;
-import org.screamingsandals.lib.gamecore.resources.editor.SpawnerEditor;
 import org.screamingsandals.lib.gamecore.visuals.holograms.GameHologram;
 import org.screamingsandals.lib.nms.holograms.Hologram;
 import org.screamingsandals.lib.nms.holograms.TouchHandler;

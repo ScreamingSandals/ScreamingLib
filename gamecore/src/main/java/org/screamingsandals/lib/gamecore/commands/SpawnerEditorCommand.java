@@ -1,18 +1,18 @@
 package org.screamingsandals.lib.gamecore.commands;
 
 import org.bukkit.entity.Player;
-import org.screamingsandals.lib.commands.common.CommandBuilder;
 import org.screamingsandals.lib.commands.common.RegisterCommand;
+import org.screamingsandals.lib.commands.common.SubCommandBuilder;
 import org.screamingsandals.lib.commands.common.interfaces.ScreamingCommand;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
-import org.screamingsandals.lib.gamecore.resources.editor.SpawnerEditor;
+import org.screamingsandals.lib.gamecore.core.GameTimeUnit;
+import org.screamingsandals.lib.gamecore.resources.SpawnerEditor;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
+import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.mpr;
 
 @RegisterCommand
@@ -21,38 +21,40 @@ public class SpawnerEditorCommand implements ScreamingCommand {
 
     @Override
     public void register() {
-        CommandBuilder.bukkitCommand()
-                .create("scseditor", GameCore.getInstance().getAdminPermissions(), Collections.singletonList("sce"))
-                .setDescription("Super cool spawner editor!") //TODO language
-                .setUsage("/scseditor help")
-                .handlePlayerCommand(this::handleCommand)
-                .handlePlayerTab(this::handleTab)
-                .register();
+        final var gameCore = GameCore.getInstance();
+        SubCommandBuilder.bukkitSubCommand()
+                .createSubCommand(gameCore.getMainCommandName(), "sedit", gameCore.getAdminPermissions(), List.of("spawner-editor", "se"))
+                .handleSubPlayerCommand(this::handleCommand)
+                .handleSubPlayerTab(this::handleTab);
 
-        actions.addAll(List.of("max-spawned", "amount", "period", "team", "location", "time-unit", "save", "exit", "help"));
+        actions.addAll(List.of("max-spawned", "amount", "period", "team", "location", "time-unit", "save", "exit"));
     }
 
     private void handleCommand(Player player, List<String> args) {
         final var size = args.size();
         final var editorFromManager = GameCore.getGameManager().getSpawnerEditor(player);
 
-        System.out.println(size);
-        if (editorFromManager.isEmpty() || size < 1) {
-            mpr("game-builder.spawners.editor.invalid-entry").sendList(player);
+        if (editorFromManager.isEmpty()) {
+            mpr("game-builder.spawners.editor.nothing-active").sendList(player);
+            return;
+        }
+
+        if (size < 2) {
+            m("game-builder.spawners.editor.help").sendList(player);
             return;
         }
 
         final var spawnerEditor = editorFromManager.get();
         final var spawner = spawnerEditor.getResourceSpawner();
 
-        if (size > 2) {
-            mpr("game-builder.spawners.editor.invalid-entry").sendList(player);
+        if (size > 3) {
+            mpr("game-builder.spawners.editor.invalid-action").sendList(player);
             return;
         }
 
-        if (size == 2) {
-            final var action = args.get(0);
-            final var value = args.get(1);
+        if (size == 3) {
+            final var action = args.get(1);
+            final var value = args.get(2);
 
             switch (action) {
                 case "max-spawned": {
@@ -96,25 +98,18 @@ public class SpawnerEditorCommand implements ScreamingCommand {
                                 .replace("%newValue%", value)
                                 .send(player);
                     } else {
-                        mpr("generals.errors.invalid-team")
+                        mpr("general.errors.invalid-team")
                                 .replace("%team%", value)
                                 .send(player);
                     }
                     break;
                 }
                 case "time-unit": {
-                    String replaced;
                     if (canBeTime(value.toLowerCase())) {
-                        if (value.equalsIgnoreCase("ticks")) {
-                            spawner.setTimeUnit(TimeUnit.MILLISECONDS);
-                            replaced = "ticks";
-                        } else {
-                            spawner.setTimeUnit(TimeUnit.valueOf(value.toUpperCase()));
-                            replaced = value;
-                        }
+                        spawner.setGameTimeUnit(GameTimeUnit.valueOf(value.toUpperCase()));
                         mpr("game-builder.spawners.editor.changed")
                                 .replace("%value%", action)
-                                .replace("%newValue%", replaced)
+                                .replace("%newValue%", value)
                                 .send(player);
                     } else {
                         mpr("game-builder.spawners.editor.invalid-value")
@@ -133,8 +128,8 @@ public class SpawnerEditorCommand implements ScreamingCommand {
             return;
         }
 
-        if (args.size() == 1) {
-            final var command = args.get(0).toLowerCase();
+        if (args.size() == 2) {
+            final var command = args.get(1).toLowerCase();
 
             switch (command) {
                 case "exit": {
@@ -156,7 +151,7 @@ public class SpawnerEditorCommand implements ScreamingCommand {
                     return;
                 }
                 default: {
-                    mpr("game-builder.spawners.editor.invalid-entry").sendList(player);
+                    mpr("game-builder.spawners.editor.invalid-action").sendList(player);
                 }
             }
 
@@ -167,21 +162,22 @@ public class SpawnerEditorCommand implements ScreamingCommand {
         final List<String> toReturn = new LinkedList<>();
         final var editorFromManager = GameCore.getGameManager().getSpawnerEditor(player);
 
-        if (editorFromManager.isEmpty() || args.size() < 1) {
+        if (editorFromManager.isEmpty() || args.size() < 2) {
             return toReturn;
         }
 
         final var spawnerEditor = editorFromManager.get();
         final var currentGame = spawnerEditor.getGameBuilder().getGameFrame();
-        final var typed = args.get(0);
+        final var typed = args.get(1);
 
-        if (args.size() == 1) {
+        if (args.size() == 2) {
             toReturn.addAll(addAvailable(typed, actions));
             return toReturn;
         }
 
-        if (args.size() == 2) {
-            switch (typed.toLowerCase()) {
+        if (args.size() == 3) {
+            final var action = args.get(2);
+            switch (action.toLowerCase()) {
                 case "time-unit": {
                     toReturn.addAll(addAvailable(typed, List.of("ticks", "minutes", "hours")));
                     return toReturn;
@@ -220,8 +216,8 @@ public class SpawnerEditorCommand implements ScreamingCommand {
 
     private boolean canCastToInt(String value, Player player) {
         try {
-            Integer.parseInt(value);
-            return true;
+            final var converted = Integer.parseInt(value);
+            return converted >= 1;
         } catch (Exception e) {
             mpr("general.errors.invalid-number")
                     .replace("%entry%", value)
@@ -232,6 +228,10 @@ public class SpawnerEditorCommand implements ScreamingCommand {
 
     private int castToInt(String value) {
         return Integer.parseInt(value);
+    }
+
+    private int castToTick(int value) {
+        return value * 50;
     }
 
     private boolean canBeTime(String value) {

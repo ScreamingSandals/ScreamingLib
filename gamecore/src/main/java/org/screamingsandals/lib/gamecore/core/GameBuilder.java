@@ -8,8 +8,8 @@ import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.adapter.WorldAdapter;
 import org.screamingsandals.lib.gamecore.resources.ResourceSpawner;
+import org.screamingsandals.lib.gamecore.resources.SpawnerEditor;
 import org.screamingsandals.lib.gamecore.resources.SpawnerHologramHandler;
-import org.screamingsandals.lib.gamecore.resources.editor.SpawnerEditor;
 import org.screamingsandals.lib.gamecore.store.GameStore;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
 import org.screamingsandals.lib.gamecore.utils.GameUtils;
@@ -22,7 +22,6 @@ import org.screamingsandals.lib.lang.Utils;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
 import static org.screamingsandals.lib.lang.I.mpr;
@@ -68,7 +67,8 @@ public abstract class GameBuilder<T extends GameFrame> {
     }
 
     public boolean isReadyToSave(boolean fireError) {
-        return gameFrame.checkIntegrity(fireError);
+        return gameFrame.checkIntegrity(fireError)
+                && spawnerEditor == null;
     }
 
     public void setDisplayName(String displayName) {
@@ -169,18 +169,14 @@ public abstract class GameBuilder<T extends GameFrame> {
     public void buildHologram(ResourceSpawner spawner, GameFrame currentGame, Player player) {
         final List<String> lines = new ArrayList<>();
         var period = spawner.getPeriod();
-        final var timeUnit = spawner.getTimeUnit();
+        final var timeUnit = spawner.getGameTimeUnit();
         final var team = spawner.getGameTeam();
         final var maxSpawned = spawner.getMaxSpawned();
-
-        if (timeUnit == TimeUnit.MILLISECONDS) {
-            period = GameUtils.convertMilisecondsToTick(period);
-        }
 
         lines.add(Utils.colorize("&a&lGameBuilder"));
         lines.addAll(m("game-builder.spawners.hologram")
                 .replace("%color%", spawner.getType().getChatColor())
-                .replace("%type%", spawner.getType().getName())
+                .replace("%type%", spawner.getType().getTranslatedName())
                 .replace("%mat%", spawner.getType().getMaterial())
                 .replace("%spawnAmount%", spawner.getAmount())
                 .replace("%time-unit%", period + " " + GameUtils.convertTimeUnitToLanguage(period, timeUnit))

@@ -10,7 +10,7 @@ import org.screamingsandals.lib.gamecore.error.GameError;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisabledEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadingEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameSavedEvent;
-import org.screamingsandals.lib.gamecore.resources.editor.SpawnerEditor;
+import org.screamingsandals.lib.gamecore.resources.SpawnerEditor;
 
 import java.io.File;
 import java.nio.file.Files;
