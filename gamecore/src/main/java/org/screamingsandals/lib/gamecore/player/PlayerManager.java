@@ -16,7 +16,7 @@ public class PlayerManager {
             return null;
         }
 
-        final GamePlayer gamePlayer = new GamePlayer(player, player.getUniqueId());
+        final GamePlayer gamePlayer = new GamePlayer(player);
         registeredPlayers.put(player, gamePlayer);
 
         GameCore.fireEvent(new SPlayerRegisteredEvent(gamePlayer));

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
@@ -23,15 +24,18 @@ import java.util.UUID;
 public class GamePlayer {
     private final Player player;
     private final UUID uuid;
+    private final PlayerStorage playerStorage;
     private GameTeam gameTeam;
     private GameFrame activeGame;
     private boolean spectator;
 
-    public void destroy() {
-        if (gameTeam != null) {
-            gameTeam.leave(this);
-        }
+    public GamePlayer(Player player) {
+        this.player = player;
+        this.uuid = player.getUniqueId();
+        this.playerStorage = new PlayerStorage();
+    }
 
+    public void destroy() {
         if (gameTeam != null) {
             gameTeam.leave(this);
         }
@@ -71,7 +75,7 @@ public class GamePlayer {
 
     public void teleport(Location location) {
         GameCore.fireEvent(new SPlayerTeleportEvent(this, location, player.getLocation()));
-        PaperLib.teleportAsync(player, location);
+        PaperLib.teleportAsync(player, location, PlayerTeleportEvent.TeleportCause.PLUGIN);
     }
 
     public void teleport(LocationAdapter locationAdapter) {
@@ -93,5 +97,19 @@ public class GamePlayer {
         }
         final ScoreboardManager scoreboardManager = activeGame.getScoreboardManager();
         return scoreboardManager.getSavedScoreboard(this, gameState.getName());
+    }
+
+    public void sendMessage(String string) {
+        player.sendMessage(string);
+    }
+
+    public void storeAndClean() {
+        playerStorage.store(player);
+        playerStorage.clean(player);
+    }
+
+
+    public void restore(boolean teleport) {
+        playerStorage.restore(player, teleport);
     }
 }

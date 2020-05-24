@@ -55,6 +55,7 @@ public class GameManager<T extends GameFrame> {
                 return null;
             }
 
+            Debug.info("&aGame &e" + game.getGameName() + "&a has been loaded!", true);
             registerGame(game.getUuid(), game);
             return game;
         }
@@ -93,8 +94,13 @@ public class GameManager<T extends GameFrame> {
     }
 
     public void unregisterAll() {
-        for (var game : registeredGames.values()) {
-            unregisterGame(game, false);
+        final var iterator = registeredGames.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            final var next = iterator.next();
+
+            unregisterGame(next.getKey());
+            iterator.remove();
         }
     }
 
@@ -159,12 +165,16 @@ public class GameManager<T extends GameFrame> {
     }
 
     public T getFirstAvailableGame() {
-        for (var game : registeredGames.values()) {
-            if (game.getActiveState() == GameState.WAITING) {
-                return game;
+        final TreeMap<Integer, T> availableGames = new TreeMap<>();
+        registeredGames.values().forEach(gameFrame -> {
+            if (gameFrame.getActiveState() != GameState.WAITING) {
+                return;
             }
-        }
-        return null;
+
+            availableGames.put(gameFrame.getPlayersInGame().size(), gameFrame);
+        });
+
+        return availableGames.lastEntry().getValue();
     }
 
     public Optional<T> castGame(GameFrame gameFrame) {

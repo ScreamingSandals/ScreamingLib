@@ -31,6 +31,8 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static org.screamingsandals.lib.gamecore.language.GameLanguage.mpr;
+
 @Data
 public abstract class GameFrame implements Serializable {
     //Game stuff
@@ -263,19 +265,25 @@ public abstract class GameFrame implements Serializable {
     public void join(GamePlayer gamePlayer) {
         if (GameCore.fireEvent(new SPlayerPreJoinGameEvent(this, gamePlayer))) {
             gamePlayer.setActiveGame(this);
+            gamePlayer.storeAndClean();
             gamePlayer.teleport(lobbyWorld.getSpawn());
 
             //update scoreboards and bossbars
+            mpr("commands.join.success")
+                    .game(this)
+                    .send(gamePlayer);
             GameCore.fireEvent(new SPlayerJoinedGameEvent(this, gamePlayer));
         }
     }
 
     public void leave(GamePlayer gamePlayer) {
         gamePlayer.setActiveGame(null);
-        gameCycle.kickPlayer(gamePlayer);
-
+        gamePlayer.restore(true); //TODO: mainlobby? bungee?
         playersInGame.remove(gamePlayer);
 
+        mpr("commands.leave.success")
+                .game(this)
+                .send(gamePlayer);
         GameCore.fireEvent(new SPlayerLeftGameEvent(this, gamePlayer));
     }
 
@@ -307,6 +315,16 @@ public abstract class GameFrame implements Serializable {
             }
         }
         return false;
+    }
+
+    public Set<String> getAvailableTeams() {
+        final var toReturn = new HashSet<String>();
+
+        for (var team : teams) {
+            toReturn.add(team.getTeamName());
+        }
+
+        return toReturn;
     }
 
     //Prepare game stuff

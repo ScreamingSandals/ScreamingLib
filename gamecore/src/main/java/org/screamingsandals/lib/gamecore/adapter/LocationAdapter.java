@@ -59,6 +59,6 @@ public class LocationAdapter implements Serializable {
             return null;
         }
 
-        return new Location(worldAdapter.getWorld(), x, y, z, pitch, yaw);
+        return new Location(worldAdapter.getWorld(), x, y, z, yaw, pitch);
     }
 }

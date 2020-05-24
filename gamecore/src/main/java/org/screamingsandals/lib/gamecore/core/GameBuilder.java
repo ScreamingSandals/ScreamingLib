@@ -175,7 +175,7 @@ public abstract class GameBuilder<T extends GameFrame> {
             return false;
         }
 
-        if (!GameUtils.isInGameBorder(location, adapter.getBorder1().getLocation(), adapter.getBorder2().getLocation())) {
+        if (!isLocationInsideGame(location)) {
             mpr("general.errors.outside-of-the-border").send(player);
             return false;
         }
@@ -205,6 +205,23 @@ public abstract class GameBuilder<T extends GameFrame> {
 
         adapter.setSpawn(new LocationAdapter(location));
         return true;
+    }
+
+    public boolean isLocationInsideGame(Location location) {
+        final var gameWorld = gameFrame.getGameWorld();
+
+        if (gameWorld == null) {
+            return false;
+        }
+
+        final var border1 = gameWorld.getBorder1();
+        final var border2 = gameWorld.getBorder2();
+
+        if (border1 == null || border2 == null) {
+            return false;
+        }
+
+        return GameUtils.isInGameBorder(location, border1.getLocation(), border2.getLocation());
     }
 
     public void buildHologram(ResourceSpawner spawner, GameFrame currentGame, Player player) {
