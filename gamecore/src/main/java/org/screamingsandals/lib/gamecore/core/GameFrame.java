@@ -34,43 +34,39 @@ import java.util.concurrent.TimeUnit;
 @Data
 public abstract class GameFrame implements Serializable {
     //Game stuff
-    private String gameName;
-    private String displayedName;
-    private GameWorld gameWorld;
-    private LobbyWorld lobbyWorld;
-    private int minPlayers;
-    private int minPlayersToStart;
-    private int lobbyTime;
-    private int startTime;
-    private int gameTime;
-    private int deathmatchTime;
-    private int endTime;
-    private List<GameTeam> teams = new LinkedList<>();
-    private List<GameStore> stores = new LinkedList<>();
-    private GameState activeState = GameState.DISABLED;
-    private GameState previousState;
+    protected String gameName;
+    protected String displayedName;
+    protected GameWorld gameWorld;
+    protected LobbyWorld lobbyWorld;
+    protected int minPlayers;
+    protected int minPlayersToStart;
+    protected int lobbyTime;
+    protected int startTime;
+    protected int gameTime;
+    protected int deathmatchTime;
+    protected int endTime;
+    protected List<GameTeam> teams = new LinkedList<>();
+    protected List<GameStore> stores = new LinkedList<>();
+    protected GameState activeState = GameState.DISABLED;
+    protected GameState previousState;
 
     //internal shits
-    private File dataFile;
-    private GameConfig gameConfig;
-    private GameType gameType;
-    private UUID uuid;
+    protected GameConfig gameConfig;
+    protected UUID uuid;
 
-    private transient int maxPlayers;
-    private transient GameCycle gameCycle;
-    private transient List<GamePlayer> playersInGame = new LinkedList<>();
-    private transient List<GamePlayer> spectators = new LinkedList<>();
+    protected transient int maxPlayers;
+    protected transient GameCycle gameCycle;
+    protected transient List<GamePlayer> playersInGame;
+    protected transient List<GamePlayer> spectators;
 
     //Manager
-    private ResourceManager resourceManager = new ResourceManager(this);
-    private transient PlaceholderParser placeholderParser = new PlaceholderParser(this);
-    private transient ScoreboardManager scoreboardManager = new ScoreboardManager(this);
-    private transient BossbarManager bossbarManager = new BossbarManager(this);
+    protected ResourceManager resourceManager = new ResourceManager(this);
+    protected transient PlaceholderParser placeholderParser;
+    protected transient ScoreboardManager scoreboardManager;
+    protected transient BossbarManager bossbarManager;
 
-    public GameFrame(String gameName, GameType gameType) {
+    public GameFrame(String gameName) {
         this.gameName = gameName;
-        this.gameType = gameType;
-        this.dataFile = new File(GameCore.getGameManager().getDataFolder(), gameName + ".json");
         this.uuid = UUID.randomUUID();
 
         loadDefaults();
@@ -114,7 +110,7 @@ public abstract class GameFrame implements Serializable {
             return false;
         }
 
-        if (gameWorld.getPosition1() == null || gameWorld.getPosition2() == null) {
+        if (gameWorld.getBorder1() == null || gameWorld.getBorder2() == null) {
             if (fireError) {
                 GameCore.getErrorManager().newError(new GameError(this, ErrorType.GAME_WORLD_NOT_DEFINED, null));
             }
@@ -129,9 +125,9 @@ public abstract class GameFrame implements Serializable {
         }
 
         var gameWorldWorld = gameWorld.getWorldAdapter().getWorldName();
-        if (!gameWorldWorld.equals(gameWorld.getPosition1().getWorld().toString())
-                || !gameWorldWorld.equals(gameWorld.getPosition2().getWorld().toString())
-                || !gameWorldWorld.equals(gameWorld.getSpectatorSpawn().getWorld().toString())) {
+        if (!gameWorldWorld.equals(gameWorld.getBorder1().getWorld().getName())
+                || !gameWorldWorld.equals(gameWorld.getBorder2().getWorld().getName())
+                || !gameWorldWorld.equals(gameWorld.getSpectatorSpawn().getWorld().getName())) {
             //TODO - error manager
             Debug.warn("World of arena is different than position1, position2 or spectator spawn. Please re-do them.", true);
             return false;
@@ -151,7 +147,7 @@ public abstract class GameFrame implements Serializable {
             return false;
         }
 
-        if (lobbyWorld.getPosition1() == null || lobbyWorld.getPosition2() == null) {
+        if (lobbyWorld.getBorder1() == null || lobbyWorld.getBorder2() == null) {
             //TODO - error manager
             return false;
         }
@@ -162,41 +158,59 @@ public abstract class GameFrame implements Serializable {
         }
 
         var lobbyWorldWorld = lobbyWorld.getWorldAdapter().getWorldName();
-        if (!lobbyWorldWorld.equals(lobbyWorld.getPosition1().getWorld().toString())
-                || !lobbyWorldWorld.equals(lobbyWorld.getPosition2().getWorld().toString())
-                || !lobbyWorldWorld.equals(lobbyWorld.getSpawn().getWorld().toString())) {
+        if (!lobbyWorldWorld.equals(lobbyWorld.getBorder1().getWorld().getName())
+                || !lobbyWorldWorld.equals(lobbyWorld.getBorder2().getWorld().getName())
+                || !lobbyWorldWorld.equals(lobbyWorld.getSpawn().getWorld().getName())) {
             //TODO - error manager
-            Debug.warn("World of arena is different than position1, position2 or spectator spawn. Please re-do them.", true);
+            Debug.warn("Fuckup with lobby?", true);
             return false;
         }
         return true;
     }
 
     public void loadDefaults() {
-        resourceManager.setResourceTypes(ResourceTypes.load(this,
-                new File(GameCore.getPlugin().getDataFolder(), "resources.json")));
+        resourceManager.setResourceTypes(
+                ResourceTypes.load(this, new File(GameCore.getPlugin().getDataFolder(), "resources.json")));
         gameConfig = new GameConfig(this);
         gameConfig.buildDefaults();
     }
 
-    public void prepare() {
+    public boolean prepare() {
+        playersInGame = new LinkedList<>();
+        spectators = new LinkedList<>();
+        placeholderParser = new PlaceholderParser(this);
+        scoreboardManager = new ScoreboardManager(this);
+        bossbarManager = new BossbarManager(this);
+
         setGameState(GameState.LOADING);
         buildTeams();
+
+        return true;
+    }
+
+    public void startMaintenance() {
+
+    }
+
+    public void stopMaintenance() {
+
     }
 
     public void start() {
+        countMaxPlayers();
         if (!checkIntegrity(true)) {
             //change to error manager
             Debug.warn("Arena " + gameName + " cannot be loaded, something is wrong with it!");
             return;
         }
 
-        prepare();
+        if (!prepare()) {
+            Debug.warn("Prepare phase failed, what is wrong?", true);
+            return;
+        }
 
         Preconditions.checkNotNull(gameCycle, "GameCycle cannot be null!")
                 .runTaskRepeater(0, 1, TimeUnit.SECONDS); //We expect that dev provided valid game-cycle
-
-        gameType = gameCycle.getGameType();
 
         GameCore.fireEvent(new SGameLoadedEvent(this));
     }
@@ -224,8 +238,15 @@ public abstract class GameFrame implements Serializable {
         spectators.clear();
         maxPlayers = 0;
 
+        resourceManager.stop();
         scoreboardManager.destroy();
         bossbarManager.destroy();
+        placeholderParser.destroy();
+
+        //TODO: regen
+
+        GameCore.getEntityManager().unregisterAll(uuid);
+        GameCore.getHologramManager().destroyAll(uuid);
 
         setGameState(GameState.DISABLED);
 
@@ -272,9 +293,9 @@ public abstract class GameFrame implements Serializable {
 
     public Optional<GameTeam> getRegisteredTeam(String teamName) {
         for (var gameTeam : teams) {
-           if (gameTeam.getTeamName().equalsIgnoreCase(teamName)) {
-               return Optional.of(gameTeam);
-           }
+            if (gameTeam.getTeamName().equalsIgnoreCase(teamName)) {
+                return Optional.of(gameTeam);
+            }
         }
         return Optional.empty();
     }

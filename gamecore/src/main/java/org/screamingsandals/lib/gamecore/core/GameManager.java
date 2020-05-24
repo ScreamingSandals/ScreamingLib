@@ -24,12 +24,18 @@ import java.util.stream.Stream;
 public class GameManager<T extends GameFrame> {
     private final File dataFolder;
     private final Class<T> type;
-    private final Map<String, Object> gameBuilders = new HashMap<>();
-    private Map<String, T> registeredGames = new HashMap<>();
+    private final Map<UUID, Object> gameBuilders = new HashMap<>();
+    private Map<UUID, T> registeredGames = new HashMap<>();
+    private GameType gameType;
 
-    public GameManager(File dataFolder, Class<T> type) {
+    public GameManager(File dataFolder, Class<T> type, GameType gameType) {
         this.dataFolder = dataFolder;
         this.type = type;
+        this.gameType = gameType;
+
+        if (!dataFolder.exists()) {
+            dataFolder.mkdirs();
+        }
     }
 
     public T loadGame(File gameFile) {
@@ -49,7 +55,7 @@ public class GameManager<T extends GameFrame> {
                 return null;
             }
 
-            registerGame(game.getGameName(), game);
+            registerGame(game.getUuid(), game);
             return game;
         }
         return null;
@@ -92,17 +98,17 @@ public class GameManager<T extends GameFrame> {
         }
     }
 
-    public void registerGame(String gameName, T gameFrame) {
+    public void registerGame(UUID uuid, T gameFrame) {
         if (!GameCore.fireEvent(new SGameLoadingEvent(gameFrame))) {
             return;
         }
 
         gameFrame.start();
-        registeredGames.put(gameName, gameFrame);
+        registeredGames.put(uuid, gameFrame);
     }
 
-    public void unregisterGame(String gameName) {
-        final var gameFrame = registeredGames.get(gameName);
+    public void unregisterGame(UUID uuid) {
+        final var gameFrame = registeredGames.get(uuid);
 
         unregisterGame(gameFrame, true);
     }
@@ -117,14 +123,39 @@ public class GameManager<T extends GameFrame> {
             return;
         }
 
-        final String gameName = gameFrame.getGameName();
-
         gameFrame.stop();
-        registeredGames.remove(gameName);
+        registeredGames.remove(gameFrame.getUuid());
+    }
+
+    public boolean isGameRegistered(UUID uuid) {
+        return registeredGames.containsKey(uuid);
     }
 
     public boolean isGameRegistered(String gameName) {
-        return registeredGames.containsKey(gameName);
+        for (var registered : registeredGames.values()) {
+            if (registered.getGameName().equals(gameName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Optional<T> getRegisteredGame(UUID uuid) {
+        final var registered = registeredGames.get(uuid);
+
+        if (registered != null) {
+            return Optional.of(registered);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<T> getRegisteredGame(String name) {
+        for (var registered : registeredGames.values()) {
+            if (registered.getGameName().equals(name)) {
+                return Optional.of(registered);
+            }
+        }
+        return Optional.empty();
     }
 
     public T getFirstAvailableGame() {
@@ -136,42 +167,80 @@ public class GameManager<T extends GameFrame> {
         return null;
     }
 
-    public T castGame(GameFrame gameFrame) {
+    public Optional<T> castGame(GameFrame gameFrame) {
         try {
-            return type.cast(gameFrame);
+            return Optional.of(type.cast(gameFrame));
         } catch (Throwable tr) {
             tr.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 
     public Collection<T> getRegisteredGames() {
         return registeredGames.values();
     }
 
-    public Map<String, T> getRegisteredGamesMap() {
+    public Set<String> getRegisteredGamesNames() {
+        final Set<String> games = new HashSet<>();
+        registeredGames.values().forEach(game -> games.add(game.getGameName()));
+
+        return games;
+    }
+
+    public Map<UUID, T> getRegisteredGamesMap() {
         return registeredGames;
     }
 
-    public void registerBuilder(String gameName, Object gameBuilder) {
-        gameBuilders.put(gameName, gameBuilder);
+    public void registerBuilder(UUID uuid, GameBuilder<?> gameBuilder) {
+        gameBuilders.put(uuid, gameBuilder);
     }
 
-    public void unregisterBuilder(String gameName) {
-        gameBuilders.remove(gameName);
+    public void unregisterBuilder(UUID uuid) {
+        gameBuilders.remove(uuid);
     }
 
-    public boolean isInBuilder(String gameName) {
-        return gameBuilders.containsKey(gameName);
+    public boolean isInBuilder(UUID uuid) {
+        return gameBuilders.containsKey(uuid);
     }
 
     public boolean isInBuilder(GameFrame gameFrame) {
-        return gameBuilders.containsKey(gameFrame.getGameName());
+        return isInBuilder(gameFrame.getUuid());
+    }
+
+    public boolean isInBuilder(String name) {
+        for (var builder : gameBuilders.values()) {
+            if (((GameBuilder) builder).getGameName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SuppressWarnings("unchecked")
-    public <E> E getGameBuilder(String gameName) {
-        return (E) gameBuilders.get(gameName);
+    public <E extends GameBuilder<?>> E getGameBuilder(UUID uuid) {
+        return (E) gameBuilders.get(uuid);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <E extends GameBuilder<?>> E getGameBuilder(String name) {
+        for (var builder : gameBuilders.values()) {
+            final var castedBuilder = (GameBuilder) builder;
+            if (castedBuilder.getGameName().equals(name)) {
+                return (E) castedBuilder;
+            }
+        }
+
+        return null;
+    }
+
+    public Set<String> getRegisteredBuildersNames() {
+        final Set<String> games = new HashSet<>();
+        gameBuilders.values().forEach(builder -> {
+            final var castedBuilder = (GameBuilder) builder;
+            games.add(castedBuilder.getGameName());
+        });
+
+        return games;
     }
 
     public Optional<SpawnerEditor> getSpawnerEditor(Player player) {

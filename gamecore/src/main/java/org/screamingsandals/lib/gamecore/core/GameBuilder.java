@@ -3,6 +3,10 @@ package org.screamingsandals.lib.gamecore.core;
 import lombok.Data;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
@@ -20,7 +24,6 @@ import org.screamingsandals.lib.gamecore.world.LobbyWorld;
 import org.screamingsandals.lib.lang.Utils;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
@@ -28,12 +31,12 @@ import static org.screamingsandals.lib.lang.I.mpr;
 
 @Data
 public abstract class GameBuilder<T extends GameFrame> {
-    private T gameFrame;
-    private String gameName;
-    private List<GameStore> gameStores = new LinkedList<>();
-    private SpawnerEditor spawnerEditor;
+    protected T gameFrame;
+    protected String gameName;
+    protected SpawnerEditor spawnerEditor;
+    protected StoreListener storeListener;
 
-    public boolean create(String gameName, GameType gameType, Player player) {
+    public boolean create(String gameName, Player player) {
         if (GameCore.getGameManager().isGameRegistered(gameName)) {
             mpr("core.errors.game-already-created").send(player);
             return false;
@@ -48,18 +51,10 @@ public abstract class GameBuilder<T extends GameFrame> {
             mpr("core.errors.game-does-not-exists").send(player);
         }
         this.gameFrame = gameFrame;
-
-        final var gameStores = gameFrame.getStores();
-        if (gameStores == null) {
-            return;
-        }
-
-        this.gameStores.addAll(gameStores);
     }
 
     public void save(Player player) {
         gameFrame.countMaxPlayers();
-        gameFrame.getStores().forEach(GameStore::remove);
     }
 
     public boolean isCreated() {
@@ -142,7 +137,7 @@ public abstract class GameBuilder<T extends GameFrame> {
         gameWorld.setWorldAdapter(new WorldAdapter(worldName));
     }
 
-    public void setGameWorldPosition(Location location, int whichOne) {
+    public void setGameWorldBorder(Location location, int whichOne) {
         final var adapter = new LocationAdapter(location);
         var gameWorld = gameFrame.getGameWorld();
 
@@ -151,10 +146,10 @@ public abstract class GameBuilder<T extends GameFrame> {
             gameFrame.setGameWorld(gameWorld);
         }
 
-        setWorldPosition(adapter, gameWorld, whichOne);
+        setWorldBorder(adapter, gameWorld, whichOne);
     }
 
-    public void setLobbyWorldPosition(Location location, int whichOne) {
+    public void setLobbyWorldBorder(Location location, int whichOne) {
         final var adapter = new LocationAdapter(location);
         var lobbyWorld = gameFrame.getLobbyWorld();
 
@@ -163,7 +158,53 @@ public abstract class GameBuilder<T extends GameFrame> {
             gameFrame.setLobbyWorld(lobbyWorld);
         }
 
-        setWorldPosition(adapter, lobbyWorld, whichOne);
+        setWorldBorder(adapter, lobbyWorld, whichOne);
+    }
+
+    public boolean setSpectatorsSpawn(Player player) {
+        final var location = player.getLocation();
+        final var adapter = gameFrame.getGameWorld();
+
+        if (adapter == null) {
+            mpr("game.core.errors.game-world-does-not-exists").send(player);
+            return false;
+        }
+
+        if (!location.getWorld().getName().equals(location.getWorld().getName())) {
+            mpr("general.errors.different-world").send(player);
+            return false;
+        }
+
+        if (!GameUtils.isInGameBorder(location, adapter.getBorder1().getLocation(), adapter.getBorder2().getLocation())) {
+            mpr("general.errors.outside-of-the-border").send(player);
+            return false;
+        }
+
+        adapter.setSpectatorSpawn(new LocationAdapter(location));
+        return true;
+    }
+
+    public boolean setLobbySpawn(Player player) {
+        final var location = player.getLocation();
+        final var adapter = gameFrame.getLobbyWorld();
+
+        if (adapter == null) {
+            mpr("game.core.errors.lobby-world-does-not-exists").send(player);
+            return false;
+        }
+
+        if (!location.getWorld().getName().equals(location.getWorld().getName())) {
+            mpr("general.errors.different-world").send(player);
+            return false;
+        }
+
+        if (!GameUtils.isInGameBorder(location, adapter.getBorder1().getLocation(), adapter.getBorder2().getLocation())) {
+            mpr("general.errors.outside-of-the-border").send(player);
+            return false;
+        }
+
+        adapter.setSpawn(new LocationAdapter(location));
+        return true;
     }
 
     public void buildHologram(ResourceSpawner spawner, GameFrame currentGame, Player player) {
@@ -191,18 +232,18 @@ public abstract class GameBuilder<T extends GameFrame> {
         gameHologram.setHandler(new SpawnerHologramHandler());
     }
 
-    private void setWorldPosition(LocationAdapter adapter, BaseWorld baseWorld, int whichOne) {
+    private void setWorldBorder(LocationAdapter adapter, BaseWorld baseWorld, int whichOne) {
         if (baseWorld.getWorldAdapter() == null) {
             baseWorld.setWorldAdapter(new WorldAdapter(adapter.getWorld().toString()));
         }
 
         switch (whichOne) {
             case 1: {
-                baseWorld.setPosition1(adapter);
+                baseWorld.setBorder1(adapter);
                 break;
             }
             case 2: {
-                baseWorld.setPosition2(adapter);
+                baseWorld.setBorder2(adapter);
                 break;
             }
             default: {
@@ -218,5 +259,35 @@ public abstract class GameBuilder<T extends GameFrame> {
             }
         }
         return false;
+    }
+
+    @Data
+    public static class StoreListener implements Listener {
+        private final GameFrame gameFrame;
+
+        @EventHandler
+        public void onRightClick(PlayerInteractEntityEvent event) {
+            var rightClicked = event.getRightClicked();
+
+            if (GameCore.getEntityManager().isRegisteredInGame(gameFrame.getUuid(), rightClicked)) {
+                event.setCancelled(true);
+                //TODO: open shop
+            }
+        }
+
+        @EventHandler
+        public void onAttack(EntityDamageByEntityEvent event) {
+            var who = event.getDamager();
+            var entity = event.getEntity();
+
+            if (!(who instanceof Player)) {
+                return;
+            }
+
+            if (GameCore.getEntityManager().isRegisteredInGame(gameFrame.getUuid(), entity)) {
+                event.setCancelled(true);
+                mpr("game-builder.store.why-are-you-punching-your-shop").send(who);
+            }
+        }
     }
 }

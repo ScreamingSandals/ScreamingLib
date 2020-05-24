@@ -24,7 +24,7 @@ public abstract class DataSource<T> {
        return false;
     }
 
-    public boolean checkFile(File file) {
+    public static boolean checkFile(File file) {
         if (!file.exists()) {
             try {
                 return file.createNewFile();

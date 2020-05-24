@@ -1,10 +1,12 @@
 package org.screamingsandals.lib.nms.entity;
 
-import static org.screamingsandals.lib.nms.utils.ClassStorage.*;
-import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.*;
-
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
+
+import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.EntityArmorStand;
+import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.World;
+import static org.screamingsandals.lib.nms.utils.ClassStorage.getHandle;
+import static org.screamingsandals.lib.nms.utils.ClassStorage.getMethod;
 
 public class ArmorStandNMS extends EntityNMS {
 
@@ -24,7 +26,7 @@ public class ArmorStandNMS extends EntityNMS {
 					.newInstance(getMethod(loc.getWorld(), "getHandle").invoke(), loc.getX(), loc.getY(), loc.getZ()));
 		this.setLocation(loc); // Update rotation
 	}
-	
+
 	public void setSmall(boolean small) {
 		getMethod(handler, "setSmall,func_175420_a", boolean.class).invoke(small);
 	}
@@ -56,5 +58,6 @@ public class ArmorStandNMS extends EntityNMS {
 	public boolean isMarker() {
 		return (boolean) getMethod(handler, "isMarker,func_175426_l,s").invoke();
 	}
+
 
 }

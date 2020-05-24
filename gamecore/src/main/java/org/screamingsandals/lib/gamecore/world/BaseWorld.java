@@ -18,8 +18,8 @@ import java.util.Map;
 @Data
 public abstract class BaseWorld {
     private WorldAdapter worldAdapter;
-    private LocationAdapter position1;
-    private LocationAdapter position2;
+    private LocationAdapter border1;
+    private LocationAdapter border2;
     private LocationAdapter spawn;
     private transient Map<Location, BlockData> originalBlocks = new HashMap<>();
     private transient Map<Location, BlockData> destroyedBlocks = new HashMap<>();
@@ -30,7 +30,7 @@ public abstract class BaseWorld {
     }
 
     public boolean exists() {
-        return position1.getWorld() != null;
+        return border1.getWorld() != null;
     }
 
     public void putOriginalBlock(Location location, BlockState blockState) {

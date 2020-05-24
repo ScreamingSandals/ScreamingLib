@@ -7,8 +7,8 @@ import org.screamingsandals.lib.gamecore.core.cycle.GameCycle;
 
 @Data
 public abstract class GamePhase {
-    private final GameCycle gameCycle;
-    private final GameFrame gameFrame;
+    private final transient GameCycle gameCycle;
+    private final transient GameFrame gameFrame;
     private final int runTime;
     private GameState phaseType;
     private int elapsedTime;
@@ -30,14 +30,22 @@ public abstract class GamePhase {
     }
 
     public boolean hasFinished() {
+        if (runTime == -1 && elapsedTime == 1) {
+            return true;
+        }
         return elapsedTime == runTime;
     }
 
     public int countRemainingTime() {
+        if (runTime == -1 && elapsedTime == 1) {
+            return 0;
+        }
+
         return runTime - elapsedTime;
     }
 
     public void reset() {
         elapsedTime = 0;
     }
+
 }

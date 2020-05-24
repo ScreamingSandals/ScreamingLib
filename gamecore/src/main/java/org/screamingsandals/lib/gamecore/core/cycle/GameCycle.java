@@ -15,20 +15,23 @@ import org.screamingsandals.lib.tasker.BaseTask;
 
 import java.util.*;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Data
 public abstract class GameCycle extends BaseTask {
-    private final GameFrame gameFrame;
-    private GamePhase currentPhase;
-    private Map<GameState, GamePhase> gamePhases = new HashMap<>();
-    private List<GamePhase> customPhases = new LinkedList<>();
-    private GameType gameType;
+    protected final transient GameFrame gameFrame;
+    protected GamePhase currentPhase;
+    protected Map<GameState, GamePhase> gamePhases = new LinkedHashMap<>();
+    protected List<GamePhase> customPhases = new LinkedList<>();
+    protected GameType gameType;
 
     @Override
     public void run() {
         final var gameState = gameFrame.getActiveState();
         if (currentPhase != null && currentPhase.getPhaseType() == gameState) {
-            if (gameState == GameState.WAITING && gameFrame.getPlayersInGame().size() == 0) {
+            final var playersInGameSize = gameFrame.getPlayersInGame().size();
+            if (gameState == GameState.WAITING && playersInGameSize == 0) {
+                return;
+            } else if (gameState == GameState.WAITING && gameFrame.getMinPlayers() > playersInGameSize) {
                 return;
             }
 
@@ -37,41 +40,18 @@ public abstract class GameCycle extends BaseTask {
         }
 
         switch (gameState) {
-            case LOADING: {
-                gameFrame.setGameState(GameState.WAITING);
-                currentPhase = gamePhases.get(GameState.LOADING);
-                break;
-            }
-            case WAITING: {
-                currentPhase = gamePhases.get(GameState.WAITING);
-                break;
-            }
-            case PRE_GAME_COUNTDOWN: {
-                currentPhase = gamePhases.get(GameState.PRE_GAME_COUNTDOWN);
-                break;
-            }
-            case IN_GAME: {
-                currentPhase = gamePhases.get(GameState.IN_GAME);
-                break;
-            }
-            case DEATHMATCH: {
-                currentPhase = gamePhases.get(GameState.DEATHMATCH);
-                break;
-            }
-            case AFTER_GAME_COUNTDOWN: {
-                currentPhase = gamePhases.get(GameState.AFTER_GAME_COUNTDOWN);
-                break;
-            }
+            case LOADING:
+            case WAITING:
+            case PRE_GAME_COUNTDOWN:
+            case IN_GAME:
+            case DEATHMATCH:
+            case AFTER_GAME_COUNTDOWN:
             case RESTART: {
-                currentPhase = gamePhases.get(GameState.RESTART);
-                break;
-            }
-            case MAINTENANCE: {
-                currentPhase = gamePhases.get(GameState.MAINTENANCE);
+                currentPhase = gamePhases.get(gameState);
                 break;
             }
             case CUSTOM: {
-                final Iterator<GamePhase> iterator = customPhases.iterator();
+                final var iterator = customPhases.iterator();
                 if (iterator.hasNext()) {
                     currentPhase = iterator.next();
                     iterator.remove();
@@ -101,10 +81,18 @@ public abstract class GameCycle extends BaseTask {
         GameCore.fireEvent(new SGameTickEvent(gameFrame, currentPhase));
         Preconditions.checkNotNull(currentPhase, "Current phase cannot be null!").tick();
         gameFrame.getPlaceholderParser().reload();
+
+        if (currentPhase.hasFinished() && currentPhase.getPhaseType() != GameState.CUSTOM) {
+            setNextAndRemovePrevious();
+        }
     }
 
     public void kickAllPlayers() {
+        if (gameFrame.getPlayersInGame().isEmpty()) {
+            return;
+        }
 
+        gameFrame.getPlayersInGame().forEach(this::kickPlayer);
     }
 
     public void kickPlayer(GamePlayer gamePlayer) {
@@ -127,5 +115,19 @@ public abstract class GameCycle extends BaseTask {
 
     public void addCustomPhase(GamePhase gamePhase) {
         customPhases.add(gamePhase);
+    }
+
+    public boolean isRunning() {
+        return currentPhase != null;
+    }
+
+    private void setNextAndRemovePrevious() {
+        final var iterator = gamePhases.entrySet().iterator();
+
+        if (iterator.hasNext()) {
+            final var next = iterator.next();
+            currentPhase = next.getValue();
+            iterator.remove();
+        }
     }
 }

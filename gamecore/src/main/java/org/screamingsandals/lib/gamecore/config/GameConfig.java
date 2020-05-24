@@ -3,6 +3,7 @@ package org.screamingsandals.lib.gamecore.config;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NoArgsConstructor
+@ToString(exclude = "gameFrame")
 public class GameConfig {
     private transient GameFrame gameFrame;
     private final Map<String, ValueHolder<?>> gameValues = new HashMap<>();

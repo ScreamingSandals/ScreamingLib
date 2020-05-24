@@ -11,7 +11,7 @@ public abstract class BaseManager<T> {
     private Map<T, List<Bossbar>> savedBossbars = new HashMap<>();
 
     public void destroy() {
-        hideAllScoreboards();
+        hideAllBossbars();
 
         activeBossbars.clear();
         savedBossbars.clear();
@@ -45,7 +45,7 @@ public abstract class BaseManager<T> {
         savedBossbars.remove(player);
     }
 
-    public void hideAllScoreboards() {
+    public void hideAllBossbars() {
 
     }
 

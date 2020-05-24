@@ -17,10 +17,6 @@ public class LocationAdapter implements Serializable {
     private float yaw;
     private transient Location location;
 
-    public LocationAdapter() {
-        location = constructLocation();
-    }
-
     public LocationAdapter(Location location) {
         this(new WorldAdapter(location.getWorld().getName()), location.getX(), location.getY(), location.getZ(), location.getPitch(), location.getYaw());
     }
@@ -36,11 +32,6 @@ public class LocationAdapter implements Serializable {
         location = constructLocation();
     }
 
-    public static LocationAdapter create(Location location) {
-        return new LocationAdapter(WorldAdapter.create(location.getWorld()),
-                location.getX(), location.getY(), location.getZ(), location.getPitch(), location.getYaw());
-    }
-
     public World getWorld() {
         return worldAdapter.getWorld();
     }
@@ -49,7 +40,20 @@ public class LocationAdapter implements Serializable {
         return location != null;
     }
 
+    public Location getLocation() {
+        if (location == null) {
+            location = constructLocation();
+        }
+
+        return location;
+    }
+
     private Location constructLocation() {
+        if (worldAdapter == null) {
+            Debug.warn("World does not exists!", true);
+            return null;
+        }
+
         if (!worldAdapter.isWorldExists()) {
             Debug.warn("World " + worldAdapter.getWorldName() + " is null!", true);
             return null;

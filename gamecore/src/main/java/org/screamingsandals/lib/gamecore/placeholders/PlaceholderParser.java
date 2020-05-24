@@ -1,14 +1,16 @@
 package org.screamingsandals.lib.gamecore.placeholders;
 
 import lombok.Data;
+import lombok.ToString;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
+@ToString(exclude = "gameFrame")
 public class PlaceholderParser {
-    private final GameFrame gameFrame;
+    private GameFrame gameFrame;
     private final Map<String, Object> available = new HashMap<>();
 
     public PlaceholderParser(GameFrame gameFrame) {
@@ -43,6 +45,11 @@ public class PlaceholderParser {
         add("%spectatorsCount%", gameFrame.getSpectators().size());
         add("%activeState%", gameFrame.getActiveState());
         add("%previousState%", gameFrame.getPreviousState());
+    }
+
+    public void destroy() {
+        gameFrame = null;
+        available.clear();
     }
 
     public void reload() {

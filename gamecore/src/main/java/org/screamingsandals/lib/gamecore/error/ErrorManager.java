@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.gamecore.error;
 
 import lombok.Data;
+import org.bukkit.Bukkit;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 
@@ -40,8 +41,7 @@ public class ErrorManager {
         }
 
         if (GameCore.getInstance().isVerbose()) {
-            GameCore.getPlayerManager().getRegisteredPlayers().forEach(gamePlayer -> {
-                final var player = gamePlayer.getPlayer();
+            Bukkit.getOnlinePlayers().forEach(player -> {
                 if (player.hasPermission(GameCore.getInstance().getAdminPermissions())) {
                     player.sendMessage(m("prefix").get() + " " + error.getMessage());
                 }

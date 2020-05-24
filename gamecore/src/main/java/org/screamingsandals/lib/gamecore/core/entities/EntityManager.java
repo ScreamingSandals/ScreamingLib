@@ -4,12 +4,12 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import lombok.Getter;
 import org.bukkit.entity.Entity;
-import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.world.BaseWorld;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 /*
 Support class for entity management.
@@ -18,10 +18,10 @@ This will prevent shop-despawning issues and others.
  */
 public class EntityManager {
     @Getter
-    private final Multimap<GameFrame, Entity> registeredEntities = ArrayListMultimap.create();
+    private final Multimap<UUID, Entity> registeredEntities = ArrayListMultimap.create();
 
-    public void register(GameFrame gameFrame, Entity entity) {
-        registeredEntities.put(gameFrame, entity);
+    public void register(UUID uuid, Entity entity) {
+        registeredEntities.put(uuid, entity);
     }
 
     public void unregister(Entity entity) {
@@ -32,17 +32,17 @@ public class EntityManager {
         });
     }
 
-    public void unregisterAll(GameFrame gameFrame) {
+    public void unregisterAll(UUID uuid) {
         final List<Entity> entities = new LinkedList<>();
 
         registeredEntities.entries().forEach(entry -> {
-            if (entry.getKey().getUuid() == gameFrame.getUuid()) {
+            if (entry.getKey() == uuid) {
                 entities.add(entry.getValue());
             }
         });
 
         entities.forEach(this::internalUnregister);
-        registeredEntities.removeAll(gameFrame);
+        registeredEntities.removeAll(uuid);
     }
 
     public void unregisterAll() {
@@ -59,5 +59,16 @@ public class EntityManager {
 
     public Collection<Entity> getEntities() {
         return registeredEntities.values();
+    }
+
+    public boolean isRegisteredInGame(UUID uuid, Entity entity) {
+        System.out.println(registeredEntities.get(uuid));
+        System.out.println(registeredEntities.size());
+        for (var registered : registeredEntities.get(uuid)) {
+            if (registered.equals(entity)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

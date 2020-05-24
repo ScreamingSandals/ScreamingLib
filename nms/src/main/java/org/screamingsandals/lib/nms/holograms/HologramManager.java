@@ -67,7 +67,6 @@ public class HologramManager implements Listener {
 
     public void destroy() {
     	activeHolograms.forEach(Hologram::destroy);
-
 	}
 
     @EventHandler

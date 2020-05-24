@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.gamecore.resources;
 
 import lombok.Data;
+import lombok.ToString;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.upgrades.UpgradeManager;
 
@@ -10,11 +11,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Data
+@ToString(exclude = "gameFrame")
 public class ResourceManager {
     private final transient GameFrame gameFrame;
     private final transient UpgradeManager upgradeManager;
     private final List<ResourceSpawner> resourceSpawners = new LinkedList<>();
-    private ResourceTypes resourceTypes;
+    private transient ResourceTypes resourceTypes;
 
     public ResourceManager(GameFrame gameFrame) {
         this.gameFrame = gameFrame;

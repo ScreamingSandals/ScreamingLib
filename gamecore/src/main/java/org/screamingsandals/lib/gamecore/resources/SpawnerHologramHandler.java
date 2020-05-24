@@ -2,7 +2,6 @@ package org.screamingsandals.lib.gamecore.resources;
 
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.gamecore.GameCore;
-import org.screamingsandals.lib.gamecore.core.GameBuilder;
 import org.screamingsandals.lib.gamecore.error.ErrorType;
 import org.screamingsandals.lib.gamecore.error.GameError;
 import org.screamingsandals.lib.gamecore.visuals.holograms.GameHologram;
@@ -42,7 +41,7 @@ public class SpawnerHologramHandler implements TouchHandler {
             return;
         }
 
-        var gameBuilder = (GameBuilder) GameCore.getGameManager().getGameBuilder(game.getGameName());
+        var gameBuilder = GameCore.getGameManager().getGameBuilder(game.getUuid());
         if (gameBuilder.getSpawnerEditor() != null) {
             mpr("game-builder.spawners.editor.already-active").sendList(player);
             return;

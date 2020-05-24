@@ -1,12 +1,13 @@
 package org.screamingsandals.lib.nms.entity;
 
-import static org.screamingsandals.lib.nms.utils.ClassStorage.*;
-import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.*;
-
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.screamingsandals.lib.nms.utils.InstanceMethod;
+
+import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.ChatSerializer;
+import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.IChatBaseComponent;
+import static org.screamingsandals.lib.nms.utils.ClassStorage.*;
 
 public class EntityNMS {
 	protected Object handler;
@@ -25,15 +26,16 @@ public class EntityNMS {
 		double locZ = (double) getField(handler, "locZ,field_70161_v");
 		float yaw = (float) getField(handler, "yaw,field_70177_z");
 		float pitch = (float) getField(handler, "pitch,field_70125_A");
-		Object world = getMethod(handler, "getWorld,func_130014_f_").invoke();
-		World craftWorld = (World) getMethod(world, "getWorld").invoke();
+
+		final Object world = getMethod(handler, "getWorld,func_130014_f_").invoke();
+		final World craftWorld = (World) getMethod(world, "getWorld").invoke();
 		
 		return new Location(craftWorld, locX, locY, locZ, yaw, pitch);
 	}
 	
 	public void setLocation(Location location) {
-		Object world = getMethod(handler, "getWorld,func_130014_f_").invoke();
-		World craftWorld = (World) getMethod(world, "getWorld").invoke();
+		final Object world = getMethod(handler, "getWorld,func_130014_f_").invoke();
+		final World craftWorld = (World) getMethod(world, "getWorld").invoke();
 		if (!location.getWorld().equals(craftWorld)) {
 			setField(handler, "world,field_70170_p", getHandle(location.getWorld()));
 		}
@@ -65,8 +67,8 @@ public class EntityNMS {
 	}
 
 	public String getCustomName() {
-		Object textComponent = getMethod(handler, "getCustomName,func_200201_e,func_95999_t").invoke();
-		String text = "";
+		final Object textComponent = getMethod(handler, "getCustomName,func_200201_e,func_95999_t").invoke();
+		String text;
 		if (IChatBaseComponent.isInstance(textComponent)) {
 			text = (String) getMethod(textComponent, "getLegacyString,func_150254_d").invoke();
 		} else {

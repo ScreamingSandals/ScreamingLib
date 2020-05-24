@@ -16,9 +16,10 @@ import java.io.Serializable;
 
 @Data
 public class GameStore implements Serializable {
-    private final LocationAdapter storeLocation;
+    private LocationAdapter storeLocation;
     private String shopName;
-    private File shopFile;
+    private String pathToFile;
+    private transient File shopFile;
 
     private GameTeam gameTeam;
     private StoreType storeType;
@@ -27,8 +28,15 @@ public class GameStore implements Serializable {
 
     private transient LivingEntity livingEntity;
 
+    /*
+    Internal use only.
+     */
+    @Deprecated
+    public GameStore() {}
+
     public GameStore(LocationAdapter storeLocation, String shopName, File shopFile, StoreType storeType) {
         this(storeLocation, shopName, shopFile, null, storeType);
+
     }
 
     public GameStore(LocationAdapter storeLocation, String shopName, File shopFile, GameTeam gameTeam, StoreType storeType) {
@@ -39,6 +47,7 @@ public class GameStore implements Serializable {
         this.storeLocation = storeLocation;
         this.shopName = shopName;
         this.shopFile = shopFile;
+        this.pathToFile = shopFile.getPath();
         this.gameTeam = gameTeam;
         this.storeType = storeType;
         setEntityType(entityType);
@@ -73,11 +82,18 @@ public class GameStore implements Serializable {
             }
         }
 
-        GameCore.getEntityManager().register(gameFrame, livingEntity);
+        GameCore.getEntityManager().register(gameFrame.getUuid(), livingEntity);
         return livingEntity;
     }
 
     public void remove() {
         GameCore.getEntityManager().unregister(livingEntity);
+    }
+
+    public File getShopFile() {
+        if (shopFile == null) {
+            shopFile = new File(pathToFile);
+        }
+        return shopFile;
     }
 }

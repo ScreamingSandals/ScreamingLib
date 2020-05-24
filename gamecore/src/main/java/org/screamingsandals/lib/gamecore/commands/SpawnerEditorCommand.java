@@ -8,6 +8,7 @@ import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.core.GameTimeUnit;
 import org.screamingsandals.lib.gamecore.resources.SpawnerEditor;
+import org.screamingsandals.lib.gamecore.utils.GameUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -58,8 +59,8 @@ public class SpawnerEditorCommand implements ScreamingCommand {
 
             switch (action) {
                 case "max-spawned": {
-                    if (canCastToInt(value, player)) {
-                        spawner.setMaxSpawned(castToInt(value));
+                    if (GameUtils.canCastToInt(value, player)) {
+                        spawner.setMaxSpawned(GameUtils.castToInt(value));
                         mpr("game-builder.spawners.editor.changed")
                                 .replace("%value%", action)
                                 .replace("%newValue%", value)
@@ -68,8 +69,8 @@ public class SpawnerEditorCommand implements ScreamingCommand {
                     break;
                 }
                 case "amount": {
-                    if (canCastToInt(value, player)) {
-                        spawner.setAmount(castToInt(value));
+                    if (GameUtils.canCastToInt(value, player)) {
+                        spawner.setAmount(GameUtils.castToInt(value));
                         mpr("game-builder.spawners.editor.changed")
                                 .replace("%value%", action)
                                 .replace("%newValue%", value)
@@ -78,8 +79,8 @@ public class SpawnerEditorCommand implements ScreamingCommand {
                     break;
                 }
                 case "period": {
-                    if (canCastToInt(value, player)) {
-                        spawner.setPeriod(castToInt(value));
+                    if (GameUtils.canCastToInt(value, player)) {
+                        spawner.setPeriod(GameUtils.castToInt(value));
                         mpr("game-builder.spawners.editor.changed")
                                 .replace("%value%", action)
                                 .replace("%newValue%", value)
@@ -145,7 +146,7 @@ public class SpawnerEditorCommand implements ScreamingCommand {
                     return;
                 }
                 case "location": {
-                    spawner.setLocation(LocationAdapter.create(player.getLocation()));
+                    spawner.setLocation(new LocationAdapter(player.getLocation()));
                     mpr("game-builder.spawners.editor.location").send(player);
                     rebuildHologram(spawnerEditor, player, false);
                     return;
@@ -212,26 +213,6 @@ public class SpawnerEditorCommand implements ScreamingCommand {
         GameCore.getHologramManager().destroy(spawnerEditor.getGameHologram());
         spawnerEditor.getGameBuilder()
                 .buildHologram(original ? spawnerEditor.getOriginalSpawner() : spawnerEditor.getResourceSpawner(), gameBuilder.getGameFrame(), player);
-    }
-
-    private boolean canCastToInt(String value, Player player) {
-        try {
-            final var converted = Integer.parseInt(value);
-            return converted >= 1;
-        } catch (Exception e) {
-            mpr("general.errors.invalid-number")
-                    .replace("%entry%", value)
-                    .send(player);
-            return false;
-        }
-    }
-
-    private int castToInt(String value) {
-        return Integer.parseInt(value);
-    }
-
-    private int castToTick(int value) {
-        return value * 50;
     }
 
     private boolean canBeTime(String value) {

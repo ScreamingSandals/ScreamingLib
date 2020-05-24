@@ -12,7 +12,7 @@ import java.util.List;
 
 @Data
 @ToString(exclude = {"activeGame"})
-public abstract class GameTeam implements Serializable {
+public class GameTeam implements Serializable {
     private LocationAdapter spawnLocation;
     private String teamName;
     private TeamColor teamColor;
@@ -22,6 +22,10 @@ public abstract class GameTeam implements Serializable {
     private transient boolean alive = false;
     private transient List<GamePlayer> teamPlayers = new ArrayList<>();
     private transient GameFrame activeGame;
+
+    //Internal use only.
+    @Deprecated
+    public GameTeam() {}
 
     public GameTeam(String teamName, TeamColor teamColor, int maxPlayers) {
         this.teamName = teamName;

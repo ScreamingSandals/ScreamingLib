@@ -25,10 +25,13 @@ public class ClassStorage {
 		public static final Class<?> EntityPlayer = getClassSafe("{nms}.EntityPlayer", "{f:ent}.player.ServerPlayerEntity", "{f:ent}.player.EntityPlayerMP");
 		public static final Class<?> EnumClientCommand = getClassSafe("{nms}.PacketPlayInClientCommand$EnumClientCommand", "{nms}.EnumClientCommand", "{f:net}.play.client.CClientStatusPacket$State", "{f:net}.play.client.CPacketClientStatus$State");
 		public static final Class<?> EnumParticle = getClassSafe("{nms}.EnumParticle");
+		public static final Class<?> EnumItemSlot = getClassSafe("{nms}.EnumItemSlot");
 		public static final Class<?> EnumTitleAction = getClassSafe("{nms}.PacketPlayOutTitle$EnumTitleAction", "{nms}.EnumTitleAction", "{f:net}.play.server.STitlePacket$Type", "{f:net}.play.server.SPacketTitle$Type");
 		public static final Class<?> GenericAttributes = getClassSafe("{nms}.GenericAttributes", "{f:ent}.SharedMonsterAttributes");
 		public static final Class<?> IChatBaseComponent = getClassSafe("{nms}.IChatBaseComponent", "{f:util}.text.ITextComponent");
 		public static final Class<?> IAttribute = getClassSafe("{nms}.IAttribute", "{f:ent}.ai.attributes.IAttribute");
+		public static final Class<?> ItemStack = getClassSafe("{nms}.ItemStack");
+		public static final Class<?> CraftItemStack = getClassSafe("{obc}.inventory.CraftItemStack");
 		public static final Class<?> MinecraftServer = getClassSafe("{nms}.MinecraftServer", "{f:nms}.MinecraftServer");
 		public static final Class<?> NBTTagCompound = getClassSafe("{nms}.NBTTagCompound", "{f:nbt}.CompoundNBT", "{f:nbt}.NBTTagCompound");
 		public static final Class<?> NetworkManager = getClassSafe("{nms}.NetworkManager", "{f:net}.NetworkManager");
@@ -272,4 +275,6 @@ public class ClassStorage {
 		}
 		return null;
 	}
+
+	//TODO: NMS item stacks
 }

@@ -2,6 +2,7 @@ package org.screamingsandals.lib.gamecore.visuals;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
@@ -10,6 +11,7 @@ import org.screamingsandals.lib.scoreboards.scoreboard.Scoreboard;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
+@ToString(exclude = "gameFrame")
 public class ScoreboardManager extends BaseManager<GamePlayer> {
     private final GameFrame gameFrame;
 

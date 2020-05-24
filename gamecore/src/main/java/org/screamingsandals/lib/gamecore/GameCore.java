@@ -11,6 +11,7 @@ import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameManager;
+import org.screamingsandals.lib.gamecore.core.GameType;
 import org.screamingsandals.lib.gamecore.core.entities.EntityManager;
 import org.screamingsandals.lib.gamecore.error.BaseError;
 import org.screamingsandals.lib.gamecore.error.ErrorManager;
@@ -59,13 +60,10 @@ public class GameCore {
         this.verbose = verbose;
     }
 
-    public <T extends GameFrame> void load(File gamesFolder, Class<T> tClass) throws GameCoreException {
+    public <T extends GameFrame> void load(File gamesFolder, Class<T> tClass, GameType gameType) throws GameCoreException {
         try {
-            this.gameManager = new GameManager<>(gamesFolder, tClass);
-
+            this.gameManager = new GameManager<>(gamesFolder, tClass, gameType);
             registerListeners();
-            registerCoreCommands();
-
             fireEvent(new SCoreLoadedEvent(this));
         } catch (Exception exception) {
             final var entry = errorManager.newError(new BaseError(ErrorType.GAME_CORE_ERROR, exception));
@@ -74,8 +72,8 @@ public class GameCore {
     }
 
     public void destroy() {
-        gameManager.unregisterAll();
         entityManager.unregisterAll();
+        gameManager.unregisterAll();
         tasker.destroy();
         errorManager.destroy();
         hologramManager.destroy();
@@ -92,10 +90,6 @@ public class GameCore {
 
     private void registerListeners() {
         registerListener(new PlayerListener());
-    }
-
-    private void registerCoreCommands() {
-
     }
 
     public static void registerListener(Listener listener) {

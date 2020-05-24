@@ -7,13 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class HologramManager extends org.screamingsandals.lib.nms.holograms.HologramManager {
-    private final Multimap<GameFrame, GameHologram> gameHolograms = ArrayListMultimap.create();
+    private final Multimap<UUID, GameHologram> gameHolograms = ArrayListMultimap.create();
 
     public HologramManager(Plugin plugin) {
         super(plugin);
@@ -29,24 +26,24 @@ public class HologramManager extends org.screamingsandals.lib.nms.holograms.Holo
 
     public GameHologram spawnHologram(GameFrame gameFrame, HologramType type, List<Player> players, Location loc, List<String> lines) {
         final var hologram = new GameHologram(gameFrame, type, this, players, loc, lines);
-        gameHolograms.put(gameFrame, hologram);
+        gameHolograms.put(gameFrame.getUuid(), hologram);
 
         return hologram;
     }
 
     public GameHologram spawnTouchableHologram(GameFrame gameFrame, HologramType type, List<Player> players, Location loc, List<String> lines) {
         final var hologram = new GameHologram(gameFrame, type,this, players, loc, lines, true);
-        gameHolograms.put(gameFrame, hologram);
+        gameHolograms.put(gameFrame.getUuid(), hologram);
 
         return hologram;
     }
 
 
-    public void destroyForGame(GameFrame gameFrame) {
+    public void destroyAll(UUID uuid) {
         final List<GameHologram> holograms = new LinkedList<>();
 
-        gameHolograms.forEach((foundGame, hologram) -> {
-            if (foundGame.getUuid() == gameFrame.getUuid()) {
+        gameHolograms.forEach((registered, hologram) -> {
+            if (registered.equals(uuid)) {
                 holograms.add(hologram);
             }
         });
