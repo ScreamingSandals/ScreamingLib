@@ -1,10 +1,12 @@
 package org.screamingsandals.lib.scoreboards.scoreboard;
 
 import lombok.Data;
+import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.DisplaySlot;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 @Data
 public class ScoreboardCreator {
@@ -14,36 +16,34 @@ public class ScoreboardCreator {
         scoreboard = new Scoreboard();
     }
 
-    public static ScoreboardCreator get() {
+    public static ScoreboardCreator create() {
         return new ScoreboardCreator();
     }
 
-    public static ScoreboardCreator get(String scoreboardName) {
-        ScoreboardCreator scoreboardCreator = get();
+    public static ScoreboardCreator create(String scoreboardName) {
+        final var scoreboardCreator = create();
         scoreboardCreator.getScoreboard().setName(scoreboardName);
 
         return scoreboardCreator;
     }
 
-    public static ScoreboardCreator get(String scoreboardName, List<String> teams) {
-        final ScoreboardCreator scoreboardCreator = get();
-        final ScoreboardHolder scoreboardHolder = scoreboardCreator.getScoreboard().getScoreboardHolder();
-        scoreboardCreator.getScoreboard().setName(scoreboardName);
-
+    public static ScoreboardCreator create(String scoreboardName, Map<String, ChatColor> teams) {
+        final var scoreboardCreator = create(scoreboardName);
         teams.forEach(scoreboardCreator::addTeam);
+
         return scoreboardCreator;
     }
 
-    public Scoreboard create(String displayedName, DisplaySlot displaySlot, List<Map.Entry<String, Integer>> lines) {
+    public static ScoreboardCreator create(String scoreboardName, String displayedName, DisplaySlot displaySlot, TreeMap<Integer, String> lines) {
+        final var scoreboardCreator = create(scoreboardName);
+        final var scoreboard = scoreboardCreator.scoreboard;
         final var scoreboardHolder = scoreboard.getScoreboardHolder();
+
         scoreboardHolder.setDisplayedName(displayedName);
         scoreboardHolder.setDisplaySlot(displaySlot);
         scoreboardHolder.setLines(lines);
 
-        scoreboard.paintAll();
-        setScoreboard(scoreboard);
-
-        return scoreboard;
+        return scoreboardCreator;
     }
 
     public ScoreboardCreator setScoreboardName(String scoreboardName) {
@@ -51,10 +51,8 @@ public class ScoreboardCreator {
         return this;
     }
 
-    public ScoreboardCreator addTeam(String name) {
-        if (isTeamExists(name)) {
-            scoreboard.getBukkitScoreboard().registerNewTeam(name);
-        }
+    public ScoreboardCreator addTeam(String name, ChatColor chatColor) {
+        scoreboard.addTeam(name, chatColor);
         return this;
     }
 
@@ -63,7 +61,22 @@ public class ScoreboardCreator {
         return this;
     }
 
+    public Scoreboard get() {
+        scoreboard.paintAll();
+        return scoreboard;
+    }
+
+    public static TreeMap<Integer, String> sortLines(List<String> fromConfig) {
+        final var toReturn = new TreeMap<Integer, String>();
+
+        for (int i = 0; i < fromConfig.size(); i++) {
+            toReturn.put(i, fromConfig.get(i));
+        }
+
+        return toReturn;
+    }
+
     public boolean isTeamExists(String name) {
-        return scoreboard.getBukkitScoreboard().getTeam(name) != null;
+        return scoreboard.isTeamExists(name);
     }
 }

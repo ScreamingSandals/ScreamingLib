@@ -5,6 +5,7 @@ import lombok.ToString;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.upgrades.UpgradeManager;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -12,15 +13,20 @@ import java.util.UUID;
 
 @Data
 @ToString(exclude = "gameFrame")
-public class ResourceManager {
-    private final transient GameFrame gameFrame;
-    private final transient UpgradeManager upgradeManager;
+public class ResourceManager implements Serializable {
+    private final transient UpgradeManager upgradeManager = new UpgradeManager();
     private final List<ResourceSpawner> resourceSpawners = new LinkedList<>();
-    private transient ResourceTypes resourceTypes;
+    private transient GameFrame gameFrame;
+    private ResourceTypes resourceTypes;
 
     public ResourceManager(GameFrame gameFrame) {
         this.gameFrame = gameFrame;
-        upgradeManager = new UpgradeManager();
+    }
+
+    public void prepare(GameFrame gameFrame) {
+        if (this.gameFrame == null) {
+            this.gameFrame = gameFrame;
+        }
     }
 
     public void start() {

@@ -9,13 +9,11 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
-import org.screamingsandals.lib.gamecore.core.GameState;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerSwitchedToPlayer;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerSwitchedToSpectator;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerTeleportEvent;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
 import org.screamingsandals.lib.gamecore.visuals.ScoreboardManager;
-import org.screamingsandals.lib.scoreboards.scoreboard.Scoreboard;
 
 import java.util.UUID;
 
@@ -47,29 +45,37 @@ public class GamePlayer {
         return activeGame != null;
     }
 
-    public void setActiveGame(GameFrame activeGame) {
-        if (activeGame != null && this.activeGame != null) {
-            activeGame.leave(this);
+    //shortcut
+    public boolean join(GameFrame gameFrame) {
+        return gameFrame.join(this);
+    }
+
+    //shortcut
+    public boolean leave() {
+        if (activeGame != null) {
+            clean();
+            return activeGame.leave(this);
         }
-        this.activeGame = activeGame;
+        return false;
     }
 
     public void makePlayer() {
         spectator = false;
+        clean();
 
         if (isInGame()) {
             teleport(gameTeam.getSpawnLocation());
         } else {
             //todo - teleport to mainlobby
         }
-
         GameCore.fireEvent(new SPlayerSwitchedToPlayer(this));
     }
 
     public void makeSpectator() {
         spectator = true;
-        teleport(activeGame.getGameWorld().getSpectatorSpawn());
+        clean();
 
+        teleport(activeGame.getGameWorld().getSpectatorSpawn());
         GameCore.fireEvent(new SPlayerSwitchedToSpectator(this));
     }
 
@@ -82,21 +88,12 @@ public class GamePlayer {
         teleport(locationAdapter.getLocation());
     }
 
-
     public void destroyScoreboards() {
         if (activeGame == null) {
             return;
         }
         final ScoreboardManager scoreboardManager = activeGame.getScoreboardManager();
-        scoreboardManager.deleteSavedScoreboards(this);
-    }
-
-    public Scoreboard getScoreboard(GameState gameState) {
-        if (activeGame == null) {
-            return null;
-        }
-        final ScoreboardManager scoreboardManager = activeGame.getScoreboardManager();
-        return scoreboardManager.getSavedScoreboard(this, gameState.getName());
+        scoreboardManager.deleteSavedScoreboards(uuid);
     }
 
     public void sendMessage(String string) {
@@ -108,8 +105,11 @@ public class GamePlayer {
         playerStorage.clean(player);
     }
 
-
     public void restore(boolean teleport) {
         playerStorage.restore(player, teleport);
+    }
+
+    public void clean() {
+        playerStorage.clean(player);
     }
 }

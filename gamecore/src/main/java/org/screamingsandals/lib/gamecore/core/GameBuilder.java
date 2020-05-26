@@ -51,10 +51,23 @@ public abstract class GameBuilder<T extends GameFrame> {
             mpr("core.errors.game-does-not-exists").send(player);
         }
         this.gameFrame = gameFrame;
+        this.gameName = gameFrame.getGameName();
+
+        storeListener = new StoreListener(gameFrame);
+        GameCore.registerListener(storeListener);
+
+        final var stores = gameFrame.getStores();
+        final var spawners = gameFrame.getResourceManager().getResourceSpawners();
+
+        stores.forEach(gameStore -> gameStore.spawn(gameFrame, formatStoreName(gameStore)));
+        spawners.forEach(resourceSpawner -> buildHologram(resourceSpawner, gameFrame, player)); //todo: better way of handling players
     }
 
     public void save(Player player) {
-        gameFrame.countMaxPlayers();
+    }
+
+    public void exit() {
+        //TODO: exit without saving
     }
 
     public boolean isCreated() {
@@ -118,6 +131,8 @@ public abstract class GameBuilder<T extends GameFrame> {
 
     public void addStore(GameStore gameStore) {
         gameFrame.getStores().add(gameStore);
+
+        gameStore.spawn(gameFrame, formatStoreName(gameStore));
     }
 
     public void removeTeam(String teamName) {
@@ -276,6 +291,10 @@ public abstract class GameBuilder<T extends GameFrame> {
             }
         }
         return false;
+    }
+
+    private String formatStoreName(GameStore gameStore) {
+        return "&a&lGameBuilder - " + gameStore.getName();
     }
 
     @Data

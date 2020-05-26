@@ -16,10 +16,10 @@ import java.io.Serializable;
 
 @Data
 public class GameStore implements Serializable {
-    private LocationAdapter storeLocation;
-    private String shopName;
+    private LocationAdapter location;
+    private String name;
     private String pathToFile;
-    private transient File shopFile;
+    private transient File storeFile;
 
     private GameTeam gameTeam;
     private StoreType storeType;
@@ -34,20 +34,20 @@ public class GameStore implements Serializable {
     @Deprecated
     public GameStore() {}
 
-    public GameStore(LocationAdapter storeLocation, String shopName, File shopFile, StoreType storeType) {
-        this(storeLocation, shopName, shopFile, null, storeType);
+    public GameStore(LocationAdapter location, String name, File storeFile, StoreType storeType) {
+        this(location, name, storeFile, null, storeType);
 
     }
 
-    public GameStore(LocationAdapter storeLocation, String shopName, File shopFile, GameTeam gameTeam, StoreType storeType) {
-        this(storeLocation, shopName, shopFile, gameTeam, storeType, null);
+    public GameStore(LocationAdapter location, String name, File storeFile, GameTeam gameTeam, StoreType storeType) {
+        this(location, name, storeFile, gameTeam, storeType, null);
     }
 
-    public GameStore(LocationAdapter storeLocation, String shopName, File shopFile, GameTeam gameTeam, StoreType storeType, EntityType entityType) {
-        this.storeLocation = storeLocation;
-        this.shopName = shopName;
-        this.shopFile = shopFile;
-        this.pathToFile = shopFile.getPath();
+    public GameStore(LocationAdapter location, String name, File storeFile, GameTeam gameTeam, StoreType storeType, EntityType entityType) {
+        this.location = location;
+        this.name = name;
+        this.storeFile = storeFile;
+        this.pathToFile = storeFile.getPath();
         this.gameTeam = gameTeam;
         this.storeType = storeType;
         setEntityType(entityType);
@@ -62,16 +62,16 @@ public class GameStore implements Serializable {
     }
 
     public LivingEntity spawn(GameFrame gameFrame) {
-        return spawn(gameFrame, shopName);
+        return spawn(gameFrame, name);
     }
 
     public LivingEntity spawn(GameFrame gameFrame, String shopName) {
         if (livingEntity == null) {
-            livingEntity = (LivingEntity) storeLocation.getWorld().spawnEntity(storeLocation.getLocation(), entityType, CreatureSpawnEvent.SpawnReason.CUSTOM);
+            livingEntity = (LivingEntity) location.getWorld().spawnEntity(location.getLocation(), entityType, CreatureSpawnEvent.SpawnReason.CUSTOM);
             livingEntity.setAI(false);
             livingEntity.setInvulnerable(true);
             livingEntity.setRemoveWhenFarAway(false);
-            livingEntity.setRotation(storeLocation.getYaw(), storeLocation.getPitch());
+            livingEntity.setRotation(location.getYaw(), location.getPitch());
 
             if (shopName != null) {
                 livingEntity.setCustomName(Utils.colorize(shopName));
@@ -90,10 +90,10 @@ public class GameStore implements Serializable {
         GameCore.getEntityManager().unregister(livingEntity);
     }
 
-    public File getShopFile() {
-        if (shopFile == null) {
-            shopFile = new File(pathToFile);
+    public File getStoreFile() {
+        if (storeFile == null) {
+            storeFile = new File(pathToFile);
         }
-        return shopFile;
+        return storeFile;
     }
 }

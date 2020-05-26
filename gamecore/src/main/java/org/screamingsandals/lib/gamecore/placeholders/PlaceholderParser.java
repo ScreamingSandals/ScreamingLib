@@ -60,4 +60,14 @@ public class PlaceholderParser {
         available.clear();
         load();
     }
+
+    public String replace(String input) {
+        String toReturn = input;
+
+        for (var entry : available.entrySet()) {
+            toReturn = toReturn.replaceAll(entry.getKey(), (String) entry.getValue());
+        }
+
+        return toReturn;
+    }
 }

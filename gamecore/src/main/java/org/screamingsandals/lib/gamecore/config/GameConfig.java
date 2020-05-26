@@ -23,6 +23,12 @@ public class GameConfig {
         this.gameFrame = gameFrame;
     }
 
+    public void prepare(GameFrame gameFrame) {
+        if (this.gameFrame == null) {
+            this.gameFrame = gameFrame;
+        }
+    }
+
     public void buildDefaults() {
         gameValues.put(DefaultKeys.GAME_TIME, ValueHolder.get(DefaultKeys.GAME_TIME, 3600));
         gameValues.put(DefaultKeys.LOBBY_TIME, ValueHolder.get(DefaultKeys.LOBBY_TIME, 60));

@@ -44,6 +44,15 @@ public class PlayerManager {
         return registeredPlayers.get(player);
     }
 
+    public GamePlayer getRegisteredPlayer(UUID uuid) {
+        for (var player : registeredPlayers.values()) {
+            if (player.getUuid().equals(uuid)) {
+                return player;
+            }
+        }
+        return null;
+    }
+
     public Collection<GamePlayer> getRegisteredPlayers() {
         return registeredPlayers.values();
     }

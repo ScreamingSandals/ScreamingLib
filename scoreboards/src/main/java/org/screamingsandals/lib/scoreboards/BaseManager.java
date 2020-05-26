@@ -1,5 +1,7 @@
 package org.screamingsandals.lib.scoreboards;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import lombok.Data;
 import org.screamingsandals.lib.scoreboards.scoreboard.Scoreboard;
 
@@ -11,7 +13,7 @@ import java.util.Map;
 @Data
 public abstract class BaseManager<T> {
     private Map<T, Scoreboard> activeScoreboards = new HashMap<>();
-    private Map<T, List<Scoreboard>> savedScoreboards = new HashMap<>();
+    private Multimap<T, Scoreboard> savedScoreboards = ArrayListMultimap.create();
 
     public void destroy() {
         hideAllScoreboards();
@@ -31,18 +33,11 @@ public abstract class BaseManager<T> {
     }
 
     public void saveScoreboard(T player, Scoreboard scoreboard) {
-        if (savedScoreboards.containsKey(player)) {
-            savedScoreboards.get(player).add(scoreboard);
-        } else {
-            List<Scoreboard> scoreboards = new ArrayList<>();
-            scoreboards.add(scoreboard);
-
-            savedScoreboards.put(player, scoreboards);
-        }
+        savedScoreboards.put(player, scoreboard);
     }
 
     public void deleteSavedScoreboards(T player) {
-        savedScoreboards.remove(player);
+        savedScoreboards.removeAll(player);
     }
 
     public void hideAllScoreboards() {

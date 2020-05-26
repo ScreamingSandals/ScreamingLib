@@ -15,6 +15,7 @@ public abstract class VisualsConfig extends SpigotConfigAdapter {
     //SCOREBOARDS
     public static String PATH_SCOREBOARDS_ENABLED = "scoreboards.enabled";
     public static String PATH_SCOREBOARDS_NAME = "scoreboards.name";
+    public static String PATH_SCOREBOARDS_CONTENT = "scoreboards.content.";
     public static String PATH_SCOREBOARDS_CONTENT_LOBBY = "scoreboards.content.lobby";
     public static String PATH_SCOREBOARDS_CONTENT_IN_GAME = "scoreboards.content.in-game";
     public static String PATH_SCOREBOARDS_CONTENT_DEATHMATCH = "scoreboards.content.deathmatch";

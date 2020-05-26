@@ -1,34 +1,30 @@
 package org.screamingsandals.lib.scoreboards.scoreboard;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Team;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Data
 public class Scoreboard implements Serializable {
-    private final ScoreboardHolder scoreboardHolder;
-    private String name;
-    private ScoreboardAnimation scoreboardAnimation = new ScoreboardAnimation();
+    protected ScoreboardHolder scoreboardHolder;
+    protected String name;
+    protected ScoreboardAnimation scoreboardAnimation = new ScoreboardAnimation();
+    @Getter(value =  AccessLevel.PRIVATE)
+    private final List<Team> activeTeams;
 
     public Scoreboard() {
         scoreboardHolder = new ScoreboardHolder();
-    }
-
-    public static List<Map.Entry<String, Integer>> sortLines(List<String> lines) {
-        final List<Map.Entry<String, Integer>> sortedLines = new ArrayList<>();
-        final int linesCount = lines.size();
-
-        for (int i = 0; i < linesCount; i++) {
-            sortedLines.add(Map.entry(lines.get(i), linesCount - i));
-        }
-
-        return sortedLines;
+        activeTeams = new LinkedList<>();
     }
 
     public void paintAll() {
@@ -43,9 +39,9 @@ public class Scoreboard implements Serializable {
         objective.setDisplaySlot(scoreboardHolder.getDisplaySlot());
 
         if (!lines.isEmpty()) {
-            final Map.Entry<String, Integer> entry = lines.get(line);
-            final Score score = objective.getScore(entry.getKey());
-            score.setScore(entry.getValue());
+            final var entry = lines.get(line);
+            final Score score = objective.getScore(entry);
+            score.setScore(line);
         }
     }
 
@@ -59,5 +55,32 @@ public class Scoreboard implements Serializable {
 
     public org.bukkit.scoreboard.Scoreboard getBukkitScoreboard() {
         return getScoreboardHolder().getBukkitScoreboard();
+    }
+
+    public boolean isTeamExists(String name) {
+        return getBukkitScoreboard().getTeam(name) != null;
+    }
+
+    public void addTeam(String name, ChatColor color) {
+        if (isTeamExists(name)) {
+            final var team = getBukkitScoreboard().registerNewTeam(name);
+            team.setColor(color);
+            team.setDisplayName(name);
+
+            activeTeams.add(team);
+        }
+    }
+
+    public Optional<Team> getScoreboardTeam(String name) {
+        for (var team : activeTeams) {
+            if (team.getName().equals(name)) {
+                return Optional.of(team);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public List<Team> getTeams() {
+        return new LinkedList<>(activeTeams);
     }
 }

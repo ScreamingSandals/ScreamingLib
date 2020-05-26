@@ -94,14 +94,8 @@ public class GameManager<T extends GameFrame> {
     }
 
     public void unregisterAll() {
-        final var iterator = registeredGames.entrySet().iterator();
-
-        while (iterator.hasNext()) {
-            final var next = iterator.next();
-
-            unregisterGame(next.getKey());
-            iterator.remove();
-        }
+        registeredGames.values().forEach(GameFrame::stop);
+        registeredGames.clear();
     }
 
     public void registerGame(UUID uuid, T gameFrame) {
@@ -219,7 +213,7 @@ public class GameManager<T extends GameFrame> {
 
     public boolean isInBuilder(String name) {
         for (var builder : gameBuilders.values()) {
-            if (((GameBuilder) builder).getGameName().equals(name)) {
+            if (((GameBuilder<?>) builder).getGameName().equals(name)) {
                 return true;
             }
         }
@@ -234,7 +228,7 @@ public class GameManager<T extends GameFrame> {
     @SuppressWarnings("unchecked")
     public <E extends GameBuilder<?>> E getGameBuilder(String name) {
         for (var builder : gameBuilders.values()) {
-            final var castedBuilder = (GameBuilder) builder;
+            final var castedBuilder = (GameBuilder<?>) builder;
             if (castedBuilder.getGameName().equals(name)) {
                 return (E) castedBuilder;
             }
@@ -246,7 +240,7 @@ public class GameManager<T extends GameFrame> {
     public Set<String> getRegisteredBuildersNames() {
         final Set<String> games = new HashSet<>();
         gameBuilders.values().forEach(builder -> {
-            final var castedBuilder = (GameBuilder) builder;
+            final var castedBuilder = (GameBuilder<?>) builder;
             games.add(castedBuilder.getGameName());
         });
 
@@ -259,7 +253,7 @@ public class GameManager<T extends GameFrame> {
         }
 
         for (var builder : gameBuilders.values()) {
-            final var castedBuilder = (GameBuilder) builder;
+            final var castedBuilder = (GameBuilder<?>) builder;
             if (castedBuilder.getSpawnerEditor() == null) {
                 continue;
             }

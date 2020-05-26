@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Map;
 
 public class SignManager {
-
     private final FileConfiguration config;
     private final File configFile;
     private final HashMap<Location, SignBlock> signs = new HashMap<>();
     private boolean modify = false;
-    private SignOwner owner;
+    private final SignOwner owner;
 
+    @SuppressWarnings("unchecked")
     public SignManager(SignOwner owner, FileConfiguration config, File configFile) {
         this.owner = owner;
     	this.config = config;

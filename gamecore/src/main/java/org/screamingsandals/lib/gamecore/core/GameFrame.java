@@ -62,7 +62,7 @@ public abstract class GameFrame implements Serializable {
     protected transient List<GamePlayer> spectators;
 
     //Manager
-    protected ResourceManager resourceManager = new ResourceManager(this);
+    protected ResourceManager resourceManager;
     protected transient PlaceholderParser placeholderParser;
     protected transient ScoreboardManager scoreboardManager;
     protected transient BossbarManager bossbarManager;
@@ -80,6 +80,8 @@ public abstract class GameFrame implements Serializable {
     }
 
     public boolean checkIntegrity(boolean fireError) {
+        countMaxPlayers();
+
         if (!checkGameWorld(fireError)) {
             return false;
         }
@@ -184,6 +186,12 @@ public abstract class GameFrame implements Serializable {
         scoreboardManager = new ScoreboardManager(this);
         bossbarManager = new BossbarManager(this);
 
+        if (resourceManager == null) {
+            resourceManager = new ResourceManager(this);
+        } else {
+            resourceManager.prepare(this);
+        }
+
         setGameState(GameState.LOADING);
         buildTeams();
 
@@ -199,15 +207,14 @@ public abstract class GameFrame implements Serializable {
     }
 
     public void start() {
-        countMaxPlayers();
-        if (!checkIntegrity(true)) {
-            //change to error manager
-            Debug.warn("Arena " + gameName + " cannot be loaded, something is wrong with it!");
+        if (!prepare()) {
+            Debug.warn("Prepare phase failed, what is wrong?", true);
             return;
         }
 
-        if (!prepare()) {
-            Debug.warn("Prepare phase failed, what is wrong?", true);
+        if (!checkIntegrity(true)) {
+            //change to error manager
+            Debug.warn("Arena " + gameName + " cannot be loaded, something is wrong with it!");
             return;
         }
 
@@ -262,22 +269,54 @@ public abstract class GameFrame implements Serializable {
         GameCore.fireEvent(new SGameStateChangedEvent(this, activeState, previousState));
     }
 
-    public void join(GamePlayer gamePlayer) {
+    public boolean join(GamePlayer gamePlayer) {
+        if (playersInGame.contains(gamePlayer)) {
+            return false;
+        }
+
+        if (activeState == GameState.DISABLED) {
+            //TODO: mpr
+            return false;
+        }
+
+        if (activeState == GameState.RESTART) {
+            //TODO: mpr
+            return false;
+        }
+
+        if (activeState == GameState.MAINTENANCE
+                && !gamePlayer.getPlayer().hasPermission(GameCore.getInstance().getAdminPermissions())) {
+            //TODO: mpr
+            return false;
+        }
+
         if (GameCore.fireEvent(new SPlayerPreJoinGameEvent(this, gamePlayer))) {
             gamePlayer.setActiveGame(this);
             gamePlayer.storeAndClean();
             gamePlayer.teleport(lobbyWorld.getSpawn());
 
-            //update scoreboards and bossbars
+            createScoreboards(gamePlayer);
+            createBossbars(gamePlayer);
             mpr("commands.join.success")
                     .game(this)
                     .send(gamePlayer);
             GameCore.fireEvent(new SPlayerJoinedGameEvent(this, gamePlayer));
+            return true;
         }
+
+        return false;
     }
 
-    public void leave(GamePlayer gamePlayer) {
+    public boolean leave(GamePlayer gamePlayer) {
+        final var uuid = gamePlayer.getUuid();
+        if (!playersInGame.contains(gamePlayer)) {
+            //TODO: mpr
+            return false;
+        }
+
         gamePlayer.setActiveGame(null);
+        scoreboardManager.hideScoreboard(uuid);
+        scoreboardManager.deleteSavedScoreboards(uuid);
         gamePlayer.restore(true); //TODO: mainlobby? bungee?
         playersInGame.remove(gamePlayer);
 
@@ -285,6 +324,7 @@ public abstract class GameFrame implements Serializable {
                 .game(this)
                 .send(gamePlayer);
         GameCore.fireEvent(new SPlayerLeftGameEvent(this, gamePlayer));
+        return true;
     }
 
     //Working with players
@@ -297,6 +337,13 @@ public abstract class GameFrame implements Serializable {
         teams.forEach(gameTeam -> playersInTeams.put(gameTeam.getTeamPlayers().size(), gameTeam));
 
         return playersInTeams.firstEntry().getValue();
+    }
+
+    public GameTeam getTeamWithMostPlayers() {
+        final TreeMap<Integer, GameTeam> playersInTeams = new TreeMap<>();
+        teams.forEach(gameTeam -> playersInTeams.put(gameTeam.getTeamPlayers().size(), gameTeam));
+
+        return playersInTeams.lastEntry().getValue();
     }
 
     public Optional<GameTeam> getRegisteredTeam(String teamName) {
@@ -337,5 +384,9 @@ public abstract class GameFrame implements Serializable {
             maxPlayers += team.getMaxPlayers();
         }
     }
+
+    protected void createScoreboards(GamePlayer gamePlayer) {}
+
+    protected void createBossbars(GamePlayer gamePlayer) {}
 }
 
