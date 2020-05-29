@@ -7,6 +7,8 @@ import org.screamingsandals.lib.gamecore.core.GameFrame;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
+
 @Data
 @ToString(exclude = "gameFrame")
 public class PlaceholderParser {
@@ -35,6 +37,7 @@ public class PlaceholderParser {
         add("%maxPlayers%", gameFrame.getMaxPlayers());
         add("%minPlayers%", gameFrame.getMinPlayers());
         add("%minPlayersToStart%", gameFrame.getMinPlayersToStart());
+        add("%remainingPlayersToJoin%", gameFrame.countRemainingPlayersToStart());
         add("%lobbyTime%", gameFrame.getLobbyTime());
         add("%startTime%", gameFrame.getStartTime());
         add("%gameTime%", gameFrame.getGameTime());
@@ -45,6 +48,9 @@ public class PlaceholderParser {
         add("%spectatorsCount%", gameFrame.getSpectators().size());
         add("%activeState%", gameFrame.getActiveState());
         add("%previousState%", gameFrame.getPreviousState());
+
+
+        //TODO: teams replacement
     }
 
     public void destroy() {
@@ -65,7 +71,9 @@ public class PlaceholderParser {
         String toReturn = input;
 
         for (var entry : available.entrySet()) {
-            toReturn = toReturn.replaceAll(entry.getKey(), (String) entry.getValue());
+            final var entryValue = entry.getValue();
+            final var valueToPrint = entryValue != null ? entry.getValue() : m("general.null-translated").get();
+            toReturn = toReturn.replaceAll(entry.getKey(), valueToPrint.toString());
         }
 
         return toReturn;

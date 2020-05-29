@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.debug.Debug;
+import org.screamingsandals.lib.gamecore.config.VisualsConfig;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameManager;
 import org.screamingsandals.lib.gamecore.core.GameType;
@@ -35,6 +36,7 @@ public class GameCore {
     private final PlayerManager playerManager;
     private final EntityManager entityManager;
     private final HologramManager hologramManager;
+    private VisualsConfig visualsConfig;
     private GameManager<?> gameManager;
     private boolean verbose = true;
     private String mainCommandName = "gc";

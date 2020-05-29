@@ -40,6 +40,15 @@ public class PlayerManager {
         return registeredPlayers.containsKey(player);
     }
 
+    public boolean isPlayerRegistered(UUID uuid) {
+        for (var player : registeredPlayers.values()) {
+            if (player.getUuid().equals(uuid)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public GamePlayer getRegisteredPlayer(Player player) {
         return registeredPlayers.get(player);
     }

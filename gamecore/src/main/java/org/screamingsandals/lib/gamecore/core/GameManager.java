@@ -39,23 +39,24 @@ public class GameManager<T extends GameFrame> {
     }
 
     public T loadGame(File gameFile) {
-        if (gameFile.exists() && gameFile.isFile()) {
+        if (gameFile.exists()
+                && gameFile.isFile()
+                && gameFile.getName().endsWith(".json")) {
             final var dataSaver = new JsonDataSource<>(gameFile, type);
             final T game = dataSaver.load();
 
             if (game == null) {
-                //TODO
-                Debug.warn("Somethings fucked");
+                Debug.warn("&cDeserializing the game went wrong.");
                 return null;
             }
 
-            if (game.checkIntegrity(true)) {
-                //TODO
-                Debug.warn("&cCannot load game &e" + game.getGameName() + "&c!");
+            final var gameName = game.getGameName();
+            if (!game.checkIntegrity(true)) {
+                Debug.warn("&cCannot load game &e" + gameName);
                 return null;
             }
 
-            Debug.info("&aGame &e" + game.getGameName() + "&a has been loaded!", true);
+            Debug.info("&aGame &e" + gameName + "&a has been loaded!", true);
             registerGame(game.getUuid(), game);
             return game;
         }
@@ -158,7 +159,7 @@ public class GameManager<T extends GameFrame> {
         return Optional.empty();
     }
 
-    public T getFirstAvailableGame() {
+    public Optional<T> getFirstAvailableGame() {
         final TreeMap<Integer, T> availableGames = new TreeMap<>();
         registeredGames.values().forEach(gameFrame -> {
             if (gameFrame.getActiveState() != GameState.WAITING) {
@@ -168,7 +169,11 @@ public class GameManager<T extends GameFrame> {
             availableGames.put(gameFrame.getPlayersInGame().size(), gameFrame);
         });
 
-        return availableGames.lastEntry().getValue();
+        if (availableGames.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(availableGames.lastEntry().getValue());
     }
 
     public Optional<T> castGame(GameFrame gameFrame) {

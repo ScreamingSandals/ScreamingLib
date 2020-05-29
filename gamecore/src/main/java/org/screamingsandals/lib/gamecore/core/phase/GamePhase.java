@@ -7,11 +7,11 @@ import org.screamingsandals.lib.gamecore.core.cycle.GameCycle;
 
 @Data
 public abstract class GamePhase {
-    private final transient GameCycle gameCycle;
-    private final transient GameFrame gameFrame;
-    private final int runTime;
-    private GameState phaseType;
-    private int elapsedTime;
+    protected final transient GameCycle gameCycle;
+    protected final transient GameFrame gameFrame;
+    protected final int runTime;
+    protected GameState phaseType;
+    protected int elapsedTime;
 
     public GamePhase(GameCycle gameCycle, int runTime) {
         this.gameCycle = gameCycle;

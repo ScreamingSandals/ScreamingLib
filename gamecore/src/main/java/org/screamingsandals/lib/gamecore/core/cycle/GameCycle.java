@@ -31,8 +31,6 @@ public abstract class GameCycle extends BaseTask {
             final var playersInGameSize = gameFrame.getPlayersInGame().size();
             if (gameState == GameState.WAITING && playersInGameSize == 0) {
                 return;
-            } else if (gameState == GameState.WAITING && gameFrame.getMinPlayers() > playersInGameSize) {
-                return;
             }
 
             tick();
@@ -81,6 +79,7 @@ public abstract class GameCycle extends BaseTask {
         GameCore.fireEvent(new SGameTickEvent(gameFrame, currentPhase));
         Preconditions.checkNotNull(currentPhase, "Current phase cannot be null!").tick();
         gameFrame.getPlaceholderParser().reload();
+        gameFrame.updateScoreboards();
 
         if (currentPhase.hasFinished() && currentPhase.getPhaseType() != GameState.CUSTOM) {
             setNextAndRemovePrevious();

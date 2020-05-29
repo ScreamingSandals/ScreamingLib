@@ -41,10 +41,12 @@ public class Storage {
 
     public List<String> translateList(String key, List<String> def) {
         if (configuration != null && configuration.get(key) != null) {
-            List<String> toTranslate = configuration.getStringList(key);
+            final var toTranslate = configuration.getStringList(key);
+
             if (toTranslate != null) {
                 return Utils.colorize(toTranslate);
             }
+
         } else if (fallbackStorage != null) {
             return fallbackStorage.translateList(key, def);
         } else if (def != null) {
@@ -55,7 +57,7 @@ public class Storage {
     }
 
     public List<String> translateListWithPrefix(String key, List<String> def) {
-        final List<String> translatedList = translateList(key, def);
+        final var translatedList = translateList(key, def);
         final List<String> toReturn = new ArrayList<>();
         final String prefix = getPrefix();
 
@@ -69,10 +71,12 @@ public class Storage {
 
     public String translate(String key, String def) {
         if (configuration != null && configuration.get(key) != null) {
-            String toTranslate = configuration.getString(key);
+            final var toTranslate = configuration.getString(key);
+
             if (toTranslate != null) {
                 return Utils.colorize(toTranslate);
             }
+
         } else if (fallbackStorage != null) {
             return fallbackStorage.translate(key, def);
         } else if (def != null) {

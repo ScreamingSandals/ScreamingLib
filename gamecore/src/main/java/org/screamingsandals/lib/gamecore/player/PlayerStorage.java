@@ -2,6 +2,7 @@ package org.screamingsandals.lib.gamecore.player;
 
 import io.papermc.lib.PaperLib;
 import lombok.Data;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -22,6 +23,7 @@ public class PlayerStorage {
     private int foodLevel;
     private int level;
     private boolean flying;
+    private double health;
     private GameMode gameMode;
 
     public void restore(Player player, boolean teleport) {
@@ -41,8 +43,12 @@ public class PlayerStorage {
         playerInventory.setContents(inventory);
         player.setFoodLevel(foodLevel);
         player.setLevel(level);
-        player.setFlying(flying);
+        player.setHealth(health);
         player.setGameMode(gameMode);
+
+        if (Bukkit.getAllowFlight()) {
+            player.setFlying(flying);
+        }
     }
 
     public void store(Player player) {
@@ -58,6 +64,7 @@ public class PlayerStorage {
         level = player.getLevel();
         flying = player.isFlying();
         gameMode = player.getGameMode();
+        health = player.getHealth();
     }
 
     public void clean(Player player) {

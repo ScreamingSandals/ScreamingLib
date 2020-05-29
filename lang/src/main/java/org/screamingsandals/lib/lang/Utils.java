@@ -27,6 +27,10 @@ public class Utils {
     public static List<String> colorize(List<String> text) {
         List<String> toReturn = new ArrayList<>();
         for (String string : text) {
+            if (string.equals(" ")){
+                string = "&r ";
+            }
+
             try {
                 Class.forName("net.md_5.bungee.api.ProxyServer");
                 toReturn.add(ChatColor.translateAlternateColorCodes('&', string));

@@ -13,7 +13,6 @@ import org.screamingsandals.lib.gamecore.events.player.SPlayerSwitchedToPlayer;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerSwitchedToSpectator;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerTeleportEvent;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
-import org.screamingsandals.lib.gamecore.visuals.ScoreboardManager;
 
 import java.util.UUID;
 
@@ -37,8 +36,6 @@ public class GamePlayer {
         if (gameTeam != null) {
             gameTeam.leave(this);
         }
-
-        destroyScoreboards();
     }
 
     public boolean isInGame() {
@@ -86,14 +83,6 @@ public class GamePlayer {
 
     public void teleport(LocationAdapter locationAdapter) {
         teleport(locationAdapter.getLocation());
-    }
-
-    public void destroyScoreboards() {
-        if (activeGame == null) {
-            return;
-        }
-        final ScoreboardManager scoreboardManager = activeGame.getScoreboardManager();
-        scoreboardManager.deleteSavedScoreboards(uuid);
     }
 
     public void sendMessage(String string) {
