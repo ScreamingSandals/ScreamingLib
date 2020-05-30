@@ -21,7 +21,7 @@ import org.screamingsandals.lib.gamecore.resources.ResourceManager;
 import org.screamingsandals.lib.gamecore.resources.ResourceTypes;
 import org.screamingsandals.lib.gamecore.store.GameStore;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
-import org.screamingsandals.lib.gamecore.visuals.BossbarManager;
+import org.screamingsandals.lib.gamecore.visuals.bossbars.BossbarManager;
 import org.screamingsandals.lib.gamecore.visuals.scoreboards.GameScoreboard;
 import org.screamingsandals.lib.gamecore.visuals.scoreboards.ScoreboardManager;
 import org.screamingsandals.lib.gamecore.world.GameWorld;
@@ -36,7 +36,7 @@ import static org.screamingsandals.lib.gamecore.language.GameLanguage.mpr;
 
 @Data
 public abstract class GameFrame implements Serializable {
-    //Game stuff
+    //Serializable stuff that will be saved into JSON file
     protected String gameName;
     protected String displayedName;
     protected GameWorld gameWorld;
@@ -52,18 +52,16 @@ public abstract class GameFrame implements Serializable {
     protected List<GameStore> stores = new LinkedList<>();
     protected GameState activeState = GameState.DISABLED;
     protected GameState previousState;
-
-    //internal shits
     protected GameConfig gameConfig;
     protected UUID uuid;
+    protected ResourceManager resourceManager;
 
+    //Internal stuff that will not be saved and is always created at the start of the game.
     protected transient int maxPlayers;
     protected transient GameCycle gameCycle;
     protected transient List<GamePlayer> playersInGame;
     protected transient List<GamePlayer> spectators;
 
-    //Manager
-    protected ResourceManager resourceManager;
     protected transient PlaceholderParser placeholderParser;
     protected transient ScoreboardManager scoreboardManager;
     protected transient BossbarManager bossbarManager;
@@ -82,6 +80,8 @@ public abstract class GameFrame implements Serializable {
     }
 
     public boolean checkIntegrity(boolean fireError) {
+        final var errorManager = GameCore.getErrorManager();
+
         if (!checkGameWorld(fireError)) {
             return false;
         }
@@ -90,82 +90,84 @@ public abstract class GameFrame implements Serializable {
             return false;
         }
 
-        return gameTime != 0
-                && teams.size() > 0
-                && stores.size() > 0;
+        if (teams.size() < 2) {
+            errorManager.newError(new GameError(this, ErrorType.NOT_ENOUGH_TEAMS, null), fireError);
+            return false;
+        }
+
+        if (stores.size() < 1) {
+            errorManager.newError(new GameError(this, ErrorType.NOT_ENOUGH_STORES, null), fireError);
+            return false;
+        }
+        return true;
     }
 
     public boolean checkGameWorld(boolean fireError) {
+        final var errorManager = GameCore.getErrorManager();
+
         if (gameWorld == null) {
-            if (fireError) {
-                GameCore.getErrorManager().newError(new GameError(this, ErrorType.GAME_WORLD_NOT_DEFINED, null));
-            }
+            errorManager.newError(new GameError(this, ErrorType.GAME_WORLD_NOT_DEFINED, null), fireError);
             return false;
         }
 
         if (!gameWorld.exists()) {
             final var type = ErrorType.GAME_WORLD_DOES_NOT_EXISTS;
-            type.getReplaceable().put("%world%", gameWorld.getWorldAdapter().getWorldName());
 
-            if (fireError) {
-                GameCore.getErrorManager().newError(new GameError(this, type, null));
-            }
+            type.getReplaceable().put("%world%", gameWorld.getWorldAdapter().getWorldName());
+            errorManager.newError(new GameError(this, type, null), fireError);
+
             return false;
         }
 
         if (gameWorld.getBorder1() == null || gameWorld.getBorder2() == null) {
-            if (fireError) {
-                GameCore.getErrorManager().newError(new GameError(this, ErrorType.GAME_WORLD_NOT_DEFINED, null));
-            }
+            errorManager.newError(new GameError(this, ErrorType.GAME_WORLD_NOT_DEFINED, null), fireError);
             return false;
         }
 
         if (gameWorld.getSpectatorSpawn() == null) {
-            if (fireError) {
-                GameCore.getErrorManager().newError(new GameError(this, ErrorType.SPECTATOR_SPAWN_NOT_SET, null));
-            }
+            errorManager.newError(new GameError(this, ErrorType.SPECTATOR_SPAWN_NOT_SET, null), fireError);
             return false;
         }
 
         var gameWorldWorld = gameWorld.getWorldAdapter().getWorldName();
         if (!gameWorldWorld.equals(gameWorld.getBorder1().getWorld().getName())
-                || !gameWorldWorld.equals(gameWorld.getBorder2().getWorld().getName())
-                || !gameWorldWorld.equals(gameWorld.getSpectatorSpawn().getWorld().getName())) {
-            //TODO - error manager
-            Debug.warn("World of arena is different than position1, position2 or spectator spawn. Please re-do them.", true);
+                || !gameWorldWorld.equals(gameWorld.getBorder2().getWorld().getName())) {
+            errorManager.newError(new GameError(this, ErrorType.GAME_WORLD_BAD_BORDER, null), fireError);
             return false;
         }
         return true;
     }
 
     public boolean checkLobbyWorld(boolean fireError) {
+        final var errorManager = GameCore.getErrorManager();
+
         if (lobbyWorld == null) {
-            if (fireError) {
-                GameCore.getErrorManager().newError(new GameError(this, ErrorType.LOBBY_WORLD_DOES_NOT_EXISTS, null));
-            }
+            errorManager.newError(new GameError(this, ErrorType.LOBBY_WORLD_NOT_DEFINED, null), fireError);
             return false;
         }
 
         if (!lobbyWorld.exists()) {
+            final var type = ErrorType.LOBBY_WORLD_DOES_NOT_EXISTS;
+
+            type.getReplaceable().put("%world%", gameWorld.getWorldAdapter().getWorldName());
+            errorManager.newError(new GameError(this, type, null), fireError);
             return false;
         }
 
         if (lobbyWorld.getBorder1() == null || lobbyWorld.getBorder2() == null) {
-            //TODO - error manager
+            errorManager.newError(new GameError(this, ErrorType.LOBBY_WORLD_NOT_DEFINED, null), fireError);
             return false;
         }
 
         if (lobbyWorld.getSpawn() == null) {
-            //TODO - error manager
+            errorManager.newError(new GameError(this, ErrorType.LOBBY_SPAWN_NOT_SET, null), fireError);
             return false;
         }
 
         var lobbyWorldWorld = lobbyWorld.getWorldAdapter().getWorldName();
         if (!lobbyWorldWorld.equals(lobbyWorld.getBorder1().getWorld().getName())
-                || !lobbyWorldWorld.equals(lobbyWorld.getBorder2().getWorld().getName())
-                || !lobbyWorldWorld.equals(lobbyWorld.getSpawn().getWorld().getName())) {
-            //TODO - error manager
-            Debug.warn("Fuckup with lobby?", true);
+                || !lobbyWorldWorld.equals(lobbyWorld.getBorder2().getWorld().getName())) {
+            errorManager.newError(new GameError(this, ErrorType.LOBBY_WORLD_BAD_BORDER, null), fireError);
             return false;
         }
         return true;
@@ -207,24 +209,26 @@ public abstract class GameFrame implements Serializable {
     }
 
     public void start() {
-        if (!prepare()) {
-            Debug.warn("Prepare phase failed, what is wrong?", true);
+        final var errorManager = GameCore.getErrorManager();
+
+        if (!prepare() || !checkIntegrity(true)) {
+            errorManager.newError(new GameError(this, ErrorType.PREPARE_FAILED, null), true);
             return;
         }
 
-        if (!checkIntegrity(true)) {
-            //change to error manager
-            Debug.warn("Arena " + gameName + " cannot be loaded, something is wrong with it!");
-            return;
+        try {
+            Preconditions.checkNotNull(gameCycle, "GameCycle cannot be null!")
+                    .runTaskRepeater(0, 1, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            errorManager.newError(new GameError(this, ErrorType.UNKNOWN, e), true);
         }
-
-        Preconditions.checkNotNull(gameCycle, "GameCycle cannot be null!")
-                .runTaskRepeater(0, 1, TimeUnit.SECONDS); //We expect that dev provided valid game-cycle
 
         GameCore.fireEvent(new SGameLoadedEvent(this));
     }
 
     public void stop() {
+        final var errorManager = GameCore.getErrorManager();
+
         if (activeState == GameState.DISABLED) {
             return;
         }
@@ -233,12 +237,15 @@ public abstract class GameFrame implements Serializable {
             return;
         }
 
-        Preconditions.checkNotNull(gameCycle, "GameCycle cannot be null!").stop();
+        try {
+            Preconditions.checkNotNull(gameCycle, "GameCycle cannot be null!").stop();
+        } catch (Exception e) {
+            errorManager.newError(new GameError(this, ErrorType.UNKNOWN, e), true);
+            return;
+        }
 
         if (!gameCycle.hasStopped()) {
-            //change to error manager
             Debug.warn("Something is fucked up, game is not stopped!", true);
-
             //last try
             gameCycle.stop();
         }
@@ -249,7 +256,6 @@ public abstract class GameFrame implements Serializable {
 
         resourceManager.stop();
         scoreboardManager.destroy();
-        bossbarManager.destroy();
         placeholderParser.destroy();
 
         //TODO: regen

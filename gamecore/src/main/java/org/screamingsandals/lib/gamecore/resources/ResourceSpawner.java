@@ -25,7 +25,6 @@ import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class ResourceSpawner implements Serializable, Cloneable {
-    //spawner settings
     private LocationAdapter location;
     private int maxSpawned;
     private int amount;
@@ -34,15 +33,14 @@ public class ResourceSpawner implements Serializable, Cloneable {
     private UUID uuid;
     private Type type;
     private boolean hologram;
-
-    //game stuff
     private GameTeam gameTeam;
 
     //utils shit
     private transient Location spawnLocation;
     private transient int remainingToSpawn;
+    private transient boolean prepared;
     private transient List<Item> spawnedItems = new ArrayList<>();
-    private transient BaseTask baseTask;
+    private transient BaseTask spawnerTask;
 
     public ResourceSpawner(LocationAdapter location, Type type) {
         this(location, type, null, true, -1);
@@ -64,15 +62,21 @@ public class ResourceSpawner implements Serializable, Cloneable {
         this.hologram = hologram;
     }
 
-    public void setup() {
+    public void prepare() {
+        if (prepared) {
+            return;
+        }
+
         this.spawnLocation = location.getLocation().add(0, 0.05, 0);
         remainingToSpawn = maxSpawned;
+
+        prepared = true;
     }
 
     public void start() {
-        setup();
+        prepare();
 
-        baseTask = new BaseTask() {
+        spawnerTask = new BaseTask() {
             @Override
             public void run() {
                 if (gameTeam != null && !gameTeam.isAlive()) {
@@ -91,14 +95,12 @@ public class ResourceSpawner implements Serializable, Cloneable {
             }
         };
 
-
-        baseTask.runTaskRepeater(1L, GameTimeUnit.getTimeUnitValue(period, gameTimeUnit), gameTimeUnit.getTimeUnit());
-
+        spawnerTask.runTaskRepeater(1L, GameTimeUnit.getTimeUnitValue(period, gameTimeUnit), gameTimeUnit.getTimeUnit());
     }
 
     public void stop() {
-        if (baseTask != null && !baseTask.hasStopped()) {
-            baseTask.stop();
+        if (spawnerTask != null && !spawnerTask.hasStopped()) {
+            spawnerTask.stop();
         }
     }
 
@@ -117,11 +119,27 @@ public class ResourceSpawner implements Serializable, Cloneable {
         remainingToSpawn = maxSpawned - getSpawnedCount();
     }
 
+    private void restart() {
+        stop();
+        start();
+    }
+
+    public void changeAmount(int amount) {
+        this.amount = amount;
+
+        restart();
+    }
+
     public void changePeriod(int period) {
         this.period = period;
 
-        stop();
-        start();
+        restart();
+    }
+
+    public void changeTimeUnit(GameTimeUnit gameTimeUnit) {
+        this.gameTimeUnit = gameTimeUnit;
+
+        restart();
     }
 
     public boolean isMaxSpawned() {

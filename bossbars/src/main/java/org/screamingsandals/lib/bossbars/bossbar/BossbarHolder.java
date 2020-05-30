@@ -11,16 +11,18 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
-import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 @Data
-public class BossbarHolder implements Serializable {
-    //This is not useless, we can serialize this! O:)
+public class BossbarHolder{
     private String title = "";
     private boolean visible;
     private BarColor barColor = BarColor.PURPLE;
     private BarStyle barStyle = BarStyle.SOLID;
+
     @Getter(AccessLevel.PRIVATE)
     @Setter(AccessLevel.PRIVATE)
     private List<BarFlag> barFlags = new LinkedList<>();
@@ -89,13 +91,21 @@ public class BossbarHolder implements Serializable {
         return new ArrayList<>(bukkitBossbar.getPlayers());
     }
 
+    public void addViewer(Player player) {
+        bukkitBossbar.addPlayer(player);
+    }
+
+    public void removeViewer() {
+        bukkitBossbar.removeAll();
+    }
+
     public void setVisible(boolean visible) {
         bukkitBossbar.setVisible(visible);
     }
 
-    public void setProgress(double progress) {
-        this.progress = progress;
-        var editableProgress = progress;
+    public void setProgress(double value) {
+        this.progress = value;
+        var editableProgress = value;
 
         if (editableProgress > 100) {
             editableProgress = 100;
@@ -104,6 +114,11 @@ public class BossbarHolder implements Serializable {
         }
 
         bukkitBossbar.setProgress(editableProgress / 100);
+    }
+
+    public void setProgress(double value, double max) {
+        final var toSet = (value / max) * 100;
+        setProgress(toSet);
     }
 
     public void updateAll() {

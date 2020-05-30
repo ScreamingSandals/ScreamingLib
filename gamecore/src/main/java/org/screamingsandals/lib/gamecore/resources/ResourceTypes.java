@@ -27,7 +27,7 @@ public class ResourceTypes implements Serializable, Cloneable {
 
     public static ResourceTypes load(GameFrame gameFrame, File file) {
         final JsonDataSource<ResourceTypes> dataSaver = new JsonDataSource<>(file, ResourceTypes.class);
-        ResourceTypes toReturn = dataSaver.load();
+        var toReturn = dataSaver.load();
 
         if (toReturn == null) {
             toReturn = new ResourceTypes(gameFrame, file);

@@ -21,9 +21,12 @@ import static org.screamingsandals.lib.lang.I.m;
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class GameScoreboard extends ScreamingScoreboard {
+    private final GamePlayer gamePlayer;
     private final GameState gameState;
 
-    public GameScoreboard(GameState gameState, String displayName, DisplaySlot displaySlot, TreeMap<Integer, String> lines) {
+    public GameScoreboard(GamePlayer gamePlayer, GameState gameState, String displayName, DisplaySlot displaySlot,
+                          TreeMap<Integer, String> lines) {
+        this.gamePlayer = gamePlayer;
         this.gameState = gameState;
         this.identifier = gameState.getName();
         this.scoreboardHolder.setDisplayedName(displayName);
@@ -60,7 +63,8 @@ public class GameScoreboard extends ScreamingScoreboard {
                 lines = m("scoreboards.content." + state).getList();
             }
 
-            final var gameScoreboard = new GameScoreboard(toReturn.gameState, displayName, DisplaySlot.SIDEBAR, ScoreboardHolder.sortLines(lines));
+            final var gameScoreboard = new GameScoreboard(gamePlayer, toReturn.gameState, displayName, DisplaySlot.SIDEBAR,
+                            ScoreboardHolder.sortLines(lines));
             gameScoreboard.update(gameFrame);
 
             return gameScoreboard;

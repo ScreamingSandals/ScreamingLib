@@ -22,7 +22,6 @@ public abstract class ScreamingScoreboard {
     protected final List<Team> activeTeams;
 
     private LinePainter linePainter;
-    private int latestUpdated;
 
     public ScreamingScoreboard() {
         scoreboardHolder = new ScoreboardHolder();

@@ -49,17 +49,18 @@ public class PlayerManager {
         return false;
     }
 
-    public GamePlayer getRegisteredPlayer(Player player) {
-        return registeredPlayers.get(player);
+    public Optional<GamePlayer> getRegisteredPlayer(Player player) {
+        final var gamePlayer = registeredPlayers.get(player);
+        return Optional.ofNullable(gamePlayer);
     }
 
-    public GamePlayer getRegisteredPlayer(UUID uuid) {
+    public Optional<GamePlayer> getRegisteredPlayer(UUID uuid) {
         for (var player : registeredPlayers.values()) {
             if (player.getUuid().equals(uuid)) {
-                return player;
+                return Optional.of(player);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     public Collection<GamePlayer> getRegisteredPlayers() {

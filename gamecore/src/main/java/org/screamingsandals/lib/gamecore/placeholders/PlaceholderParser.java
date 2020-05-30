@@ -67,7 +67,7 @@ public class PlaceholderParser {
         load();
     }
 
-    public String replace(String input) {
+    public String parse(String input) {
         String toReturn = input;
 
         for (var entry : available.entrySet()) {

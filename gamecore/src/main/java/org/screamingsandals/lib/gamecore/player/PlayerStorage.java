@@ -67,14 +67,12 @@ public class PlayerStorage {
         health = player.getHealth();
     }
 
-    public void clean(Player player) {
+    public void clean(Player player, boolean spectator) {
         final var playerInventory = player.getInventory();
 
         playerInventory.setArmorContents(new ItemStack[4]);
         playerInventory.setContents(new ItemStack[]{});
 
-        player.setAllowFlight(false);
-        player.setFlying(false);
         player.setExp(0.0F);
         player.setLevel(0);
         player.setSneaking(false);
@@ -85,7 +83,6 @@ public class PlayerStorage {
         player.setMaxHealth(20D);
         player.setHealth(player.getMaxHealth());
         player.setFireTicks(0);
-        player.setGameMode(GameMode.SURVIVAL);
 
         if (player.isInsideVehicle()) {
             player.leaveVehicle();
@@ -93,6 +90,14 @@ public class PlayerStorage {
 
         for (var effect : player.getActivePotionEffects()) {
             player.removePotionEffect(effect.getType());
+        }
+
+        if (spectator) {
+            player.setGameMode(GameMode.SPECTATOR);
+        } else {
+            player.setAllowFlight(false);
+            player.setFlying(false);
+            player.setGameMode(GameMode.SURVIVAL);
         }
 
         player.updateInventory();

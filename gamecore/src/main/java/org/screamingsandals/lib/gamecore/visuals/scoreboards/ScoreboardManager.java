@@ -33,21 +33,24 @@ public class ScoreboardManager {
 
     public void hideAll() {
         getActiveScoreboards().keySet().forEach(uuid -> {
-            if (!GameCore.getPlayerManager().isPlayerRegistered(uuid)) {
+            var gamePlayerRegistration = GameCore.getPlayerManager().getRegisteredPlayer(uuid);
+            if (gamePlayerRegistration.isEmpty()) {
                 return;
             }
 
-            final var gamePlayer = GameCore.getPlayerManager().getRegisteredPlayer(uuid);
+            final var gamePlayer = gamePlayerRegistration.get();
+
             gamePlayer.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         });
     }
 
     public void show(UUID uuid, GameScoreboard scoreboard) {
-        final var gamePlayer = GameCore.getPlayerManager().getRegisteredPlayer(uuid);
-
-        if (!GameCore.getPlayerManager().isPlayerRegistered(uuid)) {
+        var gamePlayerRegistration = GameCore.getPlayerManager().getRegisteredPlayer(uuid);
+        if (gamePlayerRegistration.isEmpty()) {
             return;
         }
+
+        final var gamePlayer = gamePlayerRegistration.get();
 
         activeScoreboards.remove(uuid);
         gamePlayer.getPlayer().setScoreboard(scoreboard.getBukkitScoreboard());
@@ -70,11 +73,12 @@ public class ScoreboardManager {
     }
 
     public void hideScoreboard(UUID uuid) {
-        final var gamePlayer = GameCore.getPlayerManager().getRegisteredPlayer(uuid);
-
-        if (!GameCore.getPlayerManager().isPlayerRegistered(uuid)) {
+        var gamePlayerRegistration = GameCore.getPlayerManager().getRegisteredPlayer(uuid);
+        if (gamePlayerRegistration.isEmpty()) {
             return;
         }
+
+        final var gamePlayer = gamePlayerRegistration.get();
 
         gamePlayer.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         activeScoreboards.remove(uuid);

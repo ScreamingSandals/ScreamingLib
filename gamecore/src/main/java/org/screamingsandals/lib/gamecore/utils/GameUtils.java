@@ -38,7 +38,7 @@ public class GameUtils {
     }
 
     public static String getTranslatedGameState(GameState gameState) {
-        return m("core.state." + gameState.toString()).get();
+        return m("core.state." + gameState.getName()).get();
     }
 
     public static String convertNullToLanguage() {

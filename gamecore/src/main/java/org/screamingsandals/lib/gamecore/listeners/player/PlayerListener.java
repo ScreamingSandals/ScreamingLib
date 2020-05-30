@@ -55,7 +55,12 @@ public class PlayerListener implements Listener {
             return;
         }
 
-        final var gamePlayer = GameCore.getPlayerManager().getRegisteredPlayer(event.getPlayer());
+        final var gamePlayerRegistration = GameCore.getPlayerManager().getRegisteredPlayer(event.getPlayer());
+        if (gamePlayerRegistration.isEmpty()) {
+            return;
+        }
+
+        final var gamePlayer = gamePlayerRegistration.get();
 
         if (gamePlayer.isInGame()) {
             final var game = gamePlayer.getActiveGame();

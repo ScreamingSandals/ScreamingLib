@@ -50,7 +50,6 @@ public class GamePlayer {
     //shortcut
     public boolean leave() {
         if (activeGame != null) {
-            clean();
             return activeGame.leave(this);
         }
         return false;
@@ -58,7 +57,7 @@ public class GamePlayer {
 
     public void makePlayer() {
         spectator = false;
-        clean();
+        clean(false);
 
         if (isInGame()) {
             teleport(gameTeam.getSpawnLocation());
@@ -70,7 +69,7 @@ public class GamePlayer {
 
     public void makeSpectator() {
         spectator = true;
-        clean();
+        clean(true);
 
         teleport(activeGame.getGameWorld().getSpectatorSpawn());
         GameCore.fireEvent(new SPlayerSwitchedToSpectator(this));
@@ -91,14 +90,14 @@ public class GamePlayer {
 
     public void storeAndClean() {
         playerStorage.store(player);
-        playerStorage.clean(player);
+        playerStorage.clean(player, false);
     }
 
     public void restore(boolean teleport) {
         playerStorage.restore(player, teleport);
     }
 
-    public void clean() {
-        playerStorage.clean(player);
+    public void clean(boolean spectator) {
+        playerStorage.clean(player, spectator);
     }
 }
