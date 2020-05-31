@@ -12,6 +12,13 @@ public abstract class GamePhase {
     protected final int runTime;
     protected GameState phaseType;
     protected int elapsedTime;
+    protected boolean oneTick = false; //if phase is only one tick long
+    protected boolean finished;
+    protected boolean firstTick = true;
+
+    public GamePhase(GameCycle gameCycle) {
+        this(gameCycle, -1);
+    }
 
     public GamePhase(GameCycle gameCycle, int runTime) {
         this.gameCycle = gameCycle;
@@ -22,17 +29,31 @@ public abstract class GamePhase {
     }
 
     public void tick() {
+        updatePlaceholders();
+        firstTick = false;
         elapsedTime++;
+
+        if (oneTick) {
+            finished = true;
+            return;
+        }
+
+        finished = isCountdownFinished();
     }
 
     public void prepare(GameFrame gameFrame) {
 
     }
 
-    public boolean hasFinished() {
-        if (runTime == -1 && elapsedTime == 1) {
-            return true;
+    public boolean isFinished() {
+        return finished;
+    }
+
+    private boolean isCountdownFinished() {
+        if (runTime == -1) { //infinity ticking
+            return false;
         }
+
         return elapsedTime == runTime;
     }
 
@@ -46,6 +67,9 @@ public abstract class GamePhase {
 
     public void reset() {
         elapsedTime = 0;
+    }
+
+    public void updatePlaceholders() {
     }
 
 }

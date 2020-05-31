@@ -36,9 +36,7 @@ public class PlaceholderParser {
         add("%displayedName%", gameFrame.getDisplayedName());
         add("%maxPlayers%", gameFrame.getMaxPlayers());
         add("%minPlayers%", gameFrame.getMinPlayers());
-        add("%minPlayersToStart%", gameFrame.getMinPlayersToStart());
         add("%remainingPlayersToJoin%", gameFrame.countRemainingPlayersToStart());
-        add("%lobbyTime%", gameFrame.getLobbyTime());
         add("%startTime%", gameFrame.getStartTime());
         add("%gameTime%", gameFrame.getGameTime());
         add("%deathmatchTime%", gameFrame.getDeathmatchTime());
@@ -62,8 +60,6 @@ public class PlaceholderParser {
         if (gameFrame == null) {
             return;
         }
-
-        available.clear();
         load();
     }
 

@@ -4,7 +4,8 @@ import com.google.common.base.Preconditions;
 import lombok.Data;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
-import org.screamingsandals.lib.gamecore.config.GameConfig;
+import org.screamingsandals.lib.gamecore.core.config.GameConfig;
+import org.screamingsandals.lib.gamecore.core.config.GameValue;
 import org.screamingsandals.lib.gamecore.core.cycle.GameCycle;
 import org.screamingsandals.lib.gamecore.error.ErrorType;
 import org.screamingsandals.lib.gamecore.error.GameError;
@@ -42,19 +43,14 @@ public abstract class GameFrame implements Serializable {
     protected GameWorld gameWorld;
     protected LobbyWorld lobbyWorld;
     protected int minPlayers;
-    protected int minPlayersToStart;
-    protected int lobbyTime;
-    protected int startTime;
-    protected int gameTime;
-    protected int deathmatchTime;
-    protected int endTime;
     protected List<GameTeam> teams = new LinkedList<>();
     protected List<GameStore> stores = new LinkedList<>();
     protected GameState activeState = GameState.DISABLED;
     protected GameState previousState;
-    protected GameConfig gameConfig;
     protected UUID uuid;
     protected ResourceManager resourceManager;
+
+    protected Map<String, GameConfig.ValueHolder<?>> gameConfig = new HashMap<>();
 
     //Internal stuff that will not be saved and is always created at the start of the game.
     protected transient int maxPlayers;
@@ -82,6 +78,11 @@ public abstract class GameFrame implements Serializable {
     public boolean checkIntegrity(boolean fireError) {
         final var errorManager = GameCore.getErrorManager();
 
+        if (gameConfig.isEmpty()) {
+            errorManager.newError(new GameError(this, ErrorType.GAME_CONFIG_NOT_DEFINED, null), fireError);
+            gameConfig = GameCore.getGameManager().getGameConfig().getGameValues();
+        }
+
         if (!checkGameWorld(fireError)) {
             return false;
         }
@@ -90,12 +91,12 @@ public abstract class GameFrame implements Serializable {
             return false;
         }
 
-        if (teams.size() < 2) {
+        if (gameConfig.get(GameConfig.DefaultKeys.TEAMS_ENABLED).getBooleanValue() && teams.size() < 2) {
             errorManager.newError(new GameError(this, ErrorType.NOT_ENOUGH_TEAMS, null), fireError);
             return false;
         }
 
-        if (stores.size() < 1) {
+        if (gameConfig.get(GameConfig.DefaultKeys.STORES_ENABLED).getBooleanValue() && stores.size() < 1) {
             errorManager.newError(new GameError(this, ErrorType.NOT_ENOUGH_STORES, null), fireError);
             return false;
         }
@@ -176,8 +177,7 @@ public abstract class GameFrame implements Serializable {
     public void loadDefaults() {
         resourceManager.setResourceTypes(
                 ResourceTypes.load(this, new File(GameCore.getPlugin().getDataFolder(), "resources.json")));
-        gameConfig = new GameConfig(this);
-        gameConfig.buildDefaults();
+        gameConfig = GameCore.getGameManager().getGameConfig().getGameValues();
     }
 
     public boolean prepare() {
@@ -193,11 +193,27 @@ public abstract class GameFrame implements Serializable {
             resourceManager.prepare(this);
         }
 
+        updateGameConfig();
+
         setGameState(GameState.LOADING);
-        countMaxPlayers();
+        maxPlayers = countMaxPlayers();
         buildTeams();
 
         return true;
+    }
+
+    private void updateGameConfig() {
+        final var toUpdate = new LinkedList<GameConfig.ValueHolder<?>>();
+        gameConfig.values().forEach(holder -> {
+            if (holder.getGameValue() == GameValue.SHARED) {
+                toUpdate.add(holder);
+            }
+        });
+
+        toUpdate.forEach(holder -> {
+            final var key = holder.getKey();
+            gameConfig.put(key, GameCore.getGameManager().getGameConfig().getValueHolder(key));
+        });
     }
 
     public void startMaintenance() {
@@ -390,10 +406,13 @@ public abstract class GameFrame implements Serializable {
         teams.forEach(gameTeam -> gameTeam.setActiveGame(this));
     }
 
-    protected void countMaxPlayers() {
+    protected int countMaxPlayers() {
+        int toReturn = 0;
         for (var team : teams) {
-            maxPlayers += team.getMaxPlayers();
+            toReturn += team.getMaxPlayers();
         }
+
+        return toReturn;
     }
 
     protected void createScoreboards(GamePlayer gamePlayer) {
@@ -436,7 +455,23 @@ public abstract class GameFrame implements Serializable {
     }
 
     public int countRemainingPlayersToStart() {
-        return minPlayersToStart - playersInGame.size();
+        return minPlayers - playersInGame.size();
+    }
+
+    public int getStartTime() {
+        return gameConfig.get(GameConfig.DefaultKeys.START_TIME).getIntValue();
+    }
+
+    public int getGameTime() {
+        return gameConfig.get(GameConfig.DefaultKeys.GAME_TIME).getIntValue();
+    }
+
+    public int getDeathmatchTime() {
+        return gameConfig.get(GameConfig.DefaultKeys.DEATHMATCH_TIME).getIntValue();
+    }
+
+    public int getEndTime() {
+        return gameConfig.get(GameConfig.DefaultKeys.END_GAME_TIME).getIntValue();
     }
 }
 

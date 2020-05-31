@@ -12,9 +12,7 @@ import org.screamingsandals.lib.commands.common.manager.CommandManager;
 import org.screamingsandals.lib.debug.Debug;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,7 +48,7 @@ public abstract class CommandEnvironment {
 
         try {
             loadScreamingCommands(plugin.getClass());
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
     }
@@ -59,7 +57,7 @@ public abstract class CommandEnvironment {
         commandManager.destroy();
     }
 
-    public void loadScreamingCommands(Class<?> toLoad) throws URISyntaxException, IOException {
+    public void loadScreamingCommands(Class<?> toLoad) throws Throwable {
         final JarFile jarFile = new JarFile(new File(toLoad.getProtectionDomain().getCodeSource().getLocation().toURI()));
         final String packageName = toLoad.getPackage().getName().replaceAll("\\.", "/");
         final List<JarEntry> entries = Collections.list(jarFile.entries());

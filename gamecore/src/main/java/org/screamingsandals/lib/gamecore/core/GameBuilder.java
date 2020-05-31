@@ -11,6 +11,8 @@ import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.adapter.WorldAdapter;
+import org.screamingsandals.lib.gamecore.core.config.GameConfig;
+import org.screamingsandals.lib.gamecore.core.config.GameValue;
 import org.screamingsandals.lib.gamecore.resources.ResourceSpawner;
 import org.screamingsandals.lib.gamecore.resources.SpawnerEditor;
 import org.screamingsandals.lib.gamecore.resources.SpawnerHologramHandler;
@@ -64,6 +66,7 @@ public abstract class GameBuilder<T extends GameFrame> {
     }
 
     public void save(Player player) {
+        gameFrame.minPlayers = gameFrame.getTeams().size();
     }
 
     public void exit() {
@@ -95,28 +98,24 @@ public abstract class GameBuilder<T extends GameFrame> {
         gameFrame.setMinPlayers(minPlayers);
     }
 
-    public void setMinPlayersToStart(int minPlayers) {
-        gameFrame.setMinPlayersToStart(minPlayers);
+    public void setStartTime(int startTime) {
+        final var value = GameConfig.ValueHolder.get(GameConfig.DefaultKeys.START_TIME, startTime, GameValue.PRIVATE);
+        gameFrame.getGameConfig().put(value.getKey(), value);
     }
 
     public void setGameTime(int gameTime) {
-        gameFrame.setGameTime(gameTime);
-    }
-
-    public void setLobbyTime(int lobbyTime) {
-        gameFrame.setLobbyTime(lobbyTime);
-    }
-
-    public void setStartTime(int startTime) {
-        gameFrame.setStartTime(startTime);
-    }
-
-    public void setEndTime(int endTime) {
-        gameFrame.setEndTime(endTime);
+        final var value = GameConfig.ValueHolder.get(GameConfig.DefaultKeys.GAME_TIME, gameTime, GameValue.PRIVATE);
+        gameFrame.getGameConfig().put(value.getKey(), value);
     }
 
     public void setDeathmatchTime(int deathmatchTime) {
-        gameFrame.setDeathmatchTime(deathmatchTime);
+        final var value = GameConfig.ValueHolder.get(GameConfig.DefaultKeys.DEATHMATCH_TIME, deathmatchTime, GameValue.PRIVATE);
+        gameFrame.getGameConfig().put(value.getKey(), value);
+    }
+
+    public void setEndTime(int endTime) {
+        final var value = GameConfig.ValueHolder.get(GameConfig.DefaultKeys.END_GAME_TIME, endTime, GameValue.PRIVATE);
+        gameFrame.getGameConfig().put(value.getKey(), value);
     }
 
     public void addTeam(GameTeam gameTeam) {

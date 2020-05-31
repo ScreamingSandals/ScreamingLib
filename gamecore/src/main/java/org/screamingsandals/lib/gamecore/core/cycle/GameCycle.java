@@ -7,8 +7,9 @@ import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameState;
-import org.screamingsandals.lib.gamecore.core.GameType;
 import org.screamingsandals.lib.gamecore.core.phase.GamePhase;
+import org.screamingsandals.lib.gamecore.error.ErrorType;
+import org.screamingsandals.lib.gamecore.error.GameError;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameTickEvent;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
 import org.screamingsandals.lib.tasker.BaseTask;
@@ -19,10 +20,12 @@ import java.util.*;
 @Data
 public abstract class GameCycle extends BaseTask {
     protected final transient GameFrame gameFrame;
+    protected GameCycleType gameCycleType;
+
+    protected Map<GameState, GamePhase> availablePhases = new LinkedHashMap<>();
+    protected List<GamePhase> availableCustomPhases = new LinkedList<>();
+
     protected GamePhase currentPhase;
-    protected Map<GameState, GamePhase> gamePhases = new LinkedHashMap<>();
-    protected List<GamePhase> customPhases = new LinkedList<>();
-    protected GameType gameType;
 
     @Override
     public void run() {
@@ -30,6 +33,7 @@ public abstract class GameCycle extends BaseTask {
         if (currentPhase != null && currentPhase.getPhaseType() == gameState) {
             final var playersInGameSize = gameFrame.getPlayersInGame().size();
             if (gameState == GameState.WAITING && playersInGameSize == 0) {
+                //Why tick if nobody is in the game?
                 return;
             }
 
@@ -45,11 +49,18 @@ public abstract class GameCycle extends BaseTask {
             case DEATHMATCH:
             case AFTER_GAME_COUNTDOWN:
             case RESTART: {
-                currentPhase = gamePhases.get(gameState);
+                currentPhase = availablePhases.get(gameState);
+
+                if (currentPhase == null) {
+                    GameCore.getErrorManager().newError(new GameError(gameFrame, ErrorType.UNKNOWN, null), true);
+                    stop();
+                }
+
+                System.out.println("Phase switched! New phase=" + currentPhase.getPhaseType());
                 break;
             }
             case CUSTOM: {
-                final var iterator = customPhases.iterator();
+                final var iterator = availableCustomPhases.iterator();
                 if (iterator.hasNext()) {
                     currentPhase = iterator.next();
                     iterator.remove();
@@ -76,14 +87,23 @@ public abstract class GameCycle extends BaseTask {
     }
 
     private void tick() {
+        System.out.println("Tick!");
         GameCore.fireEvent(new SGameTickEvent(gameFrame, currentPhase));
-        Preconditions.checkNotNull(currentPhase, "Current phase cannot be null!").tick();
         gameFrame.getPlaceholderParser().reload();
         gameFrame.updateScoreboards();
 
-        if (currentPhase.hasFinished() && currentPhase.getPhaseType() != GameState.CUSTOM) {
-            setNextAndRemovePrevious();
+        try {
+            Preconditions.checkNotNull(currentPhase, "Current phase cannot be null!").tick();
+        } catch (Exception e) {
+            GameCore.getErrorManager().newError(new GameError(gameFrame, ErrorType.UNKNOWN, e), true);
+            stop();
+
+            return;
         }
+
+        gameFrame.updateScoreboards();
+
+        //TODO: auto-switch to next phase
     }
 
     public void kickAllPlayers() {
@@ -99,34 +119,24 @@ public abstract class GameCycle extends BaseTask {
     }
 
     public void addPhase(GameState gameState, GamePhase gamePhase) {
-        if (gamePhases.get(gameState) != null) {
+        if (availablePhases.get(gameState) != null) {
             Debug.warn("GamePhase for state " + gameState + " is already defined!");
             return;
         }
 
         gamePhase.setPhaseType(gameState);
-        gamePhases.put(gameState, gamePhase);
+        availablePhases.put(gameState, gamePhase);
     }
 
     public void removePhase(GameState gameState) {
-        gamePhases.remove(gameState);
+        availablePhases.remove(gameState);
     }
 
     public void addCustomPhase(GamePhase gamePhase) {
-        customPhases.add(gamePhase);
+        availableCustomPhases.add(gamePhase);
     }
 
     public boolean isRunning() {
         return currentPhase != null;
-    }
-
-    private void setNextAndRemovePrevious() {
-        final var iterator = gamePhases.entrySet().iterator();
-
-        if (iterator.hasNext()) {
-            final var next = iterator.next();
-            currentPhase = next.getValue();
-            iterator.remove();
-        }
     }
 }

@@ -12,7 +12,7 @@ import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.config.VisualsConfig;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameManager;
-import org.screamingsandals.lib.gamecore.core.GameType;
+import org.screamingsandals.lib.gamecore.core.cycle.GameCycleType;
 import org.screamingsandals.lib.gamecore.core.entities.EntityManager;
 import org.screamingsandals.lib.gamecore.error.BaseError;
 import org.screamingsandals.lib.gamecore.error.ErrorManager;
@@ -62,9 +62,9 @@ public class GameCore {
         this.verbose = verbose;
     }
 
-    public <T extends GameFrame> void load(File gamesFolder, Class<T> tClass, GameType gameType) throws GameCoreException {
+    public <T extends GameFrame> void load(File gamesFolder, Class<T> tClass, GameCycleType gameCycleType) throws GameCoreException {
         try {
-            this.gameManager = new GameManager<>(gamesFolder, tClass, gameType);
+            this.gameManager = new GameManager<>(gamesFolder, tClass, gameCycleType);
             registerListeners();
             fireEvent(new SCoreLoadedEvent(this));
         } catch (Exception exception) {

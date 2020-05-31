@@ -12,7 +12,10 @@ public class GameError extends BaseError {
         this.gameFrame = gameFrame;
 
         if (gameFrame != null) {
-            errorType.getReplaceable().putAll(gameFrame.getPlaceholderParser().getAvailable());
+            final var placeholderParser = gameFrame.getPlaceholderParser();
+            if (placeholderParser != null) {
+                errorType.getReplaceable().putAll(placeholderParser.getAvailable());
+            }
             errorType.getReplaceable().forEach((key, value) -> setMessage(getMessage().replaceAll(key, value.toString())));
         }
     }

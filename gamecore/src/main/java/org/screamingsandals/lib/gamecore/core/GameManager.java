@@ -4,6 +4,8 @@ import lombok.Data;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
+import org.screamingsandals.lib.gamecore.core.config.GameConfig;
+import org.screamingsandals.lib.gamecore.core.cycle.GameCycleType;
 import org.screamingsandals.lib.gamecore.core.data.file.JsonDataSource;
 import org.screamingsandals.lib.gamecore.error.ErrorType;
 import org.screamingsandals.lib.gamecore.error.GameError;
@@ -22,16 +24,18 @@ import java.util.stream.Stream;
 
 @Data
 public class GameManager<T extends GameFrame> {
+    private final GameConfig gameConfig;
     private final File dataFolder;
     private final Class<T> type;
     private final Map<UUID, Object> gameBuilders = new HashMap<>();
     private Map<UUID, T> registeredGames = new HashMap<>();
-    private GameType gameType;
+    private GameCycleType gameCycleType;
 
-    public GameManager(File dataFolder, Class<T> type, GameType gameType) {
+    public GameManager(File dataFolder, Class<T> type, GameCycleType gameCycleType) {
+        this.gameConfig = new GameConfig();
         this.dataFolder = dataFolder;
         this.type = type;
-        this.gameType = gameType;
+        this.gameCycleType = gameCycleType;
 
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();

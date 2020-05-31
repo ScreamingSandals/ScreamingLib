@@ -33,11 +33,16 @@ public class ErrorManager {
         return entry;
     }
 
-    public void writeError(BaseError error, boolean stackTrace) {
-        Debug.warn(error.getMessage(), true);
+    public void writeError(BaseError error, boolean writeError) {
+        if (!writeError) {
+            return;
+        }
 
-        if (stackTrace) {
-            error.getException().printStackTrace();
+        Debug.warn(error.getMessage(), true);
+        final var exception = error.getException();
+
+        if (exception != null) {
+            exception.printStackTrace();
         }
 
         if (GameCore.getInstance().isVerbose()) {

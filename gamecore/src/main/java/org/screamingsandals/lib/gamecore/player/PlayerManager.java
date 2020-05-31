@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.gamecore.player;
 
 import org.bukkit.entity.Player;
+import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerPreRegisterEvent;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerRegisteredEvent;
@@ -16,7 +17,15 @@ public class PlayerManager {
             return null;
         }
 
-        final GamePlayer gamePlayer = new GamePlayer(player);
+        //In case some fuckup happens
+        if (registeredPlayers.containsKey(player)) {
+            Debug.warn("What the fuck. Player is registered?!", true);
+            final var registeredPlayer = registeredPlayers.get(player);
+            registeredPlayer.destroy();
+            registeredPlayers.remove(player);
+        }
+
+        final var gamePlayer = new GamePlayer(player);
         registeredPlayers.put(player, gamePlayer);
 
         GameCore.fireEvent(new SPlayerRegisteredEvent(gamePlayer));
