@@ -2,12 +2,11 @@ package org.screamingsandals.lib.storage.redis;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.storage.Storage;
 import org.screamingsandals.lib.tasker.Tasker;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class RedisStorage extends Storage {
+public class RedisStorage {
     private static RedisStorage redisStorage;
     private final Tasker tasker;
 

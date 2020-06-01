@@ -10,7 +10,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
-import org.screamingsandals.lib.gamecore.core.GameTimeUnit;
+import org.screamingsandals.lib.gamecore.core.GTimeUnit;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
 import org.screamingsandals.lib.gamecore.utils.StringUtils;
 import org.screamingsandals.lib.tasker.BaseTask;
@@ -29,7 +29,7 @@ public class ResourceSpawner implements Serializable, Cloneable {
     private int maxSpawned;
     private int amount;
     private int period;
-    private GameTimeUnit gameTimeUnit;
+    private GTimeUnit gTimeUnit;
     private UUID uuid;
     private Type type;
     private boolean hologram;
@@ -55,7 +55,7 @@ public class ResourceSpawner implements Serializable, Cloneable {
         this.type = type;
         this.amount = type.getAmount();
         this.period = type.getPeriod();
-        this.gameTimeUnit = type.getGameTimeUnit();
+        this.gTimeUnit = type.getGTimeUnit();
         this.maxSpawned = maxSpawned;
         this.gameTeam = gameTeam;
         this.uuid = UUID.randomUUID();
@@ -95,7 +95,7 @@ public class ResourceSpawner implements Serializable, Cloneable {
             }
         };
 
-        spawnerTask.runTaskRepeater(1L, GameTimeUnit.getTimeUnitValue(period, gameTimeUnit), gameTimeUnit.getTimeUnit());
+        spawnerTask.runTaskRepeater(1L, GTimeUnit.getTimeUnitValue(period, gTimeUnit), gTimeUnit.getTimeUnit());
     }
 
     public void stop() {
@@ -136,8 +136,8 @@ public class ResourceSpawner implements Serializable, Cloneable {
         restart();
     }
 
-    public void changeTimeUnit(GameTimeUnit gameTimeUnit) {
-        this.gameTimeUnit = gameTimeUnit;
+    public void changeTimeUnit(GTimeUnit gTimeUnit) {
+        this.gTimeUnit = gTimeUnit;
 
         restart();
     }
@@ -172,7 +172,7 @@ public class ResourceSpawner implements Serializable, Cloneable {
         private double spread;
         private int amount;
         private int period;
-        private GameTimeUnit gameTimeUnit;
+        private GTimeUnit gTimeUnit;
 
         public String getTranslatedName() {
             if (translateKey != null) {

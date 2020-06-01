@@ -26,13 +26,16 @@ public abstract class GameCycle extends BaseTask {
     protected List<GamePhase> availableCustomPhases = new LinkedList<>();
 
     protected GamePhase currentPhase;
+    protected GamePhase previousPhase;
 
+    /**
+     * Main logic for ticking
+     */
     @Override
     public void run() {
         final var gameState = gameFrame.getActiveState();
         if (currentPhase != null && currentPhase.getPhaseType() == gameState) {
-            final var playersInGameSize = gameFrame.getPlayersInGame().size();
-            if (gameState == GameState.WAITING && playersInGameSize == 0) {
+            if (gameFrame.isWaiting() && gameFrame.isEmpty()) {
                 //Why tick if nobody is in the game?
                 return;
             }
@@ -49,19 +52,19 @@ public abstract class GameCycle extends BaseTask {
             case DEATHMATCH:
             case AFTER_GAME_COUNTDOWN:
             case RESTART: {
+                previousPhase = currentPhase;
                 currentPhase = availablePhases.get(gameState);
 
                 if (currentPhase == null) {
                     GameCore.getErrorManager().newError(new GameError(gameFrame, ErrorType.UNKNOWN, null), true);
                     stop();
                 }
-
-                System.out.println("Phase switched! New phase=" + currentPhase.getPhaseType());
                 break;
             }
             case CUSTOM: {
                 final var iterator = availableCustomPhases.iterator();
                 if (iterator.hasNext()) {
+                    previousPhase = currentPhase;
                     currentPhase = iterator.next();
                     iterator.remove();
                 }
@@ -77,27 +80,29 @@ public abstract class GameCycle extends BaseTask {
         tick();
     }
 
+    /**
+     * Stops whole GameCycle
+     */
     @Override
     public void stop() {
         kickAllPlayers();
-
         super.stop();
-
         currentPhase = null;
     }
 
+    /**
+     * Method for game-ticking
+     */
     private void tick() {
-        System.out.println("Tick!");
         GameCore.fireEvent(new SGameTickEvent(gameFrame, currentPhase));
         gameFrame.getPlaceholderParser().reload();
         gameFrame.updateScoreboards();
 
         try {
-            Preconditions.checkNotNull(currentPhase, "Current phase cannot be null!").tick();
+            Preconditions.checkNotNull(currentPhase, "Current phase is null, contact developer!").tick();
         } catch (Exception e) {
             GameCore.getErrorManager().newError(new GameError(gameFrame, ErrorType.UNKNOWN, e), true);
             stop();
-
             return;
         }
 
@@ -110,7 +115,6 @@ public abstract class GameCycle extends BaseTask {
         if (gameFrame.getPlayersInGame().isEmpty()) {
             return;
         }
-
         gameFrame.getPlayersInGame().forEach(this::kickPlayer);
     }
 

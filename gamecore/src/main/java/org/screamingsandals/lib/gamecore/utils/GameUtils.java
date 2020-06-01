@@ -3,15 +3,15 @@ package org.screamingsandals.lib.gamecore.utils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.gamecore.core.GameState;
-import org.screamingsandals.lib.gamecore.core.GameTimeUnit;
+import org.screamingsandals.lib.gamecore.core.GTimeUnit;
 
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.mpr;
 
 public class GameUtils {
 
-    public static String convertTimeUnitToLanguage(int period, GameTimeUnit gameTimeUnit) {
-        switch (gameTimeUnit) {
+    public static String convertTimeUnitToLanguage(int period, GTimeUnit gTimeUnit) {
+        switch (gTimeUnit) {
             case TICKS: {
                 if (period <= 1) {
                     return m("general.time-units.tick").get();
@@ -34,7 +34,7 @@ public class GameUtils {
                 }
             }
         }
-        return gameTimeUnit.toString();
+        return gTimeUnit.toString();
     }
 
     public static String getTranslatedGameState(GameState gameState) {

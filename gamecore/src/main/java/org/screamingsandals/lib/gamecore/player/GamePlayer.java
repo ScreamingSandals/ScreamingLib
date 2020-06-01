@@ -32,27 +32,52 @@ public class GamePlayer {
         this.playerStorage = new PlayerStorage();
     }
 
-    public void destroy() {
-        if (gameTeam != null) {
-            gameTeam.leave(this);
-        }
-    }
-
     public boolean isInGame() {
         return activeGame != null;
     }
 
     //shortcut
-    public boolean join(GameFrame gameFrame) {
+    public boolean joinGame(GameFrame gameFrame) {
         return gameFrame.join(this);
     }
 
     //shortcut
-    public boolean leave() {
+    public boolean leaveGame() {
         if (activeGame != null) {
-            return activeGame.leave(this);
+            activeGame.leave(this);
+            return true;
         }
         return false;
+    }
+
+    public boolean joinTeam(GameTeam gameTeam) {
+        //TODO: events
+        if (activeGame == null
+                || gameTeam == null
+                || this.gameTeam != null) {
+            //TODO: mpr
+            return false;
+        }
+
+        if (gameTeam.isFull()) {
+            //TODO: mpr
+            return false;
+        }
+
+        gameTeam.join(this);
+        //TODO: mpr
+        //TODO: events
+        return true;
+    }
+
+    public boolean leaveTeam() {
+        //TODO: events
+        if (gameTeam != null
+                && activeGame != null) {
+            gameTeam.leave(this);
+        }
+        //TODO: events
+        return true;
     }
 
     public void makePlayer() {
@@ -67,12 +92,15 @@ public class GamePlayer {
         GameCore.fireEvent(new SPlayerSwitchedToPlayer(this));
     }
 
-    public void makeSpectator() {
+    public void makeSpectator(boolean fireEvent) {
         spectator = true;
         clean(true);
 
         teleport(activeGame.getGameWorld().getSpectatorSpawn());
-        GameCore.fireEvent(new SPlayerSwitchedToSpectator(this));
+
+        if (fireEvent) {
+            GameCore.fireEvent(new SPlayerSwitchedToSpectator(this));
+        }
     }
 
     public void teleport(Location location) {

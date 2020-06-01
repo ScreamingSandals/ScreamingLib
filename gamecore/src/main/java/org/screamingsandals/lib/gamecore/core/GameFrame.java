@@ -13,9 +13,7 @@ import org.screamingsandals.lib.gamecore.events.core.game.SGameDisabledEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisablingEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadedEvent;
 import org.screamingsandals.lib.gamecore.events.core.state.SGameStateChangedEvent;
-import org.screamingsandals.lib.gamecore.events.player.SPlayerJoinedGameEvent;
-import org.screamingsandals.lib.gamecore.events.player.SPlayerLeftGameEvent;
-import org.screamingsandals.lib.gamecore.events.player.SPlayerPreJoinGameEvent;
+import org.screamingsandals.lib.gamecore.events.player.*;
 import org.screamingsandals.lib.gamecore.placeholders.PlaceholderParser;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
 import org.screamingsandals.lib.gamecore.resources.ResourceManager;
@@ -75,6 +73,12 @@ public abstract class GameFrame implements Serializable {
         start();
     }
 
+    /**
+     * Checks integrity of the game
+     *
+     * @param fireError if this method should fire errors to players or console
+     * @return true if game is alright
+     */
     public boolean checkIntegrity(boolean fireError) {
         final var errorManager = GameCore.getErrorManager();
 
@@ -103,6 +107,12 @@ public abstract class GameFrame implements Serializable {
         return true;
     }
 
+    /**
+     * Checks if the game world is alright
+     *
+     * @param fireError if this method should fire errors to players or console
+     * @return true if world is ok
+     */
     public boolean checkGameWorld(boolean fireError) {
         final var errorManager = GameCore.getErrorManager();
 
@@ -139,6 +149,12 @@ public abstract class GameFrame implements Serializable {
         return true;
     }
 
+    /**
+     * Checks if the lobby world is alright
+     *
+     * @param fireError if this method should fire errors to players or console
+     * @return true if lobby is ok
+     */
     public boolean checkLobbyWorld(boolean fireError) {
         final var errorManager = GameCore.getErrorManager();
 
@@ -174,12 +190,21 @@ public abstract class GameFrame implements Serializable {
         return true;
     }
 
+    /**
+     * Loads default values for the game
+     * TODO: load resource manager always? Hell nah
+     */
     public void loadDefaults() {
         resourceManager.setResourceTypes(
                 ResourceTypes.load(this, new File(GameCore.getPlugin().getDataFolder(), "resources.json")));
         gameConfig = GameCore.getGameManager().getGameConfig().getGameValues();
     }
 
+    /**
+     * Prepare the whole game to start
+     *
+     * @return false if something fails
+     */
     public boolean prepare() {
         playersInGame = new LinkedList<>();
         spectators = new LinkedList<>();
@@ -202,6 +227,9 @@ public abstract class GameFrame implements Serializable {
         return true;
     }
 
+    /**
+     * Load {@link GameValue} SHARED values from default config
+     */
     private void updateGameConfig() {
         final var toUpdate = new LinkedList<GameConfig.ValueHolder<?>>();
         gameConfig.values().forEach(holder -> {
@@ -216,14 +244,19 @@ public abstract class GameFrame implements Serializable {
         });
     }
 
+    //TODO
     public void startMaintenance() {
 
     }
 
+    //TODO
     public void stopMaintenance() {
 
     }
 
+    /**
+     * Starts the game
+     */
     public void start() {
         final var errorManager = GameCore.getErrorManager();
 
@@ -242,6 +275,9 @@ public abstract class GameFrame implements Serializable {
         GameCore.fireEvent(new SGameLoadedEvent(this));
     }
 
+    /**
+     * Stops the game
+     */
     public void stop() {
         final var errorManager = GameCore.getErrorManager();
 
@@ -284,6 +320,12 @@ public abstract class GameFrame implements Serializable {
         GameCore.fireEvent(new SGameDisabledEvent(this));
     }
 
+    /**
+     * Sets {@link GameState} activeState to new one
+     * previousState = activeState
+     *
+     * @param gameState state to set
+     */
     public void setGameState(GameState gameState) {
         previousState = activeState;
         activeState = gameState;
@@ -291,8 +333,15 @@ public abstract class GameFrame implements Serializable {
         GameCore.fireEvent(new SGameStateChangedEvent(this, activeState, previousState));
     }
 
+    /**
+     * Joins {@link GamePlayer} to this game
+     *
+     * @param gamePlayer player to join
+     * @return true if success
+     */
     public boolean join(GamePlayer gamePlayer) {
         if (playersInGame.contains(gamePlayer)) {
+            //TODO: mpr
             return false;
         }
 
@@ -312,7 +361,16 @@ public abstract class GameFrame implements Serializable {
             return false;
         }
 
-        //TODO: spectators
+        if (isGameRunning()) {
+            if (gameConfig.get(GameConfig.DefaultKeys.SPECTATORS_ENABLED).getBooleanValue()
+                    && GameCore.fireEvent(new SSpectatorPreJoinGameEvent(this, gamePlayer))) {
+                gamePlayer.makeSpectator(false);
+                GameCore.fireEvent(new SSpectatorJoinedGameEvent(this, gamePlayer));
+                return true;
+            }
+            gameCycle.kickPlayer(gamePlayer);
+            return false;
+        }
 
         if (GameCore.fireEvent(new SPlayerPreJoinGameEvent(this, gamePlayer))) {
             playersInGame.add(gamePlayer);
@@ -333,16 +391,25 @@ public abstract class GameFrame implements Serializable {
         return false;
     }
 
+    /**
+     * Leaves {@link GamePlayer} to this game
+     *
+     * @param gamePlayer player to leave
+     * @return true if success
+     */
     public boolean leave(GamePlayer gamePlayer) {
         final var uuid = gamePlayer.getUuid();
-        if (!playersInGame.contains(gamePlayer)) {
+        if (!playersInGame.contains(gamePlayer) || !spectators.contains(gamePlayer)) {
             //TODO: mpr
             return false;
         }
 
-        gamePlayer.setActiveGame(null);
         scoreboardManager.hideScoreboard(uuid);
         scoreboardManager.removeAll(uuid);
+
+
+        gamePlayer.setActiveGame(null);
+        gamePlayer.setSpectator(false);
 
         gamePlayer.restore(true); //TODO: mainlobby? bungee?
         playersInGame.remove(gamePlayer);
@@ -354,11 +421,11 @@ public abstract class GameFrame implements Serializable {
         return true;
     }
 
-    //Working with players
     public void moveAllToTeamSpawns() {
         playersInGame.forEach(gamePlayer -> gamePlayer.teleport(gamePlayer.getGameTeam().getSpawnLocation()));
     }
 
+    //Working with teams
     public GameTeam getTeamWithLeastPlayers() {
         final TreeMap<Integer, GameTeam> playersInTeams = new TreeMap<>();
         teams.forEach(gameTeam -> playersInTeams.put(gameTeam.getTeamPlayers().size(), gameTeam));
@@ -391,7 +458,7 @@ public abstract class GameFrame implements Serializable {
         return false;
     }
 
-    public Set<String> getAvailableTeams() {
+    public Set<String> getAvailableTeamsNames() {
         final var toReturn = new HashSet<String>();
 
         for (var team : teams) {
@@ -401,6 +468,14 @@ public abstract class GameFrame implements Serializable {
         return toReturn;
     }
 
+    public void sortPlayersToTeams() {
+        playersInGame.forEach(gamePlayer -> {
+            if (gamePlayer.getGameTeam() == null) {
+                getTeamWithLeastPlayers().join(gamePlayer);
+            }
+        });
+    }
+
     //Prepare game stuff
     protected void buildTeams() {
         teams.forEach(gameTeam -> gameTeam.setActiveGame(this));
@@ -408,6 +483,11 @@ public abstract class GameFrame implements Serializable {
 
     protected int countMaxPlayers() {
         int toReturn = 0;
+
+        if (teams.isEmpty()) {
+            return toReturn;
+        }
+
         for (var team : teams) {
             toReturn += team.getMaxPlayers();
         }
@@ -472,6 +552,46 @@ public abstract class GameFrame implements Serializable {
 
     public int getEndTime() {
         return gameConfig.get(GameConfig.DefaultKeys.END_GAME_TIME).getIntValue();
+    }
+
+    public boolean isFull() {
+        //TODO: in case of some fuckup (>) remove after testing?
+        return maxPlayers >= playersInGame.size();
+    }
+
+    public boolean isEmpty() {
+        return playersInGame.size() == 0;
+    }
+
+    public boolean isWaiting() {
+        return activeState == GameState.WAITING;
+    }
+
+    /**
+     * Checks if game is running in any way (in-game or not)
+     *
+     * @return if game is running
+     */
+    public boolean isRunning() {
+        return isWaiting()
+                || activeState == GameState.PRE_GAME_COUNTDOWN
+                || activeState == GameState.IN_GAME
+                || activeState == GameState.DEATHMATCH
+                || activeState == GameState.AFTER_GAME_COUNTDOWN
+                || activeState == GameState.CUSTOM
+                || activeState == GameState.LOADING;
+    }
+
+    /**
+     * Checks if game is in-game (playing)
+     *
+     * @return if game is running
+     */
+    public boolean isGameRunning() {
+        return activeState == GameState.IN_GAME
+                || activeState == GameState.DEATHMATCH
+                || activeState == GameState.AFTER_GAME_COUNTDOWN
+                || activeState == GameState.CUSTOM;
     }
 }
 

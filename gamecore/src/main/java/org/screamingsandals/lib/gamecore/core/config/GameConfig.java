@@ -17,6 +17,8 @@ public class GameConfig {
     public interface DefaultKeys {
         String TEAMS_ENABLED = "teams";
         String STORES_ENABLED = "stores";
+        String RESOURCES_ENABLED = "resources";
+        String SPECTATORS_ENABLED = "spectators";
         String START_TIME = "start_time";
         String GAME_TIME = "game_time";
         String DEATHMATCH_TIME = "deathmatch_time";

@@ -57,6 +57,11 @@ public abstract class CommandEnvironment {
         commandManager.destroy();
     }
 
+    public void reload() {
+        destroy();
+        load();
+    }
+
     public void loadScreamingCommands(Class<?> toLoad) throws Throwable {
         final JarFile jarFile = new JarFile(new File(toLoad.getProtectionDomain().getCodeSource().getLocation().toURI()));
         final String packageName = toLoad.getPackage().getName().replaceAll("\\.", "/");

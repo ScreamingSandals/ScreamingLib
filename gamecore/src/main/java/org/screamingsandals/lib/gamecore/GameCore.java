@@ -20,12 +20,14 @@ import org.screamingsandals.lib.gamecore.error.ErrorType;
 import org.screamingsandals.lib.gamecore.events.core.SCoreLoadedEvent;
 import org.screamingsandals.lib.gamecore.events.core.SCoreUnloadedEvent;
 import org.screamingsandals.lib.gamecore.exceptions.GameCoreException;
+import org.screamingsandals.lib.gamecore.language.GameLanguage;
 import org.screamingsandals.lib.gamecore.listeners.player.PlayerListener;
 import org.screamingsandals.lib.gamecore.player.PlayerManager;
 import org.screamingsandals.lib.gamecore.visuals.holograms.HologramManager;
 import org.screamingsandals.lib.tasker.Tasker;
 
 import java.io.File;
+import java.util.Objects;
 
 @Data
 public class GameCore {
@@ -36,15 +38,20 @@ public class GameCore {
     private final PlayerManager playerManager;
     private final EntityManager entityManager;
     private final HologramManager hologramManager;
+    private final GameLanguage gameLanguage;
     private VisualsConfig visualsConfig;
     private GameManager<?> gameManager;
     private boolean verbose = true;
+
     private String mainCommandName = "gc";
     private String adminPermissions = "gamecore.admin";
 
-    public GameCore(Plugin plugin) {
+    public GameCore(Plugin plugin, GameLanguage gameLanguage) {
         this.plugin = plugin;
         instance = this;
+
+        //init game language in case we don't have any provided by the actual game
+        this.gameLanguage = Objects.requireNonNullElseGet(gameLanguage, () -> new GameLanguage(plugin, "en", "&aGame&eCore"));
 
         tasker = Tasker.getSpigot(plugin);
         errorManager = new ErrorManager();
@@ -55,8 +62,8 @@ public class GameCore {
         Debug.setFallbackName("GameCore-" + plugin.getName());
     }
 
-    public GameCore(Plugin plugin, String mainCommandName, String adminPermissions, boolean verbose) {
-        this(plugin);
+    public GameCore(Plugin plugin, GameLanguage gameLanguage, String mainCommandName, String adminPermissions, boolean verbose) {
+        this(plugin, gameLanguage);
         this.mainCommandName = mainCommandName;
         this.adminPermissions = adminPermissions;
         this.verbose = verbose;
@@ -86,8 +93,14 @@ public class GameCore {
     }
 
     public void reload() {
-        //TODO: reload all important things
-        gameManager.getRegisteredGames().forEach(GameFrame::reload);
+        gameManager.getRegisteredGames().forEach(GameFrame::stop);
+
+        tasker.destroy();
+        errorManager.destroy();
+        entityManager.unregisterAll();
+        hologramManager.destroy();
+
+        gameManager.getRegisteredGames().forEach(GameFrame::start);
     }
 
     private void registerListeners() {

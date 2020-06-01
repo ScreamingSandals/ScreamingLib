@@ -56,4 +56,12 @@ public class GameTeam implements Serializable {
     public int countPlayersInTeam() {
         return teamPlayers.size();
     }
+
+    public boolean isFull() {
+        return countPlayersInTeam() == maxPlayers;
+    }
+
+    public boolean isEmpty() {
+        return countPlayersInTeam() == 0;
+    }
 }

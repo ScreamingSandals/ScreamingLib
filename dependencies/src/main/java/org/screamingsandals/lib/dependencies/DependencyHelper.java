@@ -16,7 +16,8 @@ import static org.bukkit.Bukkit.getLogger;
 @AllArgsConstructor
 public enum DependencyHelper {
     GROOVY("groovy.util.GroovyScriptEngine", "Groovy", "3.0.3"),
-    UNIVOCITY("com.univocity.parsers.csv.CsvParser", "Univocity", "2.8.3")
+    UNIVOCITY("com.univocity.parsers.csv.CsvParser", "Univocity", "2.8.3"),
+    LETTUCE_CORE("io.lettuce:lettuce-core", "Lettuce-Core", "5.2.2.RELEASE")
     // add new dependencies here (and of course to
     ;
 
@@ -25,7 +26,7 @@ public enum DependencyHelper {
     private final String dependencyName;
     private final String dependencyVersion;
 
-    public void load() {
+    public void load(boolean warning) {
         try {
             Class.forName(checkClass);
         } catch (ClassNotFoundException classNotFoundException) {
@@ -52,7 +53,9 @@ public enum DependencyHelper {
                 var plugin = Bukkit.getPluginManager().loadPlugin(library);
                 Bukkit.getPluginManager().enablePlugin(plugin);
 
-                getLogger().info("[ScreamingDependencyHelper] " + dependencyName + " is loaded! Don't disable or reload this plugin!");
+                if (warning) {
+                    getLogger().info("[ScreamingDependencyHelper] " + dependencyName + " is loaded! Don't disable or reload this plugin!");
+                }
             } catch (Exception ex) {
                 throw new ExceptionInInitializerError(ex);
             }

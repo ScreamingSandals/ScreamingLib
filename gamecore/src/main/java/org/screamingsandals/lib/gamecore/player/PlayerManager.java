@@ -21,7 +21,7 @@ public class PlayerManager {
         if (registeredPlayers.containsKey(player)) {
             Debug.warn("What the fuck. Player is registered?!", true);
             final var registeredPlayer = registeredPlayers.get(player);
-            registeredPlayer.destroy();
+            registeredPlayer.leaveGame();
             registeredPlayers.remove(player);
         }
 
@@ -34,7 +34,7 @@ public class PlayerManager {
 
     public void unregisterPlayer(Player player) {
         if (registeredPlayers.containsKey(player)) {
-            registeredPlayers.get(player).destroy();
+            registeredPlayers.get(player).leaveGame();
         }
         registeredPlayers.remove(player);
 
