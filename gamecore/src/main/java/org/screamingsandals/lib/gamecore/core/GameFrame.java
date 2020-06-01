@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.mpr;
 
@@ -228,16 +229,37 @@ public abstract class GameFrame implements Serializable {
     }
 
     /**
-     * Load {@link GameValue} SHARED values from default config
+     * Updates shared values from default {@link GameConfig}
+     * Also checks if some values are missing
      */
     private void updateGameConfig() {
         final var toUpdate = new LinkedList<GameConfig.ValueHolder<?>>();
+        final var available = GameCore.getGameManager().getGameConfig().getGameValues().entrySet();
+        var changed = new AtomicBoolean();
+
+        //add new values if missing
+        available.forEach(entry -> {
+            if (gameConfig.containsKey(entry.getKey())) {
+                return;
+            }
+
+            changed.set(true);
+            gameConfig.put(entry.getKey(), entry.getValue());
+        });
+
+        if (changed.get()) {
+            Debug.info("Something in game changed, saving!");
+            GameCore.getGameManager().saveGame(this);
+        }
+
+        //get list of shared values
         gameConfig.values().forEach(holder -> {
             if (holder.getGameValue() == GameValue.SHARED) {
                 toUpdate.add(holder);
             }
         });
 
+        //update shared values
         toUpdate.forEach(holder -> {
             final var key = holder.getKey();
             gameConfig.put(key, GameCore.getGameManager().getGameConfig().getValueHolder(key));

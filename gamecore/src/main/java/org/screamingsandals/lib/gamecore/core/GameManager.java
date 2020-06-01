@@ -67,7 +67,7 @@ public class GameManager<T extends GameFrame> {
         return null;
     }
 
-    public void saveGame(T gameFrame) {
+    public <K extends GameFrame> void saveGame(K gameFrame) {
         if (gameFrame == null) {
             Debug.warn("nothing to save!"); //TODO
             return;
