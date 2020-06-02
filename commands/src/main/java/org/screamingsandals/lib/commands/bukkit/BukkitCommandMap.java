@@ -2,7 +2,6 @@ package org.screamingsandals.lib.commands.bukkit;
 
 import io.papermc.lib.PaperLib;
 import lombok.Data;
-import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.Plugin;
@@ -48,15 +47,16 @@ public class BukkitCommandMap {
     }
 
     private SimpleCommandMap createCommandMapInstance() {
-        final Server server = plugin.getServer();
+        final var server = plugin.getServer();
         if (PaperLib.isPaper()) {
             return (SimpleCommandMap) server.getCommandMap();
         } else {
             Debug.info("CommandMapWrapper>> Paper not found, using reflection");
             try {
-                Class<?> clazz = server.getClass();
-                Field field = clazz.getDeclaredField("commandMap");
+                final var clazz = server.getClass();
+                final var field = clazz.getDeclaredField("commandMap");
                 field.setAccessible(true);
+
                 return (SimpleCommandMap) field.get(server);
             } catch (Exception ex) {
                 Debug.info("CommandMapWrapper>> Cannot get the CommandMap instance!");
@@ -76,7 +76,7 @@ public class BukkitCommandMap {
             Debug.info("CommandMapWrapper>> Paper not found, using reflection", false);
             try {
                 if (simpleCommandMap != null) {
-                    Class<?> clazz;
+                    final Class<?> clazz;
                     Debug.info("CommandMapWrapper>> Trying to get knownCommands");
                     if (PaperLib.isVersion(13, 1)) {
                         clazz = simpleCommandMap.getClass().getSuperclass();
@@ -84,7 +84,7 @@ public class BukkitCommandMap {
                         clazz = simpleCommandMap.getClass();
                     }
 
-                    Field knownCommands = clazz.getDeclaredField("knownCommands");
+                    final Field knownCommands = clazz.getDeclaredField("knownCommands");
                     knownCommands.setAccessible(true);
                     toReturn = (Map<String, Command>) knownCommands.get(simpleCommandMap);
                 }

@@ -1,14 +1,12 @@
 package org.screamingsandals.lib.gamecore.error;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public enum ErrorType {
-
-    GAME_CORE_ERROR("core.errors.game-core", "&cSomething went wrong with the GameCore instance. Please report this error log to GitHub or Discord!", Collections.emptyMap()),
-    GAME_CONFIG_ERROR("core.errors.game-config", "&cGameConfiguration is wrong. Please report this error log to GitHub or Discord!", Collections.emptyMap()),
-    GAME_SHOP_ERROR("core.errors.game-store", "&cYour shop configuration is invalid. Please check validity of your current file.", Collections.emptyMap()),
+    GAME_CORE_ERROR("core.errors.game-core", "&cSomething went wrong with the GameCore instance. Please report this error log to GitHub or Discord!", new HashMap<>()),
+    GAME_CONFIG_ERROR("core.errors.game-config", "&cGameConfiguration is wrong. Please report this error log to GitHub or Discord!", new HashMap<>()),
+    GAME_SHOP_ERROR("core.errors.game-store", "&cYour shop configuration is invalid. Please check validity of your current file.", new HashMap<>()),
     GAME_LOADING_ERROR("core.errors.game-loading", "&c&lOh, damn. &cLoading some arena file went wrong. &a&lPlease report this error log to GitHub or Discord!", new HashMap<>()),
     GAME_WORLD_NOT_DEFINED("core.errors.game-world-not-defined", "&cGame world for the game &e%gameName% &cis not defined!", new HashMap<>()),
     GAME_WORLD_DOES_NOT_EXISTS("core.errors.game-world-does-not-exists", "&cGame world &e%world% for the game &e%gameName% &cdoes not exists!", new HashMap<>()),
@@ -23,7 +21,7 @@ public enum ErrorType {
     NOT_ENOUGH_STORES("core.errors.not-enough-stores", "&cNot enough stores defined for the game &e%gameName%. &c&lYou need at least one!", new HashMap<>()),
     GAME_CONFIG_NOT_DEFINED("core.errors.policy-not-defined", "&cGameConfig is not defined.. Report this to the developer!", new HashMap<>()),
     PREPARE_FAILED("core.errors.prepare-failed", "&cPrepare phase failed, can't start the game &e%gameName%&c!", new HashMap<>()),
-    UNKNOWN("core.errors.unknown", "&cUnknown error occurred. Error code printed to console, please report it to our GitHub or Discord!", Collections.emptyMap());
+    UNKNOWN("core.errors.unknown", "&cUnknown error occurred. Error code printed to console, please report it to our GitHub or Discord!", new HashMap<>());
 
     private final Map<String, Object> replaceable;
     private final String languageKey;

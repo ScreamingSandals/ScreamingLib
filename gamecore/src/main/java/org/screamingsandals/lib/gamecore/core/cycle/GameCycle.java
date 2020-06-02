@@ -20,7 +20,7 @@ import java.util.*;
 @Data
 public abstract class GameCycle extends BaseTask {
     protected final transient GameFrame gameFrame;
-    protected GameCycleType gameCycleType;
+    protected CycleType cycleType;
 
     protected Map<GameState, GamePhase> availablePhases = new LinkedHashMap<>();
     protected List<GamePhase> availableCustomPhases = new LinkedList<>();
@@ -59,6 +59,10 @@ public abstract class GameCycle extends BaseTask {
                     GameCore.getErrorManager().newError(new GameError(gameFrame, ErrorType.UNKNOWN, null), true);
                     stop();
                 }
+
+                if (previousPhase != null) {
+                    previousPhase.reset();
+                }
                 break;
             }
             case CUSTOM: {
@@ -86,6 +90,9 @@ public abstract class GameCycle extends BaseTask {
     @Override
     public void stop() {
         kickAllPlayers();
+
+        gameFrame.getGameWorld().regenerate();
+
         super.stop();
         currentPhase = null;
     }

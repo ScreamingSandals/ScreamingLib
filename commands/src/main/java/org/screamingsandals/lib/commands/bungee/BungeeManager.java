@@ -1,9 +1,7 @@
 package org.screamingsandals.lib.commands.bungee;
 
 import lombok.Data;
-import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
-import org.screamingsandals.lib.commands.bungee.command.BungeeCommandBase;
 import org.screamingsandals.lib.commands.bungee.command.BungeeCommandWrapper;
 import org.screamingsandals.lib.commands.common.manager.CommandManager;
 import org.screamingsandals.lib.commands.common.wrapper.CommandWrapper;
@@ -31,9 +29,9 @@ public class BungeeManager implements CommandManager {
 
     @Override
     public void registerCommand(CommandWrapper<?, ?> commandWrapper) {
-        final BungeeCommandWrapper bungeeCommandWrapper = (BungeeCommandWrapper) commandWrapper;
-        final BungeeCommandBase bungeeCommandBase = bungeeCommandWrapper.getCommandBase();
-        final String commandName = bungeeCommandBase.getName();
+        final var bungeeCommandWrapper = (BungeeCommandWrapper) commandWrapper;
+        final var bungeeCommandBase = bungeeCommandWrapper.getCommandBase();
+        final var commandName = bungeeCommandBase.getName();
 
         if (isCommandRegistered(commandName) || commands.containsKey(commandName)) {
             Debug.info("Command " + commandName + " is already registered!", true);
@@ -51,7 +49,7 @@ public class BungeeManager implements CommandManager {
 
     @Override
     public void unregisterCommand(String commandName) {
-        final Command command = commands.get(commandName).getCommandInstance();
+        final var command = commands.get(commandName).getCommandInstance();
 
         if (command != null) {
             bungeeCommandMap.unregisterCommand(command);

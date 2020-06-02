@@ -6,9 +6,9 @@ import org.screamingsandals.lib.commands.common.SubCommandBuilder;
 import org.screamingsandals.lib.commands.common.interfaces.ScreamingCommand;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
-import org.screamingsandals.lib.gamecore.core.GTimeUnit;
 import org.screamingsandals.lib.gamecore.resources.SpawnerEditor;
 import org.screamingsandals.lib.gamecore.utils.GameUtils;
+import org.screamingsandals.lib.tasker.TaskerTime;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -107,7 +107,7 @@ public class SpawnerEditorCommand implements ScreamingCommand {
                 }
                 case "time-unit": {
                     if (canBeTime(value.toLowerCase())) {
-                        spawner.setGTimeUnit(GTimeUnit.valueOf(value.toUpperCase()));
+                        spawner.setTimeUnit(TaskerTime.valueOf(value.toUpperCase()));
                         mpr("game-builder.spawners.editor.changed")
                                 .replace("%value%", action)
                                 .replace("%newValue%", value)

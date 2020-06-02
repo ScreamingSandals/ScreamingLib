@@ -2,7 +2,6 @@ package org.screamingsandals.lib.tasker;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public interface Tasker {
     Map<BaseTask, Object> runningTasks = new HashMap<>();
@@ -47,24 +46,9 @@ public interface Tasker {
 
     BaseTask runTaskAsync(BaseTask baseTask);
 
-    BaseTask runTaskLater(BaseTask baseTask, long delay, TimeUnit timeUnit);
+    BaseTask runTaskLater(BaseTask baseTask, int delay, TaskerTime taskerTime);
 
-    BaseTask runTaskRepeater(BaseTask baseTask, long delay, long period, TimeUnit timeUnit);
-
-    default long getBukkitTime(long delay, TimeUnit timeUnit) {
-        switch (timeUnit) {
-            case MILLISECONDS:
-                return delay / 50;
-            case SECONDS:
-                return delay * 20;
-            case MINUTES:
-                return delay * 1200;
-            case HOURS:
-                return delay * 72000;
-            default:
-                return delay;
-        }
-    }
+    BaseTask runTaskRepeater(BaseTask baseTask, int delay, int period, TaskerTime taskerTime);
 
     static Tasker getSpigot(Object plugin) {
         return new TaskerWrapper.SpigotTasker(plugin);

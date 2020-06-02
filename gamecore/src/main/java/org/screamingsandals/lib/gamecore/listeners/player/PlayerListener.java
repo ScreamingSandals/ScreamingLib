@@ -66,19 +66,6 @@ public class PlayerListener implements Listener {
             final var game = gamePlayer.getActiveGame();
             final var gameState = game.getActiveState();
             final var gameWorld = game.getGameWorld();
-            final var lobbyWorld = game.getLobbyWorld();
-
-            if (gameState == GameState.WAITING || gameState == GameState.PRE_GAME_COUNTDOWN) {
-                final var to = event.getTo();
-                if (to.getBlock().getType().isAir()) {
-                    return;
-                }
-
-                if (!GameUtils.isInGameBorder(to, lobbyWorld.getBorder1().getLocation(), lobbyWorld.getBorder2().getLocation())) {
-                    event.setCancelled(true);
-                }
-                return;
-            }
 
             if (gameState == GameState.IN_GAME && !gamePlayer.isSpectator()) {
                 if (!GameUtils.isInGameBorder(event.getTo(), gameWorld.getBorder1().getLocation(), gameWorld.getBorder2().getLocation())) {

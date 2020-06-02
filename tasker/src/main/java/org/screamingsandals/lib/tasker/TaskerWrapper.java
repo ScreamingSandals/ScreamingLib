@@ -5,8 +5,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.screamingsandals.lib.debug.Debug;
 
-import java.util.concurrent.TimeUnit;
-
 @Data
 public class TaskerWrapper {
     private static Tasker instance;
@@ -38,8 +36,8 @@ public class TaskerWrapper {
         @Override
         public BaseTask runTask(BaseTask baseTask) {
             try {
-                getRunningTasks()
-                        .put(baseTask, plugin.getServer().getScheduler().runTask(plugin, baseTask));
+                getRunningTasks().put(baseTask, plugin.getServer().getScheduler()
+                        .runTask(plugin, baseTask));
             } catch (Exception ignored) {
                 Debug.warn("You used Bukkit task on Bungee server, what the heck?!");
             }
@@ -49,8 +47,8 @@ public class TaskerWrapper {
         @Override
         public BaseTask runTaskAsync(BaseTask baseTask) {
             try {
-                getRunningTasks()
-                        .put(baseTask, plugin.getServer().getScheduler().runTaskAsynchronously(plugin, baseTask));
+                getRunningTasks().put(baseTask, plugin.getServer().getScheduler()
+                        .runTaskAsynchronously(plugin, baseTask));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -58,10 +56,10 @@ public class TaskerWrapper {
         }
 
         @Override
-        public BaseTask runTaskLater(BaseTask baseTask, long delay, TimeUnit timeUnit) {
+        public BaseTask runTaskLater(BaseTask baseTask, int delay, TaskerTime taskerTime) {
             try {
-                getRunningTasks()
-                        .put(baseTask, plugin.getServer().getScheduler().runTaskLater(plugin, baseTask, getBukkitTime(delay, timeUnit)));
+                getRunningTasks().put(baseTask, plugin.getServer().getScheduler()
+                        .runTaskLater(plugin, baseTask, TaskerTime.getBukkitValue(delay, taskerTime)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -69,10 +67,11 @@ public class TaskerWrapper {
         }
 
         @Override
-        public BaseTask runTaskRepeater(BaseTask baseTask, long delay, long period, TimeUnit timeUnit) {
+        public BaseTask runTaskRepeater(BaseTask baseTask, int delay, int period, TaskerTime taskerTime) {
             try {
                 getRunningTasks()
-                        .put(baseTask, plugin.getServer().getScheduler().runTaskTimer(plugin, baseTask, delay, getBukkitTime(period, timeUnit)));
+                        .put(baseTask, plugin.getServer().getScheduler()
+                                .runTaskTimer(plugin, baseTask, delay, TaskerTime.getBukkitValue(period, taskerTime)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -115,10 +114,15 @@ public class TaskerWrapper {
         }
 
         @Override
-        public BaseTask runTaskLater(BaseTask baseTask, long delay, TimeUnit timeUnit) {
+        public BaseTask runTaskLater(BaseTask baseTask, int delay, TaskerTime taskerTime) {
             try {
-                getRunningTasks().put(baseTask, plugin.getProxy()
-                        .getScheduler().schedule(plugin, baseTask, delay, timeUnit));
+                if (taskerTime == TaskerTime.TICKS) {
+                    getRunningTasks().put(baseTask, plugin.getProxy()
+                            .getScheduler().schedule(plugin, baseTask, TaskerTime.getTimeUnitValue(delay, taskerTime), taskerTime.getTimeUnit()));
+                } else {
+                    getRunningTasks().put(baseTask, plugin.getProxy()
+                            .getScheduler().schedule(plugin, baseTask, delay, taskerTime.getTimeUnit()));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -126,11 +130,16 @@ public class TaskerWrapper {
         }
 
         @Override
-        public BaseTask runTaskRepeater(BaseTask baseTask, long delay, long period, TimeUnit timeUnit) {
+        public BaseTask runTaskRepeater(BaseTask baseTask, int delay, int period, TaskerTime taskerTime) {
             try {
-                getRunningTasks().put(baseTask, plugin.getProxy()
-                        .getScheduler().schedule(
-                                plugin, baseTask, delay, period, timeUnit));
+                if (taskerTime == TaskerTime.TICKS) {
+                    getRunningTasks().put(baseTask, plugin.getProxy()
+                            .getScheduler().schedule(
+                                    plugin, baseTask, TaskerTime.getTimeUnitValue(delay, taskerTime), TaskerTime.getTimeUnitValue(period, taskerTime), taskerTime.getTimeUnit()));
+                } else {
+                    getRunningTasks().put(baseTask, plugin.getProxy()
+                            .getScheduler().schedule(plugin, baseTask, delay, period, taskerTime.getTimeUnit()));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

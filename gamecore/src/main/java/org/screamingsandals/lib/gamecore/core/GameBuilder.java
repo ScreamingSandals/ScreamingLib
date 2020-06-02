@@ -241,7 +241,7 @@ public abstract class GameBuilder<T extends GameFrame> {
     public void buildHologram(ResourceSpawner spawner, GameFrame currentGame, Player player) {
         final List<String> lines = new ArrayList<>();
         var period = spawner.getPeriod();
-        final var timeUnit = spawner.getGTimeUnit();
+        final var timeUnit = spawner.getTimeUnit();
         final var team = spawner.getGameTeam();
         final var maxSpawned = spawner.getMaxSpawned();
 

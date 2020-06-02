@@ -11,34 +11,29 @@ import java.util.Map;
 
 //You can create custom command messages with this!
 @Data
-public abstract class CommandsLanguage {
-    private Map<Key, String> languages = new HashMap<>();
+public abstract class CommandLanguage {
+    protected Map<Key, String> languages = new HashMap<>();
 
     public void loadDefaults() {
-        languages.put(Key.NO_PERMISSIONS, "&cYou don't have enough permissions for this command!");
-        languages.put(Key.COMMAND_DOES_NOT_EXISTS, "&cOh my, this command does not exists..");
-        languages.put(Key.SOMETHINGS_FUCKED, "&cThis command failed. Something is wrong, huh?!");
-        languages.put(Key.NOT_FOR_CONSOLE, "&cWell well well, this is not for console...");
+        put(Key.NO_PERMISSIONS, "&cYou don't have enough permissions for this command!");
+        put(Key.COMMAND_DOES_NOT_EXISTS, "&cOh my, this command does not exists..");
+        put(Key.SOMETHINGS_FUCKED, "&cThis command failed. Something is wrong, huh?!");
+        put(Key.NOT_FOR_CONSOLE, "&cWell well well, this is not for console...");
     }
 
     public String get(Key langKey) {
         return languages.get(langKey);
     }
 
-    public void add(Key langKey, String value) {
-        languages.put(langKey, value);
-    }
-
-    public void replace(Key langKey, String value) {
-        languages.remove(langKey);
+    public void put(Key langKey, String value) {
         languages.put(langKey, value);
     }
 
     public enum Key {
-        NO_PERMISSIONS("no_permissions"),
-        COMMAND_DOES_NOT_EXISTS("command_does_not_exists"),
-        SOMETHINGS_FUCKED("somethings_fucked"),
-        NOT_FOR_CONSOLE("not_for_console");
+        NO_PERMISSIONS("no-permissions"),
+        COMMAND_DOES_NOT_EXISTS("command-does-not-exists"),
+        SOMETHINGS_FUCKED("somethings-fucked"),
+        NOT_FOR_CONSOLE("not-for-console");
 
         @Getter
         private final String langKey;

@@ -1,8 +1,15 @@
 package org.screamingsandals.lib.tasker;
 
-import java.util.concurrent.TimeUnit;
-
 public abstract class BaseTask implements Runnable {
+
+    public static BaseTask get(Runnable runnable) {
+        return new BaseTask() {
+            @Override
+            public void run() {
+                runnable.run();
+            }
+        };
+    }
 
     /**
      * Runnable for the task
@@ -25,6 +32,7 @@ public abstract class BaseTask implements Runnable {
 
     /**
      * Runs the task
+     *
      * @return BaseTask instance
      */
     public BaseTask runTask() {
@@ -33,6 +41,7 @@ public abstract class BaseTask implements Runnable {
 
     /**
      * Runs the task asynchronously
+     *
      * @return BaseTask instance
      */
     public BaseTask runTaskAsync() {
@@ -41,22 +50,24 @@ public abstract class BaseTask implements Runnable {
 
     /**
      * Runs the task later
-     * @param delay - delay value
-     * @param timeUnit time unit for the delay value
+     *
+     * @param delay      - delay value
+     * @param taskerTime time unit for the delay value
      * @return BaseTask instance
      */
-    public BaseTask runTaskLater(long delay, TimeUnit timeUnit) {
-        return TaskerWrapper.getInstance().runTaskLater(this, delay, timeUnit);
+    public BaseTask runTaskLater(int delay, TaskerTime taskerTime) {
+        return TaskerWrapper.getInstance().runTaskLater(this, delay, taskerTime);
     }
 
     /**
      * Runs the task repeatedly
-     * @param delay - delay value
-     * @param period - repeating period value
-     * @param timeUnit time unit for the values
+     *
+     * @param delay      - delay value
+     * @param period     - repeating period value
+     * @param taskerTime time unit for the values
      * @return BaseTask instance
      */
-    public BaseTask runTaskRepeater(long delay, long period, TimeUnit timeUnit) {
-        return TaskerWrapper.getInstance().runTaskRepeater(this, delay, period, timeUnit);
+    public BaseTask runTaskRepeater(int delay, int period, TaskerTime taskerTime) {
+        return TaskerWrapper.getInstance().runTaskRepeater(this, delay, period, taskerTime);
     }
 }

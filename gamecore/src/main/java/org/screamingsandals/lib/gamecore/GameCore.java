@@ -12,7 +12,7 @@ import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.config.VisualsConfig;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameManager;
-import org.screamingsandals.lib.gamecore.core.cycle.GameCycleType;
+import org.screamingsandals.lib.gamecore.core.cycle.CycleType;
 import org.screamingsandals.lib.gamecore.core.entities.EntityManager;
 import org.screamingsandals.lib.gamecore.error.BaseError;
 import org.screamingsandals.lib.gamecore.error.ErrorManager;
@@ -24,6 +24,9 @@ import org.screamingsandals.lib.gamecore.language.GameLanguage;
 import org.screamingsandals.lib.gamecore.listeners.player.PlayerListener;
 import org.screamingsandals.lib.gamecore.player.PlayerManager;
 import org.screamingsandals.lib.gamecore.visuals.holograms.HologramManager;
+import org.screamingsandals.lib.gamecore.world.regeneration.LegacyWorldRegeneration;
+import org.screamingsandals.lib.gamecore.world.regeneration.Regenerable;
+import org.screamingsandals.lib.gamecore.world.regeneration.WorldRegeneration;
 import org.screamingsandals.lib.tasker.Tasker;
 
 import java.io.File;
@@ -69,9 +72,9 @@ public class GameCore {
         this.verbose = verbose;
     }
 
-    public <T extends GameFrame> void load(File gamesFolder, Class<T> tClass, GameCycleType gameCycleType) throws GameCoreException {
+    public <T extends GameFrame> void load(File gamesFolder, Class<T> tClass, CycleType cycleType) throws GameCoreException {
         try {
-            this.gameManager = new GameManager<>(gamesFolder, tClass, gameCycleType);
+            this.gameManager = new GameManager<>(gamesFolder, tClass, cycleType);
             registerListeners();
             fireEvent(new SCoreLoadedEvent(this));
         } catch (Exception exception) {
@@ -119,6 +122,10 @@ public class GameCore {
         return instance;
     }
 
+    public static Tasker getTasker() {
+        return instance.tasker;
+    }
+
     public static GameManager<?> getGameManager() {
         return instance.gameManager;
     }
@@ -141,6 +148,14 @@ public class GameCore {
 
     public static Plugin getPlugin() {
         return instance.plugin;
+    }
+
+    public static Regenerable getRegenerator() {
+        if (PaperLib.isVersion(13)) {
+            return new WorldRegeneration();
+        } else {
+            return new LegacyWorldRegeneration();
+        }
     }
 
     public static boolean fireEvent(Event event) {

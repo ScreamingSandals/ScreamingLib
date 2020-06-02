@@ -67,6 +67,8 @@ public abstract class GamePhase {
 
     public void reset() {
         elapsedTime = 0;
+        finished = false;
+        firstTick = true;
     }
 
     public void updatePlaceholders() {

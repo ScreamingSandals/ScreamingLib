@@ -4,7 +4,10 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import lombok.Getter;
 import org.bukkit.entity.Entity;
-import org.screamingsandals.lib.gamecore.world.BaseWorld;
+import org.screamingsandals.lib.gamecore.GameCore;
+import org.screamingsandals.lib.gamecore.world.regeneration.Regenerable;
+import org.screamingsandals.lib.tasker.BaseTask;
+import org.screamingsandals.lib.tasker.TaskerTime;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -52,8 +55,11 @@ public class EntityManager {
 
     private void internalUnregister(Entity entity) {
         if (entity != null && !entity.isDead()) {
-            BaseWorld.getAndLoadChunkAsync(entity.getLocation());
-            entity.remove();
+            if (Regenerable.loadChunkAsync(entity.getLocation())) {
+                entity.remove();
+            } else {
+                GameCore.getTasker().runTaskLater(BaseTask.get(entity::remove), 1, TaskerTime.TICKS);
+            }
         }
     }
 

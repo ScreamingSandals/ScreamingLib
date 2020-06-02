@@ -6,7 +6,7 @@ import org.screamingsandals.lib.commands.bukkit.BukkitManager;
 import org.screamingsandals.lib.commands.bungee.BungeeManager;
 import org.screamingsandals.lib.commands.common.RegisterCommand;
 import org.screamingsandals.lib.commands.common.interfaces.ScreamingCommand;
-import org.screamingsandals.lib.commands.common.language.CommandsLanguage;
+import org.screamingsandals.lib.commands.common.language.CommandLanguage;
 import org.screamingsandals.lib.commands.common.language.DefaultLanguage;
 import org.screamingsandals.lib.commands.common.manager.CommandManager;
 import org.screamingsandals.lib.debug.Debug;
@@ -16,19 +16,23 @@ import java.lang.reflect.Constructor;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 @Data
 public abstract class CommandEnvironment {
     private final Object plugin;
     private static CommandEnvironment instance;
-    private CommandsLanguage commandLanguage;
+    private CommandLanguage commandLanguage;
     private CommandManager commandManager;
 
     public CommandEnvironment(Object plugin) {
         this.plugin = plugin;
         instance = this;
+    }
+
+    public CommandEnvironment(Object plugin, CommandLanguage commandLanguage) {
+        this(plugin);
+        this.commandLanguage = commandLanguage;
     }
 
     public void load() {
@@ -44,7 +48,9 @@ public abstract class CommandEnvironment {
             }
         }
 
-        commandLanguage = new DefaultLanguage();
+        if (commandLanguage == null) {
+            commandLanguage = new DefaultLanguage();
+        }
 
         try {
             loadScreamingCommands(plugin.getClass());
@@ -63,9 +69,9 @@ public abstract class CommandEnvironment {
     }
 
     public void loadScreamingCommands(Class<?> toLoad) throws Throwable {
-        final JarFile jarFile = new JarFile(new File(toLoad.getProtectionDomain().getCodeSource().getLocation().toURI()));
-        final String packageName = toLoad.getPackage().getName().replaceAll("\\.", "/");
-        final List<JarEntry> entries = Collections.list(jarFile.entries());
+        final var jarFile = new JarFile(new File(toLoad.getProtectionDomain().getCodeSource().getLocation().toURI()));
+        final var packageName = toLoad.getPackage().getName().replaceAll("\\.", "/");
+        final var entries = Collections.list(jarFile.entries());
         final List<Object> subCommands = new LinkedList<>();
 
         entries.forEach(entry -> {

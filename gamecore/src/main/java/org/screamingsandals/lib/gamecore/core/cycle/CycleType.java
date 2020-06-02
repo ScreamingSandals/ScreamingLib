@@ -2,15 +2,15 @@ package org.screamingsandals.lib.gamecore.core.cycle;
 
 import java.util.Optional;
 
-public enum GameCycleType {
+public enum CycleType {
     SINGLE_GAME_BUNGEE,
     MULTI_GAME_BUNGEE,
     MULTI_GAME,
     CUSTOM;
 
-    public static Optional<GameCycleType> get(String name) {
+    public static Optional<CycleType> get(String name) {
         final var lowerCaseName = name.toLowerCase();
-        for (GameCycleType type : GameCycleType.values()) {
+        for (CycleType type : CycleType.values()) {
             if (type.name().toLowerCase().equalsIgnoreCase(lowerCaseName)) {
                 return Optional.of(type);
             }

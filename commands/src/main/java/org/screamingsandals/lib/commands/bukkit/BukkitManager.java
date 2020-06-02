@@ -2,7 +2,6 @@ package org.screamingsandals.lib.commands.bukkit;
 
 import lombok.Data;
 import org.bukkit.plugin.Plugin;
-import org.screamingsandals.lib.commands.bukkit.command.BukkitCommandBase;
 import org.screamingsandals.lib.commands.bukkit.command.BukkitCommandWrapper;
 import org.screamingsandals.lib.commands.common.manager.CommandManager;
 import org.screamingsandals.lib.commands.common.wrapper.CommandWrapper;
@@ -30,9 +29,9 @@ public class BukkitManager implements CommandManager {
 
     @Override
     public void registerCommand(CommandWrapper<?, ?> commandWrapper) {
-        final BukkitCommandWrapper bukkitCommandWrapper = (BukkitCommandWrapper) commandWrapper;
-        final BukkitCommandBase bukkitCommandBase = bukkitCommandWrapper.getCommandBase();
-        final String commandName = bukkitCommandBase.getName();
+        final var bukkitCommandWrapper = (BukkitCommandWrapper) commandWrapper;
+        final var bukkitCommandBase = bukkitCommandWrapper.getCommandBase();
+        final var commandName = bukkitCommandBase.getName();
 
         if (isCommandRegistered(commandName) || commands.containsKey(commandName)) {
             Debug.info("Command " + commandName + " is already registered!", true);

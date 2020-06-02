@@ -25,11 +25,11 @@ import org.screamingsandals.lib.gamecore.visuals.scoreboards.GameScoreboard;
 import org.screamingsandals.lib.gamecore.visuals.scoreboards.ScoreboardManager;
 import org.screamingsandals.lib.gamecore.world.GameWorld;
 import org.screamingsandals.lib.gamecore.world.LobbyWorld;
+import org.screamingsandals.lib.tasker.TaskerTime;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.mpr;
@@ -213,6 +213,9 @@ public abstract class GameFrame implements Serializable {
         scoreboardManager = new ScoreboardManager(this);
         bossbarManager = new BossbarManager(this);
 
+        gameWorld.setRegenerator(GameCore.getRegenerator());
+        lobbyWorld.setRegenerator(GameCore.getRegenerator());
+
         if (resourceManager == null) {
             resourceManager = new ResourceManager(this);
         } else {
@@ -289,7 +292,7 @@ public abstract class GameFrame implements Serializable {
 
         try {
             Preconditions.checkNotNull(gameCycle, "GameCycle cannot be null!")
-                    .runTaskRepeater(0, 1, TimeUnit.SECONDS);
+                    .runTaskRepeater(0, 1, TaskerTime.SECONDS);
         } catch (Exception e) {
             errorManager.newError(new GameError(this, ErrorType.UNKNOWN, e), true);
         }
@@ -314,6 +317,7 @@ public abstract class GameFrame implements Serializable {
         try {
             Preconditions.checkNotNull(gameCycle, "GameCycle cannot be null!").stop();
         } catch (Exception e) {
+            System.out.println("What");
             errorManager.newError(new GameError(this, ErrorType.UNKNOWN, e), true);
             return;
         }
@@ -331,8 +335,6 @@ public abstract class GameFrame implements Serializable {
         resourceManager.stop();
         scoreboardManager.destroy();
         placeholderParser.destroy();
-
-        //TODO: regen
 
         GameCore.getEntityManager().unregisterAll(uuid);
         GameCore.getHologramManager().destroyAll(uuid);
@@ -421,7 +423,7 @@ public abstract class GameFrame implements Serializable {
      */
     public boolean leave(GamePlayer gamePlayer) {
         final var uuid = gamePlayer.getUuid();
-        if (!playersInGame.contains(gamePlayer) || !spectators.contains(gamePlayer)) {
+        if (!playersInGame.contains(gamePlayer) && !spectators.contains(gamePlayer)) {
             //TODO: mpr
             return false;
         }

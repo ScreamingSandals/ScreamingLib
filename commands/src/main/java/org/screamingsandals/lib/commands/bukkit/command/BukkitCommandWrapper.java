@@ -8,10 +8,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.commands.Commands;
 import org.screamingsandals.lib.commands.common.commands.SubCommand;
-import org.screamingsandals.lib.commands.common.environment.CommandEnvironment;
 import org.screamingsandals.lib.commands.common.interfaces.Completable;
 import org.screamingsandals.lib.commands.common.interfaces.Executable;
-import org.screamingsandals.lib.commands.common.language.CommandsLanguage;
+import org.screamingsandals.lib.commands.common.language.CommandLanguage;
 import org.screamingsandals.lib.commands.common.wrapper.CommandWrapper;
 
 import java.util.*;
@@ -19,40 +18,39 @@ import java.util.*;
 //TODO: this needs cleanup and rewrite.. -.-
 @Data
 public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, Command> {
-    private final CommandsLanguage commandsLanguage;
     private final BukkitCommandBase commandBase;
     private Command commandInstance;
 
     public BukkitCommandWrapper(BukkitCommandBase commandBase) {
-        this.commandsLanguage = CommandEnvironment.getInstance().getCommandLanguage();
         this.commandBase = commandBase;
         commandInstance = createCommandInstance();
     }
 
     public Command createCommandInstance() {
-        final String commandName = commandBase.getName();
-        List<String> aliases = commandBase.getAliases();
+        final var commandsLanguage = Commands.getInstance().getCommandLanguage();
+        final var commandName = commandBase.getName();
+        var aliases = commandBase.getAliases();
 
         if (aliases == null) {
             aliases = Collections.emptyList();
         }
 
-        final Command command = new Command(commandName, commandBase.getDescription(), commandBase.getUsage(), aliases) {
+        final var command = new Command(commandName, commandBase.getDescription(), commandBase.getUsage(), aliases) {
             @Override
             public boolean execute(@NotNull CommandSender commandSender, @NotNull String label, @NotNull String[] args) {
                 boolean result;
                 try {
                     if (commandSender instanceof Player) {
-                        Player player = (Player) commandSender;
+                        final var player = (Player) commandSender;
                         if (!player.hasPermission(commandBase.getPermission())) {
-                            commandsLanguage.sendMessage(player, CommandsLanguage.Key.NO_PERMISSIONS);
+                            commandsLanguage.sendMessage(player, CommandLanguage.Key.NO_PERMISSIONS);
                         }
                         result = handleCommand((Player) commandSender, args, commandBase.getPlayerExecutable(), commandBase.getPlayerSubExecutors());
                     } else {
                         try {
                             result = handleCommand((ConsoleCommandSender) commandSender, args, commandBase.getConsoleExecutable(), commandBase.getConsoleSubExecutors());
                         } catch (Throwable ignored) {
-                            commandsLanguage.sendMessage(commandSender, CommandsLanguage.Key.NOT_FOR_CONSOLE);
+                            commandsLanguage.sendMessage(commandSender, CommandLanguage.Key.NOT_FOR_CONSOLE);
                             result = true;
                         }
                     }
@@ -62,10 +60,8 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
                 }
 
                 if (!result) {
-                    final CommandsLanguage commandsLanguage = Commands.getInstance().getCommandLanguage();
-                    commandsLanguage.sendMessage(commandSender, CommandsLanguage.Key.SOMETHINGS_FUCKED); //lol
+                    commandsLanguage.sendMessage(commandSender, CommandLanguage.Key.SOMETHINGS_FUCKED); //lol
                 }
-
                 return true;
             }
 
@@ -89,23 +85,27 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
         command.setAliases(aliases);
         command.setDescription(commandBase.getDescription());
         command.setUsage(commandBase.getUsage());
-
         return command;
     }
 
     private <T> boolean handleCommand(T sender, String[] args, Executable<T> command, Map<SubCommand, Executable<T>> subCommands) {
-        final List<String> convertedArgs = Arrays.asList(args);
+        final var commandsLanguage = Commands.getInstance().getCommandLanguage();
         final boolean areSubCommandsEmpty = commandBase.getSubCommands().isEmpty();
-
-        if (!areSubCommandsEmpty && args.length >= 1 && subCommands.keySet().size() <= 0) {
-            commandsLanguage.sendMessage(sender, CommandsLanguage.Key.COMMAND_DOES_NOT_EXISTS);
-            return false;
-        }
+        final var convertedArgs = Arrays.asList(args);
 
         if (args.length >= 1) {
             final var subCommandName = args[0].toLowerCase();
-            final var subCommand = commandBase.getSubCommand(subCommandName);
 
+            if (!areSubCommandsEmpty && !commandBase.isSubCommandRegistered(subCommandName)) {
+                commandsLanguage.sendMessage(sender, CommandLanguage.Key.COMMAND_DOES_NOT_EXISTS);
+                return true;
+            }
+
+            if (subCommands.size() < 1) {
+                return false;
+            }
+
+            final var subCommand = commandBase.getSubCommand(subCommandName);
             if (areSubCommandsEmpty) {
                 command.execute(sender, convertedArgs);
                 return true;
@@ -118,7 +118,7 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
             if (sender instanceof Player) {
                 final var player = (Player) sender;
                 if (!player.hasPermission(subCommand.getPermission())) {
-                    commandsLanguage.sendMessage(player, CommandsLanguage.Key.NO_PERMISSIONS);
+                    commandsLanguage.sendMessage(player, CommandLanguage.Key.NO_PERMISSIONS);
                     return true;
                 }
             }
@@ -143,7 +143,7 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
     private <T> List<String> handleTab(T sender, String[] args, Completable<T> complete, Map<SubCommand, Completable<T>> subCompletes) {
         final var convertedArgs = Arrays.asList(args);
         final var areSubCommandsEmpty = commandBase.getSubCommands().isEmpty();
-        final List<String> toReturn = new LinkedList<>();
+        final var toReturn = new LinkedList<String>();
 
         if (args.length == 0) {
             if (complete == null) {
@@ -159,7 +159,7 @@ public class BukkitCommandWrapper implements CommandWrapper<BukkitCommandBase, C
                 return toReturn;
             }
 
-            final String typed = args[0].toLowerCase();
+            final var typed = args[0].toLowerCase();
 
             for (var found : commandBase.getSubCommands()) {
                 final var permission = found.getPermission();

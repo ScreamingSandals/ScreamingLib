@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.config.GameConfig;
-import org.screamingsandals.lib.gamecore.core.cycle.GameCycleType;
+import org.screamingsandals.lib.gamecore.core.cycle.CycleType;
 import org.screamingsandals.lib.gamecore.core.data.file.JsonDataSource;
 import org.screamingsandals.lib.gamecore.error.ErrorType;
 import org.screamingsandals.lib.gamecore.error.GameError;
@@ -29,13 +29,13 @@ public class GameManager<T extends GameFrame> {
     private final Class<T> type;
     private final Map<UUID, Object> gameBuilders = new HashMap<>();
     private Map<UUID, T> registeredGames = new HashMap<>();
-    private GameCycleType gameCycleType;
+    private CycleType cycleType;
 
-    public GameManager(File dataFolder, Class<T> type, GameCycleType gameCycleType) {
+    public GameManager(File dataFolder, Class<T> type, CycleType cycleType) {
         this.gameConfig = new GameConfig();
         this.dataFolder = dataFolder;
         this.type = type;
-        this.gameCycleType = gameCycleType;
+        this.cycleType = cycleType;
 
         if (!dataFolder.exists()) {
             dataFolder.mkdirs();

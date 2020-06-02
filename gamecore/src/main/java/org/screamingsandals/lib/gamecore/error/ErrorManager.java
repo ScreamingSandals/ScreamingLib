@@ -27,6 +27,10 @@ public class ErrorManager {
     }
 
     public BaseError newError(BaseError entry, boolean writeError) {
+        if (entry == null) {
+            System.out.println("whaat");
+            return null;
+        }
         errorLog.add(entry);
         writeError(entry, writeError);
 
