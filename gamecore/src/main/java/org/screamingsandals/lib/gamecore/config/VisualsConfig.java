@@ -18,6 +18,7 @@ public abstract class VisualsConfig extends SpigotConfigAdapter {
     public static String PATH_SCOREBOARDS_CUSTOM_ENABLED = "scoreboards.custom.enabled";
     public static String PATH_SCOREBOARDS_CONTENT = "scoreboards.content.";
     public static String PATH_SCOREBOARDS_CONTENT_LOBBY = "scoreboards.content.lobby";
+    public static String PATH_SCOREBOARDS_CONTENT_STARTING = "scoreboards.content.starting";
     public static String PATH_SCOREBOARDS_CONTENT_IN_GAME = "scoreboards.content.in-game";
     public static String PATH_SCOREBOARDS_CONTENT_DEATHMATCH = "scoreboards.content.deathmatch";
     public static String PATH_SCOREBOARDS_CONTENT_END_GAME = "scoreboards.content.end-game";
@@ -25,12 +26,15 @@ public abstract class VisualsConfig extends SpigotConfigAdapter {
 
     //BOSSBARS
     public static String PATH_BOSSBARS_ENABLED = "bossbars.enabled";
+    public static String PATH_BOSSBARS_CUSTOM_ENABLED = "bossbars.custom.enabled";
+    public static String PATH_BOSSBARS_CONTENT = "bossbars.content.";
     public static String PATH_BOSSBARS_CONTENT_LOBBY = "bossbars.content.lobby";
     public static String PATH_BOSSBARS_CONTENT_STARTING = "bossbars.content.starting";
     public static String PATH_BOSSBARS_CONTENT_IN_GAME = "bossbars.content.in-game";
     public static String PATH_BOSSBARS_CONTENT_DEATHMATCH = "bossbars.content.deathmatch";
     public static String PATH_BOSSBARS_CONTENT_END_GAME = "bossbars.content.end-game";
 
+    public static String PATH_BOSSBARS_COLOR = "bossbars.color.";
     public static String PATH_BOSSBARS_COLOR_LOBBY = "bossbars.color.lobby";
     public static String PATH_BOSSBARS_COLOR_STARTING = "bossbars.color.starting";
     public static String PATH_BOSSBARS_COLOR_IN_GAME = "bossbars.color.in-game";

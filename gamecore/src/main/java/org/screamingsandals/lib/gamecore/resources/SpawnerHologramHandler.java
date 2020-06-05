@@ -33,7 +33,19 @@ public class SpawnerHologramHandler implements TouchHandler {
     }
 
     private void handleBuilder(Player player, GameHologram gameHologram) {
+        final var registeredPlayer = GameCore.getPlayerManager().getRegisteredPlayer(player);
+
+        if (registeredPlayer.isEmpty()) {
+            return;
+        }
+
+        final var gamePlayer = registeredPlayer.get();
         final var game = gameHologram.getGameFrame();
+
+        if (gamePlayer.isInGame()) {
+            return;
+        }
+
         final var spawnerUUID = gameHologram.getUuid();
         final var resourceSpawner = game.getResourceManager().getByID(spawnerUUID);
 

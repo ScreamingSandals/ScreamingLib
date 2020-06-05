@@ -25,7 +25,16 @@ public class LinePainter {
         final var lines = holder.getLines(available);
 
         for (var entry : lines.entrySet()) {
-            paintLine(entry.getKey(), entry.getValue());
+            var value = entry.getValue();
+            final var valueCharCount = value.toCharArray().length;
+
+            if (valueCharCount > 40) {
+                value = "error!";
+                System.out.println("Invalid value, longer than 40 characters!");
+                System.out.println(entry.getValue());
+            }
+
+            paintLine(entry.getKey(), value);
         }
     }
 

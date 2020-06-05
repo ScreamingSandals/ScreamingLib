@@ -135,7 +135,7 @@ public abstract class GameBuilder<T extends GameFrame> {
     }
 
     public void removeTeam(String teamName) {
-        gameFrame.getTeams().removeIf(gameTeam -> gameTeam.getTeamName().equalsIgnoreCase(teamName));
+        gameFrame.getTeams().removeIf(gameTeam -> gameTeam.getName().equalsIgnoreCase(teamName));
     }
 
     public void removeTeam(GameTeam gameTeam) {
@@ -252,7 +252,7 @@ public abstract class GameBuilder<T extends GameFrame> {
                 .replace("%mat%", spawner.getType().getMaterial())
                 .replace("%spawnAmount%", spawner.getAmount())
                 .replace("%time-unit%", period + " " + GameUtils.convertTimeUnitToLanguage(period, timeUnit))
-                .replace("%team%", team == null ? GameUtils.convertNullToLanguage() : team.getTeamName())
+                .replace("%team%", team == null ? GameUtils.convertNullToLanguage() : team.getName())
                 .replace("%amount%", maxSpawned == -1 ? GameUtils.getInfinityLanguage() : maxSpawned)
                 .replace("%booleanValue%", spawner.isHologram())
                 .getList());
@@ -285,7 +285,7 @@ public abstract class GameBuilder<T extends GameFrame> {
 
     public boolean isTeamExists(String teamName) {
         for (var gameTeam : gameFrame.getTeams()) {
-            if (gameTeam.getTeamName().equalsIgnoreCase(teamName)) {
+            if (gameTeam.getName().equalsIgnoreCase(teamName)) {
                 return true;
             }
         }

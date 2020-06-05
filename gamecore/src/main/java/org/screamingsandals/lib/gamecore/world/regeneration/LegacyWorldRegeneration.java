@@ -10,10 +10,7 @@ import org.bukkit.material.Colorable;
 import org.bukkit.material.Directional;
 import org.bukkit.material.Lever;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //TODO
 public class LegacyWorldRegeneration implements Regenerable {
@@ -27,6 +24,7 @@ public class LegacyWorldRegeneration implements Regenerable {
     private final Map<Block, DyeColor> brokenBlockColors = new HashMap<>();
 
     @Override
+    @SuppressWarnings("deprecation")
     public void regenerate() {
         for (var block : builtBlocks) {
             final var chunk = block.getChunk();
@@ -98,7 +96,7 @@ public class LegacyWorldRegeneration implements Regenerable {
 
             final var bedHead = (Bed) headState.getData();
             bedHead.setHeadOfBed(true);
-            bedHead.setFacingDirection(blockHead.getFace(blockFeed).getOppositeFace());
+            bedHead.setFacingDirection(Objects.requireNonNull(blockHead.getFace(blockFeed)).getOppositeFace());
 
             final var bedFeed = (Bed) feedState.getData();
             bedFeed.setHeadOfBed(false);

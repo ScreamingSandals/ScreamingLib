@@ -186,7 +186,7 @@ public class SpawnerEditorCommand implements ScreamingCommand {
                 }
                 case "team": {
                     final List<String> available = new LinkedList<>();
-                    currentGame.getTeams().forEach(gameTeam -> available.add(gameTeam.getTeamName()));
+                    currentGame.getTeams().forEach(gameTeam -> available.add(gameTeam.getName()));
                     toReturn.addAll(addAvailable(typed, available));
                     return toReturn;
                 }

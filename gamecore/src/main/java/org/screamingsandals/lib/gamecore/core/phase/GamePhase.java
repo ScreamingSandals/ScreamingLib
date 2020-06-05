@@ -9,12 +9,13 @@ import org.screamingsandals.lib.gamecore.core.cycle.GameCycle;
 public abstract class GamePhase {
     protected final transient GameCycle gameCycle;
     protected final transient GameFrame gameFrame;
-    protected final int runTime;
+    protected int runTime;
+    protected int elapsedTime = 0;
     protected GameState phaseType;
-    protected int elapsedTime;
     protected boolean oneTick = false; //if phase is only one tick long
-    protected boolean finished;
+
     protected boolean firstTick = true;
+    protected boolean finished;
 
     public GamePhase(GameCycle gameCycle) {
         this(gameCycle, -1);
@@ -28,9 +29,17 @@ public abstract class GamePhase {
         prepare(gameFrame);
     }
 
+    public boolean preTick() {
+        return true;
+    }
+
     public void tick() {
         updatePlaceholders();
-        firstTick = false;
+
+        if (firstTick) {
+            onFirstTick();
+        }
+
         elapsedTime++;
 
         if (oneTick) {
@@ -42,6 +51,10 @@ public abstract class GamePhase {
     }
 
     public void prepare(GameFrame gameFrame) {
+
+    }
+
+    public void onFirstTick() {
 
     }
 

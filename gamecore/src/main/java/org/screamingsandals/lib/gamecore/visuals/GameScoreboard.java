@@ -1,7 +1,8 @@
-package org.screamingsandals.lib.gamecore.visuals.scoreboards;
+package org.screamingsandals.lib.gamecore.visuals;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.config.VisualsConfig;
@@ -20,9 +21,10 @@ import static org.screamingsandals.lib.lang.I.m;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class GameScoreboard extends ScreamingScoreboard {
+public class GameScoreboard extends ScreamingScoreboard implements GameVisual {
     private final GamePlayer gamePlayer;
     private final GameState gameState;
+    private final VisualType visualType = VisualType.SCOREBOARD;
 
     public GameScoreboard(GamePlayer gamePlayer, GameState gameState, String displayName, DisplaySlot displaySlot,
                           TreeMap<Integer, String> lines) {
@@ -34,22 +36,41 @@ public class GameScoreboard extends ScreamingScoreboard {
         this.scoreboardHolder.setOriginalLines(lines);
     }
 
-    public void update(GameFrame gameFrame) {
-        paintLines(gameFrame.getPlaceholderParser().getAvailable());
+    public void update() {
+        final var game = gamePlayer.getActiveGame();
+
+        if (game == null) {
+            return;
+        }
+
+        final var placeholderParser = gamePlayer.getActiveGame().getPlaceholderParser();
+        paintLines(placeholderParser.getAvailable());
+    }
+
+    public void show() {
+        update();
+
+        final var player = gamePlayer.getPlayer();
+        player.setScoreboard(scoreboardHolder.getBukkitScoreboard());
+    }
+
+    public void hide() {
+        final var player = gamePlayer.getPlayer();
+        player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
     }
 
     public void addTeams(List<GameTeam> gameTeams) {
-        gameTeams.forEach(gameTeam -> addTeam(gameTeam.getTeamName(), gameTeam.getTeamColor().chatColor));
+        gameTeams.forEach(gameTeam -> addTeam(gameTeam.getName(), gameTeam.getColor().chatColor));
     }
 
     @Data
-    public static class ContentBuilder {
+    public static class Builder {
         private final UUID uuid;
         private final GameState gameState;
 
         public static GameScoreboard get(GamePlayer gamePlayer, GameState gameState, GameFrame gameFrame) {
             final var uuid = gameFrame.getUuid();
-            final var toReturn = new ContentBuilder(uuid, gameState);
+            final var toReturn = new Builder(uuid, gameState);
             final var state = gameState.getName();
             final var visualsConfig = GameCore.getInstance().getVisualsConfig();
             final String displayName;
@@ -65,7 +86,7 @@ public class GameScoreboard extends ScreamingScoreboard {
 
             final var gameScoreboard = new GameScoreboard(gamePlayer, toReturn.gameState, displayName, DisplaySlot.SIDEBAR,
                             ScoreboardHolder.sortLines(lines));
-            gameScoreboard.update(gameFrame);
+            gameScoreboard.update();
 
             return gameScoreboard;
         }

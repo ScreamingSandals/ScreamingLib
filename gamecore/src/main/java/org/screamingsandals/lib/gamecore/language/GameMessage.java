@@ -45,7 +45,7 @@ public class GameMessage extends Message {
 
         this.gameFrame = gameFrame;
         final var parser = gameFrame.getPlaceholderParser();
-        parser.reload();
+        parser.update();
 
         replaces.putAll(gameFrame.getPlaceholderParser().getAvailable());
         return this;

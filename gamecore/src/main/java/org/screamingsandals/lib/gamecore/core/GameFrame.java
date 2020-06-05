@@ -20,12 +20,9 @@ import org.screamingsandals.lib.gamecore.resources.ResourceManager;
 import org.screamingsandals.lib.gamecore.resources.ResourceTypes;
 import org.screamingsandals.lib.gamecore.store.GameStore;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
-import org.screamingsandals.lib.gamecore.visuals.bossbars.BossbarManager;
-import org.screamingsandals.lib.gamecore.visuals.scoreboards.GameScoreboard;
-import org.screamingsandals.lib.gamecore.visuals.scoreboards.ScoreboardManager;
+import org.screamingsandals.lib.gamecore.visuals.VisualsManager;
 import org.screamingsandals.lib.gamecore.world.GameWorld;
 import org.screamingsandals.lib.gamecore.world.LobbyWorld;
-import org.screamingsandals.lib.tasker.TaskerTime;
 
 import java.io.File;
 import java.io.Serializable;
@@ -58,8 +55,7 @@ public abstract class GameFrame implements Serializable {
     protected transient List<GamePlayer> spectators;
 
     protected transient PlaceholderParser placeholderParser;
-    protected transient ScoreboardManager scoreboardManager;
-    protected transient BossbarManager bossbarManager;
+    protected transient VisualsManager visualsManager;
 
     public GameFrame(String gameName) {
         this.gameName = gameName;
@@ -96,9 +92,26 @@ public abstract class GameFrame implements Serializable {
             return false;
         }
 
-        if (gameConfig.get(GameConfig.DefaultKeys.TEAMS_ENABLED).getBooleanValue() && teams.size() < 2) {
-            errorManager.newError(new GameError(this, ErrorType.NOT_ENOUGH_TEAMS, null), fireError);
-            return false;
+        if (gameConfig.get(GameConfig.DefaultKeys.TEAMS_ENABLED).getBooleanValue()) {
+            if (teams.size() < 2) {
+                errorManager.newError(new GameError(this, ErrorType.NOT_ENOUGH_TEAMS, null), fireError);
+                return false;
+            }
+
+            final var isSet = new AtomicBoolean(true);
+            teams.forEach(gameTeam -> {
+                if (gameTeam.getSpawnLocation() == null) {
+                    final var errorType = ErrorType.TEAM_SPAWN_NOT_SET;
+                    errorType.getReplaceable().put("%teamName%", gameTeam.getName());
+                    errorManager.newError(new GameError(this, errorType, null), fireError);
+
+                    isSet.set(false);
+                }
+            });
+
+            if (!isSet.get()) {
+                return false;
+            }
         }
 
         if (gameConfig.get(GameConfig.DefaultKeys.STORES_ENABLED).getBooleanValue() && stores.size() < 1) {
@@ -210,8 +223,7 @@ public abstract class GameFrame implements Serializable {
         playersInGame = new LinkedList<>();
         spectators = new LinkedList<>();
         placeholderParser = new PlaceholderParser(this);
-        scoreboardManager = new ScoreboardManager(this);
-        bossbarManager = new BossbarManager(this);
+        visualsManager = new VisualsManager(this);
 
         gameWorld.setRegenerator(GameCore.getRegenerator());
         lobbyWorld.setRegenerator(GameCore.getRegenerator());
@@ -291,8 +303,7 @@ public abstract class GameFrame implements Serializable {
         }
 
         try {
-            Preconditions.checkNotNull(gameCycle, "GameCycle cannot be null!")
-                    .runTaskRepeater(0, 1, TaskerTime.SECONDS);
+            Preconditions.checkNotNull(gameCycle, "Cannot start GameCycle, it is null, contact developer!").start();
         } catch (Exception e) {
             errorManager.newError(new GameError(this, ErrorType.UNKNOWN, e), true);
         }
@@ -315,7 +326,7 @@ public abstract class GameFrame implements Serializable {
         }
 
         try {
-            Preconditions.checkNotNull(gameCycle, "GameCycle cannot be null!").stop();
+            Preconditions.checkNotNull(gameCycle, "Cannot stop the GameCycle, it is null!").stop();
         } catch (Exception e) {
             System.out.println("What");
             errorManager.newError(new GameError(this, ErrorType.UNKNOWN, e), true);
@@ -333,7 +344,7 @@ public abstract class GameFrame implements Serializable {
         maxPlayers = 0;
 
         resourceManager.stop();
-        scoreboardManager.destroy();
+        visualsManager.destroy();
         placeholderParser.destroy();
 
         GameCore.getEntityManager().unregisterAll(uuid);
@@ -401,10 +412,10 @@ public abstract class GameFrame implements Serializable {
             gamePlayer.setActiveGame(this);
             gamePlayer.storeAndClean();
             gamePlayer.teleport(lobbyWorld.getSpawn());
-            createScoreboards(gamePlayer);
-            createBossbars(gamePlayer);
 
-            scoreboardManager.show(gamePlayer, activeState);
+            visualsManager.prepareGameVisuals(gamePlayer);
+            visualsManager.showGameVisuals();
+
             mpr("commands.join.success")
                     .game(this)
                     .send(gamePlayer);
@@ -422,15 +433,13 @@ public abstract class GameFrame implements Serializable {
      * @return true if success
      */
     public boolean leave(GamePlayer gamePlayer) {
-        final var uuid = gamePlayer.getUuid();
         if (!playersInGame.contains(gamePlayer) && !spectators.contains(gamePlayer)) {
             //TODO: mpr
             return false;
         }
 
-        scoreboardManager.hideScoreboard(uuid);
-        scoreboardManager.removeAll(uuid);
-
+        visualsManager.hideAllForPlayer(gamePlayer);
+        visualsManager.remove(gamePlayer);
 
         gamePlayer.setActiveGame(null);
         gamePlayer.setSpectator(false);
@@ -466,7 +475,7 @@ public abstract class GameFrame implements Serializable {
 
     public Optional<GameTeam> getRegisteredTeam(String teamName) {
         for (var gameTeam : teams) {
-            if (gameTeam.getTeamName().equalsIgnoreCase(teamName)) {
+            if (gameTeam.getName().equalsIgnoreCase(teamName)) {
                 return Optional.of(gameTeam);
             }
         }
@@ -475,7 +484,7 @@ public abstract class GameFrame implements Serializable {
 
     public boolean isTeamRegistered(String teamName) {
         for (var team : teams) {
-            if (team.getTeamName().equalsIgnoreCase(teamName)) {
+            if (team.getName().equalsIgnoreCase(teamName)) {
                 return true;
             }
         }
@@ -486,7 +495,7 @@ public abstract class GameFrame implements Serializable {
         final var toReturn = new HashSet<String>();
 
         for (var team : teams) {
-            toReturn.add(team.getTeamName());
+            toReturn.add(team.getName());
         }
 
         return toReturn;
@@ -498,6 +507,10 @@ public abstract class GameFrame implements Serializable {
                 getTeamWithLeastPlayers().join(gamePlayer);
             }
         });
+    }
+
+    public void isEnoughPlayersInTeams() {
+
     }
 
     //Prepare game stuff
@@ -519,45 +532,6 @@ public abstract class GameFrame implements Serializable {
         return toReturn;
     }
 
-    protected void createScoreboards(GamePlayer gamePlayer) {
-        scoreboardManager.save(gamePlayer, GameScoreboard.ContentBuilder.get(gamePlayer, GameState.WAITING, this));
-        scoreboardManager.save(gamePlayer, GameScoreboard.ContentBuilder.get(gamePlayer, GameState.PRE_GAME_COUNTDOWN, this));
-        scoreboardManager.save(gamePlayer, GameScoreboard.ContentBuilder.get(gamePlayer, GameState.IN_GAME, this));
-        scoreboardManager.save(gamePlayer, GameScoreboard.ContentBuilder.get(gamePlayer, GameState.DEATHMATCH, this));
-        scoreboardManager.save(gamePlayer, GameScoreboard.ContentBuilder.get(gamePlayer, GameState.AFTER_GAME_COUNTDOWN, this));
-    }
-
-    protected void createBossbars(GamePlayer gamePlayer) {
-    }
-
-    public void updateScoreboards() {
-        playersInGame.forEach(gamePlayer -> {
-            final var uuid = gamePlayer.getUuid();
-
-            if (scoreboardManager.getActiveScoreboards().containsKey(uuid)) {
-                final var gameScoreboard = scoreboardManager.getActiveScoreboards().get(uuid);
-
-                if (gameScoreboard.getGameState() == activeState) {
-                    gameScoreboard.update(this);
-                    return;
-                }
-
-                scoreboardManager.hideScoreboard(uuid);
-            }
-
-            final var scoreboard = scoreboardManager.getSavedScoreboard(uuid, activeState.getName());
-
-            if (scoreboard.isEmpty()) {
-                return;
-            }
-
-            final var gameScoreboard = scoreboard.get();
-            gameScoreboard.update(this);
-
-            scoreboardManager.show(gamePlayer, gameScoreboard);
-        });
-    }
-
     public int countRemainingPlayersToStart() {
         return minPlayers - playersInGame.size();
     }
@@ -576,6 +550,43 @@ public abstract class GameFrame implements Serializable {
 
     public int getEndTime() {
         return gameConfig.get(GameConfig.DefaultKeys.END_GAME_TIME).getIntValue();
+    }
+
+    protected int getElapsedSeconds() {
+        return gameCycle.getCurrentPhase().getElapsedTime();
+    }
+
+    public int getRawRemainingSeconds() {
+        return gameCycle.getCurrentPhase().countRemainingTime();
+    }
+
+    public int getRemainingSeconds() {
+        return getRawRemainingSeconds() % 60;
+    }
+
+    public int getRemainingMinutes() {
+        final var minutes = getRawRemainingSeconds() / 60;
+        return (int) Math.floor(minutes);
+    }
+
+    public String formatRemainingTime() {
+        if (getRawRemainingSeconds() == -1) {
+            return formatSecondsToString(gameConfig.get(GameConfig.DefaultKeys.GAME_TIME).getIntValue());
+        }
+        return formatSecondsToString(getRawRemainingSeconds());
+    }
+
+    public String formatSecondsToString(int rawSeconds) {
+        var seconds = rawSeconds % 60;
+        var finalSeconds = String.valueOf(seconds);
+
+        if (seconds < 10) {
+            finalSeconds = "0" + seconds;
+        }
+
+        final var minutes = (int) Math.floor(rawSeconds / 60.0);
+
+        return minutes + ":" + finalSeconds;
     }
 
     public boolean isFull() {
@@ -616,6 +627,10 @@ public abstract class GameFrame implements Serializable {
                 || activeState == GameState.DEATHMATCH
                 || activeState == GameState.AFTER_GAME_COUNTDOWN
                 || activeState == GameState.CUSTOM;
+    }
+
+    public boolean equals(GameFrame gameFrame) {
+        return gameFrame.getUuid().equals(uuid);
     }
 }
 

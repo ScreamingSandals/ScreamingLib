@@ -22,7 +22,7 @@ public class PlaceholderParser {
             return;
         }
 
-        load();
+        updateBase();
     }
 
     public void add(String key, Object value) {
@@ -31,22 +31,31 @@ public class PlaceholderParser {
         }
     }
 
-    public void load() {
+    public void updateBase() {
         add("%gameName%", gameFrame.getGameName());
         add("%displayedName%", gameFrame.getDisplayedName());
         add("%maxPlayers%", gameFrame.getMaxPlayers());
         add("%minPlayers%", gameFrame.getMinPlayers());
-        add("%remainingPlayersToJoin%", gameFrame.countRemainingPlayersToStart());
         add("%startTime%", gameFrame.getStartTime());
         add("%gameTime%", gameFrame.getGameTime());
         add("%deathmatchTime%", gameFrame.getDeathmatchTime());
         add("%endTime%", gameFrame.getEndTime());
         add("%teamsCount%", gameFrame.getTeams().size());
+        add("%activeState%", gameFrame.getActiveState());
+    }
+
+    public void update() {
+        if (gameFrame == null) {
+            return;
+        }
+
+        updateBase();
+        add("%remainingPlayersToJoin%", gameFrame.countRemainingPlayersToStart());
+        add("%teamsCount%", gameFrame.getTeams().size());
         add("%playersCount%", gameFrame.getPlayersInGame().size());
         add("%spectatorsCount%", gameFrame.getSpectators().size());
-        add("%activeState%", gameFrame.getActiveState());
         add("%previousState%", gameFrame.getPreviousState());
-
+        add("%formattedRemainingTime%", gameFrame.formatRemainingTime());
 
         //TODO: teams replacement
     }
@@ -54,13 +63,6 @@ public class PlaceholderParser {
     public void destroy() {
         gameFrame = null;
         available.clear();
-    }
-
-    public void reload() {
-        if (gameFrame == null) {
-            return;
-        }
-        load();
     }
 
     public String parse(String input) {

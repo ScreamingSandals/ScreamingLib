@@ -6,7 +6,7 @@ public enum GameState {
     PRE_GAME_COUNTDOWN("starting"),
     IN_GAME("game"),
     DEATHMATCH("deathmatch"),
-    AFTER_GAME_COUNTDOWN("end_game"),
+    AFTER_GAME_COUNTDOWN("end-game"),
     RESTART("restart"),
     MAINTENANCE("maintenance"),
     CUSTOM("custom"),

@@ -128,4 +128,8 @@ public class GamePlayer {
     public void clean(boolean spectator) {
         playerStorage.clean(player, spectator);
     }
+
+    public void createVisualsForGame(GameFrame gameFrame) {
+
+    }
 }

@@ -14,8 +14,8 @@ import java.util.List;
 @ToString(exclude = {"activeGame"})
 public class GameTeam implements Serializable {
     private LocationAdapter spawnLocation;
-    private String teamName;
-    private TeamColor teamColor;
+    private String name;
+    private TeamColor color;
     private int maxPlayers;
 
     //don't save this shit, not needed
@@ -27,9 +27,9 @@ public class GameTeam implements Serializable {
     @Deprecated
     public GameTeam() {}
 
-    public GameTeam(String teamName, TeamColor teamColor, int maxPlayers) {
-        this.teamName = teamName;
-        this.teamColor = teamColor;
+    public GameTeam(String name, TeamColor color, int maxPlayers) {
+        this.name = name;
+        this.color = color;
         this.maxPlayers = maxPlayers;
     }
 
@@ -49,8 +49,8 @@ public class GameTeam implements Serializable {
     }
 
     public boolean isSame(GameTeam gameTeam) {
-        return gameTeam.getTeamName().equalsIgnoreCase(teamName)
-                && gameTeam.getTeamColor() == teamColor;
+        return gameTeam.getName().equalsIgnoreCase(name)
+                && gameTeam.getColor() == color;
     }
 
     public int countPlayersInTeam() {

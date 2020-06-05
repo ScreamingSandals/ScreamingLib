@@ -5,10 +5,10 @@ import lombok.Getter;
 import java.util.concurrent.TimeUnit;
 
 public enum TaskerTime {
-    TICKS(1,50, TimeUnit.MILLISECONDS),
-    SECONDS(20,1, TimeUnit.SECONDS),
-    MINUTES(1200,1, TimeUnit.MINUTES),
-    HOURS(72000,1, TimeUnit.HOURS);
+    TICKS(1, 50, TimeUnit.MILLISECONDS),
+    SECONDS(20, 1, TimeUnit.SECONDS),
+    MINUTES(1200, 1, TimeUnit.MINUTES),
+    HOURS(72000, 1, TimeUnit.HOURS);
 
     @Getter
     private final long bukkitValue;

@@ -117,6 +117,11 @@ public class BossbarHolder{
     }
 
     public void setProgress(double value, double max) {
+        if (max == -1) {
+            setProgress(100);
+            return;
+        }
+
         final var toSet = (value / max) * 100;
         setProgress(toSet);
     }

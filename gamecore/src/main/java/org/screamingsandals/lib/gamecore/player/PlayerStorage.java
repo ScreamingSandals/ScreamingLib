@@ -67,6 +67,7 @@ public class PlayerStorage {
         health = player.getHealth();
     }
 
+    @SuppressWarnings("deprecation")
     public void clean(Player player, boolean spectator) {
         final var playerInventory = player.getInventory();
 
