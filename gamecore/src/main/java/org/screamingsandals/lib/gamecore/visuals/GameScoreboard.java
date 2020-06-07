@@ -28,6 +28,7 @@ public class GameScoreboard extends ScreamingScoreboard implements GameVisual {
 
     public GameScoreboard(GamePlayer gamePlayer, GameState gameState, String displayName, DisplaySlot displaySlot,
                           TreeMap<Integer, String> lines) {
+        super(gamePlayer.getPlayer());
         this.gamePlayer = gamePlayer;
         this.gameState = gameState;
         this.identifier = gameState.getName();

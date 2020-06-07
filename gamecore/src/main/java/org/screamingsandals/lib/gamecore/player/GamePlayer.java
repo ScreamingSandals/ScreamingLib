@@ -51,23 +51,7 @@ public class GamePlayer {
     }
 
     public boolean joinTeam(GameTeam gameTeam) {
-        //TODO: events
-        if (activeGame == null
-                || gameTeam == null
-                || this.gameTeam != null) {
-            //TODO: mpr
-            return false;
-        }
-
-        if (gameTeam.isFull()) {
-            //TODO: mpr
-            return false;
-        }
-
-        gameTeam.join(this);
-        //TODO: mpr
-        //TODO: events
-        return true;
+        return gameTeam.join(this);
     }
 
     public boolean leaveTeam() {
@@ -75,9 +59,10 @@ public class GamePlayer {
         if (gameTeam != null
                 && activeGame != null) {
             gameTeam.leave(this);
+            return true;
         }
         //TODO: events
-        return true;
+        return false;
     }
 
     public void makePlayer() {
@@ -85,7 +70,7 @@ public class GamePlayer {
         clean(false);
 
         if (isInGame()) {
-            teleport(gameTeam.getSpawnLocation());
+            teleport(gameTeam.getSpawn());
         } else {
             //todo - teleport to mainlobby
         }
@@ -103,13 +88,13 @@ public class GamePlayer {
         }
     }
 
-    public void teleport(Location location) {
-        GameCore.fireEvent(new SPlayerTeleportEvent(this, location, player.getLocation()));
-        PaperLib.teleportAsync(player, location, PlayerTeleportEvent.TeleportCause.PLUGIN);
+    public boolean teleport(Location location) {
+        GameCore.fireEvent(new SPlayerTeleportEvent(activeGame,this, location, player.getLocation()));
+        return PaperLib.teleportAsync(player, location, PlayerTeleportEvent.TeleportCause.PLUGIN).isDone();
     }
 
-    public void teleport(LocationAdapter locationAdapter) {
-        teleport(locationAdapter.getLocation());
+    public boolean teleport(LocationAdapter locationAdapter) {
+        return teleport(locationAdapter.getLocation());
     }
 
     public void sendMessage(String string) {

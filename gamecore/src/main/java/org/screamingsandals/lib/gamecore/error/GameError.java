@@ -16,7 +16,18 @@ public class GameError extends BaseError {
             if (placeholderParser != null) {
                 errorType.getReplaceable().putAll(placeholderParser.getAvailable());
             }
-            errorType.getReplaceable().forEach((key, value) -> setMessage(getMessage().replaceAll(key, value.toString())));
+            errorType.getReplaceable().forEach((key, value) -> {
+                final var message = getMessage();
+                if (message == null) {
+                    return;
+                }
+
+                if (value == null) {
+                    return;
+                }
+
+                setMessage(message.replaceAll(key, value.toString()));
+            });
         }
     }
 }

@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.screamingsandals.lib.scoreboards.holder.ScoreboardHolder;
@@ -23,8 +24,8 @@ public abstract class ScreamingScoreboard {
 
     private LinePainter linePainter;
 
-    public ScreamingScoreboard() {
-        scoreboardHolder = new ScoreboardHolder();
+    public ScreamingScoreboard(Player owner) {
+        scoreboardHolder = new ScoreboardHolder(owner);
         activeTeams = new LinkedList<>();
         linePainter = new LinePainter(this);
     }

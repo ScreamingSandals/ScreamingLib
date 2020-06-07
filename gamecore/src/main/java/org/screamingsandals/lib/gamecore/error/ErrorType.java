@@ -21,7 +21,8 @@ public enum ErrorType {
     NOT_ENOUGH_TEAMS("core.errors.not-enough-teams", "&cNot enough teams defined for the game &e%gameName%. &c&lYou need at least 2!", new HashMap<>()),
     TEAM_SPAWN_NOT_SET("core.errors.team-spawn-not-set", "&cTeam &e%teamName% &cdoes not have spawn point! &lPlease set it.", new HashMap<>()),
     NOT_ENOUGH_STORES("core.errors.not-enough-stores", "&cNot enough stores defined for the game &e%gameName%. &c&lYou need at least one!", new HashMap<>()),
-    GAME_CONFIG_NOT_DEFINED("core.errors.policy-not-defined", "&cGameConfig is not defined.. Report this to the developer!", new HashMap<>()),
+    CONFIG_NOT_DEFINED("core.errors.config.not-defined", "&cGameConfig is not defined.. Report this to the developer!", new HashMap<>()),
+    CONFIG_WRONG_BOSSBAR_COLOR("core.errors.config.wrong-bossbar-color", "&cColor &ecolor% &cis invalid! Fix this in your config.", new HashMap<>()),
     PREPARE_FAILED("core.errors.prepare-failed", "&cPrepare phase failed, can't start the game &e%gameName%&c!", new HashMap<>()),
     UNKNOWN("core.errors.unknown", "&cUnknown error occurred. Error code printed to console, please report it to our GitHub or Discord!", new HashMap<>());
 
@@ -45,6 +46,12 @@ public enum ErrorType {
 
     public Map<String, Object> getReplaceable() {
         return replaceable;
+    }
+
+    public ErrorType addPlaceholder(String key, Object value) {
+        replaceable.put(key, value);
+
+        return this;
     }
 
 }

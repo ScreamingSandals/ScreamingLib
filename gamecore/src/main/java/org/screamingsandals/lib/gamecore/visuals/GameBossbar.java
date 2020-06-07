@@ -9,6 +9,8 @@ import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.config.VisualsConfig;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameState;
+import org.screamingsandals.lib.gamecore.error.ErrorType;
+import org.screamingsandals.lib.gamecore.error.GameError;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
 
 import java.util.UUID;
@@ -58,9 +60,11 @@ public class GameBossbar extends ScreamingBossbar implements GameVisual {
         }
 
         final var placeholderParser = gamePlayer.getActiveGame().getPlaceholderParser();
-        bossbarHolder.setTitle(placeholderParser.parse(originalTitle));
+        bossbarHolder.setTitle(placeholderParser.parse(gamePlayer, originalTitle));
 
         switch (gameState) {
+            case WAITING:
+                bossbarHolder.setProgress(game.getPlayersInGame().size(), game.countRemainingPlayersToStart());
             case PRE_GAME_COUNTDOWN:
                 bossbarHolder.setProgress(game.getRawRemainingSeconds(), game.getStartTime());
                 break;
@@ -97,8 +101,14 @@ public class GameBossbar extends ScreamingBossbar implements GameVisual {
                 color = m("bossbars.color." + state).get();
             }
 
-            //TODO: handle this better
-            final var barColor = BarColor.valueOf(color.toUpperCase());
+
+            var barColor = BarColor.RED;
+            try {
+                barColor = BarColor.valueOf(color.toUpperCase());
+            } catch (Exception e) {
+                GameCore.getErrorManager().newError(new GameError(gameFrame, ErrorType.CONFIG_WRONG_BOSSBAR_COLOR
+                        .addPlaceholder("%color%", color), e), true);
+            }
 
             final var gameBossbar = new GameBossbar(gamePlayer, gameState, title, barColor, BarStyle.SOLID, 100);
             gameBossbar.update();

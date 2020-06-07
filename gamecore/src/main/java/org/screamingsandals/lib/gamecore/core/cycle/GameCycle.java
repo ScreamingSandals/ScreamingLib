@@ -192,6 +192,7 @@ public abstract class GameCycle {
             return;
         }
         gameFrame.getPlayersInGame().forEach(this::kickPlayer);
+        gameFrame.getSpectators().forEach(this::kickPlayer);
     }
 
     public void kickPlayer(GamePlayer gamePlayer) {

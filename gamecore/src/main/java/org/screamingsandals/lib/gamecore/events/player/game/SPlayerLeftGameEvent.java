@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.gamecore.events.player;
+package org.screamingsandals.lib.gamecore.events.player.game;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,8 +8,7 @@ import org.screamingsandals.lib.gamecore.player.GamePlayer;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class SSpectatorLeftGameEvent extends BaseEvent {
+public class SPlayerLeftGameEvent extends BaseEvent {
     private final GameFrame gameFrame;
     private final GamePlayer gamePlayer;
 }
-

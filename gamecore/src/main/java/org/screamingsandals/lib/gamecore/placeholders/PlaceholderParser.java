@@ -2,7 +2,10 @@ package org.screamingsandals.lib.gamecore.placeholders;
 
 import lombok.Data;
 import lombok.ToString;
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
+import org.screamingsandals.lib.gamecore.player.GamePlayer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +24,6 @@ public class PlaceholderParser {
         if (gameFrame == null) {
             return;
         }
-
         updateBase();
     }
 
@@ -50,14 +52,23 @@ public class PlaceholderParser {
         }
 
         updateBase();
-        add("%remainingPlayersToJoin%", gameFrame.countRemainingPlayersToStart());
+        add("%playersToStart%", gameFrame.countRemainingPlayersToStart());
         add("%teamsCount%", gameFrame.getTeams().size());
         add("%playersCount%", gameFrame.getPlayersInGame().size());
         add("%spectatorsCount%", gameFrame.getSpectators().size());
         add("%previousState%", gameFrame.getPreviousState());
+        add("%remainingTime%", gameFrame.formatRemainingTime());
         add("%formattedRemainingTime%", gameFrame.formatRemainingTime());
+        add("%remainingSeconds%", gameFrame.getRemainingSeconds());
+        add("%remainingMinutes%", gameFrame.getRemainingMinutes());
+        add("%rawRemainingSeconds%", gameFrame.getRawRemainingSeconds());
 
-        //TODO: teams replacement
+        gameFrame.getTeams().forEach(gameTeam -> {
+            final var teamName = gameTeam.getName();
+            add("%team_" + teamName + "_players%", gameTeam.countPlayersInTeam());
+            add("%team_" + teamName + "_color%", gameTeam.getColor());
+            add("%team_" + teamName + "_maxPlayers%", gameTeam.getMaxPlayers());
+        });
     }
 
     public void destroy() {
@@ -75,5 +86,15 @@ public class PlaceholderParser {
         }
 
         return toReturn;
+    }
+
+    public String parse(GamePlayer gamePlayer, String input) {
+        final var toReturn = parse(input);
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) {
+            return toReturn;
+        }
+
+        return PlaceholderAPI.setPlaceholders(gamePlayer.getPlayer(), toReturn);
     }
 }

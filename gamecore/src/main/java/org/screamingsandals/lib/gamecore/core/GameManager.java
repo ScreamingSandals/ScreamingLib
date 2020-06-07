@@ -57,6 +57,10 @@ public class GameManager<T extends GameFrame> {
             final var gameName = game.getGameName();
             if (!game.checkIntegrity(true)) {
                 Debug.warn("&cCannot load game &e" + gameName);
+                Debug.warn("&ecAdded to GameBuilder!");
+
+                //TODO: add to builder
+
                 return null;
             }
 

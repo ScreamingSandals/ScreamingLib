@@ -2,6 +2,7 @@ package org.screamingsandals.lib.gamecore.core;
 
 import com.google.common.base.Preconditions;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.config.GameConfig;
@@ -13,7 +14,9 @@ import org.screamingsandals.lib.gamecore.events.core.game.SGameDisabledEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisablingEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadedEvent;
 import org.screamingsandals.lib.gamecore.events.core.state.SGameStateChangedEvent;
-import org.screamingsandals.lib.gamecore.events.player.*;
+import org.screamingsandals.lib.gamecore.events.player.game.*;
+import org.screamingsandals.lib.gamecore.events.player.spectator.SSpectatorJoinedGameEvent;
+import org.screamingsandals.lib.gamecore.events.player.spectator.SSpectatorPreJoinGameEvent;
 import org.screamingsandals.lib.gamecore.placeholders.PlaceholderParser;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
 import org.screamingsandals.lib.gamecore.resources.ResourceManager;
@@ -32,6 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.mpr;
 
 @Data
+@EqualsAndHashCode(of = "uuid")
 public abstract class GameFrame implements Serializable {
     //Serializable stuff that will be saved into JSON file
     protected String gameName;
@@ -80,7 +84,7 @@ public abstract class GameFrame implements Serializable {
         final var errorManager = GameCore.getErrorManager();
 
         if (gameConfig.isEmpty()) {
-            errorManager.newError(new GameError(this, ErrorType.GAME_CONFIG_NOT_DEFINED, null), fireError);
+            errorManager.newError(new GameError(this, ErrorType.CONFIG_NOT_DEFINED, null), fireError);
             gameConfig = GameCore.getGameManager().getGameConfig().getGameValues();
         }
 
@@ -100,10 +104,9 @@ public abstract class GameFrame implements Serializable {
 
             final var isSet = new AtomicBoolean(true);
             teams.forEach(gameTeam -> {
-                if (gameTeam.getSpawnLocation() == null) {
-                    final var errorType = ErrorType.TEAM_SPAWN_NOT_SET;
-                    errorType.getReplaceable().put("%teamName%", gameTeam.getName());
-                    errorManager.newError(new GameError(this, errorType, null), fireError);
+                if (gameTeam.getSpawn() == null) {
+                    errorManager.newError(new GameError(this,  ErrorType.TEAM_SPAWN_NOT_SET
+                            .addPlaceholder("%teamName%", gameTeam.getName()), null), fireError);
 
                     isSet.set(false);
                 }
@@ -263,7 +266,7 @@ public abstract class GameFrame implements Serializable {
         });
 
         if (changed.get()) {
-            Debug.info("Something in game changed, saving!");
+            Debug.info("Something in config changed, saving!");
             GameCore.getGameManager().saveGame(this);
         }
 
@@ -400,6 +403,7 @@ public abstract class GameFrame implements Serializable {
             if (gameConfig.get(GameConfig.DefaultKeys.SPECTATORS_ENABLED).getBooleanValue()
                     && GameCore.fireEvent(new SSpectatorPreJoinGameEvent(this, gamePlayer))) {
                 gamePlayer.makeSpectator(false);
+
                 GameCore.fireEvent(new SSpectatorJoinedGameEvent(this, gamePlayer));
                 return true;
             }
@@ -407,7 +411,7 @@ public abstract class GameFrame implements Serializable {
             return false;
         }
 
-        if (GameCore.fireEvent(new SPlayerPreJoinGameEvent(this, gamePlayer))) {
+        if (GameCore.fireEvent(new SPlayerPreJoinedGameEvent(this, gamePlayer))) {
             playersInGame.add(gamePlayer);
             gamePlayer.setActiveGame(this);
             gamePlayer.storeAndClean();
@@ -455,7 +459,7 @@ public abstract class GameFrame implements Serializable {
     }
 
     public void moveAllToTeamSpawns() {
-        playersInGame.forEach(gamePlayer -> gamePlayer.teleport(gamePlayer.getGameTeam().getSpawnLocation()));
+        playersInGame.forEach(gamePlayer -> gamePlayer.teleport(gamePlayer.getGameTeam().getSpawn()));
     }
 
     //Working with teams
@@ -602,6 +606,10 @@ public abstract class GameFrame implements Serializable {
         return activeState == GameState.WAITING;
     }
 
+    public boolean isStarting() {
+        return activeState == GameState.PRE_GAME_COUNTDOWN;
+    }
+
     /**
      * Checks if game is running in any way (in-game or not)
      *
@@ -609,7 +617,7 @@ public abstract class GameFrame implements Serializable {
      */
     public boolean isRunning() {
         return isWaiting()
-                || activeState == GameState.PRE_GAME_COUNTDOWN
+                || isStarting()
                 || activeState == GameState.IN_GAME
                 || activeState == GameState.DEATHMATCH
                 || activeState == GameState.AFTER_GAME_COUNTDOWN
@@ -627,10 +635,6 @@ public abstract class GameFrame implements Serializable {
                 || activeState == GameState.DEATHMATCH
                 || activeState == GameState.AFTER_GAME_COUNTDOWN
                 || activeState == GameState.CUSTOM;
-    }
-
-    public boolean equals(GameFrame gameFrame) {
-        return gameFrame.getUuid().equals(uuid);
     }
 }
 

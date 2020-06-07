@@ -1,8 +1,10 @@
 package org.screamingsandals.lib.scoreboards.holder;
 
 import lombok.Data;
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 
 import java.util.Collections;
@@ -12,10 +14,17 @@ import java.util.TreeMap;
 
 @Data
 public class ScoreboardHolder {
+    private transient Player owner;
     private transient org.bukkit.scoreboard.Scoreboard bukkitScoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
     private String displayedName;
     private DisplaySlot displaySlot;
     private TreeMap<Integer, String> originalLines = new TreeMap<>();
+    private boolean papi;
+
+    public ScoreboardHolder(Player player) {
+        this.owner = player;
+        papi = Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null;
+    }
 
     public TreeMap<Integer, String> getOriginalLines() {
         return new TreeMap<>(originalLines);
@@ -23,6 +32,7 @@ public class ScoreboardHolder {
 
     /**
      * Gets lines map with replaced placeholders
+     *
      * @param availablePlaceholders map with available placeholders to replace
      * @return map with replaced lines
      */
@@ -31,12 +41,12 @@ public class ScoreboardHolder {
         for (var entry : originalLines.entrySet()) {
             toReturn.put(entry.getKey(), replace(entry.getValue(), availablePlaceholders));
         }
-
         return toReturn;
     }
 
     /**
      * Sorts lines from String list in the order
+     *
      * @param fromConfig list of lines from config
      * @return sorted tree map
      */
@@ -66,6 +76,10 @@ public class ScoreboardHolder {
             toReturn = toReturn.replaceAll(entry.getKey(), valueToPrint.toString());
         }
 
+        if (papi && owner != null) {
+            toReturn = PlaceholderAPI.setPlaceholders(owner, toReturn);
+        }
+
         return toReturn;
     }
 
@@ -76,5 +90,4 @@ public class ScoreboardHolder {
         }
         return hidden.toString();
     }
-
 }

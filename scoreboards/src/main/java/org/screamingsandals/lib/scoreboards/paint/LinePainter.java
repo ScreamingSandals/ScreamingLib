@@ -3,7 +3,6 @@ package org.screamingsandals.lib.scoreboards.paint;
 import lombok.Data;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 import org.screamingsandals.lib.scoreboards.scoreboard.ScreamingScoreboard;
 
 import java.util.Collections;
@@ -23,6 +22,9 @@ public class LinePainter {
     public void paintLines(Map<String, Object> available) {
         final var holder = scoreboard.getScoreboardHolder();
         final var lines = holder.getLines(available);
+        final var bukkitScoreboard = holder.getBukkitScoreboard();
+
+        bukkitScoreboard.getEntries().forEach(bukkitScoreboard::resetScores);
 
         for (var entry : lines.entrySet()) {
             var value = entry.getValue();
@@ -41,26 +43,12 @@ public class LinePainter {
     public void paintLine(int line, String content) {
         final var holder = scoreboard.getScoreboardHolder();
         final var objective = getObjective();
-        final var scoreboard = holder.getBukkitScoreboard();
 
         objective.setDisplaySlot(holder.getDisplaySlot());
-        removeOldEntry(scoreboard, line);
-
         final Score score = objective.getScore(content);
         score.setScore(line);
 
         paintedLines.put(line, content);
-    }
-
-    private void removeOldEntry(Scoreboard scoreboard, int line) {
-        final var entry = paintedLines.get(line);
-
-        if (entry == null) {
-            return;
-        }
-
-        scoreboard.resetScores(entry);
-        paintedLines.remove(line);
     }
 
     private Objective getObjective() {

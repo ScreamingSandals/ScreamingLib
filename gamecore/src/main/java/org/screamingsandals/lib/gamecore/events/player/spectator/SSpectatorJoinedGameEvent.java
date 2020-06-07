@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.gamecore.events.player;
+package org.screamingsandals.lib.gamecore.events.player.spectator;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
