@@ -35,7 +35,11 @@ public class PlaceholderParser {
 
     public void updateBase() {
         add("%gameName%", gameFrame.getGameName());
-        add("%displayedName%", gameFrame.getDisplayedName());
+        if (gameFrame.getDisplayedName() == null) {
+            add("%displayedName%", gameFrame.getGameName());
+        } else {
+            add("%displayedName%", gameFrame.getDisplayedName());
+        }
         add("%maxPlayers%", gameFrame.getMaxPlayers());
         add("%minPlayers%", gameFrame.getMinPlayers());
         add("%startTime%", gameFrame.getStartTime());
@@ -77,11 +81,16 @@ public class PlaceholderParser {
     }
 
     public String parse(String input) {
+
+        if (input == null) {
+            return "error";
+        }
+
         String toReturn = input;
 
         for (var entry : available.entrySet()) {
             final var entryValue = entry.getValue();
-            final var valueToPrint = entryValue != null ? entry.getValue() : m("general.null-translated").get();
+            final var valueToPrint = entryValue != null ? entryValue : m("general.null-translated").get();
             toReturn = toReturn.replaceAll(entry.getKey(), valueToPrint.toString());
         }
 

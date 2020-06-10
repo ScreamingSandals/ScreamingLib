@@ -19,7 +19,7 @@ public abstract class VisualsConfig extends SpigotConfigAdapter {
     public static String PATH_SCOREBOARDS_CONTENT = "scoreboards.content.";
     public static String PATH_SCOREBOARDS_CONTENT_LOBBY = "scoreboards.content.lobby";
     public static String PATH_SCOREBOARDS_CONTENT_STARTING = "scoreboards.content.starting";
-    public static String PATH_SCOREBOARDS_CONTENT_IN_GAME = "scoreboards.content.in-game";
+    public static String PATH_SCOREBOARDS_CONTENT_IN_GAME = "scoreboards.content.game";
     public static String PATH_SCOREBOARDS_CONTENT_DEATHMATCH = "scoreboards.content.deathmatch";
     public static String PATH_SCOREBOARDS_CONTENT_END_GAME = "scoreboards.content.end-game";
     //SCOREBOARDS
@@ -30,14 +30,14 @@ public abstract class VisualsConfig extends SpigotConfigAdapter {
     public static String PATH_BOSSBARS_CONTENT = "bossbars.content.";
     public static String PATH_BOSSBARS_CONTENT_LOBBY = "bossbars.content.lobby";
     public static String PATH_BOSSBARS_CONTENT_STARTING = "bossbars.content.starting";
-    public static String PATH_BOSSBARS_CONTENT_IN_GAME = "bossbars.content.in-game";
+    public static String PATH_BOSSBARS_CONTENT_IN_GAME = "bossbars.content.game";
     public static String PATH_BOSSBARS_CONTENT_DEATHMATCH = "bossbars.content.deathmatch";
     public static String PATH_BOSSBARS_CONTENT_END_GAME = "bossbars.content.end-game";
 
     public static String PATH_BOSSBARS_COLOR = "bossbars.color.";
     public static String PATH_BOSSBARS_COLOR_LOBBY = "bossbars.color.lobby";
     public static String PATH_BOSSBARS_COLOR_STARTING = "bossbars.color.starting";
-    public static String PATH_BOSSBARS_COLOR_IN_GAME = "bossbars.color.in-game";
+    public static String PATH_BOSSBARS_COLOR_IN_GAME = "bossbars.color.game";
     public static String PATH_BOSSBARS_COLOR_DEATHMATCH = "bossbars.color.deathmatch";
     public static String PATH_BOSSBARS_COLOR_END_GAME = "bossbars.color.end-game";
     //BOSSBARS
@@ -50,11 +50,11 @@ public abstract class VisualsConfig extends SpigotConfigAdapter {
     public static String PATH_TITLES_LOBBY_TITLE = "titles.lobby.title";
     public static String PATH_TITLES_LOBBY_SUBTITLE = "titles.lobby.subtitle";
 
-    public static String PATH_TITLES_IN_GAME_FADE_IN = "titles.in-game.fade-in";
-    public static String PATH_TITLES_IN_GAME_FADE_OUT = "titles.in-game.fade-out";
-    public static String PATH_TITLES_IN_GAME_STAY = "titles.in-game.stay";
-    public static String PATH_TITLES_IN_GAME_TITLE = "titles.in-game.title";
-    public static String PATH_TITLES_IN_GAME_SUBTITLE = "titles.in-game.subtitle";
+    public static String PATH_TITLES_IN_GAME_FADE_IN = "titles.game.fade-in";
+    public static String PATH_TITLES_IN_GAME_FADE_OUT = "titles.game.fade-out";
+    public static String PATH_TITLES_IN_GAME_STAY = "titles.game.stay";
+    public static String PATH_TITLES_IN_GAME_TITLE = "titles.game.title";
+    public static String PATH_TITLES_IN_GAME_SUBTITLE = "titles.game.subtitle";
 
     public static String PATH_TITLES_DEATHMATCH_FADE_IN = "titles.deathmatch.fade-in";
     public static String PATH_TITLES_DEATHMATCH_FADE_OUT = "titles.deathmatch.fade-out";

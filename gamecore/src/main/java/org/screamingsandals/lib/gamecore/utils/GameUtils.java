@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.gamecore.utils;
 
 import org.bukkit.Location;
+import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.gamecore.core.GameState;
 import org.screamingsandals.lib.tasker.TaskerTime;
@@ -76,5 +77,14 @@ public class GameUtils {
                 Math.max(border1.getZ(), border2.getZ()));
         return (min.getX() <= location.getX() && min.getY() <= location.getY() && min.getZ() <= location.getZ() && max.getX() >= location.getX()
                 && max.getY() >= location.getY() && max.getZ() >= location.getZ());
+    }
+
+    public static BarColor getBarColorByString(String input) {
+        BarColor toReturn = null;
+        try {
+            toReturn = BarColor.valueOf(input.toUpperCase());
+        } catch (Exception ignored) {
+        }
+        return toReturn;
     }
 }

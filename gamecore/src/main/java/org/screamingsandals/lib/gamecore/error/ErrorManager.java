@@ -1,12 +1,17 @@
 package org.screamingsandals.lib.gamecore.error;
 
+import com.google.gson.reflect.TypeToken;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
+import org.screamingsandals.lib.gamecore.core.data.JsonUtils;
 
+import java.io.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
 
@@ -16,10 +21,31 @@ import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
  */
 @Data
 public class ErrorManager {
-    private final List<BaseError> errorLog = new LinkedList<>();
+    private Map<ErrorType, String> defaultMessages = new HashMap<>();
+    private List<BaseError> errorLog = new LinkedList<>();
+
+    public ErrorManager() {
+        final var type = new TypeToken<Map<ErrorType, String>>() {
+        }.getType();
+        final var inputStream = getClass().getResourceAsStream("/core_errors.json");
+
+        if (inputStream == null) {
+            Debug.warn("Cannot load error core_errors.json!", true);
+            return;
+        }
+
+        try (Reader reader = new InputStreamReader(inputStream)) {
+            defaultMessages = JsonUtils.deserialize(reader, type);
+        } catch (IOException e) {
+            Debug.warn("Some error occurred while core_errors.json parsing data!", true);
+            e.printStackTrace();
+        }
+    }
 
     public void destroy() {
-        errorLog.clear();
+        if (!errorLog.isEmpty()) {
+            errorLog.clear();
+        }
     }
 
     public BaseError newError(BaseError entry) {
@@ -28,9 +54,9 @@ public class ErrorManager {
 
     public BaseError newError(BaseError entry, boolean writeError) {
         if (entry == null) {
-            System.out.println("whaat");
             return null;
         }
+
         errorLog.add(entry);
         writeError(entry, writeError);
 
@@ -42,7 +68,9 @@ public class ErrorManager {
             return;
         }
 
-        Debug.warn(error.getMessage(), true);
+        final var message = error.getMessage();
+
+        Debug.warn(message, true);
         final var exception = error.getException();
 
         if (exception != null) {
@@ -52,7 +80,7 @@ public class ErrorManager {
         if (GameCore.getInstance().isVerbose()) {
             Bukkit.getOnlinePlayers().forEach(player -> {
                 if (player.hasPermission(GameCore.getInstance().getAdminPermissions())) {
-                    player.sendMessage(m("prefix").get() + " " + error.getMessage());
+                    player.sendMessage(m("prefix").get() + " " + message);
                 }
             });
         }

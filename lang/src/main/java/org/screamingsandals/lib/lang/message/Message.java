@@ -125,6 +125,10 @@ public class Message {
         return this;
     }
 
+    public boolean exists() {
+        return storage.exists(key);
+    }
+
     public String get() {
         try {
             String message = storage.translate(key, def, prefix);

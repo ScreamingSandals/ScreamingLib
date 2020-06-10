@@ -12,6 +12,7 @@ import org.screamingsandals.lib.gamecore.core.GameState;
 import org.screamingsandals.lib.gamecore.error.ErrorType;
 import org.screamingsandals.lib.gamecore.error.GameError;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
+import org.screamingsandals.lib.gamecore.utils.GameUtils;
 
 import java.util.UUID;
 
@@ -85,9 +86,10 @@ public class GameBossbar extends ScreamingBossbar implements GameVisual {
         private final UUID uuid;
         private final GameState gameState;
 
+        //TODO still
         public static GameBossbar get(GamePlayer gamePlayer, GameState gameState, GameFrame gameFrame) {
             final var uuid = gameFrame.getUuid();
-            final var toReturn = new GameScoreboard.Builder(uuid, gameState);
+            final var toReturn = new GameBossbar.Builder(uuid, gameState);
             final var state = gameState.getName();
             final var visualsConfig = GameCore.getInstance().getVisualsConfig();
             final String title;
@@ -97,17 +99,16 @@ public class GameBossbar extends ScreamingBossbar implements GameVisual {
                 title = visualsConfig.getString(VisualsConfig.PATH_BOSSBARS_CONTENT + state);
                 color = visualsConfig.getString(VisualsConfig.PATH_BOSSBARS_COLOR + state);
             } else {
-                title = m("bossbars.content." + state).get();
-                color = m("bossbars.color." + state).get();
+                title = m(VisualsConfig.PATH_BOSSBARS_CONTENT + state).get();
+                color = m(VisualsConfig.PATH_BOSSBARS_COLOR + state).get();
             }
 
+            var barColor = GameUtils.getBarColorByString(color);
+            if (barColor == null) {
+                barColor = BarColor.RED;
 
-            var barColor = BarColor.RED;
-            try {
-                barColor = BarColor.valueOf(color.toUpperCase());
-            } catch (Exception e) {
-                GameCore.getErrorManager().newError(new GameError(gameFrame, ErrorType.CONFIG_WRONG_BOSSBAR_COLOR
-                        .addPlaceholder("%color%", color), e), true);
+                GameCore.getErrorManager().newError(
+                        new GameError(gameFrame, ErrorType.CONFIG_WRONG_BOSSBAR_COLOR, null).addPlaceholder("%color%", color), true);
             }
 
             final var gameBossbar = new GameBossbar(gamePlayer, gameState, title, barColor, BarStyle.SOLID, 100);
@@ -117,7 +118,7 @@ public class GameBossbar extends ScreamingBossbar implements GameVisual {
         }
 
         public boolean isCustomContentEnabled() {
-            return GameCore.getInstance().getVisualsConfig().getBoolean(VisualsConfig.PATH_BOSSBARS_CUSTOM_ENABLED);
+            return GameCore.getInstance().getVisualsConfig().getBoolean(VisualsConfig.PATH_BOSSBARS_CUSTOM_ENABLED, false);
         }
     }
 }

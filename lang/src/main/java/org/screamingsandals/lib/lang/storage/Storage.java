@@ -117,6 +117,17 @@ public class Storage {
         return toReturn;
     }
 
+    public boolean exists(String key) {
+        if (configuration != null && configuration.get(key) != null) {
+            final var toTranslate = configuration.getString(key);
+
+            if (toTranslate != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private String getPrefixFromConfig() {
         if ("".equals(Base.getInstance().getCustomPrefix())) {
             return Utils.colorize(configuration.getString("prefix"));

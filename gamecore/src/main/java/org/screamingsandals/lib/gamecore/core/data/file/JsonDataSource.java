@@ -7,16 +7,30 @@ import org.screamingsandals.lib.debug.Debug;
 import java.io.*;
 
 public class JsonDataSource<T> extends DataSource<T> {
-    private final File file;
+    private File file;
+    private InputStream inputStream;
 
     public JsonDataSource(File file, Class<T> tClass) {
         super(tClass);
-
         this.file = file;
+    }
+
+    public JsonDataSource(InputStream inputStream, Class<T> tClass) {
+        super(tClass);
+        this.inputStream = inputStream;
     }
 
     @Override
     public T load() {
+        if (file == null) {
+            try (Reader reader = new InputStreamReader(inputStream)) {
+                return JsonUtils.deserialize(reader, getTClass());
+            } catch (IOException e) {
+                Debug.warn("Some error occurred while parsing data!");
+                e.printStackTrace();
+            }
+        }
+
         if (checkFile(file)) {
             try (Reader reader = new FileReader(file)) {
                 return JsonUtils.deserialize(reader, getTClass());
@@ -30,13 +44,11 @@ public class JsonDataSource<T> extends DataSource<T> {
 
     @Override
     public void save(Serializable serializable) {
-        if (checkFile(file)) {
-            try (FileWriter writer = new FileWriter(file)) {
-                JsonUtils.serializePretty(serializable, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (file == null) {
+            return;
         }
+
+        JsonUtils.saveToFile(serializable, file);
     }
 
     @Override

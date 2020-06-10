@@ -79,7 +79,7 @@ public class GameCore {
             fireEvent(new SCoreLoadedEvent(this));
         } catch (Exception exception) {
             final var entry = errorManager.newError(new BaseError(ErrorType.GAME_CORE_ERROR, exception));
-            throw new GameCoreException(entry.getDefaultMessage());
+            throw new GameCoreException(entry.getMessage());
         }
     }
 

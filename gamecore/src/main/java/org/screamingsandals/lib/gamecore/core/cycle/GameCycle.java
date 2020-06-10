@@ -153,11 +153,8 @@ public abstract class GameCycle {
         gameFrame.getVisualsManager().update();
     }
 
-    /**
-     *
-     */
     public void switchPhase(GameState newState) {
-        gameFrame.setActiveState(newState);
+        gameFrame.switchState(newState);
 
         gameFrame.getPlaceholderParser().update();
         gameFrame.getVisualsManager().update();

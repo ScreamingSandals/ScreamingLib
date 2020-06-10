@@ -1,57 +1,39 @@
 package org.screamingsandals.lib.gamecore.error;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
 
-public enum ErrorType {
-    GAME_CORE_ERROR("core.errors.game-core", "&cSomething went wrong with the GameCore instance.  &a&lPlease report this error log to GitHub or Discord!", new HashMap<>()),
-    GAME_CYCLE_IS_NULL("core.errors.game-cycle-null", "&cGameCycle is null!  &a&llease report this error log to GitHub or Discord!", new HashMap<>()),
-    GAME_CONFIG_ERROR("core.errors.game-config", "&cGameConfiguration is wrong.  &a&lPlease report this error log to GitHub or Discord!", new HashMap<>()),
-    GAME_SHOP_ERROR("core.errors.game-store", "&cYour shop configuration is invalid.  &a&lPlease check validity of your current file.", new HashMap<>()),
-    GAME_LOADING_ERROR("core.errors.game-loading", "&c&lOh, damn. &cLoading some arena file went wrong. &a&lPlease report this error log to GitHub or Discord!", new HashMap<>()),
-    GAME_WORLD_NOT_DEFINED("core.errors.game-world-not-defined", "&cGame world for the game &e%gameName% &cis not defined!", new HashMap<>()),
-    GAME_WORLD_DOES_NOT_EXISTS("core.errors.game-world-does-not-exists", "&cGame world &e%world% for the game &e%gameName% &cdoes not exists!", new HashMap<>()),
-    GAME_WORLD_BAD_BORDER("core.errors.game-world-bad-border", "&cBorder for the game &e%gameName% &cis wrong. &lPlease re-do it!", new HashMap<>()),
-    LOBBY_WORLD_NOT_DEFINED("core.errors.lobby-world-not-defined", "&cLobby world for the game &e%gameName% &cis not defined!", new HashMap<>()),
-    LOBBY_WORLD_DOES_NOT_EXISTS("core.errors.lobby-world-does-not-exists", "&cLobby world &e%world% &cfor the game &e%gameName% &cdoes not exists!", new HashMap<>()),
-    LOBBY_WORLD_BAD_BORDER("core.errors.lobby-world-bad-border", "&cBorder for the lobby of the game &e%gameName% &cis wrong. &lPlease re-do it!", new HashMap<>()),
-    LOBBY_SPAWN_NOT_SET("core.errors.lobby-spawn-not-set", "&cBorder for the lobby of the game &e%gameName% &cis wrong. &lPlease re-do it!", new HashMap<>()),
-    SPAWNER_EDITOR_FAILED("core.errors.spawner-editor-failed", "&cThis, we did not expected. &a&lPlease report this error log to GitHub or Discord!", new HashMap<>()),
-    SPECTATOR_SPAWN_NOT_SET("core.errors.spectator-spawn-not-set", "&cSpectator spawn for the game %gameName% is not set!", new HashMap<>()),
-    NOT_ENOUGH_TEAMS("core.errors.not-enough-teams", "&cNot enough teams defined for the game &e%gameName%. &c&lYou need at least 2!", new HashMap<>()),
-    TEAM_SPAWN_NOT_SET("core.errors.team-spawn-not-set", "&cTeam &e%teamName% &cdoes not have spawn point! &lPlease set it.", new HashMap<>()),
-    NOT_ENOUGH_STORES("core.errors.not-enough-stores", "&cNot enough stores defined for the game &e%gameName%. &c&lYou need at least one!", new HashMap<>()),
-    CONFIG_NOT_DEFINED("core.errors.config.not-defined", "&cGameConfig is not defined.. Report this to the developer!", new HashMap<>()),
-    CONFIG_WRONG_BOSSBAR_COLOR("core.errors.config.wrong-bossbar-color", "&cColor &ecolor% &cis invalid! Fix this in your config.", new HashMap<>()),
-    PREPARE_FAILED("core.errors.prepare-failed", "&cPrepare phase failed, can't start the game &e%gameName%&c!", new HashMap<>()),
-    UNKNOWN("core.errors.unknown", "&cUnknown error occurred. Error code printed to console, please report it to our GitHub or Discord!", new HashMap<>());
+public enum ErrorType implements Serializable {
+    GAME_CORE_ERROR("core.errors.game-core"),
+    GAME_CYCLE_IS_NULL("core.errors.game-cycle-null"),
+    GAME_CONFIG_ERROR("core.errors.game-config"),
+    GAME_SHOP_ERROR("core.errors.game-store"),
+    GAME_LOADING_ERROR("core.errors.game-loading"),
+    GAME_WORLD_NOT_DEFINED("core.errors.game-world-not-defined"),
+    GAME_WORLD_DOES_NOT_EXISTS("core.errors.game-world-does-not-exists"),
+    GAME_WORLD_BAD_BORDER("core.errors.game-world-bad-border"),
+    LOBBY_WORLD_NOT_DEFINED("core.errors.lobby-world-not-defined"),
+    LOBBY_WORLD_DOES_NOT_EXISTS("core.errors.lobby-world-does-not-exists"),
+    LOBBY_WORLD_BAD_BORDER("core.errors.lobby-world-bad-border"),
+    LOBBY_SPAWN_NOT_SET("core.errors.lobby-spawn-not-set"),
+    SPAWNER_EDITOR_FAILED("core.errors.spawner-editor-failed"),
+    SPECTATOR_SPAWN_NOT_SET("core.errors.spectator-spawn-not-set"),
+    NOT_ENOUGH_TEAMS("core.errors.not-enough-teams"),
+    TEAM_SPAWN_NOT_SET("core.errors.team-spawn-not-set"),
+    NOT_ENOUGH_STORES("core.errors.not-enough-stores"),
+    CONFIG_NOT_DEFINED("core.errors.config.not-defined"),
+    CONFIG_WRONG_BOSSBAR_COLOR("core.errors.config.wrong-bossbar-color"),
+    PREPARE_FAILED("core.errors.prepare-failed"),
+    UNKNOWN("core.errors.unknown");
 
-    private final Map<String, Object> replaceable;
-    private final String languageKey;
-    private final String defaultMessage;
+    private final String key;
 
-    ErrorType(String languageKey, String defaultMessage, Map<String, Object> replaceable) {
-        this.languageKey = languageKey;
-        this.defaultMessage = defaultMessage;
-        this.replaceable = replaceable;
+    ErrorType(String key) {
+        this.key = key;
+
     }
 
-    public String getLanguageKey() {
-        return languageKey;
-    }
-
-    public String getDefaultMessage() {
-        return defaultMessage;
-    }
-
-    public Map<String, Object> getReplaceable() {
-        return replaceable;
-    }
-
-    public ErrorType addPlaceholder(String key, Object value) {
-        replaceable.put(key, value);
-
-        return this;
+    public String getKey() {
+        return key;
     }
 
 }

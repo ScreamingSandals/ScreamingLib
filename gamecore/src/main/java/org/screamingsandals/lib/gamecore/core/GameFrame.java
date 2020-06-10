@@ -1,8 +1,10 @@
 package org.screamingsandals.lib.gamecore.core;
 
 import com.google.common.base.Preconditions;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.config.GameConfig;
@@ -45,14 +47,16 @@ public abstract class GameFrame implements Serializable {
     protected int minPlayers;
     protected List<GameTeam> teams = new LinkedList<>();
     protected List<GameStore> stores = new LinkedList<>();
-    protected GameState activeState = GameState.DISABLED;
-    protected GameState previousState;
     protected UUID uuid;
     protected ResourceManager resourceManager;
 
     protected Map<String, GameConfig.ValueHolder<?>> gameConfig = new HashMap<>();
 
     //Internal stuff that will not be saved and is always created at the start of the game.
+    @Setter(AccessLevel.PRIVATE)
+    protected transient GameState activeState = GameState.DISABLED;
+    @Setter(AccessLevel.PRIVATE)
+    protected transient GameState previousState;
     protected transient int maxPlayers;
     protected transient GameCycle gameCycle;
     protected transient List<GamePlayer> playersInGame;
@@ -105,8 +109,8 @@ public abstract class GameFrame implements Serializable {
             final var isSet = new AtomicBoolean(true);
             teams.forEach(gameTeam -> {
                 if (gameTeam.getSpawn() == null) {
-                    errorManager.newError(new GameError(this,  ErrorType.TEAM_SPAWN_NOT_SET
-                            .addPlaceholder("%teamName%", gameTeam.getName()), null), fireError);
+                    errorManager.newError(new GameError(this,  ErrorType.TEAM_SPAWN_NOT_SET, null)
+                            .addPlaceholder("%teamName%", gameTeam.getName()), fireError);
 
                     isSet.set(false);
                 }
@@ -139,10 +143,8 @@ public abstract class GameFrame implements Serializable {
         }
 
         if (!gameWorld.exists()) {
-            final var type = ErrorType.GAME_WORLD_DOES_NOT_EXISTS;
-
-            type.getReplaceable().put("%world%", gameWorld.getWorldAdapter().getWorldName());
-            errorManager.newError(new GameError(this, type, null), fireError);
+            errorManager.newError(new GameError(this, ErrorType.GAME_WORLD_DOES_NOT_EXISTS, null)
+                    .addPlaceholder("%world%", gameWorld.getWorldAdapter().getWorldName()), fireError);
 
             return false;
         }
@@ -181,10 +183,8 @@ public abstract class GameFrame implements Serializable {
         }
 
         if (!lobbyWorld.exists()) {
-            final var type = ErrorType.LOBBY_WORLD_DOES_NOT_EXISTS;
-
-            type.getReplaceable().put("%world%", gameWorld.getWorldAdapter().getWorldName());
-            errorManager.newError(new GameError(this, type, null), fireError);
+            errorManager.newError(new GameError(this, ErrorType.LOBBY_WORLD_DOES_NOT_EXISTS, null)
+                    .addPlaceholder("%world%", lobbyWorld.getWorldAdapter().getWorldName()), fireError);
             return false;
         }
 
@@ -534,6 +534,15 @@ public abstract class GameFrame implements Serializable {
         }
 
         return toReturn;
+    }
+
+    public void switchState(GameState newState) {
+        if (newState == null) {
+            return;
+        }
+
+        previousState = activeState;
+        activeState = newState;
     }
 
     public int countRemainingPlayersToStart() {
