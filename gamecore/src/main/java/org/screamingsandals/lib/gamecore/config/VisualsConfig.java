@@ -4,14 +4,10 @@ import org.screamingsandals.lib.config.SpigotConfigAdapter;
 
 import java.io.File;
 
+/**
+ * Default configuration for {@link org.screamingsandals.lib.gamecore.visuals.VisualsManager}
+ */
 public abstract class VisualsConfig extends SpigotConfigAdapter {
-  /*
-    Yes, we do support placeholders. PlaceholderAPI TODO - not needed on HoZ
-
-    Available BedWars placeholders:
-    %player%, %team%, %remainingGameTime%, %elapsedGameTime%, %game-state% more to add.
-     */
-
     //SCOREBOARDS
     public static String PATH_SCOREBOARDS_ENABLED = "scoreboards.enabled";
     public static String PATH_SCOREBOARDS_NAME = "scoreboards.name";

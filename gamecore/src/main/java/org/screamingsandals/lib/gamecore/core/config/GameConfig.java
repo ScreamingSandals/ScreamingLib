@@ -10,6 +10,9 @@ import org.screamingsandals.lib.gamecore.error.ErrorType;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * GameConfig is responsible for per-game values.
+ */
 @Data
 public class GameConfig {
     private final Map<String, ValueHolder<?>> gameValues = new HashMap<>();
@@ -18,6 +21,7 @@ public class GameConfig {
         String TEAMS_ENABLED = "teams";
         String STORES_ENABLED = "stores";
         String RESOURCES_ENABLED = "resources";
+        String RESOURCES_PER_GAME = "per_game_resources";
         String SPECTATORS_ENABLED = "spectators";
         String START_TIME = "start_time";
         String GAME_TIME = "game_time";

@@ -5,6 +5,9 @@ import org.bukkit.entity.Player;
 import org.screamingsandals.lib.gamecore.core.GameBuilder;
 import org.screamingsandals.lib.gamecore.visuals.holograms.GameHologram;
 
+/**
+ * Spawner editing. What more to say?
+ */
 @Data
 public class SpawnerEditor {
     private final Player player;

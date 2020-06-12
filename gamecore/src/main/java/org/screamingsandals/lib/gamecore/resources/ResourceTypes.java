@@ -22,7 +22,7 @@ public class ResourceTypes implements Serializable, Cloneable {
 
     public ResourceTypes(GameFrame gameFrame, File file) {
         this.gameFrame = gameFrame;
-        this.dataSaver = new JsonDataSource<>(file, ResourceTypes.class);
+        prepareDataSource(file);
     }
 
     public static ResourceTypes load(GameFrame gameFrame, File file) {
@@ -74,6 +74,10 @@ public class ResourceTypes implements Serializable, Cloneable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    void prepareDataSource(File file) {
+        this.dataSaver = new JsonDataSource<>(file, ResourceTypes.class);
     }
 }
 

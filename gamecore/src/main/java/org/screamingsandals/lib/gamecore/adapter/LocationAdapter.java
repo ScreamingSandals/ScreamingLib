@@ -7,6 +7,14 @@ import org.screamingsandals.lib.debug.Debug;
 
 import java.io.Serializable;
 
+/**
+ * As Bukkit's {@link Location} is no-go for serializations, we need to implement our own adapter.
+ * This is fairly simple, just create new LocationAdapter with the {@link Location} values
+ * and that's it.
+ *
+ * This uses {@link WorldAdapter as well.}
+ */
+
 @Data
 public class LocationAdapter implements Serializable {
     private WorldAdapter worldAdapter;

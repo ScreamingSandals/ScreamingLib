@@ -67,6 +67,10 @@ public class EntityManager {
         return registeredEntities.values();
     }
 
+    public Collection<Entity> getEntities(UUID uuid) {
+        return registeredEntities.get(uuid);
+    }
+
     public boolean isRegisteredInGame(UUID uuid, Entity entity) {
         System.out.println(registeredEntities.get(uuid));
         System.out.println(registeredEntities.size());

@@ -20,7 +20,7 @@ public class ResourceManager implements Serializable {
     private ResourceTypes resourceTypes;
 
     public ResourceManager(GameFrame gameFrame) {
-        this.gameFrame = gameFrame;
+        prepare(gameFrame);
     }
 
     public void prepare(GameFrame gameFrame) {

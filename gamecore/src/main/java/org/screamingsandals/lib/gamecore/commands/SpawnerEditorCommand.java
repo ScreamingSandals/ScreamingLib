@@ -16,6 +16,13 @@ import java.util.List;
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.mpr;
 
+/**
+ * Command responsible for editing {@link org.screamingsandals.lib.gamecore.resources.ResourceSpawner}
+ * This is fairly easy, just edit the spawner in-game via {@link org.screamingsandals.lib.gamecore.visuals.holograms.GameHologram},
+ * and save it.
+ *
+ * Spawner editor should only run while game with the spawners is in the EDIT mode!
+ */
 @RegisterCommand
 public class SpawnerEditorCommand implements ScreamingCommand {
     private final List<String> actions = new LinkedList<>();

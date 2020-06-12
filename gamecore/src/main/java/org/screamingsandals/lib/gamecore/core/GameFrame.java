@@ -16,7 +16,9 @@ import org.screamingsandals.lib.gamecore.events.core.game.SGameDisabledEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisablingEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadedEvent;
 import org.screamingsandals.lib.gamecore.events.core.state.SGameStateChangedEvent;
-import org.screamingsandals.lib.gamecore.events.player.game.*;
+import org.screamingsandals.lib.gamecore.events.player.game.SPlayerJoinedGameEvent;
+import org.screamingsandals.lib.gamecore.events.player.game.SPlayerLeftGameEvent;
+import org.screamingsandals.lib.gamecore.events.player.game.SPlayerPreJoinedGameEvent;
 import org.screamingsandals.lib.gamecore.events.player.spectator.SSpectatorJoinedGameEvent;
 import org.screamingsandals.lib.gamecore.events.player.spectator.SSpectatorPreJoinGameEvent;
 import org.screamingsandals.lib.gamecore.placeholders.PlaceholderParser;
@@ -30,6 +32,8 @@ import org.screamingsandals.lib.gamecore.world.GameWorld;
 import org.screamingsandals.lib.gamecore.world.LobbyWorld;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -38,7 +42,7 @@ import static org.screamingsandals.lib.gamecore.language.GameLanguage.mpr;
 
 @Data
 @EqualsAndHashCode(of = "uuid")
-public abstract class GameFrame implements Serializable {
+public abstract class GameFrame implements Serializable, Cloneable {
     //Serializable stuff that will be saved into JSON file
     protected String gameName;
     protected String displayedName;
@@ -109,7 +113,7 @@ public abstract class GameFrame implements Serializable {
             final var isSet = new AtomicBoolean(true);
             teams.forEach(gameTeam -> {
                 if (gameTeam.getSpawn() == null) {
-                    errorManager.newError(new GameError(this,  ErrorType.TEAM_SPAWN_NOT_SET, null)
+                    errorManager.newError(new GameError(this, ErrorType.TEAM_SPAWN_NOT_SET, null)
                             .addPlaceholder("%teamName%", gameTeam.getName()), fireError);
 
                     isSet.set(false);
@@ -208,8 +212,7 @@ public abstract class GameFrame implements Serializable {
     }
 
     /**
-     * Loads default values for the game
-     * TODO: load resource manager always? Hell nah
+     * Loads game config from global config and resource types to the game.
      */
     public void loadDefaults() {
         resourceManager.setResourceTypes(
@@ -223,18 +226,8 @@ public abstract class GameFrame implements Serializable {
      * @return false if something fails
      */
     public boolean prepare() {
-        playersInGame = new LinkedList<>();
-        spectators = new LinkedList<>();
-        placeholderParser = new PlaceholderParser(this);
-        visualsManager = new VisualsManager(this);
-
-        gameWorld.setRegenerator(GameCore.getRegenerator());
-        lobbyWorld.setRegenerator(GameCore.getRegenerator());
-
-        if (resourceManager == null) {
-            resourceManager = new ResourceManager(this);
-        } else {
-            resourceManager.prepare(this);
+        if (displayedName == null) {
+            displayedName = gameName;
         }
 
         updateGameConfig();
@@ -383,20 +376,19 @@ public abstract class GameFrame implements Serializable {
             return false;
         }
 
-        if (activeState == GameState.DISABLED) {
-            //TODO: mpr
-            return false;
-        }
-
-        if (activeState == GameState.RESTART) {
-            //TODO: mpr
-            return false;
-        }
-
-        if (activeState == GameState.MAINTENANCE
-                && !gamePlayer.getPlayer().hasPermission(GameCore.getInstance().getAdminPermissions())) {
-            //TODO: mpr
-            return false;
+        switch (activeState) {
+            case DISABLED:
+            case RESTART:
+                //TODO: mpr
+                return false;
+            case MAINTENANCE: {
+                if (gamePlayer.getPlayer().hasPermission(GameCore.getInstance().getAdminPermissions())) {
+                    break;
+                } else {
+                    //TODO: mpr
+                    return false;
+                }
+            }
         }
 
         if (isGameRunning()) {
@@ -415,18 +407,18 @@ public abstract class GameFrame implements Serializable {
             playersInGame.add(gamePlayer);
             gamePlayer.setActiveGame(this);
             gamePlayer.storeAndClean();
-            gamePlayer.teleport(lobbyWorld.getSpawn());
+            gamePlayer.teleport(lobbyWorld.getSpawn()).then(() -> {
+                visualsManager.prepareGameVisuals(gamePlayer);
+                visualsManager.showGameVisuals();
 
-            visualsManager.prepareGameVisuals(gamePlayer);
-            visualsManager.showGameVisuals();
+                mpr("commands.join.success")
+                        .game(this)
+                        .send(gamePlayer);
+                GameCore.fireEvent(new SPlayerJoinedGameEvent(this, gamePlayer));
+            }).done();
 
-            mpr("commands.join.success")
-                    .game(this)
-                    .send(gamePlayer);
-            GameCore.fireEvent(new SPlayerJoinedGameEvent(this, gamePlayer));
             return true;
         }
-
         return false;
     }
 
@@ -459,7 +451,7 @@ public abstract class GameFrame implements Serializable {
     }
 
     public void moveAllToTeamSpawns() {
-        playersInGame.forEach(gamePlayer -> gamePlayer.teleport(gamePlayer.getGameTeam().getSpawn()));
+        playersInGame.forEach(gamePlayer -> gamePlayer.teleport(gamePlayer.getGameTeam().getSpawn()).done());
     }
 
     //Working with teams
@@ -644,6 +636,30 @@ public abstract class GameFrame implements Serializable {
                 || activeState == GameState.DEATHMATCH
                 || activeState == GameState.AFTER_GAME_COUNTDOWN
                 || activeState == GameState.CUSTOM;
+    }
+
+    /*
+    This is responsible for loading values while deserialization.
+    //TODO: test this propertly
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        playersInGame = new LinkedList<>();
+        spectators = new LinkedList<>();
+        placeholderParser = new PlaceholderParser(this);
+        visualsManager = new VisualsManager(this);
+
+        gameWorld.setRegenerator(GameCore.getRegenerator());
+        lobbyWorld.setRegenerator(GameCore.getRegenerator());
+
+        if (resourceManager == null) {
+            resourceManager = new ResourceManager(this);
+        } else {
+            resourceManager.prepare(this);
+        }
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
 

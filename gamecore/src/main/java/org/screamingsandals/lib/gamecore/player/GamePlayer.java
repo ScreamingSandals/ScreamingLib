@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.gamecore.player;
 
 import io.papermc.lib.PaperLib;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 import org.bukkit.Location;
@@ -9,7 +10,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
-import org.screamingsandals.lib.gamecore.events.player.SPlayerSwitchedToPlayer;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerSwitchedToSpectator;
 import org.screamingsandals.lib.gamecore.events.player.SPlayerTeleportEvent;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
@@ -70,31 +70,32 @@ public class GamePlayer {
         clean(false);
 
         if (isInGame()) {
-            teleport(gameTeam.getSpawn());
+            teleport(activeGame.getGameWorld().getSpectatorSpawn())
+                    .then(() -> GameCore.fireEvent(new SPlayerSwitchedToSpectator(this)))
+                    .done();
         } else {
+            //GameCore.fireEvent(new SPlayerSwitchedToPlayer(this));
             //todo - teleport to mainlobby
         }
-        GameCore.fireEvent(new SPlayerSwitchedToPlayer(this));
     }
 
     public void makeSpectator(boolean fireEvent) {
         spectator = true;
         clean(true);
 
-        teleport(activeGame.getGameWorld().getSpectatorSpawn());
-
-        if (fireEvent) {
-            GameCore.fireEvent(new SPlayerSwitchedToSpectator(this));
-        }
+        teleport(activeGame.getGameWorld().getSpectatorSpawn()).then(() -> {
+            if (fireEvent) {
+                GameCore.fireEvent(new SPlayerSwitchedToSpectator(this));
+            }
+        }).done();
     }
 
-    public boolean teleport(Location location) {
-        GameCore.fireEvent(new SPlayerTeleportEvent(activeGame,this, location, player.getLocation()));
-        return PaperLib.teleportAsync(player, location, PlayerTeleportEvent.TeleportCause.PLUGIN).isDone();
+    public TeleportBuilder teleport(Location to) {
+        return TeleportBuilder.get(this, to);
     }
 
-    public boolean teleport(LocationAdapter locationAdapter) {
-        return teleport(locationAdapter.getLocation());
+    public TeleportBuilder teleport(LocationAdapter to) {
+        return TeleportBuilder.get(this, to);
     }
 
     public void sendMessage(String string) {
@@ -114,7 +115,45 @@ public class GamePlayer {
         playerStorage.clean(player, spectator);
     }
 
-    public void createVisualsForGame(GameFrame gameFrame) {
+    @AllArgsConstructor
+    public static class TeleportBuilder {
+        private final GamePlayer gamePlayer;
+        private Location to;
+        private Runnable runnable;
 
+        public static TeleportBuilder get(GamePlayer gamePlayer, Location to, Runnable runnable) {
+            return new TeleportBuilder(gamePlayer, to, runnable);
+        }
+
+        public static TeleportBuilder get(GamePlayer gamePlayer, Location to) {
+            return new TeleportBuilder(gamePlayer, to, null);
+        }
+
+        public static TeleportBuilder get(GamePlayer gamePlayer, LocationAdapter to) {
+            return new TeleportBuilder(gamePlayer, to.getLocation(), null);
+        }
+
+        public static TeleportBuilder get(GamePlayer gamePlayer) {
+            return new TeleportBuilder(gamePlayer, null, null);
+        }
+
+        public TeleportBuilder to(Location to) {
+            this.to = to;
+            return this;
+        }
+
+        public TeleportBuilder then(Runnable runnable) {
+            this.runnable = runnable;
+            return this;
+        }
+
+        public void done() {
+            GameCore.fireEvent(new SPlayerTeleportEvent(gamePlayer.getActiveGame(), gamePlayer, to, gamePlayer.getPlayer().getLocation()));
+            final var future = PaperLib.teleportAsync(gamePlayer.getPlayer(), to, PlayerTeleportEvent.TeleportCause.PLUGIN);
+
+            if (runnable != null) {
+                future.thenRun(runnable);
+            }
+        }
     }
 }

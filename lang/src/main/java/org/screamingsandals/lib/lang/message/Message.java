@@ -224,6 +224,11 @@ public class Message {
     }
 
     protected void internalSendToReceiver(Object sender, String message) {
+        if (message.isEmpty()) {
+            //TODO: add some debug here?
+            return;
+        }
+
         try {
             sender.getClass().getMethod("sendMessage", String.class).invoke(sender, message);
         } catch (Throwable ignored) {
