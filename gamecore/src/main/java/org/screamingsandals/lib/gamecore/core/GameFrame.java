@@ -5,10 +5,11 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
+import org.screamingsandals.lib.config.custom.ValueHolder;
+import org.screamingsandals.lib.config.custom.ValueType;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
-import org.screamingsandals.lib.gamecore.core.config.GameConfig;
-import org.screamingsandals.lib.gamecore.core.config.GameValue;
+import org.screamingsandals.lib.gamecore.config.GameConfig;
 import org.screamingsandals.lib.gamecore.core.cycle.GameCycle;
 import org.screamingsandals.lib.gamecore.error.ErrorType;
 import org.screamingsandals.lib.gamecore.error.GameError;
@@ -54,7 +55,7 @@ public abstract class GameFrame implements Serializable, Cloneable {
     protected UUID uuid;
     protected ResourceManager resourceManager;
 
-    protected Map<String, GameConfig.ValueHolder<?>> gameConfig = new HashMap<>();
+    protected Map<String, ValueHolder<?>> gameConfig = new HashMap<>();
 
     //Internal stuff that will not be saved and is always created at the start of the game.
     @Setter(AccessLevel.PRIVATE)
@@ -93,7 +94,7 @@ public abstract class GameFrame implements Serializable, Cloneable {
 
         if (gameConfig.isEmpty()) {
             errorManager.newError(new GameError(this, ErrorType.CONFIG_NOT_DEFINED, null), fireError);
-            gameConfig = GameCore.getGameManager().getGameConfig().getGameValues();
+            gameConfig = GameCore.getGameManager().getGameConfig().getValues();
         }
 
         if (!checkGameWorld(fireError)) {
@@ -104,7 +105,7 @@ public abstract class GameFrame implements Serializable, Cloneable {
             return false;
         }
 
-        if (gameConfig.get(GameConfig.DefaultKeys.TEAMS_ENABLED).getBooleanValue()) {
+        if (gameConfig.get(GameConfig.DefaultKeys.TEAMS_ENABLED).getBoolean()) {
             if (teams.size() < 2) {
                 errorManager.newError(new GameError(this, ErrorType.NOT_ENOUGH_TEAMS, null), fireError);
                 return false;
@@ -125,7 +126,7 @@ public abstract class GameFrame implements Serializable, Cloneable {
             }
         }
 
-        if (gameConfig.get(GameConfig.DefaultKeys.STORES_ENABLED).getBooleanValue() && stores.size() < 1) {
+        if (gameConfig.get(GameConfig.DefaultKeys.STORES_ENABLED).getBoolean() && stores.size() < 1) {
             errorManager.newError(new GameError(this, ErrorType.NOT_ENOUGH_STORES, null), fireError);
             return false;
         }
@@ -217,7 +218,7 @@ public abstract class GameFrame implements Serializable, Cloneable {
     public void loadDefaults() {
         resourceManager.setResourceTypes(
                 ResourceTypes.load(this, new File(GameCore.getPlugin().getDataFolder(), "resources.json")));
-        gameConfig = GameCore.getGameManager().getGameConfig().getGameValues();
+        gameConfig = GameCore.getGameManager().getGameConfig().getValues();
     }
 
     /**
@@ -244,8 +245,8 @@ public abstract class GameFrame implements Serializable, Cloneable {
      * Also checks if some values are missing
      */
     private void updateGameConfig() {
-        final var toUpdate = new LinkedList<GameConfig.ValueHolder<?>>();
-        final var available = GameCore.getGameManager().getGameConfig().getGameValues().entrySet();
+        final var toUpdate = new LinkedList<ValueHolder<?>>();
+        final var available = GameCore.getGameManager().getGameConfig().getValues().entrySet();
         var changed = new AtomicBoolean();
 
         //add new values if missing
@@ -265,7 +266,7 @@ public abstract class GameFrame implements Serializable, Cloneable {
 
         //get list of shared values
         gameConfig.values().forEach(holder -> {
-            if (holder.getGameValue() == GameValue.SHARED) {
+            if (holder.getValueType() == ValueType.SHARED) {
                 toUpdate.add(holder);
             }
         });
@@ -392,7 +393,7 @@ public abstract class GameFrame implements Serializable, Cloneable {
         }
 
         if (isGameRunning()) {
-            if (gameConfig.get(GameConfig.DefaultKeys.SPECTATORS_ENABLED).getBooleanValue()
+            if (gameConfig.get(GameConfig.DefaultKeys.SPECTATORS_ENABLED).getBoolean()
                     && GameCore.fireEvent(new SSpectatorPreJoinGameEvent(this, gamePlayer))) {
                 gamePlayer.makeSpectator(false);
 
@@ -542,19 +543,19 @@ public abstract class GameFrame implements Serializable, Cloneable {
     }
 
     public int getStartTime() {
-        return gameConfig.get(GameConfig.DefaultKeys.START_TIME).getIntValue();
+        return gameConfig.get(GameConfig.DefaultKeys.START_TIME).getInt();
     }
 
     public int getGameTime() {
-        return gameConfig.get(GameConfig.DefaultKeys.GAME_TIME).getIntValue();
+        return gameConfig.get(GameConfig.DefaultKeys.GAME_TIME).getInt();
     }
 
     public int getDeathmatchTime() {
-        return gameConfig.get(GameConfig.DefaultKeys.DEATHMATCH_TIME).getIntValue();
+        return gameConfig.get(GameConfig.DefaultKeys.DEATHMATCH_TIME).getInt();
     }
 
     public int getEndTime() {
-        return gameConfig.get(GameConfig.DefaultKeys.END_GAME_TIME).getIntValue();
+        return gameConfig.get(GameConfig.DefaultKeys.END_GAME_TIME).getInt();
     }
 
     protected int getElapsedSeconds() {
@@ -576,7 +577,7 @@ public abstract class GameFrame implements Serializable, Cloneable {
 
     public String formatRemainingTime() {
         if (getRawRemainingSeconds() == -1) {
-            return formatSecondsToString(gameConfig.get(GameConfig.DefaultKeys.GAME_TIME).getIntValue());
+            return formatSecondsToString(gameConfig.get(GameConfig.DefaultKeys.GAME_TIME).getInt());
         }
         return formatSecondsToString(getRawRemainingSeconds());
     }

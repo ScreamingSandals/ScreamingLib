@@ -4,7 +4,7 @@ import lombok.Data;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
-import org.screamingsandals.lib.gamecore.core.config.GameConfig;
+import org.screamingsandals.lib.gamecore.config.GameConfig;
 import org.screamingsandals.lib.gamecore.core.cycle.CycleType;
 import org.screamingsandals.lib.gamecore.core.data.file.JsonDataSource;
 import org.screamingsandals.lib.gamecore.error.ErrorType;

@@ -7,12 +7,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.screamingsandals.lib.config.custom.ValueHolder;
+import org.screamingsandals.lib.config.custom.ValueType;
 import org.screamingsandals.lib.debug.Debug;
 import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.adapter.LocationAdapter;
 import org.screamingsandals.lib.gamecore.adapter.WorldAdapter;
-import org.screamingsandals.lib.gamecore.core.config.GameConfig;
-import org.screamingsandals.lib.gamecore.core.config.GameValue;
+import org.screamingsandals.lib.gamecore.config.GameConfig;
 import org.screamingsandals.lib.gamecore.resources.ResourceSpawner;
 import org.screamingsandals.lib.gamecore.resources.SpawnerEditor;
 import org.screamingsandals.lib.gamecore.resources.SpawnerHologramHandler;
@@ -99,22 +100,22 @@ public abstract class GameBuilder<T extends GameFrame> {
     }
 
     public void setStartTime(int startTime) {
-        final var value = GameConfig.ValueHolder.get(GameConfig.DefaultKeys.START_TIME, startTime, GameValue.PRIVATE);
+        final var value = ValueHolder.builder(GameConfig.DefaultKeys.START_TIME, startTime, ValueType.PRIVATE);
         gameFrame.getGameConfig().put(value.getKey(), value);
     }
 
     public void setGameTime(int gameTime) {
-        final var value = GameConfig.ValueHolder.get(GameConfig.DefaultKeys.GAME_TIME, gameTime, GameValue.PRIVATE);
+        final var value = ValueHolder.builder(GameConfig.DefaultKeys.GAME_TIME, gameTime, ValueType.PRIVATE);
         gameFrame.getGameConfig().put(value.getKey(), value);
     }
 
     public void setDeathmatchTime(int deathmatchTime) {
-        final var value = GameConfig.ValueHolder.get(GameConfig.DefaultKeys.DEATHMATCH_TIME, deathmatchTime, GameValue.PRIVATE);
+        final var value = ValueHolder.builder(GameConfig.DefaultKeys.DEATHMATCH_TIME, deathmatchTime, ValueType.PRIVATE);
         gameFrame.getGameConfig().put(value.getKey(), value);
     }
 
     public void setEndTime(int endTime) {
-        final var value = GameConfig.ValueHolder.get(GameConfig.DefaultKeys.END_GAME_TIME, endTime, GameValue.PRIVATE);
+        final var value = ValueHolder.builder(GameConfig.DefaultKeys.END_GAME_TIME, endTime, ValueType.PRIVATE);
         gameFrame.getGameConfig().put(value.getKey(), value);
     }
 
