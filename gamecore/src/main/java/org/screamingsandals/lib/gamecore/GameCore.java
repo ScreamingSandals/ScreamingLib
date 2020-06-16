@@ -24,7 +24,7 @@ import org.screamingsandals.lib.gamecore.events.core.SCoreLoadedEvent;
 import org.screamingsandals.lib.gamecore.events.core.SCoreUnloadedEvent;
 import org.screamingsandals.lib.gamecore.exceptions.GameCoreException;
 import org.screamingsandals.lib.gamecore.language.GameLanguage;
-import org.screamingsandals.lib.gamecore.listeners.player.PlayerListener;
+import org.screamingsandals.lib.gamecore.listeners.player.BasePlayerListener;
 import org.screamingsandals.lib.gamecore.player.PlayerManager;
 import org.screamingsandals.lib.gamecore.visuals.holograms.HologramManager;
 import org.screamingsandals.lib.gamecore.world.regeneration.LegacyWorldRegeneration;
@@ -85,8 +85,6 @@ public class GameCore {
         errorManager.destroy();
         hologramManager.destroy();
 
-        plugin.getServer().getServicesManager().unregisterAll(plugin);
-
         fireEvent(new SCoreUnloadedEvent(this));
     }
 
@@ -102,7 +100,7 @@ public class GameCore {
     }
 
     private void registerListeners() {
-        registerListener(new PlayerListener());
+        registerListener(new BasePlayerListener());
     }
 
     public static void registerListener(Listener listener) {

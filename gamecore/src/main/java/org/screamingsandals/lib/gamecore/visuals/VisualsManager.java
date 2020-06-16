@@ -7,6 +7,7 @@ import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameState;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,7 +19,6 @@ public class VisualsManager {
 
     public void prepareGameVisuals(GamePlayer gamePlayer) {
         final var uuid = gamePlayer.getUuid();
-
         savedVisuals.put(uuid, GameScoreboard.Builder.get(gamePlayer, GameState.WAITING, gameFrame));
         savedVisuals.put(uuid, GameScoreboard.Builder.get(gamePlayer, GameState.PRE_GAME_COUNTDOWN, gameFrame));
         savedVisuals.put(uuid, GameScoreboard.Builder.get(gamePlayer, GameState.IN_GAME, gameFrame));

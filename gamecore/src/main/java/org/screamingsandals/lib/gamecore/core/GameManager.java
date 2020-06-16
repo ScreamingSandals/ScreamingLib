@@ -12,6 +12,8 @@ import org.screamingsandals.lib.gamecore.error.GameError;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameDisabledEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameLoadingEvent;
 import org.screamingsandals.lib.gamecore.events.core.game.SGameSavedEvent;
+import org.screamingsandals.lib.gamecore.listeners.player.game.InGameListener;
+import org.screamingsandals.lib.gamecore.listeners.player.game.LobbyListener;
 import org.screamingsandals.lib.gamecore.resources.SpawnerEditor;
 
 import java.io.File;
@@ -97,6 +99,8 @@ public class GameManager<T extends GameFrame> {
             } catch (Exception e) {
                 GameCore.getErrorManager().newError(new GameError(null, ErrorType.GAME_LOADING_ERROR, e), true);
             }
+
+            registerGameListeners();
         } else {
             Debug.info("&cWe did not find any arena.. &e:(", true);
         }
@@ -105,6 +109,8 @@ public class GameManager<T extends GameFrame> {
     public void unregisterAll() {
         registeredGames.values().forEach(GameFrame::stop);
         registeredGames.clear();
+
+
     }
 
     public void registerGame(UUID uuid, T gameFrame) {
@@ -278,5 +284,10 @@ public class GameManager<T extends GameFrame> {
         }
 
         return Optional.empty();
+    }
+
+    private void registerGameListeners() {
+        GameCore.registerListener(new LobbyListener());
+        GameCore.registerListener(new InGameListener());
     }
 }

@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
+
+import org.bukkit.event.Listener;
 import org.screamingsandals.lib.config.custom.ValueHolder;
 import org.screamingsandals.lib.config.custom.ValueType;
 import org.screamingsandals.lib.debug.Debug;
