@@ -8,7 +8,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.config.custom.ScreamingConfig;
 import org.screamingsandals.lib.debug.Debug;
+import org.screamingsandals.lib.gamecore.config.CoreConfig;
+import org.screamingsandals.lib.gamecore.config.GameConfig;
 import org.screamingsandals.lib.gamecore.config.VisualsConfig;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 import org.screamingsandals.lib.gamecore.core.GameManager;
@@ -44,17 +47,15 @@ public class GameCore {
     private final GameLanguage gameLanguage;
     private VisualsConfig visualsConfig;
     private GameManager<?> gameManager;
-    private boolean verbose = true;
+    private ScreamingConfig screamingConfig;
 
-    private String mainCommandName = "gc";
-    private String adminPermissions = "gamecore.admin";
-
-    public GameCore(Plugin plugin, GameLanguage gameLanguage) {
+    public GameCore(Plugin plugin, GameLanguage gameLanguage, ScreamingConfig screamingConfig) {
         this.plugin = plugin;
         instance = this;
 
         //init game language in case we don't have any provided by the actual game
         this.gameLanguage = Objects.requireNonNullElseGet(gameLanguage, () -> new GameLanguage(plugin, "en", "&aGame&eCore"));
+        this.screamingConfig = Objects.requireNonNullElseGet(screamingConfig, GameConfig::new);
 
         tasker = Tasker.getSpigot(plugin);
         errorManager = new ErrorManager();
@@ -65,12 +66,6 @@ public class GameCore {
         Debug.setFallbackName("GameCore-" + plugin.getName());
     }
 
-    public GameCore(Plugin plugin, GameLanguage gameLanguage, String mainCommandName, String adminPermissions, boolean verbose) {
-        this(plugin, gameLanguage);
-        this.mainCommandName = mainCommandName;
-        this.adminPermissions = adminPermissions;
-        this.verbose = verbose;
-    }
 
     public <T extends GameFrame> void load(File gamesFolder, Class<T> tClass, CycleType cycleType) throws GameCoreException {
         try {
@@ -169,5 +164,17 @@ public class GameCore {
                 return true;
             }
         }
+    }
+
+    public boolean isVerbose() {
+        return screamingConfig.get(CoreConfig.DefaultKeys.VERBOSE, true).getBoolean();
+    }
+
+    public String getMainCommandName() {
+        return screamingConfig.get(CoreConfig.DefaultKeys.MAIN_COMMAND_NAME, "gc").getString();
+    }
+
+    public String getAdminPermissions() {
+        return screamingConfig.get(CoreConfig.DefaultKeys.ADMIN_PERMISSIONS, "gamecore.admin").getString();
     }
 }

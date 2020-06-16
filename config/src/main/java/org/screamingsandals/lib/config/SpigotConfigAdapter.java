@@ -1,13 +1,16 @@
 package org.screamingsandals.lib.config;
 
 import lombok.Data;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Data
 public abstract class SpigotConfigAdapter implements ConfigAdapter {
@@ -127,5 +130,48 @@ public abstract class SpigotConfigAdapter implements ConfigAdapter {
     @Override
     public void set(String key, Object obj) {
         yamlConfiguration.set(key, obj);
+    }
+
+    public Optional<ItemStack> getStack(String key) {
+        if (!isSet(key)) {
+            return Optional.empty();
+        }
+
+        final ItemStack itemStack;
+        final var object = get(key);
+
+        if (object instanceof ItemStack) {
+            itemStack = (ItemStack) object;
+        } else {
+            return Optional.empty();
+        }
+        return Optional.of(itemStack);
+    }
+
+    public ItemStack getStack(String key, Material def) {
+        final var toReturn = getStack(key);
+        if (toReturn.isEmpty()) {
+            return new ItemStack(def);
+        }
+        return toReturn.get();
+    }
+
+    public Optional<Material> getMaterial(String key) {
+        if (!isSet(key)) {
+            return Optional.empty();
+        }
+        try {
+            return Optional.of(Material.valueOf(getString(key)));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public Material getMaterial(String key, Material def) {
+        final var toReturn = getMaterial(key);
+        if (toReturn.isEmpty()) {
+            return def;
+        }
+        return toReturn.get();
     }
 }

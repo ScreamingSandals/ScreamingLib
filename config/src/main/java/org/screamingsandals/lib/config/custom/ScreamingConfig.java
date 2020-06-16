@@ -17,7 +17,7 @@ public interface ScreamingConfig extends Serializable {
 
     <T extends ValueHolder<T>> T get(String key);
 
-    <T extends ValueHolder<T>> T get(String key, T def);
+    <T extends ValueHolder<T>> T get(String key, Object def);
 
     Map<String, ValueHolder<?>> getValues();
 }

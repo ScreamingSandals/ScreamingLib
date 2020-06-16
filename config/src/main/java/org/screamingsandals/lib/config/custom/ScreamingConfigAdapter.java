@@ -1,11 +1,9 @@
 package org.screamingsandals.lib.config.custom;
 
-import org.screamingsandals.lib.debug.Debug;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class ScreamingConfigAdapter implements ScreamingConfig{
+public abstract class ScreamingConfigAdapter implements ScreamingConfig {
     private final Map<String, ValueHolder<?>> values = new HashMap<>();
 
     @Override
@@ -52,17 +50,16 @@ public abstract class ScreamingConfigAdapter implements ScreamingConfig{
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends ValueHolder<T>> T get(String key, T def) {
+    public <T extends ValueHolder<T>> T get(String key, Object def) {
         if (!values.containsKey(key)) {
-            Debug.warn("It does not exists");
-            return def;
+            return (T) def;
         }
         try {
             return (T) values.get(key).getValue();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return def;
+        return (T) def;
     }
 
     @Override

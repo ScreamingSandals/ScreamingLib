@@ -1,15 +1,41 @@
 package org.screamingsandals.lib.gamecore.utils;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.gamecore.core.GameState;
 import org.screamingsandals.lib.tasker.TaskerTime;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.mpr;
 
 public class GameUtils {
+
+    private GameUtils() {
+    }
+
+    public static ItemStack buildStack(Material material, String title) {
+        return buildStack(material, title, Collections.emptyList());
+    }
+
+    public static ItemStack buildStack(Material material, String title, List<String> lore) {
+        Preconditions.checkNotNull(material, "material");
+        Preconditions.checkNotNull(title, "title");
+        Preconditions.checkNotNull(lore, "lore");
+
+        final var stack = new ItemStack(material);
+        final var meta = stack.getItemMeta();
+        meta.setDisplayName(title);
+        meta.setLore(lore);
+        stack.setItemMeta(meta);
+        return stack;
+    }
 
     public static String convertTimeUnitToLanguage(int period, TaskerTime taskerTime) {
         switch (taskerTime) {
