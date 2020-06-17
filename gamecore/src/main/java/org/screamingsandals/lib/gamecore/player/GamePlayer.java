@@ -44,8 +44,7 @@ public class GamePlayer {
     //shortcut
     public boolean leaveGame() {
         if (activeGame != null) {
-            activeGame.leave(this);
-            return true;
+            return activeGame.leave(this);
         }
         return false;
     }

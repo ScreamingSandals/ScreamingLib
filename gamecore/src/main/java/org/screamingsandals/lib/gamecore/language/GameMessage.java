@@ -175,6 +175,10 @@ public class GameMessage extends Message {
 
     @Override
     public GameMessage send(Object sender) {
+        if (sender == null) {
+            return this;
+        }
+
         if (sender instanceof Collection) {
             for (var recipient : (Collection<?>) sender) {
                 send(recipient);
@@ -188,6 +192,10 @@ public class GameMessage extends Message {
 
     @Override
     public GameMessage send(Object sender, String permissions) {
+        if (sender == null) {
+            return this;
+        }
+
         if (sender instanceof Collection) {
             for (Object recipient : (Collection<?>) sender) {
                 send(recipient, permissions);

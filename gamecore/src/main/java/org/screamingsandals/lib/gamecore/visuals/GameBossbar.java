@@ -86,7 +86,6 @@ public class GameBossbar extends ScreamingBossbar implements GameVisual {
         private final UUID uuid;
         private final GameState gameState;
 
-        //TODO still
         public static GameBossbar get(GamePlayer gamePlayer, GameState gameState, GameFrame gameFrame) {
             final var uuid = gameFrame.getUuid();
             final var toReturn = new GameBossbar.Builder(uuid, gameState);
@@ -103,12 +102,15 @@ public class GameBossbar extends ScreamingBossbar implements GameVisual {
                 color = m(VisualsConfig.PATH_BOSSBARS_COLOR + state).get();
             }
 
-            var barColor = GameUtils.getBarColorByString(color);
-            if (barColor == null) {
+            final BarColor barColor;
+            final var optionalBarColor = GameUtils.getBarColorByString(color);
+            if (optionalBarColor.isEmpty()) {
                 barColor = BarColor.RED;
 
                 GameCore.getErrorManager().newError(
                         new GameError(gameFrame, ErrorType.CONFIG_WRONG_BOSSBAR_COLOR, null).addPlaceholder("%color%", color), true);
+            } else {
+                barColor = optionalBarColor.get();
             }
 
             final var gameBossbar = new GameBossbar(gamePlayer, gameState, title, barColor, BarStyle.SOLID, 100);

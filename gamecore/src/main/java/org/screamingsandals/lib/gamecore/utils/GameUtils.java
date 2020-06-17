@@ -11,6 +11,7 @@ import org.screamingsandals.lib.tasker.TaskerTime;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.mpr;
@@ -97,20 +98,19 @@ public class GameUtils {
             return false;
         }
 
-        final Location min = new Location(border1.getWorld(), Math.min(border1.getX(), border2.getX()), Math.min(border1.getY(), border2.getY()),
+        final var min = new Location(border1.getWorld(), Math.min(border1.getX(), border2.getX()), Math.min(border1.getY(), border2.getY()),
                 Math.min(border1.getZ(), border2.getZ()));
-        final Location max = new Location(border1.getWorld(), Math.max(border1.getX(), border2.getX()), Math.max(border1.getY(), border2.getY()),
+        final var max = new Location(border1.getWorld(), Math.max(border1.getX(), border2.getX()), Math.max(border1.getY(), border2.getY()),
                 Math.max(border1.getZ(), border2.getZ()));
         return (min.getX() <= location.getX() && min.getY() <= location.getY() && min.getZ() <= location.getZ() && max.getX() >= location.getX()
                 && max.getY() >= location.getY() && max.getZ() >= location.getZ());
     }
 
-    public static BarColor getBarColorByString(String input) {
-        BarColor toReturn = null;
+    public static Optional<BarColor> getBarColorByString(String input) {
         try {
-            toReturn = BarColor.valueOf(input.toUpperCase());
+            return Optional.of(BarColor.valueOf(input.toUpperCase()));
         } catch (Exception ignored) {
         }
-        return toReturn;
+        return Optional.empty();
     }
 }

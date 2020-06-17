@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.gamecore.GameCore;
 import org.screamingsandals.lib.gamecore.core.GameFrame;
 
 import java.util.*;
@@ -38,6 +39,30 @@ public class HologramManager extends org.screamingsandals.lib.nms.holograms.Holo
         return hologram;
     }
 
+    public Collection<GameHologram> getHologramsForGame(GameFrame gameFrame) {
+        return getHologramsForGame(gameFrame.getUuid());
+    }
+
+    public Collection<GameHologram> getHologramsForGame(UUID uuid) {
+        return gameHolograms.get(uuid);
+    }
+
+    public void updateViewersForGame(GameFrame gameFrame) {
+        final var uuid = gameFrame.getUuid();
+        final var holograms = getHologramsForGame(uuid);
+
+        holograms.forEach(gameHologram -> gameHologram.setViewers(gameFrame.getPlayersInGame()));
+    }
+
+    public void updateViewersForGame(UUID uuid) {
+        final var registeredGame = GameCore.getGameManager().getRegisteredGame(uuid);
+        if (registeredGame.isEmpty()) {
+            return;
+        }
+
+        updateViewersForGame(registeredGame.get());
+    }
+
 
     public void destroyAll(UUID uuid) {
         final List<GameHologram> holograms = new LinkedList<>();
@@ -52,15 +77,9 @@ public class HologramManager extends org.screamingsandals.lib.nms.holograms.Holo
     }
 
     public void destroy(GameHologram gameHologram) {
-        final Iterator<GameHologram> iterator = gameHolograms.values().iterator();
+        gameHologram.destroy();
 
-        while (iterator.hasNext()) {
-            final var hologram = iterator.next();
-            if (hologram.getUuid() == gameHologram.getUuid()) {
-                hologram.destroy();
-                iterator.remove();
-            }
-        }
+        gameHolograms.remove(gameHologram.getGameFrame().getUuid(), gameHologram);
     }
 
     public void destroy() {

@@ -5,8 +5,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Setter;
-
-import org.bukkit.event.Listener;
 import org.screamingsandals.lib.config.custom.ValueHolder;
 import org.screamingsandals.lib.config.custom.ValueType;
 import org.screamingsandals.lib.debug.Debug;
@@ -414,6 +412,8 @@ public abstract class GameFrame implements Serializable, Cloneable {
                 visualsManager.prepareGameVisuals(gamePlayer);
                 visualsManager.showGameVisuals();
 
+                GameCore.getHologramManager().updateViewersForGame(this);
+
                 mpr("commands.join.success")
                         .game(this)
                         .send(gamePlayer);
@@ -433,7 +433,6 @@ public abstract class GameFrame implements Serializable, Cloneable {
      */
     public boolean leave(GamePlayer gamePlayer) {
         if (!playersInGame.contains(gamePlayer) && !spectators.contains(gamePlayer)) {
-            //TODO: mpr
             return false;
         }
 
@@ -444,7 +443,9 @@ public abstract class GameFrame implements Serializable, Cloneable {
         gamePlayer.setSpectator(false);
 
         gamePlayer.restore(true); //TODO: mainlobby? bungee?
+
         playersInGame.remove(gamePlayer);
+        GameCore.getHologramManager().updateViewersForGame(this);
 
         mpr("commands.leave.success")
                 .game(this)

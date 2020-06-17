@@ -260,7 +260,7 @@ public abstract class GameBuilder<T extends GameFrame> {
 
         final var gameHologram = GameCore.getHologramManager()
                 .spawnTouchableHologram(currentGame, HologramType.BUILDER_SPAWNER, player, spawner.getLocation().getLocation(), lines);
-        gameHologram.setUuid(spawner.getUuid());
+        gameHologram.setSpawnerUuid(spawner.getUuid());
         gameHologram.setHandler(new SpawnerHologramHandler());
     }
 

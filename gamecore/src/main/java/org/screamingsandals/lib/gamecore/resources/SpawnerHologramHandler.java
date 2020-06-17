@@ -46,7 +46,7 @@ public class SpawnerHologramHandler implements TouchHandler {
             return;
         }
 
-        final var spawnerUUID = gameHologram.getUuid();
+        final var spawnerUUID = gameHologram.getSpawnerUuid();
         final var resourceSpawner = game.getResourceManager().getByID(spawnerUUID);
 
         if (resourceSpawner.isEmpty()) {
