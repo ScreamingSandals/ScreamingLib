@@ -24,7 +24,7 @@ public class GamePlayer {
     private final PlayerStorage playerStorage;
     private GameTeam gameTeam;
     private GameFrame activeGame;
-    private boolean spectator;
+    private PlayerState playerState;
 
     public GamePlayer(Player player) {
         this.player = player;
@@ -65,21 +65,22 @@ public class GamePlayer {
     }
 
     public void makePlayer() {
-        spectator = false;
         clean(false);
 
         if (isInGame()) {
+            playerState = PlayerState.ALIVE;
             teleport(activeGame.getGameWorld().getSpectatorSpawn())
                     .then(() -> GameCore.fireEvent(new SPlayerSwitchedToSpectator(this)))
                     .done();
         } else {
+            playerState = PlayerState.NOT_TRACED;
             //GameCore.fireEvent(new SPlayerSwitchedToPlayer(this));
             //todo - teleport to mainlobby
         }
     }
 
     public void makeSpectator(boolean fireEvent) {
-        spectator = true;
+        playerState = PlayerState.SPECTATOR;
         clean(true);
 
         teleport(activeGame.getGameWorld().getSpectatorSpawn()).then(() -> {
@@ -112,6 +113,18 @@ public class GamePlayer {
 
     public void clean(boolean spectator) {
         playerStorage.clean(player, spectator);
+    }
+
+    public boolean isSpectator() {
+        return playerState == PlayerState.SPECTATOR;
+    }
+
+    public boolean isAlive() {
+        return playerState == PlayerState.ALIVE;
+    }
+
+    public boolean isTraced() {
+        return playerState != PlayerState.NOT_TRACED;
     }
 
     @AllArgsConstructor

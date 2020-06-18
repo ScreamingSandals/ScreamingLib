@@ -24,6 +24,7 @@ import org.screamingsandals.lib.gamecore.events.player.spectator.SSpectatorJoine
 import org.screamingsandals.lib.gamecore.events.player.spectator.SSpectatorPreJoinGameEvent;
 import org.screamingsandals.lib.gamecore.placeholders.PlaceholderParser;
 import org.screamingsandals.lib.gamecore.player.GamePlayer;
+import org.screamingsandals.lib.gamecore.player.PlayerState;
 import org.screamingsandals.lib.gamecore.resources.ResourceManager;
 import org.screamingsandals.lib.gamecore.resources.ResourceTypes;
 import org.screamingsandals.lib.gamecore.store.GameStore;
@@ -406,7 +407,9 @@ public abstract class GameFrame implements Serializable, Cloneable {
 
         if (GameCore.fireEvent(new SPlayerPreJoinedGameEvent(this, gamePlayer))) {
             playersInGame.add(gamePlayer);
+
             gamePlayer.setActiveGame(this);
+            gamePlayer.setPlayerState(PlayerState.ALIVE);
             gamePlayer.storeAndClean();
             gamePlayer.teleport(lobbyWorld.getSpawn()).then(() -> {
                 visualsManager.prepareGameVisuals(gamePlayer);
@@ -440,7 +443,7 @@ public abstract class GameFrame implements Serializable, Cloneable {
         visualsManager.remove(gamePlayer);
 
         gamePlayer.setActiveGame(null);
-        gamePlayer.setSpectator(false);
+        gamePlayer.setPlayerState(PlayerState.NOT_TRACED);
 
         gamePlayer.restore(true); //TODO: mainlobby? bungee?
 
