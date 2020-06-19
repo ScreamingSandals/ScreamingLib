@@ -27,6 +27,7 @@ import org.screamingsandals.lib.gamecore.world.LobbyWorld;
 import org.screamingsandals.lib.lang.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.screamingsandals.lib.gamecore.language.GameLanguage.m;
@@ -49,10 +50,11 @@ public abstract class GameBuilder<T extends GameFrame> {
         return true;
     }
 
-    public void load(T gameFrame, Player player) {
+    public boolean load(T gameFrame) {
         if (gameFrame == null) {
-            mpr("core.errors.game-does-not-exists").send(player);
+            return false;
         }
+
         this.gameFrame = gameFrame;
         this.gameName = gameFrame.getGameName();
 
@@ -61,9 +63,19 @@ public abstract class GameBuilder<T extends GameFrame> {
 
         final var stores = gameFrame.getStores();
         final var spawners = gameFrame.getResourceManager().getResourceSpawners();
+        final var world = gameFrame.getGameWorld().getWorldAdapter().getWorld();
+
+        final var playersInTheWorld = world.getPlayers();
 
         stores.forEach(gameStore -> gameStore.spawn(gameFrame, formatStoreName(gameStore)));
-        spawners.forEach(resourceSpawner -> buildHologram(resourceSpawner, gameFrame, player)); //todo: better way of handling players
+        spawners.forEach(resourceSpawner -> buildHologram(resourceSpawner, gameFrame, playersInTheWorld)); //todo: better way of handling players
+        return true;
+    }
+
+    public void load(T gameFrame, Player player) {
+        if (!load(gameFrame)) {
+            mpr("core.errors.game-does-not-exists").send(player);
+        }
     }
 
     public void save(Player player) {
@@ -240,6 +252,10 @@ public abstract class GameBuilder<T extends GameFrame> {
     }
 
     public void buildHologram(ResourceSpawner spawner, GameFrame currentGame, Player player) {
+        buildHologram(spawner, currentGame, Collections.singletonList(player));
+    }
+
+    public void buildHologram(ResourceSpawner spawner, GameFrame currentGame, List<Player> player) {
         final List<String> lines = new ArrayList<>();
         var period = spawner.getPeriod();
         final var timeUnit = spawner.getTimeUnit();

@@ -14,6 +14,8 @@ import org.screamingsandals.lib.gamecore.events.player.SPlayerSwitchedToSpectato
 import org.screamingsandals.lib.gamecore.events.player.SPlayerTeleportEvent;
 import org.screamingsandals.lib.gamecore.team.GameTeam;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Data

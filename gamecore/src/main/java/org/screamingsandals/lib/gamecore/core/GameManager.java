@@ -61,8 +61,7 @@ public class GameManager<T extends GameFrame> {
                 Debug.warn("&cCannot load game &e" + gameName);
                 Debug.warn("&ecAdded to GameBuilder!");
 
-                //TODO: add to builder
-
+                gameBuilders.put(game.getUuid(), createGameBuilder(game));
                 return null;
             }
 
@@ -109,8 +108,6 @@ public class GameManager<T extends GameFrame> {
     public void unregisterAll() {
         registeredGames.values().forEach(GameFrame::stop);
         registeredGames.clear();
-
-
     }
 
     public void registerGame(UUID uuid, T gameFrame) {
@@ -239,13 +236,21 @@ public class GameManager<T extends GameFrame> {
         return false;
     }
 
+    public GameBuilder<T> createGameBuilder(T gameFrame) {
+        final var builder = new GameBuilder<>() {
+        };
+
+        builder.load(gameFrame);
+        return (GameBuilder<T>) builder;
+    }
+
     @SuppressWarnings("unchecked")
-    public <E extends GameBuilder<?>> E getGameBuilder(UUID uuid) {
+    public <E extends GameBuilder<T>> E getGameBuilder(UUID uuid) {
         return (E) gameBuilders.get(uuid);
     }
 
     @SuppressWarnings("unchecked")
-    public <E extends GameBuilder<?>> E getGameBuilder(String name) {
+    public <E extends GameBuilder<T>> E getGameBuilder(String name) {
         for (var builder : gameBuilders.values()) {
             final var castedBuilder = (GameBuilder<?>) builder;
             if (castedBuilder.getGameName().equals(name)) {

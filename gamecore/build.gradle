@@ -13,4 +13,5 @@ dependencies {
     implementation project(':bossbars')
     implementation project(':tasker')
     implementation project(':commands')
+    implementation project(':splayers')
 }
