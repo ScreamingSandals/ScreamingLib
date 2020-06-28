@@ -12,6 +12,8 @@ import org.bukkit.material.Lever;
 
 import java.util.*;
 
+import static org.screamingsandals.lib.reflection.Reflection.*;
+
 //TODO
 public class LegacyWorldRegeneration implements Regenerable {
     private final List<Location> builtBlocks = new ArrayList<>();
@@ -46,7 +48,7 @@ public class LegacyWorldRegeneration implements Regenerable {
 
             try {
                 // The method is no longer in API, but in legacy versions exists
-                Block.class.getMethod("setData", byte.class).invoke(block, brokenBlockData.get(block));
+                getMethod(block, "setData", byte.class).invoke(brokenBlockData.get(block));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -158,9 +160,5 @@ public class LegacyWorldRegeneration implements Regenerable {
     @Override
     public void unregisterDestroyedBlock(Location location) {
         destroyedBlocks.remove(location.getBlock());
-    }
-
-    private void regenerateBeds(Map<Block, Block> blocks) {
-
     }
 }

@@ -5,11 +5,14 @@ import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.config.BungeeConfigAdapter;
 import org.screamingsandals.lib.config.ConfigAdapter;
 import org.screamingsandals.lib.config.SpigotConfigAdapter;
+import org.screamingsandals.lib.reflection.Reflection;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.screamingsandals.lib.reflection.Reflection.fastInvoke;
 
 /**
  * @author ScreamingSandals team
@@ -78,7 +81,7 @@ public class Utils {
 
     public static File getDataFolder(Object plugin) {
         try {
-            return (File) plugin.getClass().getMethod("getDataFolder").invoke(plugin);
+            return (File) Reflection.fastInvoke(plugin, "getDataFolder");
         } catch (Exception e) {
             e.printStackTrace();
         }

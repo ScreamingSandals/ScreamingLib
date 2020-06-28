@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.screamingsandals.lib.reflection.Reflection.*;
+
 //You can create custom command messages with this!
 @Data
 public abstract class CommandLanguage {
@@ -49,10 +51,7 @@ public abstract class CommandLanguage {
                 sendMessage(rec, langKey);
             }
         }
-        try {
-            receiver.getClass().getMethod("sendMessage", String.class).invoke(receiver, colorize(get(langKey)));
-        } catch (Throwable ignored) {
-        }
+        getMethod(receiver, "sendMessage", String.class).invoke(colorize(get(langKey)));
     }
 
     /**

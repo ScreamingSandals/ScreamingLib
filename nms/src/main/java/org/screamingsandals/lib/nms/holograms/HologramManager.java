@@ -14,11 +14,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.screamingsandals.lib.nms.network.inbound.AutoPacketInboundListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.PacketPlayInUseEntity;
-import static org.screamingsandals.lib.nms.utils.ClassStorage.getField;
+import static org.screamingsandals.lib.reflection.Reflection.getField;
 
 @Data
 public class HologramManager implements Listener {
@@ -37,8 +36,8 @@ public class HologramManager implements Listener {
             @Override
             protected Object handle(Player sender, Object packet) {
                 if (PacketPlayInUseEntity.isInstance(packet)) {
-                    final int field = (int) getField(PacketPlayInUseEntity, "a,field_149567_a", packet);
-                    for (Hologram hologram : activeHolograms) {
+                    final var field = (int) getField(PacketPlayInUseEntity, "a,field_149567_a", packet);
+                    for (var hologram : activeHolograms) {
                         if (hologram.handleTouch(sender, field)) {
                             break;
                         }
@@ -50,11 +49,11 @@ public class HologramManager implements Listener {
     }
 
     public Hologram spawnHologram(Player player, Location loc, List<String> lines) {
-        return spawnHologram(Collections.singletonList(player), loc, lines);
+        return spawnHologram(List.of(player), loc, lines);
     }
 
     public Hologram spawnHologramTouchable(Player player, Location loc, List<String> lines) {
-        return spawnHologramTouchable(Collections.singletonList(player), loc, lines);
+        return spawnHologramTouchable(List.of(player), loc, lines);
     }
 
     public Hologram spawnHologram(List<Player> players, Location loc, List<String> lines) {
@@ -75,16 +74,16 @@ public class HologramManager implements Listener {
             return;
         }
 
-        final List<Hologram> copy = new ArrayList<>(activeHolograms);
-        for (Hologram hologram : copy) {
+        final var copy = new ArrayList<>(activeHolograms);
+        for (var hologram : copy) {
             if (hologram.isEmpty() || !hologram.hasViewers()) {
                 activeHolograms.remove(hologram);
                 continue;
             }
             try {
-                final Player player = event.getPlayer();
-                final List<Player> viewers = hologram.getViewers();
-                final Location location = hologram.getLocation();
+                final var player = event.getPlayer();
+                final var viewers = hologram.getViewers();
+                final var location = hologram.getLocation();
 
                 if (viewers.contains(player) && player.getWorld().equals(location.getWorld())) {
                     if (event.getTo().distanceSquared(location) < VISIBILITY_DISTANCE_SQUARED
@@ -92,7 +91,7 @@ public class HologramManager implements Listener {
                         hologram.update(player, hologram.getAllSpawnPackets(), false);
                     } else if (event.getTo().distanceSquared(location) >= VISIBILITY_DISTANCE_SQUARED
                             && event.getFrom().distanceSquared(location) < VISIBILITY_DISTANCE_SQUARED) {
-                        hologram.update(player, Collections.singletonList(hologram.getFullDestroyPacket()), false);
+                        hologram.update(player, List.of(hologram.getFullDestroyPacket()), false);
                     }
                 }
             } catch (Throwable ignored) {
@@ -106,16 +105,16 @@ public class HologramManager implements Listener {
             return;
         }
 
-        final List<Hologram> copy = new ArrayList<>(activeHolograms);
+        final var copy = new ArrayList<>(activeHolograms);
         for (Hologram hologram : copy) {
             if (hologram.isEmpty() || !hologram.hasViewers()) {
                 activeHolograms.remove(hologram);
                 continue;
             }
             try {
-                final Player player = event.getPlayer();
-                final List<Player> viewers = hologram.getViewers();
-                final Location loc = hologram.getLocation();
+                final var player = event.getPlayer();
+                final var viewers = hologram.getViewers();
+                final var loc = hologram.getLocation();
 
                 if (viewers.contains(player) && player.getWorld().equals(loc.getWorld())
                         && !event.getFrom().equals(loc.getWorld())) {
@@ -134,16 +133,16 @@ public class HologramManager implements Listener {
             return;
         }
 
-        final List<Hologram> copy = new ArrayList<>(activeHolograms);
+        final var copy = new ArrayList<>(activeHolograms);
         for (Hologram hologram : copy) {
             if (hologram.isEmpty() || !hologram.hasViewers()) {
                 activeHolograms.remove(hologram);
                 continue;
             }
             try {
-                final Player player = event.getPlayer();
-                final List<Player> viewers = hologram.getViewers();
-                final Location location = hologram.getLocation();
+                final var player = event.getPlayer();
+                final var viewers = hologram.getViewers();
+                final var location = hologram.getLocation();
 
                 if (viewers.contains(player) && event.getRespawnLocation().getWorld().equals(location.getWorld())) {
                     if (player.getLocation().distanceSquared(location) < VISIBILITY_DISTANCE_SQUARED) {
@@ -168,16 +167,16 @@ public class HologramManager implements Listener {
             return;
         }
 
-        final List<Hologram> copy = new ArrayList<>(activeHolograms);
+        final var copy = new ArrayList<>(activeHolograms);
         for (Hologram hologram : copy) {
             if (hologram.isEmpty() || !hologram.hasViewers()) {
                 activeHolograms.remove(hologram);
                 continue;
             }
             try {
-                final Player player = event.getPlayer();
-                final List<Player> viewers = hologram.getViewers();
-                final Location location = hologram.getLocation();
+                final var player = event.getPlayer();
+                final var viewers = hologram.getViewers();
+                final var location = hologram.getLocation();
 
                 if (viewers.contains(player) && player.getWorld().equals(location.getWorld())) {
                     if (event.getTo().distanceSquared(location) < VISIBILITY_DISTANCE_SQUARED
@@ -185,7 +184,7 @@ public class HologramManager implements Listener {
                         hologram.update(player, hologram.getAllSpawnPackets(), false);
                     } else if (event.getTo().distanceSquared(location) >= VISIBILITY_DISTANCE_SQUARED
                             && event.getFrom().distanceSquared(location) < VISIBILITY_DISTANCE_SQUARED) {
-                        hologram.update(player, Collections.singletonList(hologram.getFullDestroyPacket()), false);
+                        hologram.update(player, List.of(hologram.getFullDestroyPacket()), false);
                     }
                 }
             } catch (Throwable ignored) {

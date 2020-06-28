@@ -3,11 +3,11 @@ package org.screamingsandals.lib.nms.entity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.screamingsandals.lib.nms.utils.InstanceMethod;
 
 import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.ChatSerializer;
 import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.IChatBaseComponent;
 import static org.screamingsandals.lib.nms.utils.ClassStorage.*;
+import static org.screamingsandals.lib.reflection.Reflection.*;
 
 public class EntityNMS {
 	protected Object handler;
@@ -49,16 +49,16 @@ public class EntityNMS {
 	}
 
 	public int getId() {
-		return (int) getMethod(handler, "getId,func_145782_y").invoke();
+		return (int) fastInvoke(handler, "getId,func_145782_y");
 	}
 
 	public Object getDataWatcher() {
-		return getMethod(handler, "getDataWatcher,func_184212_Q").invoke();
+		return fastInvoke(handler, "getDataWatcher,func_184212_Q");
 	}
 
 	public void setCustomName(String name) {
-		InstanceMethod method = getMethod(handler, "setCustomName,func_200203_b", IChatBaseComponent);
-		if (method.getReflectedMethod() != null) {
+		var method = getMethod(handler, "setCustomName,func_200203_b", IChatBaseComponent);
+		if (method.getMethod() != null) {
 			method.invoke(getMethod(ChatSerializer, "a,field_150700_a", String.class)
 				.invokeStatic("{\"text\": \"" + name + "\"}"));
 		} else {
@@ -67,10 +67,10 @@ public class EntityNMS {
 	}
 
 	public String getCustomName() {
-		final Object textComponent = getMethod(handler, "getCustomName,func_200201_e,func_95999_t").invoke();
+		final var textComponent = fastInvoke(handler, "getCustomName,func_200201_e,func_95999_t");
 		String text;
 		if (IChatBaseComponent.isInstance(textComponent)) {
-			text = (String) getMethod(textComponent, "getLegacyString,func_150254_d").invoke();
+			text = (String) fastInvoke(textComponent, "getLegacyString,func_150254_d");
 		} else {
 			text = textComponent.toString();
 		}
@@ -82,7 +82,7 @@ public class EntityNMS {
 	}
 
 	public boolean isCustomNameVisible() {
-		return (boolean) getMethod(handler, "getCustomNameVisible,func_174833_aM").invoke();
+		return (boolean) fastInvoke(handler, "getCustomNameVisible,func_174833_aM");
 	}
 
 	public void setInvisible(boolean invisible) {
@@ -90,7 +90,7 @@ public class EntityNMS {
 	}
 
 	public boolean isInvisible() {
-		return (boolean) getMethod(handler, "isInvisible,func_82150_aj").invoke();
+		return (boolean) fastInvoke(handler, "isInvisible,func_82150_aj");
 	}
 	
 	public void setGravity(boolean gravity) {
@@ -98,6 +98,6 @@ public class EntityNMS {
 	}
 	
 	public boolean isGravity() {
-		return !((boolean) getMethod(handler, "isNoGravity,func_189652_ae").invoke());
+		return !((boolean) fastInvoke(handler, "isNoGravity,func_189652_ae"));
 	}
 }

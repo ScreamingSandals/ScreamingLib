@@ -18,6 +18,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.JarFile;
 
+import static org.screamingsandals.lib.reflection.Reflection.*;
+
 @Data
 public abstract class CommandEnvironment {
     private final Object plugin;
@@ -41,8 +43,8 @@ public abstract class CommandEnvironment {
             commandManager = new BukkitManager((Plugin) plugin);
         } catch (Throwable ignored) {
             try {
-                commandManager = new BungeeManager((net.md_5.bungee.api.plugin.Plugin) plugin);
                 Class.forName("net.md_5.bungee.api.plugin.PluginManager");
+                commandManager = new BungeeManager((net.md_5.bungee.api.plugin.Plugin) plugin);
             } catch (Throwable ignored2) {
                 Debug.warn("Your server type is not supported!", true);
             }
@@ -109,10 +111,6 @@ public abstract class CommandEnvironment {
     }
 
     private void invoke(Object object) {
-        try {
-            object.getClass().getDeclaredMethod("register").invoke(object);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        fastInvoke(object, "register");
     }
 }

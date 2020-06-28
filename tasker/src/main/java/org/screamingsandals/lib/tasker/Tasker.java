@@ -1,7 +1,11 @@
 package org.screamingsandals.lib.tasker;
 
+import org.screamingsandals.lib.reflection.Reflection;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.screamingsandals.lib.reflection.Reflection.fastInvoke;
 
 public interface Tasker {
     Map<BaseTask, Object> runningTasks = new HashMap<>();
@@ -17,8 +21,8 @@ public interface Tasker {
             }
 
             try {
-                Object task = runningTasks.get(baseTask);
-                task.getClass().getMethod("cancel").invoke(task);
+                var task = runningTasks.get(baseTask);
+                Reflection.fastInvoke(task, "cancel");
             } catch (Exception ignored) {
             }
         });
@@ -32,8 +36,8 @@ public interface Tasker {
         }
 
         try {
-            Object task = runningTasks.get(baseTask);
-            task.getClass().getMethod("cancel").invoke(task);
+            var task = runningTasks.get(baseTask);
+            Reflection.fastInvoke(task, "cancel");
         } catch (Exception ignored) {
         }
 

@@ -4,17 +4,16 @@ import lombok.Data;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.nms.entity.ArmorStandNMS;
-import org.screamingsandals.lib.nms.utils.InstanceMethod;
+import org.screamingsandals.lib.nms.utils.ClassStorage;
 import org.screamingsandals.lib.nms.utils.Version;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.*;
-import static org.screamingsandals.lib.nms.utils.ClassStorage.getField;
-import static org.screamingsandals.lib.nms.utils.ClassStorage.getMethod;
+import static org.screamingsandals.lib.nms.utils.ClassStorage.*;
+import static org.screamingsandals.lib.reflection.Reflection.*;
 
 @Data
 public class Hologram {
@@ -71,11 +70,11 @@ public class Hologram {
     }
 
     public Hologram addViewer(Player player) {
-        return addViewers(Collections.singletonList(player));
+        return addViewers(List.of(player));
     }
 
     public Hologram addViewers(List<Player> players) {
-        for (Player player : players) {
+        players.forEach(player -> {
             if (!viewers.contains(player)) {
                 viewers.add(player);
                 try {
@@ -83,24 +82,24 @@ public class Hologram {
                 } catch (Throwable ignored) {
                 }
             }
-        }
+        });
         return this;
     }
 
     public Hologram removeViewer(Player player) {
-        return removeViewers(Collections.singletonList(player));
+        return removeViewers(List.of(player));
     }
 
     public Hologram removeViewers(List<Player> players) {
-        for (Player player : players) {
+        players.forEach(player -> {
             if (viewers.contains(player)) {
                 viewers.remove(player);
                 try {
-                    update(player, Collections.singletonList(getFullDestroyPacket()), true);
+                    update(player, List.of(getFullDestroyPacket()), true);
                 } catch (Throwable ignored) {
                 }
             }
-        }
+        });
         return this;
     }
 
@@ -145,15 +144,13 @@ public class Hologram {
         if (!checkID(entityId))
             return false;
 
-        for (TouchHandler handler : handlers) {
-            handler.handle(player, this);
-        }
+        handlers.forEach(handler -> handler.handle(player, this));
 
         return true;
     }
 
     public boolean checkID(int id) {
-        for (ArmorStandNMS entity : entities) {
+        for (var entity : entities) {
             if (entity.getId() == id) {
                 return true;
             }
@@ -167,32 +164,32 @@ public class Hologram {
 
     private void updateEntities(int startIndex, boolean justThisIndex) {
         try {
-            final List<Object> packets = new ArrayList<>();
-            boolean positionChanged = !justThisIndex && lines.size() != entities.size();
+            final var packets = new ArrayList<>();
+            var positionChanged = !justThisIndex && lines.size() != entities.size();
 
-            for (int i = startIndex; (i < lines.size()) && (!justThisIndex || i == startIndex); i++) {
-                final String line = lines.get(i);
+            for (var i = startIndex; (i < lines.size()) && (!justThisIndex || i == startIndex); i++) {
+                final var line = lines.get(i);
                 if (i < entities.size() && entities.get(i) != null) {
-                    final ArmorStandNMS armorStand = entities.get(i);
+                    final var armorStand = entities.get(i);
                     armorStand.setCustomName(line);
 
-                    final Object metadataPacket = Objects.requireNonNull(PacketPlayOutEntityMetadata)
+                    final var metadataPacket = Objects.requireNonNull(PacketPlayOutEntityMetadata)
                             .getConstructor(int.class, DataWatcher, boolean.class)
                             .newInstance(armorStand.getId(), armorStand.getDataWatcher(), false);
                     packets.add(metadataPacket);
 
                     if (positionChanged) {
-                        final Location editedLocation = location.clone().add(0, (lines.size() - i) * .30, 0);
+                        final var editedLocation = location.clone().add(0, (lines.size() - i) * .30, 0);
                         armorStand.setLocation(editedLocation);
 
-                        final Object teleportPacket = Objects.requireNonNull(PacketPlayOutEntityTeleport)
+                        final var teleportPacket = Objects.requireNonNull(PacketPlayOutEntityTeleport)
                                 .getConstructor(Entity)
                                 .newInstance(armorStand.getHandler());
                         packets.add(teleportPacket);
                     }
                 } else {
-                    final Location editedLocation = location.clone().add(0, (lines.size() - i) * .30, 0);
-                    final ArmorStandNMS armorStand = new ArmorStandNMS(editedLocation);
+                    final var editedLocation = location.clone().add(0, (lines.size() - i) * .30, 0);
+                    final var armorStand = new ArmorStandNMS(editedLocation);
                     armorStand.setCustomName(line);
                     armorStand.setCustomNameVisible(true);
                     armorStand.setInvisible(true);
@@ -202,13 +199,13 @@ public class Hologram {
                     armorStand.setGravity(false);
                     armorStand.setMarker(!touchable);
 
-                    final Object spawnLivingPacket = Objects.requireNonNull(PacketPlayOutSpawnEntityLiving)
+                    final var spawnLivingPacket = Objects.requireNonNull(PacketPlayOutSpawnEntityLiving)
                             .getConstructor(EntityLiving)
                             .newInstance(armorStand.getHandler());
                     packets.add(spawnLivingPacket);
 
                     if (Version.isVersion(1, 15)) {
-                        final Object metadataPacket = Objects.requireNonNull(PacketPlayOutEntityMetadata)
+                        final var metadataPacket = Objects.requireNonNull(PacketPlayOutEntityMetadata)
                                 .getConstructor(int.class, DataWatcher, boolean.class)
                                 .newInstance(armorStand.getId(), armorStand.getDataWatcher(), false);
                         packets.add(metadataPacket);
@@ -222,14 +219,14 @@ public class Hologram {
                 }
             }
 
-            final List<Integer> forRemoval = new ArrayList<>();
+            final var forRemoval = new ArrayList<Integer>();
             if (entities.size() > lines.size()) {
-                for (int i = lines.size(); i < entities.size(); entities.remove(i)) {
+                for (var i = lines.size(); i < entities.size(); entities.remove(i)) {
                     forRemoval.add(entities.get(i).getId());
                 }
             }
 
-            final Object destroyPacket = Objects.requireNonNull(PacketPlayOutEntityDestroy)
+            final var destroyPacket = Objects.requireNonNull(PacketPlayOutEntityDestroy)
                     .getConstructor(int[].class)
                     .newInstance((Object) forRemoval.stream().mapToInt(i -> i).toArray());
             packets.add(destroyPacket);
@@ -254,20 +251,14 @@ public class Hologram {
                 return;
             }
 
-            final Object handler = getMethod(player, "getHandle").invoke();
-            final Object connection = getField(handler, "playerConnection,field_71135_a");
-            final InstanceMethod sendPacket = getMethod(connection, "sendPacket,func_147359_a", Packet);
-
-            for (Object packet : packets) {
-                sendPacket.invoke(packet);
-            }
+            packets.forEach(packet -> ClassStorage.sendPacket(player, packet));
         } catch (Throwable ignored) {
         }
     }
 
     public Object getFullDestroyPacket() throws Exception {
-        final int[] removal = new int[entities.size()];
-        for (int i = 0; i < entities.size(); i++) {
+        final var removal = new int[entities.size()];
+        for (var i = 0; i < entities.size(); i++) {
             removal[i] = entities.get(i).getId();
         }
 
@@ -275,13 +266,13 @@ public class Hologram {
     }
 
     public List<Object> getAllSpawnPackets() throws Exception {
-        final List<Object> packets = new ArrayList<>();
+        final var packets = new ArrayList<>();
 
-        for (ArmorStandNMS entity : entities) {
+        for (var entity : entities) {
             packets.add(Objects.requireNonNull(PacketPlayOutSpawnEntityLiving).getConstructor(EntityLiving).newInstance(entity.getHandler()));
 
             if (Version.isVersion(1, 15)) {
-                final Object metadataPacket = PacketPlayOutEntityMetadata
+                final var metadataPacket = PacketPlayOutEntityMetadata
                         .getConstructor(int.class, DataWatcher, boolean.class)
                         .newInstance(entity.getId(), entity.getDataWatcher(), true);
                 packets.add(metadataPacket);

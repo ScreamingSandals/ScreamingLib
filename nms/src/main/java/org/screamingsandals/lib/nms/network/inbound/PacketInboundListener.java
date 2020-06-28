@@ -6,6 +6,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 
+import static org.screamingsandals.lib.reflection.Reflection.*;
 import static org.screamingsandals.lib.nms.utils.ClassStorage.*;
 
 public abstract class PacketInboundListener{
@@ -15,9 +16,9 @@ public abstract class PacketInboundListener{
 	
 	public void addPlayer(Player player) {
 		try {
-			Channel channel = getChannel(player);
+			var channel = getChannel(player);
 			if (channel != null && channel.pipeline().get(channelName) == null) {
-				ChannelDuplexHandler handler = new ChannelDuplexHandler() {
+				var handler = new ChannelDuplexHandler() {
 					@Override
 					public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 						try {
@@ -37,7 +38,7 @@ public abstract class PacketInboundListener{
 
 	public void removePlayer(Player player) {
 		try {
-			Channel channel = getChannel(player);
+			var channel = getChannel(player);
 			if (channel != null && channel.pipeline().get(channelName) != null) {
 				channel.pipeline().remove(channelName);
 			}
@@ -47,7 +48,7 @@ public abstract class PacketInboundListener{
 	
 	private Channel getChannel(Player player) {
 		try {
-			Object manager = getField(getPlayerConnection(player), "networkManager,field_147371_a");
+			var manager = getField(getPlayerConnection(player), "networkManager,field_147371_a");
 			return (Channel) getField(manager, "channel,field_150746_k,k,m");
 		} catch (Throwable ignored) {
 		}

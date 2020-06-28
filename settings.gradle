@@ -26,5 +26,8 @@ include(':storage')
 project(':storage').projectDir = file('storage')
 include(':tasker')
 project(':tasker').projectDir = file('tasker')
-include 'splayers'
+include(':splayers')
+project(':splayers').projectDir = file('splayers')
+include(':reflection')
+project(':reflection').projectDir = file('reflection')
 

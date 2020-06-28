@@ -13,12 +13,13 @@ import java.util.List;
 
 import static org.bukkit.Bukkit.getLogger;
 
+// TODO: add Bungee compatibility to dependency helper
 @AllArgsConstructor
 public enum DependencyHelper {
     GROOVY("groovy.util.GroovyScriptEngine", "Groovy", "3.0.3"),
     UNIVOCITY("com.univocity.parsers.csv.CsvParser", "Univocity", "2.8.3"),
     LETTUCE_CORE("io.lettuce:lettuce-core", "Lettuce-Core", "5.2.2.RELEASE")
-    // add new dependencies here (and of course to
+    // add new dependencies here (and of course to ScreamingMiscs;
     ;
 
 

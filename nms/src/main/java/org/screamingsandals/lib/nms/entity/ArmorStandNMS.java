@@ -2,11 +2,13 @@ package org.screamingsandals.lib.nms.entity;
 
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
+import org.screamingsandals.lib.reflection.Reflection;
 
 import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.EntityArmorStand;
 import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.World;
 import static org.screamingsandals.lib.nms.utils.ClassStorage.getHandle;
-import static org.screamingsandals.lib.nms.utils.ClassStorage.getMethod;
+import static org.screamingsandals.lib.reflection.Reflection.getMethod;
+import static org.screamingsandals.lib.reflection.Reflection.fastInvoke;
 
 public class ArmorStandNMS extends EntityNMS {
 
@@ -32,7 +34,7 @@ public class ArmorStandNMS extends EntityNMS {
 	}
 	
 	public boolean isSmall() {
-		return (boolean) getMethod(handler, "isSmall,func_175410_n").invoke();
+		return (boolean) Reflection.fastInvoke(handler, "isSmall,func_175410_n");
 	}
 	
 	public void setArms(boolean arms) {
@@ -40,7 +42,7 @@ public class ArmorStandNMS extends EntityNMS {
 	}
 	
 	public boolean isArms() {
-		return (boolean) getMethod(handler, "hasArms,func_175402_q").invoke();
+		return (boolean) Reflection.fastInvoke(handler, "hasArms,func_175402_q");
 	}
 	
 	public void setBasePlate(boolean basePlate) {
@@ -48,7 +50,7 @@ public class ArmorStandNMS extends EntityNMS {
 	}
 	
 	public boolean isBasePlate() {
-		return (boolean) getMethod(handler, "hasBasePlate,func_175414_r").invoke();
+		return (boolean) Reflection.fastInvoke(handler, "hasBasePlate,func_175414_r");
 	}
 	
 	public void setMarker(boolean marker) {
@@ -56,7 +58,7 @@ public class ArmorStandNMS extends EntityNMS {
 	}
 	
 	public boolean isMarker() {
-		return (boolean) getMethod(handler, "isMarker,func_175426_l,s").invoke();
+		return (boolean) Reflection.fastInvoke(handler, "isMarker,func_175426_l,s");
 	}
 
 

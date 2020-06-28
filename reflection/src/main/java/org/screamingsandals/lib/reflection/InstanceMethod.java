@@ -1,7 +1,10 @@
-package org.screamingsandals.lib.nms.utils;
+package org.screamingsandals.lib.reflection;
+
+import lombok.Getter;
 
 import java.lang.reflect.Method;
 
+@Getter
 public class InstanceMethod extends ClassMethod {
 	private Object instance;
 	
@@ -12,9 +15,5 @@ public class InstanceMethod extends ClassMethod {
 	
 	public Object invoke(Object...params) {
 		return invokeInstance(instance, params);
-	}
-	
-	public Object getInstance() {
-		return this.instance;
 	}
 }

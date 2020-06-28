@@ -1,5 +1,10 @@
 package org.screamingsandals.lib.nms.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
 public enum Attribute {
 	MAX_HEALTH("MAX_HEALTH,field_111267_a"),
 	FOLLOW_RANGE("FOLLOW_RANGE,field_111265_b"),
@@ -14,12 +19,4 @@ public enum Attribute {
 	LUCK("LUCK,field_188792_h");
 	
 	private String keys;
-	
-	Attribute(String keys) {
-		this.keys = keys;
-	}
-	
-	public String getKeys() {
-		return this.keys;
-	}
 }

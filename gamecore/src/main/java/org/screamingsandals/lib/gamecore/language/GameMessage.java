@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static org.screamingsandals.lib.reflection.Reflection.*;
+
 public class GameMessage extends Message {
     private GameFrame gameFrame;
 
@@ -204,7 +206,7 @@ public class GameMessage extends Message {
         }
 
         try {
-            boolean hasPermissions = (boolean) sender.getClass().getMethod("hasPermission", String.class).invoke(sender, permissions);
+            boolean hasPermissions = (boolean) getMethod(sender,"hasPermission", String.class).invoke(permissions);
             if (hasPermissions) {
                 internalSendToReceiver(sender, get());
             }
@@ -236,7 +238,7 @@ public class GameMessage extends Message {
         }
 
         try {
-            sender.getClass().getMethod("sendMessage", ChatMessageType.class, TextComponent.class).invoke(sender, ChatMessageType.ACTION_BAR, new TextComponent(get()));
+            getMethod(sender, "sendMessage", ChatMessageType.class, TextComponent.class).invoke(ChatMessageType.ACTION_BAR, new TextComponent(get()));
         } catch (Throwable ignored) {
         }
         return this;

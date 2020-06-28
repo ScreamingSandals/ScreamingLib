@@ -7,6 +7,8 @@ import org.screamingsandals.lib.lang.storage.Storage;
 
 import java.util.*;
 
+import static org.screamingsandals.lib.reflection.Reflection.*;
+
 public class Message {
     protected String key;
     protected Storage storage;
@@ -108,10 +110,10 @@ public class Message {
         String language = "";
 
         try {
-            language = (String) player.getClass().getMethod("getLocale").invoke(player);
+            language = (String) fastInvoke(player, "getLocale");
         } catch (Throwable ignored) {
             try {
-                language = (String) player.getClass().getMethod("getLanguage").invoke(player);
+                language = (String) fastInvoke(player,"getLanguage");
             } catch (Throwable ignored2) {
             }
         }
@@ -187,7 +189,7 @@ public class Message {
         }
 
         try {
-            boolean hasPermissions = (boolean) sender.getClass().getMethod("hasPermission", String.class).invoke(sender, permissions);
+            boolean hasPermissions = (boolean) getMethod(sender, "hasPermission", String.class).invoke(permissions);
             if (hasPermissions) {
                 internalSendToReceiver(sender, get());
             }
@@ -217,7 +219,7 @@ public class Message {
         }
 
         try {
-            sender.getClass().getMethod("sendMessage", ChatMessageType.class, TextComponent.class).invoke(sender, ChatMessageType.ACTION_BAR, new TextComponent(get()));
+            getMethod(sender,"sendMessage", ChatMessageType.class, TextComponent.class).invoke(ChatMessageType.ACTION_BAR, new TextComponent(get()));
         } catch (Throwable ignored) {
         }
         return this;
@@ -230,7 +232,7 @@ public class Message {
         }
 
         try {
-            sender.getClass().getMethod("sendMessage", String.class).invoke(sender, message);
+            getMethod(sender, "sendMessage", String.class).invoke(message);
         } catch (Throwable ignored) {
             ignored.printStackTrace();
         }

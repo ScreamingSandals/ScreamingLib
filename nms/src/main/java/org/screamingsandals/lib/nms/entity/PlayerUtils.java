@@ -1,11 +1,11 @@
 package org.screamingsandals.lib.nms.entity;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import static org.screamingsandals.lib.nms.utils.ClassStorage.NMS.*;
+import static org.screamingsandals.lib.reflection.Reflection.*;
 import static org.screamingsandals.lib.nms.utils.ClassStorage.*;
 
 public class PlayerUtils {
@@ -18,10 +18,10 @@ public class PlayerUtils {
 					player.spigot().respawn();
 				} catch (Throwable t) {
 					try {
-						Object selectedObj = findEnumConstant(EnumClientCommand, "PERFORM_RESPAWN");
-						Object packet = PacketPlayInClientCommand.getDeclaredConstructor(EnumClientCommand)
+						var selectedObj = findEnumConstant(EnumClientCommand, "PERFORM_RESPAWN");
+						var packet = PacketPlayInClientCommand.getDeclaredConstructor(EnumClientCommand)
 							.newInstance(selectedObj);
-						Object connection = getPlayerConnection(player);
+						var connection = getPlayerConnection(player);
 						getMethod(connection, "a,func_147342_a", PacketPlayInClientCommand).invoke(packet);
 					} catch (Throwable ignored) {
 						t.printStackTrace();
@@ -33,18 +33,10 @@ public class PlayerUtils {
 
 	public static void fakeExp(Player player, float percentage, int levels) {
 		try {
-			Object packet = PacketPlayOutExperience.getConstructor(float.class, int.class, int.class)
+			var packet = PacketPlayOutExperience.getConstructor(float.class, int.class, int.class)
 				.newInstance(percentage, player.getTotalExperience(), levels);
 			sendPacket(player, packet);
 		} catch (Throwable ignored) {
-		}
-	}
-
-	public static void teleportPlayer(Player player, Location location) {
-		try {
-			player.teleportAsync(location);
-		} catch (Throwable t) {
-			player.teleport(location);
 		}
 	}
 }
