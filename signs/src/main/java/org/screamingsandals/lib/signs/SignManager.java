@@ -2,6 +2,7 @@ package org.screamingsandals.lib.signs;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,17 +12,26 @@ import java.util.List;
 import java.util.Map;
 
 public class SignManager {
-    private final FileConfiguration config;
+    private final FileConfiguration config = new YamlConfiguration();
     private final File configFile;
     private final HashMap<Location, SignBlock> signs = new HashMap<>();
     private boolean modify = false;
     private final SignOwner owner;
 
     @SuppressWarnings("unchecked")
-    public SignManager(SignOwner owner, FileConfiguration config, File configFile) {
+    public SignManager(SignOwner owner, File configFile) {
         this.owner = owner;
-    	this.config = config;
         this.configFile = configFile;
+
+        owner.runLater(this::loadConfig, 5L);
+    }
+
+    public void loadConfig() {
+        try {
+            config.load(configFile);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         var conf = (List<Map<String, Object>>) config.getList("sign");
         if (conf != null) {
@@ -32,6 +42,7 @@ public class SignManager {
                 }
                 var loc = (Location) c.get("location");
                 signs.put(loc, new SignBlock(loc, name));
+                owner.updateSign(signs.get(loc));
             }
         }
     }
