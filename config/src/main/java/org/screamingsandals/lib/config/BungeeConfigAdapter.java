@@ -8,6 +8,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +48,11 @@ public abstract class BungeeConfigAdapter implements ConfigAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Collection<String> getKeys(String path) {
+        return path == null || path.isBlank() ? configuration.getKeys() : configuration.getSection(path).getKeys();
     }
 
     @Override
@@ -99,6 +105,16 @@ public abstract class BungeeConfigAdapter implements ConfigAdapter {
     }
 
     @Override
+    public long getLong(String key) {
+        return configuration.getLong(key);
+    }
+
+    @Override
+    public long getLong(String key, long def) {
+        return configuration.getLong(key, def);
+    }
+
+    @Override
     public double getDouble(String key) {
         return configuration.getDouble(key);
     }
@@ -120,7 +136,7 @@ public abstract class BungeeConfigAdapter implements ConfigAdapter {
     }
 
     @Override
-    public List<Map<?, ?>> getMap(String key) {
+    public List<Map<?, ?>> getMapList(String key) {
         List<?> list = getList(key);
         List<Map<?, ?>> result = new ArrayList<>();
 

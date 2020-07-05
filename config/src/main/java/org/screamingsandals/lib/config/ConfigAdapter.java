@@ -3,6 +3,7 @@ package org.screamingsandals.lib.config;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -55,6 +56,19 @@ public interface ConfigAdapter {
 
     /**
      * @param key key to value in file
+     * @return long of that value or null
+     */
+    long getLong(String key);
+
+    /**
+     * @param key key to value in file
+     * @param def default value
+     * @return long of that value or default value
+     */
+    long getLong(String key, long def);
+
+    /**
+     * @param key key to value in file
      * @return double of that value or null
      */
     double getDouble(String key);
@@ -76,7 +90,7 @@ public interface ConfigAdapter {
      * @param key key to value in file
      * @return List of that value or null
      */
-    List<Map<?, ?>> getMap(String key);
+    List<Map<?, ?>> getMapList(String key);
 
     /**
      * @param key key to value in file
@@ -108,7 +122,29 @@ public interface ConfigAdapter {
      */
     void load();
 
-    default void checkOrSet(AtomicBoolean modify, String path, Serializable value) {
+
+    /**
+     * @return Collection of keys in root path
+     */
+    default Collection<String> getKeys() {
+        return getKeys(null);
+    }
+
+    /**
+     *
+     * @param path Path where we should look for keys
+     * @return Collection of keys in specified path
+     */
+    Collection<String> getKeys(String path);
+
+    /**
+     *
+     * @param modify AtomicBoolean instance storing information if file should be saved
+     * @param path identifier
+     * @param value value that will be saved
+     * @see DefaultConfigBuilder#start(ConfigAdapter)
+     */
+    default void checkOrSet(AtomicBoolean modify, String path, Object value) {
         if (!isSet(path)) {
             set(path, value);
             modify.set(true);

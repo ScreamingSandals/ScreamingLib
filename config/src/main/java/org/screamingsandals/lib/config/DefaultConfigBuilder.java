@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -18,7 +20,7 @@ public final class DefaultConfigBuilder {
 		return new DefaultConfigBuilder(adapter, "", new AtomicBoolean());
 	}
 
-	public DefaultConfigBuilder put(String path, Serializable defaultValue) {
+	public DefaultConfigBuilder put(String path, Object defaultValue) {
 		var fullPath = path;
 		if (!this.path.isEmpty()) {
 			fullPath = this.path + "." + fullPath;

@@ -8,9 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Data
 public abstract class SpigotConfigAdapter implements ConfigAdapter {
@@ -50,6 +48,11 @@ public abstract class SpigotConfigAdapter implements ConfigAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Collection<String> getKeys(String path) {
+        return path == null || path.isBlank() ? yamlConfiguration.getKeys(false) : Objects.requireNonNull(yamlConfiguration.getConfigurationSection(path)).getKeys(false);
     }
 
     @Override
@@ -98,6 +101,16 @@ public abstract class SpigotConfigAdapter implements ConfigAdapter {
     }
 
     @Override
+    public long getLong(String key) {
+        return yamlConfiguration.getLong(key);
+    }
+
+    @Override
+    public long getLong(String key, long def) {
+        return yamlConfiguration.getLong(key, def);
+    }
+
+    @Override
     public double getDouble(String key) {
         return yamlConfiguration.getDouble(key);
     }
@@ -118,7 +131,7 @@ public abstract class SpigotConfigAdapter implements ConfigAdapter {
     }
 
     @Override
-    public List<Map<?, ?>> getMap(String key) {
+    public List<Map<?, ?>> getMapList(String key) {
         return yamlConfiguration.getMapList(key);
     }
 
