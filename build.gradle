@@ -33,8 +33,7 @@ subprojects {
     dependencies {
         compileOnly paper()
         compileOnly waterfall()
-        compileOnly 'com.velocitypowered:velocity-api:1.0.9-SNAPSHOT'
-        annotationProcessor 'com.velocitypowered:velocity-api:1.0.9-SNAPSHOT'
+        compileOnly 'com.velocitypowered:velocity-api:1.0.8'
     }
 
     sourceCompatibility = '11'
