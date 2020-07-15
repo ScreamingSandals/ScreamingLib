@@ -2,22 +2,15 @@ defaultTasks 'clean', 'screamCompile'
 
 allprojects {
     group = 'org.screamingsandals.lib'
-    version = '1.1.27'
+    version = '1.1.28'
 }
 
 buildscript {
     repositories {
-        jcenter()
-        maven {
-            name 'screamingsandals'
-            url = 'https://repo.screamingsandals.org'
-        }
-        maven {
-            url =  "https://plugins.gradle.org/m2/"
-        }
+        maven { url 'https://repo.screamingsandals.org' }
     }
     dependencies {
-        classpath 'org.screamingsandals.gradle.builder:screaming-plugin-builder:1.0.13'
+        classpath 'org.screamingsandals.gradle.builder:screaming-plugin-builder:1.0.15'
     }
 }
 
@@ -26,14 +19,14 @@ subprojects {
     apply plugin: 'org.screamingsandals.gradle.builder'
 
     repositories {
-        maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
-        maven { url = 'https://repo.velocitypowered.com/snapshots/'}
+        maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+        maven { url 'https://repo.velocitypowered.com/snapshots/'}
     }
 
     dependencies {
         compileOnly paper()
         compileOnly waterfall()
-        compileOnly 'com.velocitypowered:velocity-api:1.0.8'
+        compileOnly velocity()
     }
 
     sourceCompatibility = '11'

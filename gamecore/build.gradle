@@ -3,16 +3,16 @@ dependencies {
     compileOnly 'me.clip:placeholderapi:2.10.4'
     compileOnly project(':storage')
 
-    implementation 'io.papermc:paperlib:1.0.2'
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation project(':lang')
-    implementation project(':nms')
-    implementation project(':debug')
-    implementation project(':config')
-    implementation project(':scoreboards')
-    implementation project(':bossbars')
-    implementation project(':tasker')
-    implementation project(':commands')
-    implementation project(':splayers')
-    implementation project(':reflection')
+    shade 'io.papermc:paperlib:1.0.2'
+    shade 'com.google.code.gson:gson:2.8.6' // gson is built inside spigot for years, why are we building it?
+    shade project(':lang')
+    shade project(':nms')
+    shade project(':debug')
+    shade project(':config')
+    shade project(':scoreboards')
+    shade project(':bossbars')
+    shade project(':tasker')
+    shade project(':commands')
+    shade project(':splayers')
+    shade project(':reflection')
 }

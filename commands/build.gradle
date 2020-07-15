@@ -1,7 +1,7 @@
 dependencies {
     compileOnly 'me.clip:placeholderapi:2.10.4'
-    implementation 'io.papermc:paperlib:1.0.2'
-    implementation project(':reflection')
+    shade 'io.papermc:paperlib:1.0.2'
+    shade project(':reflection')
     compileOnly project(':lang')
-    implementation project(':debug')
+    shade project(':debug')
 }

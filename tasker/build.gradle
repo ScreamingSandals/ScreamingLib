@@ -1,4 +1,4 @@
 dependencies {
-    implementation project(':debug')
-    implementation project(':reflection')
+    shade project(':debug')
+    shade project(':reflection')
 }
