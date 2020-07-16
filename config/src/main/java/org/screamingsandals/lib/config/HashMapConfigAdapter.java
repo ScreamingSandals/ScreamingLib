@@ -30,7 +30,7 @@ public abstract class HashMapConfigAdapter implements ConfigAdapter {
 
     @Override
     public boolean getBoolean(String key) {
-        return (boolean) internalGet(key);
+        return (boolean) internalGet(key, false);
     }
 
     @Override
@@ -40,7 +40,7 @@ public abstract class HashMapConfigAdapter implements ConfigAdapter {
 
     @Override
     public int getInt(String key) {
-        return ((Long) internalGet(key)).intValue();
+        return ((Long) internalGet(key,0)).intValue();
     }
 
     @Override
@@ -50,7 +50,7 @@ public abstract class HashMapConfigAdapter implements ConfigAdapter {
 
     @Override
     public long getLong(String key) {
-        return (long) internalGet(key);
+        return (long) internalGet(key,0);
     }
 
     @Override
@@ -60,7 +60,7 @@ public abstract class HashMapConfigAdapter implements ConfigAdapter {
 
     @Override
     public double getDouble(String key) {
-        return (double) internalGet(key);
+        return (double) internalGet(key, 0);
     }
 
     @Override
@@ -116,23 +116,18 @@ public abstract class HashMapConfigAdapter implements ConfigAdapter {
             return configuration.get(key);
         }
 
-        Object current = new HashMap<>(configuration);
-
         String[] keys = key.split("\\.");
 
-        for (String k : keys) {
-            if (current instanceof Map) {
-                if (((Map<String, Object>) current).containsKey(k)) {
-                    return ((Map<String, Object>) current).get(k);
-                } else {
-                    current = ((Map<String, Object>) current).get(k);
-                }
-            } else {
-                break;
+        Map<String,Object> map = new HashMap<>(configuration);
+
+        for (var i = 0; i < (keys.length - 1); i++) {
+            map = (Map<String,Object>) map.get(keys[i]);
+            if (map == null) {
+                return defaultValue;
             }
         }
 
-        return defaultValue;
+        return map.getOrDefault(key, defaultValue);
     }
 
     private void internalPut(String key, Object value) {
@@ -141,12 +136,7 @@ public abstract class HashMapConfigAdapter implements ConfigAdapter {
         var map = configuration;
 
         for (var i = 0; i < (keys.length - 1); i++) {
-            var nmap = (Map<String,Object>) map.get(keys[i]);
-            if (nmap == null) {
-              nmap = new HashMap<>();
-              map.put(keys[i], nmap);
-            }
-            map = nmap;
+            map = (Map<String,Object>) map.computeIfAbsent(keys[i], k -> new HashMap<>());
         }
 
         map.put(keys[keys.length - 1], value);

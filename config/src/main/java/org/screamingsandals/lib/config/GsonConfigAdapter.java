@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.config;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public abstract class GsonConfigAdapter extends HashMapConfigAdapter {
-    private Gson gson = new Gson();
+    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private File configFile;
     private InputStream inputStream;
 
@@ -55,11 +56,13 @@ public abstract class GsonConfigAdapter extends HashMapConfigAdapter {
             return;
         }
 
-        try {
-            gson.toJson(getConfiguration(), new FileWriter(configFile));
-            load();
+        try (FileWriter writer = new FileWriter(configFile)) {
+            var json = gson.toJson(getConfiguration());
+            writer.append(json);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        load();
     }
 }
