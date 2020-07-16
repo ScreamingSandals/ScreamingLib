@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
@@ -35,12 +36,14 @@ public abstract class GsonConfigAdapter extends HashMapConfigAdapter {
     @Override
     public void load() {
         if (inputStream != null) {
-            setConfiguration(gson.fromJson(new InputStreamReader(inputStream), Map.class));
+            var map = gson.fromJson(new InputStreamReader(inputStream), Map.class);
+            setConfiguration(map == null ? new HashMap<>() : map);
             return;
         }
 
         try {
-            setConfiguration(gson.fromJson(new FileReader(configFile), Map.class));
+            var map = gson.fromJson(new FileReader(configFile), Map.class);
+            setConfiguration(map == null ? new HashMap<>() : map);
         } catch (Exception e) {
             e.printStackTrace();
         }
