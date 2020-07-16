@@ -40,32 +40,32 @@ public abstract class HashMapConfigAdapter implements ConfigAdapter {
 
     @Override
     public int getInt(String key) {
-        return ((Long) internalGet(key,0)).intValue();
+        return ((Number) internalGet(key,0)).intValue();
     }
 
     @Override
     public int getInt(String key, int def) {
-        return ((Long) internalGet(key, (long) def)).intValue();
+        return ((Number) internalGet(key, (long) def)).intValue();
     }
 
     @Override
     public long getLong(String key) {
-        return (long) internalGet(key,0);
+        return ((Number) internalGet(key,0)).longValue();
     }
 
     @Override
     public long getLong(String key, long def) {
-        return (long) internalGet(key, def);
+        return  ((Number) internalGet(key, def)).longValue();
     }
 
     @Override
     public double getDouble(String key) {
-        return (double) internalGet(key, 0);
+        return ((Number) internalGet(key, 0)).doubleValue();
     }
 
     @Override
     public double getDouble(String key, double def) {
-        return (double) internalGet(key, def);
+        return ((Number) internalGet(key, def)).doubleValue();
     }
 
     @Override
@@ -127,7 +127,7 @@ public abstract class HashMapConfigAdapter implements ConfigAdapter {
             }
         }
 
-        return map.getOrDefault(key, defaultValue);
+        return map.getOrDefault(keys[keys.length - 1], defaultValue);
     }
 
     private void internalPut(String key, Object value) {
