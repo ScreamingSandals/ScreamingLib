@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Deprecated
 public class Debug {
     private static Logger logger;
     private static Logger aLogger;
