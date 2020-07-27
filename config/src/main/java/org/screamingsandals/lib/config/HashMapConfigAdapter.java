@@ -9,6 +9,7 @@ public abstract class HashMapConfigAdapter implements ConfigAdapter {
     private Map<String, Object> configuration = new HashMap<>();
 
     @Override
+    @SuppressWarnings("unchecked")
     public Collection<String> getKeys(String path) {
         return path == null || path.isBlank() ? configuration.keySet() : ((Map<String, Object>) internalGet(path)).keySet();
     }
@@ -69,11 +70,13 @@ public abstract class HashMapConfigAdapter implements ConfigAdapter {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Object> getList(String key) {
         return (List<Object>) internalGet(key);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<String> getStringList(String key) {
         return (List<String>) internalGet(key);
     }
@@ -111,6 +114,7 @@ public abstract class HashMapConfigAdapter implements ConfigAdapter {
         return internalGet(key, null);
     }
 
+    @SuppressWarnings("unchecked")
     private Object internalGet(String key, Object defaultValue) {
         if (configuration.containsKey(key)) {
             return configuration.get(key);
@@ -130,6 +134,7 @@ public abstract class HashMapConfigAdapter implements ConfigAdapter {
         return map.getOrDefault(keys[keys.length - 1], defaultValue);
     }
 
+    @SuppressWarnings("unchecked")
     private void internalPut(String key, Object value) {
         String[] keys = key.split("\\.");
 
