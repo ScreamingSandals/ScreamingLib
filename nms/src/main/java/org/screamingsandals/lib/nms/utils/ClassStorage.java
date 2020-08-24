@@ -43,9 +43,12 @@ public class ClassStorage {
 		public static final Class<?> PacketPlayOutEntityMetadata = getNMSClassSafe("{nms}.PacketPlayOutEntityMetadata", "{f:net}.play.server.SEntityMetadataPacket", "{f:net}.play.server.SPacketEntityMetadata");
 		public static final Class<?> PacketPlayOutEntityTeleport = getNMSClassSafe("{nms}.PacketPlayOutEntityTeleport", "{f:net}.play.server.SEntityTeleportPacket", "{f:net}.play.server.SPacketEntityTeleport");
 		public static final Class<?> PacketPlayOutExperience = getNMSClassSafe("{nms}.PacketPlayOutExperience", "{f:net}.play.server.SSetExperiencePacket", "{f:net}.play.server.SPacketSetExperience");
+		public static final Class<?> PacketPlayOutNamedEntitySpawn = getNMSClassSafe("{nms}.PacketPlayOutNamedEntitySpawn", "{f:net}.play.server.SSpawnPlayerPacket");
+		public static final Class<?> PacketPlayOutEntity = getNMSClassSafe("{nms}.PacketPlayOutEntity", "{f:net}.play.server.SEntityPacket");
 		public static final Class<?> PacketPlayOutSpawnEntityLiving = getNMSClassSafe("{nms}.PacketPlayOutSpawnEntityLiving", "{f:net}.play.server.SSpawnMobPacket", "{f:net}.play.server.SPacketSpawnMob");
 		public static final Class<?> PacketPlayOutTitle = getNMSClassSafe("{nms}.PacketPlayOutTitle", "{f:net}.play.server.STitlePacket", "{f:net}.play.server.SPacketTitle");
 		public static final Class<?> PacketPlayOutWorldParticles = getNMSClassSafe("{nms}.PacketPlayOutWorldParticles", "{f:net}.play.server.SSpawnParticlePacket", "{f:net}.play.server.SPacketParticles");
+		public static final Class<?> PacketPlayOutScoreboardTeam = getNMSClassSafe("{nms}.PacketPlayOutScoreboardTeam", "{f:net}.play.server.STeamsPacket");
 		public static final Class<?> PathfinderGoal = getNMSClassSafe("{nms}.PathfinderGoal", "{f:goal}.Goal", "{f:ent}.ai.EntityAIBase");
 		public static final Class<?> PathfinderGoalSelector = getNMSClassSafe("{nms}.PathfinderGoalSelector", "{f:goal}.GoalSelector", "{f:ent}.ai.EntityAITasks");
 		public static final Class<?> PathfinderGoalMeleeAttack = getNMSClassSafe("{nms}.PathfinderGoalMeleeAttack", "{f:goal}.MeleeAttackGoal", "{f:ent}.ai.EntityAIAttackMelee");
@@ -56,6 +59,9 @@ public class ClassStorage {
 
 		// 1.16 only (ok, it was here before, but before we don't have to use it)
 		public static final Class<?> AttributeModifiable = getNMSClassSafe("{nms}.AttributeModifiable", "{f:ent}.ai.attributes.ModifiableAttributeInstance");
+
+		public static final Class<?> AuthlibGameProfile = getNMSClassSafe("com.mojang.authlib.GameProfile");
+		public static final Class<?> AuthlibGameProfileProperty = getNMSClassSafe("com.mojang.authlib.properties.Property");
 	}
 	
 	private static String checkNMSVersion() {
