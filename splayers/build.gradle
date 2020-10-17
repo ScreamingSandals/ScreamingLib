@@ -1,4 +1,0 @@
-dependencies {
-    compileOnly 'com.google.guava:guava:29.0-jre'
-    compileOnly 'me.clip:placeholderapi:2.10.4'
-}
