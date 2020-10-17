@@ -1,4 +1,9 @@
 buildscript {
+    ext {
+        guice_version = "4.2.3"
+        configurate_version = "3.7.1"
+    }
+
     repositories {
         maven { url 'https://repo.screamingsandals.org/repository/maven-public' }
     }
@@ -11,22 +16,37 @@ defaultTasks 'clean', 'screamCompile'
 
 allprojects {
     group = 'org.screamingsandals.lib'
-    version = '1.1.34'
+    version = '1.2.0'
 }
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'org.screamingsandals.gradle.builder'
 
     repositories {
-        maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
-        maven { url 'https://repo.velocitypowered.com/snapshots/'}
+        mavenCentral()
+        jcenter()
+
+        maven {
+            name 'PlaceholderAPI'
+            url 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+        }
+
+        maven {
+            name 'Velocity'
+            url 'https://repo.velocitypowered.com/snapshots/'
+        }
     }
 
     dependencies {
         compileOnly paper()
         compileOnly waterfall()
         compileOnly velocity()
+
+        compileOnly group: 'com.google.inject', name: 'guice', version: guice_version
+        compileOnly group: 'org.spongepowered', name: 'configurate-hocon', version: configurate_version
+        compileOnly group: 'org.spongepowered', name: 'configurate-yaml', version: configurate_version
     }
 
     sourceCompatibility = '11'
