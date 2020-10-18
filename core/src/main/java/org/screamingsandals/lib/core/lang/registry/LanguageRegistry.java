@@ -1,6 +1,6 @@
-package org.screamingsandals.lib.lang.registry;
+package org.screamingsandals.lib.core.lang.registry;
 
-import org.screamingsandals.lib.lang.storage.LanguageContainer;
+import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
 
 import java.util.HashMap;
 import java.util.Map;

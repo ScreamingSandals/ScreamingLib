@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.lang.registry;
+package org.screamingsandals.lib.core.lang.registry;
 
 import lombok.Data;
 
@@ -16,5 +16,9 @@ public class PlayerRegistry {
 
     public void remove(UUID uuid) {
         players.remove(uuid);
+    }
+
+    public String getLanguageCodeFor(UUID uuid) {
+        return players.getOrDefault()
     }
 }

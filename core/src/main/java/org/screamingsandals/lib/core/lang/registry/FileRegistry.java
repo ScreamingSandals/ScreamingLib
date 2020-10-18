@@ -1,9 +1,11 @@
-package org.screamingsandals.lib.core.lang.storage;
+package org.screamingsandals.lib.core.lang.registry;
 
 import lombok.Data;
 import org.screamingsandals.lib.core.PluginCore;
 import org.screamingsandals.lib.core.config.SConfig;
 import org.screamingsandals.lib.core.lang.LanguageBase;
+import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,16 +23,20 @@ import java.util.zip.ZipInputStream;
  * @author ScreamingSandals team
  */
 @Data
-public class FileStorage {
+public class FileRegistry {
     private final PluginCore plugin;
+    private final Logger log;
     private final Map<String, SConfig> languageConfig = new HashMap<>();
     private final Map<String, LanguageContainer> registeredLanguages = new HashMap<>();
 
-    public FileStorage(PluginCore plugin) {
+    public FileRegistry(PluginCore plugin) {
         this.plugin = plugin;
+        this.log = plugin.getLog();
+
+        load();
     }
 
-    public boolean load() {
+    private void load() {
         getFiles().forEach(this::registerLanguage);
 
         languageConfig.forEach((code, config) -> {
@@ -38,7 +44,11 @@ public class FileStorage {
             registeredLanguages.put(code, container);
         });
 
-        return !registeredLanguages.isEmpty();
+        if (registeredLanguages.isEmpty()) {
+            log.info("&cLoading of language files for plugin {} resulted with no loaded languages.", plugin.getPluginName());
+            return;
+        }
+        log.info("&aLoading of language files for plugin {} resulted with {} loaded languages!", plugin.getPluginName(), registeredLanguages.size());
     }
 
     private void registerLanguage(String fileName) {

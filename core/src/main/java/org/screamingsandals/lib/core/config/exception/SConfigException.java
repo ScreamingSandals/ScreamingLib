@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.config.exception;
+package org.screamingsandals.lib.core.config.exception;
 
 public class SConfigException extends Exception {
 

@@ -1,14 +1,14 @@
-package org.screamingsandals.lib.config;
+package org.screamingsandals.lib.core.config;
 
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.gson.GsonConfigurationLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
-import org.screamingsandals.lib.config.adapter.GsonConfigAdapter;
-import org.screamingsandals.lib.config.adapter.HoconConfigAdapter;
-import org.screamingsandals.lib.config.adapter.YamlConfigAdapter;
-import org.screamingsandals.lib.config.exception.SConfigException;
+import org.screamingsandals.lib.core.config.adapter.GsonConfigAdapter;
+import org.screamingsandals.lib.core.config.adapter.HoconConfigAdapter;
+import org.screamingsandals.lib.core.config.adapter.YamlConfigAdapter;
+import org.screamingsandals.lib.core.config.exception.SConfigException;
 
 import java.io.IOException;
 import java.nio.file.Path;

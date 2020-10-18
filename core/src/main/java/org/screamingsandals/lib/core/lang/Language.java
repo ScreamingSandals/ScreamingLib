@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.lang;
+package org.screamingsandals.lib.core.lang;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,7 +10,7 @@ import java.io.File;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class Language extends Base implements I {
+public class Language extends LanguageBase implements I {
 
     public Language(Object plugin) {
         super(plugin, null, null, "");

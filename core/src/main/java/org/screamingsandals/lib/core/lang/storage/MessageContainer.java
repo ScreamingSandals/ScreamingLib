@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.lang.storage;
+package org.screamingsandals.lib.core.lang.storage;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

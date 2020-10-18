@@ -1,9 +1,9 @@
-package org.screamingsandals.lib.config.adapter;
+package org.screamingsandals.lib.core.config.adapter;
 
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
-import org.screamingsandals.lib.config.SConfig;
-import org.screamingsandals.lib.config.exception.SConfigException;
+import org.screamingsandals.lib.core.config.SConfig;
+import org.screamingsandals.lib.core.config.exception.SConfigException;
 
 import java.io.File;
 import java.io.IOException;

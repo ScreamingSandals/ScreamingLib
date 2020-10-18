@@ -1,7 +1,7 @@
-package org.screamingsandals.lib.config.adapter;
+package org.screamingsandals.lib.core.config.adapter;
 
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
-import org.screamingsandals.lib.config.exception.SConfigException;
+import org.screamingsandals.lib.core.config.exception.SConfigException;
 
 import java.io.File;
 import java.nio.file.Path;

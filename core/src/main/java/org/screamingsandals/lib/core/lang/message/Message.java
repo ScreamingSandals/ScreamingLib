@@ -1,9 +1,9 @@
-package org.screamingsandals.lib.lang.message;
+package org.screamingsandals.lib.core.lang.message;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.screamingsandals.lib.lang.Base;
-import org.screamingsandals.lib.lang.storage.LanguageContainer;
+import org.screamingsandals.lib.core.lang.LanguageBase;
+import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
 
 import java.util.*;
 
@@ -111,7 +111,7 @@ public class Message {
     }
 
     public Message setLanguage(String language) {
-        storage = Base.getStorage(language);
+        storage = LanguageBase.getStorage(language);
         return this;
     }
 

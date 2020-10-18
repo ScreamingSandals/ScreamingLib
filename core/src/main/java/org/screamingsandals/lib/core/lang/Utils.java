@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.lang;
+package org.screamingsandals.lib.core.lang;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.plugin.Plugin;
@@ -39,9 +39,9 @@ public class Utils {
     }
 
     public static void sendPluginMessage(String message) {
-        Object providedPlugin = Base.getInstance().getPlugin();
+        Object providedPlugin = LanguageBase.getInstance().getPlugin();
         String pluginName;
-        if (Base.isSpigot()) {
+        if (LanguageBase.isSpigot()) {
             Plugin plugin = (Plugin) providedPlugin;
             pluginName = plugin.getName();
 

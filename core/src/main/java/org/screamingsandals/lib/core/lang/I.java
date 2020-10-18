@@ -1,6 +1,6 @@
-package org.screamingsandals.lib.lang;
+package org.screamingsandals.lib.core.lang;
 
-import org.screamingsandals.lib.lang.message.Message;
+import org.screamingsandals.lib.core.lang.message.Message;
 
 public interface I {
 
@@ -22,6 +22,6 @@ public interface I {
     }
 
     static Message m(String key, boolean prefix) {
-        return new Message(key, Base.getGlobalContainer(), prefix);
+        return new Message(key, LanguageBase.getDefaultContainer(), prefix);
     }
 }
