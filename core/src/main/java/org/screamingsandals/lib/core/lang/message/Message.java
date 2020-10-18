@@ -3,7 +3,7 @@ package org.screamingsandals.lib.lang.message;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.screamingsandals.lib.lang.Base;
-import org.screamingsandals.lib.lang.storage.Storage;
+import org.screamingsandals.lib.lang.storage.LanguageContainer;
 
 import java.util.*;
 
@@ -11,49 +11,47 @@ import static org.screamingsandals.lib.reflection.Reflection.*;
 
 public class Message {
     protected String key;
-    protected Storage storage;
-    protected List<String> defList;
-    protected String def;
+    protected LanguageContainer storage;
     protected boolean prefix;
-    protected final Map<String, Object> replaces = new HashMap<>();
+    protected final Map<String, Object> placeholders = new HashMap<>();
 
-    public Message(String key, Storage storage) {
+    public Message(String key, LanguageContainer storage) {
         this(key, storage, (String) null, false);
     }
 
-    public Message(String key, Storage storage, boolean prefix) {
+    public Message(String key, LanguageContainer storage, boolean prefix) {
         this(key, storage, (String) null, prefix);
     }
 
-    public Message(String key, Storage storage, String def) {
+    public Message(String key, LanguageContainer storage, String def) {
         this(key, storage, def, false);
     }
 
-    public Message(String key, Storage storage, String def, boolean prefix) {
+    public Message(String key, LanguageContainer storage, String def, boolean prefix) {
         this.key = key;
         this.storage = storage;
         this.def = def;
         this.prefix = prefix;
     }
 
-    public Message(String key, Storage storage, List<String> defList) {
+    public Message(String key, LanguageContainer storage, List<String> defList) {
         this(key, storage, defList, false);
     }
 
-    public Message(String key, Storage storage, List<String> defList, boolean prefix) {
+    public Message(String key, LanguageContainer storage, List<String> defList, boolean prefix) {
         this.key = key;
         this.storage = storage;
         this.defList = defList;
         this.prefix = prefix;
     }
 
-    public Message replace(String placeholder, Object replacement) {
-        replaces.put(placeholder, replacement);
+    public Message withPlaceholder(String placeholder, Object replacement) {
+        placeholders.putIfAbsent(placeholder, replacement);
         return this;
     }
 
-    public Message replaceAll(Map<String, Object> replacements) {
-        replaces.putAll(replacements);
+    public Message withPlaceholders(Map<String, Object> replacements) {
+        placeholders.putAll(replacements);
         return this;
     }
 
@@ -62,27 +60,17 @@ public class Message {
         return this;
     }
 
-    public Message def(String def) {
-        this.def = def;
-        return this;
-    }
-
     public Message clearReplaces() {
-        this.replaces.clear();
+        this.placeholders.clear();
         return this;
     }
 
     public Message reset(String key) {
-        return reset(key, null, false);
+        return reset(key, false);
     }
 
-    public Message reset(String key, String def) {
-        return reset(key, def, false);
-    }
-
-    public Message reset(String key, String def, boolean prefix) {
+    public Message reset(String key, boolean prefix) {
         this.key = key;
-        this.def = def;
         this.prefix = prefix;
 
         return clearReplaces();
@@ -135,7 +123,7 @@ public class Message {
         try {
             String message = storage.translate(key, def, prefix);
 
-            for (var replace : replaces.entrySet()) {
+            for (var replace : placeholders.entrySet()) {
                 message = message.replaceAll(replace.getKey(), replace.getValue().toString());
             }
 
@@ -151,7 +139,7 @@ public class Message {
             final List<String> toReturn = new ArrayList<>();
 
             for (String toTranslate : messages) {
-                for (var replace : replaces.entrySet()) {
+                for (var replace : placeholders.entrySet()) {
                     System.out.println(replace);
                     toTranslate = toTranslate.replaceAll(replace.getKey(), replace.getValue().toString());
                 }

@@ -5,6 +5,9 @@ import ninja.leaping.configurate.gson.GsonConfigurationLoader;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
+import org.screamingsandals.lib.config.adapter.GsonConfigAdapter;
+import org.screamingsandals.lib.config.adapter.HoconConfigAdapter;
+import org.screamingsandals.lib.config.adapter.YamlConfigAdapter;
 import org.screamingsandals.lib.config.exception.SConfigException;
 
 import java.io.IOException;
@@ -14,6 +17,18 @@ import java.nio.file.Path;
  * Simple adapter for various libraries
  */
 public interface SConfig {
+    static SConfig create(Format format, Path path) throws SConfigException {
+        switch (format) {
+            case GSON:
+                return new GsonConfigAdapter(path);
+            case HOCON:
+                return new HoconConfigAdapter(path);
+            case YAML:
+                return new YamlConfigAdapter(path);
+            default:
+                throw new SConfigException("Bad config format! " + format.name());
+        }
+    }
     /**
      * Main configuration node
      *

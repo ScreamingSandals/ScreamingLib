@@ -1,25 +1,19 @@
-package org.screamingsandals.lib.lang;
+package org.screamingsandals.lib.core.lang;
 
+import com.google.inject.Inject;
 import lombok.Data;
-import org.screamingsandals.lib.lang.files.FileStorage;
-import org.screamingsandals.lib.lang.storage.Storage;
+import org.screamingsandals.lib.core.lang.storage.FileStorage;
+import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.security.CodeSource;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 @Data
 public abstract class Base {
     private static Base instance;
     public static String FALLBACK_LANGUAGE = "en";
-    private Storage globalStorage;
+    private LanguageContainer globalContainer;
 
     private Object plugin;
     private String customPrefix;
@@ -28,6 +22,7 @@ public abstract class Base {
     private FileStorage fileStorage;
     private Map<String, Storage> availableLanguages = new HashMap<>();
 
+    @Inject
     public Base(Object plugin) {
         this(plugin, null, null, "");
     }
@@ -63,31 +58,6 @@ public abstract class Base {
         return null;
     }
 
-    public static List<String> getResourceFolderFiles(String folder) {
-        final List<String> toReturn = new ArrayList<>();
-        try {
-            final CodeSource codeSource = instance.plugin.getClass().getProtectionDomain().getCodeSource();
-            if (codeSource != null) {
-                final URL url = codeSource.getLocation();
-                final ZipInputStream zipInputStream = new ZipInputStream(url.openStream());
-
-                while (true) {
-                    ZipEntry zipEntry = zipInputStream.getNextEntry();
-                    if (zipEntry == null) {
-                        break;
-                    }
-                    String entryName = zipEntry.getName();
-                    if (entryName.startsWith(folder) && entryName.endsWith(".yml")) {
-                        toReturn.add(entryName);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return toReturn;
-    }
-
     public static boolean isSpigot() {
         try {
             Class.forName("org.bukkit.plugin.Plugin");
@@ -105,17 +75,17 @@ public abstract class Base {
             return;
         }
 
-        globalStorage = getStorage(globalLanguage);
+        globalContainer = getStorage(globalLanguage);
 
         Utils.sendPluginMessage(Utils.colorize("&aSuccessfully loaded messages for plugin &e%pluginName%&a!"));
-        Utils.sendPluginMessage(Utils.colorize("&aSelected language: &e" + (globalStorage != null ? globalStorage.getLanguageName() : FALLBACK_LANGUAGE + " - &cFALLBACK!")));
+        Utils.sendPluginMessage(Utils.colorize("&aSelected language: &e" + (globalContainer != null ? globalContainer.getLanguageName() : FALLBACK_LANGUAGE + " - &cFALLBACK!")));
     }
 
     public static Base getInstance() {
         return instance;
     }
 
-    public static Storage getGlobalStorage() {
-        return instance.globalStorage;
+    public static LanguageContainer getGlobalContainer() {
+        return instance.globalContainer;
     }
 }

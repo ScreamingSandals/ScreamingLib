@@ -2,17 +2,11 @@ package org.screamingsandals.lib.lang;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.plugin.Plugin;
-import org.screamingsandals.lib.config.BungeeConfigAdapter;
-import org.screamingsandals.lib.config.ConfigAdapter;
-import org.screamingsandals.lib.config.SpigotConfigAdapter;
 import org.screamingsandals.lib.reflection.Reflection;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.screamingsandals.lib.reflection.Reflection.fastInvoke;
 
 /**
  * @author ScreamingSandals team
@@ -58,25 +52,6 @@ public class Utils {
 
             plugin.getLogger().info(message.replace("%pluginName%", pluginName));
         }
-    }
-
-    public static ConfigAdapter createConfig(Object input) {
-        if (input instanceof InputStream) {
-            final var stream = (InputStream) input;
-            if (Base.isSpigot()) {
-                return SpigotConfigAdapter.create(stream);
-            } else {
-                return BungeeConfigAdapter.create(stream);
-            }
-        } else if (input instanceof File) {
-            final var stream = (File) input;
-            if (Base.isSpigot()) {
-                return SpigotConfigAdapter.create(stream);
-            } else {
-                return BungeeConfigAdapter.create(stream);
-            }
-        }
-        return null;
     }
 
     public static File getDataFolder(Object plugin) {
