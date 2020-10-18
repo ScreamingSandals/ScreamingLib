@@ -8,96 +8,102 @@ import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
 import org.slf4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.CodeSource;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
  * @author ScreamingSandals team
+ * <p>
+ * customConfigs == files from customFolder
+ * originalConfigs == files form classpath
  */
 @Data
 public class FileRegistry {
-    private final PluginCore plugin;
-    private final Logger log;
-    private final Map<String, SConfig> languageConfig = new HashMap<>();
-    private final Map<String, LanguageContainer> registeredLanguages = new HashMap<>();
+    private final Map<String, SConfig> customConfigs = new HashMap<>();
+    private final Map<String, SConfig> originalConfigs = new HashMap<>();
 
-    public FileRegistry(PluginCore plugin) {
+    private final PluginCore plugin;
+    private final LanguageRegistry registry;
+    private final Logger log;
+
+    public FileRegistry(PluginCore plugin, LanguageRegistry registry) {
         this.plugin = plugin;
+        this.registry = registry;
         this.log = plugin.getLog();
 
-        load();
+        registerFromClasspath();
     }
 
-    private void load() {
-        getFiles().forEach(this::registerLanguage);
+    /**
+     * Registers custom languages
+     *
+     * @param file custom data folder to register from
+     */
+    public void registerCustomLanguages(File file) {
 
-        languageConfig.forEach((code, config) -> {
-            final var container = new LanguageContainer(config, registeredLanguages.getOrDefault(LanguageBase.FALLBACK_LANGUAGE, null), code);
-            registeredLanguages.put(code, container);
+    }
+
+    public void registerLanguage(SConfig sConfig) {
+        final var code = sConfig.get("language_code").getString();
+
+        customConfigs.putIfAbsent(code, sConfig);
+        registry.register(code, new LanguageContainer(sConfig,
+                registry.getOriginal(code)
+                        .orElse(registry.getOriginal(LanguageBase.FALLBACK_LANGUAGE)
+                                .orElse(null)), code));
+    }
+
+    public void removeLanguage(String code) {
+        registry.remove(code);
+    }
+
+    private void registerFromClasspath() {
+        getFilesFromClasspath().forEach(path -> {
+            try {
+                final var sConfig = SConfig.create(SConfig.Format.HOCON, path);
+                final var code = sConfig.get("language_code").getString();
+
+                originalConfigs.put(code, sConfig);
+                registry.registerInternal(code, new LanguageContainer(sConfig, null, code));
+            } catch (Exception e) {
+                log.warn("Registering of internal language file failed!", e);
+            }
         });
-
-        if (registeredLanguages.isEmpty()) {
-            log.info("&cLoading of language files for plugin {} resulted with no loaded languages.", plugin.getPluginName());
-            return;
-        }
-        log.info("&aLoading of language files for plugin {} resulted with {} loaded languages!", plugin.getPluginName(), registeredLanguages.size());
     }
 
-    private void registerLanguage(String fileName) {
-        final var dataFolder = plugin.getPluginFolder();
-        final var classpathResource = "/" + fileName;
-        SConfig sConfig;
+    private List<Path> getFilesFromClasspath() {
+        final List<Path> toReturn = new LinkedList<>();
 
-        try {
-            if (dataFolder != null && dataFolder.exists()) {
-                final File langFile = new File(dataFolder, fileName);
-                if (langFile.exists()) {
-                    sConfig = SConfig.create(SConfig.Format.HOCON, langFile.toPath());
+        final var codeSource = plugin.getClass().getProtectionDomain().getCodeSource();
+        if (codeSource == null) {
+            return toReturn;
+        }
 
-                    final var key = sConfig.get("language_code").getString();
-                    languageConfig.put(key, sConfig);
+        final var url = codeSource.getLocation();
+        try (final var zipInputStream = new ZipInputStream(url.openStream())) {
+            while (true) {
+                final var zipEntry = zipInputStream.getNextEntry();
+
+                if (zipEntry == null) {
+                    break;
+                }
+
+                final var entryName = zipEntry.getName();
+                if (entryName.startsWith("languages") && entryName.endsWith(".conf")) {
+                    final var classpathResource = "/" + entryName;
+
+                    toReturn.add(Paths.get(ClassLoader.getSystemResource(classpathResource).toURI()));
                 }
             }
-
-            sConfig = SConfig.create(SConfig.Format.HOCON, Paths.get(ClassLoader.getSystemResource(classpathResource).toURI()));
-
-            final var key = sConfig.get("language_code").getString();
-            languageConfig.put(key, sConfig);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn("Exception occurred while loading language file!", e);
         }
-    }
 
-    private List<String> getFiles() {
-        final List<String> toReturn = new ArrayList<>();
-        try {
-            final CodeSource codeSource = plugin.getClass().getProtectionDomain().getCodeSource();
-            if (codeSource != null) {
-                final URL url = codeSource.getLocation();
-                final ZipInputStream zipInputStream = new ZipInputStream(url.openStream());
-
-                while (true) {
-                    ZipEntry zipEntry = zipInputStream.getNextEntry();
-                    if (zipEntry == null) {
-                        break;
-                    }
-                    String entryName = zipEntry.getName();
-                    if (entryName.startsWith("languages") && entryName.endsWith(".conf")) {
-                        toReturn.add(entryName);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return toReturn;
     }
 }

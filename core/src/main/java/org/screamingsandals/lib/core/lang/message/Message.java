@@ -1,48 +1,25 @@
 package org.screamingsandals.lib.core.lang.message;
 
+import com.google.common.base.Preconditions;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.screamingsandals.lib.core.lang.LanguageBase;
 import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
+import org.screamingsandals.lib.core.reflect.SReflect;
 
 import java.util.*;
 
-import static org.screamingsandals.lib.reflection.Reflection.*;
-
 public class Message {
-    protected String key;
-    protected LanguageContainer storage;
-    protected boolean prefix;
     protected final Map<String, Object> placeholders = new HashMap<>();
 
-    public Message(String key, LanguageContainer storage) {
-        this(key, storage, (String) null, false);
-    }
+    protected String key;
+    protected boolean prefix;
+    protected Object player;
 
-    public Message(String key, LanguageContainer storage, boolean prefix) {
-        this(key, storage, (String) null, prefix);
-    }
-
-    public Message(String key, LanguageContainer storage, String def) {
-        this(key, storage, def, false);
-    }
-
-    public Message(String key, LanguageContainer storage, String def, boolean prefix) {
+    public Message(String key, boolean prefix, Object player) {
         this.key = key;
-        this.storage = storage;
-        this.def = def;
         this.prefix = prefix;
-    }
-
-    public Message(String key, LanguageContainer storage, List<String> defList) {
-        this(key, storage, defList, false);
-    }
-
-    public Message(String key, LanguageContainer storage, List<String> defList, boolean prefix) {
-        this.key = key;
-        this.storage = storage;
-        this.defList = defList;
-        this.prefix = prefix;
+        this.player = player;
     }
 
     public Message withPlaceholder(String placeholder, Object replacement) {
@@ -89,71 +66,43 @@ public class Message {
         return prefix(false);
     }
 
-    public Message setStorage(Storage storage) {
-        this.storage = storage;
-        return this;
+    public List<TextComponent> get() {
+
+
+        return get(internalGetUuid(player));
     }
 
-    public Message setLanguage(Object player) {
-        String language = "";
-
-        try {
-            language = (String) fastInvoke(player, "getLocale");
-        } catch (Throwable ignored) {
-            try {
-                language = (String) fastInvoke(player,"getLanguage");
-            } catch (Throwable ignored2) {
-            }
-        }
-
-        setLanguage(language);
-        return this;
-    }
-
-    public Message setLanguage(String language) {
-        storage = LanguageBase.getStorage(language);
-        return this;
-    }
-
-    public boolean exists() {
-        return storage.exists(key);
-    }
-
-    public String get() {
-        try {
-            String message = storage.translate(key, def, prefix);
-
-            for (var replace : placeholders.entrySet()) {
-                message = message.replaceAll(replace.getKey(), replace.getValue().toString());
+    public List<TextComponent> get(UUID uuid) {
+        LanguageContainer container;
+        if (uuid == null) {
+            container = LanguageBase.getDefaultContainer();
+        } else {
+            final var maybeContainer = LanguageBase.getInstance().getPlayerRegistry().getFor(uuid);
+            if (maybeContainer.isEmpty()) {
+                return List.of();
             }
 
-            return message;
-        } catch (Throwable ignored) {
-            return null;
+            container = maybeContainer.get();
         }
-    }
 
-    public List<String> getList() {
-        try {
-            final List<String> messages = storage.translateList(key, defList, prefix);
-            final List<String> toReturn = new ArrayList<>();
-
-            for (String toTranslate : messages) {
-                for (var replace : placeholders.entrySet()) {
-                    System.out.println(replace);
-                    toTranslate = toTranslate.replaceAll(replace.getKey(), replace.getValue().toString());
-                }
-                toReturn.add(toTranslate);
-            }
-
-            return toReturn;
-        } catch (Throwable ignored) {
-            return null;
-        }
+        return container.getMessages(key, prefix, placeholders);
     }
 
     public String toString() {
-        return get();
+        final var builder = new StringBuilder();
+        final var components = get();
+
+        components.forEach(component -> {
+            builder.append(component.toLegacyText());
+            builder.append(System.lineSeparator());
+        });
+
+        return builder.toString();
+    }
+
+    public Message send() {
+        internalSend(player, get());
+        return this;
     }
 
     public Message send(Object sender) {
@@ -164,7 +113,7 @@ public class Message {
             return this;
         }
 
-        internalSendToReceiver(sender, get());
+        internalSend(sender, get(internalGetUuid(sender)));
         return this;
     }
 
@@ -177,24 +126,12 @@ public class Message {
         }
 
         try {
-            boolean hasPermissions = (boolean) getMethod(sender, "hasPermission", String.class).invoke(permissions);
+            boolean hasPermissions = (boolean) SReflect.getMethod(sender, "hasPermission", String.class).invoke(permissions);
             if (hasPermissions) {
-                internalSendToReceiver(sender, get());
+                internalSend(sender, get(internalGetUuid(sender)));
             }
         } catch (Throwable ignored) {
         }
-        return this;
-    }
-
-    public Message sendList(Object sender) {
-        if (sender instanceof Collection) {
-            for (var recipient : (Collection<?>) sender) {
-                sendList(recipient);
-            }
-            return this;
-        }
-
-        getList().forEach(message -> internalSendToReceiver(sender, message));
         return this;
     }
 
@@ -206,23 +143,18 @@ public class Message {
             return this;
         }
 
-        try {
-            getMethod(sender,"sendMessage", ChatMessageType.class, TextComponent.class).invoke(ChatMessageType.ACTION_BAR, new TextComponent(get()));
-        } catch (Throwable ignored) {
-        }
+        get(internalGetUuid(sender)).forEach(component ->
+                SReflect.getMethod(sender, "sendMessage", ChatMessageType.class, TextComponent.class).invoke(ChatMessageType.ACTION_BAR, component));
         return this;
     }
 
-    protected void internalSendToReceiver(Object sender, String message) {
-        if (message.isEmpty()) {
-            //TODO: add some debug here?
-            return;
-        }
+    protected void internalSend(Object sender, List<TextComponent> message) {
+        message.forEach(component ->
+                SReflect.getMethod(sender, "sendMessage", TextComponent.class).invoke(message));
+    }
 
-        try {
-            getMethod(sender, "sendMessage", String.class).invoke(message);
-        } catch (Throwable ignored) {
-            ignored.printStackTrace();
-        }
+    protected UUID internalGetUuid(Object player) {
+        Preconditions.checkNotNull(player);
+        return (UUID) SReflect.fastInvoke(player, "getUniqueId");
     }
 }

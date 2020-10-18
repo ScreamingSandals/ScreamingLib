@@ -3,11 +3,14 @@ package org.screamingsandals.lib.core.lang.storage;
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 import lombok.Data;
+import net.md_5.bungee.api.chat.TextComponent;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.screamingsandals.lib.core.config.SConfig;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class LanguageContainer {
@@ -21,6 +24,22 @@ public class LanguageContainer {
         this.fallback = fallback;
         this.code = Preconditions.checkNotNull(code, "code");
         this.prefix = Preconditions.checkNotNull(config.get("prefix").getString(), "prefix");
+    }
+
+    public List<TextComponent> getMessages(String key, boolean prefix, Map<String, Object> placeholders) {
+        if (prefix) {
+            final var messages = getMessagesWithPrefix(key);
+            final var toReturn = new LinkedList<TextComponent>();
+            messages.forEach(container -> toReturn.add(container.toComponent(placeholders)));
+
+            return toReturn;
+        }
+
+        final var messages = getMessages(key);
+        final var toReturn = new LinkedList<TextComponent>();
+        messages.forEach(container -> toReturn.add(container.toComponent(placeholders)));
+
+        return toReturn;
     }
 
     public List<MessageContainer> getMessages(String key) {
@@ -59,5 +78,10 @@ public class LanguageContainer {
         });
 
         return messages;
+    }
+
+    public boolean exists(String key) {
+        final var node = config.get(key);
+        return !node.isEmpty();
     }
 }

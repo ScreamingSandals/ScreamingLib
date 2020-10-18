@@ -7,21 +7,43 @@ import java.util.Map;
 import java.util.Optional;
 
 public class LanguageRegistry {
-    private final Map<String, LanguageContainer> registeredContainers = new HashMap<>();
+    private final Map<String, LanguageContainer> customContainers = new HashMap<>();
+    private final Map<String, LanguageContainer> originalContainers = new HashMap<>();
 
-    public void register(String languageCode, LanguageContainer languageContainer) {
-        registeredContainers.putIfAbsent(languageCode, languageContainer);
+    void registerInternal(String code, LanguageContainer container) {
+        originalContainers.put(code, container);
     }
 
-    public void remove(String languageCode) {
-        registeredContainers.remove(languageCode);
+    void removeInternal(String code) {
+        originalContainers.remove(code);
+    }
+
+    public Optional<LanguageContainer> getOriginal(String code) {
+        return Optional.ofNullable(originalContainers.get(code));
+    }
+
+    public void register(String code, LanguageContainer container) {
+        customContainers.putIfAbsent(code, container);
+    }
+
+    public void remove(String code) {
+        customContainers.remove(code);
     }
 
     public void clear() {
-        registeredContainers.clear();
+        originalContainers.clear();
+        customContainers.clear();
     }
 
-    public Optional<LanguageContainer> getByCode(String languageCode) {
-        return Optional.ofNullable(registeredContainers.get(languageCode));
+    public Optional<LanguageContainer> getCustom(String code) {
+        return Optional.ofNullable(customContainers.get(code));
+    }
+
+    public Optional<LanguageContainer> get(String code) {
+        if (customContainers.containsKey(code)) {
+            return Optional.of(customContainers.get(code));
+        }
+
+        return Optional.ofNullable(originalContainers.get(code));
     }
 }

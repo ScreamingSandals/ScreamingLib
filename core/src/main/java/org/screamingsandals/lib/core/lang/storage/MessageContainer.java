@@ -44,7 +44,14 @@ public class MessageContainer {
         return container;
     }
 
+    public TextComponent toComponent(Map<String, Object> placeholders) {
+        this.placeholders = placeholders;
+        return toComponent();
+    }
+
     public TextComponent toComponent() {
+        placeholders.forEach((key, value) -> text = text.replaceAll(key, value.toString()));
+
         final var component = new TextComponent(TextComponent.fromLegacyText(text));
 
         if (events.isEmpty()) {
