@@ -1,3 +1,5 @@
+version = core_version
+
 dependencies {
     //guice
     shade group: 'com.google.inject', name: 'guice', version: guice_version

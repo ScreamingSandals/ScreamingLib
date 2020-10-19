@@ -48,16 +48,19 @@ public class LanguageContainer {
             if (uuid != null && pluginCore.getType() == PluginCore.ServerType.PAPER) {
                 final var player = pluginCore.getWrapperFor(uuid);
                 if (player.isEmpty()) {
+                    log.debug("Player is null, returning normal component.");
                     toReturn.add(container.toComponent(placeholders));
                     return;
                 }
 
-                me.clip.placeholderapi.PlaceholderAPI.setPlaceholders((OfflinePlayer) player.get().getInstance(), container.getText());
+                if (papiConfig.isEnabled() && papiConfig.isUsePapi()) {
+                    log.debug("Using PAPI for placeholders!");
+                    me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(
+                            (OfflinePlayer) player.get().getInstance(), container.getText());
+                }
             }
-
             toReturn.add(container.toComponent(placeholders));
         });
-
         return toReturn;
     }
 

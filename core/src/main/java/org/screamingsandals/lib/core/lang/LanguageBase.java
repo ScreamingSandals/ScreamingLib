@@ -12,6 +12,11 @@ import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
 import java.io.File;
 
 
+/**
+ * LanguageBase, might change this..
+ * Right now, this is used for configuring language itself.
+ *
+ */
 @Getter
 @Setter
 public class LanguageBase {
