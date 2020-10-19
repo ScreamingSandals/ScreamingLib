@@ -1,18 +1,19 @@
 package org.screamingsandals.lib.core.config.adapter;
 
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
+
 import org.screamingsandals.lib.core.config.SConfig;
 import org.screamingsandals.lib.core.config.exception.SConfigException;
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.loader.ConfigurationLoader;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 
 public abstract class BaseConfigAdapter implements SConfig {
     protected final Path location;
     protected final ConfigurationLoader<?> loader;
-    protected CommentedConfigurationNode node;
+    protected CommentedConfigurationNode root;
 
     public BaseConfigAdapter(File file, ConfigurationLoader<?> loader) throws SConfigException {
         this(file.toPath(), loader);
@@ -23,20 +24,20 @@ public abstract class BaseConfigAdapter implements SConfig {
         this.loader = loader;
 
         try {
-            node = (CommentedConfigurationNode) loader.load();
+            root = (CommentedConfigurationNode) loader.load();
         } catch (Exception e) {
             throw new SConfigException("SConfig cannot be loaded!", e);
         }
     }
 
     @Override
-    public CommentedConfigurationNode getRoot() {
-        return node;
+    public CommentedConfigurationNode root() {
+        return root;
     }
 
     @Override
-    public CommentedConfigurationNode get(String key) {
-        return node.getNode(key);
+    public CommentedConfigurationNode node(String key) {
+        return root.node(key);
     }
 
     @Override
@@ -47,8 +48,8 @@ public abstract class BaseConfigAdapter implements SConfig {
     @Override
     public void save() throws SConfigException {
         try {
-            loader.save(node);
-        } catch (IOException e) {
+            loader.save(root);
+        } catch (ConfigurateException e) {
             throw new SConfigException("Saving failed!", e);
         }
     }
@@ -57,7 +58,7 @@ public abstract class BaseConfigAdapter implements SConfig {
     public void load() throws SConfigException {
         try {
             loader.load();
-        } catch (IOException e) {
+        } catch (ConfigurateException e) {
             throw new SConfigException("Loading failed!", e);
         }
     }

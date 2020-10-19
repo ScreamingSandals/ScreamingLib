@@ -46,4 +46,12 @@ public class LanguageRegistry {
 
         return Optional.ofNullable(originalContainers.get(code));
     }
+
+    public Optional<LanguageContainer> getFirstAvailable() {
+        if (customContainers.isEmpty()) {
+            return originalContainers.values().stream().findFirst();
+        }
+
+        return customContainers.values().stream().findFirst();
+    }
 }

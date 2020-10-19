@@ -5,7 +5,10 @@ import lombok.Data;
 import org.screamingsandals.lib.core.lang.LanguageBase;
 import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @Data
 public class PlayerRegistry {
@@ -19,7 +22,7 @@ public class PlayerRegistry {
         final var consoleID = UUID.randomUUID();
         System.setProperty("slang.consoleUUID", consoleID.toString());
 
-        register(consoleID, System.getProperty("user.language"));
+        register(consoleID, "cz"); //TODO
     }
 
     public void register(UUID uuid, String languageCode) {
@@ -34,7 +37,7 @@ public class PlayerRegistry {
         final var code = players.get(uuid);
 
         if (code == null) {
-            return LanguageBase.getInstance().getDefaultLanguage();
+            return LanguageBase.getDefaultLanguage();
         }
 
         return code;

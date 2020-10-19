@@ -4,6 +4,9 @@ import lombok.Getter;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Convert normal TimeUnit to tick values for bukkit
+ */
 public enum TaskerTime {
     TICKS(1, 50, TimeUnit.MILLISECONDS),
     SECONDS(20, 1, TimeUnit.SECONDS),

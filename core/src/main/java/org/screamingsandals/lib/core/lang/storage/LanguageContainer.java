@@ -1,66 +1,104 @@
 package org.screamingsandals.lib.core.lang.storage;
 
 import com.google.common.base.Preconditions;
-import com.google.common.reflect.TypeToken;
+import io.leangen.geantyref.TypeToken;
 import lombok.Data;
 import net.md_5.bungee.api.chat.TextComponent;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import org.bukkit.OfflinePlayer;
 import org.screamingsandals.lib.core.config.SConfig;
+import org.screamingsandals.lib.core.papi.PlaceholderConfig;
+import org.screamingsandals.lib.core.plugin.PluginCore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
 public class LanguageContainer {
+    private final Logger log = LoggerFactory.getLogger(LanguageContainer.class);
     private final SConfig config;
     private LanguageContainer fallback;
     private String code;
     private String prefix;
+    private PlaceholderConfig papiConfig;
+    private PluginCore pluginCore;
 
-    public LanguageContainer(SConfig config, LanguageContainer fallback, String code) {
+    public LanguageContainer(SConfig config, LanguageContainer fallback, String code,
+                             String prefix, PlaceholderConfig papiConfig, PluginCore pluginCore) {
         this.config = Preconditions.checkNotNull(config, "config");
         this.fallback = fallback;
         this.code = Preconditions.checkNotNull(code, "code");
-        this.prefix = Preconditions.checkNotNull(config.get("prefix").getString(), "prefix");
+        this.prefix = Objects.requireNonNullElseGet(prefix, () -> Preconditions.checkNotNull(config.node("prefix").getString()));
+        this.papiConfig = papiConfig;
+        this.pluginCore = pluginCore;
     }
 
-    public List<TextComponent> getMessages(String key, boolean prefix, Map<String, Object> placeholders) {
+    public List<TextComponent> getMessages(String key, boolean prefix, Map<String, Object> placeholders, UUID uuid) {
+        List<MessageContainer> messages;
         if (prefix) {
-            final var messages = getMessagesWithPrefix(key);
-            final var toReturn = new LinkedList<TextComponent>();
-            messages.forEach(container -> toReturn.add(container.toComponent(placeholders)));
-
-            return toReturn;
+            messages = getMessagesWithPrefix(key);
+        } else {
+            messages = getMessages(key);
         }
 
-        final var messages = getMessages(key);
         final var toReturn = new LinkedList<TextComponent>();
-        messages.forEach(container -> toReturn.add(container.toComponent(placeholders)));
+        messages.forEach(container -> {
+            if (uuid != null && pluginCore.getType() == PluginCore.ServerType.PAPER) {
+                final var player = pluginCore.getWrapperFor(uuid);
+                if (player.isEmpty()) {
+                    toReturn.add(container.toComponent(placeholders));
+                    return;
+                }
+
+                me.clip.placeholderapi.PlaceholderAPI.setPlaceholders((OfflinePlayer) player.get().getInstance(), container.getText());
+            }
+
+            toReturn.add(container.toComponent(placeholders));
+        });
 
         return toReturn;
     }
 
     public List<MessageContainer> getMessages(String key) {
-        final var node = config.get(key);
+        final var node = config.node(key);
         final var notFoundContainer = new MessageContainer("&cNo translation found for: " + key);
-        final var fallbackNode = fallback != null ? fallback.getConfig().get(key) : CommentedConfigurationNode.root();
+        final var fallbackNode = fallback != null ? fallback.getConfig().node(key) : CommentedConfigurationNode.root();
 
-        if (node.isEmpty() || fallbackNode.isEmpty()) {
-            return List.of(notFoundContainer);
+        if (node.empty()) {
+            log.debug("Not found any translation, trying fallback!");
+
+            if (fallbackNode.empty()) {
+                log.debug("Fallback node is empty, returning not found container!");
+                return List.of(notFoundContainer);
+            }
         }
 
         try {
-            final var messages = node.getList(TypeToken.of(MessageContainer.class));
-            if (messages.size() < 1) {
+            if (node.isList()) {
+                log.debug("Node is list!");
+                final var messages = node.getList(new TypeToken<MessageContainer>() {
+                });
+
+                if (messages == null || messages.isEmpty()) {
+                    log.debug("Messages are null or empty.");
+                    return List.of(notFoundContainer);
+                }
+
+                messages.removeIf(container -> container.getText().startsWith("[_SKIP]"));
+                return messages;
+            }
+
+            log.debug("Node is not a list!");
+            final var message = node.get(TypeToken.get(MessageContainer.class));
+            if (message == null || message.getText().startsWith("[_SKIP]")) {
+                log.debug("Not found any translation!");
                 return List.of(notFoundContainer);
             }
 
-            messages.removeIf(container -> container.getText().startsWith("[_SKIP]"));
-
-            return messages;
-        } catch (ObjectMappingException e) {
+            return List.of(message);
+        } catch (SerializationException e) {
             return List.of(notFoundContainer);
         }
     }
@@ -81,7 +119,7 @@ public class LanguageContainer {
     }
 
     public boolean exists(String key) {
-        final var node = config.get(key);
-        return !node.isEmpty();
+        final var node = config.node(key);
+        return !node.empty();
     }
 }

@@ -5,8 +5,15 @@ import com.google.inject.name.Names;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.core.lang.guice.LanguageModule;
+import org.screamingsandals.lib.core.papi.PapiModule;
+import org.screamingsandals.lib.core.plugin.PluginCore;
 import org.screamingsandals.lib.core.tasker.guice.TaskerModule;
 
+/**
+ * Main ScreamingLib module.
+ * This module contains everything needed in Core that can be initialized
+ * via Guice.
+ */
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class ScreamingModule extends AbstractModule {
@@ -30,6 +37,7 @@ public class ScreamingModule extends AbstractModule {
         }
 
         install(new TaskerModule(pluginCore));
+        install(new PapiModule(pluginCore));
         install(new LanguageModule());
     }
 }

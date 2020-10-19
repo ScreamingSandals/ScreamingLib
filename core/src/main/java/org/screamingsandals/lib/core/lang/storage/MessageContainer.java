@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -18,9 +18,10 @@ import java.util.Map;
 @NoArgsConstructor
 @ConfigSerializable
 public class MessageContainer {
+    private static Map<String, Object> placeholders = new HashMap<>();
+
     private String text = "";
     private List<Event> events = new LinkedList<>();
-    private Map<String, Object> placeholders = new HashMap<>();
 
     public MessageContainer(String text) {
         this.text = text;
@@ -45,7 +46,7 @@ public class MessageContainer {
     }
 
     public TextComponent toComponent(Map<String, Object> placeholders) {
-        this.placeholders = placeholders;
+        MessageContainer.placeholders = placeholders;
         return toComponent();
     }
 
@@ -59,14 +60,24 @@ public class MessageContainer {
         }
 
         events.forEach(event -> {
+            if (event.getAction() == null) {
+                return;
+            }
+
             try {
                 switch (event.getAction()) {
                     case CLICK:
-                        final var clickAction = ClickEvent.Action.valueOf(event.getActionType().toUpperCase());
+                        final var clickAction = event.getClickAction();
+                        if (clickAction == null) {
+                            return;
+                        }
                         component.setClickEvent(new ClickEvent(clickAction, event.getActionValue()));
                         break;
                     case HOVER:
-                        final var hoverAction = HoverEvent.Action.valueOf(event.getActionType().toUpperCase());
+                        final var hoverAction = event.getHoverAction();
+                        if (hoverAction == null) {
+                            return;
+                        }
                         component.setHoverEvent(new HoverEvent(hoverAction, TextComponent.fromLegacyText(event.getActionValue())));
                         break;
                 }
@@ -79,7 +90,7 @@ public class MessageContainer {
     }
 
     public MessageContainer addPlaceholders(Map<String, Object> placeholders) {
-        this.placeholders.putAll(placeholders);
+        MessageContainer.placeholders.putAll(placeholders);
         return this;
     }
 
@@ -95,6 +106,24 @@ public class MessageContainer {
         public enum Action {
             HOVER,
             CLICK
+        }
+
+        public ClickEvent.Action getClickAction() {
+            for (var value : ClickEvent.Action.values()) {
+                if (value.name().equalsIgnoreCase(actionType)) {
+                    return value;
+                }
+            }
+            return null;
+        }
+
+        public HoverEvent.Action getHoverAction() {
+            for (var value : HoverEvent.Action.values()) {
+                if (value.name().equalsIgnoreCase(actionType)) {
+                    return value;
+                }
+            }
+            return null;
         }
     }
 }

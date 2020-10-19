@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.core;
+package org.screamingsandals.lib.core.lang;
 
 import org.screamingsandals.lib.core.lang.message.Message;
 
@@ -8,8 +8,8 @@ public interface SLang {
         return m(null, true, null);
     }
 
-    static Message mpr(Object player) {
-        return m(null, true, player);
+    static Message mpr(String key) {
+        return m(key, true, null);
     }
 
     static Message mpr(String key, Object player) {
@@ -21,8 +21,8 @@ public interface SLang {
         return m(null, false, null);
     }
 
-    static Message m(Object player) {
-        return m(null, false, player);
+    static Message m(String key) {
+        return m(key, false, null);
     }
 
     static Message m(String key, Object player) {

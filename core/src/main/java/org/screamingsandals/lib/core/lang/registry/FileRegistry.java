@@ -1,19 +1,22 @@
 package org.screamingsandals.lib.core.lang.registry;
 
+import com.google.inject.Inject;
 import lombok.Data;
-import org.screamingsandals.lib.core.PluginCore;
 import org.screamingsandals.lib.core.config.SConfig;
 import org.screamingsandals.lib.core.lang.LanguageBase;
 import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
+import org.screamingsandals.lib.core.papi.PlaceholderConfig;
+import org.screamingsandals.lib.core.plugin.PluginCore;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.nio.file.spi.FileSystemProvider;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.zip.ZipInputStream;
 
 /**
@@ -24,17 +27,18 @@ import java.util.zip.ZipInputStream;
  */
 @Data
 public class FileRegistry {
-    private final Map<String, SConfig> customConfigs = new HashMap<>();
-    private final Map<String, SConfig> originalConfigs = new HashMap<>();
-
-    private final PluginCore plugin;
+    private final PluginCore pluginCore;
     private final LanguageRegistry registry;
+    private final PlaceholderConfig papiConfig;
     private final Logger log;
+    private String customPrefix;
 
-    public FileRegistry(PluginCore plugin, LanguageRegistry registry) {
-        this.plugin = plugin;
+    @Inject
+    public FileRegistry(PluginCore pluginCore, LanguageRegistry registry, PlaceholderConfig papiConfig) {
+        this.pluginCore = pluginCore;
         this.registry = registry;
-        this.log = plugin.getLog();
+        this.papiConfig = papiConfig;
+        this.log = pluginCore.getLog();
 
         registerFromClasspath();
     }
@@ -45,41 +49,58 @@ public class FileRegistry {
      * @param file custom data folder to register from
      */
     public void registerCustomLanguages(File file) {
+        final var folderContext = file.listFiles();
 
+        for (File langFile : folderContext) {
+            if (langFile.getName().endsWith(".conf")) {
+                try {
+                    registerLanguage(SConfig.create(SConfig.Format.HOCON, langFile.toPath()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void registerLanguage(SConfig sConfig) {
-        final var code = sConfig.get("language_code").getString();
+        if (sConfig.node("language_code").empty()) {
+            log.warn("Cannot register language!");
+            return;
+        }
 
-        customConfigs.putIfAbsent(code, sConfig);
+        final var code = sConfig.node("language_code").getString();
+
+        log.debug("Registering new language with code {}", code);
+
         registry.register(code, new LanguageContainer(sConfig,
                 registry.getOriginal(code)
                         .orElse(registry.getOriginal(LanguageBase.FALLBACK_LANGUAGE)
-                                .orElse(null)), code));
+                                .orElse(null)),
+                code, customPrefix, papiConfig, pluginCore));
     }
 
     public void removeLanguage(String code) {
         registry.remove(code);
     }
 
-    private void registerFromClasspath() {
+    public void registerFromClasspath() {
         getFilesFromClasspath().forEach(path -> {
             try {
                 final var sConfig = SConfig.create(SConfig.Format.HOCON, path);
-                final var code = sConfig.get("language_code").getString();
+                final var code = sConfig.node("language_code").getString();
 
-                originalConfigs.put(code, sConfig);
-                registry.registerInternal(code, new LanguageContainer(sConfig, null, code));
+                registry.registerInternal(code,
+                        new LanguageContainer(sConfig, null, code, customPrefix, papiConfig, pluginCore));
             } catch (Exception e) {
                 log.warn("Registering of internal language file failed!", e);
             }
         });
     }
 
-    private List<Path> getFilesFromClasspath() {
+    public List<Path> getFilesFromClasspath() {
         final List<Path> toReturn = new LinkedList<>();
 
-        final var codeSource = plugin.getClass().getProtectionDomain().getCodeSource();
+        final var codeSource = pluginCore.getClass().getProtectionDomain().getCodeSource();
         if (codeSource == null) {
             return toReturn;
         }
@@ -95,9 +116,22 @@ public class FileRegistry {
 
                 final var entryName = zipEntry.getName();
                 if (entryName.startsWith("languages") && entryName.endsWith(".conf")) {
-                    final var classpathResource = "/" + entryName;
+                    final var resource = pluginCore.getPlugin().getClass().getResource("/" + entryName).toURI();
 
-                    toReturn.add(Paths.get(ClassLoader.getSystemResource(classpathResource).toURI()));
+                    //cool hack from StackOverflow :)
+                    if ("jar".equals(resource.getScheme())) {
+                        for (var provider : FileSystemProvider.installedProviders()) {
+                            if (provider.getScheme().equalsIgnoreCase("jar")) {
+                                try {
+                                    provider.getFileSystem(resource);
+                                } catch (FileSystemNotFoundException e) {
+                                    provider.newFileSystem(resource, Collections.emptyMap());
+                                }
+                            }
+                        }
+                    }
+
+                    toReturn.add(Paths.get(resource));
                 }
             }
         } catch (Exception e) {

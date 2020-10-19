@@ -1,7 +1,10 @@
 buildscript {
     ext {
         guice_version = "4.2.3"
-        configurate_version = "3.7.1"
+        configurate_version = "4.0.0-SNAPSHOT"
+        papi_version = "2.10.9"
+        netty_version = "4.1.42.Final"
+        slf4j_version = "1.7.25"
     }
 
     repositories {
@@ -44,9 +47,7 @@ subprojects {
         compileOnly waterfall()
         compileOnly velocity()
 
-        compileOnly group: 'com.google.inject', name: 'guice', version: guice_version
-        compileOnly group: 'org.spongepowered', name: 'configurate-hocon', version: configurate_version
-        compileOnly group: 'org.spongepowered', name: 'configurate-yaml', version: configurate_version
+        compileOnly group: 'me.clip', name: 'placeholderapi', version: papi_version
     }
 
     sourceCompatibility = '11'

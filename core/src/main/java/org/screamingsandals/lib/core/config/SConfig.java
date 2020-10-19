@@ -1,16 +1,16 @@
 package org.screamingsandals.lib.core.config;
 
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
-import ninja.leaping.configurate.gson.GsonConfigurationLoader;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.loader.ConfigurationLoader;
-import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.screamingsandals.lib.core.config.adapter.GsonConfigAdapter;
 import org.screamingsandals.lib.core.config.adapter.HoconConfigAdapter;
 import org.screamingsandals.lib.core.config.adapter.YamlConfigAdapter;
 import org.screamingsandals.lib.core.config.exception.SConfigException;
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.gson.GsonConfigurationLoader;
+import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
+import org.spongepowered.configurate.loader.ConfigurationLoader;
+import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 /**
@@ -34,14 +34,14 @@ public interface SConfig {
      *
      * @return config node
      */
-    CommentedConfigurationNode getRoot();
+    CommentedConfigurationNode root();
 
     /**
      * Config node by key
      *
      * @return config node
      */
-    CommentedConfigurationNode get(String key);
+    CommentedConfigurationNode node(String key);
 
     /**
      * Location of the config
@@ -69,18 +69,18 @@ public interface SConfig {
         final ConfigurationLoader<?> newLoader;
         switch (format) {
             case YAML:
-                newLoader = YAMLConfigurationLoader.builder()
-                        .setPath(path)
+                newLoader = YamlConfigurationLoader.builder()
+                        .path(path)
                         .build();
                 break;
             case HOCON:
                 newLoader = HoconConfigurationLoader.builder()
-                        .setPath(path)
+                        .path(path)
                         .build();
                 break;
             case GSON:
                 newLoader = GsonConfigurationLoader.builder()
-                        .setPath(path)
+                        .path(path)
                         .build();
                 break;
             default:
@@ -90,7 +90,7 @@ public interface SConfig {
 
         try {
             newLoader.save(loader.load());
-        } catch (IOException e) {
+        } catch (ConfigurateException e) {
             throw new SConfigException("Oopsie, converting failed..", e);
         }
     }

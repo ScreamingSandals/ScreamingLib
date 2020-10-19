@@ -22,7 +22,7 @@ public class Message {
         this.player = player;
     }
 
-    public Message withPlaceholder(String placeholder, Object replacement) {
+    public Message replace(String placeholder, Object replacement) {
         placeholders.putIfAbsent(placeholder, replacement);
         return this;
     }
@@ -67,9 +67,15 @@ public class Message {
     }
 
     public List<TextComponent> get() {
+        UUID uuid;
 
+        if (player == null) {
+            uuid = UUID.fromString(System.getProperty("slang.consoleUUID"));
+        } else {
+            uuid = internalGetUuid(player);
+        }
 
-        return get(internalGetUuid(player));
+        return get(uuid);
     }
 
     public List<TextComponent> get(UUID uuid) {
@@ -77,7 +83,7 @@ public class Message {
         if (uuid == null) {
             container = LanguageBase.getDefaultContainer();
         } else {
-            final var maybeContainer = LanguageBase.getInstance().getPlayerRegistry().getFor(uuid);
+            final var maybeContainer = LanguageBase.getPlayerRegistry().getFor(uuid);
             if (maybeContainer.isEmpty()) {
                 return List.of();
             }
@@ -85,7 +91,7 @@ public class Message {
             container = maybeContainer.get();
         }
 
-        return container.getMessages(key, prefix, placeholders);
+        return container.getMessages(key, prefix, placeholders, uuid);
     }
 
     public String toString() {
@@ -101,6 +107,11 @@ public class Message {
     }
 
     public Message send() {
+        if (player == null) {
+            get().forEach(component -> LanguageBase.getPluginCore().sendMessage(component));
+            return this;
+        }
+
         internalSend(player, get());
         return this;
     }

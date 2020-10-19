@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.core.config.adapter;
 
-import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.screamingsandals.lib.core.config.exception.SConfigException;
+import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -13,8 +13,8 @@ public class YamlConfigAdapter extends BaseConfigAdapter {
     }
 
     public YamlConfigAdapter(Path path) throws SConfigException {
-        super(path, YAMLConfigurationLoader.builder()
-                .setPath(path)
+        super(path, YamlConfigurationLoader.builder()
+                .path(path)
                 .build());
     }
 }
