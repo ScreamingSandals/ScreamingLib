@@ -1,4 +1,0 @@
-dependencies {
-	shade project(':config')
-	shade project(':reflection')
-}

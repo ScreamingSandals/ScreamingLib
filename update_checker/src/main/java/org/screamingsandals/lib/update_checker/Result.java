@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor;
 public class Result {
 	private final String version;
 	
-	public boolean needsUpdate(String checkVersion0) {
-		var currentVersion = checkVersion0.split("-")[0];
-		currentVersion += (checkVersion0.toLowerCase().contains("pre")
-				|| checkVersion0.toLowerCase().contains("snapshot")) ? ".0" : ".1";
+	public boolean needsUpdate(String toCheck) {
+		var currentVersion = toCheck.split("-")[0];
+		currentVersion += (toCheck.toLowerCase().contains("pre")
+				|| toCheck.toLowerCase().contains("snapshot")) ? ".0" : ".1";
 		var checkVersion = version.split("-")[0];
 		checkVersion += (version.toLowerCase().contains("pre")
 				|| version.toLowerCase().contains("snapshot")) ? ".0" : ".1";

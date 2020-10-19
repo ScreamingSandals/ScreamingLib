@@ -1,0 +1,18 @@
+version = core_version
+
+dependencies {
+    //guice
+    shade group: 'com.google.inject', name: 'guice', version: guice_version
+
+    //configurate
+    shade group: 'org.spongepowered', name: 'configurate-hocon', version: configurate_version
+    shade group: 'org.spongepowered', name: 'configurate-yaml', version: configurate_version
+    shade group: 'org.spongepowered', name: 'configurate-gson', version: configurate_version
+    shade group: 'org.spongepowered', name: 'configurate-gson', version: configurate_version
+
+    //log
+    shade group: 'org.slf4j', name: 'slf4j-api', version: slf4j_version
+
+    //netty
+    compileOnly group: 'io.netty', name: 'netty-all', version: netty_version
+}

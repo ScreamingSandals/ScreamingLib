@@ -1,4 +1,0 @@
-dependencies {
-	shade project(':reflection')
-	compileOnly 'io.netty:netty-all:4.1.42.Final'
-}

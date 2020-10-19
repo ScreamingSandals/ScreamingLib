@@ -1,5 +1,0 @@
-dependencies {
-    shade 'io.lettuce:lettuce-core:5.2.2.RELEASE'
-    shade project(':debug')
-    shade project(':tasker')
-}
