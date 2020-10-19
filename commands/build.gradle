@@ -1,5 +1,5 @@
 version = commands_version
 
 dependencies {
-
+    api project(":core")
 }

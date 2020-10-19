@@ -3,19 +3,17 @@ package org.screamingsandals.lib.core.lang;
 import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
-import org.screamingsandals.lib.core.plugin.PluginCore;
 import org.screamingsandals.lib.core.lang.registry.FileRegistry;
 import org.screamingsandals.lib.core.lang.registry.LanguageRegistry;
 import org.screamingsandals.lib.core.lang.registry.PlayerRegistry;
 import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
+import org.screamingsandals.lib.core.plugin.PluginCore;
 
 import java.io.File;
-
 
 /**
  * LanguageBase, might change this..
  * Right now, this is used for configuring language itself.
- *
  */
 @Getter
 @Setter
