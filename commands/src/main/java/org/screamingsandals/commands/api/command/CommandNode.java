@@ -2,17 +2,18 @@ package org.screamingsandals.commands.api.command;
 
 import org.screamingsandals.commands.core.command.SimpleCommandNode;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public interface CommandNode {
 
     static CommandNode empty(String name) {
-        return new SimpleCommandNode(name);
+        return SimpleCommandNode.empty(name);
     }
 
     static CommandNode copyOf(String name, CommandNode node) {
-        return new SimpleCommandNode(name, node);
+        return SimpleCommandNode.copy(name, node);
     }
 
     /**
@@ -21,10 +22,23 @@ public interface CommandNode {
      */
     String getName();
 
+    /**
+     * Permissions needed to execute the command
+     * Does not apply to console
+     * @return permissions for this node
+     */
     String getPermissions();
 
+    /**
+     *
+     * @return
+     */
     String getDescription();
 
+    /**
+     *
+     * @return
+     */
     String getUsage();
 
     /**
@@ -56,7 +70,7 @@ public interface CommandNode {
 
     Map<String, CommandNode> getSubNodes();
 
-    CommandHandler getHandler();
+    List<CommandCallback> getCallbacks();
 
-    void setHandler(CommandHandler handler);
+    void addCallback(CommandCallback callback);
 }

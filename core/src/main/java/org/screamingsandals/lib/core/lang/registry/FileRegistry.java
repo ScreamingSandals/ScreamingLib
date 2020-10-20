@@ -6,7 +6,7 @@ import org.screamingsandals.lib.core.config.SConfig;
 import org.screamingsandals.lib.core.lang.LanguageBase;
 import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
 import org.screamingsandals.lib.core.papi.PlaceholderConfig;
-import org.screamingsandals.lib.core.plugin.PluginCore;
+import org.screamingsandals.lib.core.wrapper.PluginWrapper;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -27,18 +27,18 @@ import java.util.zip.ZipInputStream;
  */
 @Data
 public class FileRegistry {
-    private final PluginCore pluginCore;
+    private final PluginWrapper pluginWrapper;
     private final LanguageRegistry registry;
     private final PlaceholderConfig papiConfig;
     private final Logger log;
     private String customPrefix;
 
     @Inject
-    public FileRegistry(PluginCore pluginCore, LanguageRegistry registry, PlaceholderConfig papiConfig) {
-        this.pluginCore = pluginCore;
+    public FileRegistry(PluginWrapper pluginWrapper, LanguageRegistry registry, PlaceholderConfig papiConfig) {
+        this.pluginWrapper = pluginWrapper;
         this.registry = registry;
         this.papiConfig = papiConfig;
-        this.log = pluginCore.getLog();
+        this.log = pluginWrapper.getLog();
 
         registerFromClasspath();
     }
@@ -76,7 +76,7 @@ public class FileRegistry {
                 registry.getOriginal(code)
                         .orElse(registry.getOriginal(LanguageBase.FALLBACK_LANGUAGE)
                                 .orElse(null)),
-                code, customPrefix, papiConfig, pluginCore));
+                code, customPrefix, papiConfig, pluginWrapper));
     }
 
     public void removeLanguage(String code) {
@@ -90,7 +90,7 @@ public class FileRegistry {
                 final var code = sConfig.node("language_code").getString();
 
                 registry.registerInternal(code,
-                        new LanguageContainer(sConfig, null, code, customPrefix, papiConfig, pluginCore));
+                        new LanguageContainer(sConfig, null, code, customPrefix, papiConfig, pluginWrapper));
             } catch (Exception e) {
                 log.warn("Registering of internal language file failed!", e);
             }
@@ -100,7 +100,7 @@ public class FileRegistry {
     public List<Path> getFilesFromClasspath() {
         final List<Path> toReturn = new LinkedList<>();
 
-        final var codeSource = pluginCore.getClass().getProtectionDomain().getCodeSource();
+        final var codeSource = pluginWrapper.getClass().getProtectionDomain().getCodeSource();
         if (codeSource == null) {
             return toReturn;
         }
@@ -116,7 +116,7 @@ public class FileRegistry {
 
                 final var entryName = zipEntry.getName();
                 if (entryName.startsWith("languages") && entryName.endsWith(".conf")) {
-                    final var resource = pluginCore.getPlugin().getClass().getResource("/" + entryName).toURI();
+                    final var resource = pluginWrapper.getPlugin().getClass().getResource("/" + entryName).toURI();
 
                     //cool hack from StackOverflow :)
                     if ("jar".equals(resource.getScheme())) {

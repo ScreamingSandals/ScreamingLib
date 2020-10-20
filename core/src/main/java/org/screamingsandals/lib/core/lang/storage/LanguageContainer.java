@@ -7,7 +7,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.OfflinePlayer;
 import org.screamingsandals.lib.core.config.SConfig;
 import org.screamingsandals.lib.core.papi.PlaceholderConfig;
-import org.screamingsandals.lib.core.plugin.PluginCore;
+import org.screamingsandals.lib.core.wrapper.PluginWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.configurate.CommentedConfigurationNode;
@@ -23,16 +23,16 @@ public class LanguageContainer {
     private String code;
     private String prefix;
     private PlaceholderConfig papiConfig;
-    private PluginCore pluginCore;
+    private PluginWrapper pluginWrapper;
 
     public LanguageContainer(SConfig config, LanguageContainer fallback, String code,
-                             String prefix, PlaceholderConfig papiConfig, PluginCore pluginCore) {
+                             String prefix, PlaceholderConfig papiConfig, PluginWrapper pluginWrapper) {
         this.config = Preconditions.checkNotNull(config, "config");
         this.fallback = fallback;
         this.code = Preconditions.checkNotNull(code, "code");
         this.prefix = Objects.requireNonNullElseGet(prefix, () -> Preconditions.checkNotNull(config.node("prefix").getString()));
         this.papiConfig = papiConfig;
-        this.pluginCore = pluginCore;
+        this.pluginWrapper = pluginWrapper;
     }
 
     public List<TextComponent> getMessages(String key, boolean prefix, Map<String, Object> placeholders, UUID uuid) {
@@ -45,8 +45,8 @@ public class LanguageContainer {
 
         final var toReturn = new LinkedList<TextComponent>();
         messages.forEach(container -> {
-            if (uuid != null && pluginCore.getType() == PluginCore.ServerType.PAPER) {
-                final var player = pluginCore.getWrapperFor(uuid);
+            if (uuid != null && pluginWrapper.getType() == PluginWrapper.ServerType.PAPER) {
+                final var player = pluginWrapper.getWrapperFor(uuid);
                 if (player.isEmpty()) {
                     log.debug("Player is null, returning normal component.");
                     toReturn.add(container.toComponent(placeholders));

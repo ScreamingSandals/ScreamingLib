@@ -108,7 +108,7 @@ public class Message {
 
     public Message send() {
         if (player == null) {
-            get().forEach(component -> LanguageBase.getPluginCore().sendMessage(component));
+            get().forEach(component -> LanguageBase.getPluginWrapper().sendMessage(component));
             return this;
         }
 

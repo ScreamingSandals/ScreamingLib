@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.core.player;
+package org.screamingsandals.lib.core.wrapper;
 
 import lombok.Data;
 import net.md_5.bungee.api.chat.TextComponent;

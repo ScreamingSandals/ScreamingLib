@@ -1,7 +1,6 @@
-package org.screamingsandals.lib.core.plugin;
+package org.screamingsandals.lib.core.wrapper;
 
 import net.md_5.bungee.api.chat.TextComponent;
-import org.screamingsandals.lib.core.player.PlayerWrapper;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -9,7 +8,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface PluginCore {
+public interface PluginWrapper {
     Logger getLog();
 
     <P> P getPlugin();

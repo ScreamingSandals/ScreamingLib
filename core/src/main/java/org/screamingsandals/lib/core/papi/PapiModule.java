@@ -2,17 +2,17 @@ package org.screamingsandals.lib.core.papi;
 
 import com.google.inject.AbstractModule;
 import lombok.RequiredArgsConstructor;
-import org.screamingsandals.lib.core.plugin.PluginCore;
+import org.screamingsandals.lib.core.wrapper.PluginWrapper;
 
 @RequiredArgsConstructor
 public class PapiModule extends AbstractModule {
-    private final PluginCore pluginCore;
+    private final PluginWrapper pluginWrapper;
 
     @Override
     protected void configure() {
         final var papi = new PlaceholderConfig();
 
-        if (pluginCore.isPluginEnabled("PlaceholderAPI")) {
+        if (pluginWrapper.isPluginEnabled("PlaceholderAPI")) {
             papi.setEnabled(true);
             papi.setUsePapi(true);
         }
