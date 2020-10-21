@@ -1,14 +1,19 @@
 package org.screamingsandals.commands.api.builder;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.screamingsandals.commands.api.command.CommandCallback;
 import org.screamingsandals.commands.api.command.CommandNode;
 import org.screamingsandals.commands.api.registry.CommandRegistry;
+import org.screamingsandals.commands.core.command.SimpleCommandNode;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class SCBuilder {
     private static SCBuilder instance;
@@ -30,14 +35,12 @@ public class SCBuilder {
 
     @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
     public static class CommandBuilder {
-        private final CommandRegistry registry;
-        private final String name;
-        private String permission;
-        private String description;
-        private String usage;
-        private List<CommandCallback> callbacks = new LinkedList<>();
-
-        private CommandNode node;
+        protected final Multimap<CommandCallback.Priority, CommandCallback> callbacks = ArrayListMultimap.create();
+        protected final CommandRegistry registry;
+        protected final String name;
+        protected String permission;
+        protected String description;
+        protected String usage;
 
         public CommandBuilder permission(String permission) {
             this.permission = permission;
@@ -48,8 +51,7 @@ public class SCBuilder {
             this.description = description;
             return this;
         }
-
-
+        
         public CommandBuilder usage(String usage) {
             this.usage = usage;
             return this;
@@ -60,8 +62,14 @@ public class SCBuilder {
         }
 
         public CommandBuilder callback(CommandCallback callback, CommandCallback.Priority priority) {
-            callbacks.add(callback);
+            callbacks.put(priority, callback);
             return this;
+        }
+
+        public CommandNode build() {
+            final var node = SimpleCommandNode.buildNode(name, permission, description, usage, callbacks);
+            registry.register(node);
+            return node;
         }
     }
 
@@ -71,6 +79,13 @@ public class SCBuilder {
         SubCommandBuilder(CommandRegistry registry, String name, CommandNode parent) {
             super(registry, name);
             this.parent = parent;
+        }
+
+        public CommandNode build() {
+            final var node = SimpleCommandNode.buildNode(name, permission, description, usage,
+                    callbacks, parent, parent.getOwner().orElse(null));
+            registry.register(node);
+            return node;
         }
     }
 }

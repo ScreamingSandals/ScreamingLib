@@ -22,6 +22,18 @@ public interface CommandNode {
      */
     String getName();
 
+    default Optional<String> getParentName() {
+        return getParent()
+                .map(CommandNode::getName)
+                .or(Optional::empty);
+    }
+
+    default Optional<String> getOwnerName() {
+        return getOwner()
+                .map(CommandNode::getName)
+                .or(Optional::empty);
+    }
+
     /**
      * Permissions needed to execute the command
      * Does not apply to console
@@ -45,7 +57,7 @@ public interface CommandNode {
      * Returns parent of the command
      * @return command node, duh
      */
-    CommandNode getParent();
+    Optional<CommandNode> getParent();
 
     /**
      * Returns owner of this node
@@ -53,6 +65,14 @@ public interface CommandNode {
      * @return command node, duh
      */
     Optional<CommandNode> getOwner();
+
+    default boolean hasParent() {
+        return getParent().isPresent();
+    }
+
+    default boolean hasOwner() {
+        return getOwner().isPresent();
+    }
 
     /**
      * Adds new sub node to parent, can be  used even for
@@ -73,4 +93,6 @@ public interface CommandNode {
     List<CommandCallback> getCallbacks();
 
     void addCallback(CommandCallback callback);
+
+    void addCallback(CommandCallback.Priority priority, CommandCallback callback);
 }

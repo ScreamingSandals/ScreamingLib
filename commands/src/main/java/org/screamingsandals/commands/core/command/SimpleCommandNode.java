@@ -1,13 +1,17 @@
 package org.screamingsandals.commands.core.command;
 
-import lombok.Data;
-import net.md_5.bungee.api.chat.TextComponent;
+import java.util.*;
+
 import org.screamingsandals.commands.api.builder.SCBuilder;
 import org.screamingsandals.commands.api.command.CommandCallback;
 import org.screamingsandals.commands.api.command.CommandNode;
 import org.screamingsandals.lib.core.wrapper.PlayerWrapper;
 
-import java.util.*;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
+import lombok.Data;
+import net.md_5.bungee.api.chat.TextComponent;
 
 @Data
 public class SimpleCommandNode implements CommandNode {
@@ -20,7 +24,7 @@ public class SimpleCommandNode implements CommandNode {
 
     private CommandNode parent;
     private CommandNode owner;
-    private List<CommandCallback> callbacks = new LinkedList<>();
+    private Multimap<CommandCallback.Priority, CommandCallback> callbacks = ArrayListMultimap.create();
 
     private SimpleCommandNode(String name) {
         this.name = name;
@@ -31,7 +35,7 @@ public class SimpleCommandNode implements CommandNode {
         this.permissions = node.getPermissions();
         this.description = node.getPermissions();
         this.usage = node.getUsage();
-        this.parent = node.getParent();
+        this.parent = node.getParent().orElse(null);
         this.owner = node.getOwner().orElse(null);
     }
 
@@ -41,6 +45,26 @@ public class SimpleCommandNode implements CommandNode {
 
     public static SimpleCommandNode copy(String newName, CommandNode node) {
         return new SimpleCommandNode(newName, node);
+    }
+
+    public static SimpleCommandNode buildNode(String name, String permission,
+                                              String description, String usage,
+                                              Multimap<CommandCallback.Priority, CommandCallback> callbacks) {
+        return buildNode(name, permission, description, usage, callbacks, null, null);
+    }
+
+    public static SimpleCommandNode buildNode(String name, String permission,
+                                              String description, String usage,
+                                              Multimap<CommandCallback.Priority, CommandCallback> callbacks,
+                                              CommandNode parent, CommandNode owner) {
+        final var node = new SimpleCommandNode(name);
+        node.setPermissions(permission);
+        node.setDescription(description);
+        node.setUsage(usage);
+        node.setCallbacks(callbacks);
+        node.setParent(parent);
+        node.setOwner(owner);
+        return node;
     }
 
 
@@ -56,26 +80,40 @@ public class SimpleCommandNode implements CommandNode {
 
     @Override
     public void addCallback(CommandCallback callback) {
-        callbacks.add(callback);
+        addCallback(CommandCallback.Priority.NORMAL, callback);
+    }
+
+    @Override
+    public void addCallback(CommandCallback.Priority priority, CommandCallback callback) {
+        callbacks.put(priority, callback);
+    }
+
+    @Override
+    public List<CommandCallback> getCallbacks() {
+        return new LinkedList<>(callbacks.values());
     }
 
     public void test() {
-        final var builder = SCBuilder.command("test");
-        builder.callback(context -> {
-            final var sender = context.getSender();
-            final var args = context.getArguments();
+        final var builder = SCBuilder.command("test")
+                .callback(context -> {
+                    final var sender = context.getSender();
+                    final var args = context.getArguments();
 
-            if (sender.isConsole()) {
-                //do console stuff here
-                return;
-            }
+                    if (sender.isConsole()) {
+                        //do console stuff here
+                        return;
+                    }
 
-            final var player = (PlayerWrapper<?>) sender;
-            player.kick(TextComponent.fromLegacyText("YOU FUCKING ASSHOLE!"));
+                    final var player = (PlayerWrapper<?>) sender;
+                    player.kick(TextComponent.fromLegacyText("YOU FUCKING ASSHOLE!"));
 
-            if (args.size() == 1) {
-                //WHOOOSH
-            }
-        }, CommandCallback.Priority.HIGH);
+                    if (args.size() == 1) {
+                        //WHOOOSH
+                    }
+                })
+                .description("description")
+                .usage("YoU dUMbAsS!")
+                .permission("use.my.ass")
+                .build();
     }
 }
