@@ -1,10 +1,10 @@
 package org.screamingsandals.lib.core.wrapper;
 
 import com.google.common.base.Preconditions;
+
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.command.ConsoleCommandSender;
 
 public interface SenderWrapper<T> {
 
@@ -21,7 +21,7 @@ public interface SenderWrapper<T> {
         return new BungeeConsoleWrapper(instance);
     }
 
-    static SenderWrapper<ConsoleCommandSender> of(ConsoleCommandSender instance) {
+    static SenderWrapper<org.bukkit.command.CommandSender> of(org.bukkit.command.CommandSender instance) {
         Preconditions.checkNotNull(instance, "instance");
         return new PaperConsoleWrapper(instance);
     }

@@ -14,6 +14,14 @@ public interface Result {
 
     <T> Optional<T> getData(Class<T> tClass);
 
+    <T> Optional<T> getDataIfOk(Class<T> tClass);
+
+    boolean isData();
+
+    boolean isOk();
+
+    boolean isFail();
+
     static Result ok() {
         return SimpleResult.builder()
                 .state(ResultState.OK)

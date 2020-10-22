@@ -3,7 +3,7 @@ package org.screamingsandals.commands.api.registry;
 import org.screamingsandals.commands.api.command.CommandNode;
 import org.screamingsandals.lib.core.util.result.Result;
 
-public interface CommandRegistry {
+public interface CommandRegistry<T> {
 
     Result register(CommandNode node);
 

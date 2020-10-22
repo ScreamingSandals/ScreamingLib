@@ -21,4 +21,28 @@ public class SimpleResult implements Result {
         }
         return Optional.empty();
     }
+
+    @Override
+    public <T> Optional<T> getDataIfOk(Class<T> tClass) {
+        if (state == ResultState.OK) {
+            return getData(tClass);
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean isData() {
+        return data != null;
+    }
+
+    @Override
+    public boolean isOk() {
+        return state == ResultState.OK;
+    }
+
+    @Override
+    public boolean isFail() {
+        return state == ResultState.FAIL;
+    }
 }

@@ -1,11 +1,13 @@
 package org.screamingsandals.commands.api.command;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.screamingsandals.lib.core.wrapper.SenderWrapper;
 
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class CommandContext {
     private SenderWrapper<?> sender;
     private CommandNode node;

@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
@@ -18,6 +19,11 @@ public class BungeeConsoleWrapper implements SenderWrapper<CommandSender> {
 
     @Override
     public void sendMessage(TextComponent message) {
+        instance.sendMessage(message);
+    }
+
+    @Override
+    public void sendMessage(BaseComponent[] message) {
         instance.sendMessage(message);
     }
 }
