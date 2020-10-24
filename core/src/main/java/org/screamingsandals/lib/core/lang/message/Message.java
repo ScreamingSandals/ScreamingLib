@@ -1,6 +1,8 @@
 package org.screamingsandals.lib.core.lang.message;
 
 import com.google.common.base.Preconditions;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.screamingsandals.lib.core.lang.LanguageBase;
@@ -10,7 +12,7 @@ import org.screamingsandals.lib.core.reflect.SReflect;
 import java.util.*;
 
 public class Message {
-    protected final Map<String, Object> placeholders = new HashMap<>();
+    protected final Map<String, String> placeholders = new HashMap<>();
 
     protected String key;
     protected boolean prefix;
@@ -22,12 +24,12 @@ public class Message {
         this.player = player;
     }
 
-    public Message replace(String placeholder, Object replacement) {
+    public Message replace(String placeholder, String replacement) {
         placeholders.putIfAbsent(placeholder, replacement);
         return this;
     }
 
-    public Message withPlaceholders(Map<String, Object> replacements) {
+    public Message withPlaceholders(Map<String, String> replacements) {
         placeholders.putAll(replacements);
         return this;
     }
@@ -66,7 +68,7 @@ public class Message {
         return prefix(false);
     }
 
-    public List<TextComponent> get() {
+    public List<Component> get() {
         UUID uuid;
 
         if (player == null) {
@@ -78,7 +80,7 @@ public class Message {
         return get(uuid);
     }
 
-    public List<TextComponent> get(UUID uuid) {
+    public List<Component> get(UUID uuid) {
         LanguageContainer container;
         if (uuid == null) {
             container = LanguageBase.getDefaultContainer();
@@ -99,7 +101,7 @@ public class Message {
         final var components = get();
 
         components.forEach(component -> {
-            builder.append(component.toLegacyText());
+            builder.append(LegacyComponentSerializer.legacyAmpersand().serialize(component));
             builder.append(System.lineSeparator());
         });
 
@@ -108,7 +110,7 @@ public class Message {
 
     public Message send() {
         if (player == null) {
-            get().forEach(component -> LanguageBase.getPluginWrapper().sendMessage(component));
+            get().forEach(component -> LanguageBase.getPluginWrapper().getConsoleWrapper().sendMessage(component));
             return this;
         }
 
@@ -159,9 +161,8 @@ public class Message {
         return this;
     }
 
-    protected void internalSend(Object sender, List<TextComponent> message) {
-        message.forEach(component ->
-                SReflect.getMethod(sender, "sendMessage", TextComponent.class).invoke(message));
+    protected void internalSend(Object sender, List<Component> message) {
+        //message.forEach(sender::sendMessage);
     }
 
     protected UUID internalGetUuid(Object player) {

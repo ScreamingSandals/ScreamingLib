@@ -1,11 +1,11 @@
 package org.screamingsandals.commands.api.command;
 
+import org.screamingsandals.commands.api.tab.TabCallback;
+import org.screamingsandals.commands.core.command.SimpleCommandNode;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import org.screamingsandals.commands.api.tab.TabCallback;
-import org.screamingsandals.commands.core.command.SimpleCommandNode;
 
 /**
  * This is the command node. Everything related to commands is node. Remember that.

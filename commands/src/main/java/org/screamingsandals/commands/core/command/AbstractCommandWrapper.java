@@ -1,15 +1,14 @@
 package org.screamingsandals.commands.core.command;
 
+import com.google.common.collect.ImmutableMap;
+import lombok.RequiredArgsConstructor;
+import org.screamingsandals.commands.api.command.CommandNode;
+import org.screamingsandals.commands.api.wrapper.WrappedCommand;
+import org.screamingsandals.commands.api.handler.CommandHandler;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import org.screamingsandals.commands.api.command.CommandNode;
-import org.screamingsandals.commands.api.handler.CommandHandler;
-
-import com.google.common.collect.ImmutableMap;
-
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author Frantisek Novosad (fnovosad@monetplus.cz)
@@ -33,9 +32,5 @@ public abstract class AbstractCommandWrapper<T> {
 
     public Optional<WrappedCommand<T>> get(CommandNode node) {
         return Optional.of(wrappedCommands.get(node));
-    }
-
-    public interface WrappedCommand<T> {
-        T get();
     }
 }

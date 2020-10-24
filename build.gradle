@@ -9,6 +9,10 @@ buildscript {
         papi_version = "2.10.9"
         netty_version = "4.1.42.Final"
         slf4j_version = "1.7.25"
+
+        adventure_version = "4.1.1"
+        adventure_platforms_version = "4.0.0-SNAPSHOT"
+        adventure_configurate_version = "4.2.0-SNAPSHOT"
     }
 
     repositories {

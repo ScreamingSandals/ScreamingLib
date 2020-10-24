@@ -1,19 +1,15 @@
 package org.screamingsandals.commands.core.command;
 
-import java.util.*;
-
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import lombok.Data;
+import net.kyori.adventure.text.Component;
 import org.screamingsandals.commands.api.builder.SCBuilder;
 import org.screamingsandals.commands.api.command.CommandCallback;
 import org.screamingsandals.commands.api.command.CommandNode;
 import org.screamingsandals.commands.api.tab.TabCallback;
-import org.screamingsandals.lib.core.util.result.ResultState;
-import org.screamingsandals.lib.core.wrapper.PlayerWrapper;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
-import lombok.Data;
-import net.md_5.bungee.api.chat.TextComponent;
+import java.util.*;
 
 @Data
 public class SimpleCommandNode implements CommandNode {
@@ -100,19 +96,29 @@ public class SimpleCommandNode implements CommandNode {
         return new LinkedList<>(callbacks.values());
     }
 
+    @Override
+    public Optional<CommandNode> getParent() {
+        return Optional.ofNullable(parent);
+    }
+
+    @Override
+    public Optional<CommandNode> getOwner() {
+        return Optional.ofNullable(owner);
+    }
+
     public void test() {
         final var parentNode = SCBuilder.command("test")
                 .callback(context -> {
                     final var sender = context.getSender();
                     final var args = context.getArguments();
 
-                    if (sender.isConsole()) {
+                    if (sender.isSender()) {
                         //do console stuff here
                         return;
                     }
 
-                    final var player = (PlayerWrapper<?>) sender;
-                    player.kick(TextComponent.fromLegacyText("YOU FUCKING ASSHOLE!"));
+                    final var player = sender.getPlayer();
+                    player.kick(Component.text("What a dumbass.."));
 
                     if (args.size() == 1) {
                         //WHOOOSH
@@ -126,10 +132,11 @@ public class SimpleCommandNode implements CommandNode {
                 .permission("use.my.ass")
                 .build();
 
-        SCBuilder.subCommand("oi", parentNode)
-                .callback(context -> {
+        parentNode.addSubNode(SCBuilder.subCommand("test", parentNode)
+                .permission("kokot")
+                .callback(callback -> {
 
                 })
-                .build();
+                .build());
     }
 }

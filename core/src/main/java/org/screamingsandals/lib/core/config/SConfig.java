@@ -1,11 +1,13 @@
 package org.screamingsandals.lib.core.config;
 
+import net.kyori.adventure.serializer.configurate4.ConfigurateComponentSerializer;
 import org.screamingsandals.lib.core.config.adapter.GsonConfigAdapter;
 import org.screamingsandals.lib.core.config.adapter.HoconConfigAdapter;
 import org.screamingsandals.lib.core.config.adapter.YamlConfigAdapter;
 import org.screamingsandals.lib.core.config.exception.SConfigException;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.ConfigurationOptions;
 import org.spongepowered.configurate.gson.GsonConfigurationLoader;
 import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.configurate.loader.ConfigurationLoader;
@@ -18,17 +20,25 @@ import java.nio.file.Path;
  */
 public interface SConfig {
     static SConfig create(Format format, Path path) throws SConfigException {
+        final var options = ConfigurationOptions.defaults()
+                .serializers(ConfigurateComponentSerializer.configurate().serializers());
+
+        return create(format, path, options);
+    }
+
+    static SConfig create(Format format, Path path, ConfigurationOptions options) throws SConfigException {
         switch (format) {
             case GSON:
-                return new GsonConfigAdapter(path);
+                return new GsonConfigAdapter(path, options);
             case HOCON:
-                return new HoconConfigAdapter(path);
+                return new HoconConfigAdapter(path, options);
             case YAML:
-                return new YamlConfigAdapter(path);
+                return new YamlConfigAdapter(path, options);
             default:
                 throw new SConfigException("Bad config format! " + format.name());
         }
     }
+
     /**
      * Main configuration node
      *

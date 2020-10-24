@@ -6,7 +6,7 @@ import org.screamingsandals.lib.core.config.SConfig;
 import org.screamingsandals.lib.core.lang.LanguageBase;
 import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
 import org.screamingsandals.lib.core.papi.PlaceholderConfig;
-import org.screamingsandals.lib.core.wrapper.PluginWrapper;
+import org.screamingsandals.lib.core.wrapper.plugin.PluginWrapper;
 import org.slf4j.Logger;
 
 import java.io.File;

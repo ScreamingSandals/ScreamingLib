@@ -19,10 +19,10 @@ import lombok.RequiredArgsConstructor;
 public class SCBuilder {
     protected static Logger log = LoggerFactory.getLogger(SCBuilder.class);
     private static SCBuilder instance;
-    private final CommandRegistry registry;
+    private final CommandRegistry<?> registry;
 
     @Inject
-    public SCBuilder(CommandRegistry registry) {
+    public SCBuilder(CommandRegistry<?> registry) {
         instance = this;
         this.registry = Preconditions.checkNotNull(registry, "registry");
     }
@@ -39,7 +39,7 @@ public class SCBuilder {
     @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
     public static class CommandBuilder {
         protected final Multimap<CommandCallback.Priority, CommandCallback> callbacks = ArrayListMultimap.create();
-        protected final CommandRegistry registry;
+        protected final CommandRegistry<?> registry;
         protected final String name;
         protected String permission;
         protected String description;
@@ -93,7 +93,7 @@ public class SCBuilder {
     public static class SubCommandBuilder extends CommandBuilder {
         private final CommandNode parent;
 
-        SubCommandBuilder(CommandRegistry registry, String name, CommandNode parent) {
+        SubCommandBuilder(CommandRegistry<?> registry, String name, CommandNode parent) {
             super(registry, name);
             this.parent = parent;
             this.description = parent.getDescription();

@@ -2,7 +2,7 @@ package org.screamingsandals.lib.core.tasker.guice;
 
 import com.google.inject.AbstractModule;
 import lombok.RequiredArgsConstructor;
-import org.screamingsandals.lib.core.wrapper.PluginWrapper;
+import org.screamingsandals.lib.core.wrapper.plugin.PluginWrapper;
 import org.screamingsandals.lib.core.tasker.Tasker;
 import org.screamingsandals.lib.core.tasker.TaskerWrapper;
 
@@ -16,10 +16,10 @@ public class TaskerModule extends AbstractModule {
     @Override
     protected void configure() {
         switch (pluginWrapper.getType()) {
-            case PAPER:
-                bind(Tasker.class).toInstance(new TaskerWrapper.SpigotTasker(pluginWrapper.getPlugin()));
+            case BUKKIT:
+                bind(Tasker.class).toInstance(new TaskerWrapper.BukkitTasker(pluginWrapper.getPlugin()));
                 break;
-            case WATERFALL:
+            case BUNGEE:
                 bind(Tasker.class).toInstance(new TaskerWrapper.BungeeTasker(pluginWrapper.getPlugin()));
                 break;
         }

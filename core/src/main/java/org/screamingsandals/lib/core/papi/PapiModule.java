@@ -2,7 +2,7 @@ package org.screamingsandals.lib.core.papi;
 
 import com.google.inject.AbstractModule;
 import lombok.RequiredArgsConstructor;
-import org.screamingsandals.lib.core.wrapper.PluginWrapper;
+import org.screamingsandals.lib.core.wrapper.plugin.PluginWrapper;
 
 @RequiredArgsConstructor
 public class PapiModule extends AbstractModule {

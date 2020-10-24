@@ -1,8 +1,7 @@
-package org.screamingsandals.lib.core.wrapper;
+package org.screamingsandals.lib.core.wrapper.sender;
 
 import com.google.common.base.Preconditions;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.bukkit.entity.Player;
 
@@ -19,17 +18,15 @@ public interface PlayerWrapper<T> extends SenderWrapper<T> {
 
     String getAddress();
 
-    void kick(TextComponent reason);
-
-    void kick(BaseComponent[] reason);
+    void kick(Component reason);
 
     static PlayerWrapper<Player> of(Player instance) {
         Preconditions.checkNotNull(instance, "instance");
-        return new PaperPlayerWrapper(instance);
+        return BukkitWrapper.of(instance);
     }
 
     static PlayerWrapper<ProxiedPlayer> of(ProxiedPlayer instance) {
         Preconditions.checkNotNull(instance, "instance");
-        return new BungeePlayerWrapper(instance);
+        return BungeeWrapper.of(instance);
     }
 }

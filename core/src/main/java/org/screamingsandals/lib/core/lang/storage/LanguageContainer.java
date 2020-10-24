@@ -3,11 +3,11 @@ package org.screamingsandals.lib.core.lang.storage;
 import com.google.common.base.Preconditions;
 import io.leangen.geantyref.TypeToken;
 import lombok.Data;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
 import org.screamingsandals.lib.core.config.SConfig;
 import org.screamingsandals.lib.core.papi.PlaceholderConfig;
-import org.screamingsandals.lib.core.wrapper.PluginWrapper;
+import org.screamingsandals.lib.core.wrapper.plugin.PluginWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongepowered.configurate.CommentedConfigurationNode;
@@ -35,7 +35,7 @@ public class LanguageContainer {
         this.pluginWrapper = pluginWrapper;
     }
 
-    public List<TextComponent> getMessages(String key, boolean prefix, Map<String, Object> placeholders, UUID uuid) {
+    public List<Component> getMessages(String key, boolean prefix, Map<String, String> placeholders, UUID uuid) {
         List<MessageContainer> messages;
         if (prefix) {
             messages = getMessagesWithPrefix(key);
@@ -43,9 +43,9 @@ public class LanguageContainer {
             messages = getMessages(key);
         }
 
-        final var toReturn = new LinkedList<TextComponent>();
+        final var toReturn = new LinkedList<Component>();
         messages.forEach(container -> {
-            if (uuid != null && pluginWrapper.getType() == PluginWrapper.ServerType.PAPER) {
+            if (uuid != null && pluginWrapper.getType() == PluginWrapper.ServerType.BUKKIT) {
                 final var player = pluginWrapper.getWrapperFor(uuid);
                 if (player.isEmpty()) {
                     log.debug("Player is null, returning normal component.");

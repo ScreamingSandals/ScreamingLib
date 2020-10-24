@@ -3,7 +3,6 @@ package org.screamingsandals.lib.core.tasker;
 import lombok.Data;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
-import org.jetbrains.annotations.Debug;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +16,10 @@ public class TaskerWrapper {
     }
 
     @Data
-    public static class SpigotTasker implements Tasker {
+    public static class BukkitTasker implements Tasker {
         private final Plugin plugin;
 
-        public SpigotTasker(Object plugin) {
+        public BukkitTasker(Object plugin) {
             this.plugin = (Plugin) plugin;
 
             TaskerWrapper.instance = this;

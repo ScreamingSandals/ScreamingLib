@@ -1,6 +1,7 @@
-package org.screamingsandals.lib.core.wrapper;
+package org.screamingsandals.lib.core.wrapper.plugin;
 
-import net.md_5.bungee.api.chat.TextComponent;
+import org.screamingsandals.lib.core.wrapper.sender.PlayerWrapper;
+import org.screamingsandals.lib.core.wrapper.sender.SenderWrapper;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -17,23 +18,23 @@ public interface PluginWrapper {
 
     default ServerType getType() {
         if (getPlugin() instanceof net.md_5.bungee.api.plugin.Plugin) {
-            return ServerType.WATERFALL;
+            return ServerType.BUNGEE;
         }
-        return ServerType.PAPER;
+        return ServerType.BUKKIT;
     }
 
     File getPluginFolder();
 
     Path getPluginFolderPath();
 
-    void sendMessage(TextComponent component);
+    SenderWrapper<?> getConsoleWrapper();
 
-   Optional< PlayerWrapper<?>> getWrapperFor(UUID uuid);
+    Optional<PlayerWrapper<?>> getWrapperFor(UUID uuid);
 
-   boolean isPluginEnabled(String pluginName);
+    boolean isPluginEnabled(String pluginName);
 
     enum ServerType {
-        PAPER,
-        WATERFALL
+        BUKKIT,
+        BUNGEE
     }
 }

@@ -10,6 +10,12 @@ dependencies {
     shade group: 'org.spongepowered', name: 'configurate-gson', version: configurate_version
     shade group: 'org.spongepowered', name: 'configurate-gson', version: configurate_version
 
+    shade group: 'net.kyori', name: 'adventure-api', version: adventure_version
+    shade group: 'net.kyori', name: 'adventure-text-minimessage', version: adventure_platforms_version
+    shade group: 'net.kyori', name: 'adventure-serializer-configurate4', version: adventure_configurate_version
+    shade group: 'net.kyori', name: 'adventure-platform-bukkit', version: adventure_platforms_version
+    shade group: 'net.kyori', name: 'adventure-platform-bungeecord', version: adventure_platforms_version
+
     //log
     shade group: 'org.slf4j', name: 'slf4j-api', version: slf4j_version
 

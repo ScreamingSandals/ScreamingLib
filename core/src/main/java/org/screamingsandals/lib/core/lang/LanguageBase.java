@@ -7,7 +7,7 @@ import org.screamingsandals.lib.core.lang.registry.FileRegistry;
 import org.screamingsandals.lib.core.lang.registry.LanguageRegistry;
 import org.screamingsandals.lib.core.lang.registry.PlayerRegistry;
 import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
-import org.screamingsandals.lib.core.wrapper.PluginWrapper;
+import org.screamingsandals.lib.core.wrapper.plugin.PluginWrapper;
 
 import java.io.File;
 
