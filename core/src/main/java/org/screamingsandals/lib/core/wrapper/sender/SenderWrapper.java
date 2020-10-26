@@ -49,13 +49,15 @@ public interface SenderWrapper<T> {
      */
     void sendMessage(Identity identity, Component message);
 
+    boolean hasPermission(String permission);
+
     /**
      * @return Player wrapper of this sender.
      */
     @SuppressWarnings("unchecked")
-    default PlayerWrapper<T> getPlayer() {
+    default <K> PlayerWrapper<K> getPlayer() {
         if (getInstance().getClass().isAssignableFrom(PlayerWrapper.class)) {
-            return (PlayerWrapper<T>) getInstance();
+            return (PlayerWrapper<K>) getInstance();
         }
 
         throw new UnsupportedOperationException("Cannot get player, instance is " + getInstance().getClass().getSimpleName());
@@ -67,13 +69,5 @@ public interface SenderWrapper<T> {
     default boolean isPlayer() {
         return (this instanceof BukkitWrapper.WrapperPlayer)
                 || (this instanceof BungeeWrapper.WrapperPlayer);
-    }
-
-    /**
-     *
-     * @return true if this instance is just Sender
-     */
-    default boolean isSender() {
-        return !isPlayer();
     }
 }

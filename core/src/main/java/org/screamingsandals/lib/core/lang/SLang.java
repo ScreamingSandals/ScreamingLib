@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.core.lang;
 
 import org.screamingsandals.lib.core.lang.message.Message;
+import org.screamingsandals.lib.core.wrapper.sender.SenderWrapper;
 
 public interface SLang {
 
@@ -12,8 +13,8 @@ public interface SLang {
         return m(key, true, null);
     }
 
-    static Message mpr(String key, Object player) {
-        return m(key, true, player);
+    static Message mpr(String key, SenderWrapper<?> sender) {
+        return m(key, true, sender);
     }
 
 
@@ -25,11 +26,11 @@ public interface SLang {
         return m(key, false, null);
     }
 
-    static Message m(String key, Object player) {
-        return m(key, false, player);
+    static Message m(String key, SenderWrapper<?> sender) {
+        return m(key, false, sender);
     }
 
-    static Message m(String key, boolean prefix, Object player) {
-        return new Message(key, prefix, player);
+    static Message m(String key, boolean prefix, SenderWrapper<?> sender) {
+        return new Message(key, prefix, sender);
     }
 }

@@ -14,6 +14,7 @@ public class SimpleResult implements Result {
     private final Throwable throwable;
     private final Object data;
 
+    @SuppressWarnings("unchecked")
     public <T> Optional<T> getData() {
         return Optional.ofNullable((T) data);
     }

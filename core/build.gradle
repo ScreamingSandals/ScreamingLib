@@ -2,23 +2,28 @@ version = core_version
 
 dependencies {
     //guice
-    shade group: 'com.google.inject', name: 'guice', version: guice_version
+    api group: 'com.google.inject', name: 'guice', version: guice_version
 
     //configurate
-    shade group: 'org.spongepowered', name: 'configurate-hocon', version: configurate_version
-    shade group: 'org.spongepowered', name: 'configurate-yaml', version: configurate_version
-    shade group: 'org.spongepowered', name: 'configurate-gson', version: configurate_version
-    shade group: 'org.spongepowered', name: 'configurate-gson', version: configurate_version
+    api group: 'org.spongepowered', name: 'configurate-hocon', version: configurate_version
+    api group: 'org.spongepowered', name: 'configurate-yaml', version: configurate_version
+    api group: 'org.spongepowered', name: 'configurate-gson', version: configurate_version
 
-    shade group: 'net.kyori', name: 'adventure-api', version: adventure_version
-    shade group: 'net.kyori', name: 'adventure-text-minimessage', version: adventure_platforms_version
-    shade group: 'net.kyori', name: 'adventure-serializer-configurate4', version: adventure_configurate_version
-    shade group: 'net.kyori', name: 'adventure-platform-bukkit', version: adventure_platforms_version
-    shade group: 'net.kyori', name: 'adventure-platform-bungeecord', version: adventure_platforms_version
+    api group: 'net.kyori', name: 'adventure-api', version: adventure_version
+    api group: 'net.kyori', name: 'adventure-text-minimessage', version: adventure_platforms_version
+    api group: 'net.kyori', name: 'adventure-serializer-configurate4', version: adventure_configurate_version
+    api group: 'net.kyori', name: 'adventure-platform-bukkit', version: adventure_platforms_version
+    api group: 'net.kyori', name: 'adventure-platform-bungeecord', version: adventure_platforms_version
 
     //log
-    shade group: 'org.slf4j', name: 'slf4j-api', version: slf4j_version
+    api group: 'org.slf4j', name: 'slf4j-api', version: slf4j_version
+
+    api group: 'io.papermc', name: 'paperlib', version: '1.0.6-SNAPSHOT'
 
     //netty
     compileOnly group: 'io.netty', name: 'netty-all', version: netty_version
+}
+
+shadowJar {
+    relocate 'io.papermc.lib', 'org.screamingsandals.lib.paperlib'
 }

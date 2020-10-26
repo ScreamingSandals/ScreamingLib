@@ -7,6 +7,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.commands.api.command.CommandNode;
 import org.screamingsandals.commands.api.handler.CommandHandler;
+import org.screamingsandals.commands.api.handler.TabHandler;
 import org.screamingsandals.commands.api.wrapper.WrappedCommand;
 import org.screamingsandals.commands.core.command.AbstractCommandWrapper;
 
@@ -15,8 +16,8 @@ import java.util.List;
 public class VelocityCommandWrapper extends AbstractCommandWrapper<RawCommand> {
 
     @Inject
-    public VelocityCommandWrapper(CommandHandler handler) {
-        super(handler);
+    public VelocityCommandWrapper(CommandHandler handler, TabHandler tabHandler) {
+        super(handler, tabHandler);
     }
 
 

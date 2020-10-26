@@ -1,13 +1,10 @@
 package org.screamingsandals.lib.core.lang.message;
 
-import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.screamingsandals.lib.core.lang.LanguageBase;
 import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
-import org.screamingsandals.lib.core.reflect.SReflect;
+import org.screamingsandals.lib.core.wrapper.sender.SenderWrapper;
 
 import java.util.*;
 
@@ -16,12 +13,12 @@ public class Message {
 
     protected String key;
     protected boolean prefix;
-    protected Object player;
+    protected SenderWrapper<?> sender;
 
-    public Message(String key, boolean prefix, Object player) {
+    public Message(String key, boolean prefix, SenderWrapper<?> sender) {
         this.key = key;
         this.prefix = prefix;
-        this.player = player;
+        this.sender = sender;
     }
 
     public Message replace(String placeholder, String replacement) {
@@ -68,20 +65,57 @@ public class Message {
         return prefix(false);
     }
 
-    public List<Component> get() {
-        UUID uuid;
-
-        if (player == null) {
-            uuid = UUID.fromString(System.getProperty("slang.consoleUUID"));
-        } else {
-            uuid = internalGetUuid(player);
-        }
-
-        return get(uuid);
+    /**
+     * This method returns only single component from
+     * possible X components available.
+     *
+     * @return only first component found
+     */
+    public Component getFirst() {
+        return getAll().stream().findFirst().orElse(Component.empty());
     }
 
-    public List<Component> get(UUID uuid) {
+    /**
+     * This method returns only single component from
+     * possible X components available.
+     *
+     * @param uuid UUID of the sender
+     * @return only first component found
+     */
+    public Component getFirst(UUID uuid) {
+        return getAll(uuid).stream().findFirst().orElse(Component.empty());
+    }
+
+    /**
+     * This method returns all available components.
+     * If no UUID is specified, we are using the default container.
+     * Don't forget that even console has default language!
+     *
+     * @return all available components
+     */
+    public List<Component> getAll() {
+        UUID uuid;
+
+        if (sender == null || !sender.isPlayer()) {
+            uuid = UUID.fromString(System.getProperty("slang.consoleUUID"));
+        } else {
+            uuid = sender.getPlayer().getUuid();
+        }
+
+        return getAll(uuid);
+    }
+
+    /**
+     * This method returns all available components.
+     * If no UUID is specified, we are using the default container.
+     * Don't forget that even console has default language!
+     *
+     * @param uuid UUID of the sender
+     * @return all available components
+     */
+    public List<Component> getAll(UUID uuid) {
         LanguageContainer container;
+
         if (uuid == null) {
             container = LanguageBase.getDefaultContainer();
         } else {
@@ -98,7 +132,7 @@ public class Message {
 
     public String toString() {
         final var builder = new StringBuilder();
-        final var components = get();
+        final var components = getAll();
 
         components.forEach(component -> {
             builder.append(LegacyComponentSerializer.legacyAmpersand().serialize(component));
@@ -109,12 +143,12 @@ public class Message {
     }
 
     public Message send() {
-        if (player == null) {
-            get().forEach(component -> LanguageBase.getPluginWrapper().getConsoleWrapper().sendMessage(component));
+        if (sender == null) {
+            getAll().forEach(component -> LanguageBase.getPluginWrapper().getConsoleWrapper().sendMessage(component));
             return this;
         }
 
-        internalSend(player, get());
+        internalSend(sender, getAll());
         return this;
     }
 
@@ -126,47 +160,17 @@ public class Message {
             return this;
         }
 
-        internalSend(sender, get(internalGetUuid(sender)));
+        if (!sender.getClass().isAssignableFrom(SenderWrapper.class)) {
+            throw new UnsupportedOperationException("Sender needs to be SenderWrapper!");
+        }
+
+        final var castedSender = (SenderWrapper<?>) sender;
+
+        internalSend(castedSender, getAll(castedSender.getPlayer().getUuid()));
         return this;
     }
 
-    public Message send(Object sender, String permissions) {
-        if (sender instanceof Collection) {
-            for (Object recipient : (Collection<?>) sender) {
-                send(recipient, permissions);
-            }
-            return this;
-        }
-
-        try {
-            boolean hasPermissions = (boolean) SReflect.getMethod(sender, "hasPermission", String.class).invoke(permissions);
-            if (hasPermissions) {
-                internalSend(sender, get(internalGetUuid(sender)));
-            }
-        } catch (Throwable ignored) {
-        }
-        return this;
-    }
-
-    public Message sendActionBar(Object sender) {
-        if (sender instanceof Collection) {
-            for (var rec : (Collection<?>) sender) {
-                sendActionBar(rec);
-            }
-            return this;
-        }
-
-        get(internalGetUuid(sender)).forEach(component ->
-                SReflect.getMethod(sender, "sendMessage", ChatMessageType.class, TextComponent.class).invoke(ChatMessageType.ACTION_BAR, component));
-        return this;
-    }
-
-    protected void internalSend(Object sender, List<Component> message) {
-        //message.forEach(sender::sendMessage);
-    }
-
-    protected UUID internalGetUuid(Object player) {
-        Preconditions.checkNotNull(player);
-        return (UUID) SReflect.fastInvoke(player, "getUniqueId");
+    protected void internalSend(SenderWrapper<?> sender, List<Component> message) {
+        message.forEach(sender::sendMessage);
     }
 }

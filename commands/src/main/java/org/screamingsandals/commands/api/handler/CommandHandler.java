@@ -7,5 +7,5 @@ import org.screamingsandals.commands.api.command.CommandContext;
  */
 public interface CommandHandler {
 
-    boolean handle(CommandContext context);
+    void handle(CommandContext context);
 }

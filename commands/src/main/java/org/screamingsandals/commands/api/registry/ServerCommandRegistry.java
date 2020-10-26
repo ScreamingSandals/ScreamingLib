@@ -1,8 +1,8 @@
 package org.screamingsandals.commands.api.registry;
 
-import java.util.Map;
-
 import org.screamingsandals.lib.core.util.result.Result;
+
+import java.util.Map;
 
 /**
  * @author Frantisek Novosad (fnovosad@monetplus.cz)
@@ -11,9 +11,9 @@ public interface ServerCommandRegistry<T> {
 
     Result register(T command);
 
-    boolean isRegistered(T command);
+    boolean isRegistered(String name);
 
-    Result remove(T command);
+    void remove(String name);
 
     Map<String, T> getRegisteredCommands();
 }

@@ -1,26 +1,24 @@
 package org.screamingsandals.commands.core.registry;
 
-import com.google.inject.Inject;
+import org.screamingsandals.commands.api.command.CommandBase;
 import org.screamingsandals.commands.api.command.CommandNode;
-import org.screamingsandals.commands.api.wrapper.WrappedCommand;
 import org.screamingsandals.commands.api.registry.CommandRegistry;
 import org.screamingsandals.commands.api.registry.ServerCommandRegistry;
+import org.screamingsandals.commands.api.wrapper.WrappedCommand;
 import org.screamingsandals.commands.core.command.AbstractCommandWrapper;
 import org.screamingsandals.lib.core.util.result.Result;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author Frantisek Novosad (fnovosad@monetplus.cz)
  */
-public class AbstractCommandRegistry<T> implements CommandRegistry<T> {
-    private final Map<String, CommandNode> registeredNodes = new HashMap<>();
+public abstract class AbstractCommandRegistry<T> implements CommandRegistry<T> {
+    private final Map<String, CommandBase> registeredNodes = new HashMap<>();
     private final AbstractCommandWrapper<T> wrapper;
     private final ServerCommandRegistry<T> serverRegistry;
 
-    @Inject
     public AbstractCommandRegistry(AbstractCommandWrapper<T> wrapper, ServerCommandRegistry<T> serverRegistry)  {
         this.wrapper = wrapper;
         this.serverRegistry = serverRegistry;
@@ -32,7 +30,7 @@ public class AbstractCommandRegistry<T> implements CommandRegistry<T> {
             return Result.fail("Node already registered!");
         }
 
-        final var registerResult = serverRegistry.register(wrapper.internalWrap(node).get());
+        final var registerResult = serverRegistry.register(wrapper.get(node).getCommand());
 
         if (registerResult.isOk()) {
             registeredNodes.put(node.getName(), node);
@@ -43,7 +41,7 @@ public class AbstractCommandRegistry<T> implements CommandRegistry<T> {
     }
 
     @Override
-    public CommandNode getByName(String name) {
+    public CommandBase getByName(String name) {
         return registeredNodes.getOrDefault(name, null);
     }
 
@@ -58,7 +56,7 @@ public class AbstractCommandRegistry<T> implements CommandRegistry<T> {
     }
 
     @Override
-    public Optional<WrappedCommand<T>> getWrappedCommand(CommandNode node) {
+    public WrappedCommand<T> getWrappedCommand(CommandNode node) {
         return wrapper.get(node);
     }
 }

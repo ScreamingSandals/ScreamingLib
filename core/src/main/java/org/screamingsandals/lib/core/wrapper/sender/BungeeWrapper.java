@@ -48,6 +48,11 @@ public class BungeeWrapper {
         }
 
         @Override
+        public boolean hasPermission(String permission) {
+            return instance.hasPermission(permission);
+        }
+
+        @Override
         public String getAddress() {
             final var address = instance.getAddress();
             if (address == null) {
@@ -87,6 +92,11 @@ public class BungeeWrapper {
         @Override
         public Audience getAudience() {
             return audience;
+        }
+
+        @Override
+        public boolean hasPermission(String permission) {
+            return true;
         }
     }
 }

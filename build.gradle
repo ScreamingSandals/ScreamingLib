@@ -58,5 +58,9 @@ subprojects {
         compileOnly group: 'me.clip', name: 'placeholderapi', version: papi_version
     }
 
-    sourceCompatibility = '11'
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(11)
+        }
+    }
 }
