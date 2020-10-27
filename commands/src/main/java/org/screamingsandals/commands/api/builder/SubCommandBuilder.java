@@ -1,19 +1,19 @@
 package org.screamingsandals.commands.api.builder;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import org.screamingsandals.commands.api.command.CommandCallback;
 import org.screamingsandals.commands.api.command.CommandNode;
 import org.screamingsandals.commands.api.command.SubCommandNode;
 import org.screamingsandals.commands.api.tab.TabCallback;
 import org.screamingsandals.commands.core.command.SimpleSubCommandNode;
 
-public class SubCommandBuilder {
-    private Multimap<CommandCallback.Priority, CommandCallback> callbacks = ArrayListMultimap.create();
+import java.util.LinkedList;
+import java.util.List;
 
+public class SubCommandBuilder {
     private final String name;
 
+    private List<CommandCallback> callbacks = new LinkedList<>();
     private String permission;
     private String description;
     private String usage;
@@ -56,12 +56,7 @@ public class SubCommandBuilder {
     }
 
     public SubCommandBuilder callback(CommandCallback callback) {
-        return callback(Preconditions.checkNotNull(callback, "callback"), CommandCallback.Priority.NORMAL);
-    }
-
-    public SubCommandBuilder callback(CommandCallback callback, CommandCallback.Priority priority) {
-        callbacks.put(Preconditions.checkNotNull(priority, "priority"),
-                Preconditions.checkNotNull(callback, "callback"));
+        callbacks.add(Preconditions.checkNotNull(callback, "callback"));
         return this;
     }
 

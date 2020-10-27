@@ -9,11 +9,11 @@ import org.screamingsandals.lib.core.wrapper.sender.SenderWrapper;
 import java.util.*;
 
 public class Message {
-    protected final Map<String, String> placeholders = new HashMap<>();
+    private final Map<String, String> placeholders = new HashMap<>();
+    private SenderWrapper<?> sender;
 
-    protected String key;
-    protected boolean prefix;
-    protected SenderWrapper<?> sender;
+    private String key;
+    private boolean prefix;
 
     public Message(String key, boolean prefix, SenderWrapper<?> sender) {
         this.key = key;
@@ -63,6 +63,11 @@ public class Message {
 
     public Message unprefix() {
         return prefix(false);
+    }
+
+    public Message sender(SenderWrapper<?> sender) {
+        this.sender = sender;
+        return this;
     }
 
     /**
@@ -142,22 +147,21 @@ public class Message {
         return builder.toString();
     }
 
-    public Message send() {
+    public void send() {
         if (sender == null) {
             getAll().forEach(component -> LanguageBase.getPluginWrapper().getConsoleWrapper().sendMessage(component));
-            return this;
+            return;
         }
 
         internalSend(sender, getAll());
-        return this;
     }
 
-    public Message send(Object sender) {
+    public void send(Object sender) {
         if (sender instanceof Collection) {
             for (var recipient : (Collection<?>) sender) {
                 send(recipient);
             }
-            return this;
+            return;
         }
 
         if (!sender.getClass().isAssignableFrom(SenderWrapper.class)) {
@@ -167,7 +171,6 @@ public class Message {
         final var castedSender = (SenderWrapper<?>) sender;
 
         internalSend(castedSender, getAll(castedSender.getPlayer().getUuid()));
-        return this;
     }
 
     protected void internalSend(SenderWrapper<?> sender, List<Component> message) {

@@ -1,7 +1,5 @@
 package org.screamingsandals.commands.core.command;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import lombok.Getter;
 import lombok.Setter;
 import org.screamingsandals.commands.api.command.CommandBase;
@@ -21,7 +19,7 @@ public abstract class AbstractCommandBase implements CommandBase {
     protected String usage;
     protected List<String> aliases = new LinkedList<>();
 
-    protected Multimap<CommandCallback.Priority, CommandCallback> callbacks = ArrayListMultimap.create();
+    protected List<CommandCallback> callbacks = new LinkedList<>();
     protected TabCallback tabCallback;
 
     protected AbstractCommandBase(String name) {
@@ -37,16 +35,11 @@ public abstract class AbstractCommandBase implements CommandBase {
 
     @Override
     public void addCallback(CommandCallback callback) {
-        addCallback(CommandCallback.Priority.NORMAL, callback);
-    }
-
-    @Override
-    public void addCallback(CommandCallback.Priority priority, CommandCallback callback) {
-        callbacks.put(priority, callback);
+        callbacks.add(callback);
     }
 
     @Override
     public List<CommandCallback> getCallbacks() {
-        return new LinkedList<>(callbacks.values());
+        return new LinkedList<>(callbacks);
     }
 }

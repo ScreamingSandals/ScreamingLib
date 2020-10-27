@@ -1,11 +1,12 @@
 package org.screamingsandals.commands.core.command;
 
-import com.google.common.collect.Multimap;
 import lombok.Getter;
 import org.screamingsandals.commands.api.command.CommandCallback;
 import org.screamingsandals.commands.api.command.CommandNode;
 import org.screamingsandals.commands.api.command.SubCommandNode;
 import org.screamingsandals.commands.api.tab.TabCallback;
+
+import java.util.List;
 
 @Getter
 public class SimpleSubCommandNode extends AbstractCommandBase implements SubCommandNode {
@@ -32,7 +33,7 @@ public class SimpleSubCommandNode extends AbstractCommandBase implements SubComm
     public static SimpleSubCommandNode build(String name, CommandNode parent,
                                              String permission, String description,
                                              String usage,
-                                             Multimap<CommandCallback.Priority, CommandCallback> callbacks,
+                                             List<CommandCallback> callbacks,
                                              TabCallback tabCallback) {
         final var node = new SimpleSubCommandNode(name, parent);
         node.setPermission(permission);

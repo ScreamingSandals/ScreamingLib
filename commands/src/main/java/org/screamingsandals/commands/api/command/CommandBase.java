@@ -60,19 +60,10 @@ public interface CommandBase {
 
     /**
      * Registers new callback
-     * The {@link org.screamingsandals.commands.api.command.CommandCallback.Priority is set to NORMAL by default}
      *
      * @param callback new callback
      */
     void addCallback(CommandCallback callback);
-
-    /**
-     * Registers new callback
-     *
-     * @param priority priority of the callback
-     * @param callback new callback
-     */
-    void addCallback(CommandCallback.Priority priority, CommandCallback callback);
 
     /**
      * @return registered tab callback

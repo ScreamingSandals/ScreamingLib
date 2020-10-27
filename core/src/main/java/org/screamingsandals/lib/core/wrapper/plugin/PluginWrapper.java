@@ -16,12 +16,7 @@ public interface PluginWrapper {
 
     String getPluginName();
 
-    default ServerType getType() {
-        if (getPlugin() instanceof net.md_5.bungee.api.plugin.Plugin) {
-            return ServerType.BUNGEE;
-        }
-        return ServerType.BUKKIT;
-    }
+    ServerType getType();
 
     File getPluginFolder();
 
@@ -35,6 +30,7 @@ public interface PluginWrapper {
 
     enum ServerType {
         BUKKIT,
-        BUNGEE
+        BUNGEE,
+        VELOCITY
     }
 }

@@ -4,10 +4,7 @@ import org.screamingsandals.lib.core.util.result.Result;
 
 import java.util.Map;
 
-/**
- * @author Frantisek Novosad (fnovosad@monetplus.cz)
- */
-public interface ServerCommandRegistry<T> {
+public interface ServerRegistry<T> {
 
     Result register(T command);
 

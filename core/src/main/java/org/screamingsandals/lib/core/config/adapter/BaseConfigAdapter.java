@@ -37,7 +37,7 @@ public abstract class BaseConfigAdapter implements SConfig {
 
     @Override
     public CommentedConfigurationNode node(String key) {
-        return root.node(key);
+        return root.node(key.split("\\."));
     }
 
     @Override

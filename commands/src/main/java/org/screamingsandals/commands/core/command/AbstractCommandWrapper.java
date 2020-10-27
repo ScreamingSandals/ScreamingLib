@@ -4,8 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import org.screamingsandals.commands.api.command.CommandBase;
 import org.screamingsandals.commands.api.command.CommandNode;
-import org.screamingsandals.commands.api.handler.CommandHandler;
-import org.screamingsandals.commands.api.handler.TabHandler;
+import org.screamingsandals.commands.api.registry.HandlerRegistry;
 import org.screamingsandals.commands.api.wrapper.WrappedCommand;
 
 import java.util.HashMap;
@@ -14,8 +13,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public abstract class AbstractCommandWrapper<T> {
     private final Map<CommandBase, WrappedCommand<T>> wrappedCommands = new HashMap<>();
-    protected final CommandHandler commandHandler;
-    protected final TabHandler tabHandler;
+    protected final HandlerRegistry handlerRegistry;
 
     private WrappedCommand<T> internalWrap(CommandNode node) {
         final var wrapped = wrap(node);

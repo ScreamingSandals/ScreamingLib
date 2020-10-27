@@ -1,12 +1,14 @@
 package org.screamingsandals.commands.core.command;
 
-import com.google.common.collect.Multimap;
 import org.screamingsandals.commands.api.command.CommandCallback;
 import org.screamingsandals.commands.api.command.CommandNode;
 import org.screamingsandals.commands.api.command.SubCommandNode;
 import org.screamingsandals.commands.api.tab.TabCallback;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class SimpleCommandNode extends AbstractCommandBase implements CommandNode {
     private final Map<String, SubCommandNode> subNodes = new HashMap<>();
@@ -29,7 +31,7 @@ public class SimpleCommandNode extends AbstractCommandBase implements CommandNod
 
     public static SimpleCommandNode build(String name, String permission,
                                           String description, String usage,
-                                          Multimap<CommandCallback.Priority, CommandCallback> callbacks,
+                                          List<CommandCallback> callbacks,
                                           TabCallback tabCallback) {
         final var node = new SimpleCommandNode(name);
         node.setPermission(permission);
@@ -52,22 +54,12 @@ public class SimpleCommandNode extends AbstractCommandBase implements CommandNod
     }
 
     @Override
+    public void removeSubNode(String name) {
+        subNodes.remove(name);
+    }
+
+    @Override
     public Map<String, SubCommandNode> getSubNodes() {
-        return null;
-    }
-
-    @Override
-    public void addCallback(CommandCallback callback) {
-        addCallback(CommandCallback.Priority.NORMAL, callback);
-    }
-
-    @Override
-    public void addCallback(CommandCallback.Priority priority, CommandCallback callback) {
-        callbacks.put(priority, callback);
-    }
-
-    @Override
-    public List<CommandCallback> getCallbacks() {
-        return new LinkedList<>(callbacks.values());
+        return new HashMap<>(subNodes);
     }
 }

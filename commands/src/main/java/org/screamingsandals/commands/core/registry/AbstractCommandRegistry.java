@@ -1,31 +1,26 @@
 package org.screamingsandals.commands.core.registry;
 
-import org.screamingsandals.commands.api.command.CommandBase;
 import org.screamingsandals.commands.api.command.CommandNode;
 import org.screamingsandals.commands.api.registry.CommandRegistry;
-import org.screamingsandals.commands.api.registry.ServerCommandRegistry;
-import org.screamingsandals.commands.api.wrapper.WrappedCommand;
+import org.screamingsandals.commands.api.registry.ServerRegistry;
 import org.screamingsandals.commands.core.command.AbstractCommandWrapper;
 import org.screamingsandals.lib.core.util.result.Result;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Frantisek Novosad (fnovosad@monetplus.cz)
- */
-public abstract class AbstractCommandRegistry<T> implements CommandRegistry<T> {
-    private final Map<String, CommandBase> registeredNodes = new HashMap<>();
+public abstract class AbstractCommandRegistry<T> implements CommandRegistry {
+    private final Map<String, CommandNode> registeredNodes = new HashMap<>();
     private final AbstractCommandWrapper<T> wrapper;
-    private final ServerCommandRegistry<T> serverRegistry;
+    private final ServerRegistry<T> serverRegistry;
 
-    public AbstractCommandRegistry(AbstractCommandWrapper<T> wrapper, ServerCommandRegistry<T> serverRegistry)  {
+    public AbstractCommandRegistry(AbstractCommandWrapper<T> wrapper, ServerRegistry<T> serverRegistry) {
         this.wrapper = wrapper;
         this.serverRegistry = serverRegistry;
     }
 
     @Override
-    public Result register(CommandNode node) {
+    public Result registerNode(CommandNode node) {
         if (registeredNodes.containsKey(node.getName())) {
             return Result.fail("Node already registered!");
         }
@@ -41,12 +36,12 @@ public abstract class AbstractCommandRegistry<T> implements CommandRegistry<T> {
     }
 
     @Override
-    public CommandBase getByName(String name) {
+    public CommandNode getNode(String name) {
         return registeredNodes.getOrDefault(name, null);
     }
 
     @Override
-    public Result remove(CommandNode node) {
+    public Result removeNode(CommandNode node) {
         if (!registeredNodes.containsKey(node.getName())) {
             return Result.fail("Node is not registered");
         }
@@ -56,7 +51,7 @@ public abstract class AbstractCommandRegistry<T> implements CommandRegistry<T> {
     }
 
     @Override
-    public WrappedCommand<T> getWrappedCommand(CommandNode node) {
-        return wrapper.get(node);
+    public Map<String, CommandNode> getNodes() {
+        return new HashMap<>(registeredNodes);
     }
 }

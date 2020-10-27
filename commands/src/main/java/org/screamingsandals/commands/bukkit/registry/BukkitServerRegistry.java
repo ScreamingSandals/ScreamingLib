@@ -6,7 +6,7 @@ import io.papermc.lib.PaperLib;
 import org.bukkit.command.Command;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.Plugin;
-import org.screamingsandals.commands.api.registry.ServerCommandRegistry;
+import org.screamingsandals.commands.api.registry.ServerRegistry;
 import org.screamingsandals.lib.core.reflect.SReflect;
 import org.screamingsandals.lib.core.util.result.Result;
 import org.screamingsandals.lib.core.wrapper.plugin.PluginWrapper;
@@ -15,13 +15,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public class BukkitServerCommandRegistry implements ServerCommandRegistry<Command> {
-    private final Logger log = LoggerFactory.getLogger(ServerCommandRegistry.class);
+public class BukkitServerRegistry implements ServerRegistry<Command> {
+    private final Logger log = LoggerFactory.getLogger(ServerRegistry.class);
     private final PluginWrapper pluginWrapper;
     private final SimpleCommandMap commandMap;
 
     @Inject
-    public BukkitServerCommandRegistry(PluginWrapper pluginWrapper) {
+    public BukkitServerRegistry(PluginWrapper pluginWrapper) {
         this.pluginWrapper = pluginWrapper;
         this.commandMap = Preconditions.checkNotNull(getCommandMap(), "commandMap");
     }

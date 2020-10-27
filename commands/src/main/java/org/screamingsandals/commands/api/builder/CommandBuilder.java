@@ -1,8 +1,6 @@
 package org.screamingsandals.commands.api.builder;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.screamingsandals.commands.api.command.CommandCallback;
@@ -19,13 +17,13 @@ import java.util.List;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class CommandBuilder {
     protected static Logger log = LoggerFactory.getLogger(CommandBuilder.class);
-    private final Multimap<CommandCallback.Priority, CommandCallback> callbacks = ArrayListMultimap.create();
+    private final List<CommandCallback> callbacks = new LinkedList<>();
     private final List<PartialSubCommandBuilder> partialSubCommands = new LinkedList<>();
 
-    private final CommandRegistry<?> registry;
+    private final CommandRegistry registry;
     private final String name;
 
-    private String permission;
+    private String permission = "";
     private String description;
     private String usage;
     private TabCallback tabCallback;
@@ -47,12 +45,7 @@ public class CommandBuilder {
     }
 
     public CommandBuilder callback(CommandCallback callback) {
-        return callback(Preconditions.checkNotNull(callback, "callback"), CommandCallback.Priority.NORMAL);
-    }
-
-    public CommandBuilder callback(CommandCallback callback, CommandCallback.Priority priority) {
-        callbacks.put(Preconditions.checkNotNull(priority, "priority"),
-                Preconditions.checkNotNull(callback, "callback"));
+        callbacks.add(Preconditions.checkNotNull(callback, "callback"));
         return this;
     }
 
@@ -69,10 +62,10 @@ public class CommandBuilder {
     public CommandNode build() {
         final var node = SimpleCommandNode.build(
                 name, permission, description, usage, callbacks, tabCallback);
-        final var result = registry.register(node);
+        final var result = registry.registerNode(node);
 
         if (result.isFail()) {
-            log.trace("Result of registering command named [{}] has FAILED! Result: [{}]", name, result.getMessage());
+            log.warn("Result of registering command named [{}] has FAILED! Result: [{}]", name, result.getMessage());
             return null;
         }
 
@@ -84,7 +77,10 @@ public class CommandBuilder {
                 log.warn("Error registering SubNode {}!", command.getName());
                 return;
             }
-            node.addSubNode(subCommand.build());
+
+            log.debug("Registering sub-node {}", subNode.getName());
+
+            node.addSubNode(subNode);
         });
         return node;
     }

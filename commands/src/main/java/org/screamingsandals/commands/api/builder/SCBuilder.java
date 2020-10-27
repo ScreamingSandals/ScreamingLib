@@ -7,10 +7,10 @@ import org.screamingsandals.commands.api.registry.CommandRegistry;
 
 public class SCBuilder {
     private static SCBuilder instance;
-    private final CommandRegistry<?> registry;
+    private final CommandRegistry registry;
 
     @Inject
-    public SCBuilder(CommandRegistry<?> registry) {
+    public SCBuilder(CommandRegistry registry) {
         instance = this;
         this.registry = Preconditions.checkNotNull(registry, "registry");
     }

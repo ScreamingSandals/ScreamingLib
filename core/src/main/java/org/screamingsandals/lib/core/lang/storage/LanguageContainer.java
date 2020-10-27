@@ -14,6 +14,7 @@ import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 public class LanguageContainer {
@@ -81,7 +82,7 @@ public class LanguageContainer {
         try {
             if (node.isList()) {
                 log.debug("Node is list!");
-                final var messages = node.getList(new TypeToken<MessageContainer>() {
+                final var messages = node.getList(new TypeToken<String>() {
                 });
 
                 if (messages == null || messages.isEmpty()) {
@@ -89,18 +90,20 @@ public class LanguageContainer {
                     return List.of(notFoundContainer);
                 }
 
-                messages.removeIf(container -> container.getText().startsWith("[_SKIP]"));
-                return messages;
+                return messages.stream()
+                        .filter(text -> !text.startsWith("<_SKIP>"))
+                        .map(MessageContainer::new)
+                        .collect(Collectors.toList());
             }
 
             log.debug("Node is not a list!");
-            final var message = node.get(TypeToken.get(MessageContainer.class));
-            if (message == null || message.getText().startsWith("[_SKIP]")) {
+            final var message = node.getString();
+            if (message == null || message.startsWith("<_SKIP>")) {
                 log.debug("Not found any translation!");
                 return List.of(notFoundContainer);
             }
 
-            return List.of(message);
+            return List.of(new MessageContainer(message));
         } catch (SerializationException e) {
             return List.of(notFoundContainer);
         }

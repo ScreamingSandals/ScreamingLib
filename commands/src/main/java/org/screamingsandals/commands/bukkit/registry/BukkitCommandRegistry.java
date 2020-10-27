@@ -8,7 +8,7 @@ import org.screamingsandals.commands.core.registry.AbstractCommandRegistry;
 public class BukkitCommandRegistry extends AbstractCommandRegistry<Command> {
 
     @Inject
-    public BukkitCommandRegistry(BukkitCommandWrapper wrapper, BukkitServerCommandRegistry serverRegistry) {
+    public BukkitCommandRegistry(BukkitCommandWrapper wrapper, BukkitServerRegistry serverRegistry) {
         super(wrapper, serverRegistry);
     }
 }
