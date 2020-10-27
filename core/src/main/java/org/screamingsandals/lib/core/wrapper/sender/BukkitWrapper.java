@@ -42,7 +42,7 @@ public class BukkitWrapper {
 
         @Override
         public void sendMessage(Component message) {
-            audience.sendMessage(Identity.identity(getUuid()), message);
+            sendMessage(Identity.identity(getUuid()), message);
         }
 
         @Override

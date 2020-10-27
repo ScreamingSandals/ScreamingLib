@@ -17,10 +17,10 @@ public class TaskerModule extends AbstractModule {
     protected void configure() {
         switch (pluginWrapper.getType()) {
             case BUKKIT:
-                bind(Tasker.class).toInstance(new TaskerWrapper.BukkitTasker(pluginWrapper.getPlugin()));
+                bind(Tasker.class).to(TaskerWrapper.BukkitTasker.class).asEagerSingleton();
                 break;
             case BUNGEE:
-                bind(Tasker.class).toInstance(new TaskerWrapper.BungeeTasker(pluginWrapper.getPlugin()));
+                bind(Tasker.class).to(TaskerWrapper.BungeeTasker.class).asEagerSingleton();
                 break;
         }
     }

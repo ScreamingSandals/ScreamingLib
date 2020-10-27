@@ -5,17 +5,21 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.screamingsandals.lib.core.lang.LanguageBase;
 import org.screamingsandals.lib.core.lang.storage.LanguageContainer;
 import org.screamingsandals.lib.core.wrapper.sender.SenderWrapper;
+import org.slf4j.Logger;
 
 import java.util.*;
 
 public class Message {
+    private final Logger log;
     private final Map<String, String> placeholders = new HashMap<>();
     private SenderWrapper<?> sender;
 
     private String key;
     private boolean prefix;
 
-    public Message(String key, boolean prefix, SenderWrapper<?> sender) {
+    public Message(Logger log, String key,
+                   boolean prefix, SenderWrapper<?> sender) {
+        this.log = log;
         this.key = key;
         this.prefix = prefix;
         this.sender = sender;
@@ -104,6 +108,8 @@ public class Message {
         if (sender == null || !sender.isPlayer()) {
             uuid = UUID.fromString(System.getProperty("slang.consoleUUID"));
         } else {
+            final var testUUID = sender.getPlayer().getUuid();
+            log.trace(testUUID.toString());
             uuid = sender.getPlayer().getUuid();
         }
 
@@ -124,12 +130,8 @@ public class Message {
         if (uuid == null) {
             container = LanguageBase.getDefaultContainer();
         } else {
-            final var maybeContainer = LanguageBase.getPlayerRegistry().getFor(uuid);
-            if (maybeContainer.isEmpty()) {
-                return List.of();
-            }
-
-            container = maybeContainer.get();
+            container = LanguageBase.getPlayerRegistry().getFor(uuid)
+                    .orElse(LanguageBase.getDefaultContainer());
         }
 
         return container.getMessages(key, prefix, placeholders, uuid);
@@ -149,31 +151,27 @@ public class Message {
 
     public void send() {
         if (sender == null) {
+            log.debug("trying to send the messages to {}", "sender not found");
             getAll().forEach(component -> LanguageBase.getPluginWrapper().getConsoleWrapper().sendMessage(component));
             return;
         }
 
+        log.debug("trying to send the messages to {}", sender.toString());
+
         internalSend(sender, getAll());
     }
 
-    public void send(Object sender) {
-        if (sender instanceof Collection) {
-            for (var recipient : (Collection<?>) sender) {
-                send(recipient);
-            }
-            return;
-        }
+    public void send(SenderWrapper<?> sender) {
+        this.sender = sender;
+        send();
+    }
 
-        if (!sender.getClass().isAssignableFrom(SenderWrapper.class)) {
-            throw new UnsupportedOperationException("Sender needs to be SenderWrapper!");
-        }
-
-        final var castedSender = (SenderWrapper<?>) sender;
-
-        internalSend(castedSender, getAll(castedSender.getPlayer().getUuid()));
+    public void send(Collection<SenderWrapper<?>> senders) {
+        senders.forEach(this::send);
     }
 
     protected void internalSend(SenderWrapper<?> sender, List<Component> message) {
+        log.debug("Sending to [{}] with components [{}]", sender.toString(), message.toArray());
         message.forEach(sender::sendMessage);
     }
 }

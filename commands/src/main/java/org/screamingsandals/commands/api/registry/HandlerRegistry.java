@@ -13,4 +13,9 @@ public interface HandlerRegistry {
     TabHandler getTabHandler();
 
     void setTabHandler(@NotNull TabHandler tabHandler);
+
+    /**
+     * Resets the HandlerRegistry to default state
+     */
+    void useDefaults();
 }

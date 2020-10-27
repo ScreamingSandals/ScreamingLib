@@ -46,6 +46,9 @@ public class LanguageContainer {
 
         final var toReturn = new LinkedList<Component>();
         messages.forEach(container -> {
+            placeholders.forEach((placeholderKey, value) ->
+                    container.setText(container.getText().replaceAll(placeholderKey, value)));
+
             if (uuid != null && pluginWrapper.getType() == PluginWrapper.ServerType.BUKKIT) {
                 final var player = pluginWrapper.getWrapperFor(uuid);
                 if (player.isEmpty()) {

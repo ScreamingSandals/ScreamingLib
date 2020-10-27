@@ -4,6 +4,8 @@ import com.velocitypowered.api.command.CommandSource;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.bukkit.entity.Player;
 
 public interface SenderWrapper<T> {
 
@@ -62,18 +64,20 @@ public interface SenderWrapper<T> {
      */
     @SuppressWarnings("unchecked")
     default <K> PlayerWrapper<K> getPlayer() {
-        if (getInstance().getClass().isAssignableFrom(PlayerWrapper.class)) {
-            return (PlayerWrapper<K>) getInstance();
+        try {
+            return (PlayerWrapper<K>) PlayerWrapper.of((Player) getInstance());
+        } catch (Throwable ignored) {
         }
 
-        throw new UnsupportedOperationException("Cannot get player, instance is " + getInstance().getClass().getSimpleName());
+        try {
+            return (PlayerWrapper<K>) PlayerWrapper.of((ProxiedPlayer) getInstance());
+        } catch (Throwable ignored) {
+        }
+
+        return null;
     }
 
-    /**
-     * @return true if this instance is Player
-     */
     default boolean isPlayer() {
-        return (this instanceof BukkitWrapper.WrapperPlayer)
-                || (this instanceof BungeeWrapper.WrapperPlayer);
+        return getPlayer() != null;
     }
 }

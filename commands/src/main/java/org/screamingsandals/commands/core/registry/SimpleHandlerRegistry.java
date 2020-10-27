@@ -11,17 +11,24 @@ import org.screamingsandals.commands.core.handler.SimpleTabHandler;
 
 @Singleton
 public class SimpleHandlerRegistry implements HandlerRegistry {
+    private final CommandHandler defaultCommandHandler;
+    private final TabHandler defaultTabHandler;
+
     private CommandHandler commandHandler;
     private TabHandler tabHandler;
 
     public SimpleHandlerRegistry() {
-        this.commandHandler = new SimpleCommandHandler();
-        this.tabHandler = new SimpleTabHandler();
+        this.defaultCommandHandler = new SimpleCommandHandler();
+        this.defaultTabHandler = new SimpleTabHandler();
     }
 
     @Override
     public CommandHandler getCommandHandler() {
-        return commandHandler;
+        if (commandHandler != null) {
+            return commandHandler;
+        }
+
+        return defaultCommandHandler;
     }
 
     @Override
@@ -31,11 +38,21 @@ public class SimpleHandlerRegistry implements HandlerRegistry {
 
     @Override
     public TabHandler getTabHandler() {
-        return tabHandler;
+        if (tabHandler != null) {
+            return tabHandler;
+        }
+
+        return defaultTabHandler;
     }
 
     @Override
     public void setTabHandler(@NotNull TabHandler tabHandler) {
         this.tabHandler = Preconditions.checkNotNull(tabHandler);
+    }
+
+    @Override
+    public void useDefaults() {
+        commandHandler = null;
+        tabHandler = null;
     }
 }

@@ -1,8 +1,10 @@
 package org.screamingsandals.lib.core.tasker;
 
+import com.google.inject.Inject;
 import lombok.Data;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
+import org.screamingsandals.lib.core.wrapper.plugin.PluginWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +21,9 @@ public class TaskerWrapper {
     public static class BukkitTasker implements Tasker {
         private final Plugin plugin;
 
-        public BukkitTasker(Object plugin) {
-            this.plugin = (Plugin) plugin;
-
+        @Inject
+        public BukkitTasker(PluginWrapper plugin) {
+            this.plugin = plugin.getPlugin();
             TaskerWrapper.instance = this;
         }
 
@@ -85,9 +87,9 @@ public class TaskerWrapper {
     public static class BungeeTasker implements Tasker {
         private final net.md_5.bungee.api.plugin.Plugin plugin;
 
-        public BungeeTasker(Object plugin) {
-            this.plugin = (net.md_5.bungee.api.plugin.Plugin) plugin;
-
+        @Inject
+        public BungeeTasker(PluginWrapper plugin) {
+            this.plugin = plugin.getPlugin();
             TaskerWrapper.instance = this;
         }
 
