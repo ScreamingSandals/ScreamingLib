@@ -1,12 +1,13 @@
 package org.screamingsandals.commands.velocity.guice;
 
-import com.google.inject.AbstractModule;
-import org.screamingsandals.commands.velocity.wrapper.VelocityCommandWrapper;
+import org.screamingsandals.commands.core.guice.AbstractCommandModule;
 
-public class VelocityCommandModule extends AbstractModule {
+public class VelocityCommandModule extends AbstractCommandModule {
 
     @Override
     protected void configure() {
-        bind(VelocityCommandWrapper.class).asEagerSingleton();
+        super.configure();
+
+        //bind(VelocityCommandWrapper.class).asEagerSingleton();
     }
 }

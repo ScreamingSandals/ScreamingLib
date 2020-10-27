@@ -4,7 +4,6 @@ import org.screamingsandals.commands.api.command.CommandContext;
 import org.screamingsandals.commands.api.command.CommandNode;
 import org.screamingsandals.commands.api.handler.TabHandler;
 import org.screamingsandals.lib.core.wrapper.sender.SenderWrapper;
-import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +16,6 @@ public class SimpleTabHandler implements TabHandler {
         final var sender = context.getSender();
         final var node = context.getNode();
 
-        LoggerFactory.getLogger("args").info(args.toString());
         //Sub Command
         if (args.isEmpty()) {
             final var toReturn = new LinkedList<String>();
