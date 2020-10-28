@@ -26,26 +26,41 @@ public class VelocityCommandWrapper extends AbstractCommandWrapper<RawCommand> {
     @Override
     @SuppressWarnings("deprecation")
     public WrappedCommand<RawCommand> wrap(CommandNode node) {
-        return () -> new RawCommand() {
+        return new WrappedCommand<>() {
             @Override
-            public void execute(CommandSource source, @NotNull @NonNull String[] args) {
-                handlerRegistry.getCommandHandler().handle(
-                        new CommandContext(SenderWrapper.of(source), node, Arrays.asList(args)));
+            public RawCommand getCommand() {
+                return new RawCommand() {
+                    @Override
+                    public void execute(Invocation invocation) {
+                        final var args =  Arrays.asList(invocation.arguments().split(" ", -1));
+                        final var context = new CommandContext(SenderWrapper.of(invocation.source()), node, args);
+
+                        handlerRegistry.getCommandHandler().handle(context);
+                    }
+
+
+                    @Override
+                    public boolean hasPermission(CommandSource source, @NotNull @NonNull String[] args) {
+                        //I want to handle this :)
+                        return true;
+                    }
+
+                    @Override
+                    public List<String> suggest(Invocation invocation) {
+                        final var args =  Arrays.asList(invocation.arguments().split(" ", -1));
+                        final var context = new CommandContext(SenderWrapper.of(invocation.source()), node, args);
+                        final var toReturn = handlerRegistry.getTabHandler().handle(context);
+
+                        return Objects.requireNonNullElseGet(toReturn, List::of);
+                    }
+                };
             }
 
             @Override
-            public boolean hasPermission(CommandSource source, @NotNull @NonNull String[] args) {
-                //I want to handle this :)
-                return true;
-            }
-
-            @Override
-            public List<String> suggest(CommandSource source, @NotNull @NonNull String[] currentArgs) {
-                final var context = new CommandContext(SenderWrapper.of(source), node, Arrays.asList(currentArgs));
-                final var toReturn = handlerRegistry.getTabHandler().handle(context);
-
-                return Objects.requireNonNullElseGet(toReturn, List::of);
+            public CommandNode getNode() {
+                return node;
             }
         };
+
     }
 }

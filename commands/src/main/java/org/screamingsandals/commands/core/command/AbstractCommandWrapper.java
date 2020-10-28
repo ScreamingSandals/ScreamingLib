@@ -12,26 +12,26 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 public abstract class AbstractCommandWrapper<T> {
-    private final Map<CommandBase, WrappedCommand<T>> wrappedCommands = new HashMap<>();
+    private final Map<CommandBase, WrappedCommand<T>> cachedWraps = new HashMap<>();
     protected final HandlerRegistry handlerRegistry;
 
-    private WrappedCommand<T> internalWrap(CommandNode node) {
-        final var wrapped = wrap(node);
-        wrappedCommands.put(node, wrapped);
-        return wrapped;
-    }
-
-    public abstract WrappedCommand<T> wrap(CommandNode node);
-
     public Map<CommandBase, WrappedCommand<T>> getAll() {
-        return ImmutableMap.copyOf(wrappedCommands);
+        return ImmutableMap.copyOf(cachedWraps);
     }
 
     public WrappedCommand<T> get(CommandNode node) {
-        if (wrappedCommands.containsKey(node)) {
-            return wrappedCommands.get(node);
+        if (cachedWraps.containsKey(node)) {
+            return cachedWraps.get(node);
         }
 
         return internalWrap(node);
+    }
+
+    protected abstract WrappedCommand<T> wrap(CommandNode node);
+
+    private WrappedCommand<T> internalWrap(CommandNode node) {
+        final var wrapped = wrap(node);
+        cachedWraps.put(node, wrapped);
+        return wrapped;
     }
 }

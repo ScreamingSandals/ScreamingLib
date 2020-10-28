@@ -4,11 +4,12 @@ import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.RawCommand;
 import org.screamingsandals.commands.api.registry.ServerRegistry;
+import org.screamingsandals.commands.api.wrapper.WrappedCommand;
 import org.screamingsandals.lib.core.util.result.Result;
 
 import java.util.Map;
 
-public class VelocityServerRegistry implements ServerRegistry<RawCommand> {
+public class VelocityServerRegistry implements ServerRegistry<WrappedCommand<RawCommand>, RawCommand> {
     private final CommandManager manager;
 
     @Inject
@@ -17,22 +18,28 @@ public class VelocityServerRegistry implements ServerRegistry<RawCommand> {
     }
 
     @Override
-    public Result register(RawCommand command) {
-        return null;
+    public Result register(WrappedCommand<RawCommand> command) {
+        if (isRegistered(command.getNode().getName())) {
+            return Result.fail("Already registered!");
+        }
+
+        manager.register(command.getNode().getName(), command.getCommand());
+        return Result.ok();
     }
 
     @Override
     public boolean isRegistered(String name) {
-        return false;
+        return manager.hasCommand(name);
     }
 
     @Override
     public void remove(String name) {
-
+        manager.unregister(name);
     }
 
     @Override
     public Map<String, RawCommand> getRegisteredCommands() {
-        return null;
+        //todo
+        return Map.of();
     }
 }

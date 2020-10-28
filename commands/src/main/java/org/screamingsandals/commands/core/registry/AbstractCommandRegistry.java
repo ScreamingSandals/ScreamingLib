@@ -3,6 +3,7 @@ package org.screamingsandals.commands.core.registry;
 import org.screamingsandals.commands.api.command.CommandNode;
 import org.screamingsandals.commands.api.registry.CommandRegistry;
 import org.screamingsandals.commands.api.registry.ServerRegistry;
+import org.screamingsandals.commands.api.wrapper.WrappedCommand;
 import org.screamingsandals.commands.core.command.AbstractCommandWrapper;
 import org.screamingsandals.lib.core.util.result.Result;
 
@@ -12,9 +13,9 @@ import java.util.Map;
 public abstract class AbstractCommandRegistry<T> implements CommandRegistry {
     private final Map<String, CommandNode> registeredNodes = new HashMap<>();
     private final AbstractCommandWrapper<T> wrapper;
-    private final ServerRegistry<T> serverRegistry;
+    private final ServerRegistry<WrappedCommand<T>, T> serverRegistry;
 
-    public AbstractCommandRegistry(AbstractCommandWrapper<T> wrapper, ServerRegistry<T> serverRegistry) {
+    public AbstractCommandRegistry(AbstractCommandWrapper<T> wrapper, ServerRegistry<WrappedCommand<T>, T> serverRegistry) {
         this.wrapper = wrapper;
         this.serverRegistry = serverRegistry;
     }
@@ -25,7 +26,7 @@ public abstract class AbstractCommandRegistry<T> implements CommandRegistry {
             return Result.fail("Node already registered!");
         }
 
-        final var registerResult = serverRegistry.register(wrapper.get(node).getCommand());
+        final var registerResult = serverRegistry.register(wrapper.get(node));
 
         if (registerResult.isOk()) {
             registeredNodes.put(node.getName(), node);

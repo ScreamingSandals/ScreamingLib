@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.commands.api.registry.ServerRegistry;
+import org.screamingsandals.commands.api.wrapper.WrappedCommand;
 import org.screamingsandals.lib.core.reflect.SReflect;
 import org.screamingsandals.lib.core.util.result.Result;
 import org.screamingsandals.lib.core.wrapper.plugin.PluginWrapper;
@@ -15,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-public class BukkitServerRegistry implements ServerRegistry<Command> {
+public class BukkitServerRegistry implements ServerRegistry<WrappedCommand<Command>,Command> {
     private final Logger log = LoggerFactory.getLogger(ServerRegistry.class);
     private final PluginWrapper pluginWrapper;
     private final SimpleCommandMap commandMap;
@@ -27,14 +28,14 @@ public class BukkitServerRegistry implements ServerRegistry<Command> {
     }
 
     @Override
-    public Result register(Command command) {
-        final var name = command.getName();
+    public Result register(WrappedCommand<Command> command) {
+        final var name = command.getCommand().getName();
 
         if (isRegistered(name)) {
             return Result.fail("Command is already registered!");
         }
 
-        final var result = commandMap.register(name, command);
+        final var result = commandMap.register(name, command.getCommand());
         if (result) {
             return Result.ok();
         }

@@ -5,13 +5,14 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 import org.screamingsandals.commands.api.registry.ServerRegistry;
+import org.screamingsandals.commands.api.wrapper.WrappedCommand;
 import org.screamingsandals.lib.core.util.result.Result;
 import org.screamingsandals.lib.core.wrapper.plugin.PluginWrapper;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class BungeeServerRegistry implements ServerRegistry<Command> {
+public class BungeeServerRegistry implements ServerRegistry<WrappedCommand<Command>, Command> {
     private final Plugin plugin;
     private final PluginManager pluginManager;
 
@@ -22,12 +23,12 @@ public class BungeeServerRegistry implements ServerRegistry<Command> {
     }
 
     @Override
-    public Result register(Command command) {
-        if (isRegistered(command.getName())) {
+    public Result register(WrappedCommand<Command> command) {
+        if (isRegistered(command.getCommand().getName())) {
             return Result.fail("Command already registered!");
         }
 
-        pluginManager.registerCommand(plugin, command);
+        pluginManager.registerCommand(plugin, command.getCommand());
         return Result.ok();
     }
 
