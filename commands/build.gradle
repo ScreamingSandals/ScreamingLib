@@ -1,5 +1,5 @@
 version = commands_version
 
 dependencies {
-    shade project(":core")
+    api project(":core")
 }

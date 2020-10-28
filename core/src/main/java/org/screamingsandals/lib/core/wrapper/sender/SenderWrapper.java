@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.core.wrapper.sender;
 
-import com.velocitypowered.api.command.CommandSource;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
@@ -17,7 +16,7 @@ public interface SenderWrapper<T> {
         return BungeeWrapper.of(commandSender);
     }
 
-    static SenderWrapper<CommandSource> of(CommandSource commandSource) {
+    static SenderWrapper<com.velocitypowered.api.command.CommandSource> of(com.velocitypowered.api.command.CommandSource commandSource) {
         return new AbstractSender<>(commandSource, commandSource) {
         };
     }

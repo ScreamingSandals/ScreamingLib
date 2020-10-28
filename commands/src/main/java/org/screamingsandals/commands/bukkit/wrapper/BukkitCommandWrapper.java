@@ -24,25 +24,35 @@ public class BukkitCommandWrapper extends AbstractCommandWrapper<Command> {
 
     @Override
     public WrappedCommand<Command> wrap(CommandNode node) {
-        return () -> new Command(node.getName(), node.getDescription(), node.getUsage(), node.getAliases()) {
+        return new WrappedCommand<>() {
             @Override
-            public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[]
-                    args) {
-                final var context = new CommandContext(SenderWrapper.of(sender), node, Arrays.asList(args));
-                handlerRegistry.getCommandHandler().handle(context);
+            public Command getCommand() {
+                return new Command(node.getName(), node.getDescription(), node.getUsage(), node.getAliases()) {
+                    @Override
+                    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[]
+                            args) {
+                        final var context = new CommandContext(SenderWrapper.of(sender), node, Arrays.asList(args));
+                        handlerRegistry.getCommandHandler().handle(context);
 
-                return true;
+                        return true;
+                    }
+
+                    @Override
+                    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String
+                            alias, @NotNull String[] args) throws IllegalArgumentException {
+                        final var context = new CommandContext(SenderWrapper.of(sender), node, Arrays.asList(args));
+                        final var toReturn = handlerRegistry.getTabHandler().handle(context);
+
+                        return Objects.requireNonNullElseGet(toReturn, List::of);
+
+                    }
+                };
             }
 
             @Override
-            public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String
-                    alias, @NotNull String[] args) throws IllegalArgumentException {
-                final var context = new CommandContext(SenderWrapper.of(sender), node, Arrays.asList(args));
-                final var toReturn = handlerRegistry.getTabHandler().handle(context);
-
-                return Objects.requireNonNullElseGet(toReturn, List::of);
+            public CommandNode getNode() {
+                return node;
             }
         };
-
     }
 }

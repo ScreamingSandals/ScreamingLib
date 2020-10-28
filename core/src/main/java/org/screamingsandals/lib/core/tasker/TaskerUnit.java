@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Convert normal TimeUnit to tick values for bukkit
  */
-public enum TaskerTime {
+public enum TaskerUnit {
     TICKS(1, 50, TimeUnit.MILLISECONDS),
     SECONDS(20, 1, TimeUnit.SECONDS),
     MINUTES(1200, 1, TimeUnit.MINUTES),
@@ -20,17 +20,17 @@ public enum TaskerTime {
     @Getter
     private final TimeUnit timeUnit;
 
-    TaskerTime(long bukkitValue, int timeUnitValue, TimeUnit timeUnit) {
+    TaskerUnit(long bukkitValue, int timeUnitValue, TimeUnit timeUnit) {
         this.bukkitValue = bukkitValue;
         this.timeUnitValue = timeUnitValue;
         this.timeUnit = timeUnit;
     }
 
-    public static int getTimeUnitValue(int multiplier, TaskerTime taskerTime) {
-        return taskerTime.timeUnitValue * multiplier;
+    public long getBukkitTime(int multiplier) {
+        return bukkitValue * multiplier;
     }
 
-    public static long getBukkitValue(long multiplier, TaskerTime taskerTime) {
-        return taskerTime.bukkitValue * multiplier;
+    public int getTime(int multiplier) {
+        return timeUnitValue * multiplier;
     }
 }

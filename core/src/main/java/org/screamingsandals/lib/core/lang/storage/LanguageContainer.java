@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
 import org.screamingsandals.lib.core.config.SConfig;
 import org.screamingsandals.lib.core.papi.PlaceholderConfig;
+import org.screamingsandals.lib.core.wrapper.plugin.PluginType;
 import org.screamingsandals.lib.core.wrapper.plugin.PluginWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +50,7 @@ public class LanguageContainer {
             placeholders.forEach((placeholderKey, value) ->
                     container.setText(container.getText().replaceAll(placeholderKey, value)));
 
-            if (uuid != null && pluginWrapper.getType() == PluginWrapper.ServerType.BUKKIT) {
+            if (uuid != null && pluginWrapper.getType() == PluginType.BUKKIT) {
                 final var player = pluginWrapper.getWrapperFor(uuid);
                 if (player.isEmpty()) {
                     log.debug("Player is null, returning normal component.");

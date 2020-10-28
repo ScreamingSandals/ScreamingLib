@@ -1,4 +1,7 @@
-package org.screamingsandals.lib.core.tasker;
+package org.screamingsandals.lib.core.tasker.task;
+
+import org.screamingsandals.lib.core.tasker.TaskerUnit;
+import org.screamingsandals.lib.core.tasker.type.AbstractTasker;
 
 public abstract class BaseTask implements Runnable {
 
@@ -23,11 +26,11 @@ public abstract class BaseTask implements Runnable {
      * Cancels the task execution
      */
     public void stop() {
-        TaskerWrapper.getInstance().destroyTask(this);
+        AbstractTasker.getInstance().destroyTask(this);
     }
 
     public boolean hasStopped() {
-        return TaskerWrapper.getInstance().hasStopped(this);
+        return AbstractTasker.getInstance().hasStopped(this);
     }
 
     /**
@@ -36,7 +39,7 @@ public abstract class BaseTask implements Runnable {
      * @return BaseTask instance
      */
     public BaseTask runTask() {
-        return TaskerWrapper.getInstance().runTask(this);
+        return AbstractTasker.getInstance().runTask(this);
     }
 
     /**
@@ -45,18 +48,18 @@ public abstract class BaseTask implements Runnable {
      * @return BaseTask instance
      */
     public BaseTask runTaskAsync() {
-        return TaskerWrapper.getInstance().runTaskAsync(this);
+        return AbstractTasker.getInstance().runTaskAsync(this);
     }
 
     /**
      * Runs the task later
      *
      * @param delay      - delay value
-     * @param taskerTime time unit for the delay value
+     * @param taskerUnit time unit for the delay value
      * @return BaseTask instance
      */
-    public BaseTask runTaskLater(int delay, TaskerTime taskerTime) {
-        return TaskerWrapper.getInstance().runTaskLater(this, delay, taskerTime);
+    public BaseTask runTaskLater(int delay, TaskerUnit taskerUnit) {
+        return AbstractTasker.getInstance().runTaskLater(this, delay, taskerUnit);
     }
 
     /**
@@ -64,10 +67,10 @@ public abstract class BaseTask implements Runnable {
      *
      * @param delay      - delay value
      * @param period     - repeating period value
-     * @param taskerTime time unit for the values
+     * @param taskerUnit time unit for the values
      * @return BaseTask instance
      */
-    public BaseTask runTaskRepeater(int delay, int period, TaskerTime taskerTime) {
-        return TaskerWrapper.getInstance().runTaskRepeater(this, delay, period, taskerTime);
+    public BaseTask runTaskRepeater(int delay, int period, TaskerUnit taskerUnit) {
+        return AbstractTasker.getInstance().runTaskRepeater(this, delay, period, taskerUnit);
     }
 }

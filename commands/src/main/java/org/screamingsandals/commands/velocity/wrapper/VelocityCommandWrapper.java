@@ -11,6 +11,7 @@ import org.screamingsandals.commands.api.registry.HandlerRegistry;
 import org.screamingsandals.commands.api.wrapper.WrappedCommand;
 import org.screamingsandals.commands.core.command.AbstractCommandWrapper;
 import org.screamingsandals.lib.core.wrapper.sender.SenderWrapper;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +33,7 @@ public class VelocityCommandWrapper extends AbstractCommandWrapper<RawCommand> {
                 return new RawCommand() {
                     @Override
                     public void execute(Invocation invocation) {
-                        final var args =  Arrays.asList(invocation.arguments().split(" ", -1));
+                        final var args = processArguments(invocation.arguments());
                         final var context = new CommandContext(SenderWrapper.of(invocation.source()), node, args);
 
                         handlerRegistry.getCommandHandler().handle(context);
@@ -47,7 +48,7 @@ public class VelocityCommandWrapper extends AbstractCommandWrapper<RawCommand> {
 
                     @Override
                     public List<String> suggest(Invocation invocation) {
-                        final var args =  Arrays.asList(invocation.arguments().split(" ", -1));
+                        final var args = Arrays.asList(invocation.arguments().split(" "));
                         final var context = new CommandContext(SenderWrapper.of(invocation.source()), node, args);
                         final var toReturn = handlerRegistry.getTabHandler().handle(context);
 
@@ -61,6 +62,14 @@ public class VelocityCommandWrapper extends AbstractCommandWrapper<RawCommand> {
                 return node;
             }
         };
+    }
 
+
+    private List<String> processArguments(String arguments) {
+        if (arguments.isBlank() || arguments.isEmpty()) {
+            return List.of();
+        }
+
+        return Arrays.asList(arguments.split(" "));
     }
 }

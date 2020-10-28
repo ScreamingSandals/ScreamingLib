@@ -24,7 +24,17 @@ public class BungeeCommandWrapper extends AbstractCommandWrapper<Command> {
 
     @Override
     public WrappedCommand<Command> wrap(CommandNode node) {
-        return () -> new WrapperBungeeCommand(node, handlerRegistry);
+        return new WrappedCommand<>() {
+            @Override
+            public Command getCommand() {
+                return new WrapperBungeeCommand(node, handlerRegistry);
+            }
+
+            @Override
+            public CommandNode getNode() {
+                return node;
+            }
+        };
     }
 
     private static class WrapperBungeeCommand extends Command implements TabExecutor {

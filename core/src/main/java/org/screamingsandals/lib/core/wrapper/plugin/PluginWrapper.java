@@ -1,10 +1,10 @@
 package org.screamingsandals.lib.core.wrapper.plugin;
 
+import org.screamingsandals.lib.core.util.PluginTypeGetter;
 import org.screamingsandals.lib.core.wrapper.sender.PlayerWrapper;
 import org.screamingsandals.lib.core.wrapper.sender.SenderWrapper;
 import org.slf4j.Logger;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,11 +16,7 @@ public interface PluginWrapper {
 
     String getPluginName();
 
-    ServerType getType();
-
-    File getPluginFolder();
-
-    Path getPluginFolderPath();
+    Path getPluginFolder();
 
     SenderWrapper<?> getConsoleWrapper();
 
@@ -28,9 +24,7 @@ public interface PluginWrapper {
 
     boolean isPluginEnabled(String pluginName);
 
-    enum ServerType {
-        BUKKIT,
-        BUNGEE,
-        VELOCITY
+    default PluginType getType() {
+        return PluginTypeGetter.getType();
     }
 }

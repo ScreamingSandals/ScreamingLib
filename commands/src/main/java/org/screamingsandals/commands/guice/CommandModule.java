@@ -29,6 +29,8 @@ public class CommandModule extends AbstractModule {
             case VELOCITY:
                 install(new VelocityCommandModule());
                 break;
+            default:
+                throw new UnsupportedOperationException("Unsupported plugin type!");
         }
 
         bind(CommandClassScanner.class).asEagerSingleton();

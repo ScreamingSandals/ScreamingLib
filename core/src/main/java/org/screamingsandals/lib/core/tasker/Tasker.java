@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.core.tasker;
 
-import com.google.common.collect.ImmutableMap;
-import org.screamingsandals.lib.core.reflect.SReflect;
+import org.screamingsandals.lib.core.tasker.task.BaseTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,47 +16,19 @@ public interface Tasker {
      *
      * @return immutable map of active tasks
      */
-    default Map<BaseTask, Object> getRunningTasks() {
-        return ImmutableMap.copyOf(runningTasks);
-    }
+    Map<BaseTask, Object> getRunningTasks();
 
     /**
      * Destroys the whole tasker :(
      */
-    default void destroy() {
-        getRunningTasks().keySet().forEach(baseTask -> {
-            if (baseTask == null) {
-                return;
-            }
-
-            try {
-                var task = runningTasks.get(baseTask);
-                SReflect.fastInvoke(task, "cancel");
-            } catch (Exception ignored) {
-            }
-        });
-
-        runningTasks.clear();
-    }
+    void destroy();
 
     /**
      * Destroys the task (that means it stops the task!)
      *
      * @param baseTask the task itself
      */
-    default void destroyTask(BaseTask baseTask) {
-        if (baseTask == null) {
-            return;
-        }
-
-        try {
-            var task = runningTasks.get(baseTask);
-            SReflect.fastInvoke(task, "cancel");
-        } catch (Exception ignored) {
-        }
-
-        runningTasks.remove(baseTask);
-    }
+    void destroyTask(BaseTask baseTask);
 
     /**
      * Checks if the task has stopped
@@ -89,10 +60,10 @@ public interface Tasker {
      *
      * @param baseTask   instance of {@link BaseTask}
      * @param delay      how later should we run
-     * @param taskerTime unit for running task later
+     * @param taskerUnit unit for running task later
      * @return baked {@link BaseTask}
      */
-    BaseTask runTaskLater(BaseTask baseTask, int delay, TaskerTime taskerTime);
+    BaseTask runTaskLater(BaseTask baseTask, int delay, TaskerUnit taskerUnit);
 
     /**
      * Runs the task in loop after some delay and in some period
@@ -100,8 +71,8 @@ public interface Tasker {
      * @param baseTask   instance of {@link BaseTask}
      * @param delay      how later should we run
      * @param period     period for repeating the task
-     * @param taskerTime unit for running task later
+     * @param taskerUnit unit for running task later
      * @return baked {@link BaseTask}
      */
-    BaseTask runTaskRepeater(BaseTask baseTask, int delay, int period, TaskerTime taskerTime);
+    BaseTask runTaskRepeater(BaseTask baseTask, int delay, int period, TaskerUnit taskerUnit);
 }
