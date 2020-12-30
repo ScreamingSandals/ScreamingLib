@@ -1,0 +1,5 @@
+dependencies {
+    shade project(':utils')
+    shade project(':player-common')
+    compileOnly 'com.github.Minestom:Minestom:' + MINESTOM_VERSION
+}
