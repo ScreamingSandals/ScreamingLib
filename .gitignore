@@ -1,0 +1,24 @@
+# Gradle shit
+.gradle
+**/build/
+!src/**/build/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+!src/**/target/
+**/target/
+
+# Eclipse
+/bin
+.settings
+.project
+.classpath
+
+# IntelliJ
+out/
+.idea/
+*.iml
+
+# Misc
+.DS_Store
+CraftBukkit/

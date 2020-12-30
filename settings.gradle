@@ -1,0 +1,10 @@
+rootProject.name = "ScreamingLib"
+
+include 'utils'
+include(':material-common')
+project(':material-common').projectDir = file('material/common')
+include(':material-bukkit')
+project(':material-bukkit').projectDir = file('material/bukkit')
+include(':material-minestom')
+project(':material-minestom').projectDir = file('material/minestom')
+

@@ -1,0 +1,28 @@
+buildscript {
+    repositories {
+        maven { url 'https://repo.screamingsandals.org/public' }
+    }
+    dependencies {
+        classpath 'org.screamingsandals.gradle.builder:screaming-plugin-builder:1.0.31'
+    }
+}
+
+defaultTasks 'clean', 'screamCompile'
+
+allprojects {
+    group = 'org.screamingsandals.lib'
+    version = SCREAMING_LIB_VERSION
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.screamingsandals.gradle.builder'
+
+    repositories {
+        maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/'  }
+        maven { url 'https://libraries.minecraft.net' }
+        maven { url 'https://jitpack.io' }
+    }
+
+    sourceCompatibility = JavaVersion.VERSION_11
+}
