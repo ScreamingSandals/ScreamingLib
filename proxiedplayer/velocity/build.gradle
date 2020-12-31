@@ -1,0 +1,6 @@
+dependencies {
+    shade project(':utils')
+    shade project(':proxiedplayer-common')
+
+    compileOnly velocity(VELOCITY_VERSION)
+}
