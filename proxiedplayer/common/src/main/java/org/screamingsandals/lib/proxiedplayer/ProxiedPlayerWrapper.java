@@ -2,12 +2,13 @@ package org.screamingsandals.lib.proxiedplayer;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.UUID;
 
 @Data
 @RequiredArgsConstructor
-public class ProxiedPlayerWrapper {
+public class ProxiedPlayerWrapper implements Wrapper {
     private final String name;
     private final UUID uuid;
 

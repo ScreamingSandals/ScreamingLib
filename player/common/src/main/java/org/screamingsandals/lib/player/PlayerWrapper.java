@@ -2,12 +2,13 @@ package org.screamingsandals.lib.player;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.UUID;
 
 @Data
 @RequiredArgsConstructor
-public class PlayerWrapper {
+public class PlayerWrapper implements Wrapper {
     private final String name;
     private final UUID uuid;
 

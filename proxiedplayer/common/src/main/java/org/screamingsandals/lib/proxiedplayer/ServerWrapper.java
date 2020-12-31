@@ -2,6 +2,7 @@ package org.screamingsandals.lib.proxiedplayer;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.screamingsandals.lib.utils.Wrapper;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 @Data
 @RequiredArgsConstructor
-public class ServerWrapper {
+public class ServerWrapper implements Wrapper {
     private final String name;
     private final SocketAddress address;
 

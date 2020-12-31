@@ -5,12 +5,13 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.meta.EnchantmentHolder;
 import org.screamingsandals.lib.material.meta.PotionHolder;
+import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class Item implements Cloneable {
+public class Item implements Cloneable, Wrapper {
     //@Nullable // in initial state it's null
     private MaterialHolder material;
     @Nullable

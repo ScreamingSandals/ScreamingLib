@@ -2,10 +2,11 @@ package org.screamingsandals.lib.material;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.screamingsandals.lib.utils.Wrapper;
 
 @Data
 @RequiredArgsConstructor
-public final class MaterialHolder {
+public final class MaterialHolder implements Wrapper {
     private final String platformName;
     private final int durability;
 

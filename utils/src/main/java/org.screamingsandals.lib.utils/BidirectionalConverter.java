@@ -10,9 +10,9 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @NoArgsConstructor(staticName = "build")
-public class BidirectionalConverter<Wrapper> {
-    private final Map<Class<?>, Function<Object, Wrapper>> p2wConverters = new HashMap<>();
-    private final Map<Class<?>, Function<Wrapper, Object>> w2pConverters = new HashMap<>();
+public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
+    private final Map<Class<?>, Function<Object, SpecificWrapper>> p2wConverters = new HashMap<>();
+    private final Map<Class<?>, Function<SpecificWrapper, Object>> w2pConverters = new HashMap<>();
     private boolean finished = false;
 
     public void finish() {
@@ -21,27 +21,27 @@ public class BidirectionalConverter<Wrapper> {
 
     @SuppressWarnings("unchecked")
     @NotNull
-    public <P> BidirectionalConverter<Wrapper> registerW2P(@NotNull Class<P> type, @NotNull Function<Wrapper, P> convertor) {
+    public <P> BidirectionalConverter<SpecificWrapper> registerW2P(@NotNull Class<P> type, @NotNull Function<SpecificWrapper, P> convertor) {
         if (finished) {
             throw new UnsupportedOperationException("Converter has been already fully initialized!");
         }
-        w2pConverters.put(type, (Function<Wrapper, Object>) convertor);
+        w2pConverters.put(type, (Function<SpecificWrapper, Object>) convertor);
         return this;
     }
 
     @SuppressWarnings("unchecked")
     @NotNull
-    public <P> BidirectionalConverter<Wrapper> registerP2W(@NotNull Class<P> type, @NotNull Function<P, Wrapper> convertor) {
+    public <P> BidirectionalConverter<SpecificWrapper> registerP2W(@NotNull Class<P> type, @NotNull Function<P, SpecificWrapper> convertor) {
         if (finished) {
             throw new UnsupportedOperationException("Converter has been already fully initialized!");
         }
-        p2wConverters.put(type, (Function<Object, Wrapper>) convertor);
+        p2wConverters.put(type, (Function<Object, SpecificWrapper>) convertor);
         return this;
     }
 
     @SuppressWarnings("unchecked")
     @NotNull
-    public <P> Wrapper convert(@NotNull P object) {
+    public <P> SpecificWrapper convert(@NotNull P object) {
         var opt = p2wConverters.entrySet()
                 .stream()
                 .filter(c -> c.getKey().isInstance(object))
@@ -51,7 +51,7 @@ public class BidirectionalConverter<Wrapper> {
     }
 
     @NotNull
-    public <P> Optional<Wrapper> convertOptional(@Nullable P object) {
+    public <P> Optional<SpecificWrapper> convertOptional(@Nullable P object) {
         if (object == null) {
             return Optional.empty();
         }
@@ -64,7 +64,7 @@ public class BidirectionalConverter<Wrapper> {
 
     @SuppressWarnings("unchecked")
     @NotNull
-    public <P> P convert(@NotNull Wrapper object, @NotNull Class<P> newType) {
+    public <P> P convert(@NotNull SpecificWrapper object, @NotNull Class<P> newType) {
         var opt = w2pConverters.entrySet()
                 .stream()
                 .filter(c -> newType.isAssignableFrom(c.getKey()))
@@ -75,7 +75,7 @@ public class BidirectionalConverter<Wrapper> {
 
     @SuppressWarnings("unchecked")
     @NotNull
-    public <P> Optional<P> convertOptional(@Nullable Wrapper object, @NotNull Class<P> newType) {
+    public <P> Optional<P> convertOptional(@Nullable SpecificWrapper object, @NotNull Class<P> newType) {
         if (object == null) {
             return Optional.empty();
         }

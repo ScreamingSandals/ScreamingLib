@@ -2,10 +2,11 @@ package org.screamingsandals.lib.material.meta;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.screamingsandals.lib.utils.Wrapper;
 
 @RequiredArgsConstructor
 @Data
-public final class EnchantmentHolder {
+public final class EnchantmentHolder implements Wrapper {
     private final String platformName;
     private final int level;
 
