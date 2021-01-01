@@ -63,12 +63,23 @@ public abstract class EnchantmentMapping {
 
         if (matcher.group("enchantment") != null) {
 
-            /*String namespace = matcher.group("namespace");*/ // namespace is currently useless on vanilla
-
+            String namespace = matcher.group("namespace") != null ? matcher.group("namespace").toUpperCase() : "MINECRAFT";
             String name = matcher.group("enchantment").toUpperCase();
             String level_str = matcher.group("level");
 
-            if (mapping.enchantmentMapping.containsKey(name)) {
+            if (mapping.enchantmentMapping.containsKey(namespace + ":" + name)) {
+                if (level_str != null && !level_str.isEmpty()) {
+                    int level;
+                    try {
+                        level = Integer.parseInt(level_str);
+                    } catch (Throwable t) {
+                        level = RomanToDecimal.romanToDecimal(level_str);
+                    }
+                    return Optional.of(mapping.enchantmentMapping.get(namespace + ":" + name).newLevel(level));
+                } else {
+                    return Optional.of(mapping.enchantmentMapping.get(namespace + ":" + name));
+                }
+            } else if (mapping.enchantmentMapping.containsKey(name)) {
                 if (level_str != null && !level_str.isEmpty()) {
                     int level;
                     try {

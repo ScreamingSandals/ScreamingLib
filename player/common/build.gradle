@@ -1,3 +1,4 @@
 dependencies {
     shade project(':utils')
+    compileOnly project(':material-common')
 }

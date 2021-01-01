@@ -1,7 +1,5 @@
 package org.screamingsandals.lib.bukkit.material.container;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -19,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BukkitContainer extends BasicWrapper<Inventory> implements Container {
-    protected BukkitContainer(Inventory wrappedObject) {
+    public BukkitContainer(Inventory wrappedObject) {
         super(wrappedObject);
     }
 

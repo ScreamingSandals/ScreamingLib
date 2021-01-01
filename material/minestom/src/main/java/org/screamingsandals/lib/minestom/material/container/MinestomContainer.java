@@ -10,13 +10,11 @@ import org.screamingsandals.lib.minestom.material.builder.MinestomItemFactory;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Wrapper;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-// TODO
 public class MinestomContainer extends BasicWrapper<Inventory> implements Container {
 
-    protected MinestomContainer(Inventory wrappedObject) {
+    public MinestomContainer(Inventory wrappedObject) {
         super(wrappedObject);
     }
 
@@ -32,37 +30,92 @@ public class MinestomContainer extends BasicWrapper<Inventory> implements Contai
 
     @Override
     public List<Item> addItem(Item... items) {
-        return null;
+        var list = new ArrayList<Item>();
+        Arrays.stream(items).forEach(item -> {
+            if (!wrappedObject.addItemStack(item.as(ItemStack.class))) {
+                list.add(item);
+            }
+        });
+        return list;
+    }
+
+    private int first(ItemStack item) {
+        if (item == null) {
+            return -1;
+        }
+        ItemStack[] inventory = wrappedObject.getItemStacks();
+        for (int i = 0; i < inventory.length; i++) {
+            if (inventory[i] == null) continue;
+
+            if (item.isSimilar(inventory[i])) {
+                return i;
+            }
+        }
+        return -1;
+
     }
 
     @Override
     public List<Item> removeItem(Item... items) {
-        return null;
+        var list = new ArrayList<Item>();
+        Arrays.stream(items).forEach(item -> {
+            var stack = item.as(ItemStack.class);
+            var toDelete = stack.getAmount();
+
+            while (toDelete > 0) {
+                var first = first(stack);
+
+                if (first == -1) {
+                    item.setAmount(toDelete);
+                    list.add(item);
+                    break;
+                } else {
+                    var itemStack = wrappedObject.getItemStack(first);
+                    int amount = itemStack.getAmount();
+
+                    if (amount <= toDelete) {
+                        toDelete -= amount;
+                        wrappedObject.setItemStack(first, ItemStack.getAirItem());
+                    } else {
+                        itemStack.setAmount((byte) (amount - toDelete));
+                        wrappedObject.setItemStack(first, itemStack);
+                        toDelete = 0;
+                    }
+                }
+            }
+        });
+        return list;
     }
 
     @Override
     public Item[] getContents() {
-        return new Item[0];
+        return Arrays.stream(wrappedObject.getItemStacks()).map(MinestomItemFactory::build).map(item -> item.orElse(null)).toArray(Item[]::new);
     }
 
     @Override
     public void setContents(Item[] items) throws IllegalArgumentException {
-
+        if (items.length != getSize()) {
+            throw new IllegalArgumentException("Wrong size of items array. Must be " + getSize());
+        }
+        for (var i = 0; i < items.length; i++) {
+            setItem(i, items[i]);
+        }
     }
 
     @Override
     public boolean contains(MaterialHolder materialHolder) {
-        return false;
+        return Arrays.stream(getContents()).filter(Objects::nonNull).anyMatch(item -> item.getMaterial().equals(materialHolder));
     }
 
     @Override
     public boolean contains(Item item) {
-        return false;
+        return Arrays.asList(getContents()).contains(item);
     }
 
     @Override
     public boolean containsAtLeast(Item item, int amount) {
-        return false;
+        var amount2 = Arrays.stream(getContents()).filter(item::isSimilar).mapToInt(Item::getAmount).sum();
+        return amount2 >= amount;
     }
 
     @Override
@@ -72,7 +125,7 @@ public class MinestomContainer extends BasicWrapper<Inventory> implements Contai
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return Arrays.stream(getContents()).allMatch(Objects::isNull);
     }
 
     @Override

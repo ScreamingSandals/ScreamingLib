@@ -1,8 +1,10 @@
 package org.screamingsandals.lib.player;
 
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public abstract class PlayerUtils {
@@ -42,4 +44,30 @@ public abstract class PlayerUtils {
 
     public abstract void sendMessage0(PlayerWrapper playerWrapper, String message);
 
+    public static void closeInventory(PlayerWrapper playerWrapper) {
+        if (playerUtils == null) {
+            throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
+        }
+        playerUtils.closeInventory0(playerWrapper);
+    }
+
+    public abstract void closeInventory0(PlayerWrapper playerWrapper);
+
+    public static Container getPlayerInventory(PlayerWrapper playerWrapper) {
+        if (playerUtils == null) {
+            throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
+        }
+        return playerUtils.getPlayerInventory0(playerWrapper);
+    }
+
+    public abstract Container getPlayerInventory0(PlayerWrapper playerWrapper);
+
+    public static Optional<Container> getOpenedInventory(PlayerWrapper playerWrapper) {
+        if (playerUtils == null) {
+            throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
+        }
+        return playerUtils.getOpenedInventory0(playerWrapper);
+    }
+
+    public abstract Optional<Container> getOpenedInventory0(PlayerWrapper playerWrapper);
 }

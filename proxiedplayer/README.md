@@ -55,7 +55,7 @@ dependencies {
 }
 
 shadowJar {
-    relocation 'org.screamingsandals.lib', 'com.example.package.lib'
+    relocate 'org.screamingsandals.lib', 'com.example.package.lib'
 }
 ```
 

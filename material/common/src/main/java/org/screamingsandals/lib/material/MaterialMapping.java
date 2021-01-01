@@ -42,13 +42,21 @@ public abstract class MaterialMapping {
 
         if (matcher.group("material") != null) {
 
-            /*String namespace = matcher.group("namespace");*/ // namespace is currently useless on vanilla
-
+            String namespace = matcher.group("namespace") != null ? matcher.group("namespace").toUpperCase() : "MINECRAFT";
             String name = matcher.group("material").toUpperCase();
             String durability = matcher.group("durability");
 
-            if (durability != null && !durability.isEmpty()) {
-                if (mapping.materialMapping.containsKey(name.toUpperCase() + ":" + durability)) {
+            if (durability != null && !durability.isEmpty()) {//noinspection DuplicateExpressions
+                if (mapping.materialMapping.containsKey(namespace.toUpperCase() + ":" + name.toUpperCase() + ":" + durability)) {
+                    //noinspection DuplicateExpressions
+                    MaterialHolder holder = mapping.materialMapping.get(namespace.toUpperCase() + ":" + name.toUpperCase() + ":" + durability);
+                    return Optional.of(holder.newDurability(Short.parseShort(durability)));
+                } else //noinspection DuplicateExpressions
+                    if (mapping.materialMapping.containsKey(namespace.toUpperCase() + ":" + name.toUpperCase())) {
+                        //noinspection DuplicateExpressions
+                        MaterialHolder holder = mapping.materialMapping.get(namespace.toUpperCase() + ":" + name.toUpperCase());
+                        return Optional.of(holder.newDurability(Short.parseShort(durability)));
+                } else if (mapping.materialMapping.containsKey(name.toUpperCase() + ":" + durability)) {
                     MaterialHolder holder = mapping.materialMapping.get(name.toUpperCase() + ":" + durability);
                     return Optional.of(holder.newDurability(Short.parseShort(durability)));
                 } else if (mapping.materialMapping.containsKey(name.toUpperCase())) {

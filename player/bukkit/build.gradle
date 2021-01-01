@@ -1,5 +1,6 @@
 dependencies {
     shade project(':utils')
     shade project(':player-common')
+    compileOnly project(':material-common')
     compileOnly paper(PAPER_VERSION)
 }

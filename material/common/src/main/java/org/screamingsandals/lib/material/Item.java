@@ -9,6 +9,7 @@ import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 public class Item implements Cloneable, Wrapper {
@@ -55,5 +56,22 @@ public class Item implements Cloneable, Wrapper {
         item.setPotion(potion);
         item.setPlatformMeta(platformMeta);
         return item;
+    }
+
+    public boolean isSimilar(Item item) {
+        if (item == null) {
+            return false;
+        }
+
+        return Objects.equals(item.material, material)
+                && Objects.equals(item.displayName, displayName)
+                && Objects.equals(item.localizedName, localizedName)
+                && customModelData == item.customModelData
+                && repair == item.repair
+                && unbreakable == item.unbreakable
+                && Objects.equals(item.lore, lore)
+                && enchantments.equals(item.enchantments)
+                && Objects.equals(item.itemFlags, itemFlags)
+                && Objects.equals(item.potion, potion);
     }
 }

@@ -1,10 +1,14 @@
 package org.screamingsandals.lib.sponge.player;
 
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.player.PlayerUtils;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.serializer.TextSerializers;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+
+import java.util.Optional;
 
 public class SpongePlayerUtils extends PlayerUtils {
     public static void init() {
@@ -16,12 +20,27 @@ public class SpongePlayerUtils extends PlayerUtils {
         /* NOTE: Converter needs null, so don't blame me because you see orElse(null) */
 
         playerConverter
-                .registerP2W(Player.class, player -> new PlayerWrapper(player.getName(), player.getUniqueId()))
-                .registerW2P(Player.class, playerWrapper -> Sponge.getServer().getPlayer(playerWrapper.getUuid()).orElse(null));
+                .registerP2W(ServerPlayer.class, player -> new PlayerWrapper(player.getName(), player.getUniqueId()))
+                .registerW2P(ServerPlayer.class, playerWrapper -> Sponge.getServer().getPlayer(playerWrapper.getUuid()).orElse(null));
     }
 
     @Override
     public void sendMessage0(PlayerWrapper playerWrapper, String message) {
-        playerWrapper.as(Player.class).sendMessage(TextSerializers.FORMATTING_CODE.deserialize(message));
+        playerWrapper.as(ServerPlayer.class).sendMessage(LegacyComponentSerializer.legacySection().deserialize(message));
+    }
+
+    @Override
+    public void closeInventory0(PlayerWrapper playerWrapper) {
+        playerWrapper.as(ServerPlayer.class).closeInventory();
+    }
+
+    @Override
+    public Container getPlayerInventory0(PlayerWrapper playerWrapper) {
+        return ItemFactory.wrapContainer(playerWrapper.as(ServerPlayer.class).getInventory()).orElseThrow();
+    }
+
+    @Override
+    public Optional<Container> getOpenedInventory0(PlayerWrapper playerWrapper) {
+        return ItemFactory.wrapContainer(playerWrapper.as(ServerPlayer.class).getOpenInventory().orElse(null));
     }
 }

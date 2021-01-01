@@ -6,6 +6,7 @@ Library for working with items. Currently optimized for items, blocks are planne
 * Potion type resolving
 * Enchantment resolving
 * Item building  
+* Modifying inventories  
 * More features are WIP
 
 ## Implementing lib to your project
@@ -57,7 +58,7 @@ dependencies {
 }
 
 shadowJar {
-    relocation 'org.screamingsandals.lib', 'com.example.package.lib'
+    relocate 'org.screamingsandals.lib', 'com.example.package.lib'
 }
 ```
 

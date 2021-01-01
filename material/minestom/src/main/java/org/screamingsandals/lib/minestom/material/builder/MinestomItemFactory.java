@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.minestom.material.builder;
 
 import net.minestom.server.chat.ColoredText;
+import net.minestom.server.inventory.Inventory;
 import net.minestom.server.item.Enchantment;
 import net.minestom.server.item.ItemFlag;
 import net.minestom.server.item.ItemStack;
@@ -10,11 +11,14 @@ import net.minestom.server.item.metadata.PotionMeta;
 import net.minestom.server.potion.PotionType;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.minestom.material.container.MinestomContainer;
 import org.screamingsandals.lib.minestom.material.meta.MinestomEnchantmentMapping;
 import org.screamingsandals.lib.minestom.material.meta.MinestomPotionMapping;
 import org.screamingsandals.lib.minestom.material.MinestomMaterialMapping;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MinestomItemFactory extends ItemFactory {
@@ -112,5 +116,13 @@ public class MinestomItemFactory extends ItemFactory {
                     return item;
 
                 });
+    }
+
+    @Override
+    public Optional<Container> wrapContainer0(Object container) {
+        if (container instanceof Inventory) {
+            return Optional.of(new MinestomContainer((Inventory) container));
+        }
+        return Optional.empty();
     }
 }

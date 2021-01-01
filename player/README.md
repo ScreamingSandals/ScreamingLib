@@ -1,9 +1,12 @@
 # Player Utils
-Library for working with players on server side (Bukkit or Sponge)
+Library for working with players on server side (Bukkit, Sponge, Minestom)
 
 ## Features
 * Sending chat messages to players
+* Opening and closing inventories, retrieving currently opened inventory (Material Resolver needed)  
 * More features are WIP
+
+[Material Resolver](../material/README.md) is optional dependency. If you want inventory features, you need to shade it.
 
 ## Implementing lib to your project
 
@@ -54,7 +57,7 @@ dependencies {
 }
 
 shadowJar {
-    relocation 'org.screamingsandals.lib', 'com.example.package.lib'
+    relocate 'org.screamingsandals.lib', 'com.example.package.lib'
 }
 ```
 

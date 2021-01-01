@@ -78,11 +78,12 @@ public class PotionMapping {
 
         if (matcher.group("potion") != null) {
 
-            /*String namespace = matcher.group("namespace");*/ // namespace is currently useless on vanilla
-
+            String namespace = matcher.group("namespace") != null ? matcher.group("namespace").toUpperCase() : "MINECRAFT";
             String name = matcher.group("potion").toUpperCase();
 
-            if (mapping.potionMapping.containsKey(name)) {
+            if (mapping.potionMapping.containsKey(namespace + ":" + name)) {
+                return Optional.of(mapping.potionMapping.get(namespace + ":" + name));
+            } else if (mapping.potionMapping.containsKey(name)) {
                 return Optional.of(mapping.potionMapping.get(name));
             }
         }

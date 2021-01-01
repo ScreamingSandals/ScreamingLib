@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.material.builder;
 
 import lombok.SneakyThrows;
+import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
 import org.screamingsandals.lib.material.Item;
@@ -379,6 +380,15 @@ public abstract class ItemFactory {
         }
         return factory.itemConverter.convert(item, newType);
     }
+
+    public static Optional<Container> wrapContainer(Object container) {
+        if (factory == null) {
+            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
+        }
+        return factory.wrapContainer0(container);
+    }
+
+    public abstract Optional<Container> wrapContainer0(Object container);
 
     public static boolean isInitialized() {
         return factory != null;
