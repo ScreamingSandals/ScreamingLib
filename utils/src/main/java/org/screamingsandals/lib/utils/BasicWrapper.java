@@ -24,6 +24,10 @@ public class BasicWrapper<O> implements Wrapper {
             //noinspection unchecked
             return (T) wrappedObject;
         }
+        if (type.isInstance(this)) {
+            //noinspection unchecked
+            return (T) this;
+        }
         throw new UnsupportedOperationException("Can't unwrap object to " + type.getName());
     }
 }

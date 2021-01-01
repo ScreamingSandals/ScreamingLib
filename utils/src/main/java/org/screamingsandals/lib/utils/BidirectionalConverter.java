@@ -39,15 +39,9 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     @NotNull
     public <P> SpecificWrapper convert(@NotNull P object) {
-        var opt = p2wConverters.entrySet()
-                .stream()
-                .filter(c -> c.getKey().isInstance(object))
-                .findFirst()
-                .orElseThrow(() -> new UnsupportedOperationException("Can't convert object to the wrapper"));
-        return opt.getValue().apply(object);
+       return convertOptional(object).orElseThrow(() -> new UnsupportedOperationException("Can't convert " + object.getClass().getName() + " to the wrapper"));
     }
 
     @NotNull
@@ -55,22 +49,16 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
         if (object == null) {
             return Optional.empty();
         }
-        var opt = p2wConverters.entrySet()
+        return p2wConverters.entrySet()
                 .stream()
                 .filter(c -> c.getKey().isInstance(object))
-                .findFirst();
-        return opt.map(classFunctionEntry -> classFunctionEntry.getValue().apply(object));
+                .findFirst()
+                .map(entry -> entry.getValue().apply(object));
     }
 
-    @SuppressWarnings("unchecked")
     @NotNull
     public <P> P convert(@NotNull SpecificWrapper object, @NotNull Class<P> newType) {
-        var opt = w2pConverters.entrySet()
-                .stream()
-                .filter(c -> newType.isAssignableFrom(c.getKey()))
-                .findFirst()
-                .orElseThrow(() -> new UnsupportedOperationException("Can't convert wrapper to " + newType.getName()));
-        return (P) opt.getValue().apply(object);
+        return convertOptional(object, newType).orElseThrow(() -> new UnsupportedOperationException("Can't convert wrapper to " + newType.getName()));
     }
 
     @SuppressWarnings("unchecked")
@@ -79,11 +67,14 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
         if (object == null) {
             return Optional.empty();
         }
-        var opt = w2pConverters.entrySet()
+        if (newType.isInstance(object)) {
+            return Optional.of((P) object);
+        }
+        return w2pConverters.entrySet()
                 .stream()
                 .filter(c -> newType.isAssignableFrom(c.getKey()))
-                .findFirst();
-        return opt.map(classFunctionEntry -> (P) classFunctionEntry.getValue().apply(object));
+                .findFirst()
+                .map(entry -> (P) entry.getValue().apply(object));
     }
 
 }
