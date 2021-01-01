@@ -70,4 +70,8 @@ public abstract class PlayerUtils {
     }
 
     public abstract Optional<Container> getOpenedInventory0(PlayerWrapper playerWrapper);
+
+    public static boolean isInitialized() {
+        return playerUtils != null;
+    }
 }

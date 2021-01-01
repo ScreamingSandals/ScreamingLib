@@ -123,4 +123,8 @@ public abstract class ProxiedPlayerUtils {
     }
 
     public abstract List<ProxiedPlayerWrapper> getPlayers0(ServerWrapper serverWrapper);
+
+    public static boolean isInitialized() {
+        return proxiedPlayerUtils != null;
+    }
 }
