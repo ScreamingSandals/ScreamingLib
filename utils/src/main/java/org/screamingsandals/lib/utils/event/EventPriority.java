@@ -1,9 +1,9 @@
 package org.screamingsandals.lib.utils.event;
 
 public enum EventPriority {
-    HIGHEST,
-    HIGH,
-    NORMAL,
+    LOWEST,
     LOW,
-    LOWEST
+    NORMAL,
+    HIGH,
+    HIGHEST;
 }

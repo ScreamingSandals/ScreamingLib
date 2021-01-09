@@ -16,6 +16,7 @@ import org.screamingsandals.lib.minestom.material.container.MinestomContainer;
 import org.screamingsandals.lib.minestom.material.meta.MinestomEnchantmentMapping;
 import org.screamingsandals.lib.minestom.material.meta.MinestomPotionMapping;
 import org.screamingsandals.lib.minestom.material.MinestomMaterialMapping;
+import org.screamingsandals.lib.utils.InitUtils;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -27,15 +28,9 @@ public class MinestomItemFactory extends ItemFactory {
     }
 
     public MinestomItemFactory() {
-        if (!MinestomMaterialMapping.isInitialized()) {
-            MinestomMaterialMapping.init();
-        }
-        if (!MinestomEnchantmentMapping.isInitialized()) {
-            MinestomEnchantmentMapping.init();
-        }
-        if (!MinestomPotionMapping.isInitialized()) {
-            MinestomPotionMapping.init();
-        }
+        InitUtils.doIfNot(MinestomMaterialMapping::isInitialized, MinestomMaterialMapping::init);
+        InitUtils.doIfNot(MinestomEnchantmentMapping::isInitialized, MinestomEnchantmentMapping::init);
+        InitUtils.doIfNot(MinestomPotionMapping::isInitialized, MinestomPotionMapping::init);
 
         itemConverter
                 .registerW2P(ItemStack.class, item -> {

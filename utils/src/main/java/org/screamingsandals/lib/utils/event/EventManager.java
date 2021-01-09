@@ -19,12 +19,19 @@ public class EventManager {
     private final Map<Class<?>, List<EventHandler<?>>> handlers = new HashMap<>();
 
     public <T> EventHandler<T> register(Class<T> event, Consumer<T> consumer) {
-        if (!handlers.containsKey(event)) {
-            handlers.put(event, new ArrayList<>());
-        }
-        var handler = EventHandler.of(consumer);
-        handlers.get(event).add(handler);
-        return handler;
+        return register(event, EventHandler.of(consumer));
+    }
+
+    public <T> EventHandler<T> register(Class<T> event, Consumer<T> consumer, boolean ignoreCancelled) {
+        return register(event, EventHandler.of(consumer, ignoreCancelled));
+    }
+
+    public <T> EventHandler<T> register(Class<T> event, Consumer<T> consumer, EventPriority eventPriority) {
+        return register(event, EventHandler.of(consumer, eventPriority));
+    }
+
+    public <T> EventHandler<T> register(Class<T> event, Consumer<T> consumer, EventPriority eventPriority, boolean ignoreCancelled) {
+        return register(event, EventHandler.of(consumer, eventPriority, ignoreCancelled));
     }
 
     public <T> EventHandler<T> register(Class<T> event, EventHandler<T> handler) {
@@ -32,20 +39,31 @@ public class EventManager {
             handlers.put(event, new ArrayList<>());
         }
         handlers.get(event).add(handler);
+        fireEvent(new HandlerRegisteredEvent(this, event, handler));
         return handler;
     }
 
     public <T> void unregister(EventHandler<T> handler) {
-        handlers.forEach((aClass, consumers) -> consumers.removeIf(e -> handler == e));
+        handlers.forEach((event, consumers) -> consumers.removeIf(e -> {
+            if (handler == e) {
+                fireEvent(new HandlerUnregisteredEvent(this, event, handler));
+                return true;
+            }
+            return false;
+        }));
     }
 
     public void fireEvent(Object event) {
+        Arrays.stream(EventPriority.values()).forEach(priority -> fireEvent(event, priority));
+    }
+
+    public void fireEvent(Object event, EventPriority eventPriority) {
         //noinspection unchecked
         handlers.entrySet().stream()
                 .filter(entry -> entry.getKey().isInstance(event))
                 .map(Map.Entry::getValue)
                 .flatMap(Collection::stream)
-                .sorted(Comparator.comparing(EventHandler::getEventPriority))
+                .filter(eventHandler -> eventHandler.getEventPriority() == eventPriority)
                 .forEach(eventHandler -> ((EventHandler<Object>) eventHandler).fire(event));
 
         if (parent != null) {
@@ -55,16 +73,28 @@ public class EventManager {
         }
     }
 
+    public void unregisterAll() {
+        Map.copyOf(handlers).forEach((event, eventHandlers) -> List.copyOf(eventHandlers).forEach(this::unregister));
+    }
+
+    public void drop() {
+        handlers.clear();
+    }
+
     public void setParent(EventManager parent) {
         if (this != baseEventManager) {
             this.parent = parent;
         }
     }
 
+    public boolean isRegistered(EventHandler<?> eventHandler) {
+        return handlers.values().stream().anyMatch(eventHandlers -> eventHandlers.contains(eventHandler));
+    }
+
     @SuppressWarnings("unchecked")
     public void cloneEventManager(EventManager newEventManager) {
-        newEventManager.handlers.forEach((aClass, handlers) -> handlers.forEach(handler ->
-                register((Class<Object>) aClass, (EventHandler<Object>) handler)
+        newEventManager.handlers.forEach((event, handlers) -> handlers.forEach(handler ->
+                register((Class<Object>) event, (EventHandler<Object>) handler)
         ));
     }
 }

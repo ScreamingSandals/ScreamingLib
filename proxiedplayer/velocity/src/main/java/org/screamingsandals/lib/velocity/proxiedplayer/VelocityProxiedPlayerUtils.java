@@ -8,6 +8,7 @@ import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerWrapper;
 import org.screamingsandals.lib.proxiedplayer.ServerWrapper;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import org.screamingsandals.lib.velocity.proxiedplayer.event.ChatEventHandlerFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,12 +19,13 @@ public class VelocityProxiedPlayerUtils extends ProxiedPlayerUtils {
 
     private final ProxyServer proxyServer;
 
-    public static void init(ProxyServer proxyServer) {
-        ProxiedPlayerUtils.init(() -> new VelocityProxiedPlayerUtils(proxyServer));
+    public static void init(Object plugin, ProxyServer proxyServer) {
+        ProxiedPlayerUtils.init(() -> new VelocityProxiedPlayerUtils(plugin, proxyServer));
     }
 
-    public VelocityProxiedPlayerUtils(ProxyServer proxyServer) {
+    public VelocityProxiedPlayerUtils(Object plugin, ProxyServer proxyServer) {
         this.proxyServer = proxyServer;
+        new ChatEventHandlerFactory(plugin, proxyServer);
 
         /* NOTE: Converter needs null, so don't blame me because you see orElse(null) */
 

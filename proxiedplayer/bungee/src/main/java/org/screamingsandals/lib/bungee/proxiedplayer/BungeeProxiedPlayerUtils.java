@@ -5,6 +5,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
+import net.md_5.bungee.api.plugin.Plugin;
+import org.screamingsandals.lib.bungee.proxiedplayer.listener.ChatEventListener;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerUtils;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerWrapper;
 import org.screamingsandals.lib.proxiedplayer.ServerWrapper;
@@ -16,11 +18,13 @@ import java.util.stream.Collectors;
 
 public class BungeeProxiedPlayerUtils extends ProxiedPlayerUtils {
 
-    public static void init() {
-        ProxiedPlayerUtils.init(BungeeProxiedPlayerUtils::new);
+    public static void init(Plugin plugin) {
+        ProxiedPlayerUtils.init(() -> new BungeeProxiedPlayerUtils(plugin));
     }
 
-    public BungeeProxiedPlayerUtils() {
+    public BungeeProxiedPlayerUtils(Plugin plugin) {
+        plugin.getProxy().getPluginManager().registerListener(plugin, new ChatEventListener());
+
         playerConverter
                 .registerP2W(ProxiedPlayer.class, proxiedPlayer -> new ProxiedPlayerWrapper(proxiedPlayer.getName(), proxiedPlayer.getUniqueId()))
                 .registerW2P(ProxiedPlayer.class, proxiedPlayerWrapper -> ProxyServer.getInstance().getPlayer(proxiedPlayerWrapper.getUuid()));

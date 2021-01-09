@@ -18,6 +18,7 @@ import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.utils.InitUtils;
 
 import java.util.Map;
 import java.util.Optional;
@@ -29,15 +30,9 @@ public class BukkitItemFactory extends ItemFactory {
     }
 
     public BukkitItemFactory() {
-        if (!BukkitMaterialMapping.isInitialized()) {
-            BukkitMaterialMapping.init();
-        }
-        if (!BukkitEnchantmentMapping.isInitialized()) {
-            BukkitEnchantmentMapping.init();
-        }
-        if (!BukkitPotionMapping.isInitialized()) {
-            BukkitPotionMapping.init();
-        }
+        InitUtils.doIfNot(BukkitMaterialMapping::isInitialized, BukkitMaterialMapping::init);
+        InitUtils.doIfNot(BukkitEnchantmentMapping::isInitialized, BukkitEnchantmentMapping::init);
+        InitUtils.doIfNot(BukkitPotionMapping::isInitialized, BukkitPotionMapping::init);
 
         itemConverter
                 .registerW2P(ItemStack.class, item -> {
