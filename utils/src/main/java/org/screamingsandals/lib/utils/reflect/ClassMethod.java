@@ -15,6 +15,10 @@ public class ClassMethod {
 	}
 	
 	public Object invokeInstance(Object instance, Object...params) {
+		if (method == null) {
+			return null;
+		}
+
 		try {
 			return method.invoke(instance, params);
 		} catch (Throwable t) {
