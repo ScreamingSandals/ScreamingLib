@@ -1,6 +1,11 @@
 package org.screamingsandals.lib.utils.reflect;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class Reflect {
     public static Class<?> getClassSafe(String... classNames) {
@@ -33,31 +38,37 @@ public class Reflect {
     }
 
     public static ClassMethod getMethod(Class<?> clazz, String[] names, Class<?>... params) {
-        for (var name : names) {
-            try {
-                var method = clazz.getMethod(name.trim(), params);
-                return new ClassMethod(method);
-            } catch (Throwable ignored) {
-                var clazz2 = clazz;
-                do {
-                    try {
-                        var method = clazz2.getDeclaredMethod(name.trim(), params);
-                        method.setAccessible(true);
-                        return new ClassMethod(method);
-                    } catch (Throwable ignored2) {
-                    }
-                } while ((clazz2 = clazz2.getSuperclass()) != null && clazz2 != Object.class);
+        return getMethod(List.of(clazz), names, params);
+    }
+
+    public static ClassMethod getMethod(List<Class<?>> classes, String[] names, Class<?>... params) {
+        for (var clazz : classes) {
+            for (var name : names) {
+                try {
+                    var method = clazz.getMethod(name.trim(), params);
+                    return new ClassMethod(method);
+                } catch (Throwable ignored) {
+                    var clazz2 = clazz;
+                    do {
+                        try {
+                            var method = clazz2.getDeclaredMethod(name.trim(), params);
+                            method.setAccessible(true);
+                            return new ClassMethod(method);
+                        } catch (Throwable ignored2) {
+                        }
+                    } while ((clazz2 = clazz2.getSuperclass()) != null && clazz2 != Object.class);
+                }
             }
         }
         return new ClassMethod(null);
     }
     public static InstanceMethod getMethod(Object instance, String names, Class<?>...params) {
-        var method = getMethod(instance.getClass(), names.split(","), params);
+        var method = getMethod(retrieveClasses(instance), names.split(","), params);
         return new InstanceMethod(instance, method.getMethod());
     }
 
     public static InstanceMethod getMethod(Object instance, String[] names, Class<?>...params) {
-        var method = getMethod(instance.getClass(), names, params);
+        var method = getMethod(retrieveClasses(instance), names, params);
         return new InstanceMethod(instance, method.getMethod());
     }
 
@@ -187,5 +198,37 @@ public class Reflect {
     public static Object fastInvoke(Class<?> className, String[] names, Object instance) {
         ClassMethod method = getMethod(className, names);
         return method.invokeInstance(instance);
+    }
+
+    public static List<Class<?>> retrieveClasses(Object instance) {
+        if (Proxy.isProxyClass(instance.getClass())) {
+            return Arrays.asList(instance.getClass().getInterfaces());
+        } else {
+            return List.of(instance.getClass());
+        }
+    }
+
+    public static Optional<InvocationHandler> asInvocationHandler(Object instance) {
+        if (instance != null && Proxy.isProxyClass(instance.getClass())) {
+            return Optional.of(Proxy.getInvocationHandler(instance));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public static boolean isInstance(Object instance, String className) {
+        return isInstance(instance, getClassSafe(className));
+    }
+
+    public static boolean isInstance(Object instance, Class<?> clazz) {
+        if (clazz == null) {
+            return false;
+        }
+
+        return clazz.isInstance(instance);
+    }
+
+    public static boolean has(String className) {
+        return getClassSafe(className) != null;
     }
 }

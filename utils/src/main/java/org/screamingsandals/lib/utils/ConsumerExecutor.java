@@ -55,11 +55,15 @@ public class ConsumerExecutor {
         return function.apply(delegate);
     }
 
-    private static void setDelegate(Object closure, Object delegate) {
-        try {
-            // TODO: test that
-            Reflect.getMethod(closure, "setDelegate", Object.class).invoke(delegate);
-            Reflect.getMethod(closure, "setResolveStrategy", int.class).invoke(3);
-        } catch (Throwable ignored) {}
+    private static void setDelegate(Object callback, Object delegate) {
+        Reflect.asInvocationHandler(callback).ifPresent(invocationHandler -> {
+            var closure = Reflect.fastInvoke(invocationHandler, "getDelegate");
+            if (closure != null) {
+                Reflect.getMethod(closure, "setDelegate", Object.class).invoke( delegate);
+                Reflect.getMethod(closure, "setResolveStrategy", int.class).invoke(
+                        Reflect.getField(closure, "DELEGATE_ONLY")
+                );
+            }
+        });
     }
 }
