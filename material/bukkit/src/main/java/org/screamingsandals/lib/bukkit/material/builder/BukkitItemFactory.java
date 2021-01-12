@@ -54,47 +54,49 @@ public class BukkitItemFactory extends ItemFactory {
 
                     ItemMeta meta = stack.getItemMeta();
 
-                    if (item.getDisplayName() != null) {
-                        meta.setDisplayName(item.getDisplayName());
-                    }
-                    if (item.getLocalizedName() != null) {
+                    if (meta != null) {
+                        if (item.getDisplayName() != null) {
+                            meta.setDisplayName(item.getDisplayName());
+                        }
+                        if (item.getLocalizedName() != null) {
+                            try {
+                                meta.setLocalizedName(item.getLocalizedName());
+                            } catch (Throwable ignored) {
+                            }
+                        }
                         try {
-                            meta.setLocalizedName(item.getLocalizedName());
+                            meta.setCustomModelData(item.getCustomModelData());
                         } catch (Throwable ignored) {
                         }
-                    }
-                    try {
-                        meta.setCustomModelData(item.getCustomModelData());
-                    } catch (Throwable ignored) {
-                    }
-                    if (meta instanceof Repairable) {
-                        ((Repairable) meta).setRepairCost(item.getRepair());
-                    }
-                    meta.setUnbreakable(item.isUnbreakable());
-                    if (item.getLore() != null) {
-                        meta.setLore(item.getLore());
-                    }
-                    item.getEnchantments().forEach(e -> {
-                        if (meta instanceof EnchantmentStorageMeta) {
-                            ((EnchantmentStorageMeta) meta).addStoredEnchant(e.as(Enchantment.class), e.getLevel(), true);
-                        } else {
-                            meta.addEnchant(e.as(Enchantment.class), e.getLevel(), true);
+                        if (meta instanceof Repairable) {
+                            ((Repairable) meta).setRepairCost(item.getRepair());
                         }
-                    });
-                    if (item.getItemFlags() != null) {
-                        try {
-                            meta.addItemFlags(item.getItemFlags().stream().map(ItemFlag::valueOf).toArray(ItemFlag[]::new));
-                        } catch (IllegalArgumentException ignored) {
+                        meta.setUnbreakable(item.isUnbreakable());
+                        if (item.getLore() != null) {
+                            meta.setLore(item.getLore());
                         }
-                    }
-                    if (item.getPotion() != null && meta instanceof PotionMeta) {
-                        try {
-                            ((PotionMeta) stack.getItemMeta()).setBasePotionData(item.getPotion().as(PotionData.class));
-                        } catch (Throwable ignored) {
+                        item.getEnchantments().forEach(e -> {
+                            if (meta instanceof EnchantmentStorageMeta) {
+                                ((EnchantmentStorageMeta) meta).addStoredEnchant(e.as(Enchantment.class), e.getLevel(), true);
+                            } else {
+                                meta.addEnchant(e.as(Enchantment.class), e.getLevel(), true);
+                            }
+                        });
+                        if (item.getItemFlags() != null) {
+                            try {
+                                meta.addItemFlags(item.getItemFlags().stream().map(ItemFlag::valueOf).toArray(ItemFlag[]::new));
+                            } catch (IllegalArgumentException ignored) {
+                            }
                         }
-                    }
+                        if (item.getPotion() != null && meta instanceof PotionMeta) {
+                            try {
+                                ((PotionMeta) stack.getItemMeta()).setBasePotionData(item.getPotion().as(PotionData.class));
+                            } catch (Throwable ignored) {
+                            }
+                        }
 
-                    stack.setItemMeta(meta);
+                        stack.setItemMeta(meta);
+                    }
 
                     return stack;
                 })

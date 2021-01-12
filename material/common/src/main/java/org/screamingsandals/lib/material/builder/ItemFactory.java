@@ -309,12 +309,18 @@ public abstract class ItemFactory {
     }
 
     public static Optional<Item> readShortStack(Item item, Object shortStackObject) {
+        if (shortStackObject instanceof ConfigurationNode) {
+            shortStackObject = ((ConfigurationNode) shortStackObject).getString();
+        }
         if (!(shortStackObject instanceof String)) {
             var opt = MaterialMapping.resolve(shortStackObject);
             if (opt.isPresent()) {
                 item.setMaterial(opt.get());
                 return Optional.of(item);
             }
+        }
+        if (shortStackObject == null) {
+            return Optional.empty();
         }
 
         var shortStack = shortStackObject.toString().trim();

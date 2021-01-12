@@ -32,6 +32,10 @@ public abstract class MaterialMapping {
             return opt;
         }
 
+        if (materialObject == null) {
+            return Optional.empty();
+        }
+
         String material = materialObject.toString().trim();
 
         Matcher matcher = RESOLUTION_PATTERN.matcher(material);
