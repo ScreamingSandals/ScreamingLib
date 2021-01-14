@@ -8,6 +8,7 @@ import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
+import org.screamingsandals.lib.utils.ConfigurateUtils;
 import org.screamingsandals.lib.utils.ConsumerExecutor;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -134,11 +135,7 @@ public abstract class ItemFactory {
                 }
                 var meta = node.node("meta");
                 if (!meta.empty()) {
-                    try {
-                        item.setPlatformMeta(meta.get(Object.class)); // TODO: check
-                    } catch (SerializationException e) {
-                        e.printStackTrace();
-                    }
+                    item.setPlatformMeta(ConfigurateUtils.toMap(meta));
                 }
 
                 return item;
