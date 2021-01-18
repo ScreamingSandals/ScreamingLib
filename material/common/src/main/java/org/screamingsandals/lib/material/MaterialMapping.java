@@ -988,4 +988,13 @@ public abstract class MaterialMapping {
     public static boolean isInitialized() {
         return mapping != null;
     }
+
+    private static MaterialHolder cachedAir;
+
+    public static MaterialHolder getAir() {
+        if (cachedAir == null) {
+            cachedAir = resolve("AIR").orElseThrow();
+        }
+        return cachedAir;
+    }
 }
