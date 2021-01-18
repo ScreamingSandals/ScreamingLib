@@ -140,7 +140,7 @@ public class BukkitItemFactory extends ItemFactory {
                                     BukkitEnchantmentMapping.resolve(entry).ifPresent(item.getEnchantments()::add)
                             );
                         }
-                        item.setItemFlags(stack.getItemFlags().stream().map(ItemFlag::name).collect(Collectors.toList()));
+                        item.setItemFlags(meta.getItemFlags().stream().map(ItemFlag::name).collect(Collectors.toList()));
 
                         if (meta instanceof PotionMeta) {
                             try {
