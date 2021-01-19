@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+/**
+ * Converts Wrapper to Platform and via versa.
+ * @param <SpecificWrapper> given wrapper
+ */
 @NoArgsConstructor(staticName = "build")
 public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
     private final Map<Class<?>, Function<Object, SpecificWrapper>> p2wConverters = new HashMap<>();

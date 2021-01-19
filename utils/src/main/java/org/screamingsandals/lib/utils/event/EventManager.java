@@ -53,11 +53,12 @@ public class EventManager {
         }));
     }
 
-    public void fireEvent(Object event) {
+    public <K> K fireEvent(K event) {
         Arrays.stream(EventPriority.values()).forEach(priority -> fireEvent(event, priority));
+        return event;
     }
 
-    public void fireEvent(Object event, EventPriority eventPriority) {
+    public <K> K fireEvent(K event, EventPriority eventPriority) {
         //noinspection unchecked
         handlers.entrySet().stream()
                 .filter(entry -> entry.getKey().isInstance(event))
@@ -71,6 +72,8 @@ public class EventManager {
         } else if (this != baseEventManager) {
             baseEventManager.fireEvent(event, eventPriority);
         }
+
+        return event;
     }
 
     public void unregisterAll() {

@@ -30,6 +30,8 @@ public class MinestomItemFactory extends ItemFactory {
         ItemFactory.init(MinestomItemFactory::new);
     }
 
+    //we can use deprecation :)
+    @SuppressWarnings("deprecation")
     public MinestomItemFactory() {
         InitUtils.doIfNot(MinestomMaterialMapping::isInitialized, MinestomMaterialMapping::init);
         InitUtils.doIfNot(MinestomEnchantmentMapping::isInitialized, MinestomEnchantmentMapping::init);
