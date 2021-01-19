@@ -10,14 +10,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionEffect;
 import org.screamingsandals.lib.bukkit.material.BukkitMaterialMapping;
 import org.screamingsandals.lib.bukkit.material.container.BukkitContainer;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitEnchantmentMapping;
+import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionMapping;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.InitUtils;
 
 import java.util.Map;
@@ -33,6 +36,7 @@ public class BukkitItemFactory extends ItemFactory {
         InitUtils.doIfNot(BukkitMaterialMapping::isInitialized, BukkitMaterialMapping::init);
         InitUtils.doIfNot(BukkitEnchantmentMapping::isInitialized, BukkitEnchantmentMapping::init);
         InitUtils.doIfNot(BukkitPotionMapping::isInitialized, BukkitPotionMapping::init);
+        InitUtils.doIfNot(BukkitPotionEffectMapping::isInitialized, BukkitPotionEffectMapping::init);
 
         itemConverter
                 .registerW2P(ItemStack.class, item -> {
@@ -88,10 +92,15 @@ public class BukkitItemFactory extends ItemFactory {
                             } catch (IllegalArgumentException ignored) {
                             }
                         }
-                        if (item.getPotion() != null && meta instanceof PotionMeta) {
-                            try {
-                                ((PotionMeta) stack.getItemMeta()).setBasePotionData(item.getPotion().as(PotionData.class));
-                            } catch (Throwable ignored) {
+                        if (meta instanceof PotionMeta) {
+                            if (item.getPotion() != null) {
+                                try {
+                                    ((PotionMeta) meta).setBasePotionData(item.getPotion().as(PotionData.class));
+                                } catch (Throwable ignored) {
+                                }
+                            }
+                            if (item.getPotionEffects() != null) {
+                                item.getPotionEffects().forEach(potionEffectHolder -> ((PotionMeta) meta).addCustomEffect(potionEffectHolder.as(PotionEffect.class), true));
                             }
                         }
 
@@ -145,6 +154,14 @@ public class BukkitItemFactory extends ItemFactory {
                         if (meta instanceof PotionMeta) {
                             try {
                                 BukkitPotionMapping.resolve(((PotionMeta) meta).getBasePotionData()).ifPresent(item::setPotion);
+                                var list = ((PotionMeta) meta).getCustomEffects().stream()
+                                        .map(PotionEffectMapping::resolve)
+                                        .filter(Optional::isPresent)
+                                        .map(Optional::get)
+                                        .collect(Collectors.toList());
+                                if (!list.isEmpty()) {
+                                    item.setPotionEffects(list);
+                                }
                             } catch (Throwable ignored) {
                             }
                         }

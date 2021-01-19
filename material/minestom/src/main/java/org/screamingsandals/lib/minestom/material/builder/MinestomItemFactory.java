@@ -8,12 +8,15 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.metadata.EnchantedBookMeta;
 import net.minestom.server.item.metadata.ItemMeta;
 import net.minestom.server.item.metadata.PotionMeta;
+import net.minestom.server.potion.CustomPotionEffect;
 import net.minestom.server.potion.PotionType;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.minestom.material.container.MinestomContainer;
 import org.screamingsandals.lib.minestom.material.meta.MinestomEnchantmentMapping;
+import org.screamingsandals.lib.minestom.material.meta.MinestomPotionEffectMapping;
 import org.screamingsandals.lib.minestom.material.meta.MinestomPotionMapping;
 import org.screamingsandals.lib.minestom.material.MinestomMaterialMapping;
 import org.screamingsandals.lib.utils.InitUtils;
@@ -31,6 +34,7 @@ public class MinestomItemFactory extends ItemFactory {
         InitUtils.doIfNot(MinestomMaterialMapping::isInitialized, MinestomMaterialMapping::init);
         InitUtils.doIfNot(MinestomEnchantmentMapping::isInitialized, MinestomEnchantmentMapping::init);
         InitUtils.doIfNot(MinestomPotionMapping::isInitialized, MinestomPotionMapping::init);
+        InitUtils.doIfNot(MinestomPotionEffectMapping::isInitialized, MinestomPotionEffectMapping::init);
 
         itemConverter
                 .registerW2P(ItemStack.class, item -> {
@@ -66,8 +70,13 @@ public class MinestomItemFactory extends ItemFactory {
                             stack.addItemFlags(item.getItemFlags().stream().map(ItemFlag::valueOf).toArray(ItemFlag[]::new));
                         } catch (IllegalArgumentException ignored) {}
                     }
-                    if (item.getPotion() != null && stack.getItemMeta() instanceof PotionMeta) {
-                        ((PotionMeta) stack.getItemMeta()).setPotionType(item.getPotion().as(PotionType.class));
+                    if (stack.getItemMeta() instanceof PotionMeta) {
+                        if (item.getPotion() != null) {
+                            ((PotionMeta) stack.getItemMeta()).setPotionType(item.getPotion().as(PotionType.class));
+                        }
+                        if (item.getPotionEffects() != null) {
+                            ((PotionMeta) stack.getItemMeta()).getCustomPotionEffects().addAll(item.getPotionEffects().stream().map(effect -> effect.as(CustomPotionEffect.class)).collect(Collectors.toList()));
+                        }
                     }
 
                     return stack;
@@ -106,6 +115,14 @@ public class MinestomItemFactory extends ItemFactory {
                     item.setItemFlags(stack.getItemFlags().stream().map(ItemFlag::name).collect(Collectors.toList()));
                     if (stack.getItemMeta() instanceof PotionMeta) {
                         MinestomPotionMapping.resolve(((PotionMeta) stack.getItemMeta()).getPotionType()).ifPresent(item::setPotion);
+                        var list = ((PotionMeta) stack.getItemMeta()).getCustomPotionEffects().stream()
+                                .map(PotionEffectMapping::resolve)
+                                .filter(Optional::isPresent)
+                                .map(Optional::get)
+                                .collect(Collectors.toList());
+                        if (!list.isEmpty()) {
+                            item.setPotionEffects(list);
+                        }
                     }
 
                     return item;

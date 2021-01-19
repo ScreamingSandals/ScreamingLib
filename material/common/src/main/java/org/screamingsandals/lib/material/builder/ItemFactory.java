@@ -3,6 +3,7 @@ package org.screamingsandals.lib.material.builder;
 import lombok.SneakyThrows;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
+import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
@@ -242,7 +243,8 @@ public abstract class ItemFactory {
                 }
 
                 return item;
-            });
+            })
+            .registerP2W(Item.class, Item::clone);
 
     private static final Pattern SHORT_STACK_PATTERN = Pattern.compile("^(?<material>(?:(?!(?<!\\\\)(?:\\\\\\\\)*;).)+)(\\\\*)?(;(?<amount>(?:(?!(?<!\\\\)(?:\\\\\\\\)*;).)+)?(\\\\*)?(;(?<name>(\"((?!(?<!\\\\)(?:\\\\\\\\)*\").)+|(?:(?!(?<!\\\\)(?:\\\\\\\\)*;).)+))?(\\\\*)?(;(?<lore>.*))?)?)?$");
     private static final Pattern LORE_SPLIT = Pattern.compile("((\"((?!(?<!\\\\)(?:\\\\\\\\)*\").)+\")|((?!(?<!\\\\)(?:\\\\\\\\)*;).)+)(?=($|;))");
@@ -258,6 +260,7 @@ public abstract class ItemFactory {
         assert MaterialMapping.isInitialized();
         assert PotionMapping.isInitialized();
         assert EnchantmentMapping.isInitialized();
+        assert PotionEffectMapping.isInitialized();
 
         factory.itemConverter.finish();
     }

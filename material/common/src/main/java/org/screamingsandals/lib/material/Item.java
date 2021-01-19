@@ -4,6 +4,7 @@ import lombok.Data;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.meta.EnchantmentHolder;
+import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
@@ -30,6 +31,8 @@ public class Item implements Cloneable, Wrapper {
     private List<String> itemFlags;
     @Nullable
     private PotionHolder potion;
+    @Nullable
+    private List<PotionEffectHolder> potionEffects;
 
     @Deprecated
     @Nullable
@@ -50,10 +53,11 @@ public class Item implements Cloneable, Wrapper {
         item.setCustomModelData(customModelData);
         item.setRepair(repair);
         item.setUnbreakable(unbreakable);
-        item.setLore(lore);
+        item.setLore(new ArrayList<>(lore != null ? lore : List.of()));
         enchantments.forEach(item.getEnchantments()::add);
-        item.setItemFlags(itemFlags);
+        item.setItemFlags(new ArrayList<>(itemFlags != null ? itemFlags : List.of()));
         item.setPotion(potion);
+        item.setPotionEffects(new ArrayList<>(potionEffects != null ? potionEffects : List.of()));
         item.setPlatformMeta(platformMeta);
         return item;
     }
@@ -72,6 +76,7 @@ public class Item implements Cloneable, Wrapper {
                 && Objects.equals(item.lore, lore)
                 && enchantments.equals(item.enchantments)
                 && Objects.equals(item.itemFlags, itemFlags)
-                && Objects.equals(item.potion, potion);
+                && Objects.equals(item.potion, potion)
+                && Objects.equals(item.potionEffects, potionEffects);
     }
 }

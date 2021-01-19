@@ -6,6 +6,9 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
 import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.utils.ConfigurateUtils;
+import org.spongepowered.configurate.BasicConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.List;
 import java.util.Map;
@@ -88,6 +91,18 @@ public class ItemBuilder {
 
     public ItemBuilder potion(@NotNull Object potion) {
         PotionMapping.resolve(potion).ifPresent(item::setPotion);
+        return this;
+    }
+
+    public ItemBuilder effect(@NotNull Object effect) {
+        if (effect instanceof Map) {
+            try {
+                effect = BasicConfigurationNode.root().set(effect);
+            } catch (SerializationException e) {
+                e.printStackTrace();
+            }
+        }
+
         return this;
     }
 

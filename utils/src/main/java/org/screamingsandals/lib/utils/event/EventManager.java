@@ -67,9 +67,9 @@ public class EventManager {
                 .forEach(eventHandler -> ((EventHandler<Object>) eventHandler).fire(event));
 
         if (parent != null) {
-            parent.fireEvent(event);
+            parent.fireEvent(event, eventPriority);
         } else if (this != baseEventManager) {
-            baseEventManager.fireEvent(event);
+            baseEventManager.fireEvent(event, eventPriority);
         }
     }
 
