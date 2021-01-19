@@ -40,7 +40,7 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder customModelData(int data) {
+    public ItemBuilder customModelData(Integer data) {
         item.setCustomModelData(data);
         return this;
     }

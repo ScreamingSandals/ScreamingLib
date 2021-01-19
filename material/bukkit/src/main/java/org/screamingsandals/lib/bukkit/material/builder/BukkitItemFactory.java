@@ -69,7 +69,9 @@ public class BukkitItemFactory extends ItemFactory {
                             }
                         }
                         try {
-                            meta.setCustomModelData(item.getCustomModelData());
+                            if (item.getCustomModelData() != null) {
+                                meta.setCustomModelData(item.getCustomModelData());
+                            }
                         } catch (Throwable ignored) {
                         }
                         if (meta instanceof Repairable) {
@@ -130,7 +132,9 @@ public class BukkitItemFactory extends ItemFactory {
                         } catch (Throwable ignored) {
                         }
                         try {
-                            item.setCustomModelData(meta.getCustomModelData());
+                            if (meta.hasCustomModelData()) {
+                                item.setCustomModelData(meta.getCustomModelData());
+                            }
                         } catch (Throwable ignored) {
                         }
                         if (meta instanceof Repairable) {

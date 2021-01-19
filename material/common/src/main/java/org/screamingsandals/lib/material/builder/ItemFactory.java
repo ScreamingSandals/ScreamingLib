@@ -62,7 +62,10 @@ public abstract class ItemFactory {
         }
         var customModelData = node.node("custom-model-data");
         if (!customModelData.empty()) {
-            item.setCustomModelData(locName.getInt(0));
+            try {
+                item.setCustomModelData(locName.get(Integer.class));
+            } catch (SerializationException ignored) {
+            }
         }
         var repairCost = node.node("repair-cost");
         if (!repairCost.empty()) {

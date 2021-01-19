@@ -52,7 +52,9 @@ public class MinestomItemFactory extends ItemFactory {
                     if (item.getLocalizedName() != null) {
                         // where is that?
                     }
-                    stack.setCustomModelData(item.getCustomModelData());
+                    if (item.getCustomModelData() != null) {
+                        stack.setCustomModelData(item.getCustomModelData());
+                    }
                     // repair
                     stack.setUnbreakable(item.isUnbreakable());
                     if (item.getLore() != null) {

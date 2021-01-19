@@ -21,7 +21,7 @@ public class Item implements Cloneable, Wrapper {
     @Nullable
     private String localizedName;
     private int amount = 1;
-    private int customModelData;
+    private Integer customModelData;
     private int repair;
     private boolean unbreakable;
     @Nullable
@@ -70,7 +70,7 @@ public class Item implements Cloneable, Wrapper {
         return Objects.equals(item.material, material)
                 && Objects.equals(item.displayName, displayName)
                 && Objects.equals(item.localizedName, localizedName)
-                && customModelData == item.customModelData
+                && Objects.equals(customModelData, item.customModelData)
                 && repair == item.repair
                 && unbreakable == item.unbreakable
                 && Objects.equals(item.lore, lore)
