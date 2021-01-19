@@ -14,7 +14,7 @@ public final class MathUtils {
         return num * num;
     }
 
-    public static float square(float num) {
+    public static double square(double num) {
         return num * num;
     }
 

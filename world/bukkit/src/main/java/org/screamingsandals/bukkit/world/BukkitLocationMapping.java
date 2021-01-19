@@ -23,7 +23,7 @@ public class BukkitLocationMapping extends LocationMapping {
 
             return new Location(world, holder.getX(), holder.getY(), holder.getZ(), holder.getYaw(), holder.getPitch());
         }).registerP2W(Location.class, location ->
-                new LocationHolder((float) location.getX(), (float) location.getY(), (float) location.getZ(),
+                new LocationHolder(location.getX(), location.getY(), location.getZ(),
                         location.getYaw(), location.getPitch(), location.getWorld().getUID()));
     }
 }

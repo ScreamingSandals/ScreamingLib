@@ -24,7 +24,8 @@ public class MinestomLocationMapping extends LocationMapping {
                 return null;
             }
 
-            return new InstancedPosition(instance.get(), holder.getX(), holder.getY(), holder.getZ(), holder.getYaw(), holder.getPitch());
+            return new InstancedPosition(instance.get(), (float) holder.getX(), (float) holder.getY(), (float) holder.getZ(),
+                    holder.getYaw(), holder.getPitch());
         }).registerP2W(InstancedPosition.class, location ->
                 new LocationHolder(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch(), location.getInstance().getUniqueId()));
     }

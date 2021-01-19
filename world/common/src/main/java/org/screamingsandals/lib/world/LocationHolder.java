@@ -15,14 +15,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @ConfigSerializable
 public class LocationHolder implements Wrapper {
-    private float x;
-    private float y;
-    private float z;
+    private double x;
+    private double y;
+    private double z;
     private float yaw;
     private float pitch;
     private UUID worldId;
 
-    public LocationHolder(float x, float y, float z) {
+    public LocationHolder(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -33,7 +33,7 @@ public class LocationHolder implements Wrapper {
         return LocationMapping.convert(this, type);
     }
 
-    public float getDistanceSquared(@NotNull LocationHolder holder) {
+    public double getDistanceSquared(@NotNull LocationHolder holder) {
         return MathUtils.square(getX() - holder.getX()) +
                 MathUtils.square(getY() - holder.getY()) +
                 MathUtils.square(getZ() - holder.getZ());
