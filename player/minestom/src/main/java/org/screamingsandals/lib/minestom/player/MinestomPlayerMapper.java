@@ -1,10 +1,11 @@
 package org.screamingsandals.lib.minestom.player;
 
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.command.CommandSender;
 import net.minestom.server.entity.Player;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
-import org.screamingsandals.lib.player.PlayerUtils;
+import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -12,20 +13,39 @@ import org.screamingsandals.lib.world.LocationMapping;
 
 import java.util.Optional;
 
-public class MinestomPlayerUtils extends PlayerUtils {
+public class MinestomPlayerMapper extends PlayerMapper {
     public static void init() {
-        PlayerUtils.init(MinestomPlayerUtils::new);
+        PlayerMapper.init(MinestomPlayerMapper::new);
     }
 
-    public MinestomPlayerUtils() {
+    public MinestomPlayerMapper() {
         playerConverter
                 .registerP2W(Player.class, player -> new PlayerWrapper(player.getUsername(), player.getUuid()))
-                .registerW2P(Player.class, playerWrapper -> MinecraftServer.getConnectionManager().getPlayer(playerWrapper.getUuid()));
+                .registerW2P(Player.class, playerWrapper -> MinecraftServer.getConnectionManager()
+                        .getPlayer(playerWrapper.getUuid()));
+        senderConverter
+                .registerP2W(CommandSender.class, sender -> {
+                    if (sender.isPlayer()) {
+                        return new SenderWrapper(sender.asPlayer().getUsername());
+                    }
+                    return new SenderWrapper(CONSOLE_NAME);
+                })
+                .registerW2P(CommandSender.class, wrapper -> {
+                    final var name = wrapper.getName();
+                    if (name.equalsIgnoreCase(CONSOLE_NAME)) {
+                        return MinecraftServer.getCommandManager().getConsoleSender();
+                    }
+                    return MinecraftServer.getConnectionManager().getPlayer(name);
+                });
     }
 
     @Override
-    public void sendMessage0(SenderWrapper playerWrapper, String message) {
-        playerWrapper.as(Player.class).sendMessage(message);
+    public void sendMessage0(SenderWrapper wrapper, String message) {
+        if (wrapper.getName().equalsIgnoreCase(CONSOLE_NAME)) {
+            MinecraftServer.getCommandManager().getConsoleSender().sendMessage(message);
+        }
+
+        wrapper.as(Player.class).sendMessage(message);
     }
 
     @Override

@@ -8,73 +8,89 @@ import org.screamingsandals.lib.world.LocationHolder;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public abstract class PlayerUtils {
+public abstract class PlayerMapper {
+    protected final static String CONSOLE_NAME = "CONSOLE";
 
     protected final BidirectionalConverter<PlayerWrapper> playerConverter = BidirectionalConverter.build();
-    private static PlayerUtils playerUtils = null;
+    protected final BidirectionalConverter<SenderWrapper> senderConverter = BidirectionalConverter.build();
+    private static PlayerMapper playerMapper = null;
 
-    public static void init(@NotNull Supplier<PlayerUtils> playerUtilsSupplier) {
-        if (playerUtils != null) {
+    public static void init(@NotNull Supplier<PlayerMapper> playerUtilsSupplier) {
+        if (playerMapper != null) {
             throw new UnsupportedOperationException("PlayerUtils are already initialized.");
         }
 
-        playerUtils = playerUtilsSupplier.get();
-        playerUtils.playerConverter.finish();
+        playerMapper = playerUtilsSupplier.get();
+        playerMapper.playerConverter.finish();
     }
 
     public static <T> PlayerWrapper wrapPlayer(T player) {
-        if (playerUtils == null) {
+        if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
         }
-        return playerUtils.playerConverter.convert(player);
+        return playerMapper.playerConverter.convert(player);
+    }
+
+    public static <T> SenderWrapper wrapSender(T sender) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
+        }
+        return playerMapper.senderConverter.convert(sender);
+    }
+
+    public static <T> T convertSenderWrapper(SenderWrapper wrapper, Class<T> type) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
+        }
+        return playerMapper.senderConverter.convert(wrapper, type);
     }
 
     public static <T> T convertPlayerWrapper(PlayerWrapper player, Class<T> type) {
-        if (playerUtils == null) {
+        if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
         }
-        return playerUtils.playerConverter.convert(player, type);
+        return playerMapper.playerConverter.convert(player, type);
     }
 
     public static void sendMessage(SenderWrapper playerWrapper, String message) {
-        if (playerUtils == null) {
+        if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
         }
-        playerUtils.sendMessage0(playerWrapper, message);
+        playerMapper.sendMessage0(playerWrapper, message);
     }
 
     public abstract void sendMessage0(SenderWrapper playerWrapper, String message);
 
     public static void closeInventory(PlayerWrapper playerWrapper) {
-        if (playerUtils == null) {
+        if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
         }
-        playerUtils.closeInventory0(playerWrapper);
+        playerMapper.closeInventory0(playerWrapper);
     }
 
     public abstract void closeInventory0(PlayerWrapper playerWrapper);
 
     public static Container getPlayerInventory(PlayerWrapper playerWrapper) {
-        if (playerUtils == null) {
+        if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
         }
-        return playerUtils.getPlayerInventory0(playerWrapper);
+        return playerMapper.getPlayerInventory0(playerWrapper);
     }
 
     public abstract Container getPlayerInventory0(PlayerWrapper playerWrapper);
 
     public static Optional<Container> getOpenedInventory(PlayerWrapper playerWrapper) {
-        if (playerUtils == null) {
+        if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
         }
-        return playerUtils.getOpenedInventory0(playerWrapper);
+        return playerMapper.getOpenedInventory0(playerWrapper);
     }
 
     public static LocationHolder getLocation(PlayerWrapper wrapper) {
-        if (playerUtils == null) {
+        if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
         }
-        return playerUtils.getLocation0(wrapper);
+        return playerMapper.getLocation0(wrapper);
     }
 
     public abstract Optional<Container> getOpenedInventory0(PlayerWrapper playerWrapper);
@@ -82,6 +98,6 @@ public abstract class PlayerUtils {
     public abstract LocationHolder getLocation0(PlayerWrapper playerWrapper);
 
     public static boolean isInitialized() {
-        return playerUtils != null;
+        return playerMapper != null;
     }
 }

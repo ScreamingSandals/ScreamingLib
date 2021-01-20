@@ -18,11 +18,11 @@ public class PlayerWrapper extends SenderWrapper implements Wrapper {
     }
 
     public Container getPlayerInventory() {
-        return PlayerUtils.getPlayerInventory(this);
+        return PlayerMapper.getPlayerInventory(this);
     }
 
     public Optional<Container> getOpenedInventory() {
-        return PlayerUtils.getOpenedInventory(this);
+        return PlayerMapper.getOpenedInventory(this);
     }
 
     public void openInventory(Openable container) {
@@ -30,11 +30,11 @@ public class PlayerWrapper extends SenderWrapper implements Wrapper {
     }
 
     public void closeInventory() {
-        PlayerUtils.closeInventory(this);
+        PlayerMapper.closeInventory(this);
     }
 
     public <T> T as(Class<T> type) {
-        return PlayerUtils.convertPlayerWrapper(this, type);
+        return PlayerMapper.convertPlayerWrapper(this, type);
     }
 
     @Override

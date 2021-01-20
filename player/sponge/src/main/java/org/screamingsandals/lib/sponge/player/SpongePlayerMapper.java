@@ -3,7 +3,7 @@ package org.screamingsandals.lib.sponge.player;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
-import org.screamingsandals.lib.player.PlayerUtils;
+import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -13,12 +13,12 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import java.util.Optional;
 
-public class SpongePlayerUtils extends PlayerUtils {
+public class SpongePlayerMapper extends PlayerMapper {
     public static void init() {
-        PlayerUtils.init(SpongePlayerUtils::new);
+        PlayerMapper.init(SpongePlayerMapper::new);
     }
 
-    public SpongePlayerUtils() {
+    public SpongePlayerMapper() {
         /* NOTE: Converter needs null, so don't blame me because you see orElse(null) */
         playerConverter
                 .registerP2W(ServerPlayer.class, player -> new PlayerWrapper(player.getName(), player.getUniqueId()))

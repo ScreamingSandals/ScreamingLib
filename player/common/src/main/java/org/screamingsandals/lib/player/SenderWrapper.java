@@ -10,11 +10,11 @@ public class SenderWrapper implements Wrapper {
     private final String name;
 
     public void sendMessage(String message) {
-        PlayerUtils.sendMessage(this, message);
+        PlayerMapper.sendMessage(this, message);
     }
 
     @Override
     public <T> T as(Class<T> type) {
-        return null;
+        return PlayerMapper.convertSenderWrapper(this, type);
     }
 }

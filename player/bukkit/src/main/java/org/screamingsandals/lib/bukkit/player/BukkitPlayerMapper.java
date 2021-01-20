@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
-import org.screamingsandals.lib.player.PlayerUtils;
+import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -13,20 +13,28 @@ import org.screamingsandals.lib.world.LocationMapping;
 
 import java.util.Optional;
 
-public class BukkitPlayerUtils extends PlayerUtils {
+public class BukkitPlayerMapper extends PlayerMapper {
     public static void init() {
-        PlayerUtils.init(BukkitPlayerUtils::new);
+        PlayerMapper.init(BukkitPlayerMapper::new);
     }
 
-    public BukkitPlayerUtils() {
+    public BukkitPlayerMapper() {
         playerConverter
                 .registerP2W(Player.class, player -> new PlayerWrapper(player.getName(), player.getUniqueId()))
                 .registerW2P(Player.class, playerWrapper -> Bukkit.getPlayer(playerWrapper.getUuid()));
+        senderConverter
+                .registerP2W(CommandSender.class, sender -> new SenderWrapper(sender.getName()))
+                .registerW2P(CommandSender.class, wrapper -> {
+                    if (wrapper.getName().equalsIgnoreCase(CONSOLE_NAME)) {
+                        return Bukkit.getConsoleSender();
+                    }
+                    return Bukkit.getPlayer(wrapper.getName());
+                });
     }
 
     @Override
-    public void sendMessage0(SenderWrapper playerWrapper, String message) {
-        playerWrapper.as(CommandSender.class).sendMessage(message);
+    public void sendMessage0(SenderWrapper wrapper, String message) {
+        wrapper.as(CommandSender.class).sendMessage(message);
     }
 
     @Override
