@@ -11,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class MaterialMapping {
-
     @Getter
     protected Platform platform;
     protected final Map<String, MaterialHolder> materialMapping = new HashMap<>();
