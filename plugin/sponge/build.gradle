@@ -1,0 +1,6 @@
+dependencies {
+    shade project(':utils')
+    shade project(':plugin-common')
+
+    compileOnly 'org.spongepowered:spongeapi:' + SPONGE_VERSION
+}
