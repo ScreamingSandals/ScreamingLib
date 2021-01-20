@@ -1,16 +1,13 @@
 package org.screamingsandals.lib.world;
 
-import lombok.Getter;
 import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
-import org.screamingsandals.lib.utils.Platform;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
 public abstract class LocationMapping {
-    @Getter
-    protected Platform platform;
+
     protected BidirectionalConverter<LocationHolder> converter = BidirectionalConverter.<LocationHolder>build()
             .registerP2W(LocationHolder.class, e -> e);
 
