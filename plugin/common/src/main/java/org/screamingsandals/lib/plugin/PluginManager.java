@@ -15,14 +15,14 @@ public abstract class PluginManager {
         pluginManager = supplier.get();
     }
 
-    public static Object getPlatformClass(PluginKey pluginKey) {
+    public static Optional<Object> getPlatformClass(PluginKey pluginKey) {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
         }
         return pluginManager.getPlatformClass0(pluginKey);
     }
 
-    protected abstract Object getPlatformClass0(PluginKey pluginKey);
+    protected abstract Optional<Object> getPlatformClass0(PluginKey pluginKey);
 
     public static boolean isEnabled(PluginKey pluginKey) {
         if (pluginManager == null) {
@@ -66,4 +66,13 @@ public abstract class PluginManager {
     }
 
     protected abstract Optional<PluginKey> createKey0(Object identifier);
+
+    public static PlatformType getPlatformType() {
+        if (pluginManager == null) {
+            throw new UnsupportedOperationException("PluginManager is not initialized yet.");
+        }
+        return pluginManager.getPlatformType0();
+    }
+
+    protected abstract PlatformType getPlatformType0();
 }

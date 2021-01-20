@@ -19,7 +19,7 @@ public class PluginDescription implements Wrapper {
     private final Path dataFolder;
 
     public Optional<Object> getInstance() {
-        return Optional.ofNullable(PluginManager.getPlatformClass(this.pluginKey));
+        return PluginManager.getPlatformClass(this.pluginKey);
     }
 
     public boolean isEnabled() {
@@ -31,8 +31,8 @@ public class PluginDescription implements Wrapper {
     @Override
     public <T> T as(Class<T> type) {
         var instance = PluginManager.getPlatformClass(this.pluginKey);
-        if (type.isInstance(instance)) {
-            return (T) instance;
+        if (instance.isPresent() && type.isInstance(instance.get())) {
+            return (T) instance.get();
         }
         throw new UnsupportedOperationException("Can't convert instance to this type!");
     }
