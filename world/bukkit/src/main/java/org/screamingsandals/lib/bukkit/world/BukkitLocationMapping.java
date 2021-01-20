@@ -1,4 +1,4 @@
-package org.screamingsandals.bukkit.world;
+package org.screamingsandals.lib.bukkit.world;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

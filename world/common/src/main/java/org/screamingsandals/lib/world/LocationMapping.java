@@ -14,12 +14,12 @@ public abstract class LocationMapping {
     private static LocationMapping mapping = null;
     private static boolean initialized = false;
 
-    public static Optional<LocationHolder> resolve(Object materialObject) {
+    public static Optional<LocationHolder> resolve(Object obj) {
         if (mapping == null) {
             throw new UnsupportedOperationException("Material mapping is not initialized yet.");
         }
 
-        return mapping.converter.convertOptional(materialObject);
+        return mapping.converter.convertOptional(obj);
     }
 
     public static <T> T convert(LocationHolder holder, Class<T> newType) {
