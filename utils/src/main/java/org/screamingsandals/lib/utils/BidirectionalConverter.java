@@ -13,6 +13,7 @@ import java.util.function.Function;
 public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
     private final Map<Class<?>, Function<Object, SpecificWrapper>> p2wConverters = new HashMap<>();
     private final Map<Class<?>, Function<SpecificWrapper, Object>> w2pConverters = new HashMap<>();
+    private Class<?> normalizeType;
     private boolean finished = false;
 
     public void finish() {
@@ -26,6 +27,15 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
             throw new UnsupportedOperationException("Converter has been already fully initialized!");
         }
         w2pConverters.put(type, (Function<SpecificWrapper, Object>) convertor);
+        return this;
+    }
+
+    @NotNull
+    public <P> BidirectionalConverter<SpecificWrapper> normalizeType(Class<P> type) {
+        if (finished) {
+            throw new UnsupportedOperationException("Converter has been already fully initialized!");
+        }
+        normalizeType = type;
         return this;
     }
 
@@ -75,6 +85,21 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
                 .filter(c -> newType.isAssignableFrom(c.getKey()))
                 .findFirst()
                 .map(entry -> (P) entry.getValue().apply(object));
+    }
+
+    /**
+     * Normalizes the wrapper by converting to platform object and then back to wrapper.
+     * This removes all fields that are not supported by platform.
+     *
+     * @param object which should be normalized
+     * @return normalized object
+     */
+    @NotNull
+    public SpecificWrapper normalize(@NotNull SpecificWrapper object) {
+        if (normalizeType == null) {
+            throw new UnsupportedOperationException("Can't normalize " + object.getClass().getName() + ", no normalization class is registered");
+        }
+        return convert(convert(object, normalizeType));
     }
 
 }

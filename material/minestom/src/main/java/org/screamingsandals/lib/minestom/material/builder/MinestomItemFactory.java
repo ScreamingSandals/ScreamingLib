@@ -129,7 +129,8 @@ public class MinestomItemFactory extends ItemFactory {
 
                     return item;
 
-                });
+                })
+                .normalizeType(ItemStack.class);
     }
 
     @Override

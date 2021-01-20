@@ -6,14 +6,14 @@ import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.meta.EnchantmentHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionHolder;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.NormalizableWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Data
-public class Item implements Cloneable, Wrapper {
+public class Item implements Cloneable, NormalizableWrapper<Item> {
     //@Nullable // in initial state it's null
     private MaterialHolder material;
     @Nullable
@@ -40,6 +40,11 @@ public class Item implements Cloneable, Wrapper {
 
     public <R> R as(Class<R> type) {
         return ItemFactory.convertItem(this, type);
+    }
+
+    @Override
+    public Item normalize() {
+        return ItemFactory.normalize(this);
     }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")

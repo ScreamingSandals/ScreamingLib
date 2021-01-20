@@ -171,7 +171,8 @@ public class BukkitItemFactory extends ItemFactory {
                         }
                     }
                     return item;
-                });
+                })
+                .normalizeType(ItemStack.class);
     }
 
     @Override

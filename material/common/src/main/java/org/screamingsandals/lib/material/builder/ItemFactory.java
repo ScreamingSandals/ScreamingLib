@@ -313,6 +313,13 @@ public abstract class ItemFactory {
         return factory.itemConverter.convert(item, newType);
     }
 
+    public static Item normalize(Item item) {
+        if (factory == null) {
+            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
+        }
+        return factory.itemConverter.normalize(item);
+    }
+
     public static Optional<Container> wrapContainer(Object container) {
         if (factory == null) {
             throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
