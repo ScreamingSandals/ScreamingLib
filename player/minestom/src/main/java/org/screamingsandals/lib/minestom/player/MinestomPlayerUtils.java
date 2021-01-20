@@ -6,6 +6,9 @@ import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.player.PlayerUtils;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.SenderWrapper;
+import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.LocationMapping;
 
 import java.util.Optional;
 
@@ -21,7 +24,7 @@ public class MinestomPlayerUtils extends PlayerUtils {
     }
 
     @Override
-    public void sendMessage0(PlayerWrapper playerWrapper, String message) {
+    public void sendMessage0(SenderWrapper playerWrapper, String message) {
         playerWrapper.as(Player.class).sendMessage(message);
     }
 
@@ -38,5 +41,10 @@ public class MinestomPlayerUtils extends PlayerUtils {
     @Override
     public Optional<Container> getOpenedInventory0(PlayerWrapper playerWrapper) {
         return ItemFactory.wrapContainer(playerWrapper.as(Player.class).getOpenInventory());
+    }
+
+    @Override
+    public LocationHolder getLocation0(PlayerWrapper playerWrapper) {
+        return LocationMapping.resolve(playerWrapper.as(Player.class)).orElseThrow();
     }
 }

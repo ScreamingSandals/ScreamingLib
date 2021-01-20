@@ -1,4 +1,4 @@
-package org.screamingsandals.sponge.world;
+package org.screamingsandals.lib.sponge.world;
 
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapping;

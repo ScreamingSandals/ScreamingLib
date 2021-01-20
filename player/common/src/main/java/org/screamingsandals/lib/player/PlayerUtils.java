@@ -3,6 +3,7 @@ package org.screamingsandals.lib.player;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
+import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -35,14 +36,14 @@ public abstract class PlayerUtils {
         return playerUtils.playerConverter.convert(player, type);
     }
 
-    public static void sendMessage(PlayerWrapper playerWrapper, String message) {
+    public static void sendMessage(SenderWrapper playerWrapper, String message) {
         if (playerUtils == null) {
             throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
         }
         playerUtils.sendMessage0(playerWrapper, message);
     }
 
-    public abstract void sendMessage0(PlayerWrapper playerWrapper, String message);
+    public abstract void sendMessage0(SenderWrapper playerWrapper, String message);
 
     public static void closeInventory(PlayerWrapper playerWrapper) {
         if (playerUtils == null) {
@@ -69,7 +70,16 @@ public abstract class PlayerUtils {
         return playerUtils.getOpenedInventory0(playerWrapper);
     }
 
+    public static LocationHolder getLocation(PlayerWrapper wrapper) {
+        if (playerUtils == null) {
+            throw new UnsupportedOperationException("PlayerUtils aren't initialized yet.");
+        }
+        return playerUtils.getLocation0(wrapper);
+    }
+
     public abstract Optional<Container> getOpenedInventory0(PlayerWrapper playerWrapper);
+
+    public abstract LocationHolder getLocation0(PlayerWrapper playerWrapper);
 
     public static boolean isInitialized() {
         return playerUtils != null;
