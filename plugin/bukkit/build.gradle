@@ -1,0 +1,5 @@
+dependencies {
+    shade project(':utils')
+    shade project(':plugin-common')
+    compileOnly paper(PAPER_VERSION)
+}
