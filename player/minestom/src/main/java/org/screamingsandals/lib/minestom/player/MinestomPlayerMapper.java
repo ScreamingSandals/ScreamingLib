@@ -24,18 +24,31 @@ public class MinestomPlayerMapper extends PlayerMapper {
                 .registerW2P(Player.class, playerWrapper -> MinecraftServer.getConnectionManager()
                         .getPlayer(playerWrapper.getUuid()));
         senderConverter
-                .registerP2W(CommandSender.class, sender -> {
-                    if (sender.isPlayer()) {
-                        return new SenderWrapper(sender.asPlayer().getUsername());
-                    }
-                    return new SenderWrapper(CONSOLE_NAME);
-                })
                 .registerW2P(CommandSender.class, wrapper -> {
                     final var name = wrapper.getName();
                     if (name.equalsIgnoreCase(CONSOLE_NAME)) {
                         return MinecraftServer.getCommandManager().getConsoleSender();
                     }
                     return MinecraftServer.getConnectionManager().getPlayer(name);
+                })
+                .registerW2P(PlayerWrapper.class, wrapper -> {
+                    final var name = wrapper.getName();
+                    if (name.equalsIgnoreCase(CONSOLE_NAME)) {
+                        return null;
+                    }
+
+                    final var player = MinecraftServer.getConnectionManager().getPlayer(name);
+                    if (player == null) {
+                        return null;
+                    }
+                    
+                    return new PlayerWrapper(player.getUsername(), player.getUuid());
+                })
+                .registerP2W(CommandSender.class, sender -> {
+                    if (sender.isPlayer()) {
+                        return new SenderWrapper(sender.asPlayer().getUsername());
+                    }
+                    return new SenderWrapper(CONSOLE_NAME);
                 });
     }
 

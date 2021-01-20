@@ -23,13 +23,24 @@ public class BukkitPlayerMapper extends PlayerMapper {
                 .registerP2W(Player.class, player -> new PlayerWrapper(player.getName(), player.getUniqueId()))
                 .registerW2P(Player.class, playerWrapper -> Bukkit.getPlayer(playerWrapper.getUuid()));
         senderConverter
-                .registerP2W(CommandSender.class, sender -> new SenderWrapper(sender.getName()))
+                .registerW2P(PlayerWrapper.class, wrapper -> {
+                    if (wrapper.getName().equalsIgnoreCase(CONSOLE_NAME)) {
+                        return null;
+                    }
+                    final var player = Bukkit.getPlayer(wrapper.getName());
+                    if (player == null) {
+                        return null;
+                    }
+
+                    return new PlayerWrapper(player.getName(), player.getUniqueId());
+                })
                 .registerW2P(CommandSender.class, wrapper -> {
                     if (wrapper.getName().equalsIgnoreCase(CONSOLE_NAME)) {
                         return Bukkit.getConsoleSender();
                     }
                     return Bukkit.getPlayer(wrapper.getName());
-                });
+                })
+                .registerP2W(CommandSender.class, sender -> new SenderWrapper(sender.getName()));
     }
 
     @Override
