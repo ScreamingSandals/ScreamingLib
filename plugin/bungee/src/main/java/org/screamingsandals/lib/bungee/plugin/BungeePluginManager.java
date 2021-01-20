@@ -2,6 +2,7 @@ package org.screamingsandals.lib.bungee.plugin;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.screamingsandals.lib.plugin.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
@@ -16,8 +17,8 @@ public class BungeePluginManager extends PluginManager {
     }
 
     @Override
-    protected Object getPlatformClass0(PluginKey pluginKey) {
-        return ProxyServer.getInstance().getPluginManager().getPlugin(pluginKey.as(String.class));
+    protected Optional<Object> getPlatformClass0(PluginKey pluginKey) {
+        return Optional.ofNullable(ProxyServer.getInstance().getPluginManager().getPlugin(pluginKey.as(String.class)));
     }
 
     @Override
@@ -38,6 +39,11 @@ public class BungeePluginManager extends PluginManager {
     @Override
     protected Optional<PluginKey> createKey0(Object identifier) {
         return Optional.of(BungeePluginKey.of(identifier.toString()));
+    }
+
+    @Override
+    protected PlatformType getPlatformType0() {
+        return PlatformType.BUNGEE;
     }
 
     private PluginDescription wrap(Plugin plugin) {

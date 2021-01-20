@@ -3,10 +3,12 @@ package org.screamingsandals.lib.velocity.plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.meta.PluginDependency;
 import lombok.RequiredArgsConstructor;
+import org.screamingsandals.lib.plugin.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,9 +22,9 @@ public class VelocityPluginManager extends PluginManager {
     }
 
     @Override
-    protected Object getPlatformClass0(PluginKey pluginKey) {
-        // I don't need optional here (probably I'll change that later
-        return pluginManager.getPlugin(pluginKey.as(String.class)).orElse(null);
+    protected Optional<Object> getPlatformClass0(PluginKey pluginKey) {
+        // that weird map o -> o is needed cause compiler is on some drugs
+        return pluginManager.getPlugin(pluginKey.as(String.class)).map(o -> o);
     }
 
     @Override
@@ -45,6 +47,11 @@ public class VelocityPluginManager extends PluginManager {
         return Optional.of(VelocityPluginKey.of(identifier.toString()));
     }
 
+    @Override
+    protected PlatformType getPlatformType0() {
+        return PlatformType.VELOCITY;
+    }
+
     private PluginDescription wrap(PluginContainer plugin) {
         return new PluginDescription(
                 VelocityPluginKey.of(plugin.getDescription().getId()),
@@ -54,7 +61,7 @@ public class VelocityPluginManager extends PluginManager {
                 plugin.getDescription().getAuthors(),
                 plugin.getDescription().getDependencies().stream().map(PluginDependency::getId).collect(Collectors.toList()),
                 List.of(),
-                null // TODO
+                plugin.getDescription().getSource().map(path -> path.getParent().resolve(plugin.getDescription().getId())).orElse(Path.of("."))
         );
     }
 }

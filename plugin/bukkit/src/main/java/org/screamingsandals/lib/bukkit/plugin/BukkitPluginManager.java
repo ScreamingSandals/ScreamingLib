@@ -2,6 +2,7 @@ package org.screamingsandals.lib.bukkit.plugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.plugin.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
@@ -17,8 +18,8 @@ public class BukkitPluginManager extends PluginManager {
     }
 
     @Override
-    protected Object getPlatformClass0(PluginKey pluginKey) {
-        return Bukkit.getPluginManager().getPlugin(pluginKey.as(String.class));
+    protected Optional<Object> getPlatformClass0(PluginKey pluginKey) {
+        return Optional.ofNullable(Bukkit.getPluginManager().getPlugin(pluginKey.as(String.class)));
     }
 
     @Override
@@ -39,6 +40,11 @@ public class BukkitPluginManager extends PluginManager {
     @Override
     protected Optional<PluginKey> createKey0(Object identifier) {
         return Optional.of(BukkitPluginKey.of(identifier.toString()));
+    }
+
+    @Override
+    protected PlatformType getPlatformType0() {
+        return PlatformType.BUKKIT;
     }
 
     private PluginDescription wrap(Plugin plugin) {
