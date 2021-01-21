@@ -9,13 +9,17 @@ import org.screamingsandals.lib.material.meta.PotionHolder;
 import org.screamingsandals.lib.utils.NormalizableWrapper;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 @Data
 @ConfigSerializable
 public class Item implements Cloneable, NormalizableWrapper<Item> {
+    private List<EnchantmentHolder> enchantments = new LinkedList<>();
+    private List<PotionEffectHolder> potionEffects = new LinkedList<>();
+    private List<String> lore = new LinkedList<>();
+    private List<String> itemFlags = new LinkedList<>();
     //@Nullable // in initial state it's null
     private MaterialHolder material;
     @Nullable
@@ -27,14 +31,7 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
     private int repair;
     private boolean unbreakable;
     @Nullable
-    private List<String> lore;
-    private final List<EnchantmentHolder> enchantments = new ArrayList<>();
-    @Nullable
-    private List<String> itemFlags;
-    @Nullable
     private PotionHolder potion;
-    @Nullable
-    private List<PotionEffectHolder> potionEffects;
 
     @Deprecated
     @Nullable
@@ -53,6 +50,10 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
     @Override
     public Item clone() {
         Item item = new Item();
+        item.setLore(new LinkedList<>(!lore.isEmpty() ? lore : List.of()));
+        item.setItemFlags(new LinkedList<>(!itemFlags.isEmpty() ? itemFlags : List.of()));
+        item.setPotionEffects(new LinkedList<>(!potionEffects.isEmpty() ? potionEffects : List.of()));
+        item.setEnchantments(new LinkedList<>(!enchantments.isEmpty() ? enchantments : List.of()));
         item.setMaterial(material);
         item.setDisplayName(displayName);
         item.setLocalizedName(localizedName);
@@ -60,13 +61,25 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
         item.setCustomModelData(customModelData);
         item.setRepair(repair);
         item.setUnbreakable(unbreakable);
-        item.setLore(new ArrayList<>(lore != null ? lore : List.of()));
-        enchantments.forEach(item.getEnchantments()::add);
-        item.setItemFlags(new ArrayList<>(itemFlags != null ? itemFlags : List.of()));
         item.setPotion(potion);
-        item.setPotionEffects(new ArrayList<>(potionEffects != null ? potionEffects : List.of()));
         item.setPlatformMeta(platformMeta);
         return item;
+    }
+
+    public void addPotionEffect(PotionEffectHolder holder) {
+        potionEffects.add(holder);
+    }
+
+    public void addEnchant(EnchantmentHolder holder) {
+        enchantments.add(holder);
+    }
+
+    public void addLore(String line) {
+        lore.add(line);
+    }
+
+    public void addFlag(String flag) {
+        lore.add(flag);
     }
 
     public boolean isSimilar(Item item) {

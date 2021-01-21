@@ -3,10 +3,11 @@ package org.screamingsandals.lib.material.builder;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.material.meta.EnchantmentMapping;
-import org.screamingsandals.lib.material.meta.PotionMapping;
 import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.utils.ConfigurateUtils;
+import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.material.meta.EnchantmentMapping;
+import org.screamingsandals.lib.material.meta.PotionEffectMapping;
+import org.screamingsandals.lib.material.meta.PotionMapping;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
@@ -19,6 +20,11 @@ import java.util.stream.Collectors;
 public class ItemBuilder {
     @NotNull
     private final Item item;
+
+    public ItemBuilder(MaterialHolder material) {
+        this.item = new Item();
+        item.setMaterial(material);
+    }
 
     public ItemBuilder type(@NotNull Object type) {
         ItemFactory.readShortStack(item, type);
@@ -52,25 +58,27 @@ public class ItemBuilder {
 
     public ItemBuilder flags(@Nullable List<Object> flags) {
         if (flags == null) {
-            item.setItemFlags(null);
+            return this;
         } else {
-            List<String> stringList = flags.stream().map(Object::toString).collect(Collectors.toList());
-            item.setItemFlags(stringList);
+            item.getItemFlags().addAll(flags.stream()
+                    .map(Object::toString)
+                    .collect(Collectors.toList()));
         }
         return this;
     }
+
     public ItemBuilder unbreakable(boolean unbreakable) {
         item.setUnbreakable(unbreakable);
         return this;
     }
 
-    public ItemBuilder lore(@Nullable List<String> lore) {
-        item.setLore(lore);
+    public ItemBuilder lore(@NotNull String lore) {
+        item.addLore(lore);
         return this;
     }
 
-    public ItemBuilder enchant(@NotNull Object enchant) {
-        EnchantmentMapping.resolve(enchant).ifPresent(item.getEnchantments()::add);
+    public ItemBuilder lore(@NotNull List<String> lore) {
+        item.getLore().addAll(lore);
         return this;
     }
 
@@ -89,6 +97,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder enchant(@NotNull Object enchant) {
+        EnchantmentMapping.resolve(enchant).ifPresent(item::addEnchant);
+        return this;
+    }
+
     public ItemBuilder potion(@NotNull Object potion) {
         PotionMapping.resolve(potion).ifPresent(item::setPotion);
         return this;
@@ -97,12 +110,21 @@ public class ItemBuilder {
     public ItemBuilder effect(@NotNull Object effect) {
         if (effect instanceof Map) {
             try {
-                effect = BasicConfigurationNode.root().set(effect);
+                final var node = BasicConfigurationNode.root().set(effect);
+                PotionEffectMapping.resolve(node).ifPresent(item::addPotionEffect);
+                return this;
             } catch (SerializationException e) {
                 e.printStackTrace();
             }
         }
 
+        if (effect instanceof List) {
+            final var list = (List<?>) effect;
+            PotionEffectMapping.resolve(list).ifPresent(item::addPotionEffect);
+            return this;
+        }
+
+        PotionEffectMapping.resolve(effect).ifPresent(item::addPotionEffect);
         return this;
     }
 
@@ -111,6 +133,7 @@ public class ItemBuilder {
     public ItemBuilder damage(int damage) {
         return durability(damage);
     }
+
     // Or (durability is just alias for damage)
     public ItemBuilder durability(int durability) {
         item.setMaterial(item.getMaterial().newDurability(durability));

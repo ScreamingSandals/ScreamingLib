@@ -49,9 +49,9 @@ public class MinestomPlayerMapper extends PlayerMapper {
                 })
                 .registerP2W(CommandSender.class, sender -> {
                     if (sender.isPlayer()) {
-                        return new SenderWrapper(sender.asPlayer().getUsername());
+                        return new SenderWrapper(sender.asPlayer().getUsername(), SenderWrapper.Type.PLAYER);
                     }
-                    return new SenderWrapper(CONSOLE_NAME);
+                    return new SenderWrapper(CONSOLE_NAME, SenderWrapper.Type.CONSOLE);
                 });
     }
 
