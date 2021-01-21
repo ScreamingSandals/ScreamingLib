@@ -7,7 +7,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.screamingsandals.lib.bungee.proxiedplayer.listener.ChatEventListener;
-import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerUtils;
+import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerWrapper;
 import org.screamingsandals.lib.proxiedplayer.ServerWrapper;
 
@@ -16,13 +16,13 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class BungeeProxiedPlayerUtils extends ProxiedPlayerUtils {
+public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
 
     public static void init(Plugin plugin) {
-        ProxiedPlayerUtils.init(() -> new BungeeProxiedPlayerUtils(plugin));
+        ProxiedPlayerMapper.init(() -> new BungeeProxiedPlayerMapper(plugin));
     }
 
-    public BungeeProxiedPlayerUtils(Plugin plugin) {
+    public BungeeProxiedPlayerMapper(Plugin plugin) {
         plugin.getProxy().getPluginManager().registerListener(plugin, new ChatEventListener());
 
         playerConverter
@@ -47,31 +47,31 @@ public class BungeeProxiedPlayerUtils extends ProxiedPlayerUtils {
 
     @Override
     public Optional<ServerWrapper> getServer0(String name) {
-        return Optional.ofNullable(ProxyServer.getInstance().getServerInfo(name)).map(ProxiedPlayerUtils::wrapServer);
+        return Optional.ofNullable(ProxyServer.getInstance().getServerInfo(name)).map(ProxiedPlayerMapper::wrapServer);
     }
 
     @Override
     public List<ServerWrapper> getServers0() {
-        return ProxyServer.getInstance().getServers().values().stream().map(ProxiedPlayerUtils::wrapServer).collect(Collectors.toList());
+        return ProxyServer.getInstance().getServers().values().stream().map(ProxiedPlayerMapper::wrapServer).collect(Collectors.toList());
     }
 
     @Override
     public Optional<ProxiedPlayerWrapper> getPlayer0(String name) {
-        return Optional.ofNullable(ProxyServer.getInstance().getPlayer(name)).map(ProxiedPlayerUtils::wrapPlayer);
+        return Optional.ofNullable(ProxyServer.getInstance().getPlayer(name)).map(ProxiedPlayerMapper::wrapPlayer);
     }
 
     @Override
     public Optional<ProxiedPlayerWrapper> getPlayer0(UUID uuid) {
-        return Optional.ofNullable(ProxyServer.getInstance().getPlayer(uuid)).map(ProxiedPlayerUtils::wrapPlayer);
+        return Optional.ofNullable(ProxyServer.getInstance().getPlayer(uuid)).map(ProxiedPlayerMapper::wrapPlayer);
     }
 
     @Override
     public List<ProxiedPlayerWrapper> getPlayers0() {
-        return ProxyServer.getInstance().getPlayers().stream().map(ProxiedPlayerUtils::wrapPlayer).collect(Collectors.toList());
+        return ProxyServer.getInstance().getPlayers().stream().map(ProxiedPlayerMapper::wrapPlayer).collect(Collectors.toList());
     }
 
     @Override
     public List<ProxiedPlayerWrapper> getPlayers0(ServerWrapper serverWrapper) {
-        return serverWrapper.as(ServerInfo.class).getPlayers().stream().map(ProxiedPlayerUtils::wrapPlayer).collect(Collectors.toList());
+        return serverWrapper.as(ServerInfo.class).getPlayers().stream().map(ProxiedPlayerMapper::wrapPlayer).collect(Collectors.toList());
     }
 }

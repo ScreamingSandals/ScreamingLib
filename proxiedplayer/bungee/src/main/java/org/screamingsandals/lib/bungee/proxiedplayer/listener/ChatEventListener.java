@@ -5,7 +5,7 @@ import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
-import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerUtils;
+import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxiedplayer.event.PlayerChatEvent;
 import org.screamingsandals.lib.utils.event.EventManager;
 
@@ -40,7 +40,7 @@ public class ChatEventListener implements Listener {
             return;
         }
 
-        var event = new PlayerChatEvent(ProxiedPlayerUtils.wrapPlayer(chatEvent.getSender()), chatEvent.getMessage(), chatEvent.isCancelled(), chatEvent.isCommand());
+        var event = new PlayerChatEvent(ProxiedPlayerMapper.wrapPlayer(chatEvent.getSender()), chatEvent.getMessage(), chatEvent.isCancelled(), chatEvent.isCommand());
         EventManager.getBaseEventManager().fireEvent(event, eventPriority);
         chatEvent.setCancelled(event.isCancelled());
         chatEvent.setMessage(event.getMessage());

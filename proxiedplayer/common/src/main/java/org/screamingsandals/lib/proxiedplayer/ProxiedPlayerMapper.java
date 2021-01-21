@@ -8,13 +8,13 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public abstract class ProxiedPlayerUtils {
+public abstract class ProxiedPlayerMapper {
 
     protected final BidirectionalConverter<ProxiedPlayerWrapper> playerConverter = BidirectionalConverter.build();
     protected final BidirectionalConverter<ServerWrapper> serverConverter = BidirectionalConverter.build();
-    private static ProxiedPlayerUtils proxiedPlayerUtils = null;
+    private static ProxiedPlayerMapper proxiedPlayerUtils = null;
 
-    public static void init(@NotNull Supplier<ProxiedPlayerUtils> proxiedPlayerUtilsSupplier) {
+    public static void init(@NotNull Supplier<ProxiedPlayerMapper> proxiedPlayerUtilsSupplier) {
         if (proxiedPlayerUtils != null) {
             throw new UnsupportedOperationException("ProxiedPlayerUtils are already initialized.");
         }

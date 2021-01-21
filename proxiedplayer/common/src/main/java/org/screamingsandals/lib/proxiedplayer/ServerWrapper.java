@@ -27,10 +27,10 @@ public class ServerWrapper implements Wrapper {
     }
 
     public List<ProxiedPlayerWrapper> getPlayers() {
-        return ProxiedPlayerUtils.getPlayers(this);
+        return ProxiedPlayerMapper.getPlayers(this);
     }
 
     public <T> T as(Class<T> type) {
-        return ProxiedPlayerUtils.convertServerWrapper(this, type);
+        return ProxiedPlayerMapper.convertServerWrapper(this, type);
     }
 }

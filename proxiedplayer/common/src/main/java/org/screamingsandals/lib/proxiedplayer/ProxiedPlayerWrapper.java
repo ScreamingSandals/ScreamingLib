@@ -13,15 +13,15 @@ public class ProxiedPlayerWrapper implements Wrapper {
     private final UUID uuid;
 
     public void sendMessage(String message) {
-        ProxiedPlayerUtils.sendMessage(this, message);
+        ProxiedPlayerMapper.sendMessage(this, message);
     }
 
     public void switchServer(ServerWrapper server) {
-        ProxiedPlayerUtils.switchServer(this, server);
+        ProxiedPlayerMapper.switchServer(this, server);
     }
 
     public <T> T as(Class<T> type) {
-        return ProxiedPlayerUtils.convertPlayerWrapper(this, type);
+        return ProxiedPlayerMapper.convertPlayerWrapper(this, type);
     }
 
     @Override
