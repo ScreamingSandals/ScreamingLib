@@ -14,7 +14,7 @@ public class PlayerWrapper extends SenderWrapper implements Wrapper {
     private final UUID uuid;
 
     public PlayerWrapper(String name, UUID uuid) {
-        super(name);
+        super(name, Type.PLAYER);
         this.uuid = uuid;
     }
 
@@ -33,7 +33,7 @@ public class PlayerWrapper extends SenderWrapper implements Wrapper {
     public void closeInventory() {
         PlayerMapper.closeInventory(this);
     }
-    
+
     public LocationHolder getLocation() {
         return PlayerMapper.getLocation(this);
     }

@@ -44,7 +44,7 @@ public class MinestomPlayerMapper extends PlayerMapper {
                     if (player == null) {
                         return null;
                     }
-                    
+
                     return new PlayerWrapper(player.getUsername(), player.getUuid());
                 })
                 .registerP2W(CommandSender.class, sender -> {

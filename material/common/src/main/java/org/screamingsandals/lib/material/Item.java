@@ -7,12 +7,14 @@ import org.screamingsandals.lib.material.meta.EnchantmentHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionHolder;
 import org.screamingsandals.lib.utils.NormalizableWrapper;
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Data
+@ConfigSerializable
 public class Item implements Cloneable, NormalizableWrapper<Item> {
     //@Nullable // in initial state it's null
     private MaterialHolder material;

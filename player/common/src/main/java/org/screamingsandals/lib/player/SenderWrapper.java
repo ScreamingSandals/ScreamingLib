@@ -8,6 +8,7 @@ import org.screamingsandals.lib.utils.Wrapper;
 @RequiredArgsConstructor
 public class SenderWrapper implements Wrapper {
     private final String name;
+    private final Type type;
 
     public void sendMessage(String message) {
         PlayerMapper.sendMessage(this, message);
@@ -16,5 +17,10 @@ public class SenderWrapper implements Wrapper {
     @Override
     public <T> T as(Class<T> type) {
         return PlayerMapper.convertSenderWrapper(this, type);
+    }
+
+    public enum Type {
+        PLAYER,
+        CONSOLE
     }
 }

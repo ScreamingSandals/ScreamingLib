@@ -43,7 +43,14 @@ public class BukkitPlayerMapper extends PlayerMapper {
                     }
                     return Bukkit.getPlayer(wrapper.getName());
                 })
-                .registerP2W(CommandSender.class, sender -> new SenderWrapper(sender.getName()));
+                .registerP2W(CommandSender.class, sender -> {
+                    final var name = sender.getName();
+                    if (name.equalsIgnoreCase(CONSOLE_NAME)) {
+                        return new SenderWrapper(sender.getName(), SenderWrapper.Type.CONSOLE);
+                    }
+
+                    return new SenderWrapper(sender.getName(), SenderWrapper.Type.PLAYER);
+                });
     }
 
     @Override

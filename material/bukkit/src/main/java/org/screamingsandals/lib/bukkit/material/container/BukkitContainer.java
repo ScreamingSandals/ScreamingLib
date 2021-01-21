@@ -39,8 +39,16 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
 
     @Override
     public List<Item> removeItem(Item... items) {
-        return wrappedObject.removeItem(Arrays.stream(items).map(item -> item.as(ItemStack.class)).toArray(ItemStack[]::new))
-                .values().stream().map(BukkitItemFactory::build).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+        return wrappedObject.removeItem(
+                Arrays.stream(items)
+                        .map(item -> item.as(ItemStack.class))
+                        .toArray(ItemStack[]::new))
+                .values()
+                .stream()
+                .map(BukkitItemFactory::build)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Override
