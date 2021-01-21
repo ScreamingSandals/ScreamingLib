@@ -18,9 +18,9 @@ public abstract class PluginContainer {
         this.logger = logger;
     }
 
-    public abstract void onLoad();
+    public abstract void load();
 
-    public abstract void onEnable();
+    public abstract void enable();
 
-    public abstract void onDisable();
+    public abstract void disable();
 }

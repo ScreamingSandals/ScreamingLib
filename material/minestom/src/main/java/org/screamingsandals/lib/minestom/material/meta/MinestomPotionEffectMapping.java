@@ -4,9 +4,12 @@ import net.minestom.server.potion.CustomPotionEffect;
 import net.minestom.server.potion.PotionEffect;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
+import org.screamingsandals.lib.utils.PlatformType;
+import org.screamingsandals.lib.utils.annotations.AutoInitialization;
 
 import java.util.Arrays;
 
+@AutoInitialization(platform = PlatformType.MINESTOM)
 public class MinestomPotionEffectMapping extends PotionEffectMapping {
     public static void init() {
         PotionEffectMapping.init(MinestomPotionEffectMapping::new);

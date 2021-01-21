@@ -20,11 +20,19 @@ import org.screamingsandals.lib.minestom.material.meta.MinestomPotionEffectMappi
 import org.screamingsandals.lib.minestom.material.meta.MinestomPotionMapping;
 import org.screamingsandals.lib.minestom.material.MinestomMaterialMapping;
 import org.screamingsandals.lib.utils.InitUtils;
+import org.screamingsandals.lib.utils.PlatformType;
+import org.screamingsandals.lib.utils.annotations.AutoInitialization;
 
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@AutoInitialization(platform = PlatformType.MINESTOM, loadAfter = {
+        MinestomMaterialMapping.class,
+        MinestomEnchantmentMapping.class,
+        MinestomPotionMapping.class,
+        MinestomPotionEffectMapping.class
+})
 public class MinestomItemFactory extends ItemFactory {
     public static void init() {
         ItemFactory.init(MinestomItemFactory::new);

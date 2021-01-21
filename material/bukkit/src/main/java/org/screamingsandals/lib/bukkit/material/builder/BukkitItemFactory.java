@@ -22,11 +22,19 @@ import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.InitUtils;
+import org.screamingsandals.lib.utils.PlatformType;
+import org.screamingsandals.lib.utils.annotations.AutoInitialization;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@AutoInitialization(platform = PlatformType.BUKKIT, loadAfter = {
+        BukkitMaterialMapping.class,
+        BukkitEnchantmentMapping.class,
+        BukkitPotionMapping.class,
+        BukkitPotionEffectMapping.class
+})
 public class BukkitItemFactory extends ItemFactory {
     public static void init() {
         ItemFactory.init(BukkitItemFactory::new);

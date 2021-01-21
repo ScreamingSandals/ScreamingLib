@@ -10,12 +10,15 @@ import org.screamingsandals.lib.bungee.proxiedplayer.listener.ChatEventListener;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerWrapper;
 import org.screamingsandals.lib.proxiedplayer.ServerWrapper;
+import org.screamingsandals.lib.utils.PlatformType;
+import org.screamingsandals.lib.utils.annotations.AutoInitialization;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@AutoInitialization(platform = PlatformType.BUNGEE)
 public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
 
     public static void init(Plugin plugin) {

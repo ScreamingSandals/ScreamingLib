@@ -2,16 +2,18 @@ package org.screamingsandals.lib.bukkit.plugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.screamingsandals.lib.plugin.PlatformType;
+import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
+import org.screamingsandals.lib.utils.annotations.AutoInitialization;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@AutoInitialization(platform = PlatformType.BUKKIT)
 public class BukkitPluginManager extends PluginManager {
     public static void init() {
         PluginManager.init(BukkitPluginManager::new);

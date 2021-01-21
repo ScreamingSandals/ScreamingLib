@@ -2,15 +2,17 @@ package org.screamingsandals.lib.minestom.plugin;
 
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.extensions.Extension;
-import org.screamingsandals.lib.plugin.PlatformType;
+import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
+import org.screamingsandals.lib.utils.annotations.AutoInitialization;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@AutoInitialization(platform = PlatformType.MINESTOM)
 public class MinestomPluginManager extends PluginManager {
 
     public static void init() {

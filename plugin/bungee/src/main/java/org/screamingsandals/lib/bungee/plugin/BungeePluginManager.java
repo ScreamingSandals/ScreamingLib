@@ -2,15 +2,17 @@ package org.screamingsandals.lib.bungee.plugin;
 
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
-import org.screamingsandals.lib.plugin.PlatformType;
+import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
+import org.screamingsandals.lib.utils.annotations.AutoInitialization;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@AutoInitialization(platform = PlatformType.BUNGEE)
 public class BungeePluginManager extends PluginManager {
     public static void init() {
         PluginManager.init(BungeePluginManager::new);

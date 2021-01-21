@@ -12,6 +12,8 @@ import org.screamingsandals.lib.sponge.material.meta.SpongeEnchantmentMapping;
 import org.screamingsandals.lib.sponge.material.meta.SpongePotionEffectMapping;
 import org.screamingsandals.lib.sponge.material.meta.SpongePotionMapping;
 import org.screamingsandals.lib.utils.InitUtils;
+import org.screamingsandals.lib.utils.PlatformType;
+import org.screamingsandals.lib.utils.annotations.AutoInitialization;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.item.enchantment.Enchantment;
@@ -23,6 +25,12 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@AutoInitialization(platform = PlatformType.SPONGE, loadAfter = {
+        SpongeMaterialMapping.class,
+        SpongeEnchantmentMapping.class,
+        SpongePotionMapping.class,
+        SpongePotionEffectMapping.class
+})
 public class SpongeItemFactory extends ItemFactory {
 
     public static void init() {
@@ -31,8 +39,8 @@ public class SpongeItemFactory extends ItemFactory {
 
     public SpongeItemFactory() {
         InitUtils.doIfNot(SpongeMaterialMapping::isInitialized, SpongeMaterialMapping::init);
-        InitUtils.doIfNot(SpongePotionMapping::isInitialized, SpongePotionMapping::init);
         InitUtils.doIfNot(SpongeEnchantmentMapping::isInitialized, SpongeEnchantmentMapping::init);
+        InitUtils.doIfNot(SpongePotionMapping::isInitialized, SpongePotionMapping::init);
         InitUtils.doIfNot(SpongePotionEffectMapping::isInitialized, SpongePotionEffectMapping::init);
 
         itemConverter

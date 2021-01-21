@@ -2,11 +2,14 @@ package org.screamingsandals.lib.sponge.material.meta;
 
 import org.screamingsandals.lib.material.meta.PotionHolder;
 import org.screamingsandals.lib.material.meta.PotionMapping;
+import org.screamingsandals.lib.utils.PlatformType;
+import org.screamingsandals.lib.utils.annotations.AutoInitialization;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.potion.PotionType;
 import org.spongepowered.api.registry.RegistryTypes;
 
+@AutoInitialization(platform = PlatformType.SPONGE)
 public class SpongePotionMapping extends PotionMapping {
     public static void init() {
         PotionMapping.init(SpongePotionMapping::new);

@@ -2,9 +2,12 @@ package org.screamingsandals.lib.bukkit.world;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.screamingsandals.lib.utils.PlatformType;
+import org.screamingsandals.lib.utils.annotations.AutoInitialization;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapping;
 
+@AutoInitialization(platform = PlatformType.BUKKIT)
 public class BukkitLocationMapping extends LocationMapping {
 
     public static void init() {

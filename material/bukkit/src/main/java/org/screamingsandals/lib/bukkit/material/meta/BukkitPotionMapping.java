@@ -6,9 +6,12 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 import org.screamingsandals.lib.material.meta.PotionHolder;
 import org.screamingsandals.lib.material.meta.PotionMapping;
+import org.screamingsandals.lib.utils.PlatformType;
+import org.screamingsandals.lib.utils.annotations.AutoInitialization;
 
 import java.util.Arrays;
 
+@AutoInitialization(platform = PlatformType.BUKKIT)
 public class BukkitPotionMapping extends PotionMapping {
 
     @Getter

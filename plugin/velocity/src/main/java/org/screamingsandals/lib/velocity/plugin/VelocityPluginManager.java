@@ -3,16 +3,18 @@ package org.screamingsandals.lib.velocity.plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.meta.PluginDependency;
 import lombok.RequiredArgsConstructor;
-import org.screamingsandals.lib.plugin.PlatformType;
+import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
+import org.screamingsandals.lib.utils.annotations.AutoInitialization;
 
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@AutoInitialization(platform = PlatformType.VELOCITY)
 @RequiredArgsConstructor
 public class VelocityPluginManager extends PluginManager {
     private final com.velocitypowered.api.plugin.PluginManager pluginManager;
