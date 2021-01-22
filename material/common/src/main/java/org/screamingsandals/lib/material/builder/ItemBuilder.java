@@ -108,19 +108,9 @@ public class ItemBuilder {
     }
 
     public ItemBuilder effect(@NotNull Object effect) {
-        if (effect instanceof Map) {
-            try {
-                final var node = BasicConfigurationNode.root().set(effect);
-                PotionEffectMapping.resolve(node).ifPresent(item::addPotionEffect);
-                return this;
-            } catch (SerializationException e) {
-                e.printStackTrace();
-            }
-        }
-
         if (effect instanceof List) {
             final var list = (List<?>) effect;
-            PotionEffectMapping.resolve(list).ifPresent(item::addPotionEffect);
+            list.forEach(effect1 -> PotionEffectMapping.resolve(effect1).ifPresent(item::addPotionEffect));
             return this;
         }
 

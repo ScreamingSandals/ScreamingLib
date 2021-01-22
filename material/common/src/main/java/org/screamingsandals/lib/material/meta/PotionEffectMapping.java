@@ -3,11 +3,15 @@ package org.screamingsandals.lib.material.meta;
 import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;
+import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,29 +19,38 @@ import java.util.regex.Pattern;
 public class PotionEffectMapping {
 
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?:(?<namespace>[A-Za-z][A-Za-z0-9_.\\-]*):)?(?<duration>[A-Za-z][A-Za-z0-9_.\\-/]*)(\\s+(?<level>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
+    private static final Function<ConfigurationNode, PotionEffectHolder> CONFIGURATE_METHOD = node -> {
+        var effectNode = node.node("effect");
+        var durationNode = node.node("duration");
+        var amplifierNode = node.node("amplifier");
+        var ambientNode = node.node("ambient");
+        var particlesNode = node.node("particles");
+        var iconNode = node.node("icon");
+
+        var holderOptional = resolve(effectNode.getString());
+        if (holderOptional.isPresent()) {
+            var holder = holderOptional.get();
+            return holder
+                    .duration(durationNode.getInt(holder.getDuration()))
+                    .amplifier(amplifierNode.getInt(holder.getAmplifier()))
+                    .ambient(ambientNode.getBoolean(holder.isAmbient()))
+                    .particles(particlesNode.getBoolean(holder.isParticles()))
+                    .icon(iconNode.getBoolean(holder.isIcon()));
+        }
+        return null;
+    };
     private static PotionEffectMapping mapping = null;
     protected final Map<String, PotionEffectHolder> potionEffectMapping = new HashMap<>();
 
     protected BidirectionalConverter<PotionEffectHolder> potionEffectConverter = BidirectionalConverter.<PotionEffectHolder>build()
             .registerW2P(String.class, PotionEffectHolder::getPlatformName)
             .registerP2W(PotionEffectHolder.class, e -> e)
-            .registerP2W(ConfigurationNode.class, node -> {
-                var effectNode = node.node("effect");
-                var durationNode = node.node("duration");
-                var amplifierNode = node.node("amplifier");
-                var ambientNode = node.node("ambient");
-                var particlesNode = node.node("particles");
-                var iconNode = node.node("icon");
-
-                var holderOptional = resolve(effectNode.getString());
-                if (holderOptional.isPresent()) {
-                    var holder = holderOptional.get();
-                    return holder
-                            .duration(durationNode.getInt(holder.getDuration()))
-                            .amplifier(amplifierNode.getInt(holder.getAmplifier()))
-                            .ambient(ambientNode.getBoolean(holder.isAmbient()))
-                            .particles(particlesNode.getBoolean(holder.isParticles()))
-                            .icon(iconNode.getBoolean(holder.isIcon()));
+            .registerP2W(ConfigurationNode.class, CONFIGURATE_METHOD)
+            .registerP2W(Map.class, map -> {
+                try {
+                    return CONFIGURATE_METHOD.apply(BasicConfigurationNode.root().set(map));
+                } catch (SerializationException e) {
+                    e.printStackTrace();
                 }
                 return null;
             });

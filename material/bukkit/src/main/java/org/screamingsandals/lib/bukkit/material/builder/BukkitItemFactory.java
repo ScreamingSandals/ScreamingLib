@@ -86,7 +86,7 @@ public class BukkitItemFactory extends ItemFactory {
                             ((Repairable) meta).setRepairCost(item.getRepair());
                         }
                         meta.setUnbreakable(item.isUnbreakable());
-                        if (item.getLore() != null) {
+                        if (!item.getLore().isEmpty()) {
                             meta.setLore(item.getLore());
                         }
                         item.getEnchantments().forEach(e -> {
@@ -96,7 +96,7 @@ public class BukkitItemFactory extends ItemFactory {
                                 meta.addEnchant(e.as(Enchantment.class), e.getLevel(), true);
                             }
                         });
-                        if (item.getItemFlags() != null) {
+                        if (!item.getItemFlags().isEmpty()) {
                             try {
                                 meta.addItemFlags(item.getItemFlags().stream().map(ItemFlag::valueOf).toArray(ItemFlag[]::new));
                             } catch (IllegalArgumentException ignored) {
@@ -109,7 +109,7 @@ public class BukkitItemFactory extends ItemFactory {
                                 } catch (Throwable ignored) {
                                 }
                             }
-                            if (item.getPotionEffects() != null) {
+                            if (!item.getPotionEffects().isEmpty()) {
                                 item.getPotionEffects().forEach(potionEffectHolder -> ((PotionMeta) meta).addCustomEffect(potionEffectHolder.as(PotionEffect.class), true));
                             }
                         }
@@ -150,7 +150,7 @@ public class BukkitItemFactory extends ItemFactory {
                         }
                         item.setUnbreakable(meta.isUnbreakable());
                         if (meta.hasLore()) {
-                            item.setLore(meta.getLore());
+                            item.getLore().addAll(meta.getLore());
                         }
                         if (meta instanceof EnchantmentStorageMeta) {
                             ((EnchantmentStorageMeta) meta).getStoredEnchants().entrySet().forEach(entry ->
@@ -161,19 +161,16 @@ public class BukkitItemFactory extends ItemFactory {
                                     BukkitEnchantmentMapping.resolve(entry).ifPresent(item.getEnchantments()::add)
                             );
                         }
-                        item.setItemFlags(meta.getItemFlags().stream().map(ItemFlag::name).collect(Collectors.toList()));
+                        item.getItemFlags().addAll(meta.getItemFlags().stream().map(ItemFlag::name).collect(Collectors.toList()));
 
                         if (meta instanceof PotionMeta) {
                             try {
                                 BukkitPotionMapping.resolve(((PotionMeta) meta).getBasePotionData()).ifPresent(item::setPotion);
-                                var list = ((PotionMeta) meta).getCustomEffects().stream()
+                                item.getPotionEffects().addAll(((PotionMeta) meta).getCustomEffects().stream()
                                         .map(PotionEffectMapping::resolve)
                                         .filter(Optional::isPresent)
                                         .map(Optional::get)
-                                        .collect(Collectors.toList());
-                                if (!list.isEmpty()) {
-                                    item.setPotionEffects(list);
-                                }
+                                        .collect(Collectors.toList()));
                             } catch (Throwable ignored) {
                             }
                         }

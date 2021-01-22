@@ -64,7 +64,7 @@ public class SpongeItemFactory extends ItemFactory {
                     }
                     // repair
                     stack.offer(Keys.IS_UNBREAKABLE, item.isUnbreakable());
-                    if (item.getLore() != null) {
+                    if (!item.getLore().isEmpty()) {
                         stack.offer(Keys.LORE, item.getLore().stream().map(LegacyComponentSerializer.legacySection()::deserialize).collect(Collectors.toList()));
                     }
                     if (stack.supports(Keys.STORED_ENCHANTMENTS)) {
@@ -75,11 +75,11 @@ public class SpongeItemFactory extends ItemFactory {
                     if (item.getPotion() != null && stack.supports(Keys.POTION_TYPE)) {
                         stack.offer(Keys.POTION_TYPE, item.getPotion().as(PotionType.class));
                     }
-                    if (item.getPotionEffects() != null && stack.supports(Keys.POTION_EFFECTS)) {
+                    if (!item.getPotionEffects().isEmpty() && stack.supports(Keys.POTION_EFFECTS)) {
                         stack.offer(Keys.POTION_EFFECTS, item.getPotionEffects()
                                 .stream().map(holder -> holder.as(PotionEffect.class)).collect(Collectors.toList()));
                     }
-                    if (item.getItemFlags() != null) {
+                    if (!item.getItemFlags().isEmpty()) {
                         stack.offer(Keys.HIDE_ATTRIBUTES, item.getItemFlags().contains("HIDE_ATTRIBUTES"));
                         stack.offer(Keys.HIDE_CAN_DESTROY, item.getItemFlags().contains("HIDE_DESTROYS"));
                         // HIDE_DYE
@@ -111,7 +111,7 @@ public class SpongeItemFactory extends ItemFactory {
                     // repair
                     stack.get(Keys.IS_UNBREAKABLE).ifPresent(item::setUnbreakable);
                     stack.get(Keys.LORE).ifPresent(components ->
-                            item.setLore(components.stream().map(LegacyComponentSerializer.legacySection()::serialize).collect(Collectors.toList()))
+                            item.getLore().addAll(components.stream().map(LegacyComponentSerializer.legacySection()::serialize).collect(Collectors.toList()))
                     );
                     if (stack.supports(Keys.STORED_ENCHANTMENTS)) {
                         stack.get(Keys.STORED_ENCHANTMENTS).ifPresent(enchantments ->
@@ -128,69 +128,42 @@ public class SpongeItemFactory extends ItemFactory {
                     }
                     stack.get(Keys.HIDE_ATTRIBUTES).ifPresent(aBoolean -> {
                         if (aBoolean) {
-                            if (item.getItemFlags() != null) {
-                                item.setItemFlags(new ArrayList<>());
-                            }
                             item.getItemFlags().add("HIDE_ATTRIBUTES");
                         }
                     });
                     stack.get(Keys.HIDE_CAN_DESTROY).ifPresent(aBoolean -> {
                         if (aBoolean) {
-                            if (item.getItemFlags() != null) {
-                                item.setItemFlags(new ArrayList<>());
-                            }
                             item.getItemFlags().add("HIDE_DESTROYS");
                         }
                     });
                     /*stack.get(Keys.HIDE_DYE).ifPresent(aBoolean -> {
-                        if (item.getItemFlags() != null) {
-                            item.setItemFlags(new ArrayList<>());
-                        }
                         item.getItemFlags().add("HIDE_DYE");
                     });*/
                     stack.get(Keys.HIDE_ENCHANTMENTS).ifPresent(aBoolean -> {
-                        if (aBoolean) {
-                            if (item.getItemFlags() != null) {
-                                item.setItemFlags(new ArrayList<>());
-                            }
-                            item.getItemFlags().add("HIDE_ENCHANTS");
-                        }
                     });
                     stack.get(Keys.HIDE_CAN_PLACE).ifPresent(aBoolean -> {
                         if (aBoolean) {
-                            if (item.getItemFlags() != null) {
-                                item.setItemFlags(new ArrayList<>());
-                            }
                             item.getItemFlags().add("HIDE_PLACED_ON");
                         }
                     });
                     stack.get(Keys.HIDE_MISCELLANEOUS).ifPresent(aBoolean -> {
                         if (aBoolean) {
-                            if (item.getItemFlags() != null) {
-                                item.setItemFlags(new ArrayList<>());
-                            }
                             item.getItemFlags().add("HIDE_POTION_EFFECTS");
                         }
                     });
                     stack.get(Keys.HIDE_UNBREAKABLE).ifPresent(aBoolean -> {
                         if (aBoolean) {
-                            if (item.getItemFlags() != null) {
-                                item.setItemFlags(new ArrayList<>());
-                            }
                             item.getItemFlags().add("HIDE_UNBREAKABLE");
                         }
                     });
                     stack.get(Keys.POTION_TYPE).flatMap(PotionMapping::resolve).ifPresent(item::setPotion);
-                    stack.get(Keys.POTION_EFFECTS).ifPresent(potionEffects -> {
-                        var list = potionEffects.stream()
+                    stack.get(Keys.POTION_EFFECTS).ifPresent(potionEffects ->
+                        item.getPotionEffects().addAll(potionEffects.stream()
                                 .map(PotionEffectMapping::resolve)
                                 .filter(Optional::isPresent)
                                 .map(Optional::get)
-                                .collect(Collectors.toList());
-                        if (!list.isEmpty()) {
-                            item.setPotionEffects(list);
-                        }
-                    });
+                                .collect(Collectors.toList()))
+                    );
 
                     return item;
 

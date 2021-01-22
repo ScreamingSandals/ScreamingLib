@@ -75,13 +75,12 @@ public abstract class ItemFactory {
         if (!itemFlags.empty()) {
             if (itemFlags.isList()) {
                 try {
-                    item.setItemFlags(itemFlags.getList(String.class));
+                    item.getItemFlags().addAll(itemFlags.getList(String.class));
                 } catch (SerializationException e) {
                     e.printStackTrace();
                 }
             } else {
-                //noinspection ConstantConditions
-                item.setItemFlags(List.of(itemFlags.getString()));
+                item.getItemFlags().add(itemFlags.getString());
             }
         }
         var unbreakable = node.node("Unbreakable");
@@ -92,13 +91,12 @@ public abstract class ItemFactory {
         if (!lore.empty()) {
             if (lore.isList()) {
                 try {
-                    item.setLore(lore.getList(String.class));
+                    item.getLore().addAll(lore.getList(String.class));
                 } catch (SerializationException e) {
                     e.printStackTrace();
                 }
             } else {
-                //noinspection ConstantConditions
-                item.setLore(List.of(lore.getString()));
+                item.getLore().add(lore.getString());
             }
         }
         var enchants = node.node("enchants");
@@ -139,13 +137,12 @@ public abstract class ItemFactory {
         var potionEffects = node.node("effects");
         if (!potionEffects.empty()) {
             if (potionEffects.isList()) {
-                item.setPotionEffects(potionEffects.childrenList().stream()
+                item.getPotionEffects().addAll(potionEffects.childrenList().stream()
                         .map(PotionEffectMapping::resolve)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toList()));
             } else {
-                item.setPotionEffects(new ArrayList<>());
                 PotionEffectMapping.resolve(potionEffects).ifPresent(item.getPotionEffects()::add);
             }
         }
@@ -288,7 +285,8 @@ public abstract class ItemFactory {
         if (name != null && !name.trim().isEmpty()) {
             item.setDisplayName(name.trim());
         }
-        item.setLore(lore);
+        item.getLore().clear();
+        item.getLore().addAll(lore);
 
         return Optional.of(item);
     }

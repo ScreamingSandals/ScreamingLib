@@ -16,10 +16,10 @@ import java.util.Objects;
 @Data
 @ConfigSerializable
 public class Item implements Cloneable, NormalizableWrapper<Item> {
-    private List<EnchantmentHolder> enchantments = new LinkedList<>();
-    private List<PotionEffectHolder> potionEffects = new LinkedList<>();
-    private List<String> lore = new LinkedList<>();
-    private List<String> itemFlags = new LinkedList<>();
+    private final List<EnchantmentHolder> enchantments = new LinkedList<>();
+    private final List<PotionEffectHolder> potionEffects = new LinkedList<>();
+    private final List<String> lore = new LinkedList<>();
+    private final List<String> itemFlags = new LinkedList<>();
     //@Nullable // in initial state it's null
     private MaterialHolder material;
     @Nullable
@@ -50,10 +50,10 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
     @Override
     public Item clone() {
         Item item = new Item();
-        item.setLore(new LinkedList<>(!lore.isEmpty() ? lore : List.of()));
-        item.setItemFlags(new LinkedList<>(!itemFlags.isEmpty() ? itemFlags : List.of()));
-        item.setPotionEffects(new LinkedList<>(!potionEffects.isEmpty() ? potionEffects : List.of()));
-        item.setEnchantments(new LinkedList<>(!enchantments.isEmpty() ? enchantments : List.of()));
+        item.getLore().addAll(lore);
+        item.getItemFlags().addAll(itemFlags);
+        item.getPotionEffects().addAll(potionEffects);
+        item.getEnchantments().addAll(enchantments);
         item.setMaterial(material);
         item.setDisplayName(displayName);
         item.setLocalizedName(localizedName);
@@ -93,10 +93,10 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
                 && Objects.equals(customModelData, item.customModelData)
                 && repair == item.repair
                 && unbreakable == item.unbreakable
-                && Objects.equals(item.lore, lore)
+                && lore.equals(item.lore)
                 && enchantments.equals(item.enchantments)
-                && Objects.equals(item.itemFlags, itemFlags)
+                && itemFlags.equals(item.itemFlags)
                 && Objects.equals(item.potion, potion)
-                && Objects.equals(item.potionEffects, potionEffects);
+                && potionEffects.equals(item.potionEffects);
     }
 }

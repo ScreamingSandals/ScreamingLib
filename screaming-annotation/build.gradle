@@ -1,3 +1,4 @@
 dependencies {
-    shade project(':utils')
+    compileOnly project(':utils')
+    shade 'com.squareup:javapoet:1.13.0'
 }

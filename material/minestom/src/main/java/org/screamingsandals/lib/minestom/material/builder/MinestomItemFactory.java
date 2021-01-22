@@ -67,7 +67,7 @@ public class MinestomItemFactory extends ItemFactory {
                     }
                     // repair
                     stack.setUnbreakable(item.isUnbreakable());
-                    if (item.getLore() != null) {
+                    if (!item.getLore().isEmpty()) {
                         stack.setLore(item.getLore().stream().map(ColoredText::of).collect(Collectors.toCollection(ArrayList::new)));
                     }
                     item.getEnchantments().forEach(e -> {
@@ -77,7 +77,7 @@ public class MinestomItemFactory extends ItemFactory {
                             stack.setEnchantment(e.as(Enchantment.class), (short) e.getLevel());
                         }
                     });
-                    if (item.getItemFlags() != null) {
+                    if (!item.getItemFlags().isEmpty()) {
                         try {
                             stack.addItemFlags(item.getItemFlags().stream().map(ItemFlag::valueOf).toArray(ItemFlag[]::new));
                         } catch (IllegalArgumentException ignored) {}
@@ -86,7 +86,7 @@ public class MinestomItemFactory extends ItemFactory {
                         if (item.getPotion() != null) {
                             ((PotionMeta) stack.getItemMeta()).setPotionType(item.getPotion().as(PotionType.class));
                         }
-                        if (item.getPotionEffects() != null) {
+                        if (!item.getPotionEffects().isEmpty()) {
                             ((PotionMeta) stack.getItemMeta()).getCustomPotionEffects().addAll(item.getPotionEffects().stream().map(effect -> effect.as(CustomPotionEffect.class)).collect(Collectors.toList()));
                         }
                     }
@@ -113,7 +113,7 @@ public class MinestomItemFactory extends ItemFactory {
                     // repair
                     item.setUnbreakable(stack.isUnbreakable());
                     if (stack.hasLore()) {
-                        item.setLore(stack.getLore().stream().map(ColoredText::getMessage).collect(Collectors.toList()));
+                        item.getLore().addAll(stack.getLore().stream().map(ColoredText::getMessage).collect(Collectors.toList()));
                     }
                     if (stack.getItemMeta() instanceof EnchantedBookMeta) {
                         ((EnchantedBookMeta) stack.getItemMeta()).getStoredEnchantmentMap().entrySet().stream().map(MinestomEnchantmentMapping::resolve).forEach(en ->
@@ -124,17 +124,14 @@ public class MinestomItemFactory extends ItemFactory {
                                 item.getEnchantments().add(en.orElseThrow())
                         );
                     }
-                    item.setItemFlags(stack.getItemFlags().stream().map(ItemFlag::name).collect(Collectors.toList()));
+                    item.getItemFlags().addAll(stack.getItemFlags().stream().map(ItemFlag::name).collect(Collectors.toList()));
                     if (stack.getItemMeta() instanceof PotionMeta) {
                         MinestomPotionMapping.resolve(((PotionMeta) stack.getItemMeta()).getPotionType()).ifPresent(item::setPotion);
-                        var list = ((PotionMeta) stack.getItemMeta()).getCustomPotionEffects().stream()
+                        item.getPotionEffects().addAll(((PotionMeta) stack.getItemMeta()).getCustomPotionEffects().stream()
                                 .map(PotionEffectMapping::resolve)
                                 .filter(Optional::isPresent)
                                 .map(Optional::get)
-                                .collect(Collectors.toList());
-                        if (!list.isEmpty()) {
-                            item.setPotionEffects(list);
-                        }
+                                .collect(Collectors.toList()));
                     }
 
                     return item;
