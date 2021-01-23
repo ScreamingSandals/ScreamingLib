@@ -15,7 +15,9 @@ import org.screamingsandals.lib.world.LocationMapping;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.SystemSubject;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.permission.Subject;
+import org.spongepowered.api.world.server.ServerLocation;
 
 import java.util.Optional;
 
@@ -85,6 +87,16 @@ public class SpongePlayerMapper extends PlayerMapper {
     @Override
     public LocationHolder getLocation0(PlayerWrapper playerWrapper) {
         return LocationMapping.resolve(playerWrapper.as(ServerPlayer.class).getLocation()).orElseThrow();
+    }
+
+    @Override
+    public void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
+        if (wrapper.as(ServerPlayer.class).setLocation(location.as(ServerLocation.class))) {
+            Sponge.getServer().getScheduler().submit(
+                    Task.builder()
+                            .execute(callback)
+                            .build());
+        }
     }
 
     @Override

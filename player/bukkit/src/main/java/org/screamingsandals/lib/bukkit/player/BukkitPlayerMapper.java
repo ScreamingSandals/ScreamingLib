@@ -1,9 +1,11 @@
 package org.screamingsandals.lib.bukkit.player;
 
+import io.papermc.lib.PaperLib;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -83,6 +85,21 @@ public class BukkitPlayerMapper extends PlayerMapper {
     @Override
     public LocationHolder getLocation0(PlayerWrapper playerWrapper) {
         return LocationMapping.resolve(playerWrapper.as(Player.class).getLocation()).orElseThrow();
+    }
+
+    @Override
+    public void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
+        PaperLib.teleportAsync(wrapper.as(Player.class), location.as(Location.class))
+                .thenAccept(result -> {
+                    if (result) {
+                        //TODO: tasker
+                        callback.run();
+                    }
+                })
+                .exceptionally(ex -> {
+                    ex.printStackTrace();
+                    return null;
+                });
     }
 
     @Override

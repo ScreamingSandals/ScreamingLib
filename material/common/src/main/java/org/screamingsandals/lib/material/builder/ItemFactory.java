@@ -15,10 +15,7 @@ import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -75,7 +72,8 @@ public abstract class ItemFactory {
         if (!itemFlags.empty()) {
             if (itemFlags.isList()) {
                 try {
-                    item.getItemFlags().addAll(itemFlags.getList(String.class));
+                    item.getItemFlags()
+                            .addAll(Objects.requireNonNull(itemFlags.getList(String.class)));
                 } catch (SerializationException e) {
                     e.printStackTrace();
                 }
@@ -91,7 +89,8 @@ public abstract class ItemFactory {
         if (!lore.empty()) {
             if (lore.isList()) {
                 try {
-                    item.getLore().addAll(lore.getList(String.class));
+                    item.getLore().addAll(
+                            Objects.requireNonNull(lore.getList(String.class)));
                 } catch (SerializationException e) {
                     e.printStackTrace();
                 }

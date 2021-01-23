@@ -37,6 +37,14 @@ public class PlayerWrapper extends SenderWrapper {
         return PlayerMapper.getLocation(this);
     }
 
+    public void teleport(LocationHolder location, Runnable callback) {
+        PlayerMapper.teleport(this, location, callback);
+    }
+
+    public void teleport(LocationHolder location) {
+        teleport(location, null);
+    }
+
     public <T> T as(Class<T> type) {
         return PlayerMapper.convertPlayerWrapper(this, type);
     }

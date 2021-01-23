@@ -8,6 +8,7 @@ import net.minestom.server.command.CommandSender;
 import net.minestom.server.command.ConsoleSender;
 import net.minestom.server.entity.Player;
 import net.minestom.server.extensions.Extension;
+import net.minestom.server.utils.Position;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.player.PlayerMapper;
@@ -88,6 +89,11 @@ public class MinestomPlayerMapper extends PlayerMapper {
     @Override
     public LocationHolder getLocation0(PlayerWrapper playerWrapper) {
         return LocationMapping.resolve(playerWrapper.as(Player.class)).orElseThrow();
+    }
+
+    @Override
+    public void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
+        wrapper.as(Player.class).teleport(location.as(Position.class), callback);
     }
 
     @Override

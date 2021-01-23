@@ -18,7 +18,7 @@ public abstract class PlayerMapper {
     private static PlayerMapper playerMapper = null;
     private static AudienceProvider provider = null;
 
-    public static void init(@NotNull Supplier<PlayerMapper> playerUtilsSupplier, 
+    public static void init(@NotNull Supplier<PlayerMapper> playerUtilsSupplier,
                             AudienceProvider audienceProvider) {
         if (playerMapper != null) {
             throw new UnsupportedOperationException("PlayerMapper is already initialized.");
@@ -34,6 +34,10 @@ public abstract class PlayerMapper {
 
         playerConverter.finish();
         senderConverter.finish();
+    }
+
+    public static boolean isInitialized() {
+        return playerMapper != null;
     }
 
     public static <T> PlayerWrapper wrapPlayer(T player) {
@@ -71,8 +75,6 @@ public abstract class PlayerMapper {
         playerMapper.sendMessage0(playerWrapper, message);
     }
 
-    public abstract void sendMessage0(SenderWrapper playerWrapper, String message);
-
     public static void closeInventory(PlayerWrapper playerWrapper) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
@@ -80,16 +82,12 @@ public abstract class PlayerMapper {
         playerMapper.closeInventory0(playerWrapper);
     }
 
-    public abstract void closeInventory0(PlayerWrapper playerWrapper);
-
     public static Container getPlayerInventory(PlayerWrapper playerWrapper) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
         }
         return playerMapper.getPlayerInventory0(playerWrapper);
     }
-
-    public abstract Container getPlayerInventory0(PlayerWrapper playerWrapper);
 
     public static Optional<Container> getOpenedInventory(PlayerWrapper playerWrapper) {
         if (playerMapper == null) {
@@ -105,13 +103,24 @@ public abstract class PlayerMapper {
         return playerMapper.getLocation0(wrapper);
     }
 
+    public static void teleport(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+        }
+        playerMapper.teleport0(wrapper, location, callback);
+    }
+
+    public abstract void closeInventory0(PlayerWrapper playerWrapper);
+
+    public abstract void sendMessage0(SenderWrapper playerWrapper, String message);
+
+    public abstract Container getPlayerInventory0(PlayerWrapper playerWrapper);
+
     public abstract Optional<Container> getOpenedInventory0(PlayerWrapper playerWrapper);
 
     public abstract LocationHolder getLocation0(PlayerWrapper playerWrapper);
 
-    public static boolean isInitialized() {
-        return playerMapper != null;
-    }
+    public abstract void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback);
 
     protected abstract Audience getAudience(SenderWrapper wrapper, AudienceProvider provider);
 }
