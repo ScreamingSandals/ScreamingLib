@@ -45,7 +45,7 @@ public class BungeeTaskInitializer extends AbstractTaskInitializer {
                     builder.getTimeUnit().getTime((int) builder.getDelay()), builder.getTimeUnit().getTimeUnit());
         }
 
-        if (builder.getRepeat() > 1) {
+        if (builder.getRepeat() > 0) {
             task = scheduler.schedule(plugin, runnable,
                     builder.getTimeUnit().getTime((int) builder.getDelay()),
                     builder.getTimeUnit().getTime((int) builder.getRepeat()),
