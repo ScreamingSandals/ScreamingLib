@@ -21,8 +21,8 @@ public class ChatEventHandlerFactory {
     private final Map<EventPriority, com.velocitypowered.api.event.EventHandler<com.velocitypowered.api.event.player.PlayerChatEvent>> map = new HashMap<>();
 
     public ChatEventHandlerFactory(final Object plugin, final ProxyServer proxyServer) {
-        EventManager.getBaseEventManager().register(HandlerRegisteredEvent.class, handlerRegisteredEvent -> {
-            if (handlerRegisteredEvent.getEventManager() != EventManager.getBaseEventManager()) {
+        EventManager.getDefaultEventManager().register(HandlerRegisteredEvent.class, handlerRegisteredEvent -> {
+            if (handlerRegisteredEvent.getEventManager() != EventManager.getDefaultEventManager()) {
                 return;
             }
 
@@ -34,7 +34,7 @@ public class ChatEventHandlerFactory {
                 final com.velocitypowered.api.event.EventHandler<com.velocitypowered.api.event.player.PlayerChatEvent> handler = event -> {
                     var wrapEvent = new PlayerChatEvent(ProxiedPlayerMapper.wrapPlayer(event.getPlayer()), event.getResult().getMessage().orElse(event.getMessage()), event.getResult().isAllowed(), event.getMessage().startsWith("/"));
                     //noinspection unchecked
-                    EventManager.getBaseEventManager().fireEvent(wrapEvent);
+                    EventManager.getDefaultEventManager().fireEvent(wrapEvent);
                     if (!wrapEvent.isCancelled()) {
                         event.setResult(com.velocitypowered.api.event.player.PlayerChatEvent.ChatResult.message(wrapEvent.getMessage()));
                     } else {

@@ -1,21 +1,19 @@
 package org.screamingsandals.lib.utils.event;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.*;
 import java.util.function.Consumer;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EventManager {
 
     @Getter
-    private static final EventManager baseEventManager = new EventManager();
+    private static final EventManager defaultEventManager = new EventManager();
 
     @Getter
-    private EventManager parent;
+    private EventManager customManager;
     private final Map<Class<?>, List<EventHandler<?>>> handlers = new HashMap<>();
 
     public <T> EventHandler<T> register(Class<T> event, Consumer<T> consumer) {
@@ -30,7 +28,8 @@ public class EventManager {
         return register(event, EventHandler.of(consumer, eventPriority));
     }
 
-    public <T> EventHandler<T> register(Class<T> event, Consumer<T> consumer, EventPriority eventPriority, boolean ignoreCancelled) {
+    public <T> EventHandler<T> register(Class<T> event, Consumer<T> consumer, EventPriority eventPriority,
+                                        boolean ignoreCancelled) {
         return register(event, EventHandler.of(consumer, eventPriority, ignoreCancelled));
     }
 
@@ -44,36 +43,38 @@ public class EventManager {
     }
 
     public <T> void unregister(EventHandler<T> handler) {
-        handlers.forEach((event, consumers) -> consumers.removeIf(e -> {
-            if (handler == e) {
-                fireEvent(new HandlerUnregisteredEvent(this, event, handler));
-                return true;
-            }
-            return false;
-        }));
+        handlers.forEach((event, consumers) ->
+                consumers.removeIf(e -> {
+                    if (handler == e) {
+                        fireEvent(new HandlerUnregisteredEvent(this, event, handler));
+                        return true;
+                    }
+                    return false;
+                }));
     }
 
-    public <K> K fireEvent(K event) {
-        Arrays.stream(EventPriority.values()).forEach(priority -> fireEvent(event, priority));
-        return event;
+    public <K> boolean fireEvent(K event) {
+        EventPriority.VALUES.forEach(priority -> fireEvent(event, priority));
+        return wasEventFired(event);
     }
 
-    public <K> K fireEvent(K event, EventPriority eventPriority) {
+    public <K> boolean fireEvent(K event, EventPriority eventPriority) {
         //noinspection unchecked
-        handlers.entrySet().stream()
+        handlers.entrySet()
+                .stream()
                 .filter(entry -> entry.getKey().isInstance(event))
                 .map(Map.Entry::getValue)
                 .flatMap(Collection::stream)
                 .filter(eventHandler -> eventHandler.getEventPriority() == eventPriority)
                 .forEach(eventHandler -> ((EventHandler<Object>) eventHandler).fire(event));
 
-        if (parent != null) {
-            parent.fireEvent(event, eventPriority);
-        } else if (this != baseEventManager) {
-            baseEventManager.fireEvent(event, eventPriority);
+        if (customManager != null) {
+            customManager.fireEvent(event, eventPriority);
+        } else if (this != defaultEventManager) {
+            defaultEventManager.fireEvent(event, eventPriority);
         }
 
-        return event;
+        return wasEventFired(event);
     }
 
     public void unregisterAll() {
@@ -84,9 +85,9 @@ public class EventManager {
         handlers.clear();
     }
 
-    public void setParent(EventManager parent) {
-        if (this != baseEventManager) {
-            this.parent = parent;
+    public void setCustomManager(EventManager parent) {
+        if (this != defaultEventManager) {
+            this.customManager = parent;
         }
     }
 
@@ -96,8 +97,18 @@ public class EventManager {
 
     @SuppressWarnings("unchecked")
     public void cloneEventManager(EventManager newEventManager) {
-        newEventManager.handlers.forEach((event, handlers) -> handlers.forEach(handler ->
-                register((Class<Object>) event, (EventHandler<Object>) handler)
-        ));
+        newEventManager.handlers.forEach((event, handlers) ->
+                handlers.forEach(handler ->
+                        register((Class<Object>) event, (EventHandler<Object>) handler)
+                ));
+    }
+
+    private <E> boolean wasEventFired(E event) {
+        if (event instanceof Cancellable) {
+            final var cancellable = (Cancellable) event;
+            return cancellable.isCancelled();
+        }
+
+        return true;
     }
 }

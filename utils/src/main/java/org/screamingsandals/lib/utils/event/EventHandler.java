@@ -27,7 +27,9 @@ public class EventHandler<E> {
 
     public void fire(E event) {
         try {
-            if (ignoreCancelled && event instanceof Cancellable && ((Cancellable) event).isCancelled()) {
+            if (ignoreCancelled
+                    && event instanceof Cancellable
+                    && ((Cancellable) event).isCancelled()) {
                 return;
             }
             ConsumerExecutor.execute(consumer, event);

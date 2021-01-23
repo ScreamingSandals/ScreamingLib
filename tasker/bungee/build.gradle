@@ -1,0 +1,5 @@
+dependencies {
+    api project(':tasker-common')
+
+    compileOnly bungeecord(BUNGEECORD_VERSION)
+}

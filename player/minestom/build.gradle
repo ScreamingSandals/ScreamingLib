@@ -1,5 +1,4 @@
 dependencies {
-
     api project(':player-common')
 
     compileOnly project(':material-common')
