@@ -4,4 +4,6 @@ dependencies {
     compileOnly project(':material-common')
     compileOnly project(':world-common')
     compileOnly 'com.github.Minestom:Minestom:' + MINESTOM_VERSION
+
+    shade 'com.github.mworzala:adventure-platform-minestom:' + ADVENTURE_MINESTOM_PLATFORM_VERSION
 }

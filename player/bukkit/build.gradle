@@ -1,7 +1,10 @@
 dependencies {
     shade project(':utils')
     shade project(':player-common')
+    shade paperlib()
     compileOnly project(':material-common')
     compileOnly project(':world-common')
     compileOnly paper(PAPER_VERSION)
+
+    shade group: 'net.kyori', name: 'adventure-platform-bukkit', version: ADVENTURE_PLATFORM_VERSION
 }

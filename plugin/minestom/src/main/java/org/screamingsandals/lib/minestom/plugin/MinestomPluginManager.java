@@ -31,12 +31,16 @@ public class MinestomPluginManager extends PluginManager {
 
     @Override
     protected Optional<PluginDescription> getPlugin0(PluginKey pluginKey) {
-        return Optional.ofNullable(MinecraftServer.getExtensionManager().getExtension(pluginKey.as(String.class))).map(this::wrap);
+        return Optional.ofNullable(MinecraftServer.getExtensionManager().getExtension(pluginKey.as(String.class)))
+                .map(this::wrap);
     }
 
     @Override
     protected List<PluginDescription> getAllPlugins0() {
-        return MinecraftServer.getExtensionManager().getExtensions().stream().map(this::wrap).collect(Collectors.toList());
+        return MinecraftServer.getExtensionManager().getExtensions()
+                .stream()
+                .map(this::wrap)
+                .collect(Collectors.toList());
     }
 
     @Override
