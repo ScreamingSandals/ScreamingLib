@@ -32,8 +32,6 @@ Supported platforms are: bungee, velocity
 ```
 
 ### With Gradle
-
-#### Standard Gradle
 ```groovy
 repositories {
     maven { 
@@ -43,19 +41,6 @@ repositories {
 
 dependencies {
     implementation 'org.screamingsandals.lib:proxiedplayer-YOUR_PLATFORM:LATEST_VERSION_HERE'
-}
-
-// Shadow plugin configuration and relocation package org.screamingsandals.lib to your own package
-```
-
-#### ScreamingSandals' Plugin Builder
-```groovy
-dependencies {
-    shade screaming('proxiedplayer-YOUR_PLATFORM', 'LATEST_VERSION')
-}
-
-shadowJar {
-    relocate 'org.screamingsandals.lib', 'com.example.package.lib'
 }
 ```
 

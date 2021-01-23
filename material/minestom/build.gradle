@@ -1,5 +1,5 @@
 dependencies {
-    shade project(':utils')
-    shade project(':material-common')
+    api project(':material-common')
+
     compileOnly 'com.github.Minestom:Minestom:' + MINESTOM_VERSION
 }

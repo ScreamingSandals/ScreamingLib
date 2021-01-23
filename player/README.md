@@ -7,6 +7,7 @@ Library for working with players on server side (Bukkit, Sponge, Minestom)
 * More features are WIP
 
 [Material Resolver](../material/README.md) is optional dependency. If you want inventory features, you need to shade it.
+[World](../world/README.md) is optional dependency. If you want features connected with worlds and locations, you need to shade it.
 
 ## Implementing lib to your project
 
@@ -35,7 +36,6 @@ Supported platforms are: bukkit, sponge, minestom
 
 ### With Gradle
 
-#### Standard Gradle
 ```groovy
 repositories {
     maven { 
@@ -49,18 +49,6 @@ dependencies {
 
 // Shadow plugin configuration and relocation package org.screamingsandals.lib to your own package
 ```
-
-#### ScreamingSandals' Plugin Builder
-```groovy
-dependencies {
-    shade screaming('player-YOUR_PLATFORM', 'LATEST_VERSION')
-}
-
-shadowJar {
-    relocate 'org.screamingsandals.lib', 'com.example.package.lib'
-}
-```
-
 
 
 

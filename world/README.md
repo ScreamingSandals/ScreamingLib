@@ -1,13 +1,8 @@
-# Material Resolver
-Library for working with items. Currently optimized for items, blocks are planned.
+# World
+Library for working with worlds and locations.
 
 ## Features
-* Material type resolving
-* Potion type resolving
-* Enchantment resolving
-* Item building  
-* Modifying inventories  
-* More features are WIP
+* Location wrapping
 
 ## Implementing lib to your project
 
@@ -25,7 +20,7 @@ Supported platforms are: bukkit, sponge, minestom
 <dependencies>
     <dependency>
         <groupId>org.screamingsandals.lib</groupId>
-        <artifactId>material-YOUR_PLATFORM</artifactId>
+        <artifactId>world-YOUR_PLATFORM</artifactId>
         <version>LATEST_VERSION</version>
         <scope>compile</scope>
     </dependency>
@@ -44,10 +39,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.screamingsandals.lib:material-YOUR_PLATFORM:LATEST_VERSION_HERE'
+    implementation 'org.screamingsandals.lib:world-YOUR_PLATFORM:LATEST_VERSION_HERE'
 }
-
-// Shadow plugin configuration and relocation package org.screamingsandals.lib to your own package
 ```
 
 

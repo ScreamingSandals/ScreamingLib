@@ -1,7 +1,8 @@
 dependencies {
-    shade project(':utils')
+    api project(':utils')
+
     compileOnly project(':material-common')
     compileOnly project(':world-common')
 
-    api group: 'net.kyori', name: 'adventure-platform-api', version: ADVENTURE_PLATFORM_VERSION
+    api 'net.kyori:adventure-platform-api:' + ADVENTURE_PLATFORM_VERSION
 }

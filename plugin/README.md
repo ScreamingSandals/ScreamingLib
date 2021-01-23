@@ -1,17 +1,14 @@
-# Material Resolver
-Library for working with items. Currently optimized for items, blocks are planned.
+# Plugin
+Library for generating main classes.
 
 ## Features
-* Material type resolving
-* Potion type resolving
-* Enchantment resolving
-* Item building  
-* Modifying inventories  
-* More features are WIP
+* List of all plugins.
+* Main classes generation.
+* Plugin files (like plugin.yml) generation.
 
 ## Implementing lib to your project
 
-Supported platforms are: bukkit, sponge, minestom
+Supported platforms are: bukkit, sponge, minestom, bungee, velocity
 
 ### With Maven
 ```xml
@@ -25,9 +22,15 @@ Supported platforms are: bukkit, sponge, minestom
 <dependencies>
     <dependency>
         <groupId>org.screamingsandals.lib</groupId>
-        <artifactId>material-YOUR_PLATFORM</artifactId>
+        <artifactId>plugin-YOUR_PLATFORM</artifactId>
         <version>LATEST_VERSION</version>
         <scope>compile</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.screamingsandals.lib</groupId>
+        <artifactId>screaming-annotation</artifactId>
+        <version>LATEST_VERSION</version>
+        <scope>provided</scope>
     </dependency>
 </dependencies>
 
@@ -44,10 +47,9 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.screamingsandals.lib:material-YOUR_PLATFORM:LATEST_VERSION_HERE'
+    implementation 'org.screamingsandals.lib:plugin-YOUR_PLATFORM:LATEST_VERSION_HERE'
+    annotationProcessor 'org.screamingsandals.lib:screaming-annotation:LATEST_VERSION_HERE'
 }
-
-// Shadow plugin configuration and relocation package org.screamingsandals.lib to your own package
 ```
 
 

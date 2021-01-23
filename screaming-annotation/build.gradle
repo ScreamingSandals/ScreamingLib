@@ -1,5 +1,5 @@
 dependencies {
-    shade project(':utils')
-    shade 'com.squareup:javapoet:1.13.0'
-    shade 'org.spongepowered:configurate-yaml:' + CONFIGURATE_VERSION
+    implementation project(':utils')
+    implementation 'com.squareup:javapoet:1.13.0'
+    implementation 'org.spongepowered:configurate-yaml:' + CONFIGURATE_VERSION
 }

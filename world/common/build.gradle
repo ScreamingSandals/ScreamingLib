@@ -1,4 +1,4 @@
 dependencies {
-    shade project(':utils')
-    shade 'org.spongepowered:configurate-core:' + CONFIGURATE_VERSION
+    api project(':utils')
+    api 'org.spongepowered:configurate-core:' + CONFIGURATE_VERSION
 }

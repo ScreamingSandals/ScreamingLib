@@ -1,6 +1,5 @@
 dependencies {
-    shade project(':utils')
-    shade project(':proxiedplayer-common')
+    api project(':proxiedplayer-common')
 
     compileOnly bungeecord(BUNGEECORD_VERSION)
 }

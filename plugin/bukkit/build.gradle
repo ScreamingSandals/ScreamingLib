@@ -1,5 +1,4 @@
 dependencies {
-    shade project(':utils')
-    shade project(':plugin-common')
+    api project(':plugin-common')
     compileOnly paper(PAPER_VERSION)
 }

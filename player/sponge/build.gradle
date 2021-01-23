@@ -1,6 +1,6 @@
 dependencies {
-    shade project(':utils')
-    shade project(':player-common')
+    api project(':player-common')
+
     compileOnly project(':material-common')
     compileOnly project(':world-common')
     compileOnly 'org.spongepowered:spongeapi:' + SPONGE_VERSION

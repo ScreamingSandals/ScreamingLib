@@ -16,8 +16,7 @@ import javax.tools.Diagnostic;
 import java.util.*;
 
 @SupportedAnnotationTypes({
-        "org.screamingsandals.lib.utils.annotations.Plugin",
-        "org.screamingsandals.lib.utils.annotations.AutoInitialization"
+        "org.screamingsandals.lib.utils.annotations.Plugin"
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
 public class ScreamingAnnotationProcessor extends AbstractProcessor {
