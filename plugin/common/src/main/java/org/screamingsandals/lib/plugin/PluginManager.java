@@ -1,11 +1,13 @@
 package org.screamingsandals.lib.plugin;
 
 import org.screamingsandals.lib.utils.PlatformType;
+import org.screamingsandals.lib.utils.annotations.AbstractMapping;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+@AbstractMapping
 public abstract class PluginManager {
     private static PluginManager pluginManager;
 

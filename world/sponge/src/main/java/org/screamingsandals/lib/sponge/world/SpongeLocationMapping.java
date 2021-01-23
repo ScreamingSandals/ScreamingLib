@@ -1,13 +1,13 @@
 package org.screamingsandals.lib.sponge.world;
 
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.AutoInitialization;
+import org.screamingsandals.lib.utils.annotations.PlatformMapping;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapping;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.world.server.ServerLocation;
 
-@AutoInitialization(platform = PlatformType.SPONGE)
+@PlatformMapping(platform = PlatformType.SPONGE)
 public class SpongeLocationMapping extends LocationMapping {
 
     public static void init() {

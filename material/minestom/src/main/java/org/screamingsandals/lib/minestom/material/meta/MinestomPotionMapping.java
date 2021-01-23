@@ -4,11 +4,11 @@ import net.minestom.server.potion.PotionType;
 import org.screamingsandals.lib.material.meta.PotionHolder;
 import org.screamingsandals.lib.material.meta.PotionMapping;
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.AutoInitialization;
+import org.screamingsandals.lib.utils.annotations.PlatformMapping;
 
 import java.util.Arrays;
 
-@AutoInitialization(platform = PlatformType.MINESTOM)
+@PlatformMapping(platform = PlatformType.MINESTOM)
 public class MinestomPotionMapping extends PotionMapping {
 
     public static void init() {

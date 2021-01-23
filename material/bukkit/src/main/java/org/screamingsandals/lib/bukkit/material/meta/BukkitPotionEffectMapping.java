@@ -5,11 +5,11 @@ import org.bukkit.potion.PotionEffectType;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.AutoInitialization;
+import org.screamingsandals.lib.utils.annotations.PlatformMapping;
 
 import java.util.Arrays;
 
-@AutoInitialization(platform = PlatformType.BUKKIT)
+@PlatformMapping(platform = PlatformType.BUKKIT)
 public class BukkitPotionEffectMapping extends PotionEffectMapping {
     public static void init() {
         PotionEffectMapping.init(BukkitPotionEffectMapping::new);

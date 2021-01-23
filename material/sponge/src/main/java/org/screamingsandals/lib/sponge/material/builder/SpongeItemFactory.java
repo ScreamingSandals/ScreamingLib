@@ -13,7 +13,7 @@ import org.screamingsandals.lib.sponge.material.meta.SpongePotionEffectMapping;
 import org.screamingsandals.lib.sponge.material.meta.SpongePotionMapping;
 import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.AutoInitialization;
+import org.screamingsandals.lib.utils.annotations.PlatformMapping;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.item.enchantment.Enchantment;
@@ -21,11 +21,10 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.potion.PotionType;
 
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@AutoInitialization(platform = PlatformType.SPONGE, loadAfter = {
+@PlatformMapping(platform = PlatformType.SPONGE, loadAfter = {
         SpongeMaterialMapping.class,
         SpongeEnchantmentMapping.class,
         SpongePotionMapping.class,

@@ -9,7 +9,14 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Plugin {
     String id();
+    String version();
     String name() default "";
     String description() default "";
     String[] authors() default {};
+    LoadTime loadTime() default LoadTime.POSTWORLD;
+
+    enum LoadTime {
+        STARTUP,
+        POSTWORLD;
+    }
 }

@@ -7,7 +7,7 @@ import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.AutoInitialization;
+import org.screamingsandals.lib.utils.annotations.PlatformMapping;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapping;
 import org.spongepowered.api.Sponge;
@@ -15,7 +15,7 @@ import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import java.util.Optional;
 
-@AutoInitialization(platform = PlatformType.SPONGE)
+@PlatformMapping(platform = PlatformType.SPONGE)
 public class SpongePlayerMapper extends PlayerMapper {
     public static void init() {
         PlayerMapper.init(SpongePlayerMapper::new);

@@ -4,7 +4,7 @@ import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
-import org.screamingsandals.lib.utils.annotations.AutoInitialization;
+import org.screamingsandals.lib.utils.annotations.PlatformMapping;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.metadata.PluginContributor;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@AutoInitialization(platform = PlatformType.SPONGE)
+@PlatformMapping(platform = PlatformType.SPONGE)
 public class SpongePluginManager extends PluginManager {
 
     public static void init() {

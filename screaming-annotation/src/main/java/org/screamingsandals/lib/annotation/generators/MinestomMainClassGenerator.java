@@ -4,7 +4,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import java.util.List;
 
-public class VelocityMainClassGenerator implements MainClassGenerator {
+public class MinestomMainClassGenerator implements MainClassGenerator {
     @Override
     public void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<TypeElement> autoInit) {
 

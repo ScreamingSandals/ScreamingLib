@@ -21,13 +21,13 @@ import org.screamingsandals.lib.minestom.material.meta.MinestomPotionMapping;
 import org.screamingsandals.lib.minestom.material.MinestomMaterialMapping;
 import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.AutoInitialization;
+import org.screamingsandals.lib.utils.annotations.PlatformMapping;
 
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@AutoInitialization(platform = PlatformType.MINESTOM, loadAfter = {
+@PlatformMapping(platform = PlatformType.MINESTOM, loadAfter = {
         MinestomMaterialMapping.class,
         MinestomEnchantmentMapping.class,
         MinestomPotionMapping.class,

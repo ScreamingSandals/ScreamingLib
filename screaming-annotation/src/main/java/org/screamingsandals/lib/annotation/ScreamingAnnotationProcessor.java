@@ -1,9 +1,10 @@
 package org.screamingsandals.lib.annotation;
 
-import com.squareup.javapoet.*;
-import lombok.Getter;
+import lombok.SneakyThrows;
+import org.screamingsandals.lib.annotation.generators.*;
+import org.screamingsandals.lib.annotation.utils.MiscUtils;
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.AutoInitialization;
+import org.screamingsandals.lib.utils.annotations.Init;
 import org.screamingsandals.lib.utils.annotations.Plugin;
 
 import javax.annotation.processing.*;
@@ -19,88 +20,96 @@ import java.util.*;
         "org.screamingsandals.lib.utils.annotations.AutoInitialization"
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
-@Getter
 public class ScreamingAnnotationProcessor extends AbstractProcessor {
-    private final Map<PlatformType, List<TypeElement>> platformInitiators = new HashMap<>();
     private TypeElement pluginContainer;
 
+    @SneakyThrows
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnv) {
-        roundEnv.getElementsAnnotatedWith(AutoInitialization.class)
-                .forEach(element -> {
-                    if (element.getKind() != ElementKind.CLASS || element.getModifiers().contains(Modifier.ABSTRACT)) {
-                        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "@AutoInitialization can be applied only too non-abstract class");
-                        throw new RuntimeException("@AutoInitialization can be applied only too non-abstract class");
-                    }
-
-                    var autoInitialization = element.getAnnotation(AutoInitialization.class);
-                    if (!platformInitiators.containsKey(autoInitialization.platform())) {
-                        platformInitiators.put(autoInitialization.platform(), new ArrayList<>());
-                    }
-                    platformInitiators.get(autoInitialization.platform()).add((TypeElement) element);
-                });
-
-
-/*
-        var pluginAnnotations = roundEnv.getElementsAnnotatedWith(Plugin.class);
-        if (!pluginAnnotations.isEmpty()) {
-            if (annotated || pluginAnnotations.size() > 1) {
-                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Only one class in project can be annotated with @Plugin");
-                return true;
+        var elements = roundEnv.getElementsAnnotatedWith(Plugin.class);
+        if (!elements.isEmpty()) {
+            if (pluginContainer != null || elements.size() > 1) {
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "@Plugin can be used only once");
+                throw new RuntimeException("@Plugin can be used only once");
             }
-            annotated = true;
-            var element = pluginAnnotations.iterator().next();
+            var element = elements.iterator().next(); // why it's not list
             if (element.getKind() != ElementKind.CLASS || element.getModifiers().contains(Modifier.ABSTRACT)) {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "@Plugin can be applied only too non-abstract class");
-                return true;
+                throw new RuntimeException("@Plugin can be applied only too non-abstract class");
             }
-            var type = (TypeElement) element;
+            pluginContainer = (TypeElement) element;
+        }
 
-            var bukkitPluginManagerClass = ClassName.get("org.screamingsandals.lib.bukkit.plugin", "BukkitPluginManager");
-            var pluginManagerClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginManager");
-            var pluginDescriptionClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginDescription");
-            var pluginKeyClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginKey");
+        if (roundEnv.processingOver()) {
+            if (pluginContainer != null) {
+                var platformInitiators = new HashMap<PlatformType, List<TypeElement>>();
 
-            var bukkitImpl = TypeSpec.classBuilder(type.getSimpleName().toString() + "_BukkitImpl")
-                    .addModifiers(Modifier.PUBLIC)
-                    .superclass(ClassName.get("org.bukkit.plugin.java", "JavaPlugin"))
-                    .addField(
-                            FieldSpec
-                                    .builder(ClassName.get("org.screamingsandals.lib.plugin", "PluginContainer"), "pluginContainer")
-                                    .addModifiers(Modifier.PRIVATE)
-                                    .build()
-                    ).addMethod(
-                            MethodSpec.methodBuilder("onLoad")
-                                    .addModifiers(Modifier.PUBLIC)
-                                    .returns(void.class)
-                                    .addStatement(CodeBlock.builder()
-                                            .add("$T.init(this)", bukkitPluginManagerClass)
+                var platformManager = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.plugin.PluginManager");
+                var platformManagers = MiscUtils.getAllSpecificPlatformImplementations(
+                        processingEnv,
+                        platformManager,
+                        Arrays.asList(PlatformType.values().clone()),
+                        false);
+                platformManagers.forEach((platformType, typeElement) ->
+                        platformInitiators.put(platformType, new ArrayList<>() {
+                            {
+                                add(typeElement);
+                            }
+                        })
+                );
 
-                                            // todo: initializers
+                var supportedPlatforms = List.copyOf(platformManagers.keySet());
 
-                                            .add("$T $N = this.getName()", String.class, "name")
-                                            .add("$T $N = $T.createKey($N)", pluginKeyClass, "key", pluginManagerClass, "name")
-                                            .add("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key")
+                Arrays.stream(pluginContainer.getAnnotationsByType(Init.class)).forEach(init -> {
+                    var platformList = new ArrayList<>(Arrays.asList(init.platforms()));
+                    if (platformList.isEmpty()) {
+                        platformList.addAll(supportedPlatforms);
+                    } else {
+                        platformList.retainAll(supportedPlatforms);
+                    }
+                    if (!platformList.isEmpty()) {
+                        MiscUtils.getSafelyTypeElements(processingEnv, init)
+                                .stream()
+                                .map(typeElement ->
+                                        MiscUtils.getAllSpecificPlatformImplementations(
+                                                processingEnv,
+                                                typeElement,
+                                                platformList,
+                                                true
+                                        )
+                                )
+                                .forEach(map ->
+                                        map.forEach((platformType, typeElement) -> {
+                                            if (!platformInitiators.get(platformType).contains(typeElement)) {
+                                                platformInitiators.get(platformType).add(typeElement);
+                                            }
+                                        })
+                                );
+                    }
+                });
 
-                                            .add("$N.init($N, this.getLogger())", "pluginContainer", "description")
-
-                                            .add("$N.load()", "pluginContainer")
-                                            .build())
-                                    .build()
-                    ).addMethod(
-                            MethodSpec.methodBuilder("onEnable")
-                                    .addModifiers(Modifier.PUBLIC)
-                                    .returns(void.class)
-                                    .addStatement("$N.enable()", "pluginContainer")
-                                    .build()
-                    ).addMethod(
-                            MethodSpec.methodBuilder("onDisable")
-                                    .addModifiers(Modifier.PUBLIC)
-                                    .returns(void.class)
-                                    .addStatement("$N.disable()", "pluginContainer")
-                                    .build()
-                    ).build();
-        }*/
+                System.out.println("PROCESSING PLUGIN CONTAINER " + pluginContainer);
+                System.out.println("Initiators " + platformInitiators);
+                if (platformInitiators.containsKey(PlatformType.BUKKIT)) {
+                    new BukkitMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.BUKKIT));
+                }
+                if (platformInitiators.containsKey(PlatformType.MINESTOM)) {
+                    new MinestomMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.MINESTOM));
+                }
+                if (platformInitiators.containsKey(PlatformType.SPONGE)) {
+                    new SpongeMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.SPONGE));
+                }
+                //if (platformInitiators.containsKey(PlatformType.FABRIC)) { }
+                //if (platformInitiators.containsKey(PlatformType.FORGE)) { }
+                if (platformInitiators.containsKey(PlatformType.BUNGEE)) {
+                    new BungeeMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.BUNGEE));
+                }
+                if (platformInitiators.containsKey(PlatformType.VELOCITY)) {
+                    new VelocityMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.VELOCITY));
+                }
+                //if (platformInitiators.containsKey(PlatformType.NUKKIT)) { }
+            }
+        }
         return true;
     }
 }

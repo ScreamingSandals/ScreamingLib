@@ -7,14 +7,14 @@ import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
-import org.screamingsandals.lib.utils.annotations.AutoInitialization;
+import org.screamingsandals.lib.utils.annotations.PlatformMapping;
 
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@AutoInitialization(platform = PlatformType.VELOCITY)
+@PlatformMapping(platform = PlatformType.VELOCITY)
 @RequiredArgsConstructor
 public class VelocityPluginManager extends PluginManager {
     private final com.velocitypowered.api.plugin.PluginManager pluginManager;

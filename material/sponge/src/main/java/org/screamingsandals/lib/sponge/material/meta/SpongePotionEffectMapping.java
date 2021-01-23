@@ -3,14 +3,14 @@ package org.screamingsandals.lib.sponge.material.meta;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.AutoInitialization;
+import org.screamingsandals.lib.utils.annotations.PlatformMapping;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.registry.RegistryTypes;
 
-@AutoInitialization(platform = PlatformType.SPONGE)
+@PlatformMapping(platform = PlatformType.SPONGE)
 public class SpongePotionEffectMapping extends PotionEffectMapping {
     public static void init() {
         PotionEffectMapping.init(SpongePotionEffectMapping::new);

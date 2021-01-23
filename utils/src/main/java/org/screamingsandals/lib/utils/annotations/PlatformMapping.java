@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
-public @interface AutoInitialization {
+public @interface PlatformMapping {
     PlatformType platform();
 
     Class<?>[] loadAfter() default {};

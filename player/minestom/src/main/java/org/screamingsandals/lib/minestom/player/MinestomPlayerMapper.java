@@ -9,13 +9,13 @@ import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.AutoInitialization;
+import org.screamingsandals.lib.utils.annotations.PlatformMapping;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapping;
 
 import java.util.Optional;
 
-@AutoInitialization(platform = PlatformType.MINESTOM)
+@PlatformMapping(platform = PlatformType.MINESTOM)
 public class MinestomPlayerMapper extends PlayerMapper {
     public static void init() {
         PlayerMapper.init(MinestomPlayerMapper::new);

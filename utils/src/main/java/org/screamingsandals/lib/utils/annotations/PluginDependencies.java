@@ -13,4 +13,5 @@ public @interface PluginDependencies {
     PlatformType platform();
     String[] dependencies() default {};
     String[] softDependencies() default {};
+    String[] loadBefore() default {};
 }

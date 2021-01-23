@@ -3,6 +3,7 @@ package org.screamingsandals.lib.material.meta;
 import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;
+import org.screamingsandals.lib.utils.annotations.AbstractMapping;
 import org.spongepowered.configurate.ConfigurationNode;
 
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@AbstractMapping(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
 public abstract class EnchantmentMapping {
 
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?:(?<namespace>[A-Za-z][A-Za-z0-9_.\\-]*):)?(?<enchantment>[A-Za-z][A-Za-z0-9_.\\-/]*)(\\s+(?<level>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
