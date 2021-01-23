@@ -1,8 +1,13 @@
 package org.screamingsandals.lib.bukkit.player;
 
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.AudienceProvider;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.player.PlayerMapper;
@@ -17,8 +22,9 @@ import java.util.Optional;
 
 @AutoInitialization(platform = PlatformType.BUKKIT)
 public class BukkitPlayerMapper extends PlayerMapper {
-    public static void init() {
-        PlayerMapper.init(BukkitPlayerMapper::new);
+
+    public static void init(Plugin plugin) {
+        PlayerMapper.init(BukkitPlayerMapper::new, BukkitAudiences.create(plugin));
     }
 
     public BukkitPlayerMapper() {
@@ -27,29 +33,30 @@ public class BukkitPlayerMapper extends PlayerMapper {
                 .registerW2P(Player.class, playerWrapper -> Bukkit.getPlayer(playerWrapper.getUuid()));
         senderConverter
                 .registerW2P(PlayerWrapper.class, wrapper -> {
-                    if (wrapper.getName().equalsIgnoreCase(CONSOLE_NAME)) {
-                        return null;
+                    if (wrapper.getType() == SenderWrapper.Type.PLAYER) {
+                        final var player = Bukkit.getPlayer(wrapper.getName());
+                        if (player == null) {
+                            return null;
+                        }
+                        return new PlayerWrapper(player.getName(), player.getUniqueId());
                     }
-                    final var player = Bukkit.getPlayer(wrapper.getName());
-                    if (player == null) {
-                        return null;
-                    }
-
-                    return new PlayerWrapper(player.getName(), player.getUniqueId());
+                    return null;
                 })
                 .registerW2P(CommandSender.class, wrapper -> {
-                    if (wrapper.getName().equalsIgnoreCase(CONSOLE_NAME)) {
-                        return Bukkit.getConsoleSender();
+                    switch (wrapper.getType()) {
+                        case PLAYER:
+                            return Bukkit.getPlayer(wrapper.getName());
+                        case CONSOLE:
+                            return Bukkit.getConsoleSender();
+                        default:
+                            return null;
                     }
-                    return Bukkit.getPlayer(wrapper.getName());
                 })
                 .registerP2W(CommandSender.class, sender -> {
-                    final var name = sender.getName();
-                    if (name.equalsIgnoreCase(CONSOLE_NAME)) {
-                        return new SenderWrapper(sender.getName(), SenderWrapper.Type.CONSOLE);
+                    if (sender instanceof Player) {
+                        return new SenderWrapper(sender.getName(), SenderWrapper.Type.PLAYER);
                     }
-
-                    return new SenderWrapper(sender.getName(), SenderWrapper.Type.PLAYER);
+                    return new SenderWrapper(sender.getName(), SenderWrapper.Type.CONSOLE);
                 });
     }
 
@@ -76,5 +83,18 @@ public class BukkitPlayerMapper extends PlayerMapper {
     @Override
     public LocationHolder getLocation0(PlayerWrapper playerWrapper) {
         return LocationMapping.resolve(playerWrapper.as(Player.class).getLocation()).orElseThrow();
+    }
+
+    @Override
+    protected Audience getAudience(SenderWrapper wrapper, AudienceProvider provider) {
+        final var audiences = (BukkitAudiences) provider;
+        final var sender = wrapper.as(CommandSender.class);
+        if (sender instanceof Player) {
+            return audiences.player(((Player) sender).getUniqueId());
+        } else if (sender instanceof ConsoleCommandSender) {
+            return audiences.console();
+        }
+
+        return Audience.empty();
     }
 }
