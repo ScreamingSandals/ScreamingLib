@@ -10,7 +10,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.screamingsandals.lib.bukkit.player.listener.AsyncPlayerPreLoginListener;
+import org.screamingsandals.lib.bukkit.player.listener.AsyncPlayerPreLoginEventListener;
+import org.screamingsandals.lib.bukkit.player.listener.PlayerJoinEventListener;
+import org.screamingsandals.lib.bukkit.player.listener.PlayerLeaveEventListener;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.player.PlayerMapper;
@@ -118,6 +120,8 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     private void registerListeners(Plugin plugin) {
-        plugin.getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginEventListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PlayerJoinEventListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PlayerLeaveEventListener(), plugin);
     }
 }

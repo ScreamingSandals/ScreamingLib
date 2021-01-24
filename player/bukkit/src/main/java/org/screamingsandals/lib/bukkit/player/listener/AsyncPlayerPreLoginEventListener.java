@@ -7,7 +7,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.utils.AdventureHelper;
 
-public class AsyncPlayerPreLoginListener implements Listener {
+public class AsyncPlayerPreLoginEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onLowest(AsyncPlayerPreLoginEvent chatEvent) {
