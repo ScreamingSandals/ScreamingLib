@@ -2,11 +2,11 @@ package org.screamingsandals.lib.velocity.proxiedplayer.event;
 
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.proxy.ProxyServer;
+import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.HandlerRegisteredEvent;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxiedplayer.event.PlayerChatEvent;
-import org.screamingsandals.lib.utils.event.EventManager;
-import org.screamingsandals.lib.utils.event.EventPriority;
-import org.screamingsandals.lib.utils.event.HandlerRegisteredEvent;
 
 import java.util.HashMap;
 import java.util.Map;

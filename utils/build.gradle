@@ -1,4 +1,6 @@
 dependencies {
     compileOnly 'org.spongepowered:configurate-core:' + CONFIGURATE_VERSION
     api 'com.google.guava:guava:' + GUAVA_VERSION
+    api 'net.kyori:adventure-platform-api:' + ADVENTURE_PLATFORM_VERSION
+    api 'net.kyori:adventure-text-serializer-legacy:' + ADVENTURE_VERSION
 }

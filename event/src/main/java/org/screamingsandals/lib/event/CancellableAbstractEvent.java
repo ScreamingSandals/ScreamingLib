@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.utils.event;
+package org.screamingsandals.lib.event;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

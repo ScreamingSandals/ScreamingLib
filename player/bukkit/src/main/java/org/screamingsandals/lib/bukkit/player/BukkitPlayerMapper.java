@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.bukkit.player.listener.AsyncPlayerPreLoginListener;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.player.PlayerMapper;
@@ -24,12 +25,13 @@ import java.util.Optional;
 
 @PlatformMapping(platform = PlatformType.BUKKIT)
 public class BukkitPlayerMapper extends PlayerMapper {
-
     public static void init(Plugin plugin) {
-        PlayerMapper.init(BukkitPlayerMapper::new, BukkitAudiences.create(plugin));
+        PlayerMapper.init(() -> new BukkitPlayerMapper(plugin), BukkitAudiences.create(plugin));
     }
 
-    public BukkitPlayerMapper() {
+    public BukkitPlayerMapper(Plugin plugin) {
+        registerListeners(plugin);
+
         playerConverter
                 .registerP2W(Player.class, player -> new PlayerWrapper(player.getName(), player.getUniqueId()))
                 .registerW2P(Player.class, playerWrapper -> Bukkit.getPlayer(playerWrapper.getUuid()));
@@ -113,5 +115,9 @@ public class BukkitPlayerMapper extends PlayerMapper {
         }
 
         return Audience.empty();
+    }
+
+    private void registerListeners(Plugin plugin) {
+        plugin.getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginListener(), plugin);
     }
 }

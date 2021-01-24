@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.utils.event;
+package org.screamingsandals.lib.event;
 
 import lombok.Getter;
 import org.screamingsandals.lib.utils.executor.AbstractServiceWithExecutor;

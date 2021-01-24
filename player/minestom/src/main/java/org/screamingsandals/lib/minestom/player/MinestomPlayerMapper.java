@@ -11,6 +11,7 @@ import net.minestom.server.extensions.Extension;
 import net.minestom.server.utils.Position;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.minestom.player.event.AsyncPlayerPreLoginListener;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
@@ -29,6 +30,7 @@ public class MinestomPlayerMapper extends PlayerMapper {
     }
 
     public MinestomPlayerMapper() {
+        registerEvents();
         playerConverter
                 .registerP2W(Player.class, player -> new PlayerWrapper(player.getUsername(), player.getUuid()))
                 .registerW2P(Player.class, playerWrapper -> MinecraftServer.getConnectionManager()
@@ -107,5 +109,9 @@ public class MinestomPlayerMapper extends PlayerMapper {
         }
 
         return Audience.empty();
+    }
+
+    private void registerEvents() {
+        new AsyncPlayerPreLoginListener();
     }
 }

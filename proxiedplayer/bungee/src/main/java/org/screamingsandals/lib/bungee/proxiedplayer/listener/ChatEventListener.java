@@ -5,37 +5,37 @@ import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
+import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxiedplayer.event.PlayerChatEvent;
-import org.screamingsandals.lib.utils.event.EventManager;
 
 public class ChatEventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onLowest(ChatEvent chatEvent) {
-        fireEvent(chatEvent, org.screamingsandals.lib.utils.event.EventPriority.LOWEST);
+        fireEvent(chatEvent, org.screamingsandals.lib.event.EventPriority.LOWEST);
     }
 
     @EventHandler(priority = EventPriority.LOW)
     public void onLow(ChatEvent chatEvent) {
-        fireEvent(chatEvent, org.screamingsandals.lib.utils.event.EventPriority.LOW);
+        fireEvent(chatEvent, org.screamingsandals.lib.event.EventPriority.LOW);
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onNormal(ChatEvent chatEvent) {
-        fireEvent(chatEvent, org.screamingsandals.lib.utils.event.EventPriority.NORMAL);
+        fireEvent(chatEvent, org.screamingsandals.lib.event.EventPriority.NORMAL);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onHigh(ChatEvent chatEvent) {
-        fireEvent(chatEvent, org.screamingsandals.lib.utils.event.EventPriority.HIGH);
+        fireEvent(chatEvent, org.screamingsandals.lib.event.EventPriority.HIGH);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onHighest(ChatEvent chatEvent) {
-        fireEvent(chatEvent, org.screamingsandals.lib.utils.event.EventPriority.HIGHEST);
+        fireEvent(chatEvent, org.screamingsandals.lib.event.EventPriority.HIGHEST);
     }
 
-    private void fireEvent(ChatEvent chatEvent, org.screamingsandals.lib.utils.event.EventPriority eventPriority) {
+    private void fireEvent(ChatEvent chatEvent, org.screamingsandals.lib.event.EventPriority eventPriority) {
         if (!(chatEvent.getSender() instanceof ProxiedPlayer)) {
             return;
         }

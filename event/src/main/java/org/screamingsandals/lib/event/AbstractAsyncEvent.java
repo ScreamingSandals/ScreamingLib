@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.utils.event;
+package org.screamingsandals.lib.event;
 
 public abstract class AbstractAsyncEvent extends AbstractEvent {
 
