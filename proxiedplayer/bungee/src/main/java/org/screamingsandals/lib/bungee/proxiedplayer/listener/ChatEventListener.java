@@ -40,7 +40,8 @@ public class ChatEventListener implements Listener {
             return;
         }
 
-        var event = new PlayerChatEvent(ProxiedPlayerMapper.wrapPlayer(chatEvent.getSender()), chatEvent.getMessage(), chatEvent.isCancelled(), chatEvent.isCommand());
+        var event = new PlayerChatEvent(ProxiedPlayerMapper.wrapPlayer(chatEvent.getSender()),
+                chatEvent.getMessage(), chatEvent.isCancelled(), chatEvent.isCommand());
         EventManager.getDefaultEventManager().fireEvent(event, eventPriority);
         chatEvent.setCancelled(event.isCancelled());
         chatEvent.setMessage(event.getMessage());

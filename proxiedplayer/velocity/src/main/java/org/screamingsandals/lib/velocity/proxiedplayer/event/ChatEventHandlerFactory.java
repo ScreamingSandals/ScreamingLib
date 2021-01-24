@@ -4,7 +4,9 @@ import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxiedplayer.event.PlayerChatEvent;
-import org.screamingsandals.lib.utils.event.*;
+import org.screamingsandals.lib.utils.event.EventManager;
+import org.screamingsandals.lib.utils.event.EventPriority;
+import org.screamingsandals.lib.utils.event.HandlerRegisteredEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +20,8 @@ public class ChatEventHandlerFactory {
             EventPriority.HIGHEST, PostOrder.LAST
     );
 
-    private final Map<EventPriority, com.velocitypowered.api.event.EventHandler<com.velocitypowered.api.event.player.PlayerChatEvent>> map = new HashMap<>();
+    private final Map<EventPriority,
+            com.velocitypowered.api.event.EventHandler<com.velocitypowered.api.event.player.PlayerChatEvent>> eventMap = new HashMap<>();
 
     public ChatEventHandlerFactory(final Object plugin, final ProxyServer proxyServer) {
         EventManager.getDefaultEventManager().register(HandlerRegisteredEvent.class, handlerRegisteredEvent -> {
@@ -30,10 +33,11 @@ public class ChatEventHandlerFactory {
                 return;
             }
 
-            if (!map.containsKey(handlerRegisteredEvent.getHandler().getEventPriority())) {
+            if (!eventMap.containsKey(handlerRegisteredEvent.getHandler().getEventPriority())) {
                 final com.velocitypowered.api.event.EventHandler<com.velocitypowered.api.event.player.PlayerChatEvent> handler = event -> {
-                    var wrapEvent = new PlayerChatEvent(ProxiedPlayerMapper.wrapPlayer(event.getPlayer()), event.getResult().getMessage().orElse(event.getMessage()), event.getResult().isAllowed(), event.getMessage().startsWith("/"));
-                    //noinspection unchecked
+                    var wrapEvent = new PlayerChatEvent(ProxiedPlayerMapper.wrapPlayer(event.getPlayer()), event.getResult().getMessage()
+                            .orElse(event.getMessage()), event.getResult().isAllowed(), event.getMessage().startsWith("/"));
+
                     EventManager.getDefaultEventManager().fireEvent(wrapEvent);
                     if (!wrapEvent.isCancelled()) {
                         event.setResult(com.velocitypowered.api.event.player.PlayerChatEvent.ChatResult.message(wrapEvent.getMessage()));
@@ -41,9 +45,10 @@ public class ChatEventHandlerFactory {
                         event.setResult(com.velocitypowered.api.event.player.PlayerChatEvent.ChatResult.denied());
                     }
                 };
-                //noinspection unchecked
-                map.put(handlerRegisteredEvent.getHandler().getEventPriority(), handler);
-                proxyServer.getEventManager().register(plugin, com.velocitypowered.api.event.player.PlayerChatEvent.class, EVENT_PRIORITY_POST_ORDER_MAP.get(handlerRegisteredEvent.getHandler().getEventPriority()), handler);
+
+                eventMap.put(handlerRegisteredEvent.getHandler().getEventPriority(), handler);
+                proxyServer.getEventManager().register(plugin, com.velocitypowered.api.event.player.PlayerChatEvent.class,
+                        EVENT_PRIORITY_POST_ORDER_MAP.get(handlerRegisteredEvent.getHandler().getEventPriority()), handler);
             }
         });
     }

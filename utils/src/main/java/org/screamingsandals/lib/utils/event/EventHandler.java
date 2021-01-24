@@ -8,31 +8,32 @@ import java.util.function.Consumer;
 
 @Data
 @RequiredArgsConstructor(staticName = "of")
-public class EventHandler<E> {
+public class EventHandler<E extends AbstractEvent> {
     private final Consumer<E> consumer;
     private final EventPriority eventPriority;
     private final boolean ignoreCancelled;
 
-    public static <E> EventHandler<E> of(Consumer<E> consumer) {
+    public static <E extends AbstractEvent> EventHandler<E> of(Consumer<E> consumer) {
         return of(consumer, EventPriority.NORMAL, false);
     }
 
-    public static <E> EventHandler<E> of(Consumer<E> consumer, EventPriority eventPriority) {
+    public static <E extends AbstractEvent> EventHandler<E> of(Consumer<E> consumer, EventPriority eventPriority) {
         return of(consumer, eventPriority, false);
     }
 
-    public static <E> EventHandler<E> of(Consumer<E> consumer, boolean ignoreCancelled) {
+    public static <E extends AbstractEvent> EventHandler<E> of(Consumer<E> consumer, boolean ignoreCancelled) {
         return of(consumer, EventPriority.NORMAL, ignoreCancelled);
     }
 
-    public void fire(E event) {
+    @SuppressWarnings("unchecked")
+    public void fire(AbstractEvent event) {
         try {
             if (ignoreCancelled
                     && event instanceof Cancellable
                     && ((Cancellable) event).isCancelled()) {
                 return;
             }
-            ConsumerExecutor.execute(consumer, event);
+            ConsumerExecutor.execute(consumer, (E) event);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
