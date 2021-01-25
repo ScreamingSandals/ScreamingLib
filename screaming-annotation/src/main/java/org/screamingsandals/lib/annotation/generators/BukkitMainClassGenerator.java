@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.annotation.generators;
 
 import com.squareup.javapoet.*;
-import org.checkerframework.checker.units.qual.A;
 import org.screamingsandals.lib.annotation.utils.MiscUtils;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.PlatformMapping;
@@ -30,7 +29,10 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
             copy.forEach(typeElement -> {
                 var annotation = typeElement.getAnnotation(PlatformMapping.class);
                 var dependencies = MiscUtils.getSafelyTypeElements(processingEnvironment, annotation);
-                if (!dependencies.isEmpty() && dependencies.stream().anyMatch(typeElement1 -> copy.contains(typeElement1) && !sorted.contains(typeElement1))) {
+                if (!dependencies.isEmpty() && dependencies.stream().anyMatch(typeElement1 -> !sorted.contains(typeElement1))) {
+                    dependencies.stream()
+                            .filter(typeElement1 -> !sorted.contains(typeElement1) && !copy.contains(typeElement1))
+                            .forEach(waiting::add);
                     waiting.add(typeElement);
                 } else {
                     sorted.add(typeElement);
@@ -40,7 +42,8 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
 
         var onLoadBuilder = MethodSpec.methodBuilder("onLoad")
                 .addModifiers(Modifier.PUBLIC)
-                .returns(void.class);
+                .returns(void.class)
+                .addStatement("this.$N = new $T()", "pluginControllable", ClassName.get("org.screamingsandals.lib.utils", "Controllable"));
 
         var onEnableBuilder = MethodSpec.methodBuilder("onEnable")
                 .addModifiers(Modifier.PUBLIC)
@@ -59,13 +62,24 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
             if (initMethod.isPresent()) {
                 var method = (ExecutableElement) initMethod.get();
                 var arguments = method.getParameters();
-                if (arguments.isEmpty()) {
-                    onLoadBuilder.addStatement("$T.init()", typeElement);
-                } else if (arguments.size() == 1 && (arguments.get(0).asType().toString().equals("org.bukkit.plugin.java.JavaPlugin") || arguments.get(0).asType().toString().equals("org.bukkit.plugin.Plugin"))) {
-                    onLoadBuilder.addStatement("$T.init(this)", typeElement);
-                } else {
-                    throw new UnsupportedOperationException("Init method of " + typeElement.getQualifiedName() + " has wrong arguments!");
-                }
+                var processedArguments = new ArrayList<>();
+                var statement = new StringBuilder("$T.init(");
+                processedArguments.add(typeElement);
+                arguments.forEach(variableElement -> {
+                    if (!statement.substring(statement.length() - 2, 1).equals("(")) {
+                        statement.append(",");
+                    }
+                    if (arguments.get(0).asType().toString().equals("org.bukkit.plugin.java.JavaPlugin") || arguments.get(0).asType().toString().equals("org.bukkit.plugin.Plugin")) {
+                        statement.append("this");
+                    } else if (arguments.get(0).asType().toString().equals("org.screamingsandals.lib.utils.Controllable")) {
+                        statement.append("this.$N.child()");
+                        processedArguments.add("pluginControllable");
+                    } else {
+                        throw new UnsupportedOperationException("Init method of " + typeElement.getQualifiedName() + " has wrong argument!");
+                    }
+                });
+                statement.append(")");
+                onLoadBuilder.addStatement(statement.toString(), processedArguments.toArray());
             } else {
                 throw new UnsupportedOperationException("Can't auto initialize " + typeElement.getQualifiedName() + " without init method");
             }
@@ -87,15 +101,23 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
                 .beginControlFlow("if (this.$N == null)", "pluginContainer")
                     .addStatement("throw new $T($S)", UnsupportedOperationException.class, "Plugin must be loaded before enabling!")
                 .endControlFlow()
+                .addStatement("this.$N.enable()", "pluginControllable")
                 .addStatement("this.$N.enable()", "pluginContainer");
 
         onDisableBuilder
-                .addStatement("this.$N.disable()", "pluginContainer");
+                .addStatement("this.$N.disable()", "pluginContainer")
+                .addStatement("this.$N.disable()", "pluginControllable");
 
         var bukkitMainClass = TypeSpec.classBuilder(pluginContainer.getSimpleName() + "_BukkitImpl")
                 .addModifiers(Modifier.PUBLIC)
                 .superclass(ClassName.get("org.bukkit.plugin.java", "JavaPlugin"))
-                .addField(FieldSpec.builder(TypeName.get(pluginContainer.asType()), "pluginContainer", Modifier.PRIVATE).build())
+                .addField(FieldSpec
+                        .builder(TypeName.get(pluginContainer.asType()), "pluginContainer", Modifier.PRIVATE)
+                        .build())
+                .addField(FieldSpec
+                        .builder(ClassName.get("org.screamingsandals.lib.utils", "Controllable"), "pluginControllable",
+                                Modifier.PRIVATE)
+                        .build())
                 .addMethod(onLoadBuilder.build())
                 .addMethod(onEnableBuilder.build())
                 .addMethod(onDisableBuilder.build())

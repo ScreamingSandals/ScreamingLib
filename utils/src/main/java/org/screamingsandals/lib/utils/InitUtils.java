@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.utils;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class InitUtils {
@@ -29,5 +30,20 @@ public class InitUtils {
         } else {
             elseRunnable.run();
         }
+    }
+
+    /**
+     * Creates plugin less environment for initializing services.
+     * Don't use if you are using screaming-annotation processor.
+     * After init, it automatically executes the enable state.
+     *
+     * @param consumer that consumes Controllable instance
+     * @return the created Controllable instance
+     */
+    public static Controllable pluginlessEnvironment(Consumer<Controllable> consumer) {
+        var controllable = new Controllable();
+        consumer.accept(controllable);
+        controllable.enable();
+        return controllable;
     }
 }
