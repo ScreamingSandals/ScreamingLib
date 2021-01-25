@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.minestom.material.builder;
 
 import net.minestom.server.chat.ColoredText;
+import net.minestom.server.chat.JsonMessage;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.item.Enchantment;
 import net.minestom.server.item.ItemFlag;
@@ -106,14 +107,18 @@ public class MinestomItemFactory extends ItemFactory {
                         item.setPlatformMeta(stack.getItemMeta().clone());
                     }
                     if (stack.hasDisplayName()) {
-                        item.setDisplayName(stack.getDisplayName().getMessage());
+                        //TODO
+                        item.setDisplayName(stack.getDisplayName().getRawMessage());
                     }
                     // localized name
                     item.setCustomModelData(stack.getCustomModelData());
                     // repair
                     item.setUnbreakable(stack.isUnbreakable());
                     if (stack.hasLore()) {
-                        item.getLore().addAll(stack.getLore().stream().map(ColoredText::getMessage).collect(Collectors.toList()));
+                        item.getLore().addAll(stack.getLore()
+                                .stream()
+                                .map(JsonMessage::getRawMessage) //TODO
+                                .collect(Collectors.toList()));
                     }
                     if (stack.getItemMeta() instanceof EnchantedBookMeta) {
                         ((EnchantedBookMeta) stack.getItemMeta()).getStoredEnchantmentMap().entrySet().stream().map(MinestomEnchantmentMapping::resolve).forEach(en ->

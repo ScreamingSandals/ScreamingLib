@@ -1,16 +1,20 @@
 package org.screamingsandals.lib.bukkit.world;
 
+import io.papermc.lib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
+import org.screamingsandals.lib.utils.PlatformType;
+import org.screamingsandals.lib.utils.annotations.PlatformMapping;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.BlockMapping;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapping;
 
+@PlatformMapping(platform = PlatformType.BUKKIT)
 public class BukkitBlockMapping extends BlockMapping {
 
     public static void init() {
@@ -42,14 +46,16 @@ public class BukkitBlockMapping extends BlockMapping {
 
     @Override
     protected BlockHolder getBlockAt0(LocationHolder location) {
-        final var instanced = location.as(Location.class);
-        final var material = instanced.getBlock().getBlockData().getMaterial();
+        final var bukkitLocation = location.as(Location.class);
+        final var material = bukkitLocation.getBlock().getBlockData().getMaterial();
         return new BlockHolder(location, MaterialMapping.resolve(material).orElseThrow());
     }
 
     @Override
     protected void setBlockAt0(LocationHolder location, MaterialHolder material) {
         final var bukkitLocation = location.as(Location.class);
-        bukkitLocation.getBlock().setType(material.as(Material.class));
+        PaperLib.getChunkAtAsync(bukkitLocation)
+                .thenAccept(result ->
+                        bukkitLocation.getBlock().setType(material.as(Material.class)));
     }
 }

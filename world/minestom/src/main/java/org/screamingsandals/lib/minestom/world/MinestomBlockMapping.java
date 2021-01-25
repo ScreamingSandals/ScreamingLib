@@ -3,11 +3,11 @@ package org.screamingsandals.lib.minestom.world;
 import net.minestom.server.instance.block.Block;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
-import org.screamingsandals.lib.world.BlockHolder;
-import org.screamingsandals.lib.world.BlockMapping;
-import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapping;
+import org.screamingsandals.lib.utils.PlatformType;
+import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.world.*;
 
+@PlatformMapping(platform = PlatformType.MINESTOM)
 public class MinestomBlockMapping extends BlockMapping {
 
     public static void init() {
@@ -19,11 +19,19 @@ public class MinestomBlockMapping extends BlockMapping {
                 .registerP2W(LocationHolder.class, location -> {
                     final var instanced = location.as(InstancedBlockPosition.class);
                     final var block = getBlock(instanced);
-                    return new BlockHolder(location, MaterialMapping.resolve(block).orElseThrow());
+                    final var holder = new BlockHolder(location,
+                            MaterialMapping.resolve(block).orElseThrow());
+                    holder.setState(BlockDataMapping.resolve(holder).orElseThrow());
+
+                    return holder;
                 })
                 .registerP2W(InstancedBlockPosition.class, position -> {
                     final var block = getBlock(position);
-                    return new BlockHolder(LocationMapping.resolve(position).orElseThrow(), MaterialMapping.resolve(block).orElseThrow());
+                    final var holder = new BlockHolder(LocationMapping.resolve(position).orElseThrow(),
+                            MaterialMapping.resolve(block).orElseThrow());
+                    BlockDataMapping.resolve(holder).ifPresent(holder::setState);
+
+                    return holder;
                 })
                 .registerW2P(Block.class, holder -> Block.valueOf(holder.getBlock().getPlatformName()));
     }
@@ -37,6 +45,7 @@ public class MinestomBlockMapping extends BlockMapping {
     protected void setBlockAt0(LocationHolder location, MaterialHolder material) {
         final var position = location.as(InstancedBlockPosition.class);
         position.getInstance().setBlock(position, material.as(Block.class));
+        position.getInstance().getBlockData(position);
     }
 
     private Block getBlock(InstancedBlockPosition position) {
