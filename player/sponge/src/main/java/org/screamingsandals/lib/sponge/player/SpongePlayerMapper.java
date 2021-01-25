@@ -24,7 +24,7 @@ import java.util.Optional;
 public class SpongePlayerMapper extends PlayerMapper {
 
     public static void init() {
-        PlayerMapper.init(SpongePlayerMapper::new, null);
+        PlayerMapper.init(SpongePlayerMapper::new);
     }
 
     public SpongePlayerMapper() {

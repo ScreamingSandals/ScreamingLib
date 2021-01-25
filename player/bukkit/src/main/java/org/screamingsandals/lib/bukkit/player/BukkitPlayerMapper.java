@@ -18,6 +18,7 @@ import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
+import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapping;
@@ -26,12 +27,15 @@ import java.util.Optional;
 
 @Service
 public class BukkitPlayerMapper extends PlayerMapper {
-    public static void init(Plugin plugin) {
-        PlayerMapper.init(() -> new BukkitPlayerMapper(plugin), BukkitAudiences.create(plugin));
+    public static void init(Plugin plugin, Controllable controllable) {
+        PlayerMapper.init(() -> new BukkitPlayerMapper(plugin, controllable));
     }
 
-    public BukkitPlayerMapper(Plugin plugin) {
-        registerListeners(plugin);
+    public BukkitPlayerMapper(Plugin plugin, Controllable controllable) {
+        controllable.enable(() -> {
+            provider = BukkitAudiences.create(plugin);
+            registerListeners(plugin);
+        });
 
         playerConverter
                 .registerP2W(Player.class, player -> new PlayerWrapper(player.getName(), player.getUniqueId()))

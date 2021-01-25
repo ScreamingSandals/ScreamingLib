@@ -98,12 +98,12 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
                     } else {
                         first.set(false);
                     }
-                    if (arguments.get(0).asType().toString().equals("org.bukkit.plugin.java.JavaPlugin") || arguments.get(0).asType().toString().equals("org.bukkit.plugin.Plugin")) {
+                    if (variableElement.asType().toString().equals("org.bukkit.plugin.java.JavaPlugin") || variableElement.asType().toString().equals("org.bukkit.plugin.Plugin")) {
                         statement.append("this");
-                    } else if (arguments.get(0).asType().toString().equals("org.screamingsandals.lib.utils.Controllable")) {
+                    } else if (variableElement.asType().toString().equals("org.screamingsandals.lib.utils.Controllable")) {
                         statement.append("this.$N.child()");
                         processedArguments.add("pluginControllable");
-                    } else if (arguments.get(0).asType().toString().equals("org.screamingsandals.lib.plugin.PluginContainer")) {
+                    } else if (variableElement.asType().toString().equals("org.screamingsandals.lib.plugin.PluginContainer")) {
                         statement.append("this.$N");
                         processedArguments.add("pluginContainer");
                     } else {

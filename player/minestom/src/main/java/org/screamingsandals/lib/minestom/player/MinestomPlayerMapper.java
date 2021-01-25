@@ -27,11 +27,13 @@ import java.util.Optional;
 public class MinestomPlayerMapper extends PlayerMapper {
 
     public static void init(Extension extension) {
-        PlayerMapper.init(MinestomPlayerMapper::new, MinestomAudiences.create(extension));
+        PlayerMapper.init(() -> new MinestomPlayerMapper(extension));
     }
 
-    public MinestomPlayerMapper() {
+    public MinestomPlayerMapper(Extension extension) {
         registerEvents();
+        MinestomAudiences.create(extension);
+
         playerConverter
                 .registerP2W(Player.class, player -> new PlayerWrapper(player.getUsername(), player.getUuid()))
                 .registerW2P(Player.class, playerWrapper -> MinecraftServer.getConnectionManager()

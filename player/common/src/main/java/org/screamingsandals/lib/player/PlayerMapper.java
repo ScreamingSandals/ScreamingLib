@@ -17,22 +17,20 @@ public abstract class PlayerMapper {
 
     protected final BidirectionalConverter<PlayerWrapper> playerConverter = BidirectionalConverter.build();
     protected final BidirectionalConverter<SenderWrapper> senderConverter = BidirectionalConverter.build();
+    protected AudienceProvider provider = null;
     private static PlayerMapper playerMapper = null;
-    private static AudienceProvider provider = null;
 
-    public static void init(@NotNull Supplier<PlayerMapper> playerUtilsSupplier,
-                            AudienceProvider audienceProvider) {
+    public static void init(@NotNull Supplier<PlayerMapper> playerUtilsSupplier) {
         if (playerMapper != null) {
             throw new UnsupportedOperationException("PlayerMapper is already initialized.");
         }
 
         playerMapper = playerUtilsSupplier.get();
-        provider = audienceProvider;
 
         final var playerConverter = playerMapper.playerConverter
-                .registerW2P(Audience.class, platform -> playerMapper.getAudience(platform, provider));
+                .registerW2P(Audience.class, platform -> playerMapper.getAudience(platform, playerMapper.provider));
         final var senderConverter = playerMapper.senderConverter
-                .registerW2P(Audience.class, platform -> playerMapper.getAudience(platform, provider));
+                .registerW2P(Audience.class, platform -> playerMapper.getAudience(platform, playerMapper.provider));
 
         playerConverter.finish();
         senderConverter.finish();
