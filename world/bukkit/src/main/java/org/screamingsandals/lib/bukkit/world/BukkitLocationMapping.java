@@ -20,7 +20,6 @@ public class BukkitLocationMapping extends LocationMapping {
             if (world == null) {
                 return null;
             }
-
             return new Location(world, holder.getX(), holder.getY(), holder.getZ(), holder.getYaw(), holder.getPitch());
         }).registerP2W(Location.class, location ->
                 new LocationHolder(location.getX(), location.getY(), location.getZ(),
