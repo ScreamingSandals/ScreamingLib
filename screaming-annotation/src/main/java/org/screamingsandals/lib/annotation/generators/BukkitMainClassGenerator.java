@@ -2,8 +2,8 @@ package org.screamingsandals.lib.annotation.generators;
 
 import com.squareup.javapoet.*;
 import org.screamingsandals.lib.annotation.utils.MiscUtils;
+import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
 import org.screamingsandals.lib.utils.annotations.Plugin;
 import org.screamingsandals.lib.utils.annotations.PluginDependencies;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
@@ -16,26 +16,39 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class BukkitMainClassGenerator implements MainClassGenerator {
     @Override
-    public void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<TypeElement> autoInit) throws IOException {
-        var sorted = new ArrayList<TypeElement>();
+    public void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException {
+        var sorted = new ArrayList<ServiceContainer>();
         var waiting = new ArrayList<>(autoInit);
         while (!waiting.isEmpty()) {
             var copy = List.copyOf(waiting);
             waiting.clear();
-            copy.forEach(typeElement -> {
-                var annotation = typeElement.getAnnotation(PlatformMapping.class);
-                var dependencies = MiscUtils.getSafelyTypeElements(processingEnvironment, annotation);
-                if (!dependencies.isEmpty() && dependencies.stream().anyMatch(typeElement1 -> !sorted.contains(typeElement1))) {
+            copy.forEach(serviceContainer -> {
+                var dependencies = serviceContainer.getDependencies();
+                var loadAfter = serviceContainer.getLoadAfter();
+                if (!dependencies.isEmpty() && dependencies.stream().anyMatch(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement)))) {
                     dependencies.stream()
-                            .filter(typeElement1 -> !sorted.contains(typeElement1) && !copy.contains(typeElement1))
+                            .filter(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement))
+                                    && copy.stream().noneMatch(s -> s.is(typeElement))
+                                    && waiting.stream().noneMatch(s -> s.is(typeElement)))
+                            .map(typeElement -> MiscUtils.getAllSpecificPlatformImplementations(processingEnvironment,
+                                    typeElement,
+                                    List.of(PlatformType.BUKKIT),
+                                    true
+                                    ).get(PlatformType.BUKKIT)
+                            )
                             .forEach(waiting::add);
-                    waiting.add(typeElement);
+                    waiting.add(serviceContainer);
+                } else if (!loadAfter.isEmpty()
+                        && loadAfter.stream().anyMatch(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement))
+                        && (copy.stream().anyMatch(s -> s.is(typeElement)) || waiting.stream().anyMatch(s -> s.is(typeElement))))) {
+                    waiting.add(serviceContainer);
                 } else {
-                    sorted.add(typeElement);
+                    sorted.add(serviceContainer);
                 }
             });
         }
@@ -53,27 +66,46 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
                 .addModifiers(Modifier.PUBLIC)
                 .returns(void.class);
 
-        sorted.forEach(typeElement -> {
+        sorted.forEach(serviceContainer -> {
+            var typeElement = serviceContainer.getService();
             var initMethod = typeElement.getEnclosedElements()
                     .stream()
                     .filter(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))
                     .findFirst();
 
+            if (initMethod.isEmpty()) {
+                initMethod = typeElement.getEnclosedElements()
+                        .stream()
+                        .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR)
+                        .findFirst();
+            }
+
             if (initMethod.isPresent()) {
                 var method = (ExecutableElement) initMethod.get();
                 var arguments = method.getParameters();
                 var processedArguments = new ArrayList<>();
-                var statement = new StringBuilder("$T.init(");
+                var statement = new StringBuilder();
+                if (method.getKind() == ElementKind.CONSTRUCTOR) {
+                    statement.append("new $T(");
+                } else {
+                    statement.append("$T.init(");
+                }
                 processedArguments.add(typeElement);
+                var first = new AtomicBoolean(true);
                 arguments.forEach(variableElement -> {
-                    if (!statement.substring(statement.length() - 2, 1).equals("(")) {
+                    if (!first.get()) {
                         statement.append(",");
+                    } else {
+                        first.set(false);
                     }
                     if (arguments.get(0).asType().toString().equals("org.bukkit.plugin.java.JavaPlugin") || arguments.get(0).asType().toString().equals("org.bukkit.plugin.Plugin")) {
                         statement.append("this");
                     } else if (arguments.get(0).asType().toString().equals("org.screamingsandals.lib.utils.Controllable")) {
                         statement.append("this.$N.child()");
                         processedArguments.add("pluginControllable");
+                    } else if (arguments.get(0).asType().toString().equals("org.screamingsandals.lib.plugin.PluginContainer")) {
+                        statement.append("this.$N");
+                        processedArguments.add("pluginContainer");
                     } else {
                         throw new UnsupportedOperationException("Init method of " + typeElement.getQualifiedName() + " has wrong argument!");
                     }
@@ -99,7 +131,7 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
 
         onEnableBuilder
                 .beginControlFlow("if (this.$N == null)", "pluginContainer")
-                    .addStatement("throw new $T($S)", UnsupportedOperationException.class, "Plugin must be loaded before enabling!")
+                .addStatement("throw new $T($S)", UnsupportedOperationException.class, "Plugin must be loaded before enabling!")
                 .endControlFlow()
                 .addStatement("this.$N.enable()", "pluginControllable")
                 .addStatement("this.$N.enable()", "pluginContainer");

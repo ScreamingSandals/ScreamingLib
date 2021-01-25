@@ -4,14 +4,14 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Platform;
-import org.screamingsandals.lib.utils.annotations.AbstractMapping;
+import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@AbstractMapping
+@AbstractService
 public abstract class MaterialMapping {
     @Getter
     protected Platform platform;

@@ -7,14 +7,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.BlockMapping;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapping;
 
-@PlatformMapping(platform = PlatformType.BUKKIT)
+@Service
 public class BukkitBlockMapping extends BlockMapping {
 
     public static void init() {

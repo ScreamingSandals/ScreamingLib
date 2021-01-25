@@ -17,14 +17,13 @@ import org.screamingsandals.lib.minestom.player.event.PlayerLeaveEventListener;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapping;
 
 import java.util.Optional;
 
-@PlatformMapping(platform = PlatformType.MINESTOM)
+@Service
 public class MinestomPlayerMapper extends PlayerMapper {
 
     public static void init(Extension extension) {

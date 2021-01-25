@@ -6,8 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.screamingsandals.lib.material.MaterialHolder;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.*;
 
 import java.util.Arrays;
@@ -16,7 +15,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@PlatformMapping(platform = PlatformType.BUKKIT)
+@Service
 public class BukkitBlockDataMapping extends BlockDataMapping {
     private final static Pattern MAPPING_PATTERN = Pattern.compile(
             "(?:(?<namespace>[A-Za-z][A-Za-z0-9_.\\-]*):)?(?<material>[A-Za-z][A-Za-z0-9_.\\-/ ]+)(\\[(?<blockState>.+)])?");

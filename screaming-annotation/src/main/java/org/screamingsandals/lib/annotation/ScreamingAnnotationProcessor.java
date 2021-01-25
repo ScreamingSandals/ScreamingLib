@@ -3,6 +3,7 @@ package org.screamingsandals.lib.annotation;
 import lombok.SneakyThrows;
 import org.screamingsandals.lib.annotation.generators.*;
 import org.screamingsandals.lib.annotation.utils.MiscUtils;
+import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.Init;
 import org.screamingsandals.lib.utils.annotations.Plugin;
@@ -41,7 +42,7 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
 
         if (roundEnv.processingOver()) {
             if (pluginContainer != null) {
-                var platformInitiators = new HashMap<PlatformType, List<TypeElement>>();
+                var platformInitiators = new HashMap<PlatformType, List<ServiceContainer>>();
 
                 var platformManager = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.plugin.PluginManager");
                 var platformManagers = MiscUtils.getAllSpecificPlatformImplementations(
@@ -87,8 +88,6 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
                     }
                 });
 
-                System.out.println("PROCESSING PLUGIN CONTAINER " + pluginContainer);
-                System.out.println("Initiators " + platformInitiators);
                 if (platformInitiators.containsKey(PlatformType.BUKKIT)) {
                     new BukkitMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.BUKKIT));
                 }

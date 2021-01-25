@@ -2,15 +2,14 @@ package org.screamingsandals.lib.sponge.material.meta;
 
 import org.screamingsandals.lib.material.meta.EnchantmentHolder;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.enchantment.Enchantment;
 import org.spongepowered.api.item.enchantment.EnchantmentType;
 import org.spongepowered.api.registry.RegistryTypes;
 
-@PlatformMapping(platform = PlatformType.SPONGE)
+@Service
 public class SpongeEnchantmentMapping extends EnchantmentMapping {
     public static void init() {
         EnchantmentMapping.init(SpongeEnchantmentMapping::new);

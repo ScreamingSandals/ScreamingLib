@@ -3,14 +3,13 @@ package org.screamingsandals.lib.minestom.world;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.utils.Position;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapping;
 
 import java.util.Objects;
 
-@PlatformMapping(platform = PlatformType.MINESTOM)
+@Service
 public class MinestomLocationMapping extends LocationMapping {
 
     public static void init() {

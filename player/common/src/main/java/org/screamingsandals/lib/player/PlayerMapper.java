@@ -5,13 +5,13 @@ import net.kyori.adventure.platform.AudienceProvider;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
-import org.screamingsandals.lib.utils.annotations.AbstractMapping;
+import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-@AbstractMapping
+@AbstractService
 public abstract class PlayerMapper {
     protected final static String CONSOLE_NAME = "CONSOLE";
 

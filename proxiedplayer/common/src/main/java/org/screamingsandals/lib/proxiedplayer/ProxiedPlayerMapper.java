@@ -2,14 +2,14 @@ package org.screamingsandals.lib.proxiedplayer;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
-import org.screamingsandals.lib.utils.annotations.AbstractMapping;
+import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-@AbstractMapping
+@AbstractService
 public abstract class ProxiedPlayerMapper {
 
     protected final BidirectionalConverter<ProxiedPlayerWrapper> playerConverter = BidirectionalConverter.build();

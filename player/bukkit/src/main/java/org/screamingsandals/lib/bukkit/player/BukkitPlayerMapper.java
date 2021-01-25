@@ -18,14 +18,13 @@ import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapping;
 
 import java.util.Optional;
 
-@PlatformMapping(platform = PlatformType.BUKKIT)
+@Service
 public class BukkitPlayerMapper extends PlayerMapper {
     public static void init(Plugin plugin) {
         PlayerMapper.init(() -> new BukkitPlayerMapper(plugin), BukkitAudiences.create(plugin));

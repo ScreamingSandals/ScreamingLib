@@ -10,12 +10,11 @@ import org.screamingsandals.lib.material.MappingFlags;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.Platform;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.Arrays;
 
-@PlatformMapping(platform = PlatformType.BUKKIT)
+@Service
 public class BukkitMaterialMapping extends MaterialMapping {
 
     @Getter

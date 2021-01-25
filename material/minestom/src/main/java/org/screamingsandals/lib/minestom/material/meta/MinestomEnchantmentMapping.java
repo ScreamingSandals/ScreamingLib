@@ -3,12 +3,11 @@ package org.screamingsandals.lib.minestom.material.meta;
 import net.minestom.server.item.Enchantment;
 import org.screamingsandals.lib.material.meta.EnchantmentHolder;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.Arrays;
 
-@PlatformMapping(platform = PlatformType.MINESTOM)
+@Service
 public class MinestomEnchantmentMapping extends EnchantmentMapping {
 
     public static void init() {

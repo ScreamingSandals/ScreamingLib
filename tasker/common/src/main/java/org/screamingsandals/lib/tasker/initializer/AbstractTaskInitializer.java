@@ -7,9 +7,9 @@ import org.screamingsandals.lib.tasker.TaskBuilderImpl;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
-import org.screamingsandals.lib.utils.annotations.AbstractMapping;
+import org.screamingsandals.lib.utils.annotations.AbstractService;
 
-@AbstractMapping(
+@AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+)\\.initializer\\.Abstract(?<className>.+)$"
 )
 public abstract class AbstractTaskInitializer {

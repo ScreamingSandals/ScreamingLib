@@ -6,14 +6,14 @@ import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@PlatformMapping(platform = PlatformType.BUKKIT)
+@Service
 public class BukkitPluginManager extends PluginManager {
     public static void init() {
         PluginManager.init(BukkitPluginManager::new);

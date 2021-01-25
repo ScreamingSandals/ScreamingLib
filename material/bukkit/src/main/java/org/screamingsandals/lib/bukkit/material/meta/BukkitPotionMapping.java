@@ -6,12 +6,11 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 import org.screamingsandals.lib.material.meta.PotionHolder;
 import org.screamingsandals.lib.material.meta.PotionMapping;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.Arrays;
 
-@PlatformMapping(platform = PlatformType.BUKKIT)
+@Service
 public class BukkitPotionMapping extends PotionMapping {
 
     @Getter

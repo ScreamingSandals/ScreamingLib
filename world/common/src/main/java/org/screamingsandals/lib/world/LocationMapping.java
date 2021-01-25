@@ -2,12 +2,12 @@ package org.screamingsandals.lib.world;
 
 import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
-import org.screamingsandals.lib.utils.annotations.AbstractMapping;
+import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-@AbstractMapping
+@AbstractService
 public abstract class LocationMapping {
 
     protected BidirectionalConverter<LocationHolder> converter = BidirectionalConverter.<LocationHolder>build()

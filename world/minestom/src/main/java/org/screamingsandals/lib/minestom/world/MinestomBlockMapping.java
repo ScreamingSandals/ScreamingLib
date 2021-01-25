@@ -3,11 +3,10 @@ package org.screamingsandals.lib.minestom.world;
 import net.minestom.server.instance.block.Block;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.*;
 
-@PlatformMapping(platform = PlatformType.MINESTOM)
+@Service
 public class MinestomBlockMapping extends BlockMapping {
 
     public static void init() {

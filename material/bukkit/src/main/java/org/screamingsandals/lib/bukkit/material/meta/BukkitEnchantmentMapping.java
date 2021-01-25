@@ -3,12 +3,11 @@ package org.screamingsandals.lib.bukkit.material.meta;
 import org.bukkit.enchantments.Enchantment;
 import org.screamingsandals.lib.material.meta.EnchantmentHolder;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.Arrays;
 
-@PlatformMapping(platform = PlatformType.BUKKIT)
+@Service
 public class BukkitEnchantmentMapping extends EnchantmentMapping {
 
     public static void init() {

@@ -6,12 +6,11 @@ import net.minestom.server.item.Material;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.Platform;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.Arrays;
 
-@PlatformMapping(platform = PlatformType.MINESTOM)
+@Service
 public class MinestomMaterialMapping extends MaterialMapping {
 
     public static void init() {

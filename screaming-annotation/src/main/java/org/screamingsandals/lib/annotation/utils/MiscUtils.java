@@ -1,15 +1,15 @@
 package org.screamingsandals.lib.annotation.utils;
 
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.AbstractMapping;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.Init;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypesException;
-import java.util.AbstractMap;
+import javax.tools.Diagnostic;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,19 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class MiscUtils {
-    public static List<TypeElement> getSafelyTypeElements(ProcessingEnvironment environment, PlatformMapping annotation) {
+    public static List<TypeElement> getSafelyTypeElements(ProcessingEnvironment environment, Service annotation) {
+        try {
+            annotation.dependsOn();
+        } catch (MirroredTypesException mte) {
+            var typeUtils = environment.getTypeUtils();
+            return mte.getTypeMirrors()
+                    .stream()
+                    .map(typeMirror -> (TypeElement) typeUtils.asElement(typeMirror))
+                    .collect(Collectors.toList());
+        }
+        return List.of();
+    }
+    public static List<TypeElement> getSafelyTypeElementsLoadAfter(ProcessingEnvironment environment, Service annotation) {
         try {
             annotation.loadAfter();
         } catch (MirroredTypesException mte) {
@@ -44,9 +56,19 @@ public class MiscUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static Map<PlatformType, TypeElement> getAllSpecificPlatformImplementations(ProcessingEnvironment environment, TypeElement typeElement, List<PlatformType> platformTypes, boolean strict) {
-        var mappingAnnotation = typeElement.getAnnotation(AbstractMapping.class);
+    public static Map<PlatformType, ServiceContainer> getAllSpecificPlatformImplementations(ProcessingEnvironment environment, TypeElement typeElement, List<PlatformType> platformTypes, boolean strict) {
+        var mappingAnnotation = typeElement.getAnnotation(AbstractService.class);
         if (mappingAnnotation == null) {
+            var service = typeElement.getAnnotation(Service.class);
+            if (service != null) {
+                var container = new ServiceContainer(typeElement, null);
+                container.getDependencies().addAll(getSafelyTypeElements(environment, service));
+                container.getLoadAfter().addAll(getSafelyTypeElementsLoadAfter(environment, service));
+
+                return platformTypes
+                        .stream()
+                        .collect(Collectors.toMap(s -> s, o -> container));
+            }
             throw new UnsupportedOperationException("Type " + typeElement.getQualifiedName() + " doesn't have @AbstractMapping annotation");
         }
 
@@ -63,7 +85,7 @@ public class MiscUtils {
                 .stream()
                 .collect(Collectors.toMap(s -> s, matcher::group));
 
-        var map = new HashMap<PlatformType, TypeElement>();
+        var map = new HashMap<PlatformType, ServiceContainer>();
 
         var rule = mappingAnnotation.replaceRule();
         for (var resolved : resolvedGroups.entrySet()) {
@@ -81,7 +103,15 @@ public class MiscUtils {
                 throw new UnsupportedOperationException("Can't find implementation of " + typeElement.getQualifiedName() + " for " + platformType);
             }
             if (resolvedElement != null) {
-                map.put(platformType, resolvedElement);
+                var container = new ServiceContainer(resolvedElement, typeElement);
+                var resolvedElementService = resolvedElement.getAnnotation(Service.class);
+                if (resolvedElementService != null) {
+                    container.getDependencies().addAll(getSafelyTypeElements(environment, resolvedElement.getAnnotation(Service.class)));
+                    container.getLoadAfter().addAll(getSafelyTypeElementsLoadAfter(environment, resolvedElement.getAnnotation(Service.class)));
+                } else {
+                    environment.getMessager().printMessage(Diagnostic.Kind.WARNING, resolvedElement.getQualifiedName() + " should have @Service annotation (ignoring that because was resolved with @AbstractService)");
+                }
+                map.put(platformType, container);
             }
         });
 

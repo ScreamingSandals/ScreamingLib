@@ -8,8 +8,7 @@ import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerWrapper;
 import org.screamingsandals.lib.proxiedplayer.ServerWrapper;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.velocity.proxiedplayer.event.ChatEventHandlerFactory;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@PlatformMapping(platform = PlatformType.VELOCITY)
+@Service
 public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
 
     private final ProxyServer proxyServer;

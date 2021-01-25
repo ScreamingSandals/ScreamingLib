@@ -3,8 +3,7 @@ package org.screamingsandals.lib.sponge.material;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.Platform;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.Keys;
@@ -12,7 +11,7 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.registry.RegistryTypes;
 
-@PlatformMapping(platform = PlatformType.SPONGE)
+@Service
 public class SpongeMaterialMapping extends MaterialMapping {
     public static void init() {
         MaterialMapping.init(SpongeMaterialMapping::new);

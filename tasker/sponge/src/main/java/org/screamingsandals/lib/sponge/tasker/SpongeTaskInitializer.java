@@ -7,8 +7,7 @@ import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.tasker.task.AbstractTaskerTask;
 import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.ScheduledTask;
 import org.spongepowered.api.scheduler.Scheduler;
@@ -16,7 +15,7 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.util.Ticks;
 import org.spongepowered.plugin.PluginContainer;
 
-@PlatformMapping(platform = PlatformType.SPONGE)
+@Service
 @RequiredArgsConstructor
 public class SpongeTaskInitializer extends AbstractTaskInitializer {
     private final Scheduler scheduler = Sponge.getServer().getScheduler();

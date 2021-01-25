@@ -7,14 +7,17 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
-public @interface AbstractMapping {
+public @interface AbstractService {
     /**
      * Contains pattern which will be used to resolve PlatformMapping
      * This pattern consists of three named groups. These groups will be used in replace rule.
+     * <p>
      * Default naming:
-     * - basePackage
-     * - subPackage
-     * - className
+     * <ul>
+     *   <li>basePackage</li>
+     *   <li>subPackage</li>
+     *   <li>className</li>
+     * </ul>
      *
      * @return regex pattern
      */
@@ -22,12 +25,15 @@ public @interface AbstractMapping {
 
     /**
      * Contains replace rule which will be used to resolve PlatformMapping
+     * <p>
      * Default naming:
-     * - basePackage
-     * - subPackage
-     * - className
-     * - platform - lowered platform name (eg. bukkit)
-     * - Platform - platform name with first letter capital (eg. Bukkit)
+     * <ul>
+     *   <li>basePackage</li>
+     *   <li>subPackage</li>
+     *   <li>className</li>
+     *   <li>platform - lowered platform name (eg. bukkit)</li>
+     *   <li>Platform - platform name with first letter capital (eg. Bukkit)</li>
+     * </ul>
      *
      * @return replace rule
      */

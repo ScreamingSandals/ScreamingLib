@@ -6,13 +6,13 @@ import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@PlatformMapping(platform = PlatformType.MINESTOM)
+@Service
 public class MinestomPluginManager extends PluginManager {
 
     public static void init() {

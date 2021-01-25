@@ -11,10 +11,9 @@ import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.tasker.task.AbstractTaskerTask;
 import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 
-@PlatformMapping(platform = PlatformType.VELOCITY)
+@Service
 @RequiredArgsConstructor
 public class VelocityTaskInitializer extends AbstractTaskInitializer {
     private final Object owner;

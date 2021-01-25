@@ -3,12 +3,12 @@ package org.screamingsandals.lib.world;
 import lombok.SneakyThrows;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
-import org.screamingsandals.lib.utils.annotations.AbstractMapping;
+import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-@AbstractMapping
+@AbstractService
 public abstract class BlockMapping {
     protected BidirectionalConverter<BlockHolder> converter = BidirectionalConverter.<BlockHolder>build()
             .registerP2W(BlockHolder.class, e -> e);

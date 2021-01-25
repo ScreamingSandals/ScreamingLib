@@ -1,15 +1,15 @@
 package org.screamingsandals.lib.minestom.world;
 
 import net.minestom.server.data.Data;
-import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.PlatformMapping;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@PlatformMapping(platform = PlatformType.MINESTOM)
+
+@Service
 public class MinestomBlockDataMapping extends BlockDataMapping {
 
     public static void init() {
