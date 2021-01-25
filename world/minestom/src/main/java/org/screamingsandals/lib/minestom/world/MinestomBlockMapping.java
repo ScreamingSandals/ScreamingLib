@@ -21,7 +21,7 @@ public class MinestomBlockMapping extends BlockMapping {
                     final var block = getBlock(instanced);
                     final var holder = new BlockHolder(location,
                             MaterialMapping.resolve(block).orElseThrow());
-                    holder.setState(BlockDataMapping.resolve(holder).orElseThrow());
+                    holder.setBlockData(BlockDataMapping.resolve(holder).orElseThrow());
 
                     return holder;
                 })
@@ -29,11 +29,11 @@ public class MinestomBlockMapping extends BlockMapping {
                     final var block = getBlock(position);
                     final var holder = new BlockHolder(LocationMapping.resolve(position).orElseThrow(),
                             MaterialMapping.resolve(block).orElseThrow());
-                    BlockDataMapping.resolve(holder).ifPresent(holder::setState);
+                    BlockDataMapping.resolve(holder).ifPresent(holder::setBlockData);
 
                     return holder;
                 })
-                .registerW2P(Block.class, holder -> Block.valueOf(holder.getBlock().getPlatformName()));
+                .registerW2P(Block.class, holder -> Block.valueOf(holder.getType().getPlatformName()));
     }
 
     @Override

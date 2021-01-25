@@ -5,6 +5,8 @@ import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.PlatformMapping;
 import org.screamingsandals.lib.world.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @PlatformMapping(platform = PlatformType.MINESTOM)
@@ -18,16 +20,18 @@ public class MinestomBlockDataMapping extends BlockDataMapping {
         converter
                 .registerP2W(BlockHolder.class, parent -> {
                     final var position = parent.getLocation().as(InstancedBlockPosition.class);
-                    final var toReturn = new BlockDataHolder(parent);
                     final var data = position.getInstance().getBlockData(position);
                     if (data == null) {
-                        return toReturn;
+                        return new BlockDataHolder(parent.getType(), Map.of(), parent);
                     }
 
-                    data.getKeys().forEach(key -> toReturn.addData(key, data.get(key)));
-                    return toReturn;
+                    final var map = new HashMap<String, Object>();
+                    data.getKeys().forEach(key -> map.put(key, data.get(key)));
+                    return new BlockDataHolder(parent.getType(), map, parent);
                 })
                 .registerP2W(InstancedBlockPosition.class, position ->
+                        resolve(BlockMapping.resolve(position)).orElseThrow())
+                .registerP2W(InstancedPosition.class, position ->
                         resolve(BlockMapping.resolve(position)).orElseThrow())
                 .registerP2W(LocationHolder.class, location ->
                         resolve(BlockMapping.resolve(location).orElseThrow()).orElseThrow())
@@ -44,13 +48,13 @@ public class MinestomBlockDataMapping extends BlockDataMapping {
     }
 
     @Override
-    protected Optional<BlockDataHolder> getBlockStateAt0(LocationHolder location) {
+    protected Optional<BlockDataHolder> getBlockDataAt0(LocationHolder location) {
         return resolve(location);
     }
 
     @Override
-    protected void setBlockStateAt0(LocationHolder location, BlockDataHolder dataHolder) {
+    protected void setBlockDataAt0(LocationHolder location, BlockDataHolder blockData) {
         final var position = location.as(InstancedBlockPosition.class);
-        position.getInstance().setBlockData(position, dataHolder.as(Data.class));
+        position.getInstance().setBlockData(position, blockData.as(Data.class));
     }
 }

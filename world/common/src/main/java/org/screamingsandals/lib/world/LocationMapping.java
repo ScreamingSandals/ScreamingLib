@@ -24,6 +24,10 @@ public abstract class LocationMapping {
         return mapping.converter.convertOptional(obj);
     }
 
+    public static <T> LocationHolder wrapLocation(T input) {
+        return resolve(input).orElseThrow();
+    }
+
     public static <T> T convert(LocationHolder holder, Class<T> newType) {
         if (mapping == null) {
             throw new UnsupportedOperationException("Material mapping is not initialized yet.");

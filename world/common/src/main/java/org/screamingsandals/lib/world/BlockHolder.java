@@ -9,38 +9,62 @@ import java.util.Optional;
 @Data
 public class BlockHolder implements Wrapper {
     private final LocationHolder location;
-    private final MaterialHolder block;
+    private MaterialHolder type;
     private BlockDataHolder blockData;
+
+    public BlockHolder(LocationHolder location, MaterialHolder type) {
+        this.location = location;
+        this.type = type;
+    }
 
     /**
      * Sets new material at this location
      *
-     * @param material material to set
+     * @param type type to set
      */
-    public void setBlock(MaterialHolder material) {
-        BlockMapping.setBlockAt(location, material);
+    public void setType(MaterialHolder type) {
+        BlockMapping.setBlockAt(location, type);
+        this.type = type;
     }
 
-    public void setState(BlockDataHolder state) {
-        BlockDataMapping.setBlockStateAt(location, state);
+    /**
+     * Changes state of this block to new one
+     *
+     * @param data data to change
+     */
+    public void setBlockData(BlockDataHolder data) {
+        BlockDataMapping.setBlockDataAt(location, data);
+        this.blockData = data;
     }
 
     /**
      * @return current block at this BlockHolder's location
      */
-    public MaterialHolder getCurrentBlock() {
-        return BlockMapping.getBlockAt(location).getBlock();
+    public MaterialHolder getCurrentType() {
+        final var toReturn = BlockMapping.getBlockAt(location).getType();
+        this.type = toReturn;
+        return toReturn;
     }
 
+    /**
+     * Gets BlockData.
+     *
+     * @return {@link Optional#empty()} if none is found
+     */
     public Optional<BlockDataHolder> getBlockData() {
         return Optional.ofNullable(blockData);
     }
 
-    public Optional<BlockDataHolder> getCurrentBlockState() {
-        return BlockDataMapping.getBlockStateAt(location);
+    /**
+     * Gets updated BlockData
+     *
+     * @return {@link Optional#empty()} if none is found
+     */
+    public Optional<BlockDataHolder> getCurrentBlockData() {
+        final var toReturn = BlockDataMapping.getBlockDataAt(location);
+        toReturn.ifPresent(data -> this.blockData = data);
+        return toReturn;
     }
-
-
 
     @Override
     public <T> T as(Class<T> type) {

@@ -28,19 +28,21 @@ public class BukkitBlockMapping extends BlockMapping {
                     final var material = location.getBlock().getBlockData().getMaterial();
                     return new BlockHolder(instanced, MaterialMapping.resolve(material).orElseThrow());
                 })
-                .registerP2W(Block.class, block -> {
-                    final var material = block.getBlockData().getMaterial();
-                    return new BlockHolder(LocationMapping.resolve(block.getLocation()).orElseThrow(),
-                            MaterialMapping.resolve(material).orElseThrow());
-                })
+                .registerP2W(Block.class, block ->
+                        resolve(block.getLocation()).orElseThrow())
+                .registerP2W(LocationHolder.class, location ->
+                        resolve(location.as(Location.class)).orElseThrow())
                 .registerW2P(Block.class, holder -> {
                     final var location = holder.getLocation().as(Location.class);
                     return location.getBlock();
                 })
                 .registerW2P(BlockData.class, holder -> {
-                    final var location = holder.getLocation().as(Location.class);
-                    final var block = location.getBlock();
-                    return block.getBlockData();
+                    final var data = holder.getBlockData().orElse(null);
+                    if (data == null) {
+                        return null;
+                    }
+
+                    return data.as(BlockData.class);
                 });
     }
 

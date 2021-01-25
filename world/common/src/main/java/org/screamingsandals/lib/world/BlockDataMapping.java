@@ -45,23 +45,23 @@ public abstract class BlockDataMapping {
         initialized = true;
     }
 
-    public static Optional<BlockDataHolder> getBlockStateAt(LocationHolder location) {
+    public static Optional<BlockDataHolder> getBlockDataAt(LocationHolder location) {
         if (mapping == null) {
             throw new UnsupportedOperationException("BlockDataMapping are not initialized yet.");
         }
 
-        return mapping.getBlockStateAt0(location);
+        return mapping.getBlockDataAt0(location);
     }
 
-    public static void setBlockStateAt(LocationHolder location, BlockDataHolder stateHolder) {
+    public static void setBlockDataAt(LocationHolder location, BlockDataHolder blockData) {
         if (mapping == null) {
             throw new UnsupportedOperationException("BlockDataMapping are not initialized yet.");
         }
 
-        mapping.setBlockStateAt0(location, stateHolder);
+        mapping.setBlockDataAt0(location, blockData);
     }
 
-    protected abstract Optional<BlockDataHolder> getBlockStateAt0(LocationHolder location);
+    protected abstract Optional<BlockDataHolder> getBlockDataAt0(LocationHolder location);
 
-    protected abstract void setBlockStateAt0(LocationHolder location, BlockDataHolder stateHolder);
+    protected abstract void setBlockDataAt0(LocationHolder location, BlockDataHolder blockData);
 }
