@@ -1,0 +1,3 @@
+dependencies {
+    api group: 'cloud.commandframework', name: 'cloud-core', version: CLOUD_VERSION
+}

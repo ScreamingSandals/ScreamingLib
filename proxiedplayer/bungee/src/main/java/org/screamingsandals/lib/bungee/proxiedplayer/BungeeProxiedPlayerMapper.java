@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bungee.proxiedplayer;
 
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -9,6 +10,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 import org.screamingsandals.lib.bungee.proxiedplayer.listener.ChatEventListener;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerWrapper;
+import org.screamingsandals.lib.proxiedplayer.ProxiedSenderWrapper;
 import org.screamingsandals.lib.proxiedplayer.ServerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 
@@ -38,8 +40,8 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     @Override
-    public void sendMessage0(ProxiedPlayerWrapper playerWrapper, String message) {
-        playerWrapper.as(ProxiedPlayer.class).sendMessage(TextComponent.fromLegacyText(message));
+    public void sendMessage0(ProxiedSenderWrapper wrapper, String message) {
+        wrapper.as(CommandSender.class).sendMessage(TextComponent.fromLegacyText(message));
     }
 
     @Override

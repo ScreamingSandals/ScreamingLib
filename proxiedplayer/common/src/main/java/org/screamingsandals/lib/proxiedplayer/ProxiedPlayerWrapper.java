@@ -1,16 +1,17 @@
 package org.screamingsandals.lib.proxiedplayer;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.screamingsandals.lib.utils.Wrapper;
+import lombok.Getter;
 
 import java.util.UUID;
 
-@Data
-@RequiredArgsConstructor
-public class ProxiedPlayerWrapper implements Wrapper {
-    private final String name;
+@Getter
+public class ProxiedPlayerWrapper extends ProxiedSenderWrapper {
     private final UUID uuid;
+
+    public ProxiedPlayerWrapper(String name, UUID uuid) {
+        super(name, Type.PLAYER);
+        this.uuid = uuid;
+    }
 
     public void sendMessage(String message) {
         ProxiedPlayerMapper.sendMessage(this, message);

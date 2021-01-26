@@ -16,9 +16,7 @@ public class AsyncPlayerPreLoginListener {
             final var toFire = new org.screamingsandals.lib.player.event.AsyncPlayerPreLoginEvent(
                     callback.getPlayerUuid(), callback.getUsername(), remoteAddress.getAddress());
             try {
-                final var result = EventManager.getDefaultEventManager().fireEventAsync(toFire)
-                        .get();
-
+                final var result = EventManager.fireAsync(toFire).get();
                 if (result.getResult() != org.screamingsandals.lib.player.event.AsyncPlayerPreLoginEvent.Result.ALLOWED) {
                     player.kick((AdventureHelper.toLegacy(result.getMessage())));
                     return;

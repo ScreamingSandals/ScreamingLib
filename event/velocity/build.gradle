@@ -1,0 +1,5 @@
+dependencies {
+    api project(':event-common')
+
+    compileOnly velocity(VELOCITY_VERSION)
+}

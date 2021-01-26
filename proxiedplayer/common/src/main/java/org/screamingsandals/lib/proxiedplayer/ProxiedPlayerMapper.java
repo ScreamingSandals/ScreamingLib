@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 public abstract class ProxiedPlayerMapper {
 
     protected final BidirectionalConverter<ProxiedPlayerWrapper> playerConverter = BidirectionalConverter.build();
+    protected final BidirectionalConverter<ProxiedSenderWrapper> senderConverter = BidirectionalConverter.build();
     protected final BidirectionalConverter<ServerWrapper> serverConverter = BidirectionalConverter.build();
     private static ProxiedPlayerMapper proxiedPlayerUtils = null;
 
@@ -23,6 +24,7 @@ public abstract class ProxiedPlayerMapper {
 
         proxiedPlayerUtils = proxiedPlayerUtilsSupplier.get();
         proxiedPlayerUtils.playerConverter.finish();
+        proxiedPlayerUtils.senderConverter.finish();
         proxiedPlayerUtils.serverConverter.finish();
     }
 
@@ -31,6 +33,13 @@ public abstract class ProxiedPlayerMapper {
             throw new UnsupportedOperationException("ProxiedPlayerUtils aren't initialized yet.");
         }
         return proxiedPlayerUtils.playerConverter.convert(player);
+    }
+
+    public static <T> ProxiedSenderWrapper wrapSender(T player) {
+        if (proxiedPlayerUtils == null) {
+            throw new UnsupportedOperationException("ProxiedPlayerUtils aren't initialized yet.");
+        }
+        return proxiedPlayerUtils.senderConverter.convert(player);
     }
 
     public static <T> ServerWrapper wrapServer(T server) {
@@ -47,6 +56,13 @@ public abstract class ProxiedPlayerMapper {
         return proxiedPlayerUtils.playerConverter.convert(player, type);
     }
 
+    public static <T> T convertSenderWrapper(ProxiedSenderWrapper sender, Class<T> type) {
+        if (proxiedPlayerUtils == null) {
+            throw new UnsupportedOperationException("ProxiedPlayerUtils aren't initialized yet.");
+        }
+        return proxiedPlayerUtils.senderConverter.convert(sender, type);
+    }
+
     public static <T> T convertServerWrapper(ServerWrapper server, Class<T> type) {
         if (proxiedPlayerUtils == null) {
             throw new UnsupportedOperationException("ProxiedPlayerUtils aren't initialized yet.");
@@ -54,14 +70,14 @@ public abstract class ProxiedPlayerMapper {
         return proxiedPlayerUtils.serverConverter.convert(server, type);
     }
 
-    public static void sendMessage(ProxiedPlayerWrapper playerWrapper, String message) {
+    public static void sendMessage(ProxiedSenderWrapper playerWrapper, String message) {
         if (proxiedPlayerUtils == null) {
             throw new UnsupportedOperationException("ProxiedPlayerUtils aren't initialized yet.");
         }
         proxiedPlayerUtils.sendMessage0(playerWrapper, message);
     }
 
-    public abstract void sendMessage0(ProxiedPlayerWrapper playerWrapper, String message);
+    public abstract void sendMessage0(ProxiedSenderWrapper playerWrapper, String message);
 
     public static void switchServer(ProxiedPlayerWrapper playerWrapper, ServerWrapper server) {
         if (proxiedPlayerUtils == null) {

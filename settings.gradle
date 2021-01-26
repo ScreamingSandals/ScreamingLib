@@ -1,7 +1,6 @@
 rootProject.name = "ScreamingLib"
 
 include 'utils'
-include 'event'
 include 'screaming-annotation'
 
 def registerModule(String name, String... platforms) {
@@ -19,4 +18,6 @@ registerModule('player', 'bukkit', 'minestom', 'sponge')
 registerModule('proxiedplayer', 'bungee', 'velocity')
 registerModule('plugin', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
 registerModule('tasker', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
+registerModule('command', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
+registerModule('event', 'bukkit', 'sponge', 'bungee', 'velocity')
 

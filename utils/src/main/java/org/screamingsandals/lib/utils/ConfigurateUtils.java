@@ -1,18 +1,21 @@
 package org.screamingsandals.lib.utils;
 
+import lombok.experimental.UtilityClass;
 import org.spongepowered.configurate.ConfigurationNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+@UtilityClass
 public class ConfigurateUtils {
-    public static Map<String,?> toMap(ConfigurationNode node) {
-        //noinspection unchecked
+
+    @SuppressWarnings("unchecked")
+    public Map<String,?> toMap(ConfigurationNode node) {
         return (Map<String,?>) raw(node);
     }
 
-    public static Object raw(ConfigurationNode node) {
+    public Object raw(ConfigurationNode node) {
         if (node.isList()) {
             var list = new ArrayList<>();
             node.childrenMap().forEach((key, configurationNode) ->

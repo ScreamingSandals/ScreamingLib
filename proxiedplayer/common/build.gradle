@@ -1,4 +1,4 @@
 dependencies {
     api project(':utils')
-    api project(':event')
+    api project(':event-common')
 }

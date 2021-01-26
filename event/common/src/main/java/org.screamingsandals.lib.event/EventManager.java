@@ -21,6 +21,14 @@ public class EventManager extends AbstractServiceWithExecutor {
         super("SSEventManager");
     }
 
+    public static <K extends AbstractEvent> K fire(K event) {
+        return defaultEventManager.fireEvent(event);
+    }
+
+    public static <K extends AbstractEvent> CompletableFuture<K> fireAsync(K event) {
+        return defaultEventManager.fireEventAsync(event);
+    }
+
     public <T extends AbstractEvent> EventHandler<T> register(Class<T> event, Consumer<T> consumer) {
         return register(event, EventHandler.of(consumer));
     }

@@ -1,5 +1,6 @@
 dependencies {
     api project(':proxiedplayer-common')
+    api project(':event-velocity')
 
     compileOnly velocity(VELOCITY_VERSION)
 }

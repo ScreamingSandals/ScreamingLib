@@ -2,40 +2,15 @@ package org.screamingsandals.lib.bungee.proxiedplayer.listener;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
-import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.event.EventHandler;
-import net.md_5.bungee.event.EventPriority;
+import org.screamingsandals.lib.bungee.event.AbstractEventListener;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxiedplayer.event.PlayerChatEvent;
 
-public class ChatEventListener implements Listener {
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onLowest(ChatEvent chatEvent) {
-        fireEvent(chatEvent, org.screamingsandals.lib.event.EventPriority.LOWEST);
-    }
+public class ChatEventListener extends AbstractEventListener<ChatEvent> {
 
-    @EventHandler(priority = EventPriority.LOW)
-    public void onLow(ChatEvent chatEvent) {
-        fireEvent(chatEvent, org.screamingsandals.lib.event.EventPriority.LOW);
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onNormal(ChatEvent chatEvent) {
-        fireEvent(chatEvent, org.screamingsandals.lib.event.EventPriority.NORMAL);
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onHigh(ChatEvent chatEvent) {
-        fireEvent(chatEvent, org.screamingsandals.lib.event.EventPriority.HIGH);
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onHighest(ChatEvent chatEvent) {
-        fireEvent(chatEvent, org.screamingsandals.lib.event.EventPriority.HIGHEST);
-    }
-
-    private void fireEvent(ChatEvent chatEvent, org.screamingsandals.lib.event.EventPriority eventPriority) {
+    @Override
+    protected void onFire(ChatEvent chatEvent, org.screamingsandals.lib.event.EventPriority eventPriority) {
         if (!(chatEvent.getSender() instanceof ProxiedPlayer)) {
             return;
         }

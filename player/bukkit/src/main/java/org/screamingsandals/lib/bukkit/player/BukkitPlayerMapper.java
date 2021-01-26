@@ -99,7 +99,6 @@ public class BukkitPlayerMapper extends PlayerMapper {
         PaperLib.teleportAsync(wrapper.as(Player.class), location.as(Location.class))
                 .thenAccept(result -> {
                     if (result) {
-                        //TODO: tasker
                         callback.run();
                     }
                 })
@@ -123,8 +122,9 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     private void registerListeners(Plugin plugin) {
-        plugin.getServer().getPluginManager().registerEvents(new AsyncPlayerPreLoginEventListener(), plugin);
-        plugin.getServer().getPluginManager().registerEvents(new PlayerJoinEventListener(), plugin);
-        plugin.getServer().getPluginManager().registerEvents(new PlayerLeaveEventListener(), plugin);
+        final var manager = plugin.getServer().getPluginManager();
+        manager.registerEvents(new AsyncPlayerPreLoginEventListener(), plugin);
+        manager.registerEvents(new PlayerJoinEventListener(), plugin);
+        manager.registerEvents(new PlayerLeaveEventListener(), plugin);
     }
 }

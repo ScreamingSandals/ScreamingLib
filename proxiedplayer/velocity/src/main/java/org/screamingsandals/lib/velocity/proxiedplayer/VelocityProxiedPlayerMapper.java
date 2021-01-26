@@ -1,10 +1,12 @@
 package org.screamingsandals.lib.velocity.proxiedplayer;
 
+import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerWrapper;
+import org.screamingsandals.lib.proxiedplayer.ProxiedSenderWrapper;
 import org.screamingsandals.lib.proxiedplayer.ServerWrapper;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -18,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
-
+    private final static String CONSOLE_NAME = "CONSOLE";
     private final ProxyServer proxyServer;
 
     public static void init(Object plugin, ProxyServer proxyServer) {
@@ -29,11 +31,37 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
         this.proxyServer = proxyServer;
         new ChatEventHandlerFactory(plugin, proxyServer);
 
-        /* NOTE: Converter needs null, so don't blame me because you see orElse(null) */
-
         playerConverter
                 .registerP2W(Player.class, player -> new ProxiedPlayerWrapper(player.getUsername(), player.getUniqueId()))
                 .registerW2P(Player.class, proxiedPlayerWrapper -> this.proxyServer.getPlayer(proxiedPlayerWrapper.getUuid()).orElse(null));
+
+        senderConverter
+                .registerP2W(CommandSource.class, source -> {
+                    if (source instanceof Player) {
+                        final var casted = (Player) source;
+                        return new ProxiedPlayerWrapper(casted.getUsername(), casted.getUniqueId());
+                    }
+                    return new ProxiedSenderWrapper(CONSOLE_NAME, ProxiedSenderWrapper.Type.CONSOLE);
+                })
+                .registerW2P(CommandSource.class, proxiedPlayerWrapper -> {
+                    if (proxiedPlayerWrapper.getType() == ProxiedSenderWrapper.Type.CONSOLE) {
+                        return proxyServer.getConsoleCommandSource();
+                    }
+
+                    return proxyServer.getPlayer(proxiedPlayerWrapper.getName()).orElse(null);
+                })
+                .registerW2P(ProxiedPlayerWrapper.class, wrapper -> {
+                   if (wrapper.getType() == ProxiedSenderWrapper.Type.CONSOLE) {
+                       return null;
+                   }
+
+                   final var player = proxyServer.getPlayer(wrapper.getName()).orElse(null);
+                   if (player == null) {
+                       return null;
+                   }
+
+                   return wrapPlayer(player);
+                });
 
         serverConverter
                 .registerP2W(ServerInfo.class, serverInfo -> new ServerWrapper(serverInfo.getName(), serverInfo.getAddress()))
@@ -43,8 +71,8 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     @Override
-    public void sendMessage0(ProxiedPlayerWrapper playerWrapper, String message) {
-        playerWrapper.as(Player.class).sendMessage(LegacyComponentSerializer.legacySection().deserialize(message));
+    public void sendMessage0(ProxiedSenderWrapper wrapper, String message) {
+        wrapper.as(CommandSource.class).sendMessage(LegacyComponentSerializer.legacySection().deserialize(message));
     }
 
     @Override

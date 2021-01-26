@@ -1,0 +1,6 @@
+dependencies {
+    compileOnly paper(PAPER_VERSION)
+    api project(':command-common')
+    api project(':player-common')
+    api group: 'cloud.commandframework', name: 'cloud-paper', version: CLOUD_VERSION
+}

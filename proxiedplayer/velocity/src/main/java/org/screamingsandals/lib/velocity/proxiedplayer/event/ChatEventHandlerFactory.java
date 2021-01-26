@@ -1,55 +1,31 @@
 package org.screamingsandals.lib.velocity.proxiedplayer.event;
 
-import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.proxy.ProxyServer;
-import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.EventPriority;
-import org.screamingsandals.lib.event.HandlerRegisteredEvent;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxiedplayer.event.PlayerChatEvent;
+import org.screamingsandals.lib.velocity.event.AbstractEventHandlerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+public class ChatEventHandlerFactory extends
+        AbstractEventHandlerFactory<com.velocitypowered.api.event.player.PlayerChatEvent, PlayerChatEvent> {
 
-public class ChatEventHandlerFactory {
-    private static final Map<EventPriority, PostOrder> EVENT_PRIORITY_POST_ORDER_MAP = Map.of(
-            EventPriority.LOWEST, PostOrder.FIRST,
-            EventPriority.LOW, PostOrder.EARLY,
-            EventPriority.NORMAL, PostOrder.NORMAL,
-            EventPriority.HIGH, PostOrder.LATE,
-            EventPriority.HIGHEST, PostOrder.LAST
-    );
+    public ChatEventHandlerFactory(Object plugin, ProxyServer proxyServer) {
+        super(com.velocitypowered.api.event.player.PlayerChatEvent.class, plugin, proxyServer);
+    }
 
-    private final Map<EventPriority,
-            com.velocitypowered.api.event.EventHandler<com.velocitypowered.api.event.player.PlayerChatEvent>> eventMap = new HashMap<>();
+    @Override
+    protected PlayerChatEvent wrapEvent(com.velocitypowered.api.event.player.PlayerChatEvent event, EventPriority priority) {
+        return new PlayerChatEvent(ProxiedPlayerMapper.wrapPlayer(event.getPlayer()),
+                event.getResult().getMessage().orElse(event.getMessage()), event.getResult().isAllowed(),
+                event.getMessage().startsWith("/"));
+    }
 
-    public ChatEventHandlerFactory(final Object plugin, final ProxyServer proxyServer) {
-        EventManager.getDefaultEventManager().register(HandlerRegisteredEvent.class, handlerRegisteredEvent -> {
-            if (handlerRegisteredEvent.getEventManager() != EventManager.getDefaultEventManager()) {
-                return;
-            }
-
-            if (!PlayerChatEvent.class.isAssignableFrom(handlerRegisteredEvent.getEventClass())) {
-                return;
-            }
-
-            if (!eventMap.containsKey(handlerRegisteredEvent.getHandler().getEventPriority())) {
-                final com.velocitypowered.api.event.EventHandler<com.velocitypowered.api.event.player.PlayerChatEvent> handler = event -> {
-                    var wrapEvent = new PlayerChatEvent(ProxiedPlayerMapper.wrapPlayer(event.getPlayer()), event.getResult().getMessage()
-                            .orElse(event.getMessage()), event.getResult().isAllowed(), event.getMessage().startsWith("/"));
-
-                    EventManager.getDefaultEventManager().fireEvent(wrapEvent);
-                    if (!wrapEvent.isCancelled()) {
-                        event.setResult(com.velocitypowered.api.event.player.PlayerChatEvent.ChatResult.message(wrapEvent.getMessage()));
-                    } else {
-                        event.setResult(com.velocitypowered.api.event.player.PlayerChatEvent.ChatResult.denied());
-                    }
-                };
-
-                eventMap.put(handlerRegisteredEvent.getHandler().getEventPriority(), handler);
-                proxyServer.getEventManager().register(plugin, com.velocitypowered.api.event.player.PlayerChatEvent.class,
-                        EVENT_PRIORITY_POST_ORDER_MAP.get(handlerRegisteredEvent.getHandler().getEventPriority()), handler);
-            }
-        });
+    @Override
+    protected void handleResult(PlayerChatEvent wrappedEvent, com.velocitypowered.api.event.player.PlayerChatEvent event) {
+        if (wrappedEvent.isCancelled()) {
+            event.setResult(com.velocitypowered.api.event.player.PlayerChatEvent.ChatResult.denied());
+        } else {
+            event.setResult(com.velocitypowered.api.event.player.PlayerChatEvent.ChatResult.message(wrappedEvent.getMessage()));
+        }
     }
 }
