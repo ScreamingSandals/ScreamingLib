@@ -1,4 +1,5 @@
 dependencies {
     api project(':plugin-common')
+    api 'org.apache.logging.log4j:log4j-slf4j-impl:' + LOG4J_VERSION
     compileOnly paper(PAPER_VERSION)
 }

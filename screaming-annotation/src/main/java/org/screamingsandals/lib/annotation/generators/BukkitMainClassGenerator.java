@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.annotation.generators;
 
 import com.squareup.javapoet.*;
-import org.screamingsandals.lib.annotation.utils.MiscUtils;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.Plugin;
@@ -16,47 +15,50 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class BukkitMainClassGenerator implements MainClassGenerator {
     @Override
     public void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException {
-        var sorted = new ArrayList<ServiceContainer>();
-        var waiting = new ArrayList<>(autoInit);
-        while (!waiting.isEmpty()) {
-            var copy = List.copyOf(waiting);
-            waiting.clear();
-            copy.forEach(serviceContainer -> {
-                var dependencies = serviceContainer.getDependencies();
-                var loadAfter = serviceContainer.getLoadAfter();
-                if (!dependencies.isEmpty() && dependencies.stream().anyMatch(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement)))) {
-                    dependencies.stream()
-                            .filter(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement))
-                                    && copy.stream().noneMatch(s -> s.is(typeElement))
-                                    && waiting.stream().noneMatch(s -> s.is(typeElement)))
-                            .map(typeElement -> MiscUtils.getAllSpecificPlatformImplementations(processingEnvironment,
-                                    typeElement,
-                                    List.of(PlatformType.BUKKIT),
-                                    true
-                                    ).get(PlatformType.BUKKIT)
-                            )
-                            .forEach(waiting::add);
-                    waiting.add(serviceContainer);
-                } else if (!loadAfter.isEmpty()
-                        && loadAfter.stream().anyMatch(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement))
-                        && (copy.stream().anyMatch(s -> s.is(typeElement)) || waiting.stream().anyMatch(s -> s.is(typeElement))))) {
-                    waiting.add(serviceContainer);
-                } else {
-                    sorted.add(serviceContainer);
-                }
-            });
-        }
+        var sorted = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.BUKKIT);
+
+        var pluginManager = new AtomicReference<ServiceContainer>();
+
+        sorted.removeIf(serviceContainer -> {
+            if (pluginManager.get() == null && serviceContainer.getAbstractService().getQualifiedName().toString().equals("org.screamingsandals.lib.plugin.PluginManager")) {
+                pluginManager.set(serviceContainer);
+                return true;
+            }
+            return false;
+        });
+
+        var pluginManagerClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginManager");
+        var pluginDescriptionClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginDescription");
+        var pluginKeyClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginKey");
+        var loggerFactoryClass = ClassName.get("org.slf4j", "LoggerFactory");
+        var loggerClass = ClassName.get("org.slf4j", "Logger");
 
         var onLoadBuilder = MethodSpec.methodBuilder("onLoad")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(void.class)
                 .addStatement("this.$N = new $T()", "pluginControllable", ClassName.get("org.screamingsandals.lib.utils", "Controllable"));
+
+
+        var serviceInitGenerator = ServiceInitGenerator
+                .builder(onLoadBuilder)
+                .add(List.of("org.bukkit.plugin.java.JavaPlugin", "org.bukkit.plugin.Plugin"), (statement, objects) ->
+                        statement.append("this")
+                );
+
+        serviceInitGenerator.process(pluginManager.get());
+
+        onLoadBuilder.addStatement("$T $N = this.getName()", String.class, "name")
+                .addStatement("$T $N = $T.createKey($N).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, "name")
+                .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key")
+                .addStatement("this.$N = new $T()", "pluginContainer", pluginContainer)
+                .addStatement("$T $N = $T.getLogger($N)", loggerClass, "slf4jLogger", loggerFactoryClass, "name")
+                .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "slf4jLogger");
 
         var onEnableBuilder = MethodSpec.methodBuilder("onEnable")
                 .addModifiers(Modifier.PUBLIC)
@@ -66,67 +68,9 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
                 .addModifiers(Modifier.PUBLIC)
                 .returns(void.class);
 
-        sorted.forEach(serviceContainer -> {
-            var typeElement = serviceContainer.getService();
-            var initMethod = typeElement.getEnclosedElements()
-                    .stream()
-                    .filter(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))
-                    .findFirst();
-
-            if (initMethod.isEmpty()) {
-                initMethod = typeElement.getEnclosedElements()
-                        .stream()
-                        .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR)
-                        .findFirst();
-            }
-
-            if (initMethod.isPresent()) {
-                var method = (ExecutableElement) initMethod.get();
-                var arguments = method.getParameters();
-                var processedArguments = new ArrayList<>();
-                var statement = new StringBuilder();
-                if (method.getKind() == ElementKind.CONSTRUCTOR) {
-                    statement.append("new $T(");
-                } else {
-                    statement.append("$T.init(");
-                }
-                processedArguments.add(typeElement);
-                var first = new AtomicBoolean(true);
-                arguments.forEach(variableElement -> {
-                    if (!first.get()) {
-                        statement.append(",");
-                    } else {
-                        first.set(false);
-                    }
-                    if (variableElement.asType().toString().equals("org.bukkit.plugin.java.JavaPlugin") || variableElement.asType().toString().equals("org.bukkit.plugin.Plugin")) {
-                        statement.append("this");
-                    } else if (variableElement.asType().toString().equals("org.screamingsandals.lib.utils.Controllable")) {
-                        statement.append("this.$N.child()");
-                        processedArguments.add("pluginControllable");
-                    } else if (variableElement.asType().toString().equals("org.screamingsandals.lib.plugin.PluginContainer")) {
-                        statement.append("this.$N");
-                        processedArguments.add("pluginContainer");
-                    } else {
-                        throw new UnsupportedOperationException("Init method of " + typeElement.getQualifiedName() + " has wrong argument!");
-                    }
-                });
-                statement.append(")");
-                onLoadBuilder.addStatement(statement.toString(), processedArguments.toArray());
-            } else {
-                throw new UnsupportedOperationException("Can't auto initialize " + typeElement.getQualifiedName() + " without init method");
-            }
-        });
-
-        var pluginManagerClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginManager");
-        var pluginDescriptionClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginDescription");
-        var pluginKeyClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginKey");
+        sorted.forEach(serviceInitGenerator::process);
 
         onLoadBuilder
-                .addStatement("$T $N = this.getName()", String.class, "name")
-                .addStatement("$T $N = $T.createKey($N).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, "name")
-                .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key")
-                .addStatement("this.$N = new $T()", "pluginContainer", pluginContainer)
-                .addStatement("this.$N.init($N, this.getLogger())", "pluginContainer", "description")
                 .addStatement("this.$N.load()", "pluginContainer");
 
         onEnableBuilder
@@ -139,6 +83,11 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
         onDisableBuilder
                 .addStatement("this.$N.disable()", "pluginContainer")
                 .addStatement("this.$N.disable()", "pluginControllable");
+
+        if (processingEnvironment.getElementUtils().getTypeElement("org.screamingsandals.lib.event.EventManager") != null) {
+            onDisableBuilder
+                    .addStatement("$T.getDefaultEventManager().unregisterAll()", ClassName.get("org.screamingsandals.lib.event", "EventManager"));
+        }
 
         var bukkitMainClass = TypeSpec.classBuilder(pluginContainer.getSimpleName() + "_BukkitImpl")
                 .addModifiers(Modifier.PUBLIC)
