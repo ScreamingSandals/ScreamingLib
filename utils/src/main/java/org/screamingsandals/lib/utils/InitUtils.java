@@ -41,9 +41,10 @@ public class InitUtils {
      * @return the created Controllable instance
      */
     public static Controllable pluginlessEnvironment(Consumer<Controllable> consumer) {
-        var controllable = new Controllable();
+        var controllable = new ControllableImpl();
         consumer.accept(controllable);
         controllable.enable();
+        controllable.postEnable();
         return controllable;
     }
 }

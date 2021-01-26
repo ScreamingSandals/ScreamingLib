@@ -2,49 +2,15 @@ package org.screamingsandals.lib.utils;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
-import java.util.List;
+public interface Controllable {
 
-public class Controllable {
-    private final List<Controllable> controllableList = new LinkedList<>();
+    Controllable enable(@NotNull Runnable enableMethod);
 
-    private Runnable enableMethod;
-    private Runnable disableMethod;
+    Controllable postEnable(@NotNull Runnable postEnable);
 
-    public Controllable enable(@NotNull Runnable enableMethod) {
-        this.enableMethod = enableMethod;
-        return this;
-    }
+    Controllable preDisable(@NotNull Runnable preDisable);
 
-    public Controllable disable(@NotNull Runnable disableMethod) {
-        this.disableMethod = disableMethod;
-        return this;
-    }
+    Controllable disable(@NotNull Runnable disableMethod);
 
-    public Controllable child() {
-        var controllable = new Controllable();
-        controllableList.add(controllable);
-        return controllable;
-    }
-
-    public void enable() {
-        controllableList.forEach(Controllable::enable);
-        if (enableMethod != null) {
-            enableMethod.run();
-        }
-    }
-
-    public void disable() {
-        if (disableMethod != null) {
-            disableMethod.run();
-        }
-        new LinkedList<>(controllableList)
-                .descendingIterator()
-                .forEachRemaining(Controllable::disable);
-    }
-
-    public void reload() {
-        disable();
-        enable();
-    }
+    Controllable child();
 }

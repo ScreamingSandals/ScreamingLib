@@ -19,6 +19,10 @@ public class ServiceInitGenerator {
     private final MethodSpec.Builder methodSpec;
     private final Map<String, BiConsumer<StringBuilder, List<Object>>> initArguments = new HashMap<>() {
         {
+            put("org.screamingsandals.lib.utils.ControllableImpl", (statement, processedArguments) -> {
+                statement.append("this.$N.child()");
+                processedArguments.add("pluginControllable");
+            });
             put("org.screamingsandals.lib.utils.Controllable", (statement, processedArguments) -> {
                 statement.append("this.$N.child()");
                 processedArguments.add("pluginControllable");

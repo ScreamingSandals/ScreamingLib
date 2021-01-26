@@ -42,7 +42,7 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
         var onLoadBuilder = MethodSpec.methodBuilder("onLoad")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(void.class)
-                .addStatement("this.$N = new $T()", "pluginControllable", ClassName.get("org.screamingsandals.lib.utils", "Controllable"));
+                .addStatement("this.$N = new $T()", "pluginControllable", ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"));
 
 
         var serviceInitGenerator = ServiceInitGenerator
@@ -75,12 +75,14 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
 
         onEnableBuilder
                 .beginControlFlow("if (this.$N == null)", "pluginContainer")
-                .addStatement("throw new $T($S)", UnsupportedOperationException.class, "Plugin must be loaded before enabling!")
+                    .addStatement("throw new $T($S)", UnsupportedOperationException.class, "Plugin must be loaded before enabling!")
                 .endControlFlow()
                 .addStatement("this.$N.enable()", "pluginControllable")
-                .addStatement("this.$N.enable()", "pluginContainer");
+                .addStatement("this.$N.enable()", "pluginContainer")
+                .addStatement("this.$N.postEnable()", "pluginControllable");
 
         onDisableBuilder
+                .addStatement("this.$N.preDisable()", "pluginControllable")
                 .addStatement("this.$N.disable()", "pluginContainer")
                 .addStatement("this.$N.disable()", "pluginControllable");
 
@@ -96,7 +98,7 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
                         .builder(TypeName.get(pluginContainer.asType()), "pluginContainer", Modifier.PRIVATE)
                         .build())
                 .addField(FieldSpec
-                        .builder(ClassName.get("org.screamingsandals.lib.utils", "Controllable"), "pluginControllable",
+                        .builder(ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"), "pluginControllable",
                                 Modifier.PRIVATE)
                         .build())
                 .addMethod(onLoadBuilder.build())
