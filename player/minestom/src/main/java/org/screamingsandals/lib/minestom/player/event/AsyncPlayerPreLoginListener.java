@@ -1,9 +1,10 @@
 package org.screamingsandals.lib.minestom.player.event;
 
+import net.kyori.adventure.platform.minestom.MinestomComponentSerializer;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.player.AsyncPlayerPreLoginEvent;
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.player.event.SAsyncPlayerPreLoginEvent;
 
 import java.net.InetSocketAddress;
 
@@ -13,12 +14,12 @@ public class AsyncPlayerPreLoginListener {
         MinecraftServer.getGlobalEventHandler().addEventCallback(AsyncPlayerPreLoginEvent.class, callback -> {
             final var player = callback.getPlayer();
             final var remoteAddress = (InetSocketAddress) callback.getPlayer().getPlayerConnection().getRemoteAddress();
-            final var toFire = new org.screamingsandals.lib.player.event.AsyncPlayerPreLoginEvent(
+            final var toFire = new SAsyncPlayerPreLoginEvent(
                     callback.getPlayerUuid(), callback.getUsername(), remoteAddress.getAddress());
             try {
                 final var result = EventManager.fireAsync(toFire).get();
-                if (result.getResult() != org.screamingsandals.lib.player.event.AsyncPlayerPreLoginEvent.Result.ALLOWED) {
-                    player.kick((AdventureHelper.toLegacy(result.getMessage())));
+                if (result.getResult() != SAsyncPlayerPreLoginEvent.Result.ALLOWED) {
+                    player.kick(MinestomComponentSerializer.get().serialize(result.getMessage()));
                     return;
                 }
 

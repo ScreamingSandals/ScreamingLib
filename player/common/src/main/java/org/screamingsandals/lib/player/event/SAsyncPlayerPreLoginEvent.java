@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class AsyncPlayerPreLoginEvent extends AbstractAsyncEvent {
+public class SAsyncPlayerPreLoginEvent extends AbstractAsyncEvent {
     private final UUID uuid;
     private final InetAddress address;
     //name is changeable only on some platforms!
@@ -18,7 +18,7 @@ public class AsyncPlayerPreLoginEvent extends AbstractAsyncEvent {
     private Result result;
     private Component message;
 
-    public AsyncPlayerPreLoginEvent(UUID uuid, String name, InetAddress address) {
+    public SAsyncPlayerPreLoginEvent(UUID uuid, String name, InetAddress address) {
         this.uuid = uuid;
         this.name = name;
         this.address = address;

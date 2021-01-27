@@ -9,9 +9,9 @@ import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerWrapper;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
-public class PlayerChatEvent extends CancellableAbstractEvent {
-    private final ProxiedPlayerWrapper playerWrapper;
+public class SPlayerChatEvent extends CancellableAbstractEvent {
+    private final ProxiedPlayerWrapper player;
+    private final boolean isCommand;
     private String message;
     private boolean cancelled;
-    private final boolean isCommand;
 }

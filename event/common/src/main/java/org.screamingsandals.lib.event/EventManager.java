@@ -72,6 +72,10 @@ public class EventManager extends AbstractServiceWithExecutor {
     }
 
     public <K extends AbstractEvent> K fireEvent(K event, EventPriority eventPriority) {
+        if (event instanceof AbstractAsyncEvent) {
+            throw new UnsupportedOperationException("Async event cannot be fired sync!");
+        }
+
         findEventHandlers(event, eventPriority)
                 .forEach(eventHandler -> eventHandler.fire(event));
 
