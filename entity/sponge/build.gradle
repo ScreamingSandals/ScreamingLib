@@ -1,0 +1,5 @@
+dependencies {
+    api project(':entity-common')
+
+    compileOnly 'org.spongepowered:spongeapi:' + SPONGE_VERSION
+}

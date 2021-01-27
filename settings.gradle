@@ -15,6 +15,7 @@ def registerModule(String name, String... platforms) {
 registerModule('material', 'bukkit', 'minestom', 'sponge')
 registerModule('world', 'bukkit', 'minestom', 'sponge')
 registerModule('player', 'bukkit', 'minestom', 'sponge')
+registerModule('entity', 'bukkit', 'minestom', 'sponge')
 registerModule('proxiedplayer', 'bungee', 'velocity')
 registerModule('plugin', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
 registerModule('tasker', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')

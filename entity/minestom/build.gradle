@@ -1,0 +1,4 @@
+dependencies {
+    api project(':entity-common')
+    compileOnly 'com.github.Minestom:Minestom:' + MINESTOM_VERSION
+}

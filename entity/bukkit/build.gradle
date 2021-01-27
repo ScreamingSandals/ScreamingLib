@@ -1,0 +1,4 @@
+dependencies {
+    api project(':entity-common')
+    compileOnly paper(PAPER_VERSION)
+}
