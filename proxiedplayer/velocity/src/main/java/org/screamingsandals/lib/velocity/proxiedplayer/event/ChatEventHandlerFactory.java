@@ -5,13 +5,13 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxiedplayer.event.SPlayerChatEvent;
-import org.screamingsandals.lib.velocity.event.AbstractEventHandlerFactory;
+import org.screamingsandals.lib.velocity.event.AbstractVelocityEventHandlerFactory;
 
 public class ChatEventHandlerFactory extends
-        AbstractEventHandlerFactory<PlayerChatEvent, SPlayerChatEvent> {
+        AbstractVelocityEventHandlerFactory<PlayerChatEvent, SPlayerChatEvent> {
 
     public ChatEventHandlerFactory(Object plugin, ProxyServer proxyServer) {
-        super(PlayerChatEvent.class, plugin, proxyServer);
+        super(PlayerChatEvent.class, SPlayerChatEvent.class, plugin, proxyServer);
     }
 
     @Override

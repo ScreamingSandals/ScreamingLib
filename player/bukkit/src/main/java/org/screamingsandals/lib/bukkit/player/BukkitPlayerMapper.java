@@ -122,9 +122,8 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     private void registerListeners(Plugin plugin) {
-        final var manager = plugin.getServer().getPluginManager();
-        manager.registerEvents(new AsyncPlayerPreLoginEventListener(), plugin);
-        manager.registerEvents(new PlayerJoinEventListener(), plugin);
-        manager.registerEvents(new PlayerLeaveEventListener(), plugin);
+        new AsyncPlayerPreLoginEventListener(plugin);
+        new PlayerJoinEventListener(plugin);
+        new PlayerLeaveEventListener(plugin);
     }
 }

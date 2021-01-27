@@ -2,17 +2,13 @@ package org.screamingsandals.lib.velocity.event;
 
 import com.velocitypowered.api.event.EventHandler;
 import com.velocitypowered.api.event.PostOrder;
-import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.event.EventPriority;
-import org.screamingsandals.lib.event.HandlerRegisteredEvent;
+import org.screamingsandals.lib.event.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractEventHandlerFactory<T extends ResultedEvent<?>, SE extends CancellableAbstractEvent> {
+public abstract class AbstractVelocityEventHandlerFactory<T, SE extends AbstractEvent> {
     protected static final Map<EventPriority, PostOrder> EVENT_PRIORITY_POST_ORDER_MAP = Map.of(
             EventPriority.LOWEST, PostOrder.FIRST,
             EventPriority.LOW, PostOrder.EARLY,
@@ -22,17 +18,25 @@ public abstract class AbstractEventHandlerFactory<T extends ResultedEvent<?>, SE
     );
 
     protected final Map<EventPriority, EventHandler<T>> eventMap = new HashMap<>();
-    protected final Class<T> eventClass;
+    protected final Class<T> platformEventClass;
+    protected final Class<SE> eventClass;
+    protected final boolean fireAsync;
 
-    public AbstractEventHandlerFactory(Class<T> eventClass, final Object plugin, final ProxyServer proxyServer) {
+    public AbstractVelocityEventHandlerFactory(Class<T> platformEventClass, Class<SE> eventClass, final Object plugin, final ProxyServer proxyServer) {
+        this(platformEventClass, eventClass, plugin, proxyServer, false);
+    }
+
+    public AbstractVelocityEventHandlerFactory(Class<T> platformEventClass, Class<SE> eventClass, final Object plugin, final ProxyServer proxyServer, boolean fireAsync) {
         this.eventClass = eventClass;
+        this.platformEventClass = platformEventClass;
+        this.fireAsync = fireAsync;
 
         EventManager.getDefaultEventManager().register(HandlerRegisteredEvent.class, handlerRegisteredEvent -> {
             if (handlerRegisteredEvent.getEventManager() != EventManager.getDefaultEventManager()) {
                 return;
             }
 
-            if (!eventClass.isAssignableFrom(handlerRegisteredEvent.getEventClass())) {
+            if (!this.eventClass.isAssignableFrom(handlerRegisteredEvent.getEventClass())) {
                 return;
             }
 
@@ -40,13 +44,21 @@ public abstract class AbstractEventHandlerFactory<T extends ResultedEvent<?>, SE
             if (!eventMap.containsKey(priority)) {
                 final EventHandler<T> handler = event -> {
                     final var wrapped = wrapEvent(event, handlerRegisteredEvent.getHandler().getEventPriority());
-                    EventManager.getDefaultEventManager().fireEvent(wrapped);
+                    if (this.fireAsync) {
+                        try {
+                            EventManager.getDefaultEventManager().fireEventAsync(wrapped).get();
+                        } catch (Throwable throwable) {
+                            throw new RuntimeException(throwable);
+                        }
+                    } else {
+                        EventManager.getDefaultEventManager().fireEvent(wrapped);
+                    }
                     handleResult(wrapped, event);
                 };
 
                 eventMap.put(handlerRegisteredEvent.getHandler().getEventPriority(), handler);
                 proxyServer.getEventManager()
-                        .register(plugin, eventClass, EVENT_PRIORITY_POST_ORDER_MAP.get(priority), handler);
+                        .register(plugin, this.platformEventClass, EVENT_PRIORITY_POST_ORDER_MAP.get(priority), handler);
             }
         });
     }

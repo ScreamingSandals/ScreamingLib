@@ -1,12 +1,24 @@
 package org.screamingsandals.lib.bukkit.player;
 
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.screamingsandals.lib.bukkit.event.AbstractEventListener;
+import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.player.event.SPlayerBlockPlaceEvent;
 
-public class PlayerBlockPlaceEventListener extends AbstractEventListener<BlockPlaceEvent> {
+public class PlayerBlockPlaceEventListener extends AbstractBukkitEventHandlerFactory<BlockPlaceEvent, SPlayerBlockPlaceEvent> {
+
+    public PlayerBlockPlaceEventListener(Plugin plugin) {
+        super(BlockPlaceEvent.class, SPlayerBlockPlaceEvent.class, plugin);
+    }
+
     @Override
-    protected void onFire(BlockPlaceEvent event, EventPriority priority) {
+    protected SPlayerBlockPlaceEvent wrapEvent(BlockPlaceEvent event, EventPriority priority) {
+        return null;
+    }
+
+    @Override
+    protected void handleResult(SPlayerBlockPlaceEvent wrappedEvent, BlockPlaceEvent event) {
 
     }
 }

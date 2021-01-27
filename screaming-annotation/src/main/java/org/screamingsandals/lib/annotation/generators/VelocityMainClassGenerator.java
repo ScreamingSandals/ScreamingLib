@@ -62,7 +62,10 @@ public class VelocityMainClassGenerator implements MainClassGenerator {
                 .add("com.velocitypowered.api.plugin.PluginManager", (statement, objects) -> {
                     statement.append("$N.getPluginManager()");
                     objects.add("proxyServer");
-                });
+                })
+                .add("java.lang.Object", (statement, objects) -> // probably plugin
+                    statement.append("this")
+                );
 
         serviceInitGenerator.process(pluginManager.get());
 
