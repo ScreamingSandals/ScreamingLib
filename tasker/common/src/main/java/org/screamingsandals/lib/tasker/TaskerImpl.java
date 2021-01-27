@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.tasker;
 
-import com.google.common.collect.ImmutableMap;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
@@ -26,7 +25,7 @@ class TaskerImpl implements Tasker {
 
     @Override
     public Map<Integer, TaskerTask> getRunningTasks() {
-        return ImmutableMap.copyOf(runningTasks);
+        return Map.copyOf(runningTasks);
     }
 
     @Override
