@@ -32,6 +32,10 @@ public abstract class AbstractEventHandlerFactory<T extends ResultedEvent<?>, SE
                 return;
             }
 
+            if (!eventClass.isAssignableFrom(handlerRegisteredEvent.getEventClass())) {
+                return;
+            }
+
             final var priority = handlerRegisteredEvent.getHandler().getEventPriority();
             if (!eventMap.containsKey(priority)) {
                 final EventHandler<T> handler = event -> {
