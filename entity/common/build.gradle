@@ -1,3 +1,4 @@
 dependencies {
     api project(':utils')
+    api project(':world-common')
 }
