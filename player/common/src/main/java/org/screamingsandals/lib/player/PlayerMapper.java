@@ -114,7 +114,7 @@ public abstract class PlayerMapper {
 
     public static Optional<PlayerWrapper> getPlayer(String name) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("ProxiedPlayerUtils aren't initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper aren't initialized yet.");
         }
         return playerMapper.getPlayer0(name);
     }
@@ -123,7 +123,7 @@ public abstract class PlayerMapper {
 
     public static Optional<PlayerWrapper> getPlayer(UUID uuid) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("ProxiedPlayerUtils aren't initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper aren't initialized yet.");
         }
         return playerMapper.getPlayer0(uuid);
     }
@@ -132,7 +132,7 @@ public abstract class PlayerMapper {
 
     public static List<PlayerWrapper> getPlayers() {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("ProxiedPlayerUtils aren't initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper aren't initialized yet.");
         }
         return playerMapper.getPlayers0();
     }
