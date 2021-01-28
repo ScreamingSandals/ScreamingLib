@@ -14,6 +14,7 @@ public class BukkitPotionEffectMapping extends PotionEffectMapping {
         PotionEffectMapping.init(BukkitPotionEffectMapping::new);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public BukkitPotionEffectMapping() {
         potionEffectConverter
                 .registerW2P(PotionEffectType.class, potionEffectHolder -> PotionEffectType.getByName(potionEffectHolder.getPlatformName()))

@@ -153,4 +153,13 @@ public class EventManager extends AbstractServiceWithExecutor {
                 .flatMap(Collection::stream)
                 .filter(eventHandler -> eventHandler.getEventPriority() == priority);
     }
+
+    @SuppressWarnings("unchecked")
+    public void cloneEventManager(EventManager targetEventManager) {
+        handlers.forEach((aClass, eventHandlers) ->
+            eventHandlers.forEach(eventHandler ->
+                targetEventManager.register((Class<AbstractEvent>) aClass, (EventHandler<AbstractEvent>) eventHandler)
+            )
+        );
+    }
 }
