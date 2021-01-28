@@ -50,6 +50,10 @@ public class BukkitPotionEffectMapping extends PotionEffectMapping {
                         return holder;
                 });
 
-        Arrays.stream(PotionEffectType.values()).forEach(potionEffectType -> potionEffectMapping.put(potionEffectType.getName().toUpperCase(), new PotionEffectHolder(potionEffectType.getName())));
+        Arrays.stream(PotionEffectType.values()).forEach(potionEffectType -> {
+            if (potionEffectType != null) { // Yeah, this is possible
+                potionEffectMapping.put(potionEffectType.getName().toUpperCase(), new PotionEffectHolder(potionEffectType.getName()));
+            }
+        });
     }
 }
