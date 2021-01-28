@@ -9,8 +9,10 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.player.listener.AsyncPlayerPreLoginEventListener;
+import org.screamingsandals.lib.bukkit.player.listener.PlayerBlockPlaceEventListener;
 import org.screamingsandals.lib.bukkit.player.listener.PlayerJoinEventListener;
 import org.screamingsandals.lib.bukkit.player.listener.PlayerLeaveEventListener;
 import org.screamingsandals.lib.material.builder.ItemFactory;
@@ -69,6 +71,19 @@ public class BukkitPlayerMapper extends PlayerMapper {
                         return new SenderWrapper(sender.getName(), SenderWrapper.Type.PLAYER);
                     }
                     return new SenderWrapper(sender.getName(), SenderWrapper.Type.CONSOLE);
+                });
+        handConverter
+                .registerW2P(EquipmentSlot.class, wrapper -> {
+                    if (wrapper == PlayerWrapper.Hand.OFF) {
+                        return EquipmentSlot.OFF_HAND;
+                    }
+                    return EquipmentSlot.HAND;
+                })
+                .registerP2W(EquipmentSlot.class, hand -> {
+                    if (hand == EquipmentSlot.OFF_HAND) {
+                        return PlayerWrapper.Hand.OFF;
+                    }
+                    return PlayerWrapper.Hand.MAIN;
                 });
     }
 
@@ -150,5 +165,6 @@ public class BukkitPlayerMapper extends PlayerMapper {
         new AsyncPlayerPreLoginEventListener(plugin);
         new PlayerJoinEventListener(plugin);
         new PlayerLeaveEventListener(plugin);
+        new PlayerBlockPlaceEventListener(plugin);
     }
 }

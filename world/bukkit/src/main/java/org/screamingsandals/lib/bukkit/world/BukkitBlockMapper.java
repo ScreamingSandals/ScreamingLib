@@ -9,18 +9,18 @@ import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.BlockHolder;
-import org.screamingsandals.lib.world.BlockMapping;
+import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapping;
 
 @Service
-public class BukkitBlockMapping extends BlockMapping {
+public class BukkitBlockMapper extends BlockMapper {
 
     public static void init() {
-        BlockMapping.init(BukkitBlockMapping::new);
+        BlockMapper.init(BukkitBlockMapper::new);
     }
 
-    public BukkitBlockMapping() {
+    public BukkitBlockMapper() {
         converter
                 .registerP2W(Location.class, location -> {
                     final var instanced = LocationMapping.resolve(location).orElseThrow();

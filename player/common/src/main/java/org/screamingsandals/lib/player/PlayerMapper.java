@@ -19,6 +19,7 @@ public abstract class PlayerMapper {
 
     protected final BidirectionalConverter<PlayerWrapper> playerConverter = BidirectionalConverter.build();
     protected final BidirectionalConverter<SenderWrapper> senderConverter = BidirectionalConverter.build();
+    protected final BidirectionalConverter<PlayerWrapper.Hand> handConverter = BidirectionalConverter.build();
     protected AudienceProvider provider = null;
     private static PlayerMapper playerMapper = null;
 
@@ -54,6 +55,20 @@ public abstract class PlayerMapper {
             throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
         }
         return playerMapper.senderConverter.convert(sender);
+    }
+
+    public static <T> PlayerWrapper.Hand wrapHand(T hand) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+        }
+        return playerMapper.handConverter.convert(hand);
+    }
+
+    public static <T> T convertHand(PlayerWrapper.Hand hand, Class<T> type) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+        }
+        return playerMapper.handConverter.convert(hand, type);
     }
 
     public static <T> T convertSenderWrapper(SenderWrapper wrapper, Class<T> type) {

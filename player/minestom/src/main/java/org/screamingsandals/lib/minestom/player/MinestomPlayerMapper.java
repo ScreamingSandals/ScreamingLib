@@ -12,6 +12,7 @@ import net.minestom.server.utils.Position;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.minestom.player.event.AsyncPlayerPreLoginListener;
+import org.screamingsandals.lib.minestom.player.event.PlayerBlockPlaceEventListener;
 import org.screamingsandals.lib.minestom.player.event.PlayerJoinEventListener;
 import org.screamingsandals.lib.minestom.player.event.PlayerLeaveEventListener;
 import org.screamingsandals.lib.player.PlayerMapper;
@@ -38,9 +39,9 @@ public class MinestomPlayerMapper extends PlayerMapper {
         MinestomAudiences.create(extension);
 
         playerConverter
-                .registerP2W(Player.class, player -> new PlayerWrapper(player.getUsername(), player.getUuid()))
                 .registerW2P(Player.class, playerWrapper -> MinecraftServer.getConnectionManager()
-                        .getPlayer(playerWrapper.getUuid()));
+                        .getPlayer(playerWrapper.getUuid()))
+                .registerP2W(Player.class, player -> new PlayerWrapper(player.getUsername(), player.getUuid()));
         senderConverter
                 .registerW2P(PlayerWrapper.class, wrapper -> {
                     if (wrapper.getType() == SenderWrapper.Type.PLAYER) {
@@ -68,6 +69,9 @@ public class MinestomPlayerMapper extends PlayerMapper {
                     }
                     return new SenderWrapper(CONSOLE_NAME, SenderWrapper.Type.CONSOLE);
                 });
+        handConverter
+                .registerW2P(Player.Hand.class, wrapper -> Player.Hand.valueOf(wrapper.name()))
+                .registerP2W(Player.Hand.class, hand -> PlayerWrapper.Hand.valueOf(hand.name()));
     }
 
     @Override
@@ -144,5 +148,6 @@ public class MinestomPlayerMapper extends PlayerMapper {
         new AsyncPlayerPreLoginListener();
         new PlayerJoinEventListener();
         new PlayerLeaveEventListener();
+        new PlayerBlockPlaceEventListener();
     }
 }

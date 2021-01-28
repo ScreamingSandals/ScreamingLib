@@ -9,11 +9,11 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 @AbstractService
-public abstract class BlockMapping {
+public abstract class BlockMapper {
     protected BidirectionalConverter<BlockHolder> converter = BidirectionalConverter.<BlockHolder>build()
             .registerP2W(BlockHolder.class, e -> e);
 
-    private static BlockMapping mapping = null;
+    private static BlockMapper mapping = null;
     private static boolean initialized = false;
 
     public static boolean isInitialized() {
@@ -22,23 +22,30 @@ public abstract class BlockMapping {
 
     public static Optional<BlockHolder> resolve(Object obj) {
         if (mapping == null) {
-            throw new UnsupportedOperationException("BlockMapping is not initialized yet.");
+            throw new UnsupportedOperationException("BlockMapper is not initialized yet.");
         }
-
+        
         return mapping.converter.convertOptional(obj);
+    }
+
+    public static <T> BlockHolder wrapBlock(T block) {
+        if (mapping == null) {
+            throw new UnsupportedOperationException("BlockMapper is not initialized yet.");
+        }
+        return mapping.converter.convert(block);
     }
 
     public static <T> T convert(BlockHolder holder, Class<T> newType) {
         if (mapping == null) {
-            throw new UnsupportedOperationException("BlockMapping is not initialized yet.");
+            throw new UnsupportedOperationException("BlockMapper is not initialized yet.");
         }
         return mapping.converter.convert(holder, newType);
     }
 
     @SneakyThrows
-    public static void init(Supplier<BlockMapping> mappingSupplier) {
+    public static void init(Supplier<BlockMapper> mappingSupplier) {
         if (mapping != null) {
-            throw new UnsupportedOperationException("BlockMapping is already initialized.");
+            throw new UnsupportedOperationException("BlockMapper is already initialized.");
         }
 
         mapping = mappingSupplier.get();
@@ -48,7 +55,7 @@ public abstract class BlockMapping {
 
     public static BlockHolder getBlockAt(LocationHolder location) {
         if (mapping == null) {
-            throw new UnsupportedOperationException("BlockMapping is already initialized.");
+            throw new UnsupportedOperationException("BlockMapper is already initialized.");
         }
 
         return mapping.getBlockAt0(location);
@@ -56,7 +63,7 @@ public abstract class BlockMapping {
 
     public static void setBlockAt(LocationHolder location, MaterialHolder material) {
         if (mapping == null) {
-            throw new UnsupportedOperationException("BlockMapping is already initialized.");
+            throw new UnsupportedOperationException("BlockMapper is already initialized.");
         }
 
         mapping.setBlockAt0(location, material);

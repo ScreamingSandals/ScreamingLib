@@ -7,13 +7,13 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.*;
 
 @Service
-public class MinestomBlockMapping extends BlockMapping {
+public class MinestomBlockMapper extends BlockMapper {
 
     public static void init() {
-        BlockMapping.init(MinestomBlockMapping::new);
+        BlockMapper.init(MinestomBlockMapper::new);
     }
 
-    public MinestomBlockMapping() {
+    public MinestomBlockMapper() {
         converter
                 .registerP2W(LocationHolder.class, location -> {
                     final var instanced = location.as(InstancedBlockPosition.class);

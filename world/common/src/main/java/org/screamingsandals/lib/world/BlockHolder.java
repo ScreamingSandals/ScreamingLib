@@ -23,7 +23,7 @@ public class BlockHolder implements Wrapper {
      * @param type type to set
      */
     public void setType(MaterialHolder type) {
-        BlockMapping.setBlockAt(location, type);
+        BlockMapper.setBlockAt(location, type);
         this.type = type;
     }
 
@@ -41,7 +41,7 @@ public class BlockHolder implements Wrapper {
      * @return current block at this BlockHolder's location
      */
     public MaterialHolder getCurrentType() {
-        final var toReturn = BlockMapping.getBlockAt(location).getType();
+        final var toReturn = BlockMapper.getBlockAt(location).getType();
         this.type = toReturn;
         return toReturn;
     }
@@ -68,6 +68,6 @@ public class BlockHolder implements Wrapper {
 
     @Override
     public <T> T as(Class<T> type) {
-        return BlockMapping.convert(this, type);
+        return BlockMapper.convert(this, type);
     }
 }

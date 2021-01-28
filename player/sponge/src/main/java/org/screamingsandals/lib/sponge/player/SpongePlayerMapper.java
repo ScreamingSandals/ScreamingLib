@@ -63,7 +63,6 @@ public class SpongePlayerMapper extends PlayerMapper {
                     }
                     return new SenderWrapper(CONSOLE_NAME, SenderWrapper.Type.CONSOLE);
                 });
-
     }
 
     @Override

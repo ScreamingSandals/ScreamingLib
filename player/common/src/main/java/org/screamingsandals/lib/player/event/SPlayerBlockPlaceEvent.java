@@ -9,7 +9,17 @@ import org.screamingsandals.lib.world.BlockHolder;
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class SPlayerBlockPlaceEvent extends CancellableAbstractEvent {
+    /**
+     * Player who placed the block
+     */
     private final PlayerWrapper player;
+    /**
+     * Hand used to place this block
+     */
+    private final PlayerWrapper.Hand playerHand;
+    /**
+     * Placed block
+     */
     private final BlockHolder block;
 
 }

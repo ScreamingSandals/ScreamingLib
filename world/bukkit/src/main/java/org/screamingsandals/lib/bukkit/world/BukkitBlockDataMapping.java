@@ -38,11 +38,11 @@ public class BukkitBlockDataMapping extends BlockDataMapping {
                     return holder;
                 })
                 .registerP2W(Location.class, position ->
-                        resolve(BlockMapping.resolve(position)).orElseThrow())
+                        resolve(BlockMapper.resolve(position)).orElseThrow())
                 .registerP2W(Block.class, block ->
-                        resolve(BlockMapping.resolve(block)).orElseThrow())
+                        resolve(BlockMapper.resolve(block)).orElseThrow())
                 .registerP2W(LocationHolder.class, location ->
-                        resolve(BlockMapping.resolve(location).orElseThrow()).orElseThrow())
+                        resolve(BlockMapper.resolve(location).orElseThrow()).orElseThrow())
                 .registerW2P(BlockData.class, holder ->
                         Bukkit.createBlockData(getDataFromMap(holder.getType(), holder.getData())));
     }
@@ -54,7 +54,7 @@ public class BukkitBlockDataMapping extends BlockDataMapping {
 
     @Override
     protected void setBlockDataAt0(LocationHolder location, BlockDataHolder blockData) {
-        final var resolved = BlockMapping.resolve(location);
+        final var resolved = BlockMapper.resolve(location);
         if (resolved.isEmpty()) {
             return;
         }

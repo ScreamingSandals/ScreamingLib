@@ -30,11 +30,11 @@ public class MinestomBlockDataMapping extends BlockDataMapping {
                     return new BlockDataHolder(parent.getType(), map, parent);
                 })
                 .registerP2W(InstancedBlockPosition.class, position ->
-                        resolve(BlockMapping.resolve(position)).orElseThrow())
+                        resolve(BlockMapper.resolve(position)).orElseThrow())
                 .registerP2W(InstancedPosition.class, position ->
-                        resolve(BlockMapping.resolve(position)).orElseThrow())
+                        resolve(BlockMapper.resolve(position)).orElseThrow())
                 .registerP2W(LocationHolder.class, location ->
-                        resolve(BlockMapping.resolve(location).orElseThrow()).orElseThrow())
+                        resolve(BlockMapper.resolve(location).orElseThrow()).orElseThrow())
                 .registerW2P(Data.class, holder -> {
                     final var position = holder.getParent().getLocation().as(InstancedBlockPosition.class);
                     final var blockData = position.getInstance().getBlockData(position);
