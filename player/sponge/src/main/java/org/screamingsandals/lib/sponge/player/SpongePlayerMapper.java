@@ -82,6 +82,11 @@ public class SpongePlayerMapper extends PlayerMapper {
     }
 
     @Override
+    public SenderWrapper getConsoleSender0() {
+        return senderConverter.convert(Sponge.getSystemSubject());
+    }
+
+    @Override
     public List<PlayerWrapper> getPlayers0() {
         return Sponge.getServer().getOnlinePlayers()
                 .stream()

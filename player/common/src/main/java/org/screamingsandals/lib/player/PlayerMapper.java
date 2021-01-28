@@ -137,6 +137,15 @@ public abstract class PlayerMapper {
         return playerMapper.getPlayers0();
     }
 
+    public static SenderWrapper getConsoleSender() {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper aren't initialized yet.");
+        }
+        return playerMapper.getConsoleSender0();
+    }
+
+    public abstract SenderWrapper getConsoleSender0();
+
     public abstract List<PlayerWrapper> getPlayers0();
 
     public abstract void closeInventory0(PlayerWrapper playerWrapper);

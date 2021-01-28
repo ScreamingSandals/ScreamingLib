@@ -90,6 +90,11 @@ public class MinestomPlayerMapper extends PlayerMapper {
     }
 
     @Override
+    public SenderWrapper getConsoleSender0() {
+        return senderConverter.convert(MinecraftServer.getCommandManager().getConsoleSender());
+    }
+
+    @Override
     public List<PlayerWrapper> getPlayers0() {
         return MinecraftServer.getConnectionManager().getOnlinePlayers()
                 .stream()

@@ -88,6 +88,11 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
+    public SenderWrapper getConsoleSender0() {
+        return senderConverter.convert(Bukkit.getConsoleSender());
+    }
+
+    @Override
     public List<PlayerWrapper> getPlayers0() {
         return Bukkit.getOnlinePlayers().stream()
                 .map(playerConverter::convert)

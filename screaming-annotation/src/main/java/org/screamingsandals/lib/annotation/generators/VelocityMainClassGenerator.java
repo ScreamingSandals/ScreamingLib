@@ -137,7 +137,7 @@ public class VelocityMainClassGenerator implements MainClassGenerator {
 
         var node = loader.createNode();
         node.node("main").set(((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString() + "." + pluginContainer.getSimpleName() + "_VelocityImpl");
-        node.node("id").set(pluginAnnotation.id());
+        node.node("id").set(pluginAnnotation.id().toLowerCase());
         node.node("name").set(pluginAnnotation.name());
         node.node("version").set(pluginAnnotation.version());
         if (!pluginAnnotation.description().isBlank()) {
