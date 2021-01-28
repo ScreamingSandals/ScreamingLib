@@ -2,6 +2,7 @@ package org.screamingsandals.lib.bukkit.event;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventException;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
@@ -47,10 +48,14 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
                         try {
                             EventManager.getDefaultEventManager().fireEventAsync(wrapped, priority).get();
                         } catch (Throwable throwable) {
-                            throw new RuntimeException(throwable);
+                            throw new EventException(throwable);
                         }
                     } else {
-                        EventManager.getDefaultEventManager().fireEvent(wrapped, priority);
+                       try {
+                           EventManager.getDefaultEventManager().fireEvent(wrapped, priority);
+                       } catch (Throwable throwable) {
+                           throw new EventException(throwable);
+                       }
                     }
                     handleResult(wrapped, (T) event);
                 };
