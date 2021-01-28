@@ -18,7 +18,10 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.world.server.ServerLocation;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class SpongePlayerMapper extends PlayerMapper {
@@ -66,6 +69,24 @@ public class SpongePlayerMapper extends PlayerMapper {
     @Override
     public void sendMessage0(SenderWrapper playerWrapper, String message) {
         playerWrapper.as(ServerPlayer.class).sendMessage(LegacyComponentSerializer.legacySection().deserialize(message));
+    }
+
+    @Override
+    public Optional<PlayerWrapper> getPlayer0(String name) {
+        return Sponge.getServer().getPlayer(name).map(playerConverter::convert);
+    }
+
+    @Override
+    public Optional<PlayerWrapper> getPlayer0(UUID uuid) {
+        return Sponge.getServer().getPlayer(uuid).map(playerConverter::convert);
+    }
+
+    @Override
+    public List<PlayerWrapper> getPlayers0() {
+        return Sponge.getServer().getOnlinePlayers()
+                .stream()
+                .map(playerConverter::convert)
+                .collect(Collectors.toList());
     }
 
     @Override

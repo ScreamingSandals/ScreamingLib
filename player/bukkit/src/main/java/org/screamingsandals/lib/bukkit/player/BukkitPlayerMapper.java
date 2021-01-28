@@ -23,7 +23,10 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapping;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class BukkitPlayerMapper extends PlayerMapper {
@@ -72,6 +75,23 @@ public class BukkitPlayerMapper extends PlayerMapper {
     @Override
     public void sendMessage0(SenderWrapper wrapper, String message) {
         wrapper.as(CommandSender.class).sendMessage(message);
+    }
+
+    @Override
+    public Optional<PlayerWrapper> getPlayer0(String name) {
+        return playerConverter.convertOptional(Bukkit.getPlayer(name));
+    }
+
+    @Override
+    public Optional<PlayerWrapper> getPlayer0(UUID uuid) {
+        return playerConverter.convertOptional(Bukkit.getPlayer(uuid));
+    }
+
+    @Override
+    public List<PlayerWrapper> getPlayers0() {
+        return Bukkit.getOnlinePlayers().stream()
+                .map(playerConverter::convert)
+                .collect(Collectors.toList());
     }
 
     @Override

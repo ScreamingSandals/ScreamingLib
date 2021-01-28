@@ -8,7 +8,9 @@ import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.LocationHolder;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 @AbstractService
@@ -109,6 +111,33 @@ public abstract class PlayerMapper {
         }
         playerMapper.teleport0(wrapper, location, callback);
     }
+
+    public static Optional<PlayerWrapper> getPlayer(String name) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("ProxiedPlayerUtils aren't initialized yet.");
+        }
+        return playerMapper.getPlayer0(name);
+    }
+
+    public abstract Optional<PlayerWrapper> getPlayer0(String name);
+
+    public static Optional<PlayerWrapper> getPlayer(UUID uuid) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("ProxiedPlayerUtils aren't initialized yet.");
+        }
+        return playerMapper.getPlayer0(uuid);
+    }
+
+    public abstract Optional<PlayerWrapper> getPlayer0(UUID uuid);
+
+    public static List<PlayerWrapper> getPlayers() {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("ProxiedPlayerUtils aren't initialized yet.");
+        }
+        return playerMapper.getPlayers0();
+    }
+
+    public abstract List<PlayerWrapper> getPlayers0();
 
     public abstract void closeInventory0(PlayerWrapper playerWrapper);
 
