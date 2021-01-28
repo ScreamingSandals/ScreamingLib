@@ -3,6 +3,11 @@ package org.screamingsandals.lib.utils;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * InitUtils are useful only if you are not using screaming-annotation.
+ *
+ * @see org.screamingsandals.lib.utils.annotations.Service
+ */
 public class InitUtils {
     public static void doIf(Supplier<Boolean> booleanSupplier, Runnable runnable) {
         if (booleanSupplier.get()) {

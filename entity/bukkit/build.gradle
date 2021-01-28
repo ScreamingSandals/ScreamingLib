@@ -1,4 +1,6 @@
 dependencies {
     api project(':entity-common')
+    api project(':world-bukkit')
+    api project(':material-bukkit')
     compileOnly paper(PAPER_VERSION)
 }
