@@ -52,6 +52,7 @@ public class EventManager extends AbstractServiceWithExecutor {
         }
         handlers.get(event).add(handler);
         fireEvent(new HandlerRegisteredEvent(this, event, handler));
+
         return handler;
     }
 
