@@ -40,7 +40,7 @@ public class InitUtils {
      * @param consumer that consumes Controllable instance
      * @return the created Controllable instance
      */
-    public static Controllable pluginlessEnvironment(Consumer<Controllable> consumer) {
+    public static ControllableImpl pluginlessEnvironment(Consumer<Controllable> consumer) {
         var controllable = new ControllableImpl();
         consumer.accept(controllable);
         controllable.enable();

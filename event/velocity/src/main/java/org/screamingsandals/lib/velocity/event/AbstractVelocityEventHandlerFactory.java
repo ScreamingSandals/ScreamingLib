@@ -43,15 +43,15 @@ public abstract class AbstractVelocityEventHandlerFactory<T, SE extends Abstract
             final var priority = handlerRegisteredEvent.getHandler().getEventPriority();
             if (!eventMap.containsKey(priority)) {
                 final EventHandler<T> handler = event -> {
-                    final var wrapped = wrapEvent(event, handlerRegisteredEvent.getHandler().getEventPriority());
+                    final var wrapped = wrapEvent(event, priority);
                     if (this.fireAsync) {
                         try {
-                            EventManager.getDefaultEventManager().fireEventAsync(wrapped).get();
+                            EventManager.getDefaultEventManager().fireEventAsync(wrapped, priority).get();
                         } catch (Throwable throwable) {
                             throw new RuntimeException(throwable);
                         }
                     } else {
-                        EventManager.getDefaultEventManager().fireEvent(wrapped);
+                        EventManager.getDefaultEventManager().fireEvent(wrapped, priority);
                     }
                     handleResult(wrapped, event);
                 };
