@@ -4,6 +4,7 @@ import org.bukkit.entity.EntityType;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
 
@@ -18,6 +19,6 @@ public class BukkitEntityTypeMapping extends EntityTypeMapping {
                 .registerP2W(EntityType.class, entityType -> new EntityTypeHolder(entityType.name()))
                 .registerW2P(EntityType.class, entityTypeHolder -> EntityType.valueOf(entityTypeHolder.getPlatformName()));
 
-        Arrays.stream(EntityType.values()).forEach(entityType -> mapping.put(entityType.name(), new EntityTypeHolder(entityType.name())));
+        Arrays.stream(EntityType.values()).forEach(entityType -> mapping.put(NamespacedMappingKey.of(entityType.name()), new EntityTypeHolder(entityType.name())));
     }
 }

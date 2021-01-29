@@ -20,7 +20,7 @@ public interface EntityLiving extends EntityBasic {
 
     BlockHolder getTargetBlock(Collection<MaterialHolder> transparent, int maxDistance);
 
-    BlockHolder getTargetBlock(int maxDistance);
+    Optional<BlockHolder> getTargetBlock(int maxDistance);
 
     int getRemainingAir();
 

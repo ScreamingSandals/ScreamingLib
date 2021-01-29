@@ -2,22 +2,22 @@ package org.screamingsandals.lib.entity.type;
 
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.key.MappingKey;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.regex.Pattern;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
 public abstract class EntityTypeMapping {
-    private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?:(?<namespace>[A-Za-z][A-Za-z0-9_.\\-]*):)?(?<entity>[A-Za-z][A-Za-z0-9_.\\-/ ]*)$");
     private static EntityTypeMapping entityTypeMapping;
 
     protected final BidirectionalConverter<EntityTypeHolder> entityTypeConverter = BidirectionalConverter.build();
-    protected final Map<String, EntityTypeHolder> mapping = new HashMap<>();
+    protected final Map<MappingKey, EntityTypeHolder> mapping = new HashMap<>();
 
     public static void init(Supplier<EntityTypeMapping> supplier) {
         if (entityTypeMapping != null) {
@@ -44,16 +44,11 @@ public abstract class EntityTypeMapping {
             return converted;
         }
 
-        var matcher = RESOLUTION_PATTERN.matcher(entity.toString());
-        if (matcher.group("entity") != null) {
+        var namespacedKey = NamespacedMappingKey.ofOptional(entity.toString());
 
-            String namespace = matcher.group("namespace") != null ? matcher.group("namespace").toUpperCase() : "MINECRAFT";
-            String name = matcher.group("entity").toUpperCase();
-
-            if (entityTypeMapping.mapping.containsKey(namespace + ":" + name)) {
-                return Optional.of(entityTypeMapping.mapping.get(namespace + ":" + name));
-            } else if (entityTypeMapping.mapping.containsKey(name)) {
-                return Optional.of(entityTypeMapping.mapping.get(name));
+        if (namespacedKey.isPresent()) {
+            if (entityTypeMapping.mapping.containsKey(namespacedKey.get())) {
+                return Optional.of(entityTypeMapping.mapping.get(namespacedKey.get()));
             }
         }
 
@@ -99,10 +94,14 @@ public abstract class EntityTypeMapping {
         if (entityType1 == null || entityType2 == null) {
             throw new IllegalArgumentException("Both effects mustn't be null!");
         }
-        if (mapping.containsKey(entityType1.toUpperCase()) && !mapping.containsKey(entityType2.toUpperCase())) {
-            mapping.put(entityType2.toUpperCase(), mapping.get(entityType1.toUpperCase()));
-        } else if (mapping.containsKey(entityType2.toUpperCase()) && !mapping.containsKey(entityType1.toUpperCase())) {
-            mapping.put(entityType1.toUpperCase(), mapping.get(entityType2.toUpperCase()));
+
+        var namespace1 = NamespacedMappingKey.of(entityType1);
+        var namespace2 = NamespacedMappingKey.of(entityType2);
+
+        if (mapping.containsKey(namespace1) && !mapping.containsKey(namespace2)) {
+            mapping.put(namespace2, mapping.get(namespace1));
+        } else if (mapping.containsKey(namespace2) && !mapping.containsKey(namespace1)) {
+            mapping.put(namespace1, mapping.get(namespace2));
         }
     }
 }

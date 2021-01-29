@@ -1,12 +1,16 @@
 package org.screamingsandals.lib.bukkit.entity;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
+import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -47,8 +51,8 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     }
 
     @Override
-    public BlockHolder getTargetBlock(int maxDistance) {
-        return BlockMapper.wrapBlock(((LivingEntity) wrappedObject)
+    public Optional<BlockHolder> getTargetBlock(int maxDistance) {
+        return BlockMapper.resolve(((LivingEntity) wrappedObject)
                 .getTargetBlockExact(maxDistance));
     }
 
@@ -134,145 +138,152 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
         return Optional.empty();
     }
 
-    // TODO
-
     @Override
     public boolean addPotionEffect(PotionEffectHolder effect) {
-        return false;
+        return ((LivingEntity) wrappedObject).addPotionEffect(effect.as(PotionEffect.class));
     }
 
     @Override
     public boolean addPotionEffects(Collection<PotionEffectHolder> effects) {
-        return false;
+        return ((LivingEntity) wrappedObject).addPotionEffects(effects
+                .stream()
+                .map(effect -> effect.as(PotionEffect.class))
+                .collect(Collectors.toSet()));
     }
 
     @Override
     public boolean hasPotionEffect(PotionEffectHolder type) {
-        return false;
+        return ((LivingEntity) wrappedObject).hasPotionEffect(type.as(PotionEffectType.class));
     }
 
     @Override
     public void removePotionEffect(PotionEffectHolder type) {
-
+        ((LivingEntity) wrappedObject).removePotionEffect(type.as(PotionEffectType.class));
     }
 
     @Override
     public List<PotionEffectHolder> getActivePotionEffects() {
-        return null;
+        return ((LivingEntity) wrappedObject).getActivePotionEffects()
+                .stream()
+                .map(potionEffect -> PotionEffectMapping.resolve(potionEffect).orElseThrow())
+                .collect(Collectors.toList());
     }
 
     @Override
     public boolean getRemoveWhenFarAway() {
-        return false;
+        return ((LivingEntity) wrappedObject).getRemoveWhenFarAway();
     }
 
     @Override
     public void setRemoveWhenFarAway(boolean remove) {
-
+        ((LivingEntity) wrappedObject).setRemoveWhenFarAway(remove);
     }
 
     @Override
     public void setCanPickupItems(boolean pickup) {
-
+        ((LivingEntity) wrappedObject).setCanPickupItems(pickup);
     }
 
     @Override
     public boolean getCanPickupItems() {
-        return false;
+        return ((LivingEntity) wrappedObject).getCanPickupItems();
     }
 
     @Override
     public boolean isLeashed() {
-        return false;
+        return ((LivingEntity) wrappedObject).isLeashed();
     }
 
     @Override
     public Optional<EntityBasic> getLeashHolder() {
+        if (isLeashed()) {
+            return EntityMapper.wrapEntity(((LivingEntity) wrappedObject).getLeashHolder());
+        }
         return Optional.empty();
     }
 
     @Override
     public boolean setLeashHolder(EntityBasic holder) {
-        return false;
+        return ((LivingEntity) wrappedObject).setLeashHolder(holder.as(Entity.class));
     }
 
     @Override
     public boolean removeLeashHolder() {
-        return false;
+        return ((LivingEntity) wrappedObject).setLeashHolder(null);
     }
 
     @Override
     public boolean isGliding() {
-        return false;
+        return ((LivingEntity) wrappedObject).isGliding();
     }
 
     @Override
     public void setGliding(boolean gliding) {
-
+        ((LivingEntity) wrappedObject).setGliding(gliding);
     }
 
     @Override
     public boolean isSwimming() {
-        return false;
+        return ((LivingEntity) wrappedObject).isSwimming();
     }
 
     @Override
     public void setSwimming(boolean swimming) {
-
+        ((LivingEntity) wrappedObject).setSwimming(swimming);
     }
 
     @Override
     public boolean isRiptiding() {
-        return false;
+        return ((LivingEntity) wrappedObject).isRiptiding();
     }
 
     @Override
     public boolean isSleeping() {
-        return false;
+        return ((LivingEntity) wrappedObject).isSleeping();
     }
 
     @Override
     public void setAI(boolean ai) {
-
+        ((LivingEntity) wrappedObject).setAI(ai);
     }
 
     @Override
     public boolean hasAI() {
-        return false;
+        return ((LivingEntity) wrappedObject).hasAI();
     }
 
     @Override
     public void attack(EntityBasic target) {
-
+        ((LivingEntity) wrappedObject).attack(target.as(Entity.class));
     }
 
     @Override
     public void swingMainHand() {
-
+        ((LivingEntity) wrappedObject).swingMainHand();
     }
 
     @Override
     public void swingOffHand() {
-
+        ((LivingEntity) wrappedObject).swingOffHand();
     }
 
     @Override
     public void setCollidable(boolean collidable) {
-
+        ((LivingEntity) wrappedObject).setCollidable(collidable);
     }
 
     @Override
     public boolean isCollidable() {
-        return false;
+        return ((LivingEntity) wrappedObject).isCollidable();
     }
 
     @Override
     public void setInvisible(boolean invisible) {
-
+        ((LivingEntity) wrappedObject).setInvisible(invisible);
     }
 
     @Override
     public boolean isInvisible() {
-        return false;
+        return ((LivingEntity) wrappedObject).isInvisible();
     }
 }
