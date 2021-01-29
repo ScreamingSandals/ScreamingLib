@@ -1,5 +1,6 @@
 rootProject.name = "ScreamingLib"
 
+include 'api-utils'
 include 'utils'
 include 'screaming-annotation'
 

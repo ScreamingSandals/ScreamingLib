@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.entity.attribute;
+package org.screamingsandals.lib.material.attribute;
 
 import lombok.Data;
 import org.screamingsandals.lib.utils.Wrapper;

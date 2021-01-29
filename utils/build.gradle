@@ -3,4 +3,5 @@ dependencies {
     compileOnly 'com.google.guava:guava:' + GUAVA_VERSION
     api 'net.kyori:adventure-platform-api:' + ADVENTURE_PLATFORM_VERSION
     api 'net.kyori:adventure-text-serializer-legacy:' + ADVENTURE_VERSION
+    api project(':api-utils')
 }

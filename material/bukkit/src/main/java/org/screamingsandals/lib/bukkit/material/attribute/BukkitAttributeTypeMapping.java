@@ -1,8 +1,8 @@
-package org.screamingsandals.lib.bukkit.entity.attribute;
+package org.screamingsandals.lib.bukkit.material.attribute;
 
 import org.bukkit.attribute.Attribute;
-import org.screamingsandals.lib.entity.attribute.AttributeTypeHolder;
-import org.screamingsandals.lib.entity.attribute.AttributeTypeMapping;
+import org.screamingsandals.lib.material.attribute.AttributeTypeHolder;
+import org.screamingsandals.lib.material.attribute.AttributeTypeMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.AttributeMappingKey;
 

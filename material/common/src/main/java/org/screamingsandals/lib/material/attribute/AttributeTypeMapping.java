@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.entity.attribute;
+package org.screamingsandals.lib.material.attribute;
 
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
