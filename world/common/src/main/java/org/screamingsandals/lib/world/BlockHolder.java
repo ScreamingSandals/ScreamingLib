@@ -33,7 +33,7 @@ public class BlockHolder implements Wrapper {
      * @param data data to change
      */
     public void setBlockData(BlockDataHolder data) {
-        BlockDataMapping.setBlockDataAt(location, data);
+        BlockDataMapper.setBlockDataAt(location, data);
         this.blockData = data;
     }
 
@@ -61,7 +61,7 @@ public class BlockHolder implements Wrapper {
      * @return {@link Optional#empty()} if none is found
      */
     public Optional<BlockDataHolder> getCurrentBlockData() {
-        final var toReturn = BlockDataMapping.getBlockDataAt(location);
+        final var toReturn = BlockDataMapper.getBlockDataAt(location);
         toReturn.ifPresent(data -> this.blockData = data);
         return toReturn;
     }

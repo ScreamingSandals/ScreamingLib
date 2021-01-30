@@ -30,7 +30,7 @@ public class LocationHolder implements Wrapper {
 
     @Override
     public <T> T as(Class<T> type) {
-        return LocationMapping.convert(this, type);
+        return LocationMapper.convert(this, type);
     }
 
     public double getDistanceSquared(@NotNull LocationHolder holder) {

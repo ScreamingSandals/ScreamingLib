@@ -11,7 +11,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapping;
+import org.screamingsandals.lib.world.LocationMapper;
 
 @Service
 public class BukkitBlockMapper extends BlockMapper {
@@ -23,7 +23,7 @@ public class BukkitBlockMapper extends BlockMapper {
     public BukkitBlockMapper() {
         converter
                 .registerP2W(Location.class, location -> {
-                    final var instanced = LocationMapping.resolve(location).orElseThrow();
+                    final var instanced = LocationMapper.resolve(location).orElseThrow();
                     final var material = location.getBlock().getBlockData().getMaterial();
                     return new BlockHolder(instanced, MaterialMapping.resolve(material).orElseThrow());
                 })

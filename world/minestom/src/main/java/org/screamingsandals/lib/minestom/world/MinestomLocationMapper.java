@@ -5,18 +5,18 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.utils.Position;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapping;
+import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.Objects;
 
 @Service
-public class MinestomLocationMapping extends LocationMapping {
+public class MinestomLocationMapper extends LocationMapper {
 
     public static void init() {
-        LocationMapping.init(MinestomLocationMapping::new);
+        LocationMapper.init(MinestomLocationMapper::new);
     }
 
-    public MinestomLocationMapping() {
+    public MinestomLocationMapper() {
         converter
                 .registerW2P(InstancedPosition.class, wrapper -> {
                     final var instance = MinecraftServer.getInstanceManager().getInstance(wrapper.getWorldId());

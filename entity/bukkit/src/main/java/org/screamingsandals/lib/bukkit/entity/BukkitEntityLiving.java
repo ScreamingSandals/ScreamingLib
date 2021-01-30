@@ -14,7 +14,7 @@ import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapping;
+import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.Collection;
 import java.util.List;
@@ -38,7 +38,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
 
     @Override
     public LocationHolder getEyeLocation() {
-        return LocationMapping.wrapLocation(((LivingEntity) wrappedObject).getEyeLocation());
+        return LocationMapper.wrapLocation(((LivingEntity) wrappedObject).getEyeLocation());
     }
 
     @Override

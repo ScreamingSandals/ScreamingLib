@@ -8,11 +8,11 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 @AbstractService
-public abstract class BlockDataMapping {
+public abstract class BlockDataMapper {
     protected BidirectionalConverter<BlockDataHolder> converter = BidirectionalConverter.<BlockDataHolder>build()
             .registerP2W(BlockDataHolder.class, e -> e);
 
-    private static BlockDataMapping mapping = null;
+    private static BlockDataMapper mapping = null;
     private static boolean initialized = false;
 
     public static boolean isInitialized() {
@@ -35,7 +35,7 @@ public abstract class BlockDataMapping {
     }
 
     @SneakyThrows
-    public static void init(Supplier<BlockDataMapping> mappingSupplier) {
+    public static void init(Supplier<BlockDataMapper> mappingSupplier) {
         if (mapping != null) {
             throw new UnsupportedOperationException("BlockDataMapping are already initialized.");
         }

@@ -4,7 +4,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityTypeMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
-import org.screamingsandals.lib.bukkit.world.BukkitLocationMapping;
+import org.screamingsandals.lib.bukkit.world.BukkitLocationMapper;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.utils.InitUtils;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Service(dependsOn = {
         BukkitEntityTypeMapping.class,
-        BukkitLocationMapping.class,
+        BukkitLocationMapper.class,
         BukkitPotionEffectMapping.class
 })
 public class BukkitEntityMapper extends EntityMapper {
@@ -25,7 +25,7 @@ public class BukkitEntityMapper extends EntityMapper {
 
     public BukkitEntityMapper() {
         InitUtils.doIfNot(BukkitEntityTypeMapping::isInitialized, BukkitEntityTypeMapping::init);
-        InitUtils.doIfNot(BukkitLocationMapping::isInitialized, BukkitLocationMapping::init);
+        InitUtils.doIfNot(BukkitLocationMapper::isInitialized, BukkitLocationMapper::init);
         InitUtils.doIfNot(BukkitPotionEffectMapping::isInitialized, BukkitPotionEffectMapping::init);
     }
 

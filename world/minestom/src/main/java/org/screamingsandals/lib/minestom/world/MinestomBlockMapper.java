@@ -20,15 +20,15 @@ public class MinestomBlockMapper extends BlockMapper {
                     final var block = getBlock(instanced);
                     final var holder = new BlockHolder(location,
                             MaterialMapping.resolve(block).orElseThrow());
-                    holder.setBlockData(BlockDataMapping.resolve(holder).orElseThrow());
+                    holder.setBlockData(BlockDataMapper.resolve(holder).orElseThrow());
 
                     return holder;
                 })
                 .registerP2W(InstancedBlockPosition.class, position -> {
                     final var block = getBlock(position);
-                    final var holder = new BlockHolder(LocationMapping.resolve(position).orElseThrow(),
+                    final var holder = new BlockHolder(LocationMapper.resolve(position).orElseThrow(),
                             MaterialMapping.resolve(block).orElseThrow());
-                    BlockDataMapping.resolve(holder).ifPresent(holder::setBlockData);
+                    BlockDataMapper.resolve(holder).ifPresent(holder::setBlockData);
 
                     return holder;
                 })

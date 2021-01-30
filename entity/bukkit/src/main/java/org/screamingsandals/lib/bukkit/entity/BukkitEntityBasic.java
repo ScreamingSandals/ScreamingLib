@@ -10,7 +10,7 @@ import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapping;
+import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +29,7 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
 
     @Override
     public LocationHolder getLocation() {
-        return LocationMapping.wrapLocation(wrappedObject.getLocation());
+        return LocationMapper.wrapLocation(wrappedObject.getLocation());
     }
 
     @Override

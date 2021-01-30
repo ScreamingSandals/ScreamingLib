@@ -14,7 +14,7 @@ public class InstancedBlockPosition extends BlockPosition {
         this.instance = instance;
     }
 
-    public InstancedBlockPosition(Instance instance, float x, float y, float z) {
+    public InstancedBlockPosition(Instance instance, double x, double y, double z) {
         super(x, y, z);
         this.instance = instance;
     }

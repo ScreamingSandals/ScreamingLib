@@ -10,13 +10,13 @@ import java.util.Optional;
 
 
 @Service
-public class MinestomBlockDataMapping extends BlockDataMapping {
+public class MinestomBlockDataMapper extends BlockDataMapper {
 
     public static void init() {
-        BlockDataMapping.init(MinestomBlockDataMapping::new);
+        BlockDataMapper.init(MinestomBlockDataMapper::new);
     }
 
-    public MinestomBlockDataMapping() {
+    public MinestomBlockDataMapper() {
         converter
                 .registerP2W(BlockHolder.class, parent -> {
                     final var position = parent.getLocation().as(InstancedBlockPosition.class);

@@ -8,12 +8,12 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 @AbstractService
-public abstract class LocationMapping {
+public abstract class LocationMapper {
 
     protected BidirectionalConverter<LocationHolder> converter = BidirectionalConverter.<LocationHolder>build()
             .registerP2W(LocationHolder.class, e -> e);
 
-    private static LocationMapping mapping = null;
+    private static LocationMapper mapping = null;
     private static boolean initialized = false;
 
     public static Optional<LocationHolder> resolve(Object obj) {
@@ -36,7 +36,7 @@ public abstract class LocationMapping {
     }
 
     @SneakyThrows
-    public static void init(Supplier<LocationMapping> mappingSupplier) {
+    public static void init(Supplier<LocationMapper> mappingSupplier) {
         if (mapping != null) {
             throw new UnsupportedOperationException("Material mapping is already initialized.");
         }

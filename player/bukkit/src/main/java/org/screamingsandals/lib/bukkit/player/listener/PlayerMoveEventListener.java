@@ -6,7 +6,7 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.event.SPlayerMoveEvent;
-import org.screamingsandals.lib.world.LocationMapping;
+import org.screamingsandals.lib.world.LocationMapper;
 
 public class PlayerMoveEventListener extends AbstractBukkitEventHandlerFactory<PlayerMoveEvent, SPlayerMoveEvent> {
 
@@ -18,8 +18,8 @@ public class PlayerMoveEventListener extends AbstractBukkitEventHandlerFactory<P
     protected SPlayerMoveEvent wrapEvent(PlayerMoveEvent event, EventPriority priority) {
         return new SPlayerMoveEvent(
                 PlayerMapper.wrapPlayer(event.getPlayer()),
-                LocationMapping.wrapLocation(event.getFrom()),
-                LocationMapping.wrapLocation(event.getTo())
+                LocationMapper.wrapLocation(event.getFrom()),
+                LocationMapper.wrapLocation(event.getTo())
         );
     }
 }

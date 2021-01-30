@@ -10,7 +10,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapping;
+import org.screamingsandals.lib.world.LocationMapper;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.SystemSubject;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -110,7 +110,7 @@ public class SpongePlayerMapper extends PlayerMapper {
 
     @Override
     public LocationHolder getLocation0(PlayerWrapper playerWrapper) {
-        return LocationMapping.resolve(playerWrapper.as(ServerPlayer.class).getLocation()).orElseThrow();
+        return LocationMapper.resolve(playerWrapper.as(ServerPlayer.class).getLocation()).orElseThrow();
     }
 
     @Override

@@ -16,15 +16,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
-public class BukkitBlockDataMapping extends BlockDataMapping {
+public class BukkitBlockDataMapper extends BlockDataMapper {
     private final static Pattern MAPPING_PATTERN = Pattern.compile(
             "(?:(?<namespace>[A-Za-z][A-Za-z0-9_.\\-]*):)?(?<material>[A-Za-z][A-Za-z0-9_.\\-/ ]+)(\\[(?<blockState>.+)])?");
 
     public static void init() {
-        BlockDataMapping.init(BukkitBlockDataMapping::new);
+        BlockDataMapper.init(BukkitBlockDataMapper::new);
     }
 
-    public BukkitBlockDataMapping() {
+    public BukkitBlockDataMapper() {
         converter
                 .registerP2W(BlockHolder.class, parent -> {
                     final var position = parent.getLocation().as(Location.class);

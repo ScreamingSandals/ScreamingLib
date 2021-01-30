@@ -17,7 +17,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapping;
+import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -120,7 +120,7 @@ public class MinestomPlayerMapper extends PlayerMapper {
 
     @Override
     public LocationHolder getLocation0(PlayerWrapper playerWrapper) {
-        return LocationMapping.resolve(playerWrapper.as(Player.class)).orElseThrow();
+        return LocationMapper.resolve(playerWrapper.as(Player.class)).orElseThrow();
     }
 
     @Override

@@ -2,19 +2,19 @@ package org.screamingsandals.lib.sponge.world;
 
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapping;
+import org.screamingsandals.lib.world.LocationMapper;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.world.server.ServerLocation;
 
 @Service
-public class SpongeLocationMapping extends LocationMapping {
+public class SpongeLocationMapper extends LocationMapper {
 
     public static void init() {
-        LocationMapping.init(SpongeLocationMapping::new);
+        LocationMapper.init(SpongeLocationMapper::new);
     }
 
-    public SpongeLocationMapping() {
+    public SpongeLocationMapper() {
         // TODO: Somehow handle rotation
         converter.registerW2P(ServerLocation.class, holder -> {
             var world = Sponge.getServer().getWorldManager()

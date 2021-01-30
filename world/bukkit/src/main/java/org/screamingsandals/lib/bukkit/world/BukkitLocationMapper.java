@@ -4,16 +4,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapping;
+import org.screamingsandals.lib.world.LocationMapper;
 
 @Service
-public class BukkitLocationMapping extends LocationMapping {
+public class BukkitLocationMapper extends LocationMapper {
 
     public static void init() {
-        LocationMapping.init(BukkitLocationMapping::new);
+        LocationMapper.init(BukkitLocationMapper::new);
     }
 
-    public BukkitLocationMapping() {
+    public BukkitLocationMapper() {
         converter.registerW2P(Location.class, holder -> {
             final var world = Bukkit.getWorld(holder.getWorldId());
             if (world == null) {

@@ -36,6 +36,6 @@ public class BlockDataHolder implements Wrapper {
 
     @Override
     public <T> T as(Class<T> type) {
-        return BlockDataMapping.convert(this, type);
+        return BlockDataMapper.convert(this, type);
     }
 }
