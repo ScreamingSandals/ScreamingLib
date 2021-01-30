@@ -1,12 +1,12 @@
-package org.screamingsandals.lib.bukkit.entity;
+package org.screamingsandals.lib.minestom.entity;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.util.Vector;
+import net.minestom.server.entity.Entity;
+import net.minestom.server.utils.Vector;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
+import org.screamingsandals.lib.minestom.world.InstancedPosition;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -17,19 +17,21 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBasic {
-    protected BukkitEntityBasic(Entity wrappedObject) {
+public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityBasic {
+
+    protected MinestomEntityBasic(Entity wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
     public EntityTypeHolder getEntityType() {
-        return EntityTypeMapping.resolve(wrappedObject.getType()).orElseThrow();
+        return EntityTypeMapping.resolve(wrappedObject.getEntityType()).orElseThrow();
     }
 
     @Override
     public LocationHolder getLocation() {
-        return LocationMapper.wrapLocation(wrappedObject.getLocation());
+        return LocationMapper.wrapLocation(
+                new InstancedPosition(wrappedObject.getInstance(), wrappedObject.getPosition()));
     }
 
     @Override
@@ -45,12 +47,12 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
 
     @Override
     public double getHeight() {
-        return wrappedObject.getHeight();
+        return wrappedObject.getBoundingBox().getHeight();
     }
 
     @Override
     public double getWidth() {
-        return wrappedObject.getWidth();
+        return wrappedObject.getBoundingBox().getWidth();
     }
 
     @Override
@@ -60,12 +62,20 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
 
     @Override
     public boolean isInWater() {
-        return wrappedObject.isInWater();
+        return false; //TODO
     }
 
     @Override
     public boolean teleport(LocationHolder locationHolder) {
-        return wrappedObject.teleport(locationHolder.as(Location.class));
+       try {
+           final var location = locationHolder.as(InstancedPosition.class);
+           wrappedObject.setInstance(location.getInstance());
+           wrappedObject.teleport(location);
+           return true;
+       } catch (Throwable t) {
+           t.printStackTrace();
+           return false;
+       }
     }
 
     @Override
@@ -75,17 +85,17 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
 
     @Override
     public int getFireTicks() {
-        return wrappedObject.getFireTicks();
+        return 0; //TODO
     }
 
     @Override
     public int getMaxFireTicks() {
-        return wrappedObject.getMaxFireTicks();
+        return 0; //TODO
     }
 
     @Override
     public void setFireTicks(int fireTicks) {
-        wrappedObject.setFireTicks(fireTicks);
+        //todo
     }
 
     @Override
@@ -95,17 +105,18 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
 
     @Override
     public boolean isDead() {
-        return wrappedObject.isDead();
+        return wrappedObject.isRemoved();
     }
 
     @Override
     public boolean isPersistent() {
-        return wrappedObject.isPersistent();
+        //todo
+        return false;
     }
 
     @Override
     public void setPersistent(boolean persistent) {
-        wrappedObject.setPersistent(persistent);
+
     }
 
     @Override
@@ -120,62 +131,71 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
 
     @Override
     public boolean addPassenger(EntityBasic passenger) {
-        return wrappedObject.addPassenger(passenger.as(Entity.class));
+        wrappedObject.addPassenger(passenger.as(Entity.class));
+        return true;
     }
 
     @Override
     public boolean removePassenger(EntityBasic passenger) {
-        return wrappedObject.removePassenger(passenger.as(Entity.class));
+        wrappedObject.removePassenger(passenger.as(Entity.class));
+        return true;
     }
 
     @Override
     public boolean hasPassengers() {
-        return !wrappedObject.isEmpty();
+        return wrappedObject.hasPassenger();
     }
 
     @Override
     public boolean ejectPassengers() {
-        return wrappedObject.eject();
+        List.copyOf(wrappedObject.getPassengers())
+                .forEach(Entity::remove);
+        return true;
     }
 
     @Override
     public float getFallDistance() {
-        return wrappedObject.getFallDistance();
+        return 0; //TODO
     }
 
     @Override
     public void setFallDistance(float distance) {
-        wrappedObject.setFallDistance(distance);
+
     }
 
     @Override
     public UUID getUniqueId() {
-        return wrappedObject.getUniqueId();
+        return wrappedObject.getUuid();
     }
 
     @Override
     public int getTicksLived() {
-        return wrappedObject.getTicksLived();
+        return (int) wrappedObject.getAliveTicks();
     }
 
     @Override
     public void setTicksLived(int value) {
-        wrappedObject.setTicksLived(value);
+        //TODO (maybe entity#tick()?);
     }
 
     @Override
     public boolean isInsideVehicle() {
-        return wrappedObject.isInsideVehicle();
+        return false;
     }
 
     @Override
     public boolean leaveVehicle() {
-        return wrappedObject.leaveVehicle();
+        final var vehicle = wrappedObject.getVehicle();
+        if (vehicle != null) {
+            vehicle.removePassenger(wrappedObject);
+            return true;
+        }
+        return false;
     }
 
     @Override
     public EntityBasic getVehicle() {
-        return EntityMapper.wrapEntity(wrappedObject.getVehicle()).orElseThrow();
+        return EntityMapper.wrapEntity(wrappedObject.getVehicle()).orElse(null);
     }
 
     @Override
@@ -200,12 +220,12 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
 
     @Override
     public void setInvulnerable(boolean flag) {
-        wrappedObject.setInvulnerable(flag);
+
     }
 
     @Override
     public boolean isInvulnerable() {
-        return wrappedObject.isInvulnerable();
+        return false;
     }
 
     @Override
@@ -220,21 +240,21 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
 
     @Override
     public boolean hasGravity() {
-        return wrappedObject.hasGravity();
+        return !wrappedObject.hasNoGravity();
     }
 
     @Override
     public void setGravity(boolean gravity) {
-        wrappedObject.setGravity(gravity);
+        wrappedObject.setNoGravity(!gravity);
     }
 
     @Override
     public int getPortalCooldown() {
-        return wrappedObject.getPortalCooldown();
+        return 0; //TODO
     }
 
     @Override
     public void setPortalCooldown(int cooldown) {
-        wrappedObject.setPortalCooldown(cooldown);
+
     }
 }

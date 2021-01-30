@@ -21,7 +21,7 @@ public abstract class BlockDataMapper {
 
     public static Optional<BlockDataHolder> resolve(Object obj) {
         if (mapping == null) {
-            throw new UnsupportedOperationException("BlockDataMapping are not initialized yet.");
+            throw new UnsupportedOperationException("BlockDataMapper are not initialized yet.");
         }
 
         return mapping.converter.convertOptional(obj);
@@ -29,7 +29,7 @@ public abstract class BlockDataMapper {
 
     public static <T> T convert(BlockDataHolder holder, Class<T> newType) {
         if (mapping == null) {
-            throw new UnsupportedOperationException("BlockDataMapping are not initialized yet.");
+            throw new UnsupportedOperationException("BlockDataMapper are not initialized yet.");
         }
         return mapping.converter.convert(holder, newType);
     }
@@ -37,7 +37,7 @@ public abstract class BlockDataMapper {
     @SneakyThrows
     public static void init(Supplier<BlockDataMapper> mappingSupplier) {
         if (mapping != null) {
-            throw new UnsupportedOperationException("BlockDataMapping are already initialized.");
+            throw new UnsupportedOperationException("BlockDataMapper are already initialized.");
         }
 
         mapping = mappingSupplier.get();
@@ -47,7 +47,7 @@ public abstract class BlockDataMapper {
 
     public static Optional<BlockDataHolder> getBlockDataAt(LocationHolder location) {
         if (mapping == null) {
-            throw new UnsupportedOperationException("BlockDataMapping are not initialized yet.");
+            throw new UnsupportedOperationException("BlockDataMapper are not initialized yet.");
         }
 
         return mapping.getBlockDataAt0(location);
@@ -55,7 +55,7 @@ public abstract class BlockDataMapper {
 
     public static void setBlockDataAt(LocationHolder location, BlockDataHolder blockData) {
         if (mapping == null) {
-            throw new UnsupportedOperationException("BlockDataMapping are not initialized yet.");
+            throw new UnsupportedOperationException("BlockDataMapper are not initialized yet.");
         }
 
         mapping.setBlockDataAt0(location, blockData);

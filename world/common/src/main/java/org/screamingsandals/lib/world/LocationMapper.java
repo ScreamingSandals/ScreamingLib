@@ -18,7 +18,7 @@ public abstract class LocationMapper {
 
     public static Optional<LocationHolder> resolve(Object obj) {
         if (mapping == null) {
-            throw new UnsupportedOperationException("Material mapping is not initialized yet.");
+            throw new UnsupportedOperationException("LocationMapper is not initialized yet.");
         }
 
         return mapping.converter.convertOptional(obj);
@@ -30,7 +30,7 @@ public abstract class LocationMapper {
 
     public static <T> T convert(LocationHolder holder, Class<T> newType) {
         if (mapping == null) {
-            throw new UnsupportedOperationException("Material mapping is not initialized yet.");
+            throw new UnsupportedOperationException("LocationMapper is not initialized yet.");
         }
         return mapping.converter.convert(holder, newType);
     }
@@ -38,7 +38,7 @@ public abstract class LocationMapper {
     @SneakyThrows
     public static void init(Supplier<LocationMapper> mappingSupplier) {
         if (mapping != null) {
-            throw new UnsupportedOperationException("Material mapping is already initialized.");
+            throw new UnsupportedOperationException("LocationMapper is already initialized.");
         }
 
         mapping = mappingSupplier.get();
