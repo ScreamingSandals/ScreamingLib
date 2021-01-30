@@ -15,12 +15,12 @@ public class InstancedPosition extends Position {
         this.instance = instance;
     }
 
-    public InstancedPosition(Instance instance, float x, float y, float z, float yaw, float pitch) {
+    public InstancedPosition(Instance instance, double x, double y, double z, float yaw, float pitch) {
        super(x, y, z, yaw, pitch);
        this.instance = instance;
     }
 
-    public InstancedPosition(Instance instance, float x, float y, float z) {
+    public InstancedPosition(Instance instance, double x, double y, double z) {
         super(x, y, z, 0, 0);
         this.instance = instance;
     }

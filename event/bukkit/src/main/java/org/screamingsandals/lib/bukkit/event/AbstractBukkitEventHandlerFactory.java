@@ -6,10 +6,7 @@ import org.bukkit.event.EventException;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
-import org.screamingsandals.lib.event.AbstractEvent;
-import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.event.EventPriority;
-import org.screamingsandals.lib.event.HandlerRegisteredEvent;
+import org.screamingsandals.lib.event.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,7 +54,14 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
                            throw new EventException(throwable);
                        }
                     }
-                    handleResult(wrapped, (T) event);
+
+                    if (wrapped instanceof CancellableAbstractEvent
+                            && event instanceof org.bukkit.event.Cancellable) {
+                        final var isCancelled = ((CancellableAbstractEvent) wrapped).isCancelled();
+                        ((org.bukkit.event.Cancellable) event).setCancelled(isCancelled);
+
+                    }
+                    postProcess(wrapped, (T) event);
                 };
 
                 eventMap.put(handlerRegisteredEvent.getHandler().getEventPriority(), handler);
@@ -68,5 +72,11 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
 
     protected abstract SE wrapEvent(T event, EventPriority priority);
 
-    protected void handleResult(SE wrappedEvent, T event) {}
+    /**
+     * For additional processing of the event.
+     * If the event is instance of {@link org.bukkit.event.Cancellable}, the result is set from our wrapped event
+     * @param wrappedEvent wrapped event
+     * @param event bukkit event
+     */
+    protected void postProcess(SE wrappedEvent, T event) {}
 }

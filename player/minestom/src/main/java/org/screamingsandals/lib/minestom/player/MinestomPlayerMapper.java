@@ -11,10 +11,7 @@ import net.minestom.server.extensions.Extension;
 import net.minestom.server.utils.Position;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
-import org.screamingsandals.lib.minestom.player.event.AsyncPlayerPreLoginListener;
-import org.screamingsandals.lib.minestom.player.event.PlayerBlockPlaceEventListener;
-import org.screamingsandals.lib.minestom.player.event.PlayerJoinEventListener;
-import org.screamingsandals.lib.minestom.player.event.PlayerLeaveEventListener;
+import org.screamingsandals.lib.minestom.player.event.*;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
@@ -149,5 +146,6 @@ public class MinestomPlayerMapper extends PlayerMapper {
         new PlayerJoinEventListener();
         new PlayerLeaveEventListener();
         new PlayerBlockPlaceEventListener();
+        new PlayerMoveEventListener();
     }
 }

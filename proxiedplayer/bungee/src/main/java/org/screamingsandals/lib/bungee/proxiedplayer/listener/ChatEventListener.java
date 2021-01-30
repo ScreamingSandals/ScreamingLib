@@ -16,8 +16,13 @@ public class ChatEventListener extends AbstractEventListener<ChatEvent> {
             return;
         }
 
-        var event = new SPlayerChatEvent(ProxiedPlayerMapper.wrapPlayer(chatEvent.getSender()), chatEvent.isCommand(),
-                chatEvent.getMessage(), chatEvent.isCancelled());
+        var event = new SPlayerChatEvent(
+                ProxiedPlayerMapper.wrapPlayer(chatEvent.getSender()),
+                chatEvent.isCommand(),
+                chatEvent.getMessage(),
+                chatEvent.isCancelled()
+        );
+
         EventManager.getDefaultEventManager().fireEvent(event, eventPriority);
         chatEvent.setCancelled(event.isCancelled());
         chatEvent.setMessage(event.getMessage());

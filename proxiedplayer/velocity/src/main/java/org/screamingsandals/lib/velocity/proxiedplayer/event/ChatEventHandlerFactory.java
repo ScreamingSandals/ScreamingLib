@@ -16,12 +16,16 @@ public class ChatEventHandlerFactory extends
 
     @Override
     protected SPlayerChatEvent wrapEvent(PlayerChatEvent event, EventPriority priority) {
-        return new SPlayerChatEvent(ProxiedPlayerMapper.wrapPlayer(event.getPlayer()), event.getMessage().startsWith("/"),
-                event.getResult().getMessage().orElse(event.getMessage()), event.getResult().isAllowed());
+        return new SPlayerChatEvent(
+                ProxiedPlayerMapper.wrapPlayer(event.getPlayer()),
+                event.getMessage().startsWith("/"),
+                event.getResult().getMessage().orElse(event.getMessage()),
+                event.getResult().isAllowed()
+        );
     }
 
     @Override
-    protected void handleResult(SPlayerChatEvent wrappedEvent, PlayerChatEvent event) {
+    protected void postProcess(SPlayerChatEvent wrappedEvent, PlayerChatEvent event) {
         if (wrappedEvent.isCancelled()) {
             event.setResult(PlayerChatEvent.ChatResult.denied());
         } else {

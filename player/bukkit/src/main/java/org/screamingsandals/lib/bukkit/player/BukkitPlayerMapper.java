@@ -11,10 +11,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
-import org.screamingsandals.lib.bukkit.player.listener.AsyncPlayerPreLoginEventListener;
-import org.screamingsandals.lib.bukkit.player.listener.PlayerBlockPlaceEventListener;
-import org.screamingsandals.lib.bukkit.player.listener.PlayerJoinEventListener;
-import org.screamingsandals.lib.bukkit.player.listener.PlayerLeaveEventListener;
+import org.screamingsandals.lib.bukkit.player.listener.*;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.player.PlayerMapper;
@@ -166,5 +163,6 @@ public class BukkitPlayerMapper extends PlayerMapper {
         new PlayerJoinEventListener(plugin);
         new PlayerLeaveEventListener(plugin);
         new PlayerBlockPlaceEventListener(plugin);
+        new PlayerMoveEventListener(plugin);
     }
 }

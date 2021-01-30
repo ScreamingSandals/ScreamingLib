@@ -10,7 +10,9 @@ public class PlayerLeaveEventListener {
 
     public PlayerLeaveEventListener() {
         MinecraftServer.getGlobalEventHandler().addEventCallback(PlayerDisconnectEvent.class, event ->
-                EventManager.getDefaultEventManager().fireEvent(new SPlayerLeaveEvent(PlayerMapper.wrapPlayer(event.getPlayer()))));
+                EventManager.fire(new SPlayerLeaveEvent(
+                        PlayerMapper.wrapPlayer(event.getPlayer())))
+        );
     }
 
 }

@@ -10,6 +10,8 @@ public class PlayerJoinEventListener {
 
     public PlayerJoinEventListener() {
         MinecraftServer.getGlobalEventHandler().addEventCallback(PlayerLoginEvent.class, event ->
-                EventManager.getDefaultEventManager().fireEvent(new SPlayerJoinEvent(PlayerMapper.wrapPlayer(event.getPlayer()))));
+                EventManager.fire(new SPlayerJoinEvent(
+                        PlayerMapper.wrapPlayer(event.getPlayer())))
+        );
     }
 }

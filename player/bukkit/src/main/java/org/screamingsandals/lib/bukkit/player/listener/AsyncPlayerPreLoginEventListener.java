@@ -19,7 +19,7 @@ public class AsyncPlayerPreLoginEventListener extends AbstractBukkitEventHandler
     }
 
     @Override
-    protected void handleResult(SAsyncPlayerPreLoginEvent wrappedEvent, AsyncPlayerPreLoginEvent event) {
+    protected void postProcess(SAsyncPlayerPreLoginEvent wrappedEvent, AsyncPlayerPreLoginEvent event) {
         switch (wrappedEvent.getResult()) {
             case ALLOWED:
                 event.setLoginResult(AsyncPlayerPreLoginEvent.Result.ALLOWED);

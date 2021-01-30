@@ -24,7 +24,7 @@ public class PlayerBlockPlaceEventListener extends AbstractBukkitEventHandlerFac
     }
 
     @Override
-    protected void handleResult(SPlayerBlockPlaceEvent wrappedEvent, BlockPlaceEvent event) {
+    protected void postProcess(SPlayerBlockPlaceEvent wrappedEvent, BlockPlaceEvent event) {
         event.setCancelled(wrappedEvent.isCancelled());
     }
 }
