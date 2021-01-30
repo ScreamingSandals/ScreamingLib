@@ -1,7 +1,7 @@
-package org.screamingsandals.lib.bukkit.material.attribute;
+package org.screamingsandals.lib.minestom.material.attribute;
 
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.attribute.AttributeModifier;
+import net.minestom.server.attribute.AttributeInstance;
+import net.minestom.server.attribute.AttributeModifier;
 import org.screamingsandals.lib.material.attribute.*;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class BukkitAttributeHolder extends BasicWrapper<AttributeInstance> implements AttributeHolder {
-
-    protected BukkitAttributeHolder(AttributeInstance wrappedObject) {
+public class MinestomAttributeHolder extends BasicWrapper<AttributeInstance> implements AttributeHolder  {
+    protected MinestomAttributeHolder(AttributeInstance wrappedObject) {
         super(wrappedObject);
     }
 
@@ -27,12 +26,12 @@ public class BukkitAttributeHolder extends BasicWrapper<AttributeInstance> imple
 
     @Override
     public void setBaseValue(double baseValue) {
-        wrappedObject.setBaseValue(baseValue);
+        wrappedObject.setBaseValue((float) baseValue);
     }
 
     @Override
     public double getDefaultValue() {
-        return wrappedObject.getDefaultValue();
+        return wrappedObject.getAttribute().getDefaultValue();
     }
 
     @Override

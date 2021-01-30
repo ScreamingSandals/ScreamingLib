@@ -9,6 +9,8 @@ public interface AttributeHolder extends Wrapper{
 
     double getBaseValue();
 
+    void setBaseValue(double baseValue);
+
     double getDefaultValue();
 
     double getValue();

@@ -7,6 +7,7 @@ import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
 import org.screamingsandals.lib.sponge.material.SpongeMaterialMapping;
+import org.screamingsandals.lib.sponge.material.attribute.SpongeAttributeMapping;
 import org.screamingsandals.lib.sponge.material.container.SpongeContainer;
 import org.screamingsandals.lib.sponge.material.meta.SpongeEnchantmentMapping;
 import org.screamingsandals.lib.sponge.material.meta.SpongePotionEffectMapping;
@@ -27,7 +28,8 @@ import java.util.stream.Collectors;
         SpongeMaterialMapping.class,
         SpongeEnchantmentMapping.class,
         SpongePotionMapping.class,
-        SpongePotionEffectMapping.class
+        SpongePotionEffectMapping.class,
+        SpongeAttributeMapping.class
 })
 public class SpongeItemFactory extends ItemFactory {
 
@@ -40,6 +42,7 @@ public class SpongeItemFactory extends ItemFactory {
         InitUtils.doIfNot(SpongeEnchantmentMapping::isInitialized, SpongeEnchantmentMapping::init);
         InitUtils.doIfNot(SpongePotionMapping::isInitialized, SpongePotionMapping::init);
         InitUtils.doIfNot(SpongePotionEffectMapping::isInitialized, SpongePotionEffectMapping::init);
+        InitUtils.doIfNot(SpongeAttributeMapping::isInitialized, SpongeAttributeMapping::init);
 
         itemConverter
                 .registerW2P(ItemStack.class, item -> {

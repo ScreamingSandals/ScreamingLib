@@ -12,6 +12,7 @@ import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.screamingsandals.lib.bukkit.material.BukkitMaterialMapping;
+import org.screamingsandals.lib.bukkit.material.attribute.BukkitAttributeMapping;
 import org.screamingsandals.lib.bukkit.material.container.BukkitContainer;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitEnchantmentMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
@@ -32,7 +33,8 @@ import java.util.stream.Collectors;
         BukkitMaterialMapping.class,
         BukkitEnchantmentMapping.class,
         BukkitPotionMapping.class,
-        BukkitPotionEffectMapping.class
+        BukkitPotionEffectMapping.class,
+        BukkitAttributeMapping.class
 })
 public class BukkitItemFactory extends ItemFactory {
     public static void init() {
@@ -44,6 +46,7 @@ public class BukkitItemFactory extends ItemFactory {
         InitUtils.doIfNot(BukkitEnchantmentMapping::isInitialized, BukkitEnchantmentMapping::init);
         InitUtils.doIfNot(BukkitPotionMapping::isInitialized, BukkitPotionMapping::init);
         InitUtils.doIfNot(BukkitPotionEffectMapping::isInitialized, BukkitPotionEffectMapping::init);
+        InitUtils.doIfNot(BukkitAttributeMapping::isInitialized, BukkitAttributeMapping::init);
 
         itemConverter
                 .registerW2P(ItemStack.class, item -> {

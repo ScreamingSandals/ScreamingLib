@@ -2,6 +2,7 @@ package org.screamingsandals.lib.material;
 
 import lombok.Data;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.material.attribute.AttributeModifierHolder;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.meta.EnchantmentHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
@@ -20,6 +21,7 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
     private final List<PotionEffectHolder> potionEffects = new LinkedList<>();
     private final List<String> lore = new LinkedList<>();
     private final List<String> itemFlags = new LinkedList<>();
+    private final List<AttributeModifierHolder> attributeModifiers = new LinkedList<>();
     //@Nullable // in initial state it's null
     private MaterialHolder material;
     @Nullable
@@ -54,6 +56,7 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
         item.getItemFlags().addAll(itemFlags);
         item.getPotionEffects().addAll(potionEffects);
         item.getEnchantments().addAll(enchantments);
+        item.getAttributeModifiers().addAll(attributeModifiers);
         item.setMaterial(material);
         item.setDisplayName(displayName);
         item.setLocalizedName(localizedName);
@@ -68,6 +71,10 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
 
     public void addPotionEffect(PotionEffectHolder holder) {
         potionEffects.add(holder);
+    }
+
+    public void addAttributeModifier(AttributeModifierHolder holder) {
+        attributeModifiers.add(holder);
     }
 
     public void addEnchant(EnchantmentHolder holder) {
@@ -97,6 +104,7 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
                 && enchantments.equals(item.enchantments)
                 && itemFlags.equals(item.itemFlags)
                 && Objects.equals(item.potion, potion)
-                && potionEffects.equals(item.potionEffects);
+                && potionEffects.equals(item.potionEffects)
+                && attributeModifiers.equals(item.attributeModifiers);
     }
 }

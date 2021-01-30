@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.material.attribute.AttributeMapping;
+import org.screamingsandals.lib.material.attribute.AttributeModifierHolder;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
@@ -104,6 +106,11 @@ public class ItemBuilder {
 
     public ItemBuilder potion(@NotNull Object potion) {
         PotionMapping.resolve(potion).ifPresent(item::setPotion);
+        return this;
+    }
+
+    public ItemBuilder attributeModifier(@NotNull Object attribute) {
+        AttributeMapping.wrapAttributeModifier(attribute).ifPresent(item::addAttributeModifier);
         return this;
     }
 

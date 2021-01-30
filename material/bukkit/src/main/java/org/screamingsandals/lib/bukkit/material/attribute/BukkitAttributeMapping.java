@@ -33,25 +33,37 @@ public class BukkitAttributeMapping extends AttributeMapping {
                                 holder.getUuid(),
                                 holder.getName(),
                                 holder.getAmount(),
-                                AttributeModifier.Operation.valueOf(holder.getOperation().name()),
-                                holder.getSlot().as(EquipmentSlot.class)
+                                AttributeModifier.Operation.values()[holder.getOperation().ordinal()],
+                                holder.getSlot() != null ? holder.getSlot().as(EquipmentSlot.class) : null
                         );
                     } catch (Throwable throwable) {
                         return new AttributeModifier(
                                 holder.getUuid(),
                                 holder.getName(),
                                 holder.getAmount(),
-                                AttributeModifier.Operation.valueOf(holder.getOperation().name())
+                                AttributeModifier.Operation.values()[holder.getOperation().ordinal()]
                         );
                     }
                 })
-                .registerP2W(AttributeModifier.class, attributeModifier -> new AttributeModifierHolder(
-                        attributeModifier.getUniqueId(),
-                        attributeModifier.getName(),
-                        attributeModifier.getAmount(),
-                        AttributeModifierHolder.Operation.valueOf(attributeModifier.getOperation().name()),
-                        EquipmentSlotMapping.resolve(attributeModifier.getSlot()).orElseThrow()
-                ));
+                .registerP2W(AttributeModifier.class, attributeModifier -> {
+                    try {
+                        return new AttributeModifierHolder(
+                                attributeModifier.getUniqueId(),
+                                attributeModifier.getName(),
+                                attributeModifier.getAmount(),
+                                AttributeModifierHolder.Operation.byOrdinal(attributeModifier.getOperation().ordinal()),
+                                EquipmentSlotMapping.resolve(attributeModifier.getSlot()).orElse(null) // nullable
+                        );
+                    } catch (Throwable throwable) {
+                        return new AttributeModifierHolder(
+                                attributeModifier.getUniqueId(),
+                                attributeModifier.getName(),
+                                attributeModifier.getAmount(),
+                                AttributeModifierHolder.Operation.byOrdinal(attributeModifier.getOperation().ordinal()),
+                                null
+                        );
+                    }
+                });
     }
 
     @Override

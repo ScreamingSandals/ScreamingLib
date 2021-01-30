@@ -1,23 +1,22 @@
-package org.screamingsandals.lib.bukkit.material.attribute;
+package org.screamingsandals.lib.sponge.material.attribute;
 
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.attribute.AttributeModifier;
 import org.screamingsandals.lib.material.attribute.*;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.spongepowered.api.entity.attribute.Attribute;
+import org.spongepowered.api.entity.attribute.AttributeModifier;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class BukkitAttributeHolder extends BasicWrapper<AttributeInstance> implements AttributeHolder {
-
-    protected BukkitAttributeHolder(AttributeInstance wrappedObject) {
+public class SpongeAttributeHolder extends BasicWrapper<Attribute> implements AttributeHolder {
+    protected SpongeAttributeHolder(Attribute wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
     public AttributeTypeHolder getAttributeType() {
-        return AttributeTypeMapping.resolve(wrappedObject.getAttribute()).orElseThrow();
+        return AttributeTypeMapping.resolve(wrappedObject.getType()).orElseThrow();
     }
 
     @Override
@@ -32,7 +31,7 @@ public class BukkitAttributeHolder extends BasicWrapper<AttributeInstance> imple
 
     @Override
     public double getDefaultValue() {
-        return wrappedObject.getDefaultValue();
+        return wrappedObject.getType().getDefaultValue();
     }
 
     @Override
