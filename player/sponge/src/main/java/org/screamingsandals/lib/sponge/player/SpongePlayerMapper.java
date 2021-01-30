@@ -2,6 +2,7 @@ package org.screamingsandals.lib.sponge.player;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
@@ -121,6 +122,11 @@ public class SpongePlayerMapper extends PlayerMapper {
                             .execute(callback)
                             .build());
         }
+    }
+
+    @Override
+    public void kick0(PlayerWrapper wrapper, Component message) {
+        wrapper.as(ServerPlayer.class).kick(message);
     }
 
     @Override

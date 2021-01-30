@@ -4,6 +4,8 @@ import io.papermc.lib.PaperLib;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -143,6 +145,11 @@ public class BukkitPlayerMapper extends PlayerMapper {
                     ex.printStackTrace();
                     return null;
                 });
+    }
+
+    @Override
+    public void kick0(PlayerWrapper wrapper, Component message) {
+        wrapper.as(Player.class).kickPlayer(LegacyComponentSerializer.legacySection().serialize(message));
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.screamingsandals.lib.player;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
@@ -127,6 +128,13 @@ public abstract class PlayerMapper {
         playerMapper.teleport0(wrapper, location, callback);
     }
 
+    public static void kick(PlayerWrapper wrapper, Component message) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+        }
+        playerMapper.kick0(wrapper, message);
+    }
+
     public static Optional<PlayerWrapper> getPlayer(String name) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper aren't initialized yet.");
@@ -174,6 +182,8 @@ public abstract class PlayerMapper {
     public abstract LocationHolder getLocation0(PlayerWrapper playerWrapper);
 
     public abstract void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback);
+
+    public abstract void kick0(PlayerWrapper wrapper, Component message);
 
     protected abstract Audience getAudience(SenderWrapper wrapper, AudienceProvider provider);
 }

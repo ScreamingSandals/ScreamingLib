@@ -3,6 +3,8 @@ package org.screamingsandals.lib.minestom.player;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.minestom.MinestomAudiences;
+import net.kyori.adventure.platform.minestom.MinestomComponentSerializer;
+import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
 import net.minestom.server.command.ConsoleSender;
@@ -126,6 +128,11 @@ public class MinestomPlayerMapper extends PlayerMapper {
     @Override
     public void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
         wrapper.as(Player.class).teleport(location.as(Position.class), callback);
+    }
+
+    @Override
+    public void kick0(PlayerWrapper wrapper, Component message) {
+        wrapper.as(Player.class).kick(MinestomComponentSerializer.get().serialize(message));
     }
 
     @Override

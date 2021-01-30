@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.player;
 
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.container.Openable;
 import org.screamingsandals.lib.utils.Wrapper;
@@ -44,6 +45,10 @@ public class PlayerWrapper extends SenderWrapper {
 
     public void teleport(LocationHolder location) {
         teleport(location, null);
+    }
+
+    public void kick(Component message) {
+        PlayerMapper.kick(this, message);
     }
 
     public <T> T as(Class<T> type) {
