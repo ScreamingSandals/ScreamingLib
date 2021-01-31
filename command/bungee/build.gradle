@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly bungeecord(BUNGEECORD_VERSION)
+    compileOnly waterfall(WATERFALL_VERSION)
     api project(':command-common')
     api project(':proxiedplayer-bungee')
     api group: 'cloud.commandframework', name: 'cloud-bungee', version: CLOUD_VERSION
