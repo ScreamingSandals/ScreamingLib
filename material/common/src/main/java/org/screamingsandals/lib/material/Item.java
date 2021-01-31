@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.material;
 
 import lombok.Data;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.material.attribute.ItemAttributeHolder;
 import org.screamingsandals.lib.material.builder.ItemFactory;
@@ -19,15 +20,15 @@ import java.util.Objects;
 public class Item implements Cloneable, NormalizableWrapper<Item> {
     private final List<EnchantmentHolder> enchantments = new LinkedList<>();
     private final List<PotionEffectHolder> potionEffects = new LinkedList<>();
-    private final List<String> lore = new LinkedList<>();
+    private final List<Component> lore = new LinkedList<>();
     private final List<String> itemFlags = new LinkedList<>();
     private final List<ItemAttributeHolder> itemAttributes = new LinkedList<>();
     //@Nullable // in initial state it's null
     private MaterialHolder material;
     @Nullable
-    private String displayName;
+    private Component displayName;
     @Nullable
-    private String localizedName;
+    private Component localizedName;
     private int amount = 1;
     private Integer customModelData;
     private int repair;
@@ -81,12 +82,12 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
         enchantments.add(holder);
     }
 
-    public void addLore(String line) {
+    public void addLore(Component line) {
         lore.add(line);
     }
 
     public void addFlag(String flag) {
-        lore.add(flag);
+        itemFlags.add(flag);
     }
 
     public boolean isSimilar(Item item) {

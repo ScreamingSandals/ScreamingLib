@@ -1,7 +1,5 @@
 package org.screamingsandals.lib.minestom.material.builder;
 
-import net.minestom.server.chat.ColoredText;
-import net.minestom.server.chat.JsonMessage;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.item.Enchantment;
 import net.minestom.server.item.ItemFlag;
@@ -17,12 +15,13 @@ import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
+import org.screamingsandals.lib.minestom.material.MinestomMaterialMapping;
 import org.screamingsandals.lib.minestom.material.attribute.MinestomAttributeMapping;
 import org.screamingsandals.lib.minestom.material.container.MinestomContainer;
 import org.screamingsandals.lib.minestom.material.meta.MinestomEnchantmentMapping;
 import org.screamingsandals.lib.minestom.material.meta.MinestomPotionEffectMapping;
 import org.screamingsandals.lib.minestom.material.meta.MinestomPotionMapping;
-import org.screamingsandals.lib.minestom.material.MinestomMaterialMapping;
+import org.screamingsandals.lib.minestom.utils.MinestomAdventureHelper;
 import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
 
@@ -63,7 +62,7 @@ public class MinestomItemFactory extends ItemFactory {
                     }
 
                     if (item.getDisplayName() != null) {
-                        stack.setDisplayName(ColoredText.of(item.getDisplayName()));
+                        stack.setDisplayName(MinestomAdventureHelper.toMinestom(item.getDisplayName()));
                     }
                     if (item.getLocalizedName() != null) {
                         // where is that?
@@ -74,7 +73,10 @@ public class MinestomItemFactory extends ItemFactory {
                     // repair
                     stack.setUnbreakable(item.isUnbreakable());
                     if (!item.getLore().isEmpty()) {
-                        stack.setLore(item.getLore().stream().map(ColoredText::of).collect(Collectors.toCollection(ArrayList::new)));
+                        stack.setLore(item.getLore()
+                                .stream()
+                                .map(MinestomAdventureHelper::toMinestom)
+                                .collect(Collectors.toCollection(ArrayList::new)));
                     }
                     item.getEnchantments().forEach(e -> {
                         if (stack.getItemMeta() instanceof EnchantedBookMeta) {
@@ -85,7 +87,10 @@ public class MinestomItemFactory extends ItemFactory {
                     });
                     if (!item.getItemFlags().isEmpty()) {
                         try {
-                            stack.addItemFlags(item.getItemFlags().stream().map(ItemFlag::valueOf).toArray(ItemFlag[]::new));
+                            stack.addItemFlags(item.getItemFlags()
+                                    .stream()
+                                    .map(ItemFlag::valueOf)
+                                    .toArray(ItemFlag[]::new));
                         } catch (IllegalArgumentException ignored) {
                         }
                     }
@@ -94,10 +99,15 @@ public class MinestomItemFactory extends ItemFactory {
                             ((PotionMeta) stack.getItemMeta()).setPotionType(item.getPotion().as(PotionType.class));
                         }
                         if (!item.getPotionEffects().isEmpty()) {
-                            ((PotionMeta) stack.getItemMeta()).getCustomPotionEffects().addAll(item.getPotionEffects().stream().map(effect -> effect.as(CustomPotionEffect.class)).collect(Collectors.toList()));
+                            ((PotionMeta) stack.getItemMeta()).getCustomPotionEffects()
+                                    .addAll(item.getPotionEffects()
+                                            .stream()
+                                            .map(effect -> effect.as(CustomPotionEffect.class))
+                                            .collect(Collectors.toList()));
                         }
                     }
-                    item.getItemAttributes().stream()
+                    item.getItemAttributes()
+                            .stream()
                             .map(attribute -> attribute.as(ItemAttribute.class))
                             .forEach(stack::addAttribute);
 
@@ -116,8 +126,7 @@ public class MinestomItemFactory extends ItemFactory {
                         item.setPlatformMeta(stack.getItemMeta().clone());
                     }
                     if (stack.hasDisplayName()) {
-                        //TODO
-                        item.setDisplayName(Objects.requireNonNull(stack.getDisplayName()).getRawMessage());
+                        item.setDisplayName(MinestomAdventureHelper.toComponent(Objects.requireNonNull(stack.getDisplayName())));
                     }
                     // localized name
                     item.setCustomModelData(stack.getCustomModelData());
@@ -126,7 +135,7 @@ public class MinestomItemFactory extends ItemFactory {
                     if (stack.hasLore()) {
                         item.getLore().addAll(stack.getLore()
                                 .stream()
-                                .map(JsonMessage::getRawMessage) //TODO
+                                .map(MinestomAdventureHelper::toComponent)
                                 .collect(Collectors.toList()));
                     }
                     if (stack.getItemMeta() instanceof EnchantedBookMeta) {
@@ -138,7 +147,12 @@ public class MinestomItemFactory extends ItemFactory {
                                 item.getEnchantments().add(en.orElseThrow())
                         );
                     }
-                    item.getItemFlags().addAll(stack.getItemFlags().stream().map(ItemFlag::name).collect(Collectors.toList()));
+
+                    item.getItemFlags().addAll(stack.getItemFlags()
+                            .stream()
+                            .map(ItemFlag::name)
+                            .collect(Collectors.toList()));
+
                     if (stack.getItemMeta() instanceof PotionMeta) {
                         MinestomPotionMapping.resolve(((PotionMeta) stack.getItemMeta()).getPotionType()).ifPresent(item::setPotion);
                         item.getPotionEffects().addAll(((PotionMeta) stack.getItemMeta()).getCustomPotionEffects().stream()
@@ -147,6 +161,7 @@ public class MinestomItemFactory extends ItemFactory {
                                 .map(Optional::get)
                                 .collect(Collectors.toList()));
                     }
+
                     stack.getAttributes().stream()
                             .map(AttributeMapping::wrapItemAttribute)
                             .filter(Optional::isPresent)

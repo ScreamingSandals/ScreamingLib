@@ -1,9 +1,9 @@
 package org.screamingsandals.lib.minestom.player.event;
 
-import net.kyori.adventure.platform.minestom.MinestomComponentSerializer;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.player.AsyncPlayerPreLoginEvent;
 import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.minestom.utils.MinestomAdventureHelper;
 import org.screamingsandals.lib.player.event.SAsyncPlayerPreLoginEvent;
 
 import java.net.InetSocketAddress;
@@ -19,7 +19,7 @@ public class AsyncPlayerPreLoginListener {
             try {
                 final var result = EventManager.fireAsync(toFire).get();
                 if (result.getResult() != SAsyncPlayerPreLoginEvent.Result.ALLOWED) {
-                    player.kick(MinestomComponentSerializer.get().serialize(result.getMessage()));
+                    player.kick(MinestomAdventureHelper.toMinestom(result.getMessage()));
                     return;
                 }
 

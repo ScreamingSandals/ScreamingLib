@@ -24,6 +24,7 @@ import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
+import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
 
@@ -43,6 +44,7 @@ public class BukkitItemFactory extends ItemFactory {
         ItemFactory.init(BukkitItemFactory::new);
     }
 
+    @SuppressWarnings({"unchecked", "deprecation"}) //cause we can
     public BukkitItemFactory() {
         InitUtils.doIfNot(BukkitMaterialMapping::isInitialized, BukkitMaterialMapping::init);
         InitUtils.doIfNot(BukkitEnchantmentMapping::isInitialized, BukkitEnchantmentMapping::init);
@@ -72,11 +74,11 @@ public class BukkitItemFactory extends ItemFactory {
 
                     if (meta != null) {
                         if (item.getDisplayName() != null) {
-                            meta.setDisplayName(item.getDisplayName());
+                            meta.setDisplayName(AdventureHelper.toLegacy(item.getDisplayName()));
                         }
                         if (item.getLocalizedName() != null) {
                             try {
-                                meta.setLocalizedName(item.getLocalizedName());
+                                meta.setLocalizedName(AdventureHelper.toLegacy(item.getLocalizedName()));
                             } catch (Throwable ignored) {
                             }
                         }
@@ -91,7 +93,11 @@ public class BukkitItemFactory extends ItemFactory {
                         }
                         meta.setUnbreakable(item.isUnbreakable());
                         if (!item.getLore().isEmpty()) {
-                            meta.setLore(item.getLore());
+
+                            meta.setLore(item.getLore()
+                                    .stream()
+                                    .map(AdventureHelper::toLegacy)
+                                    .collect(Collectors.toList()));
                         }
                         item.getEnchantments().forEach(e -> {
                             if (meta instanceof EnchantmentStorageMeta) {
@@ -140,11 +146,11 @@ public class BukkitItemFactory extends ItemFactory {
                     item.setPlatformMeta(meta);
                     if (meta != null) {
                         if (meta.hasDisplayName()) {
-                            item.setDisplayName(meta.getDisplayName());
+                            item.setDisplayName(AdventureHelper.toComponent(meta.getDisplayName()));
                         }
                         try {
                             if (meta.hasLocalizedName()) {
-                                item.setLocalizedName(meta.getLocalizedName());
+                                item.setLocalizedName(AdventureHelper.toComponent(meta.getLocalizedName()));
                             }
                         } catch (Throwable ignored) {
                         }
@@ -158,8 +164,11 @@ public class BukkitItemFactory extends ItemFactory {
                             item.setRepair(((Repairable) meta).getRepairCost());
                         }
                         item.setUnbreakable(meta.isUnbreakable());
-                        if (meta.hasLore()) {
-                            item.getLore().addAll(meta.getLore());
+                        if (meta.hasLore() && meta.getLore() != null) {
+                            item.getLore().addAll(meta.getLore()
+                                    .stream()
+                                    .map(AdventureHelper::toComponent)
+                                    .collect(Collectors.toList()));
                         }
                         if (meta instanceof EnchantmentStorageMeta) {
                             ((EnchantmentStorageMeta) meta).getStoredEnchants().entrySet().forEach(entry ->
@@ -184,11 +193,12 @@ public class BukkitItemFactory extends ItemFactory {
                             }
                         }
 
-                        if (meta.hasAttributeModifiers()) {
-                            meta.getAttributeModifiers().forEach((attribute, attributeModifier) ->
-                                    AttributeMapping.wrapItemAttribute(new BukkitItemAttribute(attribute, attributeModifier))
-                                            .ifPresent(item::addItemAttribute)
-                            );
+                        if (meta.hasAttributeModifiers() && meta.getAttributeModifiers() != null) {
+                            meta.getAttributeModifiers()
+                                    .forEach((attribute, attributeModifier) ->
+                                            AttributeMapping.wrapItemAttribute(new BukkitItemAttribute(attribute, attributeModifier))
+                                                    .ifPresent(item::addItemAttribute)
+                                    );
                         }
                     }
                     return item;

@@ -60,8 +60,10 @@ public class BukkitMaterialMapping extends MaterialMapping {
                 .registerP2W(Material.class, material -> new MaterialHolder(material.name()))
                 .registerP2W(ItemStack.class, stack -> new MaterialHolder(stack.getType().name(), stack.getDurability()));
 
-        Arrays.stream(Material.values()).filter(t -> !t.name().startsWith("LEGACY")).forEach(material ->
-                materialMapping.put(NamespacedMappingKey.of(material.name()), new MaterialHolder(material.name()))
-        );
+        Arrays.stream(Material.values())
+                .filter(t -> !t.name().startsWith("LEGACY"))
+                .forEach(material ->
+                        materialMapping.put(NamespacedMappingKey.of(material.name()), new MaterialHolder(material.name()))
+                );
     }
 }

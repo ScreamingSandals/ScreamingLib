@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.material.builder;
 
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.material.Item;
@@ -9,6 +10,7 @@ import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
+import org.screamingsandals.lib.utils.AdventureHelper;
 
 import java.util.List;
 import java.util.Map;
@@ -35,14 +37,30 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder name(@Nullable String name) {
+    public ItemBuilder name(@NotNull Component name) {
         item.setDisplayName(name);
         return this;
     }
 
-    public ItemBuilder localizedName(@Nullable String name) {
+    public ItemBuilder name(@Nullable String name) {
+        if (name == null) {
+            item.setDisplayName(null);
+            return this;
+        }
+        return name(AdventureHelper.toComponent(name));
+    }
+
+    public ItemBuilder localizedName(@Nullable Component name) {
         item.setLocalizedName(name);
         return this;
+    }
+
+    public ItemBuilder localizedName(@Nullable String name) {
+        if (name == null) {
+            item.setLocalizedName(null);
+            return this;
+        }
+        return localizedName(AdventureHelper.toComponent(name));
     }
 
     public ItemBuilder customModelData(Integer data) {
@@ -71,12 +89,20 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder lore(@NotNull String lore) {
+    public ItemBuilder lore(@NotNull Component lore) {
         item.addLore(lore);
         return this;
     }
 
-    public ItemBuilder lore(@NotNull List<String> lore) {
+    public ItemBuilder lore(@Nullable String lore) {
+        if (lore == null) {
+            item.addLore(null);
+            return this;
+        }
+        return lore(AdventureHelper.toComponent(lore));
+    }
+
+    public ItemBuilder lore(@NotNull List<Component> lore) {
         item.getLore().addAll(lore);
         return this;
     }

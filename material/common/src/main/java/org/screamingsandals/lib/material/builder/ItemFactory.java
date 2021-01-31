@@ -1,14 +1,15 @@
 package org.screamingsandals.lib.material.builder;
 
 import lombok.SneakyThrows;
+import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
-import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.MaterialHolder;
-import org.screamingsandals.lib.material.MaterialMapping;
+import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.ConfigurateUtils;
 import org.screamingsandals.lib.utils.ConsumerExecutor;
@@ -54,11 +55,11 @@ public abstract class ItemFactory {
 
         var displayName = node.node("display-name");
         if (!displayName.empty()) {
-            item.setDisplayName(displayName.getString());
+            item.setDisplayName(AdventureHelper.toComponent(Objects.requireNonNull(displayName.getString())));
         }
         var locName = node.node("loc-name");
         if (!locName.empty()) {
-            item.setLocalizedName(locName.getString());
+            item.setLocalizedName(AdventureHelper.toComponent(Objects.requireNonNull(locName.getString())));
         }
         var customModelData = node.node("custom-model-data");
         if (!customModelData.empty()) {
@@ -92,13 +93,13 @@ public abstract class ItemFactory {
         if (!lore.empty()) {
             if (lore.isList()) {
                 try {
-                    item.getLore().addAll(
-                            Objects.requireNonNull(lore.getList(String.class)));
+                    final var list = Objects.requireNonNull(lore.getList(String.class));
+                    list.forEach(next -> item.getLore().add(AdventureHelper.toComponent(next)));
                 } catch (SerializationException e) {
                     e.printStackTrace();
                 }
             } else {
-                item.getLore().add(lore.getString());
+                item.getLore().add(AdventureHelper.toComponent(Objects.requireNonNull(lore.getString())));
             }
         }
         var enchants = node.node("enchants");
@@ -296,10 +297,10 @@ public abstract class ItemFactory {
         } catch (NumberFormatException ignored) {
         }
         if (name != null && !name.trim().isEmpty()) {
-            item.setDisplayName(name.trim());
+            item.setDisplayName(AdventureHelper.toComponent(name.trim()));
         }
         item.getLore().clear();
-        item.getLore().addAll(lore);
+        lore.forEach(next -> item.getLore().add(AdventureHelper.toComponent(next)));
 
         return Optional.of(item);
     }

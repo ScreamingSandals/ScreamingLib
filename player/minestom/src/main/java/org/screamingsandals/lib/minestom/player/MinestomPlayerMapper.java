@@ -3,7 +3,6 @@ package org.screamingsandals.lib.minestom.player;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.minestom.MinestomAudiences;
-import net.kyori.adventure.platform.minestom.MinestomComponentSerializer;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
@@ -14,6 +13,7 @@ import net.minestom.server.utils.Position;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.minestom.player.event.*;
+import org.screamingsandals.lib.minestom.utils.MinestomAdventureHelper;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
@@ -132,7 +132,7 @@ public class MinestomPlayerMapper extends PlayerMapper {
 
     @Override
     public void kick0(PlayerWrapper wrapper, Component message) {
-        wrapper.as(Player.class).kick(MinestomComponentSerializer.get().serialize(message));
+        wrapper.as(Player.class).kick(MinestomAdventureHelper.toMinestom(message));
     }
 
     @Override

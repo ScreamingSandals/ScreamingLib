@@ -1,7 +1,6 @@
 rootProject.name = "ScreamingLib"
 
 include 'api-utils'
-include 'utils'
 include 'screaming-annotation'
 
 def registerModule(String name, String... platforms) {
@@ -13,6 +12,7 @@ def registerModule(String name, String... platforms) {
     }
 }
 
+registerModule('utils', 'minestom')
 registerModule('material', 'bukkit', 'minestom', 'sponge')
 registerModule('world', 'bukkit', 'minestom', 'sponge')
 registerModule('player', 'bukkit', 'minestom', 'sponge')

@@ -1,9 +1,7 @@
 package org.screamingsandals.lib.sponge.material.builder;
 
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.attribute.AttributeMapping;
-import org.screamingsandals.lib.material.attribute.AttributeTypeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
@@ -23,7 +21,6 @@ import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.item.enchantment.Enchantment;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.item.potion.PotionType;
 import org.spongepowered.api.registry.RegistryTypes;
 
@@ -61,10 +58,10 @@ public class SpongeItemFactory extends ItemFactory {
                     }*/
 
                     if (item.getDisplayName() != null) {
-                        stack.offer(Keys.DISPLAY_NAME, LegacyComponentSerializer.legacySection().deserialize(item.getDisplayName()));
+                        stack.offer(Keys.DISPLAY_NAME, item.getDisplayName());
                     }
                     //if (item.getLocalizedName() != null) {
-                        // where is that?
+                    // where is that?
                     //}
                     if (item.getCustomModelData() != null) {
                         stack.offer(Keys.CUSTOM_MODEL_DATA, item.getCustomModelData());
@@ -72,19 +69,27 @@ public class SpongeItemFactory extends ItemFactory {
                     // repair
                     stack.offer(Keys.IS_UNBREAKABLE, item.isUnbreakable());
                     if (!item.getLore().isEmpty()) {
-                        stack.offer(Keys.LORE, item.getLore().stream().map(LegacyComponentSerializer.legacySection()::deserialize).collect(Collectors.toList()));
+                        stack.offer(Keys.LORE, item.getLore());
                     }
                     if (stack.supports(Keys.STORED_ENCHANTMENTS)) {
-                        stack.offer(Keys.STORED_ENCHANTMENTS, item.getEnchantments().stream().map(holder -> holder.as(Enchantment.class)).collect(Collectors.toList()));
+                        stack.offer(Keys.STORED_ENCHANTMENTS, item.getEnchantments()
+                                .stream()
+                                .map(holder -> holder.as(Enchantment.class))
+                                .collect(Collectors.toList()));
                     } else {
-                        stack.offer(Keys.APPLIED_ENCHANTMENTS, item.getEnchantments().stream().map(holder -> holder.as(Enchantment.class)).collect(Collectors.toList()));
+                        stack.offer(Keys.APPLIED_ENCHANTMENTS, item.getEnchantments()
+                                .stream()
+                                .map(holder -> holder.as(Enchantment.class))
+                                .collect(Collectors.toList()));
                     }
                     if (item.getPotion() != null && stack.supports(Keys.POTION_TYPE)) {
                         stack.offer(Keys.POTION_TYPE, item.getPotion().as(PotionType.class));
                     }
                     if (!item.getPotionEffects().isEmpty() && stack.supports(Keys.POTION_EFFECTS)) {
                         stack.offer(Keys.POTION_EFFECTS, item.getPotionEffects()
-                                .stream().map(holder -> holder.as(PotionEffect.class)).collect(Collectors.toList()));
+                                .stream()
+                                .map(holder -> holder.as(PotionEffect.class))
+                                .collect(Collectors.toList()));
                     }
                     if (!item.getItemFlags().isEmpty()) {
                         stack.offer(Keys.HIDE_ATTRIBUTES, item.getItemFlags().contains("HIDE_ATTRIBUTES"));
@@ -115,27 +120,29 @@ public class SpongeItemFactory extends ItemFactory {
                     //if (stack.getItemMeta() != null) {
                     //    item.setPlatformMeta(stack.getItemMeta().clone());
                     //}
-                    stack.get(Keys.DISPLAY_NAME).ifPresent(component ->
-                            item.setDisplayName(LegacyComponentSerializer.legacySection().serialize(component))
-                    );
+                    stack.get(Keys.DISPLAY_NAME).ifPresent(item::setDisplayName);
                     // localized name
                     stack.get(Keys.CUSTOM_MODEL_DATA).ifPresent(item::setCustomModelData);
                     // repair
                     stack.get(Keys.IS_UNBREAKABLE).ifPresent(item::setUnbreakable);
                     stack.get(Keys.LORE).ifPresent(components ->
-                            item.getLore().addAll(components.stream().map(LegacyComponentSerializer.legacySection()::serialize).collect(Collectors.toList()))
+                            item.getLore().addAll(components)
                     );
                     if (stack.supports(Keys.STORED_ENCHANTMENTS)) {
                         stack.get(Keys.STORED_ENCHANTMENTS).ifPresent(enchantments ->
-                                enchantments.stream().map(SpongeEnchantmentMapping::resolve).forEach(en ->
-                                        item.getEnchantments().add(en.orElseThrow())
-                                )
+                                enchantments.stream()
+                                        .map(SpongeEnchantmentMapping::resolve)
+                                        .forEach(en ->
+                                                item.getEnchantments().add(en.orElseThrow())
+                                        )
                         );
                     } else {
                         stack.get(Keys.APPLIED_ENCHANTMENTS).ifPresent(enchantments ->
-                                enchantments.stream().map(SpongeEnchantmentMapping::resolve).forEach(en ->
-                                        item.getEnchantments().add(en.orElseThrow())
-                                )
+                                enchantments.stream()
+                                        .map(SpongeEnchantmentMapping::resolve)
+                                        .forEach(en ->
+                                                item.getEnchantments().add(en.orElseThrow())
+                                        )
                         );
                     }
                     stack.get(Keys.HIDE_ATTRIBUTES).ifPresent(aBoolean -> {
@@ -170,21 +177,21 @@ public class SpongeItemFactory extends ItemFactory {
                     });
                     stack.get(Keys.POTION_TYPE).flatMap(PotionMapping::resolve).ifPresent(item::setPotion);
                     stack.get(Keys.POTION_EFFECTS).ifPresent(potionEffects ->
-                        item.getPotionEffects().addAll(potionEffects.stream()
-                                .map(PotionEffectMapping::resolve)
-                                .filter(Optional::isPresent)
-                                .map(Optional::get)
-                                .collect(Collectors.toList()))
+                            item.getPotionEffects().addAll(potionEffects.stream()
+                                    .map(PotionEffectMapping::resolve)
+                                    .filter(Optional::isPresent)
+                                    .map(Optional::get)
+                                    .collect(Collectors.toList()))
                     );
                     Sponge.getGame().registries().registry(RegistryTypes.ATTRIBUTE_TYPE).forEach(attributeType ->
-                        Sponge.getGame().registries().registry(RegistryTypes.EQUIPMENT_TYPE).forEach(equipmentType ->
-                            stack.getAttributeModifiers(attributeType.value(), equipmentType.value())
-                                .forEach(attributeModifier ->
-                                        AttributeMapping.
-                                                wrapItemAttribute(new SpongeItemAttribute(attributeType.value(), attributeModifier, equipmentType.value()))
-                                                .ifPresent(item::addItemAttribute)
-                                )
-                        )
+                            Sponge.getGame().registries().registry(RegistryTypes.EQUIPMENT_TYPE).forEach(equipmentType ->
+                                    stack.getAttributeModifiers(attributeType.value(), equipmentType.value())
+                                            .forEach(attributeModifier ->
+                                                    AttributeMapping.
+                                                            wrapItemAttribute(new SpongeItemAttribute(attributeType.value(), attributeModifier, equipmentType.value()))
+                                                            .ifPresent(item::addItemAttribute)
+                                            )
+                            )
                     );
                     return item;
 

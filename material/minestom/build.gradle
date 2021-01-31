@@ -1,5 +1,6 @@
 dependencies {
     api project(':material-common')
+    api project(':utils-minestom')
 
     compileOnly 'com.github.Minestom:Minestom:' + MINESTOM_VERSION
 }
