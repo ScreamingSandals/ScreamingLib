@@ -3,6 +3,7 @@ package org.screamingsandals.lib.sponge.material.meta;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.effect.potion.PotionEffect;
@@ -37,7 +38,7 @@ public class SpongePotionEffectMapping extends PotionEffectMapping {
                 .registerP2W(PotionEffectType.class, e -> new PotionEffectHolder(Sponge.getGame().registries().registry(RegistryTypes.POTION_EFFECT_TYPE).findValueKey(e).orElseThrow().value()));
 
         Sponge.getGame().registries().registry(RegistryTypes.POTION_EFFECT_TYPE).forEach(itemType ->
-                potionEffectMapping.put(itemType.key().getNamespace().equals(ResourceKey.MINECRAFT_NAMESPACE) ? itemType.key().getValue().toUpperCase() : itemType.key().getFormatted().toUpperCase(), new PotionEffectHolder(itemType.key().getFormatted()))
+                potionEffectMapping.put(NamespacedMappingKey.of(itemType.key().getFormatted()), new PotionEffectHolder(itemType.key().getFormatted()))
         );
     }
 }

@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.minestom.material.slot;
 
+import net.minestom.server.item.attribute.AttributeSlot;
 import net.minestom.server.network.packet.server.play.EntityEquipmentPacket;
 import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.material.slot.EquipmentSlotMapping;
@@ -15,9 +16,9 @@ public class MinestomEquipmentSlotMapping extends EquipmentSlotMapping {
 
     public MinestomEquipmentSlotMapping() {
         equipmentSlotConverter
-                .registerP2W(EntityEquipmentPacket.Slot.class, equipmentSlot -> new EquipmentSlotHolder(equipmentSlot.name()))
-                .registerW2P(EntityEquipmentPacket.Slot.class, equipmentSlotHolder -> EntityEquipmentPacket.Slot.valueOf(equipmentSlotHolder.getPlatformName()));
+                .registerP2W(AttributeSlot.class, attributeSlot -> new EquipmentSlotHolder(attributeSlot.name()))
+                .registerW2P(AttributeSlot.class, equipmentSlotHolder -> AttributeSlot.valueOf(equipmentSlotHolder.getPlatformName()));
 
-        Arrays.stream(EntityEquipmentPacket.Slot.values()).forEach(equipmentSlot -> mapping.put(equipmentSlot.name(), new EquipmentSlotHolder(equipmentSlot.name())));
+        Arrays.stream(AttributeSlot.values()).forEach(equipmentSlot -> mapping.put(equipmentSlot.name(), new EquipmentSlotHolder(equipmentSlot.name())));
     }
 }

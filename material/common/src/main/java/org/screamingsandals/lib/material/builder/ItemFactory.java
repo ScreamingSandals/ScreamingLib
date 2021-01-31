@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.material.builder;
 
 import lombok.SneakyThrows;
+import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
@@ -145,6 +146,19 @@ public abstract class ItemFactory {
                         .collect(Collectors.toList()));
             } else {
                 PotionEffectMapping.resolve(potionEffects).ifPresent(item.getPotionEffects()::add);
+            }
+        }
+
+        var attributes = node.node("attributes");
+        if (!attributes.empty()) {
+            if (attributes.isList()) {
+                attributes.childrenList().stream()
+                        .map(AttributeMapping::wrapItemAttribute)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .forEach(item::addItemAttribute);
+            } else {
+                AttributeMapping.wrapItemAttribute(attributes).ifPresent(item::addItemAttribute);
             }
         }
 

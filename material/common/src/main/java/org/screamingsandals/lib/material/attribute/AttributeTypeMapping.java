@@ -27,21 +27,21 @@ public abstract class AttributeTypeMapping {
         attributeTypeMapping = supplier.get();
     }
 
-    public static Optional<AttributeTypeHolder> resolve(Object entity) {
+    public static Optional<AttributeTypeHolder> resolve(Object attributeType) {
         if (attributeTypeMapping == null) {
             throw new UnsupportedOperationException("AttributeTypeMapping is not initialized yet.");
         }
 
-        if (entity == null) {
+        if (attributeType == null) {
             return Optional.empty();
         }
 
-        var converted = attributeTypeMapping.attributeTypeConverter.convertOptional(entity);
+        var converted = attributeTypeMapping.attributeTypeConverter.convertOptional(attributeType);
         if (converted.isPresent()) {
             return converted;
         }
 
-        var namespacedKey = AttributeMappingKey.ofOptional(entity.toString());
+        var namespacedKey = AttributeMappingKey.ofOptional(attributeType.toString());
 
         if (namespacedKey.isPresent()) {
             if (attributeTypeMapping.mapping.containsKey(namespacedKey.get())) {

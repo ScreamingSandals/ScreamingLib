@@ -19,6 +19,6 @@ public class MinestomAttributeTypeMapping extends AttributeTypeMapping {
                 .registerP2W(Attribute.class, entityType -> new AttributeTypeHolder(entityType.getKey()))
                 .registerW2P(Attribute.class, entityTypeHolder -> Attribute.fromKey(entityTypeHolder.getPlatformName()));
 
-        Arrays.stream(Attribute.values()).forEach(entityType -> mapping.put(AttributeMappingKey.of(entityType.getKey()), new AttributeTypeHolder(entityType.getKey())));
+        Arrays.stream(Attribute.values()).forEach(attributeType -> mapping.put(AttributeMappingKey.of(attributeType.getKey()), new AttributeTypeHolder(attributeType.getKey())));
     }
 }

@@ -3,19 +3,19 @@ package org.screamingsandals.lib.material.meta;
 import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.key.MappingKey;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
 public class PotionMapping {
-    private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?:(?<namespace>[A-Za-z][A-Za-z0-9_.\\-]*):)?(?<potion>[A-Za-z][A-Za-z0-9_.\\-/]*)$");
     private static PotionMapping mapping = null;
-    protected final Map<String, PotionHolder> potionMapping = new HashMap<>();
+    protected final Map<MappingKey, PotionHolder> potionMapping = new HashMap<>();
     protected BidirectionalConverter<PotionHolder> potionConverter = BidirectionalConverter.<PotionHolder>build()
             .registerW2P(String.class, PotionHolder::getPlatformName)
             .registerP2W(PotionHolder.class, e -> e);
@@ -44,20 +44,29 @@ public class PotionMapping {
         if (potion == null || potionBukkit == null) {
             throw new IllegalArgumentException("Both potions mustn't be null!");
         }
-        if (potionMapping.containsKey(potion.toUpperCase()) && !potionMapping.containsKey(potionBukkit.toUpperCase())) {
-            potionMapping.put(potionBukkit.toUpperCase(), potionMapping.get(potion.toUpperCase()));
-        } else if (potionMapping.containsKey(potionBukkit.toUpperCase()) && !potionMapping.containsKey(potion.toUpperCase())) {
-            potionMapping.put(potion.toUpperCase(), potionMapping.get(potionBukkit.toUpperCase()));
+
+        var potionNamespaced = NamespacedMappingKey.of(potion);
+        var longPotionNamespaced = NamespacedMappingKey.of("long_" + potion);
+        var strongPotionNamespaced = NamespacedMappingKey.of("strong_" + potion);
+
+        var potionBukkitNamespaced = NamespacedMappingKey.of(potionBukkit);
+        var longPotionBukkitNamespaced = NamespacedMappingKey.of("long_" + potionBukkit);
+        var strongPotionBukkitNamespaced = NamespacedMappingKey.of("strong_" + potionBukkit);
+
+        if (potionMapping.containsKey(potionNamespaced) && !potionMapping.containsKey(potionBukkitNamespaced)) {
+            potionMapping.put(potionBukkitNamespaced, potionMapping.get(potionNamespaced));
+        } else if (potionMapping.containsKey(potionBukkitNamespaced) && !potionMapping.containsKey(potionNamespaced)) {
+            potionMapping.put(potionNamespaced, potionMapping.get(potionBukkitNamespaced));
         }
-        if (potionMapping.containsKey("LONG_" + potion.toUpperCase()) && !potionMapping.containsKey("LONG_" + potionBukkit.toUpperCase())) {
-            potionMapping.put("LONG_" + potionBukkit.toUpperCase(), potionMapping.get("LONG_" + potion.toUpperCase()));
-        } else if (potionMapping.containsKey("LONG_" + potionBukkit.toUpperCase()) && !potionMapping.containsKey("LONG_" + potion.toUpperCase())) {
-            potionMapping.put("LONG_" + potion.toUpperCase(), potionMapping.get("LONG_" + potionBukkit.toUpperCase()));
+        if (potionMapping.containsKey(longPotionNamespaced) && !potionMapping.containsKey(longPotionBukkitNamespaced)) {
+            potionMapping.put(longPotionBukkitNamespaced, potionMapping.get(longPotionNamespaced));
+        } else if (potionMapping.containsKey(longPotionBukkitNamespaced) && !potionMapping.containsKey(longPotionNamespaced)) {
+            potionMapping.put(longPotionNamespaced, potionMapping.get(longPotionBukkitNamespaced));
         }
-        if (potionMapping.containsKey("STRONG_" + potion.toUpperCase()) && !potionMapping.containsKey("STRONG_" + potionBukkit.toUpperCase())) {
-            potionMapping.put("STRONG_" + potionBukkit.toUpperCase(), potionMapping.get("STRONG_" + potion.toUpperCase()));
-        } else if (potionMapping.containsKey("STRONG_" + potionBukkit.toUpperCase()) && !potionMapping.containsKey("STRONG_" + potion.toUpperCase())) {
-            potionMapping.put("STRONG_" + potion.toUpperCase(), potionMapping.get("STRONG_" + potionBukkit.toUpperCase()));
+        if (potionMapping.containsKey(strongPotionNamespaced) && !potionMapping.containsKey(strongPotionBukkitNamespaced)) {
+            potionMapping.put(strongPotionBukkitNamespaced, potionMapping.get(strongPotionNamespaced));
+        } else if (potionMapping.containsKey(strongPotionBukkitNamespaced) && !potionMapping.containsKey(strongPotionNamespaced)) {
+            potionMapping.put(strongPotionNamespaced, potionMapping.get(strongPotionBukkitNamespaced));
         }
     }
 
@@ -71,22 +80,14 @@ public class PotionMapping {
         }
         String potion = potionObject.toString().trim();
 
-        Matcher matcher = RESOLUTION_PATTERN.matcher(potion);
+        var namespaced = NamespacedMappingKey.ofOptional(potion);
 
-        if (!matcher.matches()) {
+        if (namespaced.isEmpty()) {
             return Optional.empty();
         }
 
-        if (matcher.group("potion") != null) {
-
-            String namespace = matcher.group("namespace") != null ? matcher.group("namespace").toUpperCase() : "MINECRAFT";
-            String name = matcher.group("potion").toUpperCase();
-
-            if (mapping.potionMapping.containsKey(namespace + ":" + name)) {
-                return Optional.of(mapping.potionMapping.get(namespace + ":" + name));
-            } else if (mapping.potionMapping.containsKey(name)) {
-                return Optional.of(mapping.potionMapping.get(name));
-            }
+        if (mapping.potionMapping.containsKey(namespaced.get())) {
+            return Optional.of(mapping.potionMapping.get(namespaced.get()));
         }
 
         return Optional.empty();

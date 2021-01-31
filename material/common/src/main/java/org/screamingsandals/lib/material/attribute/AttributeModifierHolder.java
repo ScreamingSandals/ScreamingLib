@@ -1,8 +1,6 @@
 package org.screamingsandals.lib.material.attribute;
 
 import lombok.Data;
-import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.UUID;
@@ -13,8 +11,6 @@ public class AttributeModifierHolder implements Wrapper {
     private final String name;
     private final double amount;
     private final Operation operation;
-    @Nullable
-    private final EquipmentSlotHolder slot;
 
     @Override
     public <T> T as(Class<T> type) {

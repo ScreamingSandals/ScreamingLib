@@ -7,6 +7,7 @@ import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
 
@@ -28,6 +29,6 @@ public class MinestomMaterialMapping extends MaterialMapping {
                 .registerP2W(ItemStack.class, stack -> new MaterialHolder(stack.getMaterial().name()))
                 .registerP2W(Block.class, block -> new MaterialHolder(block.getName()));
 
-        Arrays.stream(Material.values()).forEach(material -> materialMapping.put(material.name().toUpperCase(), new MaterialHolder(material.name())));
+        Arrays.stream(Material.values()).forEach(material -> materialMapping.put(NamespacedMappingKey.of(material.getName()), new MaterialHolder(material.name())));
     }
 }

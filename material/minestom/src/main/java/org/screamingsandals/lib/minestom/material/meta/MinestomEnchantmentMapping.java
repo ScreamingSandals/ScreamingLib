@@ -4,6 +4,7 @@ import net.minestom.server.item.Enchantment;
 import org.screamingsandals.lib.material.meta.EnchantmentHolder;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
 
@@ -19,6 +20,6 @@ public class MinestomEnchantmentMapping extends EnchantmentMapping {
                 .registerW2P(Enchantment.class, e -> Enchantment.valueOf(e.getPlatformName()))
                 .registerP2W(Enchantment.class, e -> new EnchantmentHolder(e.name()));
 
-        Arrays.stream(Enchantment.values()).forEach(enchantment -> enchantmentMapping.put(enchantment.name().toUpperCase(), new EnchantmentHolder(enchantment.name())));
+        Arrays.stream(Enchantment.values()).forEach(enchantment -> enchantmentMapping.put(NamespacedMappingKey.of(enchantment.getNamespaceID()), new EnchantmentHolder(enchantment.name())));
     }
 }

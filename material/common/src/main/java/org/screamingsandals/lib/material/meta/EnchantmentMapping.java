@@ -4,6 +4,8 @@ import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.key.MappingKey;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.spongepowered.configurate.ConfigurationNode;
 
 import java.util.HashMap;
@@ -16,9 +18,9 @@ import java.util.regex.Pattern;
 @AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
 public abstract class EnchantmentMapping {
 
-    private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?:(?<namespace>[A-Za-z][A-Za-z0-9_.\\-]*):)?(?<enchantment>[A-Za-z][A-Za-z0-9_.\\-/]*)(\\s+(?<level>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
+    private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?<namespaced>[A-Za-z][A-Za-z0-9_.\\-/:]*)(\\s+(?<level>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
     private static EnchantmentMapping mapping = null;
-    protected final Map<String, EnchantmentHolder> enchantmentMapping = new HashMap<>();
+    protected final Map<MappingKey, EnchantmentHolder> enchantmentMapping = new HashMap<>();
 
     protected BidirectionalConverter<EnchantmentHolder> enchantmentConverter = BidirectionalConverter.<EnchantmentHolder>build()
             .registerW2P(String.class, EnchantmentHolder::getPlatformName)
@@ -63,13 +65,13 @@ public abstract class EnchantmentMapping {
             return Optional.empty();
         }
 
-        if (matcher.group("enchantment") != null) {
+        if (matcher.group("namespaced") != null) {
 
-            String namespace = matcher.group("namespace") != null ? matcher.group("namespace").toUpperCase() : "MINECRAFT";
-            String name = matcher.group("enchantment").toUpperCase();
+            var namespaced = NamespacedMappingKey.of(matcher.group("namespaced"));
+
             String level_str = matcher.group("level");
 
-            if (mapping.enchantmentMapping.containsKey(namespace + ":" + name)) {
+            if (mapping.enchantmentMapping.containsKey(namespaced)) {
                 if (level_str != null && !level_str.isEmpty()) {
                     int level;
                     try {
@@ -77,21 +79,9 @@ public abstract class EnchantmentMapping {
                     } catch (Throwable t) {
                         level = RomanToDecimal.romanToDecimal(level_str);
                     }
-                    return Optional.of(mapping.enchantmentMapping.get(namespace + ":" + name).newLevel(level));
+                    return Optional.of(mapping.enchantmentMapping.get(namespaced).newLevel(level));
                 } else {
-                    return Optional.of(mapping.enchantmentMapping.get(namespace + ":" + name));
-                }
-            } else if (mapping.enchantmentMapping.containsKey(name)) {
-                if (level_str != null && !level_str.isEmpty()) {
-                    int level;
-                    try {
-                        level = Integer.parseInt(level_str);
-                    } catch (Throwable t) {
-                        level = RomanToDecimal.romanToDecimal(level_str);
-                    }
-                    return Optional.of(mapping.enchantmentMapping.get(name).newLevel(level));
-                } else {
-                    return Optional.of(mapping.enchantmentMapping.get(name));
+                    return Optional.of(mapping.enchantmentMapping.get(namespaced));
                 }
             }
         }
@@ -133,14 +123,18 @@ public abstract class EnchantmentMapping {
         f2l("AQUA_AFFINITY", "WATER_WORKER");
     }
 
-    private void f2l(String enchantment, String legacyEnchantments) {
-        if (enchantment == null || legacyEnchantments == null) {
+    private void f2l(String enchantment, String legacyEnchantment) {
+        if (enchantment == null || legacyEnchantment == null) {
             throw new IllegalArgumentException("Both enchantments mustn't be null!");
         }
-        if (enchantmentMapping.containsKey(enchantment.toUpperCase()) && !enchantmentMapping.containsKey(legacyEnchantments.toUpperCase())) {
-            enchantmentMapping.put(legacyEnchantments.toUpperCase(), enchantmentMapping.get(enchantment.toUpperCase()));
-        } else if (enchantmentMapping.containsKey(legacyEnchantments.toUpperCase()) && !enchantmentMapping.containsKey(enchantment.toUpperCase())) {
-            enchantmentMapping.put(enchantment.toUpperCase(), enchantmentMapping.get(legacyEnchantments.toUpperCase()));
+
+        var enchantmentNamespaced = NamespacedMappingKey.of(enchantment);
+        var legacyEnchantmentNamespaced = NamespacedMappingKey.of(legacyEnchantment);
+
+        if (enchantmentMapping.containsKey(enchantmentNamespaced) && !enchantmentMapping.containsKey(legacyEnchantmentNamespaced)) {
+            enchantmentMapping.put(legacyEnchantmentNamespaced, enchantmentMapping.get(enchantmentNamespaced));
+        } else if (enchantmentMapping.containsKey(legacyEnchantmentNamespaced) && !enchantmentMapping.containsKey(enchantmentNamespaced)) {
+            enchantmentMapping.put(enchantmentNamespaced, enchantmentMapping.get(legacyEnchantmentNamespaced));
         }
     }
 

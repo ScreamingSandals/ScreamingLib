@@ -11,6 +11,7 @@ import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
 
@@ -60,7 +61,7 @@ public class BukkitMaterialMapping extends MaterialMapping {
                 .registerP2W(ItemStack.class, stack -> new MaterialHolder(stack.getType().name(), stack.getDurability()));
 
         Arrays.stream(Material.values()).filter(t -> !t.name().startsWith("LEGACY")).forEach(material ->
-                materialMapping.put(material.name().toUpperCase(), new MaterialHolder(material.name()))
+                materialMapping.put(NamespacedMappingKey.of(material.name()), new MaterialHolder(material.name()))
         );
     }
 }

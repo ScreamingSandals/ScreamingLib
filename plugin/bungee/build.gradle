@@ -1,5 +1,5 @@
 dependencies {
     api project(':plugin-common')
     api 'org.apache.logging.log4j:log4j-slf4j-impl:' + LOG4J_VERSION
-    compileOnly bungeecord(BUNGEECORD_VERSION)
+    compileOnly waterfall(WATERFALL_VERSION)
 }

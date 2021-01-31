@@ -6,12 +6,9 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.attribute.AttributeMapping;
-import org.screamingsandals.lib.material.attribute.AttributeModifierHolder;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
-import org.spongepowered.configurate.BasicConfigurationNode;
-import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.List;
 import java.util.Map;
@@ -109,8 +106,8 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder attributeModifier(@NotNull Object attribute) {
-        AttributeMapping.wrapAttributeModifier(attribute).ifPresent(item::addAttributeModifier);
+    public ItemBuilder attribute(@NotNull Object itemAttribute) {
+        AttributeMapping.wrapItemAttribute(itemAttribute).ifPresent(item::addItemAttribute);
         return this;
     }
 

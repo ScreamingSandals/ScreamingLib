@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly bungeecord(BUNGEECORD_VERSION)
+    compileOnly waterfall(WATERFALL_VERSION)
 
     api project(":event-common")
 }
