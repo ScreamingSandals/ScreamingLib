@@ -4,6 +4,7 @@ import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.Keys;
@@ -35,7 +36,7 @@ public class SpongeMaterialMapping extends MaterialMapping {
                 .registerP2W(ItemStack.class, stack -> new MaterialHolder(Sponge.getGame().registries().registry(RegistryTypes.ITEM_TYPE).findValueKey(stack.getType()).orElseThrow().getFormatted(), stack.getOrElse(Keys.ITEM_DURABILITY, 0)));
 
         Sponge.getGame().registries().registry(RegistryTypes.ITEM_TYPE).forEach(itemType ->
-            materialMapping.put(itemType.key().getNamespace().equals(ResourceKey.MINECRAFT_NAMESPACE) ? itemType.key().getValue().toUpperCase() : itemType.key().getFormatted().toUpperCase(), new MaterialHolder(itemType.key().getFormatted()))
+            materialMapping.put(NamespacedMappingKey.of(itemType.key().getFormatted()), new MaterialHolder(itemType.key().getFormatted()))
         );
     }
 }

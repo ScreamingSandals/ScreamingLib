@@ -5,6 +5,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
 
@@ -52,7 +53,7 @@ public class BukkitPotionEffectMapping extends PotionEffectMapping {
 
         Arrays.stream(PotionEffectType.values()).forEach(potionEffectType -> {
             if (potionEffectType != null) { // Yeah, this is possible
-                potionEffectMapping.put(potionEffectType.getName().toUpperCase(), new PotionEffectHolder(potionEffectType.getName()));
+                potionEffectMapping.put(NamespacedMappingKey.of(potionEffectType.getName()), new PotionEffectHolder(potionEffectType.getName()));
             }
         });
     }

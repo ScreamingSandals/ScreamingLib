@@ -5,6 +5,7 @@ import net.minestom.server.potion.PotionEffect;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
 
@@ -36,6 +37,6 @@ public class MinestomPotionEffectMapping extends PotionEffectMapping {
                 ));
 
 
-        Arrays.stream(PotionEffect.values()).forEach(potionEffect -> potionEffectMapping.put(potionEffect.name().toUpperCase(), new PotionEffectHolder(potionEffect.name())));
+        Arrays.stream(PotionEffect.values()).forEach(potionEffect -> potionEffectMapping.put(NamespacedMappingKey.of(potionEffect.getNamespaceID()), new PotionEffectHolder(potionEffect.name())));
     }
 }

@@ -13,12 +13,14 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.screamingsandals.lib.bukkit.material.BukkitMaterialMapping;
 import org.screamingsandals.lib.bukkit.material.attribute.BukkitAttributeMapping;
+import org.screamingsandals.lib.bukkit.material.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.bukkit.material.container.BukkitContainer;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitEnchantmentMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionMapping;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
@@ -56,12 +58,12 @@ public class BukkitItemFactory extends ItemFactory {
                         if (item.getPlatformMeta() instanceof ItemMeta) {
                             try {
                                 stack.setItemMeta((ItemMeta) item.getPlatformMeta());
-                            } catch (Throwable t) {
+                            } catch (Throwable ignored) {
                             }
                         } else if (item.getPlatformMeta() instanceof Map) {
                             try {
                                 stack.setItemMeta((ItemMeta) ConfigurationSerialization.deserializeObject((Map<String, ?>) item.getPlatformMeta()));
-                            } catch (Throwable t) {
+                            } catch (Throwable ignored) {
                             }
                         }
                     }
@@ -116,6 +118,11 @@ public class BukkitItemFactory extends ItemFactory {
                             }
                         }
 
+                        item.getItemAttributes()
+                                .stream()
+                                .map(holder -> holder.as(BukkitItemAttribute.class))
+                                .forEach(holder -> meta.addAttributeModifier(holder.getAttribute(), holder.getAttributeModifier()));
+
                         stack.setItemMeta(meta);
                     }
 
@@ -124,7 +131,7 @@ public class BukkitItemFactory extends ItemFactory {
                 .registerP2W(ItemStack.class, stack -> {
                     Item item = new Item();
                     Optional<MaterialHolder> material = BukkitMaterialMapping.resolve(stack.getType());
-                    if (!material.isPresent()) {
+                    if (material.isEmpty()) {
                         return null; // WHAT??
                     }
                     item.setMaterial(material.get().newDurability(stack.getDurability()));
@@ -175,6 +182,13 @@ public class BukkitItemFactory extends ItemFactory {
                                         .collect(Collectors.toList()));
                             } catch (Throwable ignored) {
                             }
+                        }
+
+                        if (meta.hasAttributeModifiers()) {
+                            meta.getAttributeModifiers().forEach((attribute, attributeModifier) ->
+                                    AttributeMapping.wrapItemAttribute(new BukkitItemAttribute(attribute, attributeModifier))
+                                            .ifPresent(item::addItemAttribute)
+                            );
                         }
                     }
                     return item;

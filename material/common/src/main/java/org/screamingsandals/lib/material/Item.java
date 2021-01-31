@@ -2,7 +2,7 @@ package org.screamingsandals.lib.material;
 
 import lombok.Data;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.material.attribute.AttributeModifierHolder;
+import org.screamingsandals.lib.material.attribute.ItemAttributeHolder;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.meta.EnchantmentHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
@@ -21,7 +21,7 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
     private final List<PotionEffectHolder> potionEffects = new LinkedList<>();
     private final List<String> lore = new LinkedList<>();
     private final List<String> itemFlags = new LinkedList<>();
-    private final List<AttributeModifierHolder> attributeModifiers = new LinkedList<>();
+    private final List<ItemAttributeHolder> itemAttributes = new LinkedList<>();
     //@Nullable // in initial state it's null
     private MaterialHolder material;
     @Nullable
@@ -56,7 +56,7 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
         item.getItemFlags().addAll(itemFlags);
         item.getPotionEffects().addAll(potionEffects);
         item.getEnchantments().addAll(enchantments);
-        item.getAttributeModifiers().addAll(attributeModifiers);
+        item.getItemAttributes().addAll(itemAttributes);
         item.setMaterial(material);
         item.setDisplayName(displayName);
         item.setLocalizedName(localizedName);
@@ -73,8 +73,8 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
         potionEffects.add(holder);
     }
 
-    public void addAttributeModifier(AttributeModifierHolder holder) {
-        attributeModifiers.add(holder);
+    public void addItemAttribute(ItemAttributeHolder holder) {
+        itemAttributes.add(holder);
     }
 
     public void addEnchant(EnchantmentHolder holder) {
@@ -105,6 +105,6 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
                 && itemFlags.equals(item.itemFlags)
                 && Objects.equals(item.potion, potion)
                 && potionEffects.equals(item.potionEffects)
-                && attributeModifiers.equals(item.attributeModifiers);
+                && itemAttributes.equals(item.itemAttributes);
     }
 }

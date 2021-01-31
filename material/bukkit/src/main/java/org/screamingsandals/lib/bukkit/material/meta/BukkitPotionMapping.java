@@ -7,6 +7,7 @@ import org.bukkit.potion.PotionType;
 import org.screamingsandals.lib.material.meta.PotionHolder;
 import org.screamingsandals.lib.material.meta.PotionMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
 
@@ -59,12 +60,12 @@ public class BukkitPotionMapping extends PotionMapping {
                 });
 
         Arrays.stream(PotionType.values()).forEach(potion -> {
-            potionMapping.put(potion.name().toUpperCase(), new PotionHolder(potion.name()));
+            potionMapping.put(NamespacedMappingKey.of(potion.name()), new PotionHolder(potion.name()));
             if (potion.isExtendable()) {
-                potionMapping.put("LONG_" + potion.name().toUpperCase(), new PotionHolder("LONG_" + potion.name()));
+                potionMapping.put(NamespacedMappingKey.of("long_" + potion.name()), new PotionHolder("LONG_" + potion.name()));
             }
             if (potion.isUpgradeable()) {
-                potionMapping.put("STRONG_" + potion.name().toUpperCase(), new PotionHolder("STRONG_" + potion.name()));
+                potionMapping.put(NamespacedMappingKey.of("strong_" + potion.name()), new PotionHolder("STRONG_" + potion.name()));
             }
         });
     }

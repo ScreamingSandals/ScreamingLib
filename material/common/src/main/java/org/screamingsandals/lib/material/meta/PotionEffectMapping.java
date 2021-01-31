@@ -4,6 +4,8 @@ import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.key.MappingKey;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -19,7 +21,7 @@ import java.util.regex.Pattern;
 @AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
 public class PotionEffectMapping {
 
-    private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?:(?<namespace>[A-Za-z][A-Za-z0-9_.\\-]*):)?(?<duration>[A-Za-z][A-Za-z0-9_.\\-/]*)(\\s+(?<level>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
+    private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?<namespaced>[A-Za-z0-9_.\\-/:]+)(\\s+(?<duration>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
     private static final Function<ConfigurationNode, PotionEffectHolder> CONFIGURATE_METHOD = node -> {
         var effectNode = node.node("effect");
         var durationNode = node.node("duration");
@@ -41,7 +43,7 @@ public class PotionEffectMapping {
         return null;
     };
     private static PotionEffectMapping mapping = null;
-    protected final Map<String, PotionEffectHolder> potionEffectMapping = new HashMap<>();
+    protected final Map<MappingKey, PotionEffectHolder> potionEffectMapping = new HashMap<>();
 
     protected BidirectionalConverter<PotionEffectHolder> potionEffectConverter = BidirectionalConverter.<PotionEffectHolder>build()
             .registerW2P(String.class, PotionEffectHolder::getPlatformName)
@@ -64,21 +66,21 @@ public class PotionEffectMapping {
         if (opt.isPresent()) {
             return opt;
         }
-        String enchantment = potionEffectObject.toString().trim();
+        String potionEffect = potionEffectObject.toString().trim();
 
-        Matcher matcher = RESOLUTION_PATTERN.matcher(enchantment);
+        Matcher matcher = RESOLUTION_PATTERN.matcher(potionEffect);
 
         if (!matcher.matches()) {
             return Optional.empty();
         }
 
-        if (matcher.group("effect") != null) {
+        if (matcher.group("namespaced") != null) {
 
-            String namespace = matcher.group("namespace") != null ? matcher.group("namespace").toUpperCase() : "MINECRAFT";
-            String name = matcher.group("effect").toUpperCase();
-            String duration_str = matcher.group("duration");
+            var namespaced = NamespacedMappingKey.of(matcher.group("namespaced"));
 
-            if (mapping.potionEffectMapping.containsKey(namespace + ":" + name)) {
+            var duration_str = matcher.group("duration");
+
+            if (mapping.potionEffectMapping.containsKey(namespaced)) {
                 if (duration_str != null && !duration_str.isEmpty()) {
                     int duration;
                     try {
@@ -86,21 +88,9 @@ public class PotionEffectMapping {
                     } catch (Throwable t) {
                         duration = RomanToDecimal.romanToDecimal(duration_str);
                     }
-                    return Optional.of(mapping.potionEffectMapping.get(namespace + ":" + name).duration(duration));
+                    return Optional.of(mapping.potionEffectMapping.get(namespaced).duration(duration));
                 } else {
-                    return Optional.of(mapping.potionEffectMapping.get(namespace + ":" + name));
-                }
-            } else if (mapping.potionEffectMapping.containsKey(name)) {
-                if (duration_str != null && !duration_str.isEmpty()) {
-                    int duration;
-                    try {
-                        duration = Integer.parseInt(duration_str);
-                    } catch (Throwable t) {
-                        duration = RomanToDecimal.romanToDecimal(duration_str);
-                    }
-                    return Optional.of(mapping.potionEffectMapping.get(name).duration(duration));
-                } else {
-                    return Optional.of(mapping.potionEffectMapping.get(name));
+                    return Optional.of(mapping.potionEffectMapping.get(namespaced));
                 }
             }
         }
@@ -136,10 +126,14 @@ public class PotionEffectMapping {
         if (potionEffect == null || legacyPotionEffect == null) {
             throw new IllegalArgumentException("Both effects mustn't be null!");
         }
-        if (potionEffectMapping.containsKey(potionEffect.toUpperCase()) && !potionEffectMapping.containsKey(legacyPotionEffect.toUpperCase())) {
-            potionEffectMapping.put(legacyPotionEffect.toUpperCase(), potionEffectMapping.get(potionEffect.toUpperCase()));
-        } else if (potionEffectMapping.containsKey(legacyPotionEffect.toUpperCase()) && !potionEffectMapping.containsKey(potionEffect.toUpperCase())) {
-            potionEffectMapping.put(potionEffect.toUpperCase(), potionEffectMapping.get(legacyPotionEffect.toUpperCase()));
+
+        var potionEffectNamespaced = NamespacedMappingKey.of(potionEffect);
+        var legacyPotionEffectNamespaced = NamespacedMappingKey.of(legacyPotionEffect);
+
+        if (potionEffectMapping.containsKey(potionEffectNamespaced) && !potionEffectMapping.containsKey(legacyPotionEffectNamespaced)) {
+            potionEffectMapping.put(legacyPotionEffectNamespaced, potionEffectMapping.get(potionEffectNamespaced));
+        } else if (potionEffectMapping.containsKey(legacyPotionEffectNamespaced) && !potionEffectMapping.containsKey(potionEffectNamespaced)) {
+            potionEffectMapping.put(potionEffectNamespaced, potionEffectMapping.get(legacyPotionEffectNamespaced));
         }
     }
 

@@ -3,6 +3,7 @@ package org.screamingsandals.lib.sponge.material.meta;
 import org.screamingsandals.lib.material.meta.EnchantmentHolder;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.item.enchantment.Enchantment;
@@ -23,7 +24,7 @@ public class SpongeEnchantmentMapping extends EnchantmentMapping {
                 .registerP2W(EnchantmentType.class, e -> new EnchantmentHolder(Sponge.getGame().registries().registry(RegistryTypes.ENCHANTMENT_TYPE).findValueKey(e).orElseThrow().value()));
 
         Sponge.getGame().registries().registry(RegistryTypes.ENCHANTMENT_TYPE).forEach(itemType ->
-                enchantmentMapping.put(itemType.key().getNamespace().equals(ResourceKey.MINECRAFT_NAMESPACE) ? itemType.key().getValue().toUpperCase() : itemType.key().getFormatted().toUpperCase(), new EnchantmentHolder(itemType.key().getFormatted()))
+                enchantmentMapping.put(NamespacedMappingKey.of(itemType.key().getFormatted()), new EnchantmentHolder(itemType.key().getFormatted()))
         );
     }
 }

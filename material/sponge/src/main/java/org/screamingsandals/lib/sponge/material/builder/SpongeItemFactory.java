@@ -2,24 +2,30 @@ package org.screamingsandals.lib.sponge.material.builder;
 
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.material.attribute.AttributeMapping;
+import org.screamingsandals.lib.material.attribute.AttributeTypeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
 import org.screamingsandals.lib.sponge.material.SpongeMaterialMapping;
 import org.screamingsandals.lib.sponge.material.attribute.SpongeAttributeMapping;
+import org.screamingsandals.lib.sponge.material.attribute.SpongeItemAttribute;
 import org.screamingsandals.lib.sponge.material.container.SpongeContainer;
 import org.screamingsandals.lib.sponge.material.meta.SpongeEnchantmentMapping;
 import org.screamingsandals.lib.sponge.material.meta.SpongePotionEffectMapping;
 import org.screamingsandals.lib.sponge.material.meta.SpongePotionMapping;
 import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.Keys;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.item.enchantment.Enchantment;
 import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.equipment.EquipmentType;
 import org.spongepowered.api.item.potion.PotionType;
+import org.spongepowered.api.registry.RegistryTypes;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -89,6 +95,11 @@ public class SpongeItemFactory extends ItemFactory {
                         stack.offer(Keys.HIDE_MISCELLANEOUS, item.getItemFlags().contains("HIDE_POTION_EFFECTS"));
                         stack.offer(Keys.HIDE_UNBREAKABLE, item.getItemFlags().contains("HIDE_UNBREAKABLE"));
                     }
+                    item.getItemAttributes().stream()
+                            .map(holder -> holder.as(SpongeItemAttribute.class))
+                            .forEach(attribute ->
+                                    stack.addAttributeModifier(attribute.getAttribute(), attribute.getAttributeModifier(), attribute.getEquipmentSlot())
+                            );
 
                     return stack;
                 })
@@ -165,7 +176,16 @@ public class SpongeItemFactory extends ItemFactory {
                                 .map(Optional::get)
                                 .collect(Collectors.toList()))
                     );
-
+                    Sponge.getGame().registries().registry(RegistryTypes.ATTRIBUTE_TYPE).forEach(attributeType ->
+                        Sponge.getGame().registries().registry(RegistryTypes.EQUIPMENT_TYPE).forEach(equipmentType ->
+                            stack.getAttributeModifiers(attributeType.value(), equipmentType.value())
+                                .forEach(attributeModifier ->
+                                        AttributeMapping.
+                                                wrapItemAttribute(new SpongeItemAttribute(attributeType.value(), attributeModifier, equipmentType.value()))
+                                                .ifPresent(item::addItemAttribute)
+                                )
+                        )
+                    );
                     return item;
 
                 })
