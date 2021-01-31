@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.MathUtils;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.math.Vector3D;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.UUID;
@@ -28,6 +29,38 @@ public class LocationHolder implements Wrapper {
         this.z = z;
     }
 
+    public LocationHolder add(double x, double y, double z) {
+        final var clone = clone();
+        clone.x += x;
+        clone.y += y;
+        clone.z += z;
+        return clone;
+    }
+
+    public LocationHolder add(LocationHolder holder) {
+        return add(holder.getX(), holder.getY(), holder.getZ());
+    }
+
+    public LocationHolder add(Vector3D vec) {
+        return add(vec.getX(), vec.getY(), vec.getZ());
+    }
+
+    public LocationHolder remove(double x, double y, double z) {
+        final var clone = clone();
+        clone.x -= x;
+        clone.y -= y;
+        clone.z -= z;
+        return clone;
+    }
+
+    public LocationHolder remove(LocationHolder holder) {
+        return remove(holder.getX(), holder.getY(), holder.getZ());
+    }
+
+    public LocationHolder remove(Vector3D vec) {
+        return remove(vec.getX(), vec.getY(), vec.getZ());
+    }
+
     @Override
     public <T> T as(Class<T> type) {
         return LocationMapper.convert(this, type);
@@ -37,5 +70,18 @@ public class LocationHolder implements Wrapper {
         return MathUtils.square(getX() - holder.getX()) +
                 MathUtils.square(getY() - holder.getY()) +
                 MathUtils.square(getZ() - holder.getZ());
+    }
+
+    @Override
+    public LocationHolder clone() {
+        final var location = new LocationHolder();
+        location.setX(getX());
+        location.setY(getY());
+        location.setZ(getZ());
+        location.setPitch(getPitch());
+        location.setYaw(getYaw());
+        location.setWorldId(getWorldId());
+
+        return location;
     }
 }
