@@ -25,7 +25,6 @@ public abstract class AttributeTypeMapping {
         }
 
         attributeTypeMapping = supplier.get();
-        attributeTypeMapping.attributeTypeConverter.finish();
     }
 
     public static Optional<AttributeTypeHolder> resolve(Object entity) {

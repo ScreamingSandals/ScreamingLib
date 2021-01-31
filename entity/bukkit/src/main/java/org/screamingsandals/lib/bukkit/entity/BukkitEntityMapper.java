@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.bukkit.entity;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityTypeMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
@@ -38,8 +39,12 @@ public class BukkitEntityMapper extends EntityMapper {
         // order is important here
         if (entity instanceof LivingEntity) {
             return Optional.of(new BukkitEntityLiving((LivingEntity) entity));
-        } else {
-            return Optional.of(new BukkitEntityBasic((Entity) entity));
         }
+
+        if (entity instanceof Item) {
+            return Optional.of(new BukkitEntityItem((Item) entity));
+        }
+
+        return Optional.of(new BukkitEntityBasic((Entity) entity));
     }
 }

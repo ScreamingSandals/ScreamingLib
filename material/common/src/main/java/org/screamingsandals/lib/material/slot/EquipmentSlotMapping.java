@@ -23,7 +23,6 @@ public abstract class EquipmentSlotMapping {
         }
 
         equipmentSlotMapping = supplier.get();
-        equipmentSlotMapping.equipmentSlotConverter.finish();
         equipmentSlotMapping.legacyMapping();
     }
 

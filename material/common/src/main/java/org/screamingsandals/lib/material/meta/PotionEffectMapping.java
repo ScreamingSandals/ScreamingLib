@@ -115,7 +115,6 @@ public class PotionEffectMapping {
         }
 
         mapping = mappingClass.get();
-        mapping.potionEffectConverter.finish();
 
         mapping.legacyMapping();
     }

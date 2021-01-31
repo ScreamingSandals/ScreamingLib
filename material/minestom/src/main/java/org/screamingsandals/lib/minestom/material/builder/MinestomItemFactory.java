@@ -25,6 +25,7 @@ import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -110,7 +111,7 @@ public class MinestomItemFactory extends ItemFactory {
                     }
                     if (stack.hasDisplayName()) {
                         //TODO
-                        item.setDisplayName(stack.getDisplayName().getRawMessage());
+                        item.setDisplayName(Objects.requireNonNull(stack.getDisplayName()).getRawMessage());
                     }
                     // localized name
                     item.setCustomModelData(stack.getCustomModelData());

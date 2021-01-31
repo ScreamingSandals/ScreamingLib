@@ -1,5 +1,7 @@
 package org.screamingsandals.lib.utils;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -8,14 +10,15 @@ import java.util.function.Supplier;
  *
  * @see org.screamingsandals.lib.utils.annotations.Service
  */
+@UtilityClass
 public class InitUtils {
-    public static void doIf(Supplier<Boolean> booleanSupplier, Runnable runnable) {
+    public void doIf(Supplier<Boolean> booleanSupplier, Runnable runnable) {
         if (booleanSupplier.get()) {
             runnable.run();
         }
     }
 
-    public static void doIf(Supplier<Boolean> booleanSupplier, Runnable runnable, Runnable elseRunnable) {
+    public void doIf(Supplier<Boolean> booleanSupplier, Runnable runnable, Runnable elseRunnable) {
         if (booleanSupplier.get()) {
             runnable.run();
         } else {
@@ -23,13 +26,13 @@ public class InitUtils {
         }
     }
 
-    public static void doIfNot(Supplier<Boolean> booleanSupplier, Runnable runnable) {
+    public void doIfNot(Supplier<Boolean> booleanSupplier, Runnable runnable) {
         if (!booleanSupplier.get()) {
             runnable.run();
         }
     }
 
-    public static void doIfNot(Supplier<Boolean> booleanSupplier, Runnable runnable, Runnable elseRunnable) {
+    public void doIfNot(Supplier<Boolean> booleanSupplier, Runnable runnable, Runnable elseRunnable) {
         if (!booleanSupplier.get()) {
             runnable.run();
         } else {
@@ -38,14 +41,14 @@ public class InitUtils {
     }
 
     /**
-     * Creates plugin less environment for initializing services.
+     * Creates plugin-less environment for initializing services.
      * Don't use if you are using screaming-annotation processor.
      * After init, it automatically executes the enable state.
      *
      * @param consumer that consumes Controllable instance
      * @return the created Controllable instance
      */
-    public static ControllableImpl pluginlessEnvironment(Consumer<Controllable> consumer) {
+    public ControllableImpl pluginlessEnvironment(Consumer<Controllable> consumer) {
         var controllable = new ControllableImpl();
         consumer.accept(controllable);
         controllable.enable();

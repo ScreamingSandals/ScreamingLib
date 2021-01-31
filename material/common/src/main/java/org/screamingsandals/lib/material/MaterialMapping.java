@@ -103,7 +103,6 @@ public abstract class MaterialMapping {
         }
 
         mapping = materialMapping.get();
-        mapping.materialConverter.finish();
 
         /*
         if server is running Java Edition Post-Flattening version, flattening remappings have to been applied first

@@ -35,9 +35,6 @@ public abstract class PlayerMapper {
                 .registerW2P(Audience.class, platform -> playerMapper.getAudience(platform, playerMapper.provider));
         final var senderConverter = playerMapper.senderConverter
                 .registerW2P(Audience.class, platform -> playerMapper.getAudience(platform, playerMapper.provider));
-
-        playerConverter.finish();
-        senderConverter.finish();
     }
 
     public static boolean isInitialized() {
@@ -46,98 +43,98 @@ public abstract class PlayerMapper {
 
     public static <T> PlayerWrapper wrapPlayer(T player) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.playerConverter.convert(player);
     }
 
     public static <T> SenderWrapper wrapSender(T sender) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.senderConverter.convert(sender);
     }
 
     public static <T> PlayerWrapper.Hand wrapHand(T hand) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.handConverter.convert(hand);
     }
 
     public static <T> T convertHand(PlayerWrapper.Hand hand, Class<T> type) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.handConverter.convert(hand, type);
     }
 
     public static <T> T convertSenderWrapper(SenderWrapper wrapper, Class<T> type) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.senderConverter.convert(wrapper, type);
     }
 
     public static <T> T convertPlayerWrapper(PlayerWrapper player, Class<T> type) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.playerConverter.convert(player, type);
     }
 
     public static void sendMessage(SenderWrapper playerWrapper, String message) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         playerMapper.sendMessage0(playerWrapper, message);
     }
 
     public static void closeInventory(PlayerWrapper playerWrapper) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         playerMapper.closeInventory0(playerWrapper);
     }
 
     public static Container getPlayerInventory(PlayerWrapper playerWrapper) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.getPlayerInventory0(playerWrapper);
     }
 
     public static Optional<Container> getOpenedInventory(PlayerWrapper playerWrapper) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.getOpenedInventory0(playerWrapper);
     }
 
     public static LocationHolder getLocation(PlayerWrapper wrapper) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.getLocation0(wrapper);
     }
 
     public static void teleport(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         playerMapper.teleport0(wrapper, location, callback);
     }
 
     public static void kick(PlayerWrapper wrapper, Component message) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper is not initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         playerMapper.kick0(wrapper, message);
     }
 
     public static Optional<PlayerWrapper> getPlayer(String name) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper aren't initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.getPlayer0(name);
     }
@@ -146,7 +143,7 @@ public abstract class PlayerMapper {
 
     public static Optional<PlayerWrapper> getPlayer(UUID uuid) {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper aren't initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.getPlayer0(uuid);
     }
@@ -155,16 +152,24 @@ public abstract class PlayerMapper {
 
     public static List<PlayerWrapper> getPlayers() {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper aren't initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.getPlayers0();
     }
 
     public static SenderWrapper getConsoleSender() {
         if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper aren't initialized yet.");
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.getConsoleSender0();
+    }
+    
+    public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        
+        return playerMapper.playerConverter;
     }
 
     public abstract SenderWrapper getConsoleSender0();

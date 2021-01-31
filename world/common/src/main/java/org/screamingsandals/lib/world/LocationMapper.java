@@ -42,7 +42,6 @@ public abstract class LocationMapper {
         }
 
         mapping = mappingSupplier.get();
-        mapping.converter.finish();
         initialized = true;
     }
 

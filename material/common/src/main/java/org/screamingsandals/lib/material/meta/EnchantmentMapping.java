@@ -106,7 +106,6 @@ public abstract class EnchantmentMapping {
         }
 
         mapping = mappingClass.get();
-        mapping.enchantmentConverter.finish();
 
         mapping.legacyMapping();
     }

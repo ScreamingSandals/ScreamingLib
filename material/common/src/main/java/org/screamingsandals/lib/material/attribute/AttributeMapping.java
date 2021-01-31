@@ -36,7 +36,6 @@ public abstract class AttributeMapping {
         }
 
         attributeMapping = supplier.get();
-        attributeMapping.attributeModifierConverter.finish();
     }
 
     public static Optional<AttributeHolder> wrapAttribute(Object attribute) {

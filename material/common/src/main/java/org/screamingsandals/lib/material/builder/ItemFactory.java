@@ -184,8 +184,6 @@ public abstract class ItemFactory {
         assert PotionMapping.isInitialized();
         assert EnchantmentMapping.isInitialized();
         assert PotionEffectMapping.isInitialized();
-
-        factory.itemConverter.finish();
     }
 
     public static ItemBuilder builder() {

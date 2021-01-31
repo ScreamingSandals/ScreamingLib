@@ -25,8 +25,6 @@ public abstract class EntityTypeMapping {
         }
 
         entityTypeMapping = supplier.get();
-        entityTypeMapping.entityTypeConverter.finish();
-
         entityTypeMapping.legacyMapping();
     }
 

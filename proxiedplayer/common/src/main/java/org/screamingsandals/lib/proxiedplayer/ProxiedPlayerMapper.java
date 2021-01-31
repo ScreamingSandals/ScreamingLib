@@ -23,9 +23,6 @@ public abstract class ProxiedPlayerMapper {
         }
 
         proxiedPlayerUtils = proxiedPlayerUtilsSupplier.get();
-        proxiedPlayerUtils.playerConverter.finish();
-        proxiedPlayerUtils.senderConverter.finish();
-        proxiedPlayerUtils.serverConverter.finish();
     }
 
     public static <T> ProxiedPlayerWrapper wrapPlayer(T player) {

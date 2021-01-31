@@ -14,6 +14,11 @@ public class InstancedBlockPosition extends BlockPosition {
         this.instance = instance;
     }
 
+    public InstancedBlockPosition(Instance instance, BlockPosition position) {
+        super(position.getX(), position.getY(), position.getZ());
+        this.instance = instance;
+    }
+
     public InstancedBlockPosition(Instance instance, double x, double y, double z) {
         super(x, y, z);
         this.instance = instance;

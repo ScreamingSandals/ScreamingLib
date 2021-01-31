@@ -49,7 +49,6 @@ public abstract class BlockMapper {
         }
 
         mapping = mappingSupplier.get();
-        mapping.converter.finish();
         initialized = true;
     }
 

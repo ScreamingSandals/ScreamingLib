@@ -27,7 +27,6 @@ public class PotionMapping {
         }
 
         mapping = potionMapping.get();
-        mapping.potionConverter.finish();
 
         mapping.bukkit2minecraftMapping();
     }

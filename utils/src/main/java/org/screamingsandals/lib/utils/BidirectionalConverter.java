@@ -18,27 +18,16 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
     private final Map<Class<?>, Function<Object, SpecificWrapper>> p2wConverters = new HashMap<>();
     private final Map<Class<?>, Function<SpecificWrapper, Object>> w2pConverters = new HashMap<>();
     private Class<?> normalizeType;
-    private boolean finished = false;
-
-    public void finish() {
-        finished = true;
-    }
 
     @SuppressWarnings("unchecked")
     @NotNull
     public <P> BidirectionalConverter<SpecificWrapper> registerW2P(@NotNull Class<P> type, @NotNull Function<SpecificWrapper, P> convertor) {
-        if (finished) {
-            throw new UnsupportedOperationException("Converter has been already fully initialized!");
-        }
         w2pConverters.put(type, (Function<SpecificWrapper, Object>) convertor);
         return this;
     }
 
     @NotNull
     public <P> BidirectionalConverter<SpecificWrapper> normalizeType(Class<P> type) {
-        if (finished) {
-            throw new UnsupportedOperationException("Converter has been already fully initialized!");
-        }
         normalizeType = type;
         return this;
     }
@@ -46,9 +35,6 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
     @SuppressWarnings("unchecked")
     @NotNull
     public <P> BidirectionalConverter<SpecificWrapper> registerP2W(@NotNull Class<P> type, @NotNull Function<P, SpecificWrapper> convertor) {
-        if (finished) {
-            throw new UnsupportedOperationException("Converter has been already fully initialized!");
-        }
         p2wConverters.put(type, (Function<Object, SpecificWrapper>) convertor);
         return this;
     }
