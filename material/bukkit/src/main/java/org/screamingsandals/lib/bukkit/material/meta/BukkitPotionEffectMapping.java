@@ -53,7 +53,7 @@ public class BukkitPotionEffectMapping extends PotionEffectMapping {
 
         Arrays.stream(PotionEffectType.values()).forEach(potionEffectType -> {
             if (potionEffectType != null) { // Yeah, this is possible
-                potionEffectMapping.put(NamespacedMappingKey.of(potionEffectType.getName()), new PotionEffectHolder(potionEffectType.getName()));
+                mapping.put(NamespacedMappingKey.of(potionEffectType.getName()), new PotionEffectHolder(potionEffectType.getName()));
             }
         });
     }

@@ -6,106 +6,102 @@ import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.key.ComplexMappingKey;
-import org.screamingsandals.lib.utils.key.MappingKey;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.key.NumericMappingKey;
+import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @AbstractService
-public abstract class MaterialMapping {
+public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder> {
     @Getter
     protected Platform platform;
-    protected final Map<MappingKey, MaterialHolder> materialMapping = new HashMap<>();
     protected final List<MappingFlags> mappingFlags = new ArrayList<>();
     protected BidirectionalConverter<MaterialHolder> materialConverter = BidirectionalConverter.<MaterialHolder>build()
             .registerW2P(String.class, MaterialHolder::getPlatformName)
             .registerP2W(MaterialHolder.class, e -> e);
 
-    private static MaterialMapping mapping = null;
+    private static MaterialMapping materialMapping = null;
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?::)?(?<durability>\\d+)?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
 
     public static Optional<MaterialHolder> resolve(Object materialObject) {
-        if (mapping == null) {
+        if (materialMapping == null) {
             throw new UnsupportedOperationException("Material mapping is not initialized yet.");
         }
-        Optional<MaterialHolder> opt = mapping.materialConverter.convertOptional(materialObject);
-        if (opt.isPresent()) {
-            return opt;
-        }
-
         if (materialObject == null) {
             return Optional.empty();
         }
 
-        String material = materialObject.toString().trim();
+        return materialMapping.materialConverter.convertOptional(materialObject).or(() -> {
+            var material = materialObject.toString().trim();
 
-        Matcher matcher = RESOLUTION_PATTERN.matcher(material);
+            var matcher = RESOLUTION_PATTERN.matcher(material);
 
-        if (!matcher.matches()) {
-            return Optional.empty();
-        }
+            if (matcher.matches()) {
+                if (matcher.group("namespaced") != null) {
 
-        if (matcher.group("namespaced") != null) {
+                    var namespaced = NamespacedMappingKey.of(matcher.group("namespaced"));
 
-            var namespaced = NamespacedMappingKey.of(matcher.group("namespaced"));
+                    Integer data = null;
+                    try {
+                        data = Integer.parseInt(matcher.group("durability"));
+                    } catch (NumberFormatException ignored) {
+                    }
 
-            Integer data = null;
-            try {
-                data = Integer.parseInt(matcher.group("durability"));
-            } catch (NumberFormatException ignored) {}
+                    if (data != null) {
+                        var namespacedDurability = ComplexMappingKey.of(namespaced, NumericMappingKey.of(data));
 
-            if (data != null) {
-                var namespacedDurability = ComplexMappingKey.of(namespaced, NumericMappingKey.of(data));
+                        if (materialMapping.mapping.containsKey(namespacedDurability)) {
+                            return Optional.of(materialMapping.mapping.get(namespacedDurability));
+                        } else if (materialMapping.mapping.containsKey(namespaced)) {
+                            MaterialHolder holder = materialMapping.mapping.get(namespaced);
+                            return Optional.of(holder.newDurability(data));
+                        }
+                    } else if (materialMapping.mapping.containsKey(namespaced)) {
+                        return Optional.of(materialMapping.mapping.get(namespaced));
+                    }
+                } else if (matcher.group("id") != null) {
+                    try {
+                        var id = Integer.parseInt(matcher.group("id"));
+                        int data = 0;
+                        try {
+                            data = Integer.parseInt(matcher.group("data"));
+                        } catch (NumberFormatException ignored) {
+                        }
 
-                if (mapping.materialMapping.containsKey(namespacedDurability)) {
-                    return Optional.of(mapping.materialMapping.get(namespacedDurability));
-                } else if (mapping.materialMapping.containsKey(namespaced)) {
-                    MaterialHolder holder = mapping.materialMapping.get(namespaced);
-                    return Optional.of(holder.newDurability(data));
+                        var keyWithData = ComplexMappingKey.of(NumericMappingKey.of(id), NumericMappingKey.of(data));
+                        var key = NumericMappingKey.of(id);
+
+                        if (materialMapping.mapping.containsKey(keyWithData)) {
+                            return Optional.of(materialMapping.mapping.get(keyWithData));
+                        } else if (materialMapping.mapping.containsKey(key)) {
+                            MaterialHolder holder = materialMapping.mapping.get(key);
+                            return Optional.of(holder.newDurability(data));
+                        }
+                    } catch (NumberFormatException ignored) {
+                    }
                 }
-            } else if (mapping.materialMapping.containsKey(namespaced)) {
-                return Optional.of(mapping.materialMapping.get(namespaced));
             }
-        } else if (matcher.group("id") != null) {
-            try {
-                var id = Integer.parseInt(matcher.group("id"));
-                int data = 0;
-                try {
-                    data = Integer.parseInt(matcher.group("data"));
-                } catch (NumberFormatException ignored) {}
-
-                var keyWithData = ComplexMappingKey.of(NumericMappingKey.of(id), NumericMappingKey.of(data));
-                var key = NumericMappingKey.of(id);
-
-                if (mapping.materialMapping.containsKey(keyWithData)) {
-                    return Optional.of(mapping.materialMapping.get(keyWithData));
-                } else if (mapping.materialMapping.containsKey(key)) {
-                    MaterialHolder holder = mapping.materialMapping.get(key);
-                    return Optional.of(holder.newDurability(data));
-                }
-            } catch (NumberFormatException ignored) {}
-        }
-        return Optional.empty();
+            return Optional.empty();
+        });
     }
 
     public static <T> T convertMaterialHolder(MaterialHolder holder, Class<T> newType) {
-        if (mapping == null) {
+        if (materialMapping == null) {
             throw new UnsupportedOperationException("Material mapping is not initialized yet.");
         }
-        return mapping.materialConverter.convert(holder, newType);
+        return materialMapping.materialConverter.convert(holder, newType);
     }
 
     @SneakyThrows
-    public static void init(Supplier<MaterialMapping> materialMapping) {
-        if (mapping != null) {
+    public static void init(Supplier<MaterialMapping> materialMappingSupplier) {
+        if (materialMapping != null) {
             throw new UnsupportedOperationException("Material mapping is already initialized.");
         }
 
-        mapping = materialMapping.get();
+        materialMapping = materialMappingSupplier.get();
 
         /*
         if server is running Java Edition Post-Flattening version, flattening remappings have to been applied first
@@ -113,15 +109,15 @@ public abstract class MaterialMapping {
 
         The reason why the order is important is due to often renaming java flattening names
         */
-        if (mapping.getPlatform() == Platform.JAVA_FLATTENING) {
-            mapping.flatteningMapping();
+        if (materialMapping.getPlatform() == Platform.JAVA_FLATTENING) {
+            materialMapping.flatteningMapping();
         }
 
-        if (mapping.getPlatform().name().startsWith("JAVA")) {
-            mapping.flatteningLegacyMappingJava();
+        if (materialMapping.getPlatform().name().startsWith("JAVA")) {
+            materialMapping.flatteningLegacyMappingJava();
 
-            if (mapping.getPlatform() != Platform.JAVA_FLATTENING) {
-                mapping.flatteningMapping();
+            if (materialMapping.getPlatform() != Platform.JAVA_FLATTENING) {
+                materialMapping.flatteningMapping();
             }
         }
     }
@@ -811,39 +807,24 @@ public abstract class MaterialMapping {
 
     private void flatteningMapping() {
         // Flattening remapping
-        f2f("ZOMBIFIED_PIGLIN_SPAWN_EGG", "ZOMBIE_PIGMAN_SPAWN_EGG");
-        f2f("SMOOTH_STONE_SLAB", "STONE_SLAB");
-        f2f("GREEN_DYE", "CACTUS_GREEN");
-        f2f("YELLOW_DYE", "DANDELION_YELLOW");
-        f2f("RED_DYE", "ROSE_RED");
-        f2f("OAK_SIGN", "SIGN");
-        f2f("BIRCH_SIGN", "SIGN");
-        f2f("DARK_OAK_SIGN", "SIGN");
-        f2f("JUNGLE_SIGN", "SIGN");
-        f2f("SPRUCE_SIGN", "SIGN");
-        f2f("ACACIA_SIGN", "SIGN");
-        f2f("OAK_WALL_SIGN", "SIGN");
-        f2f("BIRCH_WALL_SIGN", "SIGN");
-        f2f("BIRCH_WALL_SIGN", "SIGN");
-        f2f("DARK_OAK_WALL_SIGN", "SIGN");
-        f2f("JUNGLE_WALL_SIGN", "SIGN");
-        f2f("SPRUCE_WALL_SIGN", "SIGN");
-        f2f("ACACIA_WALL_SIGN", "SIGN");
-    }
-
-    private void f2f(String material, String material2) {
-        if (material == null || material2 == null) {
-            throw new IllegalArgumentException("Both materials mustn't be null!");
-        }
-
-        var materialNamespaced = NamespacedMappingKey.of(material);
-        var material2Namespaced = NamespacedMappingKey.of(material2);
-
-        if (materialMapping.containsKey(materialNamespaced) && !materialMapping.containsKey(material2Namespaced)) {
-            materialMapping.put(material2Namespaced, materialMapping.get(materialNamespaced));
-        } else if (materialMapping.containsKey(material2Namespaced) && !materialMapping.containsKey(materialNamespaced)) {
-            materialMapping.put(materialNamespaced, materialMapping.get(material2Namespaced));
-        }
+        mapAlias("ZOMBIFIED_PIGLIN_SPAWN_EGG", "ZOMBIE_PIGMAN_SPAWN_EGG");
+        mapAlias("SMOOTH_STONE_SLAB", "STONE_SLAB");
+        mapAlias("GREEN_DYE", "CACTUS_GREEN");
+        mapAlias("YELLOW_DYE", "DANDELION_YELLOW");
+        mapAlias("RED_DYE", "ROSE_RED");
+        mapAlias("OAK_SIGN", "SIGN");
+        mapAlias("BIRCH_SIGN", "SIGN");
+        mapAlias("DARK_OAK_SIGN", "SIGN");
+        mapAlias("JUNGLE_SIGN", "SIGN");
+        mapAlias("SPRUCE_SIGN", "SIGN");
+        mapAlias("ACACIA_SIGN", "SIGN");
+        mapAlias("OAK_WALL_SIGN", "SIGN");
+        mapAlias("BIRCH_WALL_SIGN", "SIGN");
+        mapAlias("BIRCH_WALL_SIGN", "SIGN");
+        mapAlias("DARK_OAK_WALL_SIGN", "SIGN");
+        mapAlias("JUNGLE_WALL_SIGN", "SIGN");
+        mapAlias("SPRUCE_WALL_SIGN", "SIGN");
+        mapAlias("ACACIA_WALL_SIGN", "SIGN");
     }
 
     private void f2lcolored(String material, int legacyId) {
@@ -938,60 +919,60 @@ public abstract class MaterialMapping {
                 alternativeLegacyName != null && !alternativeLegacyName.equalsIgnoreCase(legacyMaterial) ? NamespacedMappingKey.of(alternativeLegacyName) : null;
 
         MaterialHolder holder = null;
-        if (platform.isUsingLegacyNames() && (materialMapping.containsKey(legacyMaterialNamespaced) || (alternativeLegacyNamespaced != null && materialMapping.containsKey(alternativeLegacyNamespaced)))) {
-            if (materialMapping.containsKey(legacyMaterialNamespaced)) {
-                holder = materialMapping.get(legacyMaterialNamespaced).newDurability(data);
-                if (!materialMapping.containsKey(flatteningMaterialNamespaced) && !flatteningMaterialNamespaced.equals(legacyMaterialNamespaced)) {
-                    materialMapping.put(flatteningMaterialNamespaced, holder);
+        if (platform.isUsingLegacyNames() && (mapping.containsKey(legacyMaterialNamespaced) || (alternativeLegacyNamespaced != null && mapping.containsKey(alternativeLegacyNamespaced)))) {
+            if (mapping.containsKey(legacyMaterialNamespaced)) {
+                holder = mapping.get(legacyMaterialNamespaced).newDurability(data);
+                if (!mapping.containsKey(flatteningMaterialNamespaced) && !flatteningMaterialNamespaced.equals(legacyMaterialNamespaced)) {
+                    mapping.put(flatteningMaterialNamespaced, holder);
                 }
-                if (data == 0 && alternativeLegacyNamespaced != null && !materialMapping.containsKey(alternativeLegacyNamespaced)) {
-                    materialMapping.put(alternativeLegacyNamespaced, holder);
+                if (data == 0 && alternativeLegacyNamespaced != null && !mapping.containsKey(alternativeLegacyNamespaced)) {
+                    mapping.put(alternativeLegacyNamespaced, holder);
                 }
-                if (alternativeLegacyNamespaced != null && !materialMapping.containsKey(ComplexMappingKey.of(alternativeLegacyNamespaced, NumericMappingKey.of(data)))) {
-                    materialMapping.put(ComplexMappingKey.of(alternativeLegacyNamespaced, NumericMappingKey.of(data)), holder);
+                if (alternativeLegacyNamespaced != null && !mapping.containsKey(ComplexMappingKey.of(alternativeLegacyNamespaced, NumericMappingKey.of(data)))) {
+                    mapping.put(ComplexMappingKey.of(alternativeLegacyNamespaced, NumericMappingKey.of(data)), holder);
                 }
-            } else if (alternativeLegacyNamespaced != null && materialMapping.containsKey(alternativeLegacyNamespaced)) {
-                holder = materialMapping.get(alternativeLegacyNamespaced).newDurability(data);
-                if (!materialMapping.containsKey(flatteningMaterialNamespaced) && !flatteningMaterialNamespaced.equals(legacyMaterialNamespaced)) {
-                    materialMapping.put(flatteningMaterialNamespaced, holder);
+            } else if (alternativeLegacyNamespaced != null && mapping.containsKey(alternativeLegacyNamespaced)) {
+                holder = mapping.get(alternativeLegacyNamespaced).newDurability(data);
+                if (!mapping.containsKey(flatteningMaterialNamespaced) && !flatteningMaterialNamespaced.equals(legacyMaterialNamespaced)) {
+                    mapping.put(flatteningMaterialNamespaced, holder);
                 }
-                if (data == 0 && !materialMapping.containsKey(legacyMaterialNamespaced)) {
-                    materialMapping.put(legacyMaterialNamespaced, holder);
+                if (data == 0 && !mapping.containsKey(legacyMaterialNamespaced)) {
+                    mapping.put(legacyMaterialNamespaced, holder);
                 }
-                if (!materialMapping.containsKey(ComplexMappingKey.of(legacyMaterialNamespaced, NumericMappingKey.of(data)))) {
-                    materialMapping.put(ComplexMappingKey.of(legacyMaterialNamespaced, NumericMappingKey.of(data)), holder);
+                if (!mapping.containsKey(ComplexMappingKey.of(legacyMaterialNamespaced, NumericMappingKey.of(data)))) {
+                    mapping.put(ComplexMappingKey.of(legacyMaterialNamespaced, NumericMappingKey.of(data)), holder);
                 }
             }
-        } else if (!platform.isUsingLegacyNames() && materialMapping.containsKey(flatteningMaterialNamespaced)) {
-            holder = materialMapping.get(flatteningMaterialNamespaced);
-            if (data == 0 && !materialMapping.containsKey(legacyMaterialNamespaced) && !flatteningMaterialNamespaced.equals(legacyMaterialNamespaced)) {
-                materialMapping.put(legacyMaterialNamespaced, holder);
+        } else if (!platform.isUsingLegacyNames() && mapping.containsKey(flatteningMaterialNamespaced)) {
+            holder = mapping.get(flatteningMaterialNamespaced);
+            if (data == 0 && !mapping.containsKey(legacyMaterialNamespaced) && !flatteningMaterialNamespaced.equals(legacyMaterialNamespaced)) {
+                mapping.put(legacyMaterialNamespaced, holder);
             }
-            if (!materialMapping.containsKey(ComplexMappingKey.of(legacyMaterialNamespaced, NumericMappingKey.of(data)))) {
-                materialMapping.put(ComplexMappingKey.of(legacyMaterialNamespaced, NumericMappingKey.of(data)), holder);
+            if (!mapping.containsKey(ComplexMappingKey.of(legacyMaterialNamespaced, NumericMappingKey.of(data)))) {
+                mapping.put(ComplexMappingKey.of(legacyMaterialNamespaced, NumericMappingKey.of(data)), holder);
             }
-            if (data == 0 && alternativeLegacyNamespaced != null && !materialMapping.containsKey(alternativeLegacyNamespaced) && !flatteningMaterialNamespaced.equals(alternativeLegacyNamespaced)) {
-                materialMapping.put(alternativeLegacyNamespaced, holder);
+            if (data == 0 && alternativeLegacyNamespaced != null && !mapping.containsKey(alternativeLegacyNamespaced) && !flatteningMaterialNamespaced.equals(alternativeLegacyNamespaced)) {
+                mapping.put(alternativeLegacyNamespaced, holder);
             }
-            if (alternativeLegacyNamespaced != null && !materialMapping.containsKey(ComplexMappingKey.of(alternativeLegacyNamespaced, NumericMappingKey.of(data)))) {
-                materialMapping.put(ComplexMappingKey.of(alternativeLegacyNamespaced, NumericMappingKey.of(data)), holder);
+            if (alternativeLegacyNamespaced != null && !mapping.containsKey(ComplexMappingKey.of(alternativeLegacyNamespaced, NumericMappingKey.of(data)))) {
+                mapping.put(ComplexMappingKey.of(alternativeLegacyNamespaced, NumericMappingKey.of(data)), holder);
             }
         }
 
         if (holder != null) {
             var legacyIdKey = NumericMappingKey.of(legacyId);
-            if (!materialMapping.containsKey(legacyIdKey) && data == 0) {
-                materialMapping.put(legacyIdKey, holder);
+            if (!mapping.containsKey(legacyIdKey) && data == 0) {
+                mapping.put(legacyIdKey, holder);
             }
             var legacyIdDataKey = ComplexMappingKey.of(legacyIdKey, NumericMappingKey.of(data));
-            if (!materialMapping.containsKey(legacyIdDataKey)) {
-                materialMapping.put(legacyIdDataKey, holder);
+            if (!mapping.containsKey(legacyIdDataKey)) {
+                mapping.put(legacyIdDataKey, holder);
             }
         }
     }
 
     public static boolean isInitialized() {
-        return mapping != null;
+        return materialMapping != null;
     }
 
     private static MaterialHolder cachedAir;

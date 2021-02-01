@@ -6,13 +6,13 @@ include 'screaming-annotation'
 def registerModule(String name, String... platforms) {
     include(':' + name + '-common')
     project(':' + name + '-common').projectDir = file(name + '/common')
-    for (def platform in platforms) {
-        include(':' + name + '-' + platform)
-        project(':' + name + '-' + platform).projectDir = file(name + '/' + platform)
+    platforms.each {
+        include(':' + name + '-' + it)
+        project(':' + name + '-' + it).projectDir = file(name + '/' + it)
     }
 }
 
-registerModule('utils', 'minestom')
+registerModule('utils', 'minestom', 'sponge')
 registerModule('material', 'bukkit', 'minestom', 'sponge')
 registerModule('world', 'bukkit', 'minestom', 'sponge')
 registerModule('player', 'bukkit', 'minestom', 'sponge')

@@ -63,7 +63,7 @@ public class BukkitMaterialMapping extends MaterialMapping {
         Arrays.stream(Material.values())
                 .filter(t -> !t.name().startsWith("LEGACY"))
                 .forEach(material ->
-                        materialMapping.put(NamespacedMappingKey.of(material.name()), new MaterialHolder(material.name()))
+                        mapping.put(NamespacedMappingKey.of(material.name()), new MaterialHolder(material.name()))
                 );
     }
 }

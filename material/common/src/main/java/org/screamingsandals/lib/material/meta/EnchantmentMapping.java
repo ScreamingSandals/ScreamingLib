@@ -4,23 +4,20 @@ import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
-import org.screamingsandals.lib.utils.key.MappingKey;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.ConfigurationNode;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
-public abstract class EnchantmentMapping {
+public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentHolder> {
 
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?<namespaced>[A-Za-z][A-Za-z0-9_.\\-/:]*)(\\s+(?<level>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
-    private static EnchantmentMapping mapping = null;
-    protected final Map<MappingKey, EnchantmentHolder> enchantmentMapping = new HashMap<>();
+    private static EnchantmentMapping enchantmentMapping = null;
 
     protected BidirectionalConverter<EnchantmentHolder> enchantmentConverter = BidirectionalConverter.<EnchantmentHolder>build()
             .registerW2P(String.class, EnchantmentHolder::getPlatformName)
@@ -50,103 +47,86 @@ public abstract class EnchantmentMapping {
             });
 
     public static Optional<EnchantmentHolder> resolve(Object enchantmentObject) {
-        if (mapping == null) {
+        if (enchantmentMapping == null) {
             throw new UnsupportedOperationException("Enchantment mapping is not initialized yet.");
         }
-        Optional<EnchantmentHolder> opt = mapping.enchantmentConverter.convertOptional(enchantmentObject);
-        if (opt.isPresent()) {
-            return opt;
-        }
-        String enchantment = enchantmentObject.toString().trim();
-
-        Matcher matcher = RESOLUTION_PATTERN.matcher(enchantment);
-
-        if (!matcher.matches()) {
+        if (enchantmentObject == null) {
             return Optional.empty();
         }
 
-        if (matcher.group("namespaced") != null) {
+        return enchantmentMapping.enchantmentConverter.convertOptional(enchantmentObject).or(() -> {
+            var enchantment = enchantmentObject.toString().trim();
 
-            var namespaced = NamespacedMappingKey.of(matcher.group("namespaced"));
+            var matcher = RESOLUTION_PATTERN.matcher(enchantment);
 
-            String level_str = matcher.group("level");
+            if (matcher.matches() && matcher.group("namespaced") != null) {
 
-            if (mapping.enchantmentMapping.containsKey(namespaced)) {
-                if (level_str != null && !level_str.isEmpty()) {
-                    int level;
-                    try {
-                        level = Integer.parseInt(level_str);
-                    } catch (Throwable t) {
-                        level = RomanToDecimal.romanToDecimal(level_str);
+                var namespaced = NamespacedMappingKey.of(matcher.group("namespaced"));
+
+                String level_str = matcher.group("level");
+
+                if (enchantmentMapping.mapping.containsKey(namespaced)) {
+                    if (level_str != null && !level_str.isEmpty()) {
+                        int level;
+                        try {
+                            level = Integer.parseInt(level_str);
+                        } catch (Throwable t) {
+                            level = RomanToDecimal.romanToDecimal(level_str);
+                        }
+                        return Optional.of(enchantmentMapping.mapping.get(namespaced).newLevel(level));
+                    } else {
+                        return Optional.of(enchantmentMapping.mapping.get(namespaced));
                     }
-                    return Optional.of(mapping.enchantmentMapping.get(namespaced).newLevel(level));
-                } else {
-                    return Optional.of(mapping.enchantmentMapping.get(namespaced));
                 }
             }
-        }
 
-        return Optional.empty();
+            return Optional.empty();
+        });
     }
 
     @SneakyThrows
-    public static void init(Supplier<EnchantmentMapping> mappingClass) {
-        if (mapping != null) {
+    public static void init(Supplier<EnchantmentMapping> enchantmentMappingSupplier) {
+        if (enchantmentMapping != null) {
             throw new UnsupportedOperationException("Enchantment mapping is already initialized.");
         }
 
-        mapping = mappingClass.get();
+        enchantmentMapping = enchantmentMappingSupplier.get();
 
-        mapping.legacyMapping();
+        enchantmentMapping.legacyMapping();
     }
 
     private void legacyMapping() {
-        f2l("POWER", "ARROW_DAMAGE");
-        f2l("FLAME", "ARROW_FIRE");
-        f2l("INFINITY", "ARROW_INFINITE");
-        f2l("PUNCH", "ARROW_KNOCKBACK");
-        f2l("SHARPNESS", "DAMAGE_ALL");
-        f2l("BANE_OF_ARTHROPODS", "DAMAGE_ARTHROPODS");
-        f2l("SMITE", "DAMAGE_UNDEAD");
-        f2l("EFFICIENCY", "DIG_SPEED");
-        f2l("UNBREAKING", "DURABILITY");
-        f2l("FORTUNE", "LOOT_BONUS_BLOCKS");
-        f2l("LOOTING", "LOOT_BONUS_MOBS");
-        f2l("LUCK_OF_THE_SEA", "LUCK");
-        f2l("RESPIRATION", "OXYGEN");
-        f2l("PROTECTION", "PROTECTION_ENVIRONMENTAL");
-        f2l("BLAST_PROTECTION", "PROTECTION_EXPLOSIONS");
-        f2l("FEATHER_FALLING", "PROTECTION_FALL");
-        f2l("FIRE_PROTECTION", "PROTECTION_FIRE");
-        f2l("PROJECTILE_PROTECTION", "PROTECTION_PROJECTILE");
-        f2l("SWEEPING", "SWEEPING_EDGE");
-        f2l("AQUA_AFFINITY", "WATER_WORKER");
-    }
-
-    private void f2l(String enchantment, String legacyEnchantment) {
-        if (enchantment == null || legacyEnchantment == null) {
-            throw new IllegalArgumentException("Both enchantments mustn't be null!");
-        }
-
-        var enchantmentNamespaced = NamespacedMappingKey.of(enchantment);
-        var legacyEnchantmentNamespaced = NamespacedMappingKey.of(legacyEnchantment);
-
-        if (enchantmentMapping.containsKey(enchantmentNamespaced) && !enchantmentMapping.containsKey(legacyEnchantmentNamespaced)) {
-            enchantmentMapping.put(legacyEnchantmentNamespaced, enchantmentMapping.get(enchantmentNamespaced));
-        } else if (enchantmentMapping.containsKey(legacyEnchantmentNamespaced) && !enchantmentMapping.containsKey(enchantmentNamespaced)) {
-            enchantmentMapping.put(enchantmentNamespaced, enchantmentMapping.get(legacyEnchantmentNamespaced));
-        }
+        mapAlias("POWER", "ARROW_DAMAGE");
+        mapAlias("FLAME", "ARROW_FIRE");
+        mapAlias("INFINITY", "ARROW_INFINITE");
+        mapAlias("PUNCH", "ARROW_KNOCKBACK");
+        mapAlias("SHARPNESS", "DAMAGE_ALL");
+        mapAlias("BANE_OF_ARTHROPODS", "DAMAGE_ARTHROPODS");
+        mapAlias("SMITE", "DAMAGE_UNDEAD");
+        mapAlias("EFFICIENCY", "DIG_SPEED");
+        mapAlias("UNBREAKING", "DURABILITY");
+        mapAlias("FORTUNE", "LOOT_BONUS_BLOCKS");
+        mapAlias("LOOTING", "LOOT_BONUS_MOBS");
+        mapAlias("LUCK_OF_THE_SEA", "LUCK");
+        mapAlias("RESPIRATION", "OXYGEN");
+        mapAlias("PROTECTION", "PROTECTION_ENVIRONMENTAL");
+        mapAlias("BLAST_PROTECTION", "PROTECTION_EXPLOSIONS");
+        mapAlias("FEATHER_FALLING", "PROTECTION_FALL");
+        mapAlias("FIRE_PROTECTION", "PROTECTION_FIRE");
+        mapAlias("PROJECTILE_PROTECTION", "PROTECTION_PROJECTILE");
+        mapAlias("SWEEPING", "SWEEPING_EDGE");
+        mapAlias("AQUA_AFFINITY", "WATER_WORKER");
     }
 
     public static <T> T convertEnchantmentHolder(EnchantmentHolder holder, Class<T> newType) {
-        if (mapping == null) {
+        if (enchantmentMapping == null) {
             throw new UnsupportedOperationException("Enchantment mapping is not initialized yet.");
         }
-        return mapping.enchantmentConverter.convert(holder, newType);
+        return enchantmentMapping.enchantmentConverter.convert(holder, newType);
     }
 
     public static boolean isInitialized() {
-        return mapping != null;
+        return enchantmentMapping != null;
     }
 
 }

@@ -20,7 +20,7 @@ public class BukkitEnchantmentMapping extends EnchantmentMapping {
                 .registerW2P(Enchantment.class, e -> Enchantment.getByName(e.getPlatformName()))
                 .registerP2W(Enchantment.class, e -> new EnchantmentHolder(e.getName()));
 
-        Arrays.stream(Enchantment.values()).forEach(enchantment -> enchantmentMapping.put(NamespacedMappingKey.of(enchantment.getName()), new EnchantmentHolder(enchantment.getName())));
+        Arrays.stream(Enchantment.values()).forEach(enchantment -> mapping.put(NamespacedMappingKey.of(enchantment.getName()), new EnchantmentHolder(enchantment.getName())));
     }
 
 }

@@ -20,6 +20,6 @@ public class MinestomPotionMapping extends PotionMapping {
                 .registerW2P(PotionType.class, e -> PotionType.valueOf(e.getPlatformName().toUpperCase()))
                 .registerP2W(PotionType.class, e -> new PotionHolder(e.name()));
 
-        Arrays.stream(PotionType.values()).forEach(potion -> potionMapping.put(NamespacedMappingKey.of(potion.getNamespaceID()), new PotionHolder(potion.name())));
+        Arrays.stream(PotionType.values()).forEach(potion -> mapping.put(NamespacedMappingKey.of(potion.getNamespaceID()), new PotionHolder(potion.name())));
     }
 }

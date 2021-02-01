@@ -20,6 +20,6 @@ public class MinestomEnchantmentMapping extends EnchantmentMapping {
                 .registerW2P(Enchantment.class, e -> Enchantment.valueOf(e.getPlatformName()))
                 .registerP2W(Enchantment.class, e -> new EnchantmentHolder(e.name()));
 
-        Arrays.stream(Enchantment.values()).forEach(enchantment -> enchantmentMapping.put(NamespacedMappingKey.of(enchantment.getNamespaceID()), new EnchantmentHolder(enchantment.name())));
+        Arrays.stream(Enchantment.values()).forEach(enchantment -> mapping.put(NamespacedMappingKey.of(enchantment.getNamespaceID()), new EnchantmentHolder(enchantment.name())));
     }
 }

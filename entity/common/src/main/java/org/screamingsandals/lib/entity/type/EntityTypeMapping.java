@@ -2,29 +2,25 @@ package org.screamingsandals.lib.entity.type;
 
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
-import org.screamingsandals.lib.utils.key.MappingKey;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
-public abstract class EntityTypeMapping {
+public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHolder> {
     private static EntityTypeMapping entityTypeMapping;
 
     protected final BidirectionalConverter<EntityTypeHolder> entityTypeConverter = BidirectionalConverter.build();
-    protected final Map<MappingKey, EntityTypeHolder> mapping = new HashMap<>();
 
-    public static void init(Supplier<EntityTypeMapping> supplier) {
+    public static void init(Supplier<EntityTypeMapping> entityTypeMappingSupplier) {
         if (entityTypeMapping != null) {
             throw new UnsupportedOperationException("EntityTypeMapping is already initialized.");
         }
 
-        entityTypeMapping = supplier.get();
+        entityTypeMapping = entityTypeMappingSupplier.get();
         entityTypeMapping.legacyMapping();
     }
 
@@ -37,20 +33,7 @@ public abstract class EntityTypeMapping {
             return Optional.empty();
         }
 
-        var converted = entityTypeMapping.entityTypeConverter.convertOptional(entity);
-        if (converted.isPresent()) {
-            return converted;
-        }
-
-        var namespacedKey = NamespacedMappingKey.ofOptional(entity.toString());
-
-        if (namespacedKey.isPresent()) {
-            if (entityTypeMapping.mapping.containsKey(namespacedKey.get())) {
-                return Optional.of(entityTypeMapping.mapping.get(namespacedKey.get()));
-            }
-        }
-
-        return Optional.empty();
+        return entityTypeMapping.entityTypeConverter.convertOptional(entity).or(() -> entityTypeMapping.resolveFromMapping(entity));
     }
 
     public static <T> T convertEntityTypeHolder(EntityTypeHolder holder, Class<T> newType) {
@@ -66,40 +49,25 @@ public abstract class EntityTypeMapping {
 
     private void legacyMapping() {
         // Flattening <-> Bukkit
-        f2l("ITEM", "DROPPED_ITEM");
-        f2l("LEASH_KNOT", "LEASH_HITCH");
-        f2l("EYE_OF_ENDER", "ENDER_SIGNAL");
-        f2l("POTION", "SPLASH_POTION");
-        f2l("EXPERIENCE_BOTTLE", "THROWN_EXP_BOTTLE");
-        f2l("TNT", "PRIMED_TNT");
-        f2l("FIREWORK_ROCKET", "FIREWORK");
-        f2l("COMMAND_BLOCK_MINECART", "MINECART_COMMAND");
-        f2l("CHEST_MINECART", "MINECART_CHEST");
-        f2l("FURNACE_MINECART", "MINECART_FURNACE");
-        f2l("TNT_MINECART", "MINECART_TNT");
-        f2l("HOPPER_MINECART", "MINECART_HOPPER");
-        f2l("SPAWNER_MINECART", "MINECART_MOB_SPAWNER");
-        f2l("MOOSHROOM", "MUSHROOM_COW");
-        f2l("SNOW_GOLEM", "SNOWMAN");
-        f2l("END_CRYSTAL", "ENDER_CRYSTAL");
-        f2l("FISHING_BOBBER", "FISHING_HOOK");
-        f2l("LIGHTNING_BOLT", "LIGHTNING");
+        mapAlias("ITEM", "DROPPED_ITEM");
+        mapAlias("LEASH_KNOT", "LEASH_HITCH");
+        mapAlias("EYE_OF_ENDER", "ENDER_SIGNAL");
+        mapAlias("POTION", "SPLASH_POTION");
+        mapAlias("EXPERIENCE_BOTTLE", "THROWN_EXP_BOTTLE");
+        mapAlias("TNT", "PRIMED_TNT");
+        mapAlias("FIREWORK_ROCKET", "FIREWORK");
+        mapAlias("COMMAND_BLOCK_MINECART", "MINECART_COMMAND");
+        mapAlias("CHEST_MINECART", "MINECART_CHEST");
+        mapAlias("FURNACE_MINECART", "MINECART_FURNACE");
+        mapAlias("TNT_MINECART", "MINECART_TNT");
+        mapAlias("HOPPER_MINECART", "MINECART_HOPPER");
+        mapAlias("SPAWNER_MINECART", "MINECART_MOB_SPAWNER");
+        mapAlias("MOOSHROOM", "MUSHROOM_COW");
+        mapAlias("SNOW_GOLEM", "SNOWMAN");
+        mapAlias("END_CRYSTAL", "ENDER_CRYSTAL");
+        mapAlias("FISHING_BOBBER", "FISHING_HOOK");
+        mapAlias("LIGHTNING_BOLT", "LIGHTNING");
 
         // TODO check legacy
-    }
-
-    private void f2l(String entityType1, String entityType2) {
-        if (entityType1 == null || entityType2 == null) {
-            throw new IllegalArgumentException("Both effects mustn't be null!");
-        }
-
-        var namespace1 = NamespacedMappingKey.of(entityType1);
-        var namespace2 = NamespacedMappingKey.of(entityType2);
-
-        if (mapping.containsKey(namespace1) && !mapping.containsKey(namespace2)) {
-            mapping.put(namespace2, mapping.get(namespace1));
-        } else if (mapping.containsKey(namespace2) && !mapping.containsKey(namespace1)) {
-            mapping.put(namespace1, mapping.get(namespace2));
-        }
     }
 }

@@ -3,28 +3,25 @@ package org.screamingsandals.lib.material.attribute;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.key.AttributeMappingKey;
-import org.screamingsandals.lib.utils.key.MappingKey;
+import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
-public abstract class AttributeTypeMapping {
+public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeTypeHolder> {
     private static AttributeTypeMapping attributeTypeMapping;
 
     protected final BidirectionalConverter<AttributeTypeHolder> attributeTypeConverter = BidirectionalConverter.build();
-    protected final Map<MappingKey, AttributeTypeHolder> mapping = new HashMap<>();
 
-    public static void init(Supplier<AttributeTypeMapping> supplier) {
+    public static void init(Supplier<AttributeTypeMapping> attributeTypeMappingSupplier) {
         if (attributeTypeMapping != null) {
             throw new UnsupportedOperationException("AttributeTypeMapping is already initialized.");
         }
 
-        attributeTypeMapping = supplier.get();
+        attributeTypeMapping = attributeTypeMappingSupplier.get();
     }
 
     public static Optional<AttributeTypeHolder> resolve(Object attributeType) {
@@ -36,20 +33,15 @@ public abstract class AttributeTypeMapping {
             return Optional.empty();
         }
 
-        var converted = attributeTypeMapping.attributeTypeConverter.convertOptional(attributeType);
-        if (converted.isPresent()) {
-            return converted;
-        }
+        return attributeTypeMapping.attributeTypeConverter.convertOptional(attributeType).or(() -> {
+            var namespacedKey = AttributeMappingKey.ofOptional(attributeType.toString());
 
-        var namespacedKey = AttributeMappingKey.ofOptional(attributeType.toString());
-
-        if (namespacedKey.isPresent()) {
-            if (attributeTypeMapping.mapping.containsKey(namespacedKey.get())) {
+            if (namespacedKey.isPresent() && attributeTypeMapping.mapping.containsKey(namespacedKey.get())) {
                 return Optional.of(attributeTypeMapping.mapping.get(namespacedKey.get()));
             }
-        }
 
-        return Optional.empty();
+            return Optional.empty();
+        });
     }
 
     public static <T> T convertAttributeTypeHolder(AttributeTypeHolder holder, Class<T> newType) {

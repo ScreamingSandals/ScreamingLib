@@ -29,6 +29,6 @@ public class MinestomMaterialMapping extends MaterialMapping {
                 .registerP2W(ItemStack.class, stack -> new MaterialHolder(stack.getMaterial().name()))
                 .registerP2W(Block.class, block -> new MaterialHolder(block.getName()));
 
-        Arrays.stream(Material.values()).forEach(material -> materialMapping.put(NamespacedMappingKey.of(material.getName()), new MaterialHolder(material.name())));
+        Arrays.stream(Material.values()).forEach(material -> mapping.put(NamespacedMappingKey.of(material.getName()), new MaterialHolder(material.name())));
     }
 }
