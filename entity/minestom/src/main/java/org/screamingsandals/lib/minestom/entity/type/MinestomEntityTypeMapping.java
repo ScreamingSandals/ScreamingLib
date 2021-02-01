@@ -19,6 +19,7 @@ public class MinestomEntityTypeMapping extends EntityTypeMapping {
                 .registerP2W(EntityType.class, entityType -> new EntityTypeHolder(entityType.name()))
                 .registerW2P(EntityType.class, entityTypeHolder -> EntityType.valueOf(entityTypeHolder.getPlatformName()));
 
-        Arrays.stream(EntityType.values()).forEach(entityType -> mapping.put(NamespacedMappingKey.of(entityType.getNamespaceID()), new EntityTypeHolder(entityType.name())));
+        Arrays.stream(EntityType.values())
+                .forEach(entityType -> mapping.put(NamespacedMappingKey.of(entityType.getNamespaceID()), new EntityTypeHolder(entityType.name())));
     }
 }

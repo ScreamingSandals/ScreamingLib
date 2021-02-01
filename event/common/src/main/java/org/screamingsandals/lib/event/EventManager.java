@@ -1,6 +1,11 @@
 package org.screamingsandals.lib.event;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import lombok.Getter;
+import org.screamingsandals.lib.utils.Controllable;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.executor.AbstractServiceWithExecutor;
 
 import java.util.*;
@@ -9,16 +14,27 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Custom event manager that has it's own {@link java.util.concurrent.ExecutorService}.
+ *
+ * Always call {@link EventManager#destroy()} when shutting down!
+ */
+@Service
 public class EventManager extends AbstractServiceWithExecutor {
     @Getter
-    private static final EventManager defaultEventManager = new EventManager();
+    private static EventManager defaultEventManager;
+
+    public static void init(Controllable controllable) {
+        defaultEventManager = new EventManager(controllable);
+    }
 
     @Getter
     private EventManager customManager;
-    private final Map<Class<?>, List<EventHandler<? extends AbstractEvent>>> handlers = new HashMap<>();
+    private final Multimap<Class<?>, EventHandler<? extends AbstractEvent>> handlers = ArrayListMultimap.create();
 
-    public EventManager() {
+    public EventManager(Controllable controllable) {
         super("SSEventManager");
+        controllable.disable(this::destroy);
     }
 
     public static <K extends AbstractEvent> K fire(K event) {
@@ -47,24 +63,21 @@ public class EventManager extends AbstractServiceWithExecutor {
     }
 
     public <T extends AbstractEvent> EventHandler<T> register(Class<T> event, EventHandler<T> handler) {
-        if (!handlers.containsKey(event)) {
-            handlers.put(event, new ArrayList<>());
-        }
-        handlers.get(event).add(handler);
-        fireEvent(new HandlerRegisteredEvent(this, event, handler));
+        handlers.put(event, handler);
+        fireEventAsync(new HandlerRegisteredEvent(this, event, handler));
 
         return handler;
     }
 
     public <T extends AbstractEvent> void unregister(EventHandler<T> handler) {
-        handlers.forEach((event, consumers) ->
-                consumers.removeIf(e -> {
-                    if (handler == e) {
-                        fireEvent(new HandlerUnregisteredEvent(this, event, handler));
+        handlers.entries()
+                .removeIf(entry -> {
+                    if (handler == entry.getValue()) {
+                        fireEventAsync(new HandlerUnregisteredEvent(this, entry.getKey(), handler));
                         return true;
                     }
                     return false;
-                }));
+                });
     }
 
     public <K extends AbstractEvent> K fireEvent(K event) {
@@ -104,10 +117,11 @@ public class EventManager extends AbstractServiceWithExecutor {
         }
 
         final var futures = findEventHandlers(event, eventPriority)
-                .map(eventHandler -> CompletableFuture.runAsync(() -> eventHandler.fire(event), executor)
-                        .exceptionally(ex -> {
-                            throw new RuntimeException("Exception occurred while firing event!", ex);
-                        }))
+                .map(eventHandler ->
+                        CompletableFuture.runAsync(() -> eventHandler.fire(event), executor)
+                                .exceptionally(ex -> {
+                                    throw new RuntimeException("Exception occurred while firing event!", ex);
+                                }))
                 .collect(Collectors.toCollection(LinkedList::new));
 
         if (customManager != null) {
@@ -127,9 +141,9 @@ public class EventManager extends AbstractServiceWithExecutor {
     }
 
     public void unregisterAll() {
-        Map.copyOf(handlers)
-                .forEach((event, eventHandlers) -> List.copyOf(eventHandlers)
-                        .forEach(this::unregister));
+        Multimaps.unmodifiableMultimap(handlers)
+                .values()
+                .forEach(this::unregister);
     }
 
     public void drop() {
@@ -143,24 +157,28 @@ public class EventManager extends AbstractServiceWithExecutor {
     }
 
     public boolean isRegistered(EventHandler<?> eventHandler) {
-        return handlers.values().stream().anyMatch(eventHandlers -> eventHandlers.contains(eventHandler));
-    }
-
-    private <E extends AbstractEvent> Stream<EventHandler<? extends AbstractEvent>> findEventHandlers(E event, EventPriority priority) {
-        return handlers.entrySet()
-                .stream()
-                .filter(entry -> entry.getKey().isInstance(event))
-                .map(Map.Entry::getValue)
-                .flatMap(Collection::stream)
-                .filter(eventHandler -> eventHandler.getEventPriority() == priority);
+        return handlers.values()
+                .contains(eventHandler);
     }
 
     @SuppressWarnings("unchecked")
     public void cloneEventManager(EventManager originalEventManager) {
-        originalEventManager.handlers.forEach((aClass, eventHandlers) ->
-            eventHandlers.forEach(eventHandler ->
-                register((Class<AbstractEvent>) aClass, (EventHandler<AbstractEvent>) eventHandler)
-            )
-        );
+        originalEventManager.handlers.entries()
+                .forEach(entry ->
+                        register((Class<AbstractEvent>) entry.getKey(), (EventHandler<AbstractEvent>) entry.getValue()));
+    }
+
+    @Override
+    public void destroy() {
+        unregisterAll();
+        super.destroy();
+    }
+
+    private <E extends AbstractEvent> Stream<? extends EventHandler<? extends AbstractEvent>> findEventHandlers(E event, EventPriority priority) {
+        return handlers.entries()
+                .stream()
+                .filter(entry -> entry.getKey().isInstance(event))
+                .map(Map.Entry::getValue)
+                .filter(eventHandler -> eventHandler.getEventPriority() == priority);
     }
 }
