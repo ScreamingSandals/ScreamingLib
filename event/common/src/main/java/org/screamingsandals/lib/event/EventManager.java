@@ -178,7 +178,10 @@ public class EventManager {
 
     public void destroy() {
         unregisterAll();
-        ExecutorProvider.destroyExecutor(executor);
+
+        if (this == defaultEventManager) {
+            ExecutorProvider.destroyExecutor(executor);   
+        }
     }
 
     private <E extends AbstractEvent> Stream<? extends EventHandler<? extends AbstractEvent>> findEventHandlers(E event, EventPriority priority) {
