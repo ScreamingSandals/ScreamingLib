@@ -4,12 +4,15 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.executor.AbstractServiceWithExecutor;
+import org.screamingsandals.lib.utils.executor.ExecutorProvider;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -20,20 +23,25 @@ import java.util.stream.Stream;
  * Always call {@link EventManager#destroy()} when shutting down!
  */
 @Service
-public class EventManager extends AbstractServiceWithExecutor {
+@NoArgsConstructor
+public class EventManager {
+    private final static ExecutorService executor;
+    private final Multimap<Class<?>, EventHandler<? extends AbstractEvent>> handlers = ArrayListMultimap.create();
+
     @Getter
     private static EventManager defaultEventManager;
+    @Getter
+    private EventManager customManager;
+
+    static {
+        executor = ExecutorProvider.buildExecutor("SEventManager");
+    }
 
     public static void init(Controllable controllable) {
         defaultEventManager = new EventManager(controllable);
     }
 
-    @Getter
-    private EventManager customManager;
-    private final Multimap<Class<?>, EventHandler<? extends AbstractEvent>> handlers = ArrayListMultimap.create();
-
     public EventManager(Controllable controllable) {
-        super("SSEventManager");
         controllable.disable(this::destroy);
     }
 
@@ -168,10 +176,9 @@ public class EventManager extends AbstractServiceWithExecutor {
                         register((Class<AbstractEvent>) entry.getKey(), (EventHandler<AbstractEvent>) entry.getValue()));
     }
 
-    @Override
     public void destroy() {
         unregisterAll();
-        super.destroy();
+        ExecutorProvider.destroyExecutor(executor);
     }
 
     private <E extends AbstractEvent> Stream<? extends EventHandler<? extends AbstractEvent>> findEventHandlers(E event, EventPriority priority) {
