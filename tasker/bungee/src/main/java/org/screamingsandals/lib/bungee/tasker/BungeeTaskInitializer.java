@@ -55,17 +55,17 @@ public class BungeeTaskInitializer extends AbstractTaskInitializer {
             throw new UnsupportedOperationException("Cannot start task " + builder.getTaskId() + "!");
         }
 
-        final var toReturn = new AbstractTaskerTask(tasker, builder.getTaskId(), task) {
+        final var toReturn = new AbstractTaskerTask(builder.getTaskId(), task) {
         };
 
-        tasker.register(toReturn);
+        Tasker.register(toReturn);
         return toReturn;
     }
 
     @Override
     public TaskState getState(TaskerTask taskerTask) {
         //TODO: check task
-        if (tasker.getRunningTasks().containsKey(taskerTask.getId())) {
+        if (Tasker.getRunningTasks().containsKey(taskerTask.getId())) {
             return TaskState.RUNNING;
         }
         return TaskState.FINISHED;

@@ -65,10 +65,10 @@ public class VelocityTaskInitializer extends AbstractTaskInitializer {
             throw new UnsupportedOperationException("Cannot start task " + builder.getTaskId() + "!");
         }
 
-        final var toReturn = new AbstractTaskerTask(tasker, builder.getTaskId(), task) {
+        final var toReturn = new AbstractTaskerTask(builder.getTaskId(), task) {
         };
 
-        tasker.register(toReturn);
+        Tasker.register(toReturn);
         return toReturn;
     }
 

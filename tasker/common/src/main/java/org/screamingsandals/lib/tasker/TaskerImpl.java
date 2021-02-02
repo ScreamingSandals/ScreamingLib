@@ -16,25 +16,21 @@ class TaskerImpl implements Tasker {
     private final AtomicInteger counter = new AtomicInteger(0);
     private final Map<Integer, TaskerTask> runningTasks = new ConcurrentHashMap<>();
     protected final AbstractTaskInitializer initializer;
-    protected static Tasker instance;
+    protected static TaskerImpl instance;
 
-    @Override
-    public TaskBuilder build(Runnable runnable) {
+    TaskBuilder build(Runnable runnable) {
         return new TaskBuilderImpl(runnable, initializer, counter.incrementAndGet());
     }
 
-    @Override
     public Map<Integer, TaskerTask> getRunningTasks() {
         return Map.copyOf(runningTasks);
     }
 
-    @Override
     public void cancelAll() {
         final var tasks = getRunningTasks().values();
         tasks.forEach(this::cancel);
     }
 
-    @Override
     public void cancel(TaskerTask taskerTask) {
         final var task = runningTasks.get(taskerTask.getId());
 
@@ -45,14 +41,12 @@ class TaskerImpl implements Tasker {
         try {
             Reflect.fastInvoke(task, "cancel");
         } catch (Exception e) {
-            System.out.println("Exception while cancelling task " + taskerTask.getId() + "!");
-            e.printStackTrace();
+            throw new UnsupportedOperationException("Exception while cancelling task " + taskerTask.getId() + "!", e);
         }
 
         runningTasks.remove(task.getId());
     }
 
-    @Override
     public boolean register(@NotNull TaskerTask taskerTask) {
         final var id = taskerTask.getId();
         if (runningTasks.containsKey(id)) {
@@ -63,7 +57,6 @@ class TaskerImpl implements Tasker {
         return true;
     }
 
-    @Override
     public TaskState getState(TaskerTask taskerTask) {
         return initializer.getState(taskerTask);
     }

@@ -4,7 +4,6 @@ import lombok.Getter;
 import org.screamingsandals.lib.tasker.Tasker;
 
 public abstract class AbstractTaskerTask implements TaskerTask {
-    private final Tasker tasker;
     @Getter
     private final Integer id;
     @Getter
@@ -12,8 +11,7 @@ public abstract class AbstractTaskerTask implements TaskerTask {
 
     private TaskState state;
 
-    public AbstractTaskerTask(Tasker tasker, Integer id, Object taskObject) {
-        this.tasker = tasker;
+    public AbstractTaskerTask(Integer id, Object taskObject) {
         this.id = id;
         this.taskObject = taskObject;
 
@@ -29,13 +27,13 @@ public abstract class AbstractTaskerTask implements TaskerTask {
             return state;
         }
 
-        state = tasker.getState(this);
+        state = Tasker.getState(this);
         return state;
     }
 
     @Override
     public void cancel() {
-        tasker.cancel(this);
+        Tasker.cancel(this);
     }
 
 }

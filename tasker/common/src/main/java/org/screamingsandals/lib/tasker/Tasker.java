@@ -10,19 +10,11 @@ import java.util.function.Supplier;
 public interface Tasker {
 
     static void init(Supplier<AbstractTaskInitializer> taskInitializer) {
-        final var initializer = taskInitializer.get();
-        final var tasker = new TaskerImpl(initializer);
-        initializer.setTasker(tasker);
-
         if (TaskerImpl.instance != null) {
             throw new UnsupportedOperationException("Tasker is already initialized!");
         }
 
-        TaskerImpl.instance = tasker;
-    }
-
-    static Tasker get() {
-        return TaskerImpl.instance;
+        TaskerImpl.instance = new TaskerImpl(taskInitializer.get());
     }
 
     /**
@@ -31,26 +23,34 @@ public interface Tasker {
      * @param runnable the runnable to run
      * @return new TaskBuilder
      */
-    TaskBuilder build(Runnable runnable);
+    static TaskBuilder build(Runnable runnable) {
+        return TaskerImpl.instance.build(runnable);
+    }
 
     /**
      * Returns active tasks.
      *
      * @return immutable map of active tasks.
      */
-    Map<Integer, TaskerTask> getRunningTasks();
+    static Map<Integer, TaskerTask> getRunningTasks() {
+        return TaskerImpl.instance.getRunningTasks();
+    }
 
     /**
      * Cancels all tasks.
      */
-    void cancelAll();
+    static void cancelAll() {
+        TaskerImpl.instance.cancelAll();
+    }
 
     /**
      * Cancels given task
      *
      * @param taskerTask the task to cancel
      */
-    void cancel(TaskerTask taskerTask);
+    static void cancel(TaskerTask taskerTask) {
+        TaskerImpl.instance.cancel(taskerTask);
+    }
 
     /**
      * Registers new task into the Tasker
@@ -58,13 +58,17 @@ public interface Tasker {
      * @param taskerTask task to register
      * @return true if task was registered
      */
-    boolean register(TaskerTask taskerTask);
+    static boolean register(TaskerTask taskerTask) {
+        return TaskerImpl.instance.register(taskerTask);
+    }
 
     /**
      * @param taskerTask task to check
      * @return Current state of the task
      */
-    TaskState getState(TaskerTask taskerTask);
+    static TaskState getState(TaskerTask taskerTask) {
+        return TaskerImpl.instance.getState(taskerTask);
+    }
 
     /**
      * Builder for tasks

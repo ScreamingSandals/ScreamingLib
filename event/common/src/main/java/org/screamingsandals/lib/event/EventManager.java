@@ -180,7 +180,7 @@ public class EventManager {
         unregisterAll();
 
         if (this == defaultEventManager) {
-            ExecutorProvider.destroyExecutor(executor);   
+            ExecutorProvider.destroyExecutor(executor);
         }
     }
 

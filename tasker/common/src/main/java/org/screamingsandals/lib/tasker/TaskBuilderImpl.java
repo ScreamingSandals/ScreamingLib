@@ -60,7 +60,7 @@ public class TaskBuilderImpl implements Tasker.TaskBuilder {
         final var task = Preconditions.checkNotNull(
                 initializer.start(this),
                 "Error occurred while trying to run task number " + taskId);
-        initializer.getTasker().register(task);
+        Tasker.register(task);
         return task;
     }
 }
