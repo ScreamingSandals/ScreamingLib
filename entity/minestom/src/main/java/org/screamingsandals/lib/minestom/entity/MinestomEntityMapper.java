@@ -25,20 +25,21 @@ public class MinestomEntityMapper extends EntityMapper {
     }
 
     @Override
-    protected Optional<EntityBasic> wrapEntity0(Object entity) {
+    @SuppressWarnings("unchecked")
+    protected <T extends EntityBasic> Optional<T> wrapEntity0(Object entity) {
         if (!(entity instanceof Entity)) {
             return Optional.empty();
         }
 
         // order is important here
         if (entity instanceof LivingEntity) {
-            return Optional.of(new MinestomEntityLiving((LivingEntity) entity));
+            return Optional.of((T) new MinestomEntityLiving((LivingEntity) entity));
         }
 
         if (entity instanceof ItemEntity) {
-            return Optional.of(new MinestomEntityItem((ItemEntity) entity));
+            return Optional.of((T) new MinestomEntityItem((ItemEntity) entity));
         }
 
-        return Optional.of(new MinestomEntityBasic((Entity) entity));
+        return Optional.of((T) new MinestomEntityBasic((Entity) entity));
     }
 }

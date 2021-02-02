@@ -25,7 +25,7 @@ public abstract class EntityMapper {
         return mapper.wrapEntity0(entity);
     }
 
-    protected abstract Optional<EntityBasic> wrapEntity0(Object entity);
+    protected abstract <T extends EntityBasic> Optional<T> wrapEntity0(Object entity);
 
     public static boolean isInitialized() {
         return mapper != null;

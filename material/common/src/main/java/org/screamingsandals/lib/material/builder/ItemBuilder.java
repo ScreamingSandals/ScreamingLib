@@ -17,16 +17,30 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * ItemBuilder. Modifies or creates new Item. Simple, right?
+ */
 @RequiredArgsConstructor
 public class ItemBuilder {
     @NotNull
     private final Item item;
 
+    /**
+     * Creates new ItemBuilder.
+     *
+     * @param material material to build item from
+     */
     public ItemBuilder(MaterialHolder material) {
         this.item = new Item();
         item.setMaterial(material);
     }
 
+    /**
+     * Sets new type of the item
+     *
+     * @param type Anything that can be an Item. Name, ItemStack, serialized ItemStack and so on.
+     * @return this item builder
+     */
     public ItemBuilder type(@NotNull Object type) {
         ItemFactory.readShortStack(item, type);
         return this;

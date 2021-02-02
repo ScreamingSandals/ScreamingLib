@@ -31,20 +31,21 @@ public class BukkitEntityMapper extends EntityMapper {
     }
 
     @Override
-    protected Optional<EntityBasic> wrapEntity0(Object entity) {
+    @SuppressWarnings("unchecked")
+    protected <T extends EntityBasic> Optional<T> wrapEntity0(Object entity) {
         if (!(entity instanceof Entity)) {
             return Optional.empty();
         }
 
         // order is important here
         if (entity instanceof LivingEntity) {
-            return Optional.of(new BukkitEntityLiving((LivingEntity) entity));
+            return Optional.of((T) new BukkitEntityLiving((LivingEntity) entity));
         }
 
         if (entity instanceof Item) {
-            return Optional.of(new BukkitEntityItem((Item) entity));
+            return Optional.of((T) new BukkitEntityItem((Item) entity));
         }
 
-        return Optional.of(new BukkitEntityBasic((Entity) entity));
+        return Optional.of((T) new BukkitEntityBasic((Entity) entity));
     }
 }

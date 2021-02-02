@@ -22,7 +22,7 @@ public class SpongeEntityMapper extends EntityMapper {
     }
 
     @Override
-    protected Optional<EntityBasic> wrapEntity0(Object entity) {
+    protected <T extends EntityBasic> Optional<T> wrapEntity0(Object entity) {
         return Optional.empty();
     }
 }
