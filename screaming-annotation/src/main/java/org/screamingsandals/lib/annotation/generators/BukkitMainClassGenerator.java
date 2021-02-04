@@ -86,11 +86,6 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
                 .addStatement("this.$N.disable()", "pluginContainer")
                 .addStatement("this.$N.disable()", "pluginControllable");
 
-        if (processingEnvironment.getElementUtils().getTypeElement("org.screamingsandals.lib.event.EventManager") != null) {
-            onDisableBuilder
-                    .addStatement("$T.getDefaultEventManager().unregisterAll()", ClassName.get("org.screamingsandals.lib.event", "EventManager"));
-        }
-
         var bukkitMainClass = TypeSpec.classBuilder(pluginContainer.getSimpleName() + "_BukkitImpl")
                 .addModifiers(Modifier.PUBLIC)
                 .superclass(ClassName.get("org.bukkit.plugin.java", "JavaPlugin"))

@@ -88,11 +88,6 @@ public class MinestomMainClassGenerator implements MainClassGenerator {
                 .addStatement("this.$N.disable()", "pluginContainer")
                 .addStatement("this.$N.disable()", "pluginControllable");
 
-        if (processingEnvironment.getElementUtils().getTypeElement("org.screamingsandals.lib.event.EventManager") != null) {
-            onDisableBuilder
-                    .addStatement("$T.getDefaultEventManager().unregisterAll()", ClassName.get("org.screamingsandals.lib.event", "EventManager"));
-        }
-
         var minestomMainClass = TypeSpec.classBuilder(pluginContainer.getSimpleName() + "_MinestomImpl")
                 .addModifiers(Modifier.PUBLIC)
                 .superclass(ClassName.get("net.minestom.server.extensions", "Extension"))

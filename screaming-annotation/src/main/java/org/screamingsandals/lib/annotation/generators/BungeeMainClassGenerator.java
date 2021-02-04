@@ -88,11 +88,6 @@ public class BungeeMainClassGenerator implements MainClassGenerator {
                 .addStatement("this.$N.disable()", "pluginContainer")
                 .addStatement("this.$N.disable()", "pluginControllable");
 
-        if (processingEnvironment.getElementUtils().getTypeElement("org.screamingsandals.lib.event.EventManager") != null) {
-            onDisableBuilder
-                    .addStatement("$T.getDefaultEventManager().unregisterAll()", ClassName.get("org.screamingsandals.lib.event", "EventManager"));
-        }
-
         var bungeeMainClass = TypeSpec.classBuilder(pluginContainer.getSimpleName() + "_BungeeImpl")
                 .addModifiers(Modifier.PUBLIC)
                 .superclass(ClassName.get("net.md_5.bungee.api.plugin", "Plugin"))
