@@ -41,6 +41,10 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
             if (!eventMap.containsKey(priority)) {
                 final EventExecutor handler = (listener, event) -> {
                     final var wrapped = wrapEvent((T) event, priority);
+                    if (wrapped == null) {
+                        return;
+                    }
+
                     if (this.fireAsync) {
                         try {
                             EventManager.getDefaultEventManager().fireEventAsync(wrapped, priority).get();

@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.executor.ExecutorProvider;
@@ -88,12 +89,12 @@ public class EventManager {
                 });
     }
 
-    public <K extends AbstractEvent> K fireEvent(K event) {
+    public <K extends AbstractEvent> K fireEvent(@NotNull K event) {
         EventPriority.VALUES.forEach(priority -> fireEvent(event, priority));
         return event;
     }
 
-    public <K extends AbstractEvent> K fireEvent(K event, EventPriority eventPriority) {
+    public <K extends AbstractEvent> K fireEvent(@NotNull K event, @NotNull EventPriority eventPriority) {
         if (event instanceof AbstractAsyncEvent) {
             throw new UnsupportedOperationException("Async event cannot be fired sync!");
         }
@@ -110,7 +111,7 @@ public class EventManager {
         return event;
     }
 
-    public <K extends AbstractEvent> CompletableFuture<K> fireEventAsync(K event) {
+    public <K extends AbstractEvent> CompletableFuture<K> fireEventAsync(@NotNull K event) {
         final var futures = new LinkedList<CompletableFuture<K>>();
         EventPriority.VALUES.forEach(priority -> futures.add(fireEventAsync(event, priority)));
 
@@ -118,7 +119,7 @@ public class EventManager {
                 .thenApply(ignored -> event);
     }
 
-    public <K extends AbstractEvent> CompletableFuture<K> fireEventAsync(K event, EventPriority eventPriority) {
+    public <K extends AbstractEvent> CompletableFuture<K> fireEventAsync(@NotNull K event, @NotNull EventPriority eventPriority) {
         if (!event.isAsync()) {
             //we don't want non-async events to be called async. :)
             return CompletableFuture.completedFuture(fireEvent(event, eventPriority));

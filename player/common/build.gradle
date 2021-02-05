@@ -1,6 +1,7 @@
 dependencies {
     api project(':utils-common')
     api project(':event-common')
+    api project(':entity-common')
 
     compileOnly project(':material-common')
     compileOnly project(':world-common')

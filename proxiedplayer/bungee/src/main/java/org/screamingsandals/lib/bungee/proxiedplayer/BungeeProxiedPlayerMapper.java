@@ -51,31 +51,47 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
 
     @Override
     public Optional<ServerWrapper> getServer0(String name) {
-        return Optional.ofNullable(ProxyServer.getInstance().getServerInfo(name)).map(ProxiedPlayerMapper::wrapServer);
+        return Optional.ofNullable(ProxyServer.getInstance()
+                .getServerInfo(name))
+                .map(ProxiedPlayerMapper::wrapServer);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public List<ServerWrapper> getServers0() {
-        return ProxyServer.getInstance().getServers().values().stream().map(ProxiedPlayerMapper::wrapServer).collect(Collectors.toList());
+        return ProxyServer.getInstance().getServers()
+                .values()
+                .stream()
+                .map(ProxiedPlayerMapper::wrapServer)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<ProxiedPlayerWrapper> getPlayer0(String name) {
-        return Optional.ofNullable(ProxyServer.getInstance().getPlayer(name)).map(ProxiedPlayerMapper::wrapPlayer);
+        return Optional.ofNullable(ProxyServer.getInstance().getPlayer(name))
+                .map(ProxiedPlayerMapper::wrapPlayer);
     }
 
     @Override
     public Optional<ProxiedPlayerWrapper> getPlayer0(UUID uuid) {
-        return Optional.ofNullable(ProxyServer.getInstance().getPlayer(uuid)).map(ProxiedPlayerMapper::wrapPlayer);
+        return Optional.ofNullable(ProxyServer.getInstance().getPlayer(uuid))
+                .map(ProxiedPlayerMapper::wrapPlayer);
     }
 
     @Override
     public List<ProxiedPlayerWrapper> getPlayers0() {
-        return ProxyServer.getInstance().getPlayers().stream().map(ProxiedPlayerMapper::wrapPlayer).collect(Collectors.toList());
+        return ProxyServer.getInstance().getPlayers()
+                .stream()
+                .map(ProxiedPlayerMapper::wrapPlayer)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<ProxiedPlayerWrapper> getPlayers0(ServerWrapper serverWrapper) {
-        return serverWrapper.as(ServerInfo.class).getPlayers().stream().map(ProxiedPlayerMapper::wrapPlayer).collect(Collectors.toList());
+        return serverWrapper.as(ServerInfo.class)
+                .getPlayers()
+                .stream()
+                .map(ProxiedPlayerMapper::wrapPlayer)
+                .collect(Collectors.toList());
     }
 }
