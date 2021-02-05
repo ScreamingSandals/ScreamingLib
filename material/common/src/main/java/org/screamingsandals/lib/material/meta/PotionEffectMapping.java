@@ -21,6 +21,10 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
 
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?<namespaced>[A-Za-z0-9_.\\-/:]+)(\\s+(?<duration>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
     private static final Function<ConfigurationNode, PotionEffectHolder> CONFIGURATE_METHOD = node -> {
+        if (!node.isMap()) {
+            return resolve(node.getString()).orElse(null);
+        }
+
         var effectNode = node.node("effect");
         var durationNode = node.node("duration");
         var amplifierNode = node.node("amplifier");

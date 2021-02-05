@@ -31,6 +31,10 @@ public abstract class ItemFactory {
 
     private static ItemFactory factory;
     private static final Function<ConfigurationNode, Item> CONFIGURATE_RESOLVER = node -> {
+        if (!node.isMap()) {
+            return readStack(node.getString()).orElse(null);
+        }
+
         var type = node.node("type");
 
         var optionalItem = readStack(type.getString());
