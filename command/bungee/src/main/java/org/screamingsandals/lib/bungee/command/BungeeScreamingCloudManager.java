@@ -8,10 +8,11 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxiedplayer.ProxiedSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSenderWrapper;
 
 import java.util.function.Function;
 
-public class BungeeScreamingCloudManager extends BungeeCommandManager<ProxiedSenderWrapper> {
+public class BungeeScreamingCloudManager extends BungeeCommandManager<CommandSenderWrapper> {
     /**
      * Construct a new Bungee command manager
      *
@@ -19,7 +20,7 @@ public class BungeeScreamingCloudManager extends BungeeCommandManager<ProxiedSen
      * @param commandCoordinator Coordinator provider
      */
     public BungeeScreamingCloudManager(Plugin owningPlugin,
-                                       Function<CommandTree<ProxiedSenderWrapper>, CommandExecutionCoordinator<ProxiedSenderWrapper>> commandCoordinator) {
+                                       Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) {
         super(owningPlugin, commandCoordinator, sender -> {
             if (sender instanceof ProxiedPlayer) {
                 return ProxiedPlayerMapper.wrapPlayer(sender);

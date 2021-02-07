@@ -10,10 +10,11 @@ import org.bukkit.plugin.Plugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.SenderWrapper;
+import org.screamingsandals.lib.sender.CommandSenderWrapper;
 
 import java.util.function.Function;
 
-public class PaperScreamingCloudManager extends PaperCommandManager<SenderWrapper> {
+public class PaperScreamingCloudManager extends PaperCommandManager<CommandSenderWrapper> {
     /**
      * Construct a new Paper command manager
      *
@@ -21,7 +22,7 @@ public class PaperScreamingCloudManager extends PaperCommandManager<SenderWrappe
      * @param commandCoordinator Coordinator provider
      */
     public PaperScreamingCloudManager(@NonNull Plugin owningPlugin,
-                                      Function<CommandTree<SenderWrapper>, CommandExecutionCoordinator<SenderWrapper>> commandCoordinator) throws Exception {
+                                      Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) throws Exception {
         super(owningPlugin, commandCoordinator,
                 sender -> {
                     if (sender instanceof Player) {

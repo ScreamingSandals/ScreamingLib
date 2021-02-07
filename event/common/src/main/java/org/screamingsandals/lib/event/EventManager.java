@@ -39,6 +39,10 @@ public class EventManager {
     }
 
     public static void init(Controllable controllable) {
+        if (defaultEventManager != null) {
+            throw new UnsupportedOperationException("Default EventManager has been already initialized!");
+        }
+
         defaultEventManager = new EventManager(controllable);
     }
 
@@ -191,5 +195,9 @@ public class EventManager {
                 .filter(entry -> entry.getKey().isInstance(event))
                 .map(Map.Entry::getValue)
                 .filter(eventHandler -> eventHandler.getEventPriority() == priority);
+    }
+
+    private static boolean isDefaultInitialized() {
+        return defaultEventManager != null;
     }
 }

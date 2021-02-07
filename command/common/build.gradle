@@ -1,6 +1,4 @@
 dependencies {
-    api project(':player-common')
-    api project(':world-common')
-    api project(':material-common')
-    api group: 'cloud.commandframework', name: 'cloud-core', version: CLOUD_VERSION
+    api project(':sender')
+    api cloud(CLOUD_VERSION)
 }

@@ -7,16 +7,17 @@ import net.minestom.server.command.CommandSender;
 import net.minestom.server.entity.Player;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.SenderWrapper;
+import org.screamingsandals.lib.sender.CommandSenderWrapper;
 
 import java.util.function.Function;
 
-public class MinestomScreamingCloudManager extends MinestomCommandManager<SenderWrapper> {
+public class MinestomScreamingCloudManager extends MinestomCommandManager<CommandSenderWrapper> {
     /**
      * Create a new command manager instance
      *
      * @param commandCoordinator Coordinator provider
      */
-    protected MinestomScreamingCloudManager(Function<CommandTree<SenderWrapper>, CommandExecutionCoordinator<SenderWrapper>> commandCoordinator) {
+    protected MinestomScreamingCloudManager(Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) {
         super(commandCoordinator,
                 sender -> {
                     if (sender instanceof Player) {

@@ -5,11 +5,12 @@ import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.utils.Wrapper;
 
 @Data
 @RequiredArgsConstructor
-public class ProxiedSenderWrapper implements Wrapper, ForwardingAudience.Single {
+public class ProxiedSenderWrapper implements Wrapper, ForwardingAudience.Single, CommandSenderWrapper {
     private final String name;
     private final Type type;
 
@@ -25,11 +26,6 @@ public class ProxiedSenderWrapper implements Wrapper, ForwardingAudience.Single 
     @Override
     public @NonNull Audience audience() {
         return as(Audience.class);
-    }
-
-    public enum Type {
-        PLAYER,
-        CONSOLE
     }
 
 }

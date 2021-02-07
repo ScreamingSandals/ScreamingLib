@@ -2,5 +2,5 @@ dependencies {
     compileOnly paper(PAPER_VERSION)
     api project(':command-common')
     api project(':player-bukkit')
-    api group: 'cloud.commandframework', name: 'cloud-paper', version: CLOUD_VERSION
+    api cloudPaper(CLOUD_VERSION)
 }
