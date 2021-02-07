@@ -154,7 +154,7 @@ public class EventManager {
     }
 
     public void unregisterAll() {
-        Multimaps.unmodifiableMultimap(handlers)
+        Multimaps.synchronizedMultimap(handlers)
                 .values()
                 .forEach(this::unregister);
     }
