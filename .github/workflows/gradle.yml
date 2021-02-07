@@ -21,3 +21,10 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew
+      env:
+        GITLAB_REPO: ${{ secrets.GITLAB_REPO }}
+        GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        JAVADOC_HOST: ${{ secrets.JAVADOC_HOST }}
+        JAVADOC_SECRET: ${{ secrets.JAVADOC_SECRET }}
+        JAVADOC_USER: ${{ secrets.JAVADOC_USER }}
+
