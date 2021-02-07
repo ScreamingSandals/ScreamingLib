@@ -197,7 +197,7 @@ public class EventManager {
                 .filter(eventHandler -> eventHandler.getEventPriority() == priority);
     }
 
-    private static boolean isDefaultInitialized() {
+    public static boolean isDefaultInitialized() {
         return defaultEventManager != null;
     }
 }
