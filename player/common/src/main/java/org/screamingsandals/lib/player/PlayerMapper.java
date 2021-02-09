@@ -31,9 +31,9 @@ public abstract class PlayerMapper {
 
         playerMapper = playerUtilsSupplier.get();
 
-        final var playerConverter = playerMapper.playerConverter
+        playerMapper.playerConverter
                 .registerW2P(Audience.class, platform -> playerMapper.getAudience(platform, playerMapper.provider));
-        final var senderConverter = playerMapper.senderConverter
+        playerMapper.senderConverter
                 .registerW2P(Audience.class, platform -> playerMapper.getAudience(platform, playerMapper.provider));
     }
 
@@ -170,6 +170,13 @@ public abstract class PlayerMapper {
         }
         
         return playerMapper.playerConverter;
+    }
+
+    public static BidirectionalConverter<SenderWrapper> UNSAFE_getSenderConverter() {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.senderConverter;
     }
 
     public abstract SenderWrapper getConsoleSender0();

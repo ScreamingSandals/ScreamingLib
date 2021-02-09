@@ -2,7 +2,6 @@ package org.screamingsandals.lib.event;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -154,9 +153,7 @@ public class EventManager {
     }
 
     public void unregisterAll() {
-        Multimaps.synchronizedMultimap(handlers)
-                .values()
-                .forEach(this::unregister);
+        handlers.values().forEach(this::unregister);
     }
 
     public void drop() {
