@@ -1,24 +1,23 @@
 package org.screamingsandals.lib.utils;
 
 
+import lombok.experimental.UtilityClass;
+
 /**
  * Copyright Minestom guys, all rights reserved
  */
+@UtilityClass
 public final class MathUtils {
 
-    private MathUtils() {
-
-    }
-
-    public static int square(int num) {
+    public int square(int num) {
         return num * num;
     }
 
-    public static double square(double num) {
+    public double square(double num) {
         return num * num;
     }
 
-    public static double round(double value, int places) {
+    public double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
         final long factor = (long) Math.pow(10, places);
@@ -27,7 +26,7 @@ public final class MathUtils {
         return (double) tmp / factor;
     }
 
-    public static float round(float value, int places) {
+    public float round(float value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
         final long factor = (long) Math.pow(10, places);
@@ -36,23 +35,23 @@ public final class MathUtils {
         return (float) tmp / factor;
     }
 
-    public static float clampFloat(float t, float a, float b) {
+    public float clampFloat(float t, float a, float b) {
         return Math.max(a, Math.min(t, b));
     }
 
-    public static boolean isBetween(byte number, byte min, byte max) {
+    public boolean isBetween(byte number, byte min, byte max) {
         return number >= min && number <= max;
     }
 
-    public static boolean isBetween(int number, int min, int max) {
+    public boolean isBetween(int number, int min, int max) {
         return number >= min && number <= max;
     }
 
-    public static boolean isBetween(float number, float min, float max) {
+    public boolean isBetween(float number, float min, float max) {
         return number >= min && number <= max;
     }
 
-    public static int clamp(int value, int min, int max) {
+    public int clamp(int value, int min, int max) {
         if (value < min) {
             return min;
         } else {
@@ -60,7 +59,7 @@ public final class MathUtils {
         }
     }
 
-    public static double mod(final double a, final double b) {
+    public double mod(final double a, final double b) {
         return (a % b + b) % b;
     }
 }

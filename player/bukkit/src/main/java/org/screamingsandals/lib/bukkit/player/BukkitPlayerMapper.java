@@ -2,13 +2,11 @@ package org.screamingsandals.lib.bukkit.player;
 
 import io.papermc.lib.PaperLib;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
@@ -44,20 +42,43 @@ public class BukkitPlayerMapper extends PlayerMapper {
 
         playerConverter
                 .registerP2W(Player.class, player -> new PlayerWrapper(player.getName(), player.getUniqueId()))
-                .registerW2P(Player.class, playerWrapper -> Bukkit.getPlayer(playerWrapper.getUuid()));
+                .registerW2P(Player.class, playerWrapper -> {
+                    if (playerWrapper.getWrappedPlayer() != null) {
+                        final var maybePlayer = playerWrapper.getWrappedPlayer().get();
+                        if (maybePlayer != null) {
+                            return (Player) maybePlayer;
+                        }
+                    }
+
+                    return Bukkit.getPlayer(playerWrapper.getUuid());
+                });
         senderConverter
-                .registerW2P(Player.class, player -> player.as(PlayerWrapper.class).as(Player.class))
+                .registerW2P(Player.class, wrapper -> {
+                    if (wrapper.getType() != CommandSenderWrapper.Type.PLAYER) {
+                        return null;
+                    }
+
+                    if (wrapper instanceof PlayerWrapper) {
+                        final var wrapped = ((PlayerWrapper) wrapper).getWrappedPlayer().get();
+                        if (wrapped != null) {
+                            return (Player) wrapped;
+                        }
+                    }
+
+                    return Bukkit.getPlayer(wrapper.getName());
+                })
                 .registerP2W(Player.class, player -> new SenderWrapper(player.getName(), CommandSenderWrapper.Type.PLAYER))
                 .registerW2P(PlayerWrapper.class, wrapper -> {
-                    if (wrapper.getType() == SenderWrapper.Type.PLAYER) {
+                    if (wrapper.getType() == CommandSenderWrapper.Type.PLAYER) {
                         final var player = Bukkit.getPlayer(wrapper.getName());
                         if (player == null) {
                             return null;
                         }
-                        return new PlayerWrapper(player.getName(), player.getUniqueId());
+                        return PlayerMapper.wrapPlayer(player);
                     }
                     return null;
                 })
+                .registerP2W(PlayerWrapper.class, wrapper -> wrapper)
                 .registerW2P(CommandSender.class, wrapper -> {
                     switch (wrapper.getType()) {
                         case PLAYER:
@@ -70,9 +91,9 @@ public class BukkitPlayerMapper extends PlayerMapper {
                 })
                 .registerP2W(CommandSender.class, sender -> {
                     if (sender instanceof Player) {
-                        return new SenderWrapper(sender.getName(), SenderWrapper.Type.PLAYER);
+                        return PlayerMapper.wrapPlayer(sender);
                     }
-                    return new SenderWrapper(sender.getName(), SenderWrapper.Type.CONSOLE);
+                    return new SenderWrapper(sender.getName(), CommandSenderWrapper.Type.CONSOLE);
                 });
         handConverter
                 .registerW2P(EquipmentSlot.class, wrapper -> {
@@ -105,7 +126,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public SenderWrapper getConsoleSender0() {
+    public CommandSenderWrapper getConsoleSender0() {
         return senderConverter.convert(Bukkit.getConsoleSender());
     }
 
@@ -156,16 +177,13 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    protected Audience getAudience(SenderWrapper wrapper, AudienceProvider provider) {
+    public Audience getAudience0(CommandSenderWrapper wrapper) {
         final var audiences = (BukkitAudiences) provider;
-        final var sender = wrapper.as(CommandSender.class);
-        if (sender instanceof Player) {
-            return audiences.player(((Player) sender).getUniqueId());
-        } else if (sender instanceof ConsoleCommandSender) {
+        if (wrapper.getType() == CommandSenderWrapper.Type.CONSOLE) {
             return audiences.console();
         }
 
-        return Audience.empty();
+        return audiences.player(wrapper.as(Player.class).getUniqueId());
     }
 
     private void registerListeners(Plugin plugin) {

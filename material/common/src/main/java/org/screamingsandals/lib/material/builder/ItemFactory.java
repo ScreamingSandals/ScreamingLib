@@ -174,6 +174,7 @@ public abstract class ItemFactory {
 
         return item;
     };
+
     protected BidirectionalConverter<Item> itemConverter = BidirectionalConverter.<Item>build()
             .registerW2P(String.class, item -> item.getMaterial().getPlatformName())
             .registerW2P(MaterialHolder.class, Item::getMaterial)
@@ -241,6 +242,10 @@ public abstract class ItemFactory {
     }
 
     public static Optional<Item> readStack(Object stackObject) {
+        if (factory == null) {
+            return Optional.empty();
+        }
+
         var it = factory.itemConverter.convertOptional(stackObject);
         if (it.isPresent()) {
             return it;

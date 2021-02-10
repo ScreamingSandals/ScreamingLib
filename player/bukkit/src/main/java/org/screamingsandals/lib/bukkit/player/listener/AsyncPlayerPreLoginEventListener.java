@@ -20,6 +20,10 @@ public class AsyncPlayerPreLoginEventListener extends AbstractBukkitEventHandler
 
     @Override
     protected void postProcess(SAsyncPlayerPreLoginEvent wrappedEvent, AsyncPlayerPreLoginEvent event) {
+        if (wrappedEvent.getResult() == null) {
+            return;
+        }
+
         switch (wrappedEvent.getResult()) {
             case ALLOWED:
                 event.setLoginResult(AsyncPlayerPreLoginEvent.Result.ALLOWED);
@@ -37,6 +41,9 @@ public class AsyncPlayerPreLoginEventListener extends AbstractBukkitEventHandler
                 event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
                 break;
         }
-        event.setKickMessage(AdventureHelper.toLegacy(wrappedEvent.getMessage()));
+
+        if (wrappedEvent.getMessage() != null) {
+            event.setKickMessage(AdventureHelper.toLegacy(wrappedEvent.getMessage()));
+        }
     }
 }

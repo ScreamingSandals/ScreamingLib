@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 
 import java.util.function.Function;
@@ -30,7 +29,7 @@ public class PaperScreamingCloudManager extends PaperCommandManager<CommandSende
                     }
                     return PlayerMapper.wrapSender(sender);
                 }, sender -> {
-                    if (sender.getType() == SenderWrapper.Type.PLAYER) {
+                    if (sender.getType() == CommandSenderWrapper.Type.PLAYER) {
                         return sender.as(Player.class);
                     }
                     return sender.as(CommandSender.class);

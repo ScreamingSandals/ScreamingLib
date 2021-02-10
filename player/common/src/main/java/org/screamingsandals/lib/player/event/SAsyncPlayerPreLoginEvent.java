@@ -15,7 +15,7 @@ public class SAsyncPlayerPreLoginEvent extends AbstractAsyncEvent {
     private final InetAddress address;
     //name is changeable only on some platforms!
     private String name;
-    private Result result;
+    private Result result = Result.ALLOWED;
     private Component message;
 
     public SAsyncPlayerPreLoginEvent(UUID uuid, String name, InetAddress address) {

@@ -25,7 +25,7 @@ public class SenderWrapper implements Wrapper, CommandSenderWrapper {
     @Override
     @NonNull
     public Audience audience() {
-        return as(Audience.class);
+        return PlayerMapper.getAudience(this);
     }
 
 }

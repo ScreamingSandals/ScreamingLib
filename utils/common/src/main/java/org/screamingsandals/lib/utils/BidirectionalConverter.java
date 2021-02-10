@@ -49,6 +49,7 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
         if (object == null) {
             return Optional.empty();
         }
+
         return p2wConverters.entrySet()
                 .stream()
                 .filter(c -> c.getKey().isInstance(object))
@@ -58,7 +59,8 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
 
     @NotNull
     public <P> P convert(@NotNull SpecificWrapper object, @NotNull Class<P> newType) {
-        return convertOptional(object, newType).orElseThrow(() -> new UnsupportedOperationException("Can't convert wrapper to " + newType.getName()));
+        return convertOptional(object, newType).orElseThrow(() ->
+                new UnsupportedOperationException("Can't convert wrapper " + object.getClass().getName() + " to " + newType.getName()));
     }
 
     @SuppressWarnings("unchecked")

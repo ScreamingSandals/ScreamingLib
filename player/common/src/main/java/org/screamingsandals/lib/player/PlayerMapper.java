@@ -5,10 +5,12 @@ import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.LocationHolder;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,7 +21,7 @@ public abstract class PlayerMapper {
     protected final static String CONSOLE_NAME = "CONSOLE";
 
     protected final BidirectionalConverter<PlayerWrapper> playerConverter = BidirectionalConverter.build();
-    protected final BidirectionalConverter<SenderWrapper> senderConverter = BidirectionalConverter.build();
+    protected final BidirectionalConverter<CommandSenderWrapper> senderConverter = BidirectionalConverter.build();
     protected final BidirectionalConverter<PlayerWrapper.Hand> handConverter = BidirectionalConverter.build();
     protected AudienceProvider provider = null;
     private static PlayerMapper playerMapper = null;
@@ -30,11 +32,6 @@ public abstract class PlayerMapper {
         }
 
         playerMapper = playerUtilsSupplier.get();
-
-        playerMapper.playerConverter
-                .registerW2P(Audience.class, platform -> playerMapper.getAudience(platform, playerMapper.provider));
-        playerMapper.senderConverter
-                .registerW2P(Audience.class, platform -> playerMapper.getAudience(platform, playerMapper.provider));
     }
 
     public static boolean isInitialized() {
@@ -45,10 +42,12 @@ public abstract class PlayerMapper {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
-        return playerMapper.playerConverter.convert(player);
+        final var converted = playerMapper.playerConverter.convert(player);
+        converted.setWrappedPlayer(new WeakReference<>(player));
+        return converted;
     }
 
-    public static <T> SenderWrapper wrapSender(T sender) {
+    public static <T> CommandSenderWrapper wrapSender(T sender) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
@@ -69,7 +68,7 @@ public abstract class PlayerMapper {
         return playerMapper.handConverter.convert(hand, type);
     }
 
-    public static <T> T convertSenderWrapper(SenderWrapper wrapper, Class<T> type) {
+    public static <T> T convertSenderWrapper(CommandSenderWrapper wrapper, Class<T> type) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
@@ -157,11 +156,18 @@ public abstract class PlayerMapper {
         return playerMapper.getPlayers0();
     }
 
-    public static SenderWrapper getConsoleSender() {
+    public static CommandSenderWrapper getConsoleSender() {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.getConsoleSender0();
+    }
+
+    public static Audience getAudience(CommandSenderWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getAudience0(wrapper);
     }
     
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
@@ -172,14 +178,14 @@ public abstract class PlayerMapper {
         return playerMapper.playerConverter;
     }
 
-    public static BidirectionalConverter<SenderWrapper> UNSAFE_getSenderConverter() {
+    public static BidirectionalConverter<CommandSenderWrapper> UNSAFE_getSenderConverter() {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.senderConverter;
     }
 
-    public abstract SenderWrapper getConsoleSender0();
+    public abstract CommandSenderWrapper getConsoleSender0();
 
     public abstract List<PlayerWrapper> getPlayers0();
 
@@ -197,5 +203,5 @@ public abstract class PlayerMapper {
 
     public abstract void kick0(PlayerWrapper wrapper, Component message);
 
-    protected abstract Audience getAudience(SenderWrapper wrapper, AudienceProvider provider);
+    public abstract Audience getAudience0(CommandSenderWrapper wrapper);
 }

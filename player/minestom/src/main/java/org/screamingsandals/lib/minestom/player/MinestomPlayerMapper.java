@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.minestom.player;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.minestom.MinestomAudiences;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
@@ -17,6 +16,7 @@ import org.screamingsandals.lib.minestom.utils.MinestomAdventureHelper;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
+import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
@@ -43,12 +43,12 @@ public class MinestomPlayerMapper extends PlayerMapper {
                 .registerP2W(Player.class, player -> new PlayerWrapper(player.getUsername(), player.getUuid()));
         senderConverter
                 .registerW2P(PlayerWrapper.class, wrapper -> {
-                    if (wrapper.getType() == SenderWrapper.Type.PLAYER) {
+                    if (wrapper.getType() == CommandSenderWrapper.Type.PLAYER) {
                         final var player = MinecraftServer.getConnectionManager().getPlayer(wrapper.getName());
                         if (player == null) {
                             return null;
                         }
-                        return new PlayerWrapper(player.getUsername(), player.getUuid());
+                        return PlayerMapper.wrapPlayer(player);
                     }
                     return null;
                 })
@@ -93,7 +93,7 @@ public class MinestomPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public SenderWrapper getConsoleSender0() {
+    public CommandSenderWrapper getConsoleSender0() {
         return senderConverter.convert(MinecraftServer.getCommandManager().getConsoleSender());
     }
 
@@ -136,7 +136,7 @@ public class MinestomPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    protected Audience getAudience(SenderWrapper wrapper, AudienceProvider provider) {
+    public Audience getAudience0(CommandSenderWrapper wrapper) {
         final var audiences = (MinestomAudiences) provider;
         final var sender = wrapper.as(CommandSender.class);
         if (sender instanceof Player) {

@@ -9,6 +9,8 @@ public interface CommandSenderWrapper extends Wrapper, ForwardingAudience.Single
 
     void sendMessage(String message);
 
+    String getName();
+
     enum Type {
         PLAYER,
         CONSOLE

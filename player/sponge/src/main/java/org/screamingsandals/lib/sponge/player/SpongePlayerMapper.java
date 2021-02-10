@@ -1,13 +1,13 @@
 package org.screamingsandals.lib.sponge.player;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
+import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -42,7 +42,7 @@ public class SpongePlayerMapper extends PlayerMapper {
                         if (player == null) {
                             return null;
                         }
-                        return new PlayerWrapper(player.getName(), player.getUniqueId());
+                        return PlayerMapper.wrapPlayer(player);
                     }
                     return null;
                 })
@@ -82,7 +82,7 @@ public class SpongePlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public SenderWrapper getConsoleSender0() {
+    public CommandSenderWrapper getConsoleSender0() {
         return senderConverter.convert(Sponge.getSystemSubject());
     }
 
@@ -130,9 +130,9 @@ public class SpongePlayerMapper extends PlayerMapper {
     }
 
     @Override
-    protected Audience getAudience(SenderWrapper wrapper, AudienceProvider provider) {
+    public Audience getAudience0(CommandSenderWrapper wrapper) {
         if (wrapper.getType() == SenderWrapper.Type.PLAYER) {
-            return Sponge.getServer().getPlayer(wrapper.getName()).orElseThrow();
+            return Sponge.getServer().getPlayer(wrapper.as(PlayerWrapper.class).getName()).orElseThrow();
         }
         return Sponge.getSystemSubject();
     }

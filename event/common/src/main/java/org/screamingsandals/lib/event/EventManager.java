@@ -2,6 +2,7 @@ package org.screamingsandals.lib.event;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +11,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.executor.ExecutorProvider;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -26,7 +28,7 @@ import java.util.stream.Stream;
 @NoArgsConstructor
 public class EventManager {
     private final static ExecutorService executor;
-    private final Multimap<Class<?>, EventHandler<? extends AbstractEvent>> handlers = ArrayListMultimap.create();
+    private final Multimap<Class<?>, EventHandler<? extends AbstractEvent>> handlers = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
 
     @Getter
     private static EventManager defaultEventManager;
@@ -82,13 +84,12 @@ public class EventManager {
     }
 
     public <T extends AbstractEvent> void unregister(EventHandler<T> handler) {
-        handlers.entries()
-                .removeIf(entry -> {
+        List.copyOf(handlers.entries())
+                .forEach(entry -> {
                     if (handler == entry.getValue()) {
                         fireEventAsync(new HandlerUnregisteredEvent(this, entry.getKey(), handler));
-                        return true;
+                        handlers.remove(entry.getKey(), entry.getValue());
                     }
-                    return false;
                 });
     }
 
@@ -153,7 +154,7 @@ public class EventManager {
     }
 
     public void unregisterAll() {
-        handlers.values().forEach(this::unregister);
+        List.copyOf(handlers.values()).forEach(this::unregister);
     }
 
     public void drop() {
