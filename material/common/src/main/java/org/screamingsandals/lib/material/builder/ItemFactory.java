@@ -243,7 +243,7 @@ public abstract class ItemFactory {
 
     public static Optional<Item> readStack(Object stackObject) {
         if (factory == null) {
-            return Optional.empty();
+            throw new UnsupportedOperationException("ItemFactor is not initialized yet!");
         }
 
         var it = factory.itemConverter.convertOptional(stackObject);

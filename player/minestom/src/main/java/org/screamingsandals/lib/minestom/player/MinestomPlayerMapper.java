@@ -153,6 +153,7 @@ public class MinestomPlayerMapper extends PlayerMapper {
         new PlayerJoinEventListener();
         new PlayerLeaveEventListener();
         new PlayerBlockPlaceEventListener();
+        new PlayerBlockBreakEventListener();
         new PlayerMoveEventListener();
         new PlayerItemPickupEventListener();
     }

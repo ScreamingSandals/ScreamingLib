@@ -63,8 +63,9 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
                             && event instanceof org.bukkit.event.Cancellable) {
                         final var isCancelled = ((CancellableAbstractEvent) wrapped).isCancelled();
                         ((org.bukkit.event.Cancellable) event).setCancelled(isCancelled);
-
+                        return;
                     }
+
                     postProcess(wrapped, (T) event);
                 };
 

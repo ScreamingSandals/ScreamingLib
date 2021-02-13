@@ -191,6 +191,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
         new PlayerJoinEventListener(plugin);
         new PlayerLeaveEventListener(plugin);
         new PlayerBlockPlaceEventListener(plugin);
+        new PlayerBlockBreakEventListener(plugin);
         new PlayerMoveEventListener(plugin);
         new PlayerPickupItemListener(plugin);
     }
