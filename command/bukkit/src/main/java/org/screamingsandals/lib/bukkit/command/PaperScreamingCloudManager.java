@@ -37,6 +37,7 @@ public class PaperScreamingCloudManager extends PaperCommandManager<CommandSende
 
         if (queryCapability(CloudBukkitCapabilities.BRIGADIER)) {
             registerBrigadier();
+            brigadierManager().setNativeNumberSuggestions(false);
         }
 
         if (queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
