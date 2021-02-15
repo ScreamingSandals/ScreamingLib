@@ -36,7 +36,7 @@ public class ArmorStandNMS extends EntityNMS {
 		ClassStorage.getMethod(handler, "setArms,func_175413_k", boolean.class).invoke(arms);
 	}
 	
-	public boolean isArms() {
+	public boolean hasArms() {
 		return (boolean) ClassStorage.getMethod(handler, "hasArms,func_175402_q").invoke();
 	}
 	
@@ -44,7 +44,7 @@ public class ArmorStandNMS extends EntityNMS {
 		ClassStorage.getMethod(handler, "setBasePlate,func_175426_l", boolean.class).invoke(basePlate);
 	}
 	
-	public boolean isBasePlate() {
+	public boolean hasBasePlate() {
 		return (boolean) ClassStorage.getMethod(handler, "hasBasePlate,func_175414_r").invoke();
 	}
 	

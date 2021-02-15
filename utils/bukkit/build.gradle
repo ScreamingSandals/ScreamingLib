@@ -3,4 +3,5 @@ dependencies {
     compileOnly 'io.netty:netty-all:4.1.42.Final'
 
     api project(':utils-common')
+    api 'net.kyori:adventure-text-serializer-craftbukkit:' + ADVENTURE_PLATFORM_VERSION
 }

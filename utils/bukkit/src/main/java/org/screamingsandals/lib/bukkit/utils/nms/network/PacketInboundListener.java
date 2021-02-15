@@ -15,23 +15,29 @@ public abstract class PacketInboundListener{
 	
 	public void addPlayer(Player player) {
 		try {
-			Channel ch = getChannel(player);
-			if (ch.pipeline().get(channelName) == null) {
-				ChannelDuplexHandler handler = new ChannelDuplexHandler() {
+			final var channel = getChannel(player);
+			if (channel == null) {
+				return;
+			}
+
+			if (channel.pipeline().get(channelName) == null) {
+				final var handler = new ChannelDuplexHandler() {
 					@Override
 					public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 						try {
 							msg = handle(player, msg);
 						} catch (Throwable t) {
+							t.printStackTrace();
 						}
 						if (msg != null) {
 							super.channelRead(ctx, msg);
 						}
 					}
 				};
-				ch.pipeline().addBefore("packet_handler", channelName, handler);
+				channel.pipeline().addBefore("packet_handler", channelName, handler);
 			}
 		} catch (Throwable t) {
+			t.printStackTrace();
 		}
 	}
 
@@ -47,10 +53,10 @@ public abstract class PacketInboundListener{
 	
 	private Channel getChannel(Player player) {
 		try {
-			Object manager = getField(getPlayerConnection(player), "networkManager,field_147371_a");
-			Channel channel = (Channel) getField(manager, "channel,field_150746_k,k,m");
-			return channel;
+			final var manager = getField(getPlayerConnection(player), "networkManager,field_147371_a");
+			return (Channel) getField(manager, "channel,field_150746_k,k,m");
 		} catch (Throwable t) {
+			t.printStackTrace();
 		}
 		return null;
 	}

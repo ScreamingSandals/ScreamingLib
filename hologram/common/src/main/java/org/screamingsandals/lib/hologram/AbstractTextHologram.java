@@ -4,12 +4,13 @@ import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.TreeMap;
+import java.util.UUID;
 
 public abstract class AbstractTextHologram extends AbstractHologram implements TextHologram {
-    private TreeMap<Integer, Component> lines = new TreeMap<>();
+    protected TreeMap<Integer, Component> lines = new TreeMap<>();
 
-    protected AbstractTextHologram(LocationHolder location, boolean touchable) {
-        super(location, touchable);
+    protected AbstractTextHologram(UUID uuid, LocationHolder location, boolean touchable) {
+        super(uuid, location, touchable);
     }
 
     @Override
@@ -24,6 +25,9 @@ public abstract class AbstractTextHologram extends AbstractHologram implements T
 
     @Override
     public TextHologram newLine(Component text) {
+        if (lines.isEmpty()) {
+            return firstLine(text);
+        }
         return newLine(lines.lastKey() + 1, text);
     }
 
@@ -31,20 +35,29 @@ public abstract class AbstractTextHologram extends AbstractHologram implements T
     public TextHologram newLine(int line, Component text) {
         //TODO: test!!
         lines = HologramUtils.addEntryAndMoveRest(lines, line, text);
-        updateForAll();
+        update();
         return this;
     }
 
     @Override
     public TextHologram removeLine(int line) {
-        //TODo
+        lines = HologramUtils.removeEntryAndMoveRest(lines, line);
+        update();
         return this;
     }
 
     @Override
     public TextHologram replaceLines(TreeMap<Integer, Component> lines) {
         this.lines = lines;
-        updateForAll();
+        update();
         return this;
+    }
+
+    @Override
+    public void destroy() {
+        hide();
+        lines.clear();
+        update();
+        viewers.clear();
     }
 }

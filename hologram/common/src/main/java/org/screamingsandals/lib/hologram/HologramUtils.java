@@ -19,6 +19,20 @@ public class HologramUtils {
 
         final TreeMap<Integer, Component> toReturn = new TreeMap<>(head);
         tail.forEach((key, value) -> toReturn.put(key + 1, value));
+        toReturn.put(line, text);
+        return toReturn;
+    }
+
+    public TreeMap<Integer, Component> removeEntryAndMoveRest(TreeMap<Integer, Component> input, Integer line) {
+        if (!input.containsKey(line)) {
+            return input;
+        }
+
+        final var head = input.headMap(line);
+        final var tail = input.tailMap(line);
+
+        final TreeMap<Integer, Component> toReturn = new TreeMap<>(head);
+        tail.forEach((key, value) -> toReturn.put(key - 1, value));
         return toReturn;
     }
 

@@ -1,22 +1,27 @@
 package org.screamingsandals.lib.hologram;
 
+import lombok.Getter;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public abstract class AbstractHologram implements Hologram {
     protected final int DEFAULT_VIEW_DISTANCE = 4096;
     protected final List<PlayerWrapper> viewers = new LinkedList<>();
+    @Getter
+    protected final UUID uuid;
 
     protected LocationHolder location;
     protected int viewDistance;
     protected boolean touchable;
     protected boolean visible;
 
-    protected AbstractHologram(LocationHolder location, boolean touchable) {
+    protected AbstractHologram(UUID uuid, LocationHolder location, boolean touchable) {
+        this.uuid = uuid;
         this.location = location;
         this.touchable = touchable;
 
@@ -61,7 +66,7 @@ public abstract class AbstractHologram implements Hologram {
     @Override
     public Hologram setLocation(LocationHolder location) {
         this.location = location;
-        updateForAll();
+        update();
         return this;
     }
 
@@ -95,22 +100,20 @@ public abstract class AbstractHologram implements Hologram {
     @Override
     public Hologram show() {
         visible = true;
-        updateForAll();
+        update();
         return this;
     }
 
     @Override
     public Hologram hide() {
         visible = false;
-        updateForAll();
+        update();
         return this;
     }
 
-    protected abstract void onViewerAdded(PlayerWrapper player, boolean checkDistance);
+    public abstract void onViewerAdded(PlayerWrapper player, boolean checkDistance);
 
-    protected abstract void onViewerRemoved(PlayerWrapper player, boolean checkDistance);
+    public abstract void onViewerRemoved(PlayerWrapper player, boolean checkDistance);
 
-    protected abstract void update(PlayerWrapper player, boolean checkDistance);
-
-    protected abstract void updateForAll();
+    public abstract void update();
 }

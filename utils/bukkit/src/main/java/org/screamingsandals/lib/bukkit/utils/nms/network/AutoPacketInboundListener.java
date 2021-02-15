@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -18,6 +19,11 @@ public abstract class AutoPacketInboundListener extends PacketInboundListener im
 	@EventHandler(priority = EventPriority.LOWEST)
 	public final void onPlayerLogin(PlayerJoinEvent e) {
 		addPlayer(e.getPlayer());
+	}
+
+	@EventHandler(priority =  EventPriority.LOWEST)
+	public final void onPlayerQuit(PlayerQuitEvent e) {
+		removePlayer(e.getPlayer());
 	}
 
 	@EventHandler
