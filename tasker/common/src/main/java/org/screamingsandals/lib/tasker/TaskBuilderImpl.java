@@ -40,7 +40,7 @@ public class TaskBuilderImpl implements Tasker.TaskBuilder {
 
     @Override
     public Tasker.TaskBuilder delay(long time, TaskerTime unit) {
-        Preconditions.checkArgument(time < 0, "Time needs to be equals or bigger than 0!");
+        Preconditions.checkArgument(time >= 0, "Time needs to be equals or bigger than 0!");
         delay = time;
         timeUnit = unit;
         return this;
@@ -48,7 +48,7 @@ public class TaskBuilderImpl implements Tasker.TaskBuilder {
 
     @Override
     public Tasker.TaskBuilder repeat(long time, TaskerTime unit) {
-        Preconditions.checkArgument(time < 0, "Time needs to be equals or bigger than 1!");
+        Preconditions.checkArgument(time >= 0, "Time needs to be equals or bigger than 0!");
         repeat = time;
         timeUnit = unit;
         return this;

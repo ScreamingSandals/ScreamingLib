@@ -1,5 +1,6 @@
 dependencies {
-    api project(':hologram-common')
+    compileOnly paper(PAPER_VERSION)
 
+    api project(':hologram-common')
     api project(':utils-bukkit')
 }

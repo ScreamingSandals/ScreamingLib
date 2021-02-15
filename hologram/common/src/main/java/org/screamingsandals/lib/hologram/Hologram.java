@@ -5,8 +5,11 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface Hologram {
+
+    UUID getUuid();
 
     List<PlayerWrapper> getViewers();
 
@@ -33,4 +36,6 @@ public interface Hologram {
     Hologram show();
 
     Hologram hide();
+
+    void destroy();
 }
