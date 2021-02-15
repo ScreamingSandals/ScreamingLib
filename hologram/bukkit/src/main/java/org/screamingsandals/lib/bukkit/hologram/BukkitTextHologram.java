@@ -61,6 +61,18 @@ public class BukkitTextHologram extends AbstractTextHologram {
         updateEntities();
     }
 
+    @Override
+    public Hologram hide() {
+        viewers.forEach(viewer -> {
+            try {
+                update(viewer.as(Player.class), List.of(getFullDestroyPacket()), false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        return this;
+    }
+
     private void update(Player player, List<Object> packets, boolean checkDistance) {
         if (!player.getLocation().getWorld().equals(cachedLocation.getWorld())) {
             log.trace("World is different, doing nothing.");
@@ -91,7 +103,8 @@ public class BukkitTextHologram extends AbstractTextHologram {
                 try {
                     if (entitiesOnLines.containsKey(key)) {
                         final var entityOnLine = entitiesOnLines.get(key);
-                        if (entityOnLine.getCustomName().equals(value)) {
+                        if (entityOnLine.getCustomName().equals(value)
+                                && originalLinesSize == lines.size()) {
                             return;
                         }
 
@@ -110,35 +123,36 @@ public class BukkitTextHologram extends AbstractTextHologram {
                                 .getConstructor(ClassStorage.NMS.Entity)
                                 .newInstance(entityOnLine.getHandler());
                         packets.add(teleportPacket);
-                        return;
+                    } else {
+                        log.trace("Lines size {}", lines.size());
+                        log.trace("key {}", key);
+                        log.trace("new location: {}", (lines.size() - key) * .30);
+                        final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .30, 0);
+                        final var entity = new ArmorStandNMS(newLocation);
+                        entity.setCustomName(value);
+                        entity.setCustomNameVisible(true);
+                        entity.setInvisible(true);
+                        entity.setSmall(!touchable);
+                        entity.setArms(false);
+                        entity.setBasePlate(false);
+                        entity.setGravity(false);
+                        entity.setMarker(!touchable);
+
+                        final var spawnLivingPacket = ClassStorage.NMS.PacketPlayOutSpawnEntityLiving
+                                .getConstructor(ClassStorage.NMS.EntityLiving)
+                                .newInstance(entity.getHandler());
+                        packets.add(spawnLivingPacket);
+
+                        if (Version.isVersion(1, 15)) {
+                            Object metadataPacket = ClassStorage.NMS.PacketPlayOutEntityMetadata
+                                    .getConstructor(int.class, ClassStorage.NMS.DataWatcher, boolean.class)
+                                    .newInstance(entity.getId(),
+                                            entity.getDataWatcher(), false);
+                            packets.add(metadataPacket);
+                        }
+
+                        entitiesOnLines.put(key, entity);
                     }
-
-                    final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .30, 0);
-                    final var entity = new ArmorStandNMS(newLocation);
-                    entity.setCustomName(value);
-                    entity.setCustomNameVisible(true);
-                    entity.setInvisible(true);
-                    entity.setSmall(!touchable);
-                    entity.setArms(false);
-                    entity.setBasePlate(false);
-                    entity.setGravity(false);
-                    entity.setMarker(!touchable);
-
-                    final var spawnLivingPacket = ClassStorage.NMS.PacketPlayOutSpawnEntityLiving
-                            .getConstructor(ClassStorage.NMS.EntityLiving)
-                            .newInstance(entity.getHandler());
-                    packets.add(spawnLivingPacket);
-
-                    if (Version.isVersion(1, 15)) {
-                        Object metadataPacket = ClassStorage.NMS.PacketPlayOutEntityMetadata
-                                .getConstructor(int.class, ClassStorage.NMS.DataWatcher, boolean.class)
-                                .newInstance(entity.getId(),
-                                        entity.getDataWatcher(), false);
-                        packets.add(metadataPacket);
-                    }
-
-                    entitiesOnLines.put(key, entity);
-
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
                 }

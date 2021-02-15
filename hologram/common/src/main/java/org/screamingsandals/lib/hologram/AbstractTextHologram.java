@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public abstract class AbstractTextHologram extends AbstractHologram implements TextHologram {
     protected TreeMap<Integer, Component> lines = new TreeMap<>();
+    protected Integer originalLinesSize = 0;
 
     protected AbstractTextHologram(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
@@ -28,12 +29,16 @@ public abstract class AbstractTextHologram extends AbstractHologram implements T
         if (lines.isEmpty()) {
             return firstLine(text);
         }
-        return newLine(lines.lastKey() + 1, text);
+
+        originalLinesSize = lines.size();
+        lines.put(lines.lastKey() + 1, text);
+        update();
+        return this;
     }
 
     @Override
     public TextHologram newLine(int line, Component text) {
-        //TODO: test!!
+        originalLinesSize = lines.size();
         lines = HologramUtils.addEntryAndMoveRest(lines, line, text);
         update();
         return this;
@@ -41,6 +46,7 @@ public abstract class AbstractTextHologram extends AbstractHologram implements T
 
     @Override
     public TextHologram removeLine(int line) {
+        originalLinesSize = lines.size();
         lines = HologramUtils.removeEntryAndMoveRest(lines, line);
         update();
         return this;
@@ -48,6 +54,7 @@ public abstract class AbstractTextHologram extends AbstractHologram implements T
 
     @Override
     public TextHologram replaceLines(TreeMap<Integer, Component> lines) {
+        originalLinesSize = lines.size();
         this.lines = lines;
         update();
         return this;
