@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.hologram;
 
-import org.screamingsandals.lib.hologram.builder.TextHologramBuilder;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.function.Supplier;
 
@@ -16,14 +16,18 @@ public abstract class HologramCreator {
         creator = supplier.get();
     }
 
-    public static TextHologram buildTextHologram(TextHologramBuilder builder) {
+    public static TextHologram textHologram(LocationHolder holder) {
+        return textHologram(holder, false);
+    }
+
+    public static TextHologram textHologram(LocationHolder holder, boolean touchable) {
         if (creator == null) {
             throw new UnsupportedOperationException("HologramCreator is not initialized yet!");
         }
 
-        return creator.buildTextHologram0(builder);
+        return creator.textHologram0(holder, touchable);
     }
 
-    protected abstract TextHologram buildTextHologram0(TextHologramBuilder builder);
+    protected abstract TextHologram textHologram0(LocationHolder holder, boolean touchable);
 
 }

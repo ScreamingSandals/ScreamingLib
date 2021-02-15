@@ -13,7 +13,7 @@ def registerModule(String name, String... platforms) {
     }
 }
 
-registerModule('utils', 'minestom', 'sponge')
+registerModule('utils', 'bukkit', 'minestom', 'sponge')
 registerModule('material', 'bukkit', 'minestom', 'sponge')
 registerModule('world', 'bukkit', 'minestom', 'sponge')
 registerModule('player', 'bukkit', 'minestom', 'sponge')

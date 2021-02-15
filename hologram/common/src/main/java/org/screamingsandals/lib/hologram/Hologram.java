@@ -10,36 +10,27 @@ public interface Hologram {
 
     List<PlayerWrapper> getViewers();
 
-    void addViewer(PlayerWrapper player);
+    Hologram addViewer(PlayerWrapper player);
 
-    void removeViewer(PlayerWrapper player);
+    Hologram removeViewer(PlayerWrapper player);
 
     boolean hasViewers();
 
     Optional<LocationHolder> getLocation();
 
-    void setLocation(LocationHolder location);
+    Hologram setLocation(LocationHolder location);
 
     int getViewDistance();
 
-    void setViewDistance(int viewDistance);
+    Hologram setViewDistance(int viewDistance);
 
     boolean isTouchable();
 
-    List<TouchHandler> getTouchHandlers();
+    Hologram setTouchable(boolean touchable);
 
-    void addTouchHandler(TouchHandler handler);
+    boolean isShown();
 
-    void removeTouchHandler(TouchHandler handler);
+    Hologram show();
 
-    void clearTouchHandlers();
-
-    boolean isVisible();
-
-    void setVisible(boolean visible);
-
-    @FunctionalInterface
-    interface TouchHandler {
-        void handleTouch(PlayerWrapper who, Hologram clicked);
-    }
+    Hologram hide();
 }

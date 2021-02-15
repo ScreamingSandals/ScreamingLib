@@ -21,4 +21,5 @@ public class HologramUtils {
         tail.forEach((key, value) -> toReturn.put(key + 1, value));
         return toReturn;
     }
+
 }

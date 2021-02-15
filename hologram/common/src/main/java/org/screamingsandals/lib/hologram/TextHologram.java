@@ -8,11 +8,13 @@ public interface TextHologram extends Hologram {
 
     TreeMap<Integer, Component> getLines();
 
-    void firstLine(Component line);
+    TextHologram firstLine(Component text);
 
-    void newLine(Component line);
+    TextHologram newLine(Component text);
 
-    void newLine(int where, Component line);
+    TextHologram newLine(int line, Component text);
 
-    void replaceLines(TreeMap<Integer, Component> map);
+    TextHologram removeLine(int line);
+
+    TextHologram replaceLines(TreeMap<Integer, Component> lines);
 }
