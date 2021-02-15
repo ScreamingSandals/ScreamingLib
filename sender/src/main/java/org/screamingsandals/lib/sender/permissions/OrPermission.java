@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @RequiredArgsConstructor(staticName = "of")
-public class OrPermission {
+public class OrPermission implements Permission {
     private final List<Permission> permissions;
 
     public static OrPermission of(Permission...permissions) {
