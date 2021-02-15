@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -169,6 +170,20 @@ public abstract class PlayerMapper {
         }
         return playerMapper.getAudience0(wrapper);
     }
+
+    public static boolean hasPermission(CommandSenderWrapper wrapper, Permission permission) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.hasPermission0(wrapper, permission);
+    }
+
+    public static boolean isPermissionSet(CommandSenderWrapper wrapper, Permission permission) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.isPermissionSet0(wrapper, permission);
+    }
     
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
@@ -204,4 +219,8 @@ public abstract class PlayerMapper {
     public abstract void kick0(PlayerWrapper wrapper, Component message);
 
     public abstract Audience getAudience0(CommandSenderWrapper wrapper);
+
+    public abstract boolean hasPermission0(CommandSenderWrapper wrapper, Permission permission);
+
+    public abstract boolean isPermissionSet0(CommandSenderWrapper wrapper, Permission permission);
 }

@@ -2,12 +2,14 @@ package org.screamingsandals.lib.sponge.player;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -17,6 +19,7 @@ import org.spongepowered.api.SystemSubject;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.permission.Subject;
+import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.world.server.ServerLocation;
 
 import java.util.List;
@@ -24,7 +27,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service
+@Service(dependsOn = {
+        EventManager.class
+})
 public class SpongePlayerMapper extends PlayerMapper {
 
     public static void init() {
@@ -135,5 +140,32 @@ public class SpongePlayerMapper extends PlayerMapper {
             return Sponge.getServer().getPlayer(wrapper.as(PlayerWrapper.class).getName()).orElseThrow();
         }
         return Sponge.getSystemSubject();
+    }
+
+    @Override
+    public boolean hasPermission0(CommandSenderWrapper wrapper, Permission permission) {
+        if (permission instanceof SimplePermission) {
+            if (isPermissionSet0(wrapper, permission)) {
+                return wrapper.as(Subject.class).hasPermission(((SimplePermission) permission).getPermissionString());
+            } else {
+                return ((SimplePermission) permission).isDefaultAllowed();
+            }
+        } else if (permission instanceof AndPermission) {
+            return ((AndPermission) permission).getPermissions().stream().allMatch(permission1 -> hasPermission0(wrapper, permission1));
+        } else if (permission instanceof OrPermission) {
+            return ((OrPermission) permission).getPermissions().stream().anyMatch(permission1 -> hasPermission0(wrapper, permission1));
+        } else if (permission instanceof PredicatePermission) {
+            return permission.hasPermission(wrapper);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isPermissionSet0(CommandSenderWrapper wrapper, Permission permission) {
+        if (permission instanceof SimplePermission) {
+            var subject = wrapper.as(Subject.class);
+            return subject.getPermissionValue(subject.getActiveContexts(), ((SimplePermission) permission).getPermissionString()) != Tristate.UNDEFINED;
+        }
+        return true;
     }
 }

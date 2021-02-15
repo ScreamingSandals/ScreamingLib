@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.audience.Audience;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.Wrapper;
 
 @Data
@@ -15,6 +16,16 @@ public class SenderWrapper implements Wrapper, CommandSenderWrapper {
 
     public void sendMessage(String message) {
         PlayerMapper.sendMessage(this, message);
+    }
+
+    @Override
+    public boolean hasPermission(Permission permission) {
+        return PlayerMapper.hasPermission(this, permission);
+    }
+
+    @Override
+    public boolean isPermissionSet(Permission permission) {
+        return PlayerMapper.isPermissionSet(this, permission);
     }
 
     @Override

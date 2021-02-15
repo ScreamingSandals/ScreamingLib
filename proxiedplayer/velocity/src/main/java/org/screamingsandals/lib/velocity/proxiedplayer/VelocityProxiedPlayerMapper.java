@@ -1,14 +1,18 @@
 package org.screamingsandals.lib.velocity.proxiedplayer;
 
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.permission.Tristate;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
+import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerWrapper;
 import org.screamingsandals.lib.proxiedplayer.ProxiedSenderWrapper;
 import org.screamingsandals.lib.proxiedplayer.ServerWrapper;
+import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.velocity.proxiedplayer.event.ChatEventHandlerFactory;
@@ -18,7 +22,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service
+@Service(dependsOn = {
+        EventManager.class
+})
 public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     private final static String CONSOLE_NAME = "CONSOLE";
     private final ProxyServer proxyServer;
@@ -108,5 +114,31 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     @Override
     public List<ProxiedPlayerWrapper> getPlayers0(ServerWrapper serverWrapper) {
         return serverWrapper.as(RegisteredServer.class).getPlayersConnected().stream().map(ProxiedPlayerMapper::wrapPlayer).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean hasPermission0(CommandSenderWrapper wrapper, Permission permission) {
+        if (permission instanceof SimplePermission) {
+            if (isPermissionSet0(wrapper, permission)) {
+                return wrapper.as(CommandSource.class).hasPermission(((SimplePermission) permission).getPermissionString());
+            } else {
+                return ((SimplePermission) permission).isDefaultAllowed();
+            }
+        } else if (permission instanceof AndPermission) {
+            return ((AndPermission) permission).getPermissions().stream().allMatch(permission1 -> hasPermission0(wrapper, permission1));
+        } else if (permission instanceof OrPermission) {
+            return ((OrPermission) permission).getPermissions().stream().anyMatch(permission1 -> hasPermission0(wrapper, permission1));
+        } else if (permission instanceof PredicatePermission) {
+            return permission.hasPermission(wrapper);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isPermissionSet0(CommandSenderWrapper wrapper, Permission permission) {
+        if (permission instanceof SimplePermission) {
+            return wrapper.as(CommandSource.class).getPermissionValue(((SimplePermission) permission).getPermissionString()) == Tristate.UNDEFINED;
+        }
+        return true;
     }
 }

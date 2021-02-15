@@ -1,5 +1,6 @@
 dependencies {
     compileOnly paper(PAPER_VERSION)
+    compileOnly 'io.netty:netty-all:4.1.42.Final'
 
     api project(':utils-common')
 }

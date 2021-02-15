@@ -5,7 +5,7 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import org.bukkit.entity.Player;
 
-import static org.screamingsandals.bedwars.lib.nms.utils.ClassStorage.*;
+import static org.screamingsandals.lib.bukkit.utils.nms.ClassStorage.*;
 
 public abstract class PacketInboundListener{
 

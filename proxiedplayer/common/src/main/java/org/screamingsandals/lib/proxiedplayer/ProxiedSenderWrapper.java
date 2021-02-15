@@ -6,6 +6,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.Wrapper;
 
 @Data
@@ -17,6 +18,17 @@ public class ProxiedSenderWrapper implements Wrapper, ForwardingAudience.Single,
     public void sendMessage(String message) {
         ProxiedPlayerMapper.sendMessage(this, message);
     }
+
+    @Override
+    public boolean hasPermission(Permission permission) {
+        return ProxiedPlayerMapper.hasPermission(this, permission);
+    }
+
+    @Override
+    public boolean isPermissionSet(Permission permission) {
+        return ProxiedPlayerMapper.isPermissionSet(this, permission);
+    }
+
 
     @Override
     public <T> T as(Class<T> type) {

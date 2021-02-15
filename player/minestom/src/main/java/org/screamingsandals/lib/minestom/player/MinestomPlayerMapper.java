@@ -9,6 +9,7 @@ import net.minestom.server.command.ConsoleSender;
 import net.minestom.server.entity.Player;
 import net.minestom.server.extensions.Extension;
 import net.minestom.server.utils.Position;
+import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.minestom.player.event.*;
@@ -17,6 +18,7 @@ import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
@@ -26,7 +28,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service
+@Service(dependsOn = {
+        EventManager.class
+})
 public class MinestomPlayerMapper extends PlayerMapper {
 
     public static void init(Extension extension) {
@@ -146,6 +150,32 @@ public class MinestomPlayerMapper extends PlayerMapper {
         }
 
         return Audience.empty();
+    }
+
+    @Override
+    public boolean hasPermission0(CommandSenderWrapper wrapper, Permission permission) {
+        if (permission instanceof SimplePermission) {
+            if (isPermissionSet0(wrapper, permission)) {
+                return wrapper.as(CommandSender.class).hasPermission(((SimplePermission) permission).getPermissionString());
+            } else {
+                return ((SimplePermission) permission).isDefaultAllowed();
+            }
+        } else if (permission instanceof AndPermission) {
+            return ((AndPermission) permission).getPermissions().stream().allMatch(permission1 -> hasPermission0(wrapper, permission1));
+        } else if (permission instanceof OrPermission) {
+            return ((OrPermission) permission).getPermissions().stream().anyMatch(permission1 -> hasPermission0(wrapper, permission1));
+        } else if (permission instanceof PredicatePermission) {
+            return permission.hasPermission(wrapper);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isPermissionSet0(CommandSenderWrapper wrapper, Permission permission) {
+        if (permission instanceof SimplePermission) {
+            return wrapper.as(CommandSender.class).getPermission(((SimplePermission) permission).getPermissionString()) != null;
+        }
+        return true;
     }
 
     private void registerEvents() {

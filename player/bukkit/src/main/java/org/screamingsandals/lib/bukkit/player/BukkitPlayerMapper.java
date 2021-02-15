@@ -11,12 +11,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.player.listener.*;
+import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -28,7 +30,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service
+@Service(dependsOn = {
+        EventManager.class
+})
 public class BukkitPlayerMapper extends PlayerMapper {
     public static void init(Plugin plugin, Controllable controllable) {
         PlayerMapper.init(() -> new BukkitPlayerMapper(plugin, controllable));
@@ -184,6 +188,32 @@ public class BukkitPlayerMapper extends PlayerMapper {
         }
 
         return audiences.player(wrapper.as(Player.class).getUniqueId());
+    }
+
+    @Override
+    public boolean hasPermission0(CommandSenderWrapper wrapper, Permission permission) {
+        if (permission instanceof SimplePermission) {
+            if (isPermissionSet0(wrapper, permission)) {
+                return wrapper.as(CommandSender.class).hasPermission(((SimplePermission) permission).getPermissionString());
+            } else {
+                return ((SimplePermission) permission).isDefaultAllowed();
+            }
+        } else if (permission instanceof AndPermission) {
+            return ((AndPermission) permission).getPermissions().stream().allMatch(permission1 -> hasPermission0(wrapper, permission1));
+        } else if (permission instanceof OrPermission) {
+            return ((OrPermission) permission).getPermissions().stream().anyMatch(permission1 -> hasPermission0(wrapper, permission1));
+        } else if (permission instanceof PredicatePermission) {
+            return permission.hasPermission(wrapper);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isPermissionSet0(CommandSenderWrapper wrapper, Permission permission) {
+        if (permission instanceof SimplePermission) {
+            return wrapper.as(CommandSender.class).isPermissionSet(((SimplePermission) permission).getPermissionString());
+        }
+        return true;
     }
 
     private void registerListeners(Plugin plugin) {
