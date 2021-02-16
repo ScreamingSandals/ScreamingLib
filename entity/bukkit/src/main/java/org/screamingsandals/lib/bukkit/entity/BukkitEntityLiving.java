@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.bukkit.entity;
 
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
@@ -9,6 +10,9 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.material.attribute.AttributeHolder;
+import org.screamingsandals.lib.material.attribute.AttributeMapping;
+import org.screamingsandals.lib.material.attribute.AttributeTypeHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.world.BlockHolder;
@@ -24,6 +28,11 @@ import java.util.stream.Collectors;
 public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLiving {
     protected BukkitEntityLiving(LivingEntity wrappedObject) {
         super(wrappedObject);
+    }
+
+    @Override
+    public Optional<AttributeHolder> getAttribute(AttributeTypeHolder attributeType) {
+        return AttributeMapping.wrapAttribute(((LivingEntity) wrappedObject).getAttribute(attributeType.as(Attribute.class)));
     }
 
     @Override
@@ -285,5 +294,35 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     @Override
     public boolean isInvisible() {
         return ((LivingEntity) wrappedObject).isInvisible();
+    }
+
+    @Override
+    public void damage(double amount) {
+        ((LivingEntity) wrappedObject).damage(amount);
+    }
+
+    @Override
+    public void damage(double amount, EntityBasic damageSource) {
+        ((LivingEntity) wrappedObject).damage(amount, damageSource.as(Entity.class));
+    }
+
+    @Override
+    public double getAbsorptionAmount() {
+        return ((LivingEntity) wrappedObject).getAbsorptionAmount();
+    }
+
+    @Override
+    public double getHealth() {
+        return ((LivingEntity) wrappedObject).getHealth();
+    }
+
+    @Override
+    public void setAbsorptionAmount(double amount) {
+        ((LivingEntity) wrappedObject).setAbsorptionAmount(amount);
+    }
+
+    @Override
+    public void setHealth(double health) {
+
     }
 }

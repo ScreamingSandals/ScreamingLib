@@ -1,6 +1,9 @@
 package org.screamingsandals.lib.bukkit.entity;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityTypeMapping;
@@ -8,8 +11,10 @@ import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
 import org.screamingsandals.lib.bukkit.world.BukkitLocationMapper;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
+import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Optional;
 
@@ -47,5 +52,18 @@ public class BukkitEntityMapper extends EntityMapper {
         }
 
         return Optional.of((T) new BukkitEntityBasic((Entity) entity));
+    }
+
+    @Override
+    public Optional<EntityBasic> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder) {
+        return entityType.asOptional(EntityType.class).flatMap(entityType1 -> {
+            var world = Bukkit.getWorld(locationHolder.getWorldId());
+            if (world != null) {
+                // TODO: test all entity types
+                var entity = world.spawnEntity(locationHolder.as(Location.class), entityType1);
+                return wrapEntity0(entity);
+            }
+            return Optional.empty();
+        });
     }
 }

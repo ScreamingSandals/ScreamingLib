@@ -1,13 +1,18 @@
 package org.screamingsandals.lib.minestom.entity;
 
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Entity;
+import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.ItemEntity;
 import net.minestom.server.entity.LivingEntity;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
+import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.minestom.entity.type.MinestomEntityTypeMapping;
+import org.screamingsandals.lib.minestom.world.InstancedPosition;
 import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Optional;
 
@@ -41,5 +46,10 @@ public class MinestomEntityMapper extends EntityMapper {
         }
 
         return Optional.of((T) new MinestomEntityBasic((Entity) entity));
+    }
+
+    @Override
+    public Optional<EntityBasic> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder) {
+        return Optional.empty(); // TODO
     }
 }
