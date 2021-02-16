@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.entity;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -57,7 +57,7 @@ public class BukkitEntityMapper extends EntityMapper {
     @Override
     public Optional<EntityBasic> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder) {
         return entityType.asOptional(EntityType.class).flatMap(entityType1 -> {
-            var world = Bukkit.getWorld(locationHolder.getWorldId());
+            var world = locationHolder.getWorld().as(World.class);
             if (world != null) {
                 // TODO: test all entity types
                 var entity = world.spawnEntity(locationHolder.as(Location.class), entityType1);
