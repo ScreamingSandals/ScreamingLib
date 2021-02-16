@@ -2,9 +2,11 @@ package org.screamingsandals.lib.sponge.entity;
 
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
+import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.sponge.entity.type.SpongeEntityTypeMapping;
 import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Optional;
 
@@ -24,5 +26,10 @@ public class SpongeEntityMapper extends EntityMapper {
     @Override
     protected <T extends EntityBasic> Optional<T> wrapEntity0(Object entity) {
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<EntityBasic> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder) {
+        return Optional.empty(); // TODO
     }
 }

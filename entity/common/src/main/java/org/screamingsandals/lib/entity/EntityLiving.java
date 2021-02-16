@@ -1,6 +1,8 @@
 package org.screamingsandals.lib.entity;
 
 import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.material.attribute.AttributeHolder;
+import org.screamingsandals.lib.material.attribute.AttributeTypeHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -10,7 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EntityLiving extends EntityBasic {
-    // TODO Attributable, Damageable, ProjectileSource
+    // TODO Damageable, ProjectileSource
+
+    Optional<AttributeHolder> getAttribute(AttributeTypeHolder attributeType);
 
     double getEyeHeight();
 
@@ -108,4 +112,18 @@ public interface EntityLiving extends EntityBasic {
     void setInvisible(boolean invisible);
 
     boolean isInvisible();
+
+    void damage(double amount);
+
+    void damage(double amount, EntityBasic damageSource);
+
+    double getAbsorptionAmount();
+
+    double getHealth();
+
+    void setAbsorptionAmount(double amount);
+
+    void setHealth(double health);
+
+
 }
