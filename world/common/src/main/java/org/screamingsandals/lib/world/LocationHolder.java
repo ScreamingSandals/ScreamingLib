@@ -9,8 +9,6 @@ import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
-import java.util.UUID;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,7 +19,7 @@ public class LocationHolder implements Wrapper {
     private double z;
     private float yaw;
     private float pitch;
-    private UUID worldId;
+    private WorldHolder world;
 
     public LocationHolder(double x, double y, double z) {
         this.x = x;
@@ -80,7 +78,7 @@ public class LocationHolder implements Wrapper {
         location.setZ(getZ());
         location.setPitch(getPitch());
         location.setYaw(getYaw());
-        location.setWorldId(getWorldId());
+        location.setWorld(getWorld());
 
         return location;
     }

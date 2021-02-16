@@ -19,13 +19,13 @@ public class SpongeLocationMapper extends LocationMapper {
         converter.registerW2P(ServerLocation.class, holder -> {
             var world = Sponge.getServer().getWorldManager()
                     .world(ResourceKey.builder()
-                            .value(holder.getWorldId().toString())
+                            .value(holder.getWorld().getUuid().toString())
                             .build())
                     .orElseThrow();
 
             return ServerLocation.of(world, holder.getX(), holder.getY(), holder.getZ());
         }).registerP2W(ServerLocation.class, location ->
-                new LocationHolder(location.getX(), location.getY(), location.getZ(), 0, 0, location.getWorld().getUniqueId())
+                new LocationHolder(location.getX(), location.getY(), location.getZ(), 0, 0, new SpongeWorldHolder(location.getWorld()))
         );
     }
 }

@@ -6,6 +6,7 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -24,6 +25,7 @@ import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
+import org.screamingsandals.lib.world.WorldHolder;
 
 import java.util.List;
 import java.util.Optional;
@@ -135,8 +137,17 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public List<PlayerWrapper> getPlayers0() {
-        return Bukkit.getOnlinePlayers().stream()
+    public List<PlayerWrapper> getPlayersOnServer0() {
+        return Bukkit.getOnlinePlayers()
+                .stream()
+                .map(playerConverter::convert)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PlayerWrapper> getPlayers0(WorldHolder holder) {
+        return holder.as(World.class).getPlayers()
+                .stream()
                 .map(playerConverter::convert)
                 .collect(Collectors.toList());
     }
@@ -223,6 +234,8 @@ public class BukkitPlayerMapper extends PlayerMapper {
         new PlayerBlockPlaceEventListener(plugin);
         new PlayerBlockBreakEventListener(plugin);
         new PlayerMoveEventListener(plugin);
+        new PlayerTeleportEventListener(plugin);
         new PlayerPickupItemListener(plugin);
+        new PlayerChangeWorldEventListener(plugin);
     }
 }

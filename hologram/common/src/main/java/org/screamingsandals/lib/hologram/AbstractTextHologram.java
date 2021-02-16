@@ -3,6 +3,7 @@ package org.screamingsandals.lib.hologram;
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.world.LocationHolder;
 
+import java.util.List;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -22,6 +23,12 @@ public abstract class AbstractTextHologram extends AbstractHologram implements T
     @Override
     public TextHologram firstLine(Component text) {
         return newLine(0, text);
+    }
+
+    @Override
+    public TextHologram newLine(List<Component> text) {
+        text.forEach(this::newLine);
+        return this;
     }
 
     @Override

@@ -14,6 +14,7 @@ import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
+import org.screamingsandals.lib.world.WorldHolder;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.SystemSubject;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -21,6 +22,7 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.util.Tristate;
 import org.spongepowered.api.world.server.ServerLocation;
+import org.spongepowered.api.world.server.ServerWorld;
 
 import java.util.List;
 import java.util.Optional;
@@ -92,8 +94,16 @@ public class SpongePlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public List<PlayerWrapper> getPlayers0() {
+    public List<PlayerWrapper> getPlayersOnServer0() {
         return Sponge.getServer().getOnlinePlayers()
+                .stream()
+                .map(playerConverter::convert)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PlayerWrapper> getPlayers0(WorldHolder holder) {
+        return holder.as(ServerWorld.class).getPlayers()
                 .stream()
                 .map(playerConverter::convert)
                 .collect(Collectors.toList());

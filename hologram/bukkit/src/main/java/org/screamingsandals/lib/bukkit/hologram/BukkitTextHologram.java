@@ -115,7 +115,7 @@ public class BukkitTextHologram extends AbstractTextHologram {
                                         entityOnLine.getDataWatcher(), false);
                         packets.add(metadataPacket);
 
-                        final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .30, 0);
+                        final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0);
                         entityOnLine.setCustomName(value);
                         entityOnLine.setLocation(newLocation);
 
@@ -124,10 +124,7 @@ public class BukkitTextHologram extends AbstractTextHologram {
                                 .newInstance(entityOnLine.getHandler());
                         packets.add(teleportPacket);
                     } else {
-                        log.trace("Lines size {}", lines.size());
-                        log.trace("key {}", key);
-                        log.trace("new location: {}", (lines.size() - key) * .30);
-                        final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .30, 0);
+                        final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0);
                         final var entity = new ArmorStandNMS(newLocation);
                         entity.setCustomName(value);
                         entity.setCustomNameVisible(true);

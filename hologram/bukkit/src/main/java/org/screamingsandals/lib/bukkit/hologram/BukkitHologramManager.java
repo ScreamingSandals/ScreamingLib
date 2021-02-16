@@ -98,7 +98,7 @@ public class BukkitHologramManager extends HologramManager {
                 final var viewDistance = hologram.getViewDistance();
                 final var hologramLocation = maybeLocation.get();
                 if (viewers.contains(player)
-                        && hologramLocation.getWorldId().equals(player.getLocation().getWorldId())) {
+                        && hologramLocation.getWorld().equals(player.getLocation().getWorld())) {
                     if (event.getNewLocation().getDistanceSquared(hologramLocation) < viewDistance
                             && event.getCurrentLocation().getDistanceSquared(hologramLocation) >= viewDistance) {
                         log.trace("Adding player viewer to hologram.");

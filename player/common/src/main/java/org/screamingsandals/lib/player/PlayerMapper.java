@@ -10,6 +10,7 @@ import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.WorldHolder;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -154,7 +155,14 @@ public abstract class PlayerMapper {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
-        return playerMapper.getPlayers0();
+        return playerMapper.getPlayersOnServer0();
+    }
+
+    public static List<PlayerWrapper> getPlayers(WorldHolder holder) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getPlayers0(holder);
     }
 
     public static CommandSenderWrapper getConsoleSender() {
@@ -202,7 +210,9 @@ public abstract class PlayerMapper {
 
     public abstract CommandSenderWrapper getConsoleSender0();
 
-    public abstract List<PlayerWrapper> getPlayers0();
+    public abstract List<PlayerWrapper> getPlayersOnServer0();
+
+    public abstract List<PlayerWrapper> getPlayers0(WorldHolder holder);
 
     public abstract void closeInventory0(PlayerWrapper playerWrapper);
 

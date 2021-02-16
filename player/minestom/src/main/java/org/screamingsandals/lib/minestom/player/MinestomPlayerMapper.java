@@ -8,6 +8,7 @@ import net.minestom.server.command.CommandSender;
 import net.minestom.server.command.ConsoleSender;
 import net.minestom.server.entity.Player;
 import net.minestom.server.extensions.Extension;
+import net.minestom.server.instance.Instance;
 import net.minestom.server.utils.Position;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
@@ -22,6 +23,7 @@ import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
+import org.screamingsandals.lib.world.WorldHolder;
 
 import java.util.List;
 import java.util.Optional;
@@ -102,8 +104,16 @@ public class MinestomPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public List<PlayerWrapper> getPlayers0() {
+    public List<PlayerWrapper> getPlayersOnServer0() {
         return MinecraftServer.getConnectionManager().getOnlinePlayers()
+                .stream()
+                .map(playerConverter::convert)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PlayerWrapper> getPlayers0(WorldHolder holder) {
+        return holder.as(Instance.class).getPlayers()
                 .stream()
                 .map(playerConverter::convert)
                 .collect(Collectors.toList());
