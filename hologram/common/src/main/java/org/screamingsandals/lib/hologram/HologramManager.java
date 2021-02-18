@@ -31,12 +31,24 @@ public abstract class HologramManager {
         return Map.copyOf(manager.activeHolograms);
     }
 
+    public static Optional<Hologram> getHologram(UUID uuid) {
+        if (manager == null) {
+            throw new UnsupportedOperationException("HologramManager is not initialized yet!");
+        }
+
+        return Optional.ofNullable(getActiveHolograms().get(uuid));
+    }
+
     public static void addHologram(Hologram hologram) {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
 
         manager.activeHolograms.put(hologram.getUuid(), hologram);
+    }
+
+    public static void removeHologram(UUID uuid) {
+        getHologram(uuid).ifPresent(HologramManager::removeHologram);
     }
 
     public static void removeHologram(Hologram hologram) {
@@ -69,8 +81,7 @@ public abstract class HologramManager {
     protected abstract TextHologram textHologram0(UUID uuid, LocationHolder holder, boolean touchable);
 
     protected void destroy() {
-        activeHolograms.values().forEach(Hologram::destroy);
-        activeHolograms.clear();
+        getActiveHolograms().values().forEach(Hologram::destroy);
     }
 
 }

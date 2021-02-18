@@ -11,8 +11,10 @@ import org.screamingsandals.lib.hologram.HologramManager;
 import org.screamingsandals.lib.hologram.TextHologram;
 import org.screamingsandals.lib.hologram.event.HologramTouchEvent;
 import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.event.SPlayerLeaveEvent;
-import org.screamingsandals.lib.player.event.SPlayerMoveEvent;
+import org.screamingsandals.lib.player.event.*;
+import org.screamingsandals.lib.tasker.Tasker;
+import org.screamingsandals.lib.tasker.TaskerTime;
+import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -24,7 +26,8 @@ import java.util.UUID;
 @Service(dependsOn = {
         EventManager.class,
         PlayerMapper.class,
-        LocationMapper.class
+        LocationMapper.class,
+        AbstractTaskInitializer.class
 })
 public class BukkitHologramManager extends HologramManager {
 
@@ -55,6 +58,9 @@ public class BukkitHologramManager extends HologramManager {
 
                 EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, this::onLeave);
                 EventManager.getDefaultEventManager().register(SPlayerMoveEvent.class, this::onMove);
+                EventManager.getDefaultEventManager().register(SPlayerRespawnEvent.class, this::onRespawn);
+                EventManager.getDefaultEventManager().register(SPlayerTeleportEvent.class, this::onTeleport);
+                EventManager.getDefaultEventManager().register(SPlayerWorldChangeEvent.class, this::onWorldChange);
         });
     }
 
@@ -80,12 +86,15 @@ public class BukkitHologramManager extends HologramManager {
 
     private void onMove(SPlayerMoveEvent event) {
         if (activeHolograms.isEmpty()) {
-            log.trace("Active holograms are empty!");
             return;
         }
 
         getActiveHolograms().forEach((key, hologram) -> {
             try {
+                if (!hologram.hasViewers()) {
+                    return;
+                }
+
                 final var player = event.getPlayer();
                 final var viewers = hologram.getViewers();
                 final var maybeLocation = hologram.getLocation();
@@ -107,6 +116,125 @@ public class BukkitHologramManager extends HologramManager {
                             && event.getCurrentLocation().getDistanceSquared(hologramLocation) < viewDistance) {
                         castedHologram.onViewerRemoved(player, false);
                         log.trace("Removing player viewer from hologram");
+                    }
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void onRespawn(SPlayerRespawnEvent event) {
+        if (activeHolograms.isEmpty()) {
+            return;
+        }
+
+        getActiveHolograms().forEach((key, hologram) -> {
+            try {
+                if (!hologram.hasViewers()) {
+                    return;
+                }
+
+                final var player = event.getPlayer();
+                final var viewers = hologram.getViewers();
+                final var maybeLocation = hologram.getLocation();
+                if (maybeLocation.isEmpty()) {
+                    log.trace("Location is empty");
+                    return;
+                }
+
+                final var castedHologram = (AbstractHologram) hologram;
+                final var viewDistance = hologram.getViewDistance();
+                final var hologramLocation = maybeLocation.get();
+                if (viewers.contains(player)
+                        && event.getLocation().getWorld().equals(hologramLocation.getWorld())) {
+                    if (player.getLocation().getDistanceSquared(hologramLocation) < viewDistance) {
+                        Tasker.build(() -> {
+                            log.trace("Adding player viewer to hologram.");
+                            castedHologram.onViewerAdded(player, false);
+                        }).delay(20, TaskerTime.TICKS).start();
+                    }
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void onWorldChange(SPlayerWorldChangeEvent event) {
+        if (activeHolograms.isEmpty()) {
+            return;
+        }
+
+        getActiveHolograms().forEach((key, hologram) -> {
+            try {
+                if (!hologram.hasViewers()) {
+                    return;
+                }
+
+                final var player = event.getPlayer();
+                final var viewers = hologram.getViewers();
+                final var maybeLocation = hologram.getLocation();
+                if (maybeLocation.isEmpty()) {
+                    log.trace("Location is empty");
+                    return;
+                }
+
+                final var castedHologram = (AbstractHologram) hologram;
+                final var viewDistance = hologram.getViewDistance();
+                final var hologramLocation = maybeLocation.get();
+                if (viewers.contains(player)
+                        && event.getFrom().equals(hologramLocation.getWorld())) {
+                    if (player.getLocation().getDistanceSquared(hologramLocation) < viewDistance) {
+                        Tasker.build(() -> {
+                            log.trace("Adding player viewer to hologram.");
+                            castedHologram.onViewerAdded(player, false);
+                        }).delay(20, TaskerTime.TICKS).start();
+                    }
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void onTeleport(SPlayerTeleportEvent event) {
+        if (activeHolograms.isEmpty()
+                || !event.getCurrentLocation().getWorld().equals(event.getNewLocation().getWorld())) {
+            return;
+        }
+
+        getActiveHolograms().forEach((key, hologram) -> {
+            try {
+                if (!hologram.hasViewers()) {
+                    return;
+                }
+
+                final var player = event.getPlayer();
+                final var viewers = hologram.getViewers();
+                final var maybeLocation = hologram.getLocation();
+                if (maybeLocation.isEmpty()) {
+                    log.trace("Location is empty");
+                    return;
+                }
+
+                final var castedHologram = (AbstractHologram) hologram;
+                final var viewDistance = hologram.getViewDistance();
+                final var hologramLocation = maybeLocation.get();
+                if (viewers.contains(player)
+                        && hologramLocation.getWorld().equals(player.getLocation().getWorld())) {
+                    if (event.getNewLocation().getDistanceSquared(hologramLocation) < viewDistance
+                            && event.getCurrentLocation().getDistanceSquared(hologramLocation) >= viewDistance) {
+                        Tasker.build(() -> {
+                            log.trace("Adding player viewer to hologram.");
+                            castedHologram.onViewerAdded(player, false);
+                        }).delay(10, TaskerTime.TICKS).start();
+                    } else if (event.getNewLocation().getDistanceSquared(hologramLocation) >= viewDistance
+                            && event.getCurrentLocation().getDistanceSquared(hologramLocation) < viewDistance) {
+                        Tasker.build(() -> {
+                            castedHologram.onViewerRemoved(player, false);
+                            log.trace("Removing player viewer from hologram");
+                        }).delay(10, TaskerTime.TICKS).start();
                     }
                 }
             } catch (Throwable t) {

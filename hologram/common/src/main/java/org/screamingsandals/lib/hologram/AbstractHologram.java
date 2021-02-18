@@ -98,6 +98,10 @@ public abstract class AbstractHologram implements Hologram {
 
     @Override
     public Hologram show() {
+        if (isShown()) {
+            return this;
+        }
+
         visible = true;
         update();
         return this;
@@ -105,6 +109,10 @@ public abstract class AbstractHologram implements Hologram {
 
     @Override
     public Hologram hide() {
+        if (!isShown()) {
+            return this;
+        }
+
         visible = false;
         update();
         return this;
