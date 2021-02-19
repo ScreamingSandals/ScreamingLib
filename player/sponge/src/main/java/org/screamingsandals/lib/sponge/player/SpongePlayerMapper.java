@@ -5,10 +5,9 @@ import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
-import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.player.SenderWrapper;
+import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -17,7 +16,9 @@ import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.SystemSubject;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.util.Tristate;
@@ -27,6 +28,7 @@ import org.spongepowered.api.world.server.ServerWorld;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Service(dependsOn = {
@@ -39,6 +41,21 @@ public class SpongePlayerMapper extends PlayerMapper {
     }
 
     public SpongePlayerMapper() {
+        offlinePlayerConverter
+                .registerP2W(User.class, user -> new FinalOfflinePlayerWrapper(user.getUniqueId(), user.getName()))
+                .registerP2W(ServerPlayer.class, serverPlayer -> offlinePlayerConverter.convert(serverPlayer.getUser()))
+                .registerP2W(GameProfile.class, gameProfile -> new FinalOfflinePlayerWrapper(gameProfile.getUniqueId(), gameProfile.getName().orElse(null)))
+                .registerW2P(User.class, offlinePlayerWrapper ->
+                        Sponge.getServer().getUserManager().get(offlinePlayerConverter.convert(offlinePlayerWrapper, GameProfile.class)).orElse(null)
+                )
+                .registerW2P(ServerPlayer.class, offlinePlayerWrapper -> Sponge.getServer().getPlayer(offlinePlayerWrapper.getUuid()).orElse(null))
+                .registerW2P(GameProfile.class, offlinePlayerWrapper -> {
+                    try {
+                        return Sponge.getServer().getGameProfileManager().getProfile(offlinePlayerWrapper.getUuid()).get();
+                    } catch (InterruptedException | ExecutionException ignored) {
+                    }
+                    return null;
+                });
         playerConverter
                 .registerP2W(ServerPlayer.class, player -> new PlayerWrapper(player.getName(), player.getUniqueId()))
                 .registerW2P(ServerPlayer.class, playerWrapper -> Sponge.getServer().getPlayer(playerWrapper.getUuid()).orElse(null));
@@ -130,6 +147,11 @@ public class SpongePlayerMapper extends PlayerMapper {
     }
 
     @Override
+    public Optional<LocationHolder> getBedLocation0(OfflinePlayerWrapper playerWrapper) {
+        return Optional.empty(); // TODO
+    }
+
+    @Override
     public void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
         if (wrapper.as(ServerPlayer.class).setLocation(location.as(ServerLocation.class))) {
             Sponge.getServer().getScheduler().submit(
@@ -177,5 +199,52 @@ public class SpongePlayerMapper extends PlayerMapper {
             return subject.getPermissionValue(subject.getActiveContexts(), ((SimplePermission) permission).getPermissionString()) != Tristate.UNDEFINED;
         }
         return true;
+    }
+
+    @Override
+    public boolean isOp0(Operator wrapper) {
+        return false; // TODO: check if op exists in Sponge
+    }
+
+    @Override
+    public void setOp0(Operator wrapper, boolean op) {
+        // TODO: check if op exists in Sponge
+    }
+
+    @Override
+    public long getFirstPlayed0(OfflinePlayerWrapper playerWrapper) {
+        return 0; // TODO
+    }
+
+    @Override
+    public long getLastPlayed0(OfflinePlayerWrapper playerWrapper) {
+        return 0; // TODO
+    }
+
+    @Override
+    public boolean isBanned0(OfflinePlayerWrapper playerWrapper) {
+        return false; // TODO
+    }
+
+    @Override
+    public boolean isWhitelisted0(OfflinePlayerWrapper playerWrapper) {
+        return false; // TODO
+    }
+
+    @Override
+    public boolean isOnline0(OfflinePlayerWrapper playerWrapper) {
+        return Sponge.getServer().getPlayer(playerWrapper.getUuid()).isPresent();
+    }
+
+    @Override
+    public void setWhitelisted0(OfflinePlayerWrapper playerWrapper, boolean whitelisted) {
+        // TODO
+    }
+
+    @Override
+    public OfflinePlayerWrapper getOfflinePlayer0(UUID uuid) {
+        return Sponge.getServer().getUserManager().get(uuid)
+                .map(user -> new FinalOfflinePlayerWrapper(user.getUniqueId(), user.getName()))
+                .orElseGet(() -> new FinalOfflinePlayerWrapper(uuid, null));
     }
 }

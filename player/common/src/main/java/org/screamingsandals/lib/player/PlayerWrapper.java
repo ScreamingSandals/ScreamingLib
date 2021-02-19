@@ -12,7 +12,7 @@ import java.lang.ref.WeakReference;
 import java.util.Optional;
 import java.util.UUID;
 
-public class PlayerWrapper extends SenderWrapper {
+public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper {
     @Getter
     private final UUID uuid;
     @Getter
@@ -74,6 +74,46 @@ public class PlayerWrapper extends SenderWrapper {
     @Override
     public int hashCode() {
         return uuid.hashCode();
+    }
+
+    @Override
+    public Optional<LocationHolder> getBedLocation() {
+        return PlayerMapper.getBedLocation(this);
+    }
+
+    @Override
+    public Optional<String> getLastName() {
+        return Optional.ofNullable(getName());
+    }
+
+    @Override
+    public long getFirstPlayed() {
+        return PlayerMapper.getFirstPlayed(this);
+    }
+
+    @Override
+    public long getLastPlayed() {
+        return PlayerMapper.getLastPlayed(this);
+    }
+
+    @Override
+    public boolean isBanned() {
+        return PlayerMapper.isBanned(this);
+    }
+
+    @Override
+    public boolean isWhitelisted() {
+        return PlayerMapper.isWhitelisted(this);
+    }
+
+    @Override
+    public boolean isOnline() {
+        return PlayerMapper.isOnline(this);
+    }
+
+    @Override
+    public void setWhitelisted(boolean whitelisted) {
+        PlayerMapper.setWhitelisted(this, whitelisted);
     }
 
     /**

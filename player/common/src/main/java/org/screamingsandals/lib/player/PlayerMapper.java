@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -22,6 +23,7 @@ import java.util.function.Supplier;
 public abstract class PlayerMapper {
     protected final static String CONSOLE_NAME = "CONSOLE";
 
+    protected final BidirectionalConverter<OfflinePlayerWrapper> offlinePlayerConverter = BidirectionalConverter.build();
     protected final BidirectionalConverter<PlayerWrapper> playerConverter = BidirectionalConverter.build();
     protected final BidirectionalConverter<CommandSenderWrapper> senderConverter = BidirectionalConverter.build();
     protected final BidirectionalConverter<PlayerWrapper.Hand> handConverter = BidirectionalConverter.build();
@@ -34,6 +36,9 @@ public abstract class PlayerMapper {
         }
 
         playerMapper = playerUtilsSupplier.get();
+        playerMapper.offlinePlayerConverter
+                .registerP2W(UUID.class, uuid -> new FinalOfflinePlayerWrapper(uuid, null))
+                .registerW2P(UUID.class, OfflinePlayerWrapper::getUuid);
     }
 
     public static boolean isInitialized() {
@@ -47,6 +52,13 @@ public abstract class PlayerMapper {
         final var converted = playerMapper.playerConverter.convert(player);
         converted.setWrappedPlayer(new WeakReference<>(player));
         return converted;
+    }
+
+    public static <T> OfflinePlayerWrapper wrapOfflinePlayer(T player) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.offlinePlayerConverter.convert(player);
     }
 
     public static <T> CommandSenderWrapper wrapSender(T sender) {
@@ -84,6 +96,13 @@ public abstract class PlayerMapper {
         return playerMapper.playerConverter.convert(player, type);
     }
 
+    public static <T> T convertOfflinePlayer(OfflinePlayerWrapper player, Class<T> type) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.offlinePlayerConverter.convert(player, type);
+    }
+
     public static void sendMessage(SenderWrapper playerWrapper, String message) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
@@ -117,6 +136,13 @@ public abstract class PlayerMapper {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.getLocation0(wrapper);
+    }
+
+    public static Optional<LocationHolder> getBedLocation(OfflinePlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getBedLocation0(wrapper);
     }
 
     public static void teleport(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
@@ -192,6 +218,69 @@ public abstract class PlayerMapper {
         }
         return playerMapper.isPermissionSet0(wrapper, permission);
     }
+
+    public static boolean isOp(Operator wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.isOp0(wrapper);
+    }
+
+    public static void setOp(Operator wrapper, boolean op) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setOp0(wrapper, op);
+    }
+
+    public static long getFirstPlayed(OfflinePlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getFirstPlayed0(wrapper);
+    }
+
+    public static long getLastPlayed(OfflinePlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getLastPlayed0(wrapper);
+    }
+
+    public static boolean isBanned(OfflinePlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.isBanned0(wrapper);
+    }
+
+    public static boolean isWhitelisted(OfflinePlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.isWhitelisted0(wrapper);
+    }
+
+    public static boolean isOnline(OfflinePlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.isOnline0(wrapper);
+    }
+
+    public static void setWhitelisted(OfflinePlayerWrapper wrapper, boolean whitelisted) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setWhitelisted0(wrapper, whitelisted);
+    }
+
+    public static OfflinePlayerWrapper getOfflinePlayer(UUID uuid) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getOfflinePlayer0(uuid);
+    }
     
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
@@ -224,6 +313,8 @@ public abstract class PlayerMapper {
 
     public abstract LocationHolder getLocation0(PlayerWrapper playerWrapper);
 
+    public abstract Optional<LocationHolder> getBedLocation0(OfflinePlayerWrapper playerWrapper);
+
     public abstract void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback);
 
     public abstract void kick0(PlayerWrapper wrapper, Component message);
@@ -233,4 +324,22 @@ public abstract class PlayerMapper {
     public abstract boolean hasPermission0(CommandSenderWrapper wrapper, Permission permission);
 
     public abstract boolean isPermissionSet0(CommandSenderWrapper wrapper, Permission permission);
+
+    public abstract boolean isOp0(Operator wrapper);
+
+    public abstract void setOp0(Operator wrapper, boolean op);
+
+    public abstract long getFirstPlayed0(OfflinePlayerWrapper playerWrapper);
+
+    public abstract long getLastPlayed0(OfflinePlayerWrapper playerWrapper);
+
+    public abstract boolean isBanned0(OfflinePlayerWrapper playerWrapper);
+
+    public abstract boolean isWhitelisted0(OfflinePlayerWrapper playerWrapper);
+
+    public abstract boolean isOnline0(OfflinePlayerWrapper playerWrapper);
+
+    public abstract void setWhitelisted0(OfflinePlayerWrapper playerWrapper, boolean whitelisted);
+
+    public abstract OfflinePlayerWrapper getOfflinePlayer0(UUID uuid);
 }

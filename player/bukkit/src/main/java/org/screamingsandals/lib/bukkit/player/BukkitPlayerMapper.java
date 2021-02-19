@@ -6,6 +6,7 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,10 +16,9 @@ import org.screamingsandals.lib.bukkit.player.listener.*;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
-import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.player.SenderWrapper;
+import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.Controllable;
@@ -46,6 +46,11 @@ public class BukkitPlayerMapper extends PlayerMapper {
             registerListeners(plugin);
         });
 
+        offlinePlayerConverter
+                .registerP2W(OfflinePlayer.class, offlinePlayer -> new FinalOfflinePlayerWrapper(offlinePlayer.getUniqueId(), offlinePlayer.getName()))
+                .registerP2W(PlayerWrapper.class, playerWrapper -> new FinalOfflinePlayerWrapper(playerWrapper.getUuid(), playerWrapper.getName()))
+                .registerW2P(OfflinePlayer.class, offlinePlayerWrapper -> Bukkit.getOfflinePlayer(offlinePlayerWrapper.getUuid()))
+                .registerW2P(PlayerWrapper.class, offlinePlayerWrapper -> getPlayer0(offlinePlayerWrapper.getUuid()).orElse(null));
         playerConverter
                 .registerP2W(Player.class, player -> new PlayerWrapper(player.getName(), player.getUniqueId()))
                 .registerW2P(Player.class, playerWrapper -> {
@@ -173,6 +178,11 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
+    public Optional<LocationHolder> getBedLocation0(OfflinePlayerWrapper playerWrapper) {
+        return LocationMapper.resolve(playerWrapper.as(OfflinePlayer.class).getBedSpawnLocation());
+    }
+
+    @Override
     public void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
         PaperLib.teleportAsync(wrapper.as(Player.class), location.as(Location.class))
                 .thenAccept(result -> {
@@ -203,6 +213,10 @@ public class BukkitPlayerMapper extends PlayerMapper {
 
     @Override
     public boolean hasPermission0(CommandSenderWrapper wrapper, Permission permission) {
+        if (isOp0(wrapper)) {
+            return true;
+        }
+
         if (permission instanceof SimplePermission) {
             if (isPermissionSet0(wrapper, permission)) {
                 return wrapper.as(CommandSender.class).hasPermission(((SimplePermission) permission).getPermissionString());
@@ -227,8 +241,54 @@ public class BukkitPlayerMapper extends PlayerMapper {
         return true;
     }
 
+    @Override
+    public boolean isOp0(Operator wrapper) {
+        return wrapper.as(CommandSender.class).isOp();
+    }
+
+    @Override
+    public void setOp0(Operator wrapper, boolean op) {
+        wrapper.as(CommandSender.class).setOp(op);
+    }
+
+    @Override
+    public long getFirstPlayed0(OfflinePlayerWrapper playerWrapper) {
+        return playerWrapper.as(OfflinePlayer.class).getFirstPlayed();
+    }
+
+    @Override
+    public long getLastPlayed0(OfflinePlayerWrapper playerWrapper) {
+        return playerWrapper.as(OfflinePlayer.class).getLastPlayed();
+    }
+
+    @Override
+    public boolean isBanned0(OfflinePlayerWrapper playerWrapper) {
+        return playerWrapper.as(OfflinePlayer.class).isBanned();
+    }
+
+    @Override
+    public boolean isWhitelisted0(OfflinePlayerWrapper playerWrapper) {
+        return playerWrapper.as(OfflinePlayer.class).isWhitelisted();
+    }
+
+    @Override
+    public boolean isOnline0(OfflinePlayerWrapper playerWrapper) {
+        return playerWrapper.as(OfflinePlayer.class).isOnline();
+    }
+
+    @Override
+    public void setWhitelisted0(OfflinePlayerWrapper playerWrapper, boolean whitelisted) {
+        playerWrapper.as(OfflinePlayer.class).setWhitelisted(whitelisted);
+    }
+
+    @Override
+    public OfflinePlayerWrapper getOfflinePlayer0(UUID uuid) {
+        return offlinePlayerConverter.convert(Bukkit.getOfflinePlayer(uuid));
+    }
+
     private void registerListeners(Plugin plugin) {
         new AsyncPlayerPreLoginEventListener(plugin);
+        new AsyncPlayerChatEventListener(plugin);
         new PlayerJoinEventListener(plugin);
         new PlayerLeaveEventListener(plugin);
         new PlayerBlockPlaceEventListener(plugin);

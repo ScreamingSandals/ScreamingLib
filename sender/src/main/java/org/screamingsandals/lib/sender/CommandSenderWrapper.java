@@ -5,7 +5,7 @@ import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.sender.permissions.SimplePermission;
 import org.screamingsandals.lib.utils.Wrapper;
 
-public interface CommandSenderWrapper extends Wrapper, ForwardingAudience.Single {
+public interface CommandSenderWrapper extends Wrapper, ForwardingAudience.Single, Operator {
 
     Type getType();
 

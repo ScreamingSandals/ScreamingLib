@@ -39,4 +39,13 @@ public class SenderWrapper implements Wrapper, CommandSenderWrapper {
         return PlayerMapper.getAudience(this);
     }
 
+    @Override
+    public boolean isOp() {
+        return PlayerMapper.isOp(this);
+    }
+
+    @Override
+    public void setOp(boolean op) {
+        PlayerMapper.setOp(this, op);
+    }
 }

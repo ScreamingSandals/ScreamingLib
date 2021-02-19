@@ -15,10 +15,9 @@ import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.minestom.player.event.*;
 import org.screamingsandals.lib.minestom.utils.MinestomAdventureHelper;
-import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.player.SenderWrapper;
+import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -140,6 +139,11 @@ public class MinestomPlayerMapper extends PlayerMapper {
     }
 
     @Override
+    public Optional<LocationHolder> getBedLocation0(OfflinePlayerWrapper playerWrapper) {
+        return Optional.empty(); // TODO
+    }
+
+    @Override
     public void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
         wrapper.as(Player.class).teleport(location.as(Position.class), callback);
     }
@@ -188,6 +192,52 @@ public class MinestomPlayerMapper extends PlayerMapper {
         return true;
     }
 
+    @Override
+    public boolean isOp0(Operator wrapper) {
+        return false; // TODO: check if op exists in Minestom
+    }
+
+    @Override
+    public void setOp0(Operator wrapper, boolean op) {
+        // TODO: check if op exists in Minestom
+    }
+
+    @Override
+    public long getFirstPlayed0(OfflinePlayerWrapper playerWrapper) {
+        return 0; // TODO
+    }
+
+    @Override
+    public long getLastPlayed0(OfflinePlayerWrapper playerWrapper) {
+        return 0; // TODO
+    }
+
+    @Override
+    public boolean isBanned0(OfflinePlayerWrapper playerWrapper) {
+        return false; // TODO
+    }
+
+    @Override
+    public boolean isWhitelisted0(OfflinePlayerWrapper playerWrapper) {
+        return false; // TODO
+    }
+
+    @Override
+    public boolean isOnline0(OfflinePlayerWrapper playerWrapper) {
+        var player = MinecraftServer.getConnectionManager().getPlayer(playerWrapper.getUuid());
+        return player != null && player.isOnline();
+    }
+
+    @Override
+    public void setWhitelisted0(OfflinePlayerWrapper playerWrapper, boolean whitelisted) {
+        // TODO
+    }
+
+    @Override
+    public OfflinePlayerWrapper getOfflinePlayer0(UUID uuid) {
+        return new FinalOfflinePlayerWrapper(uuid, null);
+    }
+
     private void registerEvents() {
         new AsyncPlayerPreLoginListener();
         new PlayerJoinEventListener();
@@ -196,5 +246,6 @@ public class MinestomPlayerMapper extends PlayerMapper {
         new PlayerBlockBreakEventListener();
         new PlayerMoveEventListener();
         new PlayerItemPickupEventListener();
+        new PlayerChatEventListener();
     }
 }

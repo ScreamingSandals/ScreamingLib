@@ -2,15 +2,15 @@ package org.screamingsandals.lib.plugin;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.utils.Wrapper;
 import org.slf4j.Logger;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
+import java.nio.file.Path;
 
 @Getter
-public abstract class PluginContainer {
+public abstract class PluginContainer implements Wrapper {
     private PluginDescription pluginDescription;
     private Logger logger;
 
@@ -57,6 +57,15 @@ public abstract class PluginContainer {
         } catch (IOException ex) {
             getLogger().error("Could not save " + outFile.getName() + " to " + outFile, ex);
         }
+    }
+
+    public Path getDataFolder() {
+        return getPluginDescription().getDataFolder();
+    }
+
+    @Override
+    public <T> T as(Class<T> type) {
+        return getPluginDescription().as(type);
     }
 
     public void load() {

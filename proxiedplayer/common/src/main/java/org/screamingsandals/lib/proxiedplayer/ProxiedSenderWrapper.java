@@ -40,4 +40,13 @@ public class ProxiedSenderWrapper implements Wrapper, ForwardingAudience.Single,
         return as(Audience.class);
     }
 
+    @Override
+    public boolean isOp() {
+        return type == Type.CONSOLE; // No OP on proxies
+    }
+
+    @Override
+    public void setOp(boolean op) {
+        // No OP on proxies
+    }
 }
