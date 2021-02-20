@@ -43,7 +43,12 @@ public class ServiceInitGenerator {
                 statement.append("this.$N");
                 processedArguments.add("pluginContainer");
             });
+            put("org.screamingsandals.lib.plugin.logger.LoggerWrapper", (statement, processedArguments) -> {
+                statement.append("$N");
+                processedArguments.add("screamingLogger");
+            });
             put("org.slf4j.Logger", (statement, processedArguments) -> {
+                // LoggerWrapper or lombok's @Slf4j should be used instead of this
                 statement.append("$N");
                 processedArguments.add("slf4jLogger");
             });

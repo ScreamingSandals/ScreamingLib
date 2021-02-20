@@ -27,6 +27,7 @@ public class MinestomMainClassGenerator extends MainClassGenerator {
         var pluginManagerClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginManager");
         var pluginDescriptionClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginDescription");
         var pluginKeyClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginKey");
+        var screamingLoggerClass = ClassName.get("org.screamingsandals.lib.plugin.logger", "Slf4jLoggerWrapper");
         var loggerClass = ClassName.get("org.slf4j", "Logger");
 
         var onLoadBuilder = preparePublicVoid("preInitialize")
@@ -46,7 +47,8 @@ public class MinestomMainClassGenerator extends MainClassGenerator {
                 .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key")
                 .addStatement("this.$N = new $T()", "pluginContainer", pluginContainer)
                 .addStatement("$T $N = this.getLogger()", loggerClass, "slf4jLogger")
-                .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "slf4jLogger");
+                .addStatement("$T $N = new $T($N)", screamingLoggerClass, "screamingLogger", screamingLoggerClass, "slf4jLogger")
+                .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "screamingLogger");
 
 
         var onEnableBuilder = preparePublicVoid("initialize");

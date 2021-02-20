@@ -26,6 +26,7 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
         var pluginManagerClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginManager");
         var pluginDescriptionClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginDescription");
         var pluginKeyClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginKey");
+        var screamingLoggerClass = ClassName.get("org.screamingsandals.lib.plugin.logger", "Slf4jLoggerWrapper");
         var loggerClass = ClassName.get("org.slf4j", "Logger");
 
         var velocityProxyServerClass = ClassName.get("com.velocitypowered.api.proxy", "ProxyServer");
@@ -60,7 +61,8 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
                 .addStatement("$T $N = $T.createKey($N).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, "name")
                 .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key")
                 .addStatement("this.$N = new $T()", "pluginContainer", pluginContainer)
-                .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "slf4jLogger");
+                .addStatement("$T $N = new $T($N)", screamingLoggerClass, "screamingLogger", screamingLoggerClass, "slf4jLogger")
+                .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "screamingLogger");
 
         var onEnableBuilder = preparePublicVoid("onEnable")
                 .addAnnotation(ClassName.get("com.velocitypowered.api.event", "Subscribe"))

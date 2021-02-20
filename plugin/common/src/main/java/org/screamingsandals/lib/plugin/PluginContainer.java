@@ -2,8 +2,8 @@ package org.screamingsandals.lib.plugin;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.plugin.logger.LoggerWrapper;
 import org.screamingsandals.lib.utils.Wrapper;
-import org.slf4j.Logger;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,9 +12,9 @@ import java.nio.file.Path;
 @Getter
 public abstract class PluginContainer implements Wrapper {
     private PluginDescription pluginDescription;
-    private Logger logger;
+    private LoggerWrapper logger;
 
-    public void init(@NotNull PluginDescription pluginDescription, Logger logger) {
+    public void init(@NotNull PluginDescription pluginDescription, LoggerWrapper logger) {
         if (this.pluginDescription != null) {
             throw new UnsupportedOperationException(pluginDescription.getName() + " is already initialized!");
         }

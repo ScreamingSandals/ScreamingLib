@@ -17,7 +17,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 public class BungeeMainClassGenerator extends MainClassGenerator {
@@ -28,8 +27,11 @@ public class BungeeMainClassGenerator extends MainClassGenerator {
         var pluginManagerClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginManager");
         var pluginDescriptionClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginDescription");
         var pluginKeyClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginKey");
-        var loggerFactoryClass = ClassName.get("org.slf4j", "LoggerFactory");
-        var loggerClass = ClassName.get("org.slf4j", "Logger");
+        var screamingLoggerClass = ClassName.get("org.screamingsandals.lib.plugin.logger", "LoggerWrapper");
+        var julScreamingLoggerClass = ClassName.get("org.screamingsandals.lib.plugin.logger", "JULLoggerWrapper");
+        var slf4jScreamingLoggerClass = ClassName.get("org.screamingsandals.lib.plugin.logger", "Slf4jLoggerWrapper");
+        var dualScreamingLoggerClass = ClassName.get("org.screamingsandals.lib.plugin.logger", "DualLoggerWrapper");
+        var reflectClass = ClassName.get("org.screamingsandals.lib.utils.reflect", "Reflect");
 
         var onLoadBuilder = preparePublicVoid("onLoad")
                 .addStatement("this.$N = new $T()", "pluginControllable", ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"));
@@ -47,8 +49,11 @@ public class BungeeMainClassGenerator extends MainClassGenerator {
                 .addStatement("$T $N = $T.createKey($N).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, "name")
                 .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key")
                 .addStatement("this.$N = new $T()", "pluginContainer", pluginContainer)
-                .addStatement("$T $N = $T.getLogger($N)", loggerClass, "slf4jLogger", loggerFactoryClass, "name")
-                .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "slf4jLogger");
+                .addStatement("$T $N = new $T(this.getLogger())", screamingLoggerClass, "screamingLogger", julScreamingLoggerClass)
+                .beginControlFlow("if ($T.getMethod(this, $S) != null)", reflectClass, "getSLF4JLogger")
+                    .addStatement("$N = new $T(new $T(this.getSLF4JLogger()), $N)", "screamingLogger", dualScreamingLoggerClass, slf4jScreamingLoggerClass, "screamingLogger")
+                .endControlFlow()
+                .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "screamingLogger");
 
         var onEnableBuilder = preparePublicVoid("onEnable");
         var onDisableBuilder = preparePublicVoid("onDisable");
