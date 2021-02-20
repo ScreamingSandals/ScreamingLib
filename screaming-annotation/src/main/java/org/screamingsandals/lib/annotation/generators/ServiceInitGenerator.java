@@ -79,7 +79,7 @@ public class ServiceInitGenerator {
             var processedArguments = new ArrayList<>();
             var statement = new StringBuilder();
             String returnedName = null;
-            if (method.getReturnType().equals(typeElement.asType())) {
+            if (method.getKind() == ElementKind.CONSTRUCTOR || method.getReturnType().equals(typeElement.asType())) {
                 statement.append("$T $N = ");
                 processedArguments.add(typeElement);
                 returnedName = "indexedVariable" + (index++);
