@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.plugin.logger.LoggerWrapper;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.slf4j.Logger;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,6 +62,10 @@ public abstract class PluginContainer implements Wrapper {
 
     public Path getDataFolder() {
         return getPluginDescription().getDataFolder();
+    }
+
+    public Logger getSLF4JLogger() {
+        return logger.as(Logger.class);
     }
 
     @Override
