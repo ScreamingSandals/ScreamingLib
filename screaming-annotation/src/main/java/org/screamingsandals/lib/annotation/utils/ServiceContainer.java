@@ -17,6 +17,7 @@ public class ServiceContainer {
 
     private final List<TypeElement> dependencies = new LinkedList<>();
     private final List<TypeElement> loadAfter = new LinkedList<>();
+    private final boolean earlyInitialization;
 
     public boolean is(TypeElement typeElement) {
         if (typeElement == null) {

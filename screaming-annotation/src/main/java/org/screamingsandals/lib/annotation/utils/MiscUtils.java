@@ -4,6 +4,7 @@ import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.Init;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -61,7 +62,7 @@ public class MiscUtils {
         if (mappingAnnotation == null) {
             var service = typeElement.getAnnotation(Service.class);
             if (service != null) {
-                var container = new ServiceContainer(typeElement, null);
+                var container = new ServiceContainer(typeElement, null, typeElement.getAnnotation(InternalEarlyInitialization.class) != null);
                 container.getDependencies().addAll(getSafelyTypeElements(environment, service));
                 container.getLoadAfter().addAll(getSafelyTypeElementsLoadAfter(environment, service));
 
@@ -103,7 +104,7 @@ public class MiscUtils {
                 throw new UnsupportedOperationException("Can't find implementation of " + typeElement.getQualifiedName() + " for " + platformType);
             }
             if (resolvedElement != null) {
-                var container = new ServiceContainer(resolvedElement, typeElement);
+                var container = new ServiceContainer(resolvedElement, typeElement, resolvedElement.getAnnotation(InternalEarlyInitialization.class) != null);
                 var resolvedElementService = resolvedElement.getAnnotation(Service.class);
                 if (resolvedElementService != null) {
                     container.getDependencies().addAll(getSafelyTypeElements(environment, resolvedElement.getAnnotation(Service.class)));

@@ -79,9 +79,9 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
                                         )
                                 )
                                 .forEach(map ->
-                                        map.forEach((platformType, typeElement) -> {
-                                            if (!platformInitiators.get(platformType).contains(typeElement)) {
-                                                platformInitiators.get(platformType).add(typeElement);
+                                        map.forEach((platformType, serviceContainer) -> {
+                                            if (!platformInitiators.get(platformType).contains(serviceContainer)) {
+                                                platformInitiators.get(platformType).add(serviceContainer);
                                             }
                                         })
                                 );

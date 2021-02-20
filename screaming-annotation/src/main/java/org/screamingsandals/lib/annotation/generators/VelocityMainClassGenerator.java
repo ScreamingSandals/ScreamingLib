@@ -6,7 +6,6 @@ import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.Plugin;
 import org.screamingsandals.lib.utils.annotations.PluginDependencies;
 import org.spongepowered.configurate.gson.GsonConfigurationLoader;
-import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
@@ -18,23 +17,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
-public class VelocityMainClassGenerator implements MainClassGenerator {
+public class VelocityMainClassGenerator extends MainClassGenerator {
     @Override
     public void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException {
-        var sorted = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.VELOCITY);
-
-        var pluginManager = new AtomicReference<ServiceContainer>();
-
-        sorted.removeIf(serviceContainer -> {
-            if (pluginManager.get() == null && serviceContainer.getAbstractService().getQualifiedName().toString().equals("org.screamingsandals.lib.plugin.PluginManager")) {
-                pluginManager.set(serviceContainer);
-                return true;
-            }
-            return false;
-        });
+        var sortedPair = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.VELOCITY);
 
         var pluginManagerClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginManager");
         var pluginDescriptionClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginDescription");
@@ -54,7 +41,7 @@ public class VelocityMainClassGenerator implements MainClassGenerator {
 
 
         var serviceInitGenerator = ServiceInitGenerator
-                .builder(constructorBuilder)
+                .builder(constructorBuilder, processingEnvironment.getTypeUtils())
                 .add(velocityProxyServerClass.canonicalName(), (statement, objects) -> {
                     statement.append("$N");
                     objects.add("proxyServer");
@@ -67,7 +54,7 @@ public class VelocityMainClassGenerator implements MainClassGenerator {
                     statement.append("this")
                 );
 
-        serviceInitGenerator.process(pluginManager.get());
+        sortedPair.getFirst().forEach(serviceInitGenerator::process);
 
         constructorBuilder.addStatement("$T $N = $N.getId()", String.class, "name", "velocityPluginDescription")
                 .addStatement("$T $N = $T.createKey($N).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, "name")
@@ -75,19 +62,16 @@ public class VelocityMainClassGenerator implements MainClassGenerator {
                 .addStatement("this.$N = new $T()", "pluginContainer", pluginContainer)
                 .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "slf4jLogger");
 
-        var onEnableBuilder = MethodSpec.methodBuilder("onEnable")
+        var onEnableBuilder = preparePublicVoid("onEnable")
                 .addAnnotation(ClassName.get("com.velocitypowered.api.event", "Subscribe"))
-                .addModifiers(Modifier.PUBLIC)
-                .addParameter(ParameterSpec.builder(ClassName.get("com.velocitypowered.api.event.proxy", "ProxyInitializeEvent"), "event").build())
-                .returns(void.class);
+                .addParameter(ParameterSpec.builder(ClassName.get("com.velocitypowered.api.event.proxy", "ProxyInitializeEvent"), "event").build());
 
-        var onDisableBuilder = MethodSpec.methodBuilder("onDisable")
+        var onDisableBuilder =preparePublicVoid("onDisable")
                 .addAnnotation(ClassName.get("com.velocitypowered.api.event", "Subscribe"))
-                .addModifiers(Modifier.PUBLIC)
-                .addParameter(ParameterSpec.builder(ClassName.get("com.velocitypowered.api.event.proxy", "ProxyShutdownEvent"), "event").build())
-                .returns(void.class);
+                .addParameter(ParameterSpec.builder(ClassName.get("com.velocitypowered.api.event.proxy", "ProxyShutdownEvent"), "event").build());
 
-        sorted.forEach(serviceInitGenerator::process);
+
+        sortedPair.getSecond().forEach(serviceInitGenerator::process);
 
         constructorBuilder
                 .addStatement("this.$N.load()", "pluginContainer");

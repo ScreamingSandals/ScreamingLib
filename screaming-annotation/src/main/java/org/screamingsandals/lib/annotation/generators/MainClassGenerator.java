@@ -1,19 +1,22 @@
 package org.screamingsandals.lib.annotation.generators;
 
+import com.squareup.javapoet.MethodSpec;
 import org.screamingsandals.lib.annotation.utils.MiscUtils;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
+import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.PlatformType;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface MainClassGenerator {
-    void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException;
+public abstract class MainClassGenerator {
+    public abstract void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException;
 
-    default List<ServiceContainer> sortServicesAndGetDependencies(ProcessingEnvironment processingEnvironment, List<ServiceContainer> autoInit, PlatformType platformType) {
+    protected Pair<List<ServiceContainer>, List<ServiceContainer>> sortServicesAndGetDependencies(ProcessingEnvironment processingEnvironment, List<ServiceContainer> autoInit, PlatformType platformType) {
         var sorted = new ArrayList<ServiceContainer>();
         var waiting = new ArrayList<>(autoInit);
         while (!waiting.isEmpty()) {
@@ -44,6 +47,23 @@ public interface MainClassGenerator {
                 }
             });
         }
-        return sorted;
+
+        var earlyInitialization = new ArrayList<ServiceContainer>();
+
+        sorted.removeIf(serviceContainer -> {
+            if (serviceContainer.isEarlyInitialization()) {
+                earlyInitialization.add(serviceContainer);
+                return true;
+            }
+            return false;
+        });
+
+        return new Pair<>(earlyInitialization, sorted);
+    }
+
+    protected MethodSpec.Builder preparePublicVoid(String name) {
+        return MethodSpec.methodBuilder(name)
+                .addModifiers(Modifier.PUBLIC)
+                .returns(void.class);
     }
 }

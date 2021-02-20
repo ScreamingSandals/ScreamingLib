@@ -8,6 +8,7 @@ import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@InternalEarlyInitialization
 public class VelocityPluginManager extends PluginManager {
     private final com.velocitypowered.api.plugin.PluginManager pluginManager;
 

@@ -7,6 +7,7 @@ import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@InternalEarlyInitialization
 public class BukkitPluginManager extends PluginManager {
     public static void init() {
         PluginManager.init(BukkitPluginManager::new);

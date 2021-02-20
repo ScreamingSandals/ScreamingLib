@@ -7,12 +7,14 @@ import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
 import org.screamingsandals.lib.plugin.PluginManager;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@InternalEarlyInitialization
 public class MinestomPluginManager extends PluginManager {
 
     public static void init() {

@@ -6,7 +6,6 @@ import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.Plugin;
 import org.screamingsandals.lib.utils.annotations.PluginDependencies;
 import org.spongepowered.configurate.gson.GsonConfigurationLoader;
-import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
@@ -18,42 +17,29 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-public class MinestomMainClassGenerator implements MainClassGenerator {
+public class MinestomMainClassGenerator extends MainClassGenerator {
     @Override
     public void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException {
-        var sorted = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.MINESTOM);
-
-        var pluginManager = new AtomicReference<ServiceContainer>();
-
-        sorted.removeIf(serviceContainer -> {
-            if (pluginManager.get() == null && serviceContainer.getAbstractService().getQualifiedName().toString().equals("org.screamingsandals.lib.plugin.PluginManager")) {
-                pluginManager.set(serviceContainer);
-                return true;
-            }
-            return false;
-        });
+        var sortedPair = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.MINESTOM);
 
         var pluginManagerClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginManager");
         var pluginDescriptionClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginDescription");
         var pluginKeyClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginKey");
         var loggerClass = ClassName.get("org.slf4j", "Logger");
 
-        var onLoadBuilder = MethodSpec.methodBuilder("preInitialize")
-                .addModifiers(Modifier.PUBLIC)
-                .returns(void.class)
+        var onLoadBuilder = preparePublicVoid("preInitialize")
                 .addStatement("this.$N = new $T()", "pluginControllable", ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"));
 
 
         var serviceInitGenerator = ServiceInitGenerator
-                .builder(onLoadBuilder)
+                .builder(onLoadBuilder, processingEnvironment.getTypeUtils())
                 .add("net.minestom.server.extensions.Extension", (statement, objects) ->
                         statement.append("this")
                 );
 
-        serviceInitGenerator.process(pluginManager.get());
+        sortedPair.getFirst().forEach(serviceInitGenerator::process);
 
         onLoadBuilder.addStatement("$T $N = this.getDescription().getName()", String.class, "name")
                 .addStatement("$T $N = $T.createKey($N).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, "name")
@@ -62,15 +48,11 @@ public class MinestomMainClassGenerator implements MainClassGenerator {
                 .addStatement("$T $N = this.getLogger()", loggerClass, "slf4jLogger")
                 .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "slf4jLogger");
 
-        var onEnableBuilder = MethodSpec.methodBuilder("initialize")
-                .addModifiers(Modifier.PUBLIC)
-                .returns(void.class);
 
-        var onDisableBuilder = MethodSpec.methodBuilder("terminate")
-                .addModifiers(Modifier.PUBLIC)
-                .returns(void.class);
+        var onEnableBuilder = preparePublicVoid("initialize");
+        var onDisableBuilder = preparePublicVoid("terminate");
 
-        sorted.forEach(serviceInitGenerator::process);
+        sortedPair.getSecond().forEach(serviceInitGenerator::process);
 
         onLoadBuilder
                 .addStatement("this.$N.load()", "pluginContainer");

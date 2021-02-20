@@ -15,23 +15,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-public class BukkitMainClassGenerator implements MainClassGenerator {
+public class BukkitMainClassGenerator extends MainClassGenerator {
     @Override
     public void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException {
-        var sorted = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.BUKKIT);
-
-        var pluginManager = new AtomicReference<ServiceContainer>();
-
-        sorted.removeIf(serviceContainer -> {
-            if (pluginManager.get() == null && serviceContainer.getAbstractService().getQualifiedName().toString().equals("org.screamingsandals.lib.plugin.PluginManager")) {
-                pluginManager.set(serviceContainer);
-                return true;
-            }
-            return false;
-        });
+        var sortedPair = sortServicesAndGetDependencies(processingEnvironment, autoInit, PlatformType.BUKKIT);
 
         var pluginManagerClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginManager");
         var pluginDescriptionClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginDescription");
@@ -39,19 +28,17 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
         var loggerFactoryClass = ClassName.get("org.slf4j", "LoggerFactory");
         var loggerClass = ClassName.get("org.slf4j", "Logger");
 
-        var onLoadBuilder = MethodSpec.methodBuilder("onLoad")
-                .addModifiers(Modifier.PUBLIC)
-                .returns(void.class)
+        var onLoadBuilder = preparePublicVoid("onLoad")
                 .addStatement("this.$N = new $T()", "pluginControllable", ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"));
 
 
         var serviceInitGenerator = ServiceInitGenerator
-                .builder(onLoadBuilder)
+                .builder(onLoadBuilder, processingEnvironment.getTypeUtils())
                 .add(List.of("org.bukkit.plugin.java.JavaPlugin", "org.bukkit.plugin.Plugin"), (statement, objects) ->
                         statement.append("this")
                 );
 
-        serviceInitGenerator.process(pluginManager.get());
+        sortedPair.getFirst().forEach(serviceInitGenerator::process);
 
         onLoadBuilder.addStatement("$T $N = this.getName()", String.class, "name")
                 .addStatement("$T $N = $T.createKey($N).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, "name")
@@ -60,15 +47,10 @@ public class BukkitMainClassGenerator implements MainClassGenerator {
                 .addStatement("$T $N = $T.getLogger($N)", loggerClass, "slf4jLogger", loggerFactoryClass, "name")
                 .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "slf4jLogger");
 
-        var onEnableBuilder = MethodSpec.methodBuilder("onEnable")
-                .addModifiers(Modifier.PUBLIC)
-                .returns(void.class);
+        var onEnableBuilder = preparePublicVoid("onEnable");
+        var onDisableBuilder = preparePublicVoid("onDisable");
 
-        var onDisableBuilder = MethodSpec.methodBuilder("onDisable")
-                .addModifiers(Modifier.PUBLIC)
-                .returns(void.class);
-
-        sorted.forEach(serviceInitGenerator::process);
+        sortedPair.getSecond().forEach(serviceInitGenerator::process);
 
         onLoadBuilder
                 .addStatement("this.$N.load()", "pluginContainer");
