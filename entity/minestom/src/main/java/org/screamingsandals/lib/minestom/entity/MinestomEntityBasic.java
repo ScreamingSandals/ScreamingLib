@@ -1,12 +1,15 @@
 package org.screamingsandals.lib.minestom.entity;
 
+import net.kyori.adventure.text.Component;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.utils.Vector;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
+import org.screamingsandals.lib.minestom.utils.MinestomAdventureHelper;
 import org.screamingsandals.lib.minestom.world.InstancedPosition;
+import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -196,6 +199,16 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
     @Override
     public EntityBasic getVehicle() {
         return EntityMapper.wrapEntity(wrappedObject.getVehicle()).orElse(null);
+    }
+
+    @Override
+    public void setCustomName(String name) {
+        wrappedObject.setCustomName(MinestomAdventureHelper.toMinestom(AdventureHelper.toComponent(name)));
+    }
+
+    @Override
+    public void setCustomName(Component name) {
+        wrappedObject.setCustomName(MinestomAdventureHelper.toMinestom(name));
     }
 
     @Override

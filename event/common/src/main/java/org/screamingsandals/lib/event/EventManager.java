@@ -48,7 +48,7 @@ public class EventManager {
     }
 
     public EventManager(Controllable controllable) {
-        controllable.disable(this::destroy);
+        controllable.preDisable(this::destroy);
     }
 
     public static <K extends AbstractEvent> K fire(K event) {

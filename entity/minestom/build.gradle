@@ -1,4 +1,5 @@
 dependencies {
+    api project(':utils-minestom')
     api project(':entity-common')
     api project(':world-minestom')
     compileOnly 'com.github.Minestom:Minestom:' + MINESTOM_VERSION

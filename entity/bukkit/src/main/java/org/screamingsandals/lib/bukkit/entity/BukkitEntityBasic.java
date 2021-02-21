@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.entity;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
@@ -7,6 +8,7 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
+import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -176,6 +178,16 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     @Override
     public EntityBasic getVehicle() {
         return EntityMapper.wrapEntity(wrappedObject.getVehicle()).orElseThrow();
+    }
+
+    @Override
+    public void setCustomName(String name) {
+        wrappedObject.setCustomName(name);
+    }
+
+    @Override
+    public void setCustomName(Component name) {
+        setCustomName(AdventureHelper.toLegacy(name));
     }
 
     @Override

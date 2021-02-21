@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.entity;
 
+import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -68,6 +69,10 @@ public interface EntityBasic extends Wrapper {
     boolean leaveVehicle();
 
     EntityBasic getVehicle();
+
+    void setCustomName(String name);
+
+    void setCustomName(Component name);
 
     void setCustomNameVisible(boolean flag);
 
