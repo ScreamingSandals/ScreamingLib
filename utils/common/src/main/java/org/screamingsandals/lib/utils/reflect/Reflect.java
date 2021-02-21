@@ -231,4 +231,16 @@ public class Reflect {
     public static boolean has(String className) {
         return getClassSafe(className) != null;
     }
+
+    public static boolean hasMethod(String className, String methodNames, Class<?>... arguments) {
+        return getMethod(className, methodNames, arguments).getMethod() != null;
+    }
+
+    public static boolean hasMethod(Object instance, String methodNames, Class<?>... arguments) {
+        return hasMethod(instance.getClass(), methodNames, arguments);
+    }
+
+    public static boolean hasMethod(Class<?> type, String methodNames, Class<?>... arguments) {
+        return getMethod(type, methodNames, arguments).getMethod() != null;
+    }
 }

@@ -49,7 +49,8 @@ public class ServiceInitGenerator {
             });
             put("org.slf4j.Logger", (statement, processedArguments) -> {
                 // LoggerWrapper or lombok's @Slf4j should be used instead of this
-                statement.append("$N");
+                statement.append("($T) $N");
+                processedArguments.add(ClassName.get("org.slf4j", "Logger"));
                 processedArguments.add("slf4jLogger");
             });
         }

@@ -27,6 +27,7 @@ import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Map;
 import java.util.Optional;
@@ -91,7 +92,14 @@ public class BukkitItemFactory extends ItemFactory {
                         if (meta instanceof Repairable) {
                             ((Repairable) meta).setRepairCost(item.getRepair());
                         }
-                        meta.setUnbreakable(item.isUnbreakable());
+                        if (Reflect.hasMethod(meta, "setUnbreakable", boolean.class)) {
+                            meta.setUnbreakable(item.isUnbreakable());
+                        } else {
+                            var spigot = Reflect.fastInvoke(meta, "spigot");
+                            if (spigot != null) {
+                                Reflect.getMethod(spigot, "setUnbreakable", boolean.class).invoke(item.isUnbreakable());
+                            }
+                        }
                         if (!item.getLore().isEmpty()) {
 
                             meta.setLore(item.getLore()
@@ -163,7 +171,14 @@ public class BukkitItemFactory extends ItemFactory {
                         if (meta instanceof Repairable) {
                             item.setRepair(((Repairable) meta).getRepairCost());
                         }
-                        item.setUnbreakable(meta.isUnbreakable());
+                        if (Reflect.hasMethod(meta, "isUnbreakable")) {
+                            item.setUnbreakable(meta.isUnbreakable());
+                        } else {
+                            var spigot = Reflect.fastInvoke(meta, "spigot");
+                            if (spigot != null) {
+                                item.setUnbreakable((boolean) Reflect.fastInvoke(spigot, "isUnbreakable"));
+                            }
+                        }
                         if (meta.hasLore() && meta.getLore() != null) {
                             item.getLore().addAll(meta.getLore()
                                     .stream()

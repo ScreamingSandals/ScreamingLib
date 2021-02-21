@@ -47,8 +47,10 @@ public class BukkitMainClassGenerator extends MainClassGenerator {
                 .addStatement("$T $N = $T.createKey($N).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, "name")
                 .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key")
                 .addStatement("this.$N = new $T()", "pluginContainer", pluginContainer)
+                .addStatement("$T $N = null", Object.class, "slf4jLogger")
                 .addStatement("$T $N = new $T(this.getLogger())", screamingLoggerClass, "screamingLogger", julScreamingLoggerClass)
                 .beginControlFlow("if ($T.getMethod(this, $S) != null)", reflectClass, "getSLF4JLogger")
+                    .addStatement("$N = this.getSLF4JLogger()", "slf4jLogger")
                     .addStatement("$N = new $T(new $T(this.getSLF4JLogger()), $N)", "screamingLogger", dualScreamingLoggerClass, slf4jScreamingLoggerClass, "screamingLogger")
                 .endControlFlow()
                 .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "screamingLogger");
