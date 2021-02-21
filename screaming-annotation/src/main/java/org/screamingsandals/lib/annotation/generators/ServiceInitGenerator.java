@@ -43,6 +43,10 @@ public class ServiceInitGenerator {
                 statement.append("this.$N");
                 processedArguments.add("pluginContainer");
             });
+            put("org.screamingsandals.lib.plugin.PluginDescription", (statement, processedArguments) -> {
+                statement.append("$N");
+                processedArguments.add("description");
+            });
             put("org.screamingsandals.lib.plugin.logger.LoggerWrapper", (statement, processedArguments) -> {
                 statement.append("$N");
                 processedArguments.add("screamingLogger");
