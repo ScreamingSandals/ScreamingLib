@@ -78,7 +78,7 @@ public class EventManager {
 
     public <T extends AbstractEvent> EventHandler<T> register(Class<T> event, EventHandler<T> handler) {
         handlers.put(event, handler);
-        fireEventAsync(new HandlerRegisteredEvent(this, event, handler));
+        fireEvent(new HandlerRegisteredEvent(this, event, handler));
 
         return handler;
     }
@@ -87,7 +87,7 @@ public class EventManager {
         List.copyOf(handlers.entries())
                 .forEach(entry -> {
                     if (handler == entry.getValue()) {
-                        fireEventAsync(new HandlerUnregisteredEvent(this, entry.getKey(), handler));
+                        fireEvent(new HandlerUnregisteredEvent(this, entry.getKey(), handler));
                         handlers.remove(entry.getKey(), entry.getValue());
                     }
                 });
