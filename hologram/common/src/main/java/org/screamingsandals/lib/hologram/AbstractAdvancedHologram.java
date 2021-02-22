@@ -29,7 +29,7 @@ public abstract class AbstractAdvancedHologram extends AbstractHologram implemen
 
     @Override
     public TextHologram firstLine(Component text) {
-        return newLine(0, text);
+        return setLine(0, text);
     }
 
     @Override
@@ -51,7 +51,7 @@ public abstract class AbstractAdvancedHologram extends AbstractHologram implemen
     }
 
     @Override
-    public TextHologram newLine(int line, Component text) {
+    public TextHologram setLine(int line, Component text) {
         originalLinesSize = lines.size();
         lines = HologramUtils.addEntryAndMoveRest(lines, line, text);
         update();

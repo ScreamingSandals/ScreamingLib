@@ -43,13 +43,13 @@ public interface TextHologram extends Hologram {
     TextHologram newLine(Component text);
 
     /**
-     * Adds new line
+     * Sets new line. If the given line already exists, it's replaced.
      *
      * @param line where to add
      * @param text text to add
      * @return this hologram
      */
-    TextHologram newLine(int line, Component text);
+    TextHologram setLine(int line, Component text);
 
     /**
      * Removes given line from the hologram.
