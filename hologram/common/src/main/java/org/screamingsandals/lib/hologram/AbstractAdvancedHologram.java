@@ -1,17 +1,24 @@
 package org.screamingsandals.lib.hologram;
 
 import net.kyori.adventure.text.Component;
+import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.tasker.TaskerTime;
+import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.List;
 import java.util.TreeMap;
 import java.util.UUID;
 
-public abstract class AbstractTextHologram extends AbstractHologram implements TextHologram {
+
+public abstract class AbstractAdvancedHologram extends AbstractHologram implements AdvancedHologram {
     protected TreeMap<Integer, Component> lines = new TreeMap<>();
     protected Integer originalLinesSize = 0;
+    protected Pair<Integer, TaskerTime> rotatingTime;
+    protected boolean isRotating;
+    protected Item item;
 
-    protected AbstractTextHologram(UUID uuid, LocationHolder location, boolean touchable) {
+    protected AbstractAdvancedHologram(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
     }
 
@@ -73,5 +80,34 @@ public abstract class AbstractTextHologram extends AbstractHologram implements T
         lines.clear();
         update();
         viewers.clear();
+    }
+
+    @Override
+    public ItemHologram rotating(boolean isRotating) {
+        this.isRotating = isRotating;
+        update();
+        return this;
+    }
+
+    @Override
+    public boolean isRotating() {
+        return isRotating;
+    }
+
+    @Override
+    public Pair<Integer, TaskerTime> getRotatingTime() {
+        return rotatingTime;
+    }
+
+    @Override
+    public void setRotatingTime(Pair<Integer, TaskerTime> rotatingTime) {
+        this.rotatingTime = rotatingTime;
+    }
+
+    @Override
+    public ItemHologram item(Item item) {
+        this.item = item;
+        update();
+        return this;
     }
 }

@@ -163,10 +163,10 @@ public class JULLoggerWrapper extends BasicWrapper<Logger> implements LoggerWrap
 
     private Pair<String, Throwable> getMsg(String msg, Object[] args, Throwable throwable) {
         if (msg == null || args == null || args.length == 0) {
-            return new Pair<>(msg, throwable);
+            return Pair.of(msg, throwable);
         }
 
         var format = new MessageFormat(msg);
-        return new Pair<>(format.format(args), throwable);
+        return Pair.of(format.format(args), throwable);
     }
 }

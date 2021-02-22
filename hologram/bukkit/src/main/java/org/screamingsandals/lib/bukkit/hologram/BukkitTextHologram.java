@@ -7,7 +7,7 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.ArmorStandNMS;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
-import org.screamingsandals.lib.hologram.AbstractTextHologram;
+import org.screamingsandals.lib.hologram.AbstractAdvancedHologram;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -16,8 +16,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 @Slf4j
-public class BukkitTextHologram extends AbstractTextHologram {
+public class BukkitTextHologram extends AbstractAdvancedHologram {
     private final Map<Integer, ArmorStandNMS> entitiesOnLines = new HashMap<>();
+    private ArmorStandNMS itemEntity;
     private Location cachedLocation;
 
     public BukkitTextHologram(UUID uuid, LocationHolder location, boolean touchable) {
@@ -32,25 +33,25 @@ public class BukkitTextHologram extends AbstractTextHologram {
     }
 
     @Override
-    public Hologram setLocation(LocationHolder locationHolder) {
-        this.location = locationHolder;
-        this.cachedLocation = locationHolder.as(Location.class);
+    public Hologram setLocation(LocationHolder location) {
+        this.location = location;
+        this.cachedLocation = location.as(Location.class);
         return this;
     }
 
     @Override
-    public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
+    public void onViewerAdded(PlayerWrapper player, boolean shouldCheckDistance) {
         try {
-            update(player.as(Player.class), getAllSpawnPackets(), checkDistance);
+            update(player.as(Player.class), getAllSpawnPackets(), shouldCheckDistance);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void onViewerRemoved(PlayerWrapper player, boolean checkDistance) {
+    public void onViewerRemoved(PlayerWrapper player, boolean shouldCheckDistance) {
         try {
-            update(player.as(Player.class), List.of(getFullDestroyPacket()), checkDistance);
+            update(player.as(Player.class), List.of(getFullDestroyPacket()), shouldCheckDistance);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,7 +99,7 @@ public class BukkitTextHologram extends AbstractTextHologram {
     private void updateEntities() {
         log.trace("Updating entities");
         final var packets = new LinkedList<>();
-        if (visible) {
+        if (visible && viewers.size() > 0) {
             lines.forEach((key, value) -> {
                 try {
                     if (entitiesOnLines.containsKey(key)) {

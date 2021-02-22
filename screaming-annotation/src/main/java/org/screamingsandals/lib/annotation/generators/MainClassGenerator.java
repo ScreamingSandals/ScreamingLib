@@ -58,7 +58,7 @@ public abstract class MainClassGenerator {
             return false;
         });
 
-        return new Pair<>(earlyInitialization, sorted);
+        return Pair.of(earlyInitialization, sorted);
     }
 
     protected MethodSpec.Builder preparePublicVoid(String name) {

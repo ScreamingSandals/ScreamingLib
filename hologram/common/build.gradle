@@ -3,4 +3,5 @@ dependencies {
     api project(':world-common')
     api project(':event-common')
     api project(':tasker-common')
+    api project(':material-common')
 }

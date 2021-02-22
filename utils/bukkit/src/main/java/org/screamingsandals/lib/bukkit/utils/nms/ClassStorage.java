@@ -54,6 +54,8 @@ public class ClassStorage {
 		public static final Class<?> ServerConnection = safeGetClass("{nms}.ServerConnection", "{f:net}.NetworkSystem");
 		public static final Class<?> World = safeGetClass("{nms}.World", "{f:world}.World");
 		public static final Class<?> PacketPlayOutPlayerListHeaderFooter = safeGetClass("{nms}.PacketPlayOutPlayerListHeaderFooter", "{f:net}.play.server.SPlayerListHeaderFooterPacket", "{f:net}.play.server.SPacketPlayerListHeaderFooter");
+		public static final Class<?> CraftEquipmentSlot = safeGetClass("{obc}.CraftEquipmentSlot");
+		public static final Class<?> CraftItemStack = safeGetClass("{obc}.inventory.CraftItemStack");
 
 		// 1.16
 		public static final Class<?> AttributeModifiable = safeGetClass("{nms}.AttributeModifiable", "{f:ent}.ai.attributes.ModifiableAttributeInstance");
@@ -201,20 +203,18 @@ public class ClassStorage {
 			try {
 				Field field = clazz.getField(name.trim());
 				field.set(instance, set);
-				Object result = field.get(instance);
-				return result;
+				return field.get(instance);
 			} catch (Throwable t) {
-				Class<?> claz2 = clazz;
+				Class<?> clazz2 = clazz;
 				do {
 					try {
-						Field field = claz2.getDeclaredField(name.trim());
+						Field field = clazz2.getDeclaredField(name.trim());
 						field.setAccessible(true);
 						field.set(instance, set);
-						Object result = field.get(instance);
-						return result;
-					} catch (Throwable t2) {
+						return field.get(instance);
+					} catch (Throwable ignored) {
 					}
-				} while ((claz2 = claz2.getSuperclass()) != null && claz2 != Object.class);
+				} while ((clazz2 = clazz2.getSuperclass()) != null && clazz2 != Object.class);
 			}
 		}
 		return null;

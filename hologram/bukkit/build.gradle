@@ -3,4 +3,5 @@ dependencies {
 
     api project(':hologram-common')
     api project(':utils-bukkit')
+    api project(':material-bukkit')
 }
