@@ -73,4 +73,10 @@ public class BukkitTaskInitializer extends AbstractTaskInitializer {
 
         return TaskState.RUNNING;
     }
+
+    @Override
+    public void cancel(TaskerTask task) {
+        final BukkitTask toCancel = task.getTaskObject();
+        toCancel.cancel();
+    }
 }

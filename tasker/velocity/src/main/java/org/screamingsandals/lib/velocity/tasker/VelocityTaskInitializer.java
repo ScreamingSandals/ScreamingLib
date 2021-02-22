@@ -85,4 +85,10 @@ public class VelocityTaskInitializer extends AbstractTaskInitializer {
                 return TaskState.SCHEDULED;
         }
     }
+
+    @Override
+    public void cancel(TaskerTask task) {
+        final ScheduledTask toCancel = task.getTaskObject();
+        toCancel.cancel();
+    }
 }

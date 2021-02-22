@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.bukkit.hologram.nms;
 
 import com.google.common.base.Preconditions;
+import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.EquipmentSlot;
@@ -11,6 +12,7 @@ import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 
+@Slf4j
 public class AdvancedArmorStandNMS extends ArmorStandNMS {
 
     public AdvancedArmorStandNMS(Object handler) {
@@ -28,6 +30,7 @@ public class AdvancedArmorStandNMS extends ArmorStandNMS {
     public void setItem(Item item) {
         ClassStorage.getMethod(ClassStorage.NMS.Entity, "setSlot", ClassStorage.NMS.EnumItemSlot, ClassStorage.NMS.ItemStack).invokeInstance(
                 handler, getHeadSlot(), stackAsNMS(item));
+        log.trace("Get Item: {}", getItem().toString());
     }
 
     public Item getItem() {

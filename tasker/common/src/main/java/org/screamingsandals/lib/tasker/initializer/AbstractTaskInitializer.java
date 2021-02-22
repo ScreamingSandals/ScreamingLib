@@ -14,4 +14,6 @@ public abstract class AbstractTaskInitializer {
     public abstract TaskerTask start(TaskBuilderImpl taskerBuilder);
 
     public abstract TaskState getState(TaskerTask taskerTask);
+
+    public abstract void cancel(TaskerTask task);
 }

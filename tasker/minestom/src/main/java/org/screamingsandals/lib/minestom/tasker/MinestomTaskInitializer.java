@@ -65,6 +65,12 @@ public class MinestomTaskInitializer extends AbstractTaskInitializer {
         return convert(task.getStatus());
     }
 
+    @Override
+    public void cancel(TaskerTask task) {
+        final Task toCancel = task.getTaskObject();
+        toCancel.cancel();
+    }
+
     private TimeUnit convert(TaskerTime time) {
         switch (time) {
             case SECONDS:

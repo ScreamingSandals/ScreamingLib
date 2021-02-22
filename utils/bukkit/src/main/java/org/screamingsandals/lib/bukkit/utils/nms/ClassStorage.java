@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.ClassMethod;
 import org.screamingsandals.lib.utils.reflect.InstanceMethod;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -309,7 +310,11 @@ public class ClassStorage {
 	public static Vector3Df getVectorFromNMS(Object vector3f) {
 		Preconditions.checkNotNull(vector3f, "Vector is null!");
 		try {
-			return new Vector3Df((float) getField(vector3f, "getX"), (float) getField(vector3f, "getY"), (float) getField(vector3f, "getZ"));
+			return new Vector3Df(
+					(float) Reflect.fastInvoke(vector3f, "getX"),
+					(float) Reflect.fastInvoke(vector3f, "getY"),
+					(float) Reflect.fastInvoke(vector3f, "getZ")
+			);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

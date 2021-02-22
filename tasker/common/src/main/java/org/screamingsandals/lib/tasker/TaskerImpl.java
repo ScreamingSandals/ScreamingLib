@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,7 +38,7 @@ class TaskerImpl implements Tasker {
         }
 
         try {
-            Reflect.fastInvoke(task.getTaskObject(), "cancel");
+            initializer.cancel(taskerTask);
         } catch (Exception e) {
             throw new UnsupportedOperationException("Exception while cancelling task " + taskerTask.getId() + "!", e);
         }

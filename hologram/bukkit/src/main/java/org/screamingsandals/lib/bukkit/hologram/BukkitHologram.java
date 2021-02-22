@@ -273,6 +273,7 @@ public class BukkitHologram extends AbstractHologram {
     }
 
     private Vector3Df checkAndAdd(Vector3Df in) {
+        log.trace("In rotation: {}", in.toString());
         final var toReturn = new Vector3Df();
         switch (rotationMode) {
             case X:

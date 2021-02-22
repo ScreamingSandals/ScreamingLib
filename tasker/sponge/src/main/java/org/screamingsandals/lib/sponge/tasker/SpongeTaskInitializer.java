@@ -77,4 +77,10 @@ public class SpongeTaskInitializer extends AbstractTaskInitializer {
         //TODO
         return TaskState.RUNNING;
     }
+
+    @Override
+    public void cancel(TaskerTask task) {
+        final ScheduledTask toCancel = task.getTaskObject();
+        toCancel.cancel();
+    }
 }

@@ -70,4 +70,10 @@ public class BungeeTaskInitializer extends AbstractTaskInitializer {
         }
         return TaskState.FINISHED;
     }
+
+    @Override
+    public void cancel(TaskerTask task) {
+        final ScheduledTask toCancel = task.getTaskObject();
+        toCancel.cancel();
+    }
 }
