@@ -10,6 +10,7 @@ import org.screamingsandals.lib.hologram.AbstractHologram;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.hologram.HologramManager;
 import org.screamingsandals.lib.hologram.event.HologramTouchEvent;
+import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.event.*;
 import org.screamingsandals.lib.tasker.Tasker;
@@ -27,7 +28,8 @@ import java.util.UUID;
         EventManager.class,
         PlayerMapper.class,
         LocationMapper.class,
-        AbstractTaskInitializer.class
+        AbstractTaskInitializer.class,
+        ItemFactory.class
 })
 public class BukkitHologramManager extends HologramManager {
 

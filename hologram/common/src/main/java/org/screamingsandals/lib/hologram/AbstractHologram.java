@@ -21,6 +21,7 @@ public abstract class AbstractHologram implements Hologram {
     protected int viewDistance;
     protected boolean touchable;
     protected boolean visible;
+    protected boolean ready = false;
     protected Data data;
     protected Integer originalLinesSize = 0;
     protected Pair<Integer, TaskerTime> rotationTime;
@@ -111,6 +112,7 @@ public abstract class AbstractHologram implements Hologram {
             return this;
         }
 
+        ready = true;
         visible = true;
         update();
         return this;
@@ -123,6 +125,7 @@ public abstract class AbstractHologram implements Hologram {
         }
 
         visible = false;
+        ready = false;
         update();
         return this;
     }
@@ -230,7 +233,13 @@ public abstract class AbstractHologram implements Hologram {
 
     public abstract void onViewerRemoved(PlayerWrapper player, boolean checkDistance);
 
-    public abstract void update();
+    protected abstract void update0();
+
+    public void update() {
+        if (ready) {
+            update0();
+        }
+    }
 
     public static class SimpleData implements Data {
         private final Map<String, Object> dataMap = new HashMap<>();

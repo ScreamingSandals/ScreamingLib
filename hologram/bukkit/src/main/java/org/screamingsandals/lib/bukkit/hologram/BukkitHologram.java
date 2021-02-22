@@ -62,10 +62,6 @@ public class BukkitHologram extends AbstractHologram {
         }
     }
 
-    @Override
-    public void update() {
-        updateEntities();
-    }
 
     @Override
     public Hologram show() {
@@ -107,6 +103,11 @@ public class BukkitHologram extends AbstractHologram {
             rotationTask.cancel();
         }
         super.destroy();
+    }
+
+    @Override
+    protected void update0() {
+        updateEntities();
     }
 
     private void update(Player player, List<Object> packets, boolean checkDistance) {

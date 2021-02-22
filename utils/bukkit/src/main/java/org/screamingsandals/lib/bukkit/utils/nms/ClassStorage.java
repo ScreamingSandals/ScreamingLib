@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.utils.nms;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -306,6 +307,7 @@ public class ClassStorage {
 	}
 
 	public static Vector3Df getVectorFromNMS(Object vector3f) {
+		Preconditions.checkNotNull(vector3f, "Vector is null!");
 		try {
 			return new Vector3Df((float) getField(vector3f, "getX"), (float) getField(vector3f, "getY"), (float) getField(vector3f, "getZ"));
 		} catch (Throwable t) {

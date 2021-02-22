@@ -39,7 +39,7 @@ class TaskerImpl implements Tasker {
         }
 
         try {
-            Reflect.fastInvoke(task, "cancel");
+            Reflect.fastInvoke(task.getTaskObject(), "cancel");
         } catch (Exception e) {
             throw new UnsupportedOperationException("Exception while cancelling task " + taskerTask.getId() + "!", e);
         }

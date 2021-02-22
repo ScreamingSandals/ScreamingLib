@@ -20,7 +20,7 @@ public class ArmorStandNMS extends EntityNMS {
 	
 	public ArmorStandNMS(Location loc) throws Throwable {
 		this(ClassStorage.NMS.EntityArmorStand.getConstructor(ClassStorage.NMS.World, double.class, double.class, double.class)
-					.newInstance(ClassStorage.getMethod(loc.getWorld(), "getHandle").invoke(), loc.getX(), loc.getY(), loc.getZ()));
+					.newInstance(ClassStorage.getHandle(loc.getWorld()), loc.getX(), loc.getY(), loc.getZ()));
 		this.setLocation(loc); // Update rotation
 	}
 	
