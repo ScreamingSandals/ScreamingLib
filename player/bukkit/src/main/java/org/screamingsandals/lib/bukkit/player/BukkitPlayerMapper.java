@@ -23,6 +23,7 @@ import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
@@ -295,7 +296,11 @@ public class BukkitPlayerMapper extends PlayerMapper {
         new PlayerBlockBreakEventListener(plugin);
         new PlayerMoveEventListener(plugin);
         new PlayerTeleportEventListener(plugin);
-        new PlayerPickupItemListener(plugin);
+        if (Reflect.has("org.bukkit.event.entity.EntityPickupItemEvent")) {
+            new PlayerPickupItemListener(plugin);
+        } else {
+            new LegacyPlayerPickupItemListener(plugin);
+        }
         new PlayerChangeWorldEventListener(plugin);
     }
 }

@@ -34,4 +34,13 @@ public @interface Service {
      * @return All services, that should be loaded before this service
      */
     Class<?>[] loadAfter() default {};
+
+    /**
+     * Defines if service can't be registered to ServiceManager.
+     * If it's true and init method is not present, object won't be constructed.
+     * If class is annotated with {@link lombok.experimental.UtilityClass} this is implicitly true.
+     *
+     * @return true if service can't be registered to ServiceManager
+     */
+    boolean staticOnly() default false;
 }

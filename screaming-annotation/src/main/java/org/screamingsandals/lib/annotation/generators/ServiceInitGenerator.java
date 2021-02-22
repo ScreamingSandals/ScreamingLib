@@ -2,8 +2,11 @@ package org.screamingsandals.lib.annotation.generators;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
+import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
@@ -14,6 +17,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -28,6 +32,7 @@ public class ServiceInitGenerator {
 
     private final MethodSpec.Builder methodSpec;
     private final Types types;
+    private final Elements elements;
     private final Map<TypeMirror, String> instancedServices = new HashMap<>();
     private final Map<String, BiConsumer<StringBuilder, List<Object>>> initArguments = new HashMap<>() {
         {
@@ -76,51 +81,53 @@ public class ServiceInitGenerator {
                 .filter(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))
                 .findFirst();
 
-        if (initMethod.isEmpty()) {
+        if (initMethod.isEmpty() && !serviceContainer.isStaticOnly()) {
             initMethod = typeElement.getEnclosedElements()
                     .stream()
                     .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR)
                     .findFirst();
         }
 
-        if (initMethod.isPresent()) {
-            var method = (ExecutableElement) initMethod.get();
-            var arguments = method.getParameters();
-            var processedArguments = new ArrayList<>();
-            var statement = new StringBuilder();
+        if (initMethod.isPresent() || serviceContainer.isStaticOnly()) {
             String returnedName = null;
-            if (method.getKind() == ElementKind.CONSTRUCTOR || method.getReturnType().equals(typeElement.asType())) {
-                statement.append("$T $N = ");
+            if (initMethod.isPresent()) {
+                var processedArguments = new ArrayList<>();
+                var statement = new StringBuilder();
+                var method = (ExecutableElement) initMethod.get();
+                var arguments = method.getParameters();
+                if (method.getKind() == ElementKind.CONSTRUCTOR || method.getReturnType().equals(typeElement.asType())) {
+                    statement.append("$T $N = ");
+                    processedArguments.add(typeElement);
+                    returnedName = "indexedVariable" + (index++);
+                    processedArguments.add(returnedName);
+                }
+                if (method.getKind() == ElementKind.CONSTRUCTOR) {
+                    statement.append("new $T(");
+                } else {
+                    statement.append("$T.init(");
+                }
                 processedArguments.add(typeElement);
-                returnedName = "indexedVariable" + (index++);
-                processedArguments.add(returnedName);
+                var first = new AtomicBoolean(true);
+                arguments.forEach(variableElement -> {
+                    if (!first.get()) {
+                        statement.append(",");
+                    } else {
+                        first.set(false);
+                    }
+                    Optional<TypeMirror> typeMirror;
+                    if (initArguments.containsKey(variableElement.asType().toString())) {
+                        initArguments.get(variableElement.asType().toString()).accept(statement, processedArguments);
+                    } else if ((typeMirror = instancedServices.keySet().stream().filter(type -> types.isAssignable(type, variableElement.asType())).findFirst()).isPresent()) {
+                        statement.append("$N");
+                        processedArguments.add(instancedServices.get(typeMirror.get()));
+                    } else {
+                        throw new UnsupportedOperationException("Init method of " + typeElement.getQualifiedName() + " has wrong argument!");
+                    }
+                });
+                statement.append(")");
+                methodSpec.addStatement(statement.toString(), processedArguments.toArray());
             }
-            if (method.getKind() == ElementKind.CONSTRUCTOR) {
-                statement.append("new $T(");
-            } else {
-                statement.append("$T.init(");
-            }
-            processedArguments.add(typeElement);
-            var first = new AtomicBoolean(true);
-            arguments.forEach(variableElement -> {
-                if (!first.get()) {
-                    statement.append(",");
-                } else {
-                    first.set(false);
-                }
-                Optional<TypeMirror> typeMirror;
-                if (initArguments.containsKey(variableElement.asType().toString())) {
-                    initArguments.get(variableElement.asType().toString()).accept(statement, processedArguments);
-                } else if ((typeMirror = instancedServices.keySet().stream().filter(type -> types.isAssignable(variableElement.asType(), type)).findFirst()).isPresent()) {
-                    statement.append("$N");
-                    processedArguments.add(instancedServices.get(typeMirror.get()));
-                } else {
-                    throw new UnsupportedOperationException("Init method of " + typeElement.getQualifiedName() + " has wrong argument!");
-                }
-            });
-            statement.append(")");
-            methodSpec.addStatement(statement.toString(), processedArguments.toArray());
-            if (returnedName != null) {
+            if (!serviceContainer.isStaticOnly() && returnedName != null) {
                 methodSpec.addStatement("$T.$N($N)", ClassName.get("org.screamingsandals.lib.plugin", "ServiceManager"), "putService", returnedName);
                 instancedServices.put(typeElement.asType(), returnedName);
             }
@@ -131,6 +138,8 @@ public class ServiceInitGenerator {
             processMethodAnnotation(OnPostEnable.class, "postEnable", typeElement, returnedName, controllableForMethods);
             processMethodAnnotation(OnPreDisable.class, "preDisable", typeElement, returnedName, controllableForMethods);
             processMethodAnnotation(OnDisable.class, "disable", typeElement, returnedName, controllableForMethods);
+
+            processEventAnnotation(typeElement, returnedName);
         } else {
             throw new UnsupportedOperationException("Can't auto initialize " + typeElement.getQualifiedName() + " without init method");
         }
@@ -147,14 +156,11 @@ public class ServiceInitGenerator {
 
         if (result1.size() == 1) {
             var method = (ExecutableElement) result1.get(0);
-            if (method.getKind() != ElementKind.METHOD) {
-                throw new UnsupportedOperationException("Element in " + typeElement.getQualifiedName() + " annotated with @" + annotationClass.getSimpleName() + " is not method");
-            }
             if (method.getParameters().size() > 0) {
                 throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @" + annotationClass.getSimpleName() + " can't have parameters");
             }
             if (method.getModifiers().contains(Modifier.STATIC)) {
-                createControllable(controllableName, method);
+                createControllable(controllableName);
                 methodSpec.addStatement("$N.$N(() -> $T.$N())", controllableName.get(), controllableMethod, typeElement, method.getSimpleName());
             } else {
                 if (returnedName == null) {
@@ -162,13 +168,84 @@ public class ServiceInitGenerator {
                             typeElement.getQualifiedName() + ": Can't dynamically add non-static @" + annotationClass.getSimpleName() + " method because init method doesn't return any instance"
                     );
                 }
-                createControllable(controllableName, method);
+                createControllable(controllableName);
                 methodSpec.addStatement("$N.$N(() -> $N.$N())", controllableName.get(), controllableMethod, returnedName, method.getSimpleName());
             }
         }
     }
 
-    private void createControllable(AtomicReference<String> controllableName, ExecutableElement method) {
+
+    private void processEventAnnotation(TypeElement typeElement, String returnedName) {
+        var result = typeElement.getEnclosedElements().stream()
+                .filter(element -> element.getKind() == ElementKind.METHOD && element.getAnnotation(OnEvent.class) != null)
+                .map(element -> (ExecutableElement) element)
+                .collect(Collectors.toList());
+
+        if (result.size() == 0) {
+            return;
+        }
+
+        var abstractEventClass = elements.getTypeElement("org.screamingsandals.lib.event.AbstractEvent");
+        var eventManagerClass = ClassName.get("org.screamingsandals.lib.event", "EventManager");
+        var eventHandlerClass = ClassName.get("org.screamingsandals.lib.event", "EventHandler");
+        var eventPriorityClass = ClassName.get("org.screamingsandals.lib.event", "EventPriority");
+
+        var methodBuilder = MethodSpec.methodBuilder("run")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(void.class);
+
+        result.forEach(method -> {
+            if (method.getParameters().size() != 1) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @OnEvent must have one parameter");
+            }
+            var parameter = method.getParameters().get(0).asType();
+            if (!types.isAssignable(parameter, abstractEventClass.asType())) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @OnEvent must have parameter that extends AbstractEvent");
+            }
+            var annotation = method.getAnnotation(OnEvent.class);
+            if (method.getModifiers().contains(Modifier.STATIC)) {
+                methodBuilder.addStatement(
+                        "$T.getDefaultEventManager().register($T.class, $T.of(event -> $T.$N(event), $T.$N, $L))",
+                        eventManagerClass,
+                        parameter,
+                        eventHandlerClass,
+                        typeElement,
+                        method.getSimpleName(),
+                        eventPriorityClass,
+                        annotation.priority().name(),
+                        annotation.ignoreCancelled()
+                );
+            } else {
+                if (returnedName == null) {
+                    throw new UnsupportedOperationException(
+                            typeElement.getQualifiedName() + ": Can't dynamically add non-static @OnEvent method because init method doesn't return any instance"
+                    );
+                }
+                methodBuilder.addStatement(
+                        "$T.getDefaultEventManager().register($T.class, $T.of(event -> $N.$N(event), $T.$N, $L))",
+                        eventManagerClass,
+                        parameter,
+                        eventHandlerClass,
+                        returnedName,
+                        method.getSimpleName(),
+                        eventPriorityClass,
+                        annotation.priority().name(),
+                        annotation.ignoreCancelled()
+                );
+            }
+        });
+
+        methodSpec.addStatement(
+                "this.$N.child().postEnable($L)",
+                "pluginControllable",
+                TypeSpec.anonymousClassBuilder("")
+                        .addSuperinterface(Runnable.class)
+                        .addMethod(methodBuilder.build())
+                        .build()
+        );
+    }
+
+    private void createControllable(AtomicReference<String> controllableName) {
         if (controllableName.get() == null) {
             var name = "genericControllable" + (index++);
             controllableName.set(name);

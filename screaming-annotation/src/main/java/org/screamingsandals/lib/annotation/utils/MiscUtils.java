@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.annotation.utils;
 
+import lombok.experimental.UtilityClass;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.Init;
@@ -30,6 +31,7 @@ public class MiscUtils {
         }
         return List.of();
     }
+
     public static List<TypeElement> getSafelyTypeElementsLoadAfter(ProcessingEnvironment environment, Service annotation) {
         try {
             annotation.loadAfter();
@@ -62,7 +64,12 @@ public class MiscUtils {
         if (mappingAnnotation == null) {
             var service = typeElement.getAnnotation(Service.class);
             if (service != null) {
-                var container = new ServiceContainer(typeElement, null, typeElement.getAnnotation(InternalEarlyInitialization.class) != null);
+                var container = new ServiceContainer(
+                        typeElement,
+                        null,
+                        typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
+                        service.staticOnly() || typeElement.getAnnotation(UtilityClass.class) != null
+                );
                 container.getDependencies().addAll(getSafelyTypeElements(environment, service));
                 container.getLoadAfter().addAll(getSafelyTypeElementsLoadAfter(environment, service));
 
@@ -104,8 +111,13 @@ public class MiscUtils {
                 throw new UnsupportedOperationException("Can't find implementation of " + typeElement.getQualifiedName() + " for " + platformType);
             }
             if (resolvedElement != null) {
-                var container = new ServiceContainer(resolvedElement, typeElement, resolvedElement.getAnnotation(InternalEarlyInitialization.class) != null);
                 var resolvedElementService = resolvedElement.getAnnotation(Service.class);
+                var container = new ServiceContainer(
+                        resolvedElement,
+                        typeElement,
+                        resolvedElement.getAnnotation(InternalEarlyInitialization.class) != null,
+                        (resolvedElementService != null && resolvedElementService.staticOnly()) || resolvedElement.getAnnotation(UtilityClass.class) != null
+                );
                 if (resolvedElementService != null) {
                     container.getDependencies().addAll(getSafelyTypeElements(environment, resolvedElement.getAnnotation(Service.class)));
                     container.getLoadAfter().addAll(getSafelyTypeElementsLoadAfter(environment, resolvedElement.getAnnotation(Service.class)));
