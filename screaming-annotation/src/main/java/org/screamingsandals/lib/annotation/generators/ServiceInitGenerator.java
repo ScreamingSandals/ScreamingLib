@@ -5,17 +5,15 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
-import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.OnEvent;
-import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
-import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
-import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
-import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
+import org.screamingsandals.lib.utils.Pair;
+import org.screamingsandals.lib.utils.annotations.methods.*;
 
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -132,20 +130,36 @@ public class ServiceInitGenerator {
                 instancedServices.put(typeElement.asType(), returnedName);
             }
 
+            var shouldRunControllable = processShouldRunControllable(typeElement, returnedName);
+
             var controllableForMethods = new AtomicReference<String>();
 
-            processMethodAnnotation(OnEnable.class, "enable", typeElement, returnedName, controllableForMethods);
-            processMethodAnnotation(OnPostEnable.class, "postEnable", typeElement, returnedName, controllableForMethods);
-            processMethodAnnotation(OnPreDisable.class, "preDisable", typeElement, returnedName, controllableForMethods);
-            processMethodAnnotation(OnDisable.class, "disable", typeElement, returnedName, controllableForMethods);
+            processMethodAnnotation(
+                    Map.of(
+                            OnEnable.class, "enable",
+                            OnPostEnable.class, "postEnable",
+                            OnPreDisable.class, "preDisable",
+                            OnDisable.class, "disable"
+                    ),
+                    typeElement,
+                    returnedName,
+                    controllableForMethods,
+                    shouldRunControllable
+            );
 
-            processEventAnnotation(typeElement, returnedName);
+            processEventAnnotations(typeElement, returnedName, shouldRunControllable);
         } else {
             throw new UnsupportedOperationException("Can't auto initialize " + typeElement.getQualifiedName() + " without init method");
         }
     }
 
-    private void processMethodAnnotation(Class<? extends Annotation> annotationClass, String controllableMethod, TypeElement typeElement, String returnedName, AtomicReference<String> controllableName) {
+    private void processMethodAnnotation(Map<Class<? extends Annotation>, String> map, TypeElement typeElement, String returnedName, AtomicReference<String> controllableName, Pair<String, List<Object>> shouldRunControllable) {
+        map.forEach((annotationClass, controllableMethod) ->
+                processMethodAnnotation(annotationClass, controllableMethod, typeElement, returnedName, controllableName, shouldRunControllable)
+        );
+    }
+
+    private void processMethodAnnotation(Class<? extends Annotation> annotationClass, String controllableMethod, TypeElement typeElement, String returnedName, AtomicReference<String> controllableName, Pair<String, List<Object>> shouldRunControllable) {
         var result1 = typeElement.getEnclosedElements().stream()
                 .filter(element -> element.getKind() == ElementKind.METHOD && element.getAnnotation(annotationClass) != null)
                 .collect(Collectors.toList());
@@ -159,9 +173,15 @@ public class ServiceInitGenerator {
             if (method.getParameters().size() > 0) {
                 throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @" + annotationClass.getSimpleName() + " can't have parameters");
             }
+            var methodBuilder = MethodSpec.methodBuilder("run")
+                    .addModifiers(Modifier.PUBLIC)
+                    .returns(void.class);
+            if (shouldRunControllable.areBothPresent()) {
+                methodBuilder.beginControlFlow("if (" + shouldRunControllable.getFirst() + ")", shouldRunControllable.getSecond().toArray());
+            }
             if (method.getModifiers().contains(Modifier.STATIC)) {
                 createControllable(controllableName);
-                methodSpec.addStatement("$N.$N(() -> $T.$N())", controllableName.get(), controllableMethod, typeElement, method.getSimpleName());
+                methodBuilder.addStatement("$T.$N()", typeElement, method.getSimpleName());
             } else {
                 if (returnedName == null) {
                     throw new UnsupportedOperationException(
@@ -169,13 +189,57 @@ public class ServiceInitGenerator {
                     );
                 }
                 createControllable(controllableName);
-                methodSpec.addStatement("$N.$N(() -> $N.$N())", controllableName.get(), controllableMethod, returnedName, method.getSimpleName());
+                methodBuilder.addStatement("$N.$N()", returnedName, method.getSimpleName());
             }
+            if (shouldRunControllable.areBothPresent()) {
+                methodBuilder.endControlFlow();
+            }
+            methodSpec.addStatement(
+                    "$N.$N($L)",
+                    controllableName.get(),
+                    controllableMethod,
+                    TypeSpec.anonymousClassBuilder("")
+                            .addSuperinterface(Runnable.class)
+                            .addMethod(methodBuilder.build())
+                            .build()
+            );
         }
     }
 
+    private Pair<String, List<Object>> processShouldRunControllable(TypeElement typeElement, String returnedName) {
+        var result1 = typeElement.getEnclosedElements().stream()
+                .filter(element -> element.getKind() == ElementKind.METHOD && element.getAnnotation(ShouldRunControllable.class) != null)
+                .collect(Collectors.toList());
 
-    private void processEventAnnotation(TypeElement typeElement, String returnedName) {
+        if (result1.size() > 1) {
+            throw new UnsupportedOperationException("Service " + typeElement.getQualifiedName() + " has more than one @ShouldRunControllable methods");
+        }
+
+        if (result1.size() == 1) {
+            var method = (ExecutableElement) result1.get(0);
+            if (method.getParameters().size() > 0) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @ShouldRunControllable can't have parameters");
+            }
+            if (method.getReturnType().getKind() != TypeKind.BOOLEAN) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @ShouldRunControllable must return boolean");
+            }
+            if (method.getModifiers().contains(Modifier.STATIC)) {
+                return Pair.of("$T.$N()", List.of(typeElement, method.getSimpleName()));
+            } else {
+                if (returnedName == null) {
+                    throw new UnsupportedOperationException(
+                            typeElement.getQualifiedName() + ": Can't dynamically add non-static @ShouldRunControllable method because init method doesn't return any instance"
+                    );
+                }
+                return Pair.of("$N.$N()", List.of(returnedName, method.getSimpleName()));
+            }
+        }
+
+        return Pair.empty();
+    }
+
+
+    private void processEventAnnotations(TypeElement typeElement, String returnedName, Pair<String, List<Object>> shouldRunControllable) {
         var result = typeElement.getEnclosedElements().stream()
                 .filter(element -> element.getKind() == ElementKind.METHOD && element.getAnnotation(OnEvent.class) != null)
                 .map(element -> (ExecutableElement) element)
@@ -193,6 +257,9 @@ public class ServiceInitGenerator {
         var methodBuilder = MethodSpec.methodBuilder("run")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(void.class);
+        if (shouldRunControllable.areBothPresent()) {
+            methodBuilder.beginControlFlow("if (" + shouldRunControllable.getFirst() + ")", shouldRunControllable.getSecond().toArray());
+        }
 
         result.forEach(method -> {
             if (method.getParameters().size() != 1) {
@@ -234,6 +301,9 @@ public class ServiceInitGenerator {
                 );
             }
         });
+        if (shouldRunControllable.areBothPresent()) {
+            methodBuilder.endControlFlow();
+        }
 
         methodSpec.addStatement(
                 "this.$N.child().postEnable($L)",
