@@ -207,6 +207,7 @@ public interface Hologram {
         Y,
         Z,
         ALL,
+        XY,
         NONE
     }
 

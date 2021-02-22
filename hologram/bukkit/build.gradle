@@ -1,5 +1,6 @@
 dependencies {
     compileOnly paper(PAPER_VERSION)
+    compileOnly 'com.mojang:datafixerupper:' + DATAFIXERUPPER_VERSION
 
     api project(':hologram-common')
     api project(':utils-bukkit')

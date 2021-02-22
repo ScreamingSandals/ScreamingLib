@@ -31,26 +31,39 @@ public class BukkitTaskInitializer extends AbstractTaskInitializer {
         BukkitTask task = null;
 
         if (builder.isAfterOneTick() && builder.isAsync()) {
-            throw new UnsupportedOperationException("Todo");
+            throw new UnsupportedOperationException("This is not supported sadly.");
         }
 
         if (builder.isAfterOneTick()) {
             task = scheduler.runTask(plugin, runnable);
         }
 
-        if (builder.isAsync()) {
+        if (builder.isAsync()
+                && builder.getRepeat() == 0
+                && builder.getDelay() == 0) {
             task = scheduler.runTaskAsynchronously(plugin, runnable);
         }
 
         if (builder.getDelay() > 0) {
-            task = scheduler.runTaskLater(plugin, runnable,
-                    builder.getTimeUnit().getBukkitTime(builder.getDelay()));
+            if (builder.isAsync()) {
+                task = scheduler.runTaskLaterAsynchronously(plugin, runnable,
+                        builder.getTimeUnit().getBukkitTime(builder.getDelay()));
+            } else {
+                task = scheduler.runTaskLater(plugin, runnable,
+                        builder.getTimeUnit().getBukkitTime(builder.getDelay()));
+            }
         }
 
         if (builder.getRepeat() > 0) {
-            task = scheduler.runTaskTimer(plugin, runnable,
-                    builder.getTimeUnit().getBukkitTime(builder.getDelay()),
-                    builder.getTimeUnit().getBukkitTime(builder.getRepeat()));
+            if (builder.isAsync()) {
+                task = scheduler.runTaskTimerAsynchronously(plugin, runnable,
+                        builder.getTimeUnit().getBukkitTime(builder.getDelay()),
+                        builder.getTimeUnit().getBukkitTime(builder.getRepeat()));
+            } else {
+                task = scheduler.runTaskTimer(plugin, runnable,
+                        builder.getTimeUnit().getBukkitTime(builder.getDelay()),
+                        builder.getTimeUnit().getBukkitTime(builder.getRepeat()));
+            }
         }
 
         if (task == null) {

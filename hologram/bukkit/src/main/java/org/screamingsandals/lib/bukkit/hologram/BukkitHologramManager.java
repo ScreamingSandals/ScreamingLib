@@ -64,6 +64,8 @@ public class BukkitHologramManager extends HologramManager {
                 EventManager.getDefaultEventManager().register(SPlayerTeleportEvent.class, this::onTeleport);
                 EventManager.getDefaultEventManager().register(SPlayerWorldChangeEvent.class, this::onWorldChange);
         });
+
+        controllable.preDisable(this::destroy);
     }
 
     @Override
@@ -154,7 +156,7 @@ public class BukkitHologramManager extends HologramManager {
                         Tasker.build(() -> {
                             log.trace("Adding player viewer to hologram.");
                             castedHologram.onViewerAdded(player, false);
-                        }).delay(20, TaskerTime.TICKS).start();
+                        }).delay(20, TaskerTime.TICKS).async().start();
                     }
                 }
             } catch (Throwable t) {
@@ -191,7 +193,7 @@ public class BukkitHologramManager extends HologramManager {
                         Tasker.build(() -> {
                             log.trace("Adding player viewer to hologram.");
                             castedHologram.onViewerAdded(player, false);
-                        }).delay(20, TaskerTime.TICKS).start();
+                        }).delay(20, TaskerTime.TICKS).async().start();
                     }
                 }
             } catch (Throwable t) {
@@ -230,13 +232,13 @@ public class BukkitHologramManager extends HologramManager {
                         Tasker.build(() -> {
                             log.trace("Adding player viewer to hologram.");
                             castedHologram.onViewerAdded(player, false);
-                        }).delay(10, TaskerTime.TICKS).start();
+                        }).delay(10, TaskerTime.TICKS).async().start();
                     } else if (event.getNewLocation().getDistanceSquared(hologramLocation) >= viewDistance
                             && event.getCurrentLocation().getDistanceSquared(hologramLocation) < viewDistance) {
                         Tasker.build(() -> {
                             castedHologram.onViewerRemoved(player, false);
                             log.trace("Removing player viewer from hologram");
-                        }).delay(10, TaskerTime.TICKS).start();
+                        }).delay(10, TaskerTime.TICKS).async().start();
                     }
                 }
             } catch (Throwable t) {

@@ -17,13 +17,13 @@ public abstract class AbstractHologram implements Hologram {
     @Getter
     protected final UUID uuid;
 
+    protected Integer originalLinesSize = 0;
     protected LocationHolder location;
     protected int viewDistance;
     protected boolean touchable;
     protected boolean visible;
     protected boolean ready = false;
     protected Data data;
-    protected Integer originalLinesSize = 0;
     protected Pair<Integer, TaskerTime> rotationTime;
     protected RotationMode rotationMode = RotationMode.NONE;
     protected Item item;

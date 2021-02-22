@@ -50,6 +50,7 @@ public class ClassStorage {
 		public static final Class<?> PacketPlayOutEntityTeleport = safeGetClass("{nms}.PacketPlayOutEntityTeleport", "{f:net}.play.server.SEntityTeleportPacket", "{f:net}.play.server.SPacketEntityTeleport");
 		public static final Class<?> PacketPlayOutExperience = safeGetClass("{nms}.PacketPlayOutExperience", "{f:net}.play.server.SSetExperiencePacket", "{f:net}.play.server.SPacketSetExperience");
 		public static final Class<?> PacketPlayOutSpawnEntityLiving = safeGetClass("{nms}.PacketPlayOutSpawnEntityLiving", "{f:net}.play.server.SSpawnMobPacket", "{f:net}.play.server.SPacketSpawnMob");
+		public static final Class<?> PacketPlayOutEntityEquipment = safeGetClass("{nms}.PacketPlayOutEntityEquipment");
 		public static final Class<?> PacketPlayOutTitle = safeGetClass("{nms}.PacketPlayOutTitle", "{f:net}.play.server.STitlePacket", "{f:net}.play.server.SPacketTitle");
 		public static final Class<?> PacketPlayOutWorldParticles = safeGetClass("{nms}.PacketPlayOutWorldParticles", "{f:net}.play.server.SSpawnParticlePacket", "{f:net}.play.server.SPacketParticles");
 		public static final Class<?> PathfinderGoal = safeGetClass("{nms}.PathfinderGoal", "{f:goal}.Goal", "{f:ent}.ai.EntityAIBase");

@@ -1,8 +1,11 @@
 package org.screamingsandals.lib.bukkit.hologram;
 
+import com.google.common.base.Preconditions;
+import com.mojang.datafixers.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.bukkit.hologram.nms.AdvancedArmorStandNMS;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
@@ -10,6 +13,8 @@ import org.screamingsandals.lib.bukkit.utils.nms.entity.ArmorStandNMS;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
 import org.screamingsandals.lib.hologram.AbstractHologram;
 import org.screamingsandals.lib.hologram.Hologram;
+import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
@@ -18,6 +23,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Slf4j
 public class BukkitHologram extends AbstractHologram {
@@ -56,12 +62,11 @@ public class BukkitHologram extends AbstractHologram {
     @Override
     public void onViewerRemoved(PlayerWrapper player, boolean shouldCheckDistance) {
         try {
-            update(player.as(Player.class), List.of(getFullDestroyPacket()), shouldCheckDistance);
+            removeForPlayer(player, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public Hologram show() {
@@ -74,7 +79,21 @@ public class BukkitHologram extends AbstractHologram {
                 }
 
                 itemEntity.setRotation(checkAndAdd(itemEntity.getRotation()));
-            }).repeat(rotationTime.getFirst(), rotationTime.getSecond()).start();
+
+                try {
+                    if (Version.isVersion(1, 15)) {
+                        Object metadataPacket = ClassStorage.NMS.PacketPlayOutEntityMetadata
+                                .getConstructor(int.class, ClassStorage.NMS.DataWatcher, boolean.class)
+                                .newInstance(itemEntity.getId(),
+                                        itemEntity.getDataWatcher(), false);
+                        viewers.forEach(player -> update(player.as(Player.class), List.of(metadataPacket), false));
+                    }
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+            }).repeat(rotationTime.getFirst(), rotationTime.getSecond())
+                    .async()
+                    .start();
         }
 
         return this;
@@ -84,7 +103,7 @@ public class BukkitHologram extends AbstractHologram {
     public Hologram hide() {
         viewers.forEach(viewer -> {
             try {
-                update(viewer.as(Player.class), List.of(getFullDestroyPacket()), false);
+                removeForPlayer(viewer, false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -92,6 +111,21 @@ public class BukkitHologram extends AbstractHologram {
 
         if (rotationTask != null) {
             rotationTask.cancel();
+        }
+        return this;
+    }
+
+    @Override
+    public Hologram item(Item item) {
+        super.item(item);
+        if (ready) {
+            viewers.forEach(player -> {
+                try {
+                    update(player.as(Player.class), List.of(getEquipmentPacket(itemEntity, item)), true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
         return this;
     }
@@ -136,6 +170,17 @@ public class BukkitHologram extends AbstractHologram {
         log.trace("Updating entities");
         final var packets = new LinkedList<>();
         if (visible && viewers.size() > 0) {
+            if (lines.size() != originalLinesSize
+                    && itemEntity != null) {
+                itemEntity.setLocation(cachedLocation.clone().add(0, lines.size() * .25, 0));
+
+                try {
+                    packets.add(getTeleportPacket(itemEntity));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
             lines.forEach((key, value) -> {
                 try {
                     if (entitiesOnLines.containsKey(key)) {
@@ -152,14 +197,9 @@ public class BukkitHologram extends AbstractHologram {
                                         entityOnLine.getDataWatcher(), false);
                         packets.add(metadataPacket);
 
-                        final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0);
                         entityOnLine.setCustomName(value);
-                        entityOnLine.setLocation(newLocation);
-
-                        final var teleportPacket = ClassStorage.NMS.PacketPlayOutEntityTeleport
-                                .getConstructor(ClassStorage.NMS.Entity)
-                                .newInstance(entityOnLine.getHandler());
-                        packets.add(teleportPacket);
+                        entityOnLine.setLocation(cachedLocation.clone().add(0, (lines.size() - key) * .25, 0));
+                        packets.add(getTeleportPacket(entityOnLine));
                     } else {
                         final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0);
                         final var entity = new ArmorStandNMS(newLocation);
@@ -172,18 +212,7 @@ public class BukkitHologram extends AbstractHologram {
                         entity.setGravity(false);
                         entity.setMarker(!touchable);
 
-                        final var spawnLivingPacket = ClassStorage.NMS.PacketPlayOutSpawnEntityLiving
-                                .getConstructor(ClassStorage.NMS.EntityLiving)
-                                .newInstance(entity.getHandler());
-                        packets.add(spawnLivingPacket);
-
-                        if (Version.isVersion(1, 15)) {
-                            Object metadataPacket = ClassStorage.NMS.PacketPlayOutEntityMetadata
-                                    .getConstructor(int.class, ClassStorage.NMS.DataWatcher, boolean.class)
-                                    .newInstance(entity.getId(),
-                                            entity.getDataWatcher(), false);
-                            packets.add(metadataPacket);
-                        }
+                        packets.addAll(getSpawnPacket(entity));
 
                         entitiesOnLines.put(key, entity);
                     }
@@ -195,31 +224,21 @@ public class BukkitHologram extends AbstractHologram {
 
         try {
             if (rotationMode != RotationMode.NONE) {
-               if (itemEntity == null) {
-                   final var newLocation = cachedLocation.clone().add(0, lines.size() * .25, 0);
-                   final var entity = new AdvancedArmorStandNMS(newLocation);
-                   entity.setInvisible(true);
-                   entity.setArms(false);
-                   entity.setBasePlate(false);
-                   entity.setGravity(false);
-                   entity.setMarker(false);
-                   entity.setItem(item);
+                if (itemEntity == null) {
+                    final var newLocation = cachedLocation.clone().add(0, lines.size() * .25, 0);
+                    final var entity = new AdvancedArmorStandNMS(newLocation);
+                    entity.setInvisible(true);
+                    entity.setSmall(!touchable);
+                    entity.setArms(false);
+                    entity.setBasePlate(false);
+                    entity.setGravity(false);
+                    entity.setMarker(!touchable);
 
-                   final var spawnLivingPacket = ClassStorage.NMS.PacketPlayOutSpawnEntityLiving
-                           .getConstructor(ClassStorage.NMS.EntityLiving)
-                           .newInstance(entity.getHandler());
-                   packets.add(spawnLivingPacket);
+                    packets.addAll(getSpawnPacket(entity));
+                    packets.add(getEquipmentPacket(entity, item));
 
-                   if (Version.isVersion(1, 15)) {
-                       Object metadataPacket = ClassStorage.NMS.PacketPlayOutEntityMetadata
-                               .getConstructor(int.class, ClassStorage.NMS.DataWatcher, boolean.class)
-                               .newInstance(entity.getId(),
-                                       entity.getDataWatcher(), false);
-                       packets.add(metadataPacket);
-                   }
-
-                   this.itemEntity = entity;
-               }
+                    this.itemEntity = entity;
+                }
             }
 
             final var toRemove = new LinkedList<Integer>();
@@ -244,13 +263,50 @@ public class BukkitHologram extends AbstractHologram {
         viewers.forEach(viewer -> update(viewer.as(Player.class), packets, true));
     }
 
+    private Object getEquipmentPacket(AdvancedArmorStandNMS entity, Item item) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        return ClassStorage.NMS.PacketPlayOutEntityEquipment
+                .getConstructor(int.class, List.class)
+                .newInstance(entity.getId(), List.of(Pair.of(entity.getHeadSlot(), stackAsNMS(item))));
+    }
+
+    private Object getTeleportPacket(ArmorStandNMS entity) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        return ClassStorage.NMS.PacketPlayOutEntityTeleport
+                .getConstructor(ClassStorage.NMS.Entity)
+                .newInstance(entity.getHandler());
+    }
+
+    private List<Object> getSpawnPacket(ArmorStandNMS entity) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        final var toReturn = new LinkedList<>();
+
+        toReturn.add(ClassStorage.NMS.PacketPlayOutSpawnEntityLiving
+                .getConstructor(ClassStorage.NMS.EntityLiving)
+                .newInstance(entity.getHandler()));
+
+        if (Version.isVersion(1, 15)) {
+            final var metadataPacket = ClassStorage.NMS.PacketPlayOutEntityMetadata
+                    .getConstructor(int.class, ClassStorage.NMS.DataWatcher, boolean.class)
+                    .newInstance(entity.getId(), entity.getDataWatcher(), true);
+            toReturn.add(metadataPacket);
+        }
+
+        return toReturn;
+    }
+
     private Object getFullDestroyPacket() throws InstantiationException, IllegalAccessException,
             IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        final var toRemove = entitiesOnLines.values()
+        final var lines = entitiesOnLines.values()
                 .stream()
-                .map(EntityNMS::getId)
-                .mapToInt(i -> i)
-                .toArray();
+                .map(EntityNMS::getId);
+
+        final int[] toRemove;
+        if (itemEntity != null) {
+            toRemove = Stream.concat(lines, Stream.of(itemEntity.getId()))
+                    .mapToInt(i -> i)
+                    .toArray();
+        } else {
+            toRemove = lines.mapToInt(i -> i).toArray();
+        }
+
         return ClassStorage.NMS.PacketPlayOutEntityDestroy.getConstructor(int[].class).newInstance(toRemove);
     }
 
@@ -258,22 +314,24 @@ public class BukkitHologram extends AbstractHologram {
         final var packets = new LinkedList<>();
         entitiesOnLines.forEach((line, entity) -> {
             try {
-                packets.add(ClassStorage.NMS.PacketPlayOutSpawnEntityLiving.getConstructor(ClassStorage.NMS.EntityLiving).newInstance(entity.getHandler()));
-                if (Version.isVersion(1, 15)) {
-                    final var metadataPacket = ClassStorage.NMS.PacketPlayOutEntityMetadata
-                            .getConstructor(int.class, ClassStorage.NMS.DataWatcher, boolean.class)
-                            .newInstance(entity.getId(), entity.getDataWatcher(), true);
-                    packets.add(metadataPacket);
-                }
+                packets.addAll(getSpawnPacket(entity));
             } catch (Exception e) {
                 throw new UnsupportedOperationException(e);
             }
         });
+
+        if (itemEntity != null) {
+            try {
+                packets.addAll(getSpawnPacket(itemEntity));
+                packets.add(getEquipmentPacket(itemEntity, item));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return packets;
     }
 
     private Vector3Df checkAndAdd(Vector3Df in) {
-        log.trace("In rotation: {}", in.toString());
         final var toReturn = new Vector3Df();
         switch (rotationMode) {
             case X:
@@ -284,6 +342,10 @@ public class BukkitHologram extends AbstractHologram {
                 break;
             case Z:
                 toReturn.setZ(checkAndIncrement(in.getZ()));
+                break;
+            case XY:
+                toReturn.setX(checkAndIncrement(in.getX()));
+                toReturn.setY(checkAndIncrement(in.getY()));
                 break;
             case ALL:
                 toReturn.setX(checkAndIncrement(in.getX()));
@@ -296,10 +358,31 @@ public class BukkitHologram extends AbstractHologram {
     }
 
     private float checkAndIncrement(float in) {
-        if (in >= 360) {
+        if (in >= 370) {
             return 0f;
         } else {
-            return in + 10f;
+            return in + 10f; //TODO: fixme
         }
+    }
+
+    private Object stackAsNMS(Item item) {
+        Preconditions.checkNotNull(item, "Item is null!");
+        return ClassStorage.getMethod(ClassStorage.NMS.CraftItemStack, "asNMSCopy", ItemStack.class).invokeStatic(item.as(ItemStack.class));
+    }
+
+    private void removeForPlayer(PlayerWrapper player, boolean shouldCheckDistance)
+            throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        if (!player.isOnline()) {
+            return;
+        }
+
+        final var toSend = new LinkedList<>();
+        if (itemEntity != null) {
+            rotationTask.cancel();
+            toSend.add(getEquipmentPacket(itemEntity, ItemFactory.getAir()));
+        }
+
+        toSend.add(getFullDestroyPacket());
+        update(player.as(Player.class), List.of(toSend), shouldCheckDistance);
     }
 }

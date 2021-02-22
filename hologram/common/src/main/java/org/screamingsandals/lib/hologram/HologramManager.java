@@ -82,6 +82,7 @@ public abstract class HologramManager {
 
     protected void destroy() {
         getActiveHolograms().values().forEach(Hologram::destroy);
+        activeHolograms.clear();
     }
 
 }
