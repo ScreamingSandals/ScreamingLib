@@ -7,8 +7,8 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.network.AutoPacketInboundListener;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.hologram.AbstractHologram;
+import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.hologram.HologramManager;
-import org.screamingsandals.lib.hologram.TextHologram;
 import org.screamingsandals.lib.hologram.event.HologramTouchEvent;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.event.*;
@@ -44,8 +44,8 @@ public class BukkitHologramManager extends HologramManager {
                         if (ClassStorage.NMS.PacketPlayInUseEntity.isInstance(packet)) {
                             final var entityId = (int) ClassStorage.getField(ClassStorage.NMS.PacketPlayInUseEntity, "a,field_149567_a", packet);
                             getActiveHolograms().forEach((id, hologram) -> {
-                                if (hologram.getClass().isInstance(BukkitTextHologram.class)) {
-                                    final var textHologram = (BukkitTextHologram) hologram;
+                                if (hologram.getClass().isInstance(BukkitHologram.class)) {
+                                    final var textHologram = (BukkitHologram) hologram;
                                     if (textHologram.hasId(entityId)) {
                                         EventManager.fire(new HologramTouchEvent(PlayerMapper.wrapPlayer(plugin), hologram));
                                     }
@@ -65,8 +65,8 @@ public class BukkitHologramManager extends HologramManager {
     }
 
     @Override
-    protected TextHologram textHologram0(UUID uuid, LocationHolder holder, boolean touchable) {
-        return new BukkitTextHologram(uuid, holder, touchable);
+    protected Hologram hologram0(UUID uuid, LocationHolder holder, boolean touchable) {
+        return new BukkitHologram(uuid, holder, touchable);
     }
 
     private void onLeave(SPlayerLeaveEvent event) {

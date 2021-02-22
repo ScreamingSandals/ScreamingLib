@@ -60,25 +60,25 @@ public abstract class HologramManager {
         hologram.destroy();
     }
 
-    public static TextHologram textHologram(LocationHolder holder) {
-        return textHologram(UUID.randomUUID(), holder, false);
+    public static Hologram hologram(LocationHolder holder) {
+        return hologram(UUID.randomUUID(), holder, false);
     }
 
-    public static TextHologram textHologram(UUID uuid, LocationHolder holder) {
-        return textHologram(uuid, holder, false);
+    public static Hologram hologram(UUID uuid, LocationHolder holder) {
+        return hologram(uuid, holder, false);
     }
 
-    public static TextHologram textHologram(UUID uuid, LocationHolder holder, boolean touchable) {
+    public static Hologram hologram(UUID uuid, LocationHolder holder, boolean touchable) {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
 
-        final var hologram = manager.textHologram0(uuid, holder, touchable);
+        final var hologram = manager.hologram0(uuid, holder, touchable);
         addHologram(hologram);
         return hologram;
     }
 
-    protected abstract TextHologram textHologram0(UUID uuid, LocationHolder holder, boolean touchable);
+    protected abstract Hologram hologram0(UUID uuid, LocationHolder holder, boolean touchable);
 
     protected void destroy() {
         getActiveHolograms().values().forEach(Hologram::destroy);

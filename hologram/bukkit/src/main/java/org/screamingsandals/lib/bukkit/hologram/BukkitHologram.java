@@ -3,25 +3,30 @@ package org.screamingsandals.lib.bukkit.hologram;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.screamingsandals.lib.bukkit.hologram.nms.AdvancedArmorStandNMS;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.ArmorStandNMS;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
-import org.screamingsandals.lib.hologram.AbstractAdvancedHologram;
+import org.screamingsandals.lib.hologram.AbstractHologram;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.tasker.Tasker;
+import org.screamingsandals.lib.tasker.task.TaskerTask;
+import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 @Slf4j
-public class BukkitTextHologram extends AbstractAdvancedHologram {
+public class BukkitHologram extends AbstractHologram {
     private final Map<Integer, ArmorStandNMS> entitiesOnLines = new HashMap<>();
-    private ArmorStandNMS itemEntity;
+    private AdvancedArmorStandNMS itemEntity;
+    private TaskerTask rotationTask;
     private Location cachedLocation;
 
-    public BukkitTextHologram(UUID uuid, LocationHolder location, boolean touchable) {
+    public BukkitHologram(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
         this.cachedLocation = location.as(Location.class);
     }
@@ -63,6 +68,23 @@ public class BukkitTextHologram extends AbstractAdvancedHologram {
     }
 
     @Override
+    public Hologram show() {
+        super.show();
+        if (rotationMode != RotationMode.NONE) {
+            rotationTask = Tasker.build(() -> {
+                if (itemEntity == null) {
+                    log.trace("Item entity is null");
+                    return;
+                }
+
+                itemEntity.setRotation(checkAndAdd(itemEntity.getRotation()));
+            }).repeat(rotationTime.getFirst(), rotationTime.getSecond()).start();
+        }
+
+        return this;
+    }
+
+    @Override
     public Hologram hide() {
         viewers.forEach(viewer -> {
             try {
@@ -71,7 +93,20 @@ public class BukkitTextHologram extends AbstractAdvancedHologram {
                 e.printStackTrace();
             }
         });
+
+        if (rotationTask != null) {
+            rotationTask.cancel();
+        }
         return this;
+    }
+
+    @Override
+    public void destroy() {
+        if (rotationTask != null) {
+            log.trace("Cancelling!");
+            rotationTask.cancel();
+        }
+        super.destroy();
     }
 
     private void update(Player player, List<Object> packets, boolean checkDistance) {
@@ -158,6 +193,34 @@ public class BukkitTextHologram extends AbstractAdvancedHologram {
         }
 
         try {
+            if (rotationMode != RotationMode.NONE) {
+               if (itemEntity == null) {
+                   final var newLocation = cachedLocation.clone().add(0, lines.size() * .25, 0);
+                   final var entity = new AdvancedArmorStandNMS(newLocation);
+                   entity.setInvisible(true);
+                   entity.setArms(false);
+                   entity.setBasePlate(false);
+                   entity.setGravity(false);
+                   entity.setMarker(false);
+                   entity.setItem(item);
+
+                   final var spawnLivingPacket = ClassStorage.NMS.PacketPlayOutSpawnEntityLiving
+                           .getConstructor(ClassStorage.NMS.EntityLiving)
+                           .newInstance(entity.getHandler());
+                   packets.add(spawnLivingPacket);
+
+                   if (Version.isVersion(1, 15)) {
+                       Object metadataPacket = ClassStorage.NMS.PacketPlayOutEntityMetadata
+                               .getConstructor(int.class, ClassStorage.NMS.DataWatcher, boolean.class)
+                               .newInstance(entity.getId(),
+                                       entity.getDataWatcher(), false);
+                       packets.add(metadataPacket);
+                   }
+
+                   this.itemEntity = entity;
+               }
+            }
+
             final var toRemove = new LinkedList<Integer>();
             if (entitiesOnLines.size() > lines.size()) {
                 entitiesOnLines.forEach((key, value) -> {
@@ -206,5 +269,35 @@ public class BukkitTextHologram extends AbstractAdvancedHologram {
             }
         });
         return packets;
+    }
+
+    private Vector3Df checkAndAdd(Vector3Df in) {
+        final var toReturn = new Vector3Df();
+        switch (rotationMode) {
+            case X:
+                toReturn.setX(checkAndIncrement(in.getX()));
+                break;
+            case Y:
+                toReturn.setY(checkAndIncrement(in.getY()));
+                break;
+            case Z:
+                toReturn.setZ(checkAndIncrement(in.getZ()));
+                break;
+            case ALL:
+                toReturn.setX(checkAndIncrement(in.getX()));
+                toReturn.setY(checkAndIncrement(in.getY()));
+                toReturn.setZ(checkAndIncrement(in.getZ()));
+                break;
+        }
+
+        return toReturn;
+    }
+
+    private float checkAndIncrement(float in) {
+        if (in >= 360) {
+            return 0f;
+        } else {
+            return in + 10f;
+        }
     }
 }

@@ -1,13 +1,18 @@
 package org.screamingsandals.lib.hologram;
 
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.tasker.TaskerTime;
+import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.*;
 
 public abstract class AbstractHologram implements Hologram {
+    protected TreeMap<Integer, Component> lines = new TreeMap<>();
     protected final List<PlayerWrapper> viewers = new LinkedList<>();
     @Getter
     protected final UUID uuid;
@@ -17,6 +22,10 @@ public abstract class AbstractHologram implements Hologram {
     protected boolean touchable;
     protected boolean visible;
     protected Data data;
+    protected Integer originalLinesSize = 0;
+    protected Pair<Integer, TaskerTime> rotationTime;
+    protected RotationMode rotationMode = RotationMode.NONE;
+    protected Item item;
 
     protected AbstractHologram(UUID uuid, LocationHolder location, boolean touchable) {
         this.uuid = uuid;
@@ -132,7 +141,89 @@ public abstract class AbstractHologram implements Hologram {
     public void destroy() {
         data = null;
         viewers.clear();
-        HologramManager.removeHologram(this);
+    }
+
+    @Override
+    public TreeMap<Integer, Component> getLines() {
+        return new TreeMap<>(lines);
+    }
+
+    @Override
+    public Hologram firstLine(Component text) {
+        return setLine(0, text);
+    }
+
+    @Override
+    public Hologram newLine(List<Component> text) {
+        text.forEach(this::newLine);
+        return this;
+    }
+
+    @Override
+    public Hologram newLine(Component text) {
+        if (lines.isEmpty()) {
+            return firstLine(text);
+        }
+
+        originalLinesSize = lines.size();
+        lines.put(lines.lastKey() + 1, text);
+        update();
+        return this;
+    }
+
+    @Override
+    public Hologram setLine(int line, Component text) {
+        originalLinesSize = lines.size();
+        lines = HologramUtils.addEntryAndMoveRest(lines, line, text);
+        update();
+        return this;
+    }
+
+    @Override
+    public Hologram removeLine(int line) {
+        originalLinesSize = lines.size();
+        lines = HologramUtils.removeEntryAndMoveRest(lines, line);
+        update();
+        return this;
+    }
+
+    @Override
+    public Hologram replaceLines(TreeMap<Integer, Component> lines) {
+        originalLinesSize = lines.size();
+        this.lines = lines;
+        update();
+        return this;
+    }
+
+    @Override
+    public Pair<Integer, TaskerTime> getRotationTime() {
+        return rotationTime;
+    }
+
+    @Override
+    public Hologram rotationTime(Pair<Integer, TaskerTime> rotatingTime) {
+        this.rotationTime = rotatingTime;
+        update();
+        return this;
+    }
+
+    @Override
+    public Hologram rotationMode(RotationMode mode) {
+        this.rotationMode = mode;
+        update();
+        return this;
+    }
+
+    @Override
+    public RotationMode getRotationMode() {
+        return rotationMode;
+    }
+
+    @Override
+    public Hologram item(Item item) {
+        this.item = item;
+        update();
+        return this;
     }
 
     public abstract void onViewerAdded(PlayerWrapper player, boolean checkDistance);

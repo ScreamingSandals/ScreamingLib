@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.hologram.nms;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.EquipmentSlot;
@@ -8,6 +9,7 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.ArmorStandNMS;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.utils.math.Vector3Df;
 
 public class AdvancedArmorStandNMS extends ArmorStandNMS {
 
@@ -23,25 +25,35 @@ public class AdvancedArmorStandNMS extends ArmorStandNMS {
         super(loc);
     }
 
-    public void setItem(EquipmentSlot slot, Item item) {
-        ClassStorage.getMethod(ClassStorage.NMS.EntityLiving, "setSlot").invokeInstance(
-                handler, equipmentSlotToNMS(slot), stackAsNMS(item), false);
+    public void setItem(Item item) {
+        ClassStorage.getMethod(ClassStorage.NMS.Entity, "setSlot", ClassStorage.NMS.EnumItemSlot, ClassStorage.NMS.ItemStack).invokeInstance(
+                handler, getHeadSlot(), stackAsNMS(item));
     }
 
+    public Item getItem() {
+        return stackFromNMS(ClassStorage.getMethod(ClassStorage.NMS.EntityLiving, "getEquipment", ClassStorage.NMS.EnumItemSlot).invokeInstance(handler, getHeadSlot()));
+    }
 
-    public Item getItem(EquipmentSlot slot) {
-        return stackFromNMS(ClassStorage.getMethod(ClassStorage.NMS.EntityLiving, "getEquipment").invokeInstance(handler, equipmentSlotToNMS(slot)));
+    public void setRotation(Vector3Df vector3Df) {
+        Preconditions.checkNotNull(vector3Df, "Vector is null!");
+        ClassStorage.getMethod(ClassStorage.NMS.EntityArmorStand, "setHeadPose", ClassStorage.NMS.Vector3f).invokeInstance(handler, ClassStorage.getVectorToNMS(vector3Df));
+    }
+
+    public Vector3Df getRotation() {
+        return ClassStorage.getVectorFromNMS(ClassStorage.getField(handler, "headPose"));
     }
 
     private Object stackAsNMS(Item item) {
-        return ClassStorage.getMethod(ClassStorage.NMS.CraftItemStack, "asNMSCopy").invokeInstance(item.as(ItemStack.class));
+        Preconditions.checkNotNull(item, "Item is null!");
+        return ClassStorage.getMethod(ClassStorage.NMS.CraftItemStack, "asNMSCopy", ItemStack.class).invokeStatic(item.as(ItemStack.class));
     }
 
     private Item stackFromNMS(Object item) {
-        return ItemFactory.readStack(ClassStorage.getMethod(ClassStorage.NMS.CraftItemStack, "asBukkitCopy").invokeStatic(item)).orElseThrow();
+        Preconditions.checkNotNull(item, "Item is null!");
+        return ItemFactory.readStack(ClassStorage.getMethod(ClassStorage.NMS.CraftItemStack, "asBukkitCopy", ClassStorage.NMS.ItemStack).invokeStatic(item)).orElseThrow();
     }
 
-    private Object equipmentSlotToNMS(EquipmentSlot slot) {
-        return ClassStorage.getMethod(ClassStorage.NMS.CraftEquipmentSlot, "getNMS").invokeStatic(slot);
+    private Object getHeadSlot() {
+        return ClassStorage.getMethod(ClassStorage.NMS.CraftEquipmentSlot, "getNMS", EquipmentSlot.class).invokeStatic(EquipmentSlot.HEAD);
     }
 }

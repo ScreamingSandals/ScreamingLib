@@ -3,6 +3,7 @@ package org.screamingsandals.lib.bukkit.utils.nms;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.ClassMethod;
 import org.screamingsandals.lib.utils.reflect.InstanceMethod;
 
@@ -18,6 +19,8 @@ public class ClassStorage {
 	public static final String NMS_VERSION = checkNMSVersion();
 
 	public static final class NMS {
+		public static final Class<?> Vector3f = safeGetClass("{nms}.Vector3f", "{f:net}.Vector3f");
+		public static final Class<?> ItemStack = safeGetClass("{nms}.ItemStack", "{f:net}.ItemStack");
 		public static final Class<?> ChatSerializer = safeGetClass("{nms}.IChatBaseComponent$ChatSerializer", "{nms}.ChatSerializer", "{f:util}.text.ITextComponent$Serializer");
 		public static final Class<?> DataWatcher = safeGetClass("{nms}.DataWatcher", "{f:net}.datasync.EntityDataManager");
 		public static final Class<?> Entity = safeGetClass("{nms}.Entity", "{f:ent}.Entity");
@@ -27,6 +30,7 @@ public class ClassStorage {
 		public static final Class<?> EntityLiving = safeGetClass("{nms}.EntityLiving", "{f:ent}.LivingEntity", "{f:ent}.EntityLivingBase");
 		public static final Class<?> EntityPlayer = safeGetClass("{nms}.EntityPlayer", "{f:ent}.player.ServerPlayerEntity", "{f:ent}.player.EntityPlayerMP");
 		public static final Class<?> EnumClientCommand = safeGetClass("{nms}.PacketPlayInClientCommand$EnumClientCommand", "{nms}.EnumClientCommand", "{f:net}.play.client.CClientStatusPacket$State", "{f:net}.play.client.CPacketClientStatus$State");
+		public static final Class<?> EnumItemSlot = safeGetClass("{nms}.EnumItemSlot");
 		public static final Class<?> EnumParticle = safeGetClass("{nms}.EnumParticle");
 		public static final Class<?> EnumTitleAction = safeGetClass("{nms}.PacketPlayOutTitle$EnumTitleAction", "{nms}.EnumTitleAction", "{f:net}.play.server.STitlePacket$Type", "{f:net}.play.server.SPacketTitle$Type");
 		public static final Class<?> GenericAttributes = safeGetClass("{nms}.GenericAttributes", "{f:ent}.SharedMonsterAttributes");
@@ -120,6 +124,7 @@ public class ClassStorage {
 						method.setAccessible(true);
 						return new ClassMethod(method);
 					} catch (Throwable t2) {
+						t.printStackTrace();
 					}
 				} while ((claz2 = claz2.getSuperclass()) != null && claz2 != Object.class);
 			}
@@ -285,6 +290,24 @@ public class ClassStorage {
 				// Pre 1.16
 				return NMS.PathfinderGoalSelector.getConstructors()[0].newInstance(getMethodProfiler(world));
 			}
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return null;
+	}
+
+	public static Object getVectorToNMS(Vector3Df vector3f) {
+		try {
+			return NMS.Vector3f.getConstructor(float.class, float.class, float.class).newInstance(vector3f.getX(), vector3f.getY(), vector3f.getZ());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			return null;
+		}
+	}
+
+	public static Vector3Df getVectorFromNMS(Object vector3f) {
+		try {
+			return new Vector3Df((float) getField(vector3f, "getX"), (float) getField(vector3f, "getY"), (float) getField(vector3f, "getZ"));
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
