@@ -80,7 +80,7 @@ public class BukkitHologramManager extends HologramManager {
 
         getActiveHolograms().forEach((key, hologram) -> {
             if (hologram.getViewers().contains(event.getPlayer())) {
-                hologram.removeViewer(event.getPlayer());
+                hologram.removeViewer(event.getPlayer(), false);
             }
             if (!hologram.hasViewers()) {
                 removeHologram(hologram);

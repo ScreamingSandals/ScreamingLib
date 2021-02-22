@@ -54,10 +54,13 @@ public abstract class AbstractHologram implements Hologram {
     }
 
     @Override
-    public Hologram removeViewer(PlayerWrapper player) {
+    public Hologram removeViewer(PlayerWrapper player, boolean sendPackets) {
         if (viewers.contains(player)) {
             viewers.remove(player);
-            onViewerRemoved(player, false);
+
+            if (sendPackets) {
+                onViewerRemoved(player, false);
+            }
         }
         return this;
     }

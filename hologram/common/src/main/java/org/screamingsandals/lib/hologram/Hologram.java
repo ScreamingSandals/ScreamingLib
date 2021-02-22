@@ -42,9 +42,20 @@ public interface Hologram {
      * Removes given viewer from this Hologram
      *
      * @param player viewer to remove
+     * @param sendPackets if we should send destroy packets
      * @return this hologram
      */
-    Hologram removeViewer(PlayerWrapper player);
+    Hologram removeViewer(PlayerWrapper player, boolean sendPackets);
+
+    /**
+     * Removes given viewer from this Hologram
+     *
+     * @param player viewer to remove
+     * @return this hologram
+     */
+    default Hologram removeViewer(PlayerWrapper player) {
+        return removeViewer(player, false);
+    }
 
     /**
      * Checks if this Hologram has any viewers.
