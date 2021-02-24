@@ -25,10 +25,10 @@ public class BukkitMainClassGenerator extends MainClassGenerator {
         var pluginManagerClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginManager");
         var pluginDescriptionClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginDescription");
         var pluginKeyClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginKey");
-        var screamingLoggerClass = ClassName.get("org.screamingsandals.lib.plugin.logger", "LoggerWrapper");
-        var julScreamingLoggerClass = ClassName.get("org.screamingsandals.lib.plugin.logger", "JULLoggerWrapper");
-        var slf4jScreamingLoggerClass = ClassName.get("org.screamingsandals.lib.plugin.logger", "Slf4jLoggerWrapper");
-        var dualScreamingLoggerClass = ClassName.get("org.screamingsandals.lib.plugin.logger", "DualLoggerWrapper");
+        var screamingLoggerClass = ClassName.get("org.screamingsandals.lib.utils.logger", "LoggerWrapper");
+        var julScreamingLoggerClass = ClassName.get("org.screamingsandals.lib.utils.logger", "JULLoggerWrapper");
+        var slf4jScreamingLoggerClass = ClassName.get("org.screamingsandals.lib.utils.logger", "Slf4jLoggerWrapper");
+        var dualScreamingLoggerClass = ClassName.get("org.screamingsandals.lib.utils.logger", "DualLoggerWrapper");
         var reflectClass = ClassName.get("org.screamingsandals.lib.utils.reflect", "Reflect");
 
         var onLoadBuilder = preparePublicVoid("onLoad")

@@ -7,6 +7,7 @@ import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -158,6 +159,15 @@ public abstract class ProxiedPlayerMapper {
     }
 
     public abstract boolean isPermissionSet0(CommandSenderWrapper wrapper, Permission permission);
+
+    public static Locale getLocale(ProxiedSenderWrapper wrapper) {
+        if (proxiedPlayerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return proxiedPlayerMapper.getLocale0(wrapper);
+    }
+
+    public abstract Locale getLocale0(ProxiedSenderWrapper wrapper);
 
     public static boolean isInitialized() {
         return proxiedPlayerMapper != null;

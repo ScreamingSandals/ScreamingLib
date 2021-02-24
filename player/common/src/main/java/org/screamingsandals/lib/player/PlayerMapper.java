@@ -15,6 +15,7 @@ import org.screamingsandals.lib.world.WorldHolder;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -281,6 +282,13 @@ public abstract class PlayerMapper {
         }
         return playerMapper.getOfflinePlayer0(uuid);
     }
+
+    public static Locale getLocale(SenderWrapper senderWrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getLocale0(senderWrapper);
+    }
     
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
@@ -342,4 +350,6 @@ public abstract class PlayerMapper {
     public abstract void setWhitelisted0(OfflinePlayerWrapper playerWrapper, boolean whitelisted);
 
     public abstract OfflinePlayerWrapper getOfflinePlayer0(UUID uuid);
+
+    public abstract Locale getLocale0(SenderWrapper senderWrapper);
 }

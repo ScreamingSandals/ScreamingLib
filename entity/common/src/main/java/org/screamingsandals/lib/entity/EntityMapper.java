@@ -20,14 +20,14 @@ public abstract class EntityMapper {
         mapper = supplier.get();
     }
 
-    public static Optional<EntityBasic> wrapEntity(Object entity) {
+    public static <T extends EntityBasic> Optional<T> wrapEntity(Object entity) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
         return mapper.wrapEntity0(entity);
     }
 
-    public static Optional<EntityBasic> spawn(EntityTypeHolder entityType, LocationHolder locationHolder) {
+    public static <T extends EntityBasic> Optional<T> spawn(EntityTypeHolder entityType, LocationHolder locationHolder) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
@@ -40,5 +40,5 @@ public abstract class EntityMapper {
 
     protected abstract <T extends EntityBasic> Optional<T> wrapEntity0(Object entity);
 
-    public abstract Optional<EntityBasic> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder);
+    public abstract <T extends EntityBasic>  Optional<T> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder);
 }

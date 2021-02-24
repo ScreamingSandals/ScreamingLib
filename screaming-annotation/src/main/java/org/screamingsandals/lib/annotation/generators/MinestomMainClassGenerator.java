@@ -27,7 +27,7 @@ public class MinestomMainClassGenerator extends MainClassGenerator {
         var pluginManagerClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginManager");
         var pluginDescriptionClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginDescription");
         var pluginKeyClass = ClassName.get("org.screamingsandals.lib.plugin", "PluginKey");
-        var screamingLoggerClass = ClassName.get("org.screamingsandals.lib.plugin.logger", "Slf4jLoggerWrapper");
+        var screamingLoggerClass = ClassName.get("org.screamingsandals.lib.utils.logger", "Slf4jLoggerWrapper");
         var loggerClass = ClassName.get("org.slf4j", "Logger");
 
         var onLoadBuilder = preparePublicVoid("preInitialize")

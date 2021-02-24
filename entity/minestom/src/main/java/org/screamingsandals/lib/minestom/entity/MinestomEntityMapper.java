@@ -1,10 +1,7 @@
 package org.screamingsandals.lib.minestom.entity;
 
 import net.minestom.server.MinecraftServer;
-import net.minestom.server.entity.Entity;
-import net.minestom.server.entity.EntityType;
-import net.minestom.server.entity.ItemEntity;
-import net.minestom.server.entity.LivingEntity;
+import net.minestom.server.entity.*;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
@@ -37,6 +34,10 @@ public class MinestomEntityMapper extends EntityMapper {
         }
 
         // order is important here
+        if (entity instanceof Player) {
+            return Optional.of((T) new MinestomEntityHuman((Player) entity));
+        }
+
         if (entity instanceof LivingEntity) {
             return Optional.of((T) new MinestomEntityLiving((LivingEntity) entity));
         }
@@ -49,7 +50,7 @@ public class MinestomEntityMapper extends EntityMapper {
     }
 
     @Override
-    public Optional<EntityBasic> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder) {
+    public <T extends EntityBasic> Optional<T> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder) {
         return Optional.empty(); // TODO
     }
 }

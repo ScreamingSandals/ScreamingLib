@@ -10,6 +10,9 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.extensions.Extension;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.utils.Position;
+import org.apache.commons.lang3.LocaleUtils;
+import org.screamingsandals.lib.entity.EntityHuman;
+import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
@@ -25,6 +28,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -45,7 +49,9 @@ public class MinestomPlayerMapper extends PlayerMapper {
         playerConverter
                 .registerW2P(Player.class, playerWrapper -> MinecraftServer.getConnectionManager()
                         .getPlayer(playerWrapper.getUuid()))
-                .registerP2W(Player.class, player -> new PlayerWrapper(player.getUsername(), player.getUuid()));
+                .registerP2W(Player.class, player -> new PlayerWrapper(player.getUsername(), player.getUuid()))
+                .registerP2W(EntityHuman.class, entityHuman -> playerConverter.convert(entityHuman.as(Player.class)))
+                .registerW2P(EntityHuman.class, playerWrapper -> EntityMapper.<EntityHuman>wrapEntity(playerWrapper.as(Player.class)).orElse(null));
         senderConverter
                 .registerW2P(PlayerWrapper.class, wrapper -> {
                     if (wrapper.getType() == CommandSenderWrapper.Type.PLAYER) {
@@ -236,6 +242,20 @@ public class MinestomPlayerMapper extends PlayerMapper {
     @Override
     public OfflinePlayerWrapper getOfflinePlayer0(UUID uuid) {
         return new FinalOfflinePlayerWrapper(uuid, null);
+    }
+
+    @Override
+    public Locale getLocale0(SenderWrapper senderWrapper) {
+        return senderWrapper.asOptional(Player.class)
+                .map(player ->  player.getSettings().getLocale())
+                .map(s -> {
+                    try {
+                        return LocaleUtils.toLocale(s);
+                    } catch (IllegalArgumentException ignored) {
+                        return null;
+                    }
+                })
+                .orElse(Locale.US);
     }
 
     private void registerEvents() {

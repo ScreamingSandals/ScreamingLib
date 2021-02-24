@@ -2,10 +2,7 @@ package org.screamingsandals.lib.bukkit.entity;
 
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.*;
 import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityTypeMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
 import org.screamingsandals.lib.bukkit.world.BukkitLocationMapper;
@@ -43,6 +40,10 @@ public class BukkitEntityMapper extends EntityMapper {
         }
 
         // order is important here
+        if (entity instanceof HumanEntity) {
+            return Optional.of((T) new BukkitEntityHuman((HumanEntity) entity));
+        }
+
         if (entity instanceof LivingEntity) {
             return Optional.of((T) new BukkitEntityLiving((LivingEntity) entity));
         }
@@ -55,7 +56,7 @@ public class BukkitEntityMapper extends EntityMapper {
     }
 
     @Override
-    public Optional<EntityBasic> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder) {
+    public <T extends EntityBasic> Optional<T> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder) {
         return entityType.asOptional(EntityType.class).flatMap(entityType1 -> {
             var world = locationHolder.getWorld().as(World.class);
             if (world != null) {

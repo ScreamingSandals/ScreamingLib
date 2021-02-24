@@ -5,6 +5,8 @@ import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.sender.permissions.SimplePermission;
 import org.screamingsandals.lib.utils.Wrapper;
 
+import java.util.Locale;
+
 public interface CommandSenderWrapper extends Wrapper, ForwardingAudience.Single, Operator {
 
     Type getType();
@@ -24,6 +26,8 @@ public interface CommandSenderWrapper extends Wrapper, ForwardingAudience.Single
     boolean isPermissionSet(Permission permission);
 
     String getName();
+
+    Locale getLocale();
 
     enum Type {
         PLAYER,

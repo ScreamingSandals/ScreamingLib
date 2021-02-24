@@ -5,15 +5,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Types;
 import java.util.LinkedList;
 import java.util.List;
 
 @Data
 public class ServiceContainer {
+    private final Types types;
     @NotNull
     private final TypeElement service;
     @Nullable
-    private final TypeElement abstractService;
+    private final TypeElement forwardedType;
 
     private final List<TypeElement> dependencies = new LinkedList<>();
     private final List<TypeElement> loadAfter = new LinkedList<>();
@@ -24,6 +26,6 @@ public class ServiceContainer {
         if (typeElement == null) {
             return false;
         }
-        return typeElement.equals(service) || typeElement.equals(abstractService);
+        return types.isAssignable(service.asType(), typeElement.asType()) || (forwardedType != null && types.isSameType(typeElement.asType(), forwardedType.asType()));
     }
 }

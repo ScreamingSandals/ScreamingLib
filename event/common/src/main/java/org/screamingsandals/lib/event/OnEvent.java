@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The OnEvent annotation is used to match method in {@link org.screamingsandals.lib.utils.annotations.Service}
+ * The OnEvent annotation is used to mark method in {@link org.screamingsandals.lib.utils.annotations.Service}
  * which can be registered to default EventManager.
  */
 @Retention(RetentionPolicy.CLASS)

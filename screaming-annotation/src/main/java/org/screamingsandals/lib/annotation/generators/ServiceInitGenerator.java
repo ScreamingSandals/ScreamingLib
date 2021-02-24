@@ -7,7 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.utils.Pair;
+import org.screamingsandals.lib.utils.TriConsumer;
 import org.screamingsandals.lib.utils.annotations.methods.*;
+import org.screamingsandals.lib.utils.annotations.parameters.ConfigFile;
+import org.screamingsandals.lib.utils.annotations.parameters.DataFolder;
 
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -32,6 +35,41 @@ public class ServiceInitGenerator {
     private final Types types;
     private final Elements elements;
     private final Map<TypeMirror, String> instancedServices = new HashMap<>();
+    private final Map<Pair<String, Class<? extends Annotation>>, TriConsumer<StringBuilder, List<Object>, Annotation>> annotatedInitArguments = new HashMap<>() {
+        {
+            put(Pair.of("java.nio.file.Path", DataFolder.class), (statement, processedArguments, annotation) -> {
+                var dataFolder = (DataFolder) annotation;
+                statement.append("$N.getDataFolder()");
+                processedArguments.add("description");
+                if (!dataFolder.value().isEmpty()) {
+                    statement.append(".resolve($S)");
+                    processedArguments.add(dataFolder.value());
+                }
+            });
+            put(Pair.of("java.io.File", DataFolder.class), (statement, processedArguments, annotation) -> {
+                var dataFolder = (DataFolder) annotation;
+                statement.append("$N.getDataFolder()");
+                processedArguments.add("description");
+                if (!dataFolder.value().isEmpty()) {
+                    statement.append(".resolve($S)");
+                    processedArguments.add(dataFolder.value());
+                }
+                statement.append(".toFile()");
+            });
+            put(Pair.of("java.nio.file.Path", ConfigFile.class), (statement, processedArguments, annotation) -> {
+                var configFile = (ConfigFile) annotation;
+                statement.append("$N.getDataFolder().resolve($S)");
+                processedArguments.add("description");
+                processedArguments.add(configFile.value());
+            });
+            put(Pair.of("java.io.File", ConfigFile.class), (statement, processedArguments, annotation) -> {
+                var configFile = (ConfigFile) annotation;
+                statement.append("$N.getDataFolder().resolve($S).toFile()");
+                processedArguments.add("description");
+                processedArguments.add(configFile.value());
+            });
+        }
+    };
     private final Map<String, BiConsumer<StringBuilder, List<Object>>> initArguments = new HashMap<>() {
         {
             put("org.screamingsandals.lib.utils.ControllableImpl", (statement, processedArguments) -> {
@@ -50,7 +88,7 @@ public class ServiceInitGenerator {
                 statement.append("$N");
                 processedArguments.add("description");
             });
-            put("org.screamingsandals.lib.plugin.logger.LoggerWrapper", (statement, processedArguments) -> {
+            put("org.screamingsandals.lib.utils.logger.LoggerWrapper", (statement, processedArguments) -> {
                 statement.append("$N");
                 processedArguments.add("screamingLogger");
             });
@@ -69,6 +107,12 @@ public class ServiceInitGenerator {
 
     public ServiceInitGenerator add(List<String> names, BiConsumer<StringBuilder, List<Object>> initArgGen) {
         names.forEach(s -> initArguments.put(s, initArgGen));
+        return this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <A extends Annotation> ServiceInitGenerator add(String name, Class<A> annotationClass, TriConsumer<StringBuilder, List<Object>, A> initArgGen) {
+        annotatedInitArguments.put(Pair.of(name, annotationClass), (TriConsumer<StringBuilder, List<Object>, Annotation>) initArgGen);
         return this;
     }
 
@@ -113,7 +157,15 @@ public class ServiceInitGenerator {
                         first.set(false);
                     }
                     Optional<TypeMirror> typeMirror;
-                    if (initArguments.containsKey(variableElement.asType().toString())) {
+                    var annotatedInitArgument = annotatedInitArguments.entrySet().stream()
+                            .filter(entry ->
+                                    entry.getKey().getFirst().equals(variableElement.asType().toString())
+                                    && variableElement.getAnnotation(entry.getKey().getSecond()) != null
+                            )
+                            .findFirst();
+                    if (annotatedInitArgument.isPresent()) {
+                        annotatedInitArgument.get().getValue().accept(statement, processedArguments, variableElement.getAnnotation(annotatedInitArgument.get().getKey().getSecond()));
+                    } else if (initArguments.containsKey(variableElement.asType().toString())) {
                         initArguments.get(variableElement.asType().toString()).accept(statement, processedArguments);
                     } else if ((typeMirror = instancedServices.keySet().stream().filter(type -> types.isAssignable(type, variableElement.asType())).findFirst()).isPresent()) {
                         statement.append("$N");

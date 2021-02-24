@@ -2,7 +2,7 @@ package org.screamingsandals.lib.plugin;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.plugin.logger.LoggerWrapper;
+import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.slf4j.Logger;
 
