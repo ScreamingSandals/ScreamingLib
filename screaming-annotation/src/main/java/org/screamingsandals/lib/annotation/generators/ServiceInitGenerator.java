@@ -12,10 +12,7 @@ import org.screamingsandals.lib.utils.annotations.methods.*;
 import org.screamingsandals.lib.utils.annotations.parameters.ConfigFile;
 import org.screamingsandals.lib.utils.annotations.parameters.DataFolder;
 
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.*;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -163,8 +160,30 @@ public class ServiceInitGenerator {
                                     && variableElement.getAnnotation(entry.getKey().getSecond()) != null
                             )
                             .findFirst();
+                    Element annotatedElement = variableElement;
+                    if (annotatedInitArgument.isEmpty()) {
+                        // probably lombok, try other thing
+                        var lombokedElement = typeElement.getEnclosedElements().stream()
+                                .filter(element -> element.getKind().isField()
+                                                && element.getSimpleName().contentEquals(variableElement.getSimpleName())
+                                                && types.isSameType(element.asType(), variableElement.asType())
+                                        )
+                                .findFirst();
+
+                        if (lombokedElement.isPresent()) {
+                            annotatedElement = lombokedElement.get();
+                            annotatedInitArgument = annotatedInitArguments.entrySet().stream()
+                                    .filter(entry ->
+                                            entry.getKey().getFirst().equals(variableElement.asType().toString())
+                                                    && lombokedElement.get().getAnnotation(entry.getKey().getSecond()) != null
+                                    )
+                                    .findFirst();
+                        }
+
+                    }
+
                     if (annotatedInitArgument.isPresent()) {
-                        annotatedInitArgument.get().getValue().accept(statement, processedArguments, variableElement.getAnnotation(annotatedInitArgument.get().getKey().getSecond()));
+                        annotatedInitArgument.get().getValue().accept(statement, processedArguments, annotatedElement.getAnnotation(annotatedInitArgument.get().getKey().getSecond()));
                     } else if (initArguments.containsKey(variableElement.asType().toString())) {
                         initArguments.get(variableElement.asType().toString()).accept(statement, processedArguments);
                     } else if ((typeMirror = instancedServices.keySet().stream().filter(type -> types.isAssignable(type, variableElement.asType())).findFirst()).isPresent()) {
