@@ -6,8 +6,7 @@ import com.squareup.javapoet.TypeSpec;
 import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.event.OnEvent;
-import org.screamingsandals.lib.utils.Pair;
-import org.screamingsandals.lib.utils.TriConsumer;
+import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.methods.*;
 import org.screamingsandals.lib.utils.annotations.parameters.ConfigFile;
 import org.screamingsandals.lib.utils.annotations.parameters.DataFolder;
@@ -32,9 +31,9 @@ public class ServiceInitGenerator {
     private final Types types;
     private final Elements elements;
     private final Map<TypeMirror, String> instancedServices = new HashMap<>();
-    private final Map<Pair<String, Class<? extends Annotation>>, TriConsumer<StringBuilder, List<Object>, Annotation>> annotatedInitArguments = new HashMap<>() {
+    private final Map<Triple<CheckType, String, Class<? extends Annotation>>, QuadConsumer<StringBuilder, List<Object>, Annotation, TypeElement>> annotatedInitArguments = new HashMap<>() {
         {
-            put(Pair.of("java.nio.file.Path", DataFolder.class), (statement, processedArguments, annotation) -> {
+            put(Triple.of(CheckType.ONLY_SAME, "java.nio.file.Path", DataFolder.class), (statement, processedArguments, annotation, variableType) -> {
                 var dataFolder = (DataFolder) annotation;
                 statement.append("$N.getDataFolder()");
                 processedArguments.add("description");
@@ -43,7 +42,7 @@ public class ServiceInitGenerator {
                     processedArguments.add(dataFolder.value());
                 }
             });
-            put(Pair.of("java.io.File", DataFolder.class), (statement, processedArguments, annotation) -> {
+            put(Triple.of(CheckType.ONLY_SAME, "java.io.File", DataFolder.class), (statement, processedArguments, annotation, variableType) -> {
                 var dataFolder = (DataFolder) annotation;
                 statement.append("$N.getDataFolder()");
                 processedArguments.add("description");
@@ -53,17 +52,44 @@ public class ServiceInitGenerator {
                 }
                 statement.append(".toFile()");
             });
-            put(Pair.of("java.nio.file.Path", ConfigFile.class), (statement, processedArguments, annotation) -> {
+            put(Triple.of(CheckType.ONLY_SAME, "java.nio.file.Path", ConfigFile.class), (statement, processedArguments, annotation, variableType) -> {
                 var configFile = (ConfigFile) annotation;
                 statement.append("$N.getDataFolder().resolve($S)");
                 processedArguments.add("description");
                 processedArguments.add(configFile.value());
             });
-            put(Pair.of("java.io.File", ConfigFile.class), (statement, processedArguments, annotation) -> {
+            put(Triple.of(CheckType.ONLY_SAME, "java.io.File", ConfigFile.class), (statement, processedArguments, annotation, variableType) -> {
                 var configFile = (ConfigFile) annotation;
                 statement.append("$N.getDataFolder().resolve($S).toFile()");
                 processedArguments.add("description");
                 processedArguments.add(configFile.value());
+            });
+            put(Triple.of(CheckType.ALLOW_CHILDREN, "org.spongepowered.configurate.loader.ConfigurationLoader", ConfigFile.class), (statement, processedArguments, annotation, variableType) -> {
+                var configFile = (ConfigFile) annotation;
+                statement.append("$T.builder().path($N.getDataFolder().resolve($S))");
+                processedArguments.add(variableType);
+                processedArguments.add("description");
+                processedArguments.add(configFile.value());
+                variableType.getEnclosedElements()
+                        .stream()
+                        .filter(element -> element.getKind() == ElementKind.CLASS && element.getSimpleName().toString().contains("Builder"))
+                        .findFirst()
+                        .flatMap(builder -> builder
+                                .getEnclosedElements()
+                                .stream()
+                                .filter(element -> element.getKind() == ElementKind.METHOD && element.getSimpleName().contentEquals("nodeStyle"))
+                                .map(element -> (ExecutableElement) element)
+                                .findFirst()
+                        )
+                        .ifPresent(element -> {
+                            var parameters = element.getParameters();
+                            if (parameters.size() == 1) {
+                                statement.append(".nodeStyle($T.$N)");
+                                processedArguments.add(parameters.get(0).asType());
+                                processedArguments.add("BLOCK");
+                            }
+                        });
+                statement.append(".build()");
             });
         }
     };
@@ -108,8 +134,8 @@ public class ServiceInitGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public <A extends Annotation> ServiceInitGenerator add(String name, Class<A> annotationClass, TriConsumer<StringBuilder, List<Object>, A> initArgGen) {
-        annotatedInitArguments.put(Pair.of(name, annotationClass), (TriConsumer<StringBuilder, List<Object>, Annotation>) initArgGen);
+    public <A extends Annotation> ServiceInitGenerator add(CheckType type, String name, Class<A> annotationClass, QuadConsumer<StringBuilder, List<Object>, A, TypeElement> initArgGen) {
+        annotatedInitArguments.put(Triple.of(type, name, annotationClass), (QuadConsumer<StringBuilder, List<Object>, Annotation, TypeElement>) initArgGen);
         return this;
     }
 
@@ -155,9 +181,13 @@ public class ServiceInitGenerator {
                     }
                     Optional<TypeMirror> typeMirror;
                     var annotatedInitArgument = annotatedInitArguments.entrySet().stream()
-                            .filter(entry ->
-                                    entry.getKey().getFirst().equals(variableElement.asType().toString())
-                                    && variableElement.getAnnotation(entry.getKey().getSecond()) != null
+                            .filter(entry -> entry.getKey().getFirst().function
+                                    .apply(
+                                            types,
+                                            variableElement.asType(),
+                                            types.erasure(elements.getTypeElement(entry.getKey().getSecond()).asType())
+                                    )
+                                    && variableElement.getAnnotation(entry.getKey().getThird()) != null
                             )
                             .findFirst();
                     Element annotatedElement = variableElement;
@@ -165,17 +195,21 @@ public class ServiceInitGenerator {
                         // probably lombok, try other thing
                         var lombokedElement = typeElement.getEnclosedElements().stream()
                                 .filter(element -> element.getKind().isField()
-                                                && element.getSimpleName().contentEquals(variableElement.getSimpleName())
-                                                && types.isSameType(element.asType(), variableElement.asType())
-                                        )
+                                        && element.getSimpleName().contentEquals(variableElement.getSimpleName())
+                                        && types.isSameType(element.asType(), variableElement.asType())
+                                )
                                 .findFirst();
 
                         if (lombokedElement.isPresent()) {
                             annotatedElement = lombokedElement.get();
                             annotatedInitArgument = annotatedInitArguments.entrySet().stream()
-                                    .filter(entry ->
-                                            entry.getKey().getFirst().equals(variableElement.asType().toString())
-                                                    && lombokedElement.get().getAnnotation(entry.getKey().getSecond()) != null
+                                    .filter(entry -> entry.getKey().getFirst().function
+                                            .apply(
+                                                    types,
+                                                    variableElement.asType(),
+                                                    types.erasure(elements.getTypeElement(entry.getKey().getSecond()).asType())
+                                            )
+                                            && lombokedElement.get().getAnnotation(entry.getKey().getThird()) != null
                                     )
                                     .findFirst();
                         }
@@ -183,7 +217,13 @@ public class ServiceInitGenerator {
                     }
 
                     if (annotatedInitArgument.isPresent()) {
-                        annotatedInitArgument.get().getValue().accept(statement, processedArguments, annotatedElement.getAnnotation(annotatedInitArgument.get().getKey().getSecond()));
+                        annotatedInitArgument.get().getValue()
+                                .accept(
+                                        statement,
+                                        processedArguments,
+                                        annotatedElement.getAnnotation(annotatedInitArgument.get().getKey().getThird()),
+                                        (TypeElement) types.asElement(variableElement.asType())
+                                );
                     } else if (initArguments.containsKey(variableElement.asType().toString())) {
                         initArguments.get(variableElement.asType().toString()).accept(statement, processedArguments);
                     } else if ((typeMirror = instancedServices.keySet().stream().filter(type -> types.isAssignable(type, variableElement.asType())).findFirst()).isPresent()) {
@@ -392,5 +432,23 @@ public class ServiceInitGenerator {
             controllableName.set(name);
             methodSpec.addStatement("$T $N = this.$N.child()", ClassName.get("org.screamingsandals.lib.utils", "Controllable"), name, "pluginControllable");
         }
+    }
+
+    @RequiredArgsConstructor
+    public enum CheckType {
+        ONLY_SAME((types, typeMirror, typeMirror2) -> {
+            System.out.println(typeMirror.toString() + " is " + typeMirror2.toString() + " = " + types.isSameType(typeMirror2, typeMirror));
+            return types.isSameType(typeMirror2, typeMirror);
+        }),
+        ALLOW_SUPERCLASS((types, typeMirror, typeMirror2) -> {
+            System.out.println(typeMirror2.toString() + " into " + typeMirror.toString() + " = " + types.isAssignable(typeMirror2, typeMirror));
+            return types.isAssignable(typeMirror2, typeMirror);
+        }),
+        ALLOW_CHILDREN((types, typeMirror, typeMirror2) -> {
+            System.out.println(typeMirror.toString() + " into " + typeMirror2.toString() + " = " + types.isSubtype(typeMirror, typeMirror2));
+            return types.isSubtype(typeMirror, typeMirror2);
+        });
+
+        private final TriFunction<Types, TypeMirror, TypeMirror, Boolean> function;
     }
 }
