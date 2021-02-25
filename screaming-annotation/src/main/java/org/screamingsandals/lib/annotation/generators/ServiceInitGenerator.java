@@ -17,6 +17,8 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import java.lang.annotation.Annotation;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -66,6 +68,23 @@ public class ServiceInitGenerator {
             });
             put(Triple.of(CheckType.ALLOW_CHILDREN, "org.spongepowered.configurate.loader.ConfigurationLoader", ConfigFile.class), (statement, processedArguments, annotation, variableType) -> {
                 var configFile = (ConfigFile) annotation;
+                if (!configFile.old().isEmpty()) {
+                    var oldIndex = index++;
+                    var newIndex = index++;
+
+                    ServiceInitGenerator.this.methodSpec.addStatement("$T $N = $N.getDataFolder().resolve($S)", Path.class, "indexedVariable" + oldIndex, "description", configFile.old());
+                    ServiceInitGenerator.this.methodSpec.addStatement("$T $N = $N.getDataFolder().resolve($S)", Path.class, "indexedVariable" + newIndex, "description", configFile.value());
+
+                    ServiceInitGenerator.this.methodSpec
+                            .beginControlFlow("if ($T.exists($N) && !$T.exists($N))", Files.class, "indexedVariable" + oldIndex, Files.class, "indexedVariable" + newIndex)
+                                .beginControlFlow("try")
+                                    .addStatement("$T.move($N, $N)", Files.class, "indexedVariable" + oldIndex, "indexedVariable" + newIndex)
+                                .nextControlFlow("catch ($T $N)", Exception.class, "ex")
+                                    .addStatement("$N.printStackTrace()", "ex")
+                                .endControlFlow()
+                            .endControlFlow();
+                }
+
                 statement.append("$T.builder().path($N.getDataFolder().resolve($S))");
                 processedArguments.add(variableType);
                 processedArguments.add("description");

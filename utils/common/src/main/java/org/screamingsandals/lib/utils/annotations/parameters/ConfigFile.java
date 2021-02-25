@@ -18,4 +18,11 @@ public @interface ConfigFile {
      * @return the path of the file
      */
     String value();
+
+    /**
+     * It's possible to move file from old location to new one via this annotation.
+     *
+     * @return the old path of the file
+     */
+    String old() default "";
 }
