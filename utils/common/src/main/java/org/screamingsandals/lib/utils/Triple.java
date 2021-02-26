@@ -6,12 +6,29 @@ import lombok.Data;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
-public class Triple<F, M, L>  {
+public class Triple<F, S, T>  {
     private final F first;
-    private final M second;
-    private final L third;
+    private final S second;
+    private final T third;
 
-    public static <F, M, L> Triple<F, M, L> of(F first, M second, L third) {
+    public static <F, S, T> Triple<F, S, T> of(F first, S second, T third) {
         return new Triple<>(first, second, third);
     }
+
+    public static <F, S, T> Triple<F, S, T> empty() {
+        return new Triple<>(null, null, null);
+    }
+
+    public boolean areAllPresent() {
+        return first != null && second != null && third != null;
+    }
+
+    public boolean isPresent() {
+        return first != null || second != null || third != null;
+    }
+
+    public boolean isEmpty() {
+        return first == null && second == null && third == null;
+    }
+
 }

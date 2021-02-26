@@ -29,7 +29,7 @@ public class SpongeEntityMapper extends EntityMapper {
     }
 
     @Override
-    public Optional<EntityBasic> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder) {
+    public <T extends EntityBasic> Optional<T> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder) {
         return Optional.empty(); // TODO
     }
 }

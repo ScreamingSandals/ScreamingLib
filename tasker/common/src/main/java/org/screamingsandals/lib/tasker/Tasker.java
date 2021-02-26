@@ -3,10 +3,12 @@ package org.screamingsandals.lib.tasker;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
+import org.screamingsandals.lib.utils.annotations.ForwardToService;
 
 import java.util.Map;
 import java.util.function.Supplier;
 
+@ForwardToService(AbstractTaskInitializer.class)
 public interface Tasker {
 
     static void init(Supplier<AbstractTaskInitializer> taskInitializer) {

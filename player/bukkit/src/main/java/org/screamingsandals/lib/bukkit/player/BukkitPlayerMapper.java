@@ -1,9 +1,11 @@
 package org.screamingsandals.lib.bukkit.player;
 
+import com.destroystokyo.paper.ClientOption;
 import io.papermc.lib.PaperLib;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
+import org.apache.commons.lang.LocaleUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -13,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.player.listener.*;
+import org.screamingsandals.lib.entity.EntityHuman;
+import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
@@ -29,6 +33,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -63,7 +68,9 @@ public class BukkitPlayerMapper extends PlayerMapper {
                     }
 
                     return Bukkit.getPlayer(playerWrapper.getUuid());
-                });
+                })
+                .registerP2W(EntityHuman.class, entityHuman -> playerConverter.convert(entityHuman.as(Player.class)))
+                .registerW2P(EntityHuman.class, playerWrapper -> EntityMapper.<EntityHuman>wrapEntity(playerWrapper.as(Player.class)).orElse(null));
         senderConverter
                 .registerW2P(Player.class, wrapper -> {
                     if (wrapper.getType() != CommandSenderWrapper.Type.PLAYER) {
@@ -285,6 +292,25 @@ public class BukkitPlayerMapper extends PlayerMapper {
     @Override
     public OfflinePlayerWrapper getOfflinePlayer0(UUID uuid) {
         return offlinePlayerConverter.convert(Bukkit.getOfflinePlayer(uuid));
+    }
+
+    @Override
+    public Locale getLocale0(SenderWrapper senderWrapper) {
+        return senderWrapper.asOptional(Player.class)
+                .map(player -> {
+                    if (Reflect.hasMethod(player, "getLocale")) {
+                        return player.getLocale();
+                    }
+                    return null;
+                })
+                .map(s -> {
+                    try {
+                        return LocaleUtils.toLocale(s);
+                    } catch (IllegalArgumentException ignored) {
+                        return null;
+                    }
+                })
+                .orElse(Locale.US);
     }
 
     private void registerListeners(Plugin plugin) {

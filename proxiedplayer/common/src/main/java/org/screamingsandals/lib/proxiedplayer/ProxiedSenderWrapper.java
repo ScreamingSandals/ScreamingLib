@@ -9,6 +9,8 @@ import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.Wrapper;
 
+import java.util.Locale;
+
 @Data
 @RequiredArgsConstructor
 public class ProxiedSenderWrapper implements Wrapper, ForwardingAudience.Single, CommandSenderWrapper {
@@ -27,6 +29,11 @@ public class ProxiedSenderWrapper implements Wrapper, ForwardingAudience.Single,
     @Override
     public boolean isPermissionSet(Permission permission) {
         return ProxiedPlayerMapper.isPermissionSet(this, permission);
+    }
+
+    @Override
+    public Locale getLocale() {
+        return null;
     }
 
 

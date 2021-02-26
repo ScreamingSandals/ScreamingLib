@@ -18,6 +18,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.velocity.proxiedplayer.event.ChatEventHandlerFactory;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -140,5 +141,12 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
             return wrapper.as(CommandSource.class).getPermissionValue(((SimplePermission) permission).getPermissionString()) == Tristate.UNDEFINED;
         }
         return true;
+    }
+
+    @Override
+    public Locale getLocale0(ProxiedSenderWrapper wrapper) {
+        return wrapper.asOptional(Player.class)
+                .map(player -> player.getPlayerSettings().getLocale())
+                .orElse(Locale.US);
     }
 }

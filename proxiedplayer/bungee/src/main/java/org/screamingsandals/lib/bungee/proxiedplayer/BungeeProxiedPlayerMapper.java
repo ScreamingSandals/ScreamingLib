@@ -18,6 +18,7 @@ import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -124,5 +125,12 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
             return wrapper.as(CommandSender.class).getPermissions().contains(((SimplePermission) permission).getPermissionString());
         }
         return true;
+    }
+
+    @Override
+    public Locale getLocale0(ProxiedSenderWrapper wrapper) {
+        return wrapper.asOptional(ProxiedPlayer.class)
+                .map(ProxiedPlayer::getLocale)
+                .orElse(Locale.US);
     }
 }

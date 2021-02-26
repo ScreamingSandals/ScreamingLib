@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.plugin.logger;
+package org.screamingsandals.lib.utils.logger;
 
 import org.screamingsandals.lib.utils.Pair;
 

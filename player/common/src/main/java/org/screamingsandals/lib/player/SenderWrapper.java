@@ -8,6 +8,8 @@ import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.Wrapper;
 
+import java.util.Locale;
+
 @Data
 @RequiredArgsConstructor
 public class SenderWrapper implements Wrapper, CommandSenderWrapper {
@@ -26,6 +28,11 @@ public class SenderWrapper implements Wrapper, CommandSenderWrapper {
     @Override
     public boolean isPermissionSet(Permission permission) {
         return PlayerMapper.isPermissionSet(this, permission);
+    }
+
+    @Override
+    public Locale getLocale() {
+        return PlayerMapper.getLocale(this);
     }
 
     @Override

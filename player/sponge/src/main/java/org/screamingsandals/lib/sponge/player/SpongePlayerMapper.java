@@ -2,6 +2,8 @@ package org.screamingsandals.lib.sponge.player;
 
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
+import org.screamingsandals.lib.entity.EntityHuman;
+import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
@@ -26,6 +28,7 @@ import org.spongepowered.api.world.server.ServerLocation;
 import org.spongepowered.api.world.server.ServerWorld;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -58,7 +61,9 @@ public class SpongePlayerMapper extends PlayerMapper {
                 });
         playerConverter
                 .registerP2W(ServerPlayer.class, player -> new PlayerWrapper(player.getName(), player.getUniqueId()))
-                .registerW2P(ServerPlayer.class, playerWrapper -> Sponge.getServer().getPlayer(playerWrapper.getUuid()).orElse(null));
+                .registerW2P(ServerPlayer.class, playerWrapper -> Sponge.getServer().getPlayer(playerWrapper.getUuid()).orElse(null))
+                .registerP2W(EntityHuman.class, entityHuman -> playerConverter.convert(entityHuman.as(ServerPlayer.class)))
+                .registerW2P(EntityHuman.class, playerWrapper -> EntityMapper.<EntityHuman>wrapEntity(playerWrapper.as(ServerPlayer.class)).orElse(null));
         senderConverter
                 .registerW2P(PlayerWrapper.class, wrapper -> {
                     if (wrapper.getType() == SenderWrapper.Type.PLAYER) {
@@ -246,5 +251,10 @@ public class SpongePlayerMapper extends PlayerMapper {
         return Sponge.getServer().getUserManager().get(uuid)
                 .map(user -> new FinalOfflinePlayerWrapper(user.getUniqueId(), user.getName()))
                 .orElseGet(() -> new FinalOfflinePlayerWrapper(uuid, null));
+    }
+
+    @Override
+    public Locale getLocale0(SenderWrapper senderWrapper) {
+        return Locale.US; // TODO
     }
 }
