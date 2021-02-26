@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.bukkit.player;
 
-import com.destroystokyo.paper.ClientOption;
 import io.papermc.lib.PaperLib;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -328,5 +327,6 @@ public class BukkitPlayerMapper extends PlayerMapper {
             new LegacyPlayerPickupItemListener(plugin);
         }
         new PlayerChangeWorldEventListener(plugin);
+        new PlayerRightClickedEntityListener(plugin);
     }
 }

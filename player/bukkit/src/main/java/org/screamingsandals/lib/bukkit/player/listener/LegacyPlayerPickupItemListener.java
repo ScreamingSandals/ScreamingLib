@@ -8,6 +8,7 @@ import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.event.SPlayerPickupItemEvent;
 
+@SuppressWarnings("deprecation") //legacy bukkit versions
 public class LegacyPlayerPickupItemListener extends AbstractBukkitEventHandlerFactory<PlayerPickupItemEvent, SPlayerPickupItemEvent> {
 
     public LegacyPlayerPickupItemListener(Plugin plugin) {
