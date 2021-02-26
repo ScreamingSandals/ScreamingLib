@@ -9,11 +9,13 @@ import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ConfigSerializable
-public class LocationHolder implements Wrapper {
+public class LocationHolder implements Wrapper, Serializable {
     private double x;
     private double y;
     private double z;
