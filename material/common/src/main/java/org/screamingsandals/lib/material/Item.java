@@ -8,6 +8,7 @@ import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.meta.EnchantmentHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionHolder;
+import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.NormalizableWrapper;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
@@ -84,6 +85,10 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
 
     public void addLore(Component line) {
         lore.add(line);
+    }
+
+    public void addLore(String line) {
+        lore.add(AdventureHelper.toComponent(line));
     }
 
     public void addFlag(String flag) {

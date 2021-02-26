@@ -110,7 +110,7 @@ public class ItemBuilder {
 
     public ItemBuilder lore(@Nullable String lore) {
         if (lore == null) {
-            item.addLore(null);
+            item.addLore(Component.empty());
             return this;
         }
         return lore(AdventureHelper.toComponent(lore));
