@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.annotation.utils;
 
 import lombok.experimental.UtilityClass;
+import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ForwardToService;
@@ -10,9 +11,12 @@ import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitiali
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
+import javax.lang.model.type.NoType;
 import javax.tools.Diagnostic;
 import java.util.HashMap;
 import java.util.List;
@@ -90,6 +94,7 @@ public class MiscUtils {
                 );
                 container.getDependencies().addAll(getSafelyTypeElements(environment, service));
                 container.getLoadAfter().addAll(getSafelyTypeElementsLoadAfter(environment, service));
+                checkEventManagerRequirement(environment, typeElement, container);
 
                 return platformTypes
                         .stream()
@@ -146,10 +151,30 @@ public class MiscUtils {
                 } else {
                     environment.getMessager().printMessage(Diagnostic.Kind.WARNING, resolvedElement.getQualifiedName() + " should have @Service annotation (ignoring that because was resolved with @AbstractService)");
                 }
+                checkEventManagerRequirement(environment, typeElement, container);
                 map.put(platformType, container);
             }
         });
 
         return map;
+    }
+
+    private static void checkEventManagerRequirement(ProcessingEnvironment environment, TypeElement typeElement, ServiceContainer container) {
+        var eventManager = environment.getElementUtils().getTypeElement("org.screamingsandals.lib.event.EventManager");
+        if (!container.getDependencies().contains(eventManager)) {
+            var superClass = typeElement;
+            do {
+                var any = superClass.getEnclosedElements()
+                        .stream()
+                        .filter(element -> element.getKind() == ElementKind.METHOD
+                                && element.getAnnotation(OnEvent.class) != null
+                                && element.getModifiers().contains(Modifier.PUBLIC)
+                        )
+                        .findAny();
+                if (any.isPresent()) {
+                    container.getDependencies().add(eventManager);
+                }
+            } while ((superClass = (TypeElement) environment.getTypeUtils().asElement(superClass.getSuperclass())) != null);
+        }
     }
 }

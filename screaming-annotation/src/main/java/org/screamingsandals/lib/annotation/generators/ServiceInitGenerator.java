@@ -12,6 +12,7 @@ import org.screamingsandals.lib.utils.annotations.parameters.ConfigFile;
 import org.screamingsandals.lib.utils.annotations.parameters.DataFolder;
 
 import javax.lang.model.element.*;
+import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -20,9 +21,12 @@ import java.lang.annotation.Annotation;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor(staticName = "builder")
@@ -77,11 +81,11 @@ public class ServiceInitGenerator {
 
                     ServiceInitGenerator.this.methodSpec
                             .beginControlFlow("if ($T.exists($N) && !$T.exists($N))", Files.class, "indexedVariable" + oldIndex, Files.class, "indexedVariable" + newIndex)
-                                .beginControlFlow("try")
-                                    .addStatement("$T.move($N, $N)", Files.class, "indexedVariable" + oldIndex, "indexedVariable" + newIndex)
-                                .nextControlFlow("catch ($T $N)", Exception.class, "ex")
-                                    .addStatement("$N.printStackTrace()", "ex")
-                                .endControlFlow()
+                            .beginControlFlow("try")
+                            .addStatement("$T.move($N, $N)", Files.class, "indexedVariable" + oldIndex, "indexedVariable" + newIndex)
+                            .nextControlFlow("catch ($T $N)", Exception.class, "ex")
+                            .addStatement("$N.printStackTrace()", "ex")
+                            .endControlFlow()
                             .endControlFlow();
                 }
 
@@ -290,13 +294,22 @@ public class ServiceInitGenerator {
     }
 
     private void processMethodAnnotation(Class<? extends Annotation> annotationClass, String controllableMethod, TypeElement typeElement, String returnedName, AtomicReference<String> controllableName, Pair<String, List<Object>> shouldRunControllable) {
-        var result1 = typeElement.getEnclosedElements().stream()
-                .filter(element -> element.getKind() == ElementKind.METHOD && element.getAnnotation(annotationClass) != null)
-                .collect(Collectors.toList());
+        var superClass = typeElement;
+        List<Element> result1;
+        do {
+            result1 = superClass
+                    .getEnclosedElements().stream()
+                    .filter(element -> element.getKind() == ElementKind.METHOD
+                            && element.getAnnotation(annotationClass) != null
+                            && element.getModifiers().contains(Modifier.PUBLIC)
+                    )
+                    .collect(Collectors.toList());
 
-        if (result1.size() > 1) {
-            throw new UnsupportedOperationException("Service " + typeElement.getQualifiedName() + " has more than one @" + annotationClass.getSimpleName() + " methods");
-        }
+            if (result1.size() > 1) {
+                throw new UnsupportedOperationException("Service " + typeElement.getQualifiedName() + " has more than one @" + annotationClass.getSimpleName() + " methods");
+            }
+
+        } while (result1.size() == 0 && (superClass = (TypeElement) types.asElement(superClass.getSuperclass())) != null);
 
         if (result1.size() == 1) {
             var method = (ExecutableElement) result1.get(0);
@@ -337,13 +350,22 @@ public class ServiceInitGenerator {
     }
 
     private Pair<String, List<Object>> processShouldRunControllable(TypeElement typeElement, String returnedName) {
-        var result1 = typeElement.getEnclosedElements().stream()
-                .filter(element -> element.getKind() == ElementKind.METHOD && element.getAnnotation(ShouldRunControllable.class) != null)
-                .collect(Collectors.toList());
+        var superClass = typeElement;
+        List<Element> result1;
+        do {
+            result1 = superClass
+                    .getEnclosedElements().stream()
+                    .filter(element -> element.getKind() == ElementKind.METHOD
+                            && element.getAnnotation(ShouldRunControllable.class) != null
+                            && element.getModifiers().contains(Modifier.PUBLIC)
+                    )
+                    .collect(Collectors.toList());
 
-        if (result1.size() > 1) {
-            throw new UnsupportedOperationException("Service " + typeElement.getQualifiedName() + " has more than one @ShouldRunControllable methods");
-        }
+            if (result1.size() > 1) {
+                throw new UnsupportedOperationException("Service " + typeElement.getQualifiedName() + " has more than one @ShouldRunControllable methods");
+            }
+
+        } while (result1.size() == 0 && (superClass = (TypeElement) types.asElement(superClass.getSuperclass())) != null);
 
         if (result1.size() == 1) {
             var method = (ExecutableElement) result1.get(0);
@@ -368,11 +390,30 @@ public class ServiceInitGenerator {
         return Pair.empty();
     }
 
-
     private void processEventAnnotations(TypeElement typeElement, String returnedName, Pair<String, List<Object>> shouldRunControllable) {
-        var result = typeElement.getEnclosedElements().stream()
-                .filter(element -> element.getKind() == ElementKind.METHOD && element.getAnnotation(OnEvent.class) != null)
-                .map(element -> (ExecutableElement) element)
+        List<ExecutableElement> result = new ArrayList<>();
+
+        var superClass = typeElement;
+        do {
+            result.addAll(superClass
+                    .getEnclosedElements().stream()
+                    .filter(element -> element.getKind() == ElementKind.METHOD
+                            && element.getAnnotation(OnEvent.class) != null
+                            && element.getModifiers().contains(Modifier.PUBLIC)
+                    )
+                    .map(element -> (ExecutableElement) element)
+                    .collect(Collectors.toList()));
+        } while ((superClass = (TypeElement) types.asElement(superClass.getSuperclass())) != null);
+
+        result = result
+                .stream()
+                .filter(distinctByKey(element -> Pair.of(
+                        element.getSimpleName(),
+                        element.getParameters()
+                                .stream()
+                                .map(variableElement -> variableElement.asType().toString())
+                                .collect(Collectors.toList()))
+                ))
                 .collect(Collectors.toList());
 
         if (result.size() == 0) {
@@ -453,20 +494,16 @@ public class ServiceInitGenerator {
         }
     }
 
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        var seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
+    }
+
     @RequiredArgsConstructor
     public enum CheckType {
-        ONLY_SAME((types, typeMirror, typeMirror2) -> {
-            System.out.println(typeMirror.toString() + " is " + typeMirror2.toString() + " = " + types.isSameType(typeMirror2, typeMirror));
-            return types.isSameType(typeMirror2, typeMirror);
-        }),
-        ALLOW_SUPERCLASS((types, typeMirror, typeMirror2) -> {
-            System.out.println(typeMirror2.toString() + " into " + typeMirror.toString() + " = " + types.isAssignable(typeMirror2, typeMirror));
-            return types.isAssignable(typeMirror2, typeMirror);
-        }),
-        ALLOW_CHILDREN((types, typeMirror, typeMirror2) -> {
-            System.out.println(typeMirror.toString() + " into " + typeMirror2.toString() + " = " + types.isSubtype(typeMirror, typeMirror2));
-            return types.isSubtype(typeMirror, typeMirror2);
-        });
+        ONLY_SAME(Types::isSameType),
+        ALLOW_SUPERCLASS((types, typeMirror, typeMirror2) -> types.isAssignable(typeMirror2, typeMirror)),
+        ALLOW_CHILDREN(Types::isSubtype);
 
         private final TriFunction<Types, TypeMirror, TypeMirror, Boolean> function;
     }
