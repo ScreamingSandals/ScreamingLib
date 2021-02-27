@@ -45,6 +45,11 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
                         return;
                     }
 
+                    if (wrapped instanceof CancellableAbstractEvent
+                            && event instanceof org.bukkit.event.Cancellable) {
+                        ((CancellableAbstractEvent) wrapped).setCancelled(((org.bukkit.event.Cancellable) event).isCancelled());
+                    }
+
                     if (this.fireAsync) {
                         try {
                             EventManager.getDefaultEventManager().fireEventAsync(wrapped, priority).get();
