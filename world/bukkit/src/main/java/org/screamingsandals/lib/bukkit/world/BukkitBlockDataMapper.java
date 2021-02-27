@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.*;
 
@@ -27,9 +28,8 @@ public class BukkitBlockDataMapper extends BlockDataMapper {
     public BukkitBlockDataMapper() {
         converter
                 .registerP2W(BlockHolder.class, parent -> {
-                    final var position = parent.getLocation().as(Location.class);
-                    final var data = position.getBlock().getBlockData();
-                    final var holder = new BlockDataHolder(parent.getType(), getDataFromString(data.getAsString()), parent);
+                    final var data = parent.as(Block.class).getBlockData();
+                    final var holder = new BlockDataHolder(MaterialMapping.resolve(data.getMaterial()).orElseThrow(), getDataFromString(data.getAsString()), parent);
 
                     if (!holder.getType().getPlatformName().equalsIgnoreCase(parent.getType().getPlatformName())) {
                         parent.setType(holder.getType());
@@ -43,6 +43,9 @@ public class BukkitBlockDataMapper extends BlockDataMapper {
                         resolve(BlockMapper.resolve(block)).orElseThrow())
                 .registerP2W(LocationHolder.class, location ->
                         resolve(BlockMapper.resolve(location).orElseThrow()).orElseThrow())
+                .registerP2W(BlockData.class, blockData ->
+                        new BlockDataHolder(MaterialMapping.resolve(blockData.getMaterial()).orElseThrow(), getDataFromString(blockData.getAsString()), null)
+                )
                 .registerW2P(BlockData.class, holder ->
                         Bukkit.createBlockData(getDataFromMap(holder.getType(), holder.getData())));
     }

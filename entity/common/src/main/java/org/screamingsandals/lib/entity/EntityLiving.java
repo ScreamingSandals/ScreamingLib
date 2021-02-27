@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EntityLiving extends EntityBasic {
-    // TODO Damageable, ProjectileSource
+    // TODO ProjectileSource
 
     Optional<AttributeHolder> getAttribute(AttributeTypeHolder attributeType);
 

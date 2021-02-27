@@ -59,4 +59,9 @@ public class BukkitBlockMapper extends BlockMapper {
                 .thenAccept(result ->
                         bukkitLocation.getBlock().setType(material.as(Material.class)));
     }
+
+    @Override
+    protected void breakNaturally0(LocationHolder location) {
+        location.as(Location.class).getBlock().breakNaturally();
+    }
 }

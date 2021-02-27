@@ -9,6 +9,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 import java.util.List;
 import java.util.UUID;
 
+// TODO: Metadata
 public interface EntityBasic extends Wrapper {
     EntityTypeHolder getEntityType();
 

@@ -68,7 +68,17 @@ public abstract class BlockMapper {
         mapping.setBlockAt0(location, material);
     }
 
+    public static void breakNaturally(LocationHolder location) {
+        if (mapping == null) {
+            throw new UnsupportedOperationException("BlockMapper is already initialized.");
+        }
+
+        mapping.breakNaturally0(location);
+    }
+
     protected abstract BlockHolder getBlockAt0(LocationHolder location);
 
     protected abstract void setBlockAt0(LocationHolder location, MaterialHolder material);
+
+    protected abstract void breakNaturally0(LocationHolder location);
 }

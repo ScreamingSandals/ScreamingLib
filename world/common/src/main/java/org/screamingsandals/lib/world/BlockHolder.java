@@ -3,6 +3,8 @@ package org.screamingsandals.lib.world;
 import lombok.Data;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.world.state.BlockStateHolder;
+import org.screamingsandals.lib.world.state.BlockStateMapper;
 
 import java.util.Optional;
 
@@ -64,6 +66,22 @@ public class BlockHolder implements Wrapper {
         final var toReturn = BlockDataMapper.getBlockDataAt(location);
         toReturn.ifPresent(data -> this.blockData = data);
         return toReturn;
+    }
+
+    /**
+     * Gets BlockState.
+     *
+     * @return {@link Optional#empty()} if none is found
+     */
+    public <T extends BlockStateHolder> Optional<T> getBlockState() {
+        return BlockStateMapper.getBlockStateFromBlock(this);
+    }
+
+    /**
+     * Breaks the block
+     */
+    public void breakNaturally() {
+
     }
 
     @Override

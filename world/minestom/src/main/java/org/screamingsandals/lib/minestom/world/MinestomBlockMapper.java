@@ -47,6 +47,11 @@ public class MinestomBlockMapper extends BlockMapper {
         position.getInstance().getBlockData(position);
     }
 
+    @Override
+    protected void breakNaturally0(LocationHolder location) {
+        // TODO
+    }
+
     private Block getBlock(InstancedBlockPosition position) {
         return Block.fromStateId(position.getInstance().getBlockStateId(position));
     }

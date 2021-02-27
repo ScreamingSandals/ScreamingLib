@@ -328,5 +328,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
         }
         new PlayerChangeWorldEventListener(plugin);
         new PlayerRightClickedEntityListener(plugin);
+        new PlayerClickedBlockListener(plugin);
+        new PlayerSignChangeEventListener(plugin);
     }
 }
