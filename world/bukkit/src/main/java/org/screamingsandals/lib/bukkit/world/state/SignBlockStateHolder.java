@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.bukkit.world.tile;
+package org.screamingsandals.lib.bukkit.world.state;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.block.Sign;

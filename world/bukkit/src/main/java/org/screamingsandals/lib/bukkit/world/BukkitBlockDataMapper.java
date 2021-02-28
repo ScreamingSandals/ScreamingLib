@@ -16,7 +16,9 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@Service
+@Service(dependsOn = {
+        BukkitBlockMapper.class
+})
 public class BukkitBlockDataMapper extends BlockDataMapper {
     private final static Pattern MAPPING_PATTERN = Pattern.compile(
             "(?:(?<namespace>[A-Za-z][A-Za-z0-9_.\\-]*):)?(?<material>[A-Za-z][A-Za-z0-9_.\\-/ ]+)(\\[(?<blockState>.+)])?");

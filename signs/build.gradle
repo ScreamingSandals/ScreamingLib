@@ -1,0 +1,4 @@
+dependencies {
+    api project(':world-common')
+    api project(':player-common')
+}

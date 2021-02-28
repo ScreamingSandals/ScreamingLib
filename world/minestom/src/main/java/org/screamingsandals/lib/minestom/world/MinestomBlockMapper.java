@@ -6,7 +6,9 @@ import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.*;
 
-@Service
+@Service(dependsOn = {
+        MinestomLocationMapper.class
+})
 public class MinestomBlockMapper extends BlockMapper {
 
     public static void init() {

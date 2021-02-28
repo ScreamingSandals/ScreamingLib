@@ -12,8 +12,15 @@ import java.lang.annotation.Target;
  * Init method or constructor can contain this arguments:
  * <ul>
  *  <li>PluginContainer</li>
+ *  <li>PluginDescription</li>
  *  <li>Platform plugin - not recommended unless this is platform-specific service</li>
  *  <li>{@link org.screamingsandals.lib.utils.Controllable}</li>
+ *  <li>Service created by constructor (must be also defined in dependsOn</li>
+ *  <li>{@link org.screamingsandals.lib.utils.logger.LoggerWrapper}</li>
+ *  <li>If supported, than SLF4J logger</li>
+ *  <li>{@link java.nio.file.Path} annotated with {@link org.screamingsandals.lib.utils.annotations.parameters.ConfigFile} or {@link org.screamingsandals.lib.utils.annotations.parameters.DataFolder}</li>
+ *  <li>{@link java.io.File} annotated with {@link org.screamingsandals.lib.utils.annotations.parameters.ConfigFile} or {@link org.screamingsandals.lib.utils.annotations.parameters.DataFolder}</li>
+ *  <li>Any extension of {@link org.spongepowered.configurate.loader.ConfigurationLoader} annotated with {@link org.screamingsandals.lib.utils.annotations.parameters.ConfigFile} or {@link org.screamingsandals.lib.utils.annotations.parameters.DataFolder}</li>
  * </ul>
  */
 @Retention(RetentionPolicy.CLASS)

@@ -9,7 +9,9 @@ import java.util.Map;
 import java.util.Optional;
 
 
-@Service
+@Service(dependsOn = {
+        MinestomBlockMapper.class
+})
 public class MinestomBlockDataMapper extends BlockDataMapper {
 
     public static void init() {

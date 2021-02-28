@@ -1,9 +1,10 @@
-package org.screamingsandals.lib.bukkit.world.tile;
+package org.screamingsandals.lib.bukkit.world.state;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.block.TileState;
+import org.screamingsandals.lib.bukkit.world.BukkitBlockMapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.state.BlockStateHolder;
@@ -11,7 +12,9 @@ import org.screamingsandals.lib.world.state.BlockStateMapper;
 
 import java.util.Optional;
 
-@Service
+@Service(dependsOn = {
+        BukkitBlockMapper.class
+})
 public class BukkitBlockStateMapper extends BlockStateMapper {
     public static void init() {
         BlockStateMapper.init(BukkitBlockStateMapper::new);

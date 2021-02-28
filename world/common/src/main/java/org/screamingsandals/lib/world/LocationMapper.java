@@ -5,6 +5,7 @@ import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 @AbstractService
@@ -34,6 +35,24 @@ public abstract class LocationMapper {
         }
         return mapping.converter.convert(holder, newType);
     }
+
+    public static Optional<WorldHolder> getWorld(UUID uuid) {
+        if (mapping == null) {
+            throw new UnsupportedOperationException("LocationMapper is not initialized yet.");
+        }
+        return mapping.getWorld0(uuid);
+    }
+
+    public static Optional<WorldHolder> getWorld(String name) {
+        if (mapping == null) {
+            throw new UnsupportedOperationException("LocationMapper is not initialized yet.");
+        }
+        return mapping.getWorld0(name);
+    }
+
+    protected abstract Optional<WorldHolder> getWorld0(UUID uuid);
+
+    protected abstract Optional<WorldHolder> getWorld0(String name);
 
     @SneakyThrows
     public static void init(Supplier<LocationMapper> mappingSupplier) {

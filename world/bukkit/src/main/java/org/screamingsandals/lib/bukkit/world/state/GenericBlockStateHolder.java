@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.bukkit.world.tile;
+package org.screamingsandals.lib.bukkit.world.state;
 
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;

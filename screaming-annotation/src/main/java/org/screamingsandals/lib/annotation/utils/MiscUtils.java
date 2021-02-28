@@ -3,10 +3,7 @@ package org.screamingsandals.lib.annotation.utils;
 import lombok.experimental.UtilityClass;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
-import org.screamingsandals.lib.utils.annotations.ForwardToService;
-import org.screamingsandals.lib.utils.annotations.Init;
-import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.*;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -18,10 +15,7 @@ import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.NoType;
 import javax.tools.Diagnostic;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -39,7 +33,33 @@ public class MiscUtils {
         return List.of();
     }
 
+    public static List<TypeElement> getSafelyTypeElements(ProcessingEnvironment environment, ServiceDependencies annotation) {
+        try {
+            annotation.dependsOn();
+        } catch (MirroredTypesException mte) {
+            var typeUtils = environment.getTypeUtils();
+            return mte.getTypeMirrors()
+                    .stream()
+                    .map(typeMirror -> (TypeElement) typeUtils.asElement(typeMirror))
+                    .collect(Collectors.toList());
+        }
+        return List.of();
+    }
+
     public static List<TypeElement> getSafelyTypeElementsLoadAfter(ProcessingEnvironment environment, Service annotation) {
+        try {
+            annotation.loadAfter();
+        } catch (MirroredTypesException mte) {
+            var typeUtils = environment.getTypeUtils();
+            return mte.getTypeMirrors()
+                    .stream()
+                    .map(typeMirror -> (TypeElement) typeUtils.asElement(typeMirror))
+                    .collect(Collectors.toList());
+        }
+        return List.of();
+    }
+
+    public static List<TypeElement> getSafelyTypeElementsLoadAfter(ProcessingEnvironment environment, ServiceDependencies annotation) {
         try {
             annotation.loadAfter();
         } catch (MirroredTypesException mte) {
@@ -95,6 +115,7 @@ public class MiscUtils {
                 container.getDependencies().addAll(getSafelyTypeElements(environment, service));
                 container.getLoadAfter().addAll(getSafelyTypeElementsLoadAfter(environment, service));
                 checkEventManagerRequirement(environment, typeElement, container);
+                checkServiceDependencies(environment, typeElement, container);
 
                 return platformTypes
                         .stream()
@@ -152,6 +173,7 @@ public class MiscUtils {
                     environment.getMessager().printMessage(Diagnostic.Kind.WARNING, resolvedElement.getQualifiedName() + " should have @Service annotation (ignoring that because was resolved with @AbstractService)");
                 }
                 checkEventManagerRequirement(environment, typeElement, container);
+                checkServiceDependencies(environment, typeElement, container);
                 map.put(platformType, container);
             }
         });
@@ -176,5 +198,30 @@ public class MiscUtils {
                 }
             } while ((superClass = (TypeElement) environment.getTypeUtils().asElement(superClass.getSuperclass())) != null);
         }
+    }
+
+    private static void checkServiceDependencies(ProcessingEnvironment environment, TypeElement typeElement, ServiceContainer container) {
+        var superClass = typeElement;
+        do {
+            Arrays.stream(superClass
+                    .getAnnotationsByType(ServiceDependencies.class))
+                    .forEach(annotation -> {
+                        getSafelyTypeElements(environment, annotation).forEach(typeElement1 -> {
+                            if (container.getDependencies().stream().noneMatch(typeElement2 ->
+                                    environment.getTypeUtils().isAssignable(typeElement2.asType(), typeElement1.asType()))
+                            ) {
+                                container.getDependencies().add(typeElement1);
+                            }
+                        });
+
+                        getSafelyTypeElementsLoadAfter(environment, annotation).forEach(typeElement1 -> {
+                            if (container.getLoadAfter().stream().noneMatch(typeElement2 ->
+                                    environment.getTypeUtils().isAssignable(typeElement2.asType(), typeElement1.asType()))
+                            ) {
+                                container.getLoadAfter().add(typeElement1);
+                            }
+                        });
+                    });
+        } while ((superClass = (TypeElement) environment.getTypeUtils().asElement(superClass.getSuperclass())) != null);
     }
 }
