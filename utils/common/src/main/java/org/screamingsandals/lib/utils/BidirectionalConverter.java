@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -53,8 +54,9 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
         return p2wConverters.entrySet()
                 .stream()
                 .filter(c -> c.getKey().isInstance(object))
-                .findFirst()
-                .map(entry -> entry.getValue().apply(object));
+                .map(entry -> entry.getValue().apply(object))
+                .filter(Objects::nonNull)
+                .findFirst();
     }
 
     @NotNull
@@ -75,8 +77,9 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
         return w2pConverters.entrySet()
                 .stream()
                 .filter(c -> newType.isAssignableFrom(c.getKey()))
-                .findFirst()
-                .map(entry -> (P) entry.getValue().apply(object));
+                .map(entry -> (P) entry.getValue().apply(object))
+                .filter(Objects::nonNull)
+                .findFirst();
     }
 
     /**

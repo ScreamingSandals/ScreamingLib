@@ -30,7 +30,7 @@ public abstract class PluginContainer implements Wrapper {
         }
 
         resourcePath = resourcePath.replace('\\', '/');
-        var in = getClass().getResourceAsStream(resourcePath);
+        var in = getClass().getResourceAsStream("/" + resourcePath);
         if (in == null) {
             throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found in classpath");
         }

@@ -56,7 +56,6 @@ public class TaskBuilderImpl implements Tasker.TaskBuilder {
 
     @Override
     public TaskerTask start() {
-        Preconditions.checkNotNull(timeUnit, "Delay time unit is null!");
         final var task = Preconditions.checkNotNull(
                 initializer.start(this),
                 "Error occurred while trying to run task number " + taskId);
