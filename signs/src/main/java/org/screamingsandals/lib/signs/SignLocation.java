@@ -17,16 +17,12 @@ public class SignLocation implements Wrapper {
     private double x;
     private double y;
     private double z;
-    private float yaw;
-    private float pitch;
 
     public SignLocation(LocationHolder location) {
         this.world = location.getWorld().getName();
         this.x = location.getX();
         this.y = location.getY();
         this.z = location.getZ();
-        this.yaw = location.getYaw();
-        this.pitch = location.getPitch();
     }
 
     @SuppressWarnings("unchecked")
@@ -34,8 +30,6 @@ public class SignLocation implements Wrapper {
     public <T> T as(Class<T> type) {
         if (type == LocationHolder.class) {
             var holder = new LocationHolder(x, y, z);
-            holder.setYaw(yaw);
-            holder.setPitch(pitch);
             holder.setWorld(LocationMapper.getWorld(world).orElseThrow());
             return (T) holder;
         }
