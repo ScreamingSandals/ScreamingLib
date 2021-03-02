@@ -383,6 +383,6 @@ public class BukkitHologram extends AbstractHologram {
         }
 
         toSend.add(getFullDestroyPacket());
-        update(player.as(Player.class), List.of(toSend), shouldCheckDistance);
+        update(player.as(Player.class), toSend, shouldCheckDistance);
     }
 }

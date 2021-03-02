@@ -188,6 +188,15 @@ public interface Hologram {
     Hologram setLine(int line, Component text);
 
     /**
+     * Adds new line to the position and moves everything below.
+     *
+     * @param line where to add
+     * @param text text to add
+     * @return this hologram
+     */
+    Hologram addLine(int line, Component text);
+
+    /**
      * Removes given line from the hologram.
      *
      * @param line line to remove

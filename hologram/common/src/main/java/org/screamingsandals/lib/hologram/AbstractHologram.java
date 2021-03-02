@@ -178,9 +178,20 @@ public abstract class AbstractHologram implements Hologram {
     }
 
     @Override
-    public Hologram setLine(int line, Component text) {
+    public Hologram addLine(int line, Component text) {
         originalLinesSize = lines.size();
         lines = HologramUtils.addEntryAndMoveRest(lines, line, text);
+        update();
+        return this;
+    }
+
+    @Override
+    public Hologram setLine(int line, Component text) {
+        if (!lines.containsKey(line)) {
+            return addLine(line, text);
+        }
+        originalLinesSize = lines.size();
+        lines.put(line, text);
         update();
         return this;
     }
