@@ -2,6 +2,7 @@ package org.screamingsandals.lib.bukkit.utils.nms.entity;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -57,7 +58,12 @@ public class EntityNMS {
 	public void setCustomName(Component name) {
 		final var method = ClassStorage.getMethod(handler, "setCustomName,func_200203_b", ClassStorage.NMS.IChatBaseComponent);
 		if (method.getMethod() != null) {
-			method.invoke(MinecraftComponentSerializer.get().serialize(name));
+			try {
+				method.invoke(MinecraftComponentSerializer.get().serialize(name));
+			} catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
+				method.invoke(ClassStorage.getMethod(ClassStorage.NMS.ChatSerializer, "a,field_150700_a", String.class)
+						.invokeStatic(GsonComponentSerializer.gson().serialize(name)));
+			}
 		} else {
 			ClassStorage.getMethod(handler, "setCustomName,func_96094_a", String.class).invoke(AdventureHelper.toLegacy(name));
 		}
@@ -72,7 +78,11 @@ public class EntityNMS {
 
 		if (stored.isInstance(textComponent)) {
 			try {
-				return MinecraftComponentSerializer.get().deserialize(textComponent);
+				try {
+					return MinecraftComponentSerializer.get().deserialize(textComponent);
+				} catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
+					return AdventureHelper.toComponent((String) ClassStorage.getMethod(textComponent, "getLegacyString,func_150254_d").invoke());
+				}
 			} catch (Throwable t) {
 				throw new UnsupportedOperationException("Cannot deserialize " + textComponent.toString(), t);
 			}

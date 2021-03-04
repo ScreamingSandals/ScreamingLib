@@ -37,7 +37,7 @@ public class BukkitHologram extends AbstractHologram {
         this.cachedLocation = location.as(Location.class);
     }
 
-    public boolean hasId(Integer id) {
+    public boolean hasId(int id) {
         return entitiesOnLines.values()
                 .stream()
                 .anyMatch(entity -> entity.getId() == id);

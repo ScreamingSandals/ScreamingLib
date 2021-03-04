@@ -45,14 +45,17 @@ public class BukkitHologramManager extends HologramManager {
                     protected Object handle(Player sender, Object packet) {
                         if (ClassStorage.NMS.PacketPlayInUseEntity.isInstance(packet)) {
                             final var entityId = (int) ClassStorage.getField(ClassStorage.NMS.PacketPlayInUseEntity, "a,field_149567_a", packet);
-                            getActiveHolograms().forEach((id, hologram) -> {
-                                if (hologram.getClass().isInstance(BukkitHologram.class)) {
+                            for (var entry : getActiveHolograms().entrySet()) {
+                                var id = entry.getKey();
+                                var hologram = entry.getValue();
+                                if (hologram instanceof BukkitHologram) {
                                     final var textHologram = (BukkitHologram) hologram;
                                     if (textHologram.hasId(entityId)) {
-                                        EventManager.fire(new HologramTouchEvent(PlayerMapper.wrapPlayer(plugin), hologram));
+                                        EventManager.fire(new HologramTouchEvent(PlayerMapper.wrapPlayer(sender), hologram));
+                                        break; // don't continue in iteration if we found the hologram
                                     }
                                 }
-                            });
+                            };
                         }
                         return packet;
                     }
