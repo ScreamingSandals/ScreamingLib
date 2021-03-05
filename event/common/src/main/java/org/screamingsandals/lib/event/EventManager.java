@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 
 /**
  * Custom event manager that has it's own {@link java.util.concurrent.ExecutorService}.
- * <p>
+ *
  * Always call {@link EventManager#destroy()} when shutting down!
  */
 @Service
@@ -180,8 +180,6 @@ public class EventManager {
     }
 
     public void destroy() {
-        handlers.entries().forEach(entry ->
-                fireEvent(new HandlerUnregisteredEvent(this, entry.getKey(), entry.getValue())));
         handlers.clear();
 
         if (this == defaultEventManager) {
