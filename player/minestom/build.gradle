@@ -1,8 +1,8 @@
 dependencies {
     api project(':player-common')
     api project(':utils-minestom')
+    api project(':world-minestom')
 
     compileOnly project(':material-common')
-    compileOnly project(':world-common')
     compileOnly 'com.github.Minestom:Minestom:' + MINESTOM_VERSION
 }

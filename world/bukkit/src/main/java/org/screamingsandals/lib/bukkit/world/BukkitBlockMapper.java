@@ -5,7 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
-import org.screamingsandals.lib.bukkit.world.state.BukkitBlockStateMapper;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -24,8 +23,7 @@ public class BukkitBlockMapper extends BlockMapper {
     }
 
     public BukkitBlockMapper() {
-        converter
-                .registerP2W(Location.class, location -> {
+        converter.registerP2W(Location.class, location -> {
                     final var instanced = LocationMapper.resolve(location).orElseThrow();
                     final var material = location.getBlock().getBlockData().getMaterial();
                     return new BlockHolder(instanced, MaterialMapping.resolve(material).orElseThrow());

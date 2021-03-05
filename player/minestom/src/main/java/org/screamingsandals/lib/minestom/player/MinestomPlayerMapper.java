@@ -47,8 +47,7 @@ public class MinestomPlayerMapper extends PlayerMapper {
         MinestomAudiences.create(extension);
 
         playerConverter
-                .registerW2P(Player.class, playerWrapper -> MinecraftServer.getConnectionManager()
-                        .getPlayer(playerWrapper.getUuid()))
+                .registerW2P(Player.class, playerWrapper -> MinecraftServer.getConnectionManager().getPlayer(playerWrapper.getUuid()))
                 .registerP2W(Player.class, player -> new PlayerWrapper(player.getUsername(), player.getUuid()))
                 .registerP2W(EntityHuman.class, entityHuman -> playerConverter.convert(entityHuman.as(Player.class)))
                 .registerW2P(EntityHuman.class, playerWrapper -> EntityMapper.<EntityHuman>wrapEntity(playerWrapper.as(Player.class)).orElse(null));

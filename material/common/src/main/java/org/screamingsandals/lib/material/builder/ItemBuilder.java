@@ -25,6 +25,10 @@ public class ItemBuilder {
     @NotNull
     private final Item item;
 
+    public static ItemBuilder of(MaterialHolder materialHolder) {
+        return new ItemBuilder(materialHolder);
+    }
+
     /**
      * Creates new ItemBuilder.
      *

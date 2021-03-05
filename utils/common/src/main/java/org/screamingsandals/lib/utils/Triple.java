@@ -31,4 +31,16 @@ public class Triple<F, S, T>  {
         return first == null && second == null && third == null;
     }
 
+    public F first() {
+        return first;
+    }
+
+    public S second() {
+        return second;
+    }
+
+    public T third() {
+        return third;
+    }
+
 }

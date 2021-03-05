@@ -29,4 +29,12 @@ public class Pair<F, S> {
     public boolean isEmpty() {
         return first == null && second == null;
     }
+
+    public F first() {
+        return first;
+    }
+
+    public S second() {
+        return second;
+    }
 }

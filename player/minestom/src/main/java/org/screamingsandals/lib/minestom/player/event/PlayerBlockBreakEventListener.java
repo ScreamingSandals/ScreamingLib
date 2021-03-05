@@ -1,8 +1,12 @@
 package org.screamingsandals.lib.minestom.player.event;
 
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.entity.ItemEntity;
 import net.minestom.server.event.player.PlayerBlockBreakEvent;
+import net.minestom.server.item.ItemStack;
 import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.minestom.world.InstancedPosition;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.event.SPlayerBlockBreakEvent;
 import org.screamingsandals.lib.world.BlockMapper;
@@ -16,8 +20,12 @@ public class PlayerBlockBreakEventListener {
                     BlockMapper.wrapBlock(event.getBlockPosition()),
                     true) //probably shouldn't be hardcoded
             );
-
             event.setCancelled(result.isCancelled());
+            if (result.isDropItems()) {
+                final var position = result.getBlock().getLocation().as(InstancedPosition.class);
+                new ItemEntity(ItemFactory.readStack(result.getBlock().getType()).orElseThrow().as(ItemStack.class),
+                        position, position.getInstance()); //spawn the entity
+            }
         });
     }
 }

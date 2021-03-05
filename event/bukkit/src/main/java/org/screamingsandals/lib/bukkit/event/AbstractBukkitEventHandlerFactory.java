@@ -80,6 +80,12 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
         });
     }
 
+    /**
+     * Wrapping the platform event to the ScreamingLib event
+     * @param event event to wrap
+     * @param priority priority
+     * @return wrapped event or null (if null, nothing happens)
+     */
     protected abstract SE wrapEvent(T event, EventPriority priority);
 
     /**
