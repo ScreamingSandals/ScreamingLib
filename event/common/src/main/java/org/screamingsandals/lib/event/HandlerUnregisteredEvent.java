@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * This event is called when any {@link EventHandler} is unregistered.
- *
- * This event is asynchronous!
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
