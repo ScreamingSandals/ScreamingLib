@@ -330,5 +330,15 @@ public class BukkitPlayerMapper extends PlayerMapper {
         new PlayerRightClickedEntityListener(plugin);
         new PlayerClickedBlockListener(plugin);
         new PlayerSignChangeEventListener(plugin);
+        new PlayerDeathEventListener(plugin);
+        new PlayerRespawnEventListener(plugin);
+        new PlayerCommandPreprocessEventListener(plugin);
+        new PlayerInventoryClickEventListener(plugin);
+        new PlayerFoodLevelChangeListener(plugin);
+        new PlayerCraftItemEventListener(plugin);
+        new PlayerDamageEventListener(plugin);
+        new PlayerDamageByEntityListener(plugin);
+        new PlayerProjectileLaunchEventListener(plugin);
+        new PlayerDropItemEventListener(plugin);
     }
 }
