@@ -2,7 +2,9 @@ package org.screamingsandals.lib.event;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.screamingsandals.lib.utils.ClickType;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Abstract event class, every event should extend this
@@ -24,12 +26,13 @@ public abstract class AbstractEvent {
         DEFAULT,
         ALLOW;
 
+        public static List<Result> VALUES = Arrays.asList(values());
+
         public static Result convert(String result) {
-            try {
-                return Result.valueOf(result.toUpperCase());
-            } catch (IllegalArgumentException ex) {
-                return Result.ALLOW;
-            }
+            return VALUES.stream()
+                    .filter(next -> result.equalsIgnoreCase(next.name()))
+                    .findFirst()
+                    .orElse(Result.ALLOW);
         }
     }
 }

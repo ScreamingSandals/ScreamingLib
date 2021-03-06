@@ -2,9 +2,11 @@ package org.screamingsandals.lib.material;
 
 import lombok.Data;
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.material.attribute.ItemAttributeHolder;
 import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.material.data.ItemData;
 import org.screamingsandals.lib.material.meta.EnchantmentHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionHolder;
@@ -36,6 +38,8 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
     private boolean unbreakable;
     @Nullable
     private PotionHolder potion;
+    @NotNull
+    private ItemData data = ItemData.EMPTY;
 
     @Deprecated
     @Nullable

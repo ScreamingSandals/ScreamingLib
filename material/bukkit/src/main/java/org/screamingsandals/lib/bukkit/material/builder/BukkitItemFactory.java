@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.Repairable;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.screamingsandals.lib.bukkit.material.BukkitMaterialMapping;
@@ -41,12 +42,15 @@ import java.util.stream.Collectors;
         BukkitAttributeMapping.class
 })
 public class BukkitItemFactory extends ItemFactory {
-    public static void init() {
-        ItemFactory.init(BukkitItemFactory::new);
+    private final Plugin plugin;
+
+    public static void init(Plugin plugin) {
+        ItemFactory.init(() -> new BukkitItemFactory(plugin));
     }
 
     @SuppressWarnings({"unchecked", "deprecation"}) //cause we can
-    public BukkitItemFactory() {
+    public BukkitItemFactory(Plugin plugin) {
+        this.plugin = plugin;
         InitUtils.doIfNot(BukkitMaterialMapping::isInitialized, BukkitMaterialMapping::init);
         InitUtils.doIfNot(BukkitEnchantmentMapping::isInitialized, BukkitEnchantmentMapping::init);
         InitUtils.doIfNot(BukkitPotionMapping::isInitialized, BukkitPotionMapping::init);
@@ -214,6 +218,10 @@ public class BukkitItemFactory extends ItemFactory {
                                             AttributeMapping.wrapItemAttribute(new BukkitItemAttribute(attribute, attributeModifier))
                                                     .ifPresent(item::addItemAttribute)
                                     );
+                        }
+
+                        if (!meta.getPersistentDataContainer().isEmpty()) {
+                            item.setData(new BukkitItemData(plugin, stack));
                         }
                     }
                     return item;

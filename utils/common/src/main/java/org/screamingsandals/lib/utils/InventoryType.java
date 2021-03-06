@@ -2,6 +2,9 @@ package org.screamingsandals.lib.utils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum InventoryType {
 
     /**
@@ -112,18 +115,19 @@ public enum InventoryType {
     /**
      * Stonecutter inventory with 1 CRAFTING slot, and 1 RESULT slot.
      */
-    STONECUTTER(2, "Stonecutter")
-    ;
+    STONECUTTER(2, "Stonecutter");
 
     private final int size;
     private final String title;
     private final boolean isCreatable;
 
-    InventoryType(int defaultSize, /*@NotNull*/ String defaultTitle) {
+    public static final List<InventoryType> VALUES = Arrays.asList(values());
+
+    InventoryType(int defaultSize, String defaultTitle) {
         this(defaultSize, defaultTitle, true);
     }
 
-    InventoryType(int defaultSize, /*@NotNull*/ String defaultTitle, boolean isCreatable) {
+    InventoryType(int defaultSize, String defaultTitle, boolean isCreatable) {
         size = defaultSize;
         title = defaultTitle;
         this.isCreatable = isCreatable;
@@ -145,6 +149,13 @@ public enum InventoryType {
      */
     public boolean isCreatable() {
         return isCreatable;
+    }
+
+    public static InventoryType convert(String input) {
+        return VALUES.stream()
+                .filter(next -> input.equalsIgnoreCase(next.name()))
+                .findFirst()
+                .orElse(InventoryType.CHEST);
     }
 
     public enum SlotType {
@@ -179,12 +190,13 @@ public enum InventoryType {
          */
         FUEL;
 
-        public static SlotType convert(String slot) {
-            try {
-                return SlotType.valueOf(slot.toUpperCase());
-            } catch (IllegalArgumentException ex) {
-                return SlotType.RESULT;
-            }
+        public static final List<SlotType> VALUES = Arrays.asList(values());
+
+        public static SlotType convert(String input) {
+            return VALUES.stream()
+                    .filter(next -> input.equalsIgnoreCase(next.name()))
+                    .findFirst()
+                    .orElse(SlotType.RESULT);
         }
     }
 }
