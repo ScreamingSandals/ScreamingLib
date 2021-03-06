@@ -1,14 +1,14 @@
 package org.screamingsandals.lib.material.data;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 class EmptyItemData implements ItemData {
-    private final static List<String> EMPTY = List.of();
+    private final static Set<String> EMPTY = Set.of();
 
     @Override
-    public List<String> getKeys() {
+    public Set<String> getKeys() {
         return EMPTY;
     }
 

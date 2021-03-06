@@ -2,14 +2,14 @@ package org.screamingsandals.lib.material.data;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public interface ItemData {
     ItemData EMPTY = new EmptyItemData();
 
-    List<String> getKeys();
+    Set<String> getKeys();
 
     <T> void set(String key, T data, Class<T> tClass);
 

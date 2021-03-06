@@ -13,6 +13,7 @@ import org.screamingsandals.lib.utils.GsonUtils;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -32,12 +33,12 @@ public class BukkitItemData implements ItemData {
     }
 
     @Override
-    public List<String> getKeys() {
+    public Set<String> getKeys() {
         final var container = item.getItemMeta().getPersistentDataContainer();
         return container.getKeys()
                 .stream()
                 .map(NamespacedKey::getKey)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Override

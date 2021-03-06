@@ -168,6 +168,7 @@ public class MinestomItemFactory extends ItemFactory {
                             .map(Optional::get)
                             .forEach(item::addItemAttribute);
 
+                    item.setData(new MinestomItemData(stack));
                     return item;
 
                 })

@@ -219,10 +219,7 @@ public class BukkitItemFactory extends ItemFactory {
                                                     .ifPresent(item::addItemAttribute)
                                     );
                         }
-
-                        if (!meta.getPersistentDataContainer().isEmpty()) {
-                            item.setData(new BukkitItemData(plugin, stack));
-                        }
+                        item.setData(new BukkitItemData(plugin, stack));
                     }
                     return item;
                 })
