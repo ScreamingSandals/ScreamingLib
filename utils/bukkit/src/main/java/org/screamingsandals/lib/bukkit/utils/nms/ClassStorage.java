@@ -5,12 +5,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.utils.math.Vector3Df;
-import org.screamingsandals.lib.utils.reflect.ClassMethod;
-import org.screamingsandals.lib.utils.reflect.InstanceMethod;
+import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class ClassStorage {
@@ -81,194 +80,50 @@ public class ClassStorage {
 	}
 	
 	public static Class<?> safeGetClass(String... clazz) {
-		for (String claz : clazz) {
-			try {
-				return Class.forName(claz
-					// CRAFTBUKKIT/SPIGOT/PAPER
-					.replace("{obc}", "org.bukkit.craftbukkit." + NMS_VERSION)
-					.replace("{nms}", "net.minecraft.server." + NMS_VERSION)
-					// CAULDRON BASED
-					.replace("{f:ent}", "net.minecraft.entity")
-					.replace("{f:goal}", "net.minecraft.entity.ai.goal")
-					.replace("{f:nbt}", "net.minecraft.nbt")
-					.replace("{f:net}", "net.minecraft.network")
-					.replace("{f:nms}", "net.minecraft.server")
-					.replace("{f:util}", "net.minecraft.util")
-					.replace("{f:world}", "net.minecraft.world")
-				);
-			} catch (ClassNotFoundException t) {
-			}
-		}
-		return null;
-	}
-	
-	public static ClassMethod getMethod(String className, String names, Class<?>... params) {
-		return getMethod(safeGetClass(className), names.split(","), params); 
-	}
-	
-	public static ClassMethod getMethod(Class<?> clazz, String names, Class<?>... params) {
-		return getMethod(clazz, names.split(","), params); 
-	}
-	
-	public static ClassMethod getMethod(String className, String[] names, Class<?>... params) {
-		return getMethod(safeGetClass(className), names, params); 
-	}
-	
-	public static ClassMethod getMethod(Class<?> clazz, String[] names, Class<?>... params) {
-		for (String name : names) {
-			try {
-				Method method = clazz.getMethod(name.trim(), params);
-				return new ClassMethod(method);
-			} catch (Throwable t) {
-				Class<?> claz2 = clazz;
-				do {
-					try {
-						Method method = claz2.getDeclaredMethod(name.trim(), params);
-						method.setAccessible(true);
-						return new ClassMethod(method);
-					} catch (Throwable t2) {
-						t.printStackTrace();
-					}
-				} while ((claz2 = claz2.getSuperclass()) != null && claz2 != Object.class);
-			}
-		}
-		return new ClassMethod(null);
-	}
-	public static InstanceMethod getMethod(Object instance, String names, Class<?>...params) {
-		ClassMethod method = getMethod(instance.getClass(), names.split(","), params);
-		return new InstanceMethod(instance, method.getMethod());
-	}
-	
-	public static InstanceMethod getMethod(Object instance, String[] names, Class<?>...params) {
-		ClassMethod method = getMethod(instance.getClass(), names, params);
-		return new InstanceMethod(instance, method.getMethod());
-	}
-	
-	public static Object getField(Object instance, String names) {
-		return getField(instance.getClass(), names.split(","), instance);
-	}
-	
-	public static Object getField(Object instance, String[] names) {
-		return getField(instance.getClass(), names, instance);
-	}
-	
-	public static Object getField(Class<?> clazz, String names) {
-		return getField(clazz, names.split(","), null);
-	}
-	
-	public static Object getField(Class<?> clazz, String[] names) {
-		return getField(clazz, names, null);
-	}
-
-	public static Object getField(Class<?> clazz, String names, Object instance) {
-		return getField(clazz, names.split(","), instance);
-	}
-	
-	public static Object getField(Class<?> clazz, String[] names, Object instance) {
-		for (String name : names) {
-			try {
-				Field field = clazz.getField(name.trim());
-				Object result = field.get(instance);
-				return result;
-			} catch (Throwable t) {
-				Class<?> claz2 = clazz;
-				do {
-					try {
-						Field field = claz2.getDeclaredField(name.trim());
-						field.setAccessible(true);
-						Object result = field.get(instance);
-						return result;
-					} catch (Throwable t2) {
-					}
-				} while ((claz2 = claz2.getSuperclass()) != null && claz2 != Object.class);
-			}
-		}
-		return null;
-	}
-	
-	public static Object setField(Object instance, String names, Object set) {
-		return setField(instance.getClass(), names.split(","), instance, set);
-	}
-	
-	public static Object setField(Object instance, String[] names, Object set) {
-		return setField(instance.getClass(), names, instance, set);
-	}
-	
-	public static Object setField(Class<?> clazz, String names, Object set) {
-		return setField(clazz, names.split(","), null, set);
-	}
-	
-	public static Object setField(Class<?> clazz, String[] names, Object set) {
-		return setField(clazz, names, null, set);
-	}
-
-	public static Object setField(Class<?> clazz, String names, Object instance, Object set) {
-		return setField(clazz, names.split(","), instance, set);
-	}
-	
-	public static Object setField(Class<?> clazz, String[] names, Object instance, Object set) {
-		for (String name : names) {
-			try {
-				Field field = clazz.getField(name.trim());
-				field.set(instance, set);
-				return field.get(instance);
-			} catch (Throwable t) {
-				Class<?> clazz2 = clazz;
-				do {
-					try {
-						Field field = clazz2.getDeclaredField(name.trim());
-						field.setAccessible(true);
-						field.set(instance, set);
-						return field.get(instance);
-					} catch (Throwable ignored) {
-					}
-				} while ((clazz2 = clazz2.getSuperclass()) != null && clazz2 != Object.class);
-			}
-		}
-		return null;
+		return Reflect.getClassSafe(
+				Map.of(
+						"{obc}", "org.bukkit.craftbukkit." + NMS_VERSION,
+						"{nms}", "net.minecraft.server." + NMS_VERSION,
+						"{f:ent}", "net.minecraft.entity",
+						"{f:goal}", "net.minecraft.entity.ai.goal",
+						"{f:nbt}", "net.minecraft.nbt",
+						"{f:net}", "net.minecraft.network",
+						"{f:nms}", "net.minecraft.server",
+						"{f:util}", "net.minecraft.util",
+						"{f:world}", "net.minecraft.world"
+				),
+				clazz
+		);
 	}
 	
 	public static Object getHandle(Object obj) {
-		return getMethod(obj, "getHandle").invoke();
+		return Reflect.getMethod(obj, "getHandle").invoke();
 	}
 	
 	public static Object getPlayerConnection(Player player) {
-		Object handler = getMethod(player, "getHandle").invoke();
-		if (handler != null) {
-			return getField(handler, "playerConnection,field_71135_a");
-		}
-		return null;
+		return Reflect
+				.getMethod(player, "getHandle")
+				.invokeResulted()
+				.getField("playerConnection,field_71135_a");
 	}
 	
 	public static boolean sendPacket(Player player, Object packet) {
-		if (!NMS.Packet.isInstance(packet)) {
-			return false;
-		}
-		Object connection = getPlayerConnection(player);
+		return sendPackets(player, List.of(packet));
+	}
+
+	public static boolean sendPackets(Player player, List<Object> packets) {
+		var connection = getPlayerConnection(player);
 		if (connection != null) {
-			getMethod(connection, "sendPacket,func_147359_a", NMS.Packet).invoke(packet);
+			packets.forEach(packet -> {
+				if (!NMS.Packet.isInstance(packet)) {
+					return;
+				}
+
+				Reflect.getMethod(connection, "sendPacket,func_147359_a", NMS.Packet).invoke(packet);
+			});
 			return true;
 		}
 		return false;
-	}
-
-	public static Object findEnumConstant(Class<?> enumClass, String constantNames) {
-		return findEnumConstant(enumClass, constantNames.split(","));
-	}
-	
-	public static Object findEnumConstant(Class<?> enumClass, String[] constantNames) {
-		Object[] enums = enumClass.getEnumConstants();
-		if (enums != null) {
-			for (Object enumeration : enums) {
-				Object name = getMethod(enumeration, "name").invoke();
-				for (String constant : constantNames) {
-					if (constant.equals(name)) {
-						return enumeration;
-					}
-				}
-			}
-		}
-		return null;
 	}
 
 	public static Object getMethodProfiler(World world) {
@@ -276,16 +131,16 @@ public class ClassStorage {
 	}
 
 	public static Object getMethodProfiler(Object handler) {
-		Object methodProfiler = getMethod(handler, "getMethodProfiler,func_217381_Z").invoke();
+		Object methodProfiler = Reflect.getMethod(handler, "getMethodProfiler,func_217381_Z").invoke();
 		if (methodProfiler == null) {
-			methodProfiler = getField(handler, "methodProfiler,field_72984_F");
+			methodProfiler = Reflect.getField(handler, "methodProfiler,field_72984_F");
 		}
 		return methodProfiler;
 	}
 	
 	public static Object obtainNewPathfinderSelector(Object handler) {
 		try {
-			Object world = getMethod(handler, "getWorld,func_130014_f_").invoke();
+			Object world = Reflect.getMethod(handler, "getWorld,func_130014_f_").invoke();
 			try {
 				// 1.16
 				return NMS.PathfinderGoalSelector.getConstructor(Supplier.class).newInstance((Supplier<?>) () -> getMethodProfiler(world));
@@ -301,7 +156,7 @@ public class ClassStorage {
 
 	public static Object getVectorToNMS(Vector3Df vector3f) {
 		try {
-			return NMS.Vector3f.getConstructor(float.class, float.class, float.class).newInstance(vector3f.getX(), vector3f.getY(), vector3f.getZ());
+			return Reflect.constructor(NMS.Vector3f, float.class, float.class, float.class).construct(vector3f.getX(), vector3f.getY(), vector3f.getZ());
 		} catch (Throwable t) {
 			t.printStackTrace();
 			return null;
@@ -310,11 +165,12 @@ public class ClassStorage {
 
 	public static Vector3Df getVectorFromNMS(Object vector3f) {
 		Preconditions.checkNotNull(vector3f, "Vector is null!");
+		var invoker = new InvocationResult(vector3f);
 		try {
 			return new Vector3Df(
-					(float) Reflect.fastInvoke(vector3f, "getX"),
-					(float) Reflect.fastInvoke(vector3f, "getY"),
-					(float) Reflect.fastInvoke(vector3f, "getZ")
+					(float) invoker.fastInvoke("getX"),
+					(float) invoker.fastInvoke("getY"),
+					(float) invoker.fastInvoke("getZ")
 			);
 		} catch (Throwable t) {
 			t.printStackTrace();

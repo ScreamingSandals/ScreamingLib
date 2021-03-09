@@ -200,6 +200,31 @@ public class Reflect {
         return method.invokeInstance(instance);
     }
 
+    public static InvocationResult fastInvokeResulted(Object instance, String names) {
+        return fastInvokeResulted(instance, names.split(","));
+    }
+
+    public static InvocationResult fastInvokeResulted(Object instance, String[] names) {
+        return fastInvokeResulted(instance.getClass(), names, instance);
+    }
+
+    public static InvocationResult fastInvokeResulted(Class<?> className, String names) {
+        return fastInvokeResulted(className, names.split(","));
+    }
+
+    public static InvocationResult fastInvokeResulted(Class<?> className, String[] names) {
+        return fastInvokeResulted(className, names, null);
+    }
+
+    public static InvocationResult fastInvokeResulted(Class<?> className, String names, Object instance) {
+        return fastInvokeResulted(className, names.split(","), instance);
+    }
+
+    public static InvocationResult fastInvokeResulted(Class<?> className, String[] names, Object instance) {
+        ClassMethod method = getMethod(className, names);
+        return method.invokeInstanceResulted(instance);
+    }
+
     public static List<Class<?>> retrieveClasses(Object instance) {
         if (Proxy.isProxyClass(instance.getClass())) {
             return Arrays.asList(instance.getClass().getInterfaces());
@@ -242,5 +267,34 @@ public class Reflect {
 
     public static boolean hasMethod(Class<?> type, String methodNames, Class<?>... arguments) {
         return getMethod(type, methodNames, arguments).getMethod() != null;
+    }
+
+    public static Constructor constructor(String className, Class<?>... arguments) {
+        return constructor(getClassSafe(className), arguments);
+    }
+
+    public static Constructor constructor(Class<?> type, Class<?>... arguments) {
+        try {
+            return new Constructor(type.getConstructor(arguments));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Constructor(null);
+    }
+
+    public static Object construct(String className) {
+        return construct(getClassSafe(className));
+    }
+
+    public static Object construct(Class<?> type) {
+        return constructor(type).construct();
+    }
+
+    public static InvocationResult constructResulted(String className) {
+        return constructResulted(getClassSafe(className));
+    }
+
+    public static InvocationResult constructResulted(Class<?> type) {
+        return constructor(type).constructResulted();
     }
 }

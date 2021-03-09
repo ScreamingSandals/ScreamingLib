@@ -18,6 +18,10 @@ public class BasicWrapper<O> implements Wrapper {
         return new BasicWrapper<>(wrappedObject);
     }
 
+    public Object raw() {
+        return wrappedObject;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public <T> T as(Class<T> type) {

@@ -4,6 +4,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import org.bukkit.entity.Player;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import static org.screamingsandals.lib.bukkit.utils.nms.ClassStorage.*;
 
@@ -53,8 +54,8 @@ public abstract class PacketInboundListener{
 	
 	private Channel getChannel(Player player) {
 		try {
-			final var manager = getField(getPlayerConnection(player), "networkManager,field_147371_a");
-			return (Channel) getField(manager, "channel,field_150746_k,k,m");
+			final var manager = Reflect.getField(getPlayerConnection(player), "networkManager,field_147371_a");
+			return (Channel) Reflect.getField(manager, "channel,field_150746_k,k,m");
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

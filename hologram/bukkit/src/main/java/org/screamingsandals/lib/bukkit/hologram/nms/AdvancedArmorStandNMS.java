@@ -8,6 +8,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.ArmorStandNMS;
 import org.screamingsandals.lib.utils.math.Vector3Df;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 @Slf4j
 public class AdvancedArmorStandNMS extends ArmorStandNMS {
@@ -26,14 +27,14 @@ public class AdvancedArmorStandNMS extends ArmorStandNMS {
 
     public void setRotation(Vector3Df vector3Df) {
         Preconditions.checkNotNull(vector3Df, "Vector is null!");
-        ClassStorage.getMethod(ClassStorage.NMS.EntityArmorStand, "setHeadPose", ClassStorage.NMS.Vector3f).invokeInstance(handler, ClassStorage.getVectorToNMS(vector3Df));
+        Reflect.getMethod(ClassStorage.NMS.EntityArmorStand, "setHeadPose", ClassStorage.NMS.Vector3f).invokeInstance(handler, ClassStorage.getVectorToNMS(vector3Df));
     }
 
     public Vector3Df getRotation() {
-        return ClassStorage.getVectorFromNMS(ClassStorage.getField(handler, "headPose"));
+        return ClassStorage.getVectorFromNMS(Reflect.getField(handler, "headPose"));
     }
 
     public Object getHeadSlot() {
-        return ClassStorage.getMethod(ClassStorage.NMS.CraftEquipmentSlot, "getNMS", EquipmentSlot.class).invokeStatic(EquipmentSlot.HEAD);
+        return Reflect.getMethod(ClassStorage.NMS.CraftEquipmentSlot, "getNMS", EquipmentSlot.class).invokeStatic(EquipmentSlot.HEAD);
     }
 }
