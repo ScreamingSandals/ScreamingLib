@@ -31,7 +31,7 @@ public class BukkitHologram extends AbstractHologram {
     private TaskerTask rotationTask;
     private Location cachedLocation;
 
-    public BukkitHologram(UUID uuid, LocationHolder location, boolean touchable) {
+    BukkitHologram(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
         this.cachedLocation = location.as(Location.class);
     }

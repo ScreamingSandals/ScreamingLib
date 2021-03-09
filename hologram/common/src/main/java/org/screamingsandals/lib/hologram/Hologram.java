@@ -23,6 +23,26 @@ public interface Hologram {
     float DEFAULT_ROTATION_INCREMENT = 10f;
 
     /**
+     * Creates new hologram.
+     *
+     * @param location location where to create the hologram
+     * @return created hologram
+     */
+    static Hologram of(LocationHolder location) {
+        return HologramManager.hologram(location);
+    }
+
+    /**
+     * Creates new touchable hologram.
+     *
+     * @param location location where to create the hologram
+     * @return created hologram
+     */
+    static Hologram touchableOf(LocationHolder location) {
+        return HologramManager.hologram(location, true);
+    }
+
+    /**
      * @return UUID of this Hologram
      */
     UUID getUuid();
@@ -233,6 +253,7 @@ public interface Hologram {
 
     /**
      * Stands for how much should this hologram rotate per one cycle
+     *
      * @param toIncrement
      * @return
      */

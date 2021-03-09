@@ -15,15 +15,16 @@ public abstract class HologramManager {
     private static HologramManager manager;
     protected final Map<UUID, Hologram> activeHolograms = new HashMap<>();
 
-    public HologramManager(Controllable controllable) {
-        controllable.disable(this::destroy);
-    }
-
+    @Deprecated //INTERNAL USE ONLY!
     public static void init(Supplier<HologramManager> supplier) {
         if (manager != null) {
             throw new UnsupportedOperationException("HologramManager is already initialized");
         }
         manager = supplier.get();
+    }
+
+    protected HologramManager(Controllable controllable) {
+        controllable.disable(this::destroy);
     }
 
     public static Map<UUID, Hologram> getActiveHolograms() {
@@ -60,11 +61,14 @@ public abstract class HologramManager {
         }
 
         manager.activeHolograms.remove(hologram.getUuid());
-        hologram.destroy();
     }
 
     public static Hologram hologram(LocationHolder holder) {
         return hologram(UUID.randomUUID(), holder, false);
+    }
+
+    public static Hologram hologram(LocationHolder holder, boolean touchable) {
+        return hologram(UUID.randomUUID(), holder, touchable);
     }
 
     public static Hologram hologram(UUID uuid, LocationHolder holder) {
@@ -84,9 +88,9 @@ public abstract class HologramManager {
     protected abstract Hologram hologram0(UUID uuid, LocationHolder holder, boolean touchable);
 
     protected void destroy() {
-        getActiveHolograms().values()
-                .forEach(holo -> holo.hide().destroy());
-        activeHolograms.clear();
+        Map.copyOf(getActiveHolograms())
+                .values()
+                .forEach(Hologram::destroy);
+        manager.activeHolograms.clear();
     }
-
 }

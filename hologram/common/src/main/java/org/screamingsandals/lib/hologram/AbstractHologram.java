@@ -149,6 +149,9 @@ public abstract class AbstractHologram implements Hologram {
     public void destroy() {
         data = null;
         viewers.clear();
+        hide();
+
+        HologramManager.removeHologram(this);
     }
 
     @Override
