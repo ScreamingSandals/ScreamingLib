@@ -24,6 +24,7 @@ public abstract class AbstractHologram implements Hologram {
     protected boolean visible;
     protected boolean ready = false;
     protected Data data;
+    protected float rotationIncrement;
     protected Pair<Integer, TaskerTime> rotationTime;
     protected RotationMode rotationMode = RotationMode.NONE;
     protected Item item;
@@ -35,6 +36,7 @@ public abstract class AbstractHologram implements Hologram {
 
         //default values
         this.viewDistance = DEFAULT_VIEW_DISTANCE;
+        this.rotationIncrement = DEFAULT_ROTATION_INCREMENT;
         this.visible = false;
         this.data = new SimpleData();
     }
@@ -213,6 +215,15 @@ public abstract class AbstractHologram implements Hologram {
     }
 
     @Override
+    public Hologram replaceLines(List<Component> lines) {
+        final var toSet = new TreeMap<Integer, Component>();
+        for (int i = 0; i < lines.size(); i++) {
+            toSet.put(i, lines.get(i));
+        }
+        return replaceLines(toSet);
+    }
+
+    @Override
     public Pair<Integer, TaskerTime> getRotationTime() {
         return rotationTime;
     }
@@ -240,6 +251,12 @@ public abstract class AbstractHologram implements Hologram {
     public Hologram item(Item item) {
         this.item = item;
         update();
+        return this;
+    }
+
+    @Override
+    public Hologram rotationIncrement(float toIncrement) {
+        this.rotationIncrement = toIncrement;
         return this;
     }
 

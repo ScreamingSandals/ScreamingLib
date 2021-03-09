@@ -4,7 +4,10 @@ import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.LocationHolder;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 @AbstractService
@@ -81,7 +84,8 @@ public abstract class HologramManager {
     protected abstract Hologram hologram0(UUID uuid, LocationHolder holder, boolean touchable);
 
     protected void destroy() {
-        getActiveHolograms().values().forEach(Hologram::destroy);
+        getActiveHolograms().values()
+                .forEach(holo -> holo.hide().destroy());
         activeHolograms.clear();
     }
 

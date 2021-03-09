@@ -20,6 +20,8 @@ public interface Hologram {
      */
     int DEFAULT_VIEW_DISTANCE = 4096;
 
+    float DEFAULT_ROTATION_INCREMENT = 10f;
+
     /**
      * @return UUID of this Hologram
      */
@@ -41,7 +43,7 @@ public interface Hologram {
     /**
      * Removes given viewer from this Hologram
      *
-     * @param player viewer to remove
+     * @param player      viewer to remove
      * @param sendPackets if we should send destroy packets
      * @return this hologram
      */
@@ -212,6 +214,15 @@ public interface Hologram {
      */
     Hologram replaceLines(TreeMap<Integer, Component> lines);
 
+    /**
+     * Replaces lines with given collection.
+     * The list is converted to TreeMap by it's given order
+     *
+     * @param lines new lines
+     * @return this hologram
+     */
+    Hologram replaceLines(List<Component> lines);
+
     Pair<Integer, TaskerTime> getRotationTime();
 
     Hologram rotationTime(Pair<Integer, TaskerTime> rotatingTime);
@@ -219,6 +230,13 @@ public interface Hologram {
     RotationMode getRotationMode();
 
     Hologram rotationMode(RotationMode mode);
+
+    /**
+     * Stands for how much should this hologram rotate per one cycle
+     * @param toIncrement
+     * @return
+     */
+    Hologram rotationIncrement(float toIncrement);
 
     Hologram item(Item item);
 
@@ -237,6 +255,7 @@ public interface Hologram {
     interface Data {
         /**
          * Immutable copy of the data in this hologram.
+         *
          * @return copy of data that this hologram has.
          */
         Map<String, Object> getAll();

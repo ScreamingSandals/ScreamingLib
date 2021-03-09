@@ -14,7 +14,6 @@ import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
 import org.screamingsandals.lib.hologram.AbstractHologram;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
@@ -62,7 +61,7 @@ public class BukkitHologram extends AbstractHologram {
     @Override
     public void onViewerRemoved(PlayerWrapper player, boolean shouldCheckDistance) {
         try {
-            removeForPlayer(player, false);
+            removeForPlayer(player);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -103,7 +102,7 @@ public class BukkitHologram extends AbstractHologram {
     public Hologram hide() {
         viewers.forEach(viewer -> {
             try {
-                removeForPlayer(viewer, false);
+                removeForPlayer(viewer);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -111,6 +110,7 @@ public class BukkitHologram extends AbstractHologram {
 
         if (rotationTask != null) {
             rotationTask.cancel();
+            rotationTask = null;
         }
         return this;
     }
@@ -361,7 +361,7 @@ public class BukkitHologram extends AbstractHologram {
         if (in >= 370) {
             return 0f;
         } else {
-            return in + 10f; //TODO: fixme
+            return in + rotationIncrement;
         }
     }
 
@@ -370,7 +370,7 @@ public class BukkitHologram extends AbstractHologram {
         return ClassStorage.getMethod(ClassStorage.NMS.CraftItemStack, "asNMSCopy", ItemStack.class).invokeStatic(item.as(ItemStack.class));
     }
 
-    private void removeForPlayer(PlayerWrapper player, boolean shouldCheckDistance)
+    private void removeForPlayer(PlayerWrapper player)
             throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if (!player.isOnline()) {
             return;
@@ -379,10 +379,9 @@ public class BukkitHologram extends AbstractHologram {
         final var toSend = new LinkedList<>();
         if (itemEntity != null) {
             rotationTask.cancel();
-            toSend.add(getEquipmentPacket(itemEntity, ItemFactory.getAir()));
         }
 
         toSend.add(getFullDestroyPacket());
-        update(player.as(Player.class), toSend, shouldCheckDistance);
+        update(player.as(Player.class), toSend, false);
     }
 }
