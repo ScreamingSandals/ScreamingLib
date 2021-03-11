@@ -276,9 +276,7 @@ public class Reflect {
     public static Constructor constructor(Class<?> type, Class<?>... arguments) {
         try {
             return new Constructor(type.getConstructor(arguments));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ignored) { }
         return new Constructor(null);
     }
 
