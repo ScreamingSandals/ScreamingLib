@@ -40,7 +40,7 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
             final var priority = handlerRegisteredEvent.getHandler().getEventPriority();
             if (!eventMap.containsKey(priority)) {
                 final EventExecutor handler = (listener, event) -> {
-                    if (!event.getClass().equals(platformEventClass)) {
+                    if (!platformEventClass.isInstance(event)) {
                         return;
                     }
 
