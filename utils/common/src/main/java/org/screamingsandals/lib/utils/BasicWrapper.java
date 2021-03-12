@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class BasicWrapper<O> implements Wrapper {
-    protected final O wrappedObject;
+    protected transient final O wrappedObject;
 
     public static <O> BasicWrapper<O> wrap(O wrappedObject) {
         return new BasicWrapper<>(wrappedObject);

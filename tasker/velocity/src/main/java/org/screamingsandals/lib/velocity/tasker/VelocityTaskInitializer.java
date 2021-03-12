@@ -28,19 +28,10 @@ public class VelocityTaskInitializer extends AbstractTaskInitializer {
         final var runnable = builder.getRunnable();
         ScheduledTask task = null;
 
-        if (builder.isAfterOneTick() && builder.isAsync()) {
-            throw new UnsupportedOperationException("Todo");
-        }
-
-        if (builder.isAfterOneTick()) {
+        if (builder.isAfterOneTick() || builder.isAsync()) {
             final var taskBuilder = scheduler.buildTask(owner, runnable);
             taskBuilder.delay(TaskerTime.TICKS.getTime(1), TaskerTime.TICKS.getTimeUnit());
 
-            task = taskBuilder.schedule();
-        }
-
-        if (builder.isAsync()) {
-            final var taskBuilder = scheduler.buildTask(owner, runnable);
             task = taskBuilder.schedule();
         }
 
