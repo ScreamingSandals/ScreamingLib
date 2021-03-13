@@ -26,7 +26,14 @@ public interface WorldHolder extends Wrapper, Serializable {
 
         @Override
         public WorldHolder read(JsonReader in) throws IOException {
-            return LocationMapper.getWorld(UUID.fromString(in.nextString())).orElseThrow();
+            in.beginObject();
+            final var name = in.nextName();
+            if (name.equals("uuid")) {
+                final var toReturn = LocationMapper.getWorld(UUID.fromString(in.nextString())).orElseThrow();
+                in.endObject();
+                return toReturn;
+            }
+            throw new IOException("Name is not 'uuid'");
         }
     }
 

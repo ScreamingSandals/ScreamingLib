@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.tasker;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -28,53 +29,40 @@ public class BukkitTaskInitializer extends AbstractTaskInitializer {
     @Override
     public TaskerTask start(TaskBuilderImpl builder) {
         final var runnable = builder.getRunnable();
-        BukkitTask task = null;
-
-        if (builder.isAfterOneTick() && builder.isAsync()) {
-            throw new UnsupportedOperationException("This is not supported sadly.");
-        }
-
         if (builder.isAfterOneTick()) {
-            task = scheduler.runTask(plugin, runnable);
+            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runTask(plugin, runnable));
         }
 
         if (builder.isAsync()
                 && builder.getRepeat() == 0
                 && builder.getDelay() == 0) {
-            task = scheduler.runTaskAsynchronously(plugin, runnable);
+            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runTaskAsynchronously(plugin, runnable));
         }
 
-        if (builder.getDelay() > 0) {
+        final var timeUnit = Preconditions.checkNotNull(builder.getTimeUnit(), "TimeUnit cannot be null!");
+        if (builder.getDelay() > 0 && builder.getRepeat() <= 0) {
             if (builder.isAsync()) {
-                task = scheduler.runTaskLaterAsynchronously(plugin, runnable,
-                        builder.getTimeUnit().getBukkitTime(builder.getDelay()));
+                return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runTaskLaterAsynchronously(plugin, runnable,
+                        timeUnit.getBukkitTime(builder.getDelay())));
             } else {
-                task = scheduler.runTaskLater(plugin, runnable,
-                        builder.getTimeUnit().getBukkitTime(builder.getDelay()));
+                return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runTaskLater(plugin, runnable,
+                        timeUnit.getBukkitTime(builder.getDelay())));
             }
         }
 
         if (builder.getRepeat() > 0) {
             if (builder.isAsync()) {
-                task = scheduler.runTaskTimerAsynchronously(plugin, runnable,
-                        builder.getTimeUnit().getBukkitTime(builder.getDelay()),
-                        builder.getTimeUnit().getBukkitTime(builder.getRepeat()));
+                return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runTaskTimerAsynchronously(plugin, runnable,
+                        timeUnit.getBukkitTime(builder.getDelay()),
+                        timeUnit.getBukkitTime(builder.getRepeat())));
             } else {
-                task = scheduler.runTaskTimer(plugin, runnable,
-                        builder.getTimeUnit().getBukkitTime(builder.getDelay()),
-                        builder.getTimeUnit().getBukkitTime(builder.getRepeat()));
+                return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runTaskTimer(plugin, runnable,
+                        timeUnit.getBukkitTime(builder.getDelay()),
+                        timeUnit.getBukkitTime(builder.getRepeat())));
             }
         }
 
-        if (task == null) {
-            throw new UnsupportedOperationException("Cannot start task " + builder.getTaskId() + "!");
-        }
-
-        final var toReturn = new AbstractTaskerTask(builder.getTaskId(), task) {
-        };
-
-        Tasker.register(toReturn);
-        return toReturn;
+        throw new UnsupportedOperationException("Unsupported Tasker state!");
     }
 
     @Override
