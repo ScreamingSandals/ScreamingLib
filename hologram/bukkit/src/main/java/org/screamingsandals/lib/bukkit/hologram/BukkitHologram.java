@@ -53,6 +53,10 @@ public class BukkitHologram extends AbstractHologram {
     @Override
     public void onViewerAdded(PlayerWrapper player, boolean shouldCheckDistance) {
         try {
+            if (visible && entitiesOnLines.size() != lines.size()) { // fix if you show hologram and then you add viewers
+                updateEntities();
+            }
+
             update(player.as(Player.class), getAllSpawnPackets(), shouldCheckDistance);
         } catch (Exception e) {
             e.printStackTrace();
