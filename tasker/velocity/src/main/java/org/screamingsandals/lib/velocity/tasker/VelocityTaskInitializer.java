@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.velocity.tasker;
 
+import com.google.common.base.Preconditions;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.scheduler.ScheduledTask;
 import com.velocitypowered.api.scheduler.Scheduler;
@@ -26,50 +27,34 @@ public class VelocityTaskInitializer extends AbstractTaskInitializer {
     @Override
     public TaskerTask start(TaskBuilderImpl builder) {
         final var runnable = builder.getRunnable();
-        ScheduledTask task = null;
-
-        if (builder.isAfterOneTick() && builder.isAsync()) {
-            throw new UnsupportedOperationException("Todo");
-        }
 
         if (builder.isAfterOneTick()) {
             final var taskBuilder = scheduler.buildTask(owner, runnable);
             taskBuilder.delay(TaskerTime.TICKS.getTime(1), TaskerTime.TICKS.getTimeUnit());
-
-            task = taskBuilder.schedule();
+            return AbstractTaskerTask.of(builder.getTaskId(), taskBuilder.schedule());
         }
 
-        if (builder.isAsync()) {
-            final var taskBuilder = scheduler.buildTask(owner, runnable);
-            task = taskBuilder.schedule();
+        if (builder.isAsync()
+                && builder.getRepeat() == 0
+                && builder.getDelay() == 0) {
+            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(owner, runnable).schedule());
         }
 
-        if (builder.getDelay() > 0) {
-            final var taskBuilder = scheduler.buildTask(owner, runnable);
-            taskBuilder.delay(builder.getTimeUnit().getTime((int) builder.getDelay()), builder.getTimeUnit().getTimeUnit());
-
-            task = taskBuilder.schedule();
+        final var timeUnit = Preconditions.checkNotNull(builder.getTimeUnit(), "TimeUnit cannot be null!");
+        if (builder.getDelay() > 0 && builder.getRepeat() <= 0) {
+            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(owner, runnable)
+                    .delay(timeUnit.getTime((int) builder.getRepeat()), timeUnit.getTimeUnit())
+                    .schedule());
         }
 
         if (builder.getRepeat() > 0) {
-            final var taskBuilder = scheduler.buildTask(owner, runnable);
-            taskBuilder.delay(builder.getTimeUnit().getTime((int) builder.getDelay()),
-                    builder.getTimeUnit().getTimeUnit());
-            taskBuilder.repeat(builder.getTimeUnit().getTime((int) builder.getRepeat()),
-                    builder.getTimeUnit().getTimeUnit());
-
-            task = taskBuilder.schedule();
+            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(owner, runnable)
+                    .delay(timeUnit.getTime((int) builder.getDelay()), timeUnit.getTimeUnit())
+                    .repeat(timeUnit.getTime((int) builder.getRepeat()), timeUnit.getTimeUnit())
+                    .schedule());
         }
 
-        if (task == null) {
-            throw new UnsupportedOperationException("Cannot start task " + builder.getTaskId() + "!");
-        }
-
-        final var toReturn = new AbstractTaskerTask(builder.getTaskId(), task) {
-        };
-
-        Tasker.register(toReturn);
-        return toReturn;
+        throw new UnsupportedOperationException("Unsupported Tasker state!");
     }
 
     @Override

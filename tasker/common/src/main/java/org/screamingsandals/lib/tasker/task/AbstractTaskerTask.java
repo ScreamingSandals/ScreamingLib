@@ -18,6 +18,13 @@ public abstract class AbstractTaskerTask implements TaskerTask {
         state = TaskState.SCHEDULED;
     }
 
+    public static AbstractTaskerTask of(Integer id, Object taskObject) {
+        final var task = new AbstractTaskerTask(id, taskObject) {
+        };
+        Tasker.register(task);
+        return task;
+    }
+
     public TaskState getState() {
         if (state == TaskState.SCHEDULED) {
             return state;

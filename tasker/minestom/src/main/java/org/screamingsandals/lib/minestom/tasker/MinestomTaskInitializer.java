@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.minestom.tasker;
 
+import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.extensions.Extension;
@@ -29,34 +30,33 @@ public class MinestomTaskInitializer extends AbstractTaskInitializer {
     @Override
     public TaskerTask start(TaskBuilderImpl builder) {
         final var runnable = builder.getRunnable();
-        Task task = null;
-
-        if (builder.isAfterOneTick() || builder.isAsync()) {
-            task = scheduler.buildTask(runnable).schedule();
+        if (builder.isAfterOneTick()) {
+            final var taskBuilder = scheduler.buildTask(runnable);
+            taskBuilder.delay(TaskerTime.TICKS.getTime(1), convert(TaskerTime.TICKS));
+            return AbstractTaskerTask.of(builder.getTaskId(), taskBuilder.schedule());
         }
 
-        if (builder.getDelay() > 0) {
-            task = scheduler.buildTask(runnable)
-                    .delay(builder.getDelay(), convert(builder.getTimeUnit()))
-                    .schedule();
+        if (builder.isAsync()
+                && builder.getRepeat() == 0
+                && builder.getDelay() == 0) {
+            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(runnable).schedule());
+        }
+
+        final var timeUnit = Preconditions.checkNotNull(builder.getTimeUnit(), "TimeUnit cannot be null!");
+        if (builder.getDelay() > 0 && builder.getRepeat() <= 0) {
+            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(runnable)
+                    .delay(builder.getDelay(), convert(timeUnit))
+                    .schedule());
         }
 
         if (builder.getRepeat() > 0) {
-            task = scheduler.buildTask(runnable)
-                    .delay(builder.getDelay(), convert(builder.getTimeUnit()))
-                    .repeat(builder.getRepeat(), convert(builder.getTimeUnit()))
-                    .schedule();
+            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(runnable)
+                    .delay(builder.getDelay(), convert(timeUnit))
+                    .repeat(builder.getRepeat(), convert(timeUnit))
+                    .schedule());
         }
 
-        if (task == null) {
-            throw new UnsupportedOperationException("Cannot start task " + builder.getTaskId() + "!");
-        }
-
-        final var toReturn = new AbstractTaskerTask(builder.getTaskId(), task) {
-        };
-
-        Tasker.register(toReturn);
-        return toReturn;
+        throw new UnsupportedOperationException("Unsupported Tasker state!");
     }
 
     @Override
