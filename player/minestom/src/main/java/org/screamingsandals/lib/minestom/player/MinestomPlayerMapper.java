@@ -22,6 +22,7 @@ import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.*;
+import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
@@ -255,6 +256,16 @@ public class MinestomPlayerMapper extends PlayerMapper {
                     }
                 })
                 .orElse(Locale.US);
+    }
+
+    @Override
+    public GameMode getGameMode0(PlayerWrapper player) {
+        return GameMode.convert(player.as(Player.class).getGameMode().name());
+    }
+
+    @Override
+    public void setGameMode0(PlayerWrapper player, GameMode gameMode) {
+        player.as(Player.class).setGameMode(net.minestom.server.entity.GameMode.valueOf(gameMode.name()));
     }
 
     private void registerEvents() {

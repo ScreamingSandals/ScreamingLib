@@ -12,6 +12,7 @@ import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
@@ -256,5 +257,16 @@ public class SpongePlayerMapper extends PlayerMapper {
     @Override
     public Locale getLocale0(SenderWrapper senderWrapper) {
         return Locale.US; // TODO
+    }
+
+    @Override
+    public GameMode getGameMode0(PlayerWrapper player) {
+        //TODO
+        return null;
+    }
+
+    @Override
+    public void setGameMode0(PlayerWrapper player, GameMode gameMode) {
+        //TODO
     }
 }

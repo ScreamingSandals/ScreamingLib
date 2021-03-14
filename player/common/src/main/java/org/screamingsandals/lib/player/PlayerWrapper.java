@@ -3,8 +3,10 @@ package org.screamingsandals.lib.player;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.container.Openable;
+import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.world.LocationHolder;
 
@@ -54,6 +56,14 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
 
     public void kick(Component message) {
         PlayerMapper.kick(this, message);
+    }
+
+    public void setGameMode(@NotNull GameMode gameMode) {
+        PlayerMapper.setGameMode(this, gameMode);
+    }
+
+    public GameMode getGameMode() {
+        return PlayerMapper.getGameMode(this);
     }
 
     public <T> T as(Class<T> type) {

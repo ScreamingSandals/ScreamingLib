@@ -25,6 +25,7 @@ import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.Controllable;
+import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -310,6 +311,16 @@ public class BukkitPlayerMapper extends PlayerMapper {
                     }
                 })
                 .orElse(Locale.US);
+    }
+
+    @Override
+    public GameMode getGameMode0(PlayerWrapper player) {
+        return GameMode.convert(player.as(Player.class).getGameMode().name());
+    }
+
+    @Override
+    public void setGameMode0(PlayerWrapper player, GameMode gameMode) {
+        player.as(Player.class).setGameMode(org.bukkit.GameMode.valueOf(gameMode.name()));
     }
 
     private void registerListeners(Plugin plugin) {

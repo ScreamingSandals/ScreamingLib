@@ -9,6 +9,7 @@ import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
+import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.WorldHolder;
@@ -289,6 +290,20 @@ public abstract class PlayerMapper {
         }
         return playerMapper.getLocale0(senderWrapper);
     }
+
+    public static GameMode getGameMode(PlayerWrapper player) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getGameMode0(player);
+    }
+
+    public static void setGameMode(PlayerWrapper player, GameMode gameMode) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setGameMode0(player, gameMode);
+    }
     
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
@@ -352,4 +367,8 @@ public abstract class PlayerMapper {
     public abstract OfflinePlayerWrapper getOfflinePlayer0(UUID uuid);
 
     public abstract Locale getLocale0(SenderWrapper senderWrapper);
+
+    public abstract GameMode getGameMode0(PlayerWrapper player);
+
+    public abstract void setGameMode0(PlayerWrapper player, GameMode gameMode);
 }
