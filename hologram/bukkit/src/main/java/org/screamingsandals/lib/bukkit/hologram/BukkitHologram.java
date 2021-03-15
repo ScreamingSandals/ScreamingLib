@@ -116,6 +116,7 @@ public class BukkitHologram extends AbstractHologram {
             rotationTask.cancel();
             rotationTask = null;
         }
+        super.hide();
         return this;
     }
 
@@ -216,27 +217,31 @@ public class BukkitHologram extends AbstractHologram {
                     throwable.printStackTrace();
                 }
             });
+
+            try {
+                if (rotationMode != RotationMode.NONE) {
+                    if (itemEntity == null) {
+                        final var newLocation = cachedLocation.clone().add(0, itemLocation == ItemLocation.BELOW ?  (- lines.size() * .25 - .5) : (lines.size() * .25), 0);
+                        final var entity = new AdvancedArmorStandNMS(newLocation);
+                        entity.setInvisible(true);
+                        entity.setSmall(!touchable);
+                        entity.setArms(false);
+                        entity.setBasePlate(false);
+                        entity.setGravity(false);
+                        entity.setMarker(!touchable);
+
+                        packets.addAll(getSpawnPacket(entity));
+                        packets.add(getEquipmentPacket(entity, item));
+
+                        this.itemEntity = entity;
+                    }
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
         }
 
         try {
-            if (rotationMode != RotationMode.NONE) {
-                if (itemEntity == null) {
-                    final var newLocation = cachedLocation.clone().add(0, lines.size() * .25, 0);
-                    final var entity = new AdvancedArmorStandNMS(newLocation);
-                    entity.setInvisible(true);
-                    entity.setSmall(!touchable);
-                    entity.setArms(false);
-                    entity.setBasePlate(false);
-                    entity.setGravity(false);
-                    entity.setMarker(!touchable);
-
-                    packets.addAll(getSpawnPacket(entity));
-                    packets.add(getEquipmentPacket(entity, item));
-
-                    this.itemEntity = entity;
-                }
-            }
-
             final var toRemove = new LinkedList<Integer>();
             if (entitiesOnLines.size() > lines.size()) {
                 entitiesOnLines.forEach((key, value) -> {

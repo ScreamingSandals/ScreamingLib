@@ -28,6 +28,7 @@ public abstract class AbstractHologram implements Hologram {
     protected Pair<Integer, TaskerTime> rotationTime;
     protected RotationMode rotationMode = RotationMode.NONE;
     protected Item item;
+    protected ItemLocation itemLocation = ItemLocation.ABOVE;
 
     protected AbstractHologram(UUID uuid, LocationHolder location, boolean touchable) {
         this.uuid = uuid;
@@ -148,8 +149,8 @@ public abstract class AbstractHologram implements Hologram {
     @Override
     public void destroy() {
         data = null;
-        viewers.clear();
         hide();
+        viewers.clear();
 
         HologramManager.removeHologram(this);
     }
@@ -261,6 +262,18 @@ public abstract class AbstractHologram implements Hologram {
     public Hologram rotationIncrement(float toIncrement) {
         this.rotationIncrement = toIncrement;
         return this;
+    }
+
+    @Override
+    public Hologram itemLocation(ItemLocation itemLocation) {
+        this.itemLocation = itemLocation;
+        update();
+        return this;
+    }
+
+    @Override
+    public ItemLocation getItemLocation() {
+        return this.itemLocation;
     }
 
     public abstract void onViewerAdded(PlayerWrapper player, boolean checkDistance);

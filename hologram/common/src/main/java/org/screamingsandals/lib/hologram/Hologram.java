@@ -76,7 +76,7 @@ public interface Hologram {
      * @return this hologram
      */
     default Hologram removeViewer(PlayerWrapper player) {
-        return removeViewer(player, false);
+        return removeViewer(player, true);
     }
 
     /**
@@ -261,6 +261,10 @@ public interface Hologram {
 
     Hologram item(Item item);
 
+    Hologram itemLocation(ItemLocation itemLocation);
+
+    ItemLocation getItemLocation();
+
     enum RotationMode {
         X,
         Y,
@@ -268,6 +272,11 @@ public interface Hologram {
         ALL,
         XY,
         NONE
+    }
+
+    enum ItemLocation {
+        ABOVE,
+        BELOW
     }
 
     /**

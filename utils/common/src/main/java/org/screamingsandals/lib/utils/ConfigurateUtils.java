@@ -18,7 +18,7 @@ public class ConfigurateUtils {
     public Object raw(ConfigurationNode node) {
         if (node.isList()) {
             var list = new ArrayList<>();
-            node.childrenMap().forEach((key, configurationNode) ->
+            node.childrenList().forEach(configurationNode ->
                     list.add(raw(configurationNode))
             );
             return list;
