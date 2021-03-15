@@ -22,12 +22,13 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 @Slf4j
 public class BukkitHologram extends AbstractHologram {
-    private final Map<Integer, ArmorStandNMS> entitiesOnLines = new HashMap<>();
+    private final Map<Integer, ArmorStandNMS> entitiesOnLines = new ConcurrentHashMap<>();
     private AdvancedArmorStandNMS itemEntity;
     private TaskerTask rotationTask;
     private Location cachedLocation;

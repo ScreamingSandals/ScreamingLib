@@ -174,7 +174,7 @@ public interface Hologram {
      *
      * @return a new {@link TreeMap} with lines.
      */
-    TreeMap<Integer, Component> getLines();
+    Map<Integer, Component> getLines();
 
     /**
      * Adds new line to the hologram and moves everything else 1 line down.
@@ -232,7 +232,7 @@ public interface Hologram {
      * @param lines new lines
      * @return this hologram
      */
-    Hologram replaceLines(TreeMap<Integer, Component> lines);
+    Hologram replaceLines(Map<Integer, Component> lines);
 
     /**
      * Replaces lines with given collection.

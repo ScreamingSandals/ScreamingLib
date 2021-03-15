@@ -29,14 +29,16 @@ public class BukkitTaskInitializer extends AbstractTaskInitializer {
     @Override
     public TaskerTask start(TaskBuilderImpl builder) {
         final var runnable = builder.getRunnable();
-        if (builder.isAfterOneTick()) {
-            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runTask(plugin, runnable));
-        }
 
         if (builder.isAsync()
+                && !builder.isAfterOneTick()
                 && builder.getRepeat() == 0
                 && builder.getDelay() == 0) {
             return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runTaskAsynchronously(plugin, runnable));
+        }
+
+        if (builder.isAfterOneTick()) {
+            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runTask(plugin, runnable));
         }
 
         final var timeUnit = Preconditions.checkNotNull(builder.getTimeUnit(), "TimeUnit cannot be null!");

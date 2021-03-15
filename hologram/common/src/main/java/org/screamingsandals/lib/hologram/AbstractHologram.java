@@ -10,10 +10,12 @@ import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractHologram implements Hologram {
-    protected TreeMap<Integer, Component> lines = new TreeMap<>();
-    protected final List<PlayerWrapper> viewers = new LinkedList<>();
+    protected ConcurrentSkipListMap<Integer, Component> lines = new ConcurrentSkipListMap<>();
+    protected final List<PlayerWrapper> viewers = new CopyOnWriteArrayList<>();
     @Getter
     protected final UUID uuid;
 
@@ -40,6 +42,7 @@ public abstract class AbstractHologram implements Hologram {
         this.rotationIncrement = DEFAULT_ROTATION_INCREMENT;
         this.visible = false;
         this.data = new SimpleData();
+        this.rotationTime = Pair.of(2, TaskerTime.TICKS);
     }
 
     @Override
@@ -156,8 +159,8 @@ public abstract class AbstractHologram implements Hologram {
     }
 
     @Override
-    public TreeMap<Integer, Component> getLines() {
-        return new TreeMap<>(lines);
+    public Map<Integer, Component> getLines() {
+        return new ConcurrentSkipListMap<>(lines);
     }
 
     @Override
@@ -211,9 +214,9 @@ public abstract class AbstractHologram implements Hologram {
     }
 
     @Override
-    public Hologram replaceLines(TreeMap<Integer, Component> lines) {
+    public Hologram replaceLines(Map<Integer, Component> lines) {
         originalLinesSize = lines.size();
-        this.lines = lines;
+        this.lines = new ConcurrentSkipListMap<>(lines);
         update();
         return this;
     }

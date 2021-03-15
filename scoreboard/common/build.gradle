@@ -1,0 +1,5 @@
+dependencies {
+    api project(':player-common')
+    api project(':event-common')
+    api project(':tasker-common')
+}
