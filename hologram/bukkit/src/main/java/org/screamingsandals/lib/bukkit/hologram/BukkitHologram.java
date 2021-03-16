@@ -189,19 +189,19 @@ public class BukkitHologram extends AbstractHologram {
                             return;
                         }
 
-                        entityOnLine.setCustomName(value);
+                        entityOnLine.setCustomName(value.getText());
                         final var metadataPacket = Reflect
                                 .constructor(ClassStorage.NMS.PacketPlayOutEntityMetadata, int.class, ClassStorage.NMS.DataWatcher, boolean.class)
                                 .construct(entityOnLine.getId(), entityOnLine.getDataWatcher(), false);
                         packets.add(metadataPacket);
 
-                        entityOnLine.setCustomName(value);
+                        entityOnLine.setCustomName(value.getText());
                         entityOnLine.setLocation(cachedLocation.clone().add(0, (lines.size() - key) * .25, 0));
                         packets.add(getTeleportPacket(entityOnLine));
                     } else {
                         final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0);
                         final var entity = new ArmorStandNMS(newLocation);
-                        entity.setCustomName(value);
+                        entity.setCustomName(value.getText());
                         entity.setCustomNameVisible(true);
                         entity.setInvisible(true);
                         entity.setSmall(!touchable);
@@ -222,7 +222,9 @@ public class BukkitHologram extends AbstractHologram {
             try {
                 if (rotationMode != RotationMode.NONE) {
                     if (itemEntity == null) {
-                        final var newLocation = cachedLocation.clone().add(0, itemLocation == ItemLocation.BELOW ?  (- lines.size() * .25 - .5) : (lines.size() * .25), 0);
+                        final var newLocation = cachedLocation.clone().add(0, itemPosition == ItemPosition.BELOW
+                                ?  (- lines.size() * .25 - .5)
+                                : (lines.size() * .25), 0);
                         final var entity = new AdvancedArmorStandNMS(newLocation);
                         entity.setInvisible(true);
                         entity.setSmall(!touchable);
@@ -268,17 +270,14 @@ public class BukkitHologram extends AbstractHologram {
     }
 
     private Object getEquipmentPacket(AdvancedArmorStandNMS entity, Item item) {
-        var result = new AtomicReference<>();
-
-        Reflect
-                .constructor(ClassStorage.NMS.PacketPlayOutEntityEquipment, int.class, List.class)
+        final var result = new AtomicReference<>();
+        Reflect.constructor(ClassStorage.NMS.PacketPlayOutEntityEquipment, int.class, List.class)
                 .ifPresentOrElse(
                         constructor ->
                                 result.set(constructor.construct(entity.getId(), List.of(Pair.of(entity.getHeadSlot(), stackAsNMS(item))))),
                         () ->
                                 result.set(
-                                        Reflect
-                                                .constructor(ClassStorage.NMS.PacketPlayOutEntityEquipment, int.class, ClassStorage.NMS.EnumItemSlot, ClassStorage.NMS.ItemStack)
+                                        Reflect.constructor(ClassStorage.NMS.PacketPlayOutEntityEquipment, int.class, ClassStorage.NMS.EnumItemSlot, ClassStorage.NMS.ItemStack)
                                                 .construct(entity.getHeadSlot(), entity.getHeadSlot(), stackAsNMS(item))
                                 )
                 );
@@ -295,7 +294,6 @@ public class BukkitHologram extends AbstractHologram {
 
     private List<Object> getSpawnPacket(ArmorStandNMS entity) {
         final var toReturn = new LinkedList<>();
-
         toReturn.add(Reflect
                 .constructor(ClassStorage.NMS.PacketPlayOutSpawnEntityLiving, ClassStorage.NMS.EntityLiving)
                 .construct(entity.getHandler())

@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 public abstract class ItemFactory {
 
     private static ItemFactory factory;
+    @SuppressWarnings("deprecation")
     private static final Function<ConfigurationNode, Item> CONFIGURATE_RESOLVER = node -> {
         if (!node.isMap()) {
             return readStack(node.getString()).orElse(null);

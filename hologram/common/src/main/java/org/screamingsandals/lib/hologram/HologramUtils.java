@@ -1,14 +1,14 @@
 package org.screamingsandals.lib.hologram;
 
 import lombok.experimental.UtilityClass;
-import net.kyori.adventure.text.Component;
+import org.screamingsandals.lib.utils.visual.TextEntry;
 
 import java.util.concurrent.ConcurrentSkipListMap;
 
 @UtilityClass
 public class HologramUtils {
 
-    public ConcurrentSkipListMap<Integer, Component> addEntryAndMoveRest(ConcurrentSkipListMap<Integer, Component> input, Integer line, Component text) {
+    public ConcurrentSkipListMap<Integer, TextEntry> addEntryAndMoveRest(ConcurrentSkipListMap<Integer, TextEntry> input, Integer line, TextEntry text) {
         if (!input.containsKey(line)) {
             input.put(line, text);
             return input;
@@ -17,13 +17,13 @@ public class HologramUtils {
         final var head = input.headMap(line);
         final var tail = input.tailMap(line);
 
-        final ConcurrentSkipListMap<Integer, Component> toReturn = new ConcurrentSkipListMap<>(head);
+        final ConcurrentSkipListMap<Integer, TextEntry> toReturn = new ConcurrentSkipListMap<>(head);
         tail.forEach((key, value) -> toReturn.put(key + 1, value));
         toReturn.put(line, text);
         return toReturn;
     }
 
-    public ConcurrentSkipListMap<Integer, Component> removeEntryAndMoveRest(ConcurrentSkipListMap<Integer, Component> input, Integer line) {
+    public ConcurrentSkipListMap<Integer, TextEntry> removeEntryAndMoveRest(ConcurrentSkipListMap<Integer, TextEntry> input, Integer line) {
         if (!input.containsKey(line)) {
             return input;
         }
@@ -31,7 +31,7 @@ public class HologramUtils {
         final var head = input.headMap(line);
         final var tail = input.tailMap(line);
 
-        final ConcurrentSkipListMap<Integer, Component> toReturn = new ConcurrentSkipListMap<>(head);
+        final ConcurrentSkipListMap<Integer, TextEntry> toReturn = new ConcurrentSkipListMap<>(head);
         tail.forEach((key, value) -> toReturn.put(key - 1, value));
         return toReturn;
     }

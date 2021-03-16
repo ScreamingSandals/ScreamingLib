@@ -1,10 +1,10 @@
 package org.screamingsandals.lib.hologram;
 
-import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.Pair;
+import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.*;
@@ -20,6 +20,9 @@ public interface Hologram {
      */
     int DEFAULT_VIEW_DISTANCE = 4096;
 
+    /**
+     * Default rate that the item is rotated.
+     */
     float DEFAULT_ROTATION_INCREMENT = 10f;
 
     /**
@@ -174,7 +177,7 @@ public interface Hologram {
      *
      * @return a new {@link TreeMap} with lines.
      */
-    Map<Integer, Component> getLines();
+    Map<Integer, TextEntry> getLines();
 
     /**
      * Adds new line to the hologram and moves everything else 1 line down.
@@ -182,7 +185,7 @@ public interface Hologram {
      * @param text text to add
      * @return this hologram
      */
-    Hologram firstLine(Component text);
+    Hologram firstLine(TextEntry text);
 
     /**
      * Adds given collection of new lines  at the bottom of this hologram.
@@ -190,7 +193,7 @@ public interface Hologram {
      * @param text text to add
      * @return this hologram
      */
-    Hologram newLine(List<Component> text);
+    Hologram newLine(List<TextEntry> text);
 
     /**
      * Adds new line at the bottom of this hologram.
@@ -198,7 +201,7 @@ public interface Hologram {
      * @param text
      * @return this hologram
      */
-    Hologram newLine(Component text);
+    Hologram newLine(TextEntry text);
 
     /**
      * Sets new line. If the given line already exists, it's replaced.
@@ -207,7 +210,17 @@ public interface Hologram {
      * @param text text to add
      * @return this hologram
      */
-    Hologram setLine(int line, Component text);
+    Hologram setLine(int line, TextEntry text);
+
+    /**
+     * Tries to set the line by {@link TextEntry}.
+     * If the {@link TextEntry#getIdentifier()} is empty, creates new line.
+     * If not, it tries to replace given text to the line that has this identifier.
+     *
+     * @param entry TextEntry
+     * @return this hologram
+     */
+    Hologram setLine(TextEntry entry);
 
     /**
      * Adds new line to the position and moves everything below.
@@ -216,7 +229,7 @@ public interface Hologram {
      * @param text text to add
      * @return this hologram
      */
-    Hologram addLine(int line, Component text);
+    Hologram addLine(int line, TextEntry text);
 
     /**
      * Removes given line from the hologram.
@@ -232,7 +245,7 @@ public interface Hologram {
      * @param lines new lines
      * @return this hologram
      */
-    Hologram replaceLines(Map<Integer, Component> lines);
+    Hologram replaceLines(Map<Integer, TextEntry> lines);
 
     /**
      * Replaces lines with given collection.
@@ -241,14 +254,32 @@ public interface Hologram {
      * @param lines new lines
      * @return this hologram
      */
-    Hologram replaceLines(List<Component> lines);
+    Hologram replaceLines(List<TextEntry> lines);
 
+    /**
+     * @return current rotation time
+     */
     Pair<Integer, TaskerTime> getRotationTime();
 
+    /**
+     * The rotation time settings.
+     *
+     * @param rotatingTime {@link Pair} of time and unit.
+     * @return this hologram
+     */
     Hologram rotationTime(Pair<Integer, TaskerTime> rotatingTime);
 
+    /**
+     * @return current rotation mode
+     */
     RotationMode getRotationMode();
 
+    /**
+     * The mode that the Hologram should be rotating
+     *
+     * @param mode rotation mode
+     * @return this hologram
+     */
     Hologram rotationMode(RotationMode mode);
 
     /**
@@ -259,12 +290,30 @@ public interface Hologram {
      */
     Hologram rotationIncrement(float toIncrement);
 
+    /**
+     * Changes the item to show
+     *
+     * @param item item to show
+     * @return this hologram
+     */
     Hologram item(Item item);
 
-    Hologram itemLocation(ItemLocation itemLocation);
+    /**
+     * Position of the item shown as hologram
+     *
+     * @param position position of the item
+     * @return this hologram
+     */
+    Hologram itemPosition(ItemPosition position);
 
-    ItemLocation getItemLocation();
+    /**
+     * @return current item position
+     */
+    ItemPosition getItemPosition();
 
+    /**
+     * Represents rotation mode
+     */
     enum RotationMode {
         X,
         Y,
@@ -274,7 +323,10 @@ public interface Hologram {
         NONE
     }
 
-    enum ItemLocation {
+    /**
+     * Represents Item position
+     */
+    enum ItemPosition {
         ABOVE,
         BELOW
     }
