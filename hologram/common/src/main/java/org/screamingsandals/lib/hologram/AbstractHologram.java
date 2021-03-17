@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.hologram;
 
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -16,7 +17,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public abstract class AbstractHologram implements Hologram {
     protected ConcurrentSkipListMap<Integer, TextEntry> lines = new ConcurrentSkipListMap<>();
     protected final List<PlayerWrapper> viewers = new CopyOnWriteArrayList<>();
-    @Getter
     protected final UUID uuid;
 
     protected Integer originalLinesSize = 0;
@@ -46,10 +46,12 @@ public abstract class AbstractHologram implements Hologram {
         this.rotationTime = Pair.of(2, TaskerTime.TICKS);
     }
 
-    public void update() {
+    @Override
+    public Hologram update() {
         if (ready) {
             update0();
         }
+        return this;
     }
 
     public Optional<Map.Entry<Integer, TextEntry>> getLineByIdentifier(String identifier) {
@@ -61,7 +63,12 @@ public abstract class AbstractHologram implements Hologram {
     }
 
     @Override
-    public List<PlayerWrapper> getViewers() {
+    public UUID uuid() {
+        return uuid;
+    }
+
+    @Override
+    public List<PlayerWrapper> viewers() {
         return List.copyOf(viewers);
     }
 
@@ -75,15 +82,35 @@ public abstract class AbstractHologram implements Hologram {
     }
 
     @Override
-    public Hologram removeViewer(PlayerWrapper player, boolean sendPackets) {
+    public Hologram newViewer(PlayerWrapper player) {
+        if (viewers.contains(player)) {
+            return this;
+        }
+
+        viewers.add(player);
+        onViewerAdded(player, true);
+        return this;
+    }
+
+    @Override
+    public Hologram removeViewer(PlayerWrapper player) {
         if (viewers.contains(player)) {
             viewers.remove(player);
-
-            if (sendPackets) {
-                onViewerRemoved(player, false);
-            }
+            onViewerRemoved(player, false);
         }
         return this;
+    }
+
+    @Override
+    public Hologram clearViewers() {
+        hide();
+        viewers.clear();
+        return this;
+    }
+
+    @Override
+    public Hologram title(Component title) {
+        return firstLine(title);
     }
 
     @Override
@@ -92,25 +119,25 @@ public abstract class AbstractHologram implements Hologram {
     }
 
     @Override
-    public Optional<LocationHolder> getLocation() {
-        return Optional.ofNullable(location);
-    }
-
-    @Override
-    public Hologram setLocation(LocationHolder location) {
-        this.location = location;
-        update();
-        return this;
-    }
-
-    @Override
-    public int getViewDistance() {
+    public int viewDistance() {
         return viewDistance;
     }
 
     @Override
-    public Hologram setViewDistance(int viewDistance) {
+    public Hologram viewDistance(int viewDistance) {
         this.viewDistance = viewDistance;
+        return this;
+    }
+
+    @Override
+    public LocationHolder location() {
+        return location;
+    }
+
+    @Override
+    public Hologram location(LocationHolder location) {
+        this.location = location;
+        update();
         return this;
     }
 
@@ -179,18 +206,73 @@ public abstract class AbstractHologram implements Hologram {
     }
 
     @Override
-    public Hologram firstLine(TextEntry text) {
-        return setLine(0, text);
+    public Hologram firstLine(Component text) {
+        return null;
     }
 
     @Override
-    public Hologram newLine(List<TextEntry> text) {
-        text.forEach(this::newLine);
+    public Hologram firstLine(TextEntry text) {
+        return newLine(0, text);
+    }
+
+    @Override
+    public Hologram newLine(Integer where, TextEntry text) {
+        originalLinesSize = lines.size();
+        lines = HologramUtils.addEntryAndMoveRest(lines, where, text);
+        update();
         return this;
     }
 
     @Override
-    public Hologram newLine(TextEntry text) {
+    public Hologram replaceLine(Integer where, TextEntry text) {
+        if (!lines.containsKey(where)) {
+            return newLine(where, text);
+        }
+        originalLinesSize = lines.size();
+        lines.put(where, text);
+        update();
+        return this;
+    }
+
+    @Override
+    public Hologram replaceLine(Integer where, Component text) {
+        return replaceLine(where, TextEntry.of(text));
+    }
+
+    @Override
+    public Hologram replaceLine(TextEntry text) {
+        final var identifier = text.getIdentifier();
+        if (identifier.isEmpty()) {
+            return bottomLine(text);
+        }
+
+        final var line = getLineByIdentifier(text.getIdentifier());
+        if (line.isEmpty()) {
+            return bottomLine(text);
+        }
+        return replaceLine(line.get().getKey(), text);
+    }
+
+    @Override
+    public Hologram replaceLine(Map<Integer, TextEntry> lines) {
+        originalLinesSize = lines.size();
+        this.lines = new ConcurrentSkipListMap<>(lines);
+        update();
+        return this;
+    }
+
+    @Override
+    public Hologram newLine(Integer where, Component text) {
+        return null;
+    }
+
+    @Override
+    public Hologram bottomLine(Component text) {
+        return bottomLine(TextEntry.of(text));
+    }
+
+    @Override
+    public Hologram bottomLine(TextEntry text) {
         if (lines.isEmpty()) {
             return firstLine(text);
         }
@@ -202,62 +284,16 @@ public abstract class AbstractHologram implements Hologram {
     }
 
     @Override
-    public Hologram addLine(int line, TextEntry text) {
+    public Hologram removeLine(Integer where) {
         originalLinesSize = lines.size();
-        lines = HologramUtils.addEntryAndMoveRest(lines, line, text);
+        lines = HologramUtils.removeEntryAndMoveRest(lines, where);
         update();
         return this;
     }
 
     @Override
-    public Hologram setLine(int line, TextEntry text) {
-        if (!lines.containsKey(line)) {
-            return addLine(line, text);
-        }
-        originalLinesSize = lines.size();
-        lines.put(line, text);
-        update();
-        return this;
-    }
-
-    @Override
-    public Hologram setLine(TextEntry entry) {
-        final var identifier = entry.getIdentifier();
-        if (identifier.isEmpty()) {
-            return newLine(entry);
-        }
-
-        final var line = getLineByIdentifier(entry.getIdentifier());
-        if (line.isEmpty()) {
-            return newLine(entry);
-        }
-
-        return setLine(line.get().getKey(), entry);
-    }
-
-    @Override
-    public Hologram removeLine(int line) {
-        originalLinesSize = lines.size();
-        lines = HologramUtils.removeEntryAndMoveRest(lines, line);
-        update();
-        return this;
-    }
-
-    @Override
-    public Hologram replaceLines(Map<Integer, TextEntry> lines) {
-        originalLinesSize = lines.size();
-        this.lines = new ConcurrentSkipListMap<>(lines);
-        update();
-        return this;
-    }
-
-    @Override
-    public Hologram replaceLines(List<TextEntry> lines) {
-        final var toSet = new TreeMap<Integer, TextEntry>();
-        for (int i = 0; i < lines.size(); i++) {
-            toSet.put(i, lines.get(i));
-        }
-        return replaceLines(toSet);
+    public Hologram removeLine(String identifier) {
+        return null;
     }
 
     @Override

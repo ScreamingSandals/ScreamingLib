@@ -48,7 +48,7 @@ public abstract class HologramManager {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
 
-        manager.activeHolograms.put(hologram.getUuid(), hologram);
+        manager.activeHolograms.put(hologram.uuid(), hologram);
     }
 
     public static void removeHologram(UUID uuid) {
@@ -60,7 +60,7 @@ public abstract class HologramManager {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
 
-        manager.activeHolograms.remove(hologram.getUuid());
+        manager.activeHolograms.remove(hologram.uuid());
     }
 
     public static Hologram hologram(LocationHolder holder) {

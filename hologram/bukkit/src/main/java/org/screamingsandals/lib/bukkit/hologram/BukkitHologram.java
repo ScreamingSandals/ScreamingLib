@@ -21,7 +21,10 @@ import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
@@ -45,7 +48,7 @@ public class BukkitHologram extends AbstractHologram {
     }
 
     @Override
-    public Hologram setLocation(LocationHolder location) {
+    public Hologram location(LocationHolder location) {
         this.location = location;
         this.cachedLocation = location.as(Location.class);
         return this;
@@ -223,7 +226,7 @@ public class BukkitHologram extends AbstractHologram {
                 if (rotationMode != RotationMode.NONE) {
                     if (itemEntity == null) {
                         final var newLocation = cachedLocation.clone().add(0, itemPosition == ItemPosition.BELOW
-                                ?  (- lines.size() * .25 - .5)
+                                ? (-lines.size() * .25 - .5)
                                 : (lines.size() * .25), 0);
                         final var entity = new AdvancedArmorStandNMS(newLocation);
                         entity.setInvisible(true);

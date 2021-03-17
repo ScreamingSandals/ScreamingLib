@@ -2,10 +2,10 @@ package org.screamingsandals.lib.scoreboard;
 
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.scoreboard.team.ScoreboardTeam;
+import org.screamingsandals.lib.utils.visual.TextEntry;
 
-import java.util.List;
-import java.util.TreeMap;
-import java.util.UUID;
+import java.util.*;
 
 public interface Scoreboard {
 
@@ -83,8 +83,114 @@ public interface Scoreboard {
      * This is copy of the original data.
      * Changing this will have no effects on the actual Scoreboard.
      *
-     * @return a new {@link TreeMap} with lines.
+     * @return a new {@link Map} with lines.
      */
-    TreeMap<Integer, Component> getLines();
+    Map<Integer, TextEntry> getLines();
+
+    /**
+     * Replaces the title.
+     *
+     * @param text text to add
+     * @return this Scoreboard
+     */
+    Scoreboard title(Component text);
+
+    /**
+     * Gets the title;
+     *
+     * @return title
+     */
+    Component getTitle();
+
+    /**
+     * Adds new line to the Scoreboard and moves everything else 1 line down.
+     *
+     * @param text text to add
+     * @return this Scoreboard
+     */
+    Scoreboard firstLine(TextEntry text);
+
+    /**
+     * Adds given collection of new lines  at the bottom of this Scoreboard.
+     *
+     * @param text text to add
+     * @return this Scoreboard
+     */
+    Scoreboard newLine(Collection<TextEntry> text);
+
+    /**
+     * Adds new line at the bottom of this Scoreboard.
+     *
+     * @param text the text
+     * @return this Scoreboard
+     */
+    Scoreboard newLine(TextEntry text);
+
+    /**
+     * Sets new line. If the given line already exists, it's replaced.
+     *
+     * @param line where to add
+     * @param text text to add
+     * @return this Scoreboard
+     */
+    Scoreboard setLine(int line, TextEntry text);
+
+    /**
+     * Tries to set the line by {@link TextEntry}.
+     * If the {@link TextEntry#getIdentifier()} is empty, creates new line.
+     * If not, it tries to replace given text to the line that has this identifier.
+     *
+     * @param entry TextEntry
+     * @return this Scoreboard
+     */
+    Scoreboard setLine(TextEntry entry);
+
+    /**
+     * Adds new line to the position and moves everything below.
+     *
+     * @param line where to add
+     * @param text text to add
+     * @return this Scoreboard
+     */
+    Scoreboard addLine(int line, TextEntry text);
+
+    /**
+     * Removes given line from the Scoreboard.
+     *
+     * @param line line to remove
+     * @return this Scoreboard
+     */
+    Scoreboard removeLine(int line);
+
+    /**
+     * Removes given line from the Scoreboard.
+     *
+     * @param identifier a {@link TextEntry} identifier
+     * @return this Scoreboard
+     */
+    Scoreboard removeLine(String identifier);
+
+    /**
+     * Replaces all lines with new ones.
+     *
+     * @param lines new lines
+     * @return this Scoreboard
+     */
+    Scoreboard replaceLines(Map<Integer, TextEntry> lines);
+
+    /**
+     * Replaces lines with given collection.
+     * The list is converted to TreeMap by it's given order
+     *
+     * @param lines new lines
+     * @return this Scoreboard
+     */
+    Scoreboard replaceLines(List<TextEntry> lines);
+
+    Collection<ScoreboardTeam> getTeams();
+
+    Optional<ScoreboardTeam> getTeam(String identifier);
+
+
 
 }
