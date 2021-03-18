@@ -1,11 +1,8 @@
 package org.screamingsandals.lib.lang;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.Template;
-import net.kyori.adventure.text.minimessage.markdown.DiscordFlavor;
 import net.kyori.adventure.title.Title;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,14 +13,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Data
-@RequiredArgsConstructor
-public class Message implements TitleableSenderMessage {
-    private static MiniMessage MINIMESSAGE = MiniMessage.builder()
-            .markdown()
-            .markdownFlavor(DiscordFlavor.get())
-            .build();
 
+@Data
+public class Message implements TitleableSenderMessage {
     /* MUST BE MUTABLE */
     private final List<Translation> translations;
     private final Map<String, Function<CommandSenderWrapper, Component>> placeholders = new HashMap<>();
@@ -32,12 +24,18 @@ public class Message implements TitleableSenderMessage {
     private Component prefix;
     private Title.Times times;
 
+    public Message(List<Translation> translations, LangService langService, @NotNull Component prefix) {
+        this.translations = translations;
+        this.langService = langService;
+        this.prefix = prefix;
+    }
+
     public static Message of(String... key) {
-        return new Message(Arrays.asList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
+        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
     }
 
     public static Message of(Translation translation) {
-        return new Message(Arrays.asList(translation), Lang.getDefaultService(), Component.empty());
+        return new Message(Collections.singletonList(translation), Lang.getDefaultService(), Component.empty());
     }
 
     public static Message of(List<Translation> translations) {
@@ -45,11 +43,11 @@ public class Message implements TitleableSenderMessage {
     }
 
     public static Message of(LangService langService, String... key) {
-        return new Message(Arrays.asList(Translation.of(key)), langService, Component.empty());
+        return new Message(Collections.singletonList(Translation.of(key)), langService, Component.empty());
     }
 
     public static Message of(LangService langService, Translation translation) {
-        return new Message(Arrays.asList(translation), langService, Component.empty());
+        return new Message(Collections.singletonList(translation), langService, Component.empty());
     }
 
     public static Message of(LangService langService, List<Translation> translations) {
@@ -57,11 +55,11 @@ public class Message implements TitleableSenderMessage {
     }
 
     public static Message of(Component prefix, String... key) {
-        return new Message(Arrays.asList(Translation.of(key)), Lang.getDefaultService(), prefix);
+        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), prefix);
     }
 
     public static Message of(Component prefix, Translation translation) {
-        return new Message(Arrays.asList(translation), Lang.getDefaultService(), prefix);
+        return new Message(Collections.singletonList(translation), Lang.getDefaultService(), prefix);
     }
 
     public static Message of(Component prefix, List<Translation> translations) {
@@ -69,11 +67,11 @@ public class Message implements TitleableSenderMessage {
     }
 
     public static Message of(LangService langService, Component prefix, String... key) {
-        return new Message(Arrays.asList(Translation.of(key)), langService, prefix);
+        return new Message(Collections.singletonList(Translation.of(key)), langService, prefix);
     }
 
     public static Message of(LangService langService, Component prefix, Translation translation) {
-        return new Message(Arrays.asList(translation), langService, prefix);
+        return new Message(Collections.singletonList(translation), langService, prefix);
     }
 
     public static Message of(LangService langService, Component prefix, List<Translation> translations) {
@@ -81,19 +79,19 @@ public class Message implements TitleableSenderMessage {
     }
 
     public static Message of(Collection<String> key) {
-        return new Message(Arrays.asList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
+        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
     }
 
     public static Message of(LangService langService, Collection<String> key) {
-        return new Message(Arrays.asList(Translation.of(key)), langService, Component.empty());
+        return new Message(Collections.singletonList(Translation.of(key)), langService, Component.empty());
     }
 
     public static Message of(Component prefix, Collection<String> key) {
-        return new Message(Arrays.asList(Translation.of(key)), Lang.getDefaultService(), prefix);
+        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), prefix);
     }
 
     public static Message of(LangService langService, Component prefix, Collection<String> key) {
-        return new Message(Arrays.asList(Translation.of(key)), langService, prefix);
+        return new Message(Collections.singletonList(Translation.of(key)), langService, prefix);
     }
 
     public Message placeholder(String placeholder, byte value) {
@@ -139,7 +137,7 @@ public class Message implements TitleableSenderMessage {
     }
 
     public Message placeholder(String placeholder, String value) {
-        return placeholder(placeholder, MINIMESSAGE.parse(value));
+        return placeholder(placeholder, Lang.MINIMESSAGE.parse(value));
     }
 
     public Message placeholder(String placeholder, Component component) {
@@ -180,7 +178,12 @@ public class Message implements TitleableSenderMessage {
         return this;
     }
 
-    public Message join(String...keys) {
+    public Message join(String key) {
+        this.translations.add(Translation.of(key));
+        return this;
+    }
+
+    public Message join(String... keys) {
         this.translations.add(Translation.of(keys));
         return this;
     }
@@ -213,7 +216,7 @@ public class Message implements TitleableSenderMessage {
                             .getFor(sender)
                             .translate(translation.getKeys())
                             .stream()
-                            .map(s -> MINIMESSAGE.parse(s, placeholders
+                            .map(s -> Lang.MINIMESSAGE.parse(s, placeholders
                                     .entrySet()
                                     .stream()
                                     .map(entry -> Template.of(entry.getKey(), entry.getValue().apply(sender)))
@@ -221,7 +224,11 @@ public class Message implements TitleableSenderMessage {
                             ))
                             .map(component -> {
                                 if (!Component.empty().equals(prefix)) {
-                                    return Component.text().append(prefix).append(Component.space()).append(component).build();
+                                    return Component.text()
+                                            .append(prefix)
+                                            .append(Component.space())
+                                            .append(component)
+                                            .build();
                                 } else {
                                     return component;
                                 }

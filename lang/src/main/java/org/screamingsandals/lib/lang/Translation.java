@@ -13,6 +13,10 @@ public final class Translation {
     private final String[] keys;
     private final Component fallback;
 
+    public static Translation of(String key) {
+        return of(key.split("\\."));
+    }
+
     public static Translation of(String... keys) {
         return of(keys, Component.text(String.join(".", keys)).color(NamedTextColor.RED));
     }

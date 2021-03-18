@@ -13,9 +13,14 @@ import java.util.stream.Collectors;
 public class TranslationContainer {
     public static final TranslationContainer EMPTY = new TranslationContainer(BasicConfigurationNode.root(), null);
 
-    private final ConfigurationNode configurationNode;
+    private ConfigurationNode configurationNode;
     @Nullable
     private final TranslationContainer fallbackContainer;
+
+    public TranslationContainer(ConfigurationNode node, @Nullable TranslationContainer fallback) {
+        this.configurationNode = node;
+        this.fallbackContainer = fallback;
+    }
 
     public List<String> translate(Collection<String> key) {
         return translate(key.toArray(String[]::new));
