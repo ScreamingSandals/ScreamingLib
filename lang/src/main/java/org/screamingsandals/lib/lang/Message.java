@@ -31,11 +31,11 @@ public class Message implements TitleableSenderMessage {
     }
 
     public static Message of(String... key) {
-        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
+        return new Message(Arrays.asList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
     }
 
     public static Message of(Translation translation) {
-        return new Message(Collections.singletonList(translation), Lang.getDefaultService(), Component.empty());
+        return new Message(Arrays.asList(translation), Lang.getDefaultService(), Component.empty());
     }
 
     public static Message of(List<Translation> translations) {
@@ -43,11 +43,11 @@ public class Message implements TitleableSenderMessage {
     }
 
     public static Message of(LangService langService, String... key) {
-        return new Message(Collections.singletonList(Translation.of(key)), langService, Component.empty());
+        return new Message(Arrays.asList(Translation.of(key)), langService, Component.empty());
     }
 
     public static Message of(LangService langService, Translation translation) {
-        return new Message(Collections.singletonList(translation), langService, Component.empty());
+        return new Message(Arrays.asList(translation), langService, Component.empty());
     }
 
     public static Message of(LangService langService, List<Translation> translations) {
@@ -55,11 +55,11 @@ public class Message implements TitleableSenderMessage {
     }
 
     public static Message of(Component prefix, String... key) {
-        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), prefix);
+        return new Message(Arrays.asList(Translation.of(key)), Lang.getDefaultService(), prefix);
     }
 
     public static Message of(Component prefix, Translation translation) {
-        return new Message(Collections.singletonList(translation), Lang.getDefaultService(), prefix);
+        return new Message(Arrays.asList(translation), Lang.getDefaultService(), prefix);
     }
 
     public static Message of(Component prefix, List<Translation> translations) {
@@ -67,11 +67,11 @@ public class Message implements TitleableSenderMessage {
     }
 
     public static Message of(LangService langService, Component prefix, String... key) {
-        return new Message(Collections.singletonList(Translation.of(key)), langService, prefix);
+        return new Message(Arrays.asList(Translation.of(key)), langService, prefix);
     }
 
     public static Message of(LangService langService, Component prefix, Translation translation) {
-        return new Message(Collections.singletonList(translation), langService, prefix);
+        return new Message(Arrays.asList(translation), langService, prefix);
     }
 
     public static Message of(LangService langService, Component prefix, List<Translation> translations) {
@@ -79,19 +79,19 @@ public class Message implements TitleableSenderMessage {
     }
 
     public static Message of(Collection<String> key) {
-        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
+        return new Message(Arrays.asList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
     }
 
     public static Message of(LangService langService, Collection<String> key) {
-        return new Message(Collections.singletonList(Translation.of(key)), langService, Component.empty());
+        return new Message(Arrays.asList(Translation.of(key)), langService, Component.empty());
     }
 
     public static Message of(Component prefix, Collection<String> key) {
-        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), prefix);
+        return new Message(Arrays.asList(Translation.of(key)), Lang.getDefaultService(), prefix);
     }
 
     public static Message of(LangService langService, Component prefix, Collection<String> key) {
-        return new Message(Collections.singletonList(Translation.of(key)), langService, prefix);
+        return new Message(Arrays.asList(Translation.of(key)), langService, prefix);
     }
 
     public Message placeholder(String placeholder, byte value) {
