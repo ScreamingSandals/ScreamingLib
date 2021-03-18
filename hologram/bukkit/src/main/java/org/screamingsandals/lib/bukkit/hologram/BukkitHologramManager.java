@@ -113,7 +113,7 @@ public class BukkitHologramManager extends HologramManager {
                 }
 
                 final var castedHologram = (AbstractHologram) hologram;
-                final var viewDistance = hologram.getViewDistance();
+                final var viewDistance = hologram.viewDistance();
                 if (viewers.contains(player)
                         && hologramLocation.getWorld().equals(player.getLocation().getWorld())) {
                     if (event.getNewLocation().getDistanceSquared(hologramLocation) < viewDistance
@@ -152,7 +152,7 @@ public class BukkitHologramManager extends HologramManager {
                 }
 
                 final var castedHologram = (AbstractHologram) hologram;
-                final var viewDistance = hologram.getViewDistance();
+                final var viewDistance = hologram.viewDistance();
                 if (viewers.contains(player)
                         && event.getLocation().getWorld().equals(hologramLocation.getWorld())) {
                     if (player.getLocation().getDistanceSquared(hologramLocation) < viewDistance) {
@@ -188,7 +188,7 @@ public class BukkitHologramManager extends HologramManager {
                 }
 
                 final var castedHologram = (AbstractHologram) hologram;
-                final var viewDistance = hologram.getViewDistance();
+                final var viewDistance = hologram.viewDistance();
                 if (viewers.contains(player)
                         && event.getFrom().equals(hologramLocation.getWorld())) {
                     if (player.getLocation().getDistanceSquared(hologramLocation) < viewDistance) {
@@ -225,7 +225,7 @@ public class BukkitHologramManager extends HologramManager {
                 }
 
                 final var castedHologram = (AbstractHologram) hologram;
-                final var viewDistance = hologram.getViewDistance();
+                final var viewDistance = hologram.viewDistance();
                 if (viewers.contains(player)
                         && hologramLocation.getWorld().equals(player.getLocation().getWorld())) {
                     if (event.getNewLocation().getDistanceSquared(hologramLocation) < viewDistance

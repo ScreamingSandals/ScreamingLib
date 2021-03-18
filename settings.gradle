@@ -4,6 +4,7 @@ include 'api-utils'
 include 'sender'
 include 'screaming-annotation'
 include 'signs'
+include 'lang'
 include 'visuals-api'
 
 def registerModule(String name, String... platforms) {

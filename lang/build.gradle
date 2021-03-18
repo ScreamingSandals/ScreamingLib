@@ -1,0 +1,5 @@
+dependencies {
+    api project(':sender')
+    api 'net.kyori:adventure-text-minimessage:' + ADVENTURE_MINIMESSAGE_VERSION
+    api 'org.spongepowered:configurate-core:' + CONFIGURATE_VERSION
+}
