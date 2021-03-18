@@ -351,5 +351,39 @@ public class BukkitPlayerMapper extends PlayerMapper {
         new PlayerDamageByEntityListener(plugin);
         new PlayerProjectileLaunchEventListener(plugin);
         new PlayerDropItemEventListener(plugin);
+        new PlayerBedEnterEventListener(plugin);
+        new PlayerAnimationEventListener(plugin);
+        new PlayerInteractEntityEventListener(plugin);
+        new PlayerArmorStandManipulateEventListener(plugin);
+        new PlayerBedLeaveEventListener(plugin);
+        new PlayerBucketEventListener(plugin);
+        new PlayerBucketEmptyEventListener(plugin);
+        new PlayerBucketFillEventListener(plugin);
+        new PlayerCommandSendEventListener(plugin);
+        new PlayerEggThrowEventListener(plugin);
+        new PlayerExpChangeEventListener(plugin);
+        new PlayerFishEventListener(plugin);
+        new PlayerGameModeChangeEventListener(plugin);
+        if (Reflect.has("org.bukkit.event.player.PlayerHarvestBlockEvent"))
+            new PlayerHarvestBlockEventListener(plugin);
+        new PlayerInteractAtEntityEventListener(plugin);
+        new PlayerInteractEventListener(plugin);
+        new PlayerItemConsumeEventListener(plugin);
+        new PlayerItemDamageEventListener(plugin);
+        new PlayerItemHeldEventListener(plugin);
+        new PlayerItemMendEventListener(plugin);
+        new PlayerKickEventListener(plugin);
+        new PlayerLevelChangeEventListener(plugin);
+        new PlayerLocaleChangeEventListener(plugin);
+        new PlayerLoginEventListener(plugin);
+        new PlayerPortalEventListener(plugin);
+        new PlayerShearEntityEventListener(plugin);
+        if (Reflect.has("org.bukkit.event.player.PlayerSwapHandItemsEvent"))
+            new PlayerSwapHandItemsEventListener(plugin);
+        new PlayerToggleFlightEventListener(plugin);
+        new PlayerToggleSneakEventListener(plugin);
+        new PlayerToggleSprintEventListener(plugin);
+        new PlayerUnleashEntityEventListener(plugin);
+        new PlayerVelocityEventListener(plugin);
     }
 }
