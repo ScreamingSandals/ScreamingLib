@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.lang;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.BasicConfigurationNode;
@@ -10,17 +11,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@AllArgsConstructor
 public class TranslationContainer {
     public static final TranslationContainer EMPTY = new TranslationContainer(BasicConfigurationNode.root(), null);
 
     private ConfigurationNode configurationNode;
     @Nullable
     private final TranslationContainer fallbackContainer;
-
-    public TranslationContainer(ConfigurationNode node, @Nullable TranslationContainer fallback) {
-        this.configurationNode = node;
-        this.fallbackContainer = fallback;
-    }
 
     public List<String> translate(Collection<String> key) {
         return translate(key.toArray(String[]::new));
