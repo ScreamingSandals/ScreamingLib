@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-
 @Data
 public final class Message implements TitleableSenderMessage {
     private final List<Translation> translations = new LinkedList<>();
@@ -346,7 +345,7 @@ public final class Message implements TitleableSenderMessage {
                 .build(() -> getFor(sender).forEach(sender::sendMessage));
     }
 
-    public <W extends CommandSenderWrapper>  Tasker.TaskBuilder sendTask(W... senders) {
+    public <W extends CommandSenderWrapper> Tasker.TaskBuilder sendTask(W... senders) {
         return Tasker
                 .build(() -> {
                     for (var sender : senders) {
@@ -355,7 +354,7 @@ public final class Message implements TitleableSenderMessage {
                 });
     }
 
-    public <W extends CommandSenderWrapper>  Tasker.TaskBuilder sendTask(Collection<W> senders) {
+    public <W extends CommandSenderWrapper> Tasker.TaskBuilder sendTask(Collection<W> senders) {
         return Tasker
                 .build(() -> senders.forEach(this::send));
     }

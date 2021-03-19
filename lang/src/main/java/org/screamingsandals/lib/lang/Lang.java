@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.markdown.DiscordFlavor;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.lang.container.TranslationContainer;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 
 public class Lang {

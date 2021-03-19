@@ -13,7 +13,7 @@ public final class Translation {
     private final String[] keys;
     private final Component fallback;
 
-    public static Translation of(String key) {
+    public static Translation ofString(String key) {
         return of(key.split("\\."));
     }
 

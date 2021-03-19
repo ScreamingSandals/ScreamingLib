@@ -2,6 +2,7 @@ package org.screamingsandals.lib.lang;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.screamingsandals.lib.lang.container.TranslationContainer;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ public abstract class LangService {
     protected final Map<Locale, TranslationContainer> containers = new HashMap<>();
     @Setter
     @Getter
-    protected TranslationContainer fallbackContainer = TranslationContainer.EMPTY;
+    protected TranslationContainer fallbackContainer = TranslationContainer.empty();
 
     public Optional<TranslationContainer> getFor(Locale locale) {
         return Optional.ofNullable(containers.get(locale));

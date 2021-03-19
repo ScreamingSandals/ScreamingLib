@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.lang;
+package org.screamingsandals.lib.lang.container;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
-public class TranslationContainer {
-    public static final TranslationContainer EMPTY = new TranslationContainer(BasicConfigurationNode.root(), null);
+class TranslationContainerImpl implements TranslationContainer {
+    static final TranslationContainer EMPTY = new TranslationContainerImpl(BasicConfigurationNode.root(), null);
 
     private ConfigurationNode configurationNode;
     @Nullable
@@ -27,10 +27,10 @@ public class TranslationContainer {
         var node = configurationNode.node((Object[]) key);
         if (node.isList()) {
             return node.childrenList().stream().map(ConfigurationNode::getString).collect(Collectors.toList());
-        } else if (node.empty()) {
-            return List.of(node.getString(""));
-        } else {
-            return fallbackContainer != null ? fallbackContainer.translate(key) : List.of();
         }
+        if (!node.empty()) {
+            return List.of(node.getString(""));
+        }
+        return fallbackContainer != null ? fallbackContainer.translate(key) : List.of();
     }
 }
