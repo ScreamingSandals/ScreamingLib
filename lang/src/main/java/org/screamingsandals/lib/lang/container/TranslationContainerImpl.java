@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 class TranslationContainerImpl implements TranslationContainer {
     static final TranslationContainer EMPTY = new TranslationContainerImpl(BasicConfigurationNode.root(), null);
 
-    private ConfigurationNode configurationNode;
+    private ConfigurationNode node;
     @Nullable
     private TranslationContainer fallbackContainer;
 
@@ -24,7 +24,7 @@ class TranslationContainerImpl implements TranslationContainer {
     }
 
     public List<String> translate(String... key) {
-        var node = configurationNode.node((Object[]) key);
+        var node = this.node.node((Object[]) key);
         if (node.isList()) {
             return node.childrenList().stream().map(ConfigurationNode::getString).collect(Collectors.toList());
         }
