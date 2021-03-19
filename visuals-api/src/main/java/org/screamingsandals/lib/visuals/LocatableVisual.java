@@ -13,11 +13,11 @@ public interface LocatableVisual<T> extends Visual<T> {
     /**
      * @return current view distance SQUARED
      */
-    int viewDistance();
+    int getViewDistance();
 
-    T viewDistance(int viewDistance);
+    T setViewDistance(int viewDistance);
 
-    LocationHolder location();
+    LocationHolder getLocation();
 
-    T location(LocationHolder location);
+    T setLocation(LocationHolder location);
 }

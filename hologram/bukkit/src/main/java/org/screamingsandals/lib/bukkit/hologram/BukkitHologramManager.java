@@ -84,7 +84,7 @@ public class BukkitHologramManager extends HologramManager {
         }
 
         getActiveHolograms().forEach((key, hologram) -> {
-            if (hologram.viewers().contains(event.getPlayer())) {
+            if (hologram.getViewers().contains(event.getPlayer())) {
                 hologram.removeViewer(event.getPlayer());
             }
             if (!hologram.hasViewers()) {
@@ -105,15 +105,15 @@ public class BukkitHologramManager extends HologramManager {
                 }
 
                 final var player = event.getPlayer();
-                final var viewers = hologram.viewers();
-                final var hologramLocation = hologram.location();
+                final var viewers = hologram.getViewers();
+                final var hologramLocation = hologram.getLocation();
                 if (hologramLocation == null) {
                     log.trace("Location is empty");
                     return;
                 }
 
                 final var castedHologram = (AbstractHologram) hologram;
-                final var viewDistance = hologram.viewDistance();
+                final var viewDistance = hologram.getViewDistance();
                 if (viewers.contains(player)
                         && hologramLocation.getWorld().equals(player.getLocation().getWorld())) {
                     if (event.getNewLocation().getDistanceSquared(hologramLocation) < viewDistance
@@ -144,15 +144,15 @@ public class BukkitHologramManager extends HologramManager {
                 }
 
                 final var player = event.getPlayer();
-                final var viewers = hologram.viewers();
-                final var hologramLocation = hologram.location();
+                final var viewers = hologram.getViewers();
+                final var hologramLocation = hologram.getLocation();
                 if (hologramLocation == null) {
                     log.trace("Location is empty");
                     return;
                 }
 
                 final var castedHologram = (AbstractHologram) hologram;
-                final var viewDistance = hologram.viewDistance();
+                final var viewDistance = hologram.getViewDistance();
                 if (viewers.contains(player)
                         && event.getLocation().getWorld().equals(hologramLocation.getWorld())) {
                     if (player.getLocation().getDistanceSquared(hologramLocation) < viewDistance) {
@@ -180,15 +180,15 @@ public class BukkitHologramManager extends HologramManager {
                 }
 
                 final var player = event.getPlayer();
-                final var viewers = hologram.viewers();
-                final var hologramLocation = hologram.location();
+                final var viewers = hologram.getViewers();
+                final var hologramLocation = hologram.getLocation();
                 if (hologramLocation == null) {
                     log.trace("Location is empty");
                     return;
                 }
 
                 final var castedHologram = (AbstractHologram) hologram;
-                final var viewDistance = hologram.viewDistance();
+                final var viewDistance = hologram.getViewDistance();
                 if (viewers.contains(player)
                         && event.getFrom().equals(hologramLocation.getWorld())) {
                     if (player.getLocation().getDistanceSquared(hologramLocation) < viewDistance) {
@@ -217,15 +217,15 @@ public class BukkitHologramManager extends HologramManager {
                 }
 
                 final var player = event.getPlayer();
-                final var viewers = hologram.viewers();
-                final var hologramLocation = hologram.location();
+                final var viewers = hologram.getViewers();
+                final var hologramLocation = hologram.getLocation();
                 if (hologramLocation == null) {
                     log.trace("Location is empty");
                     return;
                 }
 
                 final var castedHologram = (AbstractHologram) hologram;
-                final var viewDistance = hologram.viewDistance();
+                final var viewDistance = hologram.getViewDistance();
                 if (viewers.contains(player)
                         && hologramLocation.getWorld().equals(player.getLocation().getWorld())) {
                     if (event.getNewLocation().getDistanceSquared(hologramLocation) < viewDistance

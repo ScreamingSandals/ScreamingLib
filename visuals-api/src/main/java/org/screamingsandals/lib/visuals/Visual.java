@@ -16,12 +16,12 @@ public interface Visual<T> {
      *
      * @return UUID of this visual.
      */
-    UUID uuid();
+    UUID getUuid();
 
     /**
      * @return viewers that are currently looking and this visual.
      */
-    Collection<PlayerWrapper> viewers();
+    Collection<PlayerWrapper> getViewers();
 
     T update();
 
@@ -31,9 +31,7 @@ public interface Visual<T> {
 
     T addViewer(PlayerWrapper viewer);
 
-    T newViewer(PlayerWrapper player);
-
-    T removeViewer(PlayerWrapper player);
+    T removeViewer(PlayerWrapper viewer);
 
     T clearViewers();
 

@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.hologram;
+package org.screamingsandals.lib.visuals.utils;
 
 import lombok.experimental.UtilityClass;
 import org.screamingsandals.lib.utils.visual.TextEntry;
@@ -6,7 +6,7 @@ import org.screamingsandals.lib.utils.visual.TextEntry;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 @UtilityClass
-public class HologramUtils {
+public class VisualUtils {
 
     public ConcurrentSkipListMap<Integer, TextEntry> addEntryAndMoveRest(ConcurrentSkipListMap<Integer, TextEntry> input, Integer line, TextEntry text) {
         if (!input.containsKey(line)) {

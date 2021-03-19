@@ -3,7 +3,10 @@ package org.screamingsandals.lib.visuals;
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * A visual that can have lines.
@@ -19,10 +22,17 @@ public interface LinedVisual<T> extends Visual<T> {
     Map<Integer, TextEntry> getLines();
 
     /**
+     * Tries to get a line by given identifier.
+     * @param identifier where's my identity?!
+     * @return this visual
+     */
+    Optional<Map.Entry<Integer, TextEntry>> getLineByIdentifier(String identifier);
+
+    /**
      * Adds new line to this visual and moves everything else 1 line down.
      *
      * @param text text to add
-     * @return this builder
+     * @return this visual
      */
     T firstLine(Component text);
 
@@ -30,7 +40,7 @@ public interface LinedVisual<T> extends Visual<T> {
      * Adds new line to this visual and moves everything else 1 line down.
      *
      * @param text text to add
-     * @return this builder
+     * @return this visual
      */
     T firstLine(TextEntry text);
 
@@ -38,7 +48,7 @@ public interface LinedVisual<T> extends Visual<T> {
      * Adds new line to the bottom of this visual.
      *
      * @param text text to add
-     * @return this builder
+     * @return this visual
      */
     T bottomLine(Component text);
 
@@ -46,7 +56,7 @@ public interface LinedVisual<T> extends Visual<T> {
      * Adds new line to the bottom of this visual.
      *
      * @param text text to add
-     * @return this builder
+     * @return this visual
      */
     T bottomLine(TextEntry text);
 
@@ -54,7 +64,7 @@ public interface LinedVisual<T> extends Visual<T> {
      * Replaces a line that has {@link TextEntry#getIdentifier()} on it.
      *
      * @param text text to replace
-     * @return this builder
+     * @return this visual
      */
     T replaceLine(TextEntry text);
 
@@ -63,7 +73,7 @@ public interface LinedVisual<T> extends Visual<T> {
      *
      * @param where where to replace
      * @param text  text to replace
-     * @return this builder
+     * @return this visual
      */
     T replaceLine(Integer where, Component text);
 
@@ -72,7 +82,7 @@ public interface LinedVisual<T> extends Visual<T> {
      *
      * @param where where to replace
      * @param text  text to replace
-     * @return this builder
+     * @return this visual
      */
     T replaceLine(Integer where, TextEntry text);
 
@@ -80,16 +90,30 @@ public interface LinedVisual<T> extends Visual<T> {
      * Replaces all lines.
      *
      * @param lines new lines :)
-     * @return this builder
+     * @return this visual
      */
-    T replaceLine(Map<Integer, TextEntry> lines);
+    T setLines(Map<Integer, TextEntry> lines);
+
+    /**
+     * Replaces all lines.
+     * @param lines new lines :)
+     * @return this visual
+     */
+    T setLines(List<Component> lines);
+
+    /**
+     * Replaces all lines.
+     * @param lines new lines :)
+     * @return this visual
+     */
+    T setLines(Set<TextEntry> lines);
 
     /**
      * Creates a new line and moves everything bellow if anything is already on that line.
      *
      * @param where where to add
      * @param text  text to add
-     * @return this builder
+     * @return this visual
      */
     T newLine(Integer where, Component text);
 
@@ -98,7 +122,7 @@ public interface LinedVisual<T> extends Visual<T> {
      *
      * @param where where to add
      * @param text  text to add
-     * @return this builder
+     * @return this visual
      */
     T newLine(Integer where, TextEntry text);
 
@@ -106,7 +130,7 @@ public interface LinedVisual<T> extends Visual<T> {
      * Removes line on given location.
      *
      * @param where where to remove
-     * @return this builder
+     * @return this visual
      */
     T removeLine(Integer where);
 
@@ -114,7 +138,7 @@ public interface LinedVisual<T> extends Visual<T> {
      * Removes line by given identifier.
      *
      * @param identifier identifier to remove
-     * @return this builder
+     * @return this visual
      */
     T removeLine(String identifier);
 }

@@ -48,7 +48,7 @@ public class BukkitHologram extends AbstractHologram {
     }
 
     @Override
-    public Hologram location(LocationHolder location) {
+    public Hologram setLocation(LocationHolder location) {
         this.location = location;
         this.cachedLocation = location.as(Location.class);
         return this;

@@ -3,6 +3,7 @@ package org.screamingsandals.lib.hologram;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.Pair;
+import org.screamingsandals.lib.visuals.DatableVisual;
 import org.screamingsandals.lib.visuals.LinedVisual;
 import org.screamingsandals.lib.visuals.LocatableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -12,14 +13,7 @@ import java.util.Map;
 /**
  * Hologram that shows some text.
  */
-public interface Hologram extends LocatableVisual<Hologram>, LinedVisual<Hologram> {
-    /**
-     * This is default view distance SQUARED!
-     * <p>
-     * That means that at this distance, you will see the hologram from 64 blocks away.
-     */
-    int DEFAULT_VIEW_DISTANCE = 4096;
-
+public interface Hologram extends LocatableVisual<Hologram>, LinedVisual<Hologram>, DatableVisual<Hologram> {
     /**
      * Default rate that the item is rotated.
      */
@@ -59,18 +53,6 @@ public interface Hologram extends LocatableVisual<Hologram>, LinedVisual<Hologra
      * @return this hologram
      */
     Hologram setTouchable(boolean touchable);
-
-    /**
-     * @return data stored in this hologram
-     */
-    Data getData();
-
-    /**
-     * Replaces current data with new one
-     *
-     * @param data new data
-     */
-    void newData(Data data);
 
     /**
      * @return current rotation time
