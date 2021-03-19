@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.TitleableSenderMessage;
 import org.screamingsandals.lib.tasker.Tasker;
+import org.screamingsandals.lib.utils.visual.TextEntry;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -384,6 +385,16 @@ public final class Message implements TitleableSenderMessage {
     @NotNull
     public Component asComponent(@Nullable CommandSenderWrapper sender) {
         return getForJoined(sender);
+    }
+
+    @Override
+    public @NotNull TextEntry asTextEntry(@Nullable CommandSenderWrapper wrapper) {
+        return TextEntry.of(asComponent(wrapper));
+    }
+
+    @Override
+    public @NotNull TextEntry asTextEntry(@NotNull String identifier, CommandSenderWrapper wrapper) {
+        return TextEntry.of(identifier, asComponent(wrapper));
     }
 
     @Override
