@@ -8,34 +8,37 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.TitleableSenderMessage;
+import org.screamingsandals.lib.tasker.Tasker;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
 @Data
-public class Message implements TitleableSenderMessage {
-    /* MUST BE MUTABLE */
-    private final List<Translation> translations;
+public final class Message implements TitleableSenderMessage {
+    private final List<Translation> translations = new LinkedList<>();
     private final Map<String, Function<CommandSenderWrapper, Component>> placeholders = new HashMap<>();
     private final LangService langService;
     @NotNull
     private Component prefix;
+    @Nullable
     private Title.Times times;
+    private PrefixPolicy prefixPolicy = PrefixPolicy.ALL_MESSAGES;
 
-    public Message(List<Translation> translations, LangService langService, @NotNull Component prefix) {
-        this.translations = translations;
+    public Message(Collection<Translation> translations, LangService langService, @NotNull Component prefix) {
+        this.translations.addAll(translations);
         this.langService = langService;
         this.prefix = prefix;
     }
 
     public static Message of(String... key) {
-        return new Message(Arrays.asList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
+        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
     }
 
     public static Message of(Translation translation) {
-        return new Message(Arrays.asList(translation), Lang.getDefaultService(), Component.empty());
+        return new Message(Collections.singletonList(translation), Lang.getDefaultService(), Component.empty());
     }
 
     public static Message of(List<Translation> translations) {
@@ -43,11 +46,11 @@ public class Message implements TitleableSenderMessage {
     }
 
     public static Message of(LangService langService, String... key) {
-        return new Message(Arrays.asList(Translation.of(key)), langService, Component.empty());
+        return new Message(Collections.singletonList(Translation.of(key)), langService, Component.empty());
     }
 
     public static Message of(LangService langService, Translation translation) {
-        return new Message(Arrays.asList(translation), langService, Component.empty());
+        return new Message(Collections.singletonList(translation), langService, Component.empty());
     }
 
     public static Message of(LangService langService, List<Translation> translations) {
@@ -55,11 +58,11 @@ public class Message implements TitleableSenderMessage {
     }
 
     public static Message of(Component prefix, String... key) {
-        return new Message(Arrays.asList(Translation.of(key)), Lang.getDefaultService(), prefix);
+        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), prefix);
     }
 
     public static Message of(Component prefix, Translation translation) {
-        return new Message(Arrays.asList(translation), Lang.getDefaultService(), prefix);
+        return new Message(Collections.singletonList(translation), Lang.getDefaultService(), prefix);
     }
 
     public static Message of(Component prefix, List<Translation> translations) {
@@ -67,11 +70,11 @@ public class Message implements TitleableSenderMessage {
     }
 
     public static Message of(LangService langService, Component prefix, String... key) {
-        return new Message(Arrays.asList(Translation.of(key)), langService, prefix);
+        return new Message(Collections.singletonList(Translation.of(key)), langService, prefix);
     }
 
     public static Message of(LangService langService, Component prefix, Translation translation) {
-        return new Message(Arrays.asList(translation), langService, prefix);
+        return new Message(Collections.singletonList(translation), langService, prefix);
     }
 
     public static Message of(LangService langService, Component prefix, List<Translation> translations) {
@@ -79,19 +82,19 @@ public class Message implements TitleableSenderMessage {
     }
 
     public static Message of(Collection<String> key) {
-        return new Message(Arrays.asList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
+        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
     }
 
     public static Message of(LangService langService, Collection<String> key) {
-        return new Message(Arrays.asList(Translation.of(key)), langService, Component.empty());
+        return new Message(Collections.singletonList(Translation.of(key)), langService, Component.empty());
     }
 
     public static Message of(Component prefix, Collection<String> key) {
-        return new Message(Arrays.asList(Translation.of(key)), Lang.getDefaultService(), prefix);
+        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), prefix);
     }
 
     public static Message of(LangService langService, Component prefix, Collection<String> key) {
-        return new Message(Arrays.asList(Translation.of(key)), langService, prefix);
+        return new Message(Collections.singletonList(Translation.of(key)), langService, prefix);
     }
 
     public Message placeholder(String placeholder, byte value) {
@@ -178,6 +181,11 @@ public class Message implements TitleableSenderMessage {
         return this;
     }
 
+    public Message prefixPolicy(PrefixPolicy prefixPolicy) {
+        this.prefixPolicy = prefixPolicy;
+        return this;
+    }
+
     public Message join(String key) {
         this.translations.add(Translation.of(key));
         return this;
@@ -209,11 +217,13 @@ public class Message implements TitleableSenderMessage {
     }
 
     public List<Component> getFor(CommandSenderWrapper sender) {
+        final var atomic = new AtomicBoolean(true);
+        final var container = langService.getFor(sender);
+
         return translations
                 .stream()
                 .map(translation -> {
-                    var list = langService
-                            .getFor(sender)
+                    final var list = container
                             .translate(translation.getKeys())
                             .stream()
                             .map(s -> Lang.MINIMESSAGE.parse(s, placeholders
@@ -223,7 +233,8 @@ public class Message implements TitleableSenderMessage {
                                     .collect(Collectors.toList())
                             ))
                             .map(component -> {
-                                if (!Component.empty().equals(prefix)) {
+                                if (!Component.empty().equals(prefix) && (prefixPolicy != PrefixPolicy.FIRST_MESSAGE || atomic.get())) {
+                                    atomic.set(false);
                                     return Component.text()
                                             .append(prefix)
                                             .append(Component.space())
@@ -272,6 +283,46 @@ public class Message implements TitleableSenderMessage {
         return this;
     }
 
+    public <W extends CommandSenderWrapper> Tasker.TaskBuilder titleTask(W sender) {
+        return Tasker
+                .build(() -> sender.showTitle(asTitle(sender)));
+    }
+
+    public <W extends CommandSenderWrapper> Tasker.TaskBuilder titleTask(W... senders) {
+        return Tasker
+                .build(() -> {
+                    for (var sender : senders) {
+                        title(sender);
+                    }
+                });
+    }
+
+    public <W extends CommandSenderWrapper> Tasker.TaskBuilder titleTask(Collection<W> senders) {
+        return Tasker
+                .build(() -> senders.forEach(this::title));
+    }
+
+    public <W extends CommandSenderWrapper> Message titleAsync(W sender) {
+        titleTask(sender)
+                .async()
+                .start();
+        return this;
+    }
+
+    public <W extends CommandSenderWrapper> Message titleAsync(W... senders) {
+        titleTask(senders)
+                .async()
+                .start();
+        return this;
+    }
+
+    public <W extends CommandSenderWrapper> Message titleAsync(Collection<W> senders) {
+        titleTask(senders)
+                .async()
+                .start();
+        return this;
+    }
+
     public <W extends CommandSenderWrapper> Message send(W sender) {
         getFor(sender).forEach(sender::sendMessage);
         return this;
@@ -286,6 +337,46 @@ public class Message implements TitleableSenderMessage {
 
     public <W extends CommandSenderWrapper> Message send(Collection<W> senders) {
         senders.forEach(this::send);
+        return this;
+    }
+
+    public <W extends CommandSenderWrapper> Tasker.TaskBuilder sendTask(W sender) {
+        return Tasker
+                .build(() -> getFor(sender).forEach(sender::sendMessage));
+    }
+
+    public <W extends CommandSenderWrapper>  Tasker.TaskBuilder sendTask(W... senders) {
+        return Tasker
+                .build(() -> {
+                    for (var sender : senders) {
+                        send(sender);
+                    }
+                });
+    }
+
+    public <W extends CommandSenderWrapper>  Tasker.TaskBuilder sendTask(Collection<W> senders) {
+        return Tasker
+                .build(() -> senders.forEach(this::send));
+    }
+
+    public <W extends CommandSenderWrapper> Message sendAsync(W sender) {
+        sendTask(sender)
+                .async()
+                .start();
+        return this;
+    }
+
+    public <W extends CommandSenderWrapper> Message sendAsync(W... senders) {
+        sendTask(senders)
+                .async()
+                .start();
+        return this;
+    }
+
+    public <W extends CommandSenderWrapper> Message sendAsync(Collection<W> senders) {
+        sendTask(senders)
+                .async()
+                .start();
         return this;
     }
 
@@ -324,5 +415,10 @@ public class Message implements TitleableSenderMessage {
     @NotNull
     public Title asTitle() {
         return asTitle(null, times);
+    }
+
+    public enum PrefixPolicy {
+        ALL_MESSAGES,
+        FIRST_MESSAGE
     }
 }
