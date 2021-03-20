@@ -17,7 +17,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Data
-public final class Message implements TitleableSenderMessage {
+public final class Message implements TitleableSenderMessage, Cloneable {
     private final List<Translation> translations = new LinkedList<>();
     private final Map<String, Function<CommandSenderWrapper, Component>> placeholders = new HashMap<>();
     private final LangService langService;
@@ -98,45 +98,45 @@ public final class Message implements TitleableSenderMessage {
     }
 
     public Message placeholder(String placeholder, byte value) {
-        return placeholder(placeholder, String.valueOf(value));
+        return placeholder(placeholder, Component.text(value));
     }
 
     public Message placeholder(String placeholder, short value) {
-        return placeholder(placeholder, String.valueOf(value));
+        return placeholder(placeholder, Component.text(value));
     }
 
     public Message placeholder(String placeholder, int value) {
-        return placeholder(placeholder, String.valueOf(value));
+        return placeholder(placeholder, Component.text(value));
     }
 
     public Message placeholder(String placeholder, long value) {
-        return placeholder(placeholder, String.valueOf(value));
+        return placeholder(placeholder, Component.text(value));
     }
 
     public Message placeholder(String placeholder, char value) {
-        return placeholder(placeholder, String.valueOf(value));
+        return placeholder(placeholder, Component.text(value));
     }
 
     public Message placeholder(String placeholder, boolean value) {
-        return placeholder(placeholder, String.valueOf(value));
+        return placeholder(placeholder, Component.text(value));
     }
 
     public Message placeholder(String placeholder, double value) {
-        return placeholder(placeholder, String.valueOf(value));
+        return placeholder(placeholder, Component.text(value));
     }
 
     public Message placeholder(String placeholder, float value) {
-        return placeholder(placeholder, String.valueOf(value));
+        return placeholder(placeholder, Component.text(value));
     }
 
     public Message placeholder(String placeholder, double value, int round) {
         double pow = Math.pow(10, round);
-        return placeholder(placeholder, String.valueOf(Math.round(value * pow) / pow));
+        return placeholder(placeholder, Component.text(Math.round(value * pow) / pow));
     }
 
     public Message placeholder(String placeholder, float value, int round) {
         double pow = Math.pow(10, round);
-        return placeholder(placeholder, String.valueOf(Math.round(value * pow) / pow));
+        return placeholder(placeholder, Component.text(Math.round(value * pow) / pow));
     }
 
     public Message placeholder(String placeholder, String value) {
@@ -149,12 +149,13 @@ public final class Message implements TitleableSenderMessage {
     }
 
     public Message placeholder(String placeholder, Translation translation) {
-        placeholders.put(placeholder, sender -> Component.join(Component.newline(), of(translation).getFor(sender)));
+        var msg = of(translation);
+        placeholders.put(placeholder, msg::getForJoined);
         return this;
     }
 
     public Message placeholder(String placeholder, Message message) {
-        placeholders.put(placeholder, sender -> Component.join(Component.newline(), message.getFor(sender)));
+        placeholders.put(placeholder, message::getForJoined);
         return this;
     }
 
@@ -166,6 +167,14 @@ public final class Message implements TitleableSenderMessage {
     public Message prefix(Component prefix) {
         if (prefix == null) {
             return noPrefix();
+        }
+        this.prefix = prefix;
+        return this;
+    }
+
+    public Message prefixOrDefault(Component prefix) {
+        if (prefix == null) {
+            return defaultPrefix();
         }
         this.prefix = prefix;
         return this;
@@ -425,6 +434,16 @@ public final class Message implements TitleableSenderMessage {
     @NotNull
     public Title asTitle() {
         return asTitle(null, times);
+    }
+
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
+    @Override
+    protected Message clone() {
+        var msg = new Message(translations, langService, prefix);
+        msg.times = times;
+        msg.placeholders.putAll(placeholders);
+        msg.prefixPolicy = prefixPolicy;
+        return msg;
     }
 
     public enum PrefixPolicy {
