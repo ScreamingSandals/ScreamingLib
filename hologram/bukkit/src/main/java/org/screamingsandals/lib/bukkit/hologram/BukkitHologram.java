@@ -174,7 +174,9 @@ public class BukkitHologram extends AbstractHologram {
         if (visible && viewers.size() > 0) {
             if (lines.size() != originalLinesSize
                     && itemEntity != null) {
-                itemEntity.setLocation(cachedLocation.clone().add(0, lines.size() * .25, 0));
+                itemEntity.setLocation(cachedLocation.clone().add(0, itemPosition == ItemPosition.BELOW
+                        ? (-lines.size() * .25 - .5)
+                        : (lines.size() * .25), 0));
 
                 try {
                     packets.add(getTeleportPacket(itemEntity));
