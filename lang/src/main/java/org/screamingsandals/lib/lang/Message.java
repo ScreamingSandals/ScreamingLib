@@ -173,7 +173,7 @@ public final class Message implements TitleableSenderMessage, Cloneable {
     }
 
     public Message prefixOrDefault(Component prefix) {
-        if (prefix == null) {
+        if (prefix == null || Component.empty().equals(prefix)) {
             return defaultPrefix();
         }
         this.prefix = prefix;
