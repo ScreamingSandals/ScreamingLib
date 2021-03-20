@@ -242,7 +242,8 @@ public final class Message implements TitleableSenderMessage, Cloneable {
                                     .collect(Collectors.toList())
                             ))
                             .map(component -> {
-                                if (!Component.empty().equals(prefix) && (prefixPolicy != PrefixPolicy.FIRST_MESSAGE || atomic.get())) {
+                                if (!Component.empty().equals(prefix)
+                                        && (prefixPolicy != PrefixPolicy.FIRST_MESSAGE || atomic.get())) {
                                     atomic.set(false);
                                     return Component.text()
                                             .append(prefix)

@@ -73,4 +73,10 @@ public interface TranslationContainer {
      * @return translated list of strings
      */
     List<String> translate(String... key);
+
+    /**
+     * Checks if this container is empty.
+     * @return true if empty
+     */
+    boolean isEmpty();
 }

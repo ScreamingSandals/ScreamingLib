@@ -33,4 +33,9 @@ class TranslationContainerImpl implements TranslationContainer {
         }
         return fallbackContainer != null ? fallbackContainer.translate(key) : List.of();
     }
+
+    @Override
+    public boolean isEmpty() {
+        return node.empty();
+    }
 }
