@@ -2,6 +2,7 @@ package org.screamingsandals.lib.lang;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.lang.container.TranslationContainer;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 
@@ -40,6 +41,10 @@ public abstract class LangService {
                 .map(Map.Entry::getValue)
                 .findAny()
                 .orElse(fallbackContainer);
+    }
+
+    public Component getDefaultPrefix() {
+        return Lang.getDefaultPrefix();
     }
 
     protected Locale getSenderLocale(CommandSenderWrapper sender) {

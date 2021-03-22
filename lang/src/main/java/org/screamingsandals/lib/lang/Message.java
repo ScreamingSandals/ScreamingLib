@@ -186,7 +186,7 @@ public final class Message implements TitleableSenderMessage, Cloneable {
     }
 
     public Message defaultPrefix() {
-        this.prefix = Lang.getDefaultPrefix();
+        this.prefix = Lang.getDefaultService().getDefaultPrefix();
         return this;
     }
 
