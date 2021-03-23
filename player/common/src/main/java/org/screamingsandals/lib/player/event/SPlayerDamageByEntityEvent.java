@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public class SPlayerDamageByEntityEvent extends SPlayerDamageEvent {
     @Getter
     private final EntityBasic damager;
