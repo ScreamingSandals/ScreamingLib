@@ -348,7 +348,6 @@ public class BukkitPlayerMapper extends PlayerMapper {
         new PlayerFoodLevelChangeListener(plugin);
         new PlayerCraftItemEventListener(plugin);
         new PlayerDamageEventListener(plugin);
-        new PlayerDamageByEntityListener(plugin);
         new PlayerProjectileLaunchEventListener(plugin);
         new PlayerDropItemEventListener(plugin);
         new PlayerBedEnterEventListener(plugin);
@@ -357,8 +356,6 @@ public class BukkitPlayerMapper extends PlayerMapper {
         new PlayerArmorStandManipulateEventListener(plugin);
         new PlayerBedLeaveEventListener(plugin);
         new PlayerBucketEventListener(plugin);
-        new PlayerBucketEmptyEventListener(plugin);
-        new PlayerBucketFillEventListener(plugin);
         new PlayerCommandSendEventListener(plugin);
         new PlayerEggThrowEventListener(plugin);
         new PlayerExpChangeEventListener(plugin);
@@ -366,7 +363,6 @@ public class BukkitPlayerMapper extends PlayerMapper {
         new PlayerGameModeChangeEventListener(plugin);
         if (Reflect.has("org.bukkit.event.player.PlayerHarvestBlockEvent"))
             new PlayerHarvestBlockEventListener(plugin);
-        new PlayerInteractAtEntityEventListener(plugin);
         new PlayerInteractEventListener(plugin);
         new PlayerItemConsumeEventListener(plugin);
         new PlayerItemDamageEventListener(plugin);
