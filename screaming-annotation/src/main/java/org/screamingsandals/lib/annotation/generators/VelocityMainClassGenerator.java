@@ -28,7 +28,6 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
         var loggerClass = ClassName.get("org.slf4j", "Logger");
 
         var velocityProxyServerClass = ClassName.get("com.velocitypowered.api.proxy", "ProxyServer");
-        var velocityPluginDescriptionClass = ClassName.get("com.velocitypowered.api.plugin", "PluginDescription");;
         var guiceInjectorClass = ClassName.get("com.google.inject", "Injector");
 
         var constructorBuilder = MethodSpec.constructorBuilder()
@@ -36,9 +35,10 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
                 .addAnnotation(ClassName.get("com.google.inject", "Inject"))
                 .addParameter(ParameterSpec.builder(velocityProxyServerClass, "proxyServer").build())
                 .addParameter(ParameterSpec.builder(loggerClass, "slf4jLogger").build())
-                .addParameter(ParameterSpec.builder(velocityPluginDescriptionClass, "velocityPluginDescription").build())
                 .addParameter(ParameterSpec.builder(guiceInjectorClass, "guice").build())
-                .addStatement("this.$N = new $T()", "pluginControllable", ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"));
+                .addStatement("this.$N = new $T()", "pluginControllable", ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"))
+                .addStatement("this.$N = $N", "guiceInjector", "guice")
+                .addStatement("this.$N = new $T($N)", "screamingLogger", screamingLoggerClass, "slf4jLogger");
 
 
         var serviceInitGenerator = ServiceInitGenerator
@@ -52,41 +52,43 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
                     objects.add("proxyServer");
                 })
                 .add("java.lang.Object", (statement, objects) -> // probably plugin
-                    statement.append("this")
+                        statement.append("this")
                 );
 
         sortedPair.getFirst().forEach(serviceInitGenerator::process);
 
-        constructorBuilder.addStatement("$T $N = $N.getId()", String.class, "name", "velocityPluginDescription")
-                .addStatement("$T $N = $T.createKey($N).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, "name")
-                .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key");
-        if (pluginContainer.getEnclosedElements().stream().filter(element -> element.getKind() == ElementKind.CONSTRUCTOR).map(el -> (ExecutableElement) el).anyMatch(el -> el.getParameters().size() == 1 && el.getParameters().get(0).asType().toString().equals("com.google.inject.Injector"))) {
-            constructorBuilder.addStatement("this.$N = new $T(guice)", "pluginContainer", pluginContainer);
-        } else {
-            constructorBuilder.addStatement("this.$N = new $T()", "pluginContainer", pluginContainer);
-        }
-        constructorBuilder.addStatement("$T $N = new $T($N)", screamingLoggerClass, "screamingLogger", screamingLoggerClass, "slf4jLogger")
-                .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "screamingLogger");
-
+        var pluginAnnotation = pluginContainer.getAnnotation(Plugin.class);
         var onEnableBuilder = preparePublicVoid("onEnable")
                 .addAnnotation(ClassName.get("com.velocitypowered.api.event", "Subscribe"))
                 .addParameter(ParameterSpec.builder(ClassName.get("com.velocitypowered.api.event.proxy", "ProxyInitializeEvent"), "event").build());
 
-        var onDisableBuilder =preparePublicVoid("onDisable")
+        var onDisableBuilder = preparePublicVoid("onDisable")
                 .addAnnotation(ClassName.get("com.velocitypowered.api.event", "Subscribe"))
                 .addParameter(ParameterSpec.builder(ClassName.get("com.velocitypowered.api.event.proxy", "ProxyShutdownEvent"), "event").build());
 
 
         sortedPair.getSecond().forEach(serviceInitGenerator::process);
 
-        constructorBuilder
+        //build container
+        onEnableBuilder.addStatement("$T $N = $T.createKey($S).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, pluginAnnotation.id())
+                .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key");
+
+        if (pluginContainer.getEnclosedElements().stream().filter(element -> element.getKind() == ElementKind.CONSTRUCTOR).map(el -> (ExecutableElement) el).anyMatch(el -> el.getParameters().size() == 1 && el.getParameters().get(0).asType().toString().equals("com.google.inject.Injector"))) {
+            onEnableBuilder.addStatement("this.$N = new $T(guiceInjector)", "pluginContainer", pluginContainer);
+        } else {
+            onEnableBuilder.addStatement("this.$N = new $T()", "pluginContainer", pluginContainer);
+        }
+
+        //init
+        onEnableBuilder
+                .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "screamingLogger");
+
+        //load the container first
+        onEnableBuilder
                 .addStatement("this.$N.load()", "pluginContainer");
 
-        onEnableBuilder
-                .beginControlFlow("if (this.$N == null)", "pluginContainer")
-                .addStatement("throw new $T($S)", UnsupportedOperationException.class, "Plugin must be loaded before enabling!")
-                .endControlFlow()
-                .addStatement("this.$N.enable()", "pluginControllable")
+        //then enable
+        onEnableBuilder.addStatement("this.$N.enable()", "pluginControllable")
                 .addStatement("this.$N.enable()", "pluginContainer")
                 .addStatement("this.$N.postEnable()", "pluginControllable");
 
@@ -104,6 +106,12 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
                         .builder(ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"), "pluginControllable",
                                 Modifier.PRIVATE)
                         .build())
+                .addField(FieldSpec
+                        .builder(screamingLoggerClass, "screamingLogger", Modifier.PRIVATE)
+                        .build())
+                .addField(FieldSpec
+                        .builder(guiceInjectorClass, "guiceInjector", Modifier.PRIVATE)
+                        .build())
                 .addMethod(constructorBuilder.build())
                 .addMethod(onEnableBuilder.build())
                 .addMethod(onDisableBuilder.build())
@@ -117,8 +125,6 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
                 .path(Path.of(processingEnvironment.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "velocity-plugin.json").toUri()))
                 .build();
 
-
-        var pluginAnnotation = pluginContainer.getAnnotation(Plugin.class);
 
         var node = loader.createNode();
         node.node("main").set(((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString() + "." + pluginContainer.getSimpleName() + "_VelocityImpl");
