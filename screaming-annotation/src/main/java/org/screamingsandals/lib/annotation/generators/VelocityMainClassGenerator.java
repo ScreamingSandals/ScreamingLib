@@ -8,9 +8,7 @@ import org.screamingsandals.lib.utils.annotations.PluginDependencies;
 import org.spongepowered.configurate.gson.GsonConfigurationLoader;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.PackageElement;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.*;
 import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -30,7 +28,8 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
         var loggerClass = ClassName.get("org.slf4j", "Logger");
 
         var velocityProxyServerClass = ClassName.get("com.velocitypowered.api.proxy", "ProxyServer");
-        var velocityPluginDescriptionClass = ClassName.get("com.velocitypowered.api.plugin", "PluginDescription");
+        var velocityPluginDescriptionClass = ClassName.get("com.velocitypowered.api.plugin", "PluginDescription");;
+        var guiceInjectorClass = ClassName.get("com.google.inject", "Injector");
 
         var constructorBuilder = MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
@@ -38,6 +37,7 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
                 .addParameter(ParameterSpec.builder(velocityProxyServerClass, "proxyServer").build())
                 .addParameter(ParameterSpec.builder(loggerClass, "slf4jLogger").build())
                 .addParameter(ParameterSpec.builder(velocityPluginDescriptionClass, "velocityPluginDescription").build())
+                .addParameter(ParameterSpec.builder(guiceInjectorClass, "guice").build())
                 .addStatement("this.$N = new $T()", "pluginControllable", ClassName.get("org.screamingsandals.lib.utils", "ControllableImpl"));
 
 
@@ -59,9 +59,13 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
 
         constructorBuilder.addStatement("$T $N = $N.getId()", String.class, "name", "velocityPluginDescription")
                 .addStatement("$T $N = $T.createKey($N).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, "name")
-                .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key")
-                .addStatement("this.$N = new $T()", "pluginContainer", pluginContainer)
-                .addStatement("$T $N = new $T($N)", screamingLoggerClass, "screamingLogger", screamingLoggerClass, "slf4jLogger")
+                .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key");
+        if (pluginContainer.getEnclosedElements().stream().filter(element -> element.getKind() == ElementKind.CONSTRUCTOR).map(el -> (ExecutableElement) el).anyMatch(el -> el.getParameters().size() == 1 && el.getParameters().get(0).asType().toString().equals("com.google.inject.Injector"))) {
+            constructorBuilder.addStatement("this.$N = new $T(guice)", "pluginContainer", pluginContainer);
+        } else {
+            constructorBuilder.addStatement("this.$N = new $T()", "pluginContainer", pluginContainer);
+        }
+        constructorBuilder.addStatement("$T $N = new $T($N)", screamingLoggerClass, "screamingLogger", screamingLoggerClass, "slf4jLogger")
                 .addStatement("this.$N.init($N, $N)", "pluginContainer", "description", "screamingLogger");
 
         var onEnableBuilder = preparePublicVoid("onEnable")
