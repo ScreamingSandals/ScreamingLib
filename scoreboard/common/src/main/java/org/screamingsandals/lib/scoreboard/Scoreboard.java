@@ -20,4 +20,10 @@ public interface Scoreboard extends LinedVisual<Scoreboard>, DatableVisual<Score
     Collection<ScoreboardTeam> getTeams();
 
     Optional<ScoreboardTeam> getTeam(String identifier);
+
+    ScoreboardTeam team(String identifier);
+
+    Scoreboard removeTeam(String identifier);
+
+    Scoreboard removeTeam(ScoreboardTeam scoreboardTeam);
 }

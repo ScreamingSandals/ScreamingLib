@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public abstract class AbstractScoreboard extends AbstractLinedVisual<Scoreboard> implements Scoreboard {
     @Getter
-    private final List<ScoreboardTeam> teams = new LinkedList<>();
+    protected final List<ScoreboardTeam> teams = new LinkedList<>();
     @Getter
     @Setter
     protected DataContainer data;
@@ -25,7 +25,20 @@ public abstract class AbstractScoreboard extends AbstractLinedVisual<Scoreboard>
 
     @Override
     public Optional<ScoreboardTeam> getTeam(String identifier) {
-        return teams.stream().filter(scoreboardTeam -> identifier.equals(scoreboardTeam.getIdentifier())).findFirst();
+        return teams.stream().filter(scoreboardTeam -> identifier.equals(scoreboardTeam.identifier())).findFirst();
+    }
+
+    @Override
+    public Scoreboard removeTeam(String identifier) {
+        getTeam(identifier).ifPresent(this::removeTeam);
+        return this;
+    }
+
+    @Override
+    public Scoreboard removeTeam(ScoreboardTeam scoreboardTeam) {
+        scoreboardTeam.destroy();
+        teams.remove(scoreboardTeam);
+        return this;
     }
 
     @Override

@@ -4,10 +4,12 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.entity.Player;
+import org.screamingsandals.lib.bukkit.scoreboard.team.BukkitScoreboardTeam;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.scoreboard.AbstractScoreboard;
 import org.screamingsandals.lib.scoreboard.Scoreboard;
+import org.screamingsandals.lib.scoreboard.team.ScoreboardTeam;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -37,13 +39,19 @@ public class BukkitScoreboard extends AbstractScoreboard {
             ClassStorage.sendPacket(bukkitPlayer, createObjective());
             ClassStorage.sendPackets(bukkitPlayer, allScores());
             ClassStorage.sendPacket(bukkitPlayer, displayObjective());
+            teams.forEach(scoreboardTeam ->
+                ClassStorage.sendPacket(bukkitPlayer, ((BukkitScoreboardTeam) scoreboardTeam).constructCreatePacket())
+            );
         }
     }
 
     @Override
     public void onViewerRemoved(PlayerWrapper player, boolean checkDistance) {
-        if (visible) {
+        if (visible && player.isOnline()) {
             var bukkitPlayer = player.as(Player.class);
+            teams.forEach(scoreboardTeam ->
+                    ClassStorage.sendPacket(bukkitPlayer, ((BukkitScoreboardTeam) scoreboardTeam).constructDestructPacket())
+            );
             ClassStorage.sendPacket(bukkitPlayer, destroyObjective());
         }
     }
@@ -173,8 +181,7 @@ public class BukkitScoreboard extends AbstractScoreboard {
         return stringBuilder.toString();
     }
 
-
-    private Object asMinecraftComponent(Component component) {
+    public static Object asMinecraftComponent(Component component) {
         try {
             return MinecraftComponentSerializer.get().serialize(component);
         } catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
@@ -183,4 +190,14 @@ public class BukkitScoreboard extends AbstractScoreboard {
         }
     }
 
+    @Override
+    public ScoreboardTeam team(String identifier) {
+        var team = new BukkitScoreboardTeam(this, identifier);
+        teams.add(team);
+        if (visible && !viewers.isEmpty()) {
+            var packet = team.constructCreatePacket();
+            viewers.forEach(player -> ClassStorage.sendPacket(player.as(Player.class), packet));
+        }
+        return team;
+    }
 }

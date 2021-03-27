@@ -1,5 +1,7 @@
 package org.screamingsandals.lib.bukkit.scoreboard;
 
+import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.player.event.SPlayerLeaveEvent;
 import org.screamingsandals.lib.scoreboard.Scoreboard;
 import org.screamingsandals.lib.scoreboard.ScoreboardManager;
 import org.screamingsandals.lib.utils.Controllable;
@@ -16,6 +18,23 @@ public class BukkitScoreboardManager extends ScoreboardManager {
 
     protected BukkitScoreboardManager(Controllable controllable) {
         super(controllable);
+
+        EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, this::onLeave);
+    }
+
+    private void onLeave(SPlayerLeaveEvent event) {
+        if (activeScoreboards.isEmpty()) {
+            return;
+        }
+
+        getActiveScoreboards().forEach((key, scoreboard) -> {
+            if (scoreboard.getViewers().contains(event.getPlayer())) {
+                scoreboard.removeViewer(event.getPlayer());
+            }
+            if (!scoreboard.hasViewers()) {
+                removeScoreboard(scoreboard);
+            }
+        });
     }
 
     @Override
