@@ -41,7 +41,11 @@ public class BungeeMainClassGenerator extends MainClassGenerator {
                 .builder(onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
                 .add("net.md_5.bungee.api.plugin.Plugin", (statement, objects) ->
                         statement.append("this")
-                );
+                )
+                .add(pluginContainer.asType().toString(), (statement, processedArguments) -> {
+                    statement.append("this.$N");
+                    processedArguments.add("pluginContainer");
+                });
 
         sortedPair.getFirst().forEach(serviceInitGenerator::process);
 

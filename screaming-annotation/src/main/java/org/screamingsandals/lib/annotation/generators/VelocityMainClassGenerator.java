@@ -53,7 +53,11 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
                 })
                 .add("java.lang.Object", (statement, objects) -> // probably plugin
                         statement.append("this")
-                );
+                )
+                .add(pluginContainer.asType().toString(), (statement, processedArguments) -> {
+                    statement.append("this.$N");
+                    processedArguments.add("pluginContainer");
+                });
 
         sortedPair.getFirst().forEach(serviceInitGenerator::process);
 

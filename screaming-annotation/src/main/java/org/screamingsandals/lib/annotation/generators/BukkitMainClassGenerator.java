@@ -39,7 +39,11 @@ public class BukkitMainClassGenerator extends MainClassGenerator {
                 .builder(onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
                 .add(List.of("org.bukkit.plugin.java.JavaPlugin", "org.bukkit.plugin.Plugin"), (statement, objects) ->
                         statement.append("this")
-                );
+                )
+                .add(pluginContainer.asType().toString(), (statement, processedArguments) -> {
+                    statement.append("this.$N");
+                    processedArguments.add("pluginContainer");
+                });
 
         sortedPair.getFirst().forEach(serviceInitGenerator::process);
 

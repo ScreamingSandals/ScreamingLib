@@ -3,30 +3,18 @@ package org.screamingsandals.lib.scoreboard.team;
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import org.screamingsandals.lib.scoreboard.Scoreboard;
 
 public interface ScoreboardTeam extends ForwardingAudience {
 
-    String getIdentifier();
+    ScoreboardTeam identifier(String identifier);
 
-    void setIdentifier(String identifier);
+    ScoreboardTeam color(TextColor color);
+
+    ScoreboardTeam displayName(Component component);
+
+    String getIdentifier();
 
     TextColor getColor();
 
-    void setColor(TextColor color);
-
     Component getDisplayName();
-
-    void setDisplayName(Component component);
-
-    interface Builder {
-
-        Builder identifier(String identifier);
-
-        Builder color(TextColor color);
-
-        Builder displayName(Component displayName);
-
-        Scoreboard build();
-    }
 }

@@ -1,0 +1,6 @@
+dependencies {
+    api project(':scoreboard-common')
+    api project(':utils-bukkit')
+
+    compileOnly paper(PAPER_VERSION)
+}

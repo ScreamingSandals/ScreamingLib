@@ -38,7 +38,11 @@ public class MinestomMainClassGenerator extends MainClassGenerator {
                 .builder(onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
                 .add("net.minestom.server.extensions.Extension", (statement, objects) ->
                         statement.append("this")
-                );
+                )
+                .add(pluginContainer.asType().toString(), (statement, processedArguments) -> {
+                    statement.append("this.$N");
+                    processedArguments.add("pluginContainer");
+                });
 
         sortedPair.getFirst().forEach(serviceInitGenerator::process);
 
