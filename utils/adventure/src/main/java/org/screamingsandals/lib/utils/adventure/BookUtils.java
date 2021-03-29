@@ -16,10 +16,10 @@ public class BookUtils {
         if (NATIVE_BOOK_CLASS.isInstance(book)) {
             return book;
         }
-        return bookToPlatform(book, NATIVE_BOOK_CLASS, ComponentUtils.NATIVE_COMPONENT_CLASS);
+        return bookToPlatform(book, NATIVE_BOOK_CLASS, ComponentUtils.NATIVE_COMPONENT_CLASS, ComponentUtils.NATIVE_GSON_COMPONENT_SERIALIZER_GETTER.invokeStatic());
     }
 
-    public Object bookToPlatform(Book book, Class<?> bookClass, Class<?> componentClass) {
+    public Object bookToPlatform(Book book, Class<?> bookClass, Class<?> componentClass, Object componentSerializer) {
         return Reflect
                 .getMethod(bookClass, "book", componentClass, componentClass, Collection.class)
                 .invokeStatic(
@@ -27,25 +27,32 @@ public class BookUtils {
                         ComponentUtils.componentToPlatform(book.author(), componentClass),
                         book.pages()
                                 .stream()
-                                .map(component -> ComponentUtils.componentToPlatform(component, componentClass))
+                                .map(component -> ComponentUtils.componentToPlatform(component, componentSerializer))
                                 .toArray()
                 );
     }
 
-    @SuppressWarnings("unchecked")
     public Book bookFromPlatform(Object platformObject) {
         if (platformObject instanceof Book) {
             return (Book) platformObject;
         }
+        return bookFromPlatform(platformObject, ComponentUtils.NATIVE_GSON_COMPONENT_SERIALIZER_GETTER.invokeStatic());
+    }
+
+    @SuppressWarnings("unchecked")
+    public Book bookFromPlatform(Object platformObject, Object componentSerializer) {
+        if (platformObject instanceof Book) {
+            return (Book) platformObject;
+        }
         return Book.book(
-                ComponentUtils.componentFromPlatform(Reflect.fastInvoke(platformObject, "title")),
-                ComponentUtils.componentFromPlatform(Reflect.fastInvoke(platformObject, "author")),
+                ComponentUtils.componentFromPlatform(Reflect.fastInvoke(platformObject, "title"), componentSerializer),
+                ComponentUtils.componentFromPlatform(Reflect.fastInvoke(platformObject, "author"), componentSerializer),
                 (Component[]) // IDEA is retarded or idk, so here is casting
                     Reflect
                         .fastInvokeResulted(platformObject, "pages")
                         .as(Collection.class)
                         .stream()
-                        .map(ComponentUtils::componentFromPlatform)
+                        .map(o -> ComponentUtils.componentFromPlatform(o, componentSerializer))
                         .toArray(Component[]::new)
         );
     }

@@ -12,6 +12,10 @@ public class Reflect {
         return getClassSafe(Map.of(), classNames);
     }
 
+    public static Class<?> getClassSafe(ClassLoader loader, String... classNames) {
+        return getClassSafe(loader, Map.of(), classNames);
+    }
+
     public static Class<?> getClassSafe(Map<String, String> replaceRules, String... classNames) {
         for (var className : classNames) {
             try {
@@ -19,6 +23,19 @@ public class Reflect {
                     className = className.replace(rule.getKey(), rule.getValue());
                 }
                 return Class.forName(className);
+            } catch (ClassNotFoundException ignored) {
+            }
+        }
+        return null;
+    }
+
+    public static Class<?> getClassSafe(ClassLoader loader, Map<String, String> replaceRules, String... classNames) {
+        for (var className : classNames) {
+            try {
+                for (var rule : replaceRules.entrySet()) {
+                    className = className.replace(rule.getKey(), rule.getValue());
+                }
+                return Class.forName(className, true, loader);
             } catch (ClassNotFoundException ignored) {
             }
         }

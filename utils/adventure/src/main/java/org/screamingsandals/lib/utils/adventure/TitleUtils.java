@@ -41,15 +41,15 @@ public class TitleUtils {
         if (NATIVE_TITLE_CLASS.isInstance(title)) {
             return title;
         }
-        return titleToPlatform(title, NATIVE_TITLE_CLASS, ComponentUtils.NATIVE_COMPONENT_CLASS, NATIVE_TIMES_CLASS);
+        return titleToPlatform(title, NATIVE_TITLE_CLASS, ComponentUtils.NATIVE_COMPONENT_CLASS, ComponentUtils.NATIVE_GSON_COMPONENT_SERIALIZER_GETTER.invokeStatic(), NATIVE_TIMES_CLASS);
     }
 
-    public Object titleToPlatform(Title title, Class<?> titleClass, Class<?> componentClass, Class<?> timesClass) {
+    public Object titleToPlatform(Title title, Class<?> titleClass, Class<?> componentClass, Object componentSerializer, Class<?> timesClass) {
         return Reflect
                 .getMethod(titleClass, "title", componentClass, componentClass, timesClass)
                 .invokeStatic(
-                        ComponentUtils.componentToPlatform(title.title(), componentClass),
-                        ComponentUtils.componentToPlatform(title.subtitle(), componentClass),
+                        ComponentUtils.componentToPlatform(title.title(), componentSerializer),
+                        ComponentUtils.componentToPlatform(title.subtitle(), componentSerializer),
                         title.times() != null ? timesToPlatform(title.times(), timesClass) : null
                 );
     }

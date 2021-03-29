@@ -26,16 +26,17 @@ public class BossBarUtils {
                 bossBar,
                 NATIVE_BOSSBAR_CLASS,
                 ComponentUtils.NATIVE_COMPONENT_CLASS,
+                ComponentUtils.NATIVE_GSON_COMPONENT_SERIALIZER_GETTER.invokeStatic(),
                 NATIVE_BOSSBAR_FLAG_CLASS,
                 NATIVE_BOSSBAR_OVERLAY_CLASS,
                 NATIVE_BOSSBAR_COLOR_CLASS
         );
     }
 
-    public Object bossBarToPlatform(BossBar bossBar, Class<?> bossBarClass, Class<?> componentClass, Class<?> flagsClass, Class<?> overlayClass, Class<?> colorClass) {
+    public Object bossBarToPlatform(BossBar bossBar, Class<?> bossBarClass, Class<?> componentClass, Object componentSerializer, Class<?> flagsClass, Class<?> overlayClass, Class<?> colorClass) {
         var platformBossBar = Reflect
                 .getMethod(bossBarClass, "name", componentClass)
-                .invokeStaticResulted(ComponentUtils.componentToPlatform(bossBar.name(), componentClass));
+                .invokeStaticResulted(ComponentUtils.componentToPlatform(bossBar.name(), componentSerializer));
 
         // TODO: Cache boss bars if converting to native
 
