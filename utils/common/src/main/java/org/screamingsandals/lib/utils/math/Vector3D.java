@@ -3,11 +3,13 @@ package org.screamingsandals.lib.utils.math;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
 public class Vector3D implements Cloneable {
     private double x;
     private double y;
@@ -37,6 +39,14 @@ public class Vector3D implements Cloneable {
         var deltaZ = z - o.z;
 
         return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+    }
+
+    public Vector3D multiply(double multiply) {
+        this.x *= multiply;
+        this.y *= multiply;
+        this.z *= multiply;
+
+        return this;
     }
 
     @NotNull

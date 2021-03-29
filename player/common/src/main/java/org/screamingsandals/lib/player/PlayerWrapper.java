@@ -4,10 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.entity.EntityHuman;
+import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.container.Openable;
+import org.screamingsandals.lib.player.event.SPlayerDamageEvent;
 import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.lang.ref.WeakReference;
@@ -124,6 +128,36 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
     @Override
     public void setWhitelisted(boolean whitelisted) {
         PlayerMapper.setWhitelisted(this, whitelisted);
+    }
+
+    public void launch(double multiply, double y) {
+        if (isOnline()) {
+            var entity = as(EntityHuman.class);
+            entity.setVelocity(entity.getVelocity().multiply(multiply).setY(y));
+
+            EventManager.getDefaultEventManager().registerOneTime(SPlayerDamageEvent.class, event -> {
+                if (!equals(event.getPlayer()) || event.getCause() != SPlayerDamageEvent.DamageCause.FALL) {
+                    return false;
+                }
+                event.setCancelled(true);
+                return true;
+            });
+        }
+    }
+
+    public void launch(Vector3D velocity) {
+        if (isOnline()) {
+            var entity = as(EntityHuman.class);
+            entity.setVelocity(velocity);
+
+            EventManager.getDefaultEventManager().registerOneTime(SPlayerDamageEvent.class, event -> {
+                if (!equals(event.getPlayer()) || event.getCause() != SPlayerDamageEvent.DamageCause.FALL) {
+                    return false;
+                }
+                event.setCancelled(true);
+                return true;
+            });
+        }
     }
 
     /**

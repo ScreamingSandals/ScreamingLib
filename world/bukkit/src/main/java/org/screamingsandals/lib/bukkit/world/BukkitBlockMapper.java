@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.screamingsandals.lib.bukkit.material.BukkitMaterialMapping;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -14,7 +15,8 @@ import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
 @Service(dependsOn = {
-        BukkitLocationMapper.class
+        BukkitLocationMapper.class,
+        BukkitMaterialMapping.class
 })
 public class BukkitBlockMapper extends BlockMapper {
 

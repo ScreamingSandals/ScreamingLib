@@ -3,6 +3,8 @@ package org.screamingsandals.lib.utils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Objects;
+
 /**
  * Basic Wrapper is class used for directly wrapping objects without using Mapping classes and Bidirectional Converters.
  * Can be used for example for wrapping players in Material Resolver without having Player Utils.
@@ -32,5 +34,18 @@ public class BasicWrapper<O> implements Wrapper {
             return (T) this;
         }
         throw new UnsupportedOperationException("Can't unwrap object to " + type.getName());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BasicWrapper) {
+            obj = ((BasicWrapper<?>) obj).raw();
+        }
+        return Objects.equals(wrappedObject, obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(wrappedObject);
     }
 }

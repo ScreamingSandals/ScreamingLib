@@ -72,6 +72,11 @@ public class LocationHolder implements Wrapper, Serializable {
                 MathUtils.square(getZ() - holder.getZ());
     }
 
+    public Vector3D asVector() {
+        return new Vector3D(this.x, this.y, this.z);
+    }
+
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public LocationHolder clone() {
         final var location = new LocationHolder();

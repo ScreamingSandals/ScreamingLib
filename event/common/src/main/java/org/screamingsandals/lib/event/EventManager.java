@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -63,12 +64,37 @@ public class EventManager {
         return register(event, EventHandler.of(consumer));
     }
 
+    public <T extends AbstractEvent> EventHandler<T> registerOneTime(Class<T> event, Function<T, Boolean> function) {
+        return register(event, EventHandler.ofOneTime(handler -> e -> {
+            if (function.apply(e)) {
+                unregister(handler);
+            }
+        }));
+    }
+
     public <T extends AbstractEvent> EventHandler<T> register(Class<T> event, Consumer<T> consumer, boolean ignoreCancelled) {
         return register(event, EventHandler.of(consumer, ignoreCancelled));
     }
 
+    public <T extends AbstractEvent> EventHandler<T> registerOneTime(Class<T> event, Function<T, Boolean> function, boolean ignoreCancelled) {
+        return register(event, EventHandler.ofOneTime(handler -> e -> {
+            if (function.apply(e)) {
+                unregister(handler);
+            }
+        }, ignoreCancelled));
+    }
+
     public <T extends AbstractEvent> EventHandler<T> register(Class<T> event, Consumer<T> consumer, EventPriority eventPriority) {
         return register(event, EventHandler.of(consumer, eventPriority));
+    }
+
+    public <T extends AbstractEvent> EventHandler<T> registerOneTime(Class<T> event, Function<T, Boolean> function, EventPriority eventPriority,
+                                                              boolean ignoreCancelled) {
+        return register(event, EventHandler.ofOneTime(handler -> e -> {
+            if (function.apply(e)) {
+                unregister(handler);
+            }
+        }, eventPriority, ignoreCancelled));
     }
 
     public <T extends AbstractEvent> EventHandler<T> register(Class<T> event, Consumer<T> consumer, EventPriority eventPriority,

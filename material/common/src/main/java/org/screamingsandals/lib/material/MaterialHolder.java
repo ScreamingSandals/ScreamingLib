@@ -27,4 +27,8 @@ public final class MaterialHolder implements Wrapper {
     public boolean isAir() {
         return platformName.equals("AIR");
     }
+
+    public boolean is(Object material) {
+        return equals(MaterialMapping.resolve(material).orElse(null));
+    }
 }

@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.bukkit.scoreboard;
 
 import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.event.SPlayerLeaveEvent;
 import org.screamingsandals.lib.scoreboard.Scoreboard;
 import org.screamingsandals.lib.scoreboard.ScoreboardManager;
@@ -9,7 +10,10 @@ import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.UUID;
 
-@Service
+@Service(dependsOn = {
+        EventManager.class,
+        PlayerMapper.class
+})
 public class BukkitScoreboardManager extends ScoreboardManager {
 
     public static void init(Controllable controllable) {

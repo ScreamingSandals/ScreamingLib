@@ -1,15 +1,18 @@
 package org.screamingsandals.lib.event;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.ConsumerExecutor;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Data
-@RequiredArgsConstructor(staticName = "of")
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE, staticName = "of")
+@AllArgsConstructor(staticName = "of")
 public class EventHandler<E extends AbstractEvent> {
-    private final Consumer<E> consumer;
+    @Setter(value = AccessLevel.NONE)
+    private Consumer<E> consumer;
     private final EventPriority eventPriority;
     private final boolean ignoreCancelled;
 
@@ -23,6 +26,30 @@ public class EventHandler<E extends AbstractEvent> {
 
     public static <E extends AbstractEvent> EventHandler<E> of(Consumer<E> consumer, boolean ignoreCancelled) {
         return of(consumer, EventPriority.NORMAL, ignoreCancelled);
+    }
+
+    public static <E extends AbstractEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull Consumer<E>> function) {
+        EventHandler<E> manager = of(EventPriority.NORMAL, false);
+        manager.consumer = function.apply(manager);
+        return manager;
+    }
+
+    public static <E extends AbstractEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull Consumer<E>> function, EventPriority eventPriority) {
+        EventHandler<E> manager = of(eventPriority, false);
+        manager.consumer = function.apply(manager);
+        return manager;
+    }
+
+    public static <E extends AbstractEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull Consumer<E>> function, boolean ignoreCancelled) {
+        EventHandler<E> manager = of(EventPriority.NORMAL, ignoreCancelled);
+        manager.consumer = function.apply(manager);
+        return manager;
+    }
+
+    public static <E extends AbstractEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull Consumer<E>> function, EventPriority eventPriority, boolean ignoreCancelled) {
+        EventHandler<E> manager = of(eventPriority, ignoreCancelled);
+        manager.consumer = function.apply(manager);
+        return manager;
     }
 
     @SuppressWarnings("unchecked")

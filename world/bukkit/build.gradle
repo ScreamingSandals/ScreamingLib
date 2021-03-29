@@ -1,5 +1,6 @@
 dependencies {
     api project(':world-common')
+    api project(':material-bukkit')
     api paperlib()
 
     compileOnly paper(PAPER_VERSION)
