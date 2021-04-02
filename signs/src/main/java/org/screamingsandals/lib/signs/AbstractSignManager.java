@@ -124,7 +124,8 @@ public abstract class AbstractSignManager {
 
     @OnEvent
     public void onRightClick(SPlayerClickedBlockEvent event) {
-        if (event.getAction() == SPlayerClickedBlockEvent.Action.RIGHT_CLICK_BLOCK && event.getBlock() != null) {
+        if (event.getAction() == SPlayerClickedBlockEvent.Action.RIGHT_CLICK_BLOCK
+                && event.getBlock() != null) {
             var state = event.getBlock().getBlockState().orElseThrow();
             if (state instanceof SignHolder) {
                 var location = new SignLocation(state.getLocation());

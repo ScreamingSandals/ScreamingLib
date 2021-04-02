@@ -10,6 +10,9 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.world.BlockHolder;
 
+import java.util.Arrays;
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
@@ -28,7 +31,16 @@ public class SPlayerClickedBlockEvent extends CancellableAbstractEvent {
         RIGHT_CLICK_BLOCK,
         LEFT_CLICK_AIR,
         RIGHT_CLICK_AIR,
-        PHYSICAL
+        PHYSICAL;
+
+        public static List<Action> VALUES = Arrays.asList(values());
+
+        public static Action convert(String name) {
+            return VALUES.stream()
+                    .filter(next -> next.name().equalsIgnoreCase(name))
+                    .findFirst()
+                    .orElseThrow();
+        }
     }
 
 }

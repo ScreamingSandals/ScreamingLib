@@ -25,7 +25,7 @@ public class PlayerInteractEventListener extends AbstractBukkitEventHandlerFacto
         return new SPlayerInteractEvent(
                 PlayerMapper.wrapPlayer(event.getPlayer()),
                 ItemFactory.build(event.getItem()).orElse(null),
-                SPlayerClickedBlockEvent.Action.valueOf(event.getAction().name().toUpperCase()),
+                SPlayerClickedBlockEvent.Action.convert(event.getAction().name()),
                 BlockMapper.wrapBlock(event.getClickedBlock()),
                 BlockFace.valueOf(event.getBlockFace().name().toUpperCase()),
                 AbstractEvent.Result.convert(event.useInteractedBlock().name()),
