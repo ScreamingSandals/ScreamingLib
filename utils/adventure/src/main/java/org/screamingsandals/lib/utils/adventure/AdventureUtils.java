@@ -18,6 +18,11 @@ public class AdventureUtils {
             = Reflect.getClassSafe("net.kyori.adventure.audience.MessageType");
 
     public InstanceMethod get(Object instance, String method, Class<?>... types) {
+        if (ComponentUtils.NATIVE_COMPONENT_CLASS.isAssignableFrom(Component.class)) {
+            // Ok, we are not using shaded adventure
+            return Reflect.getMethod(instance, method, types);
+        }
+
         var classes = new Class<?>[types.length];
         for (var i = 0; i < classes.length; i++) {
             if (Component.class.isAssignableFrom(types[i])) {
@@ -46,7 +51,7 @@ public class AdventureUtils {
 
         return Reflect
                 .getMethod(instance, method, classes)
-                .withTransformer((parameterTypes, parameters) -> {
+                .withTransformers((parameterTypes, parameters) -> {
                     var result = new Object[parameters.length];
                     for (var i = 0; i < result.length; i++) {
                         if (ComponentUtils.NATIVE_COMPONENT_CLASS.isAssignableFrom(parameterTypes[i])) {
@@ -74,6 +79,29 @@ public class AdventureUtils {
                         }
                     }
                     return result;
+                }, o -> {
+                    if (ComponentUtils.NATIVE_COMPONENT_CLASS.isInstance(o)) {
+                        return ComponentUtils.componentFromPlatform(o);
+                    } else if (TitleUtils.NATIVE_TIMES_CLASS.isInstance(o)) {
+                        return TitleUtils.timesFromPlatform(o);
+                    } else if (TitleUtils.NATIVE_TITLE_CLASS.isInstance(o)) {
+                        return TitleUtils.titleFromPlatform(o);
+                    } else if (BookUtils.NATIVE_BOOK_CLASS.isInstance(o)) {
+                        return BookUtils.bookFromPlatform(o);
+                    } else if (IdentityUtils.NATIVE_IDENTITY_CLASS.isInstance(o)) {
+                        return IdentityUtils.identityFromPlatform(o);
+                    } else if (NATIVE_MESSAGE_TYPE_CLASS.isInstance(o)) {
+                        return MessageType.valueOf(Reflect.fastInvokeResulted(o, "name").as(String.class));
+                    } else if (KeyUtils.NATIVE_KEY_CLASS.isInstance(o)) {
+                        return KeyUtils.keyFromPlatform(o);
+                    } else if (SoundUtils.NATIVE_SOUND_CLASS.isInstance(o)) {
+                        return SoundUtils.soundFromPlatform(o);
+                    } else if (SoundUtils.NATIVE_SOURCE_CLASS.isInstance(o)) {
+                        return SoundUtils.sourceFromPlatform(o);
+                    } else if (SoundUtils.NATIVE_SOUND_STOP_CLASS.isInstance(o)) {
+                        return SoundUtils.stopSoundFromPlatform(o);
+                    }
+                    return o;
                 });
     }
 }

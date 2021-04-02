@@ -2,9 +2,12 @@ package org.screamingsandals.lib.utils.adventure;
 
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -17,6 +20,8 @@ public class BossBarUtils {
             = Reflect.getClassSafe("net.kyori.adventure.bossbar.BossBar$Flag");
     public final Class<?> NATIVE_BOSSBAR_COLOR_CLASS
             = Reflect.getClassSafe("net.kyori.adventure.bossbar.BossBar$Color");
+
+    private final WeakHashMap<BossBar, Object> weakMap = new WeakHashMap<>();
 
     public Object bossBarToPlatform(BossBar bossBar) {
         if (NATIVE_BOSSBAR_CLASS.isInstance(bossBar)) {
@@ -34,11 +39,15 @@ public class BossBarUtils {
     }
 
     public Object bossBarToPlatform(BossBar bossBar, Class<?> bossBarClass, Class<?> componentClass, Object componentSerializer, Class<?> flagsClass, Class<?> overlayClass, Class<?> colorClass) {
+        var nativeAdventure = componentSerializer == ComponentUtils.NATIVE_GSON_COMPONENT_SERIALIZER_GETTER.invokeStatic();
+
+        if (nativeAdventure && weakMap.containsKey(bossBar)) {
+            return weakMap.get(bossBar);
+        }
+
         var platformBossBar = Reflect
                 .getMethod(bossBarClass, "name", componentClass)
                 .invokeStaticResulted(ComponentUtils.componentToPlatform(bossBar.name(), componentSerializer));
-
-        // TODO: Cache boss bars if converting to native
 
         platformBossBar
                 .getMethod("progress", float.class)
@@ -61,7 +70,60 @@ public class BossBarUtils {
                         .collect(Collectors.toSet())
                 );
 
-        // TODO: Listeners
+        if (nativeAdventure) {
+            weakMap.put(bossBar, platformBossBar.raw());
+        }
+
+        // Mirroring changes from the original to the transformed
+        bossBar.addListener(new BossBar.Listener() {
+            @Override
+            public void bossBarNameChanged(@NonNull BossBar bar, @NonNull Component oldName, @NonNull Component newName) {
+                platformBossBar
+                        .getMethod("name", componentClass)
+                        .invoke(ComponentUtils.componentToPlatform(newName, componentSerializer));
+            }
+
+            @Override
+            public void bossBarProgressChanged(@NonNull BossBar bar, float oldProgress, float newProgress) {
+                platformBossBar
+                        .getMethod("progress", float.class)
+                        .invoke(newProgress);
+            }
+
+            @Override
+            public void bossBarColorChanged(@NonNull BossBar bar, BossBar.@NonNull Color oldColor, BossBar.@NonNull Color newColor) {
+                platformBossBar
+                        .getMethod("color", colorClass)
+                        .invoke(colorToPlatform(newColor, colorClass));
+            }
+
+            @Override
+            public void bossBarOverlayChanged(@NonNull BossBar bar, BossBar.@NonNull Overlay oldOverlay, BossBar.@NonNull Overlay newOverlay) {
+                platformBossBar
+                        .getMethod("overlay", overlayClass)
+                        .invoke(overlayToPlatform(newOverlay, overlayClass));
+            }
+
+            @Override
+            public void bossBarFlagsChanged(@NonNull BossBar bar, @NonNull Set<BossBar.Flag> flagsAdded, @NonNull Set<BossBar.Flag> flagsRemoved) {
+                platformBossBar
+                        .getMethod("addFlags", Iterable.class)
+                        .invoke(flagsAdded
+                                .stream()
+                                .map(flag -> flagToPlatform(flag, flagsClass))
+                                .collect(Collectors.toSet())
+                        );
+                platformBossBar
+                        .getMethod("removeFlags", Iterable.class)
+                        .invoke(flagsRemoved
+                                .stream()
+                                .map(flag -> flagToPlatform(flag, flagsClass))
+                                .collect(Collectors.toSet())
+                        );
+            }
+        });
+
+        // TODO: Mirroring changes from transformed to original
 
         return platformBossBar.raw();
     }

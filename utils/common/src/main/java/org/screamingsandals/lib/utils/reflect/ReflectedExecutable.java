@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Executable;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface ReflectedExecutable<T extends ReflectedExecutable<T>> {
@@ -50,6 +51,14 @@ public interface ReflectedExecutable<T extends ReflectedExecutable<T>> {
             consumer.accept(self());
         } else {
             orElse.run();
+        }
+    }
+
+    default <R> R ifPresentOrElseGet(Function<T, R> function, Supplier<R> orElse) {
+        if (isPresent()) {
+            return function.apply(self());
+        } else {
+            return orElse.get();
         }
     }
 

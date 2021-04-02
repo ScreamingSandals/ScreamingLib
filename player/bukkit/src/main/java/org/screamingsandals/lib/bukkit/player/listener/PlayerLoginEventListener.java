@@ -9,6 +9,7 @@ import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.event.SAsyncPlayerPreLoginEvent;
 import org.screamingsandals.lib.player.event.SPlayerLoginEvent;
 import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.utils.adventure.AdventureUtils;
 
 public class PlayerLoginEventListener extends AbstractBukkitEventHandlerFactory<PlayerLoginEvent, SPlayerLoginEvent> {
 
@@ -18,12 +19,12 @@ public class PlayerLoginEventListener extends AbstractBukkitEventHandlerFactory<
 
     @Override
     protected SPlayerLoginEvent wrapEvent(PlayerLoginEvent event, EventPriority priority) {
-        Component kickMessage;
-        try {
-            kickMessage = event.kickMessage();
-        } catch (Exception e) {
-            kickMessage = AdventureHelper.toComponent(event.getKickMessage());
-        }
+        var kickMessage = AdventureUtils
+                .get(event, "kickMessage")
+                .ifPresentOrElseGet(classMethod ->
+                                classMethod.invokeInstanceResulted(event).as(Component.class),
+                        () -> AdventureHelper.toComponent(event.getKickMessage()));
+
         return new SPlayerLoginEvent(
                 PlayerMapper.wrapPlayer(event.getPlayer()),
                 event.getAddress(),
@@ -35,11 +36,12 @@ public class PlayerLoginEventListener extends AbstractBukkitEventHandlerFactory<
 
     @Override
     protected void postProcess(SPlayerLoginEvent wrappedEvent, PlayerLoginEvent event) {
-        try {
-            event.kickMessage(wrappedEvent.getMessage());
-        } catch (Exception e) {
-            event.setKickMessage(AdventureHelper.toLegacy(wrappedEvent.getMessage()));
-        }
+        AdventureUtils
+                .get(event, "kickMessage", Component.class)
+                .ifPresentOrElse(classMethod ->
+                                classMethod.invokeInstance(event, wrappedEvent.getMessage()),
+                        () ->
+                                event.setKickMessage(AdventureHelper.toLegacy(wrappedEvent.getMessage())));
         event.setResult(PlayerLoginEvent.Result.valueOf(wrappedEvent.getResult().name().toUpperCase()));
     }
 }

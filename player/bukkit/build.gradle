@@ -1,4 +1,5 @@
 dependencies {
+    api project(':utils-adventure')
     api project(':player-common')
     api project(':world-bukkit')
     api project(':event-bukkit')

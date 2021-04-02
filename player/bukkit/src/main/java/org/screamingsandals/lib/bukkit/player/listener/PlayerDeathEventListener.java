@@ -10,6 +10,7 @@ import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.event.SPlayerDeathEvent;
 import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.utils.adventure.AdventureUtils;
 
 import java.util.stream.Collectors;
 
@@ -22,17 +23,14 @@ public class PlayerDeathEventListener extends AbstractBukkitEventHandlerFactory<
     @SuppressWarnings("deprecation")
     @Override
     protected SPlayerDeathEvent wrapEvent(PlayerDeathEvent event, EventPriority priority) {
-        Component deathMessage;
-        try {
-            //TODO: Solve cast issue with Papers adventure components, and our shaded adventure components
-            // deathMessage = event.deathMessage();
-            throw new Exception();
-        } catch (Exception e) {
-            deathMessage = AdventureHelper.toComponent(
-                    event.getDeathMessage() == null ? "" :
-                            event.getDeathMessage()
-            );
-        }
+        var deathMessage = AdventureUtils
+                .get(event, "deathMessage")
+                .ifPresentOrElseGet(classMethod ->
+                                classMethod.invokeInstanceResulted(event).as(Component.class),
+                        () -> AdventureHelper.toComponent(
+                                event.getDeathMessage() == null ? "" : event.getDeathMessage()
+                        ));
+
         return new SPlayerDeathEvent(
                 PlayerMapper.wrapPlayer(event.getEntity().getPlayer()),
                 deathMessage,
@@ -57,6 +55,12 @@ public class PlayerDeathEventListener extends AbstractBukkitEventHandlerFactory<
         event.setNewLevel(wrappedEvent.getNewLevel());
         event.setShouldDropExperience(wrappedEvent.isShouldDropExperience());
         event.getDrops().clear();
+        AdventureUtils
+                .get(event, "deathMessage", Component.class)
+                .ifPresentOrElse(classMethod ->
+                                classMethod.invokeInstance(event, wrappedEvent.getDeathMessage()),
+                        () ->
+                                event.setDeathMessage(AdventureHelper.toLegacy(wrappedEvent.getDeathMessage())));
 
         wrappedEvent.getDrops()
                 .stream()

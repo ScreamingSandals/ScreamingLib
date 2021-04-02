@@ -9,15 +9,17 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 @Getter
 public class ClassMethod implements ReflectedExecutable<ClassMethod> {
     private final Method method;
     private final BiFunction<Class<?>[], Object[], Object[]> parameterTransformer;
+    private final Function<Object, Object> resultTransformer;
 
     public ClassMethod(Method method) {
-        this(method, (classes, objects) -> objects);
+        this(method, (classes, objects) -> objects, o -> o);
     }
 
     public Object invokeStatic(Object... params) {
@@ -37,9 +39,9 @@ public class ClassMethod implements ReflectedExecutable<ClassMethod> {
 
         try {
             if (instance != null && Proxy.isProxyClass(instance.getClass())) {
-                return Proxy.getInvocationHandler(instance).invoke(instance, method, transformed);
+                return resultTransformer.apply(Proxy.getInvocationHandler(instance).invoke(instance, method, transformed));
             } else {
-                return method.invoke(instance, transformed);
+                return resultTransformer.apply(method.invoke(instance, transformed));
             }
         } catch (Throwable throwable) {
             throwable.printStackTrace();
@@ -57,7 +59,7 @@ public class ClassMethod implements ReflectedExecutable<ClassMethod> {
         }
 
         try {
-            return invocationHandler.invoke(proxiedObject, method, parameterTransformer.apply(method.getParameterTypes(), params));
+            return resultTransformer.apply(invocationHandler.invoke(proxiedObject, method, parameterTransformer.apply(method.getParameterTypes(), params)));
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -69,7 +71,15 @@ public class ClassMethod implements ReflectedExecutable<ClassMethod> {
     }
 
     public ClassMethod withTransformer(BiFunction<Class<?>[], Object[], Object[]> parameterTransformer) {
-        return new ClassMethod(method, parameterTransformer);
+        return new ClassMethod(method, parameterTransformer, resultTransformer);
+    }
+
+    public ClassMethod withTransformers(BiFunction<Class<?>[], Object[], Object[]> parameterTransformer, Function<Object, Object> resultTransformer) {
+        return new ClassMethod(method, parameterTransformer, resultTransformer);
+    }
+
+    public ClassMethod withTransformer(Function<Object, Object> resultTransformer) {
+        return new ClassMethod(method, parameterTransformer, resultTransformer);
     }
 
     @Override
