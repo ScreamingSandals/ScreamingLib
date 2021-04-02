@@ -11,12 +11,13 @@ import java.util.function.Supplier;
 @ForwardToService(AbstractTaskInitializer.class)
 public interface Tasker {
 
-    static void init(Supplier<AbstractTaskInitializer> taskInitializer) {
+    static Tasker init(Supplier<AbstractTaskInitializer> taskInitializer) {
         if (TaskerImpl.instance != null) {
             throw new UnsupportedOperationException("Tasker is already initialized!");
         }
 
         TaskerImpl.instance = new TaskerImpl(taskInitializer.get());
+        return TaskerImpl.instance;
     }
 
     /**

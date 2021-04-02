@@ -16,6 +16,8 @@ import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.velocity.proxiedplayer.event.ChatEventHandlerFactory;
+import org.screamingsandals.lib.velocity.proxiedplayer.event.PlayerLeaveEventFactory;
+import org.screamingsandals.lib.velocity.proxiedplayer.event.PlayerLoginEventFactory;
 
 import java.util.List;
 import java.util.Locale;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 })
 public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     private final static String CONSOLE_NAME = "CONSOLE";
+    private final Object plugin;
     private final ProxyServer proxyServer;
 
     public static void init(Object plugin, ProxyServer proxyServer) {
@@ -35,8 +38,9 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     public VelocityProxiedPlayerMapper(Object plugin, ProxyServer proxyServer) {
+        this.plugin = plugin;
         this.proxyServer = proxyServer;
-        new ChatEventHandlerFactory(plugin, proxyServer);
+        registerEvents();
 
         playerConverter
                 .registerP2W(Player.class, player -> new ProxiedPlayerWrapper(player.getUsername(), player.getUniqueId()))
@@ -148,5 +152,11 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
         return wrapper.asOptional(Player.class)
                 .map(player -> player.getPlayerSettings().getLocale())
                 .orElse(Locale.US);
+    }
+
+    private void registerEvents() {
+        new ChatEventHandlerFactory(plugin, proxyServer);
+        new PlayerLoginEventFactory(plugin, proxyServer);
+        new PlayerLeaveEventFactory(plugin, proxyServer);
     }
 }
