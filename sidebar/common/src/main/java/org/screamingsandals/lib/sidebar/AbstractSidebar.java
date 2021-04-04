@@ -1,8 +1,9 @@
-package org.screamingsandals.lib.scoreboard;
+package org.screamingsandals.lib.sidebar;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.screamingsandals.lib.scoreboard.team.ScoreboardTeam;
+import net.kyori.adventure.text.Component;
+import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.visuals.impl.AbstractLinedVisual;
 
@@ -11,15 +12,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class AbstractScoreboard extends AbstractLinedVisual<Scoreboard> implements Scoreboard {
+public abstract class AbstractSidebar extends AbstractLinedVisual<Sidebar> implements Sidebar {
     @Getter
     protected final List<ScoreboardTeam> teams = new LinkedList<>();
     @Getter
     @Setter
     protected DataContainer data;
     protected boolean ready;
+    protected Component title = Component.empty();
 
-    public AbstractScoreboard(UUID uuid) {
+    public AbstractSidebar(UUID uuid) {
         super(uuid);
     }
 
@@ -29,13 +31,13 @@ public abstract class AbstractScoreboard extends AbstractLinedVisual<Scoreboard>
     }
 
     @Override
-    public Scoreboard removeTeam(String identifier) {
+    public Sidebar removeTeam(String identifier) {
         getTeam(identifier).ifPresent(this::removeTeam);
         return this;
     }
 
     @Override
-    public Scoreboard removeTeam(ScoreboardTeam scoreboardTeam) {
+    public Sidebar removeTeam(ScoreboardTeam scoreboardTeam) {
         scoreboardTeam.destroy();
         teams.remove(scoreboardTeam);
         return this;
@@ -50,9 +52,15 @@ public abstract class AbstractScoreboard extends AbstractLinedVisual<Scoreboard>
         return !data.isEmpty();
     }
 
+    @Override
+    public Sidebar title(Component title) {
+        this.title = title;
+        updateTitle0();
+        return this;
+    }
 
     @Override
-    public Scoreboard update() {
+    public Sidebar update() {
         if (ready) {
             update0();
         }
@@ -60,19 +68,20 @@ public abstract class AbstractScoreboard extends AbstractLinedVisual<Scoreboard>
     }
 
     @Override
-    public Scoreboard show() {
+    public Sidebar show() {
         if (isShown()) {
             return this;
         }
 
         ready = true;
         visible = true;
+        viewers.forEach(a -> onViewerAdded(a, false));
         update();
         return this;
     }
 
     @Override
-    public Scoreboard hide() {
+    public Sidebar hide() {
         if (!isShown()) {
             return this;
         }
@@ -89,6 +98,8 @@ public abstract class AbstractScoreboard extends AbstractLinedVisual<Scoreboard>
         hide();
         viewers.clear();
 
-        ScoreboardManager.removeScoreboard(this);
+        SidebarManager.removeSidebar(this);
     }
+
+    protected abstract void updateTitle0();
 }

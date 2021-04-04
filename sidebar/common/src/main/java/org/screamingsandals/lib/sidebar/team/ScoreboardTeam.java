@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.scoreboard.team;
+package org.screamingsandals.lib.sidebar.team;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

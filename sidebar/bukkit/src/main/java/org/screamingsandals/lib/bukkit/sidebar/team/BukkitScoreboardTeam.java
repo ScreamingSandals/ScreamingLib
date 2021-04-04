@@ -1,12 +1,13 @@
-package org.screamingsandals.lib.bukkit.scoreboard.team;
+package org.screamingsandals.lib.bukkit.sidebar.team;
 
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
-import org.screamingsandals.lib.bukkit.scoreboard.BukkitScoreboard;
+import org.screamingsandals.lib.bukkit.sidebar.BukkitSidebar;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
-import org.screamingsandals.lib.scoreboard.team.AbstractScoreboardTeam;
+import org.screamingsandals.lib.sidebar.TeamedSidebar;
+import org.screamingsandals.lib.sidebar.team.AbstractScoreboardTeam;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -15,10 +16,10 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class BukkitScoreboardTeam extends AbstractScoreboardTeam {
-    private final BukkitScoreboard scoreboard;
+    private final TeamedSidebar<?> scoreboard;
     private final String teamKey;
 
-    public BukkitScoreboardTeam(BukkitScoreboard scoreboard, String identifier) {
+    public BukkitScoreboardTeam(TeamedSidebar<?> scoreboard, String identifier) {
         super(identifier);
         this.scoreboard = scoreboard;
         this.teamKey = new Random().ints(48, 123)
@@ -82,7 +83,7 @@ public class BukkitScoreboardTeam extends AbstractScoreboardTeam {
     }
 
     private void packInfo(InvocationResult packet) {
-        packet.setField("b", BukkitScoreboard.asMinecraftComponent(displayName));
+        packet.setField("b", BukkitSidebar.asMinecraftComponent(displayName));
         int i = 0;
         if (friendlyFire) {
             i |= 1;
@@ -94,8 +95,8 @@ public class BukkitScoreboardTeam extends AbstractScoreboardTeam {
         packet.setField("e", nameTagVisibility.getIdentifier());
         packet.setField("f", collisionRule.getIdentifier());
         packet.setField("g", Reflect.findEnumConstant(ClassStorage.NMS.EnumChatFormat, NamedTextColor.nearestTo(color).toString().toUpperCase()));
-        packet.setField("c", BukkitScoreboard.asMinecraftComponent(teamPrefix));
-        packet.setField("d", BukkitScoreboard.asMinecraftComponent(teamSuffix));
+        packet.setField("c", BukkitSidebar.asMinecraftComponent(teamPrefix));
+        packet.setField("d", BukkitSidebar.asMinecraftComponent(teamSuffix));
     }
 
     private void packPlayers(InvocationResult packet, List<PlayerWrapper> players) {

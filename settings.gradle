@@ -22,7 +22,7 @@ registerModule('world', 'bukkit', 'minestom', 'sponge')
 registerModule('player', 'bukkit', 'minestom', 'sponge')
 registerModule('entity', 'bukkit', 'minestom', 'sponge')
 registerModule('hologram', 'bukkit') //TODO: add others
-registerModule('scoreboard', 'bukkit') //TODO: add others
+registerModule('sidebar', 'bukkit') //TODO: add others
 registerModule('proxiedplayer', 'bungee', 'velocity')
 registerModule('plugin', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
 registerModule('tasker', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')

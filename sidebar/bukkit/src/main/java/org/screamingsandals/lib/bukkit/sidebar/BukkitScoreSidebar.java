@@ -1,29 +1,24 @@
-package org.screamingsandals.lib.bukkit.scoreboard;
+package org.screamingsandals.lib.bukkit.sidebar;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.entity.Player;
-import org.screamingsandals.lib.bukkit.scoreboard.team.BukkitScoreboardTeam;
+import org.screamingsandals.lib.bukkit.sidebar.team.BukkitScoreboardTeam;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.scoreboard.AbstractScoreboard;
-import org.screamingsandals.lib.scoreboard.Scoreboard;
-import org.screamingsandals.lib.scoreboard.team.ScoreboardTeam;
+import org.screamingsandals.lib.sidebar.AbstractScoreSidebar;
+import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-public class BukkitScoreboard extends AbstractScoreboard {
+public class BukkitScoreSidebar extends AbstractScoreSidebar {
     private final String objectiveKey;
-    private final ConcurrentSkipListMap<Integer, String> lines = new ConcurrentSkipListMap<>();
-    private Component title = Component.empty();
+    private final List<ScoreEntry> lines = new CopyOnWriteArrayList<>();
 
-    public BukkitScoreboard(UUID uuid) {
+    public BukkitScoreSidebar(UUID uuid) {
         super(uuid);
         this.objectiveKey = new Random().ints(48, 123)
                 .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
@@ -58,38 +53,31 @@ public class BukkitScoreboard extends AbstractScoreboard {
 
     @Override
     protected void update0() {
-        var list = getLines()
-                .entrySet()
+        var list = entries
                 .stream()
-                .filter(entry -> entry.getKey() >= 0 && entry.getKey() <= 15)
-                .sorted(Map.Entry.comparingByKey())
-                .map(entry -> entry.getValue().getText())
-                .map(AdventureHelper::toLegacy)
+                .sorted(Comparator.comparingInt(ScoreEntry::getScore).reversed())
+                .limit(15)
                 .collect(Collectors.toList());
 
-        Collections.reverse(list);
-
-        for (var i = 0; i < list.size(); i++) {
-            list.set(i, makeUnique(list.get(i), list));
-        }
-
         var packets = new ArrayList<>();
-        var forRemoval = new ArrayList<Integer>();
+        var forRemoval = new ArrayList<ScoreEntry>();
 
-        for (var i = 0; i < 15; i++) {
-            if (i < list.size()) {
-                if (lines.containsKey(i)) {
-                    packets.add(destroyScore(lines.get(i)));
-                }
-                lines.put(i, list.get(i));
-                packets.add(createScorePacket(i, list.get(i)));
-            } else if (lines.containsKey(i)) {
-                packets.add(destroyScore(lines.get(i)));
-                forRemoval.add(i);
+        lines.stream().filter(scoreEntry -> !list.contains(scoreEntry)).forEach(forRemoval::add);
+        forRemoval.forEach(scoreEntry -> {
+            lines.remove(scoreEntry);
+            destroyScore(scoreEntry.getCache());
+        });
+
+        list.forEach(scoreEntry -> {
+            if (!lines.contains(scoreEntry)) {
+                lines.add(scoreEntry);
             }
-        }
-
-        forRemoval.forEach(lines::remove);
+            if (scoreEntry.getCache() == null || scoreEntry.isReloadCache()) {
+                scoreEntry.setCache(crop(AdventureHelper.toLegacy(scoreEntry.getComponent())));
+                scoreEntry.setReloadCache(false);
+            }
+            packets.add(createScorePacket(scoreEntry.getScore(), scoreEntry.getCache()));
+        });
 
         if (visible) {
             viewers.forEach(playerWrapper -> ClassStorage.sendPackets(playerWrapper.as(Player.class), packets));
@@ -97,13 +85,11 @@ public class BukkitScoreboard extends AbstractScoreboard {
     }
 
     @Override
-    public Scoreboard title(Component title) {
-        this.title = title;
+    public void updateTitle0() {
         if (visible && !viewers.isEmpty()) {
             var packet = updateObjective();
             viewers.forEach(p -> ClassStorage.sendPacket(p.as(Player.class), packet));
         }
-        return this;
     }
 
     // INTERNAL METHODS
@@ -123,7 +109,7 @@ public class BukkitScoreboard extends AbstractScoreboard {
     private InvocationResult notFinalObjectivePacket() {
         var packet = Reflect.constructResulted(ClassStorage.NMS.PacketPlayOutScoreboardObjective);
         packet.setField("a", objectiveKey);
-        if (packet.setField("b", asMinecraftComponent(title)) == null) {
+        if (packet.setField("b", BukkitSidebar.asMinecraftComponent(title)) == null) {
             packet.setField("b", AdventureHelper.toLegacy(title));
         }
         packet.setField("c", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardHealthDisplay, "INTEGER"));
@@ -162,32 +148,17 @@ public class BukkitScoreboard extends AbstractScoreboard {
     }
 
     private List<Object> allScores() {
-        return lines.entrySet()
+        return lines
                 .stream()
-                .map(entry -> createScorePacket(entry.getKey(), entry.getValue()))
+                .map(entry -> createScorePacket(entry.getScore(), entry.getCache()))
                 .collect(Collectors.toList());
     }
 
-    public String makeUnique(String toUnique, List<String> from) {
-        if (toUnique == null) toUnique = " ";
-        final var stringBuilder = new StringBuilder(toUnique);
-        while (from.contains(stringBuilder.toString())) {
-            stringBuilder.append(" ");
+    public String crop(String baseLine) {
+        if (baseLine.length() > 40) {
+            return baseLine.substring(0, 40);
         }
-
-        if (stringBuilder.length() > 40) {
-            return stringBuilder.substring(0, 40);
-        }
-        return stringBuilder.toString();
-    }
-
-    public static Object asMinecraftComponent(Component component) {
-        try {
-            return MinecraftComponentSerializer.get().serialize(component);
-        } catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
-            return Reflect.getMethod(ClassStorage.NMS.ChatSerializer, "a,field_150700_a", String.class)
-                    .invokeStatic(GsonComponentSerializer.gson().serialize(component));
-        }
+        return baseLine;
     }
 
     @Override

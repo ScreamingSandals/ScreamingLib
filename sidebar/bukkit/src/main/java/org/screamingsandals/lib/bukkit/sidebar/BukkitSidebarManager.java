@@ -1,10 +1,11 @@
-package org.screamingsandals.lib.bukkit.scoreboard;
+package org.screamingsandals.lib.bukkit.sidebar;
 
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.event.SPlayerLeaveEvent;
-import org.screamingsandals.lib.scoreboard.Scoreboard;
-import org.screamingsandals.lib.scoreboard.ScoreboardManager;
+import org.screamingsandals.lib.sidebar.ScoreSidebar;
+import org.screamingsandals.lib.sidebar.Sidebar;
+import org.screamingsandals.lib.sidebar.SidebarManager;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 
@@ -14,35 +15,40 @@ import java.util.UUID;
         EventManager.class,
         PlayerMapper.class
 })
-public class BukkitScoreboardManager extends ScoreboardManager {
+public class BukkitSidebarManager extends SidebarManager {
 
     public static void init(Controllable controllable) {
-        ScoreboardManager.init(() -> new BukkitScoreboardManager(controllable));
+        SidebarManager.init(() -> new BukkitSidebarManager(controllable));
     }
 
-    protected BukkitScoreboardManager(Controllable controllable) {
+    protected BukkitSidebarManager(Controllable controllable) {
         super(controllable);
 
         EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, this::onLeave);
     }
 
     private void onLeave(SPlayerLeaveEvent event) {
-        if (activeScoreboards.isEmpty()) {
+        if (activeSidebars.isEmpty()) {
             return;
         }
 
-        getActiveScoreboards().forEach((key, scoreboard) -> {
+        getActiveSidebars().forEach((key, scoreboard) -> {
             if (scoreboard.getViewers().contains(event.getPlayer())) {
                 scoreboard.removeViewer(event.getPlayer());
             }
             if (!scoreboard.hasViewers()) {
-                removeScoreboard(scoreboard);
+                removeSidebar(scoreboard);
             }
         });
     }
 
     @Override
-    protected Scoreboard scoreboard0(UUID uuid) {
-        return new BukkitScoreboard(uuid);
+    protected Sidebar sidebar0(UUID uuid) {
+        return new BukkitSidebar(uuid);
+    }
+
+    @Override
+    protected ScoreSidebar scoreSidebar0(UUID uuid) {
+        return new BukkitScoreSidebar(uuid);
     }
 }
