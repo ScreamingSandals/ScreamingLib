@@ -13,7 +13,6 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
-import javax.lang.model.type.NoType;
 import javax.tools.Diagnostic;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -49,6 +48,19 @@ public class MiscUtils {
     public static List<TypeElement> getSafelyTypeElementsLoadAfter(ProcessingEnvironment environment, Service annotation) {
         try {
             annotation.loadAfter();
+        } catch (MirroredTypesException mte) {
+            var typeUtils = environment.getTypeUtils();
+            return mte.getTypeMirrors()
+                    .stream()
+                    .map(typeMirror -> (TypeElement) typeUtils.asElement(typeMirror))
+                    .collect(Collectors.toList());
+        }
+        return List.of();
+    }
+
+    public static List<TypeElement> getSafelyTypeElementsInit(ProcessingEnvironment environment, Service annotation) {
+        try {
+            annotation.initAnother();
         } catch (MirroredTypesException mte) {
             var typeUtils = environment.getTypeUtils();
             return mte.getTypeMirrors()
@@ -114,6 +126,7 @@ public class MiscUtils {
                 );
                 container.getDependencies().addAll(getSafelyTypeElements(environment, service));
                 container.getLoadAfter().addAll(getSafelyTypeElementsLoadAfter(environment, service));
+                container.getInit().addAll(getSafelyTypeElementsInit(environment, service));
                 checkEventManagerRequirement(environment, typeElement, container);
                 checkServiceDependencies(environment, typeElement, container);
 

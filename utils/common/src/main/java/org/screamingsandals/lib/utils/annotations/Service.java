@@ -43,6 +43,14 @@ public @interface Service {
     Class<?>[] loadAfter() default {};
 
     /**
+     * Defines all services which should be also initialized. Equivalent to {@link Init} (you can't use Init for services yet)
+     * These services will be automatically initialized if using screaming-annotation processor.
+     *
+     * @return All services, that should be initialized independently on this service
+     */
+    Class<?>[] initAnother() default {};
+
+    /**
      * Defines if service can't be registered to ServiceManager.
      * If it's true and init method is not present, object won't be constructed.
      * If class is annotated with {@link lombok.experimental.UtilityClass} this is implicitly true.

@@ -25,6 +25,19 @@ public abstract class MainClassGenerator {
             copy.forEach(serviceContainer -> {
                 var dependencies = serviceContainer.getDependencies();
                 var loadAfter = serviceContainer.getLoadAfter();
+                serviceContainer.getInit()
+                        .stream()
+                        .filter(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement))
+                                && copy.stream().noneMatch(s -> s.is(typeElement))
+                                && waiting.stream().noneMatch(s -> s.is(typeElement)))
+                        .map(typeElement ->
+                                MiscUtils.getAllSpecificPlatformImplementations(processingEnvironment,
+                                        typeElement,
+                                        List.of(platformType),
+                                        true
+                                ).get(platformType))
+                        .forEach(waiting::add);
+
                 if (!dependencies.isEmpty() && dependencies.stream().anyMatch(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement)))) {
                     dependencies.stream()
                             .filter(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement))
