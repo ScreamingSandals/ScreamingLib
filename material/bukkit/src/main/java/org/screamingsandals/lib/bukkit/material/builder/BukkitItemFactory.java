@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.Repairable;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
@@ -19,11 +20,13 @@ import org.screamingsandals.lib.bukkit.material.container.BukkitContainer;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitEnchantmentMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionMapping;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.material.data.ItemData;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.InitUtils;
@@ -141,6 +144,13 @@ public class BukkitItemFactory extends ItemFactory {
                                 .map(holder -> holder.as(BukkitItemAttribute.class))
                                 .forEach(holder -> meta.addAttributeModifier(holder.getAttribute(), holder.getAttributeModifier()));
 
+                        var data = item.getData();
+                        if (data instanceof BukkitItemData && !data.isEmpty()) {
+                            var origDataContainer = ((BukkitItemData) data).getDataContainer();
+                            Reflect.getMethod(meta.getPersistentDataContainer(), "putAll", Map.class)
+                                    .invoke(Reflect.fastInvoke(origDataContainer, "getRaw"));
+                        }
+
                         stack.setItemMeta(meta);
                     }
 
@@ -219,7 +229,7 @@ public class BukkitItemFactory extends ItemFactory {
                                                     .ifPresent(item::addItemAttribute)
                                     );
                         }
-                        item.setData(new BukkitItemData(plugin, stack));
+                        item.setData(new BukkitItemData(plugin, meta.getPersistentDataContainer()));
                     }
                     return item;
                 })
@@ -232,5 +242,15 @@ public class BukkitItemFactory extends ItemFactory {
             return Optional.of(new BukkitContainer((Inventory) container));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public ItemData createNewItemData0() {
+        var r = Reflect.constructor(ClassStorage.NMS.CraftPersistentDataContainer, ClassStorage.NMS.CraftPersistentDataTypeRegistry)
+                .constructResulted(Reflect.getField(ClassStorage.NMS.CraftMetaItem, "DATA_TYPE_REGISTRY"));
+        if (r.raw() != null) {
+            return new BukkitItemData(plugin, (PersistentDataContainer) r.raw());
+        }
+        return ItemData.EMPTY;
     }
 }

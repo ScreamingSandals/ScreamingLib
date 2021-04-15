@@ -1,8 +1,10 @@
 package org.screamingsandals.lib.bukkit.material.builder;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataAdapterContext;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -17,16 +19,13 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class BukkitItemData implements ItemData {
     private static final List<Class<?>> WRAPPER_TYPES = List.of(Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class);
 
     private final Plugin plugin;
-    private final ItemStack item;
-
-    public BukkitItemData(Plugin plugin, ItemStack item) {
-        this.plugin = plugin;
-        this.item = item;
-    }
+    @Getter
+    private final PersistentDataContainer dataContainer;
 
     public static boolean isWrapperType(Class<?> clazz) {
         return WRAPPER_TYPES.contains(clazz);
@@ -34,7 +33,7 @@ public class BukkitItemData implements ItemData {
 
     @Override
     public Set<String> getKeys() {
-        final var container = item.getItemMeta().getPersistentDataContainer();
+        final var container = dataContainer;
         return container.getKeys()
                 .stream()
                 .map(NamespacedKey::getKey)
@@ -43,7 +42,7 @@ public class BukkitItemData implements ItemData {
 
     @Override
     public <T> void set(String key, T data, Class<T> tClass) {
-        final var container = item.getItemMeta().getPersistentDataContainer();
+        final var container = this.dataContainer;
         final var namespacedKey = new NamespacedKey(plugin, key);
         if (isWrapperType(tClass)) {
             if (data instanceof String) {
@@ -98,7 +97,7 @@ public class BukkitItemData implements ItemData {
     @Nullable
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> tClass) {
-        final var container = item.getItemMeta().getPersistentDataContainer();
+        final var container = dataContainer;
         final var namespacedKey = new NamespacedKey(plugin, key);
         if (isWrapperType(tClass)) {
             if (String.class.isAssignableFrom(tClass)) {
@@ -147,8 +146,7 @@ public class BukkitItemData implements ItemData {
 
     @Override
     public boolean contains(String key) {
-        final var container = item.getItemMeta().getPersistentDataContainer();
-        final var namespacedKey = container.getKeys()
+        final var namespacedKey = dataContainer.getKeys()
                 .stream()
                 .filter(next -> next.getNamespace().equalsIgnoreCase(plugin.getName().toLowerCase(Locale.ROOT)))
                 .filter(next -> next.getKey().equalsIgnoreCase(key))
@@ -158,7 +156,7 @@ public class BukkitItemData implements ItemData {
 
     @Override
     public boolean isEmpty() {
-        return item.getItemMeta().getPersistentDataContainer().isEmpty();
+        return dataContainer.isEmpty();
     }
 
     public static class JsonPersistentDataType<T> implements PersistentDataType<String, T> {

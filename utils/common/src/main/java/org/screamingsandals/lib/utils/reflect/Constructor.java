@@ -19,7 +19,6 @@ public class Constructor implements ReflectedExecutable<Constructor> {
         try {
             return constructor.newInstance(parameterTransformer.apply(constructor.getParameterTypes(), parameters));
         } catch (Throwable throwable) {
-            throwable.printStackTrace();
             return null;
         }
     }
