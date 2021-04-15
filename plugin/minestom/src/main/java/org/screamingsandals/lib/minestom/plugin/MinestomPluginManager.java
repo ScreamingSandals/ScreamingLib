@@ -55,6 +55,15 @@ public class MinestomPluginManager extends PluginManager {
         return PlatformType.MINESTOM;
     }
 
+    @Override
+    protected Optional<PluginDescription> getPluginFromPlatformObject0(Object object) {
+        return MinecraftServer.getExtensionManager().getExtensions()
+                .stream()
+                .filter(a -> a == object)
+                .findFirst()
+                .map(this::wrap);
+    }
+
     private PluginDescription wrap(Extension extension) {
         return new PluginDescription(
                 MinestomPluginKey.of(extension.getDescription().getName()),

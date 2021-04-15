@@ -50,6 +50,17 @@ public class BungeePluginManager extends PluginManager {
         return PlatformType.BUNGEE;
     }
 
+    @Override
+    protected Optional<PluginDescription> getPluginFromPlatformObject0(Object object) {
+        return ProxyServer.getInstance()
+                .getPluginManager()
+                .getPlugins()
+                .stream()
+                .filter(a -> a == object)
+                .findFirst()
+                .map(this::wrap);
+    }
+
     private PluginDescription wrap(Plugin plugin) {
         return new PluginDescription(
                 BungeePluginKey.of(plugin.getDescription().getName()),
