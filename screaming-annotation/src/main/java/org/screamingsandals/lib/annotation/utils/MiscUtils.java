@@ -5,6 +5,7 @@ import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.*;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
+import org.screamingsandals.lib.utils.annotations.parameters.ProvidedBy;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -13,6 +14,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
+import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -30,6 +32,14 @@ public class MiscUtils {
                     .collect(Collectors.toList());
         }
         return List.of();
+    }
+    public static TypeElement getSafelyTypeElement(Types typeUtils, ProvidedBy annotation) {
+        try {
+            annotation.value();
+        } catch (MirroredTypeException mte) {
+            return (TypeElement) typeUtils.asElement(mte.getTypeMirror());
+        }
+        return null;
     }
 
     public static List<TypeElement> getSafelyTypeElements(ProcessingEnvironment environment, ServiceDependencies annotation) {
