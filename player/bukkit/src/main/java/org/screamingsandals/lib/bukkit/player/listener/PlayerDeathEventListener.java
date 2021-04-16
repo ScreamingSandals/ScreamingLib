@@ -43,7 +43,8 @@ public class PlayerDeathEventListener extends AbstractBukkitEventHandlerFactory<
                 event.getKeepLevel(),
                 event.getNewLevel(),
                 event.getNewTotalExp(),
-                event.getNewExp());
+                event.getNewExp(),
+                event.getDroppedExp());
     }
 
     @Override
@@ -54,6 +55,7 @@ public class PlayerDeathEventListener extends AbstractBukkitEventHandlerFactory<
         event.setNewTotalExp(wrappedEvent.getNewTotalExp());
         event.setNewLevel(wrappedEvent.getNewLevel());
         event.setShouldDropExperience(wrappedEvent.isShouldDropExperience());
+        event.setDroppedExp(wrappedEvent.getDroppedExp());
         event.getDrops().clear();
         AdventureUtils
                 .get(event, "deathMessage", Component.class)

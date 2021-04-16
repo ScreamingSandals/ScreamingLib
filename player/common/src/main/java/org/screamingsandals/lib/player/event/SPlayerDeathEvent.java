@@ -22,4 +22,5 @@ public class SPlayerDeathEvent extends CancellableAbstractEvent {
     private int newLevel;
     private int newTotalExp;
     private int newExp;
+    private int droppedExp;
 }
