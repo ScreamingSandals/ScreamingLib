@@ -31,6 +31,9 @@ public class PlayerDeathEventListener extends AbstractBukkitEventHandlerFactory<
                                 event.getDeathMessage() == null ? "" : event.getDeathMessage()
                         ));
 
+        var killer = event.getEntity().getKiller();
+        var killerWrapper = killer != null ? PlayerMapper.wrapPlayer(killer) : null;
+
         return new SPlayerDeathEvent(
                 PlayerMapper.wrapPlayer(event.getEntity().getPlayer()),
                 deathMessage,
@@ -44,7 +47,8 @@ public class PlayerDeathEventListener extends AbstractBukkitEventHandlerFactory<
                 event.getNewLevel(),
                 event.getNewTotalExp(),
                 event.getNewExp(),
-                event.getDroppedExp());
+                event.getDroppedExp(),
+                killerWrapper);
     }
 
     @Override
@@ -56,6 +60,7 @@ public class PlayerDeathEventListener extends AbstractBukkitEventHandlerFactory<
         event.setNewLevel(wrappedEvent.getNewLevel());
         event.setShouldDropExperience(wrappedEvent.isShouldDropExperience());
         event.setDroppedExp(wrappedEvent.getDroppedExp());
+
         event.getDrops().clear();
         AdventureUtils
                 .get(event, "deathMessage", Component.class)

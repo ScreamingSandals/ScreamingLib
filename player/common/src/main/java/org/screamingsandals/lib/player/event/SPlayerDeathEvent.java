@@ -3,6 +3,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -23,4 +24,5 @@ public class SPlayerDeathEvent extends CancellableAbstractEvent {
     private int newTotalExp;
     private int newExp;
     private int droppedExp;
+    @Nullable private final PlayerWrapper killer;
 }
