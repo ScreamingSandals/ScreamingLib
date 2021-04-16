@@ -14,6 +14,7 @@ import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.material.data.ItemData;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.minestom.material.MinestomMaterialMapping;
 import org.screamingsandals.lib.minestom.material.attribute.MinestomAttributeMapping;
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
         MinestomPotionEffectMapping.class,
         MinestomAttributeMapping.class
 })
+// TODO: Update Minestom and use new Item api
 public class MinestomItemFactory extends ItemFactory {
     public static void init() {
         ItemFactory.init(MinestomItemFactory::new);
@@ -181,5 +183,10 @@ public class MinestomItemFactory extends ItemFactory {
             return Optional.of(new MinestomContainer((Inventory) container));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public ItemData createNewItemData0() {
+        return ItemData.EMPTY;
     }
 }

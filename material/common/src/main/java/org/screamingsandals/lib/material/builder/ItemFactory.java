@@ -6,6 +6,7 @@ import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.material.data.ItemData;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
@@ -350,6 +351,15 @@ public abstract class ItemFactory {
     }
 
     public abstract Optional<Container> wrapContainer0(Object container);
+
+    public static ItemData createNewItemData() {
+        if (factory == null) {
+            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
+        }
+        return factory.createNewItemData0();
+    }
+
+    public abstract ItemData createNewItemData0();
 
     public static boolean isInitialized() {
         return factory != null;

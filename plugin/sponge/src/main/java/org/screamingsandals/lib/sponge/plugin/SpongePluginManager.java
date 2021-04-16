@@ -54,6 +54,15 @@ public class SpongePluginManager extends PluginManager {
         return PlatformType.SPONGE;
     }
 
+    @Override
+    protected Optional<PluginDescription> getPluginFromPlatformObject0(Object object) {
+        return Sponge.getPluginManager().getPlugins()
+                .stream()
+                .filter(a -> a == object)
+                .findFirst()
+                .map(this::wrap);
+    }
+
     private PluginDescription wrap(PluginContainer plugin) {
         return new PluginDescription(
                 SpongePluginKey.of(plugin.getMetadata().getId()),

@@ -2,6 +2,10 @@ package org.screamingsandals.lib.bukkit.plugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.screamingsandals.lib.bukkit.plugin.event.PluginDisabledEventListener;
+import org.screamingsandals.lib.bukkit.plugin.event.PluginEnabledEventListener;
+import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
@@ -17,8 +21,12 @@ import java.util.stream.Collectors;
 @Service
 @InternalEarlyInitialization
 public class BukkitPluginManager extends PluginManager {
-    public static void init() {
+    public static void init(JavaPlugin plugin, Controllable controllable) {
         PluginManager.init(BukkitPluginManager::new);
+        controllable.enable(() -> {
+            new PluginEnabledEventListener(plugin);
+            new PluginDisabledEventListener(plugin);
+        });
     }
 
     @Override
@@ -49,6 +57,14 @@ public class BukkitPluginManager extends PluginManager {
     @Override
     protected PlatformType getPlatformType0() {
         return PlatformType.BUKKIT;
+    }
+
+    @Override
+    protected Optional<PluginDescription> getPluginFromPlatformObject0(Object object) {
+        return Arrays.stream(Bukkit.getPluginManager().getPlugins())
+                .filter(a -> a == object)
+                .findFirst()
+                .map(this::wrap);
     }
 
     private PluginDescription wrap(Plugin plugin) {

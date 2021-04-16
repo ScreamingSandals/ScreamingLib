@@ -4,6 +4,7 @@ import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.material.data.ItemData;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
 import org.screamingsandals.lib.sponge.material.SpongeMaterialMapping;
@@ -205,5 +206,10 @@ public class SpongeItemFactory extends ItemFactory {
             return Optional.of(new SpongeContainer((Inventory) container));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public ItemData createNewItemData0() {
+        return ItemData.EMPTY;
     }
 }

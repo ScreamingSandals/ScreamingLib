@@ -19,6 +19,7 @@ public class ServiceContainer {
 
     private final List<TypeElement> dependencies = new LinkedList<>();
     private final List<TypeElement> loadAfter = new LinkedList<>();
+    private final List<TypeElement> init = new LinkedList<>();
     private final boolean earlyInitialization;
     private final boolean staticOnly;
 

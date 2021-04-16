@@ -39,7 +39,7 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
     @Nullable
     private PotionHolder potion;
     @NotNull
-    private ItemData data = ItemData.EMPTY;
+    private ItemData data = ItemFactory.createNewItemData();
 
     @Deprecated
     @Nullable

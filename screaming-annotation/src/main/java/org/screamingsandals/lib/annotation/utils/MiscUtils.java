@@ -5,6 +5,7 @@ import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.*;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
+import org.screamingsandals.lib.utils.annotations.parameters.ProvidedBy;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -13,7 +14,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
-import javax.lang.model.type.NoType;
+import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -32,6 +33,14 @@ public class MiscUtils {
         }
         return List.of();
     }
+    public static TypeElement getSafelyTypeElement(Types typeUtils, ProvidedBy annotation) {
+        try {
+            annotation.value();
+        } catch (MirroredTypeException mte) {
+            return (TypeElement) typeUtils.asElement(mte.getTypeMirror());
+        }
+        return null;
+    }
 
     public static List<TypeElement> getSafelyTypeElements(ProcessingEnvironment environment, ServiceDependencies annotation) {
         try {
@@ -49,6 +58,19 @@ public class MiscUtils {
     public static List<TypeElement> getSafelyTypeElementsLoadAfter(ProcessingEnvironment environment, Service annotation) {
         try {
             annotation.loadAfter();
+        } catch (MirroredTypesException mte) {
+            var typeUtils = environment.getTypeUtils();
+            return mte.getTypeMirrors()
+                    .stream()
+                    .map(typeMirror -> (TypeElement) typeUtils.asElement(typeMirror))
+                    .collect(Collectors.toList());
+        }
+        return List.of();
+    }
+
+    public static List<TypeElement> getSafelyTypeElementsInit(ProcessingEnvironment environment, Service annotation) {
+        try {
+            annotation.initAnother();
         } catch (MirroredTypesException mte) {
             var typeUtils = environment.getTypeUtils();
             return mte.getTypeMirrors()
@@ -114,6 +136,7 @@ public class MiscUtils {
                 );
                 container.getDependencies().addAll(getSafelyTypeElements(environment, service));
                 container.getLoadAfter().addAll(getSafelyTypeElementsLoadAfter(environment, service));
+                container.getInit().addAll(getSafelyTypeElementsInit(environment, service));
                 checkEventManagerRequirement(environment, typeElement, container);
                 checkServiceDependencies(environment, typeElement, container);
 

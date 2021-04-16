@@ -4,12 +4,14 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import lombok.RequiredArgsConstructor;
+import org.screamingsandals.lib.annotation.utils.MiscUtils;
 import org.screamingsandals.lib.annotation.utils.ServiceContainer;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.methods.*;
 import org.screamingsandals.lib.utils.annotations.parameters.ConfigFile;
 import org.screamingsandals.lib.utils.annotations.parameters.DataFolder;
+import org.screamingsandals.lib.utils.annotations.parameters.ProvidedBy;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.NoType;
@@ -37,6 +39,7 @@ public class ServiceInitGenerator {
     private final Types types;
     private final Elements elements;
     private final Map<TypeMirror, String> instancedServices = new HashMap<>();
+    private final Map<Pair<TypeElement, TypeElement>, Pair<Provider.Level, String>> providers = new HashMap<>();
     private final Map<Triple<CheckType, String, Class<? extends Annotation>>, QuadConsumer<StringBuilder, List<Object>, Annotation, TypeElement>> annotatedInitArguments = new HashMap<>() {
         {
             put(Triple.of(CheckType.ONLY_SAME, "java.nio.file.Path", DataFolder.class), (statement, processedArguments, annotation, variableType) -> {
@@ -113,6 +116,22 @@ public class ServiceInitGenerator {
                             }
                         });
                 statement.append(".build()");
+            });
+            put(Triple.of(CheckType.ALLOW_CHILDREN, "java.lang.Object", ProvidedBy.class), (statement, processedArguments, annotation, variableType) -> {
+                var providerClass = MiscUtils.getSafelyTypeElement(ServiceInitGenerator.this.types, (ProvidedBy) annotation);
+                var provider = Pair.of(providerClass, variableType);
+                var provided = providers.get(provider);
+                if (provided != null) {
+                    if (provided.getFirst() == Provider.Level.INIT) {
+                        statement.append("($T) $N");
+                    } else {
+                        statement.append("($T) $N.get()");
+                    }
+                    processedArguments.add(toClassName(variableType)); // fucking generics
+                    processedArguments.add(provided.getSecond());
+                } else {
+                    throw new UnsupportedOperationException("Can't provide from " + providerClass  + "! Are you sure every dependencies are configured correctly?");
+                }
             });
         }
     };
@@ -281,6 +300,8 @@ public class ServiceInitGenerator {
                     shouldRunControllable
             );
 
+            processProviders(typeElement, returnedName, shouldRunControllable);
+
             processEventAnnotations(typeElement, returnedName, shouldRunControllable);
         } else {
             throw new UnsupportedOperationException("Can't auto initialize " + typeElement.getQualifiedName() + " without init method");
@@ -313,27 +334,69 @@ public class ServiceInitGenerator {
 
         if (result1.size() == 1) {
             var method = (ExecutableElement) result1.get(0);
-            if (method.getParameters().size() > 0) {
-                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @" + annotationClass.getSimpleName() + " can't have parameters");
-            }
-            var methodBuilder = MethodSpec.methodBuilder("run")
-                    .addModifiers(Modifier.PUBLIC)
-                    .returns(void.class);
-            if (shouldRunControllable.areBothPresent()) {
-                methodBuilder.beginControlFlow("if (" + shouldRunControllable.getFirst() + ")", shouldRunControllable.getSecond().toArray());
-            }
+
+            var processedArguments = new ArrayList<>();
+            var statement = new StringBuilder();
+            var arguments = method.getParameters();
             if (method.getModifiers().contains(Modifier.STATIC)) {
-                createControllable(controllableName);
-                methodBuilder.addStatement("$T.$N()", typeElement, method.getSimpleName());
+                statement.append("$T.$N(");
+                processedArguments.add(typeElement);
             } else {
                 if (returnedName == null) {
                     throw new UnsupportedOperationException(
                             typeElement.getQualifiedName() + ": Can't dynamically add non-static @" + annotationClass.getSimpleName() + " method because init method doesn't return any instance"
                     );
                 }
-                createControllable(controllableName);
-                methodBuilder.addStatement("$N.$N()", returnedName, method.getSimpleName());
+                statement.append("$N.$N(");
+                processedArguments.add(returnedName);
             }
+            processedArguments.add(method.getSimpleName());
+            var first = new AtomicBoolean(true);
+            arguments.forEach(variableElement -> {
+                if (!first.get()) {
+                    statement.append(",");
+                } else {
+                    first.set(false);
+                }
+                Optional<TypeMirror> typeMirror;
+                var annotatedParameter = annotatedInitArguments.entrySet().stream()
+                        .filter(entry -> entry.getKey().getFirst().function
+                                .apply(
+                                        types,
+                                        variableElement.asType(),
+                                        types.erasure(elements.getTypeElement(entry.getKey().getSecond()).asType())
+                                )
+                                && variableElement.getAnnotation(entry.getKey().getThird()) != null
+                        )
+                        .findFirst();
+
+                if (annotatedParameter.isPresent()) {
+                    annotatedParameter.get().getValue()
+                            .accept(
+                                    statement,
+                                    processedArguments,
+                                    variableElement.getAnnotation(annotatedParameter.get().getKey().getThird()),
+                                    (TypeElement) types.asElement(variableElement.asType())
+                            );
+                } else if (initArguments.containsKey(variableElement.asType().toString())) {
+                    initArguments.get(variableElement.asType().toString()).accept(statement, processedArguments);
+                } else if ((typeMirror = instancedServices.keySet().stream().filter(type -> types.isAssignable(type, variableElement.asType())).findFirst()).isPresent()) {
+                    statement.append("$N");
+                    processedArguments.add(instancedServices.get(typeMirror.get()));
+                } else {
+                    throw new UnsupportedOperationException("Method " +   method.getSimpleName() + " of " + typeElement.getQualifiedName() + " has wrong argument!");
+                }
+            });
+            statement.append(")");
+
+            var methodBuilder = MethodSpec.methodBuilder("run")
+                    .addModifiers(Modifier.PUBLIC)
+                    .returns(void.class);
+            if (shouldRunControllable.areBothPresent()) {
+                methodBuilder.beginControlFlow("if (" + shouldRunControllable.getFirst() + ")", shouldRunControllable.getSecond().toArray());
+            }
+            createControllable(controllableName);
+            methodBuilder.addStatement(statement.toString(), processedArguments.toArray());
             if (shouldRunControllable.areBothPresent()) {
                 methodBuilder.endControlFlow();
             }
@@ -388,6 +451,158 @@ public class ServiceInitGenerator {
         }
 
         return Pair.empty();
+    }
+
+    private void processProviders(TypeElement typeElement, String returnedName, Pair<String, List<Object>> shouldRunControllable) {
+        List<ExecutableElement> result = new ArrayList<>();
+
+        var superClass = typeElement;
+        do {
+            result.addAll(superClass
+                    .getEnclosedElements().stream()
+                    .filter(element -> element.getKind() == ElementKind.METHOD
+                            && element.getAnnotation(Provider.class) != null
+                            && element.getModifiers().contains(Modifier.PUBLIC)
+                    )
+                    .map(element -> (ExecutableElement) element)
+                    .collect(Collectors.toList()));
+        } while ((superClass = (TypeElement) types.asElement(superClass.getSuperclass())) != null);
+
+        result = result
+                .stream()
+                .filter(distinctByKey(element -> Pair.of(
+                        element.getSimpleName(),
+                        element.getParameters()
+                                .stream()
+                                .map(variableElement -> variableElement.asType().toString())
+                                .collect(Collectors.toList()))
+                ))
+                .collect(Collectors.toList());
+
+        if (result.size() == 0) {
+            return;
+        }
+
+        result.forEach(method -> {
+            var annotation = method.getAnnotation(Provider.class);
+            if (method.getReturnType() instanceof NoType) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @Provider must return something");
+            }
+            var returnType = method.getReturnType();
+
+            var processedArguments = new ArrayList<>();
+            var statement = new StringBuilder();
+            var arguments = method.getParameters();
+            if (method.getModifiers().contains(Modifier.STATIC)) {
+                statement.append("$T.$N(");
+                processedArguments.add(typeElement);
+            } else {
+                if (returnedName == null) {
+                    throw new UnsupportedOperationException(
+                            typeElement.getQualifiedName() + ": Can't dynamically add non-static @Provider method because init method doesn't return any instance"
+                    );
+                }
+                statement.append("$N.$N(");
+                processedArguments.add(returnedName);
+            }
+            processedArguments.add(method.getSimpleName());
+            var first = new AtomicBoolean(true);
+            arguments.forEach(variableElement -> {
+                if (!first.get()) {
+                    statement.append(",");
+                } else {
+                    first.set(false);
+                }
+                Optional<TypeMirror> typeMirror;
+                var annotatedParameter = annotatedInitArguments.entrySet().stream()
+                        .filter(entry -> entry.getKey().getFirst().function
+                                .apply(
+                                        types,
+                                        variableElement.asType(),
+                                        types.erasure(elements.getTypeElement(entry.getKey().getSecond()).asType())
+                                )
+                                && variableElement.getAnnotation(entry.getKey().getThird()) != null
+                        )
+                        .findFirst();
+
+                if (annotatedParameter.isPresent()) {
+                    annotatedParameter.get().getValue()
+                            .accept(
+                                    statement,
+                                    processedArguments,
+                                    variableElement.getAnnotation(annotatedParameter.get().getKey().getThird()),
+                                    (TypeElement) types.asElement(variableElement.asType())
+                            );
+                } else if (initArguments.containsKey(variableElement.asType().toString())) {
+                    initArguments.get(variableElement.asType().toString()).accept(statement, processedArguments);
+                } else if ((typeMirror = instancedServices.keySet().stream().filter(type -> types.isAssignable(type, variableElement.asType())).findFirst()).isPresent()) {
+                    statement.append("$N");
+                    processedArguments.add(instancedServices.get(typeMirror.get()));
+                } else {
+                    throw new UnsupportedOperationException("Method " +   method.getSimpleName() + " of " + typeElement.getQualifiedName() + " has wrong argument!");
+                }
+            });
+            statement.append(")");
+
+            var indexv = "indexedVariable" + (index++);
+            if (annotation.level() == Provider.Level.INIT) {
+                var list = new ArrayList<>();
+                list.add(returnType);
+                list.add(indexv);
+                list.addAll(processedArguments);
+                methodSpec.addStatement("$T $N = " + statement, list.toArray());
+                providers.put(Pair.of(typeElement, (TypeElement) types.asElement(returnType)), Pair.of(Provider.Level.INIT, indexv));
+            } else if (annotation.level() == Provider.Level.ENABLE) {
+                methodSpec.addStatement("$T $N = new $T()", AtomicReference.class, indexv, AtomicReference.class);
+                var methodBuilder = MethodSpec.methodBuilder("run")
+                        .addModifiers(Modifier.PUBLIC)
+                        .returns(void.class);
+                if (shouldRunControllable.areBothPresent()) {
+                    methodBuilder.beginControlFlow("if (" + shouldRunControllable.getFirst() + ")", shouldRunControllable.getSecond().toArray());
+                }
+                var list = new ArrayList<>();
+                list.add(indexv);
+                list.addAll(processedArguments);
+                methodBuilder.addStatement("$N.set(" + statement + ")", list.toArray());
+                if (shouldRunControllable.areBothPresent()) {
+                    methodBuilder.endControlFlow();
+                }
+                methodSpec.addStatement(
+                        "this.$N.child().enable($L)",
+                        "pluginControllable",
+                        TypeSpec.anonymousClassBuilder("")
+                                .addSuperinterface(Runnable.class)
+                                .addMethod(methodBuilder.build())
+                                .build()
+                );
+                providers.put(Pair.of(typeElement, (TypeElement) types.asElement(returnType)), Pair.of(Provider.Level.ENABLE, indexv));
+            } else if (annotation.level() == Provider.Level.POST_ENABLE) {
+                methodSpec.addStatement("$T $N = new $T()", AtomicReference.class, indexv, AtomicReference.class);
+                var methodBuilder = MethodSpec.methodBuilder("run")
+                        .addModifiers(Modifier.PUBLIC)
+                        .returns(void.class);
+                if (shouldRunControllable.areBothPresent()) {
+                    methodBuilder.beginControlFlow("if (" + shouldRunControllable.getFirst() + ")", shouldRunControllable.getSecond().toArray());
+                }
+                var list = new ArrayList<>();
+                list.add(indexv);
+                list.addAll(processedArguments);
+                methodBuilder.addStatement("$N.set(" + statement + ")", list.toArray());
+                if (shouldRunControllable.areBothPresent()) {
+                    methodBuilder.endControlFlow();
+                }
+                methodSpec.addStatement(
+                        "this.$N.child().postEnable($L)",
+                        "pluginControllable",
+                        TypeSpec.anonymousClassBuilder("")
+                                .addSuperinterface(Runnable.class)
+                                .addMethod(methodBuilder.build())
+                                .build()
+                );
+                providers.put(Pair.of(typeElement, (TypeElement)  types.asElement(returnType)), Pair.of(Provider.Level.POST_ENABLE, indexv));
+            }
+        });
+
     }
 
     private void processEventAnnotations(TypeElement typeElement, String returnedName, Pair<String, List<Object>> shouldRunControllable) {
@@ -497,6 +712,24 @@ public class ServiceInitGenerator {
     public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         var seen = ConcurrentHashMap.newKeySet();
         return t -> seen.add(keyExtractor.apply(t));
+    }
+
+    public static ClassName toClassName(TypeElement typeElement) {
+        var list = new ArrayList<String>();
+        list.add(typeElement.getSimpleName().toString());
+        Element cur = typeElement;
+        while (true) {
+            cur = cur.getEnclosingElement();
+            if (cur instanceof TypeElement) {
+                list.add(cur.getSimpleName().toString());
+            } else if (cur instanceof PackageElement) {
+                list.add(((PackageElement) cur).getQualifiedName().toString());
+                break;
+            }
+        }
+
+        Collections.reverse(list);
+        return ClassName.get(list.get(0), list.get(1), list.stream().skip(2).toArray(String[]::new));
     }
 
     @RequiredArgsConstructor

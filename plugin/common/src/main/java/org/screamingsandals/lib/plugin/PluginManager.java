@@ -79,4 +79,13 @@ public abstract class PluginManager {
     }
 
     protected abstract PlatformType getPlatformType0();
+
+    public static Optional<PluginDescription> getPluginFromPlatformObject(Object object) {
+        if (pluginManager == null) {
+            throw new UnsupportedOperationException("PluginManager is not initialized yet.");
+        }
+        return pluginManager.getPluginFromPlatformObject0(object);
+    }
+
+    protected abstract Optional<PluginDescription> getPluginFromPlatformObject0(Object object);
 }

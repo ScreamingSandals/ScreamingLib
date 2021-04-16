@@ -56,6 +56,15 @@ public class VelocityPluginManager extends PluginManager {
         return PlatformType.VELOCITY;
     }
 
+    @Override
+    protected Optional<PluginDescription> getPluginFromPlatformObject0(Object object) {
+        return  pluginManager.getPlugins()
+                .stream()
+                .filter(a -> a == object)
+                .findFirst()
+                .map(this::wrap);
+    }
+
     private PluginDescription wrap(PluginContainer plugin) {
         return new PluginDescription(
                 VelocityPluginKey.of(plugin.getDescription().getId()),

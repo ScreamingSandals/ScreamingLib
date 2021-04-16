@@ -72,6 +72,10 @@ public class ClassStorage {
 
 		// 1.16
 		public static final Class<?> AttributeModifiable = safeGetClass("{nms}.AttributeModifiable", "{f:ent}.ai.attributes.ModifiableAttributeInstance");
+
+		public static final Class<?> CraftPersistentDataContainer = safeGetClass("{obc}.persistence.CraftPersistentDataContainer");
+		public static final Class<?> CraftMetaItem = safeGetClass("{obc}.inventory.CraftMetaItem");
+		public static final Class<?> CraftPersistentDataTypeRegistry = safeGetClass("{obc}.persistence.CraftPersistentDataTypeRegistry");
 	}
 	
 	private static String checkNMSVersion() {
