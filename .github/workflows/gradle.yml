@@ -22,8 +22,10 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew
       env:
-        GITLAB_REPO: ${{ secrets.GITLAB_REPO }}
-        GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        NEXUS_URL_RELEASE: ${{ secrets.NEXUS_URL_RELEASE }}
+        NEXUS_URL_SNAPSHOT: ${{ secrets.NEXUS_URL_SNAPSHOT }}
+        NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+        NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         JAVADOC_HOST: ${{ secrets.JAVADOC_HOST }}
         JAVADOC_SECRET: ${{ secrets.JAVADOC_SECRET }}
         JAVADOC_USER: ${{ secrets.JAVADOC_USER }}
