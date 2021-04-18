@@ -5,6 +5,7 @@ import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.material.container.PlayerContainer;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.Permission;
@@ -119,7 +120,7 @@ public abstract class PlayerMapper {
         playerMapper.closeInventory0(playerWrapper);
     }
 
-    public static Container getPlayerInventory(PlayerWrapper playerWrapper) {
+    public static PlayerContainer getPlayerInventory(PlayerWrapper playerWrapper) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
@@ -330,7 +331,7 @@ public abstract class PlayerMapper {
 
     public abstract void sendMessage0(SenderWrapper playerWrapper, String message);
 
-    public abstract Container getPlayerInventory0(PlayerWrapper playerWrapper);
+    public abstract PlayerContainer getPlayerInventory0(PlayerWrapper playerWrapper);
 
     public abstract Optional<Container> getOpenedInventory0(PlayerWrapper playerWrapper);
 

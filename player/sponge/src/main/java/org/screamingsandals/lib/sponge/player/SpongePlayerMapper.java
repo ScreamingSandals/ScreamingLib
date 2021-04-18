@@ -7,6 +7,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.material.container.PlayerContainer;
 import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
@@ -138,8 +139,8 @@ public class SpongePlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public Container getPlayerInventory0(PlayerWrapper playerWrapper) {
-        return ItemFactory.wrapContainer(playerWrapper.as(ServerPlayer.class).getInventory()).orElseThrow();
+    public PlayerContainer getPlayerInventory0(PlayerWrapper playerWrapper) {
+        return ItemFactory.wrapPlayerContainer(playerWrapper.as(ServerPlayer.class).getInventory()).orElseThrow();
     }
 
     @Override

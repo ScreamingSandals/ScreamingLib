@@ -16,6 +16,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.material.container.PlayerContainer;
 import org.screamingsandals.lib.minestom.player.event.*;
 import org.screamingsandals.lib.minestom.utils.MinestomAdventureHelper;
 import org.screamingsandals.lib.player.*;
@@ -130,8 +131,8 @@ public class MinestomPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public Container getPlayerInventory0(PlayerWrapper playerWrapper) {
-        return ItemFactory.wrapContainer(playerWrapper.as(Player.class).getInventory()).orElseThrow();
+    public PlayerContainer getPlayerInventory0(PlayerWrapper playerWrapper) {
+        return ItemFactory.wrapPlayerContainer(playerWrapper.as(Player.class).getInventory()).orElseThrow();
     }
 
     @Override
