@@ -14,6 +14,7 @@ import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.material.container.PlayerContainer;
 import org.screamingsandals.lib.material.data.ItemData;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.minestom.material.MinestomMaterialMapping;
@@ -175,6 +176,11 @@ public class MinestomItemFactory extends ItemFactory {
 
                 })
                 .normalizeType(ItemStack.class);
+    }
+
+    @Override
+    public Optional<PlayerContainer> wrapPlayerContainer0(Object container) {
+            return Optional.empty();
     }
 
     @Override
