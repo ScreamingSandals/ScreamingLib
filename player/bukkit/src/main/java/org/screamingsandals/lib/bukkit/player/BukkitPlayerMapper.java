@@ -172,6 +172,11 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
+    public Container getEnderChest0(PlayerWrapper playerWrapper) {
+        return ItemFactory.wrapContainer(playerWrapper.as(Player.class).getEnderChest()).orElseThrow();
+    }
+
+    @Override
     public PlayerContainer getPlayerInventory0(PlayerWrapper playerWrapper) {
         return ItemFactory.wrapPlayerContainer(playerWrapper.as(Player.class).getInventory()).orElseThrow();
     }

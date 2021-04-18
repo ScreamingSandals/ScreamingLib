@@ -139,6 +139,12 @@ public class SpongePlayerMapper extends PlayerMapper {
     }
 
     @Override
+    public Container getEnderChest0(PlayerWrapper playerWrapper) {
+        //TODO:
+        return null;
+    }
+
+    @Override
     public PlayerContainer getPlayerInventory0(PlayerWrapper playerWrapper) {
         return ItemFactory.wrapPlayerContainer(playerWrapper.as(ServerPlayer.class).getInventory()).orElseThrow();
     }

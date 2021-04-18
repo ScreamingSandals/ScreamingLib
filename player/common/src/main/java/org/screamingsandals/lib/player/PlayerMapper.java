@@ -120,6 +120,13 @@ public abstract class PlayerMapper {
         playerMapper.closeInventory0(playerWrapper);
     }
 
+    public static Container getEnderChest(PlayerWrapper playerWrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getEnderChest0(playerWrapper);
+    }
+
     public static PlayerContainer getPlayerInventory(PlayerWrapper playerWrapper) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
@@ -330,6 +337,8 @@ public abstract class PlayerMapper {
     public abstract void closeInventory0(PlayerWrapper playerWrapper);
 
     public abstract void sendMessage0(SenderWrapper playerWrapper, String message);
+
+    public abstract Container getEnderChest0(PlayerWrapper playerWrapper);
 
     public abstract PlayerContainer getPlayerInventory0(PlayerWrapper playerWrapper);
 

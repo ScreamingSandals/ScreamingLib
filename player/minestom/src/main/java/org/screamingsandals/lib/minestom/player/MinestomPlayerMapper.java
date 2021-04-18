@@ -131,6 +131,11 @@ public class MinestomPlayerMapper extends PlayerMapper {
     }
 
     @Override
+    public Container getEnderChest0(PlayerWrapper playerWrapper) {
+        return null; //TODO
+    }
+
+    @Override
     public PlayerContainer getPlayerInventory0(PlayerWrapper playerWrapper) {
         return ItemFactory.wrapPlayerContainer(playerWrapper.as(Player.class).getInventory()).orElseThrow();
     }
