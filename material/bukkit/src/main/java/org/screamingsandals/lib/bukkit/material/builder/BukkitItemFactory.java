@@ -5,6 +5,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -17,6 +18,7 @@ import org.screamingsandals.lib.bukkit.material.BukkitMaterialMapping;
 import org.screamingsandals.lib.bukkit.material.attribute.BukkitAttributeMapping;
 import org.screamingsandals.lib.bukkit.material.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.bukkit.material.container.BukkitContainer;
+import org.screamingsandals.lib.bukkit.material.container.BukkitPlayerContainer;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitEnchantmentMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionMapping;
@@ -26,6 +28,7 @@ import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
+import org.screamingsandals.lib.material.container.PlayerContainer;
 import org.screamingsandals.lib.material.data.ItemData;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.AdventureHelper;
@@ -240,6 +243,14 @@ public class BukkitItemFactory extends ItemFactory {
     public Optional<Container> wrapContainer0(Object container) {
         if (container instanceof Inventory) {
             return Optional.of(new BukkitContainer((Inventory) container));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<PlayerContainer> wrapPlayerContainer0(Object container) {
+        if (container instanceof PlayerInventory) {
+            return Optional.of(new BukkitPlayerContainer((PlayerInventory) container));
         }
         return Optional.empty();
     }
