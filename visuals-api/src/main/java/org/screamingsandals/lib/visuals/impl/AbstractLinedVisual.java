@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.visuals.impl;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.visuals.LinedVisual;
 import org.screamingsandals.lib.visuals.Visual;
@@ -37,7 +38,17 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
     }
 
     @Override
+    public T title(ComponentLike title) {
+        return firstLine(title);
+    }
+
+    @Override
     public T firstLine(Component text) {
+        return newLine(0, text);
+    }
+
+    @Override
+    public T firstLine(ComponentLike text) {
         return newLine(0, text);
     }
 
@@ -48,6 +59,11 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
 
     @Override
     public T bottomLine(Component text) {
+        return bottomLine(TextEntry.of(text));
+    }
+
+    @Override
+    public T bottomLine(ComponentLike text) {
         return bottomLine(TextEntry.of(text));
     }
 
@@ -80,6 +96,11 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
 
     @Override
     public T replaceLine(Integer where, Component text) {
+        return replaceLine(where, TextEntry.of(text));
+    }
+
+    @Override
+    public T replaceLine(Integer where, ComponentLike text) {
         return replaceLine(where, TextEntry.of(text));
     }
 
@@ -126,6 +147,11 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
 
     @Override
     public T newLine(Integer where, Component text) {
+        return newLine(where, TextEntry.of(text));
+    }
+
+    @Override
+    public T newLine(Integer where, ComponentLike text) {
         return newLine(where, TextEntry.of(text));
     }
 

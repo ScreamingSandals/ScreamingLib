@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.sidebar;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.visuals.Visual;
 
@@ -18,6 +19,8 @@ public interface TeamedSidebar<T extends TeamedSidebar<T>> extends Visual<T> {
     T removeTeam(String identifier);
 
     T removeTeam(ScoreboardTeam scoreboardTeam);
+
+    T title(ComponentLike title);
 
     T title(Component title);
 }

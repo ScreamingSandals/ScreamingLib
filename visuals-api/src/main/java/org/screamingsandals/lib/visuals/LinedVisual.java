@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.visuals;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 
 import java.util.List;
@@ -42,6 +43,14 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text text to add
      * @return this visual
      */
+    T firstLine(ComponentLike text);
+
+    /**
+     * Adds new line to this visual and moves everything else 1 line down.
+     *
+     * @param text text to add
+     * @return this visual
+     */
     T firstLine(TextEntry text);
 
     /**
@@ -51,6 +60,14 @@ public interface LinedVisual<T> extends Visual<T> {
      * @return this visual
      */
     T bottomLine(Component text);
+
+    /**
+     * Adds new line to the bottom of this visual.
+     *
+     * @param text text to add
+     * @return this visual
+     */
+    T bottomLine(ComponentLike text);
 
     /**
      * Adds new line to the bottom of this visual.
@@ -76,6 +93,15 @@ public interface LinedVisual<T> extends Visual<T> {
      * @return this visual
      */
     T replaceLine(Integer where, Component text);
+
+    /**
+     * Replaces a line.
+     *
+     * @param where where to replace
+     * @param text  text to replace
+     * @return this visual
+     */
+    T replaceLine(Integer where, ComponentLike text);
 
     /**
      * Replaces a line.
@@ -116,6 +142,15 @@ public interface LinedVisual<T> extends Visual<T> {
      * @return this visual
      */
     T newLine(Integer where, Component text);
+
+    /**
+     * Creates a new line and moves everything bellow if anything is already on that line.
+     *
+     * @param where where to add
+     * @param text  text to add
+     * @return this visual
+     */
+    T newLine(Integer where, ComponentLike text);
 
     /**
      * Creates a new line and moves everything bellow if anything is already on that line.

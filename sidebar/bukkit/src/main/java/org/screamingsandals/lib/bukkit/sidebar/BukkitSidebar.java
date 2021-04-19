@@ -7,12 +7,13 @@ import org.bukkit.entity.Player;
 import org.screamingsandals.lib.bukkit.sidebar.team.BukkitScoreboardTeam;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.sidebar.AbstractSidebar;
-import org.screamingsandals.lib.sidebar.Sidebar;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
+import org.screamingsandals.lib.utils.visual.SimpleCLTextEntry;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class BukkitSidebar extends AbstractSidebar {
     private final String objectiveKey;
-    private final ConcurrentSkipListMap<Integer, String> lines = new ConcurrentSkipListMap<>();
+    private final ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, String>> lines = new ConcurrentSkipListMap<>();
 
     public BukkitSidebar(UUID uuid) {
         super(uuid);
@@ -35,8 +36,8 @@ public class BukkitSidebar extends AbstractSidebar {
     public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
         if (visible) {
             var bukkitPlayer = player.as(Player.class);
-            ClassStorage.sendPacket(bukkitPlayer, createObjective());
-            ClassStorage.sendPackets(bukkitPlayer, allScores());
+            ClassStorage.sendPacket(bukkitPlayer, createObjective(player));
+            updateForPlayer(player);
             ClassStorage.sendPacket(bukkitPlayer, displayObjective());
             teams.forEach(scoreboardTeam ->
                 ClassStorage.sendPacket(bukkitPlayer, ((BukkitScoreboardTeam) scoreboardTeam).constructCreatePacket())
@@ -57,12 +58,31 @@ public class BukkitSidebar extends AbstractSidebar {
 
     @Override
     protected void update0() {
+        List.copyOf(viewers).forEach(this::updateForPlayer);
+    }
+
+    private void updateForPlayer(PlayerWrapper playerWrapper) {
+        var lines = this.lines.get(playerWrapper.getUuid());
+        if (lines == null) {
+            lines = new ConcurrentSkipListMap<>();
+            this.lines.put(playerWrapper.getUuid(), lines);
+        }
+
         var list = getLines()
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getKey() >= 0 && entry.getKey() <= 15)
                 .sorted(Map.Entry.comparingByKey())
-                .map(entry -> entry.getValue().getText())
+                .map(Map.Entry::getValue)
+                .map(textEntry -> {
+                    if (textEntry instanceof SimpleCLTextEntry) {
+                        var like = ((SimpleCLTextEntry) textEntry).getComponentLike();
+                        if (like instanceof SenderMessage) {
+                            return ((SenderMessage) like).asComponent(playerWrapper);
+                        }
+                    }
+                    return textEntry.getText();
+                })
                 .map(AdventureHelper::toLegacy)
                 .collect(Collectors.toList());
 
@@ -90,38 +110,35 @@ public class BukkitSidebar extends AbstractSidebar {
 
         forRemoval.forEach(lines::remove);
 
-        if (visible) {
-            viewers.forEach(playerWrapper -> ClassStorage.sendPackets(playerWrapper.as(Player.class), packets));
-        }
+        ClassStorage.sendPackets(playerWrapper.as(Player.class), packets);
     }
 
     @Override
     public void updateTitle0() {
         if (visible && !viewers.isEmpty()) {
-            var packet = updateObjective();
-            viewers.forEach(p -> ClassStorage.sendPacket(p.as(Player.class), packet));
+            viewers.forEach(p -> ClassStorage.sendPacket(p.as(Player.class), updateObjective(p)));
         }
     }
 
     // INTERNAL METHODS
 
-    private Object createObjective() {
-        var packet = notFinalObjectivePacket();
+    private Object createObjective(PlayerWrapper player) {
+        var packet = notFinalObjectivePacket(player);
         packet.setField("d", 0);
         return packet.raw();
     }
 
-    private Object updateObjective() {
-        var packet = notFinalObjectivePacket();
+    private Object updateObjective(PlayerWrapper player) {
+        var packet = notFinalObjectivePacket(player);
         packet.setField("d", 2);
         return packet.raw();
     }
 
-    private InvocationResult notFinalObjectivePacket() {
+    private InvocationResult notFinalObjectivePacket(PlayerWrapper player) {
         var packet = Reflect.constructResulted(ClassStorage.NMS.PacketPlayOutScoreboardObjective);
         packet.setField("a", objectiveKey);
-        if (packet.setField("b", asMinecraftComponent(title)) == null) {
-            packet.setField("b", AdventureHelper.toLegacy(title));
+        if (packet.setField("b", asMinecraftComponent(title.asComponent(player))) == null) {
+            packet.setField("b", AdventureHelper.toLegacy(title.asComponent(player)));
         }
         packet.setField("c", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardHealthDisplay, "INTEGER"));
         return packet;
@@ -156,13 +173,6 @@ public class BukkitSidebar extends AbstractSidebar {
         packet.setField("b", objectiveKey);
         packet.setField("d", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardAction, "REMOVE"));
         return packet.raw();
-    }
-
-    private List<Object> allScores() {
-        return lines.entrySet()
-                .stream()
-                .map(entry -> createScorePacket(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
     }
 
     public String makeUnique(String toUnique, List<String> from) {

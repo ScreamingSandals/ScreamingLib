@@ -2,15 +2,19 @@ package org.screamingsandals.lib.material;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.key.ComplexMappingKey;
+import org.screamingsandals.lib.utils.key.MappingKey;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.key.NumericMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -22,9 +26,28 @@ public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder>
     protected BidirectionalConverter<MaterialHolder> materialConverter = BidirectionalConverter.<MaterialHolder>build()
             .registerW2P(String.class, MaterialHolder::getPlatformName)
             .registerP2W(MaterialHolder.class, e -> e);
+    protected Map<Predicate<MaterialHolder>, Function<String, Optional<MaterialHolder>>> colorable = new HashMap<>();
 
     private static MaterialMapping materialMapping = null;
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?::)?(?<durability>\\d+)?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
+    private static final List<String> colors = List.of(
+            "WHITE",
+            "ORANGE",
+            "MAGENTA",
+            "LIGHT_BLUE",
+            "YELLOW",
+            "LIME",
+            "PINK",
+            "GRAY",
+            "LIGHT_GRAY",
+            "CYAN",
+            "PURPLE",
+            "BLUE",
+            "BROWN",
+            "GREEN",
+            "RED",
+            "BLACK"
+    );
 
     public static Optional<MaterialHolder> resolve(Object materialObject) {
         if (materialMapping == null) {
@@ -88,6 +111,18 @@ public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder>
         });
     }
 
+    public static MaterialHolder colorize(MaterialHolder holder, String color) {
+        if (materialMapping == null) {
+            throw new UnsupportedOperationException("Material mapping is not initialized yet.");
+        }
+        return materialMapping.colorable.entrySet().stream()
+                .filter(c -> c.getKey().test(holder))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .flatMap(fun -> fun.apply(color))
+                .orElse(holder);
+    }
+
     public static <T> T convertMaterialHolder(MaterialHolder holder, Class<T> newType) {
         if (materialMapping == null) {
             throw new UnsupportedOperationException("Material mapping is not initialized yet.");
@@ -119,6 +154,53 @@ public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder>
             if (materialMapping.getPlatform() != Platform.JAVA_FLATTENING) {
                 materialMapping.flatteningMapping();
             }
+
+            materialMapping.javaAutoColorable();
+        }
+    }
+
+    private void javaAutoColorable() {
+        makeColorable("WOOL");
+        makeColorable("CARPET");
+        makeColorable("CONCRETE");
+        makeColorable("CONCRETE_POWDER");
+        makeColorable("TERRACOTTA");
+        makeColorable("STAINED_GLASS", "GLASS");
+        makeColorable("STAINED_GLASS_PANE", "GLASS_PANE");
+        makeColorable("SHULKER_BOX");
+        makeColorable("BANNER");
+        makeColorable("GLAZED_TERRACOTTA");
+
+        if (!mappingFlags.contains(MappingFlags.NO_COLORED_BEDS)) {
+            makeColorable("BED");
+        }
+    }
+
+    private void makeColorable(String baseName) {
+        makeColorable(baseName, baseName);
+    }
+
+    private void makeColorable(String baseName, String notColoredName) {
+        var list = new ArrayList<MaterialHolder>();
+        colors.forEach(s -> resolve(s + "_" + baseName).ifPresent(materialHolder -> {
+            if (!list.contains(materialHolder)) {
+                list.add(materialHolder);
+            }
+        }));
+
+        resolve(notColoredName).ifPresent(materialHolder -> {
+            if (!list.contains(materialHolder)) {
+                list.add(materialHolder);
+            }
+        });
+
+        if (!list.isEmpty()) { // if list is empty, we don't have this material
+            colorable.put(list::contains, s -> {
+                if (colors.contains(s.toUpperCase())) {
+                    return resolve(s.toUpperCase() + "_" + baseName);
+                }
+                return Optional.empty();
+            });
         }
     }
 
@@ -830,6 +912,7 @@ public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder>
     private void f2lcolored(String material, int legacyId) {
         f2lcolored(material, material, legacyId);
     }
+
     private void f2lcolored(String flatteningMaterialSuffix, String legacyMaterial, int legacyId) {
         f2lcolored(flatteningMaterialSuffix, legacyMaterial, legacyId, null);
     }
@@ -838,22 +921,9 @@ public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder>
         if (flatteningMaterialSuffix == null || legacyMaterial == null) {
             throw new IllegalArgumentException("Both materials mustn't be null!");
         }
-        f2l("WHITE_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 0, alternativeLegacyName);
-        f2l("ORANGE_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 1, alternativeLegacyName);
-        f2l("MAGENTA_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 2, alternativeLegacyName);
-        f2l("LIGHT_BLUE_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 3, alternativeLegacyName);
-        f2l("YELLOW_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 4, alternativeLegacyName);
-        f2l("LIME_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 5, alternativeLegacyName);
-        f2l("PINK_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 6, alternativeLegacyName);
-        f2l("GRAY_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 7, alternativeLegacyName);
-        f2l("LIGHT_GRAY_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 8, alternativeLegacyName);
-        f2l("CYAN_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 9, alternativeLegacyName);
-        f2l("PURPLE_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 10, alternativeLegacyName);
-        f2l("BLUE_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 11, alternativeLegacyName);
-        f2l("BROWN_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 12, alternativeLegacyName);
-        f2l("GREEN_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 13, alternativeLegacyName);
-        f2l("RED_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 14, alternativeLegacyName);
-        f2l("BLACK_" + flatteningMaterialSuffix, legacyMaterial, legacyId, 15, alternativeLegacyName);
+        for (int i = 0; i <= 15; i++) {
+            f2l(colors.get(i) + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, i, alternativeLegacyName);
+        }
     }
 
     private void f2lcoloredToNonColored(String material, int legacyId) {
@@ -868,22 +938,9 @@ public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder>
         if (flatteningMaterialSuffix == null || legacyMaterial == null) {
             throw new IllegalArgumentException("Both materials mustn't be null!");
         }
-        f2l("WHITE_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("ORANGE_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("MAGENTA_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("LIGHT_BLUE_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("YELLOW_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("LIME_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("PINK_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("GRAY_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("LIGHT_GRAY_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("CYAN_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("PURPLE_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("BLUE_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("BROWN_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("GREEN_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("RED_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
-        f2l("BLACK_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
+        colors.forEach(s ->
+                f2l(s + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName)
+        );
     }
 
     /* For Materials where the name is same */

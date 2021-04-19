@@ -6,18 +6,23 @@ import net.kyori.adventure.text.minimessage.Template;
 import net.kyori.adventure.title.Title;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.placeholders.PlaceholderManager;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.sender.TitleableSenderMessage;
 import org.screamingsandals.lib.tasker.Tasker;
-import org.screamingsandals.lib.utils.visual.TextEntry;
+import org.screamingsandals.lib.utils.AdventureHelper;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Data
 public final class Message implements TitleableSenderMessage, Cloneable {
+    private static final Pattern PLACEHOLDERAPI_REGEX = Pattern.compile("[%]([^%]+)[%]");
+
     private final List<Translation> translations = new LinkedList<>();
     private final Map<String, Function<CommandSenderWrapper, Component>> placeholders = new HashMap<>();
     private final LangService langService;
@@ -235,12 +240,38 @@ public final class Message implements TitleableSenderMessage, Cloneable {
                     final var list = container
                             .translate(translation.getKeys())
                             .stream()
-                            .map(s -> Lang.MINIMESSAGE.parse(s, placeholders
+                            .map(s -> {
+                                if (PlaceholderManager.isInitialized()) {
+                                    // Skip this code block to avoid impact of black magic on your mind
+                                    var matcher = PLACEHOLDERAPI_REGEX.matcher(s);
+
+                                    var lastIndex = 0;
+                                    var output = new StringBuilder();
+                                    while (matcher.find()) {
+                                        output.append(s, lastIndex, matcher.start())
+                                                .append(
+                                                        Lang.MINIMESSAGE.serialize(
+                                                                AdventureHelper.toComponent(
+                                                                        PlaceholderManager.resolveString(sender instanceof MultiPlatformOfflinePlayer ? (MultiPlatformOfflinePlayer) sender : null,
+                                                                        "%" + matcher.group(1) + "%")
+                                                                )
+                                                        )
+                                                );
+
+                                        lastIndex = matcher.end();
+                                    }
+                                    if (lastIndex < output.length()) {
+                                        output.append(s, lastIndex, s.length());
+                                    }
+                                    s = output.toString();
+                                }
+
+                                return Lang.MINIMESSAGE.parse(s, placeholders
                                     .entrySet()
                                     .stream()
                                     .map(entry -> Template.of(entry.getKey(), entry.getValue().apply(sender)))
-                                    .collect(Collectors.toList())
-                            ))
+                                    .collect(Collectors.toList()));
+                            })
                             .map(component -> {
                                 if (!Component.empty().equals(prefix)
                                         && (prefixPolicy != PrefixPolicy.FIRST_MESSAGE || atomic.get())) {
@@ -394,16 +425,6 @@ public final class Message implements TitleableSenderMessage, Cloneable {
     @NotNull
     public Component asComponent(@Nullable CommandSenderWrapper sender) {
         return getForJoined(sender);
-    }
-
-    @Override
-    public @NotNull TextEntry asTextEntry(@Nullable CommandSenderWrapper wrapper) {
-        return TextEntry.of(asComponent(wrapper));
-    }
-
-    @Override
-    public @NotNull TextEntry asTextEntry(@NotNull String identifier, CommandSenderWrapper wrapper) {
-        return TextEntry.of(identifier, asComponent(wrapper));
     }
 
     @Override

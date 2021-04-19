@@ -19,7 +19,6 @@ public class AdventureUtils {
 
     public InstanceMethod get(Object instance, String method, Class<?>... types) {
         if (ComponentUtils.NATIVE_COMPONENT_CLASS.isAssignableFrom(Component.class)) {
-            System.out.println("DON'T TELL ME WE ARE HERE");
             // Ok, we are not using shaded adventure
             return Reflect.getMethod(instance, method, types);
         }

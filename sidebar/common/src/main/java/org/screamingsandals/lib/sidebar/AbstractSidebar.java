@@ -3,6 +3,8 @@ package org.screamingsandals.lib.sidebar;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.visuals.impl.AbstractLinedVisual;
@@ -19,7 +21,7 @@ public abstract class AbstractSidebar extends AbstractLinedVisual<Sidebar> imple
     @Setter
     protected DataContainer data;
     protected boolean ready;
-    protected Component title = Component.empty();
+    protected SenderMessage title = SenderMessage.empty();
 
     public AbstractSidebar(UUID uuid) {
         super(uuid);
@@ -54,7 +56,16 @@ public abstract class AbstractSidebar extends AbstractLinedVisual<Sidebar> imple
 
     @Override
     public Sidebar title(Component title) {
-        this.title = title;
+        return title(SenderMessage.of(title));
+    }
+
+    @Override
+    public Sidebar title(ComponentLike title) {
+        if (title instanceof SenderMessage) {
+            this.title = (SenderMessage) title;
+        } else {
+            this.title = SenderMessage.of(title);
+        }
         updateTitle0();
         return this;
     }

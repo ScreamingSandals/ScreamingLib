@@ -1,0 +1,8 @@
+dependencies {
+    api project(':player-bukkit')
+    api project(':placeholders-common')
+
+    compileOnly paper(PAPER_VERSION)
+
+    compileOnly placeholderapi(PLACEHOLDERAPI_VERSION)
+}

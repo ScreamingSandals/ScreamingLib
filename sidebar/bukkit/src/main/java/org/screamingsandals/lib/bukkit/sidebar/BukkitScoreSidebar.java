@@ -31,7 +31,7 @@ public class BukkitScoreSidebar extends AbstractScoreSidebar {
     public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
         if (visible) {
             var bukkitPlayer = player.as(Player.class);
-            ClassStorage.sendPacket(bukkitPlayer, createObjective());
+            ClassStorage.sendPacket(bukkitPlayer, createObjective(player));
             ClassStorage.sendPackets(bukkitPlayer, allScores());
             ClassStorage.sendPacket(bukkitPlayer, displayObjective());
             teams.forEach(scoreboardTeam ->
@@ -87,30 +87,29 @@ public class BukkitScoreSidebar extends AbstractScoreSidebar {
     @Override
     public void updateTitle0() {
         if (visible && !viewers.isEmpty()) {
-            var packet = updateObjective();
-            viewers.forEach(p -> ClassStorage.sendPacket(p.as(Player.class), packet));
+            viewers.forEach(p -> ClassStorage.sendPacket(p.as(Player.class), updateObjective(p)));
         }
     }
 
     // INTERNAL METHODS
 
-    private Object createObjective() {
-        var packet = notFinalObjectivePacket();
+    private Object createObjective(PlayerWrapper player) {
+        var packet = notFinalObjectivePacket(player);
         packet.setField("d", 0);
         return packet.raw();
     }
 
-    private Object updateObjective() {
-        var packet = notFinalObjectivePacket();
+    private Object updateObjective(PlayerWrapper player) {
+        var packet = notFinalObjectivePacket(player);
         packet.setField("d", 2);
         return packet.raw();
     }
 
-    private InvocationResult notFinalObjectivePacket() {
+    private InvocationResult notFinalObjectivePacket(PlayerWrapper player) {
         var packet = Reflect.constructResulted(ClassStorage.NMS.PacketPlayOutScoreboardObjective);
         packet.setField("a", objectiveKey);
-        if (packet.setField("b", BukkitSidebar.asMinecraftComponent(title)) == null) {
-            packet.setField("b", AdventureHelper.toLegacy(title));
+        if (packet.setField("b", BukkitSidebar.asMinecraftComponent(title.asComponent(player))) == null) {
+            packet.setField("b", AdventureHelper.toLegacy(title.asComponent(player)));
         }
         packet.setField("c", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardHealthDisplay, "INTEGER"));
         return packet;

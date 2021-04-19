@@ -11,8 +11,24 @@ public interface SenderMessage extends ComponentLike {
     Component asComponent(@Nullable CommandSenderWrapper wrapper);
 
     @NotNull
-    TextEntry asTextEntry(@Nullable CommandSenderWrapper wrapper);
+    default TextEntry asTextEntry(@Nullable CommandSenderWrapper wrapper) {
+        return TextEntry.of(asComponent(wrapper));
+    }
 
     @NotNull
-    TextEntry asTextEntry(@NotNull String identifier, @Nullable CommandSenderWrapper wrapper);
+    default TextEntry asTextEntry(@NotNull String identifier, @Nullable CommandSenderWrapper wrapper) {
+        return TextEntry.of(identifier, asComponent(wrapper));
+    }
+
+    static SenderMessage empty() {
+        return new StaticSenderMessage(Component.empty());
+    }
+
+    static SenderMessage of(Component component) {
+        return new StaticSenderMessage(component);
+    }
+
+    static SenderMessage of(ComponentLike component) {
+        return new StaticSenderMessage(component.asComponent());
+    }
 }

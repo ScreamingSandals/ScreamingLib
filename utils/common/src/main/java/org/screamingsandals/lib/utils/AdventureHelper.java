@@ -29,6 +29,11 @@ public class AdventureHelper {
         return component == null ? "" : serializer.serialize(component);
     }
 
+    @Nullable
+    public String toLegacyNullableResult(@Nullable Component component) {
+        return component == null ? null : serializer.serialize(component);
+    }
+
     @NotNull
     public TextComponent toComponent(@NotNull String input) {
         return serializer.deserialize(input);
@@ -37,5 +42,10 @@ public class AdventureHelper {
     @NotNull
     public TextComponent toComponentNullable(@Nullable String input) {
         return input == null ? Component.empty() : serializer.deserialize(input);
+    }
+
+    @Nullable
+    public TextComponent toComponentNullableResult(@Nullable String input) {
+        return input == null ? null : serializer.deserialize(input);
     }
 }

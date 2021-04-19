@@ -4,7 +4,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
-import org.jetbrains.annotations.Nullable;
+import net.kyori.adventure.text.ComponentLike;
+import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.visuals.impl.AbstractVisual;
@@ -24,7 +25,7 @@ public abstract class AbstractScoreSidebar extends AbstractVisual<ScoreSidebar> 
     @Setter
     protected DataContainer data;
     protected boolean ready;
-    protected Component title = Component.empty();
+    protected SenderMessage title = SenderMessage.empty();
 
     public AbstractScoreSidebar(UUID uuid) {
         super(uuid);
@@ -59,7 +60,16 @@ public abstract class AbstractScoreSidebar extends AbstractVisual<ScoreSidebar> 
 
     @Override
     public ScoreSidebar title(Component title) {
-        this.title = title;
+        return title(SenderMessage.of(title));
+    }
+
+    @Override
+    public ScoreSidebar title(ComponentLike title) {
+        if (title instanceof SenderMessage) {
+            this.title = (SenderMessage) title;
+        } else {
+            this.title = SenderMessage.of(title);
+        }
         updateTitle0();
         return this;
     }

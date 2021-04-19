@@ -23,6 +23,7 @@ registerModule('player', 'bukkit', 'minestom', 'sponge')
 registerModule('entity', 'bukkit', 'minestom', 'sponge')
 registerModule('hologram', 'bukkit') //TODO: add others
 registerModule('sidebar', 'bukkit') //TODO: add others
+registerModule('placeholders', 'bukkit') //TODO: add others
 registerModule('proxiedplayer', 'bungee', 'velocity')
 registerModule('plugin', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
 registerModule('tasker', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')

@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.visuals;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 import java.util.Collection;
@@ -36,6 +37,8 @@ public interface Visual<T> {
     T clearViewers();
 
     T title(Component title);
+
+    T title(ComponentLike title);
 
     /**
      * Checks if this Visual has any viewers.
