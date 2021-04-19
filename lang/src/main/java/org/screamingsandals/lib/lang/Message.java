@@ -260,7 +260,7 @@ public final class Message implements TitleableSenderMessage, Cloneable {
 
                                         lastIndex = matcher.end();
                                     }
-                                    if (lastIndex < output.length()) {
+                                    if (lastIndex < s.length()) {
                                         output.append(s, lastIndex, s.length());
                                     }
                                     s = output.toString();
