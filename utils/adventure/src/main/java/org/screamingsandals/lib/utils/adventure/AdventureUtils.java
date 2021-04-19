@@ -15,10 +15,11 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 @UtilityClass
 public class AdventureUtils {
     public final Class<?> NATIVE_MESSAGE_TYPE_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.audience.MessageType");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "audience", "MessageType"));
 
     public InstanceMethod get(Object instance, String method, Class<?>... types) {
         if (ComponentUtils.NATIVE_COMPONENT_CLASS.isAssignableFrom(Component.class)) {
+            System.out.println("DON'T TELL ME WE ARE HERE");
             // Ok, we are not using shaded adventure
             return Reflect.getMethod(instance, method, types);
         }

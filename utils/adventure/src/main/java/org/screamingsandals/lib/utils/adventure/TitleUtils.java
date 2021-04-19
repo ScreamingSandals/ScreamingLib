@@ -9,9 +9,9 @@ import java.time.Duration;
 @UtilityClass
 public class TitleUtils {
     public final Class<?> NATIVE_TITLE_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.title.Title");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "title", "Title"));
     public final Class<?> NATIVE_TIMES_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.title.Title$Times");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "title", "Title$Times"));
 
     public Object timesToPlatform(Title.Times times) {
         if (NATIVE_TIMES_CLASS.isInstance(times)) {

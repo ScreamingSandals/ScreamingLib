@@ -10,9 +10,9 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 @UtilityClass
 public class ComponentUtils {
     public final Class<?> NATIVE_COMPONENT_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.text.Component");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "text", "Component"));
     public final Class<?> NATIVE_GSON_COMPONENT_SERIALIZER_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.text.serializer.gson.GsonComponentSerializer");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "text", "serializer", "gson", "GsonComponentSerializer"));
     public final ClassMethod NATIVE_GSON_COMPONENT_SERIALIZER_GETTER =
             Reflect.getMethod(NATIVE_GSON_COMPONENT_SERIALIZER_CLASS, "gson");
 
@@ -32,12 +32,12 @@ public class ComponentUtils {
         if (platformComponent instanceof Component) {
             return (Component) platformComponent;
         }
-        return componentFromPlatform(platformComponent, NATIVE_GSON_COMPONENT_SERIALIZER_GETTER.invokeStatic());
+        return componentFromPlatform(platformComponent, NATIVE_GSON_COMPONENT_SERIALIZER_GETTER.invokeStatic(), NATIVE_COMPONENT_CLASS);
     }
 
-    public Component componentFromPlatform(Object platformComponent, Object nativeGsonSerializer) {
+    public Component componentFromPlatform(Object platformComponent, Object nativeGsonSerializer, Class<?> nativeComponentClass) {
         var result = Reflect
-                .getMethod(nativeGsonSerializer, "serialize", String.class)
+                .getMethod(nativeGsonSerializer, "serialize", nativeComponentClass)
                 .invokeResulted(platformComponent)
                 .as(String.class);
         return GsonComponentSerializer.gson().deserialize(result);

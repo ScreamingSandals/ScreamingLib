@@ -13,13 +13,13 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class BossBarUtils {
     public final Class<?> NATIVE_BOSSBAR_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.bossbar.BossBar");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "bossbar", "BossBar"));
     public final Class<?> NATIVE_BOSSBAR_OVERLAY_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.bossbar.BossBar$Overlay");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "bossbar", "BossBar$Overlay"));
     public final Class<?> NATIVE_BOSSBAR_FLAG_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.bossbar.BossBar$Flag");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "bossbar", "BossBar$Flag"));
     public final Class<?> NATIVE_BOSSBAR_COLOR_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.bossbar.BossBar$Color");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "bossbar", "BossBar$Color"));
 
     private final WeakHashMap<BossBar, Object> weakMap = new WeakHashMap<>();
 

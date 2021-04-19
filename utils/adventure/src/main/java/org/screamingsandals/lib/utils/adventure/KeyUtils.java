@@ -8,7 +8,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 @UtilityClass
 public class KeyUtils {
     public final Class<?> NATIVE_KEY_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.key.Key");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "key", "Key"));
 
     public Object keyToPlatform(Key key) {
         if (NATIVE_KEY_CLASS.isInstance(key)) {

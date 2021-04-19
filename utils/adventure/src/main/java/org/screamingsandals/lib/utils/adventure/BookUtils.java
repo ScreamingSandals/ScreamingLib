@@ -10,7 +10,7 @@ import java.util.Collection;
 @UtilityClass
 public class BookUtils {
     public final Class<?> NATIVE_BOOK_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.inventory.Book");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "inventory", "Book"));
 
     public Object bookToPlatform(Book book) {
         if (NATIVE_BOOK_CLASS.isInstance(book)) {
@@ -36,23 +36,23 @@ public class BookUtils {
         if (platformObject instanceof Book) {
             return (Book) platformObject;
         }
-        return bookFromPlatform(platformObject, ComponentUtils.NATIVE_GSON_COMPONENT_SERIALIZER_GETTER.invokeStatic());
+        return bookFromPlatform(platformObject, ComponentUtils.NATIVE_GSON_COMPONENT_SERIALIZER_GETTER.invokeStatic(), ComponentUtils.NATIVE_COMPONENT_CLASS);
     }
 
     @SuppressWarnings("unchecked")
-    public Book bookFromPlatform(Object platformObject, Object componentSerializer) {
+    public Book bookFromPlatform(Object platformObject, Object componentSerializer, Class<?> nativeComponentClass) {
         if (platformObject instanceof Book) {
             return (Book) platformObject;
         }
         return Book.book(
-                ComponentUtils.componentFromPlatform(Reflect.fastInvoke(platformObject, "title"), componentSerializer),
-                ComponentUtils.componentFromPlatform(Reflect.fastInvoke(platformObject, "author"), componentSerializer),
+                ComponentUtils.componentFromPlatform(Reflect.fastInvoke(platformObject, "title"), componentSerializer, nativeComponentClass),
+                ComponentUtils.componentFromPlatform(Reflect.fastInvoke(platformObject, "author"), componentSerializer, nativeComponentClass),
                 (Component[]) // IDEA is retarded or idk, so here is casting
                     Reflect
                         .fastInvokeResulted(platformObject, "pages")
                         .as(Collection.class)
                         .stream()
-                        .map(o -> ComponentUtils.componentFromPlatform(o, componentSerializer))
+                        .map(o -> ComponentUtils.componentFromPlatform(o, componentSerializer, nativeComponentClass))
                         .toArray(Component[]::new)
         );
     }

@@ -9,7 +9,7 @@ import java.util.UUID;
 @UtilityClass
 public class IdentityUtils {
     public final Class<?> NATIVE_IDENTITY_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.identity.Identity");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "identity", "Identity"));
 
     public Object identityToPlatform(Identity identity) {
         if (NATIVE_IDENTITY_CLASS.isInstance(identity)) {

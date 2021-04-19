@@ -8,11 +8,11 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 @UtilityClass
 public class SoundUtils {
     public final Class<?> NATIVE_SOUND_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.sound.Sound");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "sound", "Sound"));
     public final Class<?> NATIVE_SOURCE_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.sound.Sound$Source");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "sound", "Sound$Source"));
     public final Class<?> NATIVE_SOUND_STOP_CLASS
-            = Reflect.getClassSafe("net.kyori.adventure.sound.SoundStop");
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "sound", "SoundStop"));
 
     public Object soundToPlatform(Sound sound) {
         if (NATIVE_SOUND_CLASS.isInstance(sound)) {
