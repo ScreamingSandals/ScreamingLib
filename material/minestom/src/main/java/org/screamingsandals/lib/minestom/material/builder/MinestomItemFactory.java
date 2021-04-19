@@ -178,15 +178,12 @@ public class MinestomItemFactory extends ItemFactory {
                 .normalizeType(ItemStack.class);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Optional<PlayerContainer> wrapPlayerContainer0(Object container) {
-            return Optional.empty();
-    }
-
-    @Override
-    public Optional<Container> wrapContainer0(Object container) {
+    public <C extends Container> Optional<C> wrapContainer0(Object container) {
+        // TODO: PlayerContainer
         if (container instanceof Inventory) {
-            return Optional.of(new MinestomContainer((Inventory) container));
+            return (Optional<C>) Optional.of(new MinestomContainer((Inventory) container));
         }
         return Optional.empty();
     }

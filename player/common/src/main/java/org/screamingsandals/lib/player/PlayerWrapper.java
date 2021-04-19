@@ -8,6 +8,7 @@ import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.container.Container;
 import org.screamingsandals.lib.material.container.Openable;
+import org.screamingsandals.lib.material.container.PlayerContainer;
 import org.screamingsandals.lib.player.event.SPlayerDamageEvent;
 import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.Wrapper;
@@ -34,7 +35,7 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         return PlayerMapper.getEnderChest(this);
     }
 
-    public Container getPlayerInventory() {
+    public PlayerContainer getPlayerInventory() {
         return PlayerMapper.getPlayerInventory(this);
     }
 

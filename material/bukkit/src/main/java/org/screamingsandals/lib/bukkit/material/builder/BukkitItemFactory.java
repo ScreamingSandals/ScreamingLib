@@ -1,15 +1,18 @@
 package org.screamingsandals.lib.bukkit.material.builder;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.Repairable;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionData;
@@ -19,6 +22,7 @@ import org.screamingsandals.lib.bukkit.material.attribute.BukkitAttributeMapping
 import org.screamingsandals.lib.bukkit.material.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.bukkit.material.container.BukkitContainer;
 import org.screamingsandals.lib.bukkit.material.container.BukkitPlayerContainer;
+import org.screamingsandals.lib.bukkit.material.firework.BukkitFireworkEffectMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitEnchantmentMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionMapping;
@@ -28,16 +32,18 @@ import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.container.Container;
-import org.screamingsandals.lib.material.container.PlayerContainer;
 import org.screamingsandals.lib.material.data.ItemData;
+import org.screamingsandals.lib.material.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.InitUtils;
+import org.screamingsandals.lib.utils.adventure.AdventureUtils;
+import org.screamingsandals.lib.utils.adventure.ComponentUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service(dependsOn = {
@@ -45,7 +51,8 @@ import java.util.stream.Collectors;
         BukkitEnchantmentMapping.class,
         BukkitPotionMapping.class,
         BukkitPotionEffectMapping.class,
-        BukkitAttributeMapping.class
+        BukkitAttributeMapping.class,
+        BukkitFireworkEffectMapping.class
 })
 public class BukkitItemFactory extends ItemFactory {
     private final Plugin plugin;
@@ -62,6 +69,7 @@ public class BukkitItemFactory extends ItemFactory {
         InitUtils.doIfNot(BukkitPotionMapping::isInitialized, BukkitPotionMapping::init);
         InitUtils.doIfNot(BukkitPotionEffectMapping::isInitialized, BukkitPotionEffectMapping::init);
         InitUtils.doIfNot(BukkitAttributeMapping::isInitialized, BukkitAttributeMapping::init);
+        InitUtils.doIfNot(BukkitFireworkEffectMapping::isInitialized, BukkitFireworkEffectMapping::init);
 
         itemConverter
                 .registerW2P(ItemStack.class, item -> {
@@ -85,7 +93,11 @@ public class BukkitItemFactory extends ItemFactory {
 
                     if (meta != null) {
                         if (item.getDisplayName() != null) {
-                            meta.setDisplayName(AdventureHelper.toLegacy(item.getDisplayName()));
+                            AdventureUtils
+                                    .get(meta, "displayName", Component.class)
+                                    .ifPresentOrElse(classMethod ->
+                                                    classMethod.invokeInstance(meta, item.getDisplayName()),
+                                            () -> meta.setDisplayName(AdventureHelper.toLegacy(item.getDisplayName())));
                         }
                         if (item.getLocalizedName() != null) {
                             try {
@@ -111,11 +123,19 @@ public class BukkitItemFactory extends ItemFactory {
                             }
                         }
                         if (!item.getLore().isEmpty()) {
-
-                            meta.setLore(item.getLore()
-                                    .stream()
-                                    .map(AdventureHelper::toLegacy)
-                                    .collect(Collectors.toList()));
+                            AdventureUtils
+                                    .get(meta, "lore", List.class)
+                                    .ifPresentOrElse(classMethod ->
+                                                    classMethod.invokeInstance(meta, item.getLore()
+                                                            .stream()
+                                                            .map(ComponentUtils::componentToPlatform)
+                                                            .collect(Collectors.toList()))
+                                            , () ->
+                                                    meta.setLore(item.getLore()
+                                                            .stream()
+                                                            .map(AdventureHelper::toLegacy)
+                                                            .collect(Collectors.toList()))
+                                    );
                         }
                         item.getEnchantments().forEach(e -> {
                             if (meta instanceof EnchantmentStorageMeta) {
@@ -140,6 +160,9 @@ public class BukkitItemFactory extends ItemFactory {
                             if (!item.getPotionEffects().isEmpty()) {
                                 item.getPotionEffects().forEach(potionEffectHolder -> ((PotionMeta) meta).addCustomEffect(potionEffectHolder.as(PotionEffect.class), true));
                             }
+                            if (item.getColor() != null) {
+                                ((PotionMeta) meta).setColor(Color.fromRGB(item.getColor().red(), item.getColor().green(), item.getColor().blue()));
+                            }
                         }
 
                         item.getItemAttributes()
@@ -152,6 +175,33 @@ public class BukkitItemFactory extends ItemFactory {
                             var origDataContainer = ((BukkitItemData) data).getDataContainer();
                             Reflect.getMethod(meta.getPersistentDataContainer(), "putAll", Map.class)
                                     .invoke(Reflect.fastInvoke(origDataContainer, "getRaw"));
+                        }
+
+                        if (Reflect.has("org.bukkit.inventory.meta.KnowledgeBookMeta")) { // 1.12+
+                            if (meta instanceof KnowledgeBookMeta) {
+                                ((KnowledgeBookMeta) meta).setRecipes(item.getRecipes()
+                                        .stream()
+                                        .map(key -> NamespacedKey.fromString(key.toString()))
+                                        .collect(Collectors.toList())
+                                );
+                            }
+                        }
+
+                        if (item.getColor() != null && meta instanceof LeatherArmorMeta) {
+                            ((LeatherArmorMeta) meta).setColor(Color.fromRGB(item.getColor().red(), item.getColor().green(), item.getColor().blue()));
+                        }
+
+                        if (item.getSkullOwner() != null && meta instanceof SkullMeta) {
+                            ((SkullMeta) meta).setOwner(item.getSkullOwner());
+                        }
+
+                        if (meta instanceof FireworkMeta) {
+                            ((FireworkMeta) meta).setPower(item.getPower());
+                            ((FireworkMeta) meta).addEffects(item.getFireworkEffects().stream().map(effect -> effect.as(FireworkEffect.class)).collect(Collectors.toList()));
+                        }
+
+                        if (meta instanceof FireworkEffectMeta && !item.getFireworkEffects().isEmpty()) {
+                            ((FireworkEffectMeta) meta).setEffect(item.getFireworkEffects().stream().map(effect -> effect.as(FireworkEffect.class)).findFirst().orElseThrow());
                         }
 
                         stack.setItemMeta(meta);
@@ -171,7 +221,11 @@ public class BukkitItemFactory extends ItemFactory {
                     item.setPlatformMeta(meta);
                     if (meta != null) {
                         if (meta.hasDisplayName()) {
-                            item.setDisplayName(AdventureHelper.toComponent(meta.getDisplayName()));
+                            AdventureUtils
+                                    .get(meta, "displayName")
+                                    .ifPresentOrElse(classMethod ->
+                                                    item.setDisplayName(classMethod.invokeInstanceResulted(meta).as(Component.class)),
+                                            () -> item.setDisplayName(AdventureHelper.toComponent(meta.getDisplayName())));
                         }
                         try {
                             if (meta.hasLocalizedName()) {
@@ -196,11 +250,20 @@ public class BukkitItemFactory extends ItemFactory {
                                 item.setUnbreakable((boolean) Reflect.fastInvoke(spigot, "isUnbreakable"));
                             }
                         }
-                        if (meta.hasLore() && meta.getLore() != null) {
-                            item.getLore().addAll(meta.getLore()
-                                    .stream()
-                                    .map(AdventureHelper::toComponent)
-                                    .collect(Collectors.toList()));
+                        if (meta.hasLore()) {
+                            AdventureUtils
+                                    .get(meta, "lore")
+                                    .ifPresentOrElse(classMethod ->
+                                                    classMethod.invokeInstanceResulted(meta)
+                                                            .as(List.class)
+                                                            .stream()
+                                                            .map(ComponentUtils::componentFromPlatform)
+                                                            .forEach(l -> item.addLore((Component) l)), // wtf??
+                                            () -> Objects.requireNonNull(meta.getLore())
+                                                    .stream()
+                                                    .map(AdventureHelper::toComponent)
+                                                    .forEach(item::addLore)
+                                    );
                         }
                         if (meta instanceof EnchantmentStorageMeta) {
                             ((EnchantmentStorageMeta) meta).getStoredEnchants().entrySet().forEach(entry ->
@@ -216,6 +279,10 @@ public class BukkitItemFactory extends ItemFactory {
                         if (meta instanceof PotionMeta) {
                             try {
                                 BukkitPotionMapping.resolve(((PotionMeta) meta).getBasePotionData()).ifPresent(item::setPotion);
+                                if (((PotionMeta) meta).getColor() != null) {
+                                    var color = ((LeatherArmorMeta) meta).getColor();
+                                    item.setColor(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()));
+                                }
                                 item.getPotionEffects().addAll(((PotionMeta) meta).getCustomEffects().stream()
                                         .map(PotionEffectMapping::resolve)
                                         .filter(Optional::isPresent)
@@ -232,6 +299,44 @@ public class BukkitItemFactory extends ItemFactory {
                                                     .ifPresent(item::addItemAttribute)
                                     );
                         }
+
+                        if (Reflect.has("org.bukkit.inventory.meta.KnowledgeBookMeta")) { // 1.12+
+                            if (meta instanceof KnowledgeBookMeta) {
+                                ((KnowledgeBookMeta) meta).getRecipes()
+                                        .stream()
+                                        .map(namespacedKey -> NamespacedMappingKey.of(namespacedKey.toString()))
+                                        .forEach(item::addRecipe);
+                            }
+                        }
+
+                        if (meta instanceof LeatherArmorMeta) {
+                            var color = ((LeatherArmorMeta) meta).getColor();
+                            if (!color.equals(Bukkit.getItemFactory().getDefaultLeatherColor())) {
+                                item.setColor(TextColor.color(color.getRed(), color.getGreen(), color.getBlue()));
+                            }
+                        }
+
+                        if (meta instanceof SkullMeta && ((SkullMeta) meta).hasOwner()) {
+                            item.setSkullOwner(((SkullMeta) meta).getOwner());
+                        }
+
+                        if (meta instanceof FireworkMeta) {
+                            item.setPower(((FireworkMeta) meta).getPower());
+                            item.getFireworkEffects().addAll(((FireworkMeta) meta).getEffects()
+                                    .stream()
+                                    .map(FireworkEffectMapping::resolve)
+                                    .filter(Optional::isPresent)
+                                    .map(Optional::get)
+                                    .collect(Collectors.toList())
+                            );
+                        }
+
+                        if (meta instanceof FireworkEffectMeta && ((FireworkEffectMeta) meta).getEffect() != null) {
+                            FireworkEffectMapping
+                                    .resolve(((FireworkEffectMeta) meta).getEffect())
+                                    .ifPresent(item.getFireworkEffects()::add);
+                        }
+
                         item.setData(new BukkitItemData(plugin, meta.getPersistentDataContainer()));
                     }
                     return item;
@@ -239,18 +344,15 @@ public class BukkitItemFactory extends ItemFactory {
                 .normalizeType(ItemStack.class);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Optional<Container> wrapContainer0(Object container) {
-        if (container instanceof Inventory) {
-            return Optional.of(new BukkitContainer((Inventory) container));
-        }
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<PlayerContainer> wrapPlayerContainer0(Object container) {
+    public <C extends Container> Optional<C> wrapContainer0(Object container) {
         if (container instanceof PlayerInventory) {
-            return Optional.of(new BukkitPlayerContainer((PlayerInventory) container));
+            return (Optional<C>) Optional.of(new BukkitPlayerContainer((PlayerInventory) container));
+        }
+
+        if (container instanceof Inventory) {
+            return (Optional<C>) Optional.of(new BukkitContainer((Inventory) container));
         }
         return Optional.empty();
     }

@@ -1,13 +1,15 @@
 package org.screamingsandals.lib.material.builder;
 
 import lombok.SneakyThrows;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.container.Container;
-import org.screamingsandals.lib.material.container.PlayerContainer;
 import org.screamingsandals.lib.material.data.ItemData;
+import org.screamingsandals.lib.material.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
@@ -16,6 +18,7 @@ import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.ConfigurateUtils;
 import org.screamingsandals.lib.utils.ConsumerExecutor;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -168,6 +171,51 @@ public abstract class ItemFactory {
             } else {
                 AttributeMapping.wrapItemAttribute(attributes).ifPresent(item::addItemAttribute);
             }
+        }
+
+        var recipes = node.node("recipes");
+        if (!recipes.empty()) {
+            if (recipes.isList()) {
+                attributes.childrenList().stream()
+                        .map(ConfigurationNode::getString)
+                        .map(NamespacedMappingKey::ofOptional)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .forEach(item::addRecipe);
+            } else {
+                NamespacedMappingKey.ofOptional(recipes.getString()).ifPresent(item::addRecipe);
+            }
+        }
+
+        var color = node.node("color");
+        if (!color.empty()) {
+            var c = TextColor.fromCSSHexString(color.getString(""));
+            if (c != null) {
+                item.setColor(c);
+            } else {
+                var c2 = NamedTextColor.NAMES.value(color.getString("").trim().toLowerCase());
+                if (c2 != null) {
+                    item.setColor(c2);
+                }
+            }
+        }
+
+        var fireworkEffects = node.node("firework-effects");
+        if (!fireworkEffects.empty()) {
+            if (fireworkEffects.isList()) {
+                item.getFireworkEffects().addAll(fireworkEffects.childrenList().stream()
+                        .map(FireworkEffectMapping::resolve)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList()));
+            } else {
+                FireworkEffectMapping.resolve(fireworkEffects).ifPresent(item.getFireworkEffects()::add);
+            }
+        }
+
+        var power = node.node("power");
+        if (!power.empty()) {
+            item.setPower(power.getInt());
         }
 
         var meta = node.node("meta");
@@ -344,23 +392,14 @@ public abstract class ItemFactory {
         return factory.itemConverter.normalize(item);
     }
 
-    public static Optional<Container> wrapContainer(Object container) {
+    public static <C extends Container> Optional<C> wrapContainer(Object container) {
         if (factory == null) {
             throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
         }
         return factory.wrapContainer0(container);
     }
 
-    public abstract Optional<Container> wrapContainer0(Object container);
-
-    public static Optional<PlayerContainer> wrapPlayerContainer(Object container) {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
-        }
-        return factory.wrapPlayerContainer0(container);
-    }
-
-    public abstract Optional<PlayerContainer> wrapPlayerContainer0(Object container);
+    public abstract <C extends Container> Optional<C> wrapContainer0(Object container);
 
     public static ItemData createNewItemData() {
         if (factory == null) {

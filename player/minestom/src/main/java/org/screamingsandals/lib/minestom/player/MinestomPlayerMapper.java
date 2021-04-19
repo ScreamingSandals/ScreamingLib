@@ -137,7 +137,7 @@ public class MinestomPlayerMapper extends PlayerMapper {
 
     @Override
     public PlayerContainer getPlayerInventory0(PlayerWrapper playerWrapper) {
-        return ItemFactory.wrapPlayerContainer(playerWrapper.as(Player.class).getInventory()).orElseThrow();
+        return ItemFactory.<PlayerContainer>wrapContainer(playerWrapper.as(Player.class).getInventory()).orElseThrow();
     }
 
     @Override

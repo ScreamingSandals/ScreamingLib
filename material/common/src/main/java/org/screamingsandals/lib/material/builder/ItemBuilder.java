@@ -2,15 +2,20 @@ package org.screamingsandals.lib.material.builder;
 
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.util.RGBLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.attribute.AttributeMapping;
+import org.screamingsandals.lib.material.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
 import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.List;
 import java.util.Map;
@@ -163,6 +168,54 @@ public class ItemBuilder {
         }
 
         PotionEffectMapping.resolve(effect).ifPresent(item::addPotionEffect);
+        return this;
+    }
+
+    public ItemBuilder recipe(@NotNull String key) {
+        return recipe(NamespacedMappingKey.of(key));
+    }
+
+    public ItemBuilder recipe(@NotNull NamespacedMappingKey key) {
+        item.addRecipe(key);
+        return this;
+    }
+
+    public ItemBuilder color(@NotNull String color) {
+        var c = TextColor.fromCSSHexString(color);
+        if (c != null) {
+            return color(c);
+        } else {
+            var c2 = NamedTextColor.NAMES.value(color.toLowerCase().trim());
+            if (c2 != null) {
+                return color(c2);
+            }
+        }
+        return this;
+    }
+
+    public ItemBuilder color(@NotNull RGBLike color) {
+        item.setColor(color);
+        return this;
+    }
+
+    public ItemBuilder color(int r, int g, int b) {
+        item.setColor(TextColor.color(r, g, b));
+        return this;
+    }
+
+    public ItemBuilder skullOwner(@Nullable String skullOwner) {
+        item.setSkullOwner(skullOwner);
+        return this;
+    }
+
+    public ItemBuilder fireworkEffect(@NotNull Object effect) {
+        if (effect instanceof List) {
+            final var list = (List<?>) effect;
+            list.forEach(effect1 -> FireworkEffectMapping.resolve(effect1).ifPresent(item::addFireworkEffect));
+            return this;
+        }
+
+        FireworkEffectMapping.resolve(effect).ifPresent(item::addFireworkEffect);
         return this;
     }
 

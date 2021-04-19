@@ -2,16 +2,19 @@ package org.screamingsandals.lib.material;
 
 import lombok.Data;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.util.RGBLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.material.attribute.ItemAttributeHolder;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.data.ItemData;
+import org.screamingsandals.lib.material.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.material.meta.EnchantmentHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionHolder;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.NormalizableWrapper;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.LinkedList;
@@ -22,10 +25,23 @@ import java.util.Objects;
 @ConfigSerializable
 public class Item implements Cloneable, NormalizableWrapper<Item> {
     private final List<EnchantmentHolder> enchantments = new LinkedList<>();
+    /**
+     * Item types: Potion, tipped arrow
+     */
     private final List<PotionEffectHolder> potionEffects = new LinkedList<>();
     private final List<Component> lore = new LinkedList<>();
     private final List<String> itemFlags = new LinkedList<>();
     private final List<ItemAttributeHolder> itemAttributes = new LinkedList<>();
+    /**
+     * Item types: Knowledge book
+     */
+    private final List<NamespacedMappingKey> recipes = new LinkedList<>();
+    /**
+     * Item types: Firework rocket, Firework star
+     *
+     * NOTE: for Firework start only first effect is used
+     */
+    private final List<FireworkEffectHolder> fireworkEffects = new LinkedList<>();
     //@Nullable // in initial state it's null
     private MaterialHolder material;
     @Nullable
@@ -36,10 +52,27 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
     private Integer customModelData;
     private int repair;
     private boolean unbreakable;
+    /**
+     * Item types: Potion, tipped arrow
+     */
     @Nullable
     private PotionHolder potion;
     @NotNull
     private ItemData data = ItemFactory.createNewItemData();
+    /**
+     * Item types: Leather armor, potion
+     */
+    @Nullable
+    private RGBLike color;
+    /**
+     * Item types: Skull
+     */
+    @Nullable
+    private String skullOwner;
+    /**
+     * Item types: Firework rocket
+     */
+    private int power;
 
     @Deprecated
     @Nullable
@@ -63,6 +96,8 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
         item.getPotionEffects().addAll(potionEffects);
         item.getEnchantments().addAll(enchantments);
         item.getItemAttributes().addAll(itemAttributes);
+        item.getRecipes().addAll(recipes);
+        item.getFireworkEffects().addAll(fireworkEffects);
         item.setMaterial(material);
         item.setDisplayName(displayName);
         item.setLocalizedName(localizedName);
@@ -72,6 +107,9 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
         item.setUnbreakable(unbreakable);
         item.setPotion(potion);
         item.setPlatformMeta(platformMeta);
+        item.setColor(color);
+        item.setSkullOwner(skullOwner);
+        item.setPower(power);
         return item;
     }
 
@@ -99,6 +137,14 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
         itemFlags.add(flag);
     }
 
+    public void addRecipe(NamespacedMappingKey key) {
+        recipes.add(key);
+    }
+
+    public void addFireworkEffect(FireworkEffectHolder effect) {
+        fireworkEffects.add(effect);
+    }
+
     public boolean isSimilar(Item item) {
         if (item == null) {
             return false;
@@ -115,6 +161,11 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
                 && itemFlags.equals(item.itemFlags)
                 && Objects.equals(item.potion, potion)
                 && potionEffects.equals(item.potionEffects)
-                && itemAttributes.equals(item.itemAttributes);
+                && itemAttributes.equals(item.itemAttributes)
+                && recipes.equals(item.recipes)
+                && Objects.equals(item.color, color)
+                && Objects.equals(item.skullOwner, skullOwner)
+                && fireworkEffects.equals(item.fireworkEffects)
+                && item.power == power;
     }
 }
