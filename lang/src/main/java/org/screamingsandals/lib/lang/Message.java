@@ -16,14 +16,15 @@ import org.screamingsandals.lib.utils.AdventureHelper;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Data
 public final class Message implements TitleableSenderMessage, Cloneable {
-    private static final Pattern PLACEHOLDERAPI_REGEX = Pattern.compile("[%]([^%]+)[%]");
+    private static final Pattern LEGACY_PLACEHOLDERS = Pattern.compile("[%]([^%]+)[%]");
 
-    private final List<Translation> translations = new LinkedList<>();
+    private final List<Messageable> translations = new LinkedList<>();
     private final Map<String, Function<CommandSenderWrapper, Component>> placeholders = new HashMap<>();
     private final LangService langService;
     @NotNull
@@ -32,74 +33,154 @@ public final class Message implements TitleableSenderMessage, Cloneable {
     private Title.Times times;
     private PrefixPolicy prefixPolicy = PrefixPolicy.ALL_MESSAGES;
 
-    public Message(Collection<Translation> translations, LangService langService, @NotNull Component prefix) {
+    public <M extends Messageable> Message(Collection<M> translations, LangService langService, @NotNull Component prefix) {
         this.translations.addAll(translations);
         this.langService = langService;
         this.prefix = prefix;
     }
 
+    public static Message empty() {
+        return new Message(List.of(), Lang.getDefaultService(), Component.empty());
+    }
+
+    public static Message empty(Component prefix) {
+        return new Message(List.of(), Lang.getDefaultService(), prefix);
+    }
+
+    public static Message empty(LangService service) {
+        return new Message(List.of(), service, Component.empty());
+    }
+
+    public static Message empty(LangService service, Component prefix) {
+        return new Message(List.of(), service, prefix);
+    }
+
+    public static Message ofPlainText(String message) {
+        return new Message(List.of(StringMessageable.of(message)), Lang.getDefaultService(), Component.empty());
+    }
+
+    public static Message ofPlainText(String... messages) {
+        return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), Component.empty());
+    }
+
+    public static Message ofPlainText(List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), Component.empty());
+    }
+
+    public static Message ofPlainText(Component prefix, String message) {
+        return new Message(List.of(StringMessageable.of(message)), Lang.getDefaultService(), prefix);
+    }
+
+    public static Message ofPlainText(Component prefix, String... messages) {
+        return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix);
+    }
+
+    public static Message ofPlainText(Component prefix, List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix);
+    }
+
+    public static Message ofPlainText(LangService service, String message) {
+        return new Message(List.of(StringMessageable.of(message)), service, Component.empty());
+    }
+
+    public static Message ofPlainText(LangService service, String... messages) {
+        return new Message(List.of(StringMessageable.of(messages)), service, Component.empty());
+    }
+
+    public static Message ofPlainText(LangService service, List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages)), service, Component.empty());
+    }
+
+    public static Message ofPlainText(LangService service, Component prefix, String message) {
+        return new Message(List.of(StringMessageable.of(message)), service, prefix);
+    }
+
+    public static Message ofPlainText(LangService service, Component prefix, String... messages) {
+        return new Message(List.of(StringMessageable.of(messages)), service, prefix);
+    }
+
+    public static Message ofPlainText(LangService service, Component prefix, List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages)), service, prefix);
+    }
+
+    public static Message ofPlainText(Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message)), Lang.getDefaultService(), Component.empty());
+    }
+
+    public static Message ofPlainText(Component prefix, Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message)), Lang.getDefaultService(), prefix);
+    }
+
+    public static Message ofPlainText(LangService service, Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message)), service, Component.empty());
+    }
+
+    public static Message ofPlainText(LangService service, Component prefix, Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message)), service, prefix);
+    }
+
     public static Message of(String... key) {
-        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
+        return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), Component.empty());
     }
 
     public static Message of(Translation translation) {
-        return new Message(Collections.singletonList(translation), Lang.getDefaultService(), Component.empty());
+        return new Message(List.of(translation), Lang.getDefaultService(), Component.empty());
     }
 
-    public static Message of(List<Translation> translations) {
+    public static <M extends Messageable> Message of(List<M> translations) {
         return new Message(translations, Lang.getDefaultService(), Component.empty());
     }
 
     public static Message of(LangService langService, String... key) {
-        return new Message(Collections.singletonList(Translation.of(key)), langService, Component.empty());
+        return new Message(List.of(Translation.of(key)), langService, Component.empty());
     }
 
     public static Message of(LangService langService, Translation translation) {
-        return new Message(Collections.singletonList(translation), langService, Component.empty());
+        return new Message(List.of(translation), langService, Component.empty());
     }
 
-    public static Message of(LangService langService, List<Translation> translations) {
+    public static <M extends Messageable> Message of(LangService langService, List<M> translations) {
         return new Message(translations, langService, Component.empty());
     }
 
     public static Message of(Component prefix, String... key) {
-        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), prefix);
+        return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix);
     }
 
-    public static Message of(Component prefix, Translation translation) {
-        return new Message(Collections.singletonList(translation), Lang.getDefaultService(), prefix);
+    public static Message of(Component prefix, Messageable translation) {
+        return new Message(List.of(translation), Lang.getDefaultService(), prefix);
     }
 
-    public static Message of(Component prefix, List<Translation> translations) {
+    public static <M extends Messageable> Message of(Component prefix, List<M> translations) {
         return new Message(translations, Lang.getDefaultService(), prefix);
     }
 
     public static Message of(LangService langService, Component prefix, String... key) {
-        return new Message(Collections.singletonList(Translation.of(key)), langService, prefix);
+        return new Message(List.of(Translation.of(key)), langService, prefix);
     }
 
-    public static Message of(LangService langService, Component prefix, Translation translation) {
-        return new Message(Collections.singletonList(translation), langService, prefix);
+    public static Message of(LangService langService, Component prefix, Messageable translation) {
+        return new Message(List.of(translation), langService, prefix);
     }
 
-    public static Message of(LangService langService, Component prefix, List<Translation> translations) {
+    public static <M extends Messageable> Message of(LangService langService, Component prefix, List<M> translations) {
         return new Message(translations, langService, prefix);
     }
 
     public static Message of(Collection<String> key) {
-        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), Component.empty());
+        return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), Component.empty());
     }
 
     public static Message of(LangService langService, Collection<String> key) {
-        return new Message(Collections.singletonList(Translation.of(key)), langService, Component.empty());
+        return new Message(List.of(Translation.of(key)), langService, Component.empty());
     }
 
     public static Message of(Component prefix, Collection<String> key) {
-        return new Message(Collections.singletonList(Translation.of(key)), Lang.getDefaultService(), prefix);
+        return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix);
     }
 
     public static Message of(LangService langService, Component prefix, Collection<String> key) {
-        return new Message(Collections.singletonList(Translation.of(key)), langService, prefix);
+        return new Message(List.of(Translation.of(key)), langService, prefix);
     }
 
     public Message placeholder(String placeholder, byte value) {
@@ -169,6 +250,11 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return this;
     }
 
+    public Message placeholder(String placeholder, Supplier<Component> componentFunction) {
+        placeholders.put(placeholder, sender -> componentFunction.get());
+        return this;
+    }
+
     public Message prefix(Component prefix) {
         if (prefix == null) {
             return noPrefix();
@@ -215,12 +301,27 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return this;
     }
 
-    public Message join(Translation translation) {
+    public Message joinPlainText(String message) {
+        this.translations.add(StringMessageable.of(message));
+        return this;
+    }
+
+    public Message joinPlainText(List<String> messages) {
+        this.translations.add(StringMessageable.of(messages));
+        return this;
+    }
+
+    public Message joinPlainText(Supplier<List<String>> messages) {
+        this.translations.add(SupplierStringMessageable.of(messages));
+        return this;
+    }
+
+    public Message join(Messageable translation) {
         this.translations.add(translation);
         return this;
     }
 
-    public Message join(List<Translation> translations) {
+    public <M extends Messageable> Message join(List<M> translations) {
         this.translations.addAll(translations);
         return this;
     }
@@ -237,27 +338,29 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return translations
                 .stream()
                 .map(translation -> {
-                    final var list = container
-                            .translate(translation.getKeys())
+                    final var list = translation
+                            .translateIfNeeded(container)
                             .stream()
                             .map(s -> {
                                 if (PlaceholderManager.isInitialized()) {
                                     // Skip this code block to avoid impact of black magic on your mind
-                                    var matcher = PLACEHOLDERAPI_REGEX.matcher(s);
+                                    var matcher = LEGACY_PLACEHOLDERS.matcher(s);
 
                                     var lastIndex = 0;
                                     var output = new StringBuilder();
                                     while (matcher.find()) {
-                                        output.append(s, lastIndex, matcher.start())
-                                                .append(
-                                                        Lang.MINIMESSAGE.serialize(
-                                                                AdventureHelper.toComponent(
-                                                                        PlaceholderManager.resolveString(sender instanceof MultiPlatformOfflinePlayer ? (MultiPlatformOfflinePlayer) sender : null,
-                                                                        "%" + matcher.group(1) + "%")
-                                                                )
-                                                        )
-                                                );
+                                        output.append(s, lastIndex, matcher.start());
 
+                                        var result = PlaceholderManager.resolveString(
+                                                sender instanceof MultiPlatformOfflinePlayer ? (MultiPlatformOfflinePlayer) sender : null,
+                                                "%" + matcher.group(1) + "%"
+                                        );
+
+                                        if (translation.getType() == Messageable.Type.ADVENTURE) {
+                                            output.append(Lang.MINIMESSAGE.serialize(AdventureHelper.toComponent(result)));
+                                        } else {
+                                            output.append(result);
+                                        }
                                         lastIndex = matcher.end();
                                     }
                                     if (lastIndex < s.length()) {
@@ -266,11 +369,33 @@ public final class Message implements TitleableSenderMessage, Cloneable {
                                     s = output.toString();
                                 }
 
-                                return Lang.MINIMESSAGE.parse(s, placeholders
-                                    .entrySet()
-                                    .stream()
-                                    .map(entry -> Template.of(entry.getKey(), entry.getValue().apply(sender)))
-                                    .collect(Collectors.toList()));
+                                if (translation.getType() == Messageable.Type.ADVENTURE) {
+                                    return Lang.MINIMESSAGE.parse(s, placeholders
+                                            .entrySet()
+                                            .stream()
+                                            .map(entry -> Template.of(entry.getKey(), entry.getValue().apply(sender)))
+                                            .collect(Collectors.toList()));
+                                } else {
+                                    // Black magic again
+                                    var matcher = LEGACY_PLACEHOLDERS.matcher(s);
+
+                                    var lastIndex = 0;
+                                    var output = new StringBuilder();
+                                    while (matcher.find()) {
+                                        output.append(s, lastIndex, matcher.start());
+                                        if (placeholders.containsKey(matcher.group(1))) {
+                                            output.append(AdventureHelper.toLegacy(placeholders.get(matcher.group(1)).apply(sender)));
+                                        } else {
+                                            output.append("%").append(matcher.group(1)).append("%");
+                                        }
+
+                                        lastIndex = matcher.end();
+                                    }
+                                    if (lastIndex < s.length()) {
+                                        output.append(s, lastIndex, s.length());
+                                    }
+                                    return AdventureHelper.toComponent(output.toString());
+                                }
                             })
                             .map(component -> {
                                 if (!Component.empty().equals(prefix)

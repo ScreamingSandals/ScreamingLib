@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Data
-public final class Translation {
+public final class Translation implements Messageable {
     private final List<String> keys = new LinkedList<>();
     private final Component fallback;
 
@@ -50,5 +50,15 @@ public final class Translation {
         copied.addAll(keys);
 
         return of(copied, fallback);
+    }
+
+    @Override
+    public boolean needsTranslation() {
+        return true;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.ADVENTURE;
     }
 }

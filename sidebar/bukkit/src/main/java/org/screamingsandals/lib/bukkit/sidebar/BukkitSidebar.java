@@ -8,6 +8,7 @@ import org.screamingsandals.lib.bukkit.sidebar.team.BukkitScoreboardTeam;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sender.SenderMessage;
+import org.screamingsandals.lib.sender.StaticSenderMessage;
 import org.screamingsandals.lib.sidebar.AbstractSidebar;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.utils.AdventureHelper;
@@ -93,6 +94,11 @@ public class BukkitSidebar extends AbstractSidebar {
         }
 
         var packets = new ArrayList<>();
+
+        if (!(this.title instanceof StaticSenderMessage)) {
+            packets.add(updateObjective(playerWrapper));
+        }
+
         var forRemoval = new ArrayList<Integer>();
 
         for (var i = 0; i < 15; i++) {
