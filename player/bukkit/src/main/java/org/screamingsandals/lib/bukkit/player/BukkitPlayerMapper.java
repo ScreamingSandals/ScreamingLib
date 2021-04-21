@@ -329,6 +329,11 @@ public class BukkitPlayerMapper extends PlayerMapper {
         player.as(Player.class).setGameMode(org.bukkit.GameMode.valueOf(gameMode.name()));
     }
 
+    @Override
+    public boolean canBeStoredAsWrapped(Object wrapped) {
+        return wrapped instanceof Player;
+    }
+
     private void registerListeners(Plugin plugin) {
         new AsyncPlayerPreLoginEventListener(plugin);
         new AsyncPlayerChatEventListener(plugin);

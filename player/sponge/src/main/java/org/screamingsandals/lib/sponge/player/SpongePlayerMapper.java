@@ -276,4 +276,9 @@ public class SpongePlayerMapper extends PlayerMapper {
     public void setGameMode0(PlayerWrapper player, GameMode gameMode) {
         //TODO
     }
+
+    @Override
+    public boolean canBeStoredAsWrapped(Object wrapped) {
+        return false;
+    }
 }

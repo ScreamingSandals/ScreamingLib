@@ -274,6 +274,11 @@ public class MinestomPlayerMapper extends PlayerMapper {
         player.as(Player.class).setGameMode(net.minestom.server.entity.GameMode.valueOf(gameMode.name()));
     }
 
+    @Override
+    public boolean canBeStoredAsWrapped(Object wrapped) {
+        return false;
+    }
+
     private void registerEvents() {
         new AsyncPlayerPreLoginListener();
         new PlayerJoinEventListener();

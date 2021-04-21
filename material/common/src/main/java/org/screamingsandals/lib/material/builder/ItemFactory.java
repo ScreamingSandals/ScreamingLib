@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.material.builder;
 
 import lombok.SneakyThrows;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.screamingsandals.lib.material.Item;
@@ -13,10 +14,7 @@ import org.screamingsandals.lib.material.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.material.meta.EnchantmentMapping;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
-import org.screamingsandals.lib.utils.AdventureHelper;
-import org.screamingsandals.lib.utils.BidirectionalConverter;
-import org.screamingsandals.lib.utils.ConfigurateUtils;
-import org.screamingsandals.lib.utils.ConsumerExecutor;
+import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.spongepowered.configurate.BasicConfigurationNode;
@@ -400,6 +398,15 @@ public abstract class ItemFactory {
     }
 
     public abstract <C extends Container> Optional<C> wrapContainer0(Object container);
+
+    public static <C extends Container> Optional<C> createContainer(InventoryType type, Component name) {
+        if (factory == null) {
+            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
+        }
+        return factory.createContainer0(type, name);
+    }
+
+    public abstract <C extends Container> Optional<C> createContainer0(InventoryType type, Component name);
 
     public static ItemData createNewItemData() {
         if (factory == null) {

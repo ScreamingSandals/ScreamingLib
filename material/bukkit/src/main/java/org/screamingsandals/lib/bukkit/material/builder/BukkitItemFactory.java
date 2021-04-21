@@ -8,10 +8,7 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.Plugin;
@@ -37,6 +34,7 @@ import org.screamingsandals.lib.material.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.InitUtils;
+import org.screamingsandals.lib.utils.InventoryType;
 import org.screamingsandals.lib.utils.adventure.AdventureUtils;
 import org.screamingsandals.lib.utils.adventure.ComponentUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -355,6 +353,18 @@ public class BukkitItemFactory extends ItemFactory {
             return (Optional<C>) Optional.of(new BukkitContainer((Inventory) container));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public <C extends Container> Optional<C> createContainer0(InventoryType type, Component name) {
+        var container = AdventureUtils
+                .get(Bukkit.getServer(), "createInventory", InventoryHolder.class, org.bukkit.event.inventory.InventoryType.class, Component.class)
+                .ifPresentOrElseGet(classMethod ->
+                                classMethod
+                                        .invokeInstanceResulted(Bukkit.getServer(), null, org.bukkit.event.inventory.InventoryType.valueOf(type.name()), name)
+                                        .as(Inventory.class),
+                        () -> Bukkit.createInventory(null, org.bukkit.event.inventory.InventoryType.valueOf(type.name()), AdventureHelper.toLegacy(name)));
+        return wrapContainer0(container);
     }
 
     @Override

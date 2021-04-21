@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.minestom.material.builder;
 
+import net.kyori.adventure.text.Component;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.item.Enchantment;
 import net.minestom.server.item.ItemFlag;
@@ -25,6 +26,7 @@ import org.screamingsandals.lib.minestom.material.meta.MinestomPotionEffectMappi
 import org.screamingsandals.lib.minestom.material.meta.MinestomPotionMapping;
 import org.screamingsandals.lib.minestom.utils.MinestomAdventureHelper;
 import org.screamingsandals.lib.utils.InitUtils;
+import org.screamingsandals.lib.utils.InventoryType;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.ArrayList;
@@ -185,6 +187,11 @@ public class MinestomItemFactory extends ItemFactory {
         if (container instanceof Inventory) {
             return (Optional<C>) Optional.of(new MinestomContainer((Inventory) container));
         }
+        return Optional.empty();
+    }
+
+    @Override
+    public <C extends Container> Optional<C> createContainer0(InventoryType type, Component name) {
         return Optional.empty();
     }
 

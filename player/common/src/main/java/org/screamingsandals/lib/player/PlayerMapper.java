@@ -53,7 +53,9 @@ public abstract class PlayerMapper {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         final var converted = playerMapper.playerConverter.convert(player);
-        converted.setWrappedPlayer(new WeakReference<>(player));
+        if (playerMapper.canBeStoredAsWrapped(player)) {
+            converted.setWrappedPlayer(new WeakReference<>(player));
+        }
         return converted;
     }
 
@@ -381,4 +383,6 @@ public abstract class PlayerMapper {
     public abstract GameMode getGameMode0(PlayerWrapper player);
 
     public abstract void setGameMode0(PlayerWrapper player, GameMode gameMode);
+
+    public abstract boolean canBeStoredAsWrapped(Object wrapped);
 }

@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.sponge.material.builder;
 
+import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
@@ -16,6 +17,7 @@ import org.screamingsandals.lib.sponge.material.meta.SpongeEnchantmentMapping;
 import org.screamingsandals.lib.sponge.material.meta.SpongePotionEffectMapping;
 import org.screamingsandals.lib.sponge.material.meta.SpongePotionMapping;
 import org.screamingsandals.lib.utils.InitUtils;
+import org.screamingsandals.lib.utils.InventoryType;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.Keys;
@@ -208,6 +210,11 @@ public class SpongeItemFactory extends ItemFactory {
         if (container instanceof Inventory) {
             return (Optional<C>) Optional.of(new SpongeContainer((Inventory) container));
         }
+        return Optional.empty();
+    }
+
+    @Override
+    public <C extends Container> Optional<C> createContainer0(InventoryType type, Component name) {
         return Optional.empty();
     }
 
