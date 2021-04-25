@@ -1,0 +1,6 @@
+dependencies {
+    api project(':healthindicator-common')
+    api project(':utils-bukkit')
+
+    compileOnly paper(PAPER_VERSION)
+}
