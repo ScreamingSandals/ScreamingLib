@@ -80,6 +80,16 @@ public abstract class PlayerMapper {
         return playerMapper.handConverter.convert(hand);
     }
 
+    public static <T> Optional<PlayerWrapper.Hand> resolveHand(T hand) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        if (hand == null) {
+            return Optional.empty();
+        }
+        return playerMapper.handConverter.convertOptional(hand);
+    }
+
     public static <T> T convertHand(PlayerWrapper.Hand hand, Class<T> type) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
