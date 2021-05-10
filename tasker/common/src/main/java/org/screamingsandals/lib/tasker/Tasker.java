@@ -6,6 +6,7 @@ import org.screamingsandals.lib.tasker.task.TaskerTask;
 import org.screamingsandals.lib.utils.annotations.ForwardToService;
 
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @ForwardToService(AbstractTaskInitializer.class)
@@ -108,6 +109,22 @@ public interface Tasker {
          * @return current task builder
          */
         TaskBuilder repeat(long time, TaskerTime unit);
+
+        /**
+         * Registers handler that will be used after starting the task.
+         *
+         * @param handler Handler
+         * @return current task builder
+         */
+        TaskBuilder startEvent(Consumer<TaskerTask> handler);
+
+        /**
+         * Registers handler that will be used after ending the task.
+         *
+         * @param handler Handler
+         * @return current task builder
+         */
+        TaskBuilder stopEvent(Consumer<TaskerTask> handler);
 
         /**
          * Starts the task

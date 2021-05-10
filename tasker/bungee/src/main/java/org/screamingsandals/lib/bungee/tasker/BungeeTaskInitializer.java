@@ -30,27 +30,27 @@ public class BungeeTaskInitializer extends AbstractTaskInitializer {
     public TaskerTask start(TaskBuilderImpl builder) {
         final var runnable = builder.getRunnable();
         if (builder.isAfterOneTick()) {
-            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runAsync(plugin, runnable));
+            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runAsync(plugin, runnable), builder.getStopEvent());
         }
 
         if (builder.isAsync()
                 && builder.getRepeat() == 0
                 && builder.getDelay() == 0) {
-            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runAsync(plugin, runnable));
+            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runAsync(plugin, runnable), builder.getStopEvent());
         }
 
         final var timeUnit = Preconditions.checkNotNull(builder.getTimeUnit(), "TimeUnit cannot be null!");
         if (builder.getDelay() > 0 && builder.getRepeat() <= 0) {
             return AbstractTaskerTask.of(builder.getTaskId(), scheduler.schedule(plugin, runnable,
                     builder.getTimeUnit().getTime((int) builder.getDelay()),
-                    builder.getTimeUnit().getTimeUnit()));
+                    builder.getTimeUnit().getTimeUnit()), builder.getStopEvent());
         }
 
         if (builder.getRepeat() > 0) {
             return AbstractTaskerTask.of(builder.getTaskId(), scheduler.schedule(plugin, runnable,
                     builder.getTimeUnit().getTime((int) builder.getDelay()),
                     builder.getTimeUnit().getTime((int) builder.getRepeat()),
-                    builder.getTimeUnit().getTimeUnit()));
+                    builder.getTimeUnit().getTimeUnit()), builder.getStopEvent());
         }
 
         throw new UnsupportedOperationException("Unsupported Tasker state!");

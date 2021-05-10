@@ -63,7 +63,7 @@ public class SpongeTaskInitializer extends AbstractTaskInitializer {
             throw new UnsupportedOperationException("Cannot start task " + builder.getTaskId() + "!");
         }
 
-        final var toReturn = new AbstractTaskerTask(builder.getTaskId(), task) {
+        final var toReturn = new AbstractTaskerTask(builder.getTaskId(), task, builder.getStopEvent()) {
         };
 
         Tasker.register(toReturn);

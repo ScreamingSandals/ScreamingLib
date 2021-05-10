@@ -31,27 +31,27 @@ public class VelocityTaskInitializer extends AbstractTaskInitializer {
         if (builder.isAfterOneTick()) {
             final var taskBuilder = scheduler.buildTask(owner, runnable);
             taskBuilder.delay(TaskerTime.TICKS.getTime(1), TaskerTime.TICKS.getTimeUnit());
-            return AbstractTaskerTask.of(builder.getTaskId(), taskBuilder.schedule());
+            return AbstractTaskerTask.of(builder.getTaskId(), taskBuilder.schedule(), builder.getStopEvent());
         }
 
         if (builder.isAsync()
                 && builder.getRepeat() == 0
                 && builder.getDelay() == 0) {
-            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(owner, runnable).schedule());
+            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(owner, runnable).schedule(), builder.getStopEvent());
         }
 
         final var timeUnit = Preconditions.checkNotNull(builder.getTimeUnit(), "TimeUnit cannot be null!");
         if (builder.getDelay() > 0 && builder.getRepeat() <= 0) {
             return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(owner, runnable)
                     .delay(timeUnit.getTime((int) builder.getRepeat()), timeUnit.getTimeUnit())
-                    .schedule());
+                    .schedule(), builder.getStopEvent());
         }
 
         if (builder.getRepeat() > 0) {
             return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(owner, runnable)
                     .delay(timeUnit.getTime((int) builder.getDelay()), timeUnit.getTimeUnit())
                     .repeat(timeUnit.getTime((int) builder.getRepeat()), timeUnit.getTimeUnit())
-                    .schedule());
+                    .schedule(), builder.getStopEvent());
         }
 
         throw new UnsupportedOperationException("Unsupported Tasker state!");

@@ -1,0 +1,12 @@
+dependencies {
+    api project(':gamecore-common')
+    api project(':entity-bukkit')
+    api project(':player-bukkit')
+    api project(':world-bukkit')
+    api project(':event-bukkit')
+    api project(':tasker-bukkit')
+    api project(':plugin-bukkit')
+    api project(':utils-bukkit')
+
+    compileOnly paper(PAPER_VERSION)
+}

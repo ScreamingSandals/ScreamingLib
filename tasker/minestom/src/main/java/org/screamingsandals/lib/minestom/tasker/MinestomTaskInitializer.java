@@ -33,27 +33,27 @@ public class MinestomTaskInitializer extends AbstractTaskInitializer {
         if (builder.isAfterOneTick()) {
             final var taskBuilder = scheduler.buildTask(runnable);
             taskBuilder.delay(TaskerTime.TICKS.getTime(1), convert(TaskerTime.TICKS));
-            return AbstractTaskerTask.of(builder.getTaskId(), taskBuilder.schedule());
+            return AbstractTaskerTask.of(builder.getTaskId(), taskBuilder.schedule(), builder.getStopEvent());
         }
 
         if (builder.isAsync()
                 && builder.getRepeat() == 0
                 && builder.getDelay() == 0) {
-            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(runnable).schedule());
+            return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(runnable).schedule(), builder.getStopEvent());
         }
 
         final var timeUnit = Preconditions.checkNotNull(builder.getTimeUnit(), "TimeUnit cannot be null!");
         if (builder.getDelay() > 0 && builder.getRepeat() <= 0) {
             return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(runnable)
                     .delay(builder.getDelay(), convert(timeUnit))
-                    .schedule());
+                    .schedule(), builder.getStopEvent());
         }
 
         if (builder.getRepeat() > 0) {
             return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(runnable)
                     .delay(builder.getDelay(), convert(timeUnit))
                     .repeat(builder.getRepeat(), convert(timeUnit))
-                    .schedule());
+                    .schedule(), builder.getStopEvent());
         }
 
         throw new UnsupportedOperationException("Unsupported Tasker state!");
