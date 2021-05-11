@@ -20,7 +20,7 @@ public class PlayerClickedBlockListener extends AbstractBukkitEventHandlerFactor
     protected SPlayerClickedBlockEvent wrapEvent(PlayerInteractEvent event, EventPriority priority) {
         return new SPlayerClickedBlockEvent(
                 PlayerMapper.wrapPlayer(event.getPlayer()),
-                PlayerMapper.wrapHand(event.getHand()),
+                PlayerMapper.resolveHand(event.getHand()).orElse(null),
                 SPlayerClickedBlockEvent.Action.convert(event.getAction().name()),
                 ItemFactory.build(event.getItem()).orElse(null),
                 BlockMapper.resolve(event.getClickedBlock()).orElse(null),

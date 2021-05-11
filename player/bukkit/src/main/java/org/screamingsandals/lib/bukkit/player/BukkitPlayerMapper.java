@@ -71,7 +71,8 @@ public class BukkitPlayerMapper extends PlayerMapper {
                     return Bukkit.getPlayer(playerWrapper.getUuid());
                 })
                 .registerP2W(EntityHuman.class, entityHuman -> playerConverter.convert(entityHuman.as(Player.class)))
-                .registerW2P(EntityHuman.class, playerWrapper -> EntityMapper.<EntityHuman>wrapEntity(playerWrapper.as(Player.class)).orElse(null));
+                .registerW2P(EntityHuman.class, playerWrapper -> EntityMapper.<EntityHuman>wrapEntity(playerWrapper.as(Player.class)).orElse(null))
+                .registerW2P(OfflinePlayer.class, playerWrapper -> Bukkit.getOfflinePlayer(playerWrapper.getUuid()));
         senderConverter
                 .registerW2P(Player.class, wrapper -> {
                     if (wrapper.getType() != CommandSenderWrapper.Type.PLAYER) {
