@@ -1,6 +1,9 @@
 package org.screamingsandals.lib.bukkit.utils.nms;
 
 import com.google.common.base.Preconditions;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -188,4 +191,14 @@ public class ClassStorage {
 		}
 		return null;
 	}
+
+	public static Object asMinecraftComponent(Component component) {
+		try {
+			return MinecraftComponentSerializer.get().serialize(component);
+		} catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
+			return Reflect.getMethod(ClassStorage.NMS.ChatSerializer, "a,field_150700_a", String.class)
+					.invokeStatic(GsonComponentSerializer.gson().serialize(component));
+		}
+	}
+
 }
