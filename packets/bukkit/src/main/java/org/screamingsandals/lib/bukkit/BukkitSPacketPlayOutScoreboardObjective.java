@@ -13,11 +13,11 @@ public class BukkitSPacketPlayOutScoreboardObjective extends BukkitSPacket imple
     }
 
     @Override
-    public void setObjectiveKey(String objectiveKey) {
+    public void setObjectiveKey(Component objectiveKey) {
         if (objectiveKey == null) {
             throw new UnsupportedOperationException("Objective key cannot be null!");
         }
-        packet.setField("a", objectiveKey);
+        packet.setField("a", AdventureHelper.toLegacy(objectiveKey));
     }
 
     @Override
