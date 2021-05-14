@@ -6,7 +6,10 @@ import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSeriali
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -201,4 +204,8 @@ public class ClassStorage {
 		}
 	}
 
+	public static Object stackAsNMS(ItemStack item) {
+		Preconditions.checkNotNull(item, "Item is null!");
+		return Reflect.getMethod(ClassStorage.NMS.CraftItemStack, "asNMSCopy", ItemStack.class).invokeStatic(item);
+	}
 }

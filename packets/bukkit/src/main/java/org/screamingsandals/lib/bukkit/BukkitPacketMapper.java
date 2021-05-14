@@ -1,9 +1,7 @@
 package org.screamingsandals.lib.bukkit;
 
-import org.screamingsandals.lib.common.PacketMapper;
-import org.screamingsandals.lib.common.SPacketPlayOutScoreboardDisplayObjective;
-import org.screamingsandals.lib.common.SPacketPlayOutScoreboardObjective;
-import org.screamingsandals.lib.common.SPacketPlayOutScoreboardScore;
+import org.screamingsandals.lib.common.*;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -23,6 +21,10 @@ public class BukkitPacketMapper extends PacketMapper{
                 .put(SPacketPlayOutScoreboardObjective.class, unused ->  new BukkitSPacketPlayOutScoreboardObjective());
         packetConverters
                 .put(SPacketPlayOutScoreboardDisplayObjective.class, unused -> new BukkitSPacketPlayOutScoreboardDisplayObjective());
+        packetConverters
+                .put(SPacketPlayOutEntityTeleport.class, unused -> new BukkitSPacketPlayOutEntityTeleport());
+        packetConverters
+                .put(SPacketPlayOutEntityEquipment.class, unused -> new BukkitSPacketPlayOutEntityEquipment());
     }
 
     @SuppressWarnings("unchecked")

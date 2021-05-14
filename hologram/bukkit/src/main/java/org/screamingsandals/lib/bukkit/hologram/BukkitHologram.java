@@ -283,7 +283,7 @@ public class BukkitHologram extends AbstractHologram {
                         () ->
                                 result.set(
                                         Reflect.constructor(ClassStorage.NMS.PacketPlayOutEntityEquipment, int.class, ClassStorage.NMS.EnumItemSlot, ClassStorage.NMS.ItemStack)
-                                                .construct(entity.getHeadSlot(), entity.getHeadSlot(), stackAsNMS(item))
+                                                .construct(entity.getId(), entity.getHeadSlot(), stackAsNMS(item))
                                 )
                 );
 
