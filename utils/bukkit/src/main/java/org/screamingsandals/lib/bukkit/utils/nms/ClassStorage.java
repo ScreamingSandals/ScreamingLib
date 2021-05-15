@@ -6,6 +6,7 @@ import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSeriali
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -40,6 +41,7 @@ public class ClassStorage {
 		public static final Class<?> EnumClientCommand = safeGetClass("{nms}.PacketPlayInClientCommand$EnumClientCommand", "{nms}.EnumClientCommand", "{f:net}.play.client.CClientStatusPacket$State", "{f:net}.play.client.CPacketClientStatus$State");
 		public static final Class<?> EnumItemSlot = safeGetClass("{nms}.EnumItemSlot");
 		public static final Class<?> EnumParticle = safeGetClass("{nms}.EnumParticle");
+		public static final Class<?> EntityTypes = safeGetClass("{nms}.EntityTypes");
 		public static final Class<?> EnumScoreboardAction = safeGetClass("{nms}.ScoreboardServer$Action", "{nms}.PacketPlayOutScoreboardScore$EnumScoreboardAction");
 		public static final Class<?> EnumScoreboardHealthDisplay = safeGetClass("{nms}.IScoreboardCriteria$EnumScoreboardHealthDisplay");
 		public static final Class<?> EnumTitleAction = safeGetClass("{nms}.PacketPlayOutTitle$EnumTitleAction", "{nms}.EnumTitleAction", "{f:net}.play.server.STitlePacket$Type", "{f:net}.play.server.SPacketTitle$Type");
@@ -58,6 +60,7 @@ public class ClassStorage {
 		public static final Class<?> PacketPlayOutEntityTeleport = safeGetClass("{nms}.PacketPlayOutEntityTeleport", "{f:net}.play.server.SEntityTeleportPacket", "{f:net}.play.server.SPacketEntityTeleport");
 		public static final Class<?> PacketPlayOutExperience = safeGetClass("{nms}.PacketPlayOutExperience", "{f:net}.play.server.SSetExperiencePacket", "{f:net}.play.server.SPacketSetExperience");
 		public static final Class<?> PacketPlayOutSpawnEntityLiving = safeGetClass("{nms}.PacketPlayOutSpawnEntityLiving", "{f:net}.play.server.SSpawnMobPacket", "{f:net}.play.server.SPacketSpawnMob");
+		public static final Class<?> PacketPlayOutSpawnEntity = safeGetClass("{nms}.PacketPlayOutSpawnEntity", "{f:net}.play.server.SSpawnObjectPacket", "{f:net}.play.server.SPacketSpawnObject");
 		public static final Class<?> PacketPlayOutScoreboardDisplayObjective = safeGetClass("{nms}.PacketPlayOutScoreboardDisplayObjective");
 		public static final Class<?> PacketPlayOutScoreboardObjective = safeGetClass("{nms}.PacketPlayOutScoreboardObjective");
 		public static final Class<?> PacketPlayOutScoreboardScore = safeGetClass("{nms}.PacketPlayOutScoreboardScore");
@@ -207,5 +210,14 @@ public class ClassStorage {
 	public static Object stackAsNMS(ItemStack item) {
 		Preconditions.checkNotNull(item, "Item is null!");
 		return Reflect.getMethod(ClassStorage.NMS.CraftItemStack, "asNMSCopy", ItemStack.class).invokeStatic(item);
+	}
+
+	public static Object getDataWatcher(Object handler) {
+		return Reflect.getMethod(handler, "getDataWatcher,func_184212_Q").invoke();
+	}
+
+	public static int getEntityType(Entity entity) {
+		Preconditions.checkNotNull(entity, "Entity is null!");
+		return (int) Reflect.getMethod(NMS.EntityTypes, "a", Entity.class).invokeStatic(entity);
 	}
 }

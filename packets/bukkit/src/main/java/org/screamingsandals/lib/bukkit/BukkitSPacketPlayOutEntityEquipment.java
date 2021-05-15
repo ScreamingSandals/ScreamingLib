@@ -17,22 +17,17 @@ public class BukkitSPacketPlayOutEntityEquipment extends BukkitSPacket implement
         super(ClassStorage.NMS.PacketPlayOutEntityEquipment);
     }
 
-    public boolean isOldPacket() {
-        return Reflect.getField(packet.getClass(), "d", packet) != null;
-    }
-
     @Override
     public void setEntity(EntityBasic entity) {
         if (entity == null) {
             throw new UnsupportedOperationException("Entity cannot be null!");
         }
-
         packet.setField("a", entity.getEntityId());
     }
 
     @Override
     public void setItemAndSlot(Item item, Slot slot) {
-        if (!isOldPacket()) {
+        if (isOldPacket()) {
             packet.setField("c", ClassStorage.stackAsNMS(item.as(ItemStack.class)));
             packet.setField("b", getSlot(slot));
         } else {
@@ -66,5 +61,9 @@ public class BukkitSPacketPlayOutEntityEquipment extends BukkitSPacket implement
         }
 
         return Reflect.getMethod(ClassStorage.NMS.CraftEquipmentSlot, "getNMS", EquipmentSlot.class).invokeStatic(bukkitSlot);
+    }
+
+    protected boolean isOldPacket() {
+        return Reflect.constructor(ClassStorage.NMS.PacketPlayOutEntityEquipment, int.class, List.class).isEmpty();
     }
 }

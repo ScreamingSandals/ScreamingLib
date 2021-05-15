@@ -3,7 +3,6 @@ package org.screamingsandals.lib.common;
 import net.kyori.adventure.text.Component;
 
 public interface SPacketPlayOutScoreboardDisplayObjective {
-
     void setObjectiveKey(Component objectiveKey);
 
     void setDisplaySlot(DisplaySlot slot);

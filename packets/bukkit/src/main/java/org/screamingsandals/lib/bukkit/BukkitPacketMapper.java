@@ -1,12 +1,14 @@
 package org.screamingsandals.lib.bukkit;
 
 import org.screamingsandals.lib.common.*;
+import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class BukkitPacketMapper extends PacketMapper{
+@Service
+public class BukkitPacketMapper extends PacketMapper {
     public static void init() {
         PacketMapper.init(BukkitPacketMapper::new);
     }
@@ -25,6 +27,12 @@ public class BukkitPacketMapper extends PacketMapper{
                 .put(SPacketPlayOutEntityTeleport.class, unused -> new BukkitSPacketPlayOutEntityTeleport());
         packetConverters
                 .put(SPacketPlayOutEntityEquipment.class, unused -> new BukkitSPacketPlayOutEntityEquipment());
+        packetConverters
+                .put(SPacketPlayOutEntityDestroy.class, unused -> new BukkitSPacketPlayOutEntityDestroy());
+        packetConverters
+                .put(SPacketPlayOutSpawnEntityLiving.class, unused -> new BukkitSPacketPlayOutSpawnEntityLiving());
+        packetConverters
+                .put(SPacketPlayOutSpawnEntity.class, unused -> new BukkitSPacketPlayOutSpawnEntity());
     }
 
     @SuppressWarnings("unchecked")

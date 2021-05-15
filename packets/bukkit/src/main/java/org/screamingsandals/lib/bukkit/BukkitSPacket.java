@@ -8,11 +8,19 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class BukkitSPacket extends SPacket {
-    protected final InvocationResult packet;
+    protected InvocationResult packet;
+    private final List<InvocationResult> additionalPackets = new ArrayList<>();
 
     public BukkitSPacket(Class<?> packetClass) {
         packet = Reflect.constructResulted(packetClass);
+    }
+
+    public void addAdditionalPacket(InvocationResult packet) {
+        additionalPackets.add(packet);
     }
 
     @Override
@@ -29,9 +37,13 @@ public abstract class BukkitSPacket extends SPacket {
             throw new UnsupportedOperationException("Packet cannot be null!");
         }
 
-        boolean result = ClassStorage.sendPacket((Player) player.getWrappedPlayer().get(), packet.raw());
+        final var bukkitPlayer = (Player) player.getWrappedPlayer().get();
+        boolean result = ClassStorage.sendPacket(bukkitPlayer, packet.raw());
         if (!result) {
             Bukkit.getLogger().warning("Could not send packet: " + this.getClass().getSimpleName() + " to player: " + player.getName());
         }
+        additionalPackets.stream()
+                .map(InvocationResult::raw)
+                .forEach(packet -> ClassStorage.sendPacket(bukkitPlayer, packet));
     }
 }

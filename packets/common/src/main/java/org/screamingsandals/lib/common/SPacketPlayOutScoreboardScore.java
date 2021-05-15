@@ -3,7 +3,6 @@ package org.screamingsandals.lib.common;
 import net.kyori.adventure.text.Component;
 
 public interface SPacketPlayOutScoreboardScore {
-
     void setValue(Component value);
 
     void setObjectiveKey(Component objectiveKey);

@@ -19,10 +19,8 @@ public class BukkitSPacketPlayOutEntityTeleport extends BukkitSPacket implements
         packet.setField("b", entity.getLocation().getX());
         packet.setField("c", entity.getLocation().getY());
         packet.setField("d", entity.getLocation().getZ());
-
         packet.setField ("e", (byte) ((int) (entity.getLocation().getYaw() * 256.0F / 360.0F)));
         packet.setField ("f", (byte) ((int) (entity.getLocation().getPitch() * 256.0F / 360.0F)));
-
         packet.setField("g", entity.isOnGround());
     }
 }
