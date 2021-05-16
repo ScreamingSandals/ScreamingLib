@@ -33,6 +33,24 @@ public class BukkitPacketMapper extends PacketMapper {
                 .put(SPacketPlayOutSpawnEntityLiving.class, unused -> new BukkitSPacketPlayOutSpawnEntityLiving());
         packetConverters
                 .put(SPacketPlayOutSpawnEntity.class, unused -> new BukkitSPacketPlayOutSpawnEntity());
+        packetConverters
+                .put(SPacketPlayOutEntityStatus.class, unused -> new BukkitSPacketPlayOutEntityStatus());
+        packetConverters
+                .put(SPacketPlayOutExplosion.class, unused -> new BukkitSPacketPlayOutExplosion());
+        packetConverters
+                .put(SPacketPlayOutEntityHeadRotation.class, unused -> new BukkitSPacketPlayOutEntityHeadRotation());
+        packetConverters
+                .put(SPacketPlayOutEntityEffect.class, unused -> new BukkitSPacketPlayOutEntityEffect());
+        packetConverters
+                .put(SPacketPlayOutAttachEntity.class, unused -> new BukkitSPacketPlayOutAttachEntity());
+        packetConverters
+                .put(SPacketPlayOutBlockBreakAnimation.class, unused -> new BukkitSPacketPlayOutBlockBreakAnimation());
+        packetConverters
+                .put(SPacketPlayOutBlockChange.class, unused -> new BukkitSPacketPlayOutBlockChange());
+        packetConverters
+                .put(SPacketPlayOutChat.class, unused -> new BukkitSPacketPlayOutChat());
+        packetConverters
+                .put(SPacketPlayOutEntityMetadata.class, unused -> new BukkitSPacketPlayOutEntityMetadata());
     }
 
     @SuppressWarnings("unchecked")
