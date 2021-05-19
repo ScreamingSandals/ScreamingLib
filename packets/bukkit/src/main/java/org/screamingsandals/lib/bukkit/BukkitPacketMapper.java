@@ -51,6 +51,19 @@ public class BukkitPacketMapper extends PacketMapper {
                 .put(SPacketPlayOutChat.class, unused -> new BukkitSPacketPlayOutChat());
         packetConverters
                 .put(SPacketPlayOutEntityMetadata.class, unused -> new BukkitSPacketPlayOutEntityMetadata());
+        packetConverters
+                .put(SPacketPlayOutPlayerListHeaderFooter.class, unused -> new BukkitSPacketPlayOutBlockBreakAnimation());
+        packetConverters
+                .put(SPacketPlayOutEntityVelocity.class, unused -> new BukkitSPacketPlayOutEntityVelocity());
+        packetConverters
+                .put(SPacketPlayOutExperience.class, unused -> new BukkitSPacketPlayOutExperience());
+        packetConverters
+                .put(SPacketPlayOutGameStateChange.class, unused -> new BukkitSPacketPlayOutGameStateChange());
+        packetConverters
+                .put(SPacketPlayOutKickDisconnect.class, unused -> new BukkitSPacketPlayOutKickDisconnect());
+        packetConverters
+                .put(SPacketPlayOutRemoveEntityEffect.class, unused -> new BukkitSPacketPlayOutRemoveEntityEffect());
+
     }
 
     @SuppressWarnings("unchecked")
