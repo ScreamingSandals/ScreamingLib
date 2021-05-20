@@ -11,7 +11,7 @@ public interface SPacketPlayOutScoreboardTeam {
 
     void setMode(Mode mode);
 
-    void setFriendlyFire(boolean friendlyFireEnabled);
+    void setFriendlyFire(int friendlyFireFlag);
 
     void setTagVisibility(TagVisibility visibility);
 
@@ -21,9 +21,11 @@ public interface SPacketPlayOutScoreboardTeam {
 
     void setTeamSuffix(Component teamSuffix);
 
-    void setEntityCount(int entityCount);
-
     void setEntities(Collection<String> entities);
+
+    void setDisplayName(Component displayName);
+
+    void setCollisionRule(CollisionRule rule);
 
     enum Mode {
         CREATE,

@@ -63,7 +63,8 @@ public class BukkitPacketMapper extends PacketMapper {
                 .put(SPacketPlayOutKickDisconnect.class, unused -> new BukkitSPacketPlayOutKickDisconnect());
         packetConverters
                 .put(SPacketPlayOutRemoveEntityEffect.class, unused -> new BukkitSPacketPlayOutRemoveEntityEffect());
-
+        packetConverters
+                .put(SPacketPlayOutScoreboardTeam.class, unused -> new BukkitSPacketPlayOutScoreboardTeam());
     }
 
     @SuppressWarnings("unchecked")
