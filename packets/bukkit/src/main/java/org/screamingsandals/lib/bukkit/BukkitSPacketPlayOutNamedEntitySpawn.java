@@ -1,16 +1,16 @@
 package org.screamingsandals.lib.bukkit;
+
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
-import org.screamingsandals.lib.common.SPacketPlayOutSpawnEntity;
+import org.screamingsandals.lib.common.SPacketPlayOutNamedEntitySpawn;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.UUID;
 
-public class BukkitSPacketPlayOutSpawnEntity extends BukkitSPacket implements SPacketPlayOutSpawnEntity {
-    public BukkitSPacketPlayOutSpawnEntity() {
-        super(ClassStorage.NMS.PacketPlayOutSpawnEntity);
+public class BukkitSPacketPlayOutNamedEntitySpawn extends BukkitSPacket implements SPacketPlayOutNamedEntitySpawn {
+    public BukkitSPacketPlayOutNamedEntitySpawn() {
+        super(ClassStorage.NMS.PacketPlayOutNamedEntitySpawn);
     }
 
     @Override
@@ -27,36 +27,20 @@ public class BukkitSPacketPlayOutSpawnEntity extends BukkitSPacket implements SP
     }
 
     @Override
-    public void setLocation(LocationHolder location) {
-        if (location == null) {
-            throw new UnsupportedOperationException("Location cannot be null!");
-        }
+    public void setLocation(Vector3D location) {
         packet.setField("c", location.getX());
         packet.setField("d", location.getY());
         packet.setField("e", location.getZ());
-
-        packet.setField("i", location.getYaw());
-        packet.setField("j", location.getPitch());
     }
 
     @Override
-    public void setVelocity(Vector3D velocity) {
-        if (velocity == null) {
-            throw new UnsupportedOperationException("Velocity cannot be null!");
-        }
-        packet.setField("f", velocity.getX());
-        packet.setField("g", velocity.getY());
-        packet.setField("h", velocity.getZ());
+    public void setYaw(float yaw) {
+        packet.setField("f", (byte) (yaw * 256.0F / 360.0F));
     }
 
     @Override
-    public void setType(int typeId) {
-        packet.setField("k", typeId);
-    }
-
-    @Override
-    public void setObjectData(int objectData) {
-        packet.setField("l", objectData);
+    public void setPitch(float pitch) {
+        packet.setField("g", (byte) (pitch * 256.0F / 360.0F));
     }
 
     @Override

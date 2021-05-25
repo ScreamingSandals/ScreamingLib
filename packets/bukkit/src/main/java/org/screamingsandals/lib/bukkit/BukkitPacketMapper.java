@@ -82,6 +82,12 @@ public class BukkitPacketMapper extends PacketMapper {
                 .put(SPacketPlayOutCloseWindow.class, BukkitSPacketPlayOutCloseWindow.class);
         packetConverters
                 .put(SPacketPlayOutCollect.class, BukkitSPacketPlayOutCollect.class);
+        packetConverters
+                .put(SPacketPlayOutKeepAlive.class, BukkitSPacketPlayOutKeepAlive.class);
+        packetConverters
+                .put(SPacketPlayOutLogin.class, BukkitSPacketPlayOutLogin.class);
+        packetConverters
+                .put(SPacketPlayOutNamedEntitySpawn.class, BukkitSPacketPlayOutNamedEntitySpawn.class);
     }
 
     @SuppressWarnings("unchecked")

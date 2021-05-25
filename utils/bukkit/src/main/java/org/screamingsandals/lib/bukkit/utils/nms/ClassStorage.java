@@ -7,6 +7,7 @@ import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -41,6 +42,8 @@ public class ClassStorage {
 		public static final Class<?> EnumClientCommand = safeGetClass("{nms}.PacketPlayInClientCommand$EnumClientCommand", "{nms}.EnumClientCommand", "{f:net}.play.client.CClientStatusPacket$State", "{f:net}.play.client.CPacketClientStatus$State");
 		public static final Class<?> EnumItemSlot = safeGetClass("{nms}.EnumItemSlot");
 		public static final Class<?> EnumParticle = safeGetClass("{nms}.EnumParticle");
+		public static final Class<?> EnumGamemode = safeGetClass("{nms}.WorldSettings$EnumGamemode");
+		public static final Class<?> EnumDifficulty = safeGetClass("{nms}.EnumDifficulty");
 		public static final Class<?> EntityTypes = safeGetClass("{nms}.EntityTypes");
 		public static final Class<?> EnumBossAction = safeGetClass("{nms}.PacketPlayOutBoss$Action");
 		public static final Class<?> EnumBarStyle = safeGetClass("{nms}.BossBattle$BarStyle");
@@ -94,6 +97,10 @@ public class ClassStorage {
 		public static final Class<?> PacketPlayOutCamera = safeGetClass("{nms}.PacketPlayOutCamera", "{f:net}.play.server.SCameraPacket", "{f:net}.play.server.SPacketCamera");
 		public static final Class<?> PacketPlayOutCloseWindow = safeGetClass("{nms}.PacketPlayOutCloseWindow", "{f:net}.play.server.SCloseWindowPacket", "{f:net}.play.server.SPacketCloseWindow");
 		public static final Class<?> PacketPlayOutCollect = safeGetClass("{nms}.PacketPlayOutCollect", "{f:net}.play.server.SCollectItemPacket", "{f:net}.play.server.SPacketCollectItem");
+		public static final Class<?> PacketPlayOutKeepAlive = safeGetClass("{nms}.PacketPlayOutKeepAlive", "{f:net}.play.server.SKeepAlivePacket", "{f:net}.play.server.SPacketKeepAlive");
+		public static final Class<?> PacketPlayOutNamedEntitySpawn = safeGetClass("{nms}.PacketPlayOutNamedEntitySpawn", "{f:net}.play.server.SSpawnPlayerPacket", "{f:net}.play.server.SPacketSpawnPlayer");
+		//TODO: find Forge names
+		public static final Class<?> PacketPlayOutLogin = safeGetClass("{nms}.PacketPlayOutLogin");
 		public static final Class<?> PathfinderGoal = safeGetClass("{nms}.PathfinderGoal", "{f:goal}.Goal", "{f:ent}.ai.EntityAIBase");
 		public static final Class<?> PathfinderGoalSelector = safeGetClass("{nms}.PathfinderGoalSelector", "{f:goal}.GoalSelector", "{f:ent}.ai.EntityAITasks");
 		public static final Class<?> PathfinderGoalMeleeAttack = safeGetClass("{nms}.PathfinderGoalMeleeAttack", "{f:goal}.MeleeAttackGoal", "{f:ent}.ai.EntityAIAttackMelee");
@@ -101,6 +108,7 @@ public class ClassStorage {
 		public static final Class<?> PlayerConnection = safeGetClass("{nms}.PlayerConnection", "{f:net}.play.ServerPlayNetHandler", "{f:net}.NetHandlerPlayServer");
 		public static final Class<?> ServerConnection = safeGetClass("{nms}.ServerConnection", "{f:net}.NetworkSystem");
 		public static final Class<?> World = safeGetClass("{nms}.World", "{f:world}.World");
+		public static final Class<?> WorldType = safeGetClass("{nms}.WorldType");
 		public static final Class<?> CraftEquipmentSlot = safeGetClass("{obc}.CraftEquipmentSlot");
 		public static final Class<?> CraftItemStack = safeGetClass("{obc}.inventory.CraftItemStack");
 		public static final Class<?> CraftMagicNumbers = safeGetClass("{obc}.util.CraftMagicNumbers");
@@ -240,10 +248,5 @@ public class ClassStorage {
 
 	public static Object getDataWatcher(Object handler) {
 		return Reflect.getMethod(handler, "getDataWatcher,func_184212_Q").invoke();
-	}
-
-	public static int getEntityType(Entity entity) {
-		Preconditions.checkNotNull(entity, "Entity is null!");
-		return (int) Reflect.getMethod(NMS.EntityTypes, "a", Entity.class).invokeStatic(entity);
 	}
 }
