@@ -3,8 +3,10 @@ package org.screamingsandals.lib.bukkit.world;
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.material.MaterialData;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
@@ -59,13 +61,19 @@ public class BukkitBlockDataMapper extends BlockDataMapper {
                 .registerP2W(LocationHolder.class, location ->
                         resolve(BlockMapper.resolve(location).orElseThrow()).orElseThrow());
 
-        if (Reflect.has("org.bukkit.block.data.BlockData")) {
+        if (Version.isVersion(1, 13)) {
             converter
                     .registerP2W(BlockData.class, blockData ->
                             new BlockDataHolder(MaterialMapping.resolve(blockData.getMaterial()).orElseThrow(), getDataFromString(blockData.getAsString()), null)
                     )
                     .registerW2P(BlockData.class, holder ->
                             Bukkit.createBlockData(getDataFromMap(holder.getType(), holder.getData())));
+        } else {
+            converter
+                    .registerP2W(MaterialData.class, data ->
+                            new BlockDataHolder(MaterialMapping.resolve(data.getItemType() + ":" + data.getData()).orElseThrow(), LegacyBlockDataConverter.convertMaterialData(data), null)
+                    )
+                    .registerW2P(MaterialData.class, holder -> LegacyBlockDataConverter.asMaterialData(holder.getType().as(Material.class), holder.getType().getDurability(), holder.getData()));
         }
     }
 
@@ -76,12 +84,15 @@ public class BukkitBlockDataMapper extends BlockDataMapper {
 
     @Override
     protected void setBlockDataAt0(LocationHolder location, BlockDataHolder blockData) {
-        final var resolved = BlockMapper.resolve(location);
-        if (resolved.isEmpty()) {
-            return;
-        }
+        final var block = location.as(Location.class).getBlock();
 
-        resolved.get().setBlockData(blockData);
+        if (Version.isVersion(1, 13)) {
+            block.setBlockData(blockData.as(BlockData.class));
+        } else {
+            final var state = block.getState();
+            state.setData(blockData.as(MaterialData.class));
+            state.update();
+        }
     }
 
     private Map<String, Object> getDataFromString(String data) {
