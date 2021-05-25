@@ -1,9 +1,16 @@
 package org.screamingsandals.lib.bukkit.utils.nms;
 
 import com.google.common.base.Preconditions;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -34,6 +41,7 @@ public class ClassStorage {
 		public static final Class<?> EnumClientCommand = safeGetClass("{nms}.PacketPlayInClientCommand$EnumClientCommand", "{nms}.EnumClientCommand", "{f:net}.play.client.CClientStatusPacket$State", "{f:net}.play.client.CPacketClientStatus$State");
 		public static final Class<?> EnumItemSlot = safeGetClass("{nms}.EnumItemSlot");
 		public static final Class<?> EnumParticle = safeGetClass("{nms}.EnumParticle");
+		public static final Class<?> EntityTypes = safeGetClass("{nms}.EntityTypes");
 		public static final Class<?> EnumScoreboardAction = safeGetClass("{nms}.ScoreboardServer$Action", "{nms}.PacketPlayOutScoreboardScore$EnumScoreboardAction");
 		public static final Class<?> EnumScoreboardHealthDisplay = safeGetClass("{nms}.IScoreboardCriteria$EnumScoreboardHealthDisplay");
 		public static final Class<?> EnumTitleAction = safeGetClass("{nms}.PacketPlayOutTitle$EnumTitleAction", "{nms}.EnumTitleAction", "{f:net}.play.server.STitlePacket$Type", "{f:net}.play.server.SPacketTitle$Type");
@@ -44,21 +52,38 @@ public class ClassStorage {
 		public static final Class<?> NBTTagCompound = safeGetClass("{nms}.NBTTagCompound", "{f:nbt}.CompoundNBT", "{f:nbt}.NBTTagCompound");
 		public static final Class<?> NetworkManager = safeGetClass("{nms}.NetworkManager", "{f:net}.NetworkManager");
 		public static final Class<?> Packet = safeGetClass("{nms}.Packet", "{f:net}.IPacket", "{f:net}.Packet");
+		public static final Class<?> PacketPlayOutEntityHeadRotation = safeGetClass("{nms}.PacketPlayOutEntityHeadRotation", "{f:net}.play.server.SEntityHeadLookPacket", "{f:net}.play.server.SPacketEntityHeadLook");
 		public static final Class<?> PacketLoginInStart = safeGetClass("{nms}.PacketLoginInStart", "{f:net}.login.client.CLoginStartPacket", "{f:net}.login.client.CPacketLoginStart");
 		public static final Class<?> PacketPlayInClientCommand = safeGetClass("{nms}.PacketPlayInClientCommand", "{f:net}.play.client.CClientStatusPacket", "{f:net}.play.client.CPacketClientStatus");
 		public static final Class<?> PacketPlayInUseEntity = safeGetClass("{nms}.PacketPlayInUseEntity", "{f:net}.play.client.CUseEntityPacket", "{f:net}.play.client.CPacketUseEntity");
+		public static final Class<?> PacketPlayOutAbilities = safeGetClass("{nms}.PacketPlayOutAbilities", "{f:net}.play.server.SPlayerAbilitiesPacket", "{f:net}.play.server.SPacketPlayerAbilities");
+		public static final Class<?> PacketPlayOutAttachEntity = safeGetClass("{nms}.PacketPlayOutAttachEntity", "{f:net}.play.server.SPacketEntityAttach", "{f:net}.play.server.SMountEntityPacket");
+		public static final Class<?> PacketPlayOutBlockBreakAnimation = safeGetClass("{nms}.PacketPlayOutBlockBreakAnimation", "{f:net}.play.server.SPacketBlockBreakAnim", "{f:net}.play.server.SAnimateBlockBreakPacket");
+		public static final Class<?> PacketPlayOutBlockChange = safeGetClass("{nms}.PacketPlayOutBlockChange", "{f:net}.play.server.SPacketBlockChange", "{f:net}.play.server.SChangeBlockPacket");
+		public static final Class<?> PacketPlayOutExplosion = safeGetClass("{nms}.PacketPlayOutExplosion", "{f:net}.play.server.SExplosionPacket", "{f:net}.play.server.SPacketExplosion");
+		public static final Class<?> PacketPlayOutEntityStatus = safeGetClass("{nms}.PacketPlayOutEntityStatus", "{f:net}.play.server.SEntityStatusPacket", "{f:net}.play.server.SPacketEntityStatus");
 		public static final Class<?> PacketPlayOutEntityDestroy = safeGetClass("{nms}.PacketPlayOutEntityDestroy", "{f:net}.play.server.SDestroyEntitiesPacket", "{f:net}.play.server.SPacketDestroyEntities");
 		public static final Class<?> PacketPlayOutEntityMetadata = safeGetClass("{nms}.PacketPlayOutEntityMetadata", "{f:net}.play.server.SEntityMetadataPacket", "{f:net}.play.server.SPacketEntityMetadata");
 		public static final Class<?> PacketPlayOutEntityTeleport = safeGetClass("{nms}.PacketPlayOutEntityTeleport", "{f:net}.play.server.SEntityTeleportPacket", "{f:net}.play.server.SPacketEntityTeleport");
+		public static final Class<?> PacketPlayOutChat = safeGetClass("{nms}.PacketPlayOutChat", "{f:net}.play.server.SPacketChat", "{f:net}.play.server.SChatPacket");
 		public static final Class<?> PacketPlayOutExperience = safeGetClass("{nms}.PacketPlayOutExperience", "{f:net}.play.server.SSetExperiencePacket", "{f:net}.play.server.SPacketSetExperience");
+		public static final Class<?> PacketPlayOutEntityEffect = safeGetClass("{nms}.PacketPlayOutEntityEffect", "{f:net}.play.server.SPlayEntityEffectPacket", "{f:net}.play.server.SPacketEntityEffect");
 		public static final Class<?> PacketPlayOutSpawnEntityLiving = safeGetClass("{nms}.PacketPlayOutSpawnEntityLiving", "{f:net}.play.server.SSpawnMobPacket", "{f:net}.play.server.SPacketSpawnMob");
-		public static final Class<?> PacketPlayOutScoreboardDisplayObjective = safeGetClass("{nms}.PacketPlayOutScoreboardDisplayObjective");
-		public static final Class<?> PacketPlayOutScoreboardObjective = safeGetClass("{nms}.PacketPlayOutScoreboardObjective");
-		public static final Class<?> PacketPlayOutScoreboardScore = safeGetClass("{nms}.PacketPlayOutScoreboardScore");
-		public static final Class<?> PacketPlayOutScoreboardTeam = safeGetClass("{nms}.PacketPlayOutScoreboardTeam");
-		public static final Class<?> PacketPlayOutEntityEquipment = safeGetClass("{nms}.PacketPlayOutEntityEquipment");
+		public static final Class<?> PacketPlayOutSpawnEntity = safeGetClass("{nms}.PacketPlayOutSpawnEntity", "{f:net}.play.server.SSpawnObjectPacket", "{f:net}.play.server.SPacketSpawnObject");
+		public static final Class<?> PacketPlayOutScoreboardDisplayObjective = safeGetClass("{nms}.PacketPlayOutScoreboardDisplayObjective", "{f:net}.play.server.SPacketDisplayObjective", "{f:net}.play.server.SDisplayObjectivePacket");
+		public static final Class<?> PacketPlayOutScoreboardObjective = safeGetClass("{nms}.PacketPlayOutScoreboardObjective", "{f:net}.play.server.SScoreboardObjectivePacket", "{f:net}.play.server.SPacketScoreboardObjective");
+		public static final Class<?> PacketPlayOutScoreboardScore = safeGetClass("{nms}.PacketPlayOutScoreboardScore", "{f:net}.play.server.SUpdateScorePacket", "{f:net}.play.server.SPacketUpdateScore");
+		public static final Class<?> PacketPlayOutScoreboardTeam = safeGetClass("{nms}.PacketPlayOutScoreboardTeam", "{f:net}.play.server.STeamsPacket", "{f:net}.play.server.SPacketTeams");
+		public static final Class<?> PacketPlayOutEntityEquipment = safeGetClass("{nms}.PacketPlayOutEntityEquipment", "{f:net}.play.server.SEntityEquipmentPacket", "{f:net}.play.server.SPacketEntityEquipment");
+		public static final Class<?> PacketPlayOutEntityVelocity = safeGetClass("{nms}.PacketPlayOutEntityVelocity", "{f:net}.play.server.SPacketEntityVelocity", "{f:net}.play.server.SEntityVelocityPacket");
 		public static final Class<?> PacketPlayOutTitle = safeGetClass("{nms}.PacketPlayOutTitle", "{f:net}.play.server.STitlePacket", "{f:net}.play.server.SPacketTitle");
 		public static final Class<?> PacketPlayOutWorldParticles = safeGetClass("{nms}.PacketPlayOutWorldParticles", "{f:net}.play.server.SSpawnParticlePacket", "{f:net}.play.server.SPacketParticles");
+		public static final Class<?> PacketPlayOutPlayerListHeaderFooter = safeGetClass("{nms}.PacketPlayOutPlayerListHeaderFooter", "{f:net}.play.server.SPlayerListHeaderFooterPacket", "{f:net}.play.server.SPacketPlayerListHeaderFooter");
+		public static final Class<?> PacketPlayOutGameStateChange = safeGetClass("{nms}.PacketPlayOutGameStateChange", "{f:net}.play.server.SChangeGameStatePacket", "{f:net}.play.server.SPacketChangeGameState");
+		public static final Class<?> PacketPlayOutHeldItemSlot = safeGetClass("{nms}.PacketPlayOutHeldItemSlot", "{f:net}.play.server.SHeldItemChangePacket", "{f:net}.play.server.SPacketHeldItemChange");
+		public static final Class<?> PacketPlayOutKickDisconnect = safeGetClass("{nms}.PacketPlayOutKickDisconnect", "{f:net}.play.server.SDisconnectPacket",  "{f:net}.play.server.SPacketDisconnect");
+		public static final Class<?> PacketPlayOutRemoveEntityEffect = safeGetClass("{nms}.PacketPlayOutRemoveEntityEffect", "{f:net}.play.server.SRemoveEntityEffectPacket", "{f:net}.play.server.SPacketRemoveEntityEffect");
+		public static final Class<?> PacketPlayOutBoss = safeGetClass("{nms}.PacketPlayOutBoss", "{f:net}.play.server.SUpdateBossInfoPacket", "{f:net}.play.server.SPacketUpdateBossInfo");
 		public static final Class<?> PathfinderGoal = safeGetClass("{nms}.PathfinderGoal", "{f:goal}.Goal", "{f:ent}.ai.EntityAIBase");
 		public static final Class<?> PathfinderGoalSelector = safeGetClass("{nms}.PathfinderGoalSelector", "{f:goal}.GoalSelector", "{f:ent}.ai.EntityAITasks");
 		public static final Class<?> PathfinderGoalMeleeAttack = safeGetClass("{nms}.PathfinderGoalMeleeAttack", "{f:goal}.MeleeAttackGoal", "{f:ent}.ai.EntityAIAttackMelee");
@@ -66,10 +91,10 @@ public class ClassStorage {
 		public static final Class<?> PlayerConnection = safeGetClass("{nms}.PlayerConnection", "{f:net}.play.ServerPlayNetHandler", "{f:net}.NetHandlerPlayServer");
 		public static final Class<?> ServerConnection = safeGetClass("{nms}.ServerConnection", "{f:net}.NetworkSystem");
 		public static final Class<?> World = safeGetClass("{nms}.World", "{f:world}.World");
-		public static final Class<?> PacketPlayOutPlayerListHeaderFooter = safeGetClass("{nms}.PacketPlayOutPlayerListHeaderFooter", "{f:net}.play.server.SPlayerListHeaderFooterPacket", "{f:net}.play.server.SPacketPlayerListHeaderFooter");
 		public static final Class<?> CraftEquipmentSlot = safeGetClass("{obc}.CraftEquipmentSlot");
 		public static final Class<?> CraftItemStack = safeGetClass("{obc}.inventory.CraftItemStack");
-
+		public static final Class<?> CraftMagicNumbers = safeGetClass("{obc}.util.CraftMagicNumbers");
+		public static final Class<?> BlockPosition = safeGetClass("{nms}.BlockPosition");
 		// 1.16
 		public static final Class<?> AttributeModifiable = safeGetClass("{nms}.AttributeModifiable", "{f:ent}.ai.attributes.ModifiableAttributeInstance");
 
@@ -187,5 +212,28 @@ public class ClassStorage {
 			t.printStackTrace();
 		}
 		return null;
+	}
+
+	public static Object asMinecraftComponent(Component component) {
+		try {
+			return MinecraftComponentSerializer.get().serialize(component);
+		} catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
+			return Reflect.getMethod(ClassStorage.NMS.ChatSerializer, "a,field_150700_a", String.class)
+					.invokeStatic(GsonComponentSerializer.gson().serialize(component));
+		}
+	}
+
+	public static Object stackAsNMS(ItemStack item) {
+		Preconditions.checkNotNull(item, "Item is null!");
+		return Reflect.getMethod(ClassStorage.NMS.CraftItemStack, "asNMSCopy", ItemStack.class).invokeStatic(item);
+	}
+
+	public static Object getDataWatcher(Object handler) {
+		return Reflect.getMethod(handler, "getDataWatcher,func_184212_Q").invoke();
+	}
+
+	public static int getEntityType(Entity entity) {
+		Preconditions.checkNotNull(entity, "Entity is null!");
+		return (int) Reflect.getMethod(NMS.EntityTypes, "a", Entity.class).invokeStatic(entity);
 	}
 }
