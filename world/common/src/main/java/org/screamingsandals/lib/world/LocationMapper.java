@@ -12,7 +12,8 @@ import java.util.function.Supplier;
 public abstract class LocationMapper {
 
     protected BidirectionalConverter<LocationHolder> converter = BidirectionalConverter.<LocationHolder>build()
-            .registerP2W(LocationHolder.class, e -> e);
+            .registerP2W(LocationHolder.class, e -> e)
+            .registerW2P(BlockHolder.class, locationHolder -> BlockMapper.resolve(locationHolder).orElse(null));
 
     private static LocationMapper mapping = null;
     private static boolean initialized = false;

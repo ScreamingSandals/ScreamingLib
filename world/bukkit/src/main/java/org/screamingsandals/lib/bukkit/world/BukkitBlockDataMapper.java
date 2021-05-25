@@ -5,9 +5,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.*;
 
 import java.util.Arrays;
@@ -30,26 +32,41 @@ public class BukkitBlockDataMapper extends BlockDataMapper {
     public BukkitBlockDataMapper() {
         converter
                 .registerP2W(BlockHolder.class, parent -> {
-                    final var data = parent.as(Block.class).getBlockData();
-                    final var holder = new BlockDataHolder(MaterialMapping.resolve(data.getMaterial()).orElseThrow(), getDataFromString(data.getAsString()), parent);
+                    if (Version.isVersion(1, 13)) {
+                        final var data = parent.as(Block.class).getBlockData();
+                        final var holder = new BlockDataHolder(MaterialMapping.resolve(data.getMaterial()).orElseThrow(), getDataFromString(data.getAsString()), parent);
 
-                    if (!holder.getType().getPlatformName().equalsIgnoreCase(parent.getType().getPlatformName())) {
-                        parent.setType(holder.getType());
+                        if (!holder.getType().getPlatformName().equalsIgnoreCase(parent.getType().getPlatformName())) {
+                            parent.setType(holder.getType());
+                        }
+
+                        return holder;
+                    } else {
+                        final var data = parent.as(Block.class).getState().getData();
+                        final var holder = new BlockDataHolder(MaterialMapping.resolve(data.getItemType() + ":" + data.getData()).orElseThrow(), LegacyBlockDataConverter.convertMaterialData(data), parent);
+
+                        if (!holder.getType().getPlatformName().equalsIgnoreCase(parent.getType().getPlatformName())) {
+                            parent.setType(holder.getType());
+                        }
+
+                        return holder;
                     }
-
-                    return holder;
                 })
                 .registerP2W(Location.class, position ->
                         resolve(BlockMapper.resolve(position)).orElseThrow())
                 .registerP2W(Block.class, block ->
                         resolve(BlockMapper.resolve(block)).orElseThrow())
                 .registerP2W(LocationHolder.class, location ->
-                        resolve(BlockMapper.resolve(location).orElseThrow()).orElseThrow())
-                .registerP2W(BlockData.class, blockData ->
-                        new BlockDataHolder(MaterialMapping.resolve(blockData.getMaterial()).orElseThrow(), getDataFromString(blockData.getAsString()), null)
-                )
-                .registerW2P(BlockData.class, holder ->
-                        Bukkit.createBlockData(getDataFromMap(holder.getType(), holder.getData())));
+                        resolve(BlockMapper.resolve(location).orElseThrow()).orElseThrow());
+
+        if (Reflect.has("org.bukkit.block.data.BlockData")) {
+            converter
+                    .registerP2W(BlockData.class, blockData ->
+                            new BlockDataHolder(MaterialMapping.resolve(blockData.getMaterial()).orElseThrow(), getDataFromString(blockData.getAsString()), null)
+                    )
+                    .registerW2P(BlockData.class, holder ->
+                            Bukkit.createBlockData(getDataFromMap(holder.getType(), holder.getData())));
+        }
     }
 
     @Override

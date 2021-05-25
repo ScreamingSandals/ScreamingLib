@@ -81,7 +81,11 @@ public class BlockHolder implements Wrapper {
      * Breaks the block
      */
     public void breakNaturally() {
+        BlockMapper.breakNaturally(location);
+    }
 
+    public boolean isEmpty() {
+        return type.isAir();
     }
 
     @Override

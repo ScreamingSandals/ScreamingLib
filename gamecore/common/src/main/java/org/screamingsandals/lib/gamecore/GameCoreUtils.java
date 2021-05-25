@@ -2,6 +2,7 @@ package org.screamingsandals.lib.gamecore;
 
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.gamecore.entity.EntityManager;
 import org.screamingsandals.lib.gamecore.listeners.ClickableEntityListener;
 import org.screamingsandals.lib.gamecore.listeners.PlayerListener;
 import org.screamingsandals.lib.gamecore.listeners.WorldListener;
@@ -32,7 +33,8 @@ import java.util.function.Supplier;
         BlockStateMapper.class,
         WorldListener.class,
         PlayerListener.class,
-        ClickableEntityListener.class
+        ClickableEntityListener.class,
+        EntityManager.class
 })
 public abstract class GameCoreUtils {
     private static GameCoreUtils gameCoreUtils;

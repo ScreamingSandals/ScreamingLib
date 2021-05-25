@@ -27,7 +27,7 @@ public final class MaterialHolder implements Wrapper {
     }
 
     public boolean isAir() {
-        return platformName.equals("AIR");
+        return is("AIR", "CAVE_AIR", "VOID_AIR");
     }
 
     /**
