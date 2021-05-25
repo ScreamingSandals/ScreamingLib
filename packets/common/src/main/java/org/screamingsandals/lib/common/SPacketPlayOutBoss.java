@@ -18,6 +18,12 @@ public interface SPacketPlayOutBoss {
 
     void setDivision(Division division);
 
+    void setDarkenSky(boolean darkenSky);
+
+    void setPlayMusic(boolean playMusic);
+
+    void setCreateFog(boolean createFog);
+
     enum Action {
         ADD,
         REMOVE,

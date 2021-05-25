@@ -42,6 +42,9 @@ public class ClassStorage {
 		public static final Class<?> EnumItemSlot = safeGetClass("{nms}.EnumItemSlot");
 		public static final Class<?> EnumParticle = safeGetClass("{nms}.EnumParticle");
 		public static final Class<?> EntityTypes = safeGetClass("{nms}.EntityTypes");
+		public static final Class<?> EnumBossAction = safeGetClass("{nms}.PacketPlayOutBoss$Action");
+		public static final Class<?> EnumBarStyle = safeGetClass("{nms}.BossBattle$BarStyle");
+		public static final Class<?> EnumBarColor = safeGetClass("{nms}.BossBattle$BarColor");
 		public static final Class<?> EnumScoreboardAction = safeGetClass("{nms}.ScoreboardServer$Action", "{nms}.PacketPlayOutScoreboardScore$EnumScoreboardAction");
 		public static final Class<?> EnumScoreboardHealthDisplay = safeGetClass("{nms}.IScoreboardCriteria$EnumScoreboardHealthDisplay");
 		public static final Class<?> EnumTitleAction = safeGetClass("{nms}.PacketPlayOutTitle$EnumTitleAction", "{nms}.EnumTitleAction", "{f:net}.play.server.STitlePacket$Type", "{f:net}.play.server.SPacketTitle$Type");
@@ -84,6 +87,13 @@ public class ClassStorage {
 		public static final Class<?> PacketPlayOutKickDisconnect = safeGetClass("{nms}.PacketPlayOutKickDisconnect", "{f:net}.play.server.SDisconnectPacket",  "{f:net}.play.server.SPacketDisconnect");
 		public static final Class<?> PacketPlayOutRemoveEntityEffect = safeGetClass("{nms}.PacketPlayOutRemoveEntityEffect", "{f:net}.play.server.SRemoveEntityEffectPacket", "{f:net}.play.server.SPacketRemoveEntityEffect");
 		public static final Class<?> PacketPlayOutBoss = safeGetClass("{nms}.PacketPlayOutBoss", "{f:net}.play.server.SUpdateBossInfoPacket", "{f:net}.play.server.SPacketUpdateBossInfo");
+		public static final Class<?> PacketPlayOutUnloadChunk = safeGetClass("{nms}.PacketPlayOutUnloadChunk", "{f:net}.play.server.SUnloadChunkPacket", "{f:net}.play.server.SPacketUnloadChunk");
+		public static final Class<?> PacketPlayOutAnimation = safeGetClass("{nms}.PacketPlayOutAnimation", "{f:net}.play.server.SAnimateHandPacket", "{f:net}.play.server.SPacketAnimation");
+		public static final Class<?> PacketPlayOutBed = safeGetClass("{nms}.PacketPlayOutBed", "{f:net}.play.server.SPacketUseBed");
+		public static final Class<?> PacketPlayOutBlockAction = safeGetClass("{nms}.PacketPlayOutBlockAction", "{f:net}.play.server.SBlockActionPacket", "{f:net}.play.server.SPacketBlockAction");
+		public static final Class<?> PacketPlayOutCamera = safeGetClass("{nms}.PacketPlayOutCamera", "{f:net}.play.server.SCameraPacket", "{f:net}.play.server.SPacketCamera");
+		public static final Class<?> PacketPlayOutCloseWindow = safeGetClass("{nms}.PacketPlayOutCloseWindow", "{f:net}.play.server.SCloseWindowPacket", "{f:net}.play.server.SPacketCloseWindow");
+		public static final Class<?> PacketPlayOutCollect = safeGetClass("{nms}.PacketPlayOutCollect", "{f:net}.play.server.SCollectItemPacket", "{f:net}.play.server.SPacketCollectItem");
 		public static final Class<?> PathfinderGoal = safeGetClass("{nms}.PathfinderGoal", "{f:goal}.Goal", "{f:ent}.ai.EntityAIBase");
 		public static final Class<?> PathfinderGoalSelector = safeGetClass("{nms}.PathfinderGoalSelector", "{f:goal}.GoalSelector", "{f:ent}.ai.EntityAITasks");
 		public static final Class<?> PathfinderGoalMeleeAttack = safeGetClass("{nms}.PathfinderGoalMeleeAttack", "{f:goal}.MeleeAttackGoal", "{f:ent}.ai.EntityAIAttackMelee");

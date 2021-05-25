@@ -2,10 +2,9 @@ package org.screamingsandals.lib.bukkit;
 
 import org.screamingsandals.lib.common.*;
 import org.screamingsandals.lib.utils.annotations.Service;
-
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 @Service
 public class BukkitPacketMapper extends PacketMapper {
@@ -14,57 +13,75 @@ public class BukkitPacketMapper extends PacketMapper {
     }
 
     //TODO: find alternative solution
-    protected Map<Class<?>, Function<Void, BukkitSPacket>> packetConverters = new HashMap<>();
+    protected Map<Class<?>, Class<? extends BukkitSPacket>> packetConverters = new HashMap<>();
 
     public BukkitPacketMapper() {
         packetConverters
-                .put(SPacketPlayOutScoreboardScore.class, unused -> new BukkitSPacketPlayOutScoreboardObjective());
+                .put(SPacketPlayOutScoreboardScore.class, BukkitSPacketPlayOutScoreboardScore.class);
         packetConverters
-                .put(SPacketPlayOutScoreboardObjective.class, unused ->  new BukkitSPacketPlayOutScoreboardObjective());
+                .put(SPacketPlayOutScoreboardObjective.class, BukkitSPacketPlayOutScoreboardObjective.class);
         packetConverters
-                .put(SPacketPlayOutScoreboardDisplayObjective.class, unused -> new BukkitSPacketPlayOutScoreboardDisplayObjective());
+                .put(SPacketPlayOutScoreboardDisplayObjective.class, BukkitSPacketPlayOutScoreboardDisplayObjective.class);
         packetConverters
-                .put(SPacketPlayOutEntityTeleport.class, unused -> new BukkitSPacketPlayOutEntityTeleport());
+                .put(SPacketPlayOutEntityTeleport.class, BukkitSPacketPlayOutEntityTeleport.class);
         packetConverters
-                .put(SPacketPlayOutEntityEquipment.class, unused -> new BukkitSPacketPlayOutEntityEquipment());
+                .put(SPacketPlayOutEntityEquipment.class, BukkitSPacketPlayOutEntityEquipment.class);
         packetConverters
-                .put(SPacketPlayOutEntityDestroy.class, unused -> new BukkitSPacketPlayOutEntityDestroy());
+                .put(SPacketPlayOutEntityDestroy.class, BukkitSPacketPlayOutEntityDestroy.class);
         packetConverters
-                .put(SPacketPlayOutSpawnEntityLiving.class, unused -> new BukkitSPacketPlayOutSpawnEntityLiving());
+                .put(SPacketPlayOutSpawnEntityLiving.class, BukkitSPacketPlayOutSpawnEntityLiving.class);
         packetConverters
-                .put(SPacketPlayOutSpawnEntity.class, unused -> new BukkitSPacketPlayOutSpawnEntity());
+                .put(SPacketPlayOutSpawnEntity.class, BukkitSPacketPlayOutSpawnEntity.class);
         packetConverters
-                .put(SPacketPlayOutEntityStatus.class, unused -> new BukkitSPacketPlayOutEntityStatus());
+                .put(SPacketPlayOutEntityStatus.class, BukkitSPacketPlayOutEntityStatus.class);
         packetConverters
-                .put(SPacketPlayOutExplosion.class, unused -> new BukkitSPacketPlayOutExplosion());
+                .put(SPacketPlayOutExplosion.class, BukkitSPacketPlayOutExplosion.class);
         packetConverters
-                .put(SPacketPlayOutEntityHeadRotation.class, unused -> new BukkitSPacketPlayOutEntityHeadRotation());
+                .put(SPacketPlayOutEntityHeadRotation.class, BukkitSPacketPlayOutEntityHeadRotation.class);
         packetConverters
-                .put(SPacketPlayOutEntityEffect.class, unused -> new BukkitSPacketPlayOutEntityEffect());
+                .put(SPacketPlayOutEntityEffect.class, BukkitSPacketPlayOutEntityEffect.class);
         packetConverters
-                .put(SPacketPlayOutAttachEntity.class, unused -> new BukkitSPacketPlayOutAttachEntity());
+                .put(SPacketPlayOutAttachEntity.class, BukkitSPacketPlayOutAttachEntity.class);
         packetConverters
-                .put(SPacketPlayOutBlockBreakAnimation.class, unused -> new BukkitSPacketPlayOutBlockBreakAnimation());
+                .put(SPacketPlayOutBlockBreakAnimation.class, BukkitSPacketPlayOutBlockBreakAnimation.class);
         packetConverters
-                .put(SPacketPlayOutBlockChange.class, unused -> new BukkitSPacketPlayOutBlockChange());
+                .put(SPacketPlayOutBlockChange.class, BukkitSPacketPlayOutBlockChange.class);
         packetConverters
-                .put(SPacketPlayOutChat.class, unused -> new BukkitSPacketPlayOutChat());
+                .put(SPacketPlayOutChat.class, BukkitSPacketPlayOutChat.class);
         packetConverters
-                .put(SPacketPlayOutEntityMetadata.class, unused -> new BukkitSPacketPlayOutEntityMetadata());
+                .put(SPacketPlayOutEntityMetadata.class, BukkitSPacketPlayOutEntityMetadata.class);
         packetConverters
-                .put(SPacketPlayOutPlayerListHeaderFooter.class, unused -> new BukkitSPacketPlayOutBlockBreakAnimation());
+                .put(SPacketPlayOutPlayerListHeaderFooter.class, BukkitSPacketPlayOutPlayerListHeaderFooter.class);
         packetConverters
-                .put(SPacketPlayOutEntityVelocity.class, unused -> new BukkitSPacketPlayOutEntityVelocity());
+                .put(SPacketPlayOutEntityVelocity.class, BukkitSPacketPlayOutEntityVelocity.class);
         packetConverters
-                .put(SPacketPlayOutExperience.class, unused -> new BukkitSPacketPlayOutExperience());
+                .put(SPacketPlayOutExperience.class, BukkitSPacketPlayOutExperience.class);
         packetConverters
-                .put(SPacketPlayOutGameStateChange.class, unused -> new BukkitSPacketPlayOutGameStateChange());
+                .put(SPacketPlayOutGameStateChange.class, BukkitSPacketPlayOutGameStateChange.class);
         packetConverters
-                .put(SPacketPlayOutKickDisconnect.class, unused -> new BukkitSPacketPlayOutKickDisconnect());
+                .put(SPacketPlayOutKickDisconnect.class, BukkitSPacketPlayOutKickDisconnect.class);
         packetConverters
-                .put(SPacketPlayOutRemoveEntityEffect.class, unused -> new BukkitSPacketPlayOutRemoveEntityEffect());
+                .put(SPacketPlayOutRemoveEntityEffect.class, BukkitSPacketPlayOutRemoveEntityEffect.class);
         packetConverters
-                .put(SPacketPlayOutScoreboardTeam.class, unused -> new BukkitSPacketPlayOutScoreboardTeam());
+                .put(SPacketPlayOutScoreboardTeam.class, BukkitSPacketPlayOutScoreboardTeam.class);
+        packetConverters
+                .put(SPacketPlayOutHeldItemSlot.class, BukkitSPacketPlayOutHeldItemSlot.class);
+        packetConverters
+                .put(SPacketPlayOutBoss.class, BukkitSPacketPlayOutBoss.class);
+        packetConverters
+                .put(SPacketPlayOutUnloadChunk.class, BukkitSPacketPlayOutUnloadChunk.class);
+        packetConverters
+                .put(SPacketPlayOutAbilities.class, BukkitSPacketPlayOutAbilities.class);
+        packetConverters
+                .put(SPacketPlayOutAnimation.class, BukkitSPacketPlayOutAnimation.class);
+        packetConverters
+                .put(SPacketPlayOutBlockAction.class, BukkitSPacketPlayOutBlockAction.class);
+        packetConverters
+                .put(SPacketPlayOutCamera.class, BukkitSPacketPlayOutCamera.class);
+        packetConverters
+                .put(SPacketPlayOutCloseWindow.class, BukkitSPacketPlayOutCloseWindow.class);
+        packetConverters
+                .put(SPacketPlayOutCollect.class, BukkitSPacketPlayOutCollect.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -77,6 +94,7 @@ public class BukkitPacketMapper extends PacketMapper {
         if (packet == null) {
             throw new UnsupportedOperationException("No packet found for packet of class: " + packetClass.getSimpleName());
         }
-        return (T) packet.apply(null);
+
+        return (T) Reflect.construct(packet);
     }
 }

@@ -6,6 +6,8 @@ import org.screamingsandals.lib.common.SPacketPlayOutScoreboardScore;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
+import java.util.Locale;
+
 public class BukkitSPacketPlayOutScoreboardScore extends BukkitSPacket implements SPacketPlayOutScoreboardScore {
 
     public BukkitSPacketPlayOutScoreboardScore() {
@@ -35,14 +37,10 @@ public class BukkitSPacketPlayOutScoreboardScore extends BukkitSPacket implement
 
     @Override
     public void setAction(ScoreboardAction action) {
-        String enumConstant = "CHANGE";
-        switch (action) {
-            case REMOVE:
-                enumConstant = "REMOVE";
-            case CHANGE:
-                enumConstant = "CHANGE";
-                break;
+        if (action == null) {
+            throw new UnsupportedOperationException("Action cannot be null!");
         }
+        String enumConstant = action.name().toUpperCase();
         packet.setField("d", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardAction, enumConstant));
     }
 }

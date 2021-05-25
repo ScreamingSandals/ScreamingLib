@@ -1,11 +1,13 @@
 package org.screamingsandals.lib.bukkit;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.common.SPacketPlayOutEntityEquipment;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -18,15 +20,18 @@ public class BukkitSPacketPlayOutEntityEquipment extends BukkitSPacket implement
     }
 
     @Override
-    public void setEntity(EntityBasic entity) {
-        if (entity == null) {
-            throw new UnsupportedOperationException("Entity cannot be null!");
-        }
-        packet.setField("a", entity.getEntityId());
+    public void setEntityId(int entityId) {
+        packet.setField("a", entityId);
     }
 
     @Override
     public void setItemAndSlot(Item item, Slot slot) {
+        if (slot == null) {
+            throw new UnsupportedOperationException("Slot cannot be null!");
+        }
+        if (item == null) {
+            item = ItemFactory.build(Material.AIR).orElseThrow();
+        }
         if (isOldPacket()) {
             packet.setField("c", ClassStorage.stackAsNMS(item.as(ItemStack.class)));
             packet.setField("b", getSlot(slot));
@@ -35,31 +40,11 @@ public class BukkitSPacketPlayOutEntityEquipment extends BukkitSPacket implement
         }
     }
 
-    public Object getSlot(Slot slot) {
-        EquipmentSlot bukkitSlot;
-        switch (slot) {
-            case FEET:
-                bukkitSlot = EquipmentSlot.FEET;
-                break;
-            case HAND:
-                bukkitSlot = EquipmentSlot.HAND;
-                break;
-            case OFF_HAND:
-                bukkitSlot = EquipmentSlot.OFF_HAND;
-                break;
-            case HEAD:
-                bukkitSlot = EquipmentSlot.HEAD;
-                break;
-            case LEGS:
-                bukkitSlot = EquipmentSlot.LEGS;
-                break;
-            case CHEST:
-                bukkitSlot = EquipmentSlot.CHEST;
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + slot);
+    protected Object getSlot(Slot slot) {
+        if (slot == null) {
+            throw new UnsupportedOperationException("Slot cannot be null!");
         }
-
+        EquipmentSlot bukkitSlot = EquipmentSlot.valueOf(slot.name().toUpperCase());
         return Reflect.getMethod(ClassStorage.NMS.CraftEquipmentSlot, "getNMS", EquipmentSlot.class).invokeStatic(bukkitSlot);
     }
 

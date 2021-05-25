@@ -19,13 +19,13 @@ public class BukkitSPacketPlayOutEntityTeleport extends BukkitSPacket implements
     @Override
     public void setLocation(LocationHolder location) {
         if (location == null) {
-            throw new UnsupportedOperationException("Invalid location provided!");
+            throw new UnsupportedOperationException("Location cannot be null!");
         }
         packet.setField("b", location.getX());
         packet.setField("c", location.getY());
         packet.setField("d", location.getZ());
-        packet.setField ("e", (byte) ((int) (location.getYaw() * 256.0F / 360.0F)));
-        packet.setField ("f", (byte) ((int) (location.getPitch() * 256.0F / 360.0F)));
+        packet.setField("e", (byte) ((int) (location.getYaw() * 256.0F / 360.0F)));
+        packet.setField("f", (byte) ((int) (location.getPitch() * 256.0F / 360.0F)));
     }
 
     @Override

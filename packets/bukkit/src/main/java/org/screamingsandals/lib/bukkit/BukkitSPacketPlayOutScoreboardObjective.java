@@ -32,32 +32,17 @@ public class BukkitSPacketPlayOutScoreboardObjective extends BukkitSPacket imple
 
     @Override
     public void setCriteria(Type criteriaType) {
-        String enumConstant = "INTEGER";
-        switch (criteriaType) {
-            case HEARTS:
-                enumConstant = "HEARTS";
-                break;
-            case INTEGER:
-                enumConstant = "INTEGER";
-                break;
+        if (criteriaType == null) {
+            throw new UnsupportedOperationException("CriteriaType cannot be null!");
         }
-        packet.setField("c", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardHealthDisplay, enumConstant));
+        packet.setField("c", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardHealthDisplay, criteriaType.name().toUpperCase()));
     }
 
     @Override
     public void setMode(Mode mode) {
-        int num = 0;
-        switch (mode) {
-            case CREATE:
-                num = 0;
-                break;
-            case UPDATE:
-                num = 2;
-                break;
-            case DESTROY:
-                num = 1;
-                break;
+        if (mode == null) {
+            throw new UnsupportedOperationException("Mode cannot be null!");
         }
-        packet.setField("d", num);
+        packet.setField("d", mode.ordinal());
     }
 }
