@@ -11,6 +11,7 @@ import org.screamingsandals.lib.minestom.utils.MinestomAdventureHelper;
 import org.screamingsandals.lib.minestom.world.InstancedPosition;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.entity.DataWatcher;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
@@ -269,5 +270,11 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
     @Override
     public void setPortalCooldown(int cooldown) {
 
+    }
+
+    //TODO:
+    @Override
+    public DataWatcher getDataWatcher() {
+        return null;
     }
 }

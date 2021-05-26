@@ -4,12 +4,15 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.bukkit.utils.nms.entity.BukkitDataWatcher;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.entity.DataWatcher;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
@@ -248,5 +251,10 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     @Override
     public void setPortalCooldown(int cooldown) {
         wrappedObject.setPortalCooldown(cooldown);
+    }
+
+    @Override
+    public DataWatcher getDataWatcher() {
+        return new BukkitDataWatcher(this);
     }
 }

@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.common.PacketMapper;
+import org.screamingsandals.lib.common.SPacketPlayOutEntityMetadata;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.container.Container;
@@ -162,6 +164,16 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
                 event.setCancelled(true);
                 return true;
             });
+        }
+    }
+
+    public void sendPacket(Object packet) {
+        PacketMapper.sendPacket(this, packet);
+    }
+
+    public void sendPackets(Object... packets) {
+        for (final var packet : packets) {
+            PacketMapper.sendPacket(this, packet);
         }
     }
 

@@ -1,14 +1,11 @@
 package org.screamingsandals.lib.bukkit;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.bukkit.utils.nms.entity.BukkitDataWatcher;
 import org.screamingsandals.lib.common.SPacketPlayOutSpawnEntityLiving;
-import org.screamingsandals.lib.entity.EntityLiving;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.entity.DataWatcher;
 import org.screamingsandals.lib.utils.math.Vector3D;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
-
 import java.util.UUID;
 
 public class BukkitSPacketPlayOutSpawnEntityLiving extends BukkitSPacket implements SPacketPlayOutSpawnEntityLiving {
@@ -22,7 +19,7 @@ public class BukkitSPacketPlayOutSpawnEntityLiving extends BukkitSPacket impleme
     }
 
     @Override
-    public  void setUUID(UUID uuid) {
+    public void setUUID(UUID uuid) {
         if (uuid == null) {
             throw new UnsupportedOperationException("UUID cannot be null!");
         }
@@ -70,15 +67,15 @@ public class BukkitSPacketPlayOutSpawnEntityLiving extends BukkitSPacket impleme
     }
 
     @Override
-    public void setDataWatcher(Object dataWatcher, int entityId) {
+    public void setDataWatcher(DataWatcher dataWatcher) {
         if (dataWatcher == null) {
             throw new UnsupportedOperationException("DataWatcher cannot be null!");
         }
-        if (Version.isVersion(1, 15)) {
-            final var metadataPacket = Reflect
-                    .constructor(ClassStorage.NMS.PacketPlayOutEntityMetadata, int.class, ClassStorage.NMS.DataWatcher, boolean.class)
-                    .constructResulted(entityId, dataWatcher, true);
-            addAdditionalPacket(metadataPacket);
+        if (!(dataWatcher instanceof BukkitDataWatcher)) {
+            throw new UnsupportedOperationException("DataWatcher is not an instance of BukkitDataWatcher!");
         }
+        final var bukkitDataWatcher = (BukkitDataWatcher) dataWatcher;
+        final var nmsDataWatcher = bukkitDataWatcher.toNMS();
+        packet.setField("m", nmsDataWatcher);
     }
 }

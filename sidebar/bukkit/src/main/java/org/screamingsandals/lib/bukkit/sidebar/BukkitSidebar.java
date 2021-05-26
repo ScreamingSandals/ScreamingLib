@@ -1,19 +1,15 @@
 package org.screamingsandals.lib.bukkit.sidebar;
-
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.bukkit.sidebar.team.BukkitScoreboardTeam;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.common.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.sender.StaticSenderMessage;
 import org.screamingsandals.lib.sidebar.AbstractSidebar;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.utils.AdventureHelper;
-import org.screamingsandals.lib.utils.reflect.InvocationResult;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.utils.visual.SimpleCLTextEntry;
 
 import java.util.*;
@@ -21,27 +17,29 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Collectors;
 
 public class BukkitSidebar extends AbstractSidebar {
-    private final String objectiveKey;
+    private final Component objectiveKey;
     private final ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, String>> lines = new ConcurrentSkipListMap<>();
 
     public BukkitSidebar(UUID uuid) {
         super(uuid);
-        this.objectiveKey = new Random().ints(48, 123)
+        this.objectiveKey = Component.text(
+                new Random().ints(48, 123)
                 .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
                 .limit(16)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
+                .toString()
+        );
     }
 
     @Override
     public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
         if (visible) {
             var bukkitPlayer = player.as(Player.class);
-            ClassStorage.sendPacket(bukkitPlayer, createObjective(player));
+            getCreateObjectivePacket(player).sendPacket(player);
             updateForPlayer(player);
-            ClassStorage.sendPacket(bukkitPlayer, displayObjective());
+            getDisplayObjectivePacket().sendPacket(player);
             teams.forEach(scoreboardTeam ->
-                ClassStorage.sendPacket(bukkitPlayer, ((BukkitScoreboardTeam) scoreboardTeam).constructCreatePacket())
+                    ((BukkitScoreboardTeam) scoreboardTeam).constructCreatePacket().sendPacket(player)
             );
         }
     }
@@ -51,9 +49,9 @@ public class BukkitSidebar extends AbstractSidebar {
         if (visible && player.isOnline()) {
             var bukkitPlayer = player.as(Player.class);
             teams.forEach(scoreboardTeam ->
-                    ClassStorage.sendPacket(bukkitPlayer, ((BukkitScoreboardTeam) scoreboardTeam).constructDestructPacket())
+                    ((BukkitScoreboardTeam) scoreboardTeam).constructDestructPacket().sendPacket(player)
             );
-            ClassStorage.sendPacket(bukkitPlayer, destroyObjective());
+            getDestroyObjectivePacket().sendPacket(player);
         }
     }
 
@@ -93,10 +91,10 @@ public class BukkitSidebar extends AbstractSidebar {
             list.set(i, makeUnique(list.get(i), list));
         }
 
-        var packets = new ArrayList<>();
+        var packets = new ArrayList<SPacket>();
 
         if (!(this.title instanceof StaticSenderMessage)) {
-            packets.add(updateObjective(playerWrapper));
+            packets.add(getUpdateObjectivePacket(playerWrapper));
         }
 
         var forRemoval = new ArrayList<Integer>();
@@ -107,7 +105,7 @@ public class BukkitSidebar extends AbstractSidebar {
                     packets.add(destroyScore(lines.get(i)));
                 }
                 lines.put(i, list.get(i));
-                packets.add(createScorePacket(i, list.get(i)));
+                packets.add(getCreateScorePacket(i, list.get(i)));
             } else if (lines.containsKey(i)) {
                 packets.add(destroyScore(lines.get(i)));
                 forRemoval.add(i);
@@ -116,69 +114,67 @@ public class BukkitSidebar extends AbstractSidebar {
 
         forRemoval.forEach(lines::remove);
 
-        ClassStorage.sendPackets(playerWrapper.as(Player.class), packets);
+        packets.forEach(packet -> packet.sendPacket(playerWrapper));
     }
 
     @Override
     public void updateTitle0() {
         if (visible && !viewers.isEmpty()) {
-            viewers.forEach(p -> ClassStorage.sendPacket(p.as(Player.class), updateObjective(p)));
+            viewers.forEach(p -> getUpdateObjectivePacket(p).sendPacket(p));
         }
     }
 
     // INTERNAL METHODS
 
-    private Object createObjective(PlayerWrapper player) {
-        var packet = notFinalObjectivePacket(player);
-        packet.setField("d", 0);
-        return packet.raw();
-    }
-
-    private Object updateObjective(PlayerWrapper player) {
-        var packet = notFinalObjectivePacket(player);
-        packet.setField("d", 2);
-        return packet.raw();
-    }
-
-    private InvocationResult notFinalObjectivePacket(PlayerWrapper player) {
-        var packet = Reflect.constructResulted(ClassStorage.NMS.PacketPlayOutScoreboardObjective);
-        packet.setField("a", objectiveKey);
-        if (packet.setField("b", asMinecraftComponent(title.asComponent(player))) == null) {
-            packet.setField("b", AdventureHelper.toLegacy(title.asComponent(player)));
-        }
-        packet.setField("c", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardHealthDisplay, "INTEGER"));
+    private SPacketPlayOutScoreboardObjective getCreateObjectivePacket(PlayerWrapper player) {
+        var packet = getNotFinalObjectivePacket(player);
+        packet.setMode(SPacketPlayOutScoreboardObjective.Mode.CREATE);
         return packet;
     }
 
-    private Object destroyObjective() {
-        var packet = Reflect.constructResulted(ClassStorage.NMS.PacketPlayOutScoreboardObjective);
-        packet.setField("a", objectiveKey);
-        packet.setField("d", 1);
-        return packet.raw();
+    private SPacketPlayOutScoreboardObjective getUpdateObjectivePacket(PlayerWrapper player) {
+        var packet = getNotFinalObjectivePacket(player);
+        packet.setMode(SPacketPlayOutScoreboardObjective.Mode.UPDATE);
+        return packet;
     }
 
-    private Object displayObjective() {
-        var packet = Reflect.constructResulted(ClassStorage.NMS.PacketPlayOutScoreboardDisplayObjective);
-        packet.setField("a", 1);
-        packet.setField("b", objectiveKey);
-        return packet.raw();
+    private SPacketPlayOutScoreboardObjective getNotFinalObjectivePacket(PlayerWrapper player) {
+        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class);
+        packet.setObjectiveKey(objectiveKey);
+        packet.setTitle(title.asComponent(player));
+        packet.setCriteria(SPacketPlayOutScoreboardObjective.Type.INTEGER);
+        return packet;
     }
 
-    private Object createScorePacket(int i, String value) {
-        var packet = Reflect.constructResulted(ClassStorage.NMS.PacketPlayOutScoreboardScore);
-        packet.setField("a", value);
-        packet.setField("b", objectiveKey);
-        packet.setField("c", i);
-        packet.setField("d", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardAction, "CHANGE"));
-        return packet.raw();
+    private SPacketPlayOutScoreboardObjective getDestroyObjectivePacket() {
+        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class);
+        packet.setObjectiveKey(objectiveKey);
+        packet.setMode(SPacketPlayOutScoreboardObjective.Mode.DESTROY);
+        return packet;
     }
 
-    private Object destroyScore(String value) {
-        var packet = Reflect.constructResulted(ClassStorage.NMS.PacketPlayOutScoreboardScore);
-        packet.setField("a", value);
-        packet.setField("b", objectiveKey);
-        packet.setField("d", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardAction, "REMOVE"));
-        return packet.raw();
+    private SPacketPlayOutScoreboardDisplayObjective getDisplayObjectivePacket() {
+        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardDisplayObjective.class);
+        packet.setObjectiveKey(objectiveKey);
+        packet.setDisplaySlot(SPacketPlayOutScoreboardDisplayObjective.DisplaySlot.SIDEBAR);
+        return packet;
+    }
+
+    private SPacketPlayOutScoreboardScore getCreateScorePacket(int i, String value) {
+        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class);
+        packet.setValue(Component.text(value));
+        packet.setObjectiveKey(objectiveKey);
+        packet.setScore(i);
+        packet.setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.CHANGE);
+        return packet;
+    }
+
+    private SPacketPlayOutScoreboardScore destroyScore(String value) {
+        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class);
+        packet.setValue(Component.text(value));
+        packet.setObjectiveKey(objectiveKey);
+        packet.setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.REMOVE);
+        return packet;
     }
 
     public String makeUnique(String toUnique, List<String> from) {
@@ -194,22 +190,13 @@ public class BukkitSidebar extends AbstractSidebar {
         return stringBuilder.toString();
     }
 
-    public static Object asMinecraftComponent(Component component) {
-        try {
-            return MinecraftComponentSerializer.get().serialize(component);
-        } catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
-            return Reflect.getMethod(ClassStorage.NMS.ChatSerializer, "a,field_150700_a", String.class)
-                    .invokeStatic(GsonComponentSerializer.gson().serialize(component));
-        }
-    }
-
     @Override
     public ScoreboardTeam team(String identifier) {
         var team = new BukkitScoreboardTeam(this, identifier);
         teams.add(team);
         if (visible && !viewers.isEmpty()) {
             var packet = team.constructCreatePacket();
-            viewers.forEach(player -> ClassStorage.sendPacket(player.as(Player.class), packet));
+            viewers.forEach(packet::sendPacket);
         }
         return team;
     }

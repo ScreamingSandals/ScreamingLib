@@ -3,7 +3,7 @@ package org.screamingsandals.lib.common;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.LocationHolder;
 
-public interface SPacketPlayOutBlockAction {
+public interface SPacketPlayOutBlockAction extends SPacket {
     void setBlocKLocation(LocationHolder location);
 
     void setActionId(int actionId);

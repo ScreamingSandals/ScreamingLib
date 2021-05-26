@@ -1,5 +1,4 @@
 package org.screamingsandals.lib.bukkit;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
@@ -11,15 +10,19 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BukkitSPacket extends SPacket {
+public abstract class BukkitSPacket implements SPacket {
     protected InvocationResult packet;
-    private final List<InvocationResult> additionalPackets = new ArrayList<>();
+    private final List<Object> additionalPackets = new ArrayList<>();
 
     public BukkitSPacket(Class<?> packetClass) {
         packet = Reflect.constructResulted(packetClass);
     }
 
     public void addAdditionalPacket(InvocationResult packet) {
+        addAdditionalPacket(packet.raw());
+    }
+
+    public void addAdditionalPacket(Object packet) {
         additionalPackets.add(packet);
     }
 
@@ -42,8 +45,12 @@ public abstract class BukkitSPacket extends SPacket {
         if (!result) {
             Bukkit.getLogger().warning("Could not send packet: " + this.getClass().getSimpleName() + " to player: " + player.getName());
         }
-        additionalPackets.stream()
-                .map(InvocationResult::raw)
+        additionalPackets
                 .forEach(packet -> ClassStorage.sendPacket(bukkitPlayer, packet));
+    }
+
+    @Override
+    public Object getRawPacket() {
+        return packet.raw();
     }
 }

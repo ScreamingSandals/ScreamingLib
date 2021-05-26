@@ -4,7 +4,7 @@ import org.screamingsandals.lib.utils.Difficulty;
 import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.WorldType;
 
-public interface SPacketPlayOutLogin {
+public interface SPacketPlayOutLogin extends SPacket {
     void setEntityId(int entityId);
 
     void setGameMode(GameMode gameMode);

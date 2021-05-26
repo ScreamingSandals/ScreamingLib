@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.common;
 
-public interface SPacketPlayOutAbilities {
+public interface SPacketPlayOutAbilities extends SPacket {
     void setInvulnerable(boolean invulnerable);
 
     void setFlying(boolean isFlying);

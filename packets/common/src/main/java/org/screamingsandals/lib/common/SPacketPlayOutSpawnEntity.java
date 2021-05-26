@@ -1,11 +1,10 @@
 package org.screamingsandals.lib.common;
-
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.UUID;
 
-public interface SPacketPlayOutSpawnEntity {
+public interface SPacketPlayOutSpawnEntity extends SPacket {
     void setEntityId(int entityId);
 
     void setUUID(UUID uuid);
@@ -17,6 +16,4 @@ public interface SPacketPlayOutSpawnEntity {
     void setType(int typeId);
 
     void setObjectData(int objectData);
-
-    void setDataWatcher(Object dataWatcher, int entityId);
 }

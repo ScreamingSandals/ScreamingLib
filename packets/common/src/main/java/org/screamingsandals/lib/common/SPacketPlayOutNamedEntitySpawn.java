@@ -1,9 +1,10 @@
 package org.screamingsandals.lib.common;
+import org.screamingsandals.lib.utils.entity.DataWatcher;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
 import java.util.UUID;
 
-public interface SPacketPlayOutNamedEntitySpawn {
+public interface SPacketPlayOutNamedEntitySpawn extends SPacket {
     void setEntityId(int entityId);
 
     void setUUID(UUID uuid);
@@ -14,5 +15,5 @@ public interface SPacketPlayOutNamedEntitySpawn {
 
     void setPitch(float pitch);
 
-    void setDataWatcher(Object dataWatcher, int entityId);
+    void setDataWatcher(DataWatcher dataWatcher);
 }

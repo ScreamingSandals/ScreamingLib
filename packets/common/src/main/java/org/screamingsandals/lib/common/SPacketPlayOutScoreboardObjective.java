@@ -2,7 +2,7 @@ package org.screamingsandals.lib.common;
 
 import net.kyori.adventure.text.Component;
 
-public interface SPacketPlayOutScoreboardObjective {
+public interface SPacketPlayOutScoreboardObjective extends SPacket {
     void setObjectiveKey(Component objectiveKey);
 
     void setTitle(Component title);

@@ -56,5 +56,4 @@ public class ArmorStandNMS extends EntityNMS {
 	public boolean isMarker() {
 		return (boolean) Reflect.getMethod(handler, "isMarker,func_175426_l,s").invoke();
 	}
-
 }

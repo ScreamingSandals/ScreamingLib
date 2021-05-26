@@ -5,7 +5,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.List;
 
-public interface SPacketPlayOutExplosion {
+public interface SPacketPlayOutExplosion extends SPacket {
     void setX(double x);
 
     void setY(double y);

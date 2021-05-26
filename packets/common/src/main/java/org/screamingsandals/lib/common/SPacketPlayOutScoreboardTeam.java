@@ -3,19 +3,20 @@ package org.screamingsandals.lib.common;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 
 import java.util.Collection;
 
-public interface SPacketPlayOutScoreboardTeam {
+public interface SPacketPlayOutScoreboardTeam extends SPacket {
     void setTeamName(Component teamName);
 
     void setMode(Mode mode);
 
-    void setFriendlyFire(int friendlyFireFlag);
+    void setFlags(boolean friendlyFire, boolean seeInvisible);
 
     void setTagVisibility(TagVisibility visibility);
 
-    void setTeamColor(TeamColor color);
+    void setTeamColor(TextColor color);
 
     void setTeamPrefix(Component teamPrefix);
 
@@ -55,34 +56,5 @@ public interface SPacketPlayOutScoreboardTeam {
 
         @Getter
         private final String enumName;
-    }
-
-    @RequiredArgsConstructor
-    enum TeamColor {
-        BLACK(0),
-        DARK_BLUE(1),
-        DARK_GREEN(2),
-        DARK_CYAN(3),
-        DARK_RED(4),
-        PURPLE(5),
-        GOLD(6),
-        GRAY(7),
-        DARK_GRAY(8),
-        BLUE(9),
-        BRIGHT_GREEN(10),
-        CYAN(11),
-        RED(12),
-        PINK(13),
-        YELLOW(14),
-        WHITE(15),
-        OBFUSCATED(16),
-        BOLD(17),
-        STRIKETHROUGH(18),
-        UNDERLINED(19),
-        ITALIC(20),
-        RESET(21);
-
-        @Getter
-        private final int color;
     }
 }

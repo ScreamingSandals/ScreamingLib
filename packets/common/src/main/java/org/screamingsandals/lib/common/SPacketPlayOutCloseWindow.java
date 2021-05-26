@@ -1,5 +1,5 @@
 package org.screamingsandals.lib.common;
 
-public interface SPacketPlayOutCloseWindow {
+public interface SPacketPlayOutCloseWindow extends SPacket {
     void setWindowId(int windowId);
 }

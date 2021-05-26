@@ -1,5 +1,7 @@
 package org.screamingsandals.lib.common;
 
-public interface SPacketPlayOutEntityMetadata {
-    void setMetaData(int entityId, Object dataWatcher, boolean flag);
+import org.screamingsandals.lib.utils.entity.DataWatcher;
+
+public interface SPacketPlayOutEntityMetadata extends SPacket{
+    void setMetaData(int entityId, DataWatcher dataWatcher, boolean flag);
 }

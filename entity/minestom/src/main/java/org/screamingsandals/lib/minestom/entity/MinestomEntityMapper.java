@@ -1,12 +1,10 @@
 package org.screamingsandals.lib.minestom.entity;
 
-import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.*;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.minestom.entity.type.MinestomEntityTypeMapping;
-import org.screamingsandals.lib.minestom.world.InstancedPosition;
 import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;

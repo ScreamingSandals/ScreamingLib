@@ -5,7 +5,7 @@ import net.kyori.adventure.text.Component;
 
 import java.util.UUID;
 
-public interface SPacketPlayOutBoss {
+public interface SPacketPlayOutBoss extends SPacket {
     void setUniqueId(UUID uuid);
 
     void setAction(Action action);

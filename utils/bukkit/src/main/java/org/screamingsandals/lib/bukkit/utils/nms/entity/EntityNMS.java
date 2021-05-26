@@ -6,10 +6,14 @@ import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.util.Vector;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
+
+import java.util.UUID;
 
 public class EntityNMS {
 	protected Object handler;
@@ -113,7 +117,27 @@ public class EntityNMS {
 		Reflect.getMethod(handler, "setNoGravity,func_189654_d", boolean.class).invoke(!gravity);
 	}
 
+	//TODO: forge names
 	public boolean isGravity() {
 		return !((boolean) Reflect.getMethod(handler, "isNoGravity,func_189652_ae").invoke());
 	}
+
+	public boolean isOnGround() {
+		return (boolean) Reflect.getField(handler, "onGround");
+	}
+
+	public UUID getUniqueId() {
+		return (UUID) Reflect.getField(handler, "uniqueID");
+	}
+
+	public Vector3D getVelocity() {
+		final var mot = Reflect.getMethod(handler, "getMot").invoke();
+		final var bukkitVector = (Vector) Reflect.getMethod(ClassStorage.NMS.CraftVector, "toBukkit").invokeStatic(mot);
+		return new Vector3D(
+				bukkitVector.getX(),
+				bukkitVector.getY(),
+				bukkitVector.getZ()
+		);
+	}
+
 }

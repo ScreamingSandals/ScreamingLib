@@ -1,10 +1,16 @@
 package org.screamingsandals.lib.common;
 
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.player.PlayerWrapper;
+
 import java.util.function.Supplier;
 
 public abstract class PacketMapper {
     private static PacketMapper packetMapper = null;
+
+    public static boolean isInitialized() {
+        return packetMapper != null;
+    }
 
     public static void init(@NotNull Supplier<PacketMapper> packetMapperSupplier) {
         if (packetMapper != null) {
@@ -21,4 +27,13 @@ public abstract class PacketMapper {
     }
 
     public abstract <C, T extends C> T createPacket0(Class<C> packetClass);
+
+    public static void sendPacket(PlayerWrapper player, Object packet) {
+        if (packetMapper == null) {
+            throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
+        }
+        packetMapper.sendPacket0(player, packet);
+    }
+
+    public abstract void sendPacket0(PlayerWrapper player, Object packet);
 }

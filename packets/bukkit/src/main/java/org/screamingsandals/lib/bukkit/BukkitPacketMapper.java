@@ -1,6 +1,9 @@
 package org.screamingsandals.lib.bukkit;
 
+import org.bukkit.entity.Player;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.common.*;
+import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.HashMap;
@@ -88,6 +91,8 @@ public class BukkitPacketMapper extends PacketMapper {
                 .put(SPacketPlayOutLogin.class, BukkitSPacketPlayOutLogin.class);
         packetConverters
                 .put(SPacketPlayOutNamedEntitySpawn.class, BukkitSPacketPlayOutNamedEntitySpawn.class);
+        packetConverters
+                .put(SPacketPlayOutPlayerInfo.class, BukkitSPacketPlayOutPlayerInfo.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -102,5 +107,21 @@ public class BukkitPacketMapper extends PacketMapper {
         }
 
         return (T) Reflect.construct(packet);
+    }
+
+    @Override
+    public void sendPacket0(PlayerWrapper player, Object packet) {
+        if (packet == null) {
+            throw new UnsupportedOperationException("Packet cannot be null!");
+        }
+        if (player == null) {
+            throw new UnsupportedOperationException("Player cannot be null!");
+        }
+        if (packet instanceof SPacket) {
+            final var sPacket = (SPacket) packet;
+            sPacket.sendPacket(player);
+            return;
+        }
+        ClassStorage.sendPacket(player.as(Player.class), packet);
     }
 }

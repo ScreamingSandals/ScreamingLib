@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.common;
 
-public interface SPacketPlayOutExperience {
+public interface SPacketPlayOutExperience extends SPacket {
     void setExperienceBar(float exp);
 
     void setLevel(int level);

@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.screamingsandals.lib.common.SPacketPlayOutScoreboardTeam;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 import java.util.LinkedList;
@@ -24,8 +25,8 @@ public abstract class AbstractScoreboardTeam implements ScoreboardTeam {
     protected Component teamSuffix = Component.empty();
     protected boolean friendlyFire = true;
     protected boolean seeInvisible = true;
-    protected NameTagVisibility nameTagVisibility = NameTagVisibility.ALWAYS;
-    protected CollisionRule collisionRule = CollisionRule.ALWAYS;
+    protected SPacketPlayOutScoreboardTeam.TagVisibility nameTagVisibility = SPacketPlayOutScoreboardTeam.TagVisibility.ALWAYS;
+    protected SPacketPlayOutScoreboardTeam.CollisionRule collisionRule = SPacketPlayOutScoreboardTeam.CollisionRule.ALWAYS;
     protected final List<PlayerWrapper> players = new LinkedList<>();
 
     @Override
@@ -71,14 +72,14 @@ public abstract class AbstractScoreboardTeam implements ScoreboardTeam {
     }
 
     @Override
-    public ScoreboardTeam nameTagVisibility(NameTagVisibility nameTagVisibility) {
+    public ScoreboardTeam nameTagVisibility(SPacketPlayOutScoreboardTeam.TagVisibility nameTagVisibility) {
         this.nameTagVisibility = nameTagVisibility;
         updateInfo();
         return this;
     }
 
     @Override
-    public ScoreboardTeam collisionRule(CollisionRule collisionRule) {
+    public ScoreboardTeam collisionRule(SPacketPlayOutScoreboardTeam.CollisionRule collisionRule) {
         this.collisionRule = collisionRule;
         updateInfo();
         return this;

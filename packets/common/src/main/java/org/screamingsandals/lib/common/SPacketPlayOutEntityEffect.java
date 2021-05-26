@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.common;
 
-public interface SPacketPlayOutEntityEffect {
+public interface SPacketPlayOutEntityEffect extends SPacket {
     void setEntityId(int entityId);
 
     void setEffectId(byte effectId);

@@ -1,7 +1,10 @@
 package org.screamingsandals.lib.bukkit;
 
 import com.google.common.collect.Lists;
+import com.mojang.datafixers.types.templates.Named;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.common.SPacketPlayOutScoreboardTeam;
 import org.screamingsandals.lib.utils.AdventureHelper;
@@ -31,8 +34,15 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
     }
 
     @Override
-    public void setFriendlyFire(int friendlyFireFlag) {
-        packet.setField("j", friendlyFireFlag);
+    public void setFlags(boolean friendlyFire, boolean seeInvisible) {
+        int i = 0;
+        if (friendlyFire) {
+            i |= 1;
+        }
+        if (seeInvisible) {
+            i |= 2;
+        }
+        packet.setField("j", i);
     }
 
     @Override
@@ -44,11 +54,11 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
     }
 
     @Override
-    public void setTeamColor(TeamColor color) {
-        if (ClassStorage.safeGetClass("{nms}.EnumChatFormat") != null) {
-            packet.setField("g", Reflect.getMethod(ClassStorage.NMS.EnumChatFormat, "a", int.class).invokeStatic(color.getColor()));
+    public void setTeamColor(TextColor color) {
+        if (ClassStorage.NMS.EnumChatFormat != null) {
+            packet.setField("g", Reflect.findEnumConstant(ClassStorage.NMS.EnumChatFormat, NamedTextColor.nearestTo(color).toString().toUpperCase()));
         } else {
-            packet.setField("g", color.getColor());
+            packet.setField("g", NamedTextColor.nearestTo(color).toString());
         }
     }
 

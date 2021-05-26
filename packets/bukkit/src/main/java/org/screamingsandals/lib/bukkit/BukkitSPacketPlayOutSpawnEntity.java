@@ -1,9 +1,8 @@
 package org.screamingsandals.lib.bukkit;
+
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.common.SPacketPlayOutSpawnEntity;
 import org.screamingsandals.lib.utils.math.Vector3D;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.UUID;
@@ -35,8 +34,8 @@ public class BukkitSPacketPlayOutSpawnEntity extends BukkitSPacket implements SP
         packet.setField("d", location.getY());
         packet.setField("e", location.getZ());
 
-        packet.setField("i", location.getYaw());
-        packet.setField("j", location.getPitch());
+        packet.setField("i", (byte) (location.getYaw() * 256.0F / 300.0F));
+        packet.setField("j", (byte) (location.getPitch() * 256.0F / 300.0F));
     }
 
     @Override
@@ -44,9 +43,9 @@ public class BukkitSPacketPlayOutSpawnEntity extends BukkitSPacket implements SP
         if (velocity == null) {
             throw new UnsupportedOperationException("Velocity cannot be null!");
         }
-        packet.setField("f", velocity.getX());
-        packet.setField("g", velocity.getY());
-        packet.setField("h", velocity.getZ());
+        packet.setField("f", (int) (velocity.getX() * 8000.0D));
+        packet.setField("g", (int) (velocity.getY() * 8000.0D));
+        packet.setField("h", (int) (velocity.getZ() * 8000.0D));
     }
 
     @Override
@@ -57,18 +56,5 @@ public class BukkitSPacketPlayOutSpawnEntity extends BukkitSPacket implements SP
     @Override
     public void setObjectData(int objectData) {
         packet.setField("l", objectData);
-    }
-
-    @Override
-    public void setDataWatcher(Object dataWatcher, int entityId) {
-        if (dataWatcher == null) {
-            throw new UnsupportedOperationException("DataWatcher cannot be null!");
-        }
-        if (Version.isVersion(1, 15)) {
-            final var metadataPacket = Reflect
-                    .constructor(ClassStorage.NMS.PacketPlayOutEntityMetadata, int.class, ClassStorage.NMS.DataWatcher, boolean.class)
-                    .constructResulted(entityId, dataWatcher, true);
-            addAdditionalPacket(metadataPacket);
-        }
     }
 }

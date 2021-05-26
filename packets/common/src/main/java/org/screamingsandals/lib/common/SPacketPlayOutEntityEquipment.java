@@ -1,9 +1,7 @@
 package org.screamingsandals.lib.common;
-
-import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.material.Item;
 
-public interface SPacketPlayOutEntityEquipment {
+public interface SPacketPlayOutEntityEquipment extends SPacket {
     void setEntityId(int entityId);
 
     void setItemAndSlot(Item item, Slot slot);

@@ -1,41 +1,42 @@
 package org.screamingsandals.lib.bukkit.sidebar;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.bukkit.sidebar.team.BukkitScoreboardTeam;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.common.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sidebar.AbstractScoreSidebar;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.utils.AdventureHelper;
-import org.screamingsandals.lib.utils.reflect.InvocationResult;
-import org.screamingsandals.lib.utils.reflect.Reflect;
-
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 public class BukkitScoreSidebar extends AbstractScoreSidebar {
-    private final String objectiveKey;
+    private final Component objectiveKey;
     private final List<ScoreEntry> lines = new CopyOnWriteArrayList<>();
 
     public BukkitScoreSidebar(UUID uuid) {
         super(uuid);
-        this.objectiveKey = new Random().ints(48, 123)
+        this.objectiveKey = Component.text(
+                new Random().ints(48, 123)
                 .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
                 .limit(16)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
+                .toString()
+        );
     }
 
     @Override
     public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
         if (visible) {
-            var bukkitPlayer = player.as(Player.class);
-            ClassStorage.sendPacket(bukkitPlayer, createObjective(player));
-            ClassStorage.sendPackets(bukkitPlayer, allScores());
-            ClassStorage.sendPacket(bukkitPlayer, displayObjective());
+            getCreateObjectivePacket(player).sendPacket(player);
+            allScores().forEach(packet -> packet.sendPacket(player));
+            getDisplayObjectivePacket().sendPacket(player);
             teams.forEach(scoreboardTeam ->
-                ClassStorage.sendPacket(bukkitPlayer, ((BukkitScoreboardTeam) scoreboardTeam).constructCreatePacket())
+                    ((BukkitScoreboardTeam) scoreboardTeam).constructCreatePacket().sendPacket(player)
             );
         }
     }
@@ -45,9 +46,9 @@ public class BukkitScoreSidebar extends AbstractScoreSidebar {
         if (visible && player.isOnline()) {
             var bukkitPlayer = player.as(Player.class);
             teams.forEach(scoreboardTeam ->
-                    ClassStorage.sendPacket(bukkitPlayer, ((BukkitScoreboardTeam) scoreboardTeam).constructDestructPacket())
+                    ((BukkitScoreboardTeam) scoreboardTeam).constructDestructPacket().sendPacket(player)
             );
-            ClassStorage.sendPacket(bukkitPlayer, destroyObjective());
+            ClassStorage.sendPacket(bukkitPlayer, getDestroyObjectivePacket());
         }
     }
 
@@ -59,7 +60,7 @@ public class BukkitScoreSidebar extends AbstractScoreSidebar {
                 .limit(15)
                 .collect(Collectors.toList());
 
-        var packets = new ArrayList<>();
+        var packets = new ArrayList<SPacket>();
         var forRemoval = new ArrayList<ScoreEntry>();
 
         lines.stream().filter(scoreEntry -> !list.contains(scoreEntry)).forEach(forRemoval::add);
@@ -80,73 +81,71 @@ public class BukkitScoreSidebar extends AbstractScoreSidebar {
         });
 
         if (visible) {
-            viewers.forEach(playerWrapper -> ClassStorage.sendPackets(playerWrapper.as(Player.class), packets));
+            viewers.forEach(viewer -> packets.forEach(packet -> packet.sendPacket(viewer)));
         }
     }
 
     @Override
     public void updateTitle0() {
         if (visible && !viewers.isEmpty()) {
-            viewers.forEach(p -> ClassStorage.sendPacket(p.as(Player.class), updateObjective(p)));
+            viewers.forEach(p -> ClassStorage.sendPacket(p.as(Player.class), getUpdateObjectivePacket(p)));
         }
     }
 
     // INTERNAL METHODS
 
-    private Object createObjective(PlayerWrapper player) {
+    private SPacketPlayOutScoreboardObjective getCreateObjectivePacket(PlayerWrapper player) {
         var packet = notFinalObjectivePacket(player);
-        packet.setField("d", 0);
-        return packet.raw();
-    }
-
-    private Object updateObjective(PlayerWrapper player) {
-        var packet = notFinalObjectivePacket(player);
-        packet.setField("d", 2);
-        return packet.raw();
-    }
-
-    private InvocationResult notFinalObjectivePacket(PlayerWrapper player) {
-        var packet = Reflect.constructResulted(ClassStorage.NMS.PacketPlayOutScoreboardObjective);
-        packet.setField("a", objectiveKey);
-        if (packet.setField("b", BukkitSidebar.asMinecraftComponent(title.asComponent(player))) == null) {
-            packet.setField("b", AdventureHelper.toLegacy(title.asComponent(player)));
-        }
-        packet.setField("c", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardHealthDisplay, "INTEGER"));
+        packet.setMode(SPacketPlayOutScoreboardObjective.Mode.CREATE);
         return packet;
     }
 
-    private Object destroyObjective() {
-        var packet = Reflect.constructResulted(ClassStorage.NMS.PacketPlayOutScoreboardObjective);
-        packet.setField("a", objectiveKey);
-        packet.setField("d", 1);
-        return packet.raw();
+    private SPacketPlayOutScoreboardObjective getUpdateObjectivePacket(PlayerWrapper player) {
+        var packet = notFinalObjectivePacket(player);
+        packet.setMode(SPacketPlayOutScoreboardObjective.Mode.UPDATE);
+        return packet;
     }
 
-    private Object displayObjective() {
-        var packet = Reflect.constructResulted(ClassStorage.NMS.PacketPlayOutScoreboardDisplayObjective);
-        packet.setField("a", 1);
-        packet.setField("b", objectiveKey);
-        return packet.raw();
+    private SPacketPlayOutScoreboardObjective notFinalObjectivePacket(PlayerWrapper player) {
+        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class);
+        packet.setObjectiveKey(objectiveKey);
+        packet.setTitle(title.asComponent(player));
+        packet.setCriteria(SPacketPlayOutScoreboardObjective.Type.INTEGER);
+        return packet;
     }
 
-    private Object createScorePacket(int i, String value) {
-        var packet = Reflect.constructResulted(ClassStorage.NMS.PacketPlayOutScoreboardScore);
-        packet.setField("a", value);
-        packet.setField("b", objectiveKey);
-        packet.setField("c", i);
-        packet.setField("d", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardAction, "CHANGE"));
-        return packet.raw();
+    private SPacketPlayOutScoreboardObjective getDestroyObjectivePacket() {
+        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class);
+        packet.setObjectiveKey(objectiveKey);
+        packet.setMode(SPacketPlayOutScoreboardObjective.Mode.DESTROY);
+        return packet;
+    }
+
+    private SPacketPlayOutScoreboardDisplayObjective getDisplayObjectivePacket() {
+        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardDisplayObjective.class);
+        packet.setDisplaySlot(SPacketPlayOutScoreboardDisplayObjective.DisplaySlot.SIDEBAR);
+        packet.setObjectiveKey(objectiveKey);
+        return packet;
+    }
+
+    private SPacketPlayOutScoreboardScore createScorePacket(int i, String value) {
+        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class);
+        packet.setValue(Component.text(value));
+        packet.setObjectiveKey(objectiveKey);
+        packet.setScore(i);
+        packet.setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.CHANGE);
+        return packet;
     }
 
     private Object destroyScore(String value) {
-        var packet = Reflect.constructResulted(ClassStorage.NMS.PacketPlayOutScoreboardScore);
-        packet.setField("a", value);
-        packet.setField("b", objectiveKey);
-        packet.setField("d", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardAction, "REMOVE"));
-        return packet.raw();
+        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class);
+        packet.setValue(Component.text(value));
+        packet.setObjectiveKey(objectiveKey);
+        packet.setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.REMOVE);
+        return packet;
     }
 
-    private List<Object> allScores() {
+    private List<SPacketPlayOutScoreboardScore> allScores() {
         return lines
                 .stream()
                 .map(entry -> createScorePacket(entry.getScore(), entry.getCache()))
@@ -166,7 +165,7 @@ public class BukkitScoreSidebar extends AbstractScoreSidebar {
         teams.add(team);
         if (visible && !viewers.isEmpty()) {
             var packet = team.constructCreatePacket();
-            viewers.forEach(player -> ClassStorage.sendPacket(player.as(Player.class), packet));
+            viewers.forEach(packet::sendPacket);
         }
         return team;
     }

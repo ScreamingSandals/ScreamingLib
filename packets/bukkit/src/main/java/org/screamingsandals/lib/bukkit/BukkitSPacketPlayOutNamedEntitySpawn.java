@@ -1,10 +1,9 @@
 package org.screamingsandals.lib.bukkit;
-
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.bukkit.utils.nms.entity.BukkitDataWatcher;
 import org.screamingsandals.lib.common.SPacketPlayOutNamedEntitySpawn;
+import org.screamingsandals.lib.utils.entity.DataWatcher;
 import org.screamingsandals.lib.utils.math.Vector3D;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.UUID;
 
@@ -44,15 +43,15 @@ public class BukkitSPacketPlayOutNamedEntitySpawn extends BukkitSPacket implemen
     }
 
     @Override
-    public void setDataWatcher(Object dataWatcher, int entityId) {
+    public void setDataWatcher(DataWatcher dataWatcher) {
         if (dataWatcher == null) {
             throw new UnsupportedOperationException("DataWatcher cannot be null!");
         }
-        if (Version.isVersion(1, 15)) {
-            final var metadataPacket = Reflect
-                    .constructor(ClassStorage.NMS.PacketPlayOutEntityMetadata, int.class, ClassStorage.NMS.DataWatcher, boolean.class)
-                    .constructResulted(entityId, dataWatcher, true);
-            addAdditionalPacket(metadataPacket);
+        if (!(dataWatcher instanceof BukkitDataWatcher)) {
+            throw new UnsupportedOperationException("DataWatcher is not an instance of BukkitDataWatcher!");
         }
+        final var bukkitDataWatcher = (BukkitDataWatcher) dataWatcher;
+        final var nmsDataWatcher = bukkitDataWatcher.toNMS();
+        packet.setField("h", nmsDataWatcher);
     }
 }

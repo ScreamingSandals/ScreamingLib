@@ -4,6 +4,7 @@ dependencies {
     compileOnly 'org.slf4j:slf4j-api:' + SLF4J_VERSION
 
     api project(':api-utils')
+    api project(':entity-common')
     api 'com.google.code.gson:gson:' + GSON_VERSION
     api 'net.kyori:adventure-platform-api:' + ADVENTURE_PLATFORM_VERSION
     api 'net.kyori:adventure-text-serializer-legacy:' + ADVENTURE_VERSION
