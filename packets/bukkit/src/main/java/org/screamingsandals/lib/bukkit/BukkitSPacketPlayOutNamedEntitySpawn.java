@@ -1,8 +1,8 @@
 package org.screamingsandals.lib.bukkit;
+import org.screamingsandals.lib.bukkit.entity.BukkitDataWatcher;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.bukkit.utils.nms.entity.BukkitDataWatcher;
 import org.screamingsandals.lib.common.SPacketPlayOutNamedEntitySpawn;
-import org.screamingsandals.lib.utils.entity.DataWatcher;
+import org.screamingsandals.lib.entity.DataWatcher;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
 import java.util.UUID;

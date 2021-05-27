@@ -3,7 +3,6 @@ package org.screamingsandals.lib.entity;
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
-import org.screamingsandals.lib.utils.entity.DataWatcher;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 

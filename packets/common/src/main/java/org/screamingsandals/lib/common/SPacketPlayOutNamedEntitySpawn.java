@@ -1,5 +1,5 @@
 package org.screamingsandals.lib.common;
-import org.screamingsandals.lib.utils.entity.DataWatcher;
+import org.screamingsandals.lib.entity.DataWatcher;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
 import java.util.UUID;

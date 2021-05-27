@@ -1,6 +1,7 @@
 dependencies {
     api project(':healthindicator-common')
     api project(':utils-bukkit')
+    api project(':packets-bukkit')
 
     compileOnly paper(PAPER_VERSION)
 }

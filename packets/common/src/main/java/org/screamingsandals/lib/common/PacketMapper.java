@@ -2,9 +2,11 @@ package org.screamingsandals.lib.common;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.function.Supplier;
 
+@AbstractService
 public abstract class PacketMapper {
     private static PacketMapper packetMapper = null;
 

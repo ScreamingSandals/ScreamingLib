@@ -69,7 +69,7 @@ public class BukkitHealthIndicator extends AbstractHealthIndicator {
                 }
             });
 
-            viewers.forEach(viewer -> packets.forEach(packet -> packet.sendPacket(viewer)));
+            packets.forEach(packet -> packet.sendPacket(viewers));
         }
     }
 

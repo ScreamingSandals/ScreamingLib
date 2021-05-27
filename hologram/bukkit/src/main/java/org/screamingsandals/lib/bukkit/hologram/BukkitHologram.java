@@ -2,11 +2,11 @@ package org.screamingsandals.lib.bukkit.hologram;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.screamingsandals.lib.bukkit.entity.BukkitDataWatcher;
 import org.screamingsandals.lib.bukkit.hologram.nms.AdvancedArmorStandNMS;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.ArmorStandNMS;
-import org.screamingsandals.lib.bukkit.utils.nms.entity.BukkitDataWatcher;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
 import org.screamingsandals.lib.common.*;
 import org.screamingsandals.lib.hologram.AbstractHologram;
@@ -162,7 +162,8 @@ public class BukkitHologram extends AbstractHologram {
             return;
         }
 
-        PlayerMapper.wrapPlayer(player).sendPackets(packets);
+        final var playerWrapper = PlayerMapper.wrapPlayer(player);
+        packets.forEach(packet -> packet.sendPacket(playerWrapper));
     }
 
     private void updateEntities() {

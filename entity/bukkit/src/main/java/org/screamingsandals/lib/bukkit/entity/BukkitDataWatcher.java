@@ -1,9 +1,9 @@
-package org.screamingsandals.lib.bukkit.utils.nms.entity;
+package org.screamingsandals.lib.bukkit.entity;
 
 import org.bukkit.entity.Entity;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.entity.DataWatcher;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.utils.entity.DataWatcher;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 public class BukkitDataWatcher extends DataWatcher {

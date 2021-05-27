@@ -1,7 +1,7 @@
-package org.screamingsandals.lib.utils.entity;
+package org.screamingsandals.lib.entity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.screamingsandals.lib.entity.EntityBasic;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ public abstract class DataWatcher {
 
     @SuppressWarnings("unchecked")
     public <T> T getIndex(int index, T defaultValue) {
-        DataWatcher.Item<?> value = entries.get(index);
+        Item<?> value = entries.get(index);
         return value != null ? (T) value.getValue() : defaultValue;
     }
 

@@ -1,6 +1,7 @@
 dependencies {
     api project(':packets-common')
     api project(':utils-bukkit')
+    api project(':entity-bukkit')
     compileOnly paper(PAPER_VERSION)
     compileOnly 'com.mojang:datafixerupper:' + DATAFIXERUPPER_VERSION
 }

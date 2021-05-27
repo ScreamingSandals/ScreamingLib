@@ -50,6 +50,11 @@ public abstract class BukkitSPacket implements SPacket {
     }
 
     @Override
+    public void sendPacket(List<PlayerWrapper> players) {
+        players.forEach(this::sendPacket);
+    }
+
+    @Override
     public Object getRawPacket() {
         return packet.raw();
     }
