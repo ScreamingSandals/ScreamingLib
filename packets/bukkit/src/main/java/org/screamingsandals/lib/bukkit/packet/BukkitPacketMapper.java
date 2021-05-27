@@ -2,7 +2,6 @@ package org.screamingsandals.lib.bukkit.packet;
 
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.*;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;

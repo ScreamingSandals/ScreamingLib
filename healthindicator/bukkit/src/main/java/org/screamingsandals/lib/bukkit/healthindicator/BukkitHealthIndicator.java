@@ -3,7 +3,6 @@ package org.screamingsandals.lib.bukkit.healthindicator;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.*;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.healthindicator.AbstractHealthIndicator;
 import org.screamingsandals.lib.packet.*;
