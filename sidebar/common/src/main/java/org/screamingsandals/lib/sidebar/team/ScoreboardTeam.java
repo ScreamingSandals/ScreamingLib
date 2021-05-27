@@ -2,7 +2,7 @@ package org.screamingsandals.lib.sidebar.team;
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import org.screamingsandals.lib.common.SPacketPlayOutScoreboardTeam;
+import org.screamingsandals.lib.common.packet.SPacketPlayOutScoreboardTeam;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 import java.util.List;

@@ -1,8 +1,8 @@
 package org.screamingsandals.lib.bukkit.sidebar.team;
 
 import net.kyori.adventure.text.Component;
-import org.screamingsandals.lib.common.PacketMapper;
-import org.screamingsandals.lib.common.SPacketPlayOutScoreboardTeam;
+import org.screamingsandals.lib.common.packet.PacketMapper;
+import org.screamingsandals.lib.common.packet.SPacketPlayOutScoreboardTeam;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.sidebar.TeamedSidebar;
