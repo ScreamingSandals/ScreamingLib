@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.packet;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutLogin;
+import org.screamingsandals.lib.packet.SPacketPlayOutLogin;
 import org.screamingsandals.lib.utils.Difficulty;
 import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.WorldType;

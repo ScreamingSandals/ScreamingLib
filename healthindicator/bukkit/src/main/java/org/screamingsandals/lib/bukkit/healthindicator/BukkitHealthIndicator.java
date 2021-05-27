@@ -6,6 +6,7 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.common.packet.*;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.healthindicator.AbstractHealthIndicator;
+import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 import java.util.ArrayList;

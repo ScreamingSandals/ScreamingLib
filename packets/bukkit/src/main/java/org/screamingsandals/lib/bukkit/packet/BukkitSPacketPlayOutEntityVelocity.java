@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutEntityVelocity;
+import org.screamingsandals.lib.packet.SPacketPlayOutEntityVelocity;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
 public class BukkitSPacketPlayOutEntityVelocity extends BukkitSPacket implements SPacketPlayOutEntityVelocity {

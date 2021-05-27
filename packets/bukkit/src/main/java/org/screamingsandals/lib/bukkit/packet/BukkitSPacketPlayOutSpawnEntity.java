@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutSpawnEntity;
+import org.screamingsandals.lib.packet.SPacketPlayOutSpawnEntity;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 

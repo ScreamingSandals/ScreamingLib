@@ -15,7 +15,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.packet.BukkitPacketMapper;
 import org.screamingsandals.lib.bukkit.player.listener.*;
-import org.screamingsandals.lib.common.packet.PacketMapper;
+import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventManager;

@@ -2,7 +2,7 @@ package org.screamingsandals.lib.bukkit.packet;
 
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutScoreboardScore;
+import org.screamingsandals.lib.packet.SPacketPlayOutScoreboardScore;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 

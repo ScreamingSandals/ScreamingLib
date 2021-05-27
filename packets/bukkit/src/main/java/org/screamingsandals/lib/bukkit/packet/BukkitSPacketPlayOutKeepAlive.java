@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutKeepAlive;
+import org.screamingsandals.lib.packet.SPacketPlayOutKeepAlive;
 
 public class BukkitSPacketPlayOutKeepAlive extends BukkitSPacket implements SPacketPlayOutKeepAlive {
     public BukkitSPacketPlayOutKeepAlive() {

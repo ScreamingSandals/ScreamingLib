@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutRemoveEntityEffect;
+import org.screamingsandals.lib.packet.SPacketPlayOutRemoveEntityEffect;
 
 public class BukkitSPacketPlayOutRemoveEntityEffect extends BukkitSPacket implements SPacketPlayOutRemoveEntityEffect {
     public BukkitSPacketPlayOutRemoveEntityEffect() {

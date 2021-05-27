@@ -2,7 +2,7 @@ package org.screamingsandals.lib.bukkit.packet;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutBlockChange;
+import org.screamingsandals.lib.packet.SPacketPlayOutBlockChange;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.BlockDataHolder;
 import org.screamingsandals.lib.world.LocationHolder;

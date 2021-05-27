@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutAttachEntity;
+import org.screamingsandals.lib.packet.SPacketPlayOutAttachEntity;
 
 public class BukkitSPacketPlayOutAttachEntity extends BukkitSPacket implements SPacketPlayOutAttachEntity {
     public BukkitSPacketPlayOutAttachEntity() {

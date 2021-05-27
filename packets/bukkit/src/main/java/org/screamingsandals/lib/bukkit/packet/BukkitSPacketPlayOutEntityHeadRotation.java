@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutEntityHeadRotation;
+import org.screamingsandals.lib.packet.SPacketPlayOutEntityHeadRotation;
 
 public class BukkitSPacketPlayOutEntityHeadRotation extends BukkitSPacket implements SPacketPlayOutEntityHeadRotation {
     public BukkitSPacketPlayOutEntityHeadRotation() {

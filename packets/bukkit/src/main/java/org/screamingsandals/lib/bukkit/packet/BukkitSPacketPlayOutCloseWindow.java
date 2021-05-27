@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutCloseWindow;
+import org.screamingsandals.lib.packet.SPacketPlayOutCloseWindow;
 
 public class BukkitSPacketPlayOutCloseWindow extends BukkitSPacket implements SPacketPlayOutCloseWindow {
     public BukkitSPacketPlayOutCloseWindow() {

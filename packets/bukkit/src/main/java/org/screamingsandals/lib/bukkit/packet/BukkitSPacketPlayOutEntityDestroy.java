@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutEntityDestroy;
+import org.screamingsandals.lib.packet.SPacketPlayOutEntityDestroy;
 
 public class BukkitSPacketPlayOutEntityDestroy extends BukkitSPacket implements SPacketPlayOutEntityDestroy {
 

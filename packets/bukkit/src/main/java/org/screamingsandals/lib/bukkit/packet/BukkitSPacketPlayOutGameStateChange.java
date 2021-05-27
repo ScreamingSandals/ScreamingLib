@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutGameStateChange;
+import org.screamingsandals.lib.packet.SPacketPlayOutGameStateChange;
 
 public class BukkitSPacketPlayOutGameStateChange extends BukkitSPacket implements SPacketPlayOutGameStateChange {
     public BukkitSPacketPlayOutGameStateChange() {

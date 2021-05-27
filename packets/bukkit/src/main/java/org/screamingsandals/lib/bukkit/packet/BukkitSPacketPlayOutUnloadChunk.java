@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutUnloadChunk;
+import org.screamingsandals.lib.packet.SPacketPlayOutUnloadChunk;
 
 public class BukkitSPacketPlayOutUnloadChunk extends BukkitSPacket implements SPacketPlayOutUnloadChunk {
     public BukkitSPacketPlayOutUnloadChunk() {

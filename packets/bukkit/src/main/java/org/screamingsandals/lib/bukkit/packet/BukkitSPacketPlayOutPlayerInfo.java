@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.packet;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutPlayerInfo;
+import org.screamingsandals.lib.packet.SPacketPlayOutPlayerInfo;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.ArrayList;

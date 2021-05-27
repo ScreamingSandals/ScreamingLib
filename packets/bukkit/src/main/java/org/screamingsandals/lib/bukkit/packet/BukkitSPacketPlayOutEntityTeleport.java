@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutEntityTeleport;
+import org.screamingsandals.lib.packet.SPacketPlayOutEntityTeleport;
 import org.screamingsandals.lib.world.LocationHolder;
 
 public class BukkitSPacketPlayOutEntityTeleport extends BukkitSPacket implements SPacketPlayOutEntityTeleport {

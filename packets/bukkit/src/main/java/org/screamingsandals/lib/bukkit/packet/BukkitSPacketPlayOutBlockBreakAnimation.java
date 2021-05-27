@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.packet;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutBlockBreakAnimation;
+import org.screamingsandals.lib.packet.SPacketPlayOutBlockBreakAnimation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 

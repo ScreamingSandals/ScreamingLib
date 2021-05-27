@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutAbilities;
+import org.screamingsandals.lib.packet.SPacketPlayOutAbilities;
 
 public class BukkitSPacketPlayOutAbilities extends BukkitSPacket implements SPacketPlayOutAbilities {
     public BukkitSPacketPlayOutAbilities() {

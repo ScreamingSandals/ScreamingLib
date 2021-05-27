@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.common.packet.SPacketPlayOutEntityEffect;
+import org.screamingsandals.lib.packet.SPacketPlayOutEntityEffect;
 
 public class BukkitSPacketPlayOutEntityEffect extends BukkitSPacket implements SPacketPlayOutEntityEffect {
     public BukkitSPacketPlayOutEntityEffect() {
