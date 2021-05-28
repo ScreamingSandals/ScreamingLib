@@ -3,7 +3,6 @@ dependencies {
     api project(':player-common')
     api project(':world-bukkit')
     api project(':event-bukkit')
-    api project(':packets-bukkit')
     api paperlib()
 
     compileOnly project(':material-common')

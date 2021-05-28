@@ -13,9 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
-import org.screamingsandals.lib.bukkit.packet.BukkitPacketMapper;
 import org.screamingsandals.lib.bukkit.player.listener.*;
-import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventManager;
@@ -29,7 +27,6 @@ import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.GameMode;
-import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -43,8 +40,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service(dependsOn = {
-        EventManager.class,
-        PacketMapper.class
+        EventManager.class
 })
 public class BukkitPlayerMapper extends PlayerMapper {
     public static void init(Plugin plugin, Controllable controllable) {
@@ -52,7 +48,6 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     public BukkitPlayerMapper(Plugin plugin, Controllable controllable) {
-        InitUtils.doIfNot(PacketMapper::isInitialized, BukkitPacketMapper::init);
         controllable.enable(() -> {
             provider = BukkitAudiences.create(plugin);
             registerListeners(plugin);
