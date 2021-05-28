@@ -9,9 +9,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service(dependsOn = {
-        PacketMapper.class
-})
+@Service
 public class BukkitPacketMapper extends PacketMapper {
     public static void init() {
         PacketMapper.init(BukkitPacketMapper::new);
