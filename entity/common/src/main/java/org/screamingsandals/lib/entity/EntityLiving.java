@@ -6,12 +6,13 @@ import org.screamingsandals.lib.material.attribute.AttributeTypeHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.event.SBlockDispenseEvent;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public interface EntityLiving extends EntityBasic {
+public interface EntityLiving extends EntityBasic, SBlockDispenseEvent.Receiver {
     // TODO ProjectileSource
 
     Optional<AttributeHolder> getAttribute(AttributeTypeHolder attributeType);

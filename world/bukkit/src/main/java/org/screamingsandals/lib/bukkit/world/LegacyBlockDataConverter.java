@@ -109,15 +109,16 @@ public class LegacyBlockDataConverter {
 
         // Lever: TODO
 
-        // LongGrass: TODO
+        // NetherWarts
+        if (data instanceof NetherWarts) {
+            map.put("age", data.getData());
+        }
 
-        // MonsterEggs: TODO
-
-        // Mushroom: TODO
-
-        // NetherWarts: TODO
-
-        // Observer: TODO
+        // Observer
+        if (data instanceof Observer) {
+            map.put("facing", ((Observer) data).getFacing().name().toLowerCase());
+            map.put("powered", ((Observer) data).isPowered());
+        }
 
         // PistonBaseMaterial: TODO
 
@@ -306,15 +307,20 @@ public class LegacyBlockDataConverter {
 
         // Lever: TODO
 
-        // LongGrass: TODO
-
-        // MonsterEggs: TODO
-
         // Mushroom: TODO
 
-        // NetherWarts: TODO
+        // NetherWarts
+        if (materialData instanceof NetherWarts && data.containsKey("age")) {
+            materialData.setData(Byte.parseByte(data.get("age").toString()));
+        }
 
-        // Observer: TODO
+        // Observer
+        if (materialData instanceof Observer) {
+            if (data.containsKey("facing")) {
+                ((Observer) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing").toString()));
+            }
+            // TODO: powered
+        }
 
         // PistonBaseMaterial: TODO
 
