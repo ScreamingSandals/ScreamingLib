@@ -100,5 +100,5 @@ public interface EntityBasic extends Wrapper, SBlockFormedByEntityEvent.Producer
 
     void setPortalCooldown(int cooldown);
 
-
+    DataWatcher getDataWatcher();
 }

@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
+import org.screamingsandals.lib.entity.DataWatcher;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
@@ -248,5 +249,10 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     @Override
     public void setPortalCooldown(int cooldown) {
         wrappedObject.setPortalCooldown(cooldown);
+    }
+
+    @Override
+    public DataWatcher getDataWatcher() {
+        return new BukkitDataWatcher(this);
     }
 }

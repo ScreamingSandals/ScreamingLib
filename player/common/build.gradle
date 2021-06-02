@@ -3,7 +3,6 @@ dependencies {
     api project(':event-common')
     api project(':entity-common')
     api project(':sender')
-
     compileOnly project(':material-common')
     compileOnly project(':world-common')
 }

@@ -6,9 +6,7 @@ import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSeriali
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.utils.math.Vector3Df;
@@ -41,7 +39,13 @@ public class ClassStorage {
 		public static final Class<?> EnumClientCommand = safeGetClass("{nms}.PacketPlayInClientCommand$EnumClientCommand", "{nms}.EnumClientCommand", "{f:net}.play.client.CClientStatusPacket$State", "{f:net}.play.client.CPacketClientStatus$State");
 		public static final Class<?> EnumItemSlot = safeGetClass("{nms}.EnumItemSlot");
 		public static final Class<?> EnumParticle = safeGetClass("{nms}.EnumParticle");
+		public static final Class<?> EnumGamemode = safeGetClass("{nms}.WorldSettings$EnumGamemode");
+		public static final Class<?> EnumDifficulty = safeGetClass("{nms}.EnumDifficulty");
 		public static final Class<?> EntityTypes = safeGetClass("{nms}.EntityTypes");
+		public static final Class<?> EnumBossAction = safeGetClass("{nms}.PacketPlayOutBoss$Action");
+		public static final Class<?> EnumBarStyle = safeGetClass("{nms}.BossBattle$BarStyle");
+		public static final Class<?> EnumBarColor = safeGetClass("{nms}.BossBattle$BarColor");
+		public static final Class<?> EnumPlayerInfoAction = safeGetClass("{nms}.PacketPlayOutPlayerInfo$EnumPlayerInfoAction");
 		public static final Class<?> EnumScoreboardAction = safeGetClass("{nms}.ScoreboardServer$Action", "{nms}.PacketPlayOutScoreboardScore$EnumScoreboardAction");
 		public static final Class<?> EnumScoreboardHealthDisplay = safeGetClass("{nms}.IScoreboardCriteria$EnumScoreboardHealthDisplay");
 		public static final Class<?> EnumTitleAction = safeGetClass("{nms}.PacketPlayOutTitle$EnumTitleAction", "{nms}.EnumTitleAction", "{f:net}.play.server.STitlePacket$Type", "{f:net}.play.server.SPacketTitle$Type");
@@ -51,6 +55,14 @@ public class ClassStorage {
 		public static final Class<?> MinecraftServer = safeGetClass("{nms}.MinecraftServer", "{f:nms}.MinecraftServer");
 		public static final Class<?> NBTTagCompound = safeGetClass("{nms}.NBTTagCompound", "{f:nbt}.CompoundNBT", "{f:nbt}.NBTTagCompound");
 		public static final Class<?> NetworkManager = safeGetClass("{nms}.NetworkManager", "{f:net}.NetworkManager");
+		public static final Class<?> PlayerInfoData = safeGetClass("{nms}.PlayerInfoData");
+		public static final Class<?> GameProfile = safeGetClass("com.mojang.authlib.GameProfile");
+
+		//TODO: forge names
+		public static final Class<?> DataWatcherRegistry = safeGetClass("{nms}.DataWatcherRegistry");
+		public static final Class<?> DataWatcherObject = safeGetClass("{nms}.DataWatcherObject");
+		public static final Class<?> DataWatcherSerializer = safeGetClass("{nms}.DataWatcherSerializer");
+
 		public static final Class<?> Packet = safeGetClass("{nms}.Packet", "{f:net}.IPacket", "{f:net}.Packet");
 		public static final Class<?> PacketPlayOutEntityHeadRotation = safeGetClass("{nms}.PacketPlayOutEntityHeadRotation", "{f:net}.play.server.SEntityHeadLookPacket", "{f:net}.play.server.SPacketEntityHeadLook");
 		public static final Class<?> PacketLoginInStart = safeGetClass("{nms}.PacketLoginInStart", "{f:net}.login.client.CLoginStartPacket", "{f:net}.login.client.CPacketLoginStart");
@@ -84,6 +96,17 @@ public class ClassStorage {
 		public static final Class<?> PacketPlayOutKickDisconnect = safeGetClass("{nms}.PacketPlayOutKickDisconnect", "{f:net}.play.server.SDisconnectPacket",  "{f:net}.play.server.SPacketDisconnect");
 		public static final Class<?> PacketPlayOutRemoveEntityEffect = safeGetClass("{nms}.PacketPlayOutRemoveEntityEffect", "{f:net}.play.server.SRemoveEntityEffectPacket", "{f:net}.play.server.SPacketRemoveEntityEffect");
 		public static final Class<?> PacketPlayOutBoss = safeGetClass("{nms}.PacketPlayOutBoss", "{f:net}.play.server.SUpdateBossInfoPacket", "{f:net}.play.server.SPacketUpdateBossInfo");
+		public static final Class<?> PacketPlayOutUnloadChunk = safeGetClass("{nms}.PacketPlayOutUnloadChunk", "{f:net}.play.server.SUnloadChunkPacket", "{f:net}.play.server.SPacketUnloadChunk");
+		public static final Class<?> PacketPlayOutAnimation = safeGetClass("{nms}.PacketPlayOutAnimation", "{f:net}.play.server.SAnimateHandPacket", "{f:net}.play.server.SPacketAnimation");
+		public static final Class<?> PacketPlayOutBed = safeGetClass("{nms}.PacketPlayOutBed", "{f:net}.play.server.SPacketUseBed");
+		public static final Class<?> PacketPlayOutBlockAction = safeGetClass("{nms}.PacketPlayOutBlockAction", "{f:net}.play.server.SBlockActionPacket", "{f:net}.play.server.SPacketBlockAction");
+		public static final Class<?> PacketPlayOutCamera = safeGetClass("{nms}.PacketPlayOutCamera", "{f:net}.play.server.SCameraPacket", "{f:net}.play.server.SPacketCamera");
+		public static final Class<?> PacketPlayOutCloseWindow = safeGetClass("{nms}.PacketPlayOutCloseWindow", "{f:net}.play.server.SCloseWindowPacket", "{f:net}.play.server.SPacketCloseWindow");
+		public static final Class<?> PacketPlayOutCollect = safeGetClass("{nms}.PacketPlayOutCollect", "{f:net}.play.server.SCollectItemPacket", "{f:net}.play.server.SPacketCollectItem");
+		public static final Class<?> PacketPlayOutKeepAlive = safeGetClass("{nms}.PacketPlayOutKeepAlive", "{f:net}.play.server.SKeepAlivePacket", "{f:net}.play.server.SPacketKeepAlive");
+		public static final Class<?> PacketPlayOutNamedEntitySpawn = safeGetClass("{nms}.PacketPlayOutNamedEntitySpawn", "{f:net}.play.server.SSpawnPlayerPacket", "{f:net}.play.server.SPacketSpawnPlayer");
+		//TODO: find Forge names
+		public static final Class<?> PacketPlayOutLogin = safeGetClass("{nms}.PacketPlayOutLogin");
 		public static final Class<?> PathfinderGoal = safeGetClass("{nms}.PathfinderGoal", "{f:goal}.Goal", "{f:ent}.ai.EntityAIBase");
 		public static final Class<?> PathfinderGoalSelector = safeGetClass("{nms}.PathfinderGoalSelector", "{f:goal}.GoalSelector", "{f:ent}.ai.EntityAITasks");
 		public static final Class<?> PathfinderGoalMeleeAttack = safeGetClass("{nms}.PathfinderGoalMeleeAttack", "{f:goal}.MeleeAttackGoal", "{f:ent}.ai.EntityAIAttackMelee");
@@ -91,9 +114,11 @@ public class ClassStorage {
 		public static final Class<?> PlayerConnection = safeGetClass("{nms}.PlayerConnection", "{f:net}.play.ServerPlayNetHandler", "{f:net}.NetHandlerPlayServer");
 		public static final Class<?> ServerConnection = safeGetClass("{nms}.ServerConnection", "{f:net}.NetworkSystem");
 		public static final Class<?> World = safeGetClass("{nms}.World", "{f:world}.World");
+		public static final Class<?> WorldType = safeGetClass("{nms}.WorldType");
 		public static final Class<?> CraftEquipmentSlot = safeGetClass("{obc}.CraftEquipmentSlot");
 		public static final Class<?> CraftItemStack = safeGetClass("{obc}.inventory.CraftItemStack");
 		public static final Class<?> CraftMagicNumbers = safeGetClass("{obc}.util.CraftMagicNumbers");
+		public static final Class<?> CraftVector = safeGetClass("{obc}.CraftVector");
 		public static final Class<?> BlockPosition = safeGetClass("{nms}.BlockPosition");
 		// 1.16
 		public static final Class<?> AttributeModifiable = safeGetClass("{nms}.AttributeModifiable", "{f:ent}.ai.attributes.ModifiableAttributeInstance");
@@ -229,11 +254,13 @@ public class ClassStorage {
 	}
 
 	public static Object getDataWatcher(Object handler) {
+		Preconditions.checkNotNull(handler, "Handler is null!");
 		return Reflect.getMethod(handler, "getDataWatcher,func_184212_Q").invoke();
 	}
 
-	public static int getEntityType(Entity entity) {
+	public static Object getGameProfile(HumanEntity entity) {
 		Preconditions.checkNotNull(entity, "Entity is null!");
-		return (int) Reflect.getMethod(NMS.EntityTypes, "a", Entity.class).invokeStatic(entity);
+		final var handle = getHandle(entity);
+		return Reflect.getMethod(handle, "getProfile").invoke();
 	}
 }

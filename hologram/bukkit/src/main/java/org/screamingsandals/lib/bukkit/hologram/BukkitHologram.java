@@ -1,11 +1,8 @@
 package org.screamingsandals.lib.bukkit.hologram;
-
-import com.google.common.base.Preconditions;
-import com.mojang.datafixers.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.screamingsandals.lib.bukkit.entity.BukkitDataWatcher;
 import org.screamingsandals.lib.bukkit.hologram.nms.AdvancedArmorStandNMS;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
@@ -14,19 +11,20 @@ import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
 import org.screamingsandals.lib.hologram.AbstractHologram;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.packet.*;
+import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
-
+import org.screamingsandals.lib.world.LocationMapper;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -90,9 +88,8 @@ public class BukkitHologram extends AbstractHologram {
 
                 try {
                     if (Version.isVersion(1, 15)) {
-                        Object metadataPacket = Reflect
-                                .constructor(ClassStorage.NMS.PacketPlayOutEntityMetadata, int.class, ClassStorage.NMS.DataWatcher, boolean.class)
-                                .construct(itemEntity.getId(), itemEntity.getDataWatcher(), false);
+                        final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
+                        metadataPacket.setMetaData(itemEntity.getId(), new BukkitDataWatcher(itemEntity.getDataWatcher()), false);
                         viewers.forEach(player -> update(player.as(Player.class), List.of(metadataPacket), false));
                     }
                 } catch (Throwable t) {
@@ -153,7 +150,7 @@ public class BukkitHologram extends AbstractHologram {
         updateEntities();
     }
 
-    private void update(Player player, List<Object> packets, boolean checkDistance) {
+    private void update(Player player, List<SPacket> packets, boolean checkDistance) {
         if (!player.getLocation().getWorld().equals(cachedLocation.getWorld())) {
             log.trace("World is different, doing nothing.");
             return;
@@ -165,12 +162,13 @@ public class BukkitHologram extends AbstractHologram {
             return;
         }
 
-        ClassStorage.sendPackets(player, packets);
+        final var playerWrapper = PlayerMapper.wrapPlayer(player);
+        packets.forEach(packet -> packet.sendPacket(playerWrapper));
     }
 
     private void updateEntities() {
         log.trace("Updating entities");
-        final var packets = new LinkedList<>();
+        final var packets = new LinkedList<SPacket>();
         if (visible && viewers.size() > 0) {
             if (lines.size() != originalLinesSize
                     && itemEntity != null) {
@@ -195,9 +193,8 @@ public class BukkitHologram extends AbstractHologram {
                         }
 
                         entityOnLine.setCustomName(value.getText());
-                        final var metadataPacket = Reflect
-                                .constructor(ClassStorage.NMS.PacketPlayOutEntityMetadata, int.class, ClassStorage.NMS.DataWatcher, boolean.class)
-                                .construct(entityOnLine.getId(), entityOnLine.getDataWatcher(), false);
+                        final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
+                        metadataPacket.setMetaData(entityOnLine.getId(), new BukkitDataWatcher(entityOnLine.getDataWatcher()), false);
                         packets.add(metadataPacket);
 
                         entityOnLine.setCustomName(value.getText());
@@ -259,13 +256,12 @@ public class BukkitHologram extends AbstractHologram {
                 });
             }
 
-            final var destroyPacket = Reflect
-                    .constructor(ClassStorage.NMS.PacketPlayOutEntityDestroy, int[].class)
-                    .construct((Object) toRemove
-                            .stream()
-                            .mapToInt(i -> i)
-                            .toArray()
-                    );
+            final var destroyPacket = PacketMapper.createPacket(SPacketPlayOutEntityDestroy.class);
+            destroyPacket.setEntitiesToDestroy(toRemove
+                    .stream()
+                    .mapToInt(i -> i)
+                    .toArray()
+            );
             packets.add(destroyPacket);
         } catch (Throwable t) {
             t.printStackTrace();
@@ -274,47 +270,47 @@ public class BukkitHologram extends AbstractHologram {
         viewers.forEach(viewer -> update(viewer.as(Player.class), packets, true));
     }
 
-    private Object getEquipmentPacket(AdvancedArmorStandNMS entity, Item item) {
-        final var result = new AtomicReference<>();
-        Reflect.constructor(ClassStorage.NMS.PacketPlayOutEntityEquipment, int.class, List.class)
-                .ifPresentOrElse(
-                        constructor ->
-                                result.set(constructor.construct(entity.getId(), List.of(Pair.of(entity.getHeadSlot(), stackAsNMS(item))))),
-                        () ->
-                                result.set(
-                                        Reflect.constructor(ClassStorage.NMS.PacketPlayOutEntityEquipment, int.class, ClassStorage.NMS.EnumItemSlot, ClassStorage.NMS.ItemStack)
-                                                .construct(entity.getId(), entity.getHeadSlot(), stackAsNMS(item))
-                                )
-                );
-
-
-        return result.get();
+    private SPacketPlayOutEntityEquipment getEquipmentPacket(AdvancedArmorStandNMS entity, Item item) {
+        final var packet = PacketMapper.createPacket(SPacketPlayOutEntityEquipment.class);
+        packet.setEntityId(entity.getId());
+        packet.setItemAndSlot(item, SPacketPlayOutEntityEquipment.Slot.HEAD);
+        return packet;
     }
 
-    private Object getTeleportPacket(ArmorStandNMS entity) {
-        return Reflect
-                .constructor(ClassStorage.NMS.PacketPlayOutEntityTeleport, ClassStorage.NMS.Entity)
-                .construct(entity.getHandler());
+    private SPacketPlayOutEntityTeleport getTeleportPacket(ArmorStandNMS entity) {
+        final var packet = PacketMapper.createPacket(SPacketPlayOutEntityTeleport.class);
+        packet.setEntityId(entity.getId());
+        packet.setLocation(LocationMapper.wrapLocation(entity.getLocation()));
+        packet.setIsOnGround(entity.isOnGround());
+        return packet;
     }
 
-    private List<Object> getSpawnPacket(ArmorStandNMS entity) {
-        final var toReturn = new LinkedList<>();
-        toReturn.add(Reflect
-                .constructor(ClassStorage.NMS.PacketPlayOutSpawnEntityLiving, ClassStorage.NMS.EntityLiving)
-                .construct(entity.getHandler())
-        );
+    private List<SPacket> getSpawnPacket(ArmorStandNMS entity) {
+        final var toReturn = new LinkedList<SPacket>();
+
+        final var type = (int) Reflect.getMethod(ClassStorage.NMS.EntityTypes, "a", ClassStorage.NMS.Entity)
+                .invokeStatic(entity.getHandler());
+
+        final var spawnPacket = PacketMapper.createPacket(SPacketPlayOutSpawnEntityLiving.class);
+        spawnPacket.setEntityId(entity.getId());
+        spawnPacket.setUUID(entity.getUniqueId());
+        spawnPacket.setType(type);
+        spawnPacket.setPitch(entity.getLocation().getPitch());
+        spawnPacket.setYaw(entity.getLocation().getYaw());
+        spawnPacket.setVelocity(entity.getVelocity());
+        spawnPacket.setHeadPitch(3.9f);
+        toReturn.add(spawnPacket);
 
         if (Version.isVersion(1, 15)) {
-            final var metadataPacket = Reflect
-                    .constructor(ClassStorage.NMS.PacketPlayOutEntityMetadata, int.class, ClassStorage.NMS.DataWatcher, boolean.class)
-                    .construct(entity.getId(), entity.getDataWatcher(), true);
+            final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
+            metadataPacket.setMetaData(entity.getId(), new BukkitDataWatcher(entity.getDataWatcher()), true);
             toReturn.add(metadataPacket);
         }
 
         return toReturn;
     }
 
-    private Object getFullDestroyPacket() throws IllegalArgumentException, SecurityException {
+    private SPacketPlayOutEntityDestroy getFullDestroyPacket() throws IllegalArgumentException, SecurityException {
         final var lines = entitiesOnLines.values()
                 .stream()
                 .map(EntityNMS::getId);
@@ -328,11 +324,13 @@ public class BukkitHologram extends AbstractHologram {
             toRemove = lines.mapToInt(i -> i).toArray();
         }
 
-        return Reflect.constructor(ClassStorage.NMS.PacketPlayOutEntityDestroy, int[].class).construct((Object) toRemove);
+        final var destroyPacket = PacketMapper.createPacket(SPacketPlayOutEntityDestroy.class);
+        destroyPacket.setEntitiesToDestroy(toRemove);
+        return destroyPacket;
     }
 
-    private List<Object> getAllSpawnPackets() {
-        final var packets = new LinkedList<>();
+    private List<SPacket> getAllSpawnPackets() {
+        final var packets = new LinkedList<SPacket>();
         entitiesOnLines.forEach((line, entity) -> {
             try {
                 packets.addAll(getSpawnPacket(entity));
@@ -386,17 +384,12 @@ public class BukkitHologram extends AbstractHologram {
         }
     }
 
-    private Object stackAsNMS(Item item) {
-        Preconditions.checkNotNull(item, "Item is null!");
-        return Reflect.getMethod(ClassStorage.NMS.CraftItemStack, "asNMSCopy", ItemStack.class).invokeStatic(item.as(ItemStack.class));
-    }
-
     private void removeForPlayer(PlayerWrapper player) {
         if (!player.isOnline()) {
             return;
         }
 
-        final var toSend = new LinkedList<>();
+        final var toSend = new LinkedList<SPacket>();
         if (itemEntity != null) {
             rotationTask.cancel();
         }

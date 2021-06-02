@@ -3,6 +3,7 @@ package org.screamingsandals.lib.minestom.entity;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.utils.Vector;
+import org.screamingsandals.lib.entity.DataWatcher;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
@@ -269,5 +270,11 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
     @Override
     public void setPortalCooldown(int cooldown) {
 
+    }
+
+    //TODO:
+    @Override
+    public DataWatcher getDataWatcher() {
+        return null;
     }
 }

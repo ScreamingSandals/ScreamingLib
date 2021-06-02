@@ -1,3 +1,4 @@
 dependencies {
+    api project(':entity-common')
     api project(':player-common')
 }
