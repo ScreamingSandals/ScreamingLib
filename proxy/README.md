@@ -1,4 +1,4 @@
-# Proxied Player Utils
+# Proxy
 Library for working with players on proxy side (BungeeCord and Velocity).
 
 ## Features
@@ -22,7 +22,7 @@ Supported platforms are: bungee, velocity
 <dependencies>
     <dependency>
         <groupId>org.screamingsandals.lib</groupId>
-        <artifactId>proxiedplayer-YOUR_PLATFORM</artifactId>
+        <artifactId>proxy-YOUR_PLATFORM</artifactId>
         <version>LATEST_VERSION</version>
         <scope>compile</scope>
     </dependency>
@@ -40,7 +40,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.screamingsandals.lib:proxiedplayer-YOUR_PLATFORM:LATEST_VERSION_HERE'
+    implementation 'org.screamingsandals.lib:proxy-YOUR_PLATFORM:LATEST_VERSION_HERE'
 }
 ```
 

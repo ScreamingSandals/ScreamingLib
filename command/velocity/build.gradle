@@ -1,6 +1,6 @@
 dependencies {
     compileOnly velocity(VELOCITY_VERSION)
     api project(':command-common')
-    api project(':proxiedplayer-velocity')
+    api project(':proxy-velocity')
     api cloudVelocity(CLOUD_VERSION)
 }

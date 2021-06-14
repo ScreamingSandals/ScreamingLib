@@ -1,5 +1,5 @@
 dependencies {
-    api project(':proxiedplayer-common')
+    api project(':proxy-common')
     api project(':event-bungee')
 
     compileOnly waterfall(WATERFALL_VERSION)
