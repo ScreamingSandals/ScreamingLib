@@ -1,9 +1,7 @@
 dependencies {
-    api project(':player-common')
-    api project(':world-common')
+    api project(':core-common')
     api project(':event-common')
     api project(':tasker-common')
-    api project(':material-common')
     api project(':packets-common')
 
     api project(':visuals-api')

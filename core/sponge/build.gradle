@@ -1,0 +1,4 @@
+dependencies {
+    api project(':utils-sponge')
+    compileOnly 'org.spongepowered:spongeapi:' + SPONGE_VERSION
+}

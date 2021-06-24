@@ -1,6 +1,0 @@
-dependencies {
-    api project(':material-common')
-    api project(':utils-bukkit')
-    api project(':utils-adventure')
-    compileOnly paper(PAPER_VERSION)
-}

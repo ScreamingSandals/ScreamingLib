@@ -1,7 +1,0 @@
-dependencies {
-    api project(':entity-common')
-    api project(':world-bukkit')
-    api project(':material-bukkit')
-    api project(':event-bukkit')
-    compileOnly paper(PAPER_VERSION)
-}

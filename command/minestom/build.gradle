@@ -1,6 +1,6 @@
 dependencies {
     compileOnly 'com.github.Minestom:Minestom:' + MINESTOM_VERSION
     api project(':command-common')
-    api project(':player-minestom')
+    api project(':core-minestom')
     api group: 'com.github.OpenMinigameServer', name: 'cloud-minestom', version: CLOUD_MINESTOM_VERSION
 }

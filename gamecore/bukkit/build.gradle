@@ -1,8 +1,6 @@
 dependencies {
     api project(':gamecore-common')
-    api project(':entity-bukkit')
-    api project(':player-bukkit')
-    api project(':world-bukkit')
+    api project(':core-bukkit')
     api project(':event-bukkit')
     api project(':tasker-bukkit')
     api project(':plugin-bukkit')

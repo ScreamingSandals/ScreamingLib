@@ -1,4 +1,0 @@
-dependencies {
-    api project(':world-common')
-    compileOnly 'org.spongepowered:spongeapi:' + SPONGE_VERSION
-}

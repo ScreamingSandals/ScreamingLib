@@ -1,6 +1,0 @@
-dependencies {
-    api project(':utils-common')
-    api project(':material-common')
-    api project(':sender')
-    api 'org.spongepowered:configurate-core:' + CONFIGURATE_VERSION
-}

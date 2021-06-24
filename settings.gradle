@@ -18,16 +18,13 @@ def registerModule(String name, String... platforms) {
 }
 
 registerModule('utils', 'bukkit', 'minestom', 'sponge', 'adventure')
-registerModule('material', 'bukkit', 'minestom', 'sponge')
-registerModule('world', 'bukkit', 'minestom', 'sponge')
-registerModule('player', 'bukkit', 'minestom', 'sponge')
-registerModule('entity', 'bukkit', 'minestom', 'sponge')
 registerModule('hologram', 'bukkit') //TODO: add others
 registerModule('sidebar', 'bukkit') //TODO: add others
 registerModule('healthindicator', 'bukkit') //TODO: add others
 registerModule('placeholders', 'bukkit') //TODO: add others
 registerModule('packets', 'bukkit') //TODO: add others
-registerModule('gamecore', 'bukkit') //TODO: add others
+// registerModule('gamecore', 'bukkit') //TODO: add others
+registerModule('core', 'bukkit', 'minestom', 'sponge')
 registerModule('proxy', 'bungee', 'velocity')
 registerModule('plugin', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
 registerModule('tasker', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')

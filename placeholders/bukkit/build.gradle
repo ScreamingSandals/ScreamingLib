@@ -1,5 +1,5 @@
 dependencies {
-    api project(':player-bukkit')
+    api project(':core-bukkit')
     api project(':placeholders-common')
 
     compileOnly paper(PAPER_VERSION)
