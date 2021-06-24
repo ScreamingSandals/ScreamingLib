@@ -1,4 +1,6 @@
 dependencies {
     api project(':utils-sponge')
+    api project(':core-common')
+
     compileOnly 'org.spongepowered:spongeapi:' + SPONGE_VERSION
 }
