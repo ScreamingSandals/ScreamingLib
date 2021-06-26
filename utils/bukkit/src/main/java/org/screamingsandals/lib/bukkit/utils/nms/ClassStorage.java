@@ -165,7 +165,7 @@ public class ClassStorage {
 		return Reflect
 				.getMethod(player, "getHandle")
 				.invokeResulted()
-				.getField("playerConnection,field_71135_a");
+				.getField("connection,playerConnection,field_71135_a");
 	}
 	
 	public static boolean sendPacket(Player player, Object packet) {
