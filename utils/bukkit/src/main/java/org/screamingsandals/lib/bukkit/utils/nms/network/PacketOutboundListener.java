@@ -49,7 +49,7 @@ public abstract class PacketOutboundListener {
 
     private Channel getChannel(Player player) {
         try {
-            var manager = Reflect.getField(getPlayerConnection(player), "networkManager,field_147371_a");
+            var manager = Reflect.getField(getPlayerConnection(player), "connection,networkManager,field_147371_a");
             return (Channel) Reflect.getField(manager, "channel,field_150746_k,k,m");
         } catch (Throwable ignored) {
         }
