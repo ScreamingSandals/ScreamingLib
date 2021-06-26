@@ -126,6 +126,13 @@ public class ClassStorage {
 		public static final Class<?> CraftPersistentDataContainer = safeGetClass("{obc}.persistence.CraftPersistentDataContainer");
 		public static final Class<?> CraftMetaItem = safeGetClass("{obc}.inventory.CraftMetaItem");
 		public static final Class<?> CraftPersistentDataTypeRegistry = safeGetClass("{obc}.persistence.CraftPersistentDataTypeRegistry");
+
+		//TODO: forge mappings
+		// 1.17
+		public static final Class<?> ChatMessageType = safeGetClass("net.minecraft.network.chat.ChatMessageType");
+		public static final Class<?> PacketPlayOutScoreboardTeamData = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam$ba");
+		public static final Class<?> IRegistry = safeGetClass("net.minecraft.core.IRegistry");
+
 	}
 	
 	private static String checkNMSVersion() {

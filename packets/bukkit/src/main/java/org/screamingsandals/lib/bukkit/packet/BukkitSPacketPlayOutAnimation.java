@@ -10,11 +10,15 @@ public class BukkitSPacketPlayOutAnimation extends BukkitSPacket implements SPac
 
     @Override
     public void setEntityId(int entityId) {
-        packet.setField("a", entityId);
+        if (packet.setField("a", entityId) == null) {
+            packet.setField("g", entityId);
+        }
     }
 
     @Override
     public void setAnimation(int animationId) {
-        packet.setField("b", animationId);
+        if (packet.setField("b", animationId) == null) {
+            packet.setField("h", animationId);
+        }
     }
 }

@@ -18,11 +18,11 @@ public class BukkitSPacketPlayOutExperience extends BukkitSPacket implements SPa
 
     @Override
     public void setLevel(int level) {
-        packet.setField("b", level);
+        packet.setField("c", level);
     }
 
     @Override
     public void setTotalExperience(int totalExperience) {
-        packet.setField("c", totalExperience);
+        packet.setField("b", totalExperience);
     }
 }

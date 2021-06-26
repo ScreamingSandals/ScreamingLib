@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.packet.SPacketPlayOutEntityEquipment;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.builder.ItemFactory;
@@ -20,7 +21,11 @@ public class BukkitSPacketPlayOutEntityEquipment extends BukkitSPacket implement
 
     @Override
     public void setEntityId(int entityId) {
-        packet.setField("a", entityId);
+        if (Version.isVersion(1, 17)) {
+            packet.setField("b", entityId);
+        } else {
+            packet.setField("a", entityId);
+        }
     }
 
     @Override
@@ -35,7 +40,12 @@ public class BukkitSPacketPlayOutEntityEquipment extends BukkitSPacket implement
             packet.setField("c", ClassStorage.stackAsNMS(item.as(ItemStack.class)));
             packet.setField("b", getSlot(slot));
         } else {
-            packet.setField("b", List.of(Pair.of(getSlot(slot), ClassStorage.stackAsNMS(item.as(ItemStack.class)))));
+            final var data = List.of(Pair.of(getSlot(slot), ClassStorage.stackAsNMS(item.as(ItemStack.class))));
+            if (Version.isVersion(1, 17)) {
+                packet.setField("c", data);
+            } else {
+                packet.setField("b", data);
+            }
         }
     }
 

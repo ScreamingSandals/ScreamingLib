@@ -17,7 +17,10 @@ public class BukkitSPacketPlayOutScoreboardObjective extends BukkitSPacket imple
         if (objectiveKey == null) {
             throw new UnsupportedOperationException("Objective key cannot be null!");
         }
-        packet.setField("a", AdventureHelper.toLegacy(objectiveKey));
+        final var legacyString = AdventureHelper.toLegacy(objectiveKey);
+        if (packet.setField("a", legacyString) == null) {
+            packet.setField("d", legacyString);
+        }
     }
 
     @Override
@@ -25,8 +28,12 @@ public class BukkitSPacketPlayOutScoreboardObjective extends BukkitSPacket imple
         if (title == null) {
             throw new UnsupportedOperationException("Title cannot be null!");
         }
-        if (packet.setField("b", ClassStorage.asMinecraftComponent(title)) == null) {
-            packet.setField("b", AdventureHelper.toLegacy(title));
+
+        final var minecraftComponent = ClassStorage.asMinecraftComponent(title);
+        if (packet.setField("b", minecraftComponent) == null) {
+            if (packet.setField("b", AdventureHelper.toLegacy(title)) == null) {
+                packet.setField("e", minecraftComponent);
+            }
         }
     }
 
@@ -35,7 +42,10 @@ public class BukkitSPacketPlayOutScoreboardObjective extends BukkitSPacket imple
         if (criteriaType == null) {
             throw new UnsupportedOperationException("CriteriaType cannot be null!");
         }
-        packet.setField("c", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardHealthDisplay, criteriaType.name().toUpperCase()));
+        final var criteriaEnum = Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardHealthDisplay, criteriaType.name().toUpperCase());
+        if (packet.setField("c", criteriaEnum) == null) {
+            packet.setField("f", criteriaEnum);
+        }
     }
 
     @Override
@@ -43,6 +53,18 @@ public class BukkitSPacketPlayOutScoreboardObjective extends BukkitSPacket imple
         if (mode == null) {
             throw new UnsupportedOperationException("Mode cannot be null!");
         }
-        packet.setField("d", mode.ordinal());
+        if (packet.setField("d", mode.ordinal()) == null) {
+            switch (mode) {
+                case CREATE:
+                    packet.setField("g", 0);
+                    break;
+                case DESTROY:
+                    packet.setField("g", 1);
+                    break;
+                case UPDATE:
+                    packet.setField("g", 2);
+                    break;
+            }
+        }
     }
 }

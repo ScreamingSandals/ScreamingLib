@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.packet;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.packet.SPacketPlayOutLogin;
 import org.screamingsandals.lib.utils.Difficulty;
 import org.screamingsandals.lib.utils.GameMode;
@@ -13,7 +14,11 @@ public class BukkitSPacketPlayOutLogin extends BukkitSPacket implements SPacketP
 
     @Override
     public void setEntityId(int entityId) {
-        packet.setField("a", entityId);
+        if (Version.isVersion(1, 17)) {
+            packet.setField("b", entityId);
+        } else {
+            packet.setField("a", entityId);
+        }
     }
 
     @Override
@@ -21,9 +26,14 @@ public class BukkitSPacketPlayOutLogin extends BukkitSPacket implements SPacketP
         if (gameMode == null) {
             throw new UnsupportedOperationException("GameMode cannot be null!");
         }
-        packet.setField("b", Reflect.findEnumConstant(ClassStorage.NMS.EnumGamemode, gameMode.name().toUpperCase()));
+        if (Version.isVersion(1, 17)) {
+            packet.setField("e", Reflect.findEnumConstant(ClassStorage.NMS.EnumGamemode, gameMode.name().toUpperCase()));
+        } else {
+            packet.setField("b", Reflect.findEnumConstant(ClassStorage.NMS.EnumGamemode, gameMode.name().toUpperCase()));
+        }
     }
 
+    //TODO: 1.17 support
     @Override
     public void setDimension(int dimension) {
         packet.setField("c", dimension);

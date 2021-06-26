@@ -17,4 +17,9 @@ public class BukkitSPacketPlayOutCollect extends BukkitSPacket implements SPacke
     public void setCollectedEntityId(int collectedEntityId) {
         packet.setField("b", collectedEntityId);
     }
+
+    @Override
+    public void setAmount(int amount) {
+        packet.setField("c", amount);
+    }
 }

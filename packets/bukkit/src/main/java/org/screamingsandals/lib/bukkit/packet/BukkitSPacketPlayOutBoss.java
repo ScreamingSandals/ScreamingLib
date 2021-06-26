@@ -18,7 +18,9 @@ public class BukkitSPacketPlayOutBoss extends BukkitSPacket implements SPacketPl
         if (uuid == null) {
             throw new UnsupportedOperationException("UUID cannot be null!");
         }
-        packet.setField("a", uuid);
+        if (packet.setField("a", uuid) == null) {
+            packet.setField("d", uuid);
+        }
     }
 
     @Override
@@ -26,7 +28,10 @@ public class BukkitSPacketPlayOutBoss extends BukkitSPacket implements SPacketPl
         if (action == null) {
             throw new UnsupportedOperationException("Action cannot be null!");
         }
-        packet.setField("b", Reflect.findEnumConstant(ClassStorage.NMS.EnumBossAction, action.name().toUpperCase()));
+        final var enumAction = Reflect.findEnumConstant(ClassStorage.NMS.EnumBossAction, action.name().toUpperCase());
+        if (packet.setField("b", enumAction) == null) {
+            packet.setField("e", enumAction);
+        }
     }
 
     @Override
