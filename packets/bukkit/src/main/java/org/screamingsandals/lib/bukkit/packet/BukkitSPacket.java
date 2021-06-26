@@ -28,8 +28,14 @@ public abstract class BukkitSPacket implements SPacket {
 
     @Override
     public void sendPacket(PlayerWrapper player) {
-        if (player == null || player.getWrappedPlayer().get() == null) {
+        if (player == null) {
             throw new UnsupportedOperationException("Player cannot be null!");
+        }
+
+        final var bukkitPlayer = (Player) player.getWrappedPlayer().get();
+
+        if (bukkitPlayer == null) {
+            throw new UnsupportedOperationException("BukkitPlayer cannot be null!");
         }
 
         if (!player.isOnline()) {
@@ -40,7 +46,6 @@ public abstract class BukkitSPacket implements SPacket {
             throw new UnsupportedOperationException("Packet cannot be null!");
         }
 
-        final var bukkitPlayer = (Player) player.getWrappedPlayer().get();
         boolean result = ClassStorage.sendPacket(bukkitPlayer, packet.raw());
         if (!result) {
             Bukkit.getLogger().warning("Could not send packet: " + this.getClass().getSimpleName() + " to player: " + player.getName());
