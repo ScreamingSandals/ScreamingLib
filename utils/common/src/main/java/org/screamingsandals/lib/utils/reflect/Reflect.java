@@ -1,5 +1,7 @@
 package org.screamingsandals.lib.utils.reflect;
 
+import sun.reflect.ReflectionFactory;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -311,5 +313,22 @@ public class Reflect {
 
     public static InvocationResult constructResulted(Class<?> type) {
         return constructor(type).constructResulted();
+    }
+
+    // create objects without constructor
+    public static <T> T forceConstruct(Class<T> clazz) {
+        try {
+            ReflectionFactory rf =
+                    ReflectionFactory.getReflectionFactory();
+            java.lang.reflect.Constructor<?> objDef = Object.class.getDeclaredConstructor();
+            java.lang.reflect.Constructor<?> intConstr = rf.newConstructorForSerialization(
+                    clazz, objDef
+            );
+            return clazz.cast(intConstr.newInstance());
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IllegalStateException("Cannot create object", e);
+        }
     }
 }

@@ -15,7 +15,7 @@ public abstract class BukkitSPacket implements SPacket {
     private final List<Object> additionalPackets = new ArrayList<>();
 
     public BukkitSPacket(Class<?> packetClass) {
-        packet = Reflect.constructResulted(packetClass);
+        packet = new InvocationResult(Reflect.forceConstruct(packetClass));
     }
 
     public void addAdditionalPacket(InvocationResult packet) {
