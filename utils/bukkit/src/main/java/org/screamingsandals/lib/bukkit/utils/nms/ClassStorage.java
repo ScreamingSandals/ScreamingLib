@@ -52,9 +52,9 @@ public class ClassStorage {
 		public static final Class<?> GenericAttributes = safeGetClass("{nms}.GenericAttributes", "{f:ent}.SharedMonsterAttributes");
 		public static final Class<?> IChatBaseComponent = safeGetClass("net.minecraft.network.chat.IChatBaseComponent", "{nms}.IChatBaseComponent", "{f:util}.text.ITextComponent");
 		public static final Class<?> IAttribute = safeGetClass("{nms}.IAttribute", "{nms}.AttributeBase", "{f:ent}.ai.attributes.IAttribute", "{f:ent}.ai.attributes.Attribute"); // since 1.16, IAttribute no longer exists
-		public static final Class<?> MinecraftServer = safeGetClass("{nms}.MinecraftServer", "{f:nms}.MinecraftServer");
+		public static final Class<?> MinecraftServer = safeGetClass("net.minecraft.server.MinecraftServer", "{nms}.MinecraftServer", "{f:nms}.MinecraftServer");
 		public static final Class<?> NBTTagCompound = safeGetClass("{nms}.NBTTagCompound", "{f:nbt}.CompoundNBT", "{f:nbt}.NBTTagCompound");
-		public static final Class<?> NetworkManager = safeGetClass("{nms}.NetworkManager", "{f:net}.NetworkManager");
+		public static final Class<?> NetworkManager = safeGetClass("net.minecraft.network.NetworkManager", "{nms}.NetworkManager", "{f:net}.NetworkManager");
 		public static final Class<?> PlayerInfoData = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo$PlayerInfoData", "{nms}.PlayerInfoData");
 		public static final Class<?> GameProfile = safeGetClass("com.mojang.authlib.GameProfile");
 
