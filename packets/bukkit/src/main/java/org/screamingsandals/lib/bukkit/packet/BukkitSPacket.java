@@ -42,7 +42,7 @@ public abstract class BukkitSPacket implements SPacket {
             throw new UnsupportedOperationException("Cannot send packet to offline player!");
         }
 
-        if (packet == null) {
+        if (packet == null || packet.raw() == null) {
             throw new UnsupportedOperationException("Packet cannot be null!");
         }
 

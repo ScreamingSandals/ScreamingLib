@@ -180,7 +180,7 @@ public class ClassStorage {
 					return;
 				}
 
-				Reflect.getMethod(connection, "send,sendPacket,func_147359_a,a", NMS.Packet).invoke(packet);
+				Reflect.getMethod(connection, "sendPacket,func_147359_a", NMS.Packet).invoke(packet);
 			});
 			return true;
 		}
@@ -192,25 +192,27 @@ public class ClassStorage {
 	}
 
 	public static Object getMethodProfiler(Object handler) {
-		Object methodProfiler = Reflect.getMethod(handler, "getMethodProfiler,func_217381_Z,ab").invoke();
+		Object methodProfiler = Reflect.getMethod(handler, "getMethodProfiler,func_217381_Z").invoke();
 		if (methodProfiler == null) {
-			methodProfiler = Reflect.getField(handler, "methodProfiler,field_72984_F,D");
-			if (methodProfiler instanceof Supplier) {
-				methodProfiler = ((Supplier<?>) methodProfiler).get();
-			}
+			methodProfiler = Reflect.getField(handler, "methodProfiler,field_72984_F");
 		}
 		return methodProfiler;
 	}
-	
+
 	public static Object obtainNewPathfinderSelector(Object handler) {
 		try {
-			Object world = Reflect.getMethod(handler, "getWorld,func_130014_f_,cv").invoke();
+			Object world = Reflect.getMethod(handler, "getWorld,func_130014_f_").invoke();
 			try {
-				// 1.16
-				return NMS.PathfinderGoalSelector.getConstructor(Supplier.class).newInstance((Supplier<?>) () -> getMethodProfiler(world));
+				// 1.17
+				return NMS.PathfinderGoalSelector.getConstructor(Supplier.class).newInstance(Reflect.getMethod(world, "getMethodProfilerSupplier").invoke());
 			} catch (Throwable ignored) {
-				// Pre 1.16
-				return NMS.PathfinderGoalSelector.getConstructors()[0].newInstance(getMethodProfiler(world));
+				try {
+					// 1.16
+					return NMS.PathfinderGoalSelector.getConstructor(Supplier.class).newInstance((Supplier<?>) () -> getMethodProfiler(world));
+				} catch (Throwable ignore) {
+					// Pre 1.16
+					return NMS.PathfinderGoalSelector.getConstructors()[0].newInstance(getMethodProfiler(world));
+				}
 			}
 		} catch (Throwable t) {
 			t.printStackTrace();
