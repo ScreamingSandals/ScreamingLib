@@ -5,7 +5,9 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.reflect.Reflect;
+import sun.reflect.ReflectionFactory;
+
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -106,7 +108,7 @@ public class BukkitPacketMapper extends PacketMapper {
             throw new UnsupportedOperationException("No packet found for packet of class: " + packetClass.getSimpleName());
         }
 
-        return (T) Reflect.construct(packet);
+        return (T) forceConstruct(packet);
     }
 
     @Override
@@ -123,5 +125,23 @@ public class BukkitPacketMapper extends PacketMapper {
             return;
         }
         ClassStorage.sendPacket(player.as(Player.class), packet);
+    }
+
+
+    // create objects without constructor
+    protected static <T> T forceConstruct(Class<T> clazz) {
+        try {
+            ReflectionFactory rf =
+                    ReflectionFactory.getReflectionFactory();
+            Constructor<?> objDef = Object.class.getDeclaredConstructor();
+            Constructor<?> intConstr = rf.newConstructorForSerialization(
+                    clazz, objDef
+            );
+            return clazz.cast(intConstr.newInstance());
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IllegalStateException("Cannot create object", e);
+        }
     }
 }
