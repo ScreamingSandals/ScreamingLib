@@ -24,7 +24,7 @@ public class BukkitSPacketPlayOutEntityDestroy extends BukkitSPacket implements 
                     .forEach(id -> {
                         BukkitSPacketPlayOutEntityDestroy packet = BukkitPacketMapper.createPacket(SPacketPlayOutEntityDestroy.class);
                         packet.setEntityToDestroy(id);
-                        addAdditionalPacket(packet);
+                        addAdditionalPacket(packet.getRawPacket());
                     });
         }
     }
