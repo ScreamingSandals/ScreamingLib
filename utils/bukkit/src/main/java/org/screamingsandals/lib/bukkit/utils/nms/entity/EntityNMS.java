@@ -39,6 +39,10 @@ public class EntityNMS {
 		return new Location(craftWorld, locX, locY, locZ, yaw, pitch);
 	}
 
+	public Object getEntityType() {
+		return Reflect.getMethod(handler, "getEntityType,Y").invoke();
+	}
+
 	public void setLocation(Location location) {
 		final var craftWorld = (World) Reflect.fastInvokeResulted(handler, "getWorld,func_130014_f_").fastInvoke("getWorld");
 		if (!location.getWorld().equals(craftWorld)) {
