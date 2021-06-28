@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.packet;
 
+import com.mojang.datafixers.util.Pair;
 import org.bukkit.Material;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -8,7 +9,6 @@ import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.packet.SPacketPlayOutEntityEquipment;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.builder.ItemFactory;
-import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.List;
