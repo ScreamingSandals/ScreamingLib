@@ -38,7 +38,7 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
         if (Version.isVersion(1, 17)) {
             packet.setField("i", legacyString);
         } else {
-            packet.setField("a", legacyString);
+            packet.setField("a,field_149320_a", legacyString);
         }
     }
 
@@ -48,25 +48,9 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
             throw new UnsupportedOperationException("Mode cannot be null!");
         }
         if (Version.isVersion(1, 17)) {
-            switch (mode) {
-                case CREATE:
-                    packet.setField("h", 0);
-                    break;
-                case REMOVE:
-                    packet.setField("h", 1);
-                    break;
-                case UPDATE:
-                    packet.setField("h", 2);
-                    break;
-                case ADD_ENTITY:
-                    packet.setField("h", 3);
-                    break;
-                case REMOVE_ENTITY:
-                    packet.setField("h", 4);
-                    break;
-            }
+            packet.setField("h", mode.ordinal());
         } else {
-            packet.setField("i", mode.ordinal());
+            packet.setField("i,field_149314_f", mode.ordinal());
         }
     }
 
@@ -82,7 +66,7 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
         if (Version.isVersion(1, 17)) {
             Reflect.setField(data, "g", i);
         } else {
-            packet.setField("j", i);
+            packet.setField("j,field_149315_g", i);
         }
     }
 
@@ -94,7 +78,7 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
         if (Version.isVersion(1, 17)) {
             Reflect.setField(data, "d", visibility.getEnumName());
         } else {
-            packet.setField("e", visibility.getEnumName());
+            packet.setField("e,field_179816_e", visibility.getEnumName());
         }
     }
 
@@ -102,31 +86,32 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
     public void setTeamColor(TextColor color) {
         final var str = NamedTextColor.nearestTo(color).toString();
 
-       if (ClassStorage.NMS.EnumChatFormat != null) {
-           final var enumC = Reflect.findEnumConstant(ClassStorage.NMS.EnumChatFormat,str.toUpperCase());
-           if (Version.isVersion(1, 17)) {
-               Reflect.setField(data, "f",  enumC);
-           } else {
-               packet.setField("g", enumC);
-           }
+        if (ClassStorage.NMS.EnumChatFormat != null) {
+            final var enumC = Reflect.findEnumConstant(ClassStorage.NMS.EnumChatFormat, str.toUpperCase());
+            if (Version.isVersion(1, 17)) {
+                Reflect.setField(data, "f", enumC);
+            } else {
+                packet.setField("g,field_179815_f", enumC);
+            }
         } else {
-            packet.setField("g", str);
+            packet.setField("g,field_179815_f", str);
         }
     }
 
     @Override
     public void setTeamPrefix(Component teamPrefix) {
-         if (teamPrefix == null) {
+        if (teamPrefix == null) {
             throw new UnsupportedOperationException("Team prefix cannot be null!");
-         }
-         final var minecraftComponent = ClassStorage.asMinecraftComponent(teamPrefix);
-        if (packet.setField("c", minecraftComponent) == null) {
-            if (Version.isVersion(1, 17)) {
-                Reflect.setField(data, "b", minecraftComponent);
-            } else {
-                packet.setField("c", AdventureHelper.toLegacy(teamPrefix));
+        }
+        final var minecraftComponent = ClassStorage.asMinecraftComponent(teamPrefix);
+        if (Version.isVersion(1, 17)) {
+            Reflect.setField(data, "b", minecraftComponent);
+        } else {
+            if (packet.setField("c,field_207509_c", minecraftComponent) == null) {
+                packet.setField("c,field_207509_c", AdventureHelper.toLegacy(teamPrefix));
             }
         }
+
     }
 
     @Override
@@ -138,7 +123,9 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
         if (Version.isVersion(1, 17)) {
             Reflect.setField(data, "c", minecraftComponent);
         } else {
-            packet.setField("d", AdventureHelper.toLegacy(teamSuffix));
+            if (packet.setField("d,field_207510_d", AdventureHelper.toLegacy(teamSuffix)) == null) {
+                packet.setField("d,field_207510_d", teamSuffix);
+            }
         }
     }
 
@@ -150,7 +137,7 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
         if (Version.isVersion(1, 17)) {
             packet.setField("j", entities);
         } else {
-            packet.setField("h", entities);
+            packet.setField("h,field_149317_e", entities);
         }
     }
 
@@ -160,11 +147,11 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
             throw new UnsupportedOperationException("Display name cannot be null!");
         }
         final var minecraftComponent = ClassStorage.asMinecraftComponent(displayName);
-        if (packet.setField("b", minecraftComponent) == null) {
-            if (Version.isVersion(1, 17)) {
-                Reflect.setField(data, "a", minecraftComponent);
-            } else {
-                packet.setField("b", AdventureHelper.toLegacy(displayName));
+        if (Version.isVersion(1, 17)) {
+            Reflect.setField(data, "a", minecraftComponent);
+        } else {
+            if (packet.setField("b,field_149318_b", minecraftComponent) == null) {
+                packet.setField("b,field_149318_b", AdventureHelper.toLegacy(displayName));
             }
         }
     }
@@ -177,7 +164,7 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
         if (Version.isVersion(1, 17)) {
             Reflect.setField(data, "e", rule.getEnumName());
         } else {
-            packet.setField("f", rule.getEnumName());
+            packet.setField("f,field_186976_f", rule.getEnumName());
         }
     }
 }

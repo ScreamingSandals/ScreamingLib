@@ -11,22 +11,28 @@ public class BukkitSPacketPlayOutEntityEffect extends BukkitSPacket implements S
 
     @Override
     public void setEntityId(int entityId) {
-        if (packet.setField("a", entityId) == null) {
+        if (Version.isVersion(1, 17)) {
             packet.setField("d", entityId);
+        } else {
+            packet.setField("a,field_149434_a", entityId);
         }
     }
 
     @Override
     public void setEffectId(byte effectId) {
-        if (packet.setField("b", effectId) == null) {
+        if (Version.isVersion(1, 17)) {
             packet.setField("e", effectId);
+        } else {
+            packet.setField("b,field_149432_b", effectId);
         }
     }
 
     @Override
     public void setAmplifier(byte amplifier) {
-        if (packet.setField("c", amplifier) == null) {
+        if (Version.isVersion(1, 17)) {
             packet.setField("f", amplifier);
+        } else {
+            packet.setField("c,field_149433_c", amplifier);
         }
     }
 
@@ -35,7 +41,7 @@ public class BukkitSPacketPlayOutEntityEffect extends BukkitSPacket implements S
         if (Version.isVersion(1, 17)) {
             packet.setField("g", durationInTicks);
         } else {
-            packet.setField("d", durationInTicks);
+            packet.setField("d,field_149431_d", durationInTicks);
         }
     }
 
@@ -52,7 +58,7 @@ public class BukkitSPacketPlayOutEntityEffect extends BukkitSPacket implements S
         if (Version.isVersion(1, 17)) {
             packet.setField("h", flag);
         } else {
-            packet.setField("e", flag);
+            packet.setField("e,field_186985_e", flag);
         }
     }
 }

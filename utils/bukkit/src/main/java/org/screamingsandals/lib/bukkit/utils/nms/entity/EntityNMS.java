@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
@@ -27,20 +28,31 @@ public class EntityNMS {
 	}
 
 	public Location getLocation() {
-		var invoker = new InvocationResult(handler);
+		if (Version.isVersion(1, 17)) {
+			double locX = (double) Reflect.getMethod(handler, "locX").invoke();
+			double locY = (double) Reflect.getMethod(handler, "locY").invoke();
+			double locZ = (double) Reflect.getMethod(handler, "locZ").invoke();
+			float yaw = (float) Reflect.getMethod(handler, "getYRot").invoke();
+			float pitch = (float) Reflect.getMethod(handler, "getXRot").invoke();
+			Object world = Reflect.getMethod(handler, "getWorld,func_130014_f_").invoke();
+			World craftWorld = (World) Reflect.getMethod(world, "getWorld").invoke();
 
-		final var locX = (double) invoker.getField("locX,field_70165_t");
-		final var locY = (double) invoker.getField("locY,field_70163_u");
-		final var locZ = (double) invoker.getField("locZ,field_70161_v");
-		final var yaw = (float) invoker.getField("yaw,field_70177_z");
-		final var pitch = (float) invoker.getField("pitch,field_70125_A");
-		final var craftWorld = (World) invoker.fastInvokeResulted("getWorld,func_130014_f_").fastInvoke("getWorld");
+			return new Location(craftWorld, locX, locY, locZ, yaw, pitch);
+		} else {
+			double locX = (double) Reflect.getField(handler, "locX,field_70165_t");
+			double locY = (double) Reflect.getField(handler, "locY,field_70163_u");
+			double locZ = (double) Reflect.getField(handler, "locZ,field_70161_v");
+			float yaw = (float) Reflect.getField(handler, "yaw,field_70177_z");
+			float pitch = (float) Reflect.getField(handler, "pitch,field_70125_A");
+			Object world = Reflect.getMethod(handler, "getWorld,func_130014_f_").invoke();
+			World craftWorld = (World) Reflect.getMethod(world, "getWorld").invoke();
 
-		return new Location(craftWorld, locX, locY, locZ, yaw, pitch);
+			return new Location(craftWorld, locX, locY, locZ, yaw, pitch);
+		}
 	}
 
 	public Object getEntityType() {
-		return Reflect.getMethod(handler, "getEntityType,Y").invoke();
+		return Reflect.getMethod(handler, "getEntityType,func_200600_R").invoke();
 	}
 
 	public void setLocation(Location location) {
@@ -127,15 +139,15 @@ public class EntityNMS {
 	}
 
 	public boolean isOnGround() {
-		return (boolean) Reflect.getField(handler, "onGround");
+		return (boolean) Reflect.getMethod(handler, "isOnGround,func_233570_aj_").invoke();
 	}
 
 	public UUID getUniqueId() {
-		return (UUID) Reflect.getMethod(handler, "getUniqueID,ch,bc,bS,func_110124_au").invoke();
+		return (UUID) Reflect.getMethod(handler, "getUniqueID,func_110124_au").invoke();
 	}
 
 	public Vector3D getVelocity() {
-		final var mot = Reflect.getMethod(handler, "getMot").invoke();
+		final var mot = Reflect.getMethod(handler, "getMot,func_213322_ci").invoke();
 		final var bukkitVector = (Vector) Reflect.getMethod(ClassStorage.NMS.CraftVector, "toBukkit").invokeStatic(mot);
 		return new Vector3D(
 				bukkitVector.getX(),

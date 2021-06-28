@@ -17,7 +17,7 @@ public class BukkitSPacketPlayOutPlayerInfo extends BukkitSPacket implements SPa
             throw new UnsupportedOperationException("Action cannot be null!");
         }
         var nmsAction = Reflect.findEnumConstant(ClassStorage.NMS.EnumPlayerInfoAction, action.name().toUpperCase());
-        packet.setField("a", nmsAction);
+        packet.setField("a,field_179770_a", nmsAction);
     }
 
     @Override
@@ -40,6 +40,6 @@ public class BukkitSPacketPlayOutPlayerInfo extends BukkitSPacket implements SPa
             );
             nmsData.add(constructed);
         });
-        packet.setField("b", nmsData);
+        packet.setField("b,field_179769_b", nmsData);
     }
 }

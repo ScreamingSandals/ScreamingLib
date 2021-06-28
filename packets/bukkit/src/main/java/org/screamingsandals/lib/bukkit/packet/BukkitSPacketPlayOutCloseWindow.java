@@ -10,6 +10,6 @@ public class BukkitSPacketPlayOutCloseWindow extends BukkitSPacket implements SP
 
     @Override
     public void setWindowId(int windowId) {
-        packet.setField("a", windowId);
+        packet.setField("a,field_148896_a", windowId);
     }
 }

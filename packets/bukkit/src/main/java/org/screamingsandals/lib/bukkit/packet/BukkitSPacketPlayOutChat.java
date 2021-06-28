@@ -18,19 +18,23 @@ public class BukkitSPacketPlayOutChat extends BukkitSPacket implements SPacketPl
         if (text == null) {
             throw new UnsupportedOperationException("Chat text cannot be null!");
         }
-        if (packet.setField("a", ClassStorage.asMinecraftComponent(text)) == null) {
-            packet.setField("a", AdventureHelper.toLegacy(text));
+        if (packet.setField("a,field_148919_a", ClassStorage.asMinecraftComponent(text)) == null) {
+            packet.setField("a,field_148919_a", AdventureHelper.toLegacy(text));
         }
     }
 
+    @Deprecated
     @Override
     public void setBytes(byte bytes) {
-        packet.setField("b", bytes);
+        packet.setField("b,field_179842_b", bytes);
     }
 
     @Override
     public void setUUID(UUID uuid) {
-        packet.setField("c", uuid);
+        if (uuid == null) {
+            throw new UnsupportedOperationException("UUID cannot be null!");
+        }
+        packet.setField("c,field_240809_c_", uuid);
     }
 
     @Override
@@ -38,6 +42,6 @@ public class BukkitSPacketPlayOutChat extends BukkitSPacket implements SPacketPl
         if (type == null) {
             throw new UnsupportedOperationException("ChatType cannot be null!");
         }
-        packet.setField("b", Reflect.findEnumConstant(ClassStorage.NMS.ChatMessageType, type.name().toUpperCase()));
+        packet.setField("b,field_179842_b", Reflect.findEnumConstant(ClassStorage.NMS.ChatMessageType, type.name().toUpperCase()));
     }
 }

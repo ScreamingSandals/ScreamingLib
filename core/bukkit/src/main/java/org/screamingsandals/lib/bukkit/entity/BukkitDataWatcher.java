@@ -30,7 +30,7 @@ public class BukkitDataWatcher extends DataWatcher {
     }
 
     protected Object getDataWatcherObject(int index) {
-        final var dataWatcherSerializer = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, "a");
+        final var dataWatcherSerializer = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, "a,field_187191_a");
         return Reflect.constructor(ClassStorage.NMS.DataWatcherObject, int.class, ClassStorage.NMS.DataWatcherSerializer)
                 .construct(index, dataWatcherSerializer);
     }

@@ -12,7 +12,7 @@ public class BukkitSPacketPlayOutEntityTeleport extends BukkitSPacket implements
 
     @Override
     public void setEntityId(int entityId) {
-        packet.setField("a", entityId);
+        packet.setField("a,field_149458_a", entityId);
     }
 
     @Override
@@ -20,15 +20,15 @@ public class BukkitSPacketPlayOutEntityTeleport extends BukkitSPacket implements
         if (location == null) {
             throw new UnsupportedOperationException("Location cannot be null!");
         }
-        packet.setField("b", location.getX());
-        packet.setField("c", location.getY());
-        packet.setField("d", location.getZ());
-        packet.setField("e", (byte) ((int) (location.getYaw() * 256.0F / 360.0F)));
-        packet.setField("f", (byte) ((int) (location.getPitch() * 256.0F / 360.0F)));
+        packet.setField("b,field_149456_b", location.getX());
+        packet.setField("c,field_149457_c", location.getY());
+        packet.setField("d,field_149454_d", location.getZ());
+        packet.setField("e,field_149455_e", (byte) ((int) (location.getYaw() * 256.0F / 360.0F)));
+        packet.setField("f,field_149453_f", (byte) ((int) (location.getPitch() * 256.0F / 360.0F)));
     }
 
     @Override
     public void setIsOnGround(boolean isOnGround) {
-        packet.setField("g", isOnGround);
+        packet.setField("g,field_179698_g", isOnGround);
     }
 }

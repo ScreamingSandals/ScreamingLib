@@ -17,7 +17,7 @@ public class BukkitSPacketPlayOutLogin extends BukkitSPacket implements SPacketP
         if (Version.isVersion(1, 17)) {
             packet.setField("b", entityId);
         } else {
-            packet.setField("a", entityId);
+            packet.setField("a,field_149206_a", entityId);
         }
     }
 

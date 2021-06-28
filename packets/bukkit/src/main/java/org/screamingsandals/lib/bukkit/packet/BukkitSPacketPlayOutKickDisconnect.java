@@ -15,8 +15,8 @@ public class BukkitSPacketPlayOutKickDisconnect extends BukkitSPacket implements
         if (reason == null) {
             throw new UnsupportedOperationException("Invalid kick reason provided!");
         }
-        if (packet.setField("a", ClassStorage.asMinecraftComponent(reason)) == null) {
-            packet.setField("a", AdventureHelper.toLegacy(reason));
+        if (packet.setField("a,field_149167_a", ClassStorage.asMinecraftComponent(reason)) == null) {
+            packet.setField("a,field_149167_a", AdventureHelper.toLegacy(reason));
         }
     }
 }

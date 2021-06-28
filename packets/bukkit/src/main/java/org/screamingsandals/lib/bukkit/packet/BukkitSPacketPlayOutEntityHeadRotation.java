@@ -10,11 +10,11 @@ public class BukkitSPacketPlayOutEntityHeadRotation extends BukkitSPacket implem
 
     @Override
     public void setEntityId(int entityId) {
-        packet.setField("a", entityId);
+        packet.setField("a,field_149384_a", entityId);
     }
 
     @Override
     public void setRotation(byte rotation) {
-        packet.setField("b", rotation);
+        packet.setField("b,field_149383_b", rotation);
     }
 }

@@ -2,6 +2,7 @@ package org.screamingsandals.lib.bukkit.packet;
 
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.packet.SPacketPlayOutScoreboardObjective;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -18,8 +19,10 @@ public class BukkitSPacketPlayOutScoreboardObjective extends BukkitSPacket imple
             throw new UnsupportedOperationException("Objective key cannot be null!");
         }
         final var legacyString = AdventureHelper.toLegacy(objectiveKey);
-        if (packet.setField("a", legacyString) == null) {
+        if (Version.isVersion(1, 17)) {
             packet.setField("d", legacyString);
+        } else {
+            packet.setField("a,field_149343_a", legacyString);
         }
     }
 
@@ -30,9 +33,11 @@ public class BukkitSPacketPlayOutScoreboardObjective extends BukkitSPacket imple
         }
 
         final var minecraftComponent = ClassStorage.asMinecraftComponent(title);
-        if (packet.setField("b", minecraftComponent) == null) {
-            if (packet.setField("b", AdventureHelper.toLegacy(title)) == null) {
-                packet.setField("e", minecraftComponent);
+        if (Version.isVersion(1, 17)) {
+            packet.setField("e", minecraftComponent);
+        } else {
+            if (packet.setField("b,field_149341_b", minecraftComponent) == null) {
+                packet.setField("b,field_149341_b", AdventureHelper.toLegacy(title));
             }
         }
     }
@@ -43,8 +48,10 @@ public class BukkitSPacketPlayOutScoreboardObjective extends BukkitSPacket imple
             throw new UnsupportedOperationException("CriteriaType cannot be null!");
         }
         final var criteriaEnum = Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardHealthDisplay, criteriaType.name().toUpperCase());
-        if (packet.setField("c", criteriaEnum) == null) {
+        if (Version.isVersion(1, 17)) {
             packet.setField("f", criteriaEnum);
+        } else {
+            packet.setField("c,field_199857_c", criteriaEnum);
         }
     }
 
@@ -53,18 +60,10 @@ public class BukkitSPacketPlayOutScoreboardObjective extends BukkitSPacket imple
         if (mode == null) {
             throw new UnsupportedOperationException("Mode cannot be null!");
         }
-        if (packet.setField("d", mode.ordinal()) == null) {
-            switch (mode) {
-                case CREATE:
-                    packet.setField("g", 0);
-                    break;
-                case DESTROY:
-                    packet.setField("g", 1);
-                    break;
-                case UPDATE:
-                    packet.setField("g", 2);
-                    break;
-            }
+        if (Version.isVersion(1, 17)) {
+            packet.setField("g", mode.ordinal());
+        } else {
+            packet.setField("d,field_149342_c", mode.ordinal());
         }
     }
 }

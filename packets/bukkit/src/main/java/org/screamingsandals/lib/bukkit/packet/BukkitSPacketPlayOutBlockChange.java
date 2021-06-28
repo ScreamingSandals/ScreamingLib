@@ -20,7 +20,7 @@ public class BukkitSPacketPlayOutBlockChange extends BukkitSPacket implements SP
 
         final var bukkitBlockPos = Reflect.constructor(ClassStorage.NMS.BlockPosition, int.class, int.class, int.class)
                 .construct(blockLocation.getX(), blockLocation.getY(), blockLocation.getZ());
-        packet.setField("a", bukkitBlockPos);
+        packet.setField("a,field_179828_a", bukkitBlockPos);
     }
 
     @Override
@@ -38,6 +38,6 @@ public class BukkitSPacketPlayOutBlockChange extends BukkitSPacket implements SP
             nmsBlockData = Reflect.getMethod(ClassStorage.NMS.CraftMagicNumbers, "getBlock", MaterialData.class)
                     .invokeStatic(bukkitBlockData);
         }
-        packet.setField("b", nmsBlockData);
+        packet.setField("b,field_197686_b", nmsBlockData);
     }
 }

@@ -10,11 +10,11 @@ public class BukkitSPacketPlayOutAttachEntity extends BukkitSPacket implements S
 
     @Override
     public void setEntityId(int entityId) {
-        packet.setField("a", entityId);
+        packet.setField("a,field_149406_b", entityId);
     }
 
     @Override
     public void setHoldingEntityId(int entityId) {
-        packet.setField("b", entityId);
+        packet.setField("b,field_149407_c", entityId);
     }
 }

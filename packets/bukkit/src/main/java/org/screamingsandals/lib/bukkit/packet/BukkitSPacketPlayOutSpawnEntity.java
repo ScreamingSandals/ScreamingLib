@@ -20,7 +20,7 @@ public class BukkitSPacketPlayOutSpawnEntity extends BukkitSPacket implements SP
         if (Version.isVersion(1, 17)) {
             packet.setField("c", entityId);
         } else {
-            packet.setField("a", entityId);
+            packet.setField("a,field_149018_a", entityId);
         }
     }
 
@@ -32,7 +32,7 @@ public class BukkitSPacketPlayOutSpawnEntity extends BukkitSPacket implements SP
         if (Version.isVersion(1, 17)) {
             packet.setField("d", uuid);
         } else {
-            packet.setField("b", uuid);
+            packet.setField("b,field_186883_b", uuid);
         }
     }
 
@@ -48,11 +48,11 @@ public class BukkitSPacketPlayOutSpawnEntity extends BukkitSPacket implements SP
             packet.setField("k", (byte) (location.getYaw() * 256.0F / 300.0F));
             packet.setField("l", (byte) (location.getPitch() * 256.0F / 300.0F));
         } else {
-            packet.setField("c", location.getX());
-            packet.setField("d", location.getY());
-            packet.setField("e", location.getZ());
-            packet.setField("i", (byte) (location.getYaw() * 256.0F / 300.0F));
-            packet.setField("j", (byte) (location.getPitch() * 256.0F / 300.0F));
+            packet.setField("c,field_149016_b", location.getX());
+            packet.setField("d,field_149017_c", location.getY());
+            packet.setField("e,field_149014_d", location.getZ());
+            packet.setField("i,field_149021_h", (byte) (location.getYaw() * 256.0F / 300.0F));
+            packet.setField("j,field_149022_i", (byte) (location.getPitch() * 256.0F / 300.0F));
         }
     }
 
@@ -66,21 +66,21 @@ public class BukkitSPacketPlayOutSpawnEntity extends BukkitSPacket implements SP
             packet.setField("i", (int) (velocity.getY() * 8000.0D));
             packet.setField("j", (int) (velocity.getZ() * 8000.0D));
         } else {
-            packet.setField("f", (int) (velocity.getX() * 8000.0D));
-            packet.setField("g", (int) (velocity.getY() * 8000.0D));
-            packet.setField("h", (int) (velocity.getZ() * 8000.0D));
+            packet.setField("f,field_149015_e", (int) (velocity.getX() * 8000.0D));
+            packet.setField("g,field_149012_f", (int) (velocity.getY() * 8000.0D));
+            packet.setField("h,field_149013_g", (int) (velocity.getZ() * 8000.0D));
         }
     }
 
     @Override
     public void setType(int typeId) {
         if (Version.isVersion(1, 17)) {
-            final var field = Reflect.getField(ClassStorage.NMS.IRegistry, "ENTITY_TYPE,Y");
-            final var entityId = Reflect.getMethod(field, "fromId", int.class)
+            final var field = Reflect.getField(ClassStorage.NMS.IRegistry, "ENTITY_TYPE,field_212629_r,Y");
+            final var entityTypeNMS = Reflect.getMethod(field, "fromId,func_148745_a", int.class)
                     .invoke(typeId);
-            packet.setField("m", entityId);
+            packet.setField("m", entityTypeNMS);
         } else {
-            packet.setField("k", typeId);
+            packet.setField("k,field_149019_j", typeId);
         }
     }
 
@@ -89,7 +89,7 @@ public class BukkitSPacketPlayOutSpawnEntity extends BukkitSPacket implements SP
         if (Version.isVersion(1, 17)) {
             packet.setField("n", objectData);
         } else {
-            packet.setField("l", objectData);
+            packet.setField("l,field_149020_k", objectData);
         }
     }
 }

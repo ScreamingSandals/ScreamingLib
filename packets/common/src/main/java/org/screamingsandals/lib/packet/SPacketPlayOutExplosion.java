@@ -14,7 +14,7 @@ public interface SPacketPlayOutExplosion extends SPacket {
 
     void setStrength(float strength);
 
-    void setVelocity(Vector3Df velocity);
+    void setKnockBackVelocity(Vector3Df velocity);
 
     void setBlocks(List<LocationHolder> blockLocations);
 }

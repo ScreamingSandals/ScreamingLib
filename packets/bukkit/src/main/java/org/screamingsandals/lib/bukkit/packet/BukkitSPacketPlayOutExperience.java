@@ -11,18 +11,18 @@ public class BukkitSPacketPlayOutExperience extends BukkitSPacket implements SPa
     @Override
     public void setExperienceBar(float exp) {
         if (exp < 0 || exp > 1) {
-            throw new UnsupportedOperationException("ExperienceBar must be between 0 and 1!, provided:" + exp);
+            throw new UnsupportedOperationException("ExperienceBar must be between 0 and 1!, provided: " + exp);
         }
-        packet.setField("a", exp);
+        packet.setField("a,field_149401_a", exp);
     }
 
     @Override
     public void setLevel(int level) {
-        packet.setField("c", level);
+        packet.setField("c,field_149400_c", level);
     }
 
     @Override
     public void setTotalExperience(int totalExperience) {
-        packet.setField("b", totalExperience);
+        packet.setField("b,field_149399_b", totalExperience);
     }
 }

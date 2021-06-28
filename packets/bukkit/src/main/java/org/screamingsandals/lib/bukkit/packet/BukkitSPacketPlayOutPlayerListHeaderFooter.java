@@ -16,8 +16,8 @@ public class BukkitSPacketPlayOutPlayerListHeaderFooter extends BukkitSPacket im
         if (header == null) {
             text = Component.text("");
         }
-        if (packet.setField("a", ClassStorage.asMinecraftComponent(text)) == null) {
-            packet.setField("a", AdventureHelper.toLegacy(text));
+        if (packet.setField("a,field_179703_a", ClassStorage.asMinecraftComponent(text)) == null) {
+            packet.setField("a,field_179703_a", AdventureHelper.toLegacy(text));
         }
     }
 
@@ -27,8 +27,8 @@ public class BukkitSPacketPlayOutPlayerListHeaderFooter extends BukkitSPacket im
         if (footer == null) {
             text = Component.text("");
         }
-        if (packet.setField("b", ClassStorage.asMinecraftComponent(text)) == null) {
-            packet.setField("b", AdventureHelper.toLegacy(text));
+        if (packet.setField("b,field_179702_b", ClassStorage.asMinecraftComponent(text)) == null) {
+            packet.setField("b,field_179702_b", AdventureHelper.toLegacy(text));
         }
     }
 }

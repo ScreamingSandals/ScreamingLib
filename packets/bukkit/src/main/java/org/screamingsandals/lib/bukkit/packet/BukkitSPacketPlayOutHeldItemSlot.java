@@ -10,6 +10,6 @@ public class BukkitSPacketPlayOutHeldItemSlot extends BukkitSPacket implements S
 
     @Override
     public void setSlot(int slot) {
-        packet.setField("a", slot);
+        packet.setField("a,field_149387_a", slot);
     }
 }

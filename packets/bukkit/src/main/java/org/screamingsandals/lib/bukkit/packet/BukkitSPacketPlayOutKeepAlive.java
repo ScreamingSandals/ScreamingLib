@@ -10,6 +10,6 @@ public class BukkitSPacketPlayOutKeepAlive extends BukkitSPacket implements SPac
 
     @Override
     public void setEntityId(int entityId) {
-        packet.setField("a", entityId);
+        packet.setField("a,field_149461_a", entityId);
     }
 }

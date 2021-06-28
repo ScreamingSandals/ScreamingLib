@@ -11,7 +11,7 @@ public class BukkitSPacketPlayOutEntityVelocity extends BukkitSPacket implements
 
     @Override
     public void setEntityId(int entityId) {
-        packet.setField("a", entityId);
+        packet.setField("a,field_149417_a", entityId);
     }
 
     @Override
@@ -46,8 +46,8 @@ public class BukkitSPacketPlayOutEntityVelocity extends BukkitSPacket implements
             d2 = d3;
         }
 
-        packet.setField("b", (int) (d0 * 8000.00));
-        packet.setField("c", (int) (d1 * 8000.00));
-        packet.setField("d", (int) (d2 * 8000.00));
+        packet.setField("b,field_149415_b", (int) (d0 * 8000.00));
+        packet.setField("c,field_149416_c", (int) (d1 * 8000.00));
+        packet.setField("d,field_149414_d", (int) (d2 * 8000.00));
     }
 }

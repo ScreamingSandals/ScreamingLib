@@ -15,7 +15,7 @@ public class BukkitSPacketPlayOutSpawnEntityLiving extends BukkitSPacket impleme
 
     @Override
     public void setEntityId(int entityId) {
-        packet.setField("a", entityId);
+        packet.setField("a,field_149042_a", entityId);
     }
 
     @Override
@@ -23,12 +23,12 @@ public class BukkitSPacketPlayOutSpawnEntityLiving extends BukkitSPacket impleme
         if (uuid == null) {
             throw new UnsupportedOperationException("UUID cannot be null!");
         }
-        packet.setField("b", uuid);
+        packet.setField("b,field_186894_b", uuid);
     }
 
     @Override
     public void setType(int entityType) {
-        packet.setField("c", entityType);
+        packet.setField("c,field_149040_b", entityType);
     }
 
     @Override
@@ -36,9 +36,9 @@ public class BukkitSPacketPlayOutSpawnEntityLiving extends BukkitSPacket impleme
         if (location == null) {
             throw new UnsupportedOperationException("Location cannot be null!");
         }
-        packet.setField("d", location.getX());
-        packet.setField("e", location.getY());
-        packet.setField("f", location.getZ());
+        packet.setField("d,field_149041_c", location.getX());
+        packet.setField("e,field_149038_d", location.getY());
+        packet.setField("f,field_149039_e", location.getZ());
     }
 
     @Override
@@ -46,24 +46,24 @@ public class BukkitSPacketPlayOutSpawnEntityLiving extends BukkitSPacket impleme
         if (velocity == null) {
             throw new UnsupportedOperationException("Velocity cannot be null!");
         }
-        packet.setField("g", (int) (velocity.getX() * 8000.0D));
-        packet.setField("h", (int) (velocity.getY() * 8000.0D));
-        packet.setField("i", (int) (velocity.getZ() * 8000.0D));
+        packet.setField("g,field_149036_f", (int) (velocity.getX() * 8000.0D));
+        packet.setField("h,field_149037_g", (int) (velocity.getY() * 8000.0D));
+        packet.setField("i,field_149047_h", (int) (velocity.getZ() * 8000.0D));
     }
 
     @Override
     public void setYaw(float yaw) {
-        packet.setField("j", (byte) yaw * 256.0F / 300.0F);
+        packet.setField("k,field_149045_j", (byte) (yaw * 256.0F / 300.0F));
     }
 
     @Override
     public void setPitch(float pitch) {
-        packet.setField("k", (byte) (pitch * 256.0F / 300.0F));
+        packet.setField("j,field_149048_i", (byte) pitch * 256.0F / 300.0F);
     }
 
     @Override
     public void setHeadPitch(float headPitch) {
-        packet.setField("l", (byte) (headPitch * 256.0F / 300.0F));
+        packet.setField("l,field_149046_k", (byte) (headPitch * 256.0F / 300.0F));
     }
 
     @Override

@@ -10,6 +10,6 @@ public class BukkitSPacketPlayOutCamera extends BukkitSPacket implements SPacket
 
     @Override
     public void setCameraId(int cameraId) {
-        packet.setField("a", cameraId);
+        packet.setField("a,field_179781_a", cameraId);
     }
 }

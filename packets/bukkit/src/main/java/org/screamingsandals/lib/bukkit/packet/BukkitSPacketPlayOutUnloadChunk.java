@@ -10,11 +10,11 @@ public class BukkitSPacketPlayOutUnloadChunk extends BukkitSPacket implements SP
 
     @Override
     public void setChunkX(int chunkX) {
-        packet.setField("a", chunkX);
+        packet.setField("a,field_186942_a", chunkX);
     }
 
     @Override
     public void setChunkZ(int chunkZ) {
-        packet.setField("b", chunkZ);
+        packet.setField("b,field_186943_b", chunkZ);
     }
 }

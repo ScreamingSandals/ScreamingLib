@@ -16,32 +16,32 @@ public class BukkitSPacketPlayOutExplosion extends BukkitSPacket implements SPac
 
     @Override
     public void setX(double x) {
-        packet.setField("a", x);
+        packet.setField("a,field_149158_a", x);
     }
 
     @Override
     public void setY(double y) {
-        packet.setField("b", y);
+        packet.setField("b,field_149156_b", y);
     }
 
     @Override
     public void setZ(double z) {
-        packet.setField("c", z);
+        packet.setField("c,field_149157_c", z);
     }
 
     @Override
     public void setStrength(float strength) {
-        packet.setField("d", strength);
+        packet.setField("d,field_149154_d", strength);
     }
 
     @Override
-    public void setVelocity(Vector3Df velocity) {
-        if (velocity == null) {
+    public void setKnockBackVelocity(Vector3Df knockBack) {
+        if (knockBack == null) {
             throw new UnsupportedOperationException("Velocity cannot be null!");
         }
-        packet.setField("f", velocity.getX());
-        packet.setField("g", velocity.getY());
-        packet.setField("h", velocity.getZ());
+        packet.setField("f,field_149152_f", knockBack.getX());
+        packet.setField("g,field_149153_g", knockBack.getY());
+        packet.setField("h,field_149159_h", knockBack.getZ());
     }
 
     @Override
@@ -55,6 +55,6 @@ public class BukkitSPacketPlayOutExplosion extends BukkitSPacket implements SPac
                     .construct(location.getX(), location.getY(), location.getZ());
             bukkitBlockLocations.add(constructed);
         });
-        packet.setField("e", bukkitBlockLocations);
+        packet.setField("e,field_149155_e", bukkitBlockLocations);
     }
 }

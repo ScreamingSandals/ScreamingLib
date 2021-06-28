@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.packet.SPacketPlayOutAbilities;
 
 public class BukkitSPacketPlayOutAbilities extends BukkitSPacket implements SPacketPlayOutAbilities {
@@ -10,43 +11,55 @@ public class BukkitSPacketPlayOutAbilities extends BukkitSPacket implements SPac
 
     @Override
     public void setInvulnerable(boolean invulnerable) {
-        if (packet.setField("a", invulnerable) == null) {
+        if (Version.isVersion(1, 17)) {
             packet.setField("e", invulnerable);
+        } else {
+            packet.setField("a,field_149119_a", invulnerable);
         }
     }
 
     @Override
     public void setFlying(boolean isFlying) {
-        if (packet.setField("b", isFlying) == null) {
+        if (Version.isVersion(1, 17)) {
             packet.setField("f", isFlying);
+        } else {
+            packet.setField("b,field_149117_b", isFlying);
         }
     }
 
     @Override
     public void setCanFly(boolean canFly) {
-       if (packet.setField("c", canFly) == null) {
-           packet.setField("g", canFly);
-       }
+        if (Version.isVersion(1, 17)) {
+            packet.setField("g", canFly);
+        } else {
+            packet.setField("c,field_149118_c", canFly);
+        }
     }
 
     @Override
     public void setCanInstantlyBuild(boolean canInstantlyBuild) {
-        if (packet.setField("d", canInstantlyBuild) == null) {
+        if (Version.isVersion(1, 17)) {
             packet.setField("h", canInstantlyBuild);
+        } else {
+            packet.setField("d,field_149115_d", canInstantlyBuild);
         }
     }
 
     @Override
     public void setFlyingSpeed(float speed) {
-        if (packet.setField("e", speed) == null) {
+        if (Version.isVersion(1, 17)) {
             packet.setField("i", speed);
+        } else {
+            packet.setField("e,field_149116_e", speed);
         }
     }
 
     @Override
     public void setWalkingSpeed(float walkingSpeed) {
-        if (packet.setField("f", walkingSpeed) == null) {
+        if (Version.isVersion(1, 17)) {
             packet.setField("j", walkingSpeed);
+        } else {
+            packet.setField("f,field_149114_f", walkingSpeed);
         }
     }
 }

@@ -24,7 +24,7 @@ public class BukkitSPacketPlayOutEntityEquipment extends BukkitSPacket implement
         if (Version.isVersion(1, 17)) {
             packet.setField("b", entityId);
         } else {
-            packet.setField("a", entityId);
+            packet.setField("a,field_149394_a", entityId);
         }
     }
 
@@ -44,7 +44,7 @@ public class BukkitSPacketPlayOutEntityEquipment extends BukkitSPacket implement
             if (Version.isVersion(1, 17)) {
                 packet.setField("c", data);
             } else {
-                packet.setField("b", data);
+                packet.setField("b,field_241789_b_", data);
             }
         }
     }

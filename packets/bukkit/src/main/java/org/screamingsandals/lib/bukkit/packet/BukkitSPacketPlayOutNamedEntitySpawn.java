@@ -14,7 +14,7 @@ public class BukkitSPacketPlayOutNamedEntitySpawn extends BukkitSPacket implemen
 
     @Override
     public void setEntityId(int entityId) {
-        packet.setField("a", entityId);
+        packet.setField("a,field_148957_a", entityId);
     }
 
     @Override
@@ -22,26 +22,30 @@ public class BukkitSPacketPlayOutNamedEntitySpawn extends BukkitSPacket implemen
         if (uuid == null) {
             throw new UnsupportedOperationException("UUID cannot be null!");
         }
-        packet.setField("b", uuid);
+        packet.setField("b,field_179820_b", uuid);
     }
 
     @Override
     public void setLocation(Vector3D location) {
-        packet.setField("c", location.getX());
-        packet.setField("d", location.getY());
-        packet.setField("e", location.getZ());
+        if (location == null) {
+            throw new UnsupportedOperationException("Location cannot be null!");
+        }
+        packet.setField("c,field_148956_c", location.getX());
+        packet.setField("d,field_148953_d", location.getY());
+        packet.setField("e,field_148954_e", location.getZ());
     }
 
     @Override
     public void setYaw(float yaw) {
-        packet.setField("f", (byte) (yaw * 256.0F / 360.0F));
+        packet.setField("f,field_148951_f", (byte) (yaw * 256.0F / 360.0F));
     }
 
     @Override
     public void setPitch(float pitch) {
-        packet.setField("g", (byte) (pitch * 256.0F / 360.0F));
+        packet.setField("g,field_148952_g", (byte) (pitch * 256.0F / 360.0F));
     }
 
+    @Deprecated
     @Override
     public void setDataWatcher(DataWatcher dataWatcher) {
         if (dataWatcher == null) {

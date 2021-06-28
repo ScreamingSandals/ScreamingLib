@@ -17,7 +17,7 @@ public class BukkitSPacketPlayOutScoreboardScore extends BukkitSPacket implement
         if (value == null) {
             throw new UnsupportedOperationException("Value cannot be null!");
         }
-        packet.setField("a", AdventureHelper.toLegacy(value));
+        packet.setField("a,field_149329_a", AdventureHelper.toLegacy(value));
     }
 
     @Override
@@ -25,12 +25,12 @@ public class BukkitSPacketPlayOutScoreboardScore extends BukkitSPacket implement
         if (objectiveKey == null) {
             throw new UnsupportedOperationException("Objective key cannot be null!");
         }
-        packet.setField("b", AdventureHelper.toLegacy(objectiveKey));
+        packet.setField("b,field_149327_b", AdventureHelper.toLegacy(objectiveKey));
     }
 
     @Override
     public void setScore(int score) {
-        packet.setField("c", score);
+        packet.setField("c,field_149328_c", score);
     }
 
     @Override
@@ -39,6 +39,6 @@ public class BukkitSPacketPlayOutScoreboardScore extends BukkitSPacket implement
             throw new UnsupportedOperationException("Action cannot be null!");
         }
         String enumConstant = action.name().toUpperCase();
-        packet.setField("d", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardAction, enumConstant));
+        packet.setField("d,field_149326_d", Reflect.findEnumConstant(ClassStorage.NMS.EnumScoreboardAction, enumConstant));
     }
 }

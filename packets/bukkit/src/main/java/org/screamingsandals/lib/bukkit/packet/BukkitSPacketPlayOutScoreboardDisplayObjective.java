@@ -16,7 +16,7 @@ public class BukkitSPacketPlayOutScoreboardDisplayObjective extends BukkitSPacke
         if (objectiveKey == null) {
             throw new UnsupportedOperationException("Objective key cannot be null!");
         }
-        packet.setField("b", AdventureHelper.toLegacy(objectiveKey));
+        packet.setField("b,field_149373_b", AdventureHelper.toLegacy(objectiveKey));
     }
 
     @Override
@@ -33,6 +33,6 @@ public class BukkitSPacketPlayOutScoreboardDisplayObjective extends BukkitSPacke
                 slotNum = 0;
                 break;
         }
-        packet.setField("a", slotNum);
+        packet.setField("a,field_149374_a", slotNum);
     }
 }

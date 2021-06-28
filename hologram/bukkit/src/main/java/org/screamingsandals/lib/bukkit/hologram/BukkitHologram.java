@@ -288,7 +288,7 @@ public class BukkitHologram extends AbstractHologram {
     private List<SPacket> getSpawnPacket(ArmorStandNMS entity) {
         final var toReturn = new LinkedList<SPacket>();
 
-        final var type = (int) Reflect.getMethod(Reflect.getField(ClassStorage.NMS.IRegistry, "ENTITY_TYPE,Y"), "getId,a", Object.class)
+        final var type = (int) Reflect.getMethod(Reflect.getField(ClassStorage.NMS.IRegistry, "ENTITY_TYPE,field_212629_r,Y"), "getId,func_148757_b", Object.class)
                 .invoke(entity.getEntityType());
 
         final var spawnPacket = PacketMapper.createPacket(SPacketPlayOutSpawnEntityLiving.class);
@@ -299,6 +299,7 @@ public class BukkitHologram extends AbstractHologram {
         spawnPacket.setYaw(entity.getLocation().getYaw());
         spawnPacket.setVelocity(entity.getVelocity());
         spawnPacket.setHeadPitch(3.9f);
+        spawnPacket.setLocation(LocationMapper.wrapLocation(entity.getLocation()));
         spawnPacket.setDataWatcher(new BukkitDataWatcher(entity.getDataWatcher()));
         toReturn.add(spawnPacket);
 

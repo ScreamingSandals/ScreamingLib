@@ -11,7 +11,7 @@ public class BukkitSPacketPlayOutBlockBreakAnimation extends BukkitSPacket imple
 
     @Override
     public void setEntityId(int entityId) {
-        packet.setField("a", entityId);
+        packet.setField("a,field_148852_a", entityId);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class BukkitSPacketPlayOutBlockBreakAnimation extends BukkitSPacket imple
         }
         var bukkitBlockPos = Reflect.constructor(ClassStorage.NMS.BlockPosition, int.class, int.class, int.class)
                 .construct(blockLocation.getX(), blockLocation.getY(), blockLocation.getZ());
-        packet.setField("b", bukkitBlockPos);
+        packet.setField("b,field_179822_b", bukkitBlockPos);
     }
 
     @Override
@@ -29,6 +29,6 @@ public class BukkitSPacketPlayOutBlockBreakAnimation extends BukkitSPacket imple
         if (destroyStage < 0 || destroyStage > 9) {
             throw new UnsupportedOperationException("Invalid destroy stage: " + destroyStage);
         }
-        packet.setField("c", destroyStage);
+        packet.setField("c,field_148849_e", destroyStage);
     }
 }

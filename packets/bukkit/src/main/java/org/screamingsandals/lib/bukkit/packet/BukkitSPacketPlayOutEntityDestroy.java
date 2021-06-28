@@ -17,7 +17,7 @@ public class BukkitSPacketPlayOutEntityDestroy extends BukkitSPacket implements 
             throw new UnsupportedOperationException("Invalid array provided!");
         }
 
-        if (packet.setField("a", entityIdArray) == null) {
+        if (packet.setField("a,field_149100_a", entityIdArray) == null) {
             packet.setField("a", entityIdArray[0]);
             Arrays.stream(entityIdArray)
                     .skip(1)
@@ -33,7 +33,7 @@ public class BukkitSPacketPlayOutEntityDestroy extends BukkitSPacket implements 
     public void setEntityToDestroy(int entityId) {
         if (packet.setField("a", entityId) == null) {
             int[] arr = {entityId};
-            packet.setField("a", arr);
+            packet.setField("a,field_149100_a", arr);
         }
     }
 
