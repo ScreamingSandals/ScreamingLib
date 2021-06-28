@@ -257,12 +257,19 @@ public class BukkitHologram extends AbstractHologram {
             }
 
             final var destroyPacket = PacketMapper.createPacket(SPacketPlayOutEntityDestroy.class);
-            destroyPacket.setEntitiesToDestroy(toRemove
+            int[] arr = toRemove
                     .stream()
                     .mapToInt(i -> i)
-                    .toArray()
-            );
-            packets.add(destroyPacket);
+                    .toArray();
+
+            if (arr != null && arr.length > 0) {
+                destroyPacket.setEntitiesToDestroy(toRemove
+                        .stream()
+                        .mapToInt(i -> i)
+                        .toArray()
+                );
+                packets.add(destroyPacket);
+            }
         } catch (Throwable t) {
             t.printStackTrace();
         }
@@ -327,7 +334,9 @@ public class BukkitHologram extends AbstractHologram {
         }
 
         final var destroyPacket = PacketMapper.createPacket(SPacketPlayOutEntityDestroy.class);
-        destroyPacket.setEntitiesToDestroy(toRemove);
+        if (toRemove != null && toRemove.length > 0) {
+            destroyPacket.setEntitiesToDestroy(toRemove);
+        }
         return destroyPacket;
     }
 
