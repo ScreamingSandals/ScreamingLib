@@ -118,7 +118,7 @@ public class ClassStorage {
 		public static final Class<?> CraftEquipmentSlot = safeGetClass("{obc}.CraftEquipmentSlot");
 		public static final Class<?> CraftItemStack = safeGetClass("{obc}.inventory.CraftItemStack");
 		public static final Class<?> CraftMagicNumbers = safeGetClass("{obc}.util.CraftMagicNumbers");
-		public static final Class<?> CraftVector = safeGetClass("{obc}.CraftVector");
+		public static final Class<?> CraftVector = safeGetClass("{obc}.util.CraftVector");
 		public static final Class<?> BlockPosition = safeGetClass("net.minecraft.core.BlockPosition", "{nms}.BlockPosition");
 		// 1.16
 		public static final Class<?> AttributeModifiable = safeGetClass("net.minecraft.world.entity.ai.attributes.AttributeModifiable", "{nms}.AttributeModifiable", "{f:ent}.ai.attributes.ModifiableAttributeInstance");
