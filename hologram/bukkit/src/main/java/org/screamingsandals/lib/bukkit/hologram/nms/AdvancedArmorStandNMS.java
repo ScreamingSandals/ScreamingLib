@@ -31,7 +31,7 @@ public class AdvancedArmorStandNMS extends ArmorStandNMS {
     }
 
     public Vector3Df getRotation() {
-        return ClassStorage.getVectorFromNMS(Reflect.getField(handler, "headPose,field_175443_bh,bw"));
+        return ClassStorage.getVectorFromNMS(Reflect.getField(handler, "headPose,field_175443_bh,cg"));
     }
 
     public Object getHeadSlot() {
