@@ -148,6 +148,9 @@ public class EntityNMS {
 
 	public Vector3D getVelocity() {
 		final var mot = Reflect.getMethod(handler, "getMot,func_213322_ci").invoke();
+		if (mot == null) {
+			return new Vector3D(0, 0, 0);
+		}
 		final var bukkitVector = (Vector) Reflect.getMethod(ClassStorage.NMS.CraftVector, "toBukkit").invokeStatic(mot);
 		return new Vector3D(
 				bukkitVector.getX(),
