@@ -131,7 +131,7 @@ public class EntityNMS {
 	}
 
 	public UUID getUniqueId() {
-		return (UUID) Reflect.getField(handler, "uniqueID");
+		return (UUID) Reflect.getMethod(handler, "getUniqueID,ch,bc,bS,func_110124_au").invoke();
 	}
 
 	public Vector3D getVelocity() {
