@@ -27,7 +27,7 @@ public class AdvancedArmorStandNMS extends ArmorStandNMS {
 
     public void setRotation(Vector3Df vector3Df) {
         Preconditions.checkNotNull(vector3Df, "Vector is null!");
-        Reflect.getMethod(ClassStorage.NMS.EntityArmorStand, "setHeadPose", ClassStorage.NMS.Vector3f).invokeInstance(handler, ClassStorage.getVectorToNMS(vector3Df));
+        Reflect.getMethod(ClassStorage.NMS.EntityArmorStand, "setHeadPose,func_175415_a", ClassStorage.NMS.Vector3f).invokeInstance(handler, ClassStorage.getVectorToNMS(vector3Df));
     }
 
     public Vector3Df getRotation() {
