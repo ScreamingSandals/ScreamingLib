@@ -25,7 +25,7 @@ public class ClassStorage {
 	public static final String NMS_VERSION = checkNMSVersion();
 
 	public static final class NMS {
-		public static final Class<?> Vector3f = safeGetClass("net.minecraft.core.Rotations", "{nms}.Vector3f", "{f:net}.Vector3f");
+		public static final Class<?> Vector3f = safeGetClass("net.minecraft.core.Vector3f", "{nms}.Vector3f", "{f:net}.Vector3f");
 		public static final Class<?> ItemStack = safeGetClass("net.minecraft.world.item.ItemStack", "{nms}.ItemStack", "{f:net}.ItemStack");
 		public static final Class<?> ChatSerializer = safeGetClass("net.minecraft.network.chat.IChatBaseComponent$ChatSerializer", "{nms}.IChatBaseComponent$ChatSerializer", "{nms}.ChatSerializer", "{f:util}.text.ITextComponent$Serializer");
 		public static final Class<?> DataWatcher = safeGetClass("net.minecraft.network.syncher.DataWatcher", "{nms}.DataWatcher", "{f:net}.datasync.EntityDataManager");
