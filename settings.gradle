@@ -24,6 +24,7 @@ registerModule('healthindicator', 'bukkit') //TODO: add others
 registerModule('placeholders', 'bukkit') //TODO: add others
 registerModule('packets', 'bukkit') //TODO: add others
 // registerModule('gamecore', 'bukkit') //TODO: add others
+registerModule('npc', 'bukkit') // TODO: add others
 registerModule('core', 'bukkit', 'minestom', 'sponge')
 registerModule('proxy', 'bungee', 'velocity')
 registerModule('plugin', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
