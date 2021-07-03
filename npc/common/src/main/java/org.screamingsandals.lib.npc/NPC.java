@@ -1,54 +1,110 @@
 package org.screamingsandals.lib.npc;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.world.LocationHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class NPC {
-    private final UUID uuid = UUID.randomUUID();
-    private final List<TextEntry> name = new ArrayList<>();
-    private final List<PlayerWrapper> visibleTo = new ArrayList<>();
-    private boolean visible;
+/**
+ * API For the NPC (non-player-character)
+ */
+public interface NPC {
+
+    /**
+     * Spawns the NPC to all visible Players.
+     * @throws UnsupportedOperationException if the NPC has already been spawned
+     */
+    void spawn();
+
+    /**
+     * Destroys the NPC entirely.
+     */
+    void destroy();
+
+    /**
+     * Entity logic per tick.
+     */
+    void tick();
+
+    /**
+     *
+     * @return current location of the NPC
+     */
     @Nullable
-    private LocationHolder location;
+    LocationHolder getLocation();
 
+    /**
+     *
+     * @param location location where to create the NPC
+     */
+    void setLocation(LocationHolder location);
+
+    /**
+     *
+     * @return UUID of the NPC
+     */
+    @NotNull
+    UUID getUUID();
+
+    /**
+     *
+     * @return  true if NPC is visible, false otherwise
+     */
+    boolean isVisible();
+
+    /**
+     *
+     * @return a list containing text entries for the NPC name, null if not set
+     */
     @Nullable
-    public LocationHolder getLocation() {
-        return location;
-    }
+    List<TextEntry> getDisplayName();
 
-    public LocationHolder setLocation(LocationHolder location) {
-        this.location = location;
-    }
+    /**
+     *
+     * @param name name (multi-lined) of the NPC.
+     */
+    void setDisplayName(List<TextEntry> name);
 
-    public UUID getUUID() {
-        return uuid;
-    }
+    /**
+     *
+     * @param player the player to query visibility status
+     * @return true if current NPC instance is visible to player, false otherwise
+     */
+    boolean isVisibleToPlayer(PlayerWrapper player);
 
-    public boolean isVisible() {
-        return visible;
-    }
+    /**
+     *
+     * @return true if NPC has been destroyed, false otherwise
+     */
+    boolean isDestroyed();
 
-    public List<TextEntry> getDisplayName() {
-        return List.copyOf(name);
-    }
+    /**
+     *
+     * @return id of the NPC
+     */
+    int getEntityId();
 
-    public void setDisplayName(List<TextEntry> name) {
-        this.name.clear();
-        this.name.addAll(name);
-        setDisplayName0(name);
-    }
+    /**
+     *
+     * @param viewer
+     */
+    void addViewer(PlayerWrapper viewer);
 
-    public boolean isVisibleToPlayer(PlayerWrapper player) {
-        return visibleTo.contains(player);
-    }
+    /**
+     *
+     * @param viewer
+     */
+    void removeViewer(PlayerWrapper viewer);
 
-    protected abstract void setDisplayName0(List<TextEntry> name);
+    List<PlayerWrapper> getViewers();
 
-    protected abstract void tick();
+    void show();
+
+    void hide();
+
+    void setSkin(NPCSkin skin);
 }

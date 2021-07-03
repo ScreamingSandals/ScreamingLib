@@ -20,12 +20,12 @@ public abstract class NPCManager {
         npcManager = packetMapperSupplier.get();
     }
 
-    public static NPC createNPC() {
+    public static AbstractNPC createNPC() {
         if (npcManager == null) {
             throw new UnsupportedOperationException("NPCManager isn't initialized yet.");
         }
         return npcManager.createNPC0();
     }
 
-    public abstract NPC createNPC0();
+    public abstract AbstractNPC createNPC0();
 }
