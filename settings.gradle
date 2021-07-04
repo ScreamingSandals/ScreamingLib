@@ -28,6 +28,6 @@ registerModule('core', 'bukkit') //TODO: add others
 registerModule('proxy', 'bungee', 'velocity')
 registerModule('plugin', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
 registerModule('tasker', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
-registerModule('command', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
+registerModule('command', 'bukkit', /*'minestom' ,*/ 'sponge', 'bungee', 'velocity')
 registerModule('event', 'bukkit', 'sponge', 'bungee', 'velocity')
 
