@@ -25,8 +25,8 @@ public class ClassStorage {
 	public static final String NMS_VERSION = checkNMSVersion();
 
 	public static final class NMS {
-		public static final Class<?> Vector3f = safeGetClass("net.minecraft.core.Vector3f", "{nms}.Vector3f", "{f:net}.Vector3f");
-		public static final Class<?> ItemStack = safeGetClass("net.minecraft.world.item.ItemStack", "{nms}.ItemStack", "{f:net}.ItemStack");
+		public static final Class<?> Vector3f = safeGetClass("net.minecraft.core.Vector3f", "{nms}.Vector3f", "{f:net}.Vector3f", "{f:util}.math.vector.Vector3f");
+		public static final Class<?> ItemStack = safeGetClass("net.minecraft.world.item.ItemStack", "{nms}.ItemStack", "{f:net}.ItemStack", "net.minecraft.item.ItemStack");
 		public static final Class<?> ChatSerializer = safeGetClass("net.minecraft.network.chat.IChatBaseComponent$ChatSerializer", "{nms}.IChatBaseComponent$ChatSerializer", "{nms}.ChatSerializer", "{f:util}.text.ITextComponent$Serializer");
 		public static final Class<?> DataWatcher = safeGetClass("net.minecraft.network.syncher.DataWatcher", "{nms}.DataWatcher", "{f:net}.datasync.EntityDataManager");
 		public static final Class<?> Entity = safeGetClass("net.minecraft.world.entity.Entity", "{nms}.Entity", "{f:ent}.Entity");
@@ -120,6 +120,8 @@ public class ClassStorage {
 		public static final Class<?> CraftMagicNumbers = safeGetClass("{obc}.util.CraftMagicNumbers");
 		public static final Class<?> CraftVector = safeGetClass("{obc}.util.CraftVector");
 		public static final Class<?> BlockPosition = safeGetClass("net.minecraft.core.BlockPosition", "{nms}.BlockPosition");
+		public static final Class<?> IRegistry = safeGetClass("net.minecraft.core.IRegistry", "{nms}.IRegistry", "{f:util}.registry.Registry");
+
 		// 1.16
 		public static final Class<?> AttributeModifiable = safeGetClass("net.minecraft.world.entity.ai.attributes.AttributeModifiable", "{nms}.AttributeModifiable", "{f:ent}.ai.attributes.ModifiableAttributeInstance");
 
@@ -131,7 +133,6 @@ public class ClassStorage {
 		// 1.17
 		public static final Class<?> ChatMessageType = safeGetClass("net.minecraft.network.chat.ChatMessageType");
 		public static final Class<?> PacketPlayOutScoreboardTeamData = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam$ba");
-		public static final Class<?> IRegistry = safeGetClass("net.minecraft.core.IRegistry");
 
 	}
 	
