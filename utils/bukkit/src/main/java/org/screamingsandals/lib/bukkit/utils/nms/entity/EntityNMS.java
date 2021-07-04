@@ -32,8 +32,15 @@ public class EntityNMS {
 			double locX = (double) Reflect.getMethod(handler, "locX").invoke();
 			double locY = (double) Reflect.getMethod(handler, "locY").invoke();
 			double locZ = (double) Reflect.getMethod(handler, "locZ").invoke();
-			float yaw = (float) Reflect.getMethod(handler, "getYRot").invoke();
-			float pitch = (float) Reflect.getMethod(handler, "getXRot").invoke();
+			float yaw, pitch;
+			if (Version.isVersion(1,17)) {
+				yaw = (float) Reflect.getMethod(handler, "getYRot").invoke();
+				pitch = (float) Reflect.getMethod(handler, "getXRot").invoke();
+			} else {
+				yaw = (float) Reflect.getField(handler, "yaw,field_70177_z");
+				pitch = (float) Reflect.getField(handler, "pitch,field_70125_A");
+			}
+
 			Object world = Reflect.getMethod(handler, "getWorld,func_130014_f_").invoke();
 			World craftWorld = (World) Reflect.getMethod(world, "getWorld").invoke();
 
