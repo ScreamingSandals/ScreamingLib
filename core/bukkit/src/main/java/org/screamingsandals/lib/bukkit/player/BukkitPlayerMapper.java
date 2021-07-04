@@ -368,7 +368,8 @@ public class BukkitPlayerMapper extends PlayerMapper {
         new PlayerArmorStandManipulateEventListener(plugin);
         new PlayerBedLeaveEventListener(plugin);
         new PlayerBucketEventListener(plugin);
-        new PlayerCommandSendEventListener(plugin);
+        if (Reflect.has("org.bukkit.event.player.PlayerCommandSendEvent"))
+            new PlayerCommandSendEventListener(plugin);
         new PlayerEggThrowEventListener(plugin);
         new PlayerExpChangeEventListener(plugin);
         new PlayerFishEventListener(plugin);
