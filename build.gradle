@@ -8,7 +8,7 @@ buildscript {
     }
 }
 
-defaultTasks 'clean', 'screamCompile', 'allowJavadocUpload'
+defaultTasks 'clean', 'screamCompile'//, 'allowJavadocUpload'
 
 allprojects {
     group = 'org.screamingsandals.lib'
