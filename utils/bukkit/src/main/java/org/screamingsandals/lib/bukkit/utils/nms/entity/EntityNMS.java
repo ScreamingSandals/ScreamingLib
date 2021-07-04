@@ -28,7 +28,7 @@ public class EntityNMS {
 	}
 
 	public Location getLocation() {
-		if (Version.isVersion(1, 17)) {
+		if (Version.isVersion(1, 16)) {
 			double locX = (double) Reflect.getMethod(handler, "locX").invoke();
 			double locY = (double) Reflect.getMethod(handler, "locY").invoke();
 			double locZ = (double) Reflect.getMethod(handler, "locZ").invoke();
