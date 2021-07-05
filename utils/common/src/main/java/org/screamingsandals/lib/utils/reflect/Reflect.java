@@ -59,6 +59,10 @@ public class Reflect {
 
     public static ClassMethod getMethod(List<Class<?>> classes, String[] names, Class<?>... params) {
         for (var clazz : classes) {
+            if (clazz == null) {
+                continue;
+            }
+
             for (var name : names) {
                 try {
                     var method = clazz.getMethod(name.trim(), params);
