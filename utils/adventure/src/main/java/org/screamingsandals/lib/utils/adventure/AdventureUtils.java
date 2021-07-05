@@ -18,6 +18,11 @@ public class AdventureUtils {
             = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "audience", "MessageType"));
 
     public InstanceMethod get(Object instance, String method, Class<?>... types) {
+        if (ComponentUtils.NATIVE_COMPONENT_CLASS == null) {
+            // okay, no adventure, fall to your fallback method please
+            return new InstanceMethod(null, null);
+        }
+
         if (ComponentUtils.NATIVE_COMPONENT_CLASS.isAssignableFrom(Component.class)) {
             // Ok, we are not using shaded adventure
             return Reflect.getMethod(instance, method, types);
