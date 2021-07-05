@@ -9,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -269,5 +270,16 @@ public class ClassStorage {
 	public static Object getDataWatcher(Object handler) {
 		Preconditions.checkNotNull(handler, "Handler is null!");
 		return Reflect.getMethod(handler, "getDataWatcher,func_184212_Q,ad").invoke();
+	}
+
+	public static int getEntityTypeId(EntityNMS entityNMS) {
+		Preconditions.checkNotNull(entityNMS, "Entity is null!");
+		final var entity_type_field = Reflect.getField(ClassStorage.NMS.IRegistry, "ENTITY_TYPE,field_212629_r,Y");
+		if (entityNMS.getEntityType() != null && entity_type_field != null) {
+			return (int) Reflect.getMethod(entity_type_field, "a,getId,func_148757_b", Object.class)
+					.invoke(entityNMS.getEntityType());
+		} else {
+			return (int) Reflect.getMethod(NMS.EntityTypes, "a", NMS.Entity).invokeStatic(entityNMS.getHandler());
+		}
 	}
 }

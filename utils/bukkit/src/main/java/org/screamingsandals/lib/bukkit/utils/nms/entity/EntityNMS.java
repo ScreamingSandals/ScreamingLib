@@ -140,7 +140,6 @@ public class EntityNMS {
 		Reflect.getMethod(handler, "setNoGravity,func_189654_d", boolean.class).invoke(!gravity);
 	}
 
-	//TODO: forge names
 	public boolean isGravity() {
 		return !((boolean) Reflect.getMethod(handler, "isNoGravity,func_189652_ae").invoke());
 	}
