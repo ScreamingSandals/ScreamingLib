@@ -4,10 +4,7 @@ import sun.reflect.ReflectionFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class Reflect {
     public static Class<?> getClassSafe(String... classNames) {
@@ -57,7 +54,7 @@ public class Reflect {
     }
 
     public static ClassMethod getMethod(Class<?> clazz, String[] names, Class<?>... params) {
-        return getMethod(List.of(clazz), names, params);
+        return getMethod(Collections.singletonList(clazz), names, params);
     }
 
     public static ClassMethod getMethod(List<Class<?>> classes, String[] names, Class<?>... params) {
@@ -248,7 +245,7 @@ public class Reflect {
         if (Proxy.isProxyClass(instance.getClass())) {
             return Arrays.asList(instance.getClass().getInterfaces());
         } else {
-            return List.of(instance.getClass());
+            return Collections.singletonList(instance.getClass());
         }
     }
 
