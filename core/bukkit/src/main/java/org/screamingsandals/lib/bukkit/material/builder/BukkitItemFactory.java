@@ -163,16 +163,20 @@ public class BukkitItemFactory extends ItemFactory {
                             }
                         }
 
-                        item.getItemAttributes()
-                                .stream()
-                                .map(holder -> holder.as(BukkitItemAttribute.class))
-                                .forEach(holder -> meta.addAttributeModifier(holder.getAttribute(), holder.getAttributeModifier()));
+                        if (Reflect.hasMethod(meta, "hasAttributeModifiers")) { // 1.13.1
+                            item.getItemAttributes()
+                                    .stream()
+                                    .map(holder -> holder.as(BukkitItemAttribute.class))
+                                    .forEach(holder -> meta.addAttributeModifier(holder.getAttribute(), holder.getAttributeModifier()));
+                        }
 
-                        var data = item.getData();
-                        if (data instanceof BukkitItemData && !data.isEmpty()) {
-                            var origDataContainer = ((BukkitItemData) data).getDataContainer();
-                            Reflect.getMethod(meta.getPersistentDataContainer(), "putAll", Map.class)
-                                    .invoke(Reflect.fastInvoke(origDataContainer, "getRaw"));
+                        if (Reflect.hasMethod(meta, "getPersistentDataContainer")) { // 1.14
+                            var data = item.getData();
+                            if (data instanceof BukkitItemData && !data.isEmpty()) {
+                                var origDataContainer = ((BukkitItemData) data).getDataContainer();
+                                Reflect.getMethod(meta.getPersistentDataContainer(), "putAll", Map.class)
+                                        .invoke(Reflect.fastInvoke(origDataContainer, "getRaw"));
+                            }
                         }
 
                         if (Reflect.has("org.bukkit.inventory.meta.KnowledgeBookMeta")) { // 1.12+
@@ -290,12 +294,14 @@ public class BukkitItemFactory extends ItemFactory {
                             }
                         }
 
-                        if (meta.hasAttributeModifiers() && meta.getAttributeModifiers() != null) {
-                            meta.getAttributeModifiers()
-                                    .forEach((attribute, attributeModifier) ->
-                                            AttributeMapping.wrapItemAttribute(new BukkitItemAttribute(attribute, attributeModifier))
-                                                    .ifPresent(item::addItemAttribute)
-                                    );
+                        if (Reflect.hasMethod(meta, "hasAttributeModifiers")) { // 1.13.1
+                            if (meta.hasAttributeModifiers() && meta.getAttributeModifiers() != null) {
+                                meta.getAttributeModifiers()
+                                        .forEach((attribute, attributeModifier) ->
+                                                AttributeMapping.wrapItemAttribute(new BukkitItemAttribute(attribute, attributeModifier))
+                                                        .ifPresent(item::addItemAttribute)
+                                        );
+                            }
                         }
 
                         if (Reflect.has("org.bukkit.inventory.meta.KnowledgeBookMeta")) { // 1.12+
@@ -335,7 +341,9 @@ public class BukkitItemFactory extends ItemFactory {
                                     .ifPresent(item.getFireworkEffects()::add);
                         }
 
-                        item.setData(new BukkitItemData(plugin, meta.getPersistentDataContainer()));
+                        if (Reflect.hasMethod(meta, "getPersistentDataContainer")) { // 1.14
+                            item.setData(new BukkitItemData(plugin, meta.getPersistentDataContainer()));
+                        }
                     }
                     return item;
                 })
