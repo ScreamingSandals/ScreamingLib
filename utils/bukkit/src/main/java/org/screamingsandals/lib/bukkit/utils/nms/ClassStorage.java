@@ -279,7 +279,7 @@ public class ClassStorage {
 			return (int) Reflect.getMethod(entity_type_field, "a,getId,func_148757_b", Object.class)
 					.invoke(entityNMS.getEntityType());
 		} else {
-			return (int) Reflect.getMethod(NMS.EntityTypes, "a", NMS.Entity).invokeStatic(entityNMS.getHandler());
+			return (int) Reflect.getMethod(NMS.EntityTypes, "a,func_75619_a", NMS.Entity).invokeStatic(entityNMS.getHandler());
 		}
 	}
 }

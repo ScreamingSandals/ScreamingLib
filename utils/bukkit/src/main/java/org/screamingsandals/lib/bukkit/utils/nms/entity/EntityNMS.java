@@ -153,16 +153,27 @@ public class EntityNMS {
 	}
 
 	public Vector3D getVelocity() {
-		final var mot = Reflect.getMethod(handler, "getMot,func_213322_ci").invoke();
-		final var bukkitVector = (Vector) Reflect.getMethod(ClassStorage.NMS.CraftVector, "toBukkit").invokeStatic(mot);
-		if (bukkitVector == null) {
-			return new Vector3D(0, 0, 0);
+		if (Reflect.getField(handler, "motX,field_70159_w") != null) {
+			double motX = (double) Reflect.getField(handler, "motX,field_70159_w");
+			double motY = (double) Reflect.getField(handler, "motY,field_70181_x");
+			double motZ = (double) Reflect.getField(handler, "motZ,field_70179_y");
+			return new Vector3D(
+					motX,
+					motY,
+					motZ
+			);
+		} else {
+			final var mot = Reflect.getMethod(handler, "getMot,func_213322_ci").invoke();
+			final var bukkitVector = (Vector) Reflect.getMethod(ClassStorage.NMS.CraftVector, "toBukkit").invokeStatic(mot);
+			if (bukkitVector == null) {
+				return new Vector3D(0, 0, 0);
+			}
+			return new Vector3D(
+					bukkitVector.getX(),
+					bukkitVector.getY(),
+					bukkitVector.getZ()
+			);
 		}
-		return new Vector3D(
-				bukkitVector.getX(),
-				bukkitVector.getY(),
-				bukkitVector.getZ()
-		);
 	}
 
 }
