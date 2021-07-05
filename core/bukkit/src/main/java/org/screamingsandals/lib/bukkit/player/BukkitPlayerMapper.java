@@ -380,10 +380,12 @@ public class BukkitPlayerMapper extends PlayerMapper {
         new PlayerItemConsumeEventListener(plugin);
         new PlayerItemDamageEventListener(plugin);
         new PlayerItemHeldEventListener(plugin);
-        new PlayerItemMendEventListener(plugin);
+        if (Reflect.has("org.bukkit.event.player.PlayerItemMendEvent"))
+            new PlayerItemMendEventListener(plugin);
         new PlayerKickEventListener(plugin);
         new PlayerLevelChangeEventListener(plugin);
-        new PlayerLocaleChangeEventListener(plugin);
+        if (Reflect.has("org.bukkit.event.player.PlayerLocaleChangeEvent"))
+            new PlayerLocaleChangeEventListener(plugin);
         new PlayerLoginEventListener(plugin);
         new PlayerPortalEventListener(plugin);
         new PlayerShearEntityEventListener(plugin);
