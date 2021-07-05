@@ -145,6 +145,10 @@ public class EntityNMS {
 	}
 
 	public boolean isOnGround() {
+		final var onGround_field = Reflect.getField(handler, "onGround,field_70122_E");
+		if (onGround_field != null) {
+			return (boolean) onGround_field;
+		}
 		return (boolean) Reflect.getMethod(handler, "isOnGround,func_233570_aj_").invoke();
 	}
 
