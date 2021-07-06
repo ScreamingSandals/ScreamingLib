@@ -25,6 +25,14 @@ public class InvocationResult extends BasicWrapper<Object> {
         return Reflect.getMethod(wrappedObject, names, params);
     }
 
+    public InvocationResult getFieldResulted(String names) {
+        return new InvocationResult(getField(names));
+    }
+
+    public InvocationResult getFieldResulted(String[] names) {
+        return new InvocationResult(getField(names));
+    }
+
     public Object getField(String names) {
         if (wrappedObject == null) {
             return null;

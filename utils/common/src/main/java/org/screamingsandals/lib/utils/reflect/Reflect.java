@@ -92,6 +92,31 @@ public class Reflect {
         return new InstanceMethod(instance, method.getMethod());
     }
 
+    public static InvocationResult getFieldResulted(Object instance, String names) {
+        return new InvocationResult(getField(instance, names));
+    }
+
+    public static InvocationResult getFieldResulted(Object instance, String[] names) {
+        return new InvocationResult(getField(instance, names));
+    }
+
+    public static InvocationResult getFieldResulted(Class<?> clazz, String names) {
+        return new InvocationResult(getField(clazz, names));
+    }
+
+
+    public static InvocationResult getFieldResulted(Class<?> clazz, String[] names) {
+        return new InvocationResult(getField(clazz, names));
+    }
+
+    public static InvocationResult getFieldResulted(Class<?> clazz, String names, Object instance) {
+        return new InvocationResult(getField(clazz, names, instance));
+    }
+
+    public static InvocationResult getFieldResulted(Class<?> clazz, String[] names, Object instance) {
+        return new InvocationResult(getField(clazz, names, instance));
+    }
+
     public static Object getField(Object instance, String names) {
         return getField(instance.getClass(), names.split(","), instance);
     }
