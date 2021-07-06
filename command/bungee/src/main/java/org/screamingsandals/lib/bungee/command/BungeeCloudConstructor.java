@@ -7,7 +7,6 @@ import net.md_5.bungee.api.plugin.Plugin;
 import org.screamingsandals.lib.bungee.proxiedplayer.BungeeProxiedPlayerMapper;
 import org.screamingsandals.lib.command.CloudConstructor;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
-import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.function.Function;
@@ -24,8 +23,6 @@ public class BungeeCloudConstructor extends CloudConstructor {
 
     public BungeeCloudConstructor(Plugin plugin) {
         this.plugin = plugin;
-
-        InitUtils.doIfNot(BungeeProxiedPlayerMapper::isInitialized, () -> BungeeProxiedPlayerMapper.init(plugin));
     }
 
     @Override

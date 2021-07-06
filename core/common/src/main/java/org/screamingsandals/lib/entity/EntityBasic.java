@@ -5,13 +5,12 @@ import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.event.SBlockFormedByEntityEvent;
 
 import java.util.List;
 import java.util.UUID;
 
 // TODO: Metadata
-public interface EntityBasic extends Wrapper, SBlockFormedByEntityEvent.Producer {
+public interface EntityBasic extends Wrapper {
     EntityTypeHolder getEntityType();
 
     LocationHolder getLocation();

@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly paper(PAPER_VERSION)
+    compileOnly paperLegacy(PAPER_LEGACY_VERSION)
 
     api project(":event-common")
 }

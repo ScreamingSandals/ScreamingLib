@@ -7,12 +7,14 @@ import java.lang.reflect.Proxy;
 import java.util.*;
 
 public class Reflect {
-    public static Class<?> getClassSafe(String... classNames) {
-        return getClassSafe(Map.of(), classNames);
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> getClassSafe(String... classNames) {
+        return (Class<T>) getClassSafe(Map.of(), classNames);
     }
 
-    public static Class<?> getClassSafe(ClassLoader loader, String... classNames) {
-        return getClassSafe(loader, Map.of(), classNames);
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> getClassSafe(ClassLoader loader, String... classNames) {
+        return (Class<T>) getClassSafe(loader, Map.of(), classNames);
     }
 
     public static Class<?> getClassSafe(Map<String, String> replaceRules, String... classNames) {

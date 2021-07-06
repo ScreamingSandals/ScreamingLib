@@ -2,10 +2,10 @@ package org.screamingsandals.lib.sponge.material.builder;
 
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.attribute.AttributeMapping;
+import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
-import org.screamingsandals.lib.material.container.Container;
-import org.screamingsandals.lib.material.container.PlayerContainer;
+import org.screamingsandals.lib.container.Container;
+import org.screamingsandals.lib.container.PlayerContainer;
 import org.screamingsandals.lib.material.data.ItemData;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
@@ -16,7 +16,6 @@ import org.screamingsandals.lib.sponge.material.container.SpongeContainer;
 import org.screamingsandals.lib.sponge.material.meta.SpongeEnchantmentMapping;
 import org.screamingsandals.lib.sponge.material.meta.SpongePotionEffectMapping;
 import org.screamingsandals.lib.sponge.material.meta.SpongePotionMapping;
-import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.InventoryType;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.spongepowered.api.Sponge;
@@ -45,12 +44,6 @@ public class SpongeItemFactory extends ItemFactory {
     }
 
     public SpongeItemFactory() {
-        InitUtils.doIfNot(SpongeMaterialMapping::isInitialized, SpongeMaterialMapping::init);
-        InitUtils.doIfNot(SpongeEnchantmentMapping::isInitialized, SpongeEnchantmentMapping::init);
-        InitUtils.doIfNot(SpongePotionMapping::isInitialized, SpongePotionMapping::init);
-        InitUtils.doIfNot(SpongePotionEffectMapping::isInitialized, SpongePotionEffectMapping::init);
-        InitUtils.doIfNot(SpongeAttributeMapping::isInitialized, SpongeAttributeMapping::init);
-
         itemConverter
                 .registerW2P(ItemStack.class, item -> {
                     var stack = item.getMaterial().as(ItemStack.class);

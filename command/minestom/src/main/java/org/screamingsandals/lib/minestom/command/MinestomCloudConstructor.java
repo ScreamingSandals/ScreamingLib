@@ -7,7 +7,6 @@ import net.minestom.server.extensions.Extension;
 import org.screamingsandals.lib.command.CloudConstructor;
 import org.screamingsandals.lib.minestom.player.MinestomPlayerMapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
-import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.function.Function;
@@ -16,12 +15,8 @@ import java.util.function.Function;
         MinestomPlayerMapper.class
 })
 public class MinestomCloudConstructor extends CloudConstructor {
-    public static void init(Extension extension) {
-        CloudConstructor.init(() -> new MinestomCloudConstructor(extension));
-    }
-
-    public MinestomCloudConstructor(Extension extension) {
-        InitUtils.doIfNot(MinestomPlayerMapper::isInitialized, () -> MinestomPlayerMapper.init(extension));
+    public static void init() {
+        CloudConstructor.init(MinestomCloudConstructor::new);
     }
 
     @Override

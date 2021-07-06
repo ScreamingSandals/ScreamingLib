@@ -117,4 +117,9 @@ public class InvocationResult extends BasicWrapper<Object> {
         }
         return Reflect.hasMethod(wrappedObject, methodNames, arguments);
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(fastInvoke("toString"));
+    }
 }

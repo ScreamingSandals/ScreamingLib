@@ -4,7 +4,7 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.player.AsyncPlayerPreLoginEvent;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.minestom.utils.MinestomAdventureHelper;
-import org.screamingsandals.lib.player.event.SAsyncPlayerPreLoginEvent;
+import org.screamingsandals.lib.event.player.SAsyncPlayerPreLoginEvent;
 
 import java.net.InetSocketAddress;
 

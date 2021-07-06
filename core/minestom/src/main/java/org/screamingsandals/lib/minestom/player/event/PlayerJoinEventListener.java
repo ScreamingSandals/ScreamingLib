@@ -4,7 +4,7 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.player.PlayerLoginEvent;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.event.SPlayerJoinEvent;
+import org.screamingsandals.lib.event.player.SPlayerJoinEvent;
 
 public class PlayerJoinEventListener {
 

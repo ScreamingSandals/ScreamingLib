@@ -4,6 +4,6 @@ dependencies {
     api project(':event-bukkit')
     api project(':utils-bukkit')
     api project(':core-common')
-    compileOnly paper(PAPER_VERSION)
+    compileOnly paperLegacy(PAPER_LEGACY_VERSION)
     api 'net.kyori:adventure-platform-bukkit:' + ADVENTURE_PLATFORM_VERSION
 }

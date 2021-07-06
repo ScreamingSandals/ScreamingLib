@@ -6,7 +6,7 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.event.player.PlayerChatEvent;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.event.SPlayerChatEvent;
+import org.screamingsandals.lib.event.player.SPlayerChatEvent;
 
 import java.util.stream.Collectors;
 

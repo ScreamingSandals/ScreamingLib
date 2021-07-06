@@ -2,7 +2,7 @@ package org.screamingsandals.lib.bukkit.sidebar;
 
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.event.SPlayerLeaveEvent;
+import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
 import org.screamingsandals.lib.sidebar.ScoreSidebar;
 import org.screamingsandals.lib.sidebar.Sidebar;
 import org.screamingsandals.lib.sidebar.SidebarManager;

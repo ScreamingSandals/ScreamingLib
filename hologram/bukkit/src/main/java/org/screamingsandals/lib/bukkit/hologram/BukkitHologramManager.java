@@ -12,7 +12,7 @@ import org.screamingsandals.lib.hologram.HologramManager;
 import org.screamingsandals.lib.hologram.event.HologramTouchEvent;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.event.*;
+import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
