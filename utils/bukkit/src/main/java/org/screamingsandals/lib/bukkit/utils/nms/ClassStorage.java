@@ -243,9 +243,9 @@ public class ClassStorage {
 		var invoker = new InvocationResult(vector3f);
 		try {
 			return new Vector3Df(
-					(float) invoker.fastInvoke("getX"),
-					(float) invoker.fastInvoke("getY"),
-					(float) invoker.fastInvoke("getZ")
+					(float) invoker.fastInvoke("getX,func_179415_b"),
+					(float) invoker.fastInvoke("getY,func_179416_c"),
+					(float) invoker.fastInvoke("getZ,func_179413_d")
 			);
 		} catch (Throwable t) {
 			t.printStackTrace();
