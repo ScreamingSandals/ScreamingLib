@@ -178,7 +178,7 @@ public abstract class AbstractNPC implements NPC {
             gameProfile.getProperties().get("textures").clear();
             return this;
         }
-        gameProfile.getProperties().put("textures", new Property(skin.getValue(), skin.getSignature()));
+        gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
         return this;
     }
 

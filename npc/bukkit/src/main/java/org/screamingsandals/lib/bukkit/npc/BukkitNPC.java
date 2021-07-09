@@ -196,17 +196,18 @@ public class BukkitNPC extends AbstractNPC {
 
     @Override
     public NPC setSkin(@Nullable NPCSkin skin) {
-        super.setSkin(skin);
         final var playerInfoPacket = PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class);
         playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER);
         playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
-            1,
+                1,
                 GameMode.SURVIVAL,
                 AdventureHelper.toComponent(getName()),
                 getGameProfile()
         )));
         getViewers().forEach(playerInfoPacket::sendPacket);
         getViewers().forEach(getFullDestroyPacket()::sendPacket);
+
+        super.setSkin(skin);
 
         playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.ADD_PLAYER);
         playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
