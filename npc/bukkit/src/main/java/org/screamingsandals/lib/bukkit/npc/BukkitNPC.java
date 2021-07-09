@@ -16,6 +16,8 @@ import org.screamingsandals.lib.npc.NPC;
 import org.screamingsandals.lib.npc.NPCSkin;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.tasker.Tasker;
+import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -26,6 +28,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class BukkitNPC extends AbstractNPC {
     private final int id;
@@ -127,7 +130,7 @@ public class BukkitNPC extends AbstractNPC {
         final var scoreboardTeamPacket = PacketMapper.createPacket(SPacketPlayOutScoreboardTeam.class);
         scoreboardTeamPacket.setTeamName(AdventureHelper.toComponent(getName()));
         scoreboardTeamPacket.setDisplayName(AdventureHelper.toComponent(getName()));
-        scoreboardTeamPacket.setCollisionRule(SPacketPlayOutScoreboardTeam.CollisionRule.NEVER);
+        scoreboardTeamPacket.setCollisionRule(SPacketPlayOutScoreboardTeam.CollisionRule.ALWAYS);
         scoreboardTeamPacket.setTagVisibility(SPacketPlayOutScoreboardTeam.TagVisibility.NEVER);
         scoreboardTeamPacket.setTeamColor(TextColor.color(0,0,0));
         scoreboardTeamPacket.setTeamPrefix(Component.text(" "));
@@ -136,6 +139,18 @@ public class BukkitNPC extends AbstractNPC {
         scoreboardTeamPacket.setMode(SPacketPlayOutScoreboardTeam.Mode.CREATE);
         scoreboardTeamPacket.setEntities(Collections.singletonList(getName()));
         toReturn.add(scoreboardTeamPacket);
+
+        Tasker.build(() -> {
+            //remove npc from tablist
+            playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER);
+            playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
+                    1,
+                    GameMode.SURVIVAL,
+                    AdventureHelper.toComponent(getName()),
+                    getGameProfile()
+            )));
+            getViewers().forEach(playerInfoPacket::sendPacket);
+        }).delay(3L, TaskerTime.SECONDS).start();
 
         return toReturn;
     }
@@ -218,6 +233,16 @@ public class BukkitNPC extends AbstractNPC {
         )));
         getViewers().forEach(playerInfoPacket::sendPacket);
         getViewers().forEach(viewer -> getSpawnPackets().forEach(sPacket -> sPacket.sendPacket(viewer)));
+
+        //remove npc from tablist
+        playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER);
+        playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
+                1,
+                GameMode.SURVIVAL,
+                AdventureHelper.toComponent(getName()),
+                getGameProfile()
+        )));
+        getViewers().forEach(playerInfoPacket::sendPacket);
         return this;
     }
 }
