@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.npc;
 
+import com.mojang.authlib.GameProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -21,7 +22,7 @@ public interface NPC {
      * @return created NPC
      */
     static NPC of(LocationHolder location) {
-        return NPCManager.createNPC(location);
+        return NPCManager.npc(location);
     }
 
     /**
@@ -145,4 +146,22 @@ public interface NPC {
      * @return this NPC
      */
     NPC update();
+
+    /**
+     * Makes the npc look at the particular location
+     * @param location the location to look at
+     */
+    void rotateHead(LocationHolder location);
+
+    /**
+     *
+     * @return the current game profile object of the npc
+     */
+    GameProfile getGameProfile();
+
+    /**
+     *
+     * @return
+     */
+    String getName();
 }

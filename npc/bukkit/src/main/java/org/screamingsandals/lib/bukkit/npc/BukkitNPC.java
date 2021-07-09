@@ -1,18 +1,22 @@
 package org.screamingsandals.lib.bukkit.npc;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitDataWatcher;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.npc.AbstractNPC;
 import org.screamingsandals.lib.npc.NPC;
+import org.screamingsandals.lib.npc.NPCSkin;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,7 +39,7 @@ public class BukkitNPC extends AbstractNPC {
     }
 
     @Override
-    public NPC setLocation(@NotNull LocationHolder location) {
+    public NPC setLocation(LocationHolder location) {
         super.setLocation(location);
         entity.setLocation(location.as(Location.class));
         getViewers().forEach(viewer -> getTeleportPacket().sendPacket(viewer));
@@ -75,6 +79,17 @@ public class BukkitNPC extends AbstractNPC {
 
     private List<SPacket> getSpawnPackets() {
         final var toReturn = new LinkedList<SPacket>();
+
+        final var playerInfoPacket = PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class);
+        playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.ADD_PLAYER);
+        playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
+                1,
+                GameMode.NOT_SET,
+                AdventureHelper.toComponent(getName()),
+                getGameProfile()
+        )));
+        toReturn.add(playerInfoPacket);
+
         final var spawnPacket = PacketMapper.createPacket(SPacketPlayOutNamedEntitySpawn.class);
         spawnPacket.setEntityId(entity.getId());
         spawnPacket.setUUID(entity.getUniqueId());
@@ -84,11 +99,9 @@ public class BukkitNPC extends AbstractNPC {
         spawnPacket.setDataWatcher(new BukkitDataWatcher(entity.getDataWatcher()));
         toReturn.add(spawnPacket);
 
-        if (Version.isVersion(1, 15)) {
-            final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
-            metadataPacket.setMetaData(entity.getId(), new BukkitDataWatcher(entity.getDataWatcher()), true);
-            toReturn.add(metadataPacket);
-        }
+        final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
+        metadataPacket.setMetaData(entity.getId(), new BukkitDataWatcher(entity.getDataWatcher()), true);
+        toReturn.add(metadataPacket);
 
         return toReturn;
     }
@@ -107,6 +120,15 @@ public class BukkitNPC extends AbstractNPC {
         }
         final var toSend = new LinkedList<SPacket>();
         toSend.add(getFullDestroyPacket());
+        final var removeInfoPacket = PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class);
+        removeInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER);
+        removeInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
+                1,
+                GameMode.NOT_SET,
+                AdventureHelper.toComponent(getName()),
+                getGameProfile()
+        )));
+        toSend.add(removeInfoPacket);
         toSend.forEach(sPacket -> sPacket.sendPacket(player));
     }
 
@@ -125,11 +147,42 @@ public class BukkitNPC extends AbstractNPC {
         return this;
     }
 
+    @Override
+    public void rotateHead(LocationHolder location) {
+
+    }
+
     private SPacketPlayOutEntityTeleport getTeleportPacket() {
         final var packet = PacketMapper.createPacket(SPacketPlayOutEntityTeleport.class);
         packet.setEntityId(entity.getId());
         packet.setLocation(LocationMapper.wrapLocation(entity.getLocation()));
         packet.setIsOnGround(entity.isOnGround());
         return packet;
+    }
+
+    @Override
+    public NPC setSkin(@Nullable NPCSkin skin) {
+        super.setSkin(skin);
+        final var playerInfoPacket = PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class);
+        playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER);
+        playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
+            1,
+                GameMode.NOT_SET,
+                AdventureHelper.toComponent(getName()),
+                getGameProfile()
+        )));
+        getViewers().forEach(playerInfoPacket::sendPacket);
+        getViewers().forEach(getFullDestroyPacket()::sendPacket);
+
+        playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.ADD_PLAYER);
+        playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
+                1,
+                GameMode.NOT_SET,
+                AdventureHelper.toComponent(getName()),
+                getGameProfile()
+        )));
+        getViewers().forEach(playerInfoPacket::sendPacket);
+        getViewers().forEach(viewer -> getSpawnPackets().forEach(sPacket -> sPacket.sendPacket(viewer)));
+        return this;
     }
 }

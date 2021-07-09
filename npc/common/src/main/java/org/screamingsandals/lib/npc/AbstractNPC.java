@@ -20,7 +20,6 @@ public abstract class AbstractNPC implements NPC {
     private final List<TextEntry> text = new ArrayList<>();
     private final List<PlayerWrapper> visibleTo = new ArrayList<>();
     private boolean visible;
-    @NotNull
     private LocationHolder location;
     private boolean created = false;
     private boolean destroyed = false;
@@ -55,6 +54,16 @@ public abstract class AbstractNPC implements NPC {
             update0();
         }
         return this;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public GameProfile getGameProfile() {
+        return gameProfile;
     }
 
     @Override
@@ -114,10 +123,10 @@ public abstract class AbstractNPC implements NPC {
         if (isDestroyed()) {
             return;
         }
-
+        hide();
         visibleTo.clear();
         destroyed = true;
-        Tasker.build(() -> NPCRegistry.unregisterNPC(this)).afterOneTick().start();
+        NPCManager.removeNPC(this);
     }
 
     @Override
