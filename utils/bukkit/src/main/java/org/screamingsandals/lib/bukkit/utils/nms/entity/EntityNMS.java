@@ -15,8 +15,24 @@ import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class EntityNMS {
+
+	public static int incrementAndGetId() {
+		final var entityCount = Reflect.getField(ClassStorage.NMS.Entity, "entityCount,field_70152_a");
+		if (entityCount != null) {
+			return ((int)entityCount) + 1;
+		}
+
+		final var entityCounter = Reflect.getField(ClassStorage.NMS.Entity, "b,f_19843_");
+		if (entityCounter instanceof AtomicInteger) {
+			return ((AtomicInteger) entityCounter).incrementAndGet();
+		}
+
+		throw new UnsupportedOperationException("Can't obtain new Entity id, rip");
+	}
+
 	protected Object handler;
 
 	public EntityNMS(Object handler) {

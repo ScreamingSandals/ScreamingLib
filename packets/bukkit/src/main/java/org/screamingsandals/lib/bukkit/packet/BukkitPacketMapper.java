@@ -69,8 +69,6 @@ public class BukkitPacketMapper extends PacketMapper {
         packetConverters
                 .put(SPacketPlayOutRemoveEntityEffect.class, BukkitSPacketPlayOutRemoveEntityEffect.class);
         packetConverters
-                .put(SPacketPlayOutScoreboardTeam.class, BukkitSPacketPlayOutScoreboardTeam.class);
-        packetConverters
                 .put(SPacketPlayOutHeldItemSlot.class, BukkitSPacketPlayOutHeldItemSlot.class);
         packetConverters
                 .put(SPacketPlayOutBoss.class, BukkitSPacketPlayOutBoss.class);
@@ -96,6 +94,8 @@ public class BukkitPacketMapper extends PacketMapper {
                 .put(SPacketPlayOutNamedEntitySpawn.class, BukkitSPacketPlayOutNamedEntitySpawn.class);
         packetConverters
                 .put(SPacketPlayOutPlayerInfo.class, BukkitSPacketPlayOutPlayerInfo.class);
+        packetConverters
+                .put(SPacketPlayOutScoreboardTeam.class, BukkitSPacketPlayOutScoreboardTeam.class);
     }
 
     @SuppressWarnings("unchecked")

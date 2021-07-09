@@ -1,9 +1,15 @@
 package org.screamingsandals.lib.bukkit.npc;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitDataWatcher;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.bukkit.utils.nms.entity.ArmorStandNMS;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
+import org.screamingsandals.lib.entity.DataWatcher;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.npc.AbstractNPC;
 import org.screamingsandals.lib.npc.NPC;
@@ -12,6 +18,7 @@ import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.GameMode;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
@@ -21,7 +28,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class BukkitNPC extends AbstractNPC {
-    private final EntityNMS entity;
+    private final int id;
+    private final BukkitDataWatcher dataWatcher;
     /**
      * hologram that displays the name of the entity
      */
@@ -29,19 +37,32 @@ public class BukkitNPC extends AbstractNPC {
 
     protected BukkitNPC(LocationHolder location) {
         super(location);
-        entity = new EntityNMS(location);
-        hologram = Hologram.of(LocationMapper.wrapLocation(entity.getLocation().clone().add(0, 1.25, 0)));
+        id = EntityNMS.incrementAndGetId();
+
+        hologram = Hologram.of(location.clone().add(0, 1.50, 0));
         if (isVisible()) {
             hologram.show();
         } else {
             hologram.hide();
         }
+
+        int index = 13;
+        if (Version.isVersion(1, 17)) {
+            index = 16;
+        } else if (Version.isVersion(1, 14)) {
+            index = 15;
+        } else if (Version.isVersion(1, 13)) {
+            index = 13;
+        }
+
+        dataWatcher = new BukkitDataWatcher(null);
+        dataWatcher.register(DataWatcher.Item.of(index, (byte) 128));
     }
 
     @Override
     public NPC setLocation(LocationHolder location) {
         super.setLocation(location);
-        entity.setLocation(location.as(Location.class));
+        hologram.setLocation(location.clone().add(0, 1.5D, 0));
         getViewers().forEach(viewer -> getTeleportPacket().sendPacket(viewer));
         return this;
     }
@@ -57,7 +78,7 @@ public class BukkitNPC extends AbstractNPC {
 
     @Override
     public int getEntityId() {
-        return entity.getId();
+        return id;
     }
 
     @Override
@@ -84,24 +105,37 @@ public class BukkitNPC extends AbstractNPC {
         playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.ADD_PLAYER);
         playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
                 1,
-                GameMode.NOT_SET,
+                GameMode.SURVIVAL,
                 AdventureHelper.toComponent(getName()),
                 getGameProfile()
         )));
         toReturn.add(playerInfoPacket);
 
         final var spawnPacket = PacketMapper.createPacket(SPacketPlayOutNamedEntitySpawn.class);
-        spawnPacket.setEntityId(entity.getId());
-        spawnPacket.setUUID(entity.getUniqueId());
-        spawnPacket.setPitch(entity.getLocation().getPitch());
-        spawnPacket.setYaw(entity.getLocation().getYaw());
-        spawnPacket.setLocation(LocationMapper.wrapLocation(entity.getLocation()));
-        spawnPacket.setDataWatcher(new BukkitDataWatcher(entity.getDataWatcher()));
+        spawnPacket.setEntityId(id);
+        spawnPacket.setUUID(getUUID());
+        spawnPacket.setPitch(getLocation().getPitch());
+        spawnPacket.setYaw(getLocation().getYaw());
+        spawnPacket.setLocation(getLocation());
+        spawnPacket.setDataWatcher(dataWatcher);
         toReturn.add(spawnPacket);
 
         final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
-        metadataPacket.setMetaData(entity.getId(), new BukkitDataWatcher(entity.getDataWatcher()), true);
+        metadataPacket.setMetaData(id, dataWatcher, true);
         toReturn.add(metadataPacket);
+
+        final var scoreboardTeamPacket = PacketMapper.createPacket(SPacketPlayOutScoreboardTeam.class);
+        scoreboardTeamPacket.setTeamName(AdventureHelper.toComponent(getName()));
+        scoreboardTeamPacket.setDisplayName(AdventureHelper.toComponent(getName()));
+        scoreboardTeamPacket.setCollisionRule(SPacketPlayOutScoreboardTeam.CollisionRule.NEVER);
+        scoreboardTeamPacket.setTagVisibility(SPacketPlayOutScoreboardTeam.TagVisibility.NEVER);
+        scoreboardTeamPacket.setTeamColor(TextColor.color(0,0,0));
+        scoreboardTeamPacket.setTeamPrefix(Component.text(" "));
+        scoreboardTeamPacket.setTeamSuffix(Component.text(" "));
+        scoreboardTeamPacket.setFlags(false, false);
+        scoreboardTeamPacket.setMode(SPacketPlayOutScoreboardTeam.Mode.CREATE);
+        scoreboardTeamPacket.setEntities(Collections.singletonList(getName()));
+        toReturn.add(scoreboardTeamPacket);
 
         return toReturn;
     }
@@ -124,7 +158,7 @@ public class BukkitNPC extends AbstractNPC {
         removeInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER);
         removeInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
                 1,
-                GameMode.NOT_SET,
+                GameMode.SURVIVAL,
                 AdventureHelper.toComponent(getName()),
                 getGameProfile()
         )));
@@ -154,9 +188,9 @@ public class BukkitNPC extends AbstractNPC {
 
     private SPacketPlayOutEntityTeleport getTeleportPacket() {
         final var packet = PacketMapper.createPacket(SPacketPlayOutEntityTeleport.class);
-        packet.setEntityId(entity.getId());
-        packet.setLocation(LocationMapper.wrapLocation(entity.getLocation()));
-        packet.setIsOnGround(entity.isOnGround());
+        packet.setEntityId(id);
+        packet.setLocation(getLocation());
+        packet.setIsOnGround(true);
         return packet;
     }
 
@@ -167,7 +201,7 @@ public class BukkitNPC extends AbstractNPC {
         playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER);
         playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
             1,
-                GameMode.NOT_SET,
+                GameMode.SURVIVAL,
                 AdventureHelper.toComponent(getName()),
                 getGameProfile()
         )));
@@ -177,7 +211,7 @@ public class BukkitNPC extends AbstractNPC {
         playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.ADD_PLAYER);
         playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
                 1,
-                GameMode.NOT_SET,
+                GameMode.SURVIVAL,
                 AdventureHelper.toComponent(getName()),
                 getGameProfile()
         )));

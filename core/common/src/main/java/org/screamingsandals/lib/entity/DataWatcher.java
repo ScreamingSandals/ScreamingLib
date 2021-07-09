@@ -18,7 +18,7 @@ public abstract class DataWatcher {
     }
 
     public <T> void setIndex(int index, T value) {
-        final var item = Item.of(value, index);
+        final var item = Item.of(index, value);
         entries.put(index, item);
         register(item);
     }
@@ -31,8 +31,8 @@ public abstract class DataWatcher {
 
     @RequiredArgsConstructor(staticName = "of")
     @Getter
-    protected static class Item<T> {
-        private final T value;
+    public static class Item<T> {
         private final int index;
+        private final T value;
     }
 }

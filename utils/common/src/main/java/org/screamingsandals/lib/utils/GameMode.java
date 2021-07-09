@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum GameMode {
-    NOT_SET,
     CREATIVE,
     SURVIVAL,
     ADVENTURE,

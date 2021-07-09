@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BukkitSPacketPlayOutPlayerInfo extends BukkitSPacket implements SPacketPlayOutPlayerInfo {
-    public BukkitSPacketPlayOutPlayerInfo(Class<?> packetClass) {
-        super(packetClass);
+    public BukkitSPacketPlayOutPlayerInfo() {
+        super(ClassStorage.NMS.PacketPlayOutPlayerInfo);
     }
 
     @Override
@@ -24,6 +24,10 @@ public class BukkitSPacketPlayOutPlayerInfo extends BukkitSPacket implements SPa
     public void setPlayersData(List<PlayerInfoData> data) {
         final var nmsData = new ArrayList<>();
         data.forEach(playerInfoData -> {
+            var gameMode = Reflect.findEnumConstant(
+                    ClassStorage.NMS.EnumGamemode,
+                    playerInfoData.getGameMode().name().toUpperCase()
+            );
             var constructed = Reflect.constructor(
                     ClassStorage.NMS.PlayerInfoData,
                     ClassStorage.NMS.GameProfile,
@@ -33,10 +37,8 @@ public class BukkitSPacketPlayOutPlayerInfo extends BukkitSPacket implements SPa
                     ).construct(
                         playerInfoData.getGameProfile(),
                         playerInfoData.getLatency(),
-                        Reflect.findEnumConstant(
-                                ClassStorage.NMS.EnumGamemode,
-                                playerInfoData.getGameMode().name().toUpperCase()
-                        ), ClassStorage.asMinecraftComponent(playerInfoData.getDisplayName())
+                        gameMode,
+                    ClassStorage.asMinecraftComponent(playerInfoData.getDisplayName())
             );
             nmsData.add(constructed);
         });

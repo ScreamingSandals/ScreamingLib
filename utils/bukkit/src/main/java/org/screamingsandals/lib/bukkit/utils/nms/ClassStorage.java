@@ -105,7 +105,9 @@ public class ClassStorage {
 		public static final Class<?> PacketPlayOutCollect = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutCollect", "{nms}.PacketPlayOutCollect", "{f:net}.play.server.SCollectItemPacket", "{f:net}.play.server.SPacketCollectItem");
 		public static final Class<?> PacketPlayOutKeepAlive = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutKeepAlive", "{nms}.PacketPlayOutKeepAlive", "{f:net}.play.server.SKeepAlivePacket", "{f:net}.play.server.SPacketKeepAlive");
 		public static final Class<?> PacketPlayOutNamedEntitySpawn = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutNamedEntitySpawn", "{nms}.PacketPlayOutNamedEntitySpawn", "{f:net}.play.server.SSpawnPlayerPacket", "{f:net}.play.server.SPacketSpawnPlayer");
+
 		//TODO: find Forge names
+		public static final Class<?> PacketPlayOutPlayerInfo = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo", "{nms}.PacketPlayOutPlayerInfo");
 		public static final Class<?> PacketPlayOutLogin = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutLogin", "{nms}.PacketPlayOutLogin");
 		public static final Class<?> PathfinderGoal = safeGetClass("net.minecraft.world.entity.ai.goal.PathfinderGoal", "{nms}.PathfinderGoal", "{f:goal}.Goal", "{f:ent}.ai.EntityAIBase");
 		public static final Class<?> PathfinderGoalSelector = safeGetClass("net.minecraft.world.entity.ai.goal.PathfinderGoalSelector", "{nms}.PathfinderGoalSelector", "{f:goal}.GoalSelector", "{f:ent}.ai.EntityAITasks");
@@ -130,7 +132,7 @@ public class ClassStorage {
 		//TODO: forge mappings
 		// 1.17
 		public static final Class<?> ChatMessageType = safeGetClass("net.minecraft.network.chat.ChatMessageType");
-		public static final Class<?> PacketPlayOutScoreboardTeamData = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam$ba");
+		public static final Class<?> PacketPlayOutScoreboardTeamData = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam$b");
 		public static final Class<?> IRegistry = safeGetClass("net.minecraft.core.IRegistry");
 
 	}
