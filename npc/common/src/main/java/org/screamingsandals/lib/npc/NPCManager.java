@@ -2,6 +2,7 @@ package org.screamingsandals.lib.npc;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.function.Supplier;
 
@@ -20,12 +21,15 @@ public abstract class NPCManager {
         npcManager = packetMapperSupplier.get();
     }
 
-    public static AbstractNPC createNPC() {
+    public static AbstractNPC createNPC(LocationHolder location) {
         if (npcManager == null) {
             throw new UnsupportedOperationException("NPCManager isn't initialized yet.");
         }
-        return npcManager.createNPC0();
+        if (location == null) {
+            throw new UnsupportedOperationException("Location cannot be null!");
+        }
+        return npcManager.createNPC0(location);
     }
 
-    public abstract AbstractNPC createNPC0();
+    public abstract AbstractNPC createNPC0(LocationHolder location);
 }

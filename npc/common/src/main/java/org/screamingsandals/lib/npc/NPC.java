@@ -15,10 +15,21 @@ import java.util.UUID;
 public interface NPC {
 
     /**
+     * Creates new NPC.
+     *
+     * @param location location where to create the NPC
+     * @return created NPC
+     */
+    static NPC of(LocationHolder location) {
+        return NPCManager.createNPC(location);
+    }
+
+    /**
      * Spawns the NPC to all visible Players.
      * @throws UnsupportedOperationException if the NPC has already been spawned
+     * @return this NPC
      */
-    void spawn();
+    NPC spawn();
 
     /**
      * Destroys the NPC entirely.
@@ -40,8 +51,9 @@ public interface NPC {
     /**
      *
      * @param location location where to create the NPC
+     * @return this NPC
      */
-    void setLocation(LocationHolder location);
+    NPC setLocation(LocationHolder location);
 
     /**
      *
@@ -66,8 +78,9 @@ public interface NPC {
     /**
      *
      * @param name name (multi-lined) of the NPC.
+     * @return this NPC
      */
-    void setDisplayName(List<TextEntry> name);
+    NPC setDisplayName(List<TextEntry> name);
 
     /**
      *
@@ -90,21 +103,46 @@ public interface NPC {
 
     /**
      *
-     * @param viewer
+     * @param viewer the viewer to display the NPC to
+     * @return this NPC
      */
-    void addViewer(PlayerWrapper viewer);
+    NPC addViewer(PlayerWrapper viewer);
 
     /**
      *
-     * @param viewer
+     * @param viewer the viewer to hide the NPC from.
+     * @return this NPC
      */
-    void removeViewer(PlayerWrapper viewer);
+    NPC removeViewer(PlayerWrapper viewer);
 
+    /**
+     *
+     * @return a list of current viewers for the NPC
+     */
     List<PlayerWrapper> getViewers();
 
-    void show();
+    /**
+     * Shows the NPC to all current viewers
+     * @return this NPC
+     */
+    NPC show();
 
-    void hide();
+    /**
+     * Hides the NPC to all viewers
+     * @return this NPC
+     */
+    NPC hide();
 
-    void setSkin(NPCSkin skin);
+    /**
+     * Sets the skin of the NPC
+     * @param skin the skin to be set
+     * @return this NPC
+     */
+    NPC setSkin(NPCSkin skin);
+
+    /**
+     * Updates the current NPC instance
+     * @return this NPC
+     */
+    NPC update();
 }

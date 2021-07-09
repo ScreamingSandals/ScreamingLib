@@ -2,6 +2,7 @@ package org.screamingsandals.lib.npc;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
@@ -19,7 +20,7 @@ public abstract class AbstractNPC implements NPC {
     private final List<TextEntry> text = new ArrayList<>();
     private final List<PlayerWrapper> visibleTo = new ArrayList<>();
     private boolean visible;
-    @Nullable
+    @NotNull
     private LocationHolder location;
     private boolean created = false;
     private boolean destroyed = false;
@@ -29,15 +30,31 @@ public abstract class AbstractNPC implements NPC {
     private final GameProfile gameProfile = new GameProfile(uuid, name);
     private NPCSkin skin;
 
+    protected AbstractNPC(LocationHolder location) {
+        this.location = location;
+    }
+
     @Override
-    @Nullable
+    @NotNull
     public LocationHolder getLocation() {
         return location;
     }
 
     @Override
-    public void setLocation(LocationHolder location) {
+    public NPC setLocation(LocationHolder location) {
+        if (location == null) {
+            throw new UnsupportedOperationException("Location cannot be null!");
+        }
         this.location = location;
+        return this;
+    }
+
+    @Override
+    public NPC update() {
+        if (ready) {
+            update0();
+        }
+        return this;
     }
 
     @Override
@@ -61,9 +78,10 @@ public abstract class AbstractNPC implements NPC {
     }
 
     @Override
-    public void setDisplayName(List<TextEntry> name) {
+    public NPC setDisplayName(List<TextEntry> name) {
         this.text.clear();
         this.text.addAll(name);
+        return this;
     }
 
     @Override
@@ -72,7 +90,7 @@ public abstract class AbstractNPC implements NPC {
     }
 
     @Override
-    public void spawn() {
+    public NPC spawn() {
         if (created) {
             throw new UnsupportedOperationException("NPC: " + uuid.toString() + " is already spawned!");
         }
@@ -83,6 +101,7 @@ public abstract class AbstractNPC implements NPC {
         }
 
         tickTask = Tasker.build(this::tick).repeat(1L, TaskerTime.TICKS).start();
+        return this;
     }
 
     @Override
@@ -96,45 +115,46 @@ public abstract class AbstractNPC implements NPC {
             return;
         }
 
+        visibleTo.clear();
         destroyed = true;
         Tasker.build(() -> NPCRegistry.unregisterNPC(this)).afterOneTick().start();
     }
 
     @Override
-    public void addViewer(PlayerWrapper viewer) {
+    public NPC addViewer(PlayerWrapper viewer) {
         visibleTo.add(viewer);
         onViewerAdded(viewer);
+        return this;
     }
 
     @Override
-    public void removeViewer(PlayerWrapper viewer) {
+    public NPC removeViewer(PlayerWrapper viewer) {
         visibleTo.remove(viewer);
         onViewerRemoved(viewer);
+        return this;
     }
 
-    public abstract void onViewerAdded(PlayerWrapper player);
-
-    public abstract void onViewerRemoved(PlayerWrapper player);
-
     @Override
-    public void show() {
+    public NPC show() {
         if (visible) {
-            return;
+            return this;
         }
 
         ready = true;
         visible = true;
+        return this;
     }
 
     @Override
-    public void hide() {
+    public NPC hide() {
         if (!visible) {
-            return;
+            return this;
         }
 
         visible = false;
         ready = false;
         visibleTo.clear();
+        return this;
     }
 
     @Override
@@ -143,12 +163,19 @@ public abstract class AbstractNPC implements NPC {
     }
 
     @Override
-    public void setSkin(@Nullable NPCSkin skin) {
+    public NPC setSkin(@Nullable NPCSkin skin) {
         this.skin = skin;
         if (skin == null) {
             gameProfile.getProperties().get("textures").clear();
-            return;
+            return this;
         }
         gameProfile.getProperties().put("textures", new Property(skin.getValue(), skin.getSignature()));
+        return this;
     }
+
+    public abstract void onViewerAdded(PlayerWrapper player);
+
+    public abstract void onViewerRemoved(PlayerWrapper player);
+
+    public abstract void update0();
 }

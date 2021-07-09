@@ -1,11 +1,12 @@
 package org.screamingsandals.lib.bukkit.npc;
 import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.entity.BukkitDataWatcher;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
-import org.screamingsandals.lib.bukkit.utils.nms.entity.ArmorStandNMS;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.npc.AbstractNPC;
+import org.screamingsandals.lib.npc.NPC;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.visual.TextEntry;
@@ -16,40 +17,38 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class BukkitNPC extends AbstractNPC {
-    private EntityNMS entity;
+    private final EntityNMS entity;
     /**
-     * name of entity
+     * hologram that displays the name of the entity
      */
-    private Hologram hologram;
+    private final Hologram hologram;
 
-    @Override
-    public void setLocation(LocationHolder location) {
-        super.setLocation(location);
-        if (hologram == null) {
-            hologram = Hologram.of(location.clone().add(0, 0.25, 0));
-            if (getDisplayName() != null) {
-                for (int i = 0; i < getDisplayName().size(); i++) {
-                    hologram.replaceLine(i, getDisplayName().get(i));
-                }
-            }
+    protected BukkitNPC(LocationHolder location) {
+        super(location);
+        entity = new EntityNMS(location);
+        hologram = Hologram.of(LocationMapper.wrapLocation(entity.getLocation().clone().add(0, 1.25, 0)));
+        if (isVisible()) {
+            hologram.show();
         } else {
-            hologram.setLocation(location.clone().add(0, 0.25, 0));
-        }
-
-        if (entity == null) {
-            entity = new EntityNMS(location);
-        } else {
-            entity.setLocation(location.as(Location.class));
-            getViewers().forEach(viewer -> getTeleportPacket().sendPacket(viewer));
+            hologram.hide();
         }
     }
 
     @Override
-    public void setDisplayName(List<TextEntry> name) {
+    public NPC setLocation(@NotNull LocationHolder location) {
+        super.setLocation(location);
+        entity.setLocation(location.as(Location.class));
+        getViewers().forEach(viewer -> getTeleportPacket().sendPacket(viewer));
+        return this;
+    }
+
+    @Override
+    public NPC setDisplayName(List<TextEntry> name) {
         super.setDisplayName(name);
         for (int i = 0; i < name.size(); i++) {
             hologram.replaceLine(i, name.get(i));
         }
+        return this;
     }
 
     @Override
@@ -59,20 +58,19 @@ public class BukkitNPC extends AbstractNPC {
 
     @Override
     public void onViewerAdded(PlayerWrapper player) {
-        if (getLocation() == null) {
-            throw new UnsupportedOperationException("Location cannot be null!");
-        }
         getSpawnPackets().forEach(sPacket -> sPacket.sendPacket(player));
         hologram.addViewer(player);
     }
 
     @Override
     public void onViewerRemoved(PlayerWrapper player) {
-        if (getLocation() == null) {
-            throw new UnsupportedOperationException("Location cannot be null!");
-        }
         removeForPlayer(player);
         hologram.removeViewer(player);
+    }
+
+    @Override
+    public void update0() {
+
     }
 
     private List<SPacket> getSpawnPackets() {
@@ -102,36 +100,29 @@ public class BukkitNPC extends AbstractNPC {
         return destroyPacket;
     }
 
+
     private void removeForPlayer(PlayerWrapper player) {
         if (!player.isOnline()) {
             return;
         }
-
         final var toSend = new LinkedList<SPacket>();
         toSend.add(getFullDestroyPacket());
-
         toSend.forEach(sPacket -> sPacket.sendPacket(player));
     }
 
     @Override
-    public void spawn() {
-        super.spawn();
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-    }
-
-    @Override
-    public void show() {
+    public NPC show() {
         super.show();
+        hologram.show();
+        return this;
     }
 
     @Override
-    public void hide() {
+    public NPC hide() {
         getViewers().forEach(this::removeForPlayer);
+        hologram.hide();
         super.hide();
+        return this;
     }
 
     private SPacketPlayOutEntityTeleport getTeleportPacket() {
