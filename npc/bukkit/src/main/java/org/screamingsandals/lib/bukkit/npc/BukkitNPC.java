@@ -1,13 +1,10 @@
 package org.screamingsandals.lib.bukkit.npc;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.Location;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitDataWatcher;
-import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
-import org.screamingsandals.lib.bukkit.utils.nms.entity.ArmorStandNMS;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
 import org.screamingsandals.lib.entity.DataWatcher;
 import org.screamingsandals.lib.hologram.Hologram;
@@ -20,15 +17,12 @@ import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.GameMode;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class BukkitNPC extends AbstractNPC {
     private final int id;
@@ -132,7 +126,7 @@ public class BukkitNPC extends AbstractNPC {
         scoreboardTeamPacket.setDisplayName(AdventureHelper.toComponent(getName()));
         scoreboardTeamPacket.setCollisionRule(SPacketPlayOutScoreboardTeam.CollisionRule.ALWAYS);
         scoreboardTeamPacket.setTagVisibility(SPacketPlayOutScoreboardTeam.TagVisibility.NEVER);
-        scoreboardTeamPacket.setTeamColor(TextColor.color(0,0,0));
+        scoreboardTeamPacket.setTeamColor(TextColor.color(0, 0, 0));
         scoreboardTeamPacket.setTeamPrefix(Component.text(" "));
         scoreboardTeamPacket.setTeamSuffix(Component.text(" "));
         scoreboardTeamPacket.setFlags(false, false);
@@ -156,7 +150,7 @@ public class BukkitNPC extends AbstractNPC {
     }
 
     private SPacketPlayOutEntityDestroy getFullDestroyPacket() {
-        final int[] toRemove = { getEntityId() };
+        final int[] toRemove = {getEntityId()};
         final var destroyPacket = PacketMapper.createPacket(SPacketPlayOutEntityDestroy.class);
         destroyPacket.setEntitiesToDestroy(toRemove);
         return destroyPacket;
@@ -234,15 +228,17 @@ public class BukkitNPC extends AbstractNPC {
         getViewers().forEach(playerInfoPacket::sendPacket);
         getViewers().forEach(viewer -> getSpawnPackets().forEach(sPacket -> sPacket.sendPacket(viewer)));
 
-        //remove npc from tablist
-        playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER);
-        playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
-                1,
-                GameMode.SURVIVAL,
-                AdventureHelper.toComponent(getName()),
-                getGameProfile()
-        )));
-        getViewers().forEach(playerInfoPacket::sendPacket);
+        Tasker.build(() -> {
+            playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER);
+            playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
+                    1,
+                    GameMode.SURVIVAL,
+                    AdventureHelper.toComponent(getName()),
+                    getGameProfile()
+            )));
+            getViewers().forEach(playerInfoPacket::sendPacket);
+        }).delay(3L, TaskerTime.SECONDS);
+
         return this;
     }
 }
