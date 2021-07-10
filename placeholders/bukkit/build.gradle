@@ -2,7 +2,7 @@ dependencies {
     api project(':core-bukkit')
     api project(':placeholders-common')
 
-    compileOnly paper(PAPER_VERSION)
+    compileOnly paperLegacy(PAPER_LEGACY_VERSION)
 
     compileOnly placeholderapi(PLACEHOLDERAPI_VERSION)
 }

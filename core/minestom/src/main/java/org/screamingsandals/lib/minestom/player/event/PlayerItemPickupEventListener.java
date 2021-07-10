@@ -6,7 +6,7 @@ import net.minestom.server.event.item.PickupItemEvent;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.event.SPlayerPickupItemEvent;
+import org.screamingsandals.lib.event.player.SPlayerPickupItemEvent;
 
 public class PlayerItemPickupEventListener {
 

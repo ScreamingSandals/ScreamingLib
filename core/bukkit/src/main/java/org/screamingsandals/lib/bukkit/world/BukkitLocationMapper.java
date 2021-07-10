@@ -2,6 +2,7 @@ package org.screamingsandals.lib.bukkit.world;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
@@ -41,5 +42,9 @@ public class BukkitLocationMapper extends LocationMapper {
         } catch (IllegalArgumentException ignored) {
         }
         return Optional.ofNullable(Bukkit.getWorld(name)).map(BukkitWorldHolder::new);
+    }
+
+    private void registerListeners(Plugin plugin) {
+
     }
 }

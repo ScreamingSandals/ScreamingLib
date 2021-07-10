@@ -13,13 +13,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
-import org.screamingsandals.lib.bukkit.player.listener.*;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
-import org.screamingsandals.lib.material.container.Container;
-import org.screamingsandals.lib.material.container.PlayerContainer;
+import org.screamingsandals.lib.container.Container;
+import org.screamingsandals.lib.container.PlayerContainer;
 import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
@@ -50,7 +49,6 @@ public class BukkitPlayerMapper extends PlayerMapper {
     public BukkitPlayerMapper(Plugin plugin, Controllable controllable) {
         controllable.enable(() -> {
             provider = BukkitAudiences.create(plugin);
-            registerListeners(plugin);
         });
 
         offlinePlayerConverter
@@ -333,68 +331,5 @@ public class BukkitPlayerMapper extends PlayerMapper {
     @Override
     public boolean canBeStoredAsWrapped(Object wrapped) {
         return wrapped instanceof Player;
-    }
-
-    private void registerListeners(Plugin plugin) {
-        new AsyncPlayerPreLoginEventListener(plugin);
-        new AsyncPlayerChatEventListener(plugin);
-        new PlayerJoinEventListener(plugin);
-        new PlayerLeaveEventListener(plugin);
-        new PlayerBlockPlaceEventListener(plugin);
-        new PlayerBlockBreakEventListener(plugin);
-        new PlayerMoveEventListener(plugin);
-        new PlayerTeleportEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.EntityPickupItemEvent")) {
-            new PlayerPickupItemListener(plugin);
-        } else {
-            new LegacyPlayerPickupItemListener(plugin);
-        }
-        new PlayerChangeWorldEventListener(plugin);
-        new PlayerRightClickedEntityListener(plugin);
-        new PlayerClickedBlockListener(plugin);
-        new PlayerSignChangeEventListener(plugin);
-        new PlayerDeathEventListener(plugin);
-        new PlayerRespawnEventListener(plugin);
-        new PlayerCommandPreprocessEventListener(plugin);
-        new PlayerInventoryClickEventListener(plugin);
-        new PlayerFoodLevelChangeListener(plugin);
-        new PlayerCraftItemEventListener(plugin);
-        new PlayerDamageEventListener(plugin);
-        new PlayerProjectileLaunchEventListener(plugin);
-        new PlayerDropItemEventListener(plugin);
-        new PlayerBedEnterEventListener(plugin);
-        new PlayerAnimationEventListener(plugin);
-        new PlayerInteractEntityEventListener(plugin);
-        new PlayerArmorStandManipulateEventListener(plugin);
-        new PlayerBedLeaveEventListener(plugin);
-        new PlayerBucketEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.player.PlayerCommandSendEvent"))
-            new PlayerCommandSendEventListener(plugin);
-        new PlayerEggThrowEventListener(plugin);
-        new PlayerExpChangeEventListener(plugin);
-        new PlayerFishEventListener(plugin);
-        new PlayerGameModeChangeEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.player.PlayerHarvestBlockEvent"))
-            new PlayerHarvestBlockEventListener(plugin);
-        new PlayerInteractEventListener(plugin);
-        new PlayerItemConsumeEventListener(plugin);
-        new PlayerItemDamageEventListener(plugin);
-        new PlayerItemHeldEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.player.PlayerItemMendEvent"))
-            new PlayerItemMendEventListener(plugin);
-        new PlayerKickEventListener(plugin);
-        new PlayerLevelChangeEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.player.PlayerLocaleChangeEvent"))
-            new PlayerLocaleChangeEventListener(plugin);
-        new PlayerLoginEventListener(plugin);
-        new PlayerPortalEventListener(plugin);
-        new PlayerShearEntityEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.player.PlayerSwapHandItemsEvent"))
-            new PlayerSwapHandItemsEventListener(plugin);
-        new PlayerToggleFlightEventListener(plugin);
-        new PlayerToggleSneakEventListener(plugin);
-        new PlayerToggleSprintEventListener(plugin);
-        new PlayerUnleashEntityEventListener(plugin);
-        new PlayerVelocityEventListener(plugin);
     }
 }

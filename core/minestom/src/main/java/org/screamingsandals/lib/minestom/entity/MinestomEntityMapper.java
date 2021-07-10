@@ -5,7 +5,6 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.minestom.entity.type.MinestomEntityTypeMapping;
-import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 
@@ -18,10 +17,6 @@ public class MinestomEntityMapper extends EntityMapper {
 
     public static void init() {
         EntityMapper.init(MinestomEntityMapper::new);
-    }
-
-    public MinestomEntityMapper() {
-        InitUtils.doIfNot(MinestomEntityTypeMapping::isInitialized, MinestomEntityTypeMapping::init);
     }
 
     @Override

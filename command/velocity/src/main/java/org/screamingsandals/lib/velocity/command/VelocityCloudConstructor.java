@@ -7,7 +7,6 @@ import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.screamingsandals.lib.command.CloudConstructor;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
-import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.velocity.proxiedplayer.VelocityProxiedPlayerMapper;
 
@@ -27,8 +26,6 @@ public class VelocityCloudConstructor extends CloudConstructor {
     public VelocityCloudConstructor(PluginContainer plugin, ProxyServer proxyServer) {
         this.plugin = plugin;
         this.proxyServer = proxyServer;
-
-        InitUtils.doIfNot(VelocityCloudConstructor::isInitialized, () -> VelocityProxiedPlayerMapper.init(plugin.getInstance().orElseThrow(), proxyServer));
     }
 
     @Override

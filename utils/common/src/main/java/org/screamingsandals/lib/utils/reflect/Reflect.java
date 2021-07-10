@@ -7,12 +7,14 @@ import java.lang.reflect.Proxy;
 import java.util.*;
 
 public class Reflect {
-    public static Class<?> getClassSafe(String... classNames) {
-        return getClassSafe(Map.of(), classNames);
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> getClassSafe(String... classNames) {
+        return (Class<T>) getClassSafe(Map.of(), classNames);
     }
 
-    public static Class<?> getClassSafe(ClassLoader loader, String... classNames) {
-        return getClassSafe(loader, Map.of(), classNames);
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> getClassSafe(ClassLoader loader, String... classNames) {
+        return (Class<T>) getClassSafe(loader, Map.of(), classNames);
     }
 
     public static Class<?> getClassSafe(Map<String, String> replaceRules, String... classNames) {
@@ -90,6 +92,31 @@ public class Reflect {
     public static InstanceMethod getMethod(Object instance, String[] names, Class<?>...params) {
         var method = getMethod(retrieveClasses(instance), names, params);
         return new InstanceMethod(instance, method.getMethod());
+    }
+
+    public static InvocationResult getFieldResulted(Object instance, String names) {
+        return new InvocationResult(getField(instance, names));
+    }
+
+    public static InvocationResult getFieldResulted(Object instance, String[] names) {
+        return new InvocationResult(getField(instance, names));
+    }
+
+    public static InvocationResult getFieldResulted(Class<?> clazz, String names) {
+        return new InvocationResult(getField(clazz, names));
+    }
+
+
+    public static InvocationResult getFieldResulted(Class<?> clazz, String[] names) {
+        return new InvocationResult(getField(clazz, names));
+    }
+
+    public static InvocationResult getFieldResulted(Class<?> clazz, String names, Object instance) {
+        return new InvocationResult(getField(clazz, names, instance));
+    }
+
+    public static InvocationResult getFieldResulted(Class<?> clazz, String[] names, Object instance) {
+        return new InvocationResult(getField(clazz, names, instance));
     }
 
     public static Object getField(Object instance, String names) {

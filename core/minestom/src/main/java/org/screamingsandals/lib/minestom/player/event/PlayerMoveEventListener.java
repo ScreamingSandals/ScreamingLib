@@ -4,7 +4,7 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.player.PlayerMoveEvent;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.event.SPlayerMoveEvent;
+import org.screamingsandals.lib.event.player.SPlayerMoveEvent;
 import org.screamingsandals.lib.world.LocationMapper;
 
 public class PlayerMoveEventListener {

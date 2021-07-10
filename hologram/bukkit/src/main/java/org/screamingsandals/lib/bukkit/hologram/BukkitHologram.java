@@ -86,10 +86,13 @@ public class BukkitHologram extends AbstractHologram {
 
                 itemEntity.setRotation(checkAndAdd(itemEntity.getRotation()));
 
-                final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
-                metadataPacket.setMetaData(itemEntity.getId(), new BukkitDataWatcher(itemEntity.getDataWatcher()), false);
-                viewers.forEach(player -> update(player.as(Player.class), List.of(metadataPacket), false));
-
+                try {
+                    final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
+                    metadataPacket.setMetaData(itemEntity.getId(), new BukkitDataWatcher(itemEntity.getDataWatcher()), false);
+                    viewers.forEach(player -> update(player.as(Player.class), List.of(metadataPacket), false));
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
             }).repeat(rotationTime.getFirst(), rotationTime.getSecond())
                     .async()
                     .start();

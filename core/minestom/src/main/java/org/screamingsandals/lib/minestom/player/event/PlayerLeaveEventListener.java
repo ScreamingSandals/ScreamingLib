@@ -4,7 +4,7 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.player.PlayerDisconnectEvent;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.event.SPlayerLeaveEvent;
+import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
 
 public class PlayerLeaveEventListener {
 

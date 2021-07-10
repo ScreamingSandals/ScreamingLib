@@ -12,10 +12,10 @@ import net.minestom.server.item.metadata.PotionMeta;
 import net.minestom.server.potion.CustomPotionEffect;
 import net.minestom.server.potion.PotionType;
 import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.attribute.AttributeMapping;
+import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.material.builder.ItemFactory;
-import org.screamingsandals.lib.material.container.Container;
-import org.screamingsandals.lib.material.container.PlayerContainer;
+import org.screamingsandals.lib.container.Container;
+import org.screamingsandals.lib.container.PlayerContainer;
 import org.screamingsandals.lib.material.data.ItemData;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.minestom.material.MinestomMaterialMapping;
@@ -25,7 +25,6 @@ import org.screamingsandals.lib.minestom.material.meta.MinestomEnchantmentMappin
 import org.screamingsandals.lib.minestom.material.meta.MinestomPotionEffectMapping;
 import org.screamingsandals.lib.minestom.material.meta.MinestomPotionMapping;
 import org.screamingsandals.lib.minestom.utils.MinestomAdventureHelper;
-import org.screamingsandals.lib.utils.InitUtils;
 import org.screamingsandals.lib.utils.InventoryType;
 import org.screamingsandals.lib.utils.annotations.Service;
 
@@ -50,12 +49,6 @@ public class MinestomItemFactory extends ItemFactory {
     //we can use deprecation :)
     @SuppressWarnings("deprecation")
     public MinestomItemFactory() {
-        InitUtils.doIfNot(MinestomMaterialMapping::isInitialized, MinestomMaterialMapping::init);
-        InitUtils.doIfNot(MinestomEnchantmentMapping::isInitialized, MinestomEnchantmentMapping::init);
-        InitUtils.doIfNot(MinestomPotionMapping::isInitialized, MinestomPotionMapping::init);
-        InitUtils.doIfNot(MinestomPotionEffectMapping::isInitialized, MinestomPotionEffectMapping::init);
-        InitUtils.doIfNot(MinestomAttributeMapping::isInitialized, MinestomAttributeMapping::init);
-
         itemConverter
                 .registerW2P(ItemStack.class, item -> {
                     var stack = item.getMaterial().as(ItemStack.class);

@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.gamecore.GameCoreUtils;
 import org.screamingsandals.lib.gamecore.entity.EntityManager;
-import org.screamingsandals.lib.player.event.SPlayerInteractEntityEvent;
+import org.screamingsandals.lib.event.player.SPlayerInteractEntityEvent;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 @Service(dependsOn = {

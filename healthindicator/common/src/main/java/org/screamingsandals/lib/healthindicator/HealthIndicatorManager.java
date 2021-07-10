@@ -2,11 +2,10 @@ package org.screamingsandals.lib.healthindicator;
 
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.event.SPlayerLeaveEvent;
+import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
-import org.screamingsandals.lib.utils.annotations.PluginDependencies;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.visuals.Visual;
 

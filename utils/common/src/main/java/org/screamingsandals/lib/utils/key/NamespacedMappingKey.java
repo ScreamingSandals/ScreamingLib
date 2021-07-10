@@ -3,7 +3,12 @@ package org.screamingsandals.lib.utils.key;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.key.Keyed;
+import net.kyori.adventure.key.Namespaced;
+import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -11,7 +16,7 @@ import java.util.regex.Pattern;
 
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class NamespacedMappingKey implements MappingKey {
+public class NamespacedMappingKey implements MappingKey, Wrapper, Namespaced, Key {
     public static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?:(?<namespace>[A-Za-z0-9_.\\-]+):)?(?<key>[A-Za-z0-9_.\\-/ ]+)$");
     public static final Pattern VALID_NAMESPACE = Pattern.compile("^[a-z0-9_.\\-]+$");
     public static final Pattern VALID_KEY = Pattern.compile("^[a-z0-9_.\\-/]+$");
@@ -70,5 +75,36 @@ public class NamespacedMappingKey implements MappingKey {
     @NotNull
     public String toString() {
         return namespace + ":" + key;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T as(Class<T> type) {
+        if (type.isInstance(this)) {
+            return (T) this;
+        }
+        if (type.isAssignableFrom(String.class)) {
+            return (T) type.toString();
+        }
+        throw new UnsupportedOperationException("Can't convert wrapper to " + type.getName());
+    }
+
+    @Override
+    @NotNull
+    public String value() {
+        return key;
+    }
+
+    @Override
+    @NotNull
+    public String asString() {
+        return toString();
+    }
+
+    @SuppressWarnings({"PatternOverriddenByNonAnnotatedMethod", "PatternValidation"})
+    @Override
+    @NotNull
+    public String namespace() {
+        return namespace;
     }
 }
