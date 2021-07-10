@@ -9,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -135,8 +136,6 @@ public class ClassStorage {
 		// 1.17
 		public static final Class<?> ChatMessageType = safeGetClass("net.minecraft.network.chat.ChatMessageType");
 		public static final Class<?> PacketPlayOutScoreboardTeamData = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam$b");
-		public static final Class<?> IRegistry = safeGetClass("net.minecraft.core.IRegistry");
-
 	}
 	
 	private static String checkNMSVersion() {
