@@ -1,0 +1,10 @@
+dependencies {
+    compileOnly paper(PAPER_VERSION)
+    compileOnly 'com.mojang:authlib:' + MOJANG_AUTHLIB_VERSION
+
+    api project(':npc-common')
+    api project(':utils-bukkit')
+    api project(':core-bukkit')
+    api project(':packets-bukkit')
+    api project(':hologram-bukkit')
+}

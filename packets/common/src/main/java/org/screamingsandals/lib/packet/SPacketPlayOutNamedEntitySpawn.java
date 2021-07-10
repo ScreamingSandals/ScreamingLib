@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.packet;
 import org.screamingsandals.lib.entity.DataWatcher;
 import org.screamingsandals.lib.utils.math.Vector3D;
+import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ public interface SPacketPlayOutNamedEntitySpawn extends SPacket {
 
     void setUUID(UUID uuid);
 
-    void setLocation(Vector3D location);
+    void setLocation(LocationHolder location);
 
     void setYaw(float yaw);
 

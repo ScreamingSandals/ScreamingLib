@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.packet;
 
+import com.mojang.authlib.GameProfile;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
@@ -26,6 +27,6 @@ public interface SPacketPlayOutPlayerInfo extends SPacket {
         private final int latency;
         private final GameMode gameMode;
         private final Component displayName;
-        private final Object gameProfile;
+        private final GameProfile gameProfile;
     }
 }

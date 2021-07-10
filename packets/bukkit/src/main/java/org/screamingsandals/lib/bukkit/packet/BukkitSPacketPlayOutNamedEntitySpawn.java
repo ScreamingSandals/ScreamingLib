@@ -4,6 +4,7 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.packet.SPacketPlayOutNamedEntitySpawn;
 import org.screamingsandals.lib.entity.DataWatcher;
 import org.screamingsandals.lib.utils.math.Vector3D;
+import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.UUID;
 
@@ -26,7 +27,7 @@ public class BukkitSPacketPlayOutNamedEntitySpawn extends BukkitSPacket implemen
     }
 
     @Override
-    public void setLocation(Vector3D location) {
+    public void setLocation(LocationHolder location) {
         if (location == null) {
             throw new UnsupportedOperationException("Location cannot be null!");
         }

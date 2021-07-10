@@ -4,4 +4,5 @@ dependencies {
     api project(':core-bukkit')
     compileOnly paper(PAPER_VERSION)
     compileOnly 'com.mojang:datafixerupper:' + DATAFIXERUPPER_VERSION
+    compileOnly 'com.mojang:authlib:' + MOJANG_AUTHLIB_VERSION
 }
