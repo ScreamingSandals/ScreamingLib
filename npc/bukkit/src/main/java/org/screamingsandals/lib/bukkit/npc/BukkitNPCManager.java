@@ -13,12 +13,19 @@ import org.screamingsandals.lib.npc.event.NPCTouchEvent;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
+import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.LocationMapper;
 
-@Service
+@Service(dependsOn = {
+        EventManager.class,
+        PlayerMapper.class,
+        LocationMapper.class,
+        AbstractTaskInitializer.class
+})
 public class BukkitNPCManager extends NPCManager {
     public static void init(Plugin plugin, Controllable controllable) {
         BukkitNPCManager.init(() -> new BukkitNPCManager(plugin, controllable));
@@ -32,7 +39,7 @@ public class BukkitNPCManager extends NPCManager {
                 protected Object handle(Player p, Object packet) {
                     if (ClassStorage.NMS.PacketPlayInUseEntity.isInstance(packet)) {
                         final var entityId = (int) Reflect.getField(ClassStorage.NMS.PacketPlayInUseEntity, "a,field_149567_a", packet);
-                        NPCManager.getActiveNPCS()
+                        getActiveNPCS()
                                 .values()
                                 .stream()
                                 .filter(npc -> npc.getEntityId() == entityId)
@@ -93,7 +100,7 @@ public class BukkitNPCManager extends NPCManager {
     }
 
     private void onLeave(SPlayerLeaveEvent event) {
-        NPCManager.getActiveNPCS()
+        getActiveNPCS()
                 .values()
                 .forEach(npc -> npc.removeViewer(event.getPlayer()));
     }
