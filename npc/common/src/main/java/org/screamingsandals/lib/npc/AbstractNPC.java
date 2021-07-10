@@ -5,12 +5,9 @@ import com.mojang.authlib.properties.Property;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
-import org.screamingsandals.lib.tasker.task.TaskerTask;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.world.LocationHolder;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -24,10 +21,11 @@ public abstract class AbstractNPC implements NPC {
     private boolean created = false;
     private boolean destroyed = false;
     protected boolean ready = false;
-    private TaskerTask tickTask;
     private String name = uuid.toString().replace("-", "").substring(0, 10);
     private final GameProfile gameProfile = new GameProfile(uuid, name);
     private NPCSkin skin;
+    private boolean shouldLookAtPlayer = false;
+    private int viewDistance = NPC.DEFAULT_VIEW_DISTANCE;
 
     protected AbstractNPC(LocationHolder location) {
         this.location = location;
@@ -105,19 +103,8 @@ public abstract class AbstractNPC implements NPC {
         }
 
         created = true;
-        if (tickTask != null) {
-            tickTask.cancel();
-        }
-
-        tickTask = Tasker.build(this::tick).repeat(1L, TaskerTime.TICKS).start();
         return this;
     }
-
-    @Override
-    public void tick() {
-
-    }
-
 
     public void destroy() {
         if (isDestroyed()) {
@@ -179,6 +166,33 @@ public abstract class AbstractNPC implements NPC {
             return this;
         }
         gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
+        return this;
+    }
+
+    @Override
+    public NPC setShouldLookAtViewer(boolean shouldLook) {
+        this.shouldLookAtPlayer = shouldLook;
+        return this;
+    }
+
+    @Override
+    public boolean shouldLookAtPlayer() {
+        return shouldLookAtPlayer;
+    }
+
+    @Override
+    public boolean hasViewers() {
+        return !visibleTo.isEmpty();
+    }
+
+    @Override
+    public int getViewDistance() {
+        return viewDistance;
+    }
+
+    @Override
+    public NPC setViewDistance(int viewDistance) {
+        this.viewDistance = viewDistance;
         return this;
     }
 

@@ -1,7 +1,9 @@
 package org.screamingsandals.lib.npc;
 
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.HashMap;
@@ -11,6 +13,9 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 @AbstractService
+@ServiceDependencies(dependsOn = {
+        Tasker.class
+})
 public abstract class NPCManager {
     private static NPCManager manager = null;
     protected final Map<UUID, NPC> activeNPCS = new HashMap<>();

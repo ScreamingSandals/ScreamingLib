@@ -14,6 +14,12 @@ import java.util.UUID;
  * API For the NPC (non-player-character)
  */
 public interface NPC {
+    /**
+     * This is default view distance SQUARED!
+     * <p>
+     * That means that at this distance, you will see the hologram from 64 blocks away.
+     */
+    int DEFAULT_VIEW_DISTANCE = 4096;
 
     /**
      * Creates new NPC.
@@ -36,11 +42,6 @@ public interface NPC {
      * Destroys the NPC entirely.
      */
     void destroy();
-
-    /**
-     * Entity logic per tick.
-     */
-    void tick();
 
     /**
      *
@@ -151,7 +152,7 @@ public interface NPC {
      * Makes the npc look at the particular location
      * @param location the location to look at
      */
-    void rotateHead(LocationHolder location);
+    void lookAtPlayer(LocationHolder location, PlayerWrapper player);
 
     /**
      *
@@ -161,7 +162,38 @@ public interface NPC {
 
     /**
      *
-     * @return
+     * @return single line name of entity generated from uuid
      */
     String getName();
+
+    /**
+     *
+     * @param shouldLook if true the npc will rotate it's head towards the viewer
+     * @return this NPC
+     */
+    NPC setShouldLookAtViewer(boolean shouldLook);
+
+    /**
+     *
+     * @return true if NPC should look at the player, false otherwise
+     */
+    boolean shouldLookAtPlayer();
+
+    /**
+     *
+     * @return true if NPC has viewers, false otherwise
+     */
+    boolean hasViewers();
+
+    /**
+     *
+     * @return the maximum distance between the viewer and the NPC
+     */
+    int getViewDistance();
+
+    /**
+     *
+     * @return this NPC
+     */
+    NPC setViewDistance(int distance);
 }
