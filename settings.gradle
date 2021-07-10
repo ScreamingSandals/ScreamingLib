@@ -7,6 +7,7 @@ include 'signs'
 include 'lang'
 include 'visuals-api'
 include 'results'
+//include 'nms'
 
 def registerModule(String name, String... platforms) {
     include(':' + name + '-common')
@@ -30,4 +31,5 @@ registerModule('plugin', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
 registerModule('tasker', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
 registerModule('command', 'bukkit', /*'minestom' ,*/ 'sponge', 'bungee', 'velocity')
 registerModule('event', 'bukkit', 'sponge', 'bungee', 'velocity')
+registerModule('npc', 'bukkit') // TODO: add others
 

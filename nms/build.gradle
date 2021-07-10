@@ -1,0 +1,16 @@
+apply plugin: 'org.screamingsandals.nms'
+
+dependencies {
+    api project(':utils-common')
+}
+
+// after any changes, please run generateNmsComponents task
+
+nmsGen {
+    basePackage = "org.screamingsandals.lib.nms.accessors"
+
+    reqClass("com.mojang.math.Vector3f")
+        .reqField("x")
+        .reqField("y")
+        .reqField("z")
+}

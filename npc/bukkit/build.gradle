@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly paper(PAPER_VERSION)
+    compileOnly paperLegacy(PAPER_LEGACY_VERSION)
     compileOnly 'com.mojang:authlib:' + MOJANG_AUTHLIB_VERSION
 
     api project(':npc-common')
