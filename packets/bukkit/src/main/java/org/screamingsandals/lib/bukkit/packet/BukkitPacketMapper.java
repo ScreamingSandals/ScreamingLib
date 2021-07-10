@@ -96,6 +96,8 @@ public class BukkitPacketMapper extends PacketMapper {
                 .put(SPacketPlayOutPlayerInfo.class, BukkitSPacketPlayOutPlayerInfo.class);
         packetConverters
                 .put(SPacketPlayOutScoreboardTeam.class, BukkitSPacketPlayOutScoreboardTeam.class);
+        packetConverters
+                .put(SPacketPlayOutLookAt.class, BukkitSPacketPlayOutLookAt.class);
     }
 
     @SuppressWarnings("unchecked")

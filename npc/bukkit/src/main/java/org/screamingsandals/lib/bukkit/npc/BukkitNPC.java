@@ -2,6 +2,7 @@ package org.screamingsandals.lib.bukkit.npc;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitDataWatcher;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
@@ -191,8 +192,23 @@ public class BukkitNPC extends AbstractNPC {
     }
 
     @Override
-    public void rotateHead(LocationHolder location) {
+    public void lookAtPlayer(LocationHolder location, PlayerWrapper player) {
+        final var bukkitNPCLocation = getLocation().as(Location.class);
+        final var playerLocation = location.as(Location.class);
 
+        Location direction =  bukkitNPCLocation.clone().setDirection(playerLocation.clone().subtract(bukkitNPCLocation.clone()).toVector());
+        final var lookPacket = PacketMapper.createPacket(SPacketPlayOutLookAt.class);
+        lookPacket.setEntityId(getEntityId());
+        lookPacket.setYaw((byte) (direction.getYaw() * 256.0F / 360.0F));
+        lookPacket.setPitch((byte) (direction.getPitch() * 256.0F / 360.0F));
+        lookPacket.setOnGround(true);
+
+        final var headRotationPacket = PacketMapper.createPacket(SPacketPlayOutEntityHeadRotation.class);
+        headRotationPacket.setEntityId(getEntityId());
+        headRotationPacket.setRotation((byte) (direction.getYaw() * 256.0F / 360.0F));
+
+        lookPacket.sendPacket(player);
+        headRotationPacket.sendPacket(player);
     }
 
     private SPacketPlayOutEntityTeleport getTeleportPacket() {
@@ -241,4 +257,6 @@ public class BukkitNPC extends AbstractNPC {
 
         return this;
     }
+
+
 }

@@ -124,7 +124,7 @@ public class ClassStorage {
 		public static final Class<?> CraftVector = safeGetClass("{obc}.util.CraftVector");
 		public static final Class<?> BlockPosition = safeGetClass("net.minecraft.core.BlockPosition", "{nms}.BlockPosition");
 		public static final Class<?> IRegistry = safeGetClass("net.minecraft.core.IRegistry", "{nms}.IRegistry", "{f:util}.registry.Registry");
-
+		public static final Class<?> PacketPlayOutEntityLook = safeGetClass("{nms}.PacketPlayOutEntity$PacketPlayOutEntityLook", "net.minecraft.network.protocol.game.PacketPlayOutEntity$PacketPlayOutEntityLook");
 		// 1.16
 		public static final Class<?> AttributeModifiable = safeGetClass("net.minecraft.world.entity.ai.attributes.AttributeModifiable", "{nms}.AttributeModifiable", "{f:ent}.ai.attributes.ModifiableAttributeInstance");
 
