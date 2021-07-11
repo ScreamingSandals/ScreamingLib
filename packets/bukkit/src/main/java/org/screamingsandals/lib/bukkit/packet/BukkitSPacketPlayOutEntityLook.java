@@ -7,8 +7,8 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 
 public class BukkitSPacketPlayOutEntityLook extends BukkitSPacket implements SPacketPlayOutEntityLook {
     private int entityId;
-    private int yaw;
-    private int pitch;
+    private byte yaw;
+    private byte pitch;
     private boolean isOnGround;
 
     @Override
@@ -29,12 +29,12 @@ public class BukkitSPacketPlayOutEntityLook extends BukkitSPacket implements SPa
     }
 
     @Override
-    public void setYaw(int yaw) {
+    public void setYaw(byte yaw) {
         this.yaw = yaw;
     }
 
     @Override
-    public void setPitch(int pitch) {
+    public void setPitch(byte pitch) {
         this.pitch = pitch;
     }
 

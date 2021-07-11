@@ -145,7 +145,7 @@ public class BukkitNPC extends AbstractNPC {
                     getGameProfile()
             )));
             getViewers().forEach(playerInfoPacket::sendPacket);
-        }).delay(3L, TaskerTime.SECONDS).start();
+        }).delay(5L, TaskerTime.SECONDS).start();
 
         return toReturn;
     }
@@ -253,7 +253,7 @@ public class BukkitNPC extends AbstractNPC {
                     getGameProfile()
             )));
             getViewers().forEach(playerInfoPacket::sendPacket);
-        }).delay(3L, TaskerTime.SECONDS);
+        }).delay(5L, TaskerTime.SECONDS).start();
 
         return this;
     }

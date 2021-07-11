@@ -3,9 +3,9 @@ package org.screamingsandals.lib.packet;
 public interface SPacketPlayOutEntityLook extends SPacket {
     void setEntityId(int entityId);
 
-    void setYaw(int yaw);
+    void setYaw(byte yaw);
 
-    void setPitch(int pitch);
+    void setPitch(byte pitch);
 
     void setOnGround(boolean isOnGround);
 }

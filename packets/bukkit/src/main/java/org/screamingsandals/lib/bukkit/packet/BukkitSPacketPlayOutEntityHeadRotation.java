@@ -1,8 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
-import org.bukkit.Location;
+import org.bukkit.Bukkit;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.bukkit.utils.nms.entity.ArmorStandNMS;
 import org.screamingsandals.lib.packet.SPacketPlayOutEntityHeadRotation;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -35,10 +34,12 @@ public class BukkitSPacketPlayOutEntityHeadRotation extends BukkitSPacket implem
 
     private void generatePacket() {
         // create fake entity
-        final var fakeEntity = new ArmorStandNMS(new Location(null, 0, 0, 0, 0, 0));
-        fakeEntity.setId(entityId);
+        //TODO: find alternative
+        final var fakeEntity = Reflect.constructor(ClassStorage.NMS.EntityArmorStand, ClassStorage.NMS.World, double.class, double.class, double.class)
+                .construct(ClassStorage.getHandle(Bukkit.getServer().getWorlds().get(0)), 0.0D, 0.0D, 0.0D);
+        Reflect.setField(fakeEntity, "as,f_19848_,id", entityId);
 
         packet = Reflect.constructor(ClassStorage.NMS.PacketPlayOutEntityHeadRotation, ClassStorage.NMS.Entity, byte.class)
-                .constructResulted(fakeEntity.getHandler(), rotation);
+                .constructResulted(fakeEntity, rotation);
     }
 }

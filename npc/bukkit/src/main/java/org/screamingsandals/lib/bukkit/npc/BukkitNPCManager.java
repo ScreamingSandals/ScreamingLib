@@ -57,7 +57,7 @@ public class BukkitNPCManager extends NPCManager {
                         if (npc.shouldLookAtPlayer()) {
                             npc.getViewers().forEach(viewer -> npc.lookAtPlayer(viewer.getLocation(), viewer));
                         }
-                    })).async().repeat(1L, TaskerTime.SECONDS)
+                    })).async().repeat(1L, TaskerTime.TICKS)
                             .start();
 
             controllable.preDisable(this::destroy);
