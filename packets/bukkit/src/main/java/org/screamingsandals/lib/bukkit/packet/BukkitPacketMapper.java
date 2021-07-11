@@ -6,9 +6,7 @@ import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import sun.reflect.ReflectionFactory;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,7 +95,7 @@ public class BukkitPacketMapper extends PacketMapper {
         packetConverters
                 .put(SPacketPlayOutScoreboardTeam.class, BukkitSPacketPlayOutScoreboardTeam.class);
         packetConverters
-                .put(SPacketPlayOutLookAt.class, BukkitSPacketPlayOutLookAt.class);
+                .put(SPacketPlayOutEntityLook.class, BukkitSPacketPlayOutEntityLook.class);
     }
 
     @SuppressWarnings("unchecked")

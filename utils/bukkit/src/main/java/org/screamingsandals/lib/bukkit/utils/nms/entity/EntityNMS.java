@@ -96,6 +96,10 @@ public class EntityNMS {
 		return (int) Reflect.getMethod(handler, "getId,func_145782_y").invoke();
 	}
 
+	public void setId(int id) {
+		Reflect.setField(handler, "as,f_19848_,id", id);
+	}
+
 	public Object getDataWatcher() {
 		return Reflect.getMethod(handler, "getDataWatcher,func_184212_Q").invoke();
 	}

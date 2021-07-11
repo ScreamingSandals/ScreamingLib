@@ -197,7 +197,7 @@ public class BukkitNPC extends AbstractNPC {
         final var playerLocation = location.as(Location.class);
 
         Location direction =  bukkitNPCLocation.clone().setDirection(playerLocation.clone().subtract(bukkitNPCLocation.clone()).toVector());
-        final var lookPacket = PacketMapper.createPacket(SPacketPlayOutLookAt.class);
+        final var lookPacket = PacketMapper.createPacket(SPacketPlayOutEntityLook.class);
         lookPacket.setEntityId(getEntityId());
         lookPacket.setYaw((byte) (direction.getYaw() * 256.0F / 360.0F));
         lookPacket.setPitch((byte) (direction.getPitch() * 256.0F / 360.0F));

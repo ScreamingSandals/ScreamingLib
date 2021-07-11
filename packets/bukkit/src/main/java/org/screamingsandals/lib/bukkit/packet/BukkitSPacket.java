@@ -18,6 +18,8 @@ public abstract class BukkitSPacket implements SPacket {
         packet = new InvocationResult(Reflect.forceConstruct(packetClass));
     }
 
+    public BukkitSPacket() {}
+
     public void addAdditionalPacket(InvocationResult packet) {
         addAdditionalPacket(packet.raw());
     }
