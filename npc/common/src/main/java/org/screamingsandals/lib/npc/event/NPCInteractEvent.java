@@ -8,7 +8,13 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class NPCTouchEvent extends AbstractEvent {
+public class NPCInteractEvent extends AbstractEvent {
     private final PlayerWrapper player;
     private final NPC npc;
+    private final InteractType interactType;
+
+    public enum InteractType {
+        LEFT_CLICK,
+        RIGHT_CLICK;
+    }
 }

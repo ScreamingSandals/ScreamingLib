@@ -9,7 +9,7 @@ import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
 import org.screamingsandals.lib.event.player.SPlayerMoveEvent;
 import org.screamingsandals.lib.npc.AbstractNPC;
 import org.screamingsandals.lib.npc.NPCManager;
-import org.screamingsandals.lib.npc.event.NPCTouchEvent;
+import org.screamingsandals.lib.npc.event.NPCInteractEvent;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
@@ -38,13 +38,15 @@ public class BukkitNPCManager extends NPCManager {
                 @Override
                 protected Object handle(Player p, Object packet) {
                     if (ClassStorage.NMS.PacketPlayInUseEntity.isInstance(packet)) {
-                        final var entityId = (int) Reflect.getField(ClassStorage.NMS.PacketPlayInUseEntity, "a,field_149567_a", packet);
+                        final var entityId = (int) Reflect.getField(packet, "a,field_149567_a");
+                        final var nmsClickEnum = Reflect.getField(packet, "b,action,field_149566_b");
+                        NPCInteractEvent.InteractType interactType = nmsClickEnum.toString().equals("ATTACK") ? NPCInteractEvent.InteractType.RIGHT_CLICK : NPCInteractEvent.InteractType.LEFT_CLICK;
                         getActiveNPCS()
                                 .values()
                                 .stream()
                                 .filter(npc -> npc.getEntityId() == entityId)
                                 .findAny()
-                                .ifPresent(npc -> EventManager.fire(new NPCTouchEvent(PlayerMapper.wrapPlayer(p), npc)));
+                                .ifPresent(npc -> EventManager.fire(new NPCInteractEvent(PlayerMapper.wrapPlayer(p), npc, interactType)));
                     }
                     return packet;
                 }
