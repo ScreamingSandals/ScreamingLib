@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.npc;
 
+import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Location;
@@ -21,6 +22,7 @@ import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.world.LocationHolder;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,17 +46,8 @@ public class BukkitNPC extends AbstractNPC {
             hologram.hide();
         }
 
-        int index = 13;
-        if (Version.isVersion(1, 17)) {
-            index = 16;
-        } else if (Version.isVersion(1, 14)) {
-            index = 15;
-        } else if (Version.isVersion(1, 13)) {
-            index = 13;
-        }
-
         dataWatcher = new BukkitDataWatcher(null);
-        dataWatcher.register(DataWatcher.Item.of(index, (byte) 128));
+        dataWatcher.register(DataWatcher.Item.of(SkinLayerValues.findLayerByVersion(), (byte) 127));
     }
 
     @Override
@@ -258,5 +251,24 @@ public class BukkitNPC extends AbstractNPC {
         return this;
     }
 
+    @RequiredArgsConstructor
+    public enum SkinLayerValues {
+        V9(13, 13),
+        V14(15, 14),
+        V16(16, 15),
+        V17(17, 17);
+
+        private final int layerValue;
+        private final int minVersion;
+
+        public static int findLayerByVersion() {
+            return Arrays.stream(values())
+                    .sorted(Collections.reverseOrder())
+                    .filter(value -> Version.isVersion(1, value.minVersion))
+                    .map(value -> value.layerValue)
+                    .findAny()
+                    .orElse(V9.layerValue);
+        }
+    }
 
 }
