@@ -111,6 +111,7 @@ public abstract class AbstractNPC implements NPC {
             return;
         }
         hide();
+        getViewers().forEach(this::removeViewer);
         visibleTo.clear();
         destroyed = true;
         NPCManager.removeNPC(this);

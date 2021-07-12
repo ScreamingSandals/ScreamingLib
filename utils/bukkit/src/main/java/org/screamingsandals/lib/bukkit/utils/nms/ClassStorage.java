@@ -108,6 +108,7 @@ public class ClassStorage {
 		public static final Class<?> PacketPlayOutNamedEntitySpawn = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutNamedEntitySpawn", "{nms}.PacketPlayOutNamedEntitySpawn", "{f:net}.play.server.SSpawnPlayerPacket", "{f:net}.play.server.SPacketSpawnPlayer");
 
 		//TODO: find Forge names
+		public static final Class<?> PacketPlayInUseEntityActionType = safeGetClass("net.minecraft.network.protocol.game.PacketPlayInUseEntity$b", "{nms}.PacketPlayInUseEntity$EnumEntityUseAction");
 		public static final Class<?> PacketPlayOutPlayerInfo = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo", "{nms}.PacketPlayOutPlayerInfo");
 		public static final Class<?> PacketPlayOutLogin = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutLogin", "{nms}.PacketPlayOutLogin");
 		public static final Class<?> PathfinderGoal = safeGetClass("net.minecraft.world.entity.ai.goal.PathfinderGoal", "{nms}.PathfinderGoal", "{f:goal}.Goal", "{f:ent}.ai.EntityAIBase");

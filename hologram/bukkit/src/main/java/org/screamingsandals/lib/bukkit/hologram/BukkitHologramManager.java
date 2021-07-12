@@ -53,7 +53,8 @@ public class BukkitHologramManager extends HologramManager {
                                 if (hologram instanceof BukkitHologram) {
                                     final var textHologram = (BukkitHologram) hologram;
                                     if (textHologram.hasId(entityId)) {
-                                        EventManager.fire(new HologramTouchEvent(PlayerMapper.wrapPlayer(sender), hologram));
+                                        // run synchronously
+                                        Tasker.build(() -> EventManager.fire(new HologramTouchEvent(PlayerMapper.wrapPlayer(sender), hologram))).afterOneTick().start();
                                         break; // don't continue in iteration if we found the hologram
                                     }
                                 }

@@ -46,9 +46,11 @@ public class BukkitNPCManager extends NPCManager {
                 protected Object handle(Player p, Object packet) {
                     if (ClassStorage.NMS.PacketPlayInUseEntity.isInstance(packet)) {
                         final var entityId = (int) Reflect.getField(packet, "a,field_149567_a");
-                        final var nmsClickEnum = Reflect.getField(packet, "b,action,field_149566_b");
-                        NPCInteractEvent.InteractType interactType = nmsClickEnum.toString().equals("ATTACK") || nmsClickEnum.toString().equals("b")
-                                ? NPCInteractEvent.InteractType.RIGHT_CLICK : NPCInteractEvent.InteractType.LEFT_CLICK;
+                        final var nmsEnum = Reflect.getField(packet, "b,action,field_149566_b").toString();
+                        final var attackEnum = Reflect.findEnumConstant(ClassStorage.NMS.PacketPlayInUseEntityActionType, "b,ATTACK");
+                                                                                                                                        // temporary fix smh
+                        NPCInteractEvent.InteractType interactType = nmsEnum == attackEnum  || nmsEnum.equalsIgnoreCase("net.minecraft.network.protocol.game.PacketPlayInUseEntity$1@5327f6c8")
+                                ?  NPCInteractEvent.InteractType.LEFT_CLICK : NPCInteractEvent.InteractType.RIGHT_CLICK;
 
                         for (var npc : getActiveNPCS().values()) {
                             final var id = npc.getEntityId();
@@ -62,7 +64,8 @@ public class BukkitNPCManager extends NPCManager {
                                     }
                                     cooldownMap.put(p.getUniqueId(), System.currentTimeMillis());
                                 }
-                                EventManager.fire(new NPCInteractEvent(PlayerMapper.wrapPlayer(p), npc, interactType));
+                                // use tasker to fire event synchronously
+                                Tasker.build(() -> EventManager.fire(new NPCInteractEvent(PlayerMapper.wrapPlayer(p), npc, interactType))).afterOneTick().start();
                                 break;
                             }
                         }
@@ -76,7 +79,10 @@ public class BukkitNPCManager extends NPCManager {
             Tasker.build(() -> getActiveNPCS().values()
                     .forEach(npc -> {
                         if (npc.shouldLookAtPlayer()) {
-                            npc.getViewers().forEach(viewer -> npc.lookAtPlayer(viewer.getLocation(), viewer));
+                            npc.getViewers().forEach(viewer -> {
+
+                                npc.lookAtPlayer(viewer.getLocation(), viewer);
+                            });
                         }
                     })).async().repeat(1L, TaskerTime.TICKS)
                             .start();
