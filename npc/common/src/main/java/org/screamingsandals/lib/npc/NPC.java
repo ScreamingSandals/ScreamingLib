@@ -14,6 +14,12 @@ import java.util.UUID;
  * API For the NPC (non-player-character)
  */
 public interface NPC {
+
+    /**
+     * This is the default click cool down in milliseconds
+     */
+    long CLICK_COOL_DOWN = 2L;
+
     /**
      * This is default view distance SQUARED!
      * <p>
@@ -196,4 +202,17 @@ public interface NPC {
      * @return this NPC
      */
     NPC setViewDistance(int distance);
+
+    /**
+     *
+     * @param delay the amount of time (in milliseconds) the last clicked user has to wait before interacting with this NPC again
+     * @return this NPC
+     */
+    NPC setClickCoolDown(long delay);
+
+    /**
+     *
+     * @return the amount of time (in milliseconds) the last clicked user has to wait before interacting with this NPC again
+     */
+    long getClickCoolDown();
 }

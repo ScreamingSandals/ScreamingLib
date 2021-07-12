@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.npc;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
@@ -20,6 +21,10 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 @Service(dependsOn = {
         EventManager.class,
         PlayerMapper.class,
@@ -27,6 +32,8 @@ import org.screamingsandals.lib.world.LocationMapper;
         AbstractTaskInitializer.class
 })
 public class BukkitNPCManager extends NPCManager {
+    private final Map<UUID, Long> cooldownMap = new HashMap<>();
+
     public static void init(Plugin plugin, Controllable controllable) {
         BukkitNPCManager.init(() -> new BukkitNPCManager(plugin, controllable));
     }
@@ -40,13 +47,25 @@ public class BukkitNPCManager extends NPCManager {
                     if (ClassStorage.NMS.PacketPlayInUseEntity.isInstance(packet)) {
                         final var entityId = (int) Reflect.getField(packet, "a,field_149567_a");
                         final var nmsClickEnum = Reflect.getField(packet, "b,action,field_149566_b");
-                        NPCInteractEvent.InteractType interactType = nmsClickEnum.toString().equals("ATTACK") ? NPCInteractEvent.InteractType.RIGHT_CLICK : NPCInteractEvent.InteractType.LEFT_CLICK;
-                        getActiveNPCS()
-                                .values()
-                                .stream()
-                                .filter(npc -> npc.getEntityId() == entityId)
-                                .findAny()
-                                .ifPresent(npc -> EventManager.fire(new NPCInteractEvent(PlayerMapper.wrapPlayer(p), npc, interactType)));
+                        NPCInteractEvent.InteractType interactType = nmsClickEnum.toString().equals("ATTACK") || nmsClickEnum.toString().equals("b")
+                                ? NPCInteractEvent.InteractType.RIGHT_CLICK : NPCInteractEvent.InteractType.LEFT_CLICK;
+
+                        for (var npc : getActiveNPCS().values()) {
+                            final var id = npc.getEntityId();
+                            if (id == entityId) {
+                                synchronized (cooldownMap) {
+                                    if (cooldownMap.containsKey(p.getUniqueId())) {
+                                        final var lastClick = cooldownMap.get(p.getUniqueId());
+                                        if (System.currentTimeMillis() - lastClick < npc.getClickCoolDown()) {
+                                            break;
+                                        }
+                                    }
+                                    cooldownMap.put(p.getUniqueId(), System.currentTimeMillis());
+                                }
+                                EventManager.fire(new NPCInteractEvent(PlayerMapper.wrapPlayer(p), npc, interactType));
+                                break;
+                            }
+                        }
                     }
                     return packet;
                 }

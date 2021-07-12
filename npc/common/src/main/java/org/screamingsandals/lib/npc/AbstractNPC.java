@@ -25,6 +25,7 @@ public abstract class AbstractNPC implements NPC {
     private NPCSkin skin;
     private boolean shouldLookAtPlayer = false;
     private int viewDistance = NPC.DEFAULT_VIEW_DISTANCE;
+    private long clickCoolDown = NPC.CLICK_COOL_DOWN;
 
     protected AbstractNPC(LocationHolder location) {
         this.location = location;
@@ -193,6 +194,20 @@ public abstract class AbstractNPC implements NPC {
     public NPC setViewDistance(int viewDistance) {
         this.viewDistance = viewDistance;
         return this;
+    }
+
+    @Override
+    public NPC setClickCoolDown(long delay) {
+        if (delay < 0) {
+            return this;
+        }
+        clickCoolDown = delay;
+        return this;
+    }
+
+    @Override
+    public long getClickCoolDown() {
+        return clickCoolDown;
     }
 
     public abstract void onViewerAdded(PlayerWrapper player);

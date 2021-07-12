@@ -8,12 +8,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 @AbstractService
 public abstract class NPCManager {
     private static NPCManager manager = null;
-    protected final Map<UUID, NPC> activeNPCS = new HashMap<>();
+    protected final Map<UUID, NPC> activeNPCS = new ConcurrentHashMap<>();
 
     public static boolean isInitialized() {
         return manager != null;

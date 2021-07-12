@@ -8,12 +8,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 @AbstractService
 public abstract class HologramManager {
     private static HologramManager manager;
-    protected final Map<UUID, Hologram> activeHolograms = new HashMap<>();
+    protected final Map<UUID, Hologram> activeHolograms = new ConcurrentHashMap<>();
 
     @Deprecated //INTERNAL USE ONLY!
     public static void init(Supplier<HologramManager> supplier) {
