@@ -34,11 +34,11 @@ public class BukkitSPacketPlayOutPlayerInfo extends BukkitSPacket implements SPa
 
             final var atomicRef = new AtomicReference<>();
 
-            Reflect.constructor(ClassStorage.NMS.PlayerInfoData, ClassStorage.NMS.GameProfile, int.class, ClassStorage.NMS.EnumGamemode, ClassStorage.NMS.IChatBaseComponent)
-                    .ifPresentOrElse(constructor -> atomicRef.set(constructor.construct(playerInfoData.getGameProfile(), playerInfoData.getLatency(), gameMode, ClassStorage.asMinecraftComponent(playerInfoData.getDisplayName()))), () -> {
+            Reflect.constructor(ClassStorage.NMS.PlayerInfoData, ClassStorage.NMS.PacketPlayOutPlayerInfo, ClassStorage.NMS.GameProfile, int.class, ClassStorage.NMS.EnumGamemode, ClassStorage.NMS.IChatBaseComponent)
+                    .ifPresentOrElse(constructor -> atomicRef.set(constructor.construct(packet.raw(), playerInfoData.getGameProfile(), playerInfoData.getLatency(), gameMode, ClassStorage.asMinecraftComponent(playerInfoData.getDisplayName()))), () -> {
                             atomicRef.set(Reflect
-                                    .constructor(ClassStorage.NMS.PlayerInfoData, ClassStorage.NMS.PacketPlayOutPlayerInfo, ClassStorage.NMS.GameProfile, int.class, ClassStorage.NMS.EnumGamemode, ClassStorage.NMS.IChatBaseComponent)
-                                                .construct(packet, playerInfoData.getGameProfile(), playerInfoData.getLatency(), gameMode, ClassStorage.asMinecraftComponent(playerInfoData.getDisplayName())));
+                                    .constructor(ClassStorage.NMS.PlayerInfoData, ClassStorage.NMS.GameProfile, int.class, ClassStorage.NMS.EnumGamemode, ClassStorage.NMS.IChatBaseComponent)
+                                                .construct(playerInfoData.getGameProfile(), playerInfoData.getLatency(), gameMode, ClassStorage.asMinecraftComponent(playerInfoData.getDisplayName())));
                     });
 
             nmsData.add(atomicRef.get());

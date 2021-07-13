@@ -22,7 +22,9 @@ public class EntityNMS {
 	public static int incrementAndGetId() {
 		final var entityCount = Reflect.getField(ClassStorage.NMS.Entity, "entityCount,field_70152_a");
 		if (entityCount != null) {
-			return ((int)entityCount) + 1;
+			final var newCount = ((int)entityCount) + 1;
+			Reflect.setField(ClassStorage.NMS.Entity, "entityCount,field_70152_a", newCount);
+			return newCount;
 		}
 
 		final var entityCounter = Reflect.getField(ClassStorage.NMS.Entity, "b,f_19843_");
@@ -30,7 +32,7 @@ public class EntityNMS {
 			return ((AtomicInteger) entityCounter).incrementAndGet();
 		}
 
-		throw new UnsupportedOperationException("Can't obtain new Entity id, rip");
+		throw new UnsupportedOperationException("Can't obtain new Entity id");
 	}
 
 	protected Object handler;

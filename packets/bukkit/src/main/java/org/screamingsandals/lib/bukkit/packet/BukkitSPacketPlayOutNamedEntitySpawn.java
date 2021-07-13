@@ -6,6 +6,7 @@ import org.screamingsandals.lib.entity.DataWatcher;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 
+import java.util.List;
 import java.util.UUID;
 
 public class BukkitSPacketPlayOutNamedEntitySpawn extends BukkitSPacket implements SPacketPlayOutNamedEntitySpawn {
@@ -64,6 +65,13 @@ public class BukkitSPacketPlayOutNamedEntitySpawn extends BukkitSPacket implemen
         final var bukkitDataWatcher = (BukkitDataWatcher) dataWatcher;
         final var nmsDataWatcher = bukkitDataWatcher.toNMS();
         packet.setField("h,field_148960_i", nmsDataWatcher);
+        return this;
+    }
+
+    @Override
+    public SPacketPlayOutNamedEntitySpawn setItems(List<DataWatcher.Item<?>> items) {
+        //TODO:
+        packet.setField("i,field_148958_j", null);
         return this;
     }
 }

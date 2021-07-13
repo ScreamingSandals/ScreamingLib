@@ -22,10 +22,7 @@ import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.world.LocationHolder;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class BukkitNPC extends AbstractNPC {
     private final int id;
@@ -92,6 +89,19 @@ public class BukkitNPC extends AbstractNPC {
     private List<SPacket> getSpawnPackets() {
         final var toReturn = new LinkedList<SPacket>();
 
+        final var scoreboardTeamPacket = PacketMapper.createPacket(SPacketPlayOutScoreboardTeam.class)
+                .setTeamName(AdventureHelper.toComponent(getName()))
+                .setDisplayName(AdventureHelper.toComponent(getName()))
+                .setCollisionRule(SPacketPlayOutScoreboardTeam.CollisionRule.ALWAYS)
+                .setTagVisibility(SPacketPlayOutScoreboardTeam.TagVisibility.NEVER)
+                .setTeamColor(TextColor.color(0, 0, 0))
+                .setTeamPrefix(Component.text(" "))
+                .setTeamSuffix(Component.text(" "))
+                .setFlags(false, false)
+                .setMode(SPacketPlayOutScoreboardTeam.Mode.CREATE)
+                .setEntities(Collections.singletonList(getName()));
+        toReturn.add(scoreboardTeamPacket);
+
         final var playerInfoPacket = PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class)
                 .setAction(SPacketPlayOutPlayerInfo.Action.ADD_PLAYER)
                 .setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
@@ -108,25 +118,13 @@ public class BukkitNPC extends AbstractNPC {
                 .setPitch(getLocation().getPitch())
                 .setYaw(getLocation().getYaw())
                 .setLocation(getLocation())
-                .setDataWatcher(dataWatcher);
+                .setDataWatcher(dataWatcher)
+                .setItems(null);
         toReturn.add(spawnPacket);
 
         final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
         metadataPacket.setMetaData(id, dataWatcher, true);
         toReturn.add(metadataPacket);
-
-        final var scoreboardTeamPacket = PacketMapper.createPacket(SPacketPlayOutScoreboardTeam.class)
-                .setTeamName(AdventureHelper.toComponent(getName()))
-                .setDisplayName(AdventureHelper.toComponent(getName()))
-                .setCollisionRule(SPacketPlayOutScoreboardTeam.CollisionRule.ALWAYS)
-                .setTagVisibility(SPacketPlayOutScoreboardTeam.TagVisibility.NEVER)
-                .setTeamColor(TextColor.color(0, 0, 0))
-                .setTeamPrefix(Component.text(" "))
-                .setTeamSuffix(Component.text(" "))
-                .setFlags(false, false)
-                .setMode(SPacketPlayOutScoreboardTeam.Mode.CREATE)
-                .setEntities(Collections.singletonList(getName()));
-        toReturn.add(scoreboardTeamPacket);
 
         Tasker.build(() -> {
             //remove npc from tablist
@@ -252,7 +250,8 @@ public class BukkitNPC extends AbstractNPC {
 
     @RequiredArgsConstructor
     public enum SkinLayerValues {
-        V9(13, 13),
+        V9(12, 9),
+        V13(13, 13),
         V14(15, 14),
         V16(16, 15),
         V17(17, 17);

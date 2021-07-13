@@ -87,6 +87,7 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
         if (visibility == null) {
             throw new UnsupportedOperationException("Visibility mode cannot be null!");
         }
+
         if (Version.isVersion(1, 17)) {
             Reflect.setField(data, "d,f_179355_", visibility.getEnumName());
         } else {
@@ -165,6 +166,7 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
         if (displayName == null) {
             throw new UnsupportedOperationException("Display name cannot be null!");
         }
+
         final var minecraftComponent = ClassStorage.asMinecraftComponent(displayName);
         if (Version.isVersion(1, 17)) {
             Reflect.setField(data, "a,f_179352_", minecraftComponent);
