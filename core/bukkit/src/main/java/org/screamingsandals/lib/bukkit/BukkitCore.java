@@ -28,7 +28,8 @@ public class BukkitCore extends Core {
         new EnderDragonChangePhaseEventListener(plugin);
         if (Reflect.has("org.bukkit.event.entity.EntityAirChangeEvent"))
             new EntityAirChangeEventListener(plugin);
-        new EntityBreedEventListener(plugin);
+        if (Reflect.has("org.bukkit.event.entity.EntityBreedEvent"))
+            new EntityBreedEventListener(plugin);
         new EntityChangeBlockEventListener(plugin);
         new EntityCombustEventListener(plugin);
         new EntityCreatePortalEventListener(plugin);
