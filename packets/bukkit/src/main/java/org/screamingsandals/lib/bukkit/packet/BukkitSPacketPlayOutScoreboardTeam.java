@@ -15,11 +15,13 @@ import java.util.Collection;
 import java.util.Optional;
 
 public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements SPacketPlayOutScoreboardTeam {
-    private final Object data;
+    private Object data;
 
     public BukkitSPacketPlayOutScoreboardTeam() {
         super(ClassStorage.NMS.PacketPlayOutScoreboardTeam);
-        data = Reflect.forceConstruct(ClassStorage.NMS.PacketPlayOutScoreboardTeamData);
+        if (ClassStorage.NMS.PacketPlayOutScoreboardTeamData != null) {
+            data = Reflect.forceConstruct(ClassStorage.NMS.PacketPlayOutScoreboardTeamData);
+        }
     }
 
     @Override
