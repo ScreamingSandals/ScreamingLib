@@ -174,7 +174,8 @@ public class BukkitCore extends Core {
         if (Reflect.has("org.bukkit.event.block.MoistureChangeEvent"))
             new MoistureChangeEventListener(plugin);
         new StructureGrowEventListener(plugin);
-        new SpongeAbsorbEventListener(plugin);
+        if (Reflect.has("org.bukkit.event.block.SpongeAbsorbEvent"))
+            new SpongeAbsorbEventListener(plugin);
         if (Reflect.has("org.bukkit.event.block.BlockReceiveGameEvent"))
             new BlockReceiveGameEventListener(plugin);
 
