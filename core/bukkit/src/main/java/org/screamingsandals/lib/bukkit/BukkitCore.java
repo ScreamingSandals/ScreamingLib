@@ -149,7 +149,8 @@ public class BukkitCore extends Core {
 
         // block
         new BlockBurnEventListener(plugin);
-        new BlockCookEventListener(plugin);
+        if (Reflect.has("org.bukkit.event.block.BlockCookEvent"))
+            new BlockCookEventListener(plugin);
         new BlockDispenseEventListener(plugin);
         if (Reflect.has("org.bukkit.event.block.BlockDropItemEvent"))
             new BlockDropItemEventListener(plugin);
@@ -165,11 +166,13 @@ public class BukkitCore extends Core {
         new RedstoneEventListener(plugin);
         new LeavesDecayEventListener(plugin);
         new BlockPistonEventListener(plugin);
-        new BlockShearEntityEventListener(plugin);
+        if (Reflect.has("org.bukkit.event.block.BlockShearEntityEvent"))
+            new BlockShearEntityEventListener(plugin);
         new CauldronLevelChangeEventListener(plugin);
         if (Reflect.has("org.bukkit.event.block.FluidLevelChangeEvent"))
             new FluidLevelChangeEventListener(plugin);
-        new MoistureChangeEventListener(plugin);
+        if (Reflect.has("org.bukkit.event.block.MoistureChangeEvent"))
+            new MoistureChangeEventListener(plugin);
         new StructureGrowEventListener(plugin);
         new SpongeAbsorbEventListener(plugin);
         if (Reflect.has("org.bukkit.event.block.BlockReceiveGameEvent"))
