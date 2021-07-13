@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements SPacketPlayOutScoreboardTeam {
-    private Object data;
+    private Object data = null;
 
     public BukkitSPacketPlayOutScoreboardTeam() {
         super(ClassStorage.NMS.PacketPlayOutScoreboardTeam);
@@ -26,8 +26,14 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
 
     @Override
     public void sendPacket(PlayerWrapper player) {
-        packet.setField("k,f_179316_", Optional.of(data));
+        packet.setField("k,f_179316_", Optional.ofNullable(data));
         super.sendPacket(player);
+    }
+
+    @Override
+    public Object getRawPacket() {
+        packet.setField("k,f_179316_", Optional.ofNullable(data));
+        return super.getRawPacket();
     }
 
     @Override
