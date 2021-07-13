@@ -3,13 +3,14 @@ package org.screamingsandals.lib.packet;
 import net.kyori.adventure.text.Component;
 
 public interface SPacketPlayOutScoreboardScore extends SPacket {
-    void setValue(Component value);
 
-    void setObjectiveKey(Component objectiveKey);
+    SPacketPlayOutScoreboardScore setValue(Component value);
 
-    void setAction(ScoreboardAction action);
+    SPacketPlayOutScoreboardScore setObjectiveKey(Component objectiveKey);
 
-    void setScore(int score);
+    SPacketPlayOutScoreboardScore setAction(ScoreboardAction action);
+
+    SPacketPlayOutScoreboardScore setScore(int score);
 
     enum ScoreboardAction {
         CHANGE,

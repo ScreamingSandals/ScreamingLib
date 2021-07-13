@@ -2,9 +2,10 @@ package org.screamingsandals.lib.packet;
 import org.screamingsandals.lib.material.Item;
 
 public interface SPacketPlayOutEntityEquipment extends SPacket {
-    void setEntityId(int entityId);
 
-    void setItemAndSlot(Item item, Slot slot);
+    SPacketPlayOutEntityEquipment setEntityId(int entityId);
+
+    SPacketPlayOutEntityEquipment setItemAndSlot(Item item, Slot slot);
 
     enum Slot {
         HEAD,

@@ -9,8 +9,8 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sidebar.AbstractScoreSidebar;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.utils.AdventureHelper;
+
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -22,10 +22,10 @@ public class BukkitScoreSidebar extends AbstractScoreSidebar {
         super(uuid);
         this.objectiveKey = Component.text(
                 new Random().ints(48, 123)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                .limit(16)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString()
+                        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                        .limit(16)
+                        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                        .toString()
         );
     }
 
@@ -107,42 +107,37 @@ public class BukkitScoreSidebar extends AbstractScoreSidebar {
     }
 
     private SPacketPlayOutScoreboardObjective notFinalObjectivePacket(PlayerWrapper player) {
-        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class);
-        packet.setObjectiveKey(objectiveKey);
-        packet.setTitle(title.asComponent(player));
-        packet.setCriteria(SPacketPlayOutScoreboardObjective.Type.INTEGER);
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class)
+                .setObjectiveKey(objectiveKey)
+                .setTitle(title.asComponent(player))
+                .setCriteria(SPacketPlayOutScoreboardObjective.Type.INTEGER);
     }
 
     private SPacketPlayOutScoreboardObjective getDestroyObjectivePacket() {
-        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class);
-        packet.setObjectiveKey(objectiveKey);
-        packet.setMode(SPacketPlayOutScoreboardObjective.Mode.DESTROY);
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class)
+                .setObjectiveKey(objectiveKey)
+                .setMode(SPacketPlayOutScoreboardObjective.Mode.DESTROY);
     }
 
     private SPacketPlayOutScoreboardDisplayObjective getDisplayObjectivePacket() {
-        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardDisplayObjective.class);
-        packet.setDisplaySlot(SPacketPlayOutScoreboardDisplayObjective.DisplaySlot.SIDEBAR);
-        packet.setObjectiveKey(objectiveKey);
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutScoreboardDisplayObjective.class)
+                .setDisplaySlot(SPacketPlayOutScoreboardDisplayObjective.DisplaySlot.SIDEBAR)
+                .setObjectiveKey(objectiveKey);
     }
 
     private SPacketPlayOutScoreboardScore createScorePacket(int i, String value) {
-        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class);
-        packet.setValue(Component.text(value));
-        packet.setObjectiveKey(objectiveKey);
-        packet.setScore(i);
-        packet.setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.CHANGE);
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class)
+                .setValue(Component.text(value))
+                .setObjectiveKey(objectiveKey)
+                .setScore(i)
+                .setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.CHANGE);
     }
 
     private Object destroyScore(String value) {
-        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class);
-        packet.setValue(Component.text(value));
-        packet.setObjectiveKey(objectiveKey);
-        packet.setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.REMOVE);
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class)
+                .setValue(Component.text(value))
+                .setObjectiveKey(objectiveKey)
+                .setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.REMOVE);
     }
 
     private List<SPacketPlayOutScoreboardScore> allScores() {

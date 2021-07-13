@@ -8,25 +8,26 @@ import net.kyori.adventure.text.format.TextColor;
 import java.util.Collection;
 
 public interface SPacketPlayOutScoreboardTeam extends SPacket {
-    void setTeamName(Component teamName);
 
-    void setMode(Mode mode);
+    SPacketPlayOutScoreboardTeam setTeamName(Component teamName);
 
-    void setFlags(boolean friendlyFire, boolean seeInvisible);
+    SPacketPlayOutScoreboardTeam setMode(Mode mode);
 
-    void setTagVisibility(TagVisibility visibility);
+    SPacketPlayOutScoreboardTeam setFlags(boolean friendlyFire, boolean seeInvisible);
 
-    void setTeamColor(TextColor color);
+    SPacketPlayOutScoreboardTeam setTagVisibility(TagVisibility visibility);
 
-    void setTeamPrefix(Component teamPrefix);
+    SPacketPlayOutScoreboardTeam setTeamColor(TextColor color);
 
-    void setTeamSuffix(Component teamSuffix);
+    SPacketPlayOutScoreboardTeam setTeamPrefix(Component teamPrefix);
 
-    void setEntities(Collection<String> entities);
+    SPacketPlayOutScoreboardTeam setTeamSuffix(Component teamSuffix);
 
-    void setDisplayName(Component displayName);
+    SPacketPlayOutScoreboardTeam setEntities(Collection<String> entities);
 
-    void setCollisionRule(CollisionRule rule);
+    SPacketPlayOutScoreboardTeam setDisplayName(Component displayName);
+
+    SPacketPlayOutScoreboardTeam setCollisionRule(CollisionRule rule);
 
     enum Mode {
         CREATE,

@@ -12,12 +12,12 @@ public class BukkitSPacketPlayOutEntityDestroy extends BukkitSPacket implements 
     }
 
     @Override
-    public void setEntitiesToDestroy(int[] entityIdArray) {
+    public SPacketPlayOutEntityDestroy setEntitiesToDestroy(int[] entityIdArray) {
         if (entityIdArray == null || entityIdArray.length == 0) {
             throw new UnsupportedOperationException("Invalid array provided!");
         }
 
-        if (packet.setField("a,field_149100_a", entityIdArray) == null) {
+        if (packet.setField("a,field_149100_a,f_182717_", entityIdArray) == null) {
             packet.setField("a", entityIdArray[0]);
             Arrays.stream(entityIdArray)
                     .skip(1)
@@ -27,14 +27,16 @@ public class BukkitSPacketPlayOutEntityDestroy extends BukkitSPacket implements 
                         addAdditionalPacket(packet.getRawPacket());
                     });
         }
+        return this;
     }
 
     @Override
-    public void setEntityToDestroy(int entityId) {
+    public SPacketPlayOutEntityDestroy setEntityToDestroy(int entityId) {
         if (packet.setField("a", entityId) == null) {
             int[] arr = {entityId};
-            packet.setField("a,field_149100_a", arr);
+            packet.setField("a,field_149100_a,f_182717_", arr);
         }
+        return this;
     }
 
 

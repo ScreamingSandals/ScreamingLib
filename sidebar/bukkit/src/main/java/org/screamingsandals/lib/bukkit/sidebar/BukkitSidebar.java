@@ -1,4 +1,5 @@
 package org.screamingsandals.lib.bukkit.sidebar;
+
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.bukkit.sidebar.team.BukkitScoreboardTeam;
@@ -23,10 +24,10 @@ public class BukkitSidebar extends AbstractSidebar {
         super(uuid);
         this.objectiveKey = Component.text(
                 new Random().ints(48, 123)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                .limit(16)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString()
+                        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                        .limit(16)
+                        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                        .toString()
         );
     }
 
@@ -138,42 +139,37 @@ public class BukkitSidebar extends AbstractSidebar {
     }
 
     private SPacketPlayOutScoreboardObjective getNotFinalObjectivePacket(PlayerWrapper player) {
-        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class);
-        packet.setObjectiveKey(objectiveKey);
-        packet.setTitle(title.asComponent(player));
-        packet.setCriteria(SPacketPlayOutScoreboardObjective.Type.INTEGER);
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class)
+                .setObjectiveKey(objectiveKey)
+                .setTitle(title.asComponent(player))
+                .setCriteria(SPacketPlayOutScoreboardObjective.Type.INTEGER);
     }
 
     private SPacketPlayOutScoreboardObjective getDestroyObjectivePacket() {
-        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class);
-        packet.setObjectiveKey(objectiveKey);
-        packet.setMode(SPacketPlayOutScoreboardObjective.Mode.DESTROY);
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class)
+                .setObjectiveKey(objectiveKey)
+                .setMode(SPacketPlayOutScoreboardObjective.Mode.DESTROY);
     }
 
     private SPacketPlayOutScoreboardDisplayObjective getDisplayObjectivePacket() {
-        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardDisplayObjective.class);
-        packet.setObjectiveKey(objectiveKey);
-        packet.setDisplaySlot(SPacketPlayOutScoreboardDisplayObjective.DisplaySlot.SIDEBAR);
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutScoreboardDisplayObjective.class)
+                .setObjectiveKey(objectiveKey)
+                .setDisplaySlot(SPacketPlayOutScoreboardDisplayObjective.DisplaySlot.SIDEBAR);
     }
 
     private SPacketPlayOutScoreboardScore getCreateScorePacket(int i, String value) {
-        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class);
-        packet.setValue(Component.text(value));
-        packet.setObjectiveKey(objectiveKey);
-        packet.setScore(i);
-        packet.setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.CHANGE);
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class)
+                .setValue(Component.text(value))
+                .setObjectiveKey(objectiveKey)
+                .setScore(i)
+                .setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.CHANGE);
     }
 
     private SPacketPlayOutScoreboardScore destroyScore(String value) {
-        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class);
-        packet.setValue(Component.text(value));
-        packet.setObjectiveKey(objectiveKey);
-        packet.setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.REMOVE);
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class)
+                .setValue(Component.text(value))
+                .setObjectiveKey(objectiveKey)
+                .setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.REMOVE);
     }
 
     public String makeUnique(String toUnique, List<String> from) {

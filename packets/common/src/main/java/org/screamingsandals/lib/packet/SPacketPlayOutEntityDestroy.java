@@ -1,7 +1,8 @@
 package org.screamingsandals.lib.packet;
 
 public interface SPacketPlayOutEntityDestroy extends SPacket {
-    void setEntitiesToDestroy(int[] entityIdArray);
 
-    void setEntityToDestroy(int entityId);
+    SPacketPlayOutEntityDestroy setEntitiesToDestroy(int[] entityIdArray);
+
+    SPacketPlayOutEntityDestroy setEntityToDestroy(int entityId);
 }

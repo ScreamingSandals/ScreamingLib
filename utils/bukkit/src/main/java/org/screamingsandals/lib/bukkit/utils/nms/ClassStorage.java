@@ -276,9 +276,9 @@ public class ClassStorage {
 
 	public static int getEntityTypeId(EntityNMS entityNMS) {
 		Preconditions.checkNotNull(entityNMS, "Entity is null!");
-		final var entity_type_field = Reflect.getField(ClassStorage.NMS.IRegistry, "ENTITY_TYPE,field_212629_r,Y");
+		final var entity_type_field = Reflect.getField(ClassStorage.NMS.IRegistry, "ENTITY_TYPE,field_212629_r,Y,f_122826_");
 		if (entityNMS.getEntityType() != null && entity_type_field != null) {
-			return (int) Reflect.getMethod(entity_type_field, "a,getId,func_148757_b", Object.class)
+			return (int) Reflect.getMethod(entity_type_field, "a,getId,func_148757_b,m_7447_", Object.class)
 					.invoke(entityNMS.getEntityType());
 		} else {
 			var result = Reflect.getMethod(NMS.EntityTypes, "a,func_75619_a", NMS.Entity).invokeStatic(entityNMS.getHandler());

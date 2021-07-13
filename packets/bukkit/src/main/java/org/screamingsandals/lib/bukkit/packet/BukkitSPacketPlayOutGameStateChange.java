@@ -5,17 +5,20 @@ import org.screamingsandals.lib.packet.SPacketPlayOutGameStateChange;
 
 //TODO: 1.17 support
 public class BukkitSPacketPlayOutGameStateChange extends BukkitSPacket implements SPacketPlayOutGameStateChange {
+
     public BukkitSPacketPlayOutGameStateChange() {
         super(ClassStorage.NMS.PacketPlayOutGameStateChange);
     }
 
     @Override
-    public void setReason(int reason) {
-        packet.setField("a", reason);
+    public SPacketPlayOutGameStateChange setReason(int reason) {
+        packet.setField("b,field_149140_b", reason);
+        return this;
     }
 
     @Override
-    public void setValue(float value) {
-        packet.setField("b", value);
+    public SPacketPlayOutGameStateChange setValue(float value) {
+        packet.setField("c,field_149141_c", value);
+        return this;
     }
 }

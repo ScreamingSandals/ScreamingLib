@@ -10,42 +10,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BukkitSPacketPlayOutExplosion extends BukkitSPacket implements SPacketPlayOutExplosion {
+
     public BukkitSPacketPlayOutExplosion() {
         super(ClassStorage.NMS.PacketPlayOutExplosion);
     }
 
     @Override
-    public void setX(double x) {
-        packet.setField("a,field_149158_a", x);
+    public SPacketPlayOutExplosion setX(double x) {
+        packet.setField("a,field_149158_a,f_132105_", x);
+        return this;
     }
 
     @Override
-    public void setY(double y) {
-        packet.setField("b,field_149156_b", y);
+    public SPacketPlayOutExplosion setY(double y) {
+        packet.setField("b,field_149156_b,f_132106_", y);
+        return this;
     }
 
     @Override
-    public void setZ(double z) {
-        packet.setField("c,field_149157_c", z);
+    public SPacketPlayOutExplosion setZ(double z) {
+        packet.setField("c,field_149157_c,f_132107_", z);
+        return this;
     }
 
     @Override
-    public void setStrength(float strength) {
-        packet.setField("d,field_149154_d", strength);
+    public SPacketPlayOutExplosion setStrength(float strength) {
+        packet.setField("d,field_149154_d,f_132108_", strength);
+        return this;
     }
 
     @Override
-    public void setKnockBackVelocity(Vector3Df knockBack) {
+    public SPacketPlayOutExplosion setKnockBackVelocity(Vector3Df knockBack) {
         if (knockBack == null) {
             throw new UnsupportedOperationException("Velocity cannot be null!");
         }
-        packet.setField("f,field_149152_f", knockBack.getX());
-        packet.setField("g,field_149153_g", knockBack.getY());
-        packet.setField("h,field_149159_h", knockBack.getZ());
+        packet.setField("f,field_149152_f,f_132110_", knockBack.getX());
+        packet.setField("g,field_149153_g,f_132111_", knockBack.getY());
+        packet.setField("h,field_149159_h,f_132112_", knockBack.getZ());
+        return this;
     }
 
     @Override
-    public void setBlocks(List<LocationHolder> blockLocations) {
+    public SPacketPlayOutExplosion setBlocks(List<LocationHolder> blockLocations) {
         if (blockLocations == null) {
             throw new UnsupportedOperationException("Invalid block locations provided!");
         }
@@ -55,6 +61,7 @@ public class BukkitSPacketPlayOutExplosion extends BukkitSPacket implements SPac
                     .construct(location.getX(), location.getY(), location.getZ());
             bukkitBlockLocations.add(constructed);
         });
-        packet.setField("e,field_149155_e", bukkitBlockLocations);
+        packet.setField("e,field_149155_e,f_132109_", bukkitBlockLocations);
+        return this;
     }
 }

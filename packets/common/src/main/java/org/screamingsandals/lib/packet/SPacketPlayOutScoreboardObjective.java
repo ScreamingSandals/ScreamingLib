@@ -3,13 +3,14 @@ package org.screamingsandals.lib.packet;
 import net.kyori.adventure.text.Component;
 
 public interface SPacketPlayOutScoreboardObjective extends SPacket {
-    void setObjectiveKey(Component objectiveKey);
 
-    void setTitle(Component title);
+    SPacketPlayOutScoreboardObjective setObjectiveKey(Component objectiveKey);
 
-    void setCriteria(Type criteriaType);
+    SPacketPlayOutScoreboardObjective setTitle(Component title);
 
-    void setMode(Mode mode);
+    SPacketPlayOutScoreboardObjective setCriteria(Type criteriaType);
+
+    SPacketPlayOutScoreboardObjective setMode(Mode mode);
 
     enum Type {
         INTEGER,

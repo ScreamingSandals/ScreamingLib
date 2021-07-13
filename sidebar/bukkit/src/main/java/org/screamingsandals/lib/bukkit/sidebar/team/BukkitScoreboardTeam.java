@@ -7,6 +7,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.sidebar.TeamedSidebar;
 import org.screamingsandals.lib.sidebar.team.AbstractScoreboardTeam;
+
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -20,10 +21,10 @@ public class BukkitScoreboardTeam extends AbstractScoreboardTeam {
         this.scoreboard = scoreboard;
         this.teamKey = Component.text(
                 new Random().ints(48, 123)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                .limit(16)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString()
+                        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                        .limit(16)
+                        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                        .toString()
         );
     }
 
@@ -67,10 +68,9 @@ public class BukkitScoreboardTeam extends AbstractScoreboardTeam {
     }
 
     private SPacketPlayOutScoreboardTeam getNotFinalScoreboardTeamPacket(SPacketPlayOutScoreboardTeam.Mode mode) {
-        var packet = PacketMapper.createPacket(SPacketPlayOutScoreboardTeam.class);
-        packet.setTeamName(teamKey);
-        packet.setMode(mode);
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutScoreboardTeam.class)
+                .setTeamName(teamKey)
+                .setMode(mode);
     }
 
     public SPacketPlayOutScoreboardTeam constructCreatePacket() {

@@ -12,27 +12,17 @@ public class BukkitSPacketPlayOutScoreboardDisplayObjective extends BukkitSPacke
     }
 
     @Override
-    public void setObjectiveKey(Component objectiveKey) {
+    public SPacketPlayOutScoreboardDisplayObjective setObjectiveKey(Component objectiveKey) {
         if (objectiveKey == null) {
             throw new UnsupportedOperationException("Objective key cannot be null!");
         }
-        packet.setField("b,field_149373_b", AdventureHelper.toLegacy(objectiveKey));
+        packet.setField("b,field_149373_b,f_133128_", AdventureHelper.toLegacy(objectiveKey));
+        return this;
     }
 
     @Override
-    public void setDisplaySlot(DisplaySlot slot) {
-        int slotNum = 1;
-        switch (slot) {
-            case BELOW_NAME:
-                slotNum = 2;
-                break;
-            case SIDEBAR:
-                slotNum = 1;
-                break;
-            case PLAYER_LIST:
-                slotNum = 0;
-                break;
-        }
-        packet.setField("a,field_149374_a", slotNum);
+    public SPacketPlayOutScoreboardDisplayObjective setDisplaySlot(DisplaySlot slot) {
+        packet.setField("a,field_149374_a,f_133127_", slot.ordinal());
+        return this;
     }
 }

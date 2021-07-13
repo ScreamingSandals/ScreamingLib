@@ -6,15 +6,16 @@ import org.screamingsandals.lib.world.LocationHolder;
 import java.util.List;
 
 public interface SPacketPlayOutExplosion extends SPacket {
-    void setX(double x);
 
-    void setY(double y);
+    SPacketPlayOutExplosion setX(double x);
 
-    void setZ(double z);
+    SPacketPlayOutExplosion setY(double y);
 
-    void setStrength(float strength);
+    SPacketPlayOutExplosion setZ(double z);
 
-    void setKnockBackVelocity(Vector3Df velocity);
+    SPacketPlayOutExplosion setStrength(float strength);
 
-    void setBlocks(List<LocationHolder> blockLocations);
+    SPacketPlayOutExplosion setKnockBackVelocity(Vector3Df velocity);
+
+    SPacketPlayOutExplosion setBlocks(List<LocationHolder> blockLocations);
 }

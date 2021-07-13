@@ -1,4 +1,5 @@
 package org.screamingsandals.lib.bukkit.hologram;
+
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -17,9 +18,9 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
 import org.screamingsandals.lib.utils.math.Vector3Df;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -87,8 +88,9 @@ public class BukkitHologram extends AbstractHologram {
                 itemEntity.setRotation(checkAndAdd(itemEntity.getRotation()));
 
                 try {
-                    final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
-                    metadataPacket.setMetaData(itemEntity.getId(), new BukkitDataWatcher(itemEntity.getDataWatcher()), false);
+                    final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class)
+                            .setMetaData(itemEntity.getId(), new BukkitDataWatcher(itemEntity.getDataWatcher()), false);
+
                     viewers.forEach(player -> update(player.as(Player.class), List.of(metadataPacket), false));
                 } catch (Throwable t) {
                     t.printStackTrace();
@@ -191,8 +193,9 @@ public class BukkitHologram extends AbstractHologram {
                         }
 
                         entityOnLine.setCustomName(value.getText());
-                        final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
-                        metadataPacket.setMetaData(entityOnLine.getId(), new BukkitDataWatcher(entityOnLine.getDataWatcher()), false);
+
+                        final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class)
+                                .setMetaData(entityOnLine.getId(), new BukkitDataWatcher(entityOnLine.getDataWatcher()), false);
                         packets.add(metadataPacket);
 
                         entityOnLine.setCustomName(value.getText());
@@ -276,33 +279,31 @@ public class BukkitHologram extends AbstractHologram {
     }
 
     private SPacketPlayOutEntityEquipment getEquipmentPacket(AdvancedArmorStandNMS entity, Item item) {
-        final var packet = PacketMapper.createPacket(SPacketPlayOutEntityEquipment.class);
-        packet.setEntityId(entity.getId());
-        packet.setItemAndSlot(item, SPacketPlayOutEntityEquipment.Slot.HEAD);
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutEntityEquipment.class)
+                .setEntityId(entity.getId())
+                .setItemAndSlot(item, SPacketPlayOutEntityEquipment.Slot.HEAD);
     }
 
     private SPacketPlayOutEntityTeleport getTeleportPacket(ArmorStandNMS entity) {
-        final var packet = PacketMapper.createPacket(SPacketPlayOutEntityTeleport.class);
-        packet.setEntityId(entity.getId());
-        packet.setLocation(LocationMapper.wrapLocation(entity.getLocation()));
-        packet.setIsOnGround(entity.isOnGround());
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutEntityTeleport.class)
+                .setEntityId(entity.getId())
+                .setLocation(LocationMapper.wrapLocation(entity.getLocation()))
+                .setIsOnGround(entity.isOnGround());
     }
 
     private List<SPacket> getSpawnPacket(ArmorStandNMS entity) {
         final var toReturn = new LinkedList<SPacket>();
 
-        final var spawnPacket = PacketMapper.createPacket(SPacketPlayOutSpawnEntityLiving.class);
-        spawnPacket.setEntityId(entity.getId());
-        spawnPacket.setUUID(entity.getUniqueId());
-        spawnPacket.setType(ClassStorage.getEntityTypeId(entity));
-        spawnPacket.setPitch(entity.getLocation().getPitch());
-        spawnPacket.setYaw(entity.getLocation().getYaw());
-        spawnPacket.setVelocity(entity.getVelocity());
-        spawnPacket.setHeadPitch(3.9f);
-        spawnPacket.setLocation(LocationMapper.wrapLocation(entity.getLocation()));
-        spawnPacket.setDataWatcher(new BukkitDataWatcher(entity.getDataWatcher()));
+        final var spawnPacket = PacketMapper.createPacket(SPacketPlayOutSpawnEntityLiving.class)
+                .setEntityId(entity.getId())
+                .setUUID(entity.getUniqueId())
+                .setType(ClassStorage.getEntityTypeId(entity))
+                .setPitch(entity.getLocation().getPitch())
+                .setYaw(entity.getLocation().getYaw())
+                .setVelocity(entity.getVelocity())
+                .setHeadYaw(3.9f)
+                .setLocation(LocationMapper.wrapLocation(entity.getLocation()))
+                .setDataWatcher(new BukkitDataWatcher(entity.getDataWatcher()));
         toReturn.add(spawnPacket);
 
         if (Version.isVersion(1, 15)) {

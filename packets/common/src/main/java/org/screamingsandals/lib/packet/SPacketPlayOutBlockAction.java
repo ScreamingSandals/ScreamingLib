@@ -4,11 +4,12 @@ import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.LocationHolder;
 
 public interface SPacketPlayOutBlockAction extends SPacket {
-    void setBlockLocation(LocationHolder location);
 
-    void setActionId(int actionId);
+    SPacketPlayOutBlockAction setBlockLocation(LocationHolder location);
 
-    void setActionParameter(int actionParameter);
+    SPacketPlayOutBlockAction setActionId(int actionId);
 
-    void setBlockType(BlockHolder block);
+    SPacketPlayOutBlockAction setActionParameter(int actionParameter);
+
+    SPacketPlayOutBlockAction setBlockType(BlockHolder block);
 }

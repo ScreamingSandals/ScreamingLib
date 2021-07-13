@@ -9,39 +9,44 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.UUID;
 
 public class BukkitSPacketPlayOutChat extends BukkitSPacket implements SPacketPlayOutChat {
+
     public BukkitSPacketPlayOutChat() {
         super(ClassStorage.NMS.PacketPlayOutChat);
     }
 
     @Override
-    public void setChatComponent(Component text) {
+    public SPacketPlayOutChat setChatComponent(Component text) {
         if (text == null) {
             throw new UnsupportedOperationException("Chat text cannot be null!");
         }
-        if (packet.setField("a,field_148919_a", ClassStorage.asMinecraftComponent(text)) == null) {
-            packet.setField("a,field_148919_a", AdventureHelper.toLegacy(text));
+        if (packet.setField("a,field_148919_a,f_131821_", ClassStorage.asMinecraftComponent(text)) == null) {
+            packet.setField("a,field_148919_a,f_131821_", AdventureHelper.toLegacy(text));
         }
+        return this;
     }
 
     @Deprecated
     @Override
-    public void setBytes(byte bytes) {
+    public SPacketPlayOutChat setBytes(byte bytes) {
         packet.setField("b,field_179842_b", bytes);
+        return this;
     }
 
     @Override
-    public void setUUID(UUID uuid) {
+    public SPacketPlayOutChat setUUID(UUID uuid) {
         if (uuid == null) {
             throw new UnsupportedOperationException("UUID cannot be null!");
         }
-        packet.setField("c,field_240809_c_", uuid);
+        packet.setField("c,field_240809_c_,f_131823_", uuid);
+        return this;
     }
 
     @Override
-    public void setChatType(ChatType type) {
+    public SPacketPlayOutChat setChatType(ChatType type) {
         if (type == null) {
             throw new UnsupportedOperationException("ChatType cannot be null!");
         }
-        packet.setField("b,field_179842_b", Reflect.findEnumConstant(ClassStorage.NMS.ChatMessageType, type.name().toUpperCase()));
+        packet.setField("b,field_179842_b,f_131822_", Reflect.findEnumConstant(ClassStorage.NMS.ChatMessageType, type.name().toUpperCase()));
+        return this;
     }
 }

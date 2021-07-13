@@ -2,10 +2,11 @@ package org.screamingsandals.lib.packet;
 
 import org.screamingsandals.lib.world.LocationHolder;
 
-public interface SPacketPlayOutBlockBreakAnimation extends SPacket{
-    void setEntityId(int entityId);
+public interface SPacketPlayOutBlockBreakAnimation extends SPacket {
 
-    void setBlockLocation(LocationHolder blockLocation);
+    SPacketPlayOutBlockBreakAnimation setEntityId(int entityId);
 
-    void setDestroyStage(int destroyStage);
+    SPacketPlayOutBlockBreakAnimation setBlockLocation(LocationHolder blockLocation);
+
+    SPacketPlayOutBlockBreakAnimation setDestroyStage(int destroyStage);
 }

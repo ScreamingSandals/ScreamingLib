@@ -92,51 +92,52 @@ public class BukkitNPC extends AbstractNPC {
     private List<SPacket> getSpawnPackets() {
         final var toReturn = new LinkedList<SPacket>();
 
-        final var playerInfoPacket = PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class);
-        playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.ADD_PLAYER);
-        playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
-                1,
-                GameMode.SURVIVAL,
-                AdventureHelper.toComponent(getName()),
-                getGameProfile()
-        )));
+        final var playerInfoPacket = PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class)
+                .setAction(SPacketPlayOutPlayerInfo.Action.ADD_PLAYER)
+                .setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
+                        1,
+                        GameMode.SURVIVAL,
+                        AdventureHelper.toComponent(getName()),
+                        getGameProfile()
+                )));
         toReturn.add(playerInfoPacket);
 
-        final var spawnPacket = PacketMapper.createPacket(SPacketPlayOutNamedEntitySpawn.class);
-        spawnPacket.setEntityId(id);
-        spawnPacket.setUUID(getUUID());
-        spawnPacket.setPitch(getLocation().getPitch());
-        spawnPacket.setYaw(getLocation().getYaw());
-        spawnPacket.setLocation(getLocation());
-        spawnPacket.setDataWatcher(dataWatcher);
+        final var spawnPacket = PacketMapper.createPacket(SPacketPlayOutNamedEntitySpawn.class)
+                .setEntityId(id)
+                .setUUID(getUUID())
+                .setPitch(getLocation().getPitch())
+                .setYaw(getLocation().getYaw())
+                .setLocation(getLocation())
+                .setDataWatcher(dataWatcher);
         toReturn.add(spawnPacket);
 
         final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
         metadataPacket.setMetaData(id, dataWatcher, true);
         toReturn.add(metadataPacket);
 
-        final var scoreboardTeamPacket = PacketMapper.createPacket(SPacketPlayOutScoreboardTeam.class);
-        scoreboardTeamPacket.setTeamName(AdventureHelper.toComponent(getName()));
-        scoreboardTeamPacket.setDisplayName(AdventureHelper.toComponent(getName()));
-        scoreboardTeamPacket.setCollisionRule(SPacketPlayOutScoreboardTeam.CollisionRule.ALWAYS);
-        scoreboardTeamPacket.setTagVisibility(SPacketPlayOutScoreboardTeam.TagVisibility.NEVER);
-        scoreboardTeamPacket.setTeamColor(TextColor.color(0, 0, 0));
-        scoreboardTeamPacket.setTeamPrefix(Component.text(" "));
-        scoreboardTeamPacket.setTeamSuffix(Component.text(" "));
-        scoreboardTeamPacket.setFlags(false, false);
-        scoreboardTeamPacket.setMode(SPacketPlayOutScoreboardTeam.Mode.CREATE);
-        scoreboardTeamPacket.setEntities(Collections.singletonList(getName()));
+        final var scoreboardTeamPacket = PacketMapper.createPacket(SPacketPlayOutScoreboardTeam.class)
+                .setTeamName(AdventureHelper.toComponent(getName()))
+                .setDisplayName(AdventureHelper.toComponent(getName()))
+                .setCollisionRule(SPacketPlayOutScoreboardTeam.CollisionRule.ALWAYS)
+                .setTagVisibility(SPacketPlayOutScoreboardTeam.TagVisibility.NEVER)
+                .setTeamColor(TextColor.color(0, 0, 0))
+                .setTeamPrefix(Component.text(" "))
+                .setTeamSuffix(Component.text(" "))
+                .setFlags(false, false)
+                .setMode(SPacketPlayOutScoreboardTeam.Mode.CREATE)
+                .setEntities(Collections.singletonList(getName()));
         toReturn.add(scoreboardTeamPacket);
 
         Tasker.build(() -> {
             //remove npc from tablist
-            playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER);
-            playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
-                    1,
-                    GameMode.SURVIVAL,
-                    AdventureHelper.toComponent(getName()),
-                    getGameProfile()
-            )));
+            playerInfoPacket
+                    .setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER)
+                    .setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
+                            1,
+                            GameMode.SURVIVAL,
+                            AdventureHelper.toComponent(getName()),
+                            getGameProfile()
+                    )));
             getViewers().forEach(playerInfoPacket::sendPacket);
         }).delay(5L, TaskerTime.SECONDS).start();
 
@@ -145,9 +146,8 @@ public class BukkitNPC extends AbstractNPC {
 
     private SPacketPlayOutEntityDestroy getFullDestroyPacket() {
         final int[] toRemove = {getEntityId()};
-        final var destroyPacket = PacketMapper.createPacket(SPacketPlayOutEntityDestroy.class);
-        destroyPacket.setEntitiesToDestroy(toRemove);
-        return destroyPacket;
+        return PacketMapper.createPacket(SPacketPlayOutEntityDestroy.class)
+                .setEntitiesToDestroy(toRemove);
     }
 
 
@@ -157,14 +157,14 @@ public class BukkitNPC extends AbstractNPC {
         }
         final var toSend = new LinkedList<SPacket>();
         toSend.add(getFullDestroyPacket());
-        final var removeInfoPacket = PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class);
-        removeInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER);
-        removeInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
-                1,
-                GameMode.SURVIVAL,
-                AdventureHelper.toComponent(getName()),
-                getGameProfile()
-        )));
+        final var removeInfoPacket = PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class)
+                .setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER)
+                .setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
+                        1,
+                        GameMode.SURVIVAL,
+                        AdventureHelper.toComponent(getName()),
+                        getGameProfile()
+                )));
         toSend.add(removeInfoPacket);
         toSend.forEach(sPacket -> sPacket.sendPacket(player));
     }
@@ -189,39 +189,38 @@ public class BukkitNPC extends AbstractNPC {
         final var bukkitNPCLocation = getLocation().as(Location.class);
         final var playerLocation = location.as(Location.class);
 
-        Location direction =  bukkitNPCLocation.clone().setDirection(playerLocation.clone().subtract(bukkitNPCLocation.clone()).toVector());
-        final var lookPacket = PacketMapper.createPacket(SPacketPlayOutEntityLook.class);
-        lookPacket.setEntityId(getEntityId());
-        lookPacket.setYaw((byte) (direction.getYaw() * 256.0F / 360.0F));
-        lookPacket.setPitch((byte) (direction.getPitch() * 256.0F / 360.0F));
-        lookPacket.setOnGround(true);
+        Location direction = bukkitNPCLocation.clone().setDirection(playerLocation.clone().subtract(bukkitNPCLocation.clone()).toVector());
+        final var lookPacket = PacketMapper.createPacket(SPacketPlayOutEntityLook.class)
+                .setEntityId(getEntityId())
+                .setYaw((byte) (direction.getYaw() * 256.0F / 360.0F))
+                .setPitch((byte) (direction.getPitch() * 256.0F / 360.0F))
+                .setOnGround(true);
 
-        final var headRotationPacket = PacketMapper.createPacket(SPacketPlayOutEntityHeadRotation.class);
-        headRotationPacket.setEntityId(getEntityId());
-        headRotationPacket.setRotation((byte) (direction.getYaw() * 256.0F / 360.0F));
+        final var headRotationPacket = PacketMapper.createPacket(SPacketPlayOutEntityHeadRotation.class)
+                .setEntityId(getEntityId())
+                .setRotation((byte) (direction.getYaw() * 256.0F / 360.0F));
 
         lookPacket.sendPacket(player);
         headRotationPacket.sendPacket(player);
     }
 
     private SPacketPlayOutEntityTeleport getTeleportPacket() {
-        final var packet = PacketMapper.createPacket(SPacketPlayOutEntityTeleport.class);
-        packet.setEntityId(id);
-        packet.setLocation(getLocation());
-        packet.setIsOnGround(true);
-        return packet;
+        return PacketMapper.createPacket(SPacketPlayOutEntityTeleport.class)
+                .setEntityId(id)
+                .setLocation(getLocation())
+                .setIsOnGround(true);
     }
 
     @Override
     public NPC setSkin(@Nullable NPCSkin skin) {
-        final var playerInfoPacket = PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class);
-        playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER);
-        playerInfoPacket.setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
-                1,
-                GameMode.SURVIVAL,
-                AdventureHelper.toComponent(getName()),
-                getGameProfile()
-        )));
+        final var playerInfoPacket = PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class)
+                .setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER)
+                .setPlayersData(Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
+                        1,
+                        GameMode.SURVIVAL,
+                        AdventureHelper.toComponent(getName()),
+                        getGameProfile()
+                )));
         getViewers().forEach(playerInfoPacket::sendPacket);
         getViewers().forEach(getFullDestroyPacket()::sendPacket);
 

@@ -6,23 +6,23 @@ import net.kyori.adventure.text.Component;
 import java.util.UUID;
 
 public interface SPacketPlayOutBoss extends SPacket {
-    void setUniqueId(UUID uuid);
+    SPacketPlayOutBoss setUniqueId(UUID uuid);
 
-    void setAction(Action action);
+    SPacketPlayOutBoss setAction(Action action);
 
-    void setTitle(Component title);
+    SPacketPlayOutBoss setTitle(Component title);
 
-    void setHealth(float health);
+    SPacketPlayOutBoss setHealth(float health);
 
-    void setColor(Color color);
+    SPacketPlayOutBoss setColor(Color color);
 
-    void setDivision(Division division);
+    SPacketPlayOutBoss setDivision(Division division);
 
-    void setDarkenSky(boolean darkenSky);
+    SPacketPlayOutBoss setDarkenSky(boolean darkenSky);
 
-    void setPlayMusic(boolean playMusic);
+    SPacketPlayOutBoss setPlayMusic(boolean playMusic);
 
-    void setCreateFog(boolean createFog);
+    SPacketPlayOutBoss setCreateFog(boolean createFog);
 
     enum Action {
         ADD,

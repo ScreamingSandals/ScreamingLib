@@ -5,17 +5,18 @@ import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.WorldType;
 
 public interface SPacketPlayOutLogin extends SPacket {
-    void setEntityId(int entityId);
 
-    void setGameMode(GameMode gameMode);
+    SPacketPlayOutLogin setEntityId(int entityId);
 
-    void setDimension(int dimension);
+    SPacketPlayOutLogin setGameMode(GameMode gameMode);
 
-    void setDifficulty(Difficulty difficulty);
+    SPacketPlayOutLogin setDimension(int dimension);
 
-    void setMaxPlayers(int maxPlayers);
+    SPacketPlayOutLogin setDifficulty(Difficulty difficulty);
 
-    void setWorldType(WorldType worldType);
+    SPacketPlayOutLogin setMaxPlayers(int maxPlayers);
 
-    void setReduceDebugInfo(boolean reduceDebugInfo);
+    SPacketPlayOutLogin setWorldType(WorldType worldType);
+
+    SPacketPlayOutLogin setReduceDebugInfo(boolean reduceDebugInfo);
 }

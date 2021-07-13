@@ -5,15 +5,16 @@ import org.screamingsandals.lib.world.LocationHolder;
 import java.util.UUID;
 
 public interface SPacketPlayOutSpawnEntity extends SPacket {
-    void setEntityId(int entityId);
 
-    void setUUID(UUID uuid);
+    SPacketPlayOutSpawnEntity setEntityId(int entityId);
 
-    void setLocation(LocationHolder location);
+    SPacketPlayOutSpawnEntity setUUID(UUID uuid);
 
-    void setVelocity(Vector3D velocity);
+    SPacketPlayOutSpawnEntity setLocation(LocationHolder location);
 
-    void setType(int typeId);
+    SPacketPlayOutSpawnEntity setVelocity(Vector3D velocity);
 
-    void setObjectData(int objectData);
+    SPacketPlayOutSpawnEntity setType(int typeId);
+
+    SPacketPlayOutSpawnEntity setObjectData(int objectData);
 }

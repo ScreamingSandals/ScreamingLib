@@ -4,17 +4,20 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.packet.SPacketPlayOutAttachEntity;
 
 public class BukkitSPacketPlayOutAttachEntity extends BukkitSPacket implements SPacketPlayOutAttachEntity {
+
     public BukkitSPacketPlayOutAttachEntity() {
         super(ClassStorage.NMS.PacketPlayOutAttachEntity);
     }
 
     @Override
-    public void setEntityId(int entityId) {
-        packet.setField("a,field_149406_b", entityId);
+    public SPacketPlayOutAttachEntity setEntityId(int entityId) {
+        packet.setField("a,field_149406_b,f_133160_", entityId);
+        return this;
     }
 
     @Override
-    public void setHoldingEntityId(int entityId) {
-        packet.setField("b,field_149407_c", entityId);
+    public SPacketPlayOutAttachEntity setHoldingEntityId(int entityId) {
+        packet.setField("b,field_149407_c,f_133161_", entityId);
+        return this;
     }
 }

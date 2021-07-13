@@ -9,9 +9,9 @@ import org.screamingsandals.lib.utils.GameMode;
 import java.util.List;
 
 public interface SPacketPlayOutPlayerInfo extends SPacket {
-    void setAction(Action action);
+    SPacketPlayOutPlayerInfo setAction(Action action);
 
-    void setPlayersData(List<PlayerInfoData> data);
+    SPacketPlayOutPlayerInfo setPlayersData(List<PlayerInfoData> data);
 
     enum Action {
         ADD_PLAYER,

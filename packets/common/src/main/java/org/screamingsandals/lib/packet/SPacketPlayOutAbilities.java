@@ -1,15 +1,16 @@
 package org.screamingsandals.lib.packet;
 
 public interface SPacketPlayOutAbilities extends SPacket {
-    void setInvulnerable(boolean invulnerable);
 
-    void setFlying(boolean isFlying);
+    SPacketPlayOutAbilities setInvulnerable(boolean invulnerable);
 
-    void setCanFly(boolean canFly);
+    SPacketPlayOutAbilities setFlying(boolean isFlying);
 
-    void setCanInstantlyBuild(boolean canInstantlyBuild);
+    SPacketPlayOutAbilities setCanFly(boolean canFly);
 
-    void setFlyingSpeed(float speed);
+    SPacketPlayOutAbilities setCanInstantlyBuild(boolean canInstantlyBuild);
 
-    void setWalkingSpeed(float walkingSpeed);
+    SPacketPlayOutAbilities setFlyingSpeed(float speed);
+
+    SPacketPlayOutAbilities setWalkingSpeed(float walkingSpeed);
 }

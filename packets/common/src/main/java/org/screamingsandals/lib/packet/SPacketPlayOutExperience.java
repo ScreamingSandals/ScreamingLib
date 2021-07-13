@@ -1,9 +1,10 @@
 package org.screamingsandals.lib.packet;
 
 public interface SPacketPlayOutExperience extends SPacket {
-    void setExperienceBar(float exp);
 
-    void setLevel(int level);
+    SPacketPlayOutExperience setExperienceBar(float exp);
 
-    void setTotalExperience(int totalExperience);
+    SPacketPlayOutExperience setLevel(int level);
+
+    SPacketPlayOutExperience setTotalExperience(int totalExperience);
 }

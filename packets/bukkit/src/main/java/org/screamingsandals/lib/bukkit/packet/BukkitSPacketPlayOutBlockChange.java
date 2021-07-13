@@ -8,23 +8,25 @@ import org.screamingsandals.lib.world.BlockDataHolder;
 import org.screamingsandals.lib.world.LocationHolder;
 
 public class BukkitSPacketPlayOutBlockChange extends BukkitSPacket implements SPacketPlayOutBlockChange {
+
     public BukkitSPacketPlayOutBlockChange() {
         super(ClassStorage.NMS.PacketPlayOutBlockChange);
     }
 
     @Override
-    public void setBlockLocation(LocationHolder blockLocation) {
+    public SPacketPlayOutBlockChange setBlockLocation(LocationHolder blockLocation) {
         if (blockLocation == null) {
             throw new UnsupportedOperationException("Block location cannot be null!");
         }
 
         final var bukkitBlockPos = Reflect.constructor(ClassStorage.NMS.BlockPosition, int.class, int.class, int.class)
                 .construct(blockLocation.getX(), blockLocation.getY(), blockLocation.getZ());
-        packet.setField("a,field_179828_a", bukkitBlockPos);
+        packet.setField("a,field_179828_a,f_131731_", bukkitBlockPos);
+        return this;
     }
 
     @Override
-    public void setBlockData(BlockDataHolder blockData) {
+    public SPacketPlayOutBlockChange setBlockData(BlockDataHolder blockData) {
         if (blockData == null) {
             throw new UnsupportedOperationException("Block data cannot be null!");
         }
@@ -38,6 +40,7 @@ public class BukkitSPacketPlayOutBlockChange extends BukkitSPacket implements SP
             nmsBlockData = Reflect.getMethod(ClassStorage.NMS.CraftMagicNumbers, "getBlock", MaterialData.class)
                     .invokeStatic(bukkitBlockData);
         }
-        packet.setField("b,field_197686_b", nmsBlockData);
+        packet.setField("b,field_197686_b,f_131732_", nmsBlockData);
+        return this;
     }
 }

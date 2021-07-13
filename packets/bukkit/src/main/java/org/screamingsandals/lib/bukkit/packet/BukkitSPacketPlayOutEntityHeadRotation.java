@@ -23,13 +23,15 @@ public class BukkitSPacketPlayOutEntityHeadRotation extends BukkitSPacket implem
     }
 
     @Override
-    public void setEntityId(int entityId) {
+    public SPacketPlayOutEntityHeadRotation setEntityId(int entityId) {
         this.entityId = entityId;
+        return this;
     }
 
     @Override
-    public void setRotation(byte rotation) {
+    public SPacketPlayOutEntityHeadRotation setRotation(byte rotation) {
         this.rotation = rotation;
+        return this;
     }
 
     private void generatePacket() {

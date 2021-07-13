@@ -1,7 +1,8 @@
 package org.screamingsandals.lib.packet;
 
 public interface SPacketPlayOutEntityHeadRotation extends SPacket {
-    void setEntityId(int entityId);
 
-    void setRotation(byte rotation);
+    SPacketPlayOutEntityHeadRotation setEntityId(int entityId);
+
+    SPacketPlayOutEntityHeadRotation setRotation(byte rotation);
 }

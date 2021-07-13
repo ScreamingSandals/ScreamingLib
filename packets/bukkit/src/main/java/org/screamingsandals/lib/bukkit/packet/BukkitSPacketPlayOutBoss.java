@@ -15,79 +15,88 @@ public class BukkitSPacketPlayOutBoss extends BukkitSPacket implements SPacketPl
     }
 
     @Override
-    public void setUniqueId(UUID uuid) {
+    public SPacketPlayOutBoss setUniqueId(UUID uuid) {
         if (uuid == null) {
             throw new UnsupportedOperationException("UUID cannot be null!");
         }
         if (Version.isVersion(1, 17)) {
-            packet.setField("d", uuid);
+            packet.setField("d,f_131750_", uuid);
         } else {
             packet.setField("a,field_186911_a", uuid);
         }
+        return this;
     }
 
     @Override
-    public void setAction(Action action) {
+    public SPacketPlayOutBoss setAction(Action action) {
         if (action == null) {
             throw new UnsupportedOperationException("Action cannot be null!");
         }
         final var enumAction = Reflect.findEnumConstant(ClassStorage.NMS.EnumBossAction, action.name().toUpperCase());
         if (Version.isVersion(1, 17)) {
-            packet.setField("e", enumAction);
+            packet.setField("e,f_131751_", enumAction);
         } else {
             packet.setField("b,field_186912_b", enumAction);
         }
+        return this;
     }
 
     @Deprecated
     @Override
-    public void setTitle(Component title) {
+    public SPacketPlayOutBoss setTitle(Component title) {
         if (title == null) {
             title = Component.text("");
         }
         if (packet.setField("c,field_186913_c", ClassStorage.asMinecraftComponent(title)) == null) {
             packet.setField("c,field_186913_c", AdventureHelper.toLegacy(title));
         }
+        return this;
     }
 
     @Deprecated
     @Override
-    public void setHealth(float health) {
+    public SPacketPlayOutBoss setHealth(float health) {
         packet.setField("d,field_186914_d", health);
+        return this;
     }
 
     @Deprecated
     @Override
-    public void setColor(Color color) {
+    public SPacketPlayOutBoss setColor(Color color) {
         if (color == null) {
             throw new UnsupportedOperationException("Color cannot be null!");
         }
         packet.setField("e,field_186915_e", Reflect.findEnumConstant(ClassStorage.NMS.EnumBarColor, color.name().toUpperCase()));
+        return this;
     }
 
     @Deprecated
     @Override
-    public void setDivision(Division division) {
+    public SPacketPlayOutBoss setDivision(Division division) {
         if (division == null) {
             throw new UnsupportedOperationException("Division cannot be null!");
         }
         packet.setField("f,field_186916_f", Reflect.findEnumConstant(ClassStorage.NMS.EnumBarStyle, division.name().toUpperCase()));
+        return this;
     }
 
     @Deprecated
     @Override
-    public void setDarkenSky(boolean darkenSky) {
+    public SPacketPlayOutBoss setDarkenSky(boolean darkenSky) {
         packet.setField("g,field_186917_g", darkenSky);
+        return this;
     }
 
     @Deprecated
     @Override
-    public void setPlayMusic(boolean playMusic) {
+    public SPacketPlayOutBoss setPlayMusic(boolean playMusic) {
         packet.setField("h,field_186918_h", playMusic);
+        return this;
     }
 
     @Override
-    public void setCreateFog(boolean createFog) {
+    public SPacketPlayOutBoss setCreateFog(boolean createFog) {
         packet.setField("i,field_186919_i", createFog);
+        return this;
     }
 }

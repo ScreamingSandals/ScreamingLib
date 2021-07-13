@@ -24,23 +24,27 @@ public class BukkitSPacketPlayOutEntityLook extends BukkitSPacket implements SPa
     }
 
     @Override
-    public void setEntityId(int entityId) {
+    public SPacketPlayOutEntityLook setEntityId(int entityId) {
         this.entityId = entityId;
+        return this;
     }
 
     @Override
-    public void setYaw(byte yaw) {
+    public SPacketPlayOutEntityLook setYaw(byte yaw) {
         this.yaw = yaw;
+        return this;
     }
 
     @Override
-    public void setPitch(byte pitch) {
+    public SPacketPlayOutEntityLook setPitch(byte pitch) {
         this.pitch = pitch;
+        return this;
     }
 
     @Override
-    public void setOnGround(boolean isOnGround) {
+    public SPacketPlayOutEntityLook setOnGround(boolean isOnGround) {
         this.isOnGround = isOnGround;
+        return this;
     }
 
     protected void generatePacket() {

@@ -20,16 +20,17 @@ public class BukkitSPacketPlayOutEntityEquipment extends BukkitSPacket implement
     }
 
     @Override
-    public void setEntityId(int entityId) {
+    public SPacketPlayOutEntityEquipment setEntityId(int entityId) {
         if (Version.isVersion(1, 17)) {
-            packet.setField("b", entityId);
+            packet.setField("b,f_133198_", entityId);
         } else {
             packet.setField("a,field_149394_a", entityId);
         }
+        return this;
     }
 
     @Override
-    public void setItemAndSlot(Item item, Slot slot) {
+    public SPacketPlayOutEntityEquipment setItemAndSlot(Item item, Slot slot) {
         if (slot == null) {
             throw new UnsupportedOperationException("Slot cannot be null!");
         }
@@ -37,16 +38,17 @@ public class BukkitSPacketPlayOutEntityEquipment extends BukkitSPacket implement
             item = ItemFactory.build(Material.AIR).orElseThrow();
         }
         if (isOldPacket()) {
-            packet.setField("c", ClassStorage.stackAsNMS(item.as(ItemStack.class)));
-            packet.setField("b", getSlot(slot));
+            packet.setField("c,field_149393_c", ClassStorage.stackAsNMS(item.as(ItemStack.class)));
+            packet.setField("b,field_149392_b", getSlot(slot));
         } else {
             final var data = List.of(Pair.of(getSlot(slot), ClassStorage.stackAsNMS(item.as(ItemStack.class))));
             if (Version.isVersion(1, 17)) {
-                packet.setField("c", data);
+                packet.setField("c,f_133199_`", data);
             } else {
                 packet.setField("b,field_241789_b_", data);
             }
         }
+        return this;
     }
 
     protected Object getSlot(Slot slot) {

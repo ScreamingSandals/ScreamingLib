@@ -1,13 +1,14 @@
 package org.screamingsandals.lib.packet;
 
 public interface SPacketPlayOutEntityEffect extends SPacket {
-    void setEntityId(int entityId);
 
-    void setEffectId(byte effectId);
+    SPacketPlayOutEntityEffect setEntityId(int entityId);
 
-    void setAmplifier(byte amplifier);
+    SPacketPlayOutEntityEffect setEffectId(byte effectId);
 
-    void setDurationInTicks(int durationInTicks);
+    SPacketPlayOutEntityEffect setAmplifier(byte amplifier);
 
-    void setByteFlags(boolean isAmbient,  boolean shouldShowParticles);
+    SPacketPlayOutEntityEffect setDurationInTicks(int durationInTicks);
+
+    SPacketPlayOutEntityEffect setByteFlags(boolean isAmbient,  boolean shouldShowParticles);
 }

@@ -8,32 +8,36 @@ import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.LocationHolder;
 
 public class BukkitSPacketPlayOutBlockAction extends BukkitSPacket implements SPacketPlayOutBlockAction {
+
     public BukkitSPacketPlayOutBlockAction() {
         super(ClassStorage.NMS.PacketPlayOutBlockAction);
     }
 
     @Override
-    public void setBlockLocation(LocationHolder location) {
+    public SPacketPlayOutBlockAction setBlockLocation(LocationHolder location) {
         if (location == null) {
             throw new UnsupportedOperationException("Location cannot be null!");
         }
         var constructed = Reflect.constructor(ClassStorage.NMS.BlockPosition, int.class, int.class, int.class)
                 .construct(location.getX(), location.getY(), location.getZ());
-        packet.setField("a,field_179826_a", constructed);
+        packet.setField("a,field_179826_a,f_131709_", constructed);
+        return this;
     }
 
     @Override
-    public void setActionId(int actionId) {
-        packet.setField("b,field_148872_d", actionId);
+    public SPacketPlayOutBlockAction setActionId(int actionId) {
+        packet.setField("b,field_148872_d,f_131710_", actionId);
+        return this;
     }
 
     @Override
-    public void setActionParameter(int actionParameter) {
-        packet.setField("c,field_148873_e", actionParameter);
+    public SPacketPlayOutBlockAction setActionParameter(int actionParameter) {
+        packet.setField("c,field_148873_e,f_131711_", actionParameter);
+        return this;
     }
 
     @Override
-    public void setBlockType(BlockHolder block) {
+    public SPacketPlayOutBlockAction setBlockType(BlockHolder block) {
         if (block == null) {
             throw new UnsupportedOperationException("Block cannot be null!");
         }
@@ -42,6 +46,7 @@ public class BukkitSPacketPlayOutBlockAction extends BukkitSPacket implements SP
         if (nmsBlock == null) {
             throw new UnsupportedOperationException("NMSBlock is null!");
         }
-        packet.setField("d,field_148871_f", nmsBlock);
+        packet.setField("d,field_148871_f,f_131712_", nmsBlock);
+        return this;
     }
 }

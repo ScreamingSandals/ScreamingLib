@@ -3,9 +3,9 @@ package org.screamingsandals.lib.packet;
 import net.kyori.adventure.text.Component;
 
 public interface SPacketPlayOutScoreboardDisplayObjective extends SPacket {
-    void setObjectiveKey(Component objectiveKey);
+    SPacketPlayOutScoreboardDisplayObjective setObjectiveKey(Component objectiveKey);
 
-    void setDisplaySlot(DisplaySlot slot);
+    SPacketPlayOutScoreboardDisplayObjective setDisplaySlot(DisplaySlot slot);
 
     enum DisplaySlot {
         PLAYER_LIST,
