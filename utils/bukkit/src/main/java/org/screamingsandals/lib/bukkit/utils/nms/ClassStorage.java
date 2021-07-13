@@ -56,7 +56,7 @@ public class ClassStorage {
 		public static final Class<?> MinecraftServer = safeGetClass("net.minecraft.server.MinecraftServer", "{nms}.MinecraftServer", "{f:nms}.MinecraftServer");
 		public static final Class<?> NBTTagCompound = safeGetClass("{nms}.NBTTagCompound", "{f:nbt}.CompoundNBT", "{f:nbt}.NBTTagCompound");
 		public static final Class<?> NetworkManager = safeGetClass("net.minecraft.network.NetworkManager", "{nms}.NetworkManager", "{f:net}.NetworkManager");
-		public static final Class<?> PlayerInfoData = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo$PlayerInfoData", "{nms}.PlayerInfoData");
+		public static final Class<?> PlayerInfoData = safeGetClass("net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo$PlayerInfoData", "{nms}.PacketPlayOutPlayerInfo$PlayerInfoData");
 		public static final Class<?> GameProfile = safeGetClass("com.mojang.authlib.GameProfile");
 
 		//TODO: forge names

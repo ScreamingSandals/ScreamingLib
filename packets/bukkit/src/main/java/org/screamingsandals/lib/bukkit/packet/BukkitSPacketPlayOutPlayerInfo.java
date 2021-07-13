@@ -5,6 +5,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class BukkitSPacketPlayOutPlayerInfo extends BukkitSPacket implements SPacketPlayOutPlayerInfo {
 
@@ -30,19 +31,17 @@ public class BukkitSPacketPlayOutPlayerInfo extends BukkitSPacket implements SPa
                     ClassStorage.NMS.EnumGamemode,
                     playerInfoData.getGameMode().name().toUpperCase()
             );
-            var constructed = Reflect.constructor(
-                    ClassStorage.NMS.PlayerInfoData,
-                    ClassStorage.NMS.GameProfile,
-                    int.class,
-                    ClassStorage.NMS.EnumGamemode,
-                    ClassStorage.NMS.IChatBaseComponent
-                    ).construct(
-                        playerInfoData.getGameProfile(),
-                        playerInfoData.getLatency(),
-                        gameMode,
-                    ClassStorage.asMinecraftComponent(playerInfoData.getDisplayName())
-            );
-            nmsData.add(constructed);
+
+            final var atomicRef = new AtomicReference<>();
+
+            Reflect.constructor(ClassStorage.NMS.PlayerInfoData, ClassStorage.NMS.GameProfile, int.class, ClassStorage.NMS.EnumGamemode, ClassStorage.NMS.IChatBaseComponent)
+                    .ifPresentOrElse(constructor -> atomicRef.set(constructor.construct(playerInfoData.getGameProfile(), playerInfoData.getLatency(), gameMode, ClassStorage.asMinecraftComponent(playerInfoData.getDisplayName()))), () -> {
+                            atomicRef.set(Reflect
+                                    .constructor(ClassStorage.NMS.PlayerInfoData, ClassStorage.NMS.PacketPlayOutPlayerInfo, ClassStorage.NMS.GameProfile, int.class, ClassStorage.NMS.EnumGamemode, ClassStorage.NMS.IChatBaseComponent)
+                                                .construct(packet, playerInfoData.getGameProfile(), playerInfoData.getLatency(), gameMode, ClassStorage.asMinecraftComponent(playerInfoData.getDisplayName())));
+                    });
+
+            nmsData.add(atomicRef.get());
         });
         packet.setField("b,field_179769_b,f_132718_", nmsData);
         return this;
