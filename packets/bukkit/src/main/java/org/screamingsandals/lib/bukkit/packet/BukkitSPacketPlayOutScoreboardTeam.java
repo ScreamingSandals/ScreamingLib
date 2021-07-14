@@ -99,16 +99,13 @@ public class BukkitSPacketPlayOutScoreboardTeam extends BukkitSPacket implements
     @Override
     public SPacketPlayOutScoreboardTeam setTeamColor(TextColor color) {
         final var str = NamedTextColor.nearestTo(color).toString();
-
-        if (ClassStorage.NMS.EnumChatFormat != null) {
-            final var enumC = Reflect.findEnumConstant(ClassStorage.NMS.EnumChatFormat, str.toUpperCase());
-            if (Version.isVersion(1, 17)) {
-                Reflect.setField(data, "f,f_179357_", enumC);
-            } else {
-                packet.setField("g,field_179815_f", enumC);
-            }
+        final var enumC = Reflect.findEnumConstant(ClassStorage.NMS.EnumChatFormat, str.toUpperCase());
+        if (Version.isVersion(1, 17)) {
+            Reflect.setField(data, "f,f_179357_", enumC);
         } else {
-            packet.setField("g,field_179815_f", str);
+            if (packet.setField("g,field_179815_f", enumC) == null) {
+                packet.setField("g,field_179815_f", Reflect.getField(enumC, "C,field_175747_C"));
+            }
         }
         return this;
     }

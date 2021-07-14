@@ -9,10 +9,11 @@ import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.world.LocationHolder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public abstract class AbstractNPC implements NPC {
-    private final UUID uuid = UUID.randomUUID();
+    private final UUID uuid = new UUID(new Random().nextLong(), 0);
     private final List<TextEntry> text = new ArrayList<>();
     private final List<PlayerWrapper> visibleTo = new ArrayList<>();
     private boolean visible;
@@ -20,7 +21,7 @@ public abstract class AbstractNPC implements NPC {
     private boolean created = false;
     private boolean destroyed = false;
     protected boolean ready = false;
-    private String name = uuid.toString().replace("-", "").substring(0, 10);
+    private final String name = uuid.toString().replace("-", "").substring(0, 10);
     private final GameProfile gameProfile = new GameProfile(uuid, name);
     private NPCSkin skin;
     private boolean shouldLookAtPlayer = false;

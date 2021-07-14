@@ -306,11 +306,9 @@ public class BukkitHologram extends AbstractHologram {
                 .setDataWatcher(new BukkitDataWatcher(entity.getDataWatcher()));
         toReturn.add(spawnPacket);
 
-        if (Version.isVersion(1, 15)) {
-            final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
-            metadataPacket.setMetaData(entity.getId(), new BukkitDataWatcher(entity.getDataWatcher()), true);
-            toReturn.add(metadataPacket);
-        }
+        final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
+        metadataPacket.setMetaData(entity.getId(), new BukkitDataWatcher(entity.getDataWatcher()), true);
+        toReturn.add(metadataPacket);
 
         return toReturn;
     }

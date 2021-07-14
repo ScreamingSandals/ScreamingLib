@@ -6,8 +6,8 @@ import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.network.AutoPacketInboundListener;
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
-import org.screamingsandals.lib.event.player.SPlayerMoveEvent;
+import org.screamingsandals.lib.event.player.*;
+import org.screamingsandals.lib.hologram.AbstractHologram;
 import org.screamingsandals.lib.npc.AbstractNPC;
 import org.screamingsandals.lib.npc.NPCManager;
 import org.screamingsandals.lib.npc.event.NPCInteractEvent;
@@ -46,10 +46,10 @@ public class BukkitNPCManager extends NPCManager {
                 protected Object handle(Player p, Object packet) {
                     if (ClassStorage.NMS.PacketPlayInUseEntity.isInstance(packet)) {
                         final var entityId = (int) Reflect.getField(packet, "a,field_149567_a");
-                        final var nmsEnum = Reflect.getField(packet, "b,action,field_149566_b").toString();
+                        final var nmsEnum = Reflect.getField(packet, "b,action,field_149566_b");
                         final var attackEnum = Reflect.findEnumConstant(ClassStorage.NMS.PacketPlayInUseEntityActionType, "b,ATTACK");
                                                                                                                                         // temporary fix smh
-                        NPCInteractEvent.InteractType interactType = nmsEnum == attackEnum  || nmsEnum.equalsIgnoreCase("net.minecraft.network.protocol.game.PacketPlayInUseEntity$1@5327f6c8")
+                        NPCInteractEvent.InteractType interactType = nmsEnum == attackEnum  || nmsEnum.toString().equalsIgnoreCase("net.minecraft.network.protocol.game.PacketPlayInUseEntity$1@5327f6c8")
                                 ?  NPCInteractEvent.InteractType.LEFT_CLICK : NPCInteractEvent.InteractType.RIGHT_CLICK;
 
                         for (var npc : getActiveNPCS().values()) {
@@ -74,15 +74,15 @@ public class BukkitNPCManager extends NPCManager {
                 }
             };
 
+            EventManager.getDefaultEventManager().register(SPlayerWorldChangeEvent.class, this::onWorldChange);
+            EventManager.getDefaultEventManager().register(SPlayerTeleportEvent.class, this::onTeleport);
             EventManager.getDefaultEventManager().register(SPlayerMoveEvent.class, this::onMove);
             EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, this::onLeave);
+            EventManager.getDefaultEventManager().register(SPlayerRespawnEvent.class, this::onRespawn);
             Tasker.build(() -> getActiveNPCS().values()
                     .forEach(npc -> {
                         if (npc.shouldLookAtPlayer()) {
-                            npc.getViewers().forEach(viewer -> {
-
-                                npc.lookAtPlayer(viewer.getLocation(), viewer);
-                            });
+                            npc.getViewers().forEach(viewer -> npc.lookAtPlayer(viewer.getLocation(), viewer));
                         }
                     })).async().repeat(1L, TaskerTime.TICKS)
                             .start();
@@ -119,6 +119,107 @@ public class BukkitNPCManager extends NPCManager {
                     } else if (event.getNewLocation().getDistanceSquared(npcLocation) >= viewDistance
                             && event.getCurrentLocation().getDistanceSquared(npcLocation) < viewDistance) {
                         castedNPC.onViewerRemoved(player);
+                    }
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void onRespawn(SPlayerRespawnEvent event) {
+        if (activeNPCS.isEmpty()) {
+            return;
+        }
+
+        getActiveNPCS().forEach((key, npc) -> {
+            try {
+                if (!npc.hasViewers()) {
+                    return;
+                }
+
+                final var player = event.getPlayer();
+                final var viewers = npc.getViewers();
+                final var npcLocation = npc.getLocation();
+                if (npcLocation == null) {
+                    return;
+                }
+
+                final var castedNPC = (AbstractNPC) npc;
+                final var viewDistance = npc.getViewDistance();
+                if (viewers.contains(player)
+                        && event.getLocation().getWorld().equals(npcLocation.getWorld())) {
+                    if (player.getLocation().getDistanceSquared(npcLocation) < viewDistance) {
+                        Tasker.build(() -> castedNPC.onViewerAdded(player)).delay(20, TaskerTime.TICKS).async().start();
+                    }
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void onWorldChange(SPlayerWorldChangeEvent event) {
+        if (activeNPCS.isEmpty()) {
+            return;
+        }
+
+        getActiveNPCS().forEach((key, npc) -> {
+            try {
+                if (!npc.hasViewers()) {
+                    return;
+                }
+
+                final var player = event.getPlayer();
+                final var viewers = npc.getViewers();
+                final var npcLocation  = npc.getLocation();
+                if (npcLocation == null) {
+                    return;
+                }
+
+                final var castedNPC = (AbstractNPC) npc;
+                final var viewDistance = npc.getViewDistance();
+                if (viewers.contains(player)
+                        && event.getFrom().equals(npcLocation.getWorld())) {
+                    if (player.getLocation().getDistanceSquared(npcLocation) < viewDistance) {
+                        Tasker.build(() -> castedNPC.onViewerAdded(player)).delay(20, TaskerTime.TICKS).async().start();
+                    }
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    private void onTeleport(SPlayerTeleportEvent event) {
+        if (activeNPCS.isEmpty()
+                || !event.getCurrentLocation().getWorld().equals(event.getNewLocation().getWorld())) {
+            return;
+        }
+
+        getActiveNPCS().forEach((key, npc) -> {
+            try {
+                if (!npc.hasViewers()) {
+                    return;
+                }
+
+                final var player = event.getPlayer();
+                final var viewers = npc.getViewers();
+                final var npcLocation = npc.getLocation();
+                if (npcLocation == null) {
+                    return;
+                }
+
+                final var castedNPC = (AbstractNPC) npc;
+                final var viewDistance = npc.getViewDistance();
+                if (viewers.contains(player)
+                        && npcLocation.getWorld().equals(player.getLocation().getWorld())) {
+                    if (event.getNewLocation().getDistanceSquared(npcLocation) < viewDistance
+                            && event.getCurrentLocation().getDistanceSquared(npcLocation) >= viewDistance) {
+                        Tasker.build(() -> castedNPC.onViewerAdded(player)).delay(10, TaskerTime.TICKS).async().start();
+                    } else if (event.getNewLocation().getDistanceSquared(npcLocation) >= viewDistance
+                            && event.getCurrentLocation().getDistanceSquared(npcLocation) < viewDistance) {
+                        Tasker.build(() -> castedNPC.onViewerRemoved(player)).delay(10, TaskerTime.TICKS).async().start();
                     }
                 }
             } catch (Throwable t) {
