@@ -1,3 +1,5 @@
+import java.util.function.Supplier
+
 apply plugin: 'org.screamingsandals.nms'
 
 sourceSets.main.java.srcDirs += 'src/generated/java'
@@ -8,6 +10,9 @@ nmsGen {
     basePackage = "org.screamingsandals.lib.nms.accessors"
     sourceSet = "src/generated/java"
     cleanOnRebuild = true
+
+    var ChatComponent = reqClass('net.minecraft.network.chat.Component')
+        .reqMethod('searge:func_150254_d') // get legacy string
 
     reqClass('net.minecraft.world.entity.EntityType')
         .reqMethod('byString', String) // 1.14+
@@ -21,4 +26,78 @@ nmsGen {
 
     reqClass('net.minecraft.core.MappedRegistry')
         .reqMethod('searge:func_148757_b', Object)
+
+    reqClass('net.minecraft.world.entity.Entity')
+        .reqMethod('getEntityData') // DataWatcher
+        .reqMethod('getCommandSenderWorld') // world
+        .reqMethod('getX')
+        .reqMethod('getY')
+        .reqMethod('getZ')
+        .reqMethod('getYRot')
+        .reqMethod('getXRot')
+        .reqMethod('getType')
+        .reqMethod('getId')
+        .reqMethod('setNoGravity', boolean)
+        .reqMethod('isNoGravity')
+        .reqMethod('setOnGround', boolean)
+        .reqMethod('isOnGround')
+        .reqMethod('getUUID')
+        .reqMethod('setCustomNameVisible', boolean)
+        .reqMethod('isCustomNameVisible')
+        .reqMethod('setInvisible', boolean)
+        .reqMethod('isInvisible')
+        .reqMethod('getDeltaMovement')
+        .reqMethod('searge:func_96094_a', String) // setCustomName
+        .reqMethod('setCustomName', ChatComponent)
+        .reqMethod('absMoveTo', double, double, double, float, float)
+        .reqMethod('getCustomName')
+        .reqField('searge:field_70159_w') // velocity x
+        .reqField('searge:field_70181_x') // velocity y
+        .reqField('searge:field_70179_y') // velocity z
+
+        .reqField('searge:field_70152_a')
+        .reqField('onGround')
+        .reqField('id')
+        .reqField('ENTITY_COUNTER')
+        .reqField('searge:field_70177_z') // yaw
+        .reqField('searge:field_70125_A') // pitch
+        .reqField('searge:field_70165_t') // locX
+        .reqField('searge:field_70163_u') // locY
+        .reqField('searge:field_70161_v') // locZ
+        .reqField('searge:field_70170_p') // world
+
+
+    reqClass('net.minecraft.network.chat.Component$Serializer')
+        .reqMethod('searge:m_130701_', String)
+
+    reqClass('net.minecraft.core.Rotations')
+        .reqConstructor(float, float, float)
+        .reqMethod('getX')
+        .reqMethod('getY')
+        .reqMethod('getZ')
+
+    var PathfinderGoal = reqClass('net.minecraft.world.entity.ai.goal.Goal')
+
+    reqClass('net.minecraft.world.entity.ai.goal.GoalSelector')
+        .reqConstructor(Supplier)
+        .reqMethod('searge:func_75776_a', int, PathfinderGoal)
+
+    var Level = reqClass('net.minecraft.world.level.Level')
+        .reqMethod('getProfilerSupplier')
+        .reqMethod('getProfiler')
+        .reqField('searge:field_72984_F')
+
+    reqClass('net.minecraft.world.entity.decoration.ArmorStand')
+        .reqConstructor(Level, double, double, double)
+        .reqMethod('setSmall', boolean)
+        .reqMethod('isSmall')
+        .reqMethod('isShowArms')
+        .reqMethod('setShowArms', boolean)
+        .reqMethod('setNoBasePlate', boolean)
+        .reqMethod('isNoBasePlate')
+        .reqMethod('setMarker', boolean)
+        .reqMethod('isMarker')
+
+    reqClass('net.minecraft.server.level.ServerPlayer')
+            .reqField('connection')
 }

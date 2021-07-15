@@ -2,14 +2,14 @@ package org.screamingsandals.lib.bukkit.utils.nms.entity;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.nms.accessors.ComponentAccessor;
+import org.screamingsandals.lib.nms.accessors.EntityAccessor;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -20,14 +20,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class EntityNMS {
 
 	public synchronized static int incrementAndGetId() {
-		final var entityCount = Reflect.getField(ClassStorage.NMS.Entity, "entityCount,field_70152_a");
+		final var entityCount = Reflect.getField(EntityAccessor.getFieldField_70152_a());
 		if (entityCount != null) {
 			final var newCount = ((int)entityCount) + 1;
-			Reflect.setField(ClassStorage.NMS.Entity, "entityCount,field_70152_a", newCount);
+			Reflect.setField(EntityAccessor.getFieldField_70152_a(), newCount);
 			return newCount;
 		}
 
-		final var entityCounter = Reflect.getField(ClassStorage.NMS.Entity, "b,f_19843_");
+		final var entityCounter = Reflect.getField(EntityAccessor.getFieldENTITY_COUNTER());
 		if (entityCounter instanceof AtomicInteger) {
 			return ((AtomicInteger) entityCounter).incrementAndGet();
 		}
@@ -47,29 +47,29 @@ public class EntityNMS {
 
 	public Location getLocation() {
 		if (Version.isVersion(1, 16)) {
-			double locX = (double) Reflect.getMethod(handler, "locX").invoke();
-			double locY = (double) Reflect.getMethod(handler, "locY").invoke();
-			double locZ = (double) Reflect.getMethod(handler, "locZ").invoke();
+			double locX = (double) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetX1());
+			double locY = (double) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetY1());
+			double locZ = (double) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetZ1());
 			float yaw, pitch;
 			if (Version.isVersion(1,17)) {
-				yaw = (float) Reflect.getMethod(handler, "getYRot").invoke();
-				pitch = (float) Reflect.getMethod(handler, "getXRot").invoke();
+				yaw = (float) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetXRot1());
+				pitch = (float) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetYRot1());
 			} else {
-				yaw = (float) Reflect.getField(handler, "yaw,field_70177_z");
-				pitch = (float) Reflect.getField(handler, "pitch,field_70125_A");
+				yaw = (float) Reflect.getField(handler, EntityAccessor.getFieldField_70177_z());
+				pitch = (float) Reflect.getField(handler, EntityAccessor.getFieldField_70125_A());
 			}
 
-			Object world = Reflect.getMethod(handler, "getWorld,func_130014_f_").invoke();
+			Object world = Reflect.fastInvoke(handler, EntityAccessor.getMethodGetCommandSenderWorld1());
 			World craftWorld = (World) Reflect.getMethod(world, "getWorld").invoke();
 
 			return new Location(craftWorld, locX, locY, locZ, yaw, pitch);
 		} else {
-			double locX = (double) Reflect.getField(handler, "locX,field_70165_t");
-			double locY = (double) Reflect.getField(handler, "locY,field_70163_u");
-			double locZ = (double) Reflect.getField(handler, "locZ,field_70161_v");
-			float yaw = (float) Reflect.getField(handler, "yaw,field_70177_z");
-			float pitch = (float) Reflect.getField(handler, "pitch,field_70125_A");
-			Object world = Reflect.getMethod(handler, "getWorld,func_130014_f_").invoke();
+			double locX = (double) Reflect.getField(handler, EntityAccessor.getFieldField_70165_t());
+			double locY = (double) Reflect.getField(handler, EntityAccessor.getFieldField_70163_u());
+			double locZ = (double) Reflect.getField(handler, EntityAccessor.getFieldField_70161_v());
+			float yaw = (float) Reflect.getField(handler, EntityAccessor.getFieldField_70177_z());
+			float pitch = (float) Reflect.getField(handler, EntityAccessor.getFieldField_70125_A());
+			Object world = Reflect.fastInvoke(handler, EntityAccessor.getMethodGetCommandSenderWorld1());
 			World craftWorld = (World) Reflect.getMethod(world, "getWorld").invoke();
 
 			return new Location(craftWorld, locX, locY, locZ, yaw, pitch);
@@ -77,17 +77,15 @@ public class EntityNMS {
 	}
 
 	public Object getEntityType() {
-		return Reflect.getMethod(handler, "getEntityType,func_200600_R").invoke();
+		return Reflect.fastInvoke(handler, EntityAccessor.getMethodGetType1());
 	}
 
 	public void setLocation(Location location) {
-		final var craftWorld = (World) Reflect.fastInvokeResulted(handler, "getWorld,func_130014_f_").fastInvoke("getWorld");
+		final var craftWorld = (World) Reflect.fastInvokeResulted(handler, EntityAccessor.getMethodGetCommandSenderWorld1()).fastInvoke("getWorld");
 		if (!location.getWorld().equals(craftWorld)) {
-			Reflect.setField(handler, "world,field_70170_p", ClassStorage.getHandle(location.getWorld()));
+			Reflect.setField(handler, EntityAccessor.getFieldField_70170_p(), ClassStorage.getHandle(location.getWorld()));
 		}
-
-		Reflect.getMethod(handler, "setLocation,func_70080_a", double.class, double.class, double.class, float.class, float.class)
-			.invoke(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		Reflect.fastInvoke(handler, EntityAccessor.getMethodAbsMoveTo1(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
 	}
 
 	public Object getHandler() {
@@ -95,34 +93,33 @@ public class EntityNMS {
 	}
 
 	public int getId() {
-		return (int) Reflect.getMethod(handler, "getId,func_145782_y").invoke();
+		return (int) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetId1());
 	}
 
 	public void setId(int id) {
-		Reflect.setField(handler, "as,f_19848_,id", id);
+		Reflect.setField(handler, EntityAccessor.getFieldId(), id);
 	}
 
 	public Object getDataWatcher() {
-		return Reflect.getMethod(handler, "getDataWatcher,func_184212_Q").invoke();
+		return Reflect.fastInvoke(handler, EntityAccessor.getMethodGetEntityData1());
 	}
 
 	public void setCustomName(Component name) {
-		final var method = Reflect.getMethod(handler, "setCustomName,func_200203_b", ClassStorage.NMS.IChatBaseComponent);
-		if (method.getMethod() != null) {
+		final var method = EntityAccessor.getMethodSetCustomName1();
+		if (method != null) {
 			try {
-				method.invoke(MinecraftComponentSerializer.get().serialize(name));
+				Reflect.fastInvoke(method, MinecraftComponentSerializer.get().serialize(name));
 			} catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
-				method.invoke(Reflect.getMethod(ClassStorage.NMS.ChatSerializer, "a,field_150700_a", String.class)
-						.invokeStatic(GsonComponentSerializer.gson().serialize(name)));
+				Reflect.fastInvoke(method, ClassStorage.asMinecraftComponent(name));
 			}
 		} else {
-			Reflect.getMethod(handler, "setCustomName,func_96094_a", String.class).invoke(AdventureHelper.toLegacy(name));
+			Reflect.fastInvoke(handler, EntityAccessor.getMethodFunc_96094_a1(), AdventureHelper.toLegacy(name));
 		}
 	}
 
 	public Component getCustomName() {
-		final var textComponent = Reflect.getMethod(handler, "getCustomName,func_200201_e,func_95999_t").invoke();
-		final var stored = ClassStorage.NMS.IChatBaseComponent;
+		final var textComponent = Reflect.fastInvoke(handler, EntityAccessor.getMethodGetCustomName1());
+		final var stored = ComponentAccessor.getType();
 		if (stored == null) {
 			return Component.empty();
 		}
@@ -132,7 +129,7 @@ public class EntityNMS {
 				try {
 					return MinecraftComponentSerializer.get().deserialize(textComponent);
 				} catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
-					return AdventureHelper.toComponent((String) Reflect.getMethod(textComponent, "getLegacyString,func_150254_d").invoke());
+					return AdventureHelper.toComponent((String) Reflect.fastInvoke(textComponent, ComponentAccessor.getMethodFunc_150254_d1()));
 				}
 			} catch (Throwable t) {
 				throw new UnsupportedOperationException("Cannot deserialize " + textComponent.toString(), t);
@@ -143,53 +140,53 @@ public class EntityNMS {
 	}
 
 	public void setCustomNameVisible(boolean visible) {
-		Reflect.getMethod(handler, "setCustomNameVisible,func_174805_g", boolean.class).invoke(visible);
+		Reflect.fastInvoke(handler, EntityAccessor.getMethodSetCustomNameVisible1(), visible);
 	}
 
 	public boolean isCustomNameVisible() {
-		return (boolean) Reflect.getMethod(handler, "getCustomNameVisible,func_174833_aM").invoke();
+		return (boolean) Reflect.fastInvoke(handler, EntityAccessor.getMethodIsCustomNameVisible1());
 	}
 
 	public void setInvisible(boolean invisible) {
-		Reflect.getMethod(handler, "setInvisible,func_82142_c", boolean.class).invoke(invisible);
+		Reflect.fastInvoke(handler, EntityAccessor.getMethodSetInvisible1(), invisible);
 	}
 
 	public boolean isInvisible() {
-		return (boolean) Reflect.getMethod(handler, "isInvisible,func_82150_aj").invoke();
+		return (boolean) Reflect.fastInvoke(handler, EntityAccessor.getMethodIsInvisible1());
 	}
 
 	public void setGravity(boolean gravity) {
-		Reflect.getMethod(handler, "setNoGravity,func_189654_d", boolean.class).invoke(!gravity);
+		Reflect.fastInvoke(handler, EntityAccessor.getMethodSetNoGravity1(), !gravity);
 	}
 
 	public boolean isGravity() {
-		return !((boolean) Reflect.getMethod(handler, "isNoGravity,func_189652_ae").invoke());
+		return !((boolean) Reflect.fastInvoke(handler, EntityAccessor.getMethodIsNoGravity1()));
 	}
 
 	public boolean isOnGround() {
-		final var onGround_field = Reflect.getField(handler, "onGround,field_70122_E");
+		final var onGround_field = Reflect.getField(handler, EntityAccessor.getFieldOnGround());
 		if (onGround_field != null) {
 			return (boolean) onGround_field;
 		}
-		return (boolean) Reflect.getMethod(handler, "isOnGround,func_233570_aj_").invoke();
+		return (boolean) Reflect.fastInvoke(handler, EntityAccessor.getMethodIsOnGround1());
 	}
 
 	public UUID getUniqueId() {
-		return (UUID) Reflect.getMethod(handler, "getUniqueID,func_110124_au").invoke();
+		return (UUID) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetUUID1());
 	}
 
 	public Vector3D getVelocity() {
-		if (Reflect.getField(handler, "motX,field_70159_w") != null) {
-			double motX = (double) Reflect.getField(handler, "motX,field_70159_w");
-			double motY = (double) Reflect.getField(handler, "motY,field_70181_x");
-			double motZ = (double) Reflect.getField(handler, "motZ,field_70179_y");
+		if (Reflect.getField(handler, EntityAccessor.getFieldField_70159_w()) != null) {
+			double motX = (double) Reflect.getField(handler, EntityAccessor.getFieldField_70159_w());
+			double motY = (double) Reflect.getField(handler, EntityAccessor.getFieldField_70181_x());
+			double motZ = (double) Reflect.getField(handler, EntityAccessor.getFieldField_70179_y());
 			return new Vector3D(
 					motX,
 					motY,
 					motZ
 			);
 		} else {
-			final var mot = Reflect.getMethod(handler, "getMot,func_213322_ci").invoke();
+			final var mot = Reflect.fastInvoke(handler, EntityAccessor.getMethodGetDeltaMovement1());
 			final var bukkitVector = (Vector) Reflect.getMethod(ClassStorage.NMS.CraftVector, "toBukkit").invokeStatic(mot);
 			if (bukkitVector == null) {
 				return new Vector3D(0, 0, 0);

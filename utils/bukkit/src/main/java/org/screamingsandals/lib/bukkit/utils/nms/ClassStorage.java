@@ -7,14 +7,9 @@ import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
-import org.screamingsandals.lib.nms.accessors.EntityTypeAccessor;
-import org.screamingsandals.lib.nms.accessors.MappedRegistryAccessor;
-import org.screamingsandals.lib.nms.accessors.RegistryAccessor;
+import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.utils.math.Vector3Df;
-import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.List;
@@ -180,7 +175,7 @@ public class ClassStorage {
 		return Reflect
 				.getMethod(player, "getHandle")
 				.invokeResulted()
-				.getField("connection,playerConnection,field_71135_a,b");
+				.getField(ServerPlayerAccessor.getFieldConnection());
 	}
 	
 	public static boolean sendPacket(Player player, Object packet) {
@@ -207,26 +202,26 @@ public class ClassStorage {
 	}
 
 	public static Object getMethodProfiler(Object handler) {
-		Object methodProfiler = Reflect.getMethod(handler, "getMethodProfiler,func_217381_Z").invoke();
+		Object methodProfiler = Reflect.fastInvoke(handler, LevelAccessor.getMethodGetProfiler1());
 		if (methodProfiler == null) {
-			methodProfiler = Reflect.getField(handler, "methodProfiler,field_72984_F");
+			methodProfiler = Reflect.getField(handler, LevelAccessor.getFieldField_72984_F());
 		}
 		return methodProfiler;
 	}
 
 	public static Object obtainNewPathfinderSelector(Object handler) {
 		try {
-			Object world = Reflect.getMethod(handler, "getWorld,func_130014_f_").invoke();
+			Object world = Reflect.fastInvoke(handler, EntityAccessor.getMethodGetCommandSenderWorld1());
 			try {
 				// 1.17
-				return NMS.PathfinderGoalSelector.getConstructor(Supplier.class).newInstance(Reflect.getMethod(world, "getMethodProfilerSupplier").invoke());
+				return Reflect.fastInvoke(world, LevelAccessor.getMethodGetProfilerSupplier1());
 			} catch (Throwable ignored) {
 				try {
 					// 1.16
-					return NMS.PathfinderGoalSelector.getConstructor(Supplier.class).newInstance((Supplier<?>) () -> getMethodProfiler(world));
+					return GoalSelectorAccessor.getConstructor0().newInstance((Supplier<?>) () -> getMethodProfiler(world));
 				} catch (Throwable ignore) {
 					// Pre 1.16
-					return NMS.PathfinderGoalSelector.getConstructors()[0].newInstance(getMethodProfiler(world));
+					return GoalSelectorAccessor.getType().getConstructors()[0].newInstance(getMethodProfiler(world));
 				}
 			}
 		} catch (Throwable t) {
@@ -235,9 +230,10 @@ public class ClassStorage {
 		return null;
 	}
 
+
 	public static Object getVectorToNMS(Vector3Df vector3f) {
 		try {
-			return Reflect.constructor(NMS.Vector3f, float.class, float.class, float.class).construct(vector3f.getX(), vector3f.getY(), vector3f.getZ());
+			return RotationsAccessor.getConstructor0().newInstance(vector3f.getX(), vector3f.getY(), vector3f.getZ());
 		} catch (Throwable t) {
 			t.printStackTrace();
 			return null;
@@ -246,12 +242,11 @@ public class ClassStorage {
 
 	public static Vector3Df getVectorFromNMS(Object vector3f) {
 		Preconditions.checkNotNull(vector3f, "Vector is null!");
-		var invoker = new InvocationResult(vector3f);
 		try {
 			return new Vector3Df(
-					(float) invoker.fastInvoke("getX,func_179415_b"),
-					(float) invoker.fastInvoke("getY,func_179416_c"),
-					(float) invoker.fastInvoke("getZ,func_179413_d")
+					(float) Reflect.fastInvoke(vector3f, RotationsAccessor.getMethodGetX1()),
+					(float) Reflect.fastInvoke(vector3f, RotationsAccessor.getMethodGetY1()),
+					(float) Reflect.fastInvoke(vector3f, RotationsAccessor.getMethodGetZ1())
 			);
 		} catch (Throwable t) {
 			t.printStackTrace();
@@ -263,8 +258,7 @@ public class ClassStorage {
 		try {
 			return MinecraftComponentSerializer.get().serialize(component);
 		} catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
-			return Reflect.getMethod(ClassStorage.NMS.ChatSerializer, "a,field_150700_a", String.class)
-					.invokeStatic(GsonComponentSerializer.gson().serialize(component));
+			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), GsonComponentSerializer.gson().serialize(component));
 		}
 	}
 
@@ -275,23 +269,7 @@ public class ClassStorage {
 
 	public static Object getDataWatcher(Object handler) {
 		Preconditions.checkNotNull(handler, "Handler is null!");
-		return Reflect.getMethod(handler, "getDataWatcher,func_184212_Q,ad").invoke();
-	}
-
-	public static int getEntityTypeId(EntityNMS entityNMS) {
-		Preconditions.checkNotNull(entityNMS, "Entity is null!");
-		final var entity_type_field = Reflect.getField(ClassStorage.NMS.IRegistry, "ENTITY_TYPE,field_212629_r,Y,f_122826_");
-		if (entityNMS.getEntityType() != null && entity_type_field != null) {
-			return (int) Reflect.getMethod(entity_type_field, "a,getId,func_148757_b,m_7447_", Object.class)
-					.invoke(entityNMS.getEntityType());
-		} else {
-			var result = Reflect.getMethod(NMS.EntityTypes, "a,func_75619_a", NMS.Entity).invokeStatic(entityNMS.getHandler());
-			if (result instanceof Number) {
-				return ((Number) result).intValue();
-			} else {
-				return (int) Reflect.getFieldResulted(NMS.EntityTypes, "b").getMethod("a,func_148757_b", Object.class).invoke(entityNMS.getHandler().getClass());
-			}
-		}
+		return Reflect.fastInvoke(handler, EntityAccessor.getMethodGetEntityData1());
 	}
 
 	public static int getEntityTypeId(String key, Class<?> clazz) {
