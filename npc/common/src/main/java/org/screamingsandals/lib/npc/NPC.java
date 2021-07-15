@@ -1,13 +1,16 @@
 package org.screamingsandals.lib.npc;
 
 import com.mojang.authlib.GameProfile;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -88,7 +91,7 @@ public interface NPC {
      * @param name name (multi-lined) of the NPC.
      * @return this NPC
      */
-    NPC setDisplayName(List<TextEntry> name);
+    NPC setDisplayName(List<Component> name);
 
     /**
      *
@@ -215,4 +218,10 @@ public interface NPC {
      * @return the amount of time (in milliseconds) the last clicked user has to wait before interacting with this NPC again
      */
     long getClickCoolDown();
+
+    /**
+     *
+     * @return the hologram instance that displays the name of the entity.
+     */
+    Hologram getHologram();
 }

@@ -3,6 +3,7 @@ package org.screamingsandals.lib.bukkit.utils.nms.entity;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -11,7 +12,6 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.math.Vector3D;
-import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.UUID;
@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class EntityNMS {
 
-	public static int incrementAndGetId() {
+	public synchronized static int incrementAndGetId() {
 		final var entityCount = Reflect.getField(ClassStorage.NMS.Entity, "entityCount,field_70152_a");
 		if (entityCount != null) {
 			final var newCount = ((int)entityCount) + 1;

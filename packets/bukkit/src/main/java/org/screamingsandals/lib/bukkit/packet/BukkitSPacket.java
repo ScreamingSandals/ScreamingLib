@@ -1,4 +1,5 @@
 package org.screamingsandals.lib.bukkit.packet;
+import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
@@ -10,6 +11,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public abstract class BukkitSPacket implements SPacket {
     protected InvocationResult packet;
     private final List<Object> additionalPackets = new ArrayList<>();
@@ -37,15 +39,16 @@ public abstract class BukkitSPacket implements SPacket {
         final var bukkitPlayer = (Player) player.getWrappedPlayer().get();
 
         if (bukkitPlayer == null) {
-            throw new UnsupportedOperationException("BukkitPlayer cannot be null!");
+            log.warn("Cannot send packet to null player!");
         }
 
         if (!player.isOnline()) {
-            throw new UnsupportedOperationException("Cannot send packet to offline player!");
+            log.trace("Cannot send packet to offline player!");
+            return;
         }
 
         if (packet == null || packet.raw() == null) {
-            throw new UnsupportedOperationException("Packet cannot be null!");
+            log.warn("Packet is null!");
         }
 
         boolean result = ClassStorage.sendPacket(bukkitPlayer, packet.raw());

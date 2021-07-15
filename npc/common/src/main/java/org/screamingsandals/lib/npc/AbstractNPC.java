@@ -2,19 +2,20 @@ package org.screamingsandals.lib.npc;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.world.LocationHolder;
-import java.util.ArrayList;
+
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
 public abstract class AbstractNPC implements NPC {
     private final UUID uuid = new UUID(new Random().nextLong(), 0);
-    private final List<TextEntry> text = new ArrayList<>();
     private final List<PlayerWrapper> visibleTo = new ArrayList<>();
     private boolean visible;
     private LocationHolder location;
@@ -28,8 +29,24 @@ public abstract class AbstractNPC implements NPC {
     private int viewDistance = NPC.DEFAULT_VIEW_DISTANCE;
     private long clickCoolDown = NPC.CLICK_COOL_DOWN;
 
+    /**
+     * hologram that displays the name of the entity
+     */
+    private final Hologram hologram;
+
     protected AbstractNPC(LocationHolder location) {
         this.location = location;
+        hologram = Hologram.of(location.clone().add(0, 1.50, 0));
+        if (isVisible()) {
+            hologram.show();
+        } else {
+            hologram.hide();
+        }
+    }
+
+    @Override
+    public Hologram getHologram() {
+        return hologram;
     }
 
     @Override
@@ -44,6 +61,7 @@ public abstract class AbstractNPC implements NPC {
             throw new UnsupportedOperationException("Location cannot be null!");
         }
         this.location = location;
+        hologram.setLocation(location.clone().add(0, 1.5D, 0));
         return this;
     }
 
@@ -82,13 +100,14 @@ public abstract class AbstractNPC implements NPC {
 
     @Override
     public List<TextEntry> getDisplayName() {
-        return List.copyOf(text);
+        return List.copyOf(hologram.getLines().values());
     }
 
     @Override
-    public NPC setDisplayName(List<TextEntry> name) {
-        this.text.clear();
-        this.text.addAll(name);
+    public NPC setDisplayName(List<Component> name) {
+        for (int i = 0; i < name.size(); i++) {
+            hologram.replaceLine(i, name.get(i));
+        }
         return this;
     }
 
@@ -140,6 +159,7 @@ public abstract class AbstractNPC implements NPC {
 
         ready = true;
         visible = true;
+        hologram.show();
         return this;
     }
 
@@ -152,6 +172,7 @@ public abstract class AbstractNPC implements NPC {
         visible = false;
         ready = false;
         visibleTo.clear();
+        hologram.hide();
         return this;
     }
 

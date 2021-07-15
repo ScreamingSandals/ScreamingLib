@@ -3,6 +3,7 @@ package org.screamingsandals.lib.bukkit.npc;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitDataWatcher;
@@ -29,22 +30,10 @@ import java.util.List;
 public class BukkitNPC extends AbstractNPC {
     private final int id;
     private final BukkitDataWatcher dataWatcher;
-    /**
-     * hologram that displays the name of the entity
-     */
-    private final Hologram hologram;
 
     protected BukkitNPC(LocationHolder location) {
         super(location);
         id = EntityNMS.incrementAndGetId();
-
-        hologram = Hologram.of(location.clone().add(0, 1.50, 0));
-        if (isVisible()) {
-            hologram.show();
-        } else {
-            hologram.hide();
-        }
-
         dataWatcher = new BukkitDataWatcher(null);
         dataWatcher.register(DataWatcher.Item.of(SkinLayerValues.findLayerByVersion(), (byte) 127));
     }
@@ -52,17 +41,7 @@ public class BukkitNPC extends AbstractNPC {
     @Override
     public NPC setLocation(LocationHolder location) {
         super.setLocation(location);
-        hologram.setLocation(location.clone().add(0, 1.5D, 0));
         getViewers().forEach(viewer -> getTeleportPacket().sendPacket(viewer));
-        return this;
-    }
-
-    @Override
-    public NPC setDisplayName(List<TextEntry> name) {
-        super.setDisplayName(name);
-        for (int i = 0; i < name.size(); i++) {
-            hologram.replaceLine(i, name.get(i));
-        }
         return this;
     }
 
@@ -74,13 +53,13 @@ public class BukkitNPC extends AbstractNPC {
     @Override
     public void onViewerAdded(PlayerWrapper player) {
         sendSpawnPackets(player);
-        hologram.addViewer(player);
+        getHologram().addViewer(player);
     }
 
     @Override
     public void onViewerRemoved(PlayerWrapper player) {
         removeForPlayer(player);
-        hologram.removeViewer(player);
+        getHologram().removeViewer(player);
     }
 
     @Override
@@ -107,21 +86,18 @@ public class BukkitNPC extends AbstractNPC {
                 .setPlayersData(getNPCInfoData())
                 .sendPacket(player);
 
-        // send packet after a delay, weird fix for 1.9.4 and other legacy versions
-        Tasker.build(() -> {
-            PacketMapper.createPacket(SPacketPlayOutNamedEntitySpawn.class)
-                    .setEntityId(id)
-                    .setUUID(getUUID())
-                    .setPitch(getLocation().getPitch())
-                    .setYaw(getLocation().getYaw())
-                    .setLocation(getLocation())
-                    .setDataWatcher(dataWatcher)
-                    .sendPacket(player);
+        PacketMapper.createPacket(SPacketPlayOutNamedEntitySpawn.class)
+                .setEntityId(id)
+                .setUUID(getUUID())
+                .setPitch(getLocation().getPitch())
+                .setYaw(getLocation().getYaw())
+                .setLocation(getLocation())
+                .setDataWatcher(dataWatcher)
+                .sendPacket(player);
 
-            PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class)
-                    .setMetaData(id, dataWatcher, true)
-                    .sendPacket(player);
-        }).afterOneTick().start();
+        PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class)
+                .setMetaData(id, dataWatcher, true)
+                .sendPacket(player);
 
 
         Tasker.build(() -> {
@@ -153,16 +129,8 @@ public class BukkitNPC extends AbstractNPC {
     }
 
     @Override
-    public NPC show() {
-        super.show();
-        hologram.show();
-        return this;
-    }
-
-    @Override
     public NPC hide() {
         getViewers().forEach(this::removeForPlayer);
-        hologram.hide();
         super.hide();
         return this;
     }
