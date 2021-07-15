@@ -74,7 +74,7 @@ public class BukkitHologram extends AbstractHologram {
                 itemEntity.setRotation(checkAndAdd(itemEntity.getRotation()));
 
                 final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class)
-                        .setMetaData(itemEntity.getId(), itemEntity.getDataWatcher(), false);
+                        .setMetaData(itemEntity.getId(), itemEntity.getDataWatcher(), true);
 
                 viewers.forEach(player -> update(player, List.of(metadataPacket), false));
 
@@ -161,7 +161,7 @@ public class BukkitHologram extends AbstractHologram {
                         entityOnLine.setCustomName(value.getText());
 
                         final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class)
-                                .setMetaData(entityOnLine.getId(), entityOnLine.getDataWatcher(), false);
+                                .setMetaData(entityOnLine.getId(), entityOnLine.getDataWatcher(), true);
                         packets.add(metadataPacket);
 
                         entityOnLine.setCustomName(value.getText());

@@ -10,15 +10,18 @@ import org.screamingsandals.lib.utils.AdventureHelper;
 import java.util.UUID;
 
 public class FakeEntityNMS {
-    public final BukkitDataWatcher dataWatcher = new BukkitDataWatcher(null);
+    public final BukkitDataWatcher dataWatcher;
     private final int id;
-    private final UUID uuid = UUID.randomUUID();
+    private final UUID uuid;
     private Location location;
     private byte maskedByte = 0;
     private Component customName = Component.empty();
 
     public FakeEntityNMS(Location location) {
         id = EntityNMS.incrementAndGetId();
+        this.customName = Component.empty();
+        this.uuid = UUID.randomUUID();
+        this.dataWatcher = new BukkitDataWatcher(null);
         this.location = location;
         dataWatcher.register(DataWatcher.Item.of(0, (byte) 0));
         dataWatcher.register(DataWatcher.Item.of(1, 300));
