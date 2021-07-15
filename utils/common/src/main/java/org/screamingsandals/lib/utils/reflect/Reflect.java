@@ -2,7 +2,9 @@ package org.screamingsandals.lib.utils.reflect;
 
 import sun.reflect.ReflectionFactory;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
 
@@ -84,6 +86,11 @@ public class Reflect {
         }
         return new ClassMethod(null);
     }
+
+    public static ClassMethod getMethod(Method method) {
+        return new ClassMethod(method);
+    }
+
     public static InstanceMethod getMethod(Object instance, String names, Class<?>...params) {
         var method = getMethod(retrieveClasses(instance), names.split(","), params);
         return new InstanceMethod(instance, method.getMethod());
@@ -92,6 +99,10 @@ public class Reflect {
     public static InstanceMethod getMethod(Object instance, String[] names, Class<?>...params) {
         var method = getMethod(retrieveClasses(instance), names, params);
         return new InstanceMethod(instance, method.getMethod());
+    }
+
+    public static InstanceMethod getMethod(Object instance, Method method) {
+        return new InstanceMethod(instance, method);
     }
 
     public static InvocationResult getFieldResulted(Object instance, String names) {
@@ -104,6 +115,14 @@ public class Reflect {
 
     public static InvocationResult getFieldResulted(Class<?> clazz, String names) {
         return new InvocationResult(getField(clazz, names));
+    }
+
+    public static InvocationResult getFieldResulted(Field field) {
+        return new InvocationResult(getField(field));
+    }
+
+    public static InvocationResult getFieldResulted(Object instance, Field field) {
+        return new InvocationResult(getField(instance, field));
     }
 
 
@@ -159,6 +178,18 @@ public class Reflect {
         return null;
     }
 
+    public static Object getField(Field field) {
+        return getField(null, field);
+    }
+
+    public static Object getField(Object instance, Field field) {
+        try {
+            field.setAccessible(true);
+            return field.get(instance);
+        } catch (Throwable ignored) {}
+        return null;
+    }
+
     public static Object setField(Object instance, String names, Object set) {
         return setField(instance.getClass(), names.split(","), instance, set);
     }
@@ -198,6 +229,19 @@ public class Reflect {
                 } while ((clazz1 = clazz1.getSuperclass()) != null && clazz1 != Object.class);
             }
         }
+        return null;
+    }
+
+    public static Object setField(Field field, Object value) {
+        return setField(null, field, value);
+    }
+
+    public static Object setField(Object instance, Field field, Object value) {
+        try {
+            field.setAccessible(true);
+            field.set(instance, value);
+            return field.get(instance);
+        } catch (Throwable ignored) {}
         return null;
     }
 
@@ -247,6 +291,22 @@ public class Reflect {
         return method.invokeInstance(instance);
     }
 
+    public static Object fastInvoke(Method method) {
+        return getMethod(method).invokeStatic();
+    }
+
+    public static Object fastInvoke(Object instance, Method method) {
+        return getMethod(instance, method).invoke();
+    }
+
+    public static Object fastInvoke(Method method, Object... params) {
+        return fastInvoke(null, method, params);
+    }
+
+    public static Object fastInvoke(Object instance, Method method, Object... params) {
+        return getMethod(instance, method).invoke(params);
+    }
+
     public static InvocationResult fastInvokeResulted(Object instance, String names) {
         return fastInvokeResulted(instance, names.split(","));
     }
@@ -270,6 +330,22 @@ public class Reflect {
     public static InvocationResult fastInvokeResulted(Class<?> className, String[] names, Object instance) {
         ClassMethod method = getMethod(className, names);
         return method.invokeInstanceResulted(instance);
+    }
+
+    public static InvocationResult fastInvokeResulted(Method method) {
+        return getMethod(method).invokeStaticResulted();
+    }
+
+    public static InvocationResult fastInvokeResulted(Object instance, Method method) {
+        return getMethod(instance, method).invokeResulted();
+    }
+
+    public static InvocationResult fastInvokeResulted(Method method, Object... params) {
+        return fastInvokeResulted(null, method, params);
+    }
+
+    public static InvocationResult fastInvokeResulted(Object instance, Method method, Object... params) {
+        return getMethod(instance, method).invokeResulted(params);
     }
 
     public static List<Class<?>> retrieveClasses(Object instance) {
@@ -304,6 +380,10 @@ public class Reflect {
         return getClassSafe(className) != null;
     }
 
+    public static boolean has(Class<?> clazz) {
+        return clazz != null;
+    }
+
     public static boolean hasMethod(String className, String methodNames, Class<?>... arguments) {
         return getMethod(className, methodNames, arguments).getMethod() != null;
     }
@@ -327,6 +407,10 @@ public class Reflect {
         return new Constructor(null);
     }
 
+    public static Constructor constructor(java.lang.reflect.Constructor<?> constructor) {
+        return new Constructor(constructor);
+    }
+
     public static Object construct(String className) {
         return construct(getClassSafe(className));
     }
@@ -335,12 +419,20 @@ public class Reflect {
         return constructor(type).construct();
     }
 
+    public static Object construct(java.lang.reflect.Constructor<?> constructor, Object... params) {
+        return constructor(constructor).construct(params);
+    }
+
     public static InvocationResult constructResulted(String className) {
         return constructResulted(getClassSafe(className));
     }
 
     public static InvocationResult constructResulted(Class<?> type) {
         return constructor(type).constructResulted();
+    }
+
+    public static InvocationResult constructResulted(java.lang.reflect.Constructor<?> constructor, Object... params) {
+        return constructor(constructor).constructResulted(params);
     }
 
     // create objects without constructor

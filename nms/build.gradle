@@ -1,16 +1,24 @@
 apply plugin: 'org.screamingsandals.nms'
 
-dependencies {
-    api project(':utils-common')
-}
+sourceSets.main.java.srcDirs += 'src/generated/java'
 
 // after any changes, please run generateNmsComponents task
 
 nmsGen {
     basePackage = "org.screamingsandals.lib.nms.accessors"
+    sourceSet = "src/generated/java"
+    cleanOnRebuild = true
 
-    reqClass("com.mojang.math.Vector3f")
-        .reqField("x")
-        .reqField("y")
-        .reqField("z")
+    reqClass('net.minecraft.world.entity.EntityType')
+        .reqMethod('byString', String) // 1.14+
+        .reqMethod('searge:func_200713_a', String) // 1.13.X
+        .reqField('searge:field_191308_b') // 1.11 - 1.12.2
+        .reqField('searge:field_75624_e') // <= 1.10.2
+
+    reqClass('net.minecraft.core.Registry')
+        .reqField('ENTITY_TYPE')
+        .reqMethod('getId', Object)
+
+    reqClass('net.minecraft.core.MappedRegistry')
+        .reqMethod('searge:func_148757_b', Object)
 }

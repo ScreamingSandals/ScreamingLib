@@ -10,12 +10,16 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
+import org.screamingsandals.lib.nms.accessors.EntityTypeAccessor;
+import org.screamingsandals.lib.nms.accessors.MappedRegistryAccessor;
+import org.screamingsandals.lib.nms.accessors.RegistryAccessor;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ClassStorage {
@@ -287,6 +291,30 @@ public class ClassStorage {
 			} else {
 				return (int) Reflect.getFieldResulted(NMS.EntityTypes, "b").getMethod("a,func_148757_b", Object.class).invoke(entityNMS.getHandler().getClass());
 			}
+		}
+	}
+
+	public static int getEntityTypeId(String key, Class<?> clazz) {
+		var registry = Reflect.getFieldResulted(RegistryAccessor.getFieldENTITY_TYPE());
+
+		if (registry.isPresent()) {
+			// 1.14+
+			var optional = Reflect.fastInvoke(EntityTypeAccessor.getMethodByString1(), key);
+			if (optional instanceof Optional) {
+				return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
+			}
+
+			// 1.13.X
+			var nullable = Reflect.fastInvoke(EntityTypeAccessor.getMethodFunc_200713_a1(), key);
+			return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), nullable).asOptional(Integer.class).orElse(0);
+		} else {
+			// 1.11 - 1.12.2
+			if (EntityTypeAccessor.getFieldField_191308_b() != null) {
+				return Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_191308_b()).fastInvokeResulted(MappedRegistryAccessor.getMethodFunc_148757_b1(), clazz).asOptional(Integer.class).orElse(0);
+			}
+
+			// 1.9.4 - 1.10.2
+			return (int) Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_75624_e()).as(Map.class).get(clazz);
 		}
 	}
 }

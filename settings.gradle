@@ -7,7 +7,7 @@ include 'signs'
 include 'lang'
 include 'visuals-api'
 include 'results'
-//include 'nms'
+include 'nms'
 
 def registerModule(String name, String... platforms) {
     include(':' + name + '-common')

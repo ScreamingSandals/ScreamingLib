@@ -5,11 +5,11 @@ buildscript {
     }
     dependencies {
         classpath 'org.screamingsandals.gradle.builder:screaming-plugin-builder:' + SCREAMING_PLUGIN_BUILDER_VERSION
-        //classpath 'org.screamingsandals.nms:NMSMapper:' + NMS_MAPPER_VERSION
+        classpath 'org.screamingsandals.nms:NMSMapper:' + NMS_MAPPER_VERSION
     }
 }
 
-defaultTasks 'clean', 'screamCompile'//, 'allowJavadocUpload'
+defaultTasks 'clean', ':nms:generateNmsComponents', 'screamCompile'//, 'allowJavadocUpload'
 
 allprojects {
     group = 'org.screamingsandals.lib'

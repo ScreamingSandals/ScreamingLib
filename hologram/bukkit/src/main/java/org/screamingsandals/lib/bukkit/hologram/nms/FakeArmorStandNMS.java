@@ -75,6 +75,6 @@ public class FakeArmorStandNMS extends FakeEntityNMS {
 
     //TODO: misat pls do this xdd
     public int getTypeId() {
-        return 30;
+        return ClassStorage.getEntityTypeId("armor_stand", ClassStorage.NMS.EntityArmorStand);
     }
 }
