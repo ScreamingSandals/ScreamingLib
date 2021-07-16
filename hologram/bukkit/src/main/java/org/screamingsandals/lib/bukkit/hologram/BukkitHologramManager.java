@@ -22,6 +22,8 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -33,6 +35,7 @@ import java.util.UUID;
         ItemFactory.class
 })
 public class BukkitHologramManager extends HologramManager {
+    private final Map<UUID, Long> cooldownMap = new HashMap<>();
 
     @Deprecated //INTERNAL USE ONLY!
     public static void init(Plugin plugin, Controllable controllable) {
@@ -53,6 +56,15 @@ public class BukkitHologramManager extends HologramManager {
                                 if (hologram instanceof BukkitHologram) {
                                     final var textHologram = (BukkitHologram) hologram;
                                     if (textHologram.hasId(entityId)) {
+                                        synchronized (cooldownMap) {
+                                            if (cooldownMap.containsKey(sender.getUniqueId())) {
+                                                final var lastClick = cooldownMap.get(sender.getUniqueId());
+                                                if (System.currentTimeMillis() - lastClick < 2L) {
+                                                    break;
+                                                }
+                                            }
+                                            cooldownMap.put(sender.getUniqueId(), System.currentTimeMillis());
+                                        }
                                         // run synchronously
                                         Tasker.build(() -> EventManager.fire(new HologramTouchEvent(PlayerMapper.wrapPlayer(sender), hologram))).afterOneTick().start();
                                         break; // don't continue in iteration if we found the hologram
