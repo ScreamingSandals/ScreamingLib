@@ -11,6 +11,7 @@ import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.hologram.HologramManager;
 import org.screamingsandals.lib.hologram.event.HologramTouchEvent;
 import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.tasker.Tasker;
@@ -48,8 +49,8 @@ public class BukkitHologramManager extends HologramManager {
                 new AutoPacketInboundListener(plugin) {
                     @Override
                     protected Object handle(Player sender, Object packet) {
-                        if (ClassStorage.NMS.PacketPlayInUseEntity.isInstance(packet)) {
-                            final var entityId = (int) Reflect.getField(ClassStorage.NMS.PacketPlayInUseEntity, "a,field_149567_a", packet);
+                        if (ServerboundInteractPacketAccessor.getType().isInstance(packet)) {
+                            final var entityId = (int) Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldEntityId());
                             for (var entry : getActiveHolograms().entrySet()) {
                                 var id = entry.getKey();
                                 var hologram = entry.getValue();
