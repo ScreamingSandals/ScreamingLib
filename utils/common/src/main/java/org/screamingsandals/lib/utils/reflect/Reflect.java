@@ -2,10 +2,7 @@ package org.screamingsandals.lib.utils.reflect;
 
 import sun.reflect.ReflectionFactory;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
 import java.util.*;
 
 public class Reflect {
@@ -222,6 +219,11 @@ public class Reflect {
                     try {
                         var field = clazz1.getDeclaredField(name.trim());
                         field.setAccessible(true);
+                        Field modifiersField = Field.class.getDeclaredField("modifiers");
+                        modifiersField.setAccessible(true);
+                        int modifiers = modifiersField.getInt(field);
+                        modifiers &= ~Modifier.FINAL;
+                        modifiersField.setInt(field, modifiers);
                         field.set(instance, set);
                         return field.get(instance);
                     } catch (Throwable ignored2) {
@@ -438,8 +440,7 @@ public class Reflect {
     // create objects without constructor
     public static <T> T forceConstruct(Class<T> clazz) {
         try {
-            ReflectionFactory rf =
-                    ReflectionFactory.getReflectionFactory();
+            ReflectionFactory rf = ReflectionFactory.getReflectionFactory();
             java.lang.reflect.Constructor<?> objDef = Object.class.getDeclaredConstructor();
             java.lang.reflect.Constructor<?> intConstr = rf.newConstructorForSerialization(
                     clazz, objDef
