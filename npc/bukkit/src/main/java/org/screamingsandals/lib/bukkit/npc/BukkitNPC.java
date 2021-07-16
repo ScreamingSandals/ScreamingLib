@@ -3,14 +3,12 @@ package org.screamingsandals.lib.bukkit.npc;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitDataWatcher;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
 import org.screamingsandals.lib.entity.DataWatcher;
-import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.npc.AbstractNPC;
 import org.screamingsandals.lib.npc.NPC;
 import org.screamingsandals.lib.npc.NPCSkin;
@@ -20,7 +18,6 @@ import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.GameMode;
-import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Arrays;
@@ -68,25 +65,25 @@ public class BukkitNPC extends AbstractNPC {
     }
 
     private void sendSpawnPackets(PlayerWrapper player) {
-        PacketMapper.createPacket(SPacketPlayOutScoreboardTeam.class)
+        PacketMapper.createPacket(SClientboundSetPlayerTeamPacket.class)
                 .setTeamName(AdventureHelper.toComponent(getName()))
                 .setDisplayName(AdventureHelper.toComponent(getName()))
-                .setCollisionRule(SPacketPlayOutScoreboardTeam.CollisionRule.ALWAYS)
-                .setTagVisibility(SPacketPlayOutScoreboardTeam.TagVisibility.NEVER)
+                .setCollisionRule(SClientboundSetPlayerTeamPacket.CollisionRule.ALWAYS)
+                .setTagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility.NEVER)
                 .setTeamColor(TextColor.color(0, 0, 0))
                 .setTeamPrefix(Component.text(" "))
                 .setTeamSuffix(Component.text(" "))
                 .setFlags(false, true)
-                .setMode(SPacketPlayOutScoreboardTeam.Mode.CREATE)
+                .setMode(SClientboundSetPlayerTeamPacket.Mode.CREATE)
                 .setEntities(Collections.singletonList(getName()))
                 .sendPacket(player);
 
-        PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class)
-                .setAction(SPacketPlayOutPlayerInfo.Action.ADD_PLAYER)
+        PacketMapper.createPacket(SClientboundPlayerInfoPacket.class)
+                .setAction(SClientboundPlayerInfoPacket.Action.ADD_PLAYER)
                 .setPlayersData(getNPCInfoData())
                 .sendPacket(player);
 
-        PacketMapper.createPacket(SPacketPlayOutNamedEntitySpawn.class)
+        PacketMapper.createPacket(SClientboundAddPlayerPacket.class)
                 .setEntityId(id)
                 .setUUID(getUUID())
                 .setPitch(getLocation().getPitch())
@@ -95,23 +92,23 @@ public class BukkitNPC extends AbstractNPC {
                 .setDataWatcher(dataWatcher)
                 .sendPacket(player);
 
-        PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class)
+        PacketMapper.createPacket(SClientboundSetEntityDataPacket.class)
                 .setMetaData(id, dataWatcher, true)
                 .sendPacket(player);
 
 
         Tasker.build(() -> {
             //remove npc from TabList
-            PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class)
-                    .setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER)
+            PacketMapper.createPacket(SClientboundPlayerInfoPacket.class)
+                    .setAction(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
                     .setPlayersData(getNPCInfoData())
                     .sendPacket(player);
         }).delay(6L, TaskerTime.SECONDS).start();
     }
 
-    private SPacketPlayOutEntityDestroy getFullDestroyPacket() {
+    private SClientboundRemoveEntitiesPacket getFullDestroyPacket() {
         final int[] toRemove = { getEntityId() };
-        return PacketMapper.createPacket(SPacketPlayOutEntityDestroy.class)
+        return PacketMapper.createPacket(SClientboundRemoveEntitiesPacket.class)
                 .setEntitiesToDestroy(toRemove);
     }
 
@@ -122,8 +119,8 @@ public class BukkitNPC extends AbstractNPC {
         }
 
         getFullDestroyPacket().sendPacket(player);
-        PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class)
-                .setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER)
+        PacketMapper.createPacket(SClientboundPlayerInfoPacket.class)
+                .setAction(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
                 .setPlayersData(getNPCInfoData())
                 .sendPacket(player);
     }
@@ -141,21 +138,21 @@ public class BukkitNPC extends AbstractNPC {
         final var playerLocation = location.as(Location.class);
 
         Location direction = bukkitNPCLocation.clone().setDirection(playerLocation.clone().subtract(bukkitNPCLocation.clone()).toVector());
-        PacketMapper.createPacket(SPacketPlayOutEntityLook.class)
+        PacketMapper.createPacket(SClientboundMoveEntityPacket.Rot.class)
                 .setEntityId(getEntityId())
                 .setYaw((byte) (direction.getYaw() * 256.0F / 360.0F))
                 .setPitch((byte) (direction.getPitch() * 256.0F / 360.0F))
                 .setOnGround(true)
                 .sendPacket(player);
 
-        PacketMapper.createPacket(SPacketPlayOutEntityHeadRotation.class)
+        PacketMapper.createPacket(SClientboundRotateHeadPacket.class)
                 .setEntityId(getEntityId())
                 .setRotation((byte) (direction.getYaw() * 256.0F / 360.0F))
                 .sendPacket(player);
     }
 
-    private SPacketPlayOutEntityTeleport getTeleportPacket() {
-        return PacketMapper.createPacket(SPacketPlayOutEntityTeleport.class)
+    private SClientboundTeleportEntityPacket getTeleportPacket() {
+        return PacketMapper.createPacket(SClientboundTeleportEntityPacket.class)
                 .setEntityId(id)
                 .setLocation(getLocation())
                 .setIsOnGround(true);
@@ -163,8 +160,8 @@ public class BukkitNPC extends AbstractNPC {
 
     @Override
     public NPC setSkin(@Nullable NPCSkin skin) {
-        final var playerInfoPacket = PacketMapper.createPacket(SPacketPlayOutPlayerInfo.class)
-                .setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER)
+        final var playerInfoPacket = PacketMapper.createPacket(SClientboundPlayerInfoPacket.class)
+                .setAction(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
                 .setPlayersData(getNPCInfoData());
 
         getViewers().forEach(playerInfoPacket::sendPacket);
@@ -172,13 +169,13 @@ public class BukkitNPC extends AbstractNPC {
 
         super.setSkin(skin);
 
-        playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.ADD_PLAYER);
+        playerInfoPacket.setAction(SClientboundPlayerInfoPacket.Action.ADD_PLAYER);
         playerInfoPacket.setPlayersData(getNPCInfoData());
         getViewers().forEach(playerInfoPacket::sendPacket);
         getViewers().forEach(this::sendSpawnPackets);
 
         Tasker.build(() -> {
-            playerInfoPacket.setAction(SPacketPlayOutPlayerInfo.Action.REMOVE_PLAYER);
+            playerInfoPacket.setAction(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER);
             playerInfoPacket.setPlayersData(getNPCInfoData());
             getViewers().forEach(playerInfoPacket::sendPacket);
         }).delay(6L, TaskerTime.SECONDS).start();
@@ -186,8 +183,8 @@ public class BukkitNPC extends AbstractNPC {
         return this;
     }
 
-    private List<SPacketPlayOutPlayerInfo.PlayerInfoData> getNPCInfoData() {
-        return Collections.singletonList(new SPacketPlayOutPlayerInfo.PlayerInfoData(
+    private List<SClientboundPlayerInfoPacket.PlayerInfoData> getNPCInfoData() {
+        return Collections.singletonList(new SClientboundPlayerInfoPacket.PlayerInfoData(
                 1,
                 GameMode.SURVIVAL,
                 AdventureHelper.toComponent(getName()),

@@ -126,50 +126,50 @@ public class BukkitSidebar extends AbstractSidebar {
 
     // INTERNAL METHODS
 
-    private SPacketPlayOutScoreboardObjective getCreateObjectivePacket(PlayerWrapper player) {
+    private SClientboundSetObjectivePacket getCreateObjectivePacket(PlayerWrapper player) {
         var packet = getNotFinalObjectivePacket(player);
-        packet.setMode(SPacketPlayOutScoreboardObjective.Mode.CREATE);
+        packet.setMode(SClientboundSetObjectivePacket.Mode.CREATE);
         return packet;
     }
 
-    private SPacketPlayOutScoreboardObjective getUpdateObjectivePacket(PlayerWrapper player) {
+    private SClientboundSetObjectivePacket getUpdateObjectivePacket(PlayerWrapper player) {
         var packet = getNotFinalObjectivePacket(player);
-        packet.setMode(SPacketPlayOutScoreboardObjective.Mode.UPDATE);
+        packet.setMode(SClientboundSetObjectivePacket.Mode.UPDATE);
         return packet;
     }
 
-    private SPacketPlayOutScoreboardObjective getNotFinalObjectivePacket(PlayerWrapper player) {
-        return PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class)
+    private SClientboundSetObjectivePacket getNotFinalObjectivePacket(PlayerWrapper player) {
+        return PacketMapper.createPacket(SClientboundSetObjectivePacket.class)
                 .setObjectiveKey(objectiveKey)
                 .setTitle(title.asComponent(player))
-                .setCriteria(SPacketPlayOutScoreboardObjective.Type.INTEGER);
+                .setCriteria(SClientboundSetObjectivePacket.Type.INTEGER);
     }
 
-    private SPacketPlayOutScoreboardObjective getDestroyObjectivePacket() {
-        return PacketMapper.createPacket(SPacketPlayOutScoreboardObjective.class)
+    private SClientboundSetObjectivePacket getDestroyObjectivePacket() {
+        return PacketMapper.createPacket(SClientboundSetObjectivePacket.class)
                 .setObjectiveKey(objectiveKey)
-                .setMode(SPacketPlayOutScoreboardObjective.Mode.DESTROY);
+                .setMode(SClientboundSetObjectivePacket.Mode.DESTROY);
     }
 
-    private SPacketPlayOutScoreboardDisplayObjective getDisplayObjectivePacket() {
-        return PacketMapper.createPacket(SPacketPlayOutScoreboardDisplayObjective.class)
+    private SClientboundSetDisplayObjectivePacket getDisplayObjectivePacket() {
+        return PacketMapper.createPacket(SClientboundSetDisplayObjectivePacket.class)
                 .setObjectiveKey(objectiveKey)
-                .setDisplaySlot(SPacketPlayOutScoreboardDisplayObjective.DisplaySlot.SIDEBAR);
+                .setDisplaySlot(SClientboundSetDisplayObjectivePacket.DisplaySlot.SIDEBAR);
     }
 
-    private SPacketPlayOutScoreboardScore getCreateScorePacket(int i, String value) {
-        return PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class)
+    private SClientboundSetScorePacket getCreateScorePacket(int i, String value) {
+        return PacketMapper.createPacket(SClientboundSetScorePacket.class)
                 .setValue(Component.text(value))
                 .setObjectiveKey(objectiveKey)
                 .setScore(i)
-                .setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.CHANGE);
+                .setAction(SClientboundSetScorePacket.ScoreboardAction.CHANGE);
     }
 
-    private SPacketPlayOutScoreboardScore destroyScore(String value) {
-        return PacketMapper.createPacket(SPacketPlayOutScoreboardScore.class)
+    private SClientboundSetScorePacket destroyScore(String value) {
+        return PacketMapper.createPacket(SClientboundSetScorePacket.class)
                 .setValue(Component.text(value))
                 .setObjectiveKey(objectiveKey)
-                .setAction(SPacketPlayOutScoreboardScore.ScoreboardAction.REMOVE);
+                .setAction(SClientboundSetScorePacket.ScoreboardAction.REMOVE);
     }
 
     public String makeUnique(String toUnique, List<String> from) {

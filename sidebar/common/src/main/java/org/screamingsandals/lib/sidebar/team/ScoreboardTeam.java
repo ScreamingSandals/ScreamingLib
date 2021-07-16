@@ -2,7 +2,7 @@ package org.screamingsandals.lib.sidebar.team;
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import org.screamingsandals.lib.packet.SPacketPlayOutScoreboardTeam;
+import org.screamingsandals.lib.packet.SClientboundSetPlayerTeamPacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 import java.util.List;
@@ -21,9 +21,9 @@ public interface ScoreboardTeam extends ForwardingAudience {
 
     ScoreboardTeam seeInvisible(boolean seeInvisible);
 
-    ScoreboardTeam nameTagVisibility(SPacketPlayOutScoreboardTeam.TagVisibility nameTagVisibility);
+    ScoreboardTeam nameTagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility nameTagVisibility);
 
-    ScoreboardTeam collisionRule(SPacketPlayOutScoreboardTeam.CollisionRule collisionRule);
+    ScoreboardTeam collisionRule(SClientboundSetPlayerTeamPacket.CollisionRule collisionRule);
 
     ScoreboardTeam player(PlayerWrapper player);
 
@@ -43,9 +43,9 @@ public interface ScoreboardTeam extends ForwardingAudience {
 
     boolean seeInvisible();
 
-    SPacketPlayOutScoreboardTeam.TagVisibility nameTagVisibility();
+    SClientboundSetPlayerTeamPacket.TagVisibility nameTagVisibility();
 
-    SPacketPlayOutScoreboardTeam.CollisionRule collisionRule();
+    SClientboundSetPlayerTeamPacket.CollisionRule collisionRule();
 
     List<PlayerWrapper> players();
 

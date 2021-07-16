@@ -27,7 +27,7 @@ nmsGen {
     reqClass('net.minecraft.core.MappedRegistry')
         .reqMethod('searge:func_148757_b', Object)
 
-    reqClass('net.minecraft.world.entity.Entity')
+    var Entity = reqClass('net.minecraft.world.entity.Entity')
         .reqMethod('getEntityData') // DataWatcher
         .reqMethod('getCommandSenderWorld') // world
         .reqMethod('getX')
@@ -54,7 +54,6 @@ nmsGen {
         .reqField('searge:field_70159_w') // velocity x
         .reqField('searge:field_70181_x') // velocity y
         .reqField('searge:field_70179_y') // velocity z
-
         .reqField('searge:field_70152_a')
         .reqField('onGround')
         .reqField('id')
@@ -65,7 +64,6 @@ nmsGen {
         .reqField('searge:field_70163_u') // locY
         .reqField('searge:field_70161_v') // locZ
         .reqField('searge:field_70170_p') // world
-
 
     reqClass('net.minecraft.network.chat.Component$Serializer')
         .reqMethod('searge:m_130701_', String)
@@ -100,4 +98,236 @@ nmsGen {
 
     reqClass('net.minecraft.server.level.ServerPlayer')
             .reqField('connection')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundAnimatePacket')
+            .reqField('id')
+            .reqField('action')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket')
+            .reqField('id')
+            .reqField('pos')
+            .reqField('progress')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundBlockEventPacket')
+            .reqField('pos')
+            .reqField('b0')
+            .reqField('b1')
+            .reqField('block')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket')
+        .reqField('pos')
+        .reqField('blockState')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundContainerClosePacket')
+        .reqField('containerId')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket')
+        .reqField('invulnerable')
+        .reqField('isFlying')
+        .reqField('canFly')
+        .reqField('instabuild')
+        .reqField('flyingSpeed')
+        .reqField('walkingSpeed')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket')
+            .reqField('entityIds')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetCameraPacket')
+        .reqField('cameraId')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket')
+        .reqField('sourceId')
+        .reqField('destId')
+
+    reqClass('net.minecraft.core.BlockPos')
+        .reqConstructor(double, double, double)
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket')
+        .reqField('itemId')
+        .reqField('playerId')
+        .reqField('amount')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket')
+        .reqField('entityId')
+        .reqField('effectId')
+        .reqField('effectAmplifier')
+        .reqField('effectDurationTicks')
+        .reqField('flags')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket')
+        .reqField('entity')
+        .reqField('slots')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundRotateHeadPacket')
+        .reqField('entityId')
+        .reqField('yHeadRot')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket')
+        .reqField('entityId')
+        .reqField('xa')
+        .reqField('ya')
+        .reqField('za')
+        .reqField('yRot')
+        .reqField('xRot')
+        .reqField('onGround')
+        .reqField('hasRot')
+        .reqField('hasPos')
+
+    var SynchedEntityData = reqClass('net.minecraft.network.syncher.SynchedEntityData')
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket')
+        .reqConstructor(int, SynchedEntityData, boolean)
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundEntityEventPacket')
+        .reqField('entityId')
+        .reqField('eventId')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket')
+        .reqField('id')
+        .reqField('x')
+        .reqField('y')
+        .reqField('z')
+        .reqField('yRot')
+        .reqField('xRot')
+        .reqField('onGround')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket')
+        .reqField('id')
+        .reqField('xa')
+        .reqField('ya')
+        .reqField('za')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetExperiencePacket')
+        .reqField('experienceProgress')
+        .reqField('totalExperience')
+        .reqField('experienceLevel')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundExplodePacket')
+        .reqField('x')
+        .reqField('y')
+        .reqField('z')
+        .reqField('power')
+        .reqField('toBlow')
+        .reqField('knockbackX')
+        .reqField('knockbackY')
+        .reqField('knockbackZ')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket')
+        .reqField('slot')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundKeepAlivePacket')
+        .reqField('id')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundDisconnectPacket')
+        .reqField('reason')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundAddPlayerPacket')
+        .reqField('entityId')
+        .reqField('playerId')
+        .reqField('x')
+        .reqField('y')
+        .reqField('z')
+        .reqField('yRot')
+        .reqField('xRot')
+        .reqField('searge:field_148960_i')  // DataWatcher
+        .reqField('searge:field_148958_j') // DataWatcher items
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket')
+        .reqField('action')
+        .reqField('entries')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket$Action')
+
+    reqClass('net.minecraft.world.level.GameType')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket$PlayerUpdate')
+        .reqField('latency')
+        .reqField('gameMode')
+        .reqField('profile')
+        .reqField('displayName')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundTabListPacket')
+        .reqField('header')
+        .reqField('footer')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket')
+        .reqField('entityId')
+        .reqField('effect')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket')
+        .reqField('slot')
+        .reqField('objectiveName')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetObjectivePacket')
+        .reqField('objectiveName')
+        .reqField('displayName')
+        .reqField('renderType')
+        .reqField('method')
+
+    reqClass('net.minecraft.world.scores.criteria.ObjectiveCriteria$RenderType')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetScorePacket')
+        .reqField('owner')
+        .reqField('objectiveName')
+        .reqField('score')
+        .reqField('method')
+
+    reqClass('net.minecraft.server.ServerScoreboard$Method')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundAddMobPacket')
+        .reqField('id')
+        .reqField('uuid')
+        .reqField('type')
+        .reqField('x')
+        .reqField('y')
+        .reqField('z')
+        .reqField('xd')
+        .reqField('yd')
+        .reqField('zd')
+        .reqField('yRot')
+        .reqField('xRot')
+        .reqField('yHeadRot')
+        .reqField('searge:field_149043_l') // DataWatcher
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundAddEntityPacket')
+            .reqField('id')
+            .reqField('uuid')
+            .reqField('type')
+            .reqField('x')
+            .reqField('y')
+            .reqField('z')
+            .reqField('xa')
+            .reqField('ya')
+            .reqField('za')
+            .reqField('yRot')
+            .reqField('xRot')
+            .reqField('data')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket')
+        .reqField('x')
+        .reqField('z')
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket')
+        .reqField('method')
+        .reqField('name')
+        .reqField('players')
+        .reqField('parameters')
+        .reqField('searge:field_149315_g') // flags
+        .reqField('searge:field_179816_e') // tag visibility
+        .reqField('searge:field_179815_f') // color
+        .reqField('searge:field_207509_c') // prefix
+        .reqField('searge:field_207510_d') // suffix
+        .reqField('searge:field_149318_b') // display name
+        .reqField('searge:field_186976_f') // collision rule
+
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket$Parameters')
+        .reqField('displayName')
+        .reqField('playerPrefix')
+        .reqField('playerSuffix')
+        .reqField('nametagVisibility')
+        .reqField('collisionRule')
+        .reqField('color')
+        .reqField('options')
+
+    reqClass('net.minecraft.ChatFormatting')
+        .reqField('WHITE')
 }

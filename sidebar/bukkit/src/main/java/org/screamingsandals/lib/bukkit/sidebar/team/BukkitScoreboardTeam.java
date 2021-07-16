@@ -2,7 +2,7 @@ package org.screamingsandals.lib.bukkit.sidebar.team;
 
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.packet.PacketMapper;
-import org.screamingsandals.lib.packet.SPacketPlayOutScoreboardTeam;
+import org.screamingsandals.lib.packet.SClientboundSetPlayerTeamPacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.sidebar.TeamedSidebar;
@@ -31,7 +31,7 @@ public class BukkitScoreboardTeam extends AbstractScoreboardTeam {
     @Override
     protected void updateInfo() {
         if (scoreboard.isShown() && scoreboard.hasViewers()) {
-            var packet = getNotFinalScoreboardTeamPacket(SPacketPlayOutScoreboardTeam.Mode.UPDATE);
+            var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.UPDATE);
             packInfo(packet);
             scoreboard.getViewers().forEach(packet::sendPacket);
         }
@@ -40,7 +40,7 @@ public class BukkitScoreboardTeam extends AbstractScoreboardTeam {
     @Override
     protected void sendAddPlayer(PlayerWrapper player) {
         if (scoreboard.isShown() && scoreboard.hasViewers()) {
-            var packet = getNotFinalScoreboardTeamPacket(SPacketPlayOutScoreboardTeam.Mode.ADD_ENTITY);
+            var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.ADD_ENTITY);
             packPlayers(packet, List.of(player));
             scoreboard.getViewers().forEach(packet::sendPacket);
         }
@@ -49,7 +49,7 @@ public class BukkitScoreboardTeam extends AbstractScoreboardTeam {
     @Override
     protected void sendRemovePlayer(PlayerWrapper player) {
         if (scoreboard.isShown() && scoreboard.hasViewers()) {
-            var packet = getNotFinalScoreboardTeamPacket(SPacketPlayOutScoreboardTeam.Mode.REMOVE_ENTITY);
+            var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.REMOVE_ENTITY);
             packPlayers(packet, List.of(player));
             scoreboard.getViewers().forEach(packet::sendPacket);
         }
@@ -63,24 +63,24 @@ public class BukkitScoreboardTeam extends AbstractScoreboardTeam {
         }
     }
 
-    public SPacketPlayOutScoreboardTeam constructDestructPacket() {
-        return getNotFinalScoreboardTeamPacket(SPacketPlayOutScoreboardTeam.Mode.REMOVE);
+    public SClientboundSetPlayerTeamPacket constructDestructPacket() {
+        return getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.REMOVE);
     }
 
-    private SPacketPlayOutScoreboardTeam getNotFinalScoreboardTeamPacket(SPacketPlayOutScoreboardTeam.Mode mode) {
-        return PacketMapper.createPacket(SPacketPlayOutScoreboardTeam.class)
+    private SClientboundSetPlayerTeamPacket getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode mode) {
+        return PacketMapper.createPacket(SClientboundSetPlayerTeamPacket.class)
                 .setTeamName(teamKey)
                 .setMode(mode);
     }
 
-    public SPacketPlayOutScoreboardTeam constructCreatePacket() {
-        var packet = getNotFinalScoreboardTeamPacket(SPacketPlayOutScoreboardTeam.Mode.CREATE);
+    public SClientboundSetPlayerTeamPacket constructCreatePacket() {
+        var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.CREATE);
         packInfo(packet);
         packPlayers(packet, players);
         return packet;
     }
 
-    private void packInfo(SPacketPlayOutScoreboardTeam packet) {
+    private void packInfo(SClientboundSetPlayerTeamPacket packet) {
         packet.setDisplayName(displayName);
         packet.setFlags(friendlyFire, seeInvisible);
         packet.setTagVisibility(nameTagVisibility);
@@ -90,7 +90,7 @@ public class BukkitScoreboardTeam extends AbstractScoreboardTeam {
         packet.setTeamSuffix(teamSuffix);
     }
 
-    private void packPlayers(SPacketPlayOutScoreboardTeam packet, List<PlayerWrapper> players) {
+    private void packPlayers(SClientboundSetPlayerTeamPacket packet, List<PlayerWrapper> players) {
         packet.setEntities(players.stream().map(SenderWrapper::getName).collect(Collectors.toList()));
     }
 }

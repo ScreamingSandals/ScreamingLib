@@ -20,13 +20,10 @@ public abstract class BukkitSPacket implements SPacket {
         packet = new InvocationResult(Reflect.forceConstruct(packetClass));
     }
 
-    public BukkitSPacket() {}
-
-    public void addAdditionalPacket(InvocationResult packet) {
-        addAdditionalPacket(packet.raw());
-    }
-
     public void addAdditionalPacket(Object packet) {
+        if (packet instanceof InvocationResult) {
+            packet = ((InvocationResult) packet).raw();
+        }
         additionalPackets.add(packet);
     }
 

@@ -73,7 +73,7 @@ public class BukkitHologram extends AbstractHologram {
 
                 itemEntity.setRotation(checkAndAdd(itemEntity.getRotation()));
 
-                final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class)
+                final var metadataPacket = PacketMapper.createPacket(SClientboundSetEntityDataPacket.class)
                         .setMetaData(itemEntity.getId(), itemEntity.getDataWatcher(), true);
 
                 viewers.forEach(player -> update(player, List.of(metadataPacket), false));
@@ -160,7 +160,7 @@ public class BukkitHologram extends AbstractHologram {
 
                         entityOnLine.setCustomName(value.getText());
 
-                        final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class)
+                        final var metadataPacket = PacketMapper.createPacket(SClientboundSetEntityDataPacket.class)
                                 .setMetaData(entityOnLine.getId(), entityOnLine.getDataWatcher(), true);
                         packets.add(metadataPacket);
 
@@ -222,7 +222,7 @@ public class BukkitHologram extends AbstractHologram {
                 });
             }
 
-            final var destroyPacket = PacketMapper.createPacket(SPacketPlayOutEntityDestroy.class);
+            final var destroyPacket = PacketMapper.createPacket(SClientboundRemoveEntitiesPacket.class);
             int[] arr = toRemove
                     .stream()
                     .mapToInt(i -> i)
@@ -243,14 +243,14 @@ public class BukkitHologram extends AbstractHologram {
         viewers.forEach(viewer -> update(viewer, packets, true));
     }
 
-    private SPacketPlayOutEntityEquipment getEquipmentPacket(FakeArmorStandNMS entity, Item item) {
-        return PacketMapper.createPacket(SPacketPlayOutEntityEquipment.class)
+    private SClientboundSetEquipmentPacket getEquipmentPacket(FakeArmorStandNMS entity, Item item) {
+        return PacketMapper.createPacket(SClientboundSetEquipmentPacket.class)
                 .setEntityId(entity.getId())
-                .setItemAndSlot(item, SPacketPlayOutEntityEquipment.Slot.HEAD);
+                .setItemAndSlot(item, SClientboundSetEquipmentPacket.Slot.HEAD);
     }
 
-    private SPacketPlayOutEntityTeleport getTeleportPacket(FakeArmorStandNMS entity) {
-        return PacketMapper.createPacket(SPacketPlayOutEntityTeleport.class)
+    private SClientboundTeleportEntityPacket getTeleportPacket(FakeArmorStandNMS entity) {
+        return PacketMapper.createPacket(SClientboundTeleportEntityPacket.class)
                 .setEntityId(entity.getId())
                 .setLocation(LocationMapper.wrapLocation(entity.getLocation()))
                 .setIsOnGround(entity.isOnGround());
@@ -259,26 +259,24 @@ public class BukkitHologram extends AbstractHologram {
     private List<SPacket> getSpawnPacket(FakeArmorStandNMS entity) {
         final var toReturn = new LinkedList<SPacket>();
 
-        final var spawnPacket = PacketMapper.createPacket(SPacketPlayOutSpawnEntityLiving.class)
+        final var spawnPacket = PacketMapper.createPacket(SClientboundAddMobPacket.class)
                 .setEntityId(entity.getId())
                 .setUUID(entity.getUuid())
                 .setType(entity.getTypeId())
-                .setPitch(entity.getLocation().getPitch())
-                .setYaw(entity.getLocation().getYaw())
                 .setVelocity(new Vector3D(0,0,0))
-                .setHeadYaw(3.9f)
+                .setHeadYaw((byte) 3.9f)
                 .setLocation(LocationMapper.wrapLocation(entity.getLocation()))
                 .setDataWatcher(entity.getDataWatcher());
         toReturn.add(spawnPacket);
 
-        final var metadataPacket = PacketMapper.createPacket(SPacketPlayOutEntityMetadata.class);
+        final var metadataPacket = PacketMapper.createPacket(SClientboundSetEntityDataPacket.class);
         metadataPacket.setMetaData(entity.getId(), entity.getDataWatcher(), true);
         toReturn.add(metadataPacket);
 
         return toReturn;
     }
 
-    private SPacketPlayOutEntityDestroy getFullDestroyPacket() throws IllegalArgumentException, SecurityException {
+    private SClientboundRemoveEntitiesPacket getFullDestroyPacket() throws IllegalArgumentException, SecurityException {
         final var lines = entitiesOnLines.values()
                 .stream()
                 .map(FakeEntityNMS::getId);
@@ -292,7 +290,7 @@ public class BukkitHologram extends AbstractHologram {
             toRemove = lines.mapToInt(i -> i).toArray();
         }
 
-        final var destroyPacket = PacketMapper.createPacket(SPacketPlayOutEntityDestroy.class);
+        final var destroyPacket = PacketMapper.createPacket(SClientboundRemoveEntitiesPacket.class);
         if (toRemove != null && toRemove.length > 0) {
             destroyPacket.setEntitiesToDestroy(toRemove);
         }
