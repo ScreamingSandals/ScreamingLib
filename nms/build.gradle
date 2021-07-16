@@ -173,7 +173,15 @@ nmsGen {
         .reqField('hasRot')
         .reqField('hasPos')
 
+    var EntityDataSerializers = reqClass('net.minecraft.network.syncher.EntityDataSerializers')
+    var EntityDataAccessor = reqClass('net.minecraft.network.syncher.EntityDataAccessor')
+        .reqConstructor(int, EntityDataSerializers)
+
     var SynchedEntityData = reqClass('net.minecraft.network.syncher.SynchedEntityData')
+        .reqMethod('createDataItem', EntityDataAccessor, Object)
+        .reqMethod('set', EntityDataAccessor, Object)
+        .reqMethod('get', EntityDataAccessor)
+
     reqClass('net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket')
         .reqConstructor(int, SynchedEntityData, boolean)
 
@@ -335,4 +343,12 @@ nmsGen {
         .reqField('entityId')
         .reqField('action')
         .reqField('ATTACK_ACTION')
+
+    reqClass('net.minecraft.network.syncher.EntityDataSerializers')
+        .reqField('BYTE')
+        .reqField('INT')
+        .reqField('FLOAT')
+        .reqField('STRING')
+        .reqField('ROTATIONS')
+        .reqField('BOOLEAN')
 }

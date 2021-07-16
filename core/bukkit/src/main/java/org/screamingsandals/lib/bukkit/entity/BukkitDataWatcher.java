@@ -3,8 +3,14 @@ import org.bukkit.entity.Entity;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.DataWatcher;
 import org.screamingsandals.lib.entity.EntityBasic;
+import org.screamingsandals.lib.nms.accessors.EntityAccessor;
+import org.screamingsandals.lib.nms.accessors.EntityDataAccessorAccessor;
+import org.screamingsandals.lib.nms.accessors.EntityDataSerializersAccessor;
+import org.screamingsandals.lib.nms.accessors.SynchedEntityDataAccessor;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.Reflect;
+
+import java.sql.Ref;
 
 public class BukkitDataWatcher extends DataWatcher {
     private final Object dataWatcher;
@@ -17,16 +23,16 @@ public class BukkitDataWatcher extends DataWatcher {
     public static final Object VECTOR3DF_SERIALIZER;
 
     private static Object getNewDataWatcherObject() {
-        return Reflect.constructor(ClassStorage.NMS.DataWatcher, ClassStorage.NMS.Entity).construct((Object) null);
+        return Reflect.constructor(SynchedEntityDataAccessor.getType(), EntityAccessor.getType()).construct((Object) null);
     }
 
     static {
-        BYTE_SERIALIZER = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, "a,field_187191_a");
-        INTEGER_SERIALIZER = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, "b,field_187192_b");
-        FLOAT_SERIALIZER = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, "c,field_187193_c");
-        STRING_SERIALIZER = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, "d,field_187194_d");
-        BOOLEAN_SERIALIZER = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, "h,field_187198_h");
-        VECTOR3DF_SERIALIZER = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, "i,field_187199_i");
+        BYTE_SERIALIZER = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, EntityDataSerializersAccessor.getFieldBYTE());
+        INTEGER_SERIALIZER = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, EntityDataSerializersAccessor.getFieldINT());
+        FLOAT_SERIALIZER = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, EntityDataSerializersAccessor.getFieldFLOAT());
+        STRING_SERIALIZER = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, EntityDataSerializersAccessor.getFieldSTRING());
+        BOOLEAN_SERIALIZER = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, EntityDataSerializersAccessor.getFieldBOOLEAN());
+        VECTOR3DF_SERIALIZER = Reflect.getField(ClassStorage.NMS.DataWatcherRegistry, EntityDataSerializersAccessor.getFieldROTATIONS());
     }
 
     public static Object getSerializerOfType(Object query) {
@@ -78,29 +84,25 @@ public class BukkitDataWatcher extends DataWatcher {
 
     @Override
     public <T> void register(DataWatcher.Item<T> item) {
-        Reflect.getMethod(dataWatcher, "registerObject,func_187222_c",  ClassStorage.NMS.DataWatcherObject, Object.class)
-                .invoke(getDataWatcherObject(item.getIndex(), getSerializerOfType(item.getValue())), item.getValue());
+        Reflect.fastInvoke(dataWatcher, SynchedEntityDataAccessor.getMethodCreateDataItem1(), getDataWatcherObject(item.getIndex(), getSerializerOfType(item.getValue())), item.getValue());
     }
 
     @Override
     public <T> void set(Item<T> item) {
-        Reflect.getMethod(dataWatcher, "set,func_187227_b",  ClassStorage.NMS.DataWatcherObject, Object.class)
-                .invoke(getDataWatcherObject(item.getIndex(), getSerializerOfType(item.getValue())), item.getValue());
+        Reflect.fastInvoke(dataWatcher, SynchedEntityDataAccessor.getMethodSet1(), getDataWatcherObject(item.getIndex(), getSerializerOfType(item.getValue())), item.getValue());
     }
 
     @Override
     public Object get(int index, Object serializer) {
-        Reflect.getMethod(dataWatcher, "get,func_187225_a", ClassStorage.NMS.DataWatcherObject)
-                .invoke(getDataWatcherObject(index, serializer));
-        return null;
+        return Reflect.fastInvoke(dataWatcher, SynchedEntityDataAccessor.getMethodGet1(), getDataWatcherObject(index, serializer));
     }
 
     protected Object getDataWatcherObject(int index, Object serializer) {
         if (serializer == null) {
             throw new UnsupportedOperationException("Invalid serializer provided!");
         }
-        return Reflect.constructor(ClassStorage.NMS.DataWatcherObject, int.class, ClassStorage.NMS.DataWatcherSerializer)
-                .construct(index, serializer);
+
+        return Reflect.construct(EntityDataAccessorAccessor.getConstructor0(), index, serializer);
     }
 
     public Object toNMS() {
