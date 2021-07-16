@@ -330,4 +330,9 @@ nmsGen {
 
     reqClass('net.minecraft.ChatFormatting')
         .reqField('WHITE')
+
+    reqClass('net.minecraft.network.protocol.game.ServerboundInteractPacket')
+        .reqField('entityId')
+        .reqField('action')
+        .reqField('ATTACK_ACTION')
 }

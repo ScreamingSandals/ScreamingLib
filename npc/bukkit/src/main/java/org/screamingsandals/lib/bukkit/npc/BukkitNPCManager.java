@@ -8,6 +8,7 @@ import org.screamingsandals.lib.bukkit.utils.nms.network.AutoPacketInboundListen
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.hologram.AbstractHologram;
+import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;
 import org.screamingsandals.lib.npc.AbstractNPC;
 import org.screamingsandals.lib.npc.NPCManager;
 import org.screamingsandals.lib.npc.event.NPCInteractEvent;
@@ -44,12 +45,13 @@ public class BukkitNPCManager extends NPCManager {
             new AutoPacketInboundListener(plugin) {
                 @Override
                 protected Object handle(Player p, Object packet) {
-                    if (ClassStorage.NMS.PacketPlayInUseEntity.isInstance(packet)) {
-                        final var entityId = (int) Reflect.getField(packet, "a,field_149567_a");
-                        final var nmsEnum = Reflect.getField(packet, "b,action,field_149566_b");
+                    if (ServerboundInteractPacketAccessor.getType().isInstance(packet)) {
+                        final var entityId = (int) Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldEntityId());
+                        final var nmsEnum = Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldAction());
+
                         final var attackEnum = Reflect.findEnumConstant(ClassStorage.NMS.PacketPlayInUseEntityActionType, "b,ATTACK");
-                                                                                                                                        // temporary fix smh
-                        NPCInteractEvent.InteractType interactType = nmsEnum == attackEnum  || nmsEnum.toString().equalsIgnoreCase("net.minecraft.network.protocol.game.PacketPlayInUseEntity$1@5327f6c8")
+                                                                                                                                              // temporary fix smh
+                        NPCInteractEvent.InteractType interactType = nmsEnum == attackEnum  || nmsEnum == Reflect.getField(ServerboundInteractPacketAccessor.getFieldATTACK_ACTION())
                                 ?  NPCInteractEvent.InteractType.LEFT_CLICK : NPCInteractEvent.InteractType.RIGHT_CLICK;
 
                         for (var npc : getActiveNPCS().values()) {
