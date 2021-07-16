@@ -6,7 +6,6 @@ import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.*;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 import org.screamingsandals.lib.utils.annotations.parameters.ProvidedBy;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ElementKind;
@@ -154,22 +153,27 @@ public class MiscUtils {
             throw new UnsupportedOperationException("Pattern in @AbstractMapping annotation of " + typeElement.getQualifiedName() + " is invalid");
         }
 
-        var namedGroups = (Map<String, Integer>) Reflect.fastInvoke(pattern, "namedGroups");
+        var sb = new StringBuilder();
+        var pattern2 = Pattern.compile("(\\{[^}]+})");
+        var matcher2 = pattern2.matcher(mappingAnnotation.replaceRule());
 
-        var resolvedGroups = namedGroups.keySet()
-                .stream()
-                .collect(Collectors.toMap(s -> s, matcher::group));
+        while (matcher2.find()) {
+            var g = matcher2.group(1);
+            try {
+                var repString = matcher.group(g.substring(1, g.length() - 1));
+                if (repString != null) {
+                    matcher2.appendReplacement(sb, repString);
+                }
+            } catch (IllegalArgumentException ignored) { }
+        }
+        matcher2.appendTail(sb);
 
         var map = new HashMap<PlatformType, ServiceContainer>();
 
-        var rule = mappingAnnotation.replaceRule();
-        for (var resolved : resolvedGroups.entrySet()) {
-            rule = rule.replaceAll("\\{" + resolved.getKey() + "}", resolved.getValue());
-        }
-        final var finalRule = rule;
+        final var rule = sb.toString();
 
         platformTypes.forEach(platformType -> {
-            var resolvedClassName = finalRule
+            var resolvedClassName = rule
                     .replaceAll("\\{platform}", platformType.name().toLowerCase())
                     .replaceAll("\\{Platform}", platformType.name().substring(0, 1).toUpperCase() + platformType.name().substring(1).toLowerCase());
 
