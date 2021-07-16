@@ -10,8 +10,6 @@ import org.screamingsandals.lib.nms.accessors.SynchedEntityDataAccessor;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.sql.Ref;
-
 public class BukkitDataWatcher extends DataWatcher {
     private final Object dataWatcher;
 
