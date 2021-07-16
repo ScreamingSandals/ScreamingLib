@@ -178,6 +178,7 @@ nmsGen {
         .reqConstructor(int, EntityDataSerializers)
 
     var SynchedEntityData = reqClass('net.minecraft.network.syncher.SynchedEntityData')
+        .reqConstructor(Entity)
         .reqMethod('createDataItem', EntityDataAccessor, Object)
         .reqMethod('set', EntityDataAccessor, Object)
         .reqMethod('get', EntityDataAccessor)
@@ -351,4 +352,6 @@ nmsGen {
         .reqField('STRING')
         .reqField('ROTATIONS')
         .reqField('BOOLEAN')
+
+    reqClass('spigot:WorldSettings$EnumGamemode')
 }

@@ -23,7 +23,7 @@ public class BukkitDataWatcher extends DataWatcher {
     public static final Object VECTOR3DF_SERIALIZER;
 
     private static Object getNewDataWatcherObject() {
-        return Reflect.constructor(SynchedEntityDataAccessor.getType(), EntityAccessor.getType()).construct((Object) null);
+        return Reflect.construct(SynchedEntityDataAccessor.getConstructor0(), (Object) null);
     }
 
     static {

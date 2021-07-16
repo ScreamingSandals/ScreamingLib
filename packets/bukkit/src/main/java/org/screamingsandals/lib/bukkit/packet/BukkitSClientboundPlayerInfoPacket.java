@@ -30,10 +30,19 @@ public class BukkitSClientboundPlayerInfoPacket extends BukkitSPacket implements
     public SClientboundPlayerInfoPacket setPlayersData(List<PlayerInfoData> data) {
         final var nmsData = new ArrayList<>();
         data.forEach(playerInfoData -> {
-            var gameMode = Reflect.findEnumConstant(
-                    GameTypeAccessor.getType(),
-                    playerInfoData.getGameMode().name().toUpperCase()
-            );
+            Object gameMode;
+
+            if (GameTypeAccessor.getType() != null) {
+                gameMode = Reflect.findEnumConstant(
+                        GameTypeAccessor.getType(),
+                        playerInfoData.getGameMode().name().toUpperCase()
+                );
+            } else {
+                gameMode = Reflect.findEnumConstant(
+                        WorldSettings_i_EnumGamemodeAccessor.getType(),
+                        playerInfoData.getGameMode().name().toUpperCase()
+                );
+            }
 
             final var atomicRef = new AtomicReference<>();
 
