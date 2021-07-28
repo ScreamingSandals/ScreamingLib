@@ -2,13 +2,11 @@ package org.screamingsandals.lib.bukkit.npc;
 
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.bukkit.entity.BukkitDataWatcher;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
-import org.screamingsandals.lib.entity.DataWatcher;
 import org.screamingsandals.lib.npc.AbstractNPC;
 import org.screamingsandals.lib.npc.NPC;
 import org.screamingsandals.lib.npc.NPCSkin;
@@ -20,19 +18,19 @@ import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.world.LocationHolder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class BukkitNPC extends AbstractNPC {
     private final int id;
-    private final BukkitDataWatcher dataWatcher;
+    private final List<MetadataItem> metadata = new ArrayList<>();
 
     protected BukkitNPC(LocationHolder location) {
         super(location);
         id = EntityNMS.incrementAndGetId();
-        dataWatcher = new BukkitDataWatcher(null);
-        dataWatcher.register(DataWatcher.Item.of(SkinLayerValues.findLayerByVersion(), (byte) 127));
+        metadata.add(MetadataItem.of((byte) SkinLayerValues.findLayerByVersion(), (byte) 127));
     }
 
     @Override
@@ -65,51 +63,45 @@ public class BukkitNPC extends AbstractNPC {
     }
 
     private void sendSpawnPackets(PlayerWrapper player) {
-        PacketMapper.createPacket(SClientboundSetPlayerTeamPacket.class)
-                .setTeamName(AdventureHelper.toComponent(getName()))
-                .setDisplayName(AdventureHelper.toComponent(getName()))
-                .setCollisionRule(SClientboundSetPlayerTeamPacket.CollisionRule.ALWAYS)
-                .setTagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility.NEVER)
-                .setTeamColor(TextColor.color(0, 0, 0))
-                .setTeamPrefix(Component.text(" "))
-                .setTeamSuffix(Component.text(" "))
-                .setFlags(false, true)
-                .setMode(SClientboundSetPlayerTeamPacket.Mode.CREATE)
-                .setEntities(Collections.singletonList(getName()))
+        new SClientboundSetPlayerTeamPacket()
+                .teamKey(getName())
+                .mode(SClientboundSetPlayerTeamPacket.Mode.CREATE)
+                .displayName(AdventureHelper.toComponent(getName()))
+                .collisionRule(SClientboundSetPlayerTeamPacket.CollisionRule.ALWAYS)
+                .tagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility.NEVER)
+                .teamColor(NamedTextColor.BLACK)
+                .teamPrefix(Component.empty())
+                .teamSuffix(Component.empty())
+                .friendlyFire(false)
+                .seeInvisible(true)
+                .entities(Collections.singletonList(getName()))
                 .sendPacket(player);
 
-        PacketMapper.createPacket(SClientboundPlayerInfoPacket.class)
-                .setAction(SClientboundPlayerInfoPacket.Action.ADD_PLAYER)
-                .setPlayersData(getNPCInfoData())
+        new SClientboundPlayerInfoPacket()
+                .action(SClientboundPlayerInfoPacket.Action.ADD_PLAYER)
+                .data(getNPCInfoData())
                 .sendPacket(player);
 
-        PacketMapper.createPacket(SClientboundAddPlayerPacket.class)
-                .setEntityId(id)
-                .setUUID(getUUID())
-                .setPitch(getLocation().getPitch())
-                .setYaw(getLocation().getYaw())
-                .setLocation(getLocation())
-                .setDataWatcher(dataWatcher)
+        // protocol < 550: sending metadata as part of AddPlayerPacket; protocol >= 550, packet lib will split this packet into to as supposed to be
+        new SClientboundAddPlayerPacket()
+                .entityId(id)
+                .uuid(getUUID())
+                .location(getLocation())
+                .metadata(metadata)
                 .sendPacket(player);
-
-        PacketMapper.createPacket(SClientboundSetEntityDataPacket.class)
-                .setMetaData(id, dataWatcher, true)
-                .sendPacket(player);
-
 
         Tasker.build(() -> {
             //remove npc from TabList
-            PacketMapper.createPacket(SClientboundPlayerInfoPacket.class)
-                    .setAction(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
-                    .setPlayersData(getNPCInfoData())
+            new SClientboundPlayerInfoPacket()
+                    .action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
+                    .data(getNPCInfoData())
                     .sendPacket(player);
         }).delay(6L, TaskerTime.SECONDS).start();
     }
 
     private SClientboundRemoveEntitiesPacket getFullDestroyPacket() {
-        final int[] toRemove = { getEntityId() };
-        return PacketMapper.createPacket(SClientboundRemoveEntitiesPacket.class)
-                .setEntitiesToDestroy(toRemove);
+        return new SClientboundRemoveEntitiesPacket()
+                .entityIds(new int[] { getEntityId() });
     }
 
 
@@ -119,9 +111,9 @@ public class BukkitNPC extends AbstractNPC {
         }
 
         getFullDestroyPacket().sendPacket(player);
-        PacketMapper.createPacket(SClientboundPlayerInfoPacket.class)
-                .setAction(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
-                .setPlayersData(getNPCInfoData())
+        new SClientboundPlayerInfoPacket()
+                .action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
+                .data(getNPCInfoData())
                 .sendPacket(player);
     }
 
@@ -138,45 +130,45 @@ public class BukkitNPC extends AbstractNPC {
         final var playerLocation = location.as(Location.class);
 
         Location direction = bukkitNPCLocation.clone().setDirection(playerLocation.clone().subtract(bukkitNPCLocation.clone()).toVector());
-        PacketMapper.createPacket(SClientboundMoveEntityPacket.Rot.class)
-                .setEntityId(getEntityId())
-                .setYaw((byte) (direction.getYaw() * 256.0F / 360.0F))
-                .setPitch((byte) (direction.getPitch() * 256.0F / 360.0F))
-                .setOnGround(true)
+        new SClientboundMoveEntityPacket.Rot()
+                .entityId(getEntityId())
+                .yaw((byte) (direction.getYaw() * 256.0F / 360.0F))
+                .pitch((byte) (direction.getPitch() * 256.0F / 360.0F))
+                .onGround(true)
                 .sendPacket(player);
 
-        PacketMapper.createPacket(SClientboundRotateHeadPacket.class)
-                .setEntityId(getEntityId())
-                .setRotation((byte) (direction.getYaw() * 256.0F / 360.0F))
+        new SClientboundRotateHeadPacket()
+                .entityId(getEntityId())
+                .headYaw(direction.getYaw())
                 .sendPacket(player);
     }
 
     private SClientboundTeleportEntityPacket getTeleportPacket() {
-        return PacketMapper.createPacket(SClientboundTeleportEntityPacket.class)
-                .setEntityId(id)
-                .setLocation(getLocation())
-                .setIsOnGround(true);
+        return new SClientboundTeleportEntityPacket()
+                .entityId(id)
+                .location(getLocation())
+                .onGround(true);
     }
 
     @Override
     public NPC setSkin(@Nullable NPCSkin skin) {
-        final var playerInfoPacket = PacketMapper.createPacket(SClientboundPlayerInfoPacket.class)
-                .setAction(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
-                .setPlayersData(getNPCInfoData());
+        final var playerInfoPacket = new SClientboundPlayerInfoPacket()
+                .action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
+                .data(getNPCInfoData());
 
         getViewers().forEach(playerInfoPacket::sendPacket);
         getViewers().forEach(getFullDestroyPacket()::sendPacket);
 
         super.setSkin(skin);
 
-        playerInfoPacket.setAction(SClientboundPlayerInfoPacket.Action.ADD_PLAYER);
-        playerInfoPacket.setPlayersData(getNPCInfoData());
+        playerInfoPacket.action(SClientboundPlayerInfoPacket.Action.ADD_PLAYER);
+        playerInfoPacket.data(getNPCInfoData());
         getViewers().forEach(playerInfoPacket::sendPacket);
         getViewers().forEach(this::sendSpawnPackets);
 
         Tasker.build(() -> {
-            playerInfoPacket.setAction(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER);
-            playerInfoPacket.setPlayersData(getNPCInfoData());
+            playerInfoPacket.action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER);
+            playerInfoPacket.data(getNPCInfoData());
             getViewers().forEach(playerInfoPacket::sendPacket);
         }).delay(6L, TaskerTime.SECONDS).start();
 
@@ -185,10 +177,12 @@ public class BukkitNPC extends AbstractNPC {
 
     private List<SClientboundPlayerInfoPacket.PlayerInfoData> getNPCInfoData() {
         return Collections.singletonList(new SClientboundPlayerInfoPacket.PlayerInfoData(
+                getUUID(),
+                getName(),
                 1,
                 GameMode.SURVIVAL,
                 AdventureHelper.toComponent(getName()),
-                getGameProfile()
+                List.copyOf(properties)
         ));
     }
 

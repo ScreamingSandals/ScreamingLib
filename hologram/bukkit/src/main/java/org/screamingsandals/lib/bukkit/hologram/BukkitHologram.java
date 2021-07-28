@@ -1,12 +1,10 @@
 package org.screamingsandals.lib.bukkit.hologram;
 
 import lombok.extern.slf4j.Slf4j;
-import org.bukkit.Location;
-import org.screamingsandals.lib.bukkit.hologram.nms.FakeArmorStandNMS;
-import org.screamingsandals.lib.bukkit.hologram.nms.FakeEntityNMS;
 import org.screamingsandals.lib.hologram.AbstractHologram;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.material.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
@@ -25,8 +23,8 @@ import java.util.stream.Stream;
 
 @Slf4j
 public class BukkitHologram extends AbstractHologram {
-    private final Map<Integer, FakeArmorStandNMS> entitiesOnLines = new ConcurrentHashMap<>();
-    private FakeArmorStandNMS itemEntity;
+    private final Map<Integer, HologramPiece> entitiesOnLines = new ConcurrentHashMap<>();
+    private HologramPiece itemEntity;
     private TaskerTask rotationTask;
     private LocationHolder cachedLocation;
 
@@ -71,10 +69,11 @@ public class BukkitHologram extends AbstractHologram {
                     return;
                 }
 
-                itemEntity.setRotation(checkAndAdd(itemEntity.getRotation()));
+                itemEntity.setHeadPose(checkAndAdd(itemEntity.getHeadPose()));
 
-                final var metadataPacket = PacketMapper.createPacket(SClientboundSetEntityDataPacket.class)
-                        .setMetaData(itemEntity.getId(), itemEntity.getDataWatcher(), true);
+                final var metadataPacket = new SClientboundSetEntityDataPacket()
+                        .entityId(itemEntity.getId());
+                metadataPacket.metadata().addAll(itemEntity.getMetadataItems());
 
                 viewers.forEach(player -> update(player, List.of(metadataPacket), false));
 
@@ -121,7 +120,7 @@ public class BukkitHologram extends AbstractHologram {
         updateEntities();
     }
 
-    private void update(PlayerWrapper player, List<SPacket> packets, boolean checkDistance) {
+    private void update(PlayerWrapper player, List<AbstractPacket> packets, boolean checkDistance) {
         if (!player.getLocation().getWorld().equals(cachedLocation.getWorld())) {
             log.trace("World is different, doing nothing.");
             return;
@@ -138,15 +137,15 @@ public class BukkitHologram extends AbstractHologram {
 
     private void updateEntities() {
         log.trace("Updating entities");
-        final var packets = new LinkedList<SPacket>();
+        final var packets = new LinkedList<AbstractPacket>();
         if (visible && viewers.size() > 0) {
             if (lines.size() != originalLinesSize
                     && itemEntity != null) {
                 itemEntity.setLocation(cachedLocation.clone().add(0, itemPosition == ItemPosition.BELOW
                         ? (-lines.size() * .25 - .5)
-                        : (lines.size() * .25), 0).as(Location.class));
+                        : (lines.size() * .25), 0));
 
-                 packets.add(getTeleportPacket(itemEntity));
+                packets.add(getTeleportPacket(itemEntity));
             }
 
             lines.forEach((key, value) -> {
@@ -160,16 +159,17 @@ public class BukkitHologram extends AbstractHologram {
 
                         entityOnLine.setCustomName(value.getText());
 
-                        final var metadataPacket = PacketMapper.createPacket(SClientboundSetEntityDataPacket.class)
-                                .setMetaData(entityOnLine.getId(), entityOnLine.getDataWatcher(), true);
+                        final var metadataPacket = new SClientboundSetEntityDataPacket()
+                                .entityId(entityOnLine.getId());
+                        metadataPacket.metadata(); // TODO
                         packets.add(metadataPacket);
 
                         entityOnLine.setCustomName(value.getText());
-                        entityOnLine.setLocation(cachedLocation.clone().add(0, (lines.size() - key) * .25, 0).as(Location.class));
+                        entityOnLine.setLocation(cachedLocation.clone().add(0, (lines.size() - key) * .25, 0));
                         packets.add(getTeleportPacket(entityOnLine));
                     } else {
-                        final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0).as(Location.class);
-                        final var entity = new FakeArmorStandNMS(newLocation);
+                        final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0);
+                        final var entity = new HologramPiece(newLocation);
                         entity.setCustomName(value.getText());
                         entity.setCustomNameVisible(true);
                         entity.setInvisible(true);
@@ -192,8 +192,8 @@ public class BukkitHologram extends AbstractHologram {
                     if (itemEntity == null) {
                         final var newLocation = cachedLocation.clone().add(0, itemPosition == ItemPosition.BELOW
                                 ? (-lines.size() * .25 - .5)
-                                : (lines.size() * .25), 0).as(Location.class);
-                        final var entity = new FakeArmorStandNMS(newLocation);
+                                : (lines.size() * .25), 0);
+                        final var entity = new HologramPiece(newLocation);
                         entity.setInvisible(true);
                         entity.setSmall(!touchable);
                         entity.setArms(false);
@@ -222,14 +222,14 @@ public class BukkitHologram extends AbstractHologram {
                 });
             }
 
-            final var destroyPacket = PacketMapper.createPacket(SClientboundRemoveEntitiesPacket.class);
+            final var destroyPacket = new SClientboundRemoveEntitiesPacket();
             int[] arr = toRemove
                     .stream()
                     .mapToInt(i -> i)
                     .toArray();
 
             if (arr != null && arr.length > 0) {
-                destroyPacket.setEntitiesToDestroy(toRemove
+                destroyPacket.entityIds(toRemove
                         .stream()
                         .mapToInt(i -> i)
                         .toArray()
@@ -243,35 +243,32 @@ public class BukkitHologram extends AbstractHologram {
         viewers.forEach(viewer -> update(viewer, packets, true));
     }
 
-    private SClientboundSetEquipmentPacket getEquipmentPacket(FakeArmorStandNMS entity, Item item) {
-        return PacketMapper.createPacket(SClientboundSetEquipmentPacket.class)
-                .setEntityId(entity.getId())
-                .setItemAndSlot(item, SClientboundSetEquipmentPacket.Slot.HEAD);
+    private SClientboundSetEquipmentPacket getEquipmentPacket(HologramPiece entity, Item item) {
+        var packet = new SClientboundSetEquipmentPacket()
+                .entityId(entity.getId());
+        packet.slots().put(EquipmentSlotMapping.resolve("HEAD").orElseThrow(), item);
+        return packet;
     }
 
-    private SClientboundTeleportEntityPacket getTeleportPacket(FakeArmorStandNMS entity) {
-        return PacketMapper.createPacket(SClientboundTeleportEntityPacket.class)
-                .setEntityId(entity.getId())
-                .setLocation(LocationMapper.wrapLocation(entity.getLocation()))
-                .setIsOnGround(entity.isOnGround());
+    private SClientboundTeleportEntityPacket getTeleportPacket(HologramPiece entity) {
+        return new SClientboundTeleportEntityPacket()
+                .entityId(entity.getId())
+                .location(LocationMapper.wrapLocation(entity.getLocation()))
+                .onGround(true);
     }
 
-    private List<SPacket> getSpawnPacket(FakeArmorStandNMS entity) {
-        final var toReturn = new LinkedList<SPacket>();
+    private List<AbstractPacket> getSpawnPacket(HologramPiece entity) {
+        final var toReturn = new LinkedList<AbstractPacket>();
 
-        final var spawnPacket = PacketMapper.createPacket(SClientboundAddMobPacket.class)
-                .setEntityId(entity.getId())
-                .setUUID(entity.getUuid())
-                .setType(entity.getTypeId())
-                .setVelocity(new Vector3D(0,0,0))
-                .setHeadYaw((byte) 3.9f)
-                .setLocation(LocationMapper.wrapLocation(entity.getLocation()))
-                .setDataWatcher(entity.getDataWatcher());
+        final var spawnPacket = new SClientboundAddMobPacket()
+                .entityId(entity.getId())
+                .uuid(entity.getUuid())
+                .typeId(entity.getTypeId())
+                .velocity(new Vector3D(0, 0, 0))
+                .headYaw((byte) 3.9f)
+                .location(LocationMapper.wrapLocation(entity.getLocation()));
+        spawnPacket.metadata().addAll(entity.getMetadataItems());
         toReturn.add(spawnPacket);
-
-        final var metadataPacket = PacketMapper.createPacket(SClientboundSetEntityDataPacket.class);
-        metadataPacket.setMetaData(entity.getId(), entity.getDataWatcher(), true);
-        toReturn.add(metadataPacket);
 
         return toReturn;
     }
@@ -279,7 +276,7 @@ public class BukkitHologram extends AbstractHologram {
     private SClientboundRemoveEntitiesPacket getFullDestroyPacket() throws IllegalArgumentException, SecurityException {
         final var lines = entitiesOnLines.values()
                 .stream()
-                .map(FakeEntityNMS::getId);
+                .map(HologramPiece::getId);
 
         final int[] toRemove;
         if (itemEntity != null) {
@@ -290,15 +287,15 @@ public class BukkitHologram extends AbstractHologram {
             toRemove = lines.mapToInt(i -> i).toArray();
         }
 
-        final var destroyPacket = PacketMapper.createPacket(SClientboundRemoveEntitiesPacket.class);
+        final var destroyPacket = new SClientboundRemoveEntitiesPacket();
         if (toRemove != null && toRemove.length > 0) {
-            destroyPacket.setEntitiesToDestroy(toRemove);
+            destroyPacket.entityIds(toRemove);
         }
         return destroyPacket;
     }
 
-    private List<SPacket> getAllSpawnPackets() {
-        final var packets = new LinkedList<SPacket>();
+    private List<AbstractPacket> getAllSpawnPackets() {
+        final var packets = new LinkedList<AbstractPacket>();
         entitiesOnLines.forEach((line, entity) -> packets.addAll(getSpawnPacket(entity)));
         if (itemEntity != null) {
             packets.addAll(getSpawnPacket(itemEntity));
@@ -346,7 +343,7 @@ public class BukkitHologram extends AbstractHologram {
             return;
         }
 
-        final var toSend = new LinkedList<SPacket>();
+        final var toSend = new LinkedList<AbstractPacket>();
         if (itemEntity != null) {
             rotationTask.cancel();
         }

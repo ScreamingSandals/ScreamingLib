@@ -1,14 +1,17 @@
 package org.screamingsandals.lib.bukkit.packet;
 
-import org.bukkit.entity.Player;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
+import org.screamingsandals.lib.nms.accessors.ServerGamePacketListenerImplAccessor;
+import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
 @Service
 public class BukkitPacketMapper extends PacketMapper {
@@ -16,36 +19,42 @@ public class BukkitPacketMapper extends PacketMapper {
         PacketMapper.init(BukkitPacketMapper::new);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public <C, T extends C> T createPacket0(Class<C> packetClass) {
-        if (packetClass == null) {
-            throw new UnsupportedOperationException("Invalid packet class provided!");
-        }
-
-        final var simpleName = packetClass.getSimpleName();
-        final var packet = Reflect.construct(getClass().getPackageName() + ".Bukkit" + simpleName);
-        if (packet == null) {
-            throw new UnsupportedOperationException("No packet found for packet of class: " + packetClass.getSimpleName());
-        }
-
-        return (T) packet;
-    }
-
-    @Override
-    public void sendPacket0(PlayerWrapper player, Object packet) {
+    public void sendPacket0(PlayerWrapper player, AbstractPacket packet) {
         if (packet == null) {
             throw new UnsupportedOperationException("Packet cannot be null!");
         }
         if (player == null) {
             throw new UnsupportedOperationException("Player cannot be null!");
         }
-        if (packet instanceof SPacket) {
-            final var sPacket = (SPacket) packet;
-            sPacket.sendPacket(player);
-            return;
+
+        var writer = new CraftBukkitPacketWriter(Unpooled.buffer());
+        writer.writeVarInt(PacketIdMapping.getPacketId(packet.getClass()));
+
+        int i = writer.getBuffer().writerIndex();
+        packet.write(writer);
+
+        int j = writer.getBuffer().writerIndex() - i;
+        if (j > 2097152) {
+            throw new IllegalArgumentException("Packet too big (is " + j + ", should be less than 2097152): " + packet);
         }
-        ClassStorage.sendPacket(player.as(Player.class), packet);
+
+        var channel = Reflect.getFieldResulted(ClassStorage.getHandle(player), ServerPlayerAccessor.getFieldConnection())
+                .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
+                .getFieldResulted(ConnectionAccessor.getFieldChannel())
+                .as(Channel.class);
+
+        if (channel.eventLoop().inEventLoop()) {
+            var future = channel.writeAndFlush(writer.getBuffer());
+            future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+        } else {
+            channel.eventLoop().execute(() -> {
+                var future = channel.writeAndFlush(writer.getBuffer());
+                future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+            });
+        }
+
+        writer.getAppendedPackets().forEach(packet1 -> sendPacket0(player, packet1));
     }
 
 }

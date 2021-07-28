@@ -1,39 +1,35 @@
 package org.screamingsandals.lib.healthindicator;
 
+import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.player.PlayerMapper;
+import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.Controllable;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
-import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.visuals.Visual;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
-@AbstractService
-@ServiceDependencies(dependsOn = {
-        EventManager.class,
-        PlayerMapper.class,
+@Service(dependsOn = {
+        Core.class,
+        PacketMapper.class,
         Tasker.class
 })
-public abstract class HealthIndicatorManager {
+public class HealthIndicatorManager {
     private static HealthIndicatorManager manager;
     protected final Map<UUID, HealthIndicator> activeIndicators = new HashMap<>();
 
-    @Deprecated //INTERNAL USE ONLY!
-    public static void init(Supplier<HealthIndicatorManager> supplier) {
+    @Deprecated // internal use only
+    public HealthIndicatorManager(Controllable controllable) {
         if (manager != null) {
-            throw new UnsupportedOperationException("HealthIndicatorManager is already initialized");
+            throw new UnsupportedOperationException("HealthIndicatorManager is already initialized!");
         }
-        manager = supplier.get();
-    }
+        manager = this;
 
-    protected HealthIndicatorManager(Controllable controllable) {
         controllable.disable(this::destroy).postEnable(() ->
             EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, this::onLeave)
         );
@@ -89,7 +85,9 @@ public abstract class HealthIndicatorManager {
         return healthIndicator;
     }
 
-    protected abstract HealthIndicator healthIndicator0(UUID uuid);
+    protected HealthIndicator healthIndicator0(UUID uuid) {
+        return new HealthIndicatorImpl(uuid);
+    }
 
     protected void destroy() {
         Map.copyOf(getActiveIndicators())

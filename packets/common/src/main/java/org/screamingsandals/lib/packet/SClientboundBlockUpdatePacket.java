@@ -1,11 +1,21 @@
 package org.screamingsandals.lib.packet;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 import org.screamingsandals.lib.world.BlockDataHolder;
 import org.screamingsandals.lib.world.LocationHolder;
 
-public interface SClientboundBlockUpdatePacket extends SPacket {
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Accessors(chain = true, fluent = true)
+public class SClientboundBlockUpdatePacket extends AbstractPacket {
+    private LocationHolder blockLocation;
+    private BlockDataHolder blockData;
 
-    SClientboundBlockUpdatePacket setBlockLocation(LocationHolder blockLocation);
-
-    SClientboundBlockUpdatePacket setBlockData(BlockDataHolder blockData);
+    @Override
+    public void write(PacketWriter writer) {
+        writer.writeBlockPosition(blockLocation);
+        writer.writeBlockData(blockData);
+    }
 }

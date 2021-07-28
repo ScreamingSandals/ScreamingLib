@@ -1,12 +1,27 @@
 package org.screamingsandals.lib.packet;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 import org.screamingsandals.lib.world.LocationHolder;
 
-public interface SClientboundTeleportEntityPacket extends SPacket {
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Accessors(chain = true, fluent = true)
+public class SClientboundTeleportEntityPacket extends AbstractPacket {
+    private int entityId;
+    private LocationHolder location;
+    private boolean onGround;
 
-    SClientboundTeleportEntityPacket setEntityId(int entityId);
-
-    SClientboundTeleportEntityPacket setLocation(LocationHolder location);
-
-    SClientboundTeleportEntityPacket setIsOnGround(boolean isOnGround);
+    @Override
+    public void write(PacketWriter writer) {
+        writer.writeVarInt(entityId);
+        if (writer.protocol() >= 100) {
+            writer.writeVector(location);
+        } else {
+            writer.writeFixedPointVector(location);
+        }
+        writer.writeByteRotation(location);
+        writer.writeBoolean(onGround);
+    }
 }

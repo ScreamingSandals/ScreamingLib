@@ -1,12 +1,22 @@
 package org.screamingsandals.lib.packet;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 import org.screamingsandals.lib.world.LocationHolder;
 
-public interface SClientboundBlockDestructionPacket extends SPacket {
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Accessors(chain = true, fluent = true)
+public class SClientboundBlockDestructionPacket extends AbstractPacket {
+    private int entityId;
+    private LocationHolder blockLocation;
+    private byte destroyStage;
 
-    SClientboundBlockDestructionPacket setEntityId(int entityId);
-
-    SClientboundBlockDestructionPacket setBlockLocation(LocationHolder blockLocation);
-
-    SClientboundBlockDestructionPacket setDestroyStage(int destroyStage);
+    @Override
+    public void write(PacketWriter writer) {
+        writer.writeVarInt(entityId);
+        writer.writeBlockPosition(blockLocation);
+        writer.writeByte(destroyStage);
+    }
 }

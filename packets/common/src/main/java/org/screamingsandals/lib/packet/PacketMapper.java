@@ -21,21 +21,12 @@ public abstract class PacketMapper {
         packetMapper = packetMapperSupplier.get();
     }
 
-    public static <C, T extends C> T createPacket(Class<C> packetClass) {
-        if (packetMapper == null) {
-            throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
-        }
-        return packetMapper.createPacket0(packetClass);
-    }
-
-    public abstract <C, T extends C> T createPacket0(Class<C> packetClass);
-
-    public static void sendPacket(PlayerWrapper player, Object packet) {
+    public static void sendPacket(PlayerWrapper player, AbstractPacket packet) {
         if (packetMapper == null) {
             throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
         }
         packetMapper.sendPacket0(player, packet);
     }
 
-    public abstract void sendPacket0(PlayerWrapper player, Object packet);
+    public abstract void sendPacket0(PlayerWrapper player, AbstractPacket packet);
 }

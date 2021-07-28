@@ -3,9 +3,10 @@ package org.screamingsandals.lib.utils;
 import java.util.Arrays;
 import java.util.List;
 
+// TODO: Replace with mapping in core module
 public enum GameMode {
-    CREATIVE,
     SURVIVAL,
+    CREATIVE,
     ADVENTURE,
     SPECTATOR;
 

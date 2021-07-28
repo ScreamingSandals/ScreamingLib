@@ -3,19 +3,21 @@ import com.google.common.base.Preconditions;
 import org.bukkit.Location;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.DataWatcher;
+import org.screamingsandals.lib.nms.accessors.ArmorStandAccessor;
+import org.screamingsandals.lib.nms.accessors.EntityDataAccessorAccessor;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 public class FakeArmorStandNMS extends FakeEntityNMS {
-    private static final int CLIENT_FLAGS_INDEX;
-    private static final int HEAD_POSE_INDEX;
+    public static final int CLIENT_FLAGS_INDEX;
+    public static final int HEAD_POSE_INDEX;
 
     static {
-        final var object = Reflect.getField(ClassStorage.NMS.EntityArmorStand, "bG,a,field_184801_a,f_31524_,b,field_184801_a");
-        CLIENT_FLAGS_INDEX = (int) Reflect.getMethod(object, "a,func_187155_a,m_135015_").invoke();
+        final var object = Reflect.getField(ArmorStandAccessor.getFieldDATA_CLIENT_FLAGS());
+        CLIENT_FLAGS_INDEX = (int) Reflect.fastInvoke(object, EntityDataAccessorAccessor.getMethodGetId1());
 
-        final var object2 = Reflect.getField(ClassStorage.NMS.EntityArmorStand, "bH,b,field_184802_b,f_31546_");
-        HEAD_POSE_INDEX = (int) Reflect.getMethod(object2, "a,func_187155_a,m_135015_,field_184802_b,c").invoke();
+        final var object2 = Reflect.getField(ArmorStandAccessor.getFieldDATA_HEAD_POSE());
+        HEAD_POSE_INDEX = (int) Reflect.fastInvoke(object2, EntityDataAccessorAccessor.getMethodGetId1());
     }
 
     private byte maskedByte = 0;

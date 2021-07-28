@@ -1,7 +1,8 @@
 package org.screamingsandals.lib.sidebar.team;
+
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.screamingsandals.lib.packet.SClientboundSetPlayerTeamPacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface ScoreboardTeam extends ForwardingAudience {
 
-    ScoreboardTeam color(TextColor color);
+    ScoreboardTeam color(NamedTextColor color);
 
     ScoreboardTeam displayName(Component component);
 
@@ -31,7 +32,7 @@ public interface ScoreboardTeam extends ForwardingAudience {
 
     String identifier();
 
-    TextColor color();
+    NamedTextColor color();
 
     Component displayName();
 

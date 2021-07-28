@@ -1,4 +1,6 @@
 dependencies {
     api project(':core-common')
-    compileOnly 'com.mojang:authlib:' + MOJANG_AUTHLIB_VERSION
+    api 'net.kyori:adventure-text-serializer-gson:' + ADVENTURE_VERSION
+
+    compileOnly 'io.netty:netty-all:' + NETTY_VERSION
 }

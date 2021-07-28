@@ -1,13 +1,23 @@
 package org.screamingsandals.lib.packet;
 
-import net.kyori.adventure.text.Component;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-public interface SClientboundSetDisplayObjectivePacket extends SPacket {
-    SClientboundSetDisplayObjectivePacket setObjectiveKey(Component objectiveKey);
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Accessors(chain = true, fluent = true)
+public class SClientboundSetDisplayObjectivePacket extends AbstractPacket {
+    private DisplaySlot slot;
+    private String objectiveKey;
 
-    SClientboundSetDisplayObjectivePacket setDisplaySlot(DisplaySlot slot);
+    @Override
+    public void write(PacketWriter writer) {
+        writer.writeByte((byte) slot.ordinal());
+        writer.writeSizedString(objectiveKey);
+    }
 
-    enum DisplaySlot {
+    public enum DisplaySlot {
         PLAYER_LIST,
         SIDEBAR,
         BELOW_NAME

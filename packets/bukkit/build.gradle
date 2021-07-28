@@ -1,8 +1,9 @@
 dependencies {
-    api project(':packets-common')
+    api project(':packets-vanilla')
     api project(':utils-bukkit')
     api project(':core-bukkit')
     compileOnly paperLegacy(PAPER_LEGACY_VERSION)
     compileOnly 'com.mojang:datafixerupper:' + DATAFIXERUPPER_VERSION
     compileOnly 'com.mojang:authlib:' + MOJANG_AUTHLIB_VERSION
+    compileOnly 'io.netty:netty-all:' + NETTY_VERSION
 }

@@ -219,11 +219,16 @@ public class Reflect {
                     try {
                         var field = clazz1.getDeclaredField(name.trim());
                         field.setAccessible(true);
-                        Field modifiersField = Field.class.getDeclaredField("modifiers");
-                        modifiersField.setAccessible(true);
-                        int modifiers = modifiersField.getInt(field);
-                        modifiers &= ~Modifier.FINAL;
-                        modifiersField.setInt(field, modifiers);
+                        if ((field.getModifiers() & Modifier.FINAL) == Modifier.FINAL) {
+                            try {
+                                var modifiersField = Field.class.getDeclaredField("modifiers");
+                                modifiersField.setAccessible(true);
+                                int modifiers = modifiersField.getInt(field);
+                                modifiers &= ~Modifier.FINAL;
+                                modifiersField.setInt(field, modifiers);
+                            } catch (Throwable ignored2) {
+                            }
+                        }
                         field.set(instance, set);
                         return field.get(instance);
                     } catch (Throwable ignored2) {
@@ -241,13 +246,16 @@ public class Reflect {
     public static Object setField(Object instance, Field field, Object value) {
         try {
             field.setAccessible(true);
-            try {
-                var modifiersField = Field.class.getDeclaredField("modifiers");
-                modifiersField.setAccessible(true);
-                int modifiers = modifiersField.getInt(field);
-                modifiers &= ~Modifier.FINAL;
-                modifiersField.setInt(field, modifiers);
-            } catch (Throwable ignored) {}
+            if ((field.getModifiers() & Modifier.FINAL) == Modifier.FINAL) {
+                try {
+                    var modifiersField = Field.class.getDeclaredField("modifiers");
+                    modifiersField.setAccessible(true);
+                    int modifiers = modifiersField.getInt(field);
+                    modifiers &= ~Modifier.FINAL;
+                    modifiersField.setInt(field, modifiers);
+                } catch (Throwable ignored) {
+                }
+            }
             field.set(instance, value);
             return field.get(instance);
         } catch (Throwable ignored) {}

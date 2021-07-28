@@ -1,29 +1,31 @@
 package org.screamingsandals.lib.sidebar;
 
+import org.screamingsandals.lib.Core;
+import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.utils.Controllable;
-import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.visuals.Visual;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
-@AbstractService
-public abstract class SidebarManager {
+@Service(dependsOn = {
+        Core.class,
+        PacketMapper.class
+})
+public class SidebarManager {
     private static SidebarManager manager;
     protected final Map<UUID, TeamedSidebar<?>> activeSidebars = new HashMap<>();
 
-    @Deprecated //INTERNAL USE ONLY!
-    public static void init(Supplier<SidebarManager> supplier) {
+    @Deprecated // internal use only
+    public SidebarManager(Controllable controllable) {
         if (manager != null) {
-            throw new UnsupportedOperationException("SidebarManager is already initialized");
+            throw new UnsupportedOperationException("SidebarManager is already initialized!");
         }
-        manager = supplier.get();
-    }
+        manager = this;
 
-    protected SidebarManager(Controllable controllable) {
         controllable.disable(this::destroy);
     }
 
@@ -92,9 +94,13 @@ public abstract class SidebarManager {
         return scoreboard;
     }
 
-    protected abstract Sidebar sidebar0(UUID uuid);
+    protected Sidebar sidebar0(UUID uuid) {
+        return new SidebarImpl(uuid);
+    }
 
-    protected abstract ScoreSidebar scoreSidebar0(UUID uuid);
+    protected ScoreSidebar scoreSidebar0(UUID uuid) {
+        return new ScoreSidebarImpl(uuid);
+    }
 
     protected void destroy() {
         Map.copyOf(getActiveSidebars())

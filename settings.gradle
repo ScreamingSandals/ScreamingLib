@@ -23,7 +23,7 @@ registerModule('hologram', 'bukkit') //TODO: add others
 registerModule('sidebar', 'bukkit') //TODO: add others
 registerModule('healthindicator', 'bukkit') //TODO: add others
 registerModule('placeholders', 'bukkit') //TODO: add others
-registerModule('packets', 'bukkit') //TODO: add others
+registerModule('packets', 'vanilla', 'bukkit') //TODO: add others
 // registerModule('gamecore', 'bukkit') //TODO: add others
 registerModule('core', 'bukkit') //TODO: add others
 registerModule('npc', 'bukkit') // TODO: add others

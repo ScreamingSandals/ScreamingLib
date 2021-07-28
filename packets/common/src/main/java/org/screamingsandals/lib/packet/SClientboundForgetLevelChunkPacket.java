@@ -1,8 +1,19 @@
 package org.screamingsandals.lib.packet;
 
-public interface SClientboundForgetLevelChunkPacket extends SPacket {
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-    SClientboundForgetLevelChunkPacket setChunkX(int chunkX);
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Accessors(chain = true, fluent = true)
+public class SClientboundForgetLevelChunkPacket extends AbstractPacket {
+    private int chunkX;
+    private int chunkZ;
 
-    SClientboundForgetLevelChunkPacket setChunkZ(int chunkZ);
+    @Override
+    public void write(PacketWriter writer) {
+        writer.writeInt(chunkX);
+        writer.writeInt(chunkZ);
+    }
 }

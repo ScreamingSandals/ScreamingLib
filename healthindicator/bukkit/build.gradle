@@ -1,7 +1,8 @@
+// Meta project, exists due to screaming plugin builder
+
 dependencies {
     api project(':healthindicator-common')
-    api project(':utils-bukkit')
+    api project(':core-bukkit')
+    api project(':tasker-bukkit')
     api project(':packets-bukkit')
-
-    compileOnly paperLegacy(PAPER_LEGACY_VERSION)
 }

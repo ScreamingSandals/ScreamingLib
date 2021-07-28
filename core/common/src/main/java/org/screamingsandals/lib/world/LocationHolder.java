@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.MathUtils;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
+import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.io.Serializable;
@@ -74,6 +75,22 @@ public class LocationHolder implements Wrapper, Serializable {
 
     public Vector3D asVector() {
         return new Vector3D(this.x, this.y, this.z);
+    }
+
+    public Vector3Df asVectorf() {
+        return new Vector3Df((float) this.x, (float) this.y, (float) this.z);
+    }
+
+    public int getBlockX() {
+        return (int) Math.floor(x);
+    }
+
+    public int getBlockY() {
+        return (int) Math.floor(y);
+    }
+
+    public int getBlockZ() {
+        return (int) Math.floor(z);
     }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")

@@ -1,4 +1,5 @@
 package org.screamingsandals.lib.entity;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

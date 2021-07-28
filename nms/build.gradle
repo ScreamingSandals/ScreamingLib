@@ -86,6 +86,8 @@ nmsGen {
         .reqField('searge:field_72984_F')
 
     reqClass('net.minecraft.world.entity.decoration.ArmorStand')
+        .reqField('DATA_CLIENT_FLAGS')
+        .reqField('DATA_HEAD_POSE')
         .reqConstructor(Level, double, double, double)
         .reqMethod('setSmall', boolean)
         .reqMethod('isSmall')
@@ -173,9 +175,14 @@ nmsGen {
         .reqField('hasRot')
         .reqField('hasPos')
 
+    reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket$Rot')
+    reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket$Pos')
+    reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket$PosRot')
+
     var EntityDataSerializers = reqClass('net.minecraft.network.syncher.EntityDataSerializers')
     var EntityDataAccessor = reqClass('net.minecraft.network.syncher.EntityDataAccessor')
         .reqConstructor(int, EntityDataSerializers)
+        .reqMethod('getId')
 
     var SynchedEntityData = reqClass('net.minecraft.network.syncher.SynchedEntityData')
         .reqConstructor(Entity)
@@ -352,6 +359,50 @@ nmsGen {
         .reqField('STRING')
         .reqField('ROTATIONS')
         .reqField('BOOLEAN')
+
+    var Item = reqClass('net.minecraft.world.item.Item')
+    Item.reqMethod('getId', Item)
+
+    // new way of getting protocol
+    reqClass('net.minecraft.SharedConstants')
+        .reqMethod('getProtocolVersion')
+
+    reqClass('net.minecraft.server.MinecraftServer')
+        .reqField('status')
+
+    // old way of getting protocol
+    reqClass('net.minecraft.network.protocol.status.ServerStatus')
+        .reqMethod('getVersion')
+
+    reqClass('net.minecraft.network.protocol.status.ServerStatus$Version')
+        .reqMethod('getProtocol')
+
+    var BlockState = reqClass('net.minecraft.world.level.block.state.BlockState')
+
+    reqClass('net.minecraft.world.level.block.Block')
+        .reqMethod('getId', BlockState)
+        .reqMethod('spigot:fromLegacyData', int)
+
+    reqClass('net.minecraft.network.protocol.PacketFlow')
+        .reqEnumField('SERVERBOUND')
+        .reqEnumField('CLIENTBOUND')
+
+    reqClass('net.minecraft.network.ConnectionProtocol')
+        .reqEnumField('HANDSHAKING')
+        .reqEnumField('PLAY')
+        .reqEnumField('STATUS')
+        .reqEnumField('LOGIN')
+        .reqField('flows') // new
+        .reqField('mojang:packets:1.14.4') // old
+
+    reqClass('net.minecraft.network.ConnectionProtocol$PacketSet')
+        .reqMethod('getId', Class)
+
+    reqClass('net.minecraft.server.network.ServerGamePacketListenerImpl')
+        .reqField('connection')
+
+    reqClass('net.minecraft.network.Connection')
+        .reqField('channel')
 
     reqClass('spigot:WorldSettings$EnumGamemode')
 }

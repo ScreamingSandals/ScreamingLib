@@ -3,7 +3,6 @@ package org.screamingsandals.lib.bukkit.hologram;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.network.AutoPacketInboundListener;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.hologram.AbstractHologram;

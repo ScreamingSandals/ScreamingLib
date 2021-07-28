@@ -1,16 +1,14 @@
 package org.screamingsandals.lib.npc;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.hologram.Hologram;
+import org.screamingsandals.lib.packet.SClientboundPlayerInfoPacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.world.LocationHolder;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public abstract class AbstractNPC implements NPC {
     private boolean destroyed = false;
     protected boolean ready = false;
     private final String name = uuid.toString().replace("-", "").substring(0, 10);
-    private final GameProfile gameProfile = new GameProfile(uuid, name);
+    protected final List<SClientboundPlayerInfoPacket.Property> properties = new ArrayList<>();
     private NPCSkin skin;
     private boolean shouldLookAtPlayer = false;
     private int viewDistance = NPC.DEFAULT_VIEW_DISTANCE;
@@ -76,11 +74,6 @@ public abstract class AbstractNPC implements NPC {
     @Override
     public String getName() {
         return name;
-    }
-
-    @Override
-    public GameProfile getGameProfile() {
-        return gameProfile;
     }
 
     @Override
@@ -184,11 +177,11 @@ public abstract class AbstractNPC implements NPC {
     @Override
     public NPC setSkin(@Nullable NPCSkin skin) {
         this.skin = skin;
+        properties.removeIf(property -> property.name().equals("textures"));
         if (skin == null) {
-            gameProfile.getProperties().get("textures").clear();
             return this;
         }
-        gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
+        properties.add(new SClientboundPlayerInfoPacket.Property("textures", skin.getValue(), skin.getSignature()));
         return this;
     }
 

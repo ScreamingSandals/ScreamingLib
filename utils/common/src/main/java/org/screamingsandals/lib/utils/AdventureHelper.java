@@ -3,13 +3,36 @@ package org.screamingsandals.lib.utils;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 @UtilityClass
 public class AdventureHelper {
     private final static LegacyComponentSerializer serializer;
+
+    public static final Map<NamedTextColor, Integer> NAMED_TEXT_COLOR_ID_MAP = Map.ofEntries(
+            Map.entry(NamedTextColor.BLACK, 0),
+            Map.entry(NamedTextColor.DARK_BLUE, 1),
+            Map.entry(NamedTextColor.DARK_GREEN, 2),
+            Map.entry(NamedTextColor.DARK_AQUA, 3),
+            Map.entry(NamedTextColor.DARK_RED, 4),
+            Map.entry(NamedTextColor.DARK_PURPLE, 5),
+            Map.entry(NamedTextColor.GOLD, 6),
+            Map.entry(NamedTextColor.GRAY, 7),
+            Map.entry(NamedTextColor.DARK_GRAY, 8),
+            Map.entry(NamedTextColor.BLUE, 9),
+            Map.entry(NamedTextColor.GREEN, 10),
+            Map.entry(NamedTextColor.AQUA, 11),
+            Map.entry(NamedTextColor.RED, 12),
+            Map.entry(NamedTextColor.LIGHT_PURPLE, 13),
+            Map.entry(NamedTextColor.YELLOW, 14),
+            Map.entry(NamedTextColor.WHITE, 15)
+    );
+
 
     static {
         serializer = LegacyComponentSerializer.builder()

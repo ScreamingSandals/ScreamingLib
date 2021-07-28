@@ -1,8 +1,19 @@
 package org.screamingsandals.lib.packet;
 
-public interface SClientboundRemoveMobEffectPacket extends SPacket {
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-    SClientboundRemoveMobEffectPacket setEntityId(int entityId);
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Accessors(chain = true, fluent = true)
+public class SClientboundRemoveMobEffectPacket extends AbstractPacket {
+    private int entityId;
+    private byte effect;
 
-    SClientboundRemoveMobEffectPacket setEffect(int effect);
+    @Override
+    public void write(PacketWriter writer) {
+        writer.writeVarInt(entityId);
+        writer.writeByte(effect);
+    }
 }
