@@ -57,7 +57,7 @@ public class PacketIdMapping {
         // all our mapped packets are just clientbound. server bound listener is not implemented yet
         var outgoing = PacketFlowAccessor.getFieldCLIENTBOUND();
 
-        if (ConnectionProtocolAccessor.getFieldPackets() != null) {
+        if (ConnectionProtocolAccessor.getFieldFlows() == null) {
             // up to 1.14.4
             var outgoingMap = Reflect.getFieldResulted(playProtocol, ConnectionProtocolAccessor.getFieldPackets())
                     .as(Map.class)
