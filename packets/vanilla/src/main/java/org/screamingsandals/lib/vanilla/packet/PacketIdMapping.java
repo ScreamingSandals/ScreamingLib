@@ -68,8 +68,12 @@ public class PacketIdMapping {
                     .get(vanillaClass);
         } else {
             // 1.15+
-            return Reflect.getFieldResulted(playProtocol, ConnectionProtocolAccessor.getFieldFlows())
-                    .fastInvokeResulted(ConnectionProtocol_i_PacketSetAccessor.getMethodGetId1(), vanillaClass)
+            var outgoingMap = Reflect.getFieldResulted(playProtocol, ConnectionProtocolAccessor.getFieldFlows())
+                    .as(Map.class)
+                    .get(outgoing);
+
+            return Reflect
+                    .fastInvokeResulted(outgoingMap, ConnectionProtocol_i_PacketSetAccessor.getMethodGetId1(), vanillaClass)
                     .as(Integer.class);
 
         }
