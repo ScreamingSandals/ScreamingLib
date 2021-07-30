@@ -30,12 +30,12 @@ public abstract class VanillaPacketWriter extends PacketWriter {
     public int protocol() {
         if (PROTOCOL == null) {
             if (SharedConstantsAccessor.getMethodGetProtocolVersion1() != null) {
-                PROTOCOL = Reflect.fastInvokeResulted(SharedConstantsAccessor.getMethodGetProtocolVersion1()).as(int.class);
+                PROTOCOL = Reflect.fastInvokeResulted(SharedConstantsAccessor.getMethodGetProtocolVersion1()).as(Integer.class);
             } else {
                 PROTOCOL = Reflect.getFieldResulted(getMinecraftServerInstance(), MinecraftServerAccessor.getFieldStatus())
                         .fastInvokeResulted(ServerStatusAccessor.getMethodGetVersion1())
                         .fastInvokeResulted(ServerStatus_i_VersionAccessor.getMethodGetProtocol1())
-                        .as(int.class);
+                        .as(Integer.class);
             }
         }
         return PROTOCOL;
