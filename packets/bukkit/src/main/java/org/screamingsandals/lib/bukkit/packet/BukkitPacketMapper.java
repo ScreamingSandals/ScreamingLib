@@ -3,6 +3,7 @@ package org.screamingsandals.lib.bukkit.packet;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
+import org.bukkit.entity.Player;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerGamePacketListenerImplAccessor;
@@ -39,7 +40,7 @@ public class BukkitPacketMapper extends PacketMapper {
             throw new IllegalArgumentException("Packet too big (is " + j + ", should be less than 2097152): " + packet);
         }
 
-        var channel = Reflect.getFieldResulted(ClassStorage.getHandle(player), ServerPlayerAccessor.getFieldConnection())
+        var channel = Reflect.getFieldResulted(ClassStorage.getHandle(player.as(Player.class)), ServerPlayerAccessor.getFieldConnection())
                 .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
                 .getFieldResulted(ConnectionAccessor.getFieldChannel())
                 .as(Channel.class);
