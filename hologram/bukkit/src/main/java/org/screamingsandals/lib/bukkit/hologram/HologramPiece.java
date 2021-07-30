@@ -29,6 +29,7 @@ public class HologramPiece {
 
     public HologramPiece(LocationHolder location) {
         this.location = location;
+        this.headPose = new Vector3Df(0.0f, 0.0f, 0.0f);
 
         put(MetadataItem.of((byte) 0, (byte) 0));
         put(MetadataItem.of((byte) 1, 300));
