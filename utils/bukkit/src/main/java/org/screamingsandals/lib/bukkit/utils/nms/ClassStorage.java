@@ -277,9 +277,10 @@ public class ClassStorage {
 
 		if (registry.isPresent()) {
 			// 1.14+
-			var optional = Reflect.fastInvoke(EntityTypeAccessor.getMethodByString1(), key);
+			var optional = Reflect.getMethod(EntityTypeAccessor.getMethodByString1()).invokeStatic(key);
+
 			if (optional instanceof Optional) {
-				return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), ((Optional<?>) optional).orElse(null)).asOptional(int.class).orElse(0);
+				return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
 			}
 
 			// 1.13.X
