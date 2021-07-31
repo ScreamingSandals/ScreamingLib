@@ -31,6 +31,7 @@ public class BukkitHologram extends AbstractHologram {
     BukkitHologram(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
         this.cachedLocation = location;
+        log.trace("Initialized hologram of uuid: {} in location: {}", uuid, location);
     }
 
     public boolean hasId(int id) {
@@ -52,11 +53,13 @@ public class BukkitHologram extends AbstractHologram {
             updateEntities();
         }
         update(player, getAllSpawnPackets(), shouldCheckDistance);
+        log.trace("Added viewer {} to hologram: {}", player.getName(), uuid);
     }
 
     @Override
     public void onViewerRemoved(PlayerWrapper player, boolean shouldCheckDistance) {
         removeForPlayer(player);
+        log.trace("Removed viewer {} from hologram: {}", player.getName(), uuid);
     }
 
     @Override
@@ -136,7 +139,9 @@ public class BukkitHologram extends AbstractHologram {
     }
 
     private void updateEntities() {
-        log.trace("Updating entities");
+        log.trace("Update entities for hologram of uuid: {}", uuid);
+        log.trace("Visible: {}, Viewer count: {}", visible, viewers.size());
+
         final var packets = new LinkedList<AbstractPacket>();
         if (visible && viewers.size() > 0) {
             if (lines.size() != originalLinesSize
@@ -170,6 +175,7 @@ public class BukkitHologram extends AbstractHologram {
                     } else {
                         final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0);
                         final var entity = new HologramPiece(newLocation);
+                        log.trace("Creating new ArmorStand entity of id {} for hologram: {} of text: {}", uuid, entity.getId(), value.getText());
                         entity.setCustomName(value.getText());
                         entity.setCustomNameVisible(true);
                         entity.setInvisible(true);
@@ -190,6 +196,7 @@ public class BukkitHologram extends AbstractHologram {
             try {
                 if (rotationMode != RotationMode.NONE) {
                     if (itemEntity == null) {
+                        log.trace("Spawning Rotating Entity!");
                         final var newLocation = cachedLocation.clone().add(0, itemPosition == ItemPosition.BELOW
                                 ? (-lines.size() * .25 - .5)
                                 : (lines.size() * .25), 0);
@@ -348,7 +355,9 @@ public class BukkitHologram extends AbstractHologram {
             rotationTask.cancel();
         }
 
-        toSend.add(getFullDestroyPacket());
-        update(player, toSend, false);
+        if (itemEntity != null || entitiesOnLines.size() > 0) {
+            toSend.add(getFullDestroyPacket());
+            update(player, toSend, false);
+        }
     }
 }
