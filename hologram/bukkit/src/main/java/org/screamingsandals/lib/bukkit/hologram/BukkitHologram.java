@@ -166,7 +166,7 @@ public class BukkitHologram extends AbstractHologram {
 
                         final var metadataPacket = new SClientboundSetEntityDataPacket()
                                 .entityId(entityOnLine.getId());
-                        metadataPacket.metadata(); // TODO
+                        metadataPacket.metadata().addAll(entityOnLine.getMetadataItems());
                         packets.add(metadataPacket);
 
                         entityOnLine.setCustomName(value.getText());

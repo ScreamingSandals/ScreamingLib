@@ -39,7 +39,7 @@ public class HologramPiece {
         } else {
             put(MetadataItem.of((byte) 2, " "));
         }
-        put(MetadataItem.of((byte) 3, true));
+        put(MetadataItem.of((byte) 3, false));
         put(MetadataItem.of((byte) 4, false));
     }
 
