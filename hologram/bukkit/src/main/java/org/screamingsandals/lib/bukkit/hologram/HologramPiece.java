@@ -5,6 +5,7 @@ import lombok.Data;
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.bukkit.hologram.nms.FakeArmorStandNMS;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
 import org.screamingsandals.lib.nms.accessors.ArmorStandAccessor;
 import org.screamingsandals.lib.packet.MetadataItem;
@@ -33,8 +34,12 @@ public class HologramPiece {
 
         put(MetadataItem.of((byte) 0, (byte) 0));
         put(MetadataItem.of((byte) 1, 300));
-        put(MetadataItem.of((byte) 2, " "));
-        put(MetadataItem.of((byte) 3, false));
+        if (Version.isVersion(1, 13)) {
+            put(MetadataItem.ofOpt((byte) 2, Component.empty()));
+        } else {
+            put(MetadataItem.of((byte) 2, " "));
+        }
+        put(MetadataItem.of((byte) 3, true));
         put(MetadataItem.of((byte) 4, false));
     }
 
@@ -53,11 +58,15 @@ public class HologramPiece {
     }
 
     public void setCustomName(Component name) {
-        var str = AdventureHelper.toLegacy(name);
-        if (str.length() > 256) {
-            str = str.substring(0, 256);
+        if (Version.isVersion(1, 13)) {
+            put(MetadataItem.ofOpt((byte) 2, name));
+        } else {
+            var str = AdventureHelper.toLegacy(name);
+            if (str.length() > 256) {
+                str = str.substring(0, 256);
+            }
+            put(MetadataItem.of((byte) 2, str));
         }
-        put(MetadataItem.of((byte) 2, str));
         customName = name;
     }
 

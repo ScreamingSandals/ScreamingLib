@@ -258,7 +258,7 @@ public class ClassStorage {
 		try {
 			return MinecraftComponentSerializer.get().serialize(component);
 		} catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
-			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), GsonComponentSerializer.gson().serialize(component));
+			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), (Object) GsonComponentSerializer.gson().serialize(component));
 		}
 	}
 
@@ -277,14 +277,14 @@ public class ClassStorage {
 
 		if (registry.isPresent()) {
 			// 1.14+
-			var optional = Reflect.getMethod(EntityTypeAccessor.getMethodByString1()).invokeStatic(key);
+			var optional = Reflect.fastInvoke(EntityTypeAccessor.getMethodByString1(), (Object) key);
 
 			if (optional instanceof Optional) {
 				return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
 			}
 
 			// 1.13.X
-			var nullable = Reflect.fastInvoke(EntityTypeAccessor.getMethodFunc_200713_a1(), key);
+			var nullable = Reflect.fastInvoke(EntityTypeAccessor.getMethodFunc_200713_a1(), (Object) key);
 			return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), nullable).asOptional(Integer.class).orElse(0);
 		} else {
 			// 1.11 - 1.12.2

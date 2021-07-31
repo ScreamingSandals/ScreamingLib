@@ -41,6 +41,10 @@ public abstract class MetadataItem {
         return new Vector3DfMetadataItem(index, value);
     }
 
+    public static OptionalComponentMetadataItem ofOpt(byte index, Component value) {
+        return new OptionalComponentMetadataItem(index, value);
+    }
+
     @Getter
     public static class ByteMetadataItem extends MetadataItem {
         private final byte data;
@@ -123,6 +127,27 @@ public abstract class MetadataItem {
             super.write(writer);
             writer.writeVarInt(4);
             writer.writeComponent(text);
+        }
+    }
+
+    @Getter
+    public static class OptionalComponentMetadataItem extends MetadataItem {
+        private final Component text;
+
+        public OptionalComponentMetadataItem(byte index, Component text) {
+            super(index);
+            this.text = text;
+        }
+
+        @Override
+        public void write(PacketWriter writer) {
+            super.write(writer);
+            writer.writeVarInt(5);
+            var flag = text != null && !text.equals(Component.empty());
+            writer.writeBoolean(flag);
+            if (flag) {
+                writer.writeComponent(text);
+            }
         }
     }
 
