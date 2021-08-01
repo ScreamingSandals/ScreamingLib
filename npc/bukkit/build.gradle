@@ -7,4 +7,5 @@ dependencies {
     api project(':core-bukkit')
     api project(':packets-bukkit')
     api project(':hologram-bukkit')
+    api project(':visuals-api-bukkit')
 }

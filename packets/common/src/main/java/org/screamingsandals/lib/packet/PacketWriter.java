@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import org.screamingsandals.lib.entity.DataWatcher;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;

@@ -134,6 +134,11 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     }
 
     @Override
+    public boolean hasId(int id) {
+        return false;
+    }
+
+    @Override
     public HealthIndicator startUpdateTask(long time, TaskerTime unit) {
         if (task != null) {
             task.cancel();

@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.visual.TextEntry;
+import org.screamingsandals.lib.visuals.LocatableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.UUID;
 /**
  * API For the NPC (non-player-character)
  */
-public interface NPC {
+public interface NPC extends LocatableVisual<NPC> {
 
     /**
      * This is the default click cool down in milliseconds
@@ -46,11 +47,6 @@ public interface NPC {
     NPC spawn();
 
     /**
-     * Destroys the NPC entirely.
-     */
-    void destroy();
-
-    /**
      *
      * @return current location of the NPC
      */
@@ -59,23 +55,11 @@ public interface NPC {
 
     /**
      *
-     * @param location location where to create the NPC
-     * @return this NPC
-     */
-    NPC setLocation(LocationHolder location);
-
-    /**
-     *
      * @return UUID of the NPC
      */
     @NotNull
     UUID getUUID();
 
-    /**
-     *
-     * @return  true if NPC is visible, false otherwise
-     */
-    boolean isVisible();
 
     /**
      *
@@ -112,35 +96,10 @@ public interface NPC {
 
     /**
      *
-     * @param viewer the viewer to display the NPC to
-     * @return this NPC
-     */
-    NPC addViewer(PlayerWrapper viewer);
-
-    /**
-     *
-     * @param viewer the viewer to hide the NPC from.
-     * @return this NPC
-     */
-    NPC removeViewer(PlayerWrapper viewer);
-
-    /**
-     *
      * @return a list of current viewers for the NPC
      */
     List<PlayerWrapper> getViewers();
 
-    /**
-     * Shows the NPC to all current viewers
-     * @return this NPC
-     */
-    NPC show();
-
-    /**
-     * Hides the NPC to all viewers
-     * @return this NPC
-     */
-    NPC hide();
 
     /**
      * Sets the skin of the NPC
@@ -148,12 +107,6 @@ public interface NPC {
      * @return this NPC
      */
     NPC setSkin(NPCSkin skin);
-
-    /**
-     * Updates the current NPC instance
-     * @return this NPC
-     */
-    NPC update();
 
     /**
      * Makes the npc look at the particular location
@@ -182,24 +135,6 @@ public interface NPC {
 
     /**
      *
-     * @return true if NPC has viewers, false otherwise
-     */
-    boolean hasViewers();
-
-    /**
-     *
-     * @return the maximum distance between the viewer and the NPC
-     */
-    int getViewDistance();
-
-    /**
-     *
-     * @return this NPC
-     */
-    NPC setViewDistance(int distance);
-
-    /**
-     *
      * @param delay the amount of time (in milliseconds) the last clicked user has to wait before interacting with this NPC again
      * @return this NPC
      */
@@ -216,4 +151,19 @@ public interface NPC {
      * @return the hologram instance that displays the name of the entity.
      */
     Hologram getHologram();
+
+    /**
+     * Checks if you can interact with this NPC.
+     *
+     * @return true if this npc is touchable
+     */
+    boolean isTouchable();
+
+    /**
+     * Changes interact state for this NPC.
+     *
+     * @param touchable touchable state
+     * @return this npc
+     */
+    NPC setTouchable(boolean touchable);
 }

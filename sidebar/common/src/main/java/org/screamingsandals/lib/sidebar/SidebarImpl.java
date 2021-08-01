@@ -126,6 +126,11 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     }
 
     @Override
+    public boolean hasId(int id) {
+        return false;
+    }
+
+    @Override
     public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
         if (visible) {
             getCreateObjectivePacket(player).sendPacket(player);

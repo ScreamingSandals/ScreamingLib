@@ -19,10 +19,10 @@ public abstract class AbstractHologram extends AbstractLinedVisual<Hologram> imp
     protected DataContainer data;
     protected float rotationIncrement;
     protected Pair<Integer, TaskerTime> rotationTime;
-    protected RotationMode rotationMode = RotationMode.NONE;
+    protected RotationMode rotationMode;
     protected Item item;
     @Getter
-    protected ItemPosition itemPosition = ItemPosition.ABOVE;
+    protected ItemPosition itemPosition;
 
     protected AbstractHologram(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid);
@@ -30,10 +30,13 @@ public abstract class AbstractHologram extends AbstractLinedVisual<Hologram> imp
         this.touchable = touchable;
 
         //default values
+        this.ready = false;
         this.viewDistance = DEFAULT_VIEW_DISTANCE;
         this.rotationIncrement = DEFAULT_ROTATION_INCREMENT;
         this.data = DataContainer.get();
         this.rotationTime = Pair.of(2, TaskerTime.TICKS);
+        this.rotationMode = RotationMode.NONE;
+        this.itemPosition = ItemPosition.ABOVE;
     }
 
     @Override
@@ -164,10 +167,6 @@ public abstract class AbstractHologram extends AbstractLinedVisual<Hologram> imp
         update();
         return this;
     }
-
-    public abstract void onViewerAdded(PlayerWrapper player, boolean checkDistance);
-
-    public abstract void onViewerRemoved(PlayerWrapper player, boolean checkDistance);
 
     protected abstract void update0();
 

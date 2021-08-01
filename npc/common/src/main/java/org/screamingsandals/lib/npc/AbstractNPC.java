@@ -13,29 +13,44 @@ import java.util.*;
 import java.util.List;
 
 public abstract class AbstractNPC implements NPC {
-    private final UUID uuid = new UUID(new Random().nextLong(), 0);
-    private final List<PlayerWrapper> visibleTo = new ArrayList<>();
-    private boolean visible;
-    private LocationHolder location;
-    private boolean created = false;
-    private boolean destroyed = false;
-    protected boolean ready = false;
-    private final String name = uuid.toString().replace("-", "").substring(0, 10);
-    protected final List<SClientboundPlayerInfoPacket.Property> properties = new ArrayList<>();
-    private NPCSkin skin;
-    private boolean shouldLookAtPlayer = false;
-    private int viewDistance = NPC.DEFAULT_VIEW_DISTANCE;
-    private long clickCoolDown = NPC.CLICK_COOL_DOWN;
+    protected final UUID uuid;
+    protected final List<PlayerWrapper> visibleTo;
+    protected LocationHolder location;
+    protected boolean created;
+    protected boolean destroyed;
+    protected boolean ready;
+    protected boolean shouldLookAtPlayer;
+    protected boolean visible;
+    protected boolean touchable;
+    protected final String name;
+    protected final List<SClientboundPlayerInfoPacket.Property> properties;
+    protected NPCSkin skin;
+    protected int viewDistance;
+    protected long clickCoolDown;
 
     /**
      * hologram that displays the name of the entity
      */
     private final Hologram hologram;
 
-    protected AbstractNPC(LocationHolder location) {
+    protected AbstractNPC(UUID uuid, LocationHolder location, boolean touchable) {
+        this.uuid = uuid;
         this.location = location;
+        this.touchable = touchable;
+
+        // default values.
+        this.created = false;
+        this.destroyed = false;
+        this.ready = false;
+        this.shouldLookAtPlayer = false;
+        this.viewDistance = NPC.DEFAULT_VIEW_DISTANCE;
+        this.clickCoolDown = NPC.CLICK_COOL_DOWN;
+        this.properties = new ArrayList<>();
+        this.visibleTo = new ArrayList<>();
+        this.name = uuid.toString().replace("-", "").substring(0, 10);
+
         hologram = Hologram.of(location.clone().add(0, 1.50, 0));
-        if (isVisible()) {
+        if (isShown()) {
             hologram.show();
         } else {
             hologram.hide();
@@ -54,6 +69,17 @@ public abstract class AbstractNPC implements NPC {
     }
 
     @Override
+    public boolean isTouchable() {
+        return touchable;
+    }
+
+    @Override
+    public NPC setTouchable(boolean touchable) {
+        this.touchable = touchable;
+        return this;
+    }
+
+    @Override
     public NPC setLocation(LocationHolder location) {
         if (location == null) {
             throw new UnsupportedOperationException("Location cannot be null!");
@@ -66,7 +92,7 @@ public abstract class AbstractNPC implements NPC {
     @Override
     public NPC update() {
         if (ready) {
-            update0();
+            // TODO: update
         }
         return this;
     }
@@ -76,14 +102,10 @@ public abstract class AbstractNPC implements NPC {
         return name;
     }
 
+    @NotNull
     @Override
     public UUID getUUID() {
         return uuid;
-    }
-
-    @Override
-    public boolean isVisible() {
-        return visible;
     }
 
     @Override
@@ -133,14 +155,16 @@ public abstract class AbstractNPC implements NPC {
     @Override
     public NPC addViewer(PlayerWrapper viewer) {
         visibleTo.add(viewer);
-        onViewerAdded(viewer);
+        hologram.addViewer(viewer);
+        onViewerAdded(viewer, false);
         return this;
     }
 
     @Override
     public NPC removeViewer(PlayerWrapper viewer) {
         visibleTo.remove(viewer);
-        onViewerRemoved(viewer);
+        hologram.removeViewer(viewer);
+        onViewerRemoved(viewer, false);
         return this;
     }
 
@@ -222,13 +246,17 @@ public abstract class AbstractNPC implements NPC {
     }
 
     @Override
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    @Override
+    public boolean hasId(int id) {
+        return id == getEntityId();
+    }
+
+    @Override
     public long getClickCoolDown() {
         return clickCoolDown;
     }
-
-    public abstract void onViewerAdded(PlayerWrapper player);
-
-    public abstract void onViewerRemoved(PlayerWrapper player);
-
-    public abstract void update0();
 }

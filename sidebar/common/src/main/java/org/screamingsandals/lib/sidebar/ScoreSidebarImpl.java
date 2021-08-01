@@ -172,6 +172,11 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     }
 
     @Override
+    public boolean hasId(int id) {
+        return false;
+    }
+
+    @Override
     public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
         if (visible) {
             getCreateObjectivePacket(player).sendPacket(player);

@@ -3,6 +3,7 @@ package org.screamingsandals.lib.visuals;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -51,4 +52,9 @@ public interface Visual<T> {
 
     void destroy();
 
+    boolean hasId(int id);
+
+    void onViewerAdded(PlayerWrapper viewer, boolean checkDistance);
+
+    void onViewerRemoved(PlayerWrapper viewer, boolean checkDistance);
 }

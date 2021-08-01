@@ -17,10 +17,6 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
         this.uuid = uuid;
     }
 
-    public abstract void onViewerAdded(PlayerWrapper player, boolean checkDistance);
-
-    public abstract void onViewerRemoved(PlayerWrapper player, boolean checkDistance);
-
     protected abstract void update0();
 
     @Override

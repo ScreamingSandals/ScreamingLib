@@ -2,6 +2,7 @@ package org.screamingsandals.lib.bukkit.npc;
 
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
@@ -18,17 +19,14 @@ import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.world.LocationHolder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class BukkitNPC extends AbstractNPC {
     private final int id;
     private final List<MetadataItem> metadata = new ArrayList<>();
 
-    protected BukkitNPC(LocationHolder location) {
-        super(location);
+    protected BukkitNPC(UUID uuid, LocationHolder location, boolean touchable) {
+        super(uuid, location, touchable);
         id = EntityNMS.incrementAndGetId();
         metadata.add(MetadataItem.of((byte) SkinLayerValues.findLayerByVersion(), (byte) 127));
     }
@@ -46,20 +44,13 @@ public class BukkitNPC extends AbstractNPC {
     }
 
     @Override
-    public void onViewerAdded(PlayerWrapper player) {
+    public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
         sendSpawnPackets(player);
-        getHologram().addViewer(player);
     }
 
     @Override
-    public void onViewerRemoved(PlayerWrapper player) {
+    public void onViewerRemoved(PlayerWrapper player, boolean checkDistance) {
         removeForPlayer(player);
-        getHologram().removeViewer(player);
-    }
-
-    @Override
-    public void update0() {
-
     }
 
     private void sendSpawnPackets(PlayerWrapper player) {
@@ -122,6 +113,30 @@ public class BukkitNPC extends AbstractNPC {
         getViewers().forEach(this::removeForPlayer);
         super.hide();
         return this;
+    }
+
+    @Override
+    public NPC clearViewers() {
+        hide();
+        getViewers().forEach(this::removeViewer);
+        return this;
+    }
+
+    @Override
+    public NPC title(Component title) {
+        getHologram().title(title);
+        return this;
+    }
+
+    @Override
+    public NPC title(ComponentLike title) {
+        getHologram().title(title);
+        return null;
+    }
+
+    @Override
+    public boolean isShown() {
+        return visible;
     }
 
     @Override

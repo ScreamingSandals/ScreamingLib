@@ -34,6 +34,7 @@ public class BukkitHologram extends AbstractHologram {
         log.trace("Initialized hologram of uuid: {} in location: {}", uuid, location);
     }
 
+    @Override
     public boolean hasId(int id) {
         return entitiesOnLines.values()
                 .stream()

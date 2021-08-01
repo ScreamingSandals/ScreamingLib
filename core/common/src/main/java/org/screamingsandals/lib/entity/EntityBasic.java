@@ -98,6 +98,4 @@ public interface EntityBasic extends Wrapper {
     int getPortalCooldown();
 
     void setPortalCooldown(int cooldown);
-
-    DataWatcher getDataWatcher();
 }

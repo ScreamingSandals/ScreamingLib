@@ -5,7 +5,6 @@ include 'sender'
 include 'screaming-annotation'
 include 'signs'
 include 'lang'
-include 'visuals-api'
 include 'results'
 include 'nms'
 
@@ -27,6 +26,7 @@ registerModule('packets', 'vanilla', 'bukkit') //TODO: add others
 // registerModule('gamecore', 'bukkit') //TODO: add others
 registerModule('core', 'bukkit') //TODO: add others
 registerModule('npc', 'bukkit') // TODO: add others
+registerModule('visuals-api', 'bukkit') // TODO: add others
 registerModule('proxy', 'bungee', 'velocity')
 registerModule('plugin', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
 registerModule('tasker', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')

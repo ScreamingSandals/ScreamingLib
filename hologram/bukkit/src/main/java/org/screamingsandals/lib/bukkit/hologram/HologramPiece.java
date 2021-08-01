@@ -3,14 +3,15 @@ package org.screamingsandals.lib.bukkit.hologram;
 import com.google.common.base.Preconditions;
 import lombok.Data;
 import net.kyori.adventure.text.Component;
-import org.screamingsandals.lib.bukkit.hologram.nms.FakeArmorStandNMS;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
 import org.screamingsandals.lib.nms.accessors.ArmorStandAccessor;
+import org.screamingsandals.lib.nms.accessors.EntityDataAccessorAccessor;
 import org.screamingsandals.lib.packet.MetadataItem;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.math.Vector3Df;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.ArrayList;
@@ -19,6 +20,17 @@ import java.util.UUID;
 
 @Data
 public class HologramPiece {
+    public static final int CLIENT_FLAGS_INDEX;
+    public static final int HEAD_POSE_INDEX;
+
+    static {
+        final var object = Reflect.getField(ArmorStandAccessor.getFieldDATA_CLIENT_FLAGS());
+        CLIENT_FLAGS_INDEX = (int) Reflect.fastInvoke(object, EntityDataAccessorAccessor.getMethodGetId1());
+
+        final var object2 = Reflect.getField(ArmorStandAccessor.getFieldDATA_HEAD_POSE());
+        HEAD_POSE_INDEX = (int) Reflect.fastInvoke(object2, EntityDataAccessorAccessor.getMethodGetId1());
+    }
+
     private final int id = EntityNMS.incrementAndGetId();
     private LocationHolder location;
     private UUID uuid = UUID.randomUUID();
@@ -72,33 +84,33 @@ public class HologramPiece {
 
     public void setSmall(boolean isSmall) {
         maskedByte2 = getMaskedByteFromBoolFlag(maskedByte2, 1, isSmall);
-        put(MetadataItem.of((byte) FakeArmorStandNMS.CLIENT_FLAGS_INDEX, maskedByte));
+        put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte));
     }
 
     public void setGravity(boolean gravity) {
         maskedByte2 = getMaskedByteFromBoolFlag(maskedByte2, 2, gravity);
-        put(MetadataItem.of((byte) FakeArmorStandNMS.CLIENT_FLAGS_INDEX, maskedByte));
+        put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte2));
     }
 
     public void setArms(boolean hasArms) {
         maskedByte2 = getMaskedByteFromBoolFlag(maskedByte2, 4, hasArms);
-        put(MetadataItem.of((byte) FakeArmorStandNMS.CLIENT_FLAGS_INDEX, maskedByte));
+        put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte2));
     }
 
     public void setBasePlate(boolean hasBasePlate) {
         maskedByte2 = getMaskedByteFromBoolFlag(maskedByte2, 8, hasBasePlate);
-        put(MetadataItem.of((byte) FakeArmorStandNMS.CLIENT_FLAGS_INDEX, maskedByte));
+        put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte2));
     }
 
     public void setMarker(boolean marker) {
         maskedByte2 = getMaskedByteFromBoolFlag(maskedByte2, 16, marker);
-        put(MetadataItem.of((byte) FakeArmorStandNMS.CLIENT_FLAGS_INDEX, maskedByte));
+        put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte2));
     }
 
     public void setHeadPose(Vector3Df vector3Df) {
         Preconditions.checkNotNull(vector3Df, "Vector is null!");
         this.headPose = vector3Df;
-        put(MetadataItem.of((byte) FakeArmorStandNMS.HEAD_POSE_INDEX, this.headPose));
+        put(MetadataItem.of((byte) HEAD_POSE_INDEX, this.headPose));
     }
 
     private byte getMaskedByteFromBoolFlag(byte b, int i, boolean flag) {
