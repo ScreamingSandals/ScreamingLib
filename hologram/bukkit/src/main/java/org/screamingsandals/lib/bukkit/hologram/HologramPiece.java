@@ -84,7 +84,7 @@ public class HologramPiece {
 
     public void setSmall(boolean isSmall) {
         maskedByte2 = getMaskedByteFromBoolFlag(maskedByte2, 1, isSmall);
-        put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte));
+        put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte2));
     }
 
     public void setGravity(boolean gravity) {
