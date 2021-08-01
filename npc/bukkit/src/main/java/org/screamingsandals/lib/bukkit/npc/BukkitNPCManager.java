@@ -9,6 +9,7 @@ import org.screamingsandals.lib.npc.event.NPCInteractEvent;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
+import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -34,6 +35,13 @@ public class BukkitNPCManager extends NPCManager {
 
     protected BukkitNPCManager(Plugin plugin, Controllable controllable) {
         super(controllable);
+        controllable.postEnable(() -> Tasker.build(() -> getActiveNPCS().values()
+                        .forEach(npc -> {
+                            if (npc.shouldLookAtPlayer()) {
+                                npc.getViewers().forEach(viewer -> npc.lookAtPlayer(viewer.getLocation(), viewer));
+                            }
+                        })).async().repeat(1L, TaskerTime.TICKS)
+                .start());
         new VisualsTouchListener<>(this, plugin, controllable);
     }
 

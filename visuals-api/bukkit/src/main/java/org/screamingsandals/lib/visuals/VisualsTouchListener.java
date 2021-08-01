@@ -19,7 +19,7 @@ public class VisualsTouchListener<T extends TouchableVisual<T> & LocatableVisual
             @Override
             protected Object handle(Player sender, Object packet) {
                 if (ServerboundInteractPacketAccessor.getType().isInstance(packet)) {
-                    final var entityId = Reflect.getFieldResulted(packet, ServerboundInteractPacketAccessor.getFieldEntityId()).as(int.class);
+                    final var entityId = (int) Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldEntityId());
                     for (var entry : manager.getActiveVisuals().entrySet()) {
                         var visual = entry.getValue();
                         if (visual.hasId(entityId) && visual.isTouchable()) {
