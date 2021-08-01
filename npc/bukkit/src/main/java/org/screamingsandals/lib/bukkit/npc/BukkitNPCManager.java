@@ -1,8 +1,8 @@
 package org.screamingsandals.lib.bukkit.npc;
 import org.bukkit.plugin.Plugin;
-import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;
+import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacket_i_ActionTypeAccessor;
 import org.screamingsandals.lib.npc.NPC;
 import org.screamingsandals.lib.npc.NPCManager;
 import org.screamingsandals.lib.npc.event.NPCInteractEvent;
@@ -13,7 +13,7 @@ import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import org.screamingsandals.lib.visuals.BukkitAbstractVisualsManager;
+import org.screamingsandals.lib.visuals.VisualsTouchListener;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 import java.util.UUID;
@@ -24,7 +24,7 @@ import java.util.UUID;
         LocationMapper.class,
         AbstractTaskInitializer.class
 })
-public class BukkitNPCManager extends BukkitAbstractVisualsManager<NPC> {
+public class BukkitNPCManager extends NPCManager {
     private static final Object ATTACK_ACTION_FIELD = Reflect.getField(ServerboundInteractPacketAccessor.getFieldATTACK_ACTION());
 
     @Deprecated //INTERNAL USE ONLY!
@@ -33,15 +33,14 @@ public class BukkitNPCManager extends BukkitAbstractVisualsManager<NPC> {
     }
 
     protected BukkitNPCManager(Plugin plugin, Controllable controllable) {
-        super(plugin, controllable);
+        super(controllable);
+        new VisualsTouchListener<>(this, plugin, controllable);
     }
 
     @Override
     public void fireVisualTouchEvent(PlayerWrapper sender, NPC visual, Object packet) {
         final var nmsEnum = Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldAction());
-
-        //TODO: use NMSMapper
-        final var attackEnum = Reflect.findEnumConstant(ClassStorage.NMS.PacketPlayInUseEntityActionType, "b,ATTACK");
+        final var attackEnum = Reflect.getField(ServerboundInteractPacket_i_ActionTypeAccessor.getFieldATTACK());
 
         NPCInteractEvent.InteractType interactType = (nmsEnum == attackEnum  || nmsEnum == ATTACK_ACTION_FIELD)
                 ?  NPCInteractEvent.InteractType.LEFT_CLICK : NPCInteractEvent.InteractType.RIGHT_CLICK;

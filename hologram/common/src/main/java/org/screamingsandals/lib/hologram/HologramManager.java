@@ -2,22 +2,19 @@ package org.screamingsandals.lib.hologram;
 
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
-import org.screamingsandals.lib.visual.AbstractVisualsManager;
+import org.screamingsandals.lib.visuals.AbstractVisualsManager;
 import org.screamingsandals.lib.world.LocationHolder;
-
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 @AbstractService
 public abstract class HologramManager extends AbstractVisualsManager<Hologram> {
-    private static AbstractVisualsManager<Hologram> manager = null;
+    private static HologramManager manager = null;
 
     @Deprecated //INTERNAL USE ONLY!
-    public static void init(Supplier<AbstractVisualsManager<Hologram>> supplier) {
+    public static void init(Supplier<HologramManager> supplier) {
         if (manager != null) {
             throw new UnsupportedOperationException("HologramManager is already initialized");
         }

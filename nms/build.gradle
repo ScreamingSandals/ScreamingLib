@@ -352,6 +352,9 @@ nmsGen {
         .reqField('action')
         .reqField('ATTACK_ACTION')
 
+    reqClass('net.minecraft.network.protocol.game.ServerboundInteractPacket$ActionType')
+        .reqField('ATTACK')
+
     reqClass('net.minecraft.network.syncher.EntityDataSerializers')
         .reqField('BYTE')
         .reqField('INT')

@@ -13,10 +13,9 @@ import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.visuals.BukkitAbstractVisualsManager;
+import org.screamingsandals.lib.visuals.VisualsTouchListener;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
-
 import java.util.UUID;
 
 @Slf4j
@@ -27,15 +26,16 @@ import java.util.UUID;
         AbstractTaskInitializer.class,
         ItemFactory.class
 })
-public class BukkitHologramManager extends BukkitAbstractVisualsManager<Hologram> {
-
-    protected BukkitHologramManager(Plugin plugin, Controllable controllable) {
-        super(plugin, controllable);
-    }
+public class BukkitHologramManager extends HologramManager {
 
     @Deprecated //INTERNAL USE ONLY!
     public static void init(Plugin plugin, Controllable controllable) {
         HologramManager.init(() -> new BukkitHologramManager(plugin, controllable));
+    }
+
+    protected BukkitHologramManager(Plugin plugin, Controllable controllable) {
+        super(controllable);
+        new VisualsTouchListener<>(this, plugin, controllable);
     }
 
     @Override
@@ -47,4 +47,5 @@ public class BukkitHologramManager extends BukkitAbstractVisualsManager<Hologram
     public Hologram createVisual(UUID uuid, LocationHolder holder, boolean touchable) {
         return new BukkitHologram(uuid, holder, touchable);
     }
+
 }

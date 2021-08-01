@@ -1,22 +1,18 @@
 package org.screamingsandals.lib.npc;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
-import org.screamingsandals.lib.visual.AbstractVisualsManager;
+import org.screamingsandals.lib.visuals.AbstractVisualsManager;
 import org.screamingsandals.lib.world.LocationHolder;
-
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 @AbstractService
 public abstract class NPCManager extends AbstractVisualsManager<NPC> {
-    private static AbstractVisualsManager<NPC> manager = null;
+    private static NPCManager manager = null;
 
     protected NPCManager(Controllable controllable) {
         super(controllable);
@@ -26,7 +22,7 @@ public abstract class NPCManager extends AbstractVisualsManager<NPC> {
         return manager != null;
     }
 
-    public static void init(@NotNull Supplier<AbstractVisualsManager<NPC>> packetMapperSupplier) {
+    public static void init(@NotNull Supplier<NPCManager> packetMapperSupplier) {
         if (manager != null) {
             throw new UnsupportedOperationException("NPCManager is already initialized.");
         }
