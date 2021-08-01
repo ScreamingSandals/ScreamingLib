@@ -50,7 +50,7 @@ public abstract class NPCManager extends AbstractVisualsManager<NPC> {
             throw new UnsupportedOperationException("NPCManager is not initialized yet!");
         }
 
-        manager.getActiveVisuals().put(npc.getUUID(), npc);
+        manager.addVisual(npc.getUUID(), npc);
     }
 
     public static void removeHologram(UUID uuid) {
@@ -62,7 +62,7 @@ public abstract class NPCManager extends AbstractVisualsManager<NPC> {
             throw new UnsupportedOperationException("NPCManager is not initialized yet!");
         }
 
-        manager.getActiveVisuals().remove(npc.getUUID());
+        manager.removeVisual(npc.getUUID());
     }
 
     public static NPC npc(LocationHolder holder) {
