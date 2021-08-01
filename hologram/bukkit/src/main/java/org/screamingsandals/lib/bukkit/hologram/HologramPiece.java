@@ -89,8 +89,12 @@ public class HologramPiece {
     }
 
     public void setGravity(boolean gravity) {
-        maskedByte2 = getMaskedByteFromBoolFlag(maskedByte2, 2, gravity);
-        put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte2));
+        if (Version.isVersion(1, 10)) {
+            put(MetadataItem.of((byte) 5, !gravity));
+        } else {
+            maskedByte2 = getMaskedByteFromBoolFlag(maskedByte2, 2, gravity);
+            put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte2));
+        }
     }
 
     public void setArms(boolean hasArms) {
