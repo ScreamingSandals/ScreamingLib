@@ -15,6 +15,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,7 +35,7 @@ public class HologramPiece {
     private final int id = EntityNMS.incrementAndGetId();
     private LocationHolder location;
     private UUID uuid = UUID.randomUUID();
-    private final List<MetadataItem> metadataItems = new ArrayList<>();
+    private final List<MetadataItem> metadataItems = Collections.synchronizedList(new ArrayList<>());
     private byte maskedByte = 0;
     private byte maskedByte2 = 0;
     private Component customName = Component.empty();

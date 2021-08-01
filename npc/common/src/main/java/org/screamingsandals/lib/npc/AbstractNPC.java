@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.hologram.Hologram;
+import org.screamingsandals.lib.hologram.HologramManager;
 import org.screamingsandals.lib.packet.SClientboundPlayerInfoPacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.visual.TextEntry;
@@ -19,7 +20,7 @@ public abstract class AbstractNPC implements NPC {
     protected boolean created;
     protected boolean destroyed;
     protected boolean ready;
-    protected boolean shouldLookAtPlayer;
+    protected volatile boolean shouldLookAtPlayer;
     protected boolean visible;
     protected boolean touchable;
     protected final String name;
