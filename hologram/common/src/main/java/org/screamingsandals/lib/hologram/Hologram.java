@@ -6,6 +6,7 @@ import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.visuals.DatableVisual;
 import org.screamingsandals.lib.visuals.LinedVisual;
 import org.screamingsandals.lib.visuals.LocatableVisual;
+import org.screamingsandals.lib.visuals.TouchableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
 /**
  * Hologram that shows some text.
  */
-public interface Hologram extends LocatableVisual<Hologram>, LinedVisual<Hologram>, DatableVisual<Hologram> {
+public interface Hologram extends LocatableVisual<Hologram>, LinedVisual<Hologram>, DatableVisual<Hologram>, TouchableVisual<Hologram> {
     /**
      * Default rate that the item is rotated.
      */
@@ -38,21 +39,6 @@ public interface Hologram extends LocatableVisual<Hologram>, LinedVisual<Hologra
     static Hologram touchableOf(LocationHolder location) {
         return HologramManager.hologram(location, true);
     }
-
-    /**
-     * Checks if you can interact with this Hologram
-     *
-     * @return true if this hologram is touchable
-     */
-    boolean isTouchable();
-
-    /**
-     * Changes interact state for this hologram
-     *
-     * @param touchable touchable state
-     * @return this hologram
-     */
-    Hologram setTouchable(boolean touchable);
 
     /**
      * @return current rotation time

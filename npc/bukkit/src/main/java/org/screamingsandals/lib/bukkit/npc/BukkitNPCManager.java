@@ -38,10 +38,6 @@ public class BukkitNPCManager extends BukkitAbstractVisualsManager<NPC> {
 
     @Override
     public void fireVisualTouchEvent(PlayerWrapper sender, NPC visual, Object packet) {
-        if (!visual.isTouchable()) {
-            return;
-        }
-
         final var nmsEnum = Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldAction());
 
         //TODO: use NMSMapper

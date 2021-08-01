@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
-public abstract class BukkitAbstractVisualsManager<T extends LocatableVisual<T>> extends AbstractVisualsManager<T> {
+public abstract class BukkitAbstractVisualsManager<T extends LocatableVisual<T> & TouchableVisual<T>> extends AbstractVisualsManager<T> {
     private final Map<UUID, Long> cooldownMap = new HashMap<>();
 
     protected BukkitAbstractVisualsManager(Plugin plugin, Controllable controllable) {
@@ -32,7 +32,7 @@ public abstract class BukkitAbstractVisualsManager<T extends LocatableVisual<T>>
                         final var entityId = Reflect.getFieldResulted(packet, ServerboundInteractPacketAccessor.getFieldEntityId()).as(int.class);
                         for (var entry : getActiveVisuals().entrySet()) {
                             var visual = entry.getValue();
-                            if (visual.hasId(entityId)) {
+                            if (visual.hasId(entityId) && visual.isTouchable()) {
                                 synchronized (cooldownMap) {
                                     if (cooldownMap.containsKey(sender.getUniqueId())) {
                                         final var lastClick = cooldownMap.get(sender.getUniqueId());
@@ -45,7 +45,7 @@ public abstract class BukkitAbstractVisualsManager<T extends LocatableVisual<T>>
                                 fireVisualTouchEvent(PlayerMapper.wrapPlayer(sender), visual, packet);
                                 break;
                             }
-                        };
+                        }
                     }
                     return packet;
                 }

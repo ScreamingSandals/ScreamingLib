@@ -40,9 +40,6 @@ public class BukkitHologramManager extends BukkitAbstractVisualsManager<Hologram
 
     @Override
     public void fireVisualTouchEvent(PlayerWrapper sender, Hologram visual, Object packet) {
-        if (!visual.isTouchable()) {
-            return;
-        }
         Tasker.build(() -> EventManager.fire(new HologramTouchEvent(PlayerMapper.wrapPlayer(sender), visual))).afterOneTick().start();
     }
 

@@ -52,8 +52,6 @@ public interface Visual<T> {
 
     void destroy();
 
-    boolean hasId(int id);
-
     void onViewerAdded(PlayerWrapper viewer, boolean checkDistance);
 
     void onViewerRemoved(PlayerWrapper viewer, boolean checkDistance);
