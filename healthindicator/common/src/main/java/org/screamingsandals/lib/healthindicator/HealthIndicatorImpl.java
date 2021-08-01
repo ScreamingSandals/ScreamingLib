@@ -20,24 +20,22 @@ import java.util.*;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> implements HealthIndicator {
-    private final String objectiveKey;
+    private final String underNameTagKey;
+    private final String tabListKey;
     private final ConcurrentSkipListMap<String, Integer> values = new ConcurrentSkipListMap<>();
     protected final List<PlayerWrapper> trackedPlayers = new LinkedList<>();
     @Getter
     @Setter
     protected DataContainer data;
     protected boolean ready;
+    protected boolean healthInTabList;
     protected Component symbol = Component.empty();
     protected TaskerTask task;
 
     public HealthIndicatorImpl(UUID uuid) {
         super(uuid);
-        this.objectiveKey =
-                new Random().ints(48, 123)
-                        .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                        .limit(16)
-                        .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                        .toString();
+        this.underNameTagKey = generateObjectiveKey();
+        this.tabListKey = generateObjectiveKey();
     }
 
     @Override
@@ -65,6 +63,12 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     @Override
     public HealthIndicator symbol(ComponentLike symbol) {
         return symbol(symbol.asComponent());
+    }
+
+    @Override
+    public HealthIndicator showHealthInTabList(boolean flag) {
+        this.healthInTabList = flag;
+        return this;
     }
 
     @Override
@@ -149,16 +153,38 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
 
     protected void updateSymbol0() {
         if (visible) {
-            getUpdateObjectivePacket().sendPacket(viewers);
+            getUpdateObjectivePacket().objectiveKey(underNameTagKey).sendPacket(viewers);
+            if (healthInTabList) {
+                getUpdateObjectivePacket().objectiveKey(tabListKey).sendPacket(viewers);
+            }
         }
     }
 
     @Override
     public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
         if (visible) {
-            getCreateObjectivePacket().sendPacket(player);
-            getDisplayObjectivePacket().sendPacket(player);
-            values.forEach((s, integer) -> createScorePacket(s, integer).sendPacket(player));
+            var createObjectivePacket = getCreateObjectivePacket()
+                    .objectiveKey(underNameTagKey);
+
+            createObjectivePacket.sendPacket(player);
+
+            var displayObjectivePacket = new SClientboundSetDisplayObjectivePacket()
+                    .objectiveKey(underNameTagKey)
+                    .slot(SClientboundSetDisplayObjectivePacket.DisplaySlot.BELOW_NAME);
+
+            displayObjectivePacket.sendPacket(player);
+
+            if (healthInTabList) {
+                createObjectivePacket.objectiveKey(tabListKey);
+                createObjectivePacket.sendPacket(player);
+
+                displayObjectivePacket.objectiveKey(tabListKey).slot(SClientboundSetDisplayObjectivePacket.DisplaySlot.PLAYER_LIST);
+                displayObjectivePacket.sendPacket(player);
+
+                values.forEach((s, integer) -> createScorePacket(s, integer).objectiveKey(tabListKey).sendPacket(player));
+            }
+
+            values.forEach((s, integer) -> createScorePacket(s, integer).objectiveKey(underNameTagKey).sendPacket(player));
         }
     }
 
@@ -176,7 +202,10 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
 
             List.copyOf(values.keySet()).stream().filter(s -> trackedPlayers.stream().noneMatch(p -> p.getName().equals(s))).forEach(s -> {
                 values.remove(s);
-                packets.add(getDestroyScorePacket(s));
+                packets.add(getDestroyScorePacket(s).objectiveKey(underNameTagKey));
+                if (healthInTabList) {
+                    packets.add(getDestroyScorePacket(s).objectiveKey(tabListKey));
+                }
             });
 
             trackedPlayers.forEach(playerWrapper -> {
@@ -189,7 +218,10 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
                 var key = playerWrapper.getName();
                 if (!values.containsKey(key) || values.get(key) != health) {
                     values.put(key, health);
-                    packets.add(createScorePacket(key, health));
+                    packets.add(createScorePacket(key, health).objectiveKey(underNameTagKey));
+                    if (healthInTabList) {
+                        packets.add(createScorePacket(key, health).objectiveKey(tabListKey));
+                    }
                 }
             });
 
@@ -199,7 +231,6 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
 
     private SClientboundSetObjectivePacket getNotFinalObjectivePacket() {
         return new SClientboundSetObjectivePacket()
-                .objectiveKey(objectiveKey)
                 .title(symbol.asComponent())
                 .criteriaType(SClientboundSetObjectivePacket.Type.INTEGER);
     }
@@ -218,20 +249,12 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
 
     private SClientboundSetObjectivePacket getDestroyObjectivePacket() {
         return new SClientboundSetObjectivePacket()
-                .objectiveKey(objectiveKey)
                 .mode(SClientboundSetObjectivePacket.Mode.DESTROY);
-    }
-
-    private SClientboundSetDisplayObjectivePacket getDisplayObjectivePacket() {
-        return new SClientboundSetDisplayObjectivePacket()
-                .slot(SClientboundSetDisplayObjectivePacket.DisplaySlot.BELOW_NAME)
-                .objectiveKey(objectiveKey);
     }
 
     private SClientboundSetScorePacket createScorePacket(String key, int score) {
         return new SClientboundSetScorePacket()
                 .entityName(key)
-                .objectiveKey(objectiveKey)
                 .score(score)
                 .action(SClientboundSetScorePacket.ScoreboardAction.CHANGE);
     }
@@ -239,7 +262,14 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     private SClientboundSetScorePacket getDestroyScorePacket(String key) {
         return new SClientboundSetScorePacket()
                 .entityName(key)
-                .objectiveKey(objectiveKey)
                 .action(SClientboundSetScorePacket.ScoreboardAction.REMOVE);
+    }
+
+    private static String generateObjectiveKey() {
+        return new Random().ints(48, 123)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(16)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
     }
 }

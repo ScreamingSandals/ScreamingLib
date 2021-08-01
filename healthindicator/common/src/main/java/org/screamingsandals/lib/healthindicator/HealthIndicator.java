@@ -11,6 +11,8 @@ public interface HealthIndicator extends DatableVisual<HealthIndicator> {
         return HealthIndicatorManager.healthIndicator();
     }
 
+    HealthIndicator showHealthInTabList(boolean flag);
+
     HealthIndicator symbol(Component symbol);
 
     HealthIndicator symbol(ComponentLike symbol);
