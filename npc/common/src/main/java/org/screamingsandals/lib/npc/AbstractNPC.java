@@ -21,8 +21,8 @@ public abstract class AbstractNPC implements NPC {
     protected boolean destroyed;
     protected boolean ready;
     protected volatile boolean shouldLookAtPlayer;
+    protected volatile boolean touchable;
     protected boolean visible;
-    protected boolean touchable;
     protected final String name;
     protected final List<SClientboundPlayerInfoPacket.Property> properties;
     protected NPCSkin skin;
@@ -49,13 +49,7 @@ public abstract class AbstractNPC implements NPC {
         this.properties = new ArrayList<>();
         this.visibleTo = new ArrayList<>();
         this.name = uuid.toString().replace("-", "").substring(0, 10);
-
-        hologram = Hologram.of(location.clone().add(0, 1.50, 0));
-        if (isShown()) {
-            hologram.show();
-        } else {
-            hologram.hide();
-        }
+        this.hologram = HologramManager.hologram(location.clone().add(0.0D, 1.5D, 0.0D));
     }
 
     @Override
@@ -86,7 +80,7 @@ public abstract class AbstractNPC implements NPC {
             throw new UnsupportedOperationException("Location cannot be null!");
         }
         this.location = location;
-        hologram.setLocation(location.clone().add(0, 1.5D, 0));
+        hologram.setLocation(location.clone().add(0.0D, 1.5D, 0.0D));
         return this;
     }
 
@@ -151,6 +145,7 @@ public abstract class AbstractNPC implements NPC {
         visibleTo.clear();
         destroyed = true;
         NPCManager.removeNPC(this);
+        HologramManager.removeHologram(hologram);
     }
 
     @Override
@@ -178,6 +173,7 @@ public abstract class AbstractNPC implements NPC {
         ready = true;
         visible = true;
         hologram.show();
+        visibleTo.forEach(viewer -> onViewerAdded(viewer, false));
         return this;
     }
 

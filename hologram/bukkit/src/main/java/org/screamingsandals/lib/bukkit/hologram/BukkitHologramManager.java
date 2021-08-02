@@ -35,7 +35,7 @@ public class BukkitHologramManager extends HologramManager {
 
     protected BukkitHologramManager(Plugin plugin, Controllable controllable) {
         super(controllable);
-        new VisualsTouchListener<>(this, plugin, controllable);
+        controllable.postEnable(() -> new VisualsTouchListener<>(BukkitHologramManager.this, plugin));
     }
 
     @Override
@@ -47,5 +47,4 @@ public class BukkitHologramManager extends HologramManager {
     public Hologram createVisual(UUID uuid, LocationHolder holder, boolean touchable) {
         return new BukkitHologram(uuid, holder, touchable);
     }
-
 }

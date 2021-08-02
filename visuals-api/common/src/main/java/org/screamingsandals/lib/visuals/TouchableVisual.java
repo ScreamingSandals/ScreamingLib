@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.visuals;
 
-public interface TouchableVisual<T> extends Visual<T> {
+public interface TouchableVisual<T> extends LocatableVisual<T> {
     /**
      * Checks if you can interact with this Visual.
      *

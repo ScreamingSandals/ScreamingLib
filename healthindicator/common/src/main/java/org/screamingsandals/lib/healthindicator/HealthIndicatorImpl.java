@@ -27,9 +27,9 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     @Getter
     @Setter
     protected DataContainer data;
-    protected boolean ready;
-    protected boolean healthInTabList;
-    protected Component symbol = Component.empty();
+    protected volatile boolean ready;
+    protected volatile boolean healthInTabList;
+    protected volatile Component symbol = Component.empty();
     protected TaskerTask task;
 
     public HealthIndicatorImpl(UUID uuid) {
@@ -93,16 +93,14 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     public HealthIndicator update() {
         if (ready) {
             update0();
+        } else {
+            viewers.forEach(viewer -> onViewerRemoved(viewer, false));
         }
         return this;
     }
 
     @Override
     public HealthIndicator show() {
-        if (isShown()) {
-            return this;
-        }
-
         ready = true;
         visible = true;
         viewers.forEach(a -> onViewerAdded(a, false));
@@ -112,10 +110,6 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
 
     @Override
     public HealthIndicator hide() {
-        if (!isShown()) {
-            return this;
-        }
-
         visible = false;
         ready = false;
         update();
@@ -153,9 +147,14 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
 
     protected void updateSymbol0() {
         if (visible) {
-            getUpdateObjectivePacket().objectiveKey(underNameTagKey).sendPacket(viewers);
+            getUpdateObjectivePacket()
+                    .objectiveKey(underNameTagKey)
+                    .sendPacket(viewers);
+
             if (healthInTabList) {
-                getUpdateObjectivePacket().objectiveKey(tabListKey).sendPacket(viewers);
+                getUpdateObjectivePacket()
+                        .objectiveKey(tabListKey)
+                        .sendPacket(viewers);
             }
         }
     }
@@ -163,34 +162,43 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     @Override
     public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
         if (visible) {
-            var createObjectivePacket = getCreateObjectivePacket()
-                    .objectiveKey(underNameTagKey);
-
-            createObjectivePacket.sendPacket(player);
-
-            var displayObjectivePacket = new SClientboundSetDisplayObjectivePacket()
+            getCreateObjectivePacket()
                     .objectiveKey(underNameTagKey)
-                    .slot(SClientboundSetDisplayObjectivePacket.DisplaySlot.BELOW_NAME);
+                    .sendPacket(player);
 
-            displayObjectivePacket.sendPacket(player);
+            new SClientboundSetDisplayObjectivePacket()
+                    .objectiveKey(underNameTagKey)
+                    .slot(SClientboundSetDisplayObjectivePacket.DisplaySlot.BELOW_NAME)
+                    .sendPacket(player);
+
+            values.forEach((s, integer) -> createScorePacket(s, integer).objectiveKey(underNameTagKey).sendPacket(player));
 
             if (healthInTabList) {
-                createObjectivePacket.objectiveKey(tabListKey);
-                createObjectivePacket.sendPacket(player);
+                getCreateObjectivePacket()
+                        .objectiveKey(tabListKey)
+                        .sendPacket(player);
 
-                displayObjectivePacket.objectiveKey(tabListKey).slot(SClientboundSetDisplayObjectivePacket.DisplaySlot.PLAYER_LIST);
-                displayObjectivePacket.sendPacket(player);
+                new SClientboundSetDisplayObjectivePacket()
+                        .objectiveKey(tabListKey)
+                        .slot(SClientboundSetDisplayObjectivePacket.DisplaySlot.PLAYER_LIST)
+                        .sendPacket(player);
 
                 values.forEach((s, integer) -> createScorePacket(s, integer).objectiveKey(tabListKey).sendPacket(player));
             }
-
-            values.forEach((s, integer) -> createScorePacket(s, integer).objectiveKey(underNameTagKey).sendPacket(player));
         }
     }
 
     @Override
     public void onViewerRemoved(PlayerWrapper player, boolean checkDistance) {
-        getDestroyObjectivePacket().sendPacket(player);
+        getDestroyObjectivePacket()
+                .objectiveKey(underNameTagKey)
+                .sendPacket(player);
+
+        if (healthInTabList) {
+            getDestroyObjectivePacket()
+                    .objectiveKey(tabListKey)
+                    .sendPacket(player);
+        }
     }
 
     @Override

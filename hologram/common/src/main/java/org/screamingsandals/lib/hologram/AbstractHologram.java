@@ -15,7 +15,7 @@ public abstract class AbstractHologram extends AbstractLinedVisual<Hologram> imp
     protected LocationHolder location;
     protected int viewDistance;
     protected boolean touchable;
-    protected boolean ready = false;
+    protected boolean ready;
     protected DataContainer data;
     protected float rotationIncrement;
     protected Pair<Integer, TaskerTime> rotationTime;

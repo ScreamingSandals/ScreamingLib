@@ -45,6 +45,9 @@ public class BukkitNPC extends AbstractNPC {
 
     @Override
     public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
+        if (!isShown()) {
+            return;
+        }
         sendSpawnPackets(player);
     }
 

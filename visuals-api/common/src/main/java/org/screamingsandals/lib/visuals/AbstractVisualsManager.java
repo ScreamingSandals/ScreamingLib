@@ -7,11 +7,12 @@ import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.world.LocationHolder;
+
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractVisualsManager<T extends LocatableVisual<T>> {
+public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     private final Map<UUID, T> activeVisuals = new ConcurrentHashMap<>();
 
     protected AbstractVisualsManager(Controllable controllable) {
@@ -42,7 +43,7 @@ public abstract class AbstractVisualsManager<T extends LocatableVisual<T>> {
     }
 
     protected void destroy() {
-        Map.copyOf(getActiveVisuals())
+        getActiveVisuals()
                 .values()
                 .forEach(Visual::destroy);
         activeVisuals.clear();
@@ -76,19 +77,19 @@ public abstract class AbstractVisualsManager<T extends LocatableVisual<T>> {
 
                 final var player = event.getPlayer();
                 final var viewers = visual.getViewers();
-                final var hologramLocation = visual.getLocation();
-                if (hologramLocation == null) {
+                final var visualLocation = visual.getLocation();
+                if (visualLocation == null) {
                     return;
                 }
 
                 final var viewDistance = visual.getViewDistance();
                 if (viewers.contains(player)
-                        && hologramLocation.getWorld().equals(player.getLocation().getWorld())) {
-                    if (event.getNewLocation().getDistanceSquared(hologramLocation) < viewDistance
-                            && event.getCurrentLocation().getDistanceSquared(hologramLocation) >= viewDistance) {
+                        && visualLocation.getWorld().equals(player.getLocation().getWorld())) {
+                    if (event.getNewLocation().getDistanceSquared(visualLocation) < viewDistance
+                            && event.getCurrentLocation().getDistanceSquared(visualLocation) >= viewDistance) {
                         visual.onViewerAdded(player, false);
-                    } else if (event.getNewLocation().getDistanceSquared(hologramLocation) >= viewDistance
-                            && event.getCurrentLocation().getDistanceSquared(hologramLocation) < viewDistance) {
+                    } else if (event.getNewLocation().getDistanceSquared(visualLocation) >= viewDistance
+                            && event.getCurrentLocation().getDistanceSquared(visualLocation) < viewDistance) {
                         visual.onViewerRemoved(player, false);
                     }
                 }
@@ -111,18 +112,16 @@ public abstract class AbstractVisualsManager<T extends LocatableVisual<T>> {
 
                 final var player = event.getPlayer();
                 final var viewers = visual.getViewers();
-                final var hologramLocation = visual.getLocation();
-                if (hologramLocation == null) {
+                final var visualLocation = visual.getLocation();
+                if (visualLocation == null) {
                     return;
                 }
 
                 final var viewDistance = visual.getViewDistance();
                 if (viewers.contains(player)
-                        && event.getLocation().getWorld().equals(hologramLocation.getWorld())) {
-                    if (player.getLocation().getDistanceSquared(hologramLocation) < viewDistance) {
-                        Tasker.build(() -> {
-                            visual.onViewerAdded(player, false);
-                        }).delay(20, TaskerTime.TICKS).async().start();
+                        && event.getLocation().getWorld().equals(visualLocation.getWorld())) {
+                    if (player.getLocation().getDistanceSquared(visualLocation) < viewDistance) {
+                        Tasker.build(() -> visual.onViewerAdded(player, false)).delay(20, TaskerTime.TICKS).async().start();
                     }
                 }
             } catch (Throwable t) {
@@ -144,15 +143,15 @@ public abstract class AbstractVisualsManager<T extends LocatableVisual<T>> {
 
                 final var player = event.getPlayer();
                 final var viewers = visual.getViewers();
-                final var hologramLocation = visual.getLocation();
-                if (hologramLocation == null) {
+                final var visualLocation = visual.getLocation();
+                if (visualLocation == null) {
                     return;
                 }
 
                 final var viewDistance = visual.getViewDistance();
                 if (viewers.contains(player)
-                        && event.getFrom().equals(hologramLocation.getWorld())) {
-                    if (player.getLocation().getDistanceSquared(hologramLocation) < viewDistance) {
+                        && event.getFrom().equals(visualLocation.getWorld())) {
+                    if (player.getLocation().getDistanceSquared(visualLocation) < viewDistance) {
                         Tasker.build(() -> {
                             visual.onViewerAdded(player, false);
                         }).delay(20, TaskerTime.TICKS).async().start();
@@ -178,21 +177,19 @@ public abstract class AbstractVisualsManager<T extends LocatableVisual<T>> {
 
                 final var player = event.getPlayer();
                 final var viewers = visual.getViewers();
-                final var hologramLocation = visual.getLocation();
-                if (hologramLocation == null) {
+                final var visualLocation = visual.getLocation();
+                if (visualLocation == null) {
                     return;
                 }
 
                 final var viewDistance = visual.getViewDistance();
                 if (viewers.contains(player)
-                        && hologramLocation.getWorld().equals(player.getLocation().getWorld())) {
-                    if (event.getNewLocation().getDistanceSquared(hologramLocation) < viewDistance
-                            && event.getCurrentLocation().getDistanceSquared(hologramLocation) >= viewDistance) {
-                        Tasker.build(() -> {
-                            visual.onViewerAdded(player, false);
-                        }).delay(10, TaskerTime.TICKS).async().start();
-                    } else if (event.getNewLocation().getDistanceSquared(hologramLocation) >= viewDistance
-                            && event.getCurrentLocation().getDistanceSquared(hologramLocation) < viewDistance) {
+                        && visualLocation.getWorld().equals(player.getLocation().getWorld())) {
+                    if (event.getNewLocation().getDistanceSquared(visualLocation) < viewDistance
+                            && event.getCurrentLocation().getDistanceSquared(visualLocation) >= viewDistance) {
+                        Tasker.build(() -> visual.onViewerAdded(player, false)).delay(10, TaskerTime.TICKS).async().start();
+                    } else if (event.getNewLocation().getDistanceSquared(visualLocation) >= viewDistance
+                            && event.getCurrentLocation().getDistanceSquared(visualLocation) < viewDistance) {
                         Tasker.build(() -> {
                             visual.onViewerRemoved(player, false);
                         }).delay(10, TaskerTime.TICKS).async().start();

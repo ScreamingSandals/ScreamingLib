@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.bukkit.npc;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.event.player.SPlayerMoveEvent;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacket_i_ActionTypeAccessor;
 import org.screamingsandals.lib.npc.NPC;
@@ -9,7 +10,6 @@ import org.screamingsandals.lib.npc.event.NPCInteractEvent;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
-import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -35,13 +35,24 @@ public class BukkitNPCManager extends NPCManager {
 
     protected BukkitNPCManager(Plugin plugin, Controllable controllable) {
         super(controllable);
-        controllable.postEnable(() -> Tasker.build(() -> getActiveNPCS().values()
-                        .forEach(npc -> {
-                            if (npc.shouldLookAtPlayer()) {
-                                npc.getViewers().forEach(viewer -> npc.lookAtPlayer(viewer.getLocation(), viewer));
-                            }
-                        })).async().repeat(1L, TaskerTime.TICKS).start());
-        new VisualsTouchListener<>(this, plugin, controllable);
+        controllable.postEnable(() -> {
+            new VisualsTouchListener<>(BukkitNPCManager.this, plugin);
+            EventManager.getDefaultEventManager().register(SPlayerMoveEvent.class, this::onPlayerMove);
+        });
+    }
+
+    private void onPlayerMove(SPlayerMoveEvent event) {
+        if (getActiveNPCS().isEmpty()) {
+            return;
+        }
+
+        final var player = event.getPlayer();
+
+        getActiveNPCS().values().forEach(npc -> {
+            if (npc.isShown() && npc.shouldLookAtPlayer() && npc.getViewers().contains(player)) {
+                npc.lookAtPlayer(event.getNewLocation(), player);
+            }
+        });
     }
 
     @Override

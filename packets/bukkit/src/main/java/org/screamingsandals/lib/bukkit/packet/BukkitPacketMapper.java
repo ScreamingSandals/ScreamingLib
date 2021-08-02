@@ -3,6 +3,7 @@ package org.screamingsandals.lib.bukkit.packet;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
+import lombok.extern.slf4j.Slf4j;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
@@ -15,6 +16,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
 @Service
+@Slf4j
 public class BukkitPacketMapper extends PacketMapper {
     public static void init() {
         PacketMapper.init(BukkitPacketMapper::new);
@@ -27,6 +29,10 @@ public class BukkitPacketMapper extends PacketMapper {
         }
         if (player == null) {
             throw new UnsupportedOperationException("Player cannot be null!");
+        }
+        if (!player.isOnline()) {
+            log.trace("Ignoring packet!, not sending packet to offline player.");
+            return;
         }
 
         var writer = new CraftBukkitPacketWriter(Unpooled.buffer());

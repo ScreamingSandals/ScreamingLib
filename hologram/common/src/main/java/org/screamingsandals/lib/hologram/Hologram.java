@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Hologram that shows some text.
  */
-public interface Hologram extends LocatableVisual<Hologram>, LinedVisual<Hologram>, DatableVisual<Hologram>, TouchableVisual<Hologram> {
+public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>, TouchableVisual<Hologram> {
     /**
      * Default rate that the item is rotated.
      */

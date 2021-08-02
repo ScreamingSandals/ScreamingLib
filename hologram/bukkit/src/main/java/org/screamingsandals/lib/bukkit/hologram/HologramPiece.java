@@ -32,18 +32,23 @@ public class HologramPiece {
         HEAD_POSE_INDEX = (int) Reflect.fastInvoke(object2, EntityDataAccessorAccessor.getMethodGetId1());
     }
 
-    private final int id = EntityNMS.incrementAndGetId();
+    private final int id;
     private LocationHolder location;
-    private UUID uuid = UUID.randomUUID();
-    private final List<MetadataItem> metadataItems = Collections.synchronizedList(new ArrayList<>());
-    private byte maskedByte = 0;
-    private byte maskedByte2 = 0;
+    private UUID uuid;
+    private final List<MetadataItem> metadataItems;
+    private byte maskedByte;
+    private byte maskedByte2;
     private Component customName = Component.empty();
     private Vector3Df headPose;
 
     public HologramPiece(LocationHolder location) {
+        this.id = EntityNMS.incrementAndGetId();
         this.location = location;
+        this.uuid = UUID.randomUUID();
         this.headPose = new Vector3Df(0.0f, 0.0f, 0.0f);
+        this.metadataItems = Collections.synchronizedList(new ArrayList<>());
+        this.maskedByte = 0;
+        this.maskedByte2 = 0;
 
         put(MetadataItem.of((byte) 0, (byte) 0));
         put(MetadataItem.of((byte) 1, 300));
@@ -54,6 +59,7 @@ public class HologramPiece {
         }
         put(MetadataItem.of((byte) 3, false));
         put(MetadataItem.of((byte) 4, false));
+        put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte2));
     }
 
     public void put(MetadataItem metadataItem) {
@@ -62,7 +68,7 @@ public class HologramPiece {
     }
 
     public void setInvisible(boolean invisible) {
-        maskedByte = getMaskedByteFromBoolFlag(maskedByte, 5, invisible);
+        setMaskedByte1FromFlag(5, invisible);
         put(MetadataItem.of((byte) 0, maskedByte));
     }
 
@@ -84,7 +90,7 @@ public class HologramPiece {
     }
 
     public void setSmall(boolean isSmall) {
-        maskedByte2 = getMaskedByteFromBoolFlag(maskedByte2, 1, isSmall);
+        setMaskedByte2FromFlag(1, isSmall);
         put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte2));
     }
 
@@ -92,23 +98,23 @@ public class HologramPiece {
         if (Version.isVersion(1, 10)) {
             put(MetadataItem.of((byte) 5, !gravity));
         } else {
-            maskedByte2 = getMaskedByteFromBoolFlag(maskedByte2, 2, gravity);
+            setMaskedByte2FromFlag( 2, gravity);
             put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte2));
         }
     }
 
     public void setArms(boolean hasArms) {
-        maskedByte2 = getMaskedByteFromBoolFlag(maskedByte2, 4, hasArms);
+        setMaskedByte2FromFlag(4, hasArms);
         put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte2));
     }
 
     public void setBasePlate(boolean hasBasePlate) {
-        maskedByte2 = getMaskedByteFromBoolFlag(maskedByte2, 8, hasBasePlate);
+        setMaskedByte2FromFlag(8, hasBasePlate);
         put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte2));
     }
 
     public void setMarker(boolean marker) {
-        maskedByte2 = getMaskedByteFromBoolFlag(maskedByte2, 16, marker);
+        setMaskedByte2FromFlag( 16, marker);
         put(MetadataItem.of((byte) CLIENT_FLAGS_INDEX, maskedByte2));
     }
 
@@ -118,11 +124,19 @@ public class HologramPiece {
         put(MetadataItem.of((byte) HEAD_POSE_INDEX, this.headPose));
     }
 
-    private byte getMaskedByteFromBoolFlag(byte b, int i, boolean flag) {
+    private void setMaskedByte2FromFlag(int i, boolean flag) {
         if (flag) {
-            return (byte)(b | 1 << i);
+            maskedByte2 = (byte) (maskedByte2 | i);
         } else {
-            return (byte)(b & (~(1 << i)));
+            maskedByte2 = (byte)(maskedByte2 & (~i));
+        }
+    }
+
+    public void setMaskedByte1FromFlag(int index, boolean value) {
+        if (value) {
+            maskedByte = (byte) (maskedByte | 1 << index);
+        } else {
+            maskedByte = (byte) (maskedByte & (~(1 << index)));
         }
     }
 

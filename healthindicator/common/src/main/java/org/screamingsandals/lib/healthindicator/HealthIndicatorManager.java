@@ -90,7 +90,7 @@ public class HealthIndicatorManager {
     }
 
     protected void destroy() {
-        Map.copyOf(getActiveIndicators())
+        getActiveIndicators()
                 .values()
                 .forEach(Visual::destroy);
         manager.activeIndicators.clear();
