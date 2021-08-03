@@ -585,7 +585,7 @@ public final class Message implements TitleableSenderMessage, Cloneable {
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
-    protected Message clone() {
+    public Message clone() {
         var msg = new Message(translations, langService, prefix);
         msg.times = times;
         msg.placeholders.putAll(placeholders);
