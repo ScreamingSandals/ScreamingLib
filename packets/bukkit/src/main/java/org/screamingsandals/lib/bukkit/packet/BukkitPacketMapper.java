@@ -4,6 +4,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import lombok.extern.slf4j.Slf4j;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
@@ -35,33 +36,38 @@ public class BukkitPacketMapper extends PacketMapper {
             return;
         }
 
-        var writer = new CraftBukkitPacketWriter(Unpooled.buffer());
-        writer.writeVarInt(PacketIdMapping.getPacketId(packet.getClass()));
+        try {
+            var writer = new CraftBukkitPacketWriter(Unpooled.buffer());
+            writer.writeVarInt(PacketIdMapping.getPacketId(packet.getClass()));
 
-        int i = writer.getBuffer().writerIndex();
-        packet.write(writer);
+            int i = writer.getBuffer().writerIndex();
+            packet.write(writer);
 
-        int j = writer.getBuffer().writerIndex() - i;
-        if (j > 2097152) {
-            throw new IllegalArgumentException("Packet too big (is " + j + ", should be less than 2097152): " + packet);
-        }
+            int j = writer.getBuffer().writerIndex() - i;
+            if (j > 2097152) {
+                throw new IllegalArgumentException("Packet too big (is " + j + ", should be less than 2097152): " + packet);
+            }
 
-        var channel = Reflect.getFieldResulted(ClassStorage.getHandle(player.as(Player.class)), ServerPlayerAccessor.getFieldConnection())
-                .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
-                .getFieldResulted(ConnectionAccessor.getFieldChannel())
-                .as(Channel.class);
+            var channel = Reflect.getFieldResulted(ClassStorage.getHandle(player.as(Player.class)), ServerPlayerAccessor.getFieldConnection())
+                    .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
+                    .getFieldResulted(ConnectionAccessor.getFieldChannel())
+                    .as(Channel.class);
 
-        if (channel.eventLoop().inEventLoop()) {
-            var future = channel.writeAndFlush(writer.getBuffer());
-            future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
-        } else {
-            channel.eventLoop().execute(() -> {
+            if (channel.eventLoop().inEventLoop()) {
                 var future = channel.writeAndFlush(writer.getBuffer());
                 future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
-            });
-        }
+            } else {
+                channel.eventLoop().execute(() -> {
+                    var future = channel.writeAndFlush(writer.getBuffer());
+                    future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+                });
+            }
 
-        writer.getAppendedPackets().forEach(packet1 -> sendPacket0(player, packet1));
+            writer.getAppendedPackets().forEach(packet1 -> sendPacket0(player, packet1));
+        } catch(Throwable t) {
+            Bukkit.getLogger().warning("An exception occurred sending packet of class: " + packet.getClass().getSimpleName() + " to player: " + player.getName());
+            t.printStackTrace();
+        }
     }
 
 }
