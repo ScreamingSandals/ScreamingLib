@@ -93,9 +93,9 @@ public abstract class PacketWriter extends OutputStream {
     }
 
     public void writeSizedString(String string) {
-        final int utf8Bytes = ByteBufUtil.utf8Bytes(string);
-        writeVarInt(utf8Bytes);
-        buffer.writeCharSequence(string, StandardCharsets.UTF_8);
+        var bytes = string.getBytes(StandardCharsets.UTF_8);
+        writeVarInt(bytes.length);
+        buffer.writeBytes(bytes);
     }
 
     public void writeNullTerminatedString(String s) {
