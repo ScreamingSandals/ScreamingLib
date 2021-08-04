@@ -3,10 +3,12 @@ package org.screamingsandals.lib.bukkit.entity;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityTypeMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
 import org.screamingsandals.lib.bukkit.world.BukkitLocationMapper;
 import org.screamingsandals.lib.entity.EntityBasic;
+import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -59,5 +61,12 @@ public class BukkitEntityMapper extends EntityMapper {
             }
             return Optional.empty();
         });
+    }
+
+    @Override
+    public Optional<EntityItem> dropItem0(org.screamingsandals.lib.material.Item item, LocationHolder locationHolder) {
+        var bukkitLoc = locationHolder.as(Location.class);
+        var itemEntity = bukkitLoc.getWorld().dropItem(bukkitLoc, item.as(ItemStack.class));
+        return Optional.of(new BukkitEntityItem(itemEntity));
     }
 }

@@ -122,12 +122,21 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
 
     @Override
     public boolean addPassenger(EntityBasic passenger) {
-        return wrappedObject.addPassenger(passenger.as(Entity.class));
+        var bukkitPassenger = passenger.as(Entity.class);
+        try {
+            return wrappedObject.addPassenger(bukkitPassenger);
+        } catch (Throwable ignored) { // probably old version
+            return wrappedObject.setPassenger(bukkitPassenger);
+        }
     }
 
     @Override
     public boolean removePassenger(EntityBasic passenger) {
-        return wrappedObject.removePassenger(passenger.as(Entity.class));
+        try {
+            return wrappedObject.removePassenger(passenger.as(Entity.class));
+        } catch (Throwable ignored) { // probably old version
+            return wrappedObject.eject();
+        }
     }
 
     @Override

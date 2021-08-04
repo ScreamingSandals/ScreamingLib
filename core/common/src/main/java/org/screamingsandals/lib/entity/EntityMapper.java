@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.entity;
 
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.LocationHolder;
 
@@ -34,6 +35,13 @@ public abstract class EntityMapper {
         return mapper.spawn0(entityType, locationHolder);
     }
 
+    public static Optional<EntityItem> dropItem(Item item, LocationHolder locationHolder) {
+        if (mapper == null) {
+            throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
+        }
+        return mapper.dropItem0(item, locationHolder);
+    }
+
     public static boolean isInitialized() {
         return mapper != null;
     }
@@ -41,4 +49,6 @@ public abstract class EntityMapper {
     protected abstract <T extends EntityBasic> Optional<T> wrapEntity0(Object entity);
 
     public abstract <T extends EntityBasic>  Optional<T> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder);
+
+    public abstract Optional<EntityItem> dropItem0(Item item, LocationHolder locationHolder);
 }
