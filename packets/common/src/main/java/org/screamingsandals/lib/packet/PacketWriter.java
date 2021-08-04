@@ -218,12 +218,24 @@ public abstract class PacketWriter extends OutputStream {
 
     public void writeItem(Item item) {
         if (item.getMaterial().isAir()) {
-           writeBoolean(false);
+            if (protocol() >= 402) {
+                writeBoolean(false);
+            } else {
+                writeShort((short) -1);
+            }
         } else {
-            writeBoolean(true);
+            if (protocol() >= 402) {
+                writeBoolean(true);
 
-            writeVarInt(getItemId(item.getMaterial()));
+                writeVarInt(getItemId(item.getMaterial()));
+            } else {
+                writeShort((short) getItemId(item.getMaterial()));
+            }
+
             write(item.getAmount());
+            if (protocol() >= 351) {
+                writeShort((short) item.getMaterial().getDurability());
+            }
             write(0); // TODO: write nbt meta
             //write(item.get()); write meta
         }
