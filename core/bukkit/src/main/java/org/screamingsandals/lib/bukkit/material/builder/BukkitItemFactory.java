@@ -370,8 +370,8 @@ public class BukkitItemFactory extends ItemFactory {
 
     @Override
     public ItemData createNewItemData0() {
-        var r = Reflect.constructor(ClassStorage.NMS.CraftPersistentDataContainer, ClassStorage.NMS.CraftPersistentDataTypeRegistry)
-                .constructResulted(Reflect.getField(ClassStorage.NMS.CraftMetaItem, "DATA_TYPE_REGISTRY"));
+        var r = Reflect.constructor(ClassStorage.CB.CraftPersistentDataContainer, ClassStorage.CB.CraftPersistentDataTypeRegistry)
+                .constructResulted(Reflect.getField(ClassStorage.CB.CraftMetaItem, "DATA_TYPE_REGISTRY"));
         if (r.raw() != null) {
             return new BukkitItemData(plugin, (PersistentDataContainer) r.raw());
         }

@@ -26,7 +26,7 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
 
     @Override
     protected Object materialHolderToItem(MaterialHolder material) {
-        return Reflect.getMethod(ClassStorage.NMS.CraftMagicNumbers, "getItem", Material.class).invokeStatic(material.as(Material.class));
+        return Reflect.getMethod(ClassStorage.CB.CraftMagicNumbers, "getItem", Material.class).invokeStatic(material.as(Material.class));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
             return Reflect.fastInvoke(blockData.as(BlockData.class), "getState");
         } else {
             var materialData = blockData.as(MaterialData.class);
-            return Reflect.getMethod(ClassStorage.NMS.CraftMagicNumbers, "getBlock", Material.class)
+            return Reflect.getMethod(ClassStorage.CB.CraftMagicNumbers, "getBlock", Material.class)
                     .invokeStaticResulted(materialData.getItemType())
                     .fastInvoke(BlockAccessor.getMethodFromLegacyData1(), (int) materialData.getData());
         }

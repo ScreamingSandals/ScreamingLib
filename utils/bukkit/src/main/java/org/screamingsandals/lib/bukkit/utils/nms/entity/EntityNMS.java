@@ -187,7 +187,7 @@ public class EntityNMS {
 			);
 		} else {
 			final var mot = Reflect.fastInvoke(handler, EntityAccessor.getMethodGetDeltaMovement1());
-			final var bukkitVector = (Vector) Reflect.getMethod(ClassStorage.NMS.CraftVector, "toBukkit").invokeStatic(mot);
+			final var bukkitVector = (Vector) Reflect.getMethod(ClassStorage.CB.CraftVector, "toBukkit").invokeStatic(mot);
 			if (bukkitVector == null) {
 				return new Vector3D(0, 0, 0);
 			}
