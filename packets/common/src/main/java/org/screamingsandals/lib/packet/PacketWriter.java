@@ -233,7 +233,7 @@ public abstract class PacketWriter extends OutputStream {
             }
 
             write(item.getAmount());
-            if (protocol() >= 351) {
+            if (protocol() < 351) {
                 writeShort((short) item.getMaterial().getDurability());
             }
             write(0); // TODO: write nbt meta
