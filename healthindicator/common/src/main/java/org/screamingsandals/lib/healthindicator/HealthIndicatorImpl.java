@@ -119,15 +119,14 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     @Override
     public void destroy() {
         data = null;
-        hide();
-        viewers.clear();
-        trackedPlayers.clear();
-        values.clear();
         if (task != null) {
             task.cancel();
             task = null;
         }
-
+        hide();
+        viewers.clear();
+        trackedPlayers.clear();
+        values.clear();
         HealthIndicatorManager.removeHealthIndicator(this);
     }
 

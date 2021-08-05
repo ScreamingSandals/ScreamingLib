@@ -167,7 +167,6 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
         data = null;
         hide();
         viewers.clear();
-
         SidebarManager.removeSidebar(this);
     }
 

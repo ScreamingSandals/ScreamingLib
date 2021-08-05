@@ -65,7 +65,7 @@ public class BukkitPacketMapper extends PacketMapper {
 
             writer.getAppendedPackets().forEach(packet1 -> sendPacket0(player, packet1));
         } catch(Throwable t) {
-            Bukkit.getLogger().warning("An exception occurred sending packet of class: " + packet.getClass().getSimpleName() + " to player: " + player.getName());
+            Bukkit.getLogger().severe("An exception occurred sending packet of class: " + packet.getClass().getSimpleName() + " to player: " + player.getName());
             t.printStackTrace();
         }
     }

@@ -6,9 +6,10 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PacketIdMapping {
-    private static final Map<Class<? extends AbstractPacket>, Class<?>> PACKET_CLASS_TRANSLATE = new HashMap<>();
+    private static final Map<Class<? extends AbstractPacket>, Class<?>> PACKET_CLASS_TRANSLATE = new ConcurrentHashMap<>();
 
     static {
         PACKET_CLASS_TRANSLATE.put(SClientboundAddEntityPacket.class, ClientboundAddEntityPacketAccessor.getType());
@@ -49,6 +50,10 @@ public class PacketIdMapping {
     }
 
     public static Integer getPacketId(Class<? extends AbstractPacket> packetClass) {
+        if (packetClass == null) {
+            throw new UnsupportedOperationException("Cannot get packet id of null class!");
+        }
+
         var vanillaClass = PACKET_CLASS_TRANSLATE.get(packetClass);
 
         // all mapped packets are just from play protocol, we don't rly need to touch handshaking, status or login protocol

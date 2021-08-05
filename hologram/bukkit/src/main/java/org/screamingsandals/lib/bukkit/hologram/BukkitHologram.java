@@ -115,6 +115,7 @@ public class BukkitHologram extends AbstractHologram {
         if (rotationTask != null) {
             log.trace("Cancelling!");
             rotationTask.cancel();
+            rotationTask = null;
         }
         super.destroy();
     }
@@ -281,7 +282,7 @@ public class BukkitHologram extends AbstractHologram {
         return toReturn;
     }
 
-    private SClientboundRemoveEntitiesPacket getFullDestroyPacket() throws IllegalArgumentException, SecurityException {
+    private SClientboundRemoveEntitiesPacket getFullDestroyPacket() {
         final var lines = entitiesOnLines.values()
                 .stream()
                 .map(HologramPiece::getId);
@@ -354,6 +355,7 @@ public class BukkitHologram extends AbstractHologram {
         final var toSend = new LinkedList<AbstractPacket>();
         if (itemEntity != null) {
             rotationTask.cancel();
+            rotationTask = null;
         }
 
         if (itemEntity != null || entitiesOnLines.size() > 0) {

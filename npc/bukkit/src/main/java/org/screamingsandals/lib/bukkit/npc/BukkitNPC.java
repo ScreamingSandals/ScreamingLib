@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.bukkit.npc;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -21,6 +22,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.*;
 
+@Slf4j
 public class BukkitNPC extends AbstractNPC {
     private final int id;
     private final List<MetadataItem> metadata = new ArrayList<>();
@@ -28,7 +30,9 @@ public class BukkitNPC extends AbstractNPC {
     protected BukkitNPC(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
         id = EntityNMS.incrementAndGetId();
+        log.trace("Initialized BukkitNPC of id: {}", id);
         metadata.add(MetadataItem.of((byte) SkinLayerValues.findLayerByVersion(), (byte) 127));
+        log.trace("Added Second Skin MetaData value {}", SkinLayerValues.findLayerByVersion());
     }
 
     @Override
@@ -95,7 +99,7 @@ public class BukkitNPC extends AbstractNPC {
 
     private SClientboundRemoveEntitiesPacket getFullDestroyPacket() {
         return new SClientboundRemoveEntitiesPacket()
-                .entityIds(new int[] { getEntityId() });
+                .entityIds(new int[] {getEntityId()});
     }
 
 
@@ -138,11 +142,6 @@ public class BukkitNPC extends AbstractNPC {
     }
 
     @Override
-    public boolean isShown() {
-        return visible;
-    }
-
-    @Override
     public void lookAtPlayer(LocationHolder location, PlayerWrapper player) {
         final var bukkitNPCLocation = getLocation().as(Location.class);
         final var playerLocation = location.as(Location.class);
@@ -170,6 +169,7 @@ public class BukkitNPC extends AbstractNPC {
 
     @Override
     public NPC setSkin(@Nullable NPCSkin skin) {
+        log.trace("Updating NPC skin to: {}", skin);
         final var playerInfoPacket = new SClientboundPlayerInfoPacket()
                 .action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
                 .data(getNPCInfoData());
@@ -224,5 +224,4 @@ public class BukkitNPC extends AbstractNPC {
                     .orElse(V9.layerValue);
         }
     }
-
 }

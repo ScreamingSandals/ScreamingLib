@@ -1,5 +1,4 @@
 package org.screamingsandals.lib.npc;
-
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,8 +47,13 @@ public abstract class AbstractNPC implements NPC {
         this.clickCoolDown = NPC.CLICK_COOL_DOWN;
         this.properties = new ArrayList<>();
         this.visibleTo = new ArrayList<>();
-        this.name = uuid.toString().replace("-", "").substring(0, 10);
+        this.name = "[NPC} " + uuid.toString().replace("-", "").substring(0, 10);
         this.hologram = HologramManager.hologram(location.clone().add(0.0D, 1.5D, 0.0D));
+    }
+
+    @Override
+    public boolean isShown() {
+        return visible;
     }
 
     @Override
@@ -185,8 +189,8 @@ public abstract class AbstractNPC implements NPC {
 
         visible = false;
         ready = false;
-        visibleTo.clear();
         hologram.hide();
+        visibleTo.forEach(viewer -> onViewerRemoved(viewer, false));
         return this;
     }
 
