@@ -52,10 +52,10 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
                     objects.add("proxyServer");
                 })
                 .add("java.lang.Object", (statement, objects) -> // probably plugin
-                        statement.append("this")
+                        statement.append(pluginContainer.getSimpleName()).append("_VelocityImpl.this")
                 )
                 .add(pluginContainer.asType().toString(), (statement, processedArguments) -> {
-                    statement.append("this.$N");
+                    statement.append(pluginContainer.getSimpleName()).append("_VelocityImpl.this.$N");
                     processedArguments.add("pluginContainer");
                 });
 
