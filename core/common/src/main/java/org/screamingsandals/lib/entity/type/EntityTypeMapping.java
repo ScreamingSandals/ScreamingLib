@@ -43,6 +43,13 @@ public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHol
         return entityTypeMapping.entityTypeConverter.convert(holder, newType);
     }
 
+    public static boolean isAlive(EntityTypeHolder entityTypeHolder) {
+        if (entityTypeMapping == null) {
+            throw new UnsupportedOperationException("EntityTypeMapping is not initialized yet.");
+        }
+        return entityTypeMapping.isAlive0(entityTypeHolder);
+    }
+
     public static boolean isInitialized() {
         return entityTypeMapping != null;
     }
@@ -70,4 +77,6 @@ public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHol
 
         // TODO check legacy
     }
+
+    public abstract boolean isAlive0(EntityTypeHolder entityTypeHolder);
 }
