@@ -49,15 +49,14 @@ public class BukkitNPC extends AbstractNPC {
 
     @Override
     public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
-        if (!isShown()) {
-            return;
-        }
         sendSpawnPackets(player);
+        getHologram().onViewerAdded(player, checkDistance);
     }
 
     @Override
     public void onViewerRemoved(PlayerWrapper player, boolean checkDistance) {
         removeForPlayer(player);
+        getHologram().onViewerRemoved(player, checkDistance);
     }
 
     private void sendSpawnPackets(PlayerWrapper player) {

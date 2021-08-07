@@ -152,9 +152,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
                 if (viewers.contains(player)
                         && event.getFrom().equals(visualLocation.getWorld())) {
                     if (player.getLocation().getDistanceSquared(visualLocation) < viewDistance) {
-                        Tasker.build(() -> {
-                            visual.onViewerAdded(player, false);
-                        }).delay(20, TaskerTime.TICKS).async().start();
+                        Tasker.build(() -> visual.onViewerAdded(player, false)).delay(20, TaskerTime.TICKS).async().start();
                     }
                 }
             } catch (Throwable t) {
@@ -190,9 +188,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
                         Tasker.build(() -> visual.onViewerAdded(player, false)).delay(10, TaskerTime.TICKS).async().start();
                     } else if (event.getNewLocation().getDistanceSquared(visualLocation) >= viewDistance
                             && event.getCurrentLocation().getDistanceSquared(visualLocation) < viewDistance) {
-                        Tasker.build(() -> {
-                            visual.onViewerRemoved(player, false);
-                        }).delay(10, TaskerTime.TICKS).async().start();
+                        Tasker.build(() -> visual.onViewerRemoved(player, false)).delay(10, TaskerTime.TICKS).async().start();
                     }
                 }
             } catch (Throwable t) {
