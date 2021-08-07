@@ -30,8 +30,10 @@ public class BukkitNPCManager extends NPCManager {
     private static final Object ATTACK_ACTION_FIELD = Reflect.getField(ServerboundInteractPacketAccessor.getFieldATTACK_ACTION());
 
     @Deprecated //INTERNAL USE ONLY!
-    public static void init(Plugin plugin, Controllable controllable) {
-        NPCManager.init(() -> new BukkitNPCManager(plugin, controllable));
+    public static BukkitNPCManager init(Plugin plugin, Controllable controllable) {
+        var bukkitNPCManager = new BukkitNPCManager(plugin, controllable);
+        NPCManager.init(() -> bukkitNPCManager);
+        return bukkitNPCManager;
     }
 
     protected BukkitNPCManager(Plugin plugin, Controllable controllable) {
@@ -40,7 +42,7 @@ public class BukkitNPCManager extends NPCManager {
     }
 
     @OnEvent
-    private void onPlayerMove(SPlayerMoveEvent event) {
+    public void onPlayerMove(SPlayerMoveEvent event) {
         if (getActiveNPCS().isEmpty()) {
             return;
         }
