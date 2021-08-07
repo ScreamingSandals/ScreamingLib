@@ -31,6 +31,10 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         this.uuid = uuid;
     }
 
+    public EntityHuman asEntity() {
+        return as(EntityHuman.class);
+    }
+
     public Container getEnderChest() {
         return PlayerMapper.getEnderChest(this);
     }
