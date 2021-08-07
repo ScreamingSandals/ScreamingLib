@@ -95,6 +95,13 @@ public class BukkitNPC extends AbstractNPC {
                     .data(getNPCInfoData())
                     .sendPacket(player);
         }).delay(6L, TaskerTime.SECONDS).start();
+
+        new SClientboundMoveEntityPacket.Rot()
+                .entityId(getEntityId())
+                .yaw((byte) (getLocation().getYaw() * 256.0F / 360.0F))
+                .pitch((byte) (getLocation().getPitch() * 256.0F / 360.0F))
+                .onGround(true)
+                .sendPacket(player);
     }
 
     private SClientboundRemoveEntitiesPacket getFullDestroyPacket() {
