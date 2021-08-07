@@ -1,4 +1,5 @@
 package org.screamingsandals.lib.visuals;
+import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -15,7 +16,13 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     private final Map<UUID, T> activeVisuals = new ConcurrentHashMap<>();
 
     protected AbstractVisualsManager(Controllable controllable) {
-        controllable.preDisable(this::destroy);
+        controllable.child().postEnable(() -> {
+            EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, this::onLeave);
+            EventManager.getDefaultEventManager().register(SPlayerMoveEvent.class, this::onMove);
+            EventManager.getDefaultEventManager().register(SPlayerRespawnEvent.class, this::onRespawn);
+            EventManager.getDefaultEventManager().register(SPlayerTeleportEvent.class, this::onTeleport);
+            EventManager.getDefaultEventManager().register(SPlayerWorldChangeEvent.class, this::onWorldChange);
+        }).preDisable(this::destroy);
     }
 
     public void addVisual(UUID uuid, T visual) {
@@ -41,7 +48,6 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         activeVisuals.clear();
     }
 
-    @OnEvent
     public void onLeave(SPlayerLeaveEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
@@ -57,7 +63,6 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         });
     }
 
-    @OnEvent
     public void onMove(SPlayerMoveEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
@@ -93,7 +98,6 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         });
     }
 
-    @OnEvent
     public void onRespawn(SPlayerRespawnEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
@@ -129,7 +133,6 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         });
     }
 
-    @OnEvent
     public void onWorldChange(SPlayerWorldChangeEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
@@ -167,7 +170,6 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         });
     }
 
-    @OnEvent
     public void onTeleport(SPlayerTeleportEvent event) {
         if (activeVisuals.isEmpty()
                 || !event.getCurrentLocation().getWorld().equals(event.getNewLocation().getWorld())) {
