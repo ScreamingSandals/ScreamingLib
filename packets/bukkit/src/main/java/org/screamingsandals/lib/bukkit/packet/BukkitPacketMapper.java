@@ -2,6 +2,7 @@ package org.screamingsandals.lib.bukkit.packet;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Bukkit;
@@ -19,6 +20,16 @@ import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 @Service
 @Slf4j
 public class BukkitPacketMapper extends PacketMapper {
+    private static final ChannelFutureListener OPERATION_COMPLETE_LISTENER = new ChannelFutureListener() {
+        @Override
+        public void operationComplete(ChannelFuture future) throws Exception {
+            if (!future.isSuccess()) {
+                future.cause().printStackTrace();
+                future.channel().pipeline().fireExceptionCaught(future.cause());
+            }
+        }
+    };
+
     public static void init() {
         PacketMapper.init(BukkitPacketMapper::new);
     }
@@ -55,11 +66,11 @@ public class BukkitPacketMapper extends PacketMapper {
 
             if (channel.eventLoop().inEventLoop()) {
                 var future = channel.writeAndFlush(writer.getBuffer());
-                future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+                future.addListener(OPERATION_COMPLETE_LISTENER);
             } else {
                 channel.eventLoop().execute(() -> {
                     var future = channel.writeAndFlush(writer.getBuffer());
-                    future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+                    future.addListener(OPERATION_COMPLETE_LISTENER);
                 });
             }
 
