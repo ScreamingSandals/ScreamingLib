@@ -2,16 +2,13 @@ package org.screamingsandals.lib.signs;
 
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.event.OnEvent;
+import org.screamingsandals.lib.event.player.SPlayerInteractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.event.player.SPlayerBlockBreakEvent;
-import org.screamingsandals.lib.event.player.SPlayerClickedBlockEvent;
 import org.screamingsandals.lib.event.player.SPlayerUpdateSignEvent;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
-import org.screamingsandals.lib.world.BlockMapper;
-import org.screamingsandals.lib.world.LocationMapper;
-import org.screamingsandals.lib.world.state.BlockStateMapper;
 import org.screamingsandals.lib.world.state.SignHolder;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.loader.ConfigurationLoader;
@@ -23,11 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@ServiceDependencies(dependsOn = {
-        LocationMapper.class,
-        BlockMapper.class,
-        BlockStateMapper.class
-})
+@ServiceDependencies
 public abstract class AbstractSignManager {
     private final List<ClickableSign> signs = new LinkedList<>();
     private boolean modified;
@@ -123,10 +116,10 @@ public abstract class AbstractSignManager {
     }
 
     @OnEvent
-    public void onRightClick(SPlayerClickedBlockEvent event) {
-        if (event.getAction() == SPlayerClickedBlockEvent.Action.RIGHT_CLICK_BLOCK
-                && event.getBlock() != null) {
-            var state = event.getBlock().getBlockState().orElseThrow();
+    public void onRightClick(SPlayerInteractEvent event) {
+        if (event.getAction() == SPlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
+                && event.getBlockClicked() != null) {
+            var state = event.getBlockClicked().getBlockState().orElseThrow();
             if (state instanceof SignHolder) {
                 var location = new SignLocation(state.getLocation());
                 var sign = getSign(location);

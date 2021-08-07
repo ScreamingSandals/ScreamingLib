@@ -202,7 +202,7 @@ public class ServiceInitGenerator {
                 var statement = new StringBuilder();
                 var method = (ExecutableElement) initMethod.get();
                 var arguments = method.getParameters();
-                if (method.getKind() == ElementKind.CONSTRUCTOR || method.getReturnType().equals(typeElement.asType())) {
+                if (method.getKind() == ElementKind.CONSTRUCTOR || types.isSameType(method.getReturnType(), typeElement.asType())) {
                     statement.append("$T $N = ");
                     processedArguments.add(typeElement);
                     returnedName = "indexedVariable" + (index++);

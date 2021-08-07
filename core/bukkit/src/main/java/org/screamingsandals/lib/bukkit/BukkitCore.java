@@ -100,8 +100,6 @@ public class BukkitCore extends Core {
             new LegacyPlayerPickupItemListener(plugin);
         }
         new PlayerChangeWorldEventListener(plugin);
-        new PlayerRightClickedEntityListener(plugin);
-        new PlayerClickedBlockListener(plugin);
         new PlayerSignChangeEventListener(plugin);
         new PlayerDeathEventListener(plugin);
         new PlayerRespawnEventListener(plugin);

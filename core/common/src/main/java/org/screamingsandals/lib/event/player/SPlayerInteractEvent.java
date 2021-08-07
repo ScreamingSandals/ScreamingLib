@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.material.Item;
@@ -14,17 +15,23 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.world.BlockHolder;
 
+import java.util.Arrays;
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
 public class SPlayerInteractEvent extends CancellableAbstractEvent {
     private final PlayerWrapper player;
+    @Nullable
     protected Item item;
-    protected SPlayerClickedBlockEvent.Action action;
+    protected Action action;
+    @Nullable
     protected BlockHolder blockClicked;
     protected BlockFace blockFace;
     private AbstractEvent.Result useClickedBlock;
     private AbstractEvent.Result useItemInHand;
+    @Nullable
     private EquipmentSlotHolder hand;
 
     /**
@@ -90,5 +97,22 @@ public class SPlayerInteractEvent extends CancellableAbstractEvent {
     @Override
     public boolean isCancelled() {
         return useClickedBlock == Result.DENY;
+    }
+
+    public enum Action {
+        LEFT_CLICK_BLOCK,
+        RIGHT_CLICK_BLOCK,
+        LEFT_CLICK_AIR,
+        RIGHT_CLICK_AIR,
+        PHYSICAL;
+
+        public static List<Action> VALUES = Arrays.asList(values());
+
+        public static Action convert(String name) {
+            return VALUES.stream()
+                    .filter(next -> next.name().equalsIgnoreCase(name))
+                    .findFirst()
+                    .orElse(LEFT_CLICK_AIR);
+        }
     }
 }

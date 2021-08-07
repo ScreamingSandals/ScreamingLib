@@ -17,8 +17,12 @@ import org.screamingsandals.lib.utils.InventoryType;
 @AllArgsConstructor
 public class SPlayerInventoryClickEvent extends CancellableAbstractEvent {
     private final PlayerWrapper player;
-    @Nullable private final Item currentItem;
-    @Nullable private final Container container;
+    @Nullable
+    private final Item cursorItem;
+    @Nullable
+    private final Item currentItem;
+    @Nullable
+    private final Container container;
     private final ClickType clickType;
     private final Container inventory;
     private final InventoryAction action;

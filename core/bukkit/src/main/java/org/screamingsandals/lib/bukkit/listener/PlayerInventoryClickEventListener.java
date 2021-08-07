@@ -24,10 +24,10 @@ public class PlayerInventoryClickEventListener extends AbstractBukkitEventHandle
 
     @Override
     protected SPlayerInventoryClickEvent wrapEvent(InventoryClickEvent event, EventPriority priority) {
-        if (event.getClickedInventory() == null) return null;
         if (event.getWhoClicked() instanceof Player) {
             return new SPlayerInventoryClickEvent(
                     PlayerMapper.wrapPlayer((Player)event.getWhoClicked()),
+                    ItemFactory.build(event.getCursor()).orElse(null),
                     ItemFactory.build(event.getCurrentItem()).orElse(null),
                     ItemFactory.wrapContainer(event.getClickedInventory()).orElse(null),
                     ClickType.convert(event.getClick().name()),
