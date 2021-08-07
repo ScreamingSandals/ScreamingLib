@@ -40,10 +40,10 @@ public class BungeeMainClassGenerator extends MainClassGenerator {
         var serviceInitGenerator = ServiceInitGenerator
                 .builder(onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
                 .add("net.md_5.bungee.api.plugin.Plugin", (statement, objects) ->
-                        statement.append("this")
+                        statement.append(pluginContainer.getSimpleName()).append("_BungeeImpl.this")
                 )
                 .add(pluginContainer.asType().toString(), (statement, processedArguments) -> {
-                    statement.append("this.$N");
+                    statement.append(pluginContainer.getSimpleName()).append("_BungeeImpl.this.$N");
                     processedArguments.add("pluginContainer");
                 });
 

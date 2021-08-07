@@ -905,6 +905,7 @@ public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder>
         mapAlias("JUNGLE_WALL_SIGN", "SIGN");
         mapAlias("SPRUCE_WALL_SIGN", "SIGN");
         mapAlias("ACACIA_WALL_SIGN", "SIGN");
+        mapAlias("DIRT_PATH", "GRASS_PATH");
     }
 
     private void f2lcolored(String material, int legacyId) {

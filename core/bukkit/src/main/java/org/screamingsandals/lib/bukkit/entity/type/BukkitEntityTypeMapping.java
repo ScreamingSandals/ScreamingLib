@@ -21,4 +21,9 @@ public class BukkitEntityTypeMapping extends EntityTypeMapping {
 
         Arrays.stream(EntityType.values()).forEach(entityType -> mapping.put(NamespacedMappingKey.of(entityType.name()), new EntityTypeHolder(entityType.name())));
     }
+
+    @Override
+    public boolean isAlive0(EntityTypeHolder entityTypeHolder) {
+        return entityTypeHolder.as(EntityType.class).isAlive();
+    }
 }
