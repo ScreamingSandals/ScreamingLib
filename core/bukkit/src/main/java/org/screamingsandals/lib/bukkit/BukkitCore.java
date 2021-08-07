@@ -109,7 +109,6 @@ public class BukkitCore extends Core {
         new PlayerInventoryClickEventListener(plugin);
         new PlayerFoodLevelChangeListener(plugin);
         new PlayerCraftItemEventListener(plugin);
-        new PlayerDamageEventListener(plugin);
         new PlayerProjectileLaunchEventListener(plugin);
         new PlayerDropItemEventListener(plugin);
         new PlayerBedEnterEventListener(plugin);

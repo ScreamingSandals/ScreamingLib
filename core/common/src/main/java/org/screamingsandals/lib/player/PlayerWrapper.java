@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.entity.DamageCause;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.Openable;
 import org.screamingsandals.lib.container.PlayerContainer;
-import org.screamingsandals.lib.event.player.SPlayerDamageEvent;
+import org.screamingsandals.lib.event.entity.SEntityDamageEvent;
 import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -144,8 +145,8 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
             var entity = as(EntityHuman.class);
             entity.setVelocity(entity.getVelocity().multiply(multiply).setY(y));
 
-            EventManager.getDefaultEventManager().registerOneTime(SPlayerDamageEvent.class, event -> {
-                if (!equals(event.getPlayer()) || event.getCause() != SPlayerDamageEvent.DamageCause.FALL) {
+            EventManager.getDefaultEventManager().registerOneTime(SEntityDamageEvent.class, event -> {
+                if (!(event.getEntity() instanceof EntityHuman) || !equals(((EntityHuman) event.getEntity()).asPlayer()) || event.getDamageCause() != DamageCause.FALL) {
                     return false;
                 }
                 event.setCancelled(true);
@@ -159,8 +160,8 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
             var entity = as(EntityHuman.class);
             entity.setVelocity(velocity);
 
-            EventManager.getDefaultEventManager().registerOneTime(SPlayerDamageEvent.class, event -> {
-                if (!equals(event.getPlayer()) || event.getCause() != SPlayerDamageEvent.DamageCause.FALL) {
+            EventManager.getDefaultEventManager().registerOneTime(SEntityDamageEvent.class, event -> {
+                if (!(event.getEntity() instanceof EntityHuman) || !equals(((EntityHuman) event.getEntity()).asPlayer()) || event.getDamageCause() != DamageCause.FALL) {
                     return false;
                 }
                 event.setCancelled(true);
