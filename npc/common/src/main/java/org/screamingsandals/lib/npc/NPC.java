@@ -18,11 +18,6 @@ import java.util.UUID;
 public interface NPC extends TouchableVisual<NPC> {
 
     /**
-     * This is the default click cool down in milliseconds
-     */
-    long CLICK_COOL_DOWN = 2L;
-
-    /**
      * This is default view distance SQUARED!
      * <p>
      * That means that at this distance, you will see the hologram from 64 blocks away.
@@ -132,19 +127,6 @@ public interface NPC extends TouchableVisual<NPC> {
      * @return true if NPC should look at the player, false otherwise
      */
     boolean shouldLookAtPlayer();
-
-    /**
-     *
-     * @param delay the amount of time (in milliseconds) the last clicked user has to wait before interacting with this NPC again
-     * @return this NPC
-     */
-    NPC setClickCoolDown(long delay);
-
-    /**
-     *
-     * @return the amount of time (in milliseconds) the last clicked user has to wait before interacting with this NPC again
-     */
-    long getClickCoolDown();
 
     /**
      *

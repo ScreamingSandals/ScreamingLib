@@ -26,7 +26,7 @@ public class VisualsTouchListener<T extends TouchableVisual<T>> {
                             synchronized (coolDownMap) {
                                 if (coolDownMap.containsKey(sender.getUniqueId())) {
                                     final var lastClick = coolDownMap.get(sender.getUniqueId());
-                                    if (System.currentTimeMillis() - lastClick < 2L) {
+                                    if (System.currentTimeMillis() - lastClick < visual.getClickCoolDown()) {
                                         break;
                                     }
                                 }

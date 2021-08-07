@@ -58,7 +58,7 @@ public class BukkitNPCManager extends NPCManager {
         final var nmsEnum = Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldAction());
         final var attackEnum = Reflect.getField(ServerboundInteractPacket_i_ActionTypeAccessor.getFieldATTACK());
 
-        NPCInteractEvent.InteractType interactType = (nmsEnum == attackEnum  || nmsEnum == ATTACK_ACTION_FIELD)
+        NPCInteractEvent.InteractType interactType = (nmsEnum == attackEnum  || nmsEnum == ATTACK_ACTION_FIELD || (nmsEnum != null && attackEnum.toString().equals("ATTACK")))
                 ?  NPCInteractEvent.InteractType.LEFT_CLICK : NPCInteractEvent.InteractType.RIGHT_CLICK;
 
         Tasker.build(() -> EventManager.fire(new NPCInteractEvent(sender, visual, interactType))).afterOneTick().start();
