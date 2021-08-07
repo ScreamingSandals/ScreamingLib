@@ -34,7 +34,7 @@ public interface TouchableVisual<T> extends LocatableVisual<T> {
     /**
      *
      * @param delay the amount of time (in milliseconds) the last clicked user has to wait before interacting with this Visual again
-     * @return this NPC
+     * @return this Visual
      */
     T setClickCoolDown(long delay);
 
