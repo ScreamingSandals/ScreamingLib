@@ -25,7 +25,6 @@ public class BukkitPacketMapper extends PacketMapper {
         public void operationComplete(ChannelFuture future) throws Exception {
             if (!future.isSuccess()) {
                 future.cause().printStackTrace();
-                future.channel().pipeline().fireExceptionCaught(future.cause());
             }
         }
     };
