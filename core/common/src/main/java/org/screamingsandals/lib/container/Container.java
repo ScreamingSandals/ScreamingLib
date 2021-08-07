@@ -2,6 +2,7 @@ package org.screamingsandals.lib.container;
 
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.utils.InventoryType;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.List;
@@ -29,4 +30,6 @@ public interface Container extends Openable, Wrapper {
     int getSize();
 
     boolean isEmpty();
+
+    InventoryType getType();
 }

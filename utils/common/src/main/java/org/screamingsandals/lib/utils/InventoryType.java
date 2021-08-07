@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+// TODO: This should be fucking holder instead of enum
 public enum InventoryType {
 
     /**

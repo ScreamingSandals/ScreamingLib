@@ -27,6 +27,7 @@ public class PlayerInventoryClickEventListener extends AbstractBukkitEventHandle
         if (event.getWhoClicked() instanceof Player) {
             return new SPlayerInventoryClickEvent(
                     PlayerMapper.wrapPlayer((Player)event.getWhoClicked()),
+                    ItemFactory.build(event.getCursor()).orElse(null),
                     ItemFactory.build(event.getCurrentItem()).orElse(null),
                     ItemFactory.wrapContainer(event.getClickedInventory()).orElse(null),
                     ClickType.convert(event.getClick().name()),
