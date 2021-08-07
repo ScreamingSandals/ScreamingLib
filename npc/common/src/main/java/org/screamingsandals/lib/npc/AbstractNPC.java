@@ -146,10 +146,10 @@ public abstract class AbstractNPC implements NPC {
         }
         hide();
         getViewers().forEach(this::removeViewer);
+        hologram.destroy();
         visibleTo.clear();
         destroyed = true;
         NPCManager.removeNPC(this);
-        HologramManager.removeHologram(hologram);
     }
 
     @Override
