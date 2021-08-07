@@ -25,6 +25,7 @@ subprojects {
         minecraftLibraries()
         jitpack()
         sponge()
+        velocity()
         placeholderApi()
     }
 
