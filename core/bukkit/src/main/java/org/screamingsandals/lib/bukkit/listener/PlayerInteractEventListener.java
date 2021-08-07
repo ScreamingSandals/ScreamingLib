@@ -9,7 +9,6 @@ import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.material.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.event.player.SPlayerClickedBlockEvent;
 import org.screamingsandals.lib.event.player.SPlayerInteractEvent;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.world.BlockMapper;
@@ -25,12 +24,12 @@ public class PlayerInteractEventListener extends AbstractBukkitEventHandlerFacto
         return new SPlayerInteractEvent(
                 PlayerMapper.wrapPlayer(event.getPlayer()),
                 ItemFactory.build(event.getItem()).orElse(null),
-                SPlayerClickedBlockEvent.Action.convert(event.getAction().name()),
-                BlockMapper.wrapBlock(event.getClickedBlock()),
+                SPlayerInteractEvent.Action.convert(event.getAction().name()),
+                BlockMapper.resolve(event.getClickedBlock()).orElse(null),
                 BlockFace.valueOf(event.getBlockFace().name().toUpperCase()),
                 AbstractEvent.Result.convert(event.useInteractedBlock().name()),
                 AbstractEvent.Result.convert(event.useItemInHand().name()),
-                EquipmentSlotMapping.resolve(event.getHand()).orElseThrow()
+                EquipmentSlotMapping.resolve(event.getHand()).orElse(null)
         );
     }
 
