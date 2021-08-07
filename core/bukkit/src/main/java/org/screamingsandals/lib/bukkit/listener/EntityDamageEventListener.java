@@ -25,7 +25,7 @@ public class EntityDamageEventListener extends AbstractBukkitEventHandlerFactory
             return new SEntityDamageByEntityEvent(
                     EntityMapper.wrapEntity(((EntityDamageByEntityEvent)event).getDamager()).orElseThrow(),
                     EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                    DamageCause.valueOf(event.getCause().name().toUpperCase()),
+                    DamageCause.convert(event.getCause().name()),
                     event.getDamage()
             );
         }
@@ -34,14 +34,14 @@ public class EntityDamageEventListener extends AbstractBukkitEventHandlerFactory
             return new SEntityDamageByBlockEvent(
                     BlockMapper.wrapBlock(((EntityDamageByBlockEvent)event).getDamager()),
                     EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                    DamageCause.valueOf(event.getCause().name().toUpperCase()),
+                    DamageCause.convert(event.getCause().name()),
                     event.getDamage()
             );
         }
 
         return new SEntityDamageEvent(
                 EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                DamageCause.valueOf(event.getCause().name().toUpperCase()),
+                DamageCause.convert(event.getCause().name()),
                 event.getDamage()
         );
     }
