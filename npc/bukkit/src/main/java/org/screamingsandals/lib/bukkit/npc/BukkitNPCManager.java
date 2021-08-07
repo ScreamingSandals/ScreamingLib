@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.bukkit.npc;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.SPlayerMoveEvent;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacket_i_ActionTypeAccessor;
@@ -35,12 +36,10 @@ public class BukkitNPCManager extends NPCManager {
 
     protected BukkitNPCManager(Plugin plugin, Controllable controllable) {
         super(controllable);
-        controllable.postEnable(() -> {
-            new VisualsTouchListener<>(BukkitNPCManager.this, plugin);
-            EventManager.getDefaultEventManager().register(SPlayerMoveEvent.class, this::onPlayerMove);
-        });
+        controllable.postEnable(() -> new VisualsTouchListener<>(BukkitNPCManager.this, plugin));
     }
 
+    @OnEvent
     private void onPlayerMove(SPlayerMoveEvent event) {
         if (getActiveNPCS().isEmpty()) {
             return;
