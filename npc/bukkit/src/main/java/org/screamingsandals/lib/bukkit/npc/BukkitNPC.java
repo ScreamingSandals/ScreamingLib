@@ -102,6 +102,11 @@ public class BukkitNPC extends AbstractNPC {
                 .pitch((byte) (getLocation().getPitch() * 256.0F / 360.0F))
                 .onGround(true)
                 .sendPacket(player);
+
+        new SClientboundRotateHeadPacket()
+                .entityId(getEntityId())
+                .headYaw(getLocation().getYaw())
+                .sendPacket(player);
     }
 
     private SClientboundRemoveEntitiesPacket getFullDestroyPacket() {
