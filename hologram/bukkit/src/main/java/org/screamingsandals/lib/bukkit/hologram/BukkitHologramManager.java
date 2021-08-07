@@ -29,8 +29,10 @@ import java.util.UUID;
 public class BukkitHologramManager extends HologramManager {
 
     @Deprecated //INTERNAL USE ONLY!
-    public static void init(Plugin plugin, Controllable controllable) {
-        HologramManager.init(() -> new BukkitHologramManager(plugin, controllable));
+    public static BukkitHologramManager init(Plugin plugin, Controllable controllable) {
+        final var bukkitHologramManager =  new BukkitHologramManager(plugin, controllable);
+        HologramManager.init(() -> bukkitHologramManager);
+        return bukkitHologramManager;
     }
 
     protected BukkitHologramManager(Plugin plugin, Controllable controllable) {
