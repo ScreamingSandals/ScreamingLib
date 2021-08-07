@@ -47,7 +47,7 @@ public abstract class AbstractNPC implements NPC {
         this.clickCoolDown = NPC.CLICK_COOL_DOWN;
         this.properties = new ArrayList<>();
         this.visibleTo = new ArrayList<>();
-        this.name = "[NPC} " + uuid.toString().replace("-", "").substring(0, 10);
+        this.name = "[NPC] " + uuid.toString().replace("-", "").substring(0, 10);
         this.hologram = HologramManager.hologram(location.clone().add(0.0D, 1.5D, 0.0D));
     }
 
