@@ -35,7 +35,7 @@ public class BukkitHologramManager extends HologramManager {
 
     protected BukkitHologramManager(Plugin plugin, Controllable controllable) {
         super(controllable);
-        controllable.postEnable(() -> new VisualsTouchListener<>(BukkitHologramManager.this, plugin));
+        controllable.child().postEnable(() -> new VisualsTouchListener<>(BukkitHologramManager.this, plugin));
     }
 
     @Override

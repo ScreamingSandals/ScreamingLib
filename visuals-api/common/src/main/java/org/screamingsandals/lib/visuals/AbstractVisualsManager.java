@@ -16,7 +16,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     private final Map<UUID, T> activeVisuals = new ConcurrentHashMap<>();
 
     protected AbstractVisualsManager(Controllable controllable) {
-        controllable.child().postEnable(() -> {
+        controllable.postEnable(() -> {
             EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, this::onLeave);
             EventManager.getDefaultEventManager().register(SPlayerMoveEvent.class, this::onMove);
             EventManager.getDefaultEventManager().register(SPlayerRespawnEvent.class, this::onRespawn);

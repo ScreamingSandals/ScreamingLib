@@ -36,7 +36,7 @@ public class BukkitNPCManager extends NPCManager {
 
     protected BukkitNPCManager(Plugin plugin, Controllable controllable) {
         super(controllable);
-        controllable.postEnable(() -> new VisualsTouchListener<>(BukkitNPCManager.this, plugin));
+        controllable.child().postEnable(() -> new VisualsTouchListener<>(BukkitNPCManager.this, plugin));
     }
 
     public void onPlayerMove(SPlayerMoveEvent event) {
