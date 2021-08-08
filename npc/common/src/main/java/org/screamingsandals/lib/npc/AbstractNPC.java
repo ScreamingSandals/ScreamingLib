@@ -44,7 +44,7 @@ public abstract class AbstractNPC implements NPC {
         this.ready = false;
         this.shouldLookAtPlayer = false;
         this.viewDistance = NPC.DEFAULT_VIEW_DISTANCE;
-        this.clickCoolDown = NPC.CLICK_COOL_DOWN;
+        this.clickCoolDown = NPC.DEFAULT_CLICK_COOL_DOWN;
         this.properties = new ArrayList<>();
         this.visibleTo = Collections.synchronizedList(new ArrayList<>());
         this.name = "[NPC] " + uuid.toString().replace("-", "").substring(0, 10);

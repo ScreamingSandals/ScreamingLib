@@ -353,7 +353,7 @@ public class BukkitHologram extends AbstractHologram {
         }
 
         final var toSend = new LinkedList<AbstractPacket>();
-        if (itemEntity != null) {
+        if (itemEntity != null && rotationTask != null) {
             rotationTask.cancel();
             rotationTask = null;
         }

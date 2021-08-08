@@ -23,6 +23,7 @@ public abstract class AbstractHologram extends AbstractLinedVisual<Hologram> imp
     protected Item item;
     @Getter
     protected ItemPosition itemPosition;
+    protected long clickCoolDown;
 
     protected AbstractHologram(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid);
@@ -31,6 +32,7 @@ public abstract class AbstractHologram extends AbstractLinedVisual<Hologram> imp
 
         //default values
         this.ready = false;
+        this.clickCoolDown = DEFAULT_CLICK_COOL_DOWN;
         this.viewDistance = DEFAULT_VIEW_DISTANCE;
         this.rotationIncrement = DEFAULT_ROTATION_INCREMENT;
         this.data = DataContainer.get();
@@ -177,5 +179,16 @@ public abstract class AbstractHologram extends AbstractLinedVisual<Hologram> imp
         viewers.clear();
 
         HologramManager.removeHologram(this);
+    }
+
+    @Override
+    public long getClickCoolDown() {
+        return clickCoolDown;
+    }
+
+    @Override
+    public Hologram setClickCoolDown(long clickCoolDown) {
+        this.clickCoolDown = clickCoolDown;
+        return this;
     }
 }

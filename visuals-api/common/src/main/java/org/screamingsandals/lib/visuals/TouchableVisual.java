@@ -1,6 +1,13 @@
 package org.screamingsandals.lib.visuals;
 
 public interface TouchableVisual<T> extends LocatableVisual<T> {
+
+
+    /**
+     * This is the default click cool down in milliseconds
+     */
+    long DEFAULT_CLICK_COOL_DOWN = 20L;
+
     /**
      * Checks if you can interact with this Visual.
      *
@@ -23,4 +30,17 @@ public interface TouchableVisual<T> extends LocatableVisual<T> {
      * @return true if the visual contains the entity id, false otherwise
      */
     boolean hasId(int entityId);
+
+    /**
+     *
+     * @param delay the amount of time (in milliseconds) the last clicked user has to wait before interacting with this Visual again
+     * @return this Visual
+     */
+    T setClickCoolDown(long delay);
+
+    /**
+     *
+     * @return the amount of time (in milliseconds) the last clicked user has to wait before interacting with this Visual again
+     */
+    long getClickCoolDown();
 }

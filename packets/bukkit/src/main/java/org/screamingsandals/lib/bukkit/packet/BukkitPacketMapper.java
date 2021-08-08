@@ -2,6 +2,7 @@ package org.screamingsandals.lib.bukkit.packet;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 @Service
 @Slf4j
 public class BukkitPacketMapper extends PacketMapper {
+
     public static void init() {
         PacketMapper.init(BukkitPacketMapper::new);
     }
@@ -53,14 +55,16 @@ public class BukkitPacketMapper extends PacketMapper {
                     .getFieldResulted(ConnectionAccessor.getFieldChannel())
                     .as(Channel.class);
 
-            if (channel.eventLoop().inEventLoop()) {
-                var future = channel.writeAndFlush(writer.getBuffer());
-                future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
-            } else {
-                channel.eventLoop().execute(() -> {
+            if (channel.isActive()) {
+                if (channel.eventLoop().inEventLoop()) {
                     var future = channel.writeAndFlush(writer.getBuffer());
                     future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
-                });
+                } else {
+                    channel.eventLoop().execute(() -> {
+                        var future = channel.writeAndFlush(writer.getBuffer());
+                        future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+                    });
+                }
             }
 
             writer.getAppendedPackets().forEach(packet1 -> sendPacket0(player, packet1));
