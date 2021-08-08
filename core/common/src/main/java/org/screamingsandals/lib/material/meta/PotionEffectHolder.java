@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import java.util.Optional;
+
 @Data
 @RequiredArgsConstructor
 @ConfigSerializable
@@ -43,5 +45,16 @@ public class PotionEffectHolder implements Wrapper {
     @Override
     public <T> T as(Class<T> type) {
         return PotionEffectMapping.convertPotionEffectHolder(this, type);
+    }
+
+    public static PotionEffectHolder of(Object effect) {
+        return ofOptional(effect).orElseThrow();
+    }
+
+    public static Optional<PotionEffectHolder> ofOptional(Object effect) {
+        if (effect instanceof PotionEffectHolder) {
+            return Optional.of((PotionEffectHolder) effect);
+        }
+        return PotionEffectMapping.resolve(effect);
     }
 }

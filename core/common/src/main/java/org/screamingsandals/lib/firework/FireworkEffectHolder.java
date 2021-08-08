@@ -6,6 +6,7 @@ import net.kyori.adventure.util.RGBLike;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @RequiredArgsConstructor
@@ -36,9 +37,19 @@ public class FireworkEffectHolder implements Wrapper {
         return new FireworkEffectHolder(this.platformName, this.colors, this.fadeColors, this.flicker, trail);
     }
 
-
     @Override
     public <T> T as(Class<T> type) {
         return FireworkEffectMapping.convertFireworkEffectHolder(this, type);
+    }
+
+    public static FireworkEffectHolder of(Object effect) {
+        return ofOptional(effect).orElseThrow();
+    }
+
+    public static Optional<FireworkEffectHolder> ofOptional(Object effect) {
+        if (effect instanceof FireworkEffectHolder) {
+            return Optional.of((FireworkEffectHolder) effect);
+        }
+        return FireworkEffectMapping.resolve(effect);
     }
 }

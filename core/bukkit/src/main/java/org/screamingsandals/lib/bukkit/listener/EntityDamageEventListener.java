@@ -5,8 +5,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
-import org.screamingsandals.lib.entity.DamageCause;
 import org.screamingsandals.lib.entity.EntityMapper;
+import org.screamingsandals.lib.entity.damage.DamageCauseHolder;
 import org.screamingsandals.lib.event.entity.SEntityDamageByBlockEvent;
 import org.screamingsandals.lib.event.entity.SEntityDamageByEntityEvent;
 import org.screamingsandals.lib.event.entity.SEntityDamageEvent;
@@ -25,7 +25,7 @@ public class EntityDamageEventListener extends AbstractBukkitEventHandlerFactory
             return new SEntityDamageByEntityEvent(
                     EntityMapper.wrapEntity(((EntityDamageByEntityEvent)event).getDamager()).orElseThrow(),
                     EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                    DamageCause.convert(event.getCause().name()),
+                    DamageCauseHolder.of(event.getCause()),
                     event.getDamage()
             );
         }
@@ -34,14 +34,14 @@ public class EntityDamageEventListener extends AbstractBukkitEventHandlerFactory
             return new SEntityDamageByBlockEvent(
                     BlockMapper.wrapBlock(((EntityDamageByBlockEvent)event).getDamager()),
                     EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                    DamageCause.convert(event.getCause().name()),
+                    DamageCauseHolder.of(event.getCause()),
                     event.getDamage()
             );
         }
 
         return new SEntityDamageEvent(
                 EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                DamageCause.convert(event.getCause().name()),
+                DamageCauseHolder.of(event.getCause()),
                 event.getDamage()
         );
     }

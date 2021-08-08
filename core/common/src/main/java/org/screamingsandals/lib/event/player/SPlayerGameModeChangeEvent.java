@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.utils.GameMode;
+import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
 public class SPlayerGameModeChangeEvent extends CancellableAbstractEvent {
     private final PlayerWrapper player;
-    private final GameMode gameMode;
+    private final GameModeHolder gameMode;
 }

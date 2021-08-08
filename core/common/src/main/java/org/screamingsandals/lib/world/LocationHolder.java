@@ -46,6 +46,10 @@ public class LocationHolder implements Wrapper, Serializable {
         return add(vec.getX(), vec.getY(), vec.getZ());
     }
 
+    public LocationHolder add(Vector3Df vec) {
+        return add(vec.getX(), vec.getY(), vec.getZ());
+    }
+
     public LocationHolder remove(double x, double y, double z) {
         final var clone = clone();
         clone.x -= x;
@@ -91,6 +95,22 @@ public class LocationHolder implements Wrapper, Serializable {
 
     public int getBlockZ() {
         return (int) Math.floor(z);
+    }
+
+    public Vector3D getFacingDirection() {
+        var vector = new Vector3D();
+
+        vector.setY(-Math.sin(Math.toRadians(pitch)));
+
+        var xz = Math.cos(Math.toRadians(pitch));
+        vector.setX(-xz * Math.sin(Math.toRadians(yaw)));
+        vector.setZ(xz * Math.cos(Math.toRadians(yaw)));
+
+        return vector;
+    }
+
+    public BlockHolder getBlock() {
+        return as(BlockHolder.class);
     }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")

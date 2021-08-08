@@ -6,7 +6,7 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerGameModeChangeEvent;
-import org.screamingsandals.lib.utils.GameMode;
+import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 
 public class PlayerGameModeChangeEventListener extends AbstractBukkitEventHandlerFactory<PlayerGameModeChangeEvent, SPlayerGameModeChangeEvent> {
 
@@ -18,7 +18,7 @@ public class PlayerGameModeChangeEventListener extends AbstractBukkitEventHandle
     protected SPlayerGameModeChangeEvent wrapEvent(PlayerGameModeChangeEvent event, EventPriority priority) {
         return new SPlayerGameModeChangeEvent(
                 PlayerMapper.wrapPlayer(event.getPlayer()),
-                GameMode.convert(event.getNewGameMode().name())
+                GameModeHolder.of(event.getNewGameMode())
         );
     }
 }

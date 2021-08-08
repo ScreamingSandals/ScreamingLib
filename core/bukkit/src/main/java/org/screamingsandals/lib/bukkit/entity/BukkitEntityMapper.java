@@ -1,15 +1,12 @@
 package org.screamingsandals.lib.bukkit.entity;
 
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityTypeMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
 import org.screamingsandals.lib.bukkit.world.BukkitLocationMapper;
-import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.entity.EntityItem;
-import org.screamingsandals.lib.entity.EntityMapper;
+import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -47,16 +44,25 @@ public class BukkitEntityMapper extends EntityMapper {
             return Optional.of((T) new BukkitEntityItem((Item) entity));
         }
 
+        if (entity instanceof LightningStrike) {
+            return Optional.of((T) new BukkitEntityLightning((LightningStrike) entity));
+        }
+
+        if (entity instanceof ExperienceOrb) {
+            return Optional.of((T) new BukkitEntityExperience((ExperienceOrb) entity));
+        }
+
         return Optional.of((T) new BukkitEntityBasic((Entity) entity));
     }
 
     @Override
     public <T extends EntityBasic> Optional<T> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder) {
         return entityType.asOptional(EntityType.class).flatMap(entityType1 -> {
-            var world = locationHolder.getWorld().as(World.class);
+            var bukkitLoc = locationHolder.as(Location.class);
+            var world = bukkitLoc.getWorld();
             if (world != null) {
                 // TODO: test all entity types
-                var entity = world.spawnEntity(locationHolder.as(Location.class), entityType1);
+                var entity = world.spawnEntity(bukkitLoc, entityType1);
                 return wrapEntity0(entity);
             }
             return Optional.empty();
@@ -68,5 +74,20 @@ public class BukkitEntityMapper extends EntityMapper {
         var bukkitLoc = locationHolder.as(Location.class);
         var itemEntity = bukkitLoc.getWorld().dropItem(bukkitLoc, item.as(ItemStack.class));
         return Optional.of(new BukkitEntityItem(itemEntity));
+    }
+
+    @Override
+    public Optional<EntityExperience> dropExperience0(int experience, LocationHolder locationHolder) {
+        var bukkitLoc = locationHolder.as(Location.class);
+        var orb = (ExperienceOrb) bukkitLoc.getWorld().spawnEntity(bukkitLoc, EntityType.EXPERIENCE_ORB);
+        orb.setExperience(experience);
+        return Optional.of(new BukkitEntityExperience(orb));
+    }
+
+    @Override
+    public Optional<EntityLightning> strikeLightning0(LocationHolder locationHolder) {
+        var bukkitLoc = locationHolder.as(Location.class);
+        var lightning = bukkitLoc.getWorld().strikeLightning(bukkitLoc);
+        return Optional.of(new BukkitEntityLightning(lightning));
     }
 }

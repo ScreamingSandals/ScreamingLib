@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Data
 @ConfigSerializable
@@ -22,5 +24,16 @@ public final class EnchantmentHolder implements Wrapper {
 
     public <R> R as(Class<R> type) {
         return EnchantmentMapping.convertEnchantmentHolder(this, type);
+    }
+
+    public static EnchantmentHolder of(Object enchantment) {
+        return ofOptional(enchantment).orElseThrow();
+    }
+
+    public static Optional<EnchantmentHolder> ofOptional(Object enchantment) {
+        if (enchantment instanceof EnchantmentHolder) {
+            return Optional.of((EnchantmentHolder) enchantment);
+        }
+        return EnchantmentMapping.resolve(enchantment);
     }
 }

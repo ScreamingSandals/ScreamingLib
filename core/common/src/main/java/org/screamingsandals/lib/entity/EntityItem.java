@@ -1,7 +1,9 @@
 package org.screamingsandals.lib.entity;
 
 import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.world.LocationHolder;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public interface EntityItem extends EntityBasic {
@@ -33,4 +35,8 @@ public interface EntityItem extends EntityBasic {
     void setMergeRange(float mergeRange);
 
     long getSpawnTime();
+
+    static Optional<EntityItem> dropItem(Item item, LocationHolder location) {
+        return EntityMapper.dropItem(item, location);
+    }
 }

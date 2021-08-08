@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.entity;
 
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -28,6 +29,19 @@ public abstract class EntityMapper {
         return mapper.wrapEntity0(entity);
     }
 
+    public static <T extends EntityBasic> Optional<T> spawn(Object entityType, LocationHolder locationHolder) {
+        if (entityType instanceof EntityTypeHolder) {
+            return spawn((EntityTypeHolder) entityType, locationHolder);
+        } else {
+            var type = EntityTypeMapping.resolve(entityType);
+            if (type.isPresent()) {
+                return spawn(type.get(), locationHolder);
+            } else {
+                return Optional.empty();
+            }
+        }
+    }
+
     public static <T extends EntityBasic> Optional<T> spawn(EntityTypeHolder entityType, LocationHolder locationHolder) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
@@ -42,6 +56,20 @@ public abstract class EntityMapper {
         return mapper.dropItem0(item, locationHolder);
     }
 
+    public static Optional<EntityExperience> dropExperience(int experience, LocationHolder locationHolder) {
+        if (mapper == null) {
+            throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
+        }
+        return mapper.dropExperience0(experience, locationHolder);
+    }
+
+    public static Optional<EntityLightning> strikeLightning(LocationHolder locationHolder) {
+        if (mapper == null) {
+            throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
+        }
+        return mapper.strikeLightning0(locationHolder);
+    }
+
     public static boolean isInitialized() {
         return mapper != null;
     }
@@ -51,4 +79,8 @@ public abstract class EntityMapper {
     public abstract <T extends EntityBasic>  Optional<T> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder);
 
     public abstract Optional<EntityItem> dropItem0(Item item, LocationHolder locationHolder);
+
+    public abstract Optional<EntityExperience> dropExperience0(int experience, LocationHolder locationHolder);
+
+    public abstract Optional<EntityLightning> strikeLightning0(LocationHolder locationHolder);
 }

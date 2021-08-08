@@ -3,6 +3,8 @@ package org.screamingsandals.lib.material.slot;
 import lombok.Data;
 import org.screamingsandals.lib.utils.Wrapper;
 
+import java.util.Optional;
+
 @Data
 public class EquipmentSlotHolder implements Wrapper {
     private final String platformName;
@@ -10,5 +12,16 @@ public class EquipmentSlotHolder implements Wrapper {
     @Override
     public <T> T as(Class<T> type) {
         return EquipmentSlotMapping.convertEquipmentSlotHolder(this, type);
+    }
+
+    public static EquipmentSlotHolder of(Object slot) {
+        return ofOptional(slot).orElseThrow();
+    }
+
+    public static Optional<EquipmentSlotHolder> ofOptional(Object slot) {
+        if (slot instanceof EquipmentSlotHolder) {
+            return Optional.of((EquipmentSlotHolder) slot);
+        }
+        return EquipmentSlotMapping.resolve(slot);
     }
 }

@@ -4,14 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.entity.DamageCause;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.Openable;
 import org.screamingsandals.lib.container.PlayerContainer;
 import org.screamingsandals.lib.event.entity.SEntityDamageEvent;
-import org.screamingsandals.lib.utils.GameMode;
+import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -72,11 +71,11 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         PlayerMapper.kick(this, message);
     }
 
-    public void setGameMode(@NotNull GameMode gameMode) {
+    public void setGameMode(@NotNull GameModeHolder gameMode) {
         PlayerMapper.setGameMode(this, gameMode);
     }
 
-    public GameMode getGameMode() {
+    public GameModeHolder getGameMode() {
         return PlayerMapper.getGameMode(this);
     }
 
@@ -146,7 +145,7 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
             entity.setVelocity(entity.getVelocity().multiply(multiply).setY(y));
 
             EventManager.getDefaultEventManager().registerOneTime(SEntityDamageEvent.class, event -> {
-                if (!(event.getEntity() instanceof EntityHuman) || !equals(((EntityHuman) event.getEntity()).asPlayer()) || event.getDamageCause() != DamageCause.FALL) {
+                if (!(event.getEntity() instanceof EntityHuman) || !equals(((EntityHuman) event.getEntity()).asPlayer()) || !event.getDamageCause().is("FALL")) {
                     return false;
                 }
                 event.setCancelled(true);
@@ -161,7 +160,7 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
             entity.setVelocity(velocity);
 
             EventManager.getDefaultEventManager().registerOneTime(SEntityDamageEvent.class, event -> {
-                if (!(event.getEntity() instanceof EntityHuman) || !equals(((EntityHuman) event.getEntity()).asPlayer()) || event.getDamageCause() != DamageCause.FALL) {
+                if (!(event.getEntity() instanceof EntityHuman) || !equals(((EntityHuman) event.getEntity()).asPlayer()) || !event.getDamageCause().is("FALL")) {
                     return false;
                 }
                 event.setCancelled(true);

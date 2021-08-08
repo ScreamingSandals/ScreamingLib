@@ -1,9 +1,13 @@
 package org.screamingsandals.lib.entity.type;
 
 import lombok.Data;
+import org.screamingsandals.lib.entity.EntityBasic;
+import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @Data
 public class EntityTypeHolder implements Wrapper {
@@ -36,5 +40,20 @@ public class EntityTypeHolder implements Wrapper {
      */
     public boolean is(Object... entityTypes) {
         return Arrays.stream(entityTypes).anyMatch(this::is);
+    }
+
+    public <T extends EntityBasic> Optional<T> spawn(LocationHolder location) {
+        return EntityMapper.spawn(this, location);
+    }
+
+    public static EntityTypeHolder of(Object entityType) {
+        return ofOptional(entityType).orElseThrow();
+    }
+
+    public static Optional<EntityTypeHolder> ofOptional(Object entityType) {
+        if (entityType instanceof EntityTypeHolder) {
+            return Optional.of((EntityTypeHolder) entityType);
+        }
+        return EntityTypeMapping.resolve(entityType);
     }
 }

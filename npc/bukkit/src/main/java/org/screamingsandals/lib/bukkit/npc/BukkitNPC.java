@@ -14,10 +14,10 @@ import org.screamingsandals.lib.npc.NPC;
 import org.screamingsandals.lib.npc.NPCSkin;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.AdventureHelper;
-import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.*;
@@ -209,7 +209,7 @@ public class BukkitNPC extends AbstractNPC {
                 getUUID(),
                 getName(),
                 1,
-                GameMode.SURVIVAL,
+                GameModeHolder.of("SURVIVAL"),
                 AdventureHelper.toComponent(getName()),
                 List.copyOf(properties)
         ));

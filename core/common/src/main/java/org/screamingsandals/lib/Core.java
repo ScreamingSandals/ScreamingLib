@@ -1,6 +1,7 @@
 package org.screamingsandals.lib;
 
 import org.screamingsandals.lib.entity.EntityMapper;
+import org.screamingsandals.lib.entity.damage.DamageCauseMapping;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.MaterialMapping;
@@ -13,6 +14,7 @@ import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
 import org.screamingsandals.lib.material.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.player.PlayerMapper;
+import org.screamingsandals.lib.player.gamemode.GameModeMapping;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.world.BlockDataMapper;
@@ -41,7 +43,9 @@ import org.screamingsandals.lib.world.state.BlockStateMapper;
         LocationMapper.class,
         BlockMapper.class,
         BlockDataMapper.class,
-        BlockStateMapper.class
+        BlockStateMapper.class,
+        DamageCauseMapping.class,
+        GameModeMapping.class
 })
 public abstract class Core {
 }

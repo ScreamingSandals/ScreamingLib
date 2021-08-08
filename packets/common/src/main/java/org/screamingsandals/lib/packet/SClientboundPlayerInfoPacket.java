@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.utils.GameMode;
+import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +35,7 @@ public class SClientboundPlayerInfoPacket extends AbstractPacket {
                             writer.writeSizedString(property.signature());
                         }
                     });
-                    writer.writeVarInt(playerInfoData.gameMode().ordinal());
+                    writer.writeVarInt(playerInfoData.gameMode().getId());
                     writer.writeVarInt(playerInfoData.latency());
                     writer.writeBoolean(playerInfoData.displayName() != null);
                     if (playerInfoData.displayName() != null) {
@@ -44,7 +44,7 @@ public class SClientboundPlayerInfoPacket extends AbstractPacket {
                     break;
                 }
                 case UPDATE_GAME_MODE: {
-                    writer.writeVarInt(playerInfoData.gameMode().ordinal());
+                    writer.writeVarInt(playerInfoData.gameMode().getId());
                     break;
                 }
                 case UPDATE_LATENCY: {
@@ -75,7 +75,7 @@ public class SClientboundPlayerInfoPacket extends AbstractPacket {
         private final UUID uuid;
         private final String realName;
         private final int latency;
-        private final GameMode gameMode;
+        private final GameModeHolder gameMode;
         private final Component displayName;
         private final List<Property> properties;
     }

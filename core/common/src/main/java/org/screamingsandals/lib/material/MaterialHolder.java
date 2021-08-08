@@ -6,6 +6,7 @@ import org.screamingsandals.lib.utils.Wrapper;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @Data
 @RequiredArgsConstructor
@@ -48,5 +49,16 @@ public final class MaterialHolder implements Wrapper {
      */
     public boolean is(Object... materials) {
         return Arrays.stream(materials).anyMatch(this::is);
+    }
+
+    public static MaterialHolder of(Object material) {
+        return ofOptional(material).orElseThrow();
+    }
+
+    public static Optional<MaterialHolder> ofOptional(Object material) {
+        if (material instanceof MaterialHolder) {
+            return Optional.of((MaterialHolder) material);
+        }
+        return MaterialMapping.resolve(material);
     }
 }

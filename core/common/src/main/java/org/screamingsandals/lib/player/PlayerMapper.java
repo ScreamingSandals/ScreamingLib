@@ -6,11 +6,11 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.PlayerContainer;
+import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
-import org.screamingsandals.lib.utils.GameMode;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.WorldHolder;
@@ -311,14 +311,14 @@ public abstract class PlayerMapper {
         return playerMapper.getLocale0(senderWrapper);
     }
 
-    public static GameMode getGameMode(PlayerWrapper player) {
+    public static GameModeHolder getGameMode(PlayerWrapper player) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.getGameMode0(player);
     }
 
-    public static void setGameMode(PlayerWrapper player, GameMode gameMode) {
+    public static void setGameMode(PlayerWrapper player, GameModeHolder gameMode) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
@@ -390,9 +390,9 @@ public abstract class PlayerMapper {
 
     public abstract Locale getLocale0(SenderWrapper senderWrapper);
 
-    public abstract GameMode getGameMode0(PlayerWrapper player);
+    public abstract GameModeHolder getGameMode0(PlayerWrapper player);
 
-    public abstract void setGameMode0(PlayerWrapper player, GameMode gameMode);
+    public abstract void setGameMode0(PlayerWrapper player, GameModeHolder gameMode);
 
     public abstract boolean canBeStoredAsWrapped(Object wrapped);
 }
