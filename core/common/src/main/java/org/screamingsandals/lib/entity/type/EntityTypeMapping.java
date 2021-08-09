@@ -13,7 +13,8 @@ import java.util.function.Supplier;
 public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHolder> {
     private static EntityTypeMapping entityTypeMapping;
 
-    protected final BidirectionalConverter<EntityTypeHolder> entityTypeConverter = BidirectionalConverter.build();
+    protected final BidirectionalConverter<EntityTypeHolder> entityTypeConverter = BidirectionalConverter.<EntityTypeHolder>build()
+            .registerP2W(EntityTypeHolder.class, e -> e);
 
     public static void init(Supplier<EntityTypeMapping> entityTypeMappingSupplier) {
         if (entityTypeMapping != null) {

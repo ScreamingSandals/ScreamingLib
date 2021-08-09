@@ -74,7 +74,8 @@ public abstract class AttributeMapping {
                 } catch (ConfigurateException ignored) {
                     return null;
                 }
-            });
+            })
+            .registerP2W(AttributeModifierHolder.class, e -> e);
 
     protected final BidirectionalConverter<ItemAttributeHolder> itemAttributeConverter = BidirectionalConverter.<ItemAttributeHolder>build()
             .registerP2W(ConfigurationNode.class, CONFIGURATE_LOAD_ITEM)
@@ -84,7 +85,8 @@ public abstract class AttributeMapping {
                 } catch (ConfigurateException ignored) {
                     return null;
                 }
-            });
+            })
+            .registerP2W(ItemAttributeHolder.class, e -> e);
 
     public static void init(Supplier<AttributeMapping> supplier) {
         if (attributeMapping != null) {

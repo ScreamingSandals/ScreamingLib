@@ -41,7 +41,14 @@ public abstract class PlayerMapper {
         playerMapper = playerUtilsSupplier.get();
         playerMapper.offlinePlayerConverter
                 .registerP2W(UUID.class, uuid -> new FinalOfflinePlayerWrapper(uuid, null))
-                .registerW2P(UUID.class, OfflinePlayerWrapper::getUuid);
+                .registerW2P(UUID.class, OfflinePlayerWrapper::getUuid)
+                .registerP2W(OfflinePlayerWrapper.class, e -> e);
+        playerMapper.playerConverter
+                .registerP2W(PlayerWrapper.class, e -> e);
+        playerMapper.senderConverter
+                .registerP2W(CommandSenderWrapper.class, e -> e);
+        playerMapper.handConverter
+                .registerP2W(PlayerWrapper.Hand.class, e -> e);
     }
 
     public static boolean isInitialized() {

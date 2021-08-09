@@ -11,8 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public interface EntityLiving extends EntityBasic {
-    // TODO ProjectileSource
+public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
     Optional<AttributeHolder> getAttribute(AttributeTypeHolder attributeType);
 

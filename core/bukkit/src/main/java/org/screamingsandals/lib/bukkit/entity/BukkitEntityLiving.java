@@ -3,18 +3,24 @@ package org.screamingsandals.lib.bukkit.entity;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Projectile;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityMapper;
+import org.screamingsandals.lib.entity.EntityProjectile;
+import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.attribute.AttributeHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeTypeHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
+import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -323,6 +329,18 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
 
     @Override
     public void setHealth(double health) {
+        ((LivingEntity) wrappedObject).setHealth(health);
+    }
 
+    @SuppressWarnings({"ConstantConditions", "unchecked"})
+    @Override
+    public Optional<EntityProjectile> launchProjectile(EntityTypeHolder projectileType) {
+        return EntityMapper.wrapEntity(((LivingEntity) wrappedObject).launchProjectile((Class<Projectile>) projectileType.as(EntityType.class).getEntityClass()));
+    }
+
+    @SuppressWarnings({"ConstantConditions", "unchecked"})
+    @Override
+    public Optional<EntityProjectile> launchProjectile(EntityTypeHolder projectileType, Vector3D velocity) {
+        return EntityMapper.wrapEntity(((LivingEntity) wrappedObject).launchProjectile((Class<Projectile>) projectileType.as(EntityType.class).getEntityClass(), new Vector(velocity.getX(), velocity.getY(), velocity.getZ())));
     }
 }

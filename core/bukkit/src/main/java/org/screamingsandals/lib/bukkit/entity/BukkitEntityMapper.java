@@ -40,6 +40,10 @@ public class BukkitEntityMapper extends EntityMapper {
             return Optional.of((T) new BukkitEntityLiving((LivingEntity) entity));
         }
 
+        if (entity instanceof Projectile) {
+            return Optional.of((T) new BukkitEntityProjectile((Projectile) entity));
+        }
+
         if (entity instanceof Item) {
             return Optional.of((T) new BukkitEntityItem((Item) entity));
         }

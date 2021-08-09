@@ -23,9 +23,13 @@ public abstract class BlockStateMapper {
         blockStateMapper = blockStateMapperSupplier.get();
     }
 
+    @SuppressWarnings("unchecked")
     public static <T extends BlockStateHolder> Optional<T> wrapBlockState(Object blockState) {
         if (blockStateMapper == null) {
             throw new UnsupportedOperationException("BlockStateMapper is not initialized yet.");
+        }
+        if (blockState instanceof BlockStateHolder) {
+            return Optional.of((T) blockState);
         }
         return blockStateMapper.wrapBlockState0(blockState);
     }

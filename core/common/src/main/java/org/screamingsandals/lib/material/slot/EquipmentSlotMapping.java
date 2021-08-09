@@ -14,7 +14,8 @@ import java.util.function.Supplier;
 public abstract class EquipmentSlotMapping {
     private static EquipmentSlotMapping equipmentSlotMapping;
 
-    protected final BidirectionalConverter<EquipmentSlotHolder> equipmentSlotConverter = BidirectionalConverter.build();
+    protected final BidirectionalConverter<EquipmentSlotHolder> equipmentSlotConverter = BidirectionalConverter.<EquipmentSlotHolder>build()
+            .registerP2W(EquipmentSlotHolder.class, e -> e);
     protected final Map<String, EquipmentSlotHolder> mapping = new HashMap<>();
 
     public static void init(Supplier<EquipmentSlotMapping> supplier) {

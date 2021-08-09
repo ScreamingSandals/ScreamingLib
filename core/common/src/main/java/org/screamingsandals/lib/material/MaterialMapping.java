@@ -1039,4 +1039,22 @@ public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder>
         }
         return cachedAir;
     }
+
+    public static boolean isBlock(MaterialHolder materialHolder) {
+        if (materialMapping == null) {
+            throw new UnsupportedOperationException("Material mapping is not initialized yet.");
+        }
+        return materialMapping.isBlock0(materialHolder);
+    }
+
+    protected abstract boolean isBlock0(MaterialHolder materialHolder);
+
+    public static boolean isItem(MaterialHolder materialHolder) {
+        if (materialMapping == null) {
+            throw new UnsupportedOperationException("Material mapping is not initialized yet.");
+        }
+        return materialMapping.isItem0(materialHolder);
+    }
+
+    protected abstract boolean isItem0(MaterialHolder materialHolder);
 }

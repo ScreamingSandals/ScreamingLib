@@ -32,4 +32,6 @@ public interface Container extends Openable, Wrapper {
     boolean isEmpty();
 
     InventoryType getType();
+
+    void clear();
 }

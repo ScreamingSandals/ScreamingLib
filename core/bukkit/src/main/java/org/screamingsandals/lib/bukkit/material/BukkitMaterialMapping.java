@@ -66,4 +66,18 @@ public class BukkitMaterialMapping extends MaterialMapping {
                         mapping.put(NamespacedMappingKey.of(material.name()), new MaterialHolder(material.name()))
                 );
     }
+
+    @Override
+    protected boolean isBlock0(MaterialHolder materialHolder) {
+        return materialHolder.as(Material.class).isBlock();
+    }
+
+    @Override
+    protected boolean isItem0(MaterialHolder materialHolder) {
+        try {
+            return materialHolder.as(Material.class).isItem();
+        } catch (Throwable ignored) {
+            return true; // we are on older versions and yes, it is probably item xdd
+        }
+    }
 }

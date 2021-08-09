@@ -22,9 +22,13 @@ public abstract class EntityMapper {
         mapper = supplier.get();
     }
 
+    @SuppressWarnings("unchecked")
     public static <T extends EntityBasic> Optional<T> wrapEntity(Object entity) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
+        }
+        if (entity instanceof EntityBasic) {
+            return Optional.of((T) entity);
         }
         return mapper.wrapEntity0(entity);
     }

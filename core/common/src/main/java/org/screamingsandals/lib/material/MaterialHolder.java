@@ -51,6 +51,14 @@ public final class MaterialHolder implements Wrapper {
         return Arrays.stream(materials).anyMatch(this::is);
     }
 
+    public boolean isBlock() {
+        return MaterialMapping.isBlock(this);
+    }
+
+    public boolean isItem() {
+        return MaterialMapping.isItem(this);
+    }
+
     public static MaterialHolder of(Object material) {
         return ofOptional(material).orElseThrow();
     }

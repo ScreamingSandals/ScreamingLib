@@ -12,7 +12,8 @@ import java.util.function.Supplier;
 public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeTypeHolder> {
     private static AttributeTypeMapping attributeTypeMapping;
 
-    protected final BidirectionalConverter<AttributeTypeHolder> attributeTypeConverter = BidirectionalConverter.build();
+    protected final BidirectionalConverter<AttributeTypeHolder> attributeTypeConverter = BidirectionalConverter.<AttributeTypeHolder>build()
+            .registerP2W(AttributeTypeHolder.class, e -> e);
 
     public static void init(Supplier<AttributeTypeMapping> attributeTypeMappingSupplier) {
         if (attributeTypeMapping != null) {
