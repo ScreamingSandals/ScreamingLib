@@ -7,7 +7,6 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerCommandPreprocessEvent;
-import org.screamingsandals.lib.utils.AdventureHelper;
 
 public class PlayerCommandPreprocessEventListener extends AbstractBukkitEventHandlerFactory<PlayerCommandPreprocessEvent, SPlayerCommandPreprocessEvent> {
 
@@ -19,13 +18,13 @@ public class PlayerCommandPreprocessEventListener extends AbstractBukkitEventHan
     protected SPlayerCommandPreprocessEvent wrapEvent(PlayerCommandPreprocessEvent event, EventPriority priority) {
         return new SPlayerCommandPreprocessEvent(
                 PlayerMapper.wrapPlayer(event.getPlayer()),
-                AdventureHelper.toComponent(event.getMessage())
+                event.getMessage()
         );
     }
 
     @Override
     protected void postProcess(SPlayerCommandPreprocessEvent wrappedEvent, PlayerCommandPreprocessEvent event) {
         event.setPlayer(wrappedEvent.getPlayer().as(Player.class));
-        event.setMessage(AdventureHelper.toLegacy(wrappedEvent.getMessage()));
+        event.setMessage(wrappedEvent.getCommand());
     }
 }
