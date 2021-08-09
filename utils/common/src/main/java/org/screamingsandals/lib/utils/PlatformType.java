@@ -10,5 +10,13 @@ public enum PlatformType {
     BUNGEE,
     VELOCITY,
     // Bedrock
-    NUKKIT
+    NUKKIT;
+
+    public boolean isProxy() {
+        return this == BUNGEE || this == VELOCITY;
+    }
+
+    public boolean isServer() {
+        return !isProxy();
+    }
 }

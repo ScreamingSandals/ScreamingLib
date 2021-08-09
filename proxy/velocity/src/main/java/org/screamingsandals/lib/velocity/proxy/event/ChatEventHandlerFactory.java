@@ -1,10 +1,10 @@
-package org.screamingsandals.lib.velocity.proxiedplayer.event;
+package org.screamingsandals.lib.velocity.proxy.event;
 
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.screamingsandals.lib.event.EventPriority;
-import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
-import org.screamingsandals.lib.proxiedplayer.event.SPlayerChatEvent;
+import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
+import org.screamingsandals.lib.proxy.event.SPlayerChatEvent;
 import org.screamingsandals.lib.velocity.event.AbstractVelocityEventHandlerFactory;
 
 public class ChatEventHandlerFactory extends

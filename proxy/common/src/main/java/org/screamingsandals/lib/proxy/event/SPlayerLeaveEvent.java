@@ -1,9 +1,9 @@
-package org.screamingsandals.lib.proxiedplayer.event;
+package org.screamingsandals.lib.proxy.event;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.event.AbstractEvent;
-import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerWrapper;
+import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,10 +1,10 @@
-package org.screamingsandals.lib.proxiedplayer.event;
+package org.screamingsandals.lib.proxy.event;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.event.CancellableAbstractAsyncEvent;
-import org.screamingsandals.lib.proxiedplayer.PendingConnection;
+import org.screamingsandals.lib.proxy.PendingConnection;
 
 @EqualsAndHashCode(callSuper = false)
 @Data

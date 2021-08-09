@@ -4,7 +4,7 @@ import cloud.commandframework.CommandManager;
 import cloud.commandframework.CommandTree;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import net.md_5.bungee.api.plugin.Plugin;
-import org.screamingsandals.lib.bungee.proxiedplayer.BungeeProxiedPlayerMapper;
+import org.screamingsandals.lib.bungee.proxy.BungeeProxiedPlayerMapper;
 import org.screamingsandals.lib.command.CloudConstructor;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;

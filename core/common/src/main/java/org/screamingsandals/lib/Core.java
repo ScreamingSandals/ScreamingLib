@@ -17,6 +17,7 @@ import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.gamemode.GameModeMapping;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
+import org.screamingsandals.lib.utils.annotations.internal.InternalCoreService;
 import org.screamingsandals.lib.world.BlockDataMapper;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.world.LocationMapper;
@@ -47,5 +48,6 @@ import org.screamingsandals.lib.world.state.BlockStateMapper;
         DamageCauseMapping.class,
         GameModeMapping.class
 })
+@InternalCoreService
 public abstract class Core {
 }

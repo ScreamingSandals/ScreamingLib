@@ -22,6 +22,7 @@ public class ServiceContainer {
     private final List<TypeElement> init = new LinkedList<>();
     private final boolean earlyInitialization;
     private final boolean staticOnly;
+    private final boolean coreService;
 
     public boolean is(TypeElement typeElement) {
         if (typeElement == null) {

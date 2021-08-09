@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.proxiedplayer;
+package org.screamingsandals.lib.proxy;
 
 import lombok.Getter;
 

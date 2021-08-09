@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.bungee.proxiedplayer;
+package org.screamingsandals.lib.bungee.proxy;
 
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -7,12 +7,12 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.plugin.Plugin;
-import org.screamingsandals.lib.bungee.proxiedplayer.listener.ChatEventListener;
+import org.screamingsandals.lib.bungee.proxy.listener.ChatEventListener;
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
-import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerWrapper;
-import org.screamingsandals.lib.proxiedplayer.ProxiedSenderWrapper;
-import org.screamingsandals.lib.proxiedplayer.ServerWrapper;
+import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
+import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
+import org.screamingsandals.lib.proxy.ProxiedSenderWrapper;
+import org.screamingsandals.lib.proxy.ServerWrapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.annotations.Service;

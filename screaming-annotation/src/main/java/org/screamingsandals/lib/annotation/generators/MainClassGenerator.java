@@ -12,6 +12,8 @@ import javax.lang.model.element.TypeElement;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public abstract class MainClassGenerator {
     public abstract void generate(ProcessingEnvironment processingEnvironment, TypeElement pluginContainer, List<ServiceContainer> autoInit) throws IOException;
@@ -22,6 +24,7 @@ public abstract class MainClassGenerator {
         while (!waiting.isEmpty()) {
             var copy = List.copyOf(waiting);
             waiting.clear();
+            var delayEverything = new AtomicBoolean(false);
             copy.forEach(serviceContainer -> {
                 var dependencies = serviceContainer.getDependencies();
                 var loadAfter = serviceContainer.getLoadAfter();
@@ -51,12 +54,22 @@ public abstract class MainClassGenerator {
                             )
                             .forEach(waiting::add);
                     waiting.add(serviceContainer);
+                    if (serviceContainer.isCoreService()) {
+                        delayEverything.set(true);
+                    }
                 } else if (!loadAfter.isEmpty()
                         && loadAfter.stream().anyMatch(typeElement -> sorted.stream().noneMatch(s -> s.is(typeElement))
                         && (copy.stream().anyMatch(s -> s.is(typeElement)) || waiting.stream().anyMatch(s -> s.is(typeElement))))) {
                     waiting.add(serviceContainer);
+                    if (serviceContainer.isCoreService()) {
+                        delayEverything.set(true);
+                    }
                 } else {
-                    sorted.add(serviceContainer);
+                    if (delayEverything.get() && !serviceContainer.isEarlyInitialization()) { // only early initialization (PluginManager) is exception
+                        waiting.add(serviceContainer);
+                    } else {
+                        sorted.add(serviceContainer);
+                    }
                 }
             });
         }

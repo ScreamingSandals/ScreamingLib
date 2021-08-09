@@ -50,13 +50,35 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
                         platformManager,
                         Arrays.asList(PlatformType.values().clone()),
                         false);
-                platformManagers.forEach((platformType, typeElement) ->
-                        platformInitiators.put(platformType, new ArrayList<>() {
-                            {
-                                add(typeElement);
-                            }
-                        })
-                );
+                platformManagers.forEach((platformType, typeElement) -> {
+                    platformInitiators.put(platformType, new ArrayList<>() {
+                        {
+                            add(typeElement);
+                        }
+                    });
+                    if (platformType.isServer()) {
+                        var core = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.Core");
+                        platformInitiators.get(platformType).add(
+                                MiscUtils.getAllSpecificPlatformImplementations(
+                                        processingEnv,
+                                        core,
+                                        List.of(platformType),
+                                        true
+                                ).get(platformType)
+                        );
+                    }
+                    if (platformType.isProxy()) {
+                        var proxy = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.proxy.ProxyCore");
+                        platformInitiators.get(platformType).add(
+                                MiscUtils.getAllSpecificPlatformImplementations(
+                                        processingEnv,
+                                        proxy,
+                                        List.of(platformType),
+                                        true
+                                ).get(platformType)
+                        );
+                    }
+                });
 
                 var supportedPlatforms = List.copyOf(platformManagers.keySet());
 
