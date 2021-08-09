@@ -8,7 +8,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import org.screamingsandals.lib.command.CloudConstructor;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.velocity.proxiedplayer.VelocityProxiedPlayerMapper;
+import org.screamingsandals.lib.velocity.proxy.VelocityProxiedPlayerMapper;
 
 import java.util.function.Function;
 

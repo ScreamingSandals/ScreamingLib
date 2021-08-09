@@ -7,8 +7,8 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
-import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
-import org.screamingsandals.lib.proxiedplayer.ProxiedSenderWrapper;
+import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
+import org.screamingsandals.lib.proxy.ProxiedSenderWrapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 
 import java.util.function.Function;

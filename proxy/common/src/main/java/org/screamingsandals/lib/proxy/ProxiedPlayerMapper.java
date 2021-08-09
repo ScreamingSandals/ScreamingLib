@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.proxiedplayer;
+package org.screamingsandals.lib.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;

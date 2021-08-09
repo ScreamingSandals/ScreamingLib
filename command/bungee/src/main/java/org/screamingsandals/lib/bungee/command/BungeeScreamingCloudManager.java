@@ -6,8 +6,8 @@ import cloud.commandframework.execution.CommandExecutionCoordinator;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
-import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
-import org.screamingsandals.lib.proxiedplayer.ProxiedSenderWrapper;
+import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
+import org.screamingsandals.lib.proxy.ProxiedSenderWrapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 
 import java.util.function.Function;

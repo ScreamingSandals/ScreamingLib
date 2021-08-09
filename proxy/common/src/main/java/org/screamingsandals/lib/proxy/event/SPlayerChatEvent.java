@@ -1,10 +1,10 @@
-package org.screamingsandals.lib.proxiedplayer.event;
+package org.screamingsandals.lib.proxy.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerWrapper;
+import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 
 @EqualsAndHashCode(callSuper = false)
 @Data

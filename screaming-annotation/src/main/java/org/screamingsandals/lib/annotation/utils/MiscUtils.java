@@ -4,15 +4,18 @@ import lombok.experimental.UtilityClass;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.*;
+import org.screamingsandals.lib.utils.annotations.internal.InternalCoreService;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 import org.screamingsandals.lib.utils.annotations.parameters.ProvidedBy;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.MirroredTypesException;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import java.util.*;
@@ -131,26 +134,28 @@ public class MiscUtils {
                         typeElement,
                         forwardedAnnotation != null ? originalTypeElement : null,
                         typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
-                        service.staticOnly() || typeElement.getAnnotation(UtilityClass.class) != null
+                        service.staticOnly() || typeElement.getAnnotation(UtilityClass.class) != null,
+                        typeElement.getAnnotation(InternalCoreService.class) != null
                 );
                 container.getDependencies().addAll(getSafelyTypeElements(environment, service));
                 container.getLoadAfter().addAll(getSafelyTypeElementsLoadAfter(environment, service));
                 container.getInit().addAll(getSafelyTypeElementsInit(environment, service));
                 checkEventManagerRequirement(environment, typeElement, container);
                 checkServiceDependencies(environment, typeElement, container);
+                checkConstructorDependencies(environment, typeElement, container);
 
                 return platformTypes
                         .stream()
                         .collect(Collectors.toMap(s -> s, o -> container));
             }
-            throw new UnsupportedOperationException("Type " + typeElement.getQualifiedName() + " doesn't have @AbstractMapping annotation");
+            throw new UnsupportedOperationException("Type " + typeElement.getQualifiedName() + " doesn't have @AbstractService annotation");
         }
 
         var pattern = Pattern.compile(mappingAnnotation.pattern());
         var matcher = pattern.matcher(typeElement.getQualifiedName().toString());
 
         if (!matcher.matches()) {
-            throw new UnsupportedOperationException("Pattern in @AbstractMapping annotation of " + typeElement.getQualifiedName() + " is invalid");
+            throw new UnsupportedOperationException("Pattern in @AbstractService annotation of " + typeElement.getQualifiedName() + " is invalid");
         }
 
         var sb = new StringBuilder();
@@ -190,8 +195,9 @@ public class MiscUtils {
                         environment.getTypeUtils(),
                         resolvedElement,
                         forwardedAnnotation != null ? originalTypeElement : null,
-                        resolvedElement.getAnnotation(InternalEarlyInitialization.class) != null,
-                        (resolvedElementService != null && resolvedElementService.staticOnly()) || resolvedElement.getAnnotation(UtilityClass.class) != null
+                        resolvedElement.getAnnotation(InternalEarlyInitialization.class) != null || typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
+                        (resolvedElementService != null && resolvedElementService.staticOnly()) || resolvedElement.getAnnotation(UtilityClass.class) != null,
+                        resolvedElement.getAnnotation(InternalCoreService.class) != null || typeElement.getAnnotation(InternalCoreService.class) != null
                 );
                 if (resolvedElementService != null) {
                     container.getDependencies().addAll(getSafelyTypeElements(environment, resolvedElement.getAnnotation(Service.class)));
@@ -201,6 +207,7 @@ public class MiscUtils {
                 }
                 checkEventManagerRequirement(environment, typeElement, container);
                 checkServiceDependencies(environment, typeElement, container);
+                checkConstructorDependencies(environment, typeElement, container);
                 map.put(platformType, container);
             }
         });
@@ -250,5 +257,34 @@ public class MiscUtils {
                         });
                     });
         } while ((superClass = (TypeElement) environment.getTypeUtils().asElement(superClass.getSuperclass())) != null);
+    }
+
+    private static void checkConstructorDependencies(ProcessingEnvironment environment, TypeElement typeElement, ServiceContainer container) {
+        var initMethod = typeElement.getEnclosedElements()
+                .stream()
+                .filter(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))
+                .findFirst();
+
+        if (initMethod.isEmpty() && !container.isStaticOnly()) {
+            initMethod = typeElement.getEnclosedElements()
+                    .stream()
+                    .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR)
+                    .findFirst();
+        }
+
+        if (initMethod.isPresent()) {
+            var method = (ExecutableElement) initMethod.get();
+            var arguments = method.getParameters();
+
+            for (var argument : arguments) {
+                var type = argument.asType();
+                if (type.getKind() == TypeKind.DECLARED) {
+                    var el = (TypeElement) environment.getTypeUtils().asElement(type);
+                    if ((el.getAnnotation(Service.class) != null || el.getAnnotation(AbstractService.class) != null) && !container.getDependencies().contains(el)) {
+                        container.getDependencies().add(el);
+                    }
+                }
+            }
+        }
     }
 }

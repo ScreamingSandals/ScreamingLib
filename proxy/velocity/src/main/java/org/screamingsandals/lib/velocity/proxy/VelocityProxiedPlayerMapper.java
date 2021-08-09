@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.velocity.proxiedplayer;
+package org.screamingsandals.lib.velocity.proxy;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.permission.Tristate;
@@ -7,17 +7,17 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerMapper;
-import org.screamingsandals.lib.proxiedplayer.ProxiedPlayerWrapper;
-import org.screamingsandals.lib.proxiedplayer.ProxiedSenderWrapper;
-import org.screamingsandals.lib.proxiedplayer.ServerWrapper;
+import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
+import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
+import org.screamingsandals.lib.proxy.ProxiedSenderWrapper;
+import org.screamingsandals.lib.proxy.ServerWrapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.velocity.proxiedplayer.event.ChatEventHandlerFactory;
-import org.screamingsandals.lib.velocity.proxiedplayer.event.PlayerLeaveEventFactory;
-import org.screamingsandals.lib.velocity.proxiedplayer.event.PlayerLoginEventFactory;
+import org.screamingsandals.lib.velocity.proxy.event.ChatEventHandlerFactory;
+import org.screamingsandals.lib.velocity.proxy.event.PlayerLeaveEventFactory;
+import org.screamingsandals.lib.velocity.proxy.event.PlayerLoginEventFactory;
 
 import java.util.List;
 import java.util.Locale;

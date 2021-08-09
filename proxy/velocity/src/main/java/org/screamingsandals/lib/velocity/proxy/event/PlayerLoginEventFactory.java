@@ -1,11 +1,11 @@
-package org.screamingsandals.lib.velocity.proxiedplayer.event;
+package org.screamingsandals.lib.velocity.proxy.event;
 
 import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.screamingsandals.lib.event.EventPriority;
-import org.screamingsandals.lib.proxiedplayer.PendingConnection;
-import org.screamingsandals.lib.proxiedplayer.event.SPlayerLoginEvent;
+import org.screamingsandals.lib.proxy.PendingConnection;
+import org.screamingsandals.lib.proxy.event.SPlayerLoginEvent;
 import org.screamingsandals.lib.velocity.event.AbstractVelocityEventHandlerFactory;
 
 public class PlayerLoginEventFactory extends AbstractVelocityEventHandlerFactory<LoginEvent, SPlayerLoginEvent> {
