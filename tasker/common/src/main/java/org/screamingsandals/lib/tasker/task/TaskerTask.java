@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.tasker.task;
 
-public interface TaskerTask {
+public interface TaskerTask extends TaskBase {
 
     Integer getId();
 
@@ -10,11 +10,6 @@ public interface TaskerTask {
      * @return the current state of this task
      */
     TaskState getState();
-
-    /**
-     * Cancels this task.
-     */
-    void cancel();
 
     <P> P getTaskObject();
 }

@@ -3,12 +3,14 @@ package org.screamingsandals.lib.tasker;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
+import org.screamingsandals.lib.tasker.task.TaskBase;
 import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 class TaskerImpl implements Tasker {
@@ -19,6 +21,16 @@ class TaskerImpl implements Tasker {
 
     TaskBuilder build(Runnable runnable) {
         return new TaskBuilderImpl(runnable, initializer, counter.incrementAndGet());
+    }
+
+    TaskBuilder build(Function<TaskBase, Runnable> taskBase) {
+        final var id = counter.incrementAndGet();
+        return new TaskBuilderImpl(taskBase.apply(() -> {
+            final var task = runningTasks.get(id);
+            if (task != null) {
+                task.cancel();
+            }
+        }), initializer, id);
     }
 
     public Map<Integer, TaskerTask> getRunningTasks() {

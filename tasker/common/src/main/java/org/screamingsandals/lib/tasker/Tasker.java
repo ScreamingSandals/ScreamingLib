@@ -1,12 +1,14 @@
 package org.screamingsandals.lib.tasker;
 
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
+import org.screamingsandals.lib.tasker.task.TaskBase;
 import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
 import org.screamingsandals.lib.utils.annotations.ForwardToService;
 
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 @ForwardToService(AbstractTaskInitializer.class)
@@ -28,6 +30,17 @@ public interface Tasker {
      * @return new TaskBuilder
      */
     static TaskBuilder build(Runnable runnable) {
+        return TaskerImpl.instance.build(runnable);
+    }
+
+    /**
+     * Creates new TaskBuilder for given task and plugin wrapper
+     * This task can cancel itself :)
+     *
+     * @param runnable the runnable to run
+     * @return new TaskBuilder
+     */
+    static TaskBuilder build(Function<TaskBase, Runnable> runnable) {
         return TaskerImpl.instance.build(runnable);
     }
 

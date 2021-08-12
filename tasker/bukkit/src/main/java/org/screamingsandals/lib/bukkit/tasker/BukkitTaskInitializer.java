@@ -10,6 +10,7 @@ import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.tasker.task.AbstractTaskerTask;
 import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
+import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 @Service
@@ -17,11 +18,12 @@ public class BukkitTaskInitializer extends AbstractTaskInitializer {
     private final Plugin plugin;
     private final BukkitScheduler scheduler;
 
-    public static void init(Plugin plugin) {
-        Tasker.init(() -> new BukkitTaskInitializer(plugin));
+    public static void init(Controllable controllable, Plugin plugin) {
+        Tasker.init(() -> new BukkitTaskInitializer(controllable, plugin));
     }
 
-    public BukkitTaskInitializer(Plugin plugin) {
+    public BukkitTaskInitializer(Controllable controllable, Plugin plugin) {
+        super(controllable);
         this.plugin = plugin;
         this.scheduler = plugin.getServer().getScheduler();
     }
