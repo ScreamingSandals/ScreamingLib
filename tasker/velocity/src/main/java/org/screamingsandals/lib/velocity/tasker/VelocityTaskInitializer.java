@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.scheduler.ScheduledTask;
 import com.velocitypowered.api.scheduler.Scheduler;
-import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.tasker.TaskBuilderImpl;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
@@ -12,16 +11,22 @@ import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.tasker.task.AbstractTaskerTask;
 import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
+import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 @Service
-@RequiredArgsConstructor
 public class VelocityTaskInitializer extends AbstractTaskInitializer {
     private final Object owner;
     private final Scheduler scheduler;
 
-    public static void init(Object owner, ProxyServer proxyServer) {
-        Tasker.init(() -> new VelocityTaskInitializer(owner, proxyServer.getScheduler()));
+    public VelocityTaskInitializer(Controllable controllable, Object owner, Scheduler scheduler) {
+        super(controllable);
+        this.owner = owner;
+        this.scheduler = scheduler;
+    }
+
+    public static void init(Controllable controllable, Object owner, ProxyServer proxyServer) {
+        Tasker.init(() -> new VelocityTaskInitializer(controllable, owner, proxyServer.getScheduler()));
     }
 
     @Override

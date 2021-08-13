@@ -1,12 +1,12 @@
 package org.screamingsandals.lib.sponge.tasker;
 
-import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.tasker.TaskBuilderImpl;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.tasker.task.AbstractTaskerTask;
 import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
+import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.ScheduledTask;
@@ -16,14 +16,18 @@ import org.spongepowered.api.util.Ticks;
 import org.spongepowered.plugin.PluginContainer;
 
 @Service
-@RequiredArgsConstructor
 public class SpongeTaskInitializer extends AbstractTaskInitializer {
     private final Scheduler scheduler = Sponge.getServer().getScheduler();
     private final Scheduler asyncScheduler = Sponge.getAsyncScheduler();
     private final PluginContainer plugin;
 
-    public static void init(PluginContainer plugin) {
-        Tasker.init(() -> new SpongeTaskInitializer(plugin));
+    public SpongeTaskInitializer(Controllable controllable, PluginContainer plugin) {
+        super(controllable);
+        this.plugin = plugin;
+    }
+
+    public static void init(Controllable controllable, PluginContainer plugin) {
+        Tasker.init(() -> new SpongeTaskInitializer(controllable, plugin));
     }
 
     @Override

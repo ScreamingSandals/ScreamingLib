@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.minestom.tasker;
 
 import com.google.common.base.Preconditions;
-import lombok.RequiredArgsConstructor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.extensions.Extension;
 import net.minestom.server.timer.SchedulerManager;
@@ -15,16 +14,21 @@ import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.tasker.task.AbstractTaskerTask;
 import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
+import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 @Service
-@RequiredArgsConstructor
 public class MinestomTaskInitializer extends AbstractTaskInitializer {
     private final SchedulerManager scheduler = MinecraftServer.getSchedulerManager();
     private final Extension plugin;
 
-    public static void init(Extension plugin) {
-        Tasker.init(() -> new MinestomTaskInitializer(plugin));
+    public MinestomTaskInitializer(Controllable controllable, Extension plugin) {
+        super(controllable);
+        this.plugin = plugin;
+    }
+
+    public static void init(Controllable controllable, Extension plugin) {
+        Tasker.init(() -> new MinestomTaskInitializer(controllable, plugin));
     }
 
     @Override
