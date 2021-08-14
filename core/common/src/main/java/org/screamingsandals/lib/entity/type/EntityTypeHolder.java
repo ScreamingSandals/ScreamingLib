@@ -4,6 +4,7 @@ import lombok.Data;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Arrays;
@@ -28,6 +29,7 @@ public class EntityTypeHolder implements Wrapper {
      * @param entityType Object that represents entity type
      * @return true if specified entity type is the same as this
      */
+    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
     public boolean is(Object entityType) {
         return equals(EntityTypeMapping.resolve(entityType).orElse(null));
     }
@@ -38,6 +40,7 @@ public class EntityTypeHolder implements Wrapper {
      * @param entityTypes Array of objects that represents entity type
      * @return true if at least one of the entity type objects is same as this
      */
+    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
     public boolean is(Object... entityTypes) {
         return Arrays.stream(entityTypes).anyMatch(this::is);
     }
@@ -46,10 +49,12 @@ public class EntityTypeHolder implements Wrapper {
         return EntityMapper.spawn(this, location);
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
     public static EntityTypeHolder of(Object entityType) {
         return ofOptional(entityType).orElseThrow();
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
     public static Optional<EntityTypeHolder> ofOptional(Object entityType) {
         if (entityType instanceof EntityTypeHolder) {
             return Optional.of((EntityTypeHolder) entityType);

@@ -3,6 +3,7 @@ package org.screamingsandals.lib.material;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.Arrays;
@@ -37,6 +38,7 @@ public final class MaterialHolder implements Wrapper {
      * @param material Object that represents material
      * @return true if specified material is the same as this
      */
+    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     public boolean is(Object material) {
         return equals(MaterialMapping.resolve(material).orElse(null));
     }
@@ -47,6 +49,7 @@ public final class MaterialHolder implements Wrapper {
      * @param materials Array of objects that represents material
      * @return true if at least one of the specified objects is same as this
      */
+    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     public boolean is(Object... materials) {
         return Arrays.stream(materials).anyMatch(this::is);
     }
@@ -59,10 +62,12 @@ public final class MaterialHolder implements Wrapper {
         return MaterialMapping.isItem(this);
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     public static MaterialHolder of(Object material) {
         return ofOptional(material).orElseThrow();
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     public static Optional<MaterialHolder> ofOptional(Object material) {
         if (material instanceof MaterialHolder) {
             return Optional.of((MaterialHolder) material);

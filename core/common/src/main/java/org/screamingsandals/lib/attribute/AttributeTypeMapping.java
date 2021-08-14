@@ -2,6 +2,8 @@ package org.screamingsandals.lib.attribute;
 
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.AttributeMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
@@ -23,6 +25,8 @@ public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeT
         attributeTypeMapping = attributeTypeMappingSupplier.get();
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
+    @OfMethodAlternative(value = AttributeTypeHolder.class, methodName = "ofOptional")
     public static Optional<AttributeTypeHolder> resolve(Object attributeType) {
         if (attributeTypeMapping == null) {
             throw new UnsupportedOperationException("AttributeTypeMapping is not initialized yet.");

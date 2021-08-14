@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.utils.annotations;
+package org.screamingsandals.lib.utils.annotations.ide;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

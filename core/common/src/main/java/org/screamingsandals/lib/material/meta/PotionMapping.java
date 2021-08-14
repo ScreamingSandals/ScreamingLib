@@ -3,6 +3,8 @@ package org.screamingsandals.lib.material.meta;
 import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
 import java.util.Optional;
@@ -45,6 +47,8 @@ public abstract class PotionMapping extends AbstractTypeMapper<PotionHolder> {
         super.mapAlias("strong_" + potion, "strong_" + potionBukkit);
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.POTION)
+    @OfMethodAlternative(value = PotionHolder.class, methodName = "ofOptional")
     public static Optional<PotionHolder> resolve(Object potionObject) {
         if (potionMapping == null) {
             throw new UnsupportedOperationException("Potion mapping is not initialized yet.");

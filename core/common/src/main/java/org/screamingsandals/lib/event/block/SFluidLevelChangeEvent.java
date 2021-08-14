@@ -3,7 +3,7 @@ package org.screamingsandals.lib.event.block;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.annotations.LimitedVersionSupport;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.world.BlockDataHolder;
 import org.screamingsandals.lib.world.BlockHolder;
 

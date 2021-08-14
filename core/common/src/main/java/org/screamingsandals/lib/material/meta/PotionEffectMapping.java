@@ -4,6 +4,8 @@ import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.BasicConfigurationNode;
@@ -59,6 +61,8 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
                 return null;
             });
 
+    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
+    @OfMethodAlternative(value = PotionEffectHolder.class, methodName = "ofOptional")
     public static Optional<PotionEffectHolder> resolve(Object potionEffectObject) {
         if (potionEffectMapping == null) {
             throw new UnsupportedOperationException("PotionEffect mapping is not initialized yet.");

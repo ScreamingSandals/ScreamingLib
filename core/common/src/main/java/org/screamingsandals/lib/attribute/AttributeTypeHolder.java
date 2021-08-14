@@ -2,6 +2,7 @@ package org.screamingsandals.lib.attribute;
 
 import lombok.Data;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.Optional;
 
@@ -14,10 +15,12 @@ public class AttributeTypeHolder implements Wrapper {
         return AttributeTypeMapping.convertAttributeTypeHolder(this, type);
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
     public static AttributeTypeHolder of(Object attributeType) {
         return ofOptional(attributeType).orElseThrow();
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
     public static Optional<AttributeTypeHolder> ofOptional(Object attributeType) {
         if (attributeType instanceof AttributeTypeHolder) {
             return Optional.of((AttributeTypeHolder) attributeType);

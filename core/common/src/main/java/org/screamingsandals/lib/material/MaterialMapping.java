@@ -5,6 +5,8 @@ import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.ComplexMappingKey;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.key.NumericMappingKey;
@@ -47,6 +49,8 @@ public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder>
             "BLACK"
     );
 
+    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
+    @OfMethodAlternative(value = MaterialHolder.class, methodName = "ofOptional")
     public static Optional<MaterialHolder> resolve(Object materialObject) {
         if (materialMapping == null) {
             throw new UnsupportedOperationException("Material mapping is not initialized yet.");

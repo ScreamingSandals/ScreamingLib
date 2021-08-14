@@ -4,6 +4,8 @@ import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -46,6 +48,8 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
                 return null;
             });
 
+    @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
+    @OfMethodAlternative(value = EnchantmentHolder.class, methodName = "ofOptional")
     public static Optional<EnchantmentHolder> resolve(Object enchantmentObject) {
         if (enchantmentMapping == null) {
             throw new UnsupportedOperationException("Enchantment mapping is not initialized yet.");

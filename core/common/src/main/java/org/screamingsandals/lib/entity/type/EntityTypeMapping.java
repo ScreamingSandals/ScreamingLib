@@ -2,6 +2,8 @@ package org.screamingsandals.lib.entity.type;
 
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
 import java.util.Optional;
@@ -25,6 +27,8 @@ public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHol
         entityTypeMapping.legacyMapping();
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
+    @OfMethodAlternative(value = EntityTypeHolder.class, methodName = "ofOptional")
     public static Optional<EntityTypeHolder> resolve(Object entity) {
         if (entityTypeMapping == null) {
             throw new UnsupportedOperationException("EntityTypeMapping is not initialized yet.");

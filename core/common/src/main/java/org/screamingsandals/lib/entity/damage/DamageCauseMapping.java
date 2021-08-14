@@ -2,6 +2,8 @@ package org.screamingsandals.lib.entity.damage;
 
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
 import java.util.Optional;
@@ -22,6 +24,8 @@ public abstract class DamageCauseMapping extends AbstractTypeMapper<DamageCauseH
         damageCauseMapping = this;
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
+    @OfMethodAlternative(value = DamageCauseHolder.class, methodName = "ofOptional")
     public static Optional<DamageCauseHolder> resolve(Object damageCause) {
         if (damageCauseMapping == null) {
             throw new UnsupportedOperationException("DamageCauseMapping is not initialized yet.");

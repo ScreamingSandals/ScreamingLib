@@ -5,6 +5,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -147,6 +149,8 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
         fireworkEffectMapping.mapAlias("LARGE", "BALL_LARGE");
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
+    @OfMethodAlternative(value = FireworkEffectHolder.class, methodName = "ofOptional")
     public static Optional<FireworkEffectHolder> resolve(Object fireworkEffectObject) {
         if (fireworkEffectMapping == null) {
             throw new UnsupportedOperationException("FireworkEffectMapping is not initialized yet.");

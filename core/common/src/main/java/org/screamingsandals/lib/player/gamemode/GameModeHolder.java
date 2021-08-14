@@ -2,6 +2,7 @@ package org.screamingsandals.lib.player.gamemode;
 
 import lombok.Data;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -19,18 +20,22 @@ public class GameModeHolder implements Wrapper {
         return GameModeMapping.getId(this);
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
     public boolean is(Object gameMode) {
         return equals(GameModeMapping.resolve(gameMode).orElse(null));
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
     public boolean is(Object... gameModes) {
         return Arrays.stream(gameModes).anyMatch(this::is);
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
     public static GameModeHolder of(Object gameMode) {
         return ofOptional(gameMode).orElseThrow();
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
     public static Optional<GameModeHolder> ofOptional(Object gameMode) {
         if (gameMode instanceof GameModeHolder) {
             return Optional.of((GameModeHolder) gameMode);

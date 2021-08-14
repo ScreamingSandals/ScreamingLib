@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.util.RGBLike;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,10 +43,12 @@ public class FireworkEffectHolder implements Wrapper {
         return FireworkEffectMapping.convertFireworkEffectHolder(this, type);
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
     public static FireworkEffectHolder of(Object effect) {
         return ofOptional(effect).orElseThrow();
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
     public static Optional<FireworkEffectHolder> ofOptional(Object effect) {
         if (effect instanceof FireworkEffectHolder) {
             return Optional.of((FireworkEffectHolder) effect);

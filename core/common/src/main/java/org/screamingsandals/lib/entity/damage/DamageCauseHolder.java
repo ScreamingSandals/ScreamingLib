@@ -2,6 +2,7 @@ package org.screamingsandals.lib.entity.damage;
 
 import lombok.Data;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -15,18 +16,22 @@ public class DamageCauseHolder implements Wrapper {
         return DamageCauseMapping.convertDamageCauseHolder(this, type);
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
     public boolean is(Object damageCause) {
         return equals(DamageCauseMapping.resolve(damageCause).orElse(null));
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
     public boolean is(Object... damageCauses) {
         return Arrays.stream(damageCauses).anyMatch(this::is);
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
     public static DamageCauseHolder of(Object damageCause) {
         return ofOptional(damageCause).orElseThrow();
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
     public static Optional<DamageCauseHolder> ofOptional(Object damageCause) {
         if (damageCause instanceof DamageCauseHolder) {
             return Optional.of((DamageCauseHolder) damageCause);

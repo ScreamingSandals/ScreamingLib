@@ -2,6 +2,8 @@ package org.screamingsandals.lib.material.slot;
 
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +29,8 @@ public abstract class EquipmentSlotMapping {
         equipmentSlotMapping.legacyMapping();
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
+    @OfMethodAlternative(value = EquipmentSlotHolder.class, methodName = "ofOptional")
     public static Optional<EquipmentSlotHolder> resolve(Object slot) {
         if (equipmentSlotMapping == null) {
             throw new UnsupportedOperationException("EquipmentSlotMapping is not initialized yet.");

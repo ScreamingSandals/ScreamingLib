@@ -2,6 +2,8 @@ package org.screamingsandals.lib.player.gamemode;
 
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
 import java.util.Optional;
@@ -22,6 +24,8 @@ public abstract class GameModeMapping extends AbstractTypeMapper<GameModeHolder>
         gameModeMapping = this;
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
+    @OfMethodAlternative(value = GameModeHolder.class, methodName = "ofOptional")
     public static Optional<GameModeHolder> resolve(Object gameMode) {
         if (gameModeMapping == null) {
             throw new UnsupportedOperationException("GameModeMapping is not initialized yet.");

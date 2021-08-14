@@ -2,6 +2,7 @@ package org.screamingsandals.lib.material.slot;
 
 import lombok.Data;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.Optional;
 
@@ -14,10 +15,12 @@ public class EquipmentSlotHolder implements Wrapper {
         return EquipmentSlotMapping.convertEquipmentSlotHolder(this, type);
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
     public static EquipmentSlotHolder of(Object slot) {
         return ofOptional(slot).orElseThrow();
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
     public static Optional<EquipmentSlotHolder> ofOptional(Object slot) {
         if (slot instanceof EquipmentSlotHolder) {
             return Optional.of((EquipmentSlotHolder) slot);

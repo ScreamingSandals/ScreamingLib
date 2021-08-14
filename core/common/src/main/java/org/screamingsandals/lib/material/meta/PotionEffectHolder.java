@@ -3,6 +3,7 @@ package org.screamingsandals.lib.material.meta;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.Optional;
@@ -47,10 +48,12 @@ public class PotionEffectHolder implements Wrapper {
         return PotionEffectMapping.convertPotionEffectHolder(this, type);
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
     public static PotionEffectHolder of(Object effect) {
         return ofOptional(effect).orElseThrow();
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
     public static Optional<PotionEffectHolder> ofOptional(Object effect) {
         if (effect instanceof PotionEffectHolder) {
             return Optional.of((PotionEffectHolder) effect);
