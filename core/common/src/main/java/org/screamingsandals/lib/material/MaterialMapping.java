@@ -18,6 +18,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @AbstractService
 public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder> {
     @Getter

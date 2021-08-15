@@ -2,16 +2,18 @@ package org.screamingsandals.lib.material.meta;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import java.util.Arrays;
 import java.util.Optional;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @RequiredArgsConstructor
 @Data
 @ConfigSerializable
-public final class EnchantmentHolder implements Wrapper {
+public final class EnchantmentHolder implements ComparableWrapper {
     private final String platformName;
     private final int level;
 
@@ -38,5 +40,27 @@ public final class EnchantmentHolder implements Wrapper {
             return Optional.of((EnchantmentHolder) enchantment);
         }
         return EnchantmentMapping.resolve(enchantment);
+    }
+
+    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
+    @Override
+    public boolean is(Object object) {
+        return equals(ofOptional(object).orElse(null));
+    }
+
+    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
+    @Override
+    public boolean is(Object... objects) {
+        return Arrays.stream(objects).anyMatch(this::is);
+    }
+
+    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
+    public boolean isType(Object object) {
+        return platformName.equals(ofOptional(object).map(EnchantmentHolder::getPlatformName).orElse(null));
+    }
+
+    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
+    public boolean isType(Object... objects) {
+        return Arrays.stream(objects).anyMatch(this::isType);
     }
 }

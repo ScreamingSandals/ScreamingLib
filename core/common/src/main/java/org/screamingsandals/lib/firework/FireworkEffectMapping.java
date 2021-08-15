@@ -20,6 +20,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @AbstractService
 public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkEffectHolder> {
     private static FireworkEffectMapping fireworkEffectMapping = null;

@@ -9,6 +9,7 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @Data
 @RequiredArgsConstructor
 public class FireworkEffectHolder implements Wrapper {

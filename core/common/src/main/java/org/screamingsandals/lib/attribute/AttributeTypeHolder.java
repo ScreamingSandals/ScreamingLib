@@ -1,13 +1,15 @@
 package org.screamingsandals.lib.attribute;
 
 import lombok.Data;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
+import java.util.Arrays;
 import java.util.Optional;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @Data
-public class AttributeTypeHolder implements Wrapper {
+public class AttributeTypeHolder implements ComparableWrapper {
     private final String platformName;
 
     @Override
@@ -26,5 +28,17 @@ public class AttributeTypeHolder implements Wrapper {
             return Optional.of((AttributeTypeHolder) attributeType);
         }
         return AttributeTypeMapping.resolve(attributeType);
+    }
+
+    @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
+    @Override
+    public boolean is(Object object) {
+        return equals(ofOptional(object).orElse(null));
+    }
+
+    @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
+    @Override
+    public boolean is(Object... objects) {
+        return Arrays.stream(objects).anyMatch(this::is);
     }
 }

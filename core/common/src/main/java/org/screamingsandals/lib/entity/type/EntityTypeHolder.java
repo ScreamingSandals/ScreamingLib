@@ -3,15 +3,16 @@ package org.screamingsandals.lib.entity.type;
 import lombok.Data;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Arrays;
 import java.util.Optional;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @Data
-public class EntityTypeHolder implements Wrapper {
+public class EntityTypeHolder implements ComparableWrapper {
     private final String platformName;
 
     @Override
@@ -31,7 +32,7 @@ public class EntityTypeHolder implements Wrapper {
      */
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
     public boolean is(Object entityType) {
-        return equals(EntityTypeMapping.resolve(entityType).orElse(null));
+        return equals(ofOptional(entityType).orElse(null));
     }
 
     /**

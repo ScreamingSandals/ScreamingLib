@@ -7,6 +7,7 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import java.util.Arrays;
 import java.util.Optional;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @Data
 public class GameModeHolder implements Wrapper {
     private final String platformName;
@@ -22,7 +23,7 @@ public class GameModeHolder implements Wrapper {
 
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
     public boolean is(Object gameMode) {
-        return equals(GameModeMapping.resolve(gameMode).orElse(null));
+        return equals(ofOptional(gameMode).orElse(null));
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)

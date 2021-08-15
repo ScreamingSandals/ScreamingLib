@@ -2,17 +2,18 @@ package org.screamingsandals.lib.material;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.Arrays;
 import java.util.Optional;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @Data
 @RequiredArgsConstructor
 @ConfigSerializable
-public final class MaterialHolder implements Wrapper {
+public final class MaterialHolder implements ComparableWrapper {
     private final String platformName;
     private final int durability;
 

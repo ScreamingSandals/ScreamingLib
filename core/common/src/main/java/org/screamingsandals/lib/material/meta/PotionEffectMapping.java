@@ -18,6 +18,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
 public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffectHolder> {
 

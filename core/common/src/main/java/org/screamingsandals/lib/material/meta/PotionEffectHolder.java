@@ -2,16 +2,18 @@ package org.screamingsandals.lib.material.meta;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import java.util.Arrays;
 import java.util.Optional;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @Data
 @RequiredArgsConstructor
 @ConfigSerializable
-public class PotionEffectHolder implements Wrapper {
+public class PotionEffectHolder implements ComparableWrapper {
     private final String platformName;
     private final int duration;
     private final int amplifier;
@@ -59,5 +61,27 @@ public class PotionEffectHolder implements Wrapper {
             return Optional.of((PotionEffectHolder) effect);
         }
         return PotionEffectMapping.resolve(effect);
+    }
+
+    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
+    @Override
+    public boolean is(Object object) {
+        return equals(ofOptional(object).orElse(null));
+    }
+
+    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
+    @Override
+    public boolean is(Object... objects) {
+        return Arrays.stream(objects).anyMatch(this::is);
+    }
+
+    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
+    public boolean isType(Object object) {
+        return platformName.equals(ofOptional(object).map(PotionEffectHolder::getPlatformName).orElse(null));
+    }
+
+    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
+    public boolean isType(Object... objects) {
+        return Arrays.stream(objects).anyMatch(this::isType);
     }
 }
