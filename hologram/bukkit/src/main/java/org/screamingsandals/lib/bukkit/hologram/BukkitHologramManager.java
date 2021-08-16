@@ -23,7 +23,7 @@ import java.util.UUID;
         EventManager.class,
         PlayerMapper.class,
         LocationMapper.class,
-        AbstractTaskInitializer.class,
+        Tasker.class,
         ItemFactory.class
 })
 public class BukkitHologramManager extends HologramManager {
