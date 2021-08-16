@@ -11,10 +11,6 @@ import java.util.Arrays;
 @Service
 public class BukkitEnchantmentMapping extends EnchantmentMapping {
 
-    public static void init() {
-        EnchantmentMapping.init(BukkitEnchantmentMapping::new);
-    }
-
     public BukkitEnchantmentMapping() {
         enchantmentConverter
                 .registerW2P(Enchantment.class, e -> Enchantment.getByName(e.getPlatformName()))

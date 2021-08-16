@@ -8,7 +8,6 @@ import org.screamingsandals.lib.utils.key.AttributeMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @AbstractService
 public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeTypeHolder> {
@@ -17,12 +16,12 @@ public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeT
     protected final BidirectionalConverter<AttributeTypeHolder> attributeTypeConverter = BidirectionalConverter.<AttributeTypeHolder>build()
             .registerP2W(AttributeTypeHolder.class, e -> e);
 
-    public static void init(Supplier<AttributeTypeMapping> attributeTypeMappingSupplier) {
+    protected AttributeTypeMapping() {
         if (attributeTypeMapping != null) {
             throw new UnsupportedOperationException("AttributeTypeMapping is already initialized.");
         }
 
-        attributeTypeMapping = attributeTypeMappingSupplier.get();
+        attributeTypeMapping = this;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
@@ -52,9 +51,5 @@ public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeT
             throw new UnsupportedOperationException("AttributeTypeMapping is not initialized yet.");
         }
         return attributeTypeMapping.attributeTypeConverter.convert(holder, newType);
-    }
-
-    public static boolean isInitialized() {
-        return attributeTypeMapping != null;
     }
 }

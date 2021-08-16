@@ -1,11 +1,11 @@
 package org.screamingsandals.lib.material.meta;
 
-import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.BasicConfigurationNode;
@@ -15,7 +15,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("AlternativeMethodAvailable")
@@ -47,7 +46,7 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
         }
         return null;
     };
-    private static PotionEffectMapping potionEffectMapping = null;
+    private static PotionEffectMapping potionEffectMapping;
 
     protected BidirectionalConverter<PotionEffectHolder> potionEffectConverter = BidirectionalConverter.<PotionEffectHolder>build()
             .registerW2P(String.class, PotionEffectHolder::getPlatformName)
@@ -102,18 +101,16 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
         });
     }
 
-    @SneakyThrows
-    public static void init(Supplier<PotionEffectMapping> potionEffectMappingSupplier) {
+    protected PotionEffectMapping() {
         if (potionEffectMapping != null) {
             throw new UnsupportedOperationException("PotionEffect mapping is already initialized.");
         }
 
-        potionEffectMapping = potionEffectMappingSupplier.get();
-
-        potionEffectMapping.legacyMapping();
+        potionEffectMapping = this;
     }
 
-    private void legacyMapping() {
+    @OnPostConstruct
+    public void legacyMapping() {
         mapAlias("SLOWNESS", "SLOW");
         mapAlias("HASTE", "FAST_DIGGING");
         mapAlias("MINING_FATIGUE", "SLOW_DIGGING");
@@ -131,9 +128,4 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
         }
         return potionEffectMapping.potionEffectConverter.convert(holder, newType);
     }
-
-    public static boolean isInitialized() {
-        return potionEffectMapping != null;
-    }
-
 }

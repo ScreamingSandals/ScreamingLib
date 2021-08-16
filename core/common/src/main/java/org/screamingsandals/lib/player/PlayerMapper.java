@@ -52,10 +52,6 @@ public abstract class PlayerMapper {
                 .registerP2W(PlayerWrapper.Hand.class, e -> e);
     }
 
-    public static boolean isInitialized() {
-        return playerMapper != null;
-    }
-
     public static <T> PlayerWrapper wrapPlayer(T player) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");

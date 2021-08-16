@@ -14,6 +14,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @AbstractService
 public abstract class AttributeMapping {
     private static AttributeMapping attributeMapping;
@@ -88,12 +89,12 @@ public abstract class AttributeMapping {
             })
             .registerP2W(ItemAttributeHolder.class, e -> e);
 
-    public static void init(Supplier<AttributeMapping> supplier) {
+    protected AttributeMapping() {
         if (attributeMapping != null) {
             throw new UnsupportedOperationException("AttributeMapping is already initialized.");
         }
 
-        attributeMapping = supplier.get();
+        attributeMapping = this;
     }
 
     public static Optional<AttributeHolder> wrapAttribute(Object attribute) {
@@ -131,9 +132,5 @@ public abstract class AttributeMapping {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }
         return attributeMapping.attributeModifierConverter.convert(holder, newType);
-    }
-
-    public static boolean isInitialized() {
-        return attributeMapping != null;
     }
 }

@@ -53,9 +53,5 @@ public abstract class InventoryTypeMapping extends AbstractTypeMapper<InventoryT
         return inventoryTypeMapping.getSize0(holder);
     }
 
-    public static boolean isInitialized() {
-        return inventoryTypeMapping != null;
-    }
-
     public abstract int getSize0(InventoryTypeHolder holder);
 }

@@ -73,10 +73,6 @@ public abstract class EntityMapper {
         return mapper.strikeLightning0(locationHolder);
     }
 
-    public static boolean isInitialized() {
-        return mapper != null;
-    }
-
     protected abstract <T extends EntityBasic> Optional<T> wrapEntity0(Object entity);
 
     public abstract <T extends EntityBasic>  Optional<T> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder);

@@ -16,10 +16,6 @@ import java.util.Optional;
         BukkitEquipmentSlotMapping.class
 })
 public class BukkitAttributeMapping extends AttributeMapping {
-    public static void init() {
-        AttributeMapping.init(BukkitAttributeMapping::new);
-    }
-
     public BukkitAttributeMapping() {
         attributeModifierConverter
                 .registerW2P(AttributeModifier.class, holder ->

@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.material.builder;
 
-import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -25,12 +24,14 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
+@SuppressWarnings("AlternativeMethodAvailable")
+@AbstractService(
+        pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
+)
 public abstract class ItemFactory {
 
     private static ItemFactory factory;
@@ -242,18 +243,12 @@ public abstract class ItemFactory {
     private static final Pattern SHORT_STACK_PATTERN = Pattern.compile("^(?<material>(?:(?!(?<!\\\\)(?:\\\\\\\\)*;).)+)(\\\\*)?(;(?<amount>(?:(?!(?<!\\\\)(?:\\\\\\\\)*;).)+)?(\\\\*)?(;(?<name>(\"((?!(?<!\\\\)(?:\\\\\\\\)*\").)+|(?:(?!(?<!\\\\)(?:\\\\\\\\)*;).)+))?(\\\\*)?(;(?<lore>.*))?)?)?$");
     private static final Pattern LORE_SPLIT = Pattern.compile("((\"((?!(?<!\\\\)(?:\\\\\\\\)*\").)+\")|((?!(?<!\\\\)(?:\\\\\\\\)*;).)+)(?=($|;))");
 
-    @SneakyThrows
-    public static void init(Supplier<ItemFactory> factoryClass) {
+    protected ItemFactory() {
         if (factory != null) {
             throw new UnsupportedOperationException("ItemFactory is already initialized.");
         }
 
-        factory = factoryClass.get();
-
-        assert MaterialMapping.isInitialized();
-        assert PotionMapping.isInitialized();
-        assert EnchantmentMapping.isInitialized();
-        assert PotionEffectMapping.isInitialized();
+        factory = this;
     }
 
     public static ItemBuilder builder() {
@@ -418,7 +413,4 @@ public abstract class ItemFactory {
 
     public abstract ItemData createNewItemData0();
 
-    public static boolean isInitialized() {
-        return factory != null;
-    }
 }

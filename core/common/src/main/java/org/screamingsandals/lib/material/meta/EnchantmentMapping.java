@@ -6,13 +6,13 @@ import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.ConfigurationNode;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("AlternativeMethodAvailable")
@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentHolder> {
 
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?<namespaced>[A-Za-z][A-Za-z0-9_.\\-/:]*)(\\s+(?<level>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
-    private static EnchantmentMapping enchantmentMapping = null;
+    private static EnchantmentMapping enchantmentMapping;
 
     protected BidirectionalConverter<EnchantmentHolder> enchantmentConverter = BidirectionalConverter.<EnchantmentHolder>build()
             .registerW2P(String.class, EnchantmentHolder::getPlatformName)
@@ -90,17 +90,16 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
     }
 
     @SneakyThrows
-    public static void init(Supplier<EnchantmentMapping> enchantmentMappingSupplier) {
+    protected EnchantmentMapping() {
         if (enchantmentMapping != null) {
             throw new UnsupportedOperationException("Enchantment mapping is already initialized.");
         }
 
-        enchantmentMapping = enchantmentMappingSupplier.get();
-
-        enchantmentMapping.legacyMapping();
+        enchantmentMapping = this;
     }
 
-    private void legacyMapping() {
+    @OnPostConstruct
+    public void legacyMapping() {
         mapAlias("POWER", "ARROW_DAMAGE");
         mapAlias("FLAME", "ARROW_FIRE");
         mapAlias("INFINITY", "ARROW_INFINITE");
@@ -128,10 +127,6 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
             throw new UnsupportedOperationException("Enchantment mapping is not initialized yet.");
         }
         return enchantmentMapping.enchantmentConverter.convert(holder, newType);
-    }
-
-    public static boolean isInitialized() {
-        return enchantmentMapping != null;
     }
 
 }

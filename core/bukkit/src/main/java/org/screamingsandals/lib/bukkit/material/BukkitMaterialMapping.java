@@ -21,10 +21,6 @@ public class BukkitMaterialMapping extends MaterialMapping {
     @Getter
     private int versionNumber;
 
-    public static void init() {
-        MaterialMapping.init(BukkitMaterialMapping::new);
-    }
-
     @SuppressWarnings("deprecation") //legacy versions
     public BukkitMaterialMapping() {
         String[] bukkitVersion = Bukkit.getBukkitVersion().split("-")[0].split("\\.");

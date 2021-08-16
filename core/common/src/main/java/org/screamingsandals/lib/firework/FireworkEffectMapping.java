@@ -170,8 +170,4 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
         }
         return fireworkEffectMapping.fireworkEffectConverter.convert(holder, newType);
     }
-
-    public static boolean isInitialized() {
-        return fireworkEffectMapping != null;
-    }
 }

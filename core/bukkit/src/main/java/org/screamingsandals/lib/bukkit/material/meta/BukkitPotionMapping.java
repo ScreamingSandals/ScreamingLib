@@ -17,10 +17,6 @@ public class BukkitPotionMapping extends PotionMapping {
     @Getter
     private int versionNumber;
 
-    public static void init() {
-        PotionMapping.init(BukkitPotionMapping::new);
-    }
-
     public BukkitPotionMapping() {
         String[] bukkitVersion = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
         versionNumber = 0;

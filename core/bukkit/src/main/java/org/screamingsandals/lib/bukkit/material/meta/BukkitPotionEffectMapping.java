@@ -11,10 +11,6 @@ import java.util.Arrays;
 
 @Service
 public class BukkitPotionEffectMapping extends PotionEffectMapping {
-    public static void init() {
-        PotionEffectMapping.init(BukkitPotionEffectMapping::new);
-    }
-
     @SuppressWarnings("ConstantConditions")
     public BukkitPotionEffectMapping() {
         potionEffectConverter

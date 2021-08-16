@@ -9,10 +9,6 @@ import java.util.Arrays;
 
 @Service
 public class BukkitEquipmentSlotMapping extends EquipmentSlotMapping {
-    public static void init() {
-        EquipmentSlotMapping.init(BukkitEquipmentSlotMapping::new);
-    }
-
     public BukkitEquipmentSlotMapping() {
         equipmentSlotConverter
                 .registerP2W(EquipmentSlot.class, equipmentSlot -> new EquipmentSlotHolder(equipmentSlot.name()))

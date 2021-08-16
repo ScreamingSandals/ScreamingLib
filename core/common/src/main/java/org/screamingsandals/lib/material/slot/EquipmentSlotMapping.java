@@ -4,11 +4,11 @@ import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
@@ -20,13 +20,12 @@ public abstract class EquipmentSlotMapping {
             .registerP2W(EquipmentSlotHolder.class, e -> e);
     protected final Map<String, EquipmentSlotHolder> mapping = new HashMap<>();
 
-    public static void init(Supplier<EquipmentSlotMapping> supplier) {
+    protected EquipmentSlotMapping() {
         if (equipmentSlotMapping != null) {
             throw new UnsupportedOperationException("EquipmentSlotMapping is already initialized.");
         }
 
-        equipmentSlotMapping = supplier.get();
-        equipmentSlotMapping.legacyMapping();
+        equipmentSlotMapping = this;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
@@ -54,11 +53,8 @@ public abstract class EquipmentSlotMapping {
         return equipmentSlotMapping.equipmentSlotConverter.convert(holder, newType);
     }
 
-    public static boolean isInitialized() {
-        return equipmentSlotMapping != null;
-    }
-
-    private void legacyMapping() {
+    @OnPostConstruct
+    public void legacyMapping() {
         // Vanilla <-> Bukkit
         f2l("MAIN_HAND", "HAND");
         f2l("OFF_HAND", "OFF_HAND");

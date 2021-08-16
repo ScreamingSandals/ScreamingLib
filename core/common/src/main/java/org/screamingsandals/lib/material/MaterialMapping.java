@@ -1,12 +1,12 @@
 package org.screamingsandals.lib.material;
 
 import lombok.Getter;
-import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.key.ComplexMappingKey;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.key.NumericMappingKey;
@@ -15,7 +15,6 @@ import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("AlternativeMethodAvailable")
@@ -29,7 +28,7 @@ public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder>
             .registerP2W(MaterialHolder.class, e -> e);
     protected Map<Predicate<MaterialHolder>, Function<String, Optional<MaterialHolder>>> colorable = new HashMap<>();
 
-    private static MaterialMapping materialMapping = null;
+    private static MaterialMapping materialMapping;
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?::)?(?<durability>\\d+)?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
     private static final List<String> colors = List.of(
             "WHITE",
@@ -133,14 +132,16 @@ public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder>
         return materialMapping.materialConverter.convert(holder, newType);
     }
 
-    @SneakyThrows
-    public static void init(Supplier<MaterialMapping> materialMappingSupplier) {
+    protected MaterialMapping() {
         if (materialMapping != null) {
             throw new UnsupportedOperationException("Material mapping is already initialized.");
         }
 
-        materialMapping = materialMappingSupplier.get();
+        materialMapping = this;
+    }
 
+    @OnPostConstruct
+    public void finishConstruction() {
         /*
         if server is running Java Edition Post-Flattening version, flattening remappings have to been applied first
         on legacy versions you had to run it after the legacy
@@ -1030,10 +1031,6 @@ public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder>
                 mapping.put(legacyIdDataKey, holder);
             }
         }
-    }
-
-    public static boolean isInitialized() {
-        return materialMapping != null;
     }
 
     private static MaterialHolder cachedAir;

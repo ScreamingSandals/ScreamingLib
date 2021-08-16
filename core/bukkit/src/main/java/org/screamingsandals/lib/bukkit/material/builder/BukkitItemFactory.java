@@ -44,6 +44,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @Service(dependsOn = {
         BukkitMaterialMapping.class,
         BukkitEnchantmentMapping.class,
@@ -54,10 +55,6 @@ import java.util.stream.Collectors;
 })
 public class BukkitItemFactory extends ItemFactory {
     private final Plugin plugin;
-
-    public static void init(Plugin plugin) {
-        ItemFactory.init(() -> new BukkitItemFactory(plugin));
-    }
 
     @SuppressWarnings({"unchecked", "deprecation"}) //cause we can
     public BukkitItemFactory(Plugin plugin) {

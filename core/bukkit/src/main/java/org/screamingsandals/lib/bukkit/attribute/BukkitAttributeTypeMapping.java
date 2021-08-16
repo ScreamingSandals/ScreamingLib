@@ -10,9 +10,6 @@ import java.util.Arrays;
 
 @Service
 public class BukkitAttributeTypeMapping extends AttributeTypeMapping {
-    public static void init() {
-        AttributeTypeMapping.init(BukkitAttributeTypeMapping::new);
-    }
 
     public BukkitAttributeTypeMapping() {
         attributeTypeConverter

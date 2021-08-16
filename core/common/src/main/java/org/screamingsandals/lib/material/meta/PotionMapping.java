@@ -1,34 +1,31 @@
 package org.screamingsandals.lib.material.meta;
 
-import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
 public abstract class PotionMapping extends AbstractTypeMapper<PotionHolder> {
-    private static PotionMapping potionMapping = null;
+    private static PotionMapping potionMapping;
     protected BidirectionalConverter<PotionHolder> potionConverter = BidirectionalConverter.<PotionHolder>build()
             .registerW2P(String.class, PotionHolder::getPlatformName)
             .registerP2W(PotionHolder.class, e -> e);
 
-    @SneakyThrows
-    public static void init(Supplier<PotionMapping> potionMappingSupplier) {
+    protected PotionMapping() {
         if (potionMapping != null) {
             throw new UnsupportedOperationException("Potion mapping is already initialized.");
         }
 
-        potionMapping = potionMappingSupplier.get();
-
-        potionMapping.bukkit2minecraftMapping();
+        potionMapping = this;
     }
 
-    private void bukkit2minecraftMapping() {
+    @OnPostConstruct
+    public void bukkit2minecraftMapping() {
         mapAlias("EMPTY", "UNCRAFTABLE");
         mapAlias("LEAPING", "JUMP");
         mapAlias("SWIFTNESS", "SPEED");
@@ -65,9 +62,5 @@ public abstract class PotionMapping extends AbstractTypeMapper<PotionHolder> {
             throw new UnsupportedOperationException("Potion mapping is not initialized yet.");
         }
         return potionMapping.potionConverter.convert(holder, newType);
-    }
-
-    public static boolean isInitialized() {
-        return potionMapping != null;
     }
 }

@@ -54,10 +54,6 @@ public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHol
         return entityTypeMapping.isAlive0(entityTypeHolder);
     }
 
-    public static boolean isInitialized() {
-        return entityTypeMapping != null;
-    }
-
     @OnPostConstruct
     public void legacyMapping() {
         // Flattening <-> Bukkit
