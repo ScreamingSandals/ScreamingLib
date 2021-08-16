@@ -10,7 +10,7 @@ import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ClickType;
 import org.screamingsandals.lib.utils.InventoryAction;
-import org.screamingsandals.lib.utils.InventoryType;
+import org.screamingsandals.lib.utils.SlotType;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -28,7 +28,7 @@ public class SPlayerInventoryClickEvent extends CancellableAbstractEvent {
     private final InventoryAction action;
     private final int hotbarButton;
     private final int slot;
-    private final InventoryType.SlotType slotType;
+    private final SlotType slotType;
     private final int rawSlot;
     private Result result;
 }

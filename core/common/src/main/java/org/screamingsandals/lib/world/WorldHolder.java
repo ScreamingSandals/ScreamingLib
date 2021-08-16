@@ -4,6 +4,8 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
+import org.screamingsandals.lib.world.dimension.DimensionHolder;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -14,6 +16,14 @@ public interface WorldHolder extends Wrapper, Serializable {
     UUID getUuid();
 
     String getName();
+
+    int getMinY();
+
+    int getMaxY();
+
+    DifficultyHolder getDifficulty();
+
+    DimensionHolder getDimension();
 
     class WorldHolderTypeAdapter extends TypeAdapter<WorldHolder> {
         @Override

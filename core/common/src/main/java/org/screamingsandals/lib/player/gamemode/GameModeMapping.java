@@ -17,7 +17,7 @@ public abstract class GameModeMapping extends AbstractTypeMapper<GameModeHolder>
     protected final BidirectionalConverter<GameModeHolder> gameModeConverter = BidirectionalConverter.<GameModeHolder>build()
             .registerP2W(GameModeHolder.class, g -> g);
 
-    public GameModeMapping() {
+    protected GameModeMapping() {
         if (gameModeMapping != null) {
             throw new UnsupportedOperationException("GameModeMapping is already initialized!");
         }

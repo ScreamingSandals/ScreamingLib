@@ -1,7 +1,9 @@
 package org.screamingsandals.lib;
 
+import org.screamingsandals.lib.container.type.InventoryTypeMapping;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.damage.DamageCauseMapping;
+import org.screamingsandals.lib.entity.pose.EntityPoseMapping;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.MaterialMapping;
@@ -21,6 +23,8 @@ import org.screamingsandals.lib.utils.annotations.internal.InternalCoreService;
 import org.screamingsandals.lib.world.BlockDataMapper;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.world.LocationMapper;
+import org.screamingsandals.lib.world.difficulty.DifficultyMapping;
+import org.screamingsandals.lib.world.dimension.DimensionMapping;
 import org.screamingsandals.lib.world.state.BlockStateMapper;
 
 @AbstractService(
@@ -46,7 +50,11 @@ import org.screamingsandals.lib.world.state.BlockStateMapper;
         BlockDataMapper.class,
         BlockStateMapper.class,
         DamageCauseMapping.class,
-        GameModeMapping.class
+        GameModeMapping.class,
+        InventoryTypeMapping.class,
+        EntityPoseMapping.class,
+        DifficultyMapping.class,
+        DimensionMapping.class
 })
 @InternalCoreService
 public abstract class Core {

@@ -16,9 +16,6 @@ import java.util.Optional;
         BukkitBlockMapper.class
 })
 public class BukkitBlockStateMapper extends BlockStateMapper {
-    public static void init() {
-        BlockStateMapper.init(BukkitBlockStateMapper::new);
-    }
 
     @SuppressWarnings("unchecked")
     @Override

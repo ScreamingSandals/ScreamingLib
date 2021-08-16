@@ -15,7 +15,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.entity.EntityMapper;
-import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.PlayerContainer;
@@ -25,8 +24,8 @@ import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
-import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
@@ -38,19 +37,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service(dependsOn = {
-        EventManager.class
-})
+@Service
 public class BukkitPlayerMapper extends PlayerMapper {
-    public static void init(Plugin plugin, Controllable controllable) {
-        PlayerMapper.init(() -> new BukkitPlayerMapper(plugin, controllable));
-    }
-
-    public BukkitPlayerMapper(Plugin plugin, Controllable controllable) {
-        controllable.enable(() -> {
-            provider = BukkitAudiences.create(plugin);
-        });
-
+    public BukkitPlayerMapper() {
         offlinePlayerConverter
                 .registerP2W(OfflinePlayer.class, offlinePlayer -> new FinalOfflinePlayerWrapper(offlinePlayer.getUniqueId(), offlinePlayer.getName()))
                 .registerP2W(PlayerWrapper.class, playerWrapper -> new FinalOfflinePlayerWrapper(playerWrapper.getUuid(), playerWrapper.getName()))
@@ -127,6 +116,11 @@ public class BukkitPlayerMapper extends PlayerMapper {
                     }
                     return PlayerWrapper.Hand.MAIN;
                 });
+    }
+
+    @OnEnable
+    public void onEnable(Plugin plugin) {
+        provider = BukkitAudiences.create(plugin);
     }
 
     @Override

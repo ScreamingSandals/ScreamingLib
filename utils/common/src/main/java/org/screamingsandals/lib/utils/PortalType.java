@@ -3,6 +3,7 @@ package org.screamingsandals.lib.utils;
 /**
  * Represents various types of portals that can be made in a world.
  */
+// TODO: Replace with holder
 public enum PortalType {
 
     /**

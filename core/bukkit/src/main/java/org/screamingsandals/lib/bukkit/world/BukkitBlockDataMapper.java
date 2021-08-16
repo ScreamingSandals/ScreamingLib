@@ -11,7 +11,6 @@ import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.*;
 
 import java.util.Arrays;
@@ -26,10 +25,6 @@ import java.util.stream.Collectors;
 public class BukkitBlockDataMapper extends BlockDataMapper {
     private final static Pattern MAPPING_PATTERN = Pattern.compile(
             "(?:(?<namespace>[A-Za-z][A-Za-z0-9_.\\-]*):)?(?<material>[A-Za-z][A-Za-z0-9_.\\-/ ]+)(\\[(?<blockState>.+)])?");
-
-    public static void init() {
-        BlockDataMapper.init(BukkitBlockDataMapper::new);
-    }
 
     public BukkitBlockDataMapper() {
         converter

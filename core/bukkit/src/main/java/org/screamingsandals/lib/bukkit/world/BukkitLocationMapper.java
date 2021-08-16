@@ -2,7 +2,6 @@ package org.screamingsandals.lib.bukkit.world;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
@@ -13,10 +12,6 @@ import java.util.UUID;
 
 @Service
 public class BukkitLocationMapper extends LocationMapper {
-
-    public static void init() {
-        LocationMapper.init(BukkitLocationMapper::new);
-    }
 
     public BukkitLocationMapper() {
         converter.registerW2P(Location.class, holder -> {
@@ -42,9 +37,5 @@ public class BukkitLocationMapper extends LocationMapper {
         } catch (IllegalArgumentException ignored) {
         }
         return Optional.ofNullable(Bukkit.getWorld(name)).map(BukkitWorldHolder::new);
-    }
-
-    private void registerListeners(Plugin plugin) {
-
     }
 }

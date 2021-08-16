@@ -1,12 +1,12 @@
 package org.screamingsandals.lib.firework;
 
-import lombok.SneakyThrows;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("AlternativeMethodAvailable")
@@ -138,16 +137,18 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
                 return null;
             });
 
-    @SneakyThrows
-    public static void init(Supplier<FireworkEffectMapping> fireworkEffectMappingSupplier) {
+    public FireworkEffectMapping() {
         if (fireworkEffectMapping != null) {
             throw new UnsupportedOperationException("FireworkEffectMapping is already initialized.");
         }
 
-        fireworkEffectMapping = fireworkEffectMappingSupplier.get();
+        fireworkEffectMapping = this;
+    }
 
-        fireworkEffectMapping.mapAlias("SMALL", "BALL");
-        fireworkEffectMapping.mapAlias("LARGE", "BALL_LARGE");
+    @OnPostConstruct
+    public void postConstruct() {
+        mapAlias("SMALL", "BALL");
+        mapAlias("LARGE", "BALL_LARGE");
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)

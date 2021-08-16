@@ -13,7 +13,7 @@ import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerInventoryClickEvent;
 import org.screamingsandals.lib.utils.ClickType;
 import org.screamingsandals.lib.utils.InventoryAction;
-import org.screamingsandals.lib.utils.InventoryType;
+import org.screamingsandals.lib.utils.SlotType;
 
 //TODO:
 public class PlayerInventoryClickEventListener extends AbstractBukkitEventHandlerFactory<InventoryClickEvent, SPlayerInventoryClickEvent> {
@@ -35,7 +35,7 @@ public class PlayerInventoryClickEventListener extends AbstractBukkitEventHandle
                     InventoryAction.convert(event.getAction().name()),
                     event.getHotbarButton(),
                     event.getSlot(),
-                    InventoryType.SlotType.convert(event.getSlotType().name()),
+                    SlotType.convert(event.getSlotType().name()),
                     event.getRawSlot(),
                     AbstractEvent.Result.convert(event.getResult().name())
             );

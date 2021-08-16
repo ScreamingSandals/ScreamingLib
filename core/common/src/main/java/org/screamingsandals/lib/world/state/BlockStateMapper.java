@@ -1,26 +1,23 @@
 package org.screamingsandals.lib.world.state;
 
-import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.BlockHolder;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
 public abstract class BlockStateMapper {
 
-    private static BlockStateMapper blockStateMapper = null;
+    private static BlockStateMapper blockStateMapper;
 
-    @SneakyThrows
-    public static void init(Supplier<BlockStateMapper> blockStateMapperSupplier) {
+    protected BlockStateMapper() {
         if (blockStateMapper != null) {
             throw new UnsupportedOperationException("BlockStateMapper is already initialized.");
         }
 
-        blockStateMapper = blockStateMapperSupplier.get();
+        blockStateMapper = this;
     }
 
     @SuppressWarnings("unchecked")
@@ -44,8 +41,4 @@ public abstract class BlockStateMapper {
     }
 
     protected abstract <T extends BlockStateHolder> Optional<T> getBlockStateFromBlock0(BlockHolder blockHolder);
-
-    public static boolean isInitialized() {
-        return blockStateMapper != null;
-    }
 }

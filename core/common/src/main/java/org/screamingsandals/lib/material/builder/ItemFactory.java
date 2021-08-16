@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.material.MaterialMapping;
@@ -399,14 +400,14 @@ public abstract class ItemFactory {
 
     public abstract <C extends Container> Optional<C> wrapContainer0(Object container);
 
-    public static <C extends Container> Optional<C> createContainer(InventoryType type, Component name) {
+    public static <C extends Container> Optional<C> createContainer(InventoryTypeHolder type, Component name) {
         if (factory == null) {
             throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
         }
         return factory.createContainer0(type, name);
     }
 
-    public abstract <C extends Container> Optional<C> createContainer0(InventoryType type, Component name);
+    public abstract <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type, Component name);
 
     public static ItemData createNewItemData() {
         if (factory == null) {

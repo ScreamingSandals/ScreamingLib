@@ -2,7 +2,10 @@ package org.screamingsandals.lib.bukkit.world;
 
 import org.bukkit.World;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.WorldHolder;
+import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
+import org.screamingsandals.lib.world.dimension.DimensionHolder;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.UUID;
@@ -22,6 +25,30 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
     @Override
     public String getName() {
         return wrappedObject.getName();
+    }
+
+    @Override
+    public int getMinY() {
+        if (Reflect.hasMethod(wrappedObject, "getMinHeight")) {
+            return wrappedObject.getMinHeight();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int getMaxY() {
+        return wrappedObject.getMaxHeight();
+    }
+
+    @Override
+    public DifficultyHolder getDifficulty() {
+        return DifficultyHolder.of(wrappedObject.getDifficulty());
+    }
+
+    @Override
+    public DimensionHolder getDimension() {
+        return DimensionHolder.of(wrappedObject.getEnvironment());
     }
 
 }

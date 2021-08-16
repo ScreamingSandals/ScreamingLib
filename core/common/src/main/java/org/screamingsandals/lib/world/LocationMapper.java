@@ -1,12 +1,10 @@
 package org.screamingsandals.lib.world;
 
-import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 @AbstractService
 public abstract class LocationMapper {
@@ -15,8 +13,15 @@ public abstract class LocationMapper {
             .registerP2W(LocationHolder.class, e -> e)
             .registerW2P(BlockHolder.class, locationHolder -> BlockMapper.resolve(locationHolder).orElse(null));
 
-    private static LocationMapper mapping = null;
-    private static boolean initialized = false;
+    private static LocationMapper mapping;
+
+    protected LocationMapper() {
+        if (mapping != null) {
+            throw new UnsupportedOperationException("LocationMapper is already initialized.");
+        }
+
+        mapping = this;
+    }
 
     public static Optional<LocationHolder> resolve(Object obj) {
         if (mapping == null) {
@@ -54,18 +59,4 @@ public abstract class LocationMapper {
     protected abstract Optional<WorldHolder> getWorld0(UUID uuid);
 
     protected abstract Optional<WorldHolder> getWorld0(String name);
-
-    @SneakyThrows
-    public static void init(Supplier<LocationMapper> mappingSupplier) {
-        if (mapping != null) {
-            throw new UnsupportedOperationException("LocationMapper is already initialized.");
-        }
-
-        mapping = mappingSupplier.get();
-        initialized = true;
-    }
-
-    public static boolean isInitialized() {
-        return initialized;
-    }
 }

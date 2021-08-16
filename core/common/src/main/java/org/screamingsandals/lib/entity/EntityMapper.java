@@ -7,19 +7,18 @@ import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @AbstractService
 public abstract class EntityMapper {
 
     private static EntityMapper mapper;
 
-    public static void init(Supplier<EntityMapper> supplier) {
+    protected EntityMapper() {
         if (mapper != null) {
             throw new UnsupportedOperationException("EntityMapper is already initialized");
         }
 
-        mapper = supplier.get();
+        mapper = this;
     }
 
     @SuppressWarnings("unchecked")

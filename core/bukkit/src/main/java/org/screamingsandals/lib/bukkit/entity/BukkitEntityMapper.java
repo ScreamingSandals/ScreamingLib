@@ -20,10 +20,6 @@ import java.util.Optional;
 })
 public class BukkitEntityMapper extends EntityMapper {
 
-    public static void init() {
-        EntityMapper.init(BukkitEntityMapper::new);
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     protected <T extends EntityBasic> Optional<T> wrapEntity0(Object entity) {

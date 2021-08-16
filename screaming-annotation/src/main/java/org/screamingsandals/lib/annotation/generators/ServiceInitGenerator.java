@@ -278,6 +278,11 @@ public class ServiceInitGenerator {
                 statement.append(")");
                 methodSpec.addStatement(statement.toString(), processedArguments.toArray());
             }
+            var postConstruct = processOnPostConstruct(typeElement, returnedName);
+            if (postConstruct.areBothPresent()) {
+                methodSpec.addStatement(postConstruct.first(), postConstruct.second().toArray());
+            }
+
             if (!serviceContainer.isStaticOnly() && returnedName != null) {
                 methodSpec.addStatement("$T.$N($N)", ClassName.get("org.screamingsandals.lib.plugin", "ServiceManager"), "putService", returnedName);
                 instancedServices.put(typeElement.asType(), returnedName);
@@ -444,6 +449,43 @@ public class ServiceInitGenerator {
                 if (returnedName == null) {
                     throw new UnsupportedOperationException(
                             typeElement.getQualifiedName() + ": Can't dynamically add non-static @ShouldRunControllable method because init method doesn't return any instance"
+                    );
+                }
+                return Pair.of("$N.$N()", List.of(returnedName, method.getSimpleName()));
+            }
+        }
+
+        return Pair.empty();
+    }
+    private Pair<String, List<Object>> processOnPostConstruct(TypeElement typeElement, String returnedName) {
+        var superClass = typeElement;
+        List<Element> result1;
+        do {
+            result1 = superClass
+                    .getEnclosedElements().stream()
+                    .filter(element -> element.getKind() == ElementKind.METHOD
+                            && element.getAnnotation(OnPostConstruct.class) != null
+                            && element.getModifiers().contains(Modifier.PUBLIC)
+                    )
+                    .collect(Collectors.toList());
+
+            if (result1.size() > 1) {
+                throw new UnsupportedOperationException("Service " + typeElement.getQualifiedName() + " has more than one @OnPostConstruct methods");
+            }
+
+        } while (result1.size() == 0 && (superClass = (TypeElement) types.asElement(superClass.getSuperclass())) != null);
+
+        if (result1.size() == 1) {
+            var method = (ExecutableElement) result1.get(0);
+            if (method.getParameters().size() > 0) {
+                throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @OnPostConstruct can't have parameters");
+            }
+            if (method.getModifiers().contains(Modifier.STATIC)) {
+                return Pair.of("$T.$N()", List.of(typeElement, method.getSimpleName()));
+            } else {
+                if (returnedName == null) {
+                    throw new UnsupportedOperationException(
+                            typeElement.getQualifiedName() + ": Can't dynamically add non-static @OnPostConstruct method because init method doesn't return any instance"
                     );
                 }
                 return Pair.of("$N.$N()", List.of(returnedName, method.getSimpleName()));

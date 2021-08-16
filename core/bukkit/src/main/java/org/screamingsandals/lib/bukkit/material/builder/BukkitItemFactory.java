@@ -8,6 +8,7 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -24,6 +25,7 @@ import org.screamingsandals.lib.bukkit.material.meta.BukkitEnchantmentMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionMapping;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
@@ -33,7 +35,6 @@ import org.screamingsandals.lib.material.data.ItemData;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.AdventureHelper;
-import org.screamingsandals.lib.utils.InventoryType;
 import org.screamingsandals.lib.utils.adventure.AdventureUtils;
 import org.screamingsandals.lib.utils.adventure.ComponentUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -357,14 +358,14 @@ public class BukkitItemFactory extends ItemFactory {
     }
 
     @Override
-    public <C extends Container> Optional<C> createContainer0(InventoryType type, Component name) {
+    public <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type, Component name) {
         var container = AdventureUtils
-                .get(Bukkit.getServer(), "createInventory", InventoryHolder.class, org.bukkit.event.inventory.InventoryType.class, Component.class)
+                .get(Bukkit.getServer(), "createInventory", InventoryHolder.class, InventoryType.class, Component.class)
                 .ifPresentOrElseGet(classMethod ->
                                 classMethod
-                                        .invokeInstanceResulted(Bukkit.getServer(), null, org.bukkit.event.inventory.InventoryType.valueOf(type.name()), name)
+                                        .invokeInstanceResulted(Bukkit.getServer(), null, type.as(InventoryType.class), name)
                                         .as(Inventory.class),
-                        () -> Bukkit.createInventory(null, org.bukkit.event.inventory.InventoryType.valueOf(type.name()), AdventureHelper.toLegacy(name)));
+                        () -> Bukkit.createInventory(null, type.as(InventoryType.class), AdventureHelper.toLegacy(name)));
         return wrapContainer0(container);
     }
 

@@ -3,7 +3,6 @@ package org.screamingsandals.lib.player;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.Component;
-import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.PlayerContainer;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
@@ -12,6 +11,7 @@ import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.WorldHolder;
 
@@ -20,34 +20,35 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 @AbstractService
 public abstract class PlayerMapper {
-    protected final static String CONSOLE_NAME = "CONSOLE";
-
     protected final BidirectionalConverter<OfflinePlayerWrapper> offlinePlayerConverter = BidirectionalConverter.build();
     protected final BidirectionalConverter<PlayerWrapper> playerConverter = BidirectionalConverter.build();
     protected final BidirectionalConverter<CommandSenderWrapper> senderConverter = BidirectionalConverter.build();
     protected final BidirectionalConverter<PlayerWrapper.Hand> handConverter = BidirectionalConverter.build();
-    protected AudienceProvider provider = null;
-    private static PlayerMapper playerMapper = null;
+    protected AudienceProvider provider;
+    private static PlayerMapper playerMapper;
 
-    public static void init(@NotNull Supplier<PlayerMapper> playerUtilsSupplier) {
+    protected PlayerMapper() {
         if (playerMapper != null) {
             throw new UnsupportedOperationException("PlayerMapper is already initialized.");
         }
 
-        playerMapper = playerUtilsSupplier.get();
-        playerMapper.offlinePlayerConverter
+        playerMapper = this;
+    }
+
+    @OnPostConstruct
+    public void postConstruct() {
+        offlinePlayerConverter
                 .registerP2W(UUID.class, uuid -> new FinalOfflinePlayerWrapper(uuid, null))
                 .registerW2P(UUID.class, OfflinePlayerWrapper::getUuid)
                 .registerP2W(OfflinePlayerWrapper.class, e -> e);
-        playerMapper.playerConverter
+        playerConverter
                 .registerP2W(PlayerWrapper.class, e -> e);
-        playerMapper.senderConverter
+        senderConverter
                 .registerP2W(CommandSenderWrapper.class, e -> e);
-        playerMapper.handConverter
+        handConverter
                 .registerP2W(PlayerWrapper.Hand.class, e -> e);
     }
 

@@ -20,6 +20,10 @@ public @interface CustomAutocompletion {
         ENTITY_TYPE,
         DAMAGE_CAUSE,
         ATTRIBUTE_TYPE,
-        GAME_MODE
+        GAME_MODE,
+        INVENTORY_TYPE,
+        ENTITY_POSE,
+        DIFFICULTY,
+        DIMENSION
     }
 }

@@ -4,10 +4,10 @@ import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
@@ -18,13 +18,12 @@ public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHol
     protected final BidirectionalConverter<EntityTypeHolder> entityTypeConverter = BidirectionalConverter.<EntityTypeHolder>build()
             .registerP2W(EntityTypeHolder.class, e -> e);
 
-    public static void init(Supplier<EntityTypeMapping> entityTypeMappingSupplier) {
+    protected EntityTypeMapping() {
         if (entityTypeMapping != null) {
             throw new UnsupportedOperationException("EntityTypeMapping is already initialized.");
         }
 
-        entityTypeMapping = entityTypeMappingSupplier.get();
-        entityTypeMapping.legacyMapping();
+        entityTypeMapping = this;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
@@ -59,7 +58,8 @@ public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHol
         return entityTypeMapping != null;
     }
 
-    private void legacyMapping() {
+    @OnPostConstruct
+    public void legacyMapping() {
         // Flattening <-> Bukkit
         mapAlias("ITEM", "DROPPED_ITEM");
         mapAlias("LEASH_KNOT", "LEASH_HITCH");

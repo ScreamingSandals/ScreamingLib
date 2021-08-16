@@ -10,10 +10,6 @@ import java.util.Arrays;
 
 @Service
 public class BukkitEntityTypeMapping extends EntityTypeMapping {
-    public static void init() {
-        EntityTypeMapping.init(BukkitEntityTypeMapping::new);
-    }
-
     public BukkitEntityTypeMapping() {
         entityTypeConverter
                 .registerP2W(EntityType.class, entityType -> new EntityTypeHolder(entityType.name()))

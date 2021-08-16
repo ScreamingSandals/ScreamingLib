@@ -17,7 +17,7 @@ public abstract class DamageCauseMapping extends AbstractTypeMapper<DamageCauseH
     protected final BidirectionalConverter<DamageCauseHolder> damageCauseConverter = BidirectionalConverter.<DamageCauseHolder>build()
             .registerP2W(DamageCauseHolder.class, d -> d);
 
-    public DamageCauseMapping() {
+    protected DamageCauseMapping() {
         if (damageCauseMapping != null) {
             throw new UnsupportedOperationException("DamageCauseMapping is already initialized!");
         }

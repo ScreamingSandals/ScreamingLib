@@ -13,10 +13,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class BukkitFireworkEffectMapping extends FireworkEffectMapping {
-    public static void init() {
-        FireworkEffectMapping.init(BukkitFireworkEffectMapping::new);
-    }
-
     public BukkitFireworkEffectMapping() {
         fireworkEffectConverter
                 .registerW2P(FireworkEffect.Type.class, fireworkEffectHolder -> FireworkEffect.Type.valueOf(fireworkEffectHolder.getPlatformName()))

@@ -5,12 +5,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.bukkit.material.builder.BukkitItemFactory;
+import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.InventoryType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -102,8 +102,8 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public InventoryType getType() {
-        return InventoryType.convert(wrappedObject.getType().name());
+    public InventoryTypeHolder getType() {
+        return InventoryTypeHolder.of(wrappedObject.getType());
     }
 
     @Override

@@ -22,10 +22,6 @@ import org.screamingsandals.lib.world.LocationMapper;
 })
 public class BukkitBlockMapper extends BlockMapper {
 
-    public static void init() {
-        BlockMapper.init(BukkitBlockMapper::new);
-    }
-
     public BukkitBlockMapper() {
         converter.registerP2W(Location.class, location -> {
                     final var instanced = LocationMapper.resolve(location).orElseThrow();

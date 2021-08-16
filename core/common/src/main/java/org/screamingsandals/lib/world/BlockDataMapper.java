@@ -1,22 +1,23 @@
 package org.screamingsandals.lib.world;
 
-import lombok.SneakyThrows;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @AbstractService
 public abstract class BlockDataMapper {
     protected BidirectionalConverter<BlockDataHolder> converter = BidirectionalConverter.<BlockDataHolder>build()
             .registerP2W(BlockDataHolder.class, e -> e);
 
-    private static BlockDataMapper mapping = null;
-    private static boolean initialized = false;
+    private static BlockDataMapper mapping;
 
-    public static boolean isInitialized() {
-        return initialized;
+    protected BlockDataMapper() {
+        if (mapping != null) {
+            throw new UnsupportedOperationException("BlockDataMapper are already initialized.");
+        }
+
+        mapping = this;
     }
 
     public static Optional<BlockDataHolder> resolve(Object obj) {
@@ -32,16 +33,6 @@ public abstract class BlockDataMapper {
             throw new UnsupportedOperationException("BlockDataMapper are not initialized yet.");
         }
         return mapping.converter.convert(holder, newType);
-    }
-
-    @SneakyThrows
-    public static void init(Supplier<BlockDataMapper> mappingSupplier) {
-        if (mapping != null) {
-            throw new UnsupportedOperationException("BlockDataMapper are already initialized.");
-        }
-
-        mapping = mappingSupplier.get();
-        initialized = true;
     }
 
     public static Optional<BlockDataHolder> getBlockDataAt(LocationHolder location) {
