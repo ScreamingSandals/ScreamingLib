@@ -52,7 +52,7 @@ import org.screamingsandals.lib.world.state.BlockStateMapper;
         DamageCauseMapping.class,
         GameModeMapping.class,
         InventoryTypeMapping.class,
-        EntityPoseMapping.class,
+      //  EntityPoseMapping.class,
         DifficultyMapping.class,
         DimensionMapping.class
 })
