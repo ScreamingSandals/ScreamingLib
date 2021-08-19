@@ -32,7 +32,7 @@ public class EntityDamageEventListener extends AbstractBukkitEventHandlerFactory
 
         if (event instanceof EntityDamageByBlockEvent) {
             return new SEntityDamageByBlockEvent(
-                    BlockMapper.wrapBlock(((EntityDamageByBlockEvent)event).getDamager()),
+                    BlockMapper.resolve(((EntityDamageByBlockEvent)event).getDamager()).orElse(null),
                     EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
                     DamageCauseHolder.of(event.getCause()),
                     event.getDamage()
