@@ -7,6 +7,7 @@ import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerWorldChangeEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 public class PlayerChangeWorldEventListener extends AbstractBukkitEventHandlerFactory<PlayerChangedWorldEvent, SPlayerWorldChangeEvent> {
 
@@ -17,8 +18,8 @@ public class PlayerChangeWorldEventListener extends AbstractBukkitEventHandlerFa
     @Override
     protected SPlayerWorldChangeEvent wrapEvent(PlayerChangedWorldEvent event, EventPriority priority) {
         return new SPlayerWorldChangeEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                new BukkitWorldHolder(event.getFrom())
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(() -> new BukkitWorldHolder(event.getFrom()))
         );
     }
 }

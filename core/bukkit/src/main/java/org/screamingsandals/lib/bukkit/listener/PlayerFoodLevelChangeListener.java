@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.bukkit.listener;
 
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.plugin.Plugin;
@@ -9,8 +8,10 @@ import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerFoodLevelChangeEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
-public class PlayerFoodLevelChangeListener  extends AbstractBukkitEventHandlerFactory<FoodLevelChangeEvent, SPlayerFoodLevelChangeEvent> {
+public class PlayerFoodLevelChangeListener extends AbstractBukkitEventHandlerFactory<FoodLevelChangeEvent, SPlayerFoodLevelChangeEvent> {
 
     public PlayerFoodLevelChangeListener(Plugin plugin) {
         super(FoodLevelChangeEvent.class, SPlayerFoodLevelChangeEvent.class, plugin);
@@ -20,16 +21,11 @@ public class PlayerFoodLevelChangeListener  extends AbstractBukkitEventHandlerFa
     protected SPlayerFoodLevelChangeEvent wrapEvent(FoodLevelChangeEvent event, EventPriority priority) {
         if (event.getEntity() instanceof Player) {
             return new SPlayerFoodLevelChangeEvent(
-                    PlayerMapper.wrapPlayer((Player) event.getEntity()),
-                    ItemFactory.build(event.getItem()).orElse(null),
-                    event.getFoodLevel()
+                    ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer((Player) event.getEntity())),
+                    ImmutableObjectLink.of(() -> ItemFactory.build(event.getItem()).orElse(null)),
+                    ObjectLink.of(event::getFoodLevel, event::setFoodLevel)
             );
         }
         return null;
-    }
-
-    @Override
-    protected void postProcess(SPlayerFoodLevelChangeEvent wrappedEvent, FoodLevelChangeEvent event) {
-        event.setFoodLevel(wrappedEvent.getFoodLevel());
     }
 }

@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.BlockHolder;
 
 @EqualsAndHashCode(callSuper = false)
@@ -14,6 +16,7 @@ public class SPlayerBedEnterEvent extends CancellableAbstractEvent {
     /**
      * Represents the default possible outcomes of this event.
      */
+    // TODO: holder?
     public enum BedEnterResult {
         /**
          * The player will enter the bed.
@@ -55,13 +58,33 @@ public class SPlayerBedEnterEvent extends CancellableAbstractEvent {
         }
     }
 
-    private final PlayerWrapper player;
-    private final BlockHolder bed;
-    private final BedEnterResult bedEnterResult;
-    private Result useBed = Result.DEFAULT;
+    private final ImmutableObjectLink<PlayerWrapper> player;
+    private final ImmutableObjectLink<BlockHolder> bed;
+    private final ImmutableObjectLink<BedEnterResult> bedEnterResult;
+    private final ObjectLink<Result> useBed;
+
+    public PlayerWrapper getPlayer() {
+        return player.get();
+    }
+
+    public BlockHolder getBed() {
+        return bed.get();
+    }
+
+    public BedEnterResult getBedEnterResult() {
+        return bedEnterResult.get();
+    }
+
+    public Result getUseBed() {
+        return useBed.get();
+    }
+
+    public void setUseBed(Result useBed) {
+        this.useBed.set(useBed);
+    }
 
     @Override
     public boolean isCancelled() {
-        return (useBed == Result.DENY || useBed == Result.DEFAULT && bedEnterResult != BedEnterResult.OK);
+        return (useBed.get() == Result.DENY || useBed.get() == Result.DEFAULT && bedEnterResult.get() != BedEnterResult.OK);
     }
 }

@@ -11,9 +11,7 @@ import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerCraftItemEvent;
-import org.screamingsandals.lib.utils.ClickType;
-import org.screamingsandals.lib.utils.InventoryAction;
-import org.screamingsandals.lib.utils.SlotType;
+import org.screamingsandals.lib.utils.*;
 
 public class PlayerCraftItemEventListener extends AbstractBukkitEventHandlerFactory<CraftItemEvent, SPlayerCraftItemEvent> {
 
@@ -25,29 +23,29 @@ public class PlayerCraftItemEventListener extends AbstractBukkitEventHandlerFact
     protected SPlayerCraftItemEvent wrapEvent(CraftItemEvent event, EventPriority priority) {
         if (event.getWhoClicked() instanceof Player) {
             return new SPlayerCraftItemEvent(
-                    PlayerMapper.wrapPlayer((Player)event.getWhoClicked()),
-                    ItemFactory.build(event.getCurrentItem()).orElseThrow(),
-                    ItemFactory.wrapContainer(event.getClickedInventory()).orElse(null),
-                    ItemFactory.wrapContainer(event.getInventory()).orElseThrow(),
-                    ClickType.convert(event.getClick().name()),
-                    new SPlayerCraftItemEvent.Recipe(
-                            ItemFactory.build(event.getRecipe().getResult()).orElseThrow()
+                    ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer((Player) event.getWhoClicked())),
+                    ObjectLink.of(
+                            () -> ItemFactory.build(event.getCurrentItem()).orElseThrow(),
+                            item -> event.setCurrentItem(item.as(ItemStack.class))
                     ),
-                    AbstractEvent.Result.convert(event.getResult().name()),
-                    InventoryAction.convert(event.getAction().name()),
-                    ItemFactory.build(event.getCursor()).orElse(null),
-                    SlotType.convert(event.getSlotType().name()),
-                    event.getHotbarButton(),
-                    event.getRawSlot()
+                    ImmutableObjectLink.of(() -> ItemFactory.wrapContainer(event.getClickedInventory()).orElse(null)),
+                    ImmutableObjectLink.of(() -> ItemFactory.wrapContainer(event.getInventory()).orElseThrow()),
+                    ImmutableObjectLink.of(() -> ClickType.convert(event.getClick().name())),
+                    ImmutableObjectLink.of(() -> new SPlayerCraftItemEvent.Recipe(
+                            ItemFactory.build(event.getRecipe().getResult()).orElseThrow()
+                    )),
+                    ObjectLink.of(
+                            () -> AbstractEvent.Result.convert(event.getResult().name()),
+                            result -> Event.Result.valueOf(result.name().toUpperCase())
+                    ),
+                    ImmutableObjectLink.of(() -> InventoryAction.convert(event.getAction().name())),
+                    ImmutableObjectLink.of(() -> ItemFactory.build(event.getCursor()).orElse(null)),
+                    ImmutableObjectLink.of(() -> SlotType.convert(event.getSlotType().name())),
+                    ImmutableObjectLink.of(event::getHotbarButton),
+                    ImmutableObjectLink.of(event::getRawSlot)
             );
         }
 
         return null;
-    }
-
-    @Override
-    protected void postProcess(SPlayerCraftItemEvent wrappedEvent, CraftItemEvent event) {
-        event.setCurrentItem(wrappedEvent.getCurrentItem().as(ItemStack.class));
-        event.setResult(Event.Result.valueOf(wrappedEvent.getResult().name().toUpperCase()));
     }
 }

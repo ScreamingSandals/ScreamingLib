@@ -1,6 +1,8 @@
 package org.screamingsandals.lib.bukkit;
 
 import lombok.RequiredArgsConstructor;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.bukkit.listener.*;
@@ -113,7 +115,11 @@ public class BukkitCore extends Core {
         new PlayerAnimationEventListener(plugin);
         new PlayerInteractEntityEventListener(plugin);
         new PlayerBedLeaveEventListener(plugin);
-        new PlayerBucketEventListener(plugin);
+
+        // PlayerBucketEvent is abstract and doesn't have implemented handler list
+        new PlayerBucketEventListener(plugin, PlayerBucketEmptyEvent.class);
+        new PlayerBucketEventListener(plugin, PlayerBucketFillEvent.class);
+
         if (Reflect.has("org.bukkit.event.player.PlayerCommandSendEvent"))
             new PlayerCommandSendEventListener(plugin);
         new PlayerEggThrowEventListener(plugin);

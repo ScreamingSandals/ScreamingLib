@@ -6,6 +6,7 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerCommandSendEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 public class PlayerCommandSendEventListener extends AbstractBukkitEventHandlerFactory<PlayerCommandSendEvent, SPlayerCommandSendEvent> {
 
@@ -16,8 +17,8 @@ public class PlayerCommandSendEventListener extends AbstractBukkitEventHandlerFa
     @Override
     protected SPlayerCommandSendEvent wrapEvent(PlayerCommandSendEvent event, EventPriority priority) {
         return new SPlayerCommandSendEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                event.getCommands()
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(event::getCommands)
         );
     }
 }

@@ -7,6 +7,8 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerFishEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 public class PlayerFishEventListener extends AbstractBukkitEventHandlerFactory<PlayerFishEvent, SPlayerFishEvent> {
 
@@ -17,16 +19,11 @@ public class PlayerFishEventListener extends AbstractBukkitEventHandlerFactory<P
     @Override
     protected SPlayerFishEvent wrapEvent(PlayerFishEvent event, EventPriority priority) {
         return new SPlayerFishEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                EntityMapper.wrapEntity(event.getCaught()).orElse(null),
-                event.getExpToDrop(),
-                SPlayerFishEvent.State.convert(event.getState().name()),
-                EntityMapper.wrapEntity(event.getHook()).orElse(null)
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getCaught()).orElse(null)),
+                ObjectLink.of(event::getExpToDrop, event::setExpToDrop),
+                ImmutableObjectLink.of(() -> SPlayerFishEvent.State.convert(event.getState().name())),
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getHook()).orElse(null))
         );
-    }
-
-    @Override
-    protected void postProcess(SPlayerFishEvent wrappedEvent, PlayerFishEvent event) {
-        event.setExpToDrop(wrappedEvent.getExp());
     }
 }

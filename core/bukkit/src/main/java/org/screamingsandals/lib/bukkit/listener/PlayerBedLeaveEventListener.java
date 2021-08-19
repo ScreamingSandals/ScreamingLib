@@ -6,6 +6,8 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerBedLeaveEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
 
 public class PlayerBedLeaveEventListener extends AbstractBukkitEventHandlerFactory<PlayerBedLeaveEvent, SPlayerBedLeaveEvent> {
@@ -17,9 +19,9 @@ public class PlayerBedLeaveEventListener extends AbstractBukkitEventHandlerFacto
     @Override
     protected SPlayerBedLeaveEvent wrapEvent(PlayerBedLeaveEvent event, EventPriority priority) {
         return new SPlayerBedLeaveEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                BlockMapper.wrapBlock(event.getBed()),
-                event.shouldSetSpawnLocation()
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBed())),
+                ObjectLink.of(event::shouldSetSpawnLocation, event::setSpawnLocation)
         );
     }
 }
