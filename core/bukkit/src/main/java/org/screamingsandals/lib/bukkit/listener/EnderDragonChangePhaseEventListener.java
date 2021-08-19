@@ -7,6 +7,8 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEnderDragonChangePhaseEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 public class EnderDragonChangePhaseEventListener extends AbstractBukkitEventHandlerFactory<EnderDragonChangePhaseEvent, SEnderDragonChangePhaseEvent> {
 
@@ -16,18 +18,14 @@ public class EnderDragonChangePhaseEventListener extends AbstractBukkitEventHand
 
     @Override
     protected SEnderDragonChangePhaseEvent wrapEvent(EnderDragonChangePhaseEvent event, EventPriority priority) {
-        final var currentPhase = event.getCurrentPhase() != null ?
-                SEnderDragonChangePhaseEvent.Phase.valueOf(event.getCurrentPhase().name().toUpperCase()) : null;
-
         return new SEnderDragonChangePhaseEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                currentPhase,
-                SEnderDragonChangePhaseEvent.Phase.valueOf(event.getNewPhase().name().toUpperCase())
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> event.getCurrentPhase() != null ?
+                        SEnderDragonChangePhaseEvent.Phase.valueOf(event.getCurrentPhase().name().toUpperCase()) : null),
+                ObjectLink.of(
+                        () -> SEnderDragonChangePhaseEvent.Phase.valueOf(event.getNewPhase().name().toUpperCase()),
+                        phase -> event.setNewPhase(EnderDragon.Phase.valueOf(phase.name().toUpperCase()))
+                )
         );
-    }
-
-    @Override
-    protected void postProcess(SEnderDragonChangePhaseEvent wrappedEvent, EnderDragonChangePhaseEvent event) {
-        event.setNewPhase(EnderDragon.Phase.valueOf(wrappedEvent.getNewPhase().name().toUpperCase()));
     }
 }

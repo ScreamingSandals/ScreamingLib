@@ -7,8 +7,9 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerChatEvent;
-
-import java.util.stream.Collectors;
+import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 public class AsyncPlayerChatEventListener extends AbstractBukkitEventHandlerFactory<AsyncPlayerChatEvent, SPlayerChatEvent> {
     public AsyncPlayerChatEventListener(Plugin plugin) {
@@ -18,19 +19,10 @@ public class AsyncPlayerChatEventListener extends AbstractBukkitEventHandlerFact
     @Override
     protected SPlayerChatEvent wrapEvent(AsyncPlayerChatEvent event, EventPriority priority) {
         return new SPlayerChatEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                event.getMessage(),
-                event.getFormat(),
-                event.getRecipients().stream().map(PlayerMapper::wrapPlayer).collect(Collectors.toList())
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ObjectLink.of(event::getMessage, event::setMessage),
+                ObjectLink.of(event::getFormat, event::setFormat),
+                new CollectionLinkedToCollection<>(event.getRecipients(), playerWrapper -> playerWrapper.as(Player.class), PlayerMapper::wrapPlayer)
         );
-    }
-
-    @Override
-    protected void postProcess(SPlayerChatEvent wrappedEvent, AsyncPlayerChatEvent event) {
-        event.setCancelled(wrappedEvent.isCancelled());
-        event.setMessage(wrappedEvent.getMessage());
-        event.setFormat(wrappedEvent.getFormat());
-        event.getRecipients().clear();
-        event.getRecipients().addAll(wrappedEvent.getRecipients().stream().map(w -> w.as(Player.class)).collect(Collectors.toList()));
     }
 }

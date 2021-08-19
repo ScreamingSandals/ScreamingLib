@@ -8,9 +8,9 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityDeathEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
-
-import java.util.Optional;
-import java.util.stream.Collectors;
+import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 public class EntityDeathEventListener extends AbstractBukkitEventHandlerFactory<EntityDeathEvent, SEntityDeathEvent> {
 
@@ -21,23 +21,13 @@ public class EntityDeathEventListener extends AbstractBukkitEventHandlerFactory<
     @Override
     protected SEntityDeathEvent wrapEvent(EntityDeathEvent event, EventPriority priority) {
         return new SEntityDeathEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                event.getDrops()
-                        .stream()
-                        .map(ItemFactory::build)
-                        .map(Optional::orElseThrow)
-                        .collect(Collectors.toList()),
-                event.getDroppedExp()
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                new CollectionLinkedToCollection<>(
+                        event.getDrops(),
+                        item -> item.as(ItemStack.class),
+                        itemStack -> ItemFactory.build(itemStack).orElseThrow()
+                ),
+                ObjectLink.of(event::getDroppedExp, event::setDroppedExp)
         );
-    }
-
-    @Override
-    protected void postProcess(SEntityDeathEvent wrappedEvent, EntityDeathEvent event) {
-        event.getDrops().clear();
-        wrappedEvent
-                .getDrops()
-                .stream()
-                .map(item -> item.as(ItemStack.class))
-                .forEach(event.getDrops()::add);
     }
 }

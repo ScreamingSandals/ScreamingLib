@@ -6,6 +6,8 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SArrowBodyCountChangeEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 public class ArrowBodyCountChangeEventListener extends AbstractBukkitEventHandlerFactory<ArrowBodyCountChangeEvent, SArrowBodyCountChangeEvent> {
 
@@ -16,10 +18,10 @@ public class ArrowBodyCountChangeEventListener extends AbstractBukkitEventHandle
     @Override
     protected SArrowBodyCountChangeEvent wrapEvent(ArrowBodyCountChangeEvent event, EventPriority priority) {
         return new SArrowBodyCountChangeEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                event.isReset(),
-                event.getOldAmount(),
-                event.getNewAmount()
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(event::isReset),
+                ImmutableObjectLink.of(event::getOldAmount),
+                ObjectLink.of(event::getNewAmount, event::setNewAmount)
         );
     }
 }

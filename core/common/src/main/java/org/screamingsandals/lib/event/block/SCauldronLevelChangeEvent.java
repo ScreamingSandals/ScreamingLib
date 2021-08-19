@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.state.BlockStateHolder;
 
@@ -12,12 +14,37 @@ import org.screamingsandals.lib.world.state.BlockStateHolder;
 @Data
 @AllArgsConstructor
 public class SCauldronLevelChangeEvent extends CancellableAbstractEvent {
-    private final BlockHolder block;
-    private final EntityBasic entity;
-    private final int oldLevel;
-    private final Reason reason;
-    private int newLevel;
+    private final ImmutableObjectLink<BlockHolder> block;
+    private final ImmutableObjectLink<EntityBasic> entity;
+    private final ImmutableObjectLink<Integer> oldLevel;
+    private final ImmutableObjectLink<Reason> reason;
+    private final ObjectLink<Integer> newLevel;
 
+    public BlockHolder getBlock() {
+        return block.get();
+    }
+
+    public EntityBasic getEntity() {
+        return entity.get();
+    }
+
+    public int getOldLevel() {
+        return oldLevel.get();
+    }
+
+    public Reason getReason() {
+        return reason.get();
+    }
+
+    public int getNewLevel() {
+        return newLevel.get();
+    }
+
+    public void setNewLevel(int newLevel) {
+        this.newLevel.set(newLevel);
+    }
+
+    // TODO: holder?
     public enum Reason {
         ARMOR_WASH,
         BANNER_WASH,

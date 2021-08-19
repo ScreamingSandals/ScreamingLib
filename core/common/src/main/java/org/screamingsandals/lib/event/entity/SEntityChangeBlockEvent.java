@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.BlockDataHolder;
 import org.screamingsandals.lib.world.BlockHolder;
 
@@ -12,7 +13,19 @@ import org.screamingsandals.lib.world.BlockHolder;
 @AllArgsConstructor
 @Data
 public class SEntityChangeBlockEvent extends CancellableAbstractEvent {
-    private final EntityBasic entity;
-    private final BlockHolder block;
-    private final BlockDataHolder to;
+    private final ImmutableObjectLink<EntityBasic> entity;
+    private final ImmutableObjectLink<BlockHolder> block;
+    private final ImmutableObjectLink<BlockDataHolder> to;
+
+    public EntityBasic getEntity() {
+        return entity.get();
+    }
+
+    public BlockHolder getBlock() {
+        return block.get();
+    }
+
+    public BlockDataHolder getTo() {
+        return to.get();
+    }
 }

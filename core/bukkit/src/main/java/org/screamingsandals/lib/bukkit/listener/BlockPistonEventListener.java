@@ -10,6 +10,7 @@ import org.screamingsandals.lib.event.block.SBlockPistonExtendEvent;
 import org.screamingsandals.lib.event.block.SBlockPistonRetractEvent;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
 
 public class BlockPistonEventListener extends AbstractBukkitEventHandlerFactory<BlockPistonEvent, SBlockPistonEvent> {
@@ -22,26 +23,26 @@ public class BlockPistonEventListener extends AbstractBukkitEventHandlerFactory<
     protected SBlockPistonEvent wrapEvent(BlockPistonEvent event, EventPriority priority) {
         if (event instanceof BlockPistonExtendEvent) {
             return new SBlockPistonExtendEvent(
-                    BlockMapper.wrapBlock(event.getBlock()),
-                    event.isSticky(),
-                    BlockFace.valueOf(event.getDirection().name()),
+                    ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                    ImmutableObjectLink.of(event::isSticky),
+                    ImmutableObjectLink.of(() -> BlockFace.valueOf(event.getDirection().name())),
                     new CollectionLinkedToCollection<>(((BlockPistonExtendEvent) event).getBlocks(), o -> o.as(Block.class), BlockMapper::wrapBlock)
             );
         }
 
         if (event instanceof BlockPistonRetractEvent) {
             return new SBlockPistonRetractEvent(
-                    BlockMapper.wrapBlock(event.getBlock()),
-                    event.isSticky(),
-                    BlockFace.valueOf(event.getDirection().name()),
+                    ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                    ImmutableObjectLink.of(event::isSticky),
+                    ImmutableObjectLink.of(() -> BlockFace.valueOf(event.getDirection().name())),
                     new CollectionLinkedToCollection<>(((BlockPistonRetractEvent) event).getBlocks(), o -> o.as(Block.class), BlockMapper::wrapBlock)
             );
         }
 
         return new SBlockPistonEvent(
-                BlockMapper.wrapBlock(event.getBlock()),
-                event.isSticky(),
-                BlockFace.valueOf(event.getDirection().name())
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                ImmutableObjectLink.of(event::isSticky),
+                ImmutableObjectLink.of(() -> BlockFace.valueOf(event.getDirection().name()))
         );
     }
 }

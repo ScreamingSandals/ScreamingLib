@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.screamingsandals.lib.utils.BlockFace;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.BlockHolder;
 
 import java.util.Collection;
@@ -16,7 +17,7 @@ import java.util.Collection;
 public class SBlockPistonRetractEvent extends SBlockPistonEvent {
     private final Collection<BlockHolder> pushedBlocks;
 
-    public SBlockPistonRetractEvent(BlockHolder block, boolean sticky, BlockFace direction, Collection<BlockHolder> pushedBlocks) {
+    public SBlockPistonRetractEvent(ImmutableObjectLink<BlockHolder> block, ImmutableObjectLink<Boolean> sticky, ImmutableObjectLink<BlockFace> direction, Collection<BlockHolder> pushedBlocks) {
         super(block, sticky, direction);
         this.pushedBlocks = pushedBlocks;
     }

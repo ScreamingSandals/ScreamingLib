@@ -8,6 +8,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityBreakDoorEvent;
 import org.screamingsandals.lib.event.entity.SEntityChangeBlockEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.BlockDataMapper;
 import org.screamingsandals.lib.world.BlockMapper;
 
@@ -21,15 +22,27 @@ public class EntityChangeBlockEventListener extends AbstractBukkitEventHandlerFa
     protected SEntityChangeBlockEvent wrapEvent(EntityChangeBlockEvent event, EventPriority priority) {
         if (event instanceof EntityBreakDoorEvent) {
             return new SEntityBreakDoorEvent(
-                    EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                    BlockMapper.wrapBlock(event.getBlock()),
-                    BlockDataMapper.resolve(event.getTo()).orElseThrow()
+                    ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                    ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                    ImmutableObjectLink.of(() -> {
+                        try {
+                            return BlockDataMapper.resolve(event.getBlockData()).orElseThrow();
+                        } catch (Throwable ignored) {
+                            return BlockDataMapper.resolve(event.getTo().getNewData((byte) 0)).orElseThrow();
+                        }
+                    })
             );
         }
         return new SEntityChangeBlockEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                BlockMapper.wrapBlock(event.getBlock()),
-                BlockDataMapper.resolve(event.getBlockData()).orElseThrow()
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                ImmutableObjectLink.of(() -> {
+                    try {
+                        return BlockDataMapper.resolve(event.getBlockData()).orElseThrow();
+                    } catch (Throwable ignored) {
+                        return BlockDataMapper.resolve(event.getTo().getNewData((byte) 0)).orElseThrow();
+                    }
+                })
         );
     }
 }

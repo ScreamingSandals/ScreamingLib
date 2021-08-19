@@ -3,8 +3,9 @@ package org.screamingsandals.lib.event.chunk;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
 /**
@@ -14,6 +15,18 @@ import org.screamingsandals.lib.world.chunk.ChunkHolder;
 @Data
 @AllArgsConstructor
 public class SChunkUnloadEvent extends CancellableAbstractEvent {
-    private final ChunkHolder chunk;
-    private boolean saveChunk;
+    private final ImmutableObjectLink<ChunkHolder> chunk;
+    private final ObjectLink<Boolean> saveChunk;
+
+    public ChunkHolder getChunk() {
+        return chunk.get();
+    }
+
+    public boolean isSaveChunk() {
+        return saveChunk.get();
+    }
+
+    public void setSaveChunk(boolean saveChunk) {
+        this.saveChunk.set(saveChunk);
+    }
 }

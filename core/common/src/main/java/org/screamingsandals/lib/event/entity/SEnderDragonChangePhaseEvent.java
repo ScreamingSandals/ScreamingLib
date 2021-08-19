@@ -5,18 +5,37 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
 public class SEnderDragonChangePhaseEvent extends CancellableAbstractEvent {
-    private final EntityBasic entity;
-    private final Phase currentPhase;
-    private Phase newPhase;
+    private final ImmutableObjectLink<EntityBasic> entity;
+    private final ImmutableObjectLink<Phase> currentPhase;
+    private final ObjectLink<Phase> newPhase;
+
+    public EntityBasic getEntity() {
+        return entity.get();
+    }
+
+    public Phase getCurrentPhase() {
+        return currentPhase.get();
+    }
+
+    public Phase getNewPhase() {
+        return newPhase.get();
+    }
+
+    public void setNewPhase(Phase newPhase) {
+        this.newPhase.set(newPhase);
+    }
 
     /**
      * Represents a phase or action that an Ender Dragon can perform.
      */
+    // TODO: holder?
     public enum Phase {
         /**
          * The dragon will circle outside the ring of pillars if ender

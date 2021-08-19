@@ -6,6 +6,8 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityEnterLoveModeEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 public class EntityEnterLoveModeEventListener extends AbstractBukkitEventHandlerFactory<EntityEnterLoveModeEvent, SEntityEnterLoveModeEvent> {
 
@@ -16,14 +18,9 @@ public class EntityEnterLoveModeEventListener extends AbstractBukkitEventHandler
     @Override
     protected SEntityEnterLoveModeEvent wrapEvent(EntityEnterLoveModeEvent event, EventPriority priority) {
         return new SEntityEnterLoveModeEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                EntityMapper.wrapEntity(event.getHumanEntity()).orElseThrow(),
-                event.getTicksInLove()
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getHumanEntity()).orElseThrow()),
+                ObjectLink.of(event::getTicksInLove, event::setTicksInLove)
         );
-    }
-
-    @Override
-    protected void postProcess(SEntityEnterLoveModeEvent wrappedEvent, EntityEnterLoveModeEvent event) {
-        event.setTicksInLove(wrappedEvent.getTicksInLove());
     }
 }

@@ -6,6 +6,7 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SCreatureSpawnEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 public class CreatureSpawnEventListener extends AbstractBukkitEventHandlerFactory<CreatureSpawnEvent, SCreatureSpawnEvent> {
 
@@ -16,8 +17,8 @@ public class CreatureSpawnEventListener extends AbstractBukkitEventHandlerFactor
     @Override
     protected SCreatureSpawnEvent wrapEvent(CreatureSpawnEvent event, EventPriority priority) {
         return new SCreatureSpawnEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                SCreatureSpawnEvent.SpawnReason.valueOf(event.getSpawnReason().name().toUpperCase())
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> SCreatureSpawnEvent.SpawnReason.valueOf(event.getSpawnReason().name().toUpperCase()))
         );
     }
 }

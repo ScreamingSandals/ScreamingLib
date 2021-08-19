@@ -5,16 +5,25 @@ import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.world.state.BlockStateHolder;
 
-import java.util.List;
+import java.util.Collection;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @LimitedVersionSupport("Bukkit >= 1.13.2")
 public class SBlockDropItemEvent extends CancellableAbstractEvent {
-    private final PlayerWrapper player;
-    private final BlockStateHolder blockState;
-    private final List<EntityItem> items;
+    private final ImmutableObjectLink<PlayerWrapper> player;
+    private final ImmutableObjectLink<BlockStateHolder> blockState;
+    private final Collection<EntityItem> items;
+
+    public PlayerWrapper getPlayer() {
+        return player.get();
+    }
+
+    public BlockStateHolder getBlockState() {
+        return blockState.get();
+    }
 }

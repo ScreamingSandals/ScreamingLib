@@ -8,6 +8,7 @@ import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockFormEvent;
 import org.screamingsandals.lib.event.block.SBlockFormedByEntityEvent;
@@ -26,29 +27,29 @@ public class BlockGrowEventListener extends AbstractBukkitEventHandlerFactory<Bl
         if (event instanceof BlockFormEvent) {
             if (event instanceof EntityBlockFormEvent) {
                 return new SBlockFormedByEntityEvent(
-                        BlockMapper.wrapBlock(event.getBlock()),
-                        EntityMapper.wrapEntity(((EntityBlockFormEvent) event).getEntity()).orElseThrow(),
-                        BlockStateMapper.wrapBlockState(event.getNewState()).orElseThrow()
+                        ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                        ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(((EntityBlockFormEvent) event).getEntity()).orElseThrow()),
+                        ImmutableObjectLink.of(() -> BlockStateMapper.wrapBlockState(event.getNewState()).orElseThrow())
                 );
             }
 
             if (event instanceof BlockSpreadEvent) {
                 return new SBlockSpreadEvent(
-                        BlockMapper.wrapBlock(event.getBlock()),
-                        BlockMapper.wrapBlock(((BlockSpreadEvent) event).getSource()),
-                        BlockStateMapper.wrapBlockState(event.getNewState()).orElseThrow()
+                        ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                        ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(((BlockSpreadEvent) event).getSource())),
+                        ImmutableObjectLink.of(() -> BlockStateMapper.wrapBlockState(event.getNewState()).orElseThrow())
                 );
             }
 
             return new SBlockFormEvent(
-                    BlockMapper.wrapBlock(event.getBlock()),
-                    BlockStateMapper.wrapBlockState(event.getNewState()).orElseThrow()
+                    ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                    ImmutableObjectLink.of(() -> BlockStateMapper.wrapBlockState(event.getNewState()).orElseThrow())
             );
         }
 
         return new SBlockGrowEvent(
-                BlockMapper.wrapBlock(event.getBlock()),
-                BlockStateMapper.wrapBlockState(event.getNewState()).orElseThrow()
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                ImmutableObjectLink.of(() -> BlockStateMapper.wrapBlockState(event.getNewState()).orElseThrow())
         );
     }
 }

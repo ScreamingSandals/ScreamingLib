@@ -6,11 +6,20 @@ import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
 public class SEntityDropItemEvent extends CancellableAbstractEvent {
-    private final EntityBasic entity;
-    private final Item drop;
+    private final ImmutableObjectLink<EntityBasic> entity;
+    private final ImmutableObjectLink<Item> drop;
+
+    public EntityBasic getEntity() {
+        return entity.get();
+    }
+
+    public Item getDrop() {
+        return drop.get();
+    }
 }

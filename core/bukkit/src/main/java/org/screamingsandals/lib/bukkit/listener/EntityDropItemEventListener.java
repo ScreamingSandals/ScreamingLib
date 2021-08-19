@@ -7,6 +7,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityDropItemEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 public class EntityDropItemEventListener extends AbstractBukkitEventHandlerFactory<EntityDropItemEvent, SEntityDropItemEvent> {
 
@@ -17,8 +18,8 @@ public class EntityDropItemEventListener extends AbstractBukkitEventHandlerFacto
     @Override
     protected SEntityDropItemEvent wrapEvent(EntityDropItemEvent event, EventPriority priority) {
         return new SEntityDropItemEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                ItemFactory.build(event.getItemDrop()).orElseThrow()
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> ItemFactory.build(event.getItemDrop()).orElseThrow())
         );
     }
 }

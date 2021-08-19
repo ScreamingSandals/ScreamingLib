@@ -6,6 +6,8 @@ import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockExplodeEvent;
 
@@ -18,14 +20,9 @@ public class BlockExplodeEventListener extends AbstractBukkitEventHandlerFactory
     @Override
     protected SBlockExplodeEvent wrapEvent(BlockExplodeEvent event, EventPriority priority) {
         return new SBlockExplodeEvent(
-                BlockMapper.wrapBlock(event.getBlock()),
-                new CollectionLinkedToCollection<>(event.blockList(), o -> o.as(Block.class), BlockMapper::wrapBlock), // because it's mutable
-                event.getYield()
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                new CollectionLinkedToCollection<>(event.blockList(), o -> o.as(Block.class), BlockMapper::wrapBlock),
+                ObjectLink.of(event::getYield, event::setYield)
         );
-    }
-
-    @Override
-    protected void postProcess(SBlockExplodeEvent wrappedEvent, BlockExplodeEvent event) {
-        event.setYield(wrappedEvent.getYield());
     }
 }

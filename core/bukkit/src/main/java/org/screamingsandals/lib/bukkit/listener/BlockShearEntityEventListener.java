@@ -6,6 +6,7 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockShearEntityEvent;
 
@@ -18,9 +19,9 @@ public class BlockShearEntityEventListener extends AbstractBukkitEventHandlerFac
     @Override
     protected SBlockShearEntityEvent wrapEvent(BlockShearEntityEvent event, EventPriority priority) {
         return new SBlockShearEntityEvent(
-                BlockMapper.wrapBlock(event.getBlock()),
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                ItemFactory.build(event.getTool()).orElseThrow()
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> ItemFactory.build(event.getTool()).orElseThrow())
         );
     }
 }

@@ -7,8 +7,8 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SAreaEffectCloudApplyEvent;
 import org.screamingsandals.lib.event.EventPriority;
-
-import java.util.stream.Collectors;
+import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 public class AreaEffectCloudApplyEventListener extends AbstractBukkitEventHandlerFactory<AreaEffectCloudApplyEvent, SAreaEffectCloudApplyEvent> {
 
@@ -19,21 +19,12 @@ public class AreaEffectCloudApplyEventListener extends AbstractBukkitEventHandle
     @Override
     protected SAreaEffectCloudApplyEvent wrapEvent(AreaEffectCloudApplyEvent event, EventPriority priority) {
         return new SAreaEffectCloudApplyEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                event.getAffectedEntities()
-                        .stream()
-                        .map(entity -> EntityMapper.wrapEntity(entity).orElseThrow())
-                        .collect(Collectors.toList())
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                new CollectionLinkedToCollection<>(
+                        event.getAffectedEntities(),
+                        entityBasic -> entityBasic.as(LivingEntity.class),
+                        livingEntity -> EntityMapper.wrapEntity(livingEntity).orElseThrow()
+                )
         );
-    }
-
-    @Override
-    protected void postProcess(SAreaEffectCloudApplyEvent wrappedEvent, AreaEffectCloudApplyEvent event) {
-        event.getAffectedEntities().clear();
-        wrappedEvent
-                .getAffectedEntities()
-                .stream()
-                .map(entityBasic -> entityBasic.as(LivingEntity.class))
-                .forEach(event.getAffectedEntities()::add);
     }
 }

@@ -5,6 +5,7 @@ import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockCookEvent;
 
@@ -17,9 +18,9 @@ public class BlockCookEventListener extends AbstractBukkitEventHandlerFactory<Bl
     @Override
     protected SBlockCookEvent wrapEvent(BlockCookEvent event, EventPriority priority) {
         return new SBlockCookEvent(
-                BlockMapper.wrapBlock(event.getBlock()),
-                ItemFactory.build(event.getSource()).orElseThrow(),
-                ItemFactory.build(event.getResult()).orElseThrow()
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                ImmutableObjectLink.of(() -> ItemFactory.build(event.getSource()).orElseThrow()),
+                ImmutableObjectLink.of(() -> ItemFactory.build(event.getResult()).orElseThrow())
         );
     }
 }

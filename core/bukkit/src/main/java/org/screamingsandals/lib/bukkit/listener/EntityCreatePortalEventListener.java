@@ -7,10 +7,10 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityCreatePortalEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.PortalType;
 import org.screamingsandals.lib.world.state.BlockStateMapper;
-
-import java.util.stream.Collectors;
 
 public class EntityCreatePortalEventListener extends AbstractBukkitEventHandlerFactory<EntityCreatePortalEvent, SEntityCreatePortalEvent> {
 
@@ -21,22 +21,13 @@ public class EntityCreatePortalEventListener extends AbstractBukkitEventHandlerF
     @Override
     protected SEntityCreatePortalEvent wrapEvent(EntityCreatePortalEvent event, EventPriority priority) {
         return new SEntityCreatePortalEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                event.getBlocks()
-                        .stream()
-                        .map(blockState -> BlockStateMapper.wrapBlockState(blockState).orElseThrow())
-                        .collect(Collectors.toList()),
-                PortalType.valueOf(event.getPortalType().name().toUpperCase())
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                new CollectionLinkedToCollection<>( // is this supposed to be mutable or not? I'm not sure
+                        event.getBlocks(),
+                        blockStateHolder -> blockStateHolder.as(BlockState.class),
+                        blockState -> BlockStateMapper.wrapBlockState(blockState).orElseThrow()
+                ),
+                ImmutableObjectLink.of(() -> PortalType.valueOf(event.getPortalType().name().toUpperCase()))
         );
-    }
-
-    @Override
-    protected void postProcess(SEntityCreatePortalEvent wrappedEvent, EntityCreatePortalEvent event) {
-        event.getBlocks().clear();
-        wrappedEvent
-                .getBlocks()
-                .stream()
-                .map(blockStateHolder -> blockStateHolder.as(BlockState.class))
-                .forEach(event.getBlocks()::add);
     }
 }

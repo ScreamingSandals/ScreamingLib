@@ -96,5 +96,6 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
      * @param wrappedEvent wrapped event
      * @param event bukkit event
      */
+    @Deprecated
     protected void postProcess(SE wrappedEvent, T event) {}
 }

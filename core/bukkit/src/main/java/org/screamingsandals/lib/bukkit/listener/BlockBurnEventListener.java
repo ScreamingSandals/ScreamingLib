@@ -4,6 +4,7 @@ import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockBurnEvent;
 
@@ -16,8 +17,8 @@ public class BlockBurnEventListener extends AbstractBukkitEventHandlerFactory<Bl
     @Override
     protected SBlockBurnEvent wrapEvent(BlockBurnEvent event, EventPriority priority) {
         return new SBlockBurnEvent(
-                BlockMapper.wrapBlock(event.getBlock()),
-                event.getIgnitingBlock() != null ? BlockMapper.wrapBlock(event.getIgnitingBlock()) : null
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                ImmutableObjectLink.of(() -> BlockMapper.resolve(event.getIgnitingBlock()).orElse(null))
         );
     }
 }

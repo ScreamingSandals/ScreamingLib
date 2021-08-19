@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.BlockHolder;
 
 import java.util.Collection;
@@ -12,7 +14,19 @@ import java.util.Collection;
 @Data
 @AllArgsConstructor
 public class SBlockExplodeEvent extends CancellableAbstractEvent {
-    private final BlockHolder block;
+    private final ImmutableObjectLink<BlockHolder> block;
     private final Collection<BlockHolder> destroyed;
-    private float yield;
+    private final ObjectLink<Float> yield;
+
+    public BlockHolder getBlock() {
+        return block.get();
+    }
+
+    public float getYield() {
+        return yield.get();
+    }
+
+    public void setYield(float yield) {
+        this.yield.set(yield);
+    }
 }

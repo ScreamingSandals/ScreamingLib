@@ -8,6 +8,9 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityCombustByBlockEvent;
 import org.screamingsandals.lib.event.entity.SEntityCombustEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.world.BlockMapper;
 
 public class EntityCombustEventListener extends AbstractBukkitEventHandlerFactory<EntityCombustEvent, SEntityCombustEvent> {
 
@@ -19,14 +22,15 @@ public class EntityCombustEventListener extends AbstractBukkitEventHandlerFactor
     protected SEntityCombustEvent wrapEvent(EntityCombustEvent event, EventPriority priority) {
         if (event instanceof EntityCombustByBlockEvent) {
             return new SEntityCombustByBlockEvent(
-                    EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                    event.getDuration()
+                    ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                    ObjectLink.of(event::getDuration, event::setDuration),
+                    ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(((EntityCombustByBlockEvent) event).getCombuster()))
             );
         }
 
         return new SEntityCombustEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                event.getDuration()
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ObjectLink.of(event::getDuration, event::setDuration)
         );
     }
 }
