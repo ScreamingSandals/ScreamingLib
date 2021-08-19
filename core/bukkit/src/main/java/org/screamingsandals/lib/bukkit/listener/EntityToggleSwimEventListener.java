@@ -6,6 +6,7 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityToggleSwimEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 public class EntityToggleSwimEventListener extends AbstractBukkitEventHandlerFactory<EntityToggleSwimEvent, SEntityToggleSwimEvent> {
 
@@ -16,8 +17,8 @@ public class EntityToggleSwimEventListener extends AbstractBukkitEventHandlerFac
     @Override
     protected SEntityToggleSwimEvent wrapEvent(EntityToggleSwimEvent event, EventPriority priority) {
         return new SEntityToggleSwimEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                event.isSwimming()
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(event::isSwimming)
         );
     }
 }

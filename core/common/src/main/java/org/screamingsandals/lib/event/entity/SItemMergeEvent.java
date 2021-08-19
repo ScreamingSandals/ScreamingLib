@@ -6,11 +6,20 @@ import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
 public class SItemMergeEvent extends CancellableAbstractEvent {
-    private final EntityBasic entity;
-    private final Item target;
+    private final ImmutableObjectLink<EntityBasic> entity;
+    private final ImmutableObjectLink<Item> target;
+
+    public EntityBasic getEntity() {
+        return entity.get();
+    }
+
+    public Item getTarget() {
+        return target.get();
+    }
 }

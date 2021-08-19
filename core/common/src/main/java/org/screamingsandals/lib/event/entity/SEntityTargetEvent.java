@@ -5,18 +5,37 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
 public class SEntityTargetEvent extends CancellableAbstractEvent {
-    private final EntityBasic entity;
-    private EntityBasic target;
-    private final TargetReason targetReason;
+    private final ImmutableObjectLink<EntityBasic> entity;
+    private final ObjectLink<EntityBasic> target;
+    private final ImmutableObjectLink<TargetReason> targetReason;
+
+    public EntityBasic getEntity() {
+        return entity.get();
+    }
+
+    public EntityBasic getTarget() {
+        return target.get();
+    }
+
+    public void setTarget(EntityBasic target) {
+        this.target.set(target);
+    }
+
+    public TargetReason getTargetReason() {
+        return targetReason.get();
+    }
 
     /**
      * An enum to specify the reason for the targeting
      */
+    // TODO: holder?
     public enum TargetReason {
 
         /**

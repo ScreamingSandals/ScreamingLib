@@ -112,7 +112,6 @@ public class BukkitCore extends Core {
         new PlayerBedEnterEventListener(plugin);
         new PlayerAnimationEventListener(plugin);
         new PlayerInteractEntityEventListener(plugin);
-        new PlayerArmorStandManipulateEventListener(plugin);
         new PlayerBedLeaveEventListener(plugin);
         new PlayerBucketEventListener(plugin);
         if (Reflect.has("org.bukkit.event.player.PlayerCommandSendEvent"))

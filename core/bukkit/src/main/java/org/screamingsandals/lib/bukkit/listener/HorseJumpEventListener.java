@@ -6,6 +6,8 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SHorseJumpEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 @SuppressWarnings("deprecation")
 public class HorseJumpEventListener extends AbstractBukkitEventHandlerFactory<HorseJumpEvent, SHorseJumpEvent> {
@@ -17,13 +19,8 @@ public class HorseJumpEventListener extends AbstractBukkitEventHandlerFactory<Ho
     @Override
     protected SHorseJumpEvent wrapEvent(HorseJumpEvent event, EventPriority priority) {
         return new SHorseJumpEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                event.getPower()
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ObjectLink.of(event::getPower, event::setPower)
         );
-    }
-
-    @Override
-    protected void postProcess(SHorseJumpEvent wrappedEvent, HorseJumpEvent event) {
-        event.setPower(wrappedEvent.getPower());
     }
 }

@@ -7,7 +7,9 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityShootBowEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
-import org.screamingsandals.lib.material.slot.EquipmentSlotMapping;
+import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 public class EntityShootBowEventListener extends AbstractBukkitEventHandlerFactory<EntityShootBowEvent, SEntityShootBowEvent> {
 
@@ -18,19 +20,13 @@ public class EntityShootBowEventListener extends AbstractBukkitEventHandlerFacto
     @Override
     protected SEntityShootBowEvent wrapEvent(EntityShootBowEvent event, EventPriority priority) {
         return new SEntityShootBowEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                ItemFactory.build(event.getBow()).orElse(null),
-                ItemFactory.build(event.getConsumable()).orElse(null),
-                EntityMapper.wrapEntity(event.getProjectile()).orElseThrow(),
-                EquipmentSlotMapping.resolve(event.getHand()).orElse(null),
-                event.getForce(),
-                event.shouldConsumeItem()
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> ItemFactory.build(event.getBow()).orElse(null)),
+                ImmutableObjectLink.of(() -> ItemFactory.build(event.getConsumable()).orElse(null)),
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getProjectile()).orElseThrow()),
+                ImmutableObjectLink.of(() -> EquipmentSlotHolder.ofOptional(event.getHand()).orElse(null)),
+                ImmutableObjectLink.of(event::getForce),
+                ObjectLink.of(event::shouldConsumeItem, event::setConsumeItem)
         );
-    }
-
-    @Override
-    protected void postProcess(SEntityShootBowEvent wrappedEvent, EntityShootBowEvent event) {
-        event.setConsumeItem(wrappedEvent.isConsumeItem());
-        //event.setProjectile(wrappedEvent.getProjectile().as(Entity.class));
     }
 }

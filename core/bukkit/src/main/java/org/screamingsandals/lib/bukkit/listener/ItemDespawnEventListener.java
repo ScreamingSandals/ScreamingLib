@@ -6,6 +6,7 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SItemDespawnEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.LocationMapper;
 
 public class ItemDespawnEventListener extends AbstractBukkitEventHandlerFactory<ItemDespawnEvent, SItemDespawnEvent> {
@@ -17,8 +18,8 @@ public class ItemDespawnEventListener extends AbstractBukkitEventHandlerFactory<
     @Override
     protected SItemDespawnEvent wrapEvent(ItemDespawnEvent event, EventPriority priority) {
         return new SItemDespawnEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                LocationMapper.wrapLocation(event.getLocation())
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> LocationMapper.wrapLocation(event.getLocation()))
         );
     }
 }

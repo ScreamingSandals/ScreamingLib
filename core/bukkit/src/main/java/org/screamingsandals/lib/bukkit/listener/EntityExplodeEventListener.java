@@ -8,6 +8,8 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityExplodeEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.world.LocationMapper;
 
@@ -20,16 +22,10 @@ public class EntityExplodeEventListener extends AbstractBukkitEventHandlerFactor
     @Override
     protected SEntityExplodeEvent wrapEvent(EntityExplodeEvent event, EventPriority priority) {
         return new SEntityExplodeEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                LocationMapper.wrapLocation(event.getLocation()),
-                new CollectionLinkedToCollection<>(event.blockList(), o -> o.as(Block.class), BlockMapper::wrapBlock), // because it's mutable
-                event.getYield()
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> LocationMapper.wrapLocation(event.getLocation())),
+                new CollectionLinkedToCollection<>(event.blockList(), o -> o.as(Block.class), BlockMapper::wrapBlock),
+                ObjectLink.of(event::getYield, event::setYield)
         );
-    }
-
-    @Override
-    protected void postProcess(SEntityExplodeEvent wrappedEvent, EntityExplodeEvent event) {
-        event.setYield(wrappedEvent.getYield());
-
     }
 }

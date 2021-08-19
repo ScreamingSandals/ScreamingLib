@@ -7,6 +7,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
 import org.screamingsandals.lib.event.entity.SEntityPoseChangeEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 public class EntityPoseChangeEventListener extends AbstractBukkitEventHandlerFactory<EntityPoseChangeEvent, SEntityPoseChangeEvent> {
 
@@ -17,8 +18,8 @@ public class EntityPoseChangeEventListener extends AbstractBukkitEventHandlerFac
     @Override
     protected SEntityPoseChangeEvent wrapEvent(EntityPoseChangeEvent event, EventPriority priority) {
         return new SEntityPoseChangeEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                EntityPoseHolder.of(event.getPose())
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> EntityPoseHolder.of(event.getPose()))
         );
     }
 }

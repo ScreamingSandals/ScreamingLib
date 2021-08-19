@@ -7,9 +7,9 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityPlaceEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.utils.BlockFace;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
 
-@SuppressWarnings("deprecation")
 public class EntityPlaceEventListener extends AbstractBukkitEventHandlerFactory<EntityPlaceEvent, SEntityPlaceEvent> {
 
     public EntityPlaceEventListener(Plugin plugin) {
@@ -19,10 +19,10 @@ public class EntityPlaceEventListener extends AbstractBukkitEventHandlerFactory<
     @Override
     protected SEntityPlaceEvent wrapEvent(EntityPlaceEvent event, EventPriority priority) {
         return new SEntityPlaceEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                EntityMapper.wrapEntity(event.getPlayer()).orElseThrow(),
-                BlockMapper.wrapBlock(event.getBlock()),
-                BlockFace.valueOf(event.getBlockFace().name().toUpperCase())
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getPlayer()).orElseThrow()),
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                ImmutableObjectLink.of(() -> BlockFace.valueOf(event.getBlockFace().name().toUpperCase()))
         );
     }
 }

@@ -6,21 +6,52 @@ import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.material.meta.PotionEffectHolder;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
 public class SEntityPotionEffectEvent extends CancellableAbstractEvent {
-    private final EntityBasic entity;
-    private final PotionEffectHolder oldEffect;
-    private final PotionEffectHolder newEffect;
-    private final Cause cause;
-    private final Action action;
-    private boolean override;
+    private final ImmutableObjectLink<EntityBasic> entity;
+    private final ImmutableObjectLink<PotionEffectHolder> oldEffect;
+    private final ImmutableObjectLink<PotionEffectHolder> newEffect;
+    private final ImmutableObjectLink<Cause> cause;
+    private final ImmutableObjectLink<Action> action;
+    private final ObjectLink<Boolean> override;
+
+    public EntityBasic getEntity() {
+        return entity.get();
+    }
+
+    public PotionEffectHolder getOldEffect() {
+        return oldEffect.get();
+    }
+
+    public PotionEffectHolder getNewEffect() {
+        return newEffect.get();
+    }
+
+    public Cause getCause() {
+        return cause.get();
+    }
+
+    public Action getAction() {
+        return action.get();
+    }
+
+    public boolean isOverride() {
+        return override.get();
+    }
+
+    public void setOverride(boolean override) {
+        this.override.set(override);
+    }
 
     /**
      * An enum to specify the action to be performed.
      */
+    // TODO: holder?
     public enum Action {
 
         /**
@@ -46,6 +77,7 @@ public class SEntityPotionEffectEvent extends CancellableAbstractEvent {
     /**
      * An enum to specify the cause why an effect was changed.
      */
+    // TODO: holder
     public enum Cause {
 
         /**

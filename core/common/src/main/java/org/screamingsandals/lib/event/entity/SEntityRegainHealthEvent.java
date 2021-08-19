@@ -5,18 +5,37 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
 public class SEntityRegainHealthEvent extends CancellableAbstractEvent {
-    private final EntityBasic entity;
-    private double amount;
-    private final RegainReason regainReason;
+    private final ImmutableObjectLink<EntityBasic> entity;
+    private final ObjectLink<Double> amount;
+    private final ImmutableObjectLink<RegainReason> regainReason;
+
+    public EntityBasic getEntity() {
+        return entity.get();
+    }
+
+    public RegainReason getRegainReason() {
+        return regainReason.get();
+    }
+
+    public double getAmount() {
+        return amount.get();
+    }
+
+    public void setAmount(double amount) {
+        this.amount.set(amount);
+    }
 
     /**
      * An enum to specify the type of health regaining that is occurring
      */
+    // TODO: holder?
     public enum RegainReason {
 
         /**

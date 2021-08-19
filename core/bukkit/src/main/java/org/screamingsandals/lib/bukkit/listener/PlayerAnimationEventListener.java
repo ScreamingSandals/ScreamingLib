@@ -6,18 +6,19 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerAnimationEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 public class PlayerAnimationEventListener extends AbstractBukkitEventHandlerFactory<PlayerAnimationEvent, SPlayerAnimationEvent> {
 
     public PlayerAnimationEventListener(Plugin plugin) {
-        super(org.bukkit.event.player.PlayerAnimationEvent.class, SPlayerAnimationEvent.class, plugin);
+        super(PlayerAnimationEvent.class, SPlayerAnimationEvent.class, plugin);
     }
 
     @Override
-    protected SPlayerAnimationEvent wrapEvent(org.bukkit.event.player.PlayerAnimationEvent event, EventPriority priority) {
+    protected SPlayerAnimationEvent wrapEvent(PlayerAnimationEvent event, EventPriority priority) {
         return new SPlayerAnimationEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                SPlayerAnimationEvent.PlayerAnimationType.convert(event.getAnimationType().name())
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(() -> SPlayerAnimationEvent.PlayerAnimationType.convert(event.getAnimationType().name()))
         );
     }
 }

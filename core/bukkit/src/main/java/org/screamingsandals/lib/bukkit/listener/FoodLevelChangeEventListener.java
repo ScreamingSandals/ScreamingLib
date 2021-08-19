@@ -7,6 +7,8 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SFoodLevelChangeEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 public class FoodLevelChangeEventListener extends AbstractBukkitEventHandlerFactory<FoodLevelChangeEvent, SFoodLevelChangeEvent> {
 
@@ -17,14 +19,9 @@ public class FoodLevelChangeEventListener extends AbstractBukkitEventHandlerFact
     @Override
     protected SFoodLevelChangeEvent wrapEvent(FoodLevelChangeEvent event, EventPriority priority) {
         return new SFoodLevelChangeEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                event.getFoodLevel(),
-                ItemFactory.build(event.getItem()).orElse(null)
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ObjectLink.of(event::getFoodLevel, event::setFoodLevel),
+                ImmutableObjectLink.of(() -> ItemFactory.build(event.getItem()).orElse(null))
         );
-    }
-
-    @Override
-    protected void postProcess(SFoodLevelChangeEvent wrappedEvent, FoodLevelChangeEvent event) {
-        event.setFoodLevel(wrappedEvent.getLevel());
     }
 }

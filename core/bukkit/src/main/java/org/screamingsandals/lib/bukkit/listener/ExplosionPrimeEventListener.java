@@ -6,6 +6,8 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SExplosionPrimeEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 public class ExplosionPrimeEventListener extends AbstractBukkitEventHandlerFactory<ExplosionPrimeEvent, SExplosionPrimeEvent> {
 
@@ -16,15 +18,9 @@ public class ExplosionPrimeEventListener extends AbstractBukkitEventHandlerFacto
     @Override
     protected SExplosionPrimeEvent wrapEvent(ExplosionPrimeEvent event, EventPriority priority) {
         return new SExplosionPrimeEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                event.getRadius(),
-                event.getFire()
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ObjectLink.of(event::getRadius, event::setRadius),
+                ObjectLink.of(event::getFire, event::setFire)
         );
-    }
-
-    @Override
-    protected void postProcess(SExplosionPrimeEvent wrappedEvent, ExplosionPrimeEvent event) {
-        event.setFire(wrappedEvent.isFire());
-        event.setRadius(wrappedEvent.getRadius());
     }
 }

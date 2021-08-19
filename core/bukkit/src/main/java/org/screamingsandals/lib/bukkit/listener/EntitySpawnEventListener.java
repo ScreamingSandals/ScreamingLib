@@ -10,6 +10,7 @@ import org.screamingsandals.lib.event.entity.SEntitySpawnEvent;
 import org.screamingsandals.lib.event.entity.SItemSpawnEvent;
 import org.screamingsandals.lib.event.entity.SProjectileLaunchEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 public class EntitySpawnEventListener extends AbstractBukkitEventHandlerFactory<EntitySpawnEvent, SEntitySpawnEvent> {
 
@@ -20,11 +21,11 @@ public class EntitySpawnEventListener extends AbstractBukkitEventHandlerFactory<
     @Override
     protected SEntitySpawnEvent wrapEvent(EntitySpawnEvent event, EventPriority priority) {
         if (event instanceof ItemSpawnEvent) {
-            return new SItemSpawnEvent(EntityMapper.wrapEntity(event.getEntity()).orElseThrow());
+            return new SItemSpawnEvent(ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()));
         }
         if (event instanceof ProjectileLaunchEvent) {
-            return new SProjectileLaunchEvent(EntityMapper.wrapEntity(event.getEntity()).orElseThrow());
+            return new SProjectileLaunchEvent(ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()));
         }
-        return new SEntitySpawnEvent(EntityMapper.wrapEntity(event.getEntity()).orElseThrow());
+        return new SEntitySpawnEvent(ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()));
     }
 }

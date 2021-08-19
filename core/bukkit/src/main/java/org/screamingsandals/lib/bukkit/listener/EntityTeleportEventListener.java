@@ -9,6 +9,8 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityPortalEvent;
 import org.screamingsandals.lib.event.entity.SEntityTeleportEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.LocationMapper;
 
 public class EntityTeleportEventListener extends AbstractBukkitEventHandlerFactory<EntityTeleportEvent, SEntityTeleportEvent> {
@@ -21,22 +23,17 @@ public class EntityTeleportEventListener extends AbstractBukkitEventHandlerFacto
     protected SEntityTeleportEvent wrapEvent(EntityTeleportEvent event, EventPriority priority) {
         if (event instanceof EntityPortalEvent) {
             return new SEntityPortalEvent(
-                    EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                    LocationMapper.wrapLocation(event.getFrom()),
-                    LocationMapper.wrapLocation(event.getTo())
+                    ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                    ObjectLink.of(() -> LocationMapper.wrapLocation(event.getFrom()), locationHolder -> event.setFrom(locationHolder.as(Location.class))),
+                    ObjectLink.of(() -> LocationMapper.wrapLocation(event.getTo()), locationHolder -> event.setTo(locationHolder.as(Location.class))),
+                    ObjectLink.of(((EntityPortalEvent) event)::getSearchRadius, ((EntityPortalEvent) event)::setSearchRadius)
             );
         }
 
-        return new SEntityPortalEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                LocationMapper.wrapLocation(event.getFrom()),
-                LocationMapper.wrapLocation(event.getTo())
+        return new SEntityTeleportEvent(
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ObjectLink.of(() -> LocationMapper.wrapLocation(event.getFrom()), locationHolder -> event.setFrom(locationHolder.as(Location.class))),
+                ObjectLink.of(() -> LocationMapper.wrapLocation(event.getTo()), locationHolder -> event.setTo(locationHolder.as(Location.class)))
         );
-    }
-
-    @Override
-    protected void postProcess(SEntityTeleportEvent wrappedEvent, EntityTeleportEvent event) {
-        event.setFrom(wrappedEvent.getFrom().as(Location.class));
-        event.setTo(wrappedEvent.getTo().as(Location.class));
     }
 }

@@ -4,6 +4,7 @@ import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.event.block.SLeavesDecayEvent;
 
@@ -16,7 +17,7 @@ public class LeavesDecayEventListener extends AbstractBukkitEventHandlerFactory<
     @Override
     protected SLeavesDecayEvent wrapEvent(LeavesDecayEvent event, EventPriority priority) {
         return new SLeavesDecayEvent(
-                BlockMapper.wrapBlock(event.getBlock())
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock()))
         );
     }
 }

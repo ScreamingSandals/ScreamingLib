@@ -4,6 +4,7 @@ import org.bukkit.event.block.FluidLevelChangeEvent;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.BlockDataMapper;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.event.block.SFluidLevelChangeEvent;
@@ -17,8 +18,8 @@ public class FluidLevelChangeEventListener extends AbstractBukkitEventHandlerFac
     @Override
     protected SFluidLevelChangeEvent wrapEvent(FluidLevelChangeEvent event, EventPriority priority) {
         return new SFluidLevelChangeEvent(
-                BlockMapper.wrapBlock(event.getBlock()),
-                BlockDataMapper.resolve(event.getNewData()).orElseThrow()
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                ImmutableObjectLink.of(() -> BlockDataMapper.resolve(event.getNewData()).orElseThrow())
         );
     }
 }
