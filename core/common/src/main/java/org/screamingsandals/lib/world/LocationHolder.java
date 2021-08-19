@@ -8,6 +8,7 @@ import org.screamingsandals.lib.utils.MathUtils;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
+import org.screamingsandals.lib.world.chunk.ChunkHolder;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.io.Serializable;
@@ -111,6 +112,10 @@ public class LocationHolder implements Wrapper, Serializable {
 
     public BlockHolder getBlock() {
         return as(BlockHolder.class);
+    }
+
+    public ChunkHolder getChunk() {
+        return getWorld().getChunkAt(this).orElseThrow();
     }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")

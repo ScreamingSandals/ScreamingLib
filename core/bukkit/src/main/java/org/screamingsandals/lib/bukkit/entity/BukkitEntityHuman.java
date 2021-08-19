@@ -19,6 +19,11 @@ public class BukkitEntityHuman extends BukkitEntityLiving implements EntityHuman
         return null;
     }
 
+    @Override
+    public int getExpToLevel() {
+        return ((HumanEntity) wrappedObject).getExpToLevel();
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

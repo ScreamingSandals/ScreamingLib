@@ -3,6 +3,7 @@ package org.screamingsandals.lib.attribute;
 import org.screamingsandals.lib.material.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -16,6 +17,10 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 @AbstractService
+@ServiceDependencies(dependsOn = {
+        AttributeTypeMapping.class,
+        EquipmentSlotMapping.class
+})
 public abstract class AttributeMapping {
     private static AttributeMapping attributeMapping;
     private static final Function<ConfigurationNode, AttributeModifierHolder> CONFIGURATE_LOAD_MODIFIER = node -> {

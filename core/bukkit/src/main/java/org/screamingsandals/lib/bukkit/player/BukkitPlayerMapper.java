@@ -24,6 +24,7 @@ import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.utils.adventure.AdventureUtils;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -320,6 +321,25 @@ public class BukkitPlayerMapper extends PlayerMapper {
     @Override
     public void setGameMode0(PlayerWrapper player, GameModeHolder gameMode) {
         player.as(Player.class).setGameMode(gameMode.as(org.bukkit.GameMode.class));
+    }
+
+    @Override
+    public Component getDisplayName0(PlayerWrapper player) {
+        var bukkitPlayer = player.as(Player.class);
+        return AdventureUtils
+                .get(bukkitPlayer, "displayName")
+                .ifPresentOrElseGet(classMethod ->
+                                classMethod.invokeInstanceResulted(bukkitPlayer).as(Component.class),
+                        () -> AdventureHelper.toComponent(bukkitPlayer.getDisplayName()));
+    }
+
+    @Override
+    public void setDisplayName0(PlayerWrapper player, Component component) {
+        var bukkitPlayer = player.as(Player.class);
+        AdventureUtils
+                .get(bukkitPlayer, "displayName", Component.class)
+                .ifPresentOrElse(classMethod -> classMethod.invokeInstance(bukkitPlayer, component),
+                        () -> bukkitPlayer.setDisplayName(AdventureHelper.toLegacyNullableResult(component)));
     }
 
     @Override

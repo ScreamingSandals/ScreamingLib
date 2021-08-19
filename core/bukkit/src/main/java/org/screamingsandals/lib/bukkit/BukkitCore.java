@@ -184,5 +184,10 @@ public class BukkitCore extends Core {
         new WorldLoadEventListener(plugin);
         new WorldSaveEventListener(plugin);
         new WorldUnloadEventListener(plugin);
+
+        // chunk
+        new ChunkLoadEventListener(plugin);
+        new ChunkPopulateEventListener(plugin);
+        new ChunkUnloadEventListener(plugin);
     }
 }

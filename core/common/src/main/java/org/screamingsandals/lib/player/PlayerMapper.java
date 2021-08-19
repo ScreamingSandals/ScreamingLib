@@ -328,6 +328,20 @@ public abstract class PlayerMapper {
         }
         playerMapper.setGameMode0(player, gameMode);
     }
+
+    public static Component getDisplayName(PlayerWrapper player) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getDisplayName0(player);
+    }
+
+    public static void setDisplayName(PlayerWrapper player, Component displayName) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setDisplayName0(player, displayName);
+    }
     
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
@@ -397,6 +411,10 @@ public abstract class PlayerMapper {
     public abstract GameModeHolder getGameMode0(PlayerWrapper player);
 
     public abstract void setGameMode0(PlayerWrapper player, GameModeHolder gameMode);
+
+    public abstract Component getDisplayName0(PlayerWrapper player);
+
+    public abstract void setDisplayName0(PlayerWrapper player, Component component);
 
     public abstract boolean canBeStoredAsWrapped(Object wrapped);
 }

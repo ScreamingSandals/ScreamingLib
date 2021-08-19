@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.container.Container;
@@ -29,6 +30,15 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
     public PlayerWrapper(String name, UUID uuid) {
         super(name, Type.PLAYER);
         this.uuid = uuid;
+    }
+
+    @NotNull
+    public Component getDisplayName() {
+        return PlayerMapper.getDisplayName(this);
+    }
+
+    public void setDisplayName(@Nullable Component component) {
+        PlayerMapper.setDisplayName(this, component);
     }
 
     public EntityHuman asEntity() {
@@ -172,6 +182,7 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
     /**
      * Wrapper for hands
      */
+    // TODO: No enum
     public enum Hand implements Wrapper {
         MAIN,
         OFF;

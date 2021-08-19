@@ -16,13 +16,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.screamingsandals.lib.bukkit.material.BukkitMaterialMapping;
-import org.screamingsandals.lib.bukkit.attribute.BukkitAttributeMapping;
 import org.screamingsandals.lib.bukkit.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.bukkit.container.BukkitContainer;
 import org.screamingsandals.lib.bukkit.container.BukkitPlayerContainer;
-import org.screamingsandals.lib.bukkit.firework.BukkitFireworkEffectMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitEnchantmentMapping;
-import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
 import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionMapping;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
@@ -45,14 +42,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-@Service(dependsOn = {
-        BukkitMaterialMapping.class,
-        BukkitEnchantmentMapping.class,
-        BukkitPotionMapping.class,
-        BukkitPotionEffectMapping.class,
-        BukkitAttributeMapping.class,
-        BukkitFireworkEffectMapping.class
-})
+@Service
 public class BukkitItemFactory extends ItemFactory {
     private final Plugin plugin;
 

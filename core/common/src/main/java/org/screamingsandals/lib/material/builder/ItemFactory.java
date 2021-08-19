@@ -16,6 +16,7 @@ import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.material.meta.PotionMapping;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -32,6 +33,14 @@ import java.util.stream.Collectors;
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
+@ServiceDependencies(dependsOn = {
+        MaterialMapping.class,
+        EnchantmentMapping.class,
+        PotionMapping.class,
+        PotionEffectMapping.class,
+        AttributeMapping.class,
+        FireworkEffectMapping.class
+})
 public abstract class ItemFactory {
 
     private static ItemFactory factory;

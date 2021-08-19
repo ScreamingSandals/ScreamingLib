@@ -2,10 +2,14 @@ package org.screamingsandals.lib.world;
 
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 
 import java.util.Optional;
 
 @AbstractService
+@ServiceDependencies(dependsOn = {
+        BlockMapper.class
+})
 public abstract class BlockDataMapper {
     protected BidirectionalConverter<BlockDataHolder> converter = BidirectionalConverter.<BlockDataHolder>build()
             .registerP2W(BlockDataHolder.class, e -> e);

@@ -1,13 +1,18 @@
 package org.screamingsandals.lib.bukkit.world;
 
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
+import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.WorldHolder;
+import org.screamingsandals.lib.world.chunk.ChunkHolder;
+import org.screamingsandals.lib.world.chunk.ChunkMapper;
 import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import org.screamingsandals.lib.world.dimension.DimensionHolder;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @ConfigSerializable
@@ -49,6 +54,16 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
     @Override
     public DimensionHolder getDimension() {
         return DimensionHolder.of(wrappedObject.getEnvironment());
+    }
+
+    @Override
+    public Optional<ChunkHolder> getChunkAt(int x, int z) {
+        return ChunkMapper.wrapChunk(wrappedObject.getChunkAt(x, z));
+    }
+
+    @Override
+    public Optional<ChunkHolder> getChunkAt(LocationHolder location) {
+        return ChunkMapper.wrapChunk(wrappedObject.getChunkAt(location.as(Location.class)));
     }
 
 }

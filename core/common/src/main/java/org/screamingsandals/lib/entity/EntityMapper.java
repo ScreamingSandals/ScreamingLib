@@ -3,12 +3,20 @@ package org.screamingsandals.lib.entity;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.material.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.Optional;
 
 @AbstractService
+@ServiceDependencies(dependsOn = {
+        EntityTypeMapping.class,
+        LocationMapper.class,
+        PotionEffectMapping.class
+})
 public abstract class EntityMapper {
 
     private static EntityMapper mapper;

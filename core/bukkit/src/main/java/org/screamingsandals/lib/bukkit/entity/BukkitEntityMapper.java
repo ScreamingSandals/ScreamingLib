@@ -3,9 +3,6 @@ package org.screamingsandals.lib.bukkit.entity;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
-import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityTypeMapping;
-import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionEffectMapping;
-import org.screamingsandals.lib.bukkit.world.BukkitLocationMapper;
 import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -13,11 +10,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Optional;
 
-@Service(dependsOn = {
-        BukkitEntityTypeMapping.class,
-        BukkitLocationMapper.class,
-        BukkitPotionEffectMapping.class
-})
+@Service
 public class BukkitEntityMapper extends EntityMapper {
 
     @Override

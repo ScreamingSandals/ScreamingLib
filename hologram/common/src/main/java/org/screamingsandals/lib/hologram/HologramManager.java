@@ -1,25 +1,38 @@
 package org.screamingsandals.lib.hologram;
 
+import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.player.PlayerMapper;
+import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.visuals.AbstractVisualsManager;
 import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.LocationMapper;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 @AbstractService
+@ServiceDependencies(dependsOn = {
+        EventManager.class,
+        PlayerMapper.class,
+        LocationMapper.class,
+        Tasker.class,
+        ItemFactory.class
+})
 public abstract class HologramManager extends AbstractVisualsManager<Hologram> {
     private static HologramManager manager = null;
 
-    @Deprecated //INTERNAL USE ONLY!
-    public static void init(Supplier<HologramManager> supplier) {
+    protected HologramManager(Controllable controllable) {
+        super(controllable);
         if (manager != null) {
             throw new UnsupportedOperationException("HologramManager is already initialized");
         }
 
-        manager = supplier.get();
+        manager = this;
     }
 
     public static Hologram hologram(LocationHolder holder) {
@@ -78,9 +91,5 @@ public abstract class HologramManager extends AbstractVisualsManager<Hologram> {
         }
 
         manager.removeVisual(hologram.getUuid());
-    }
-
-    protected HologramManager(Controllable controllable) {
-        super(controllable);
     }
 }
