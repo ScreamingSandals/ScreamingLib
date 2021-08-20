@@ -6,9 +6,8 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerLocaleChangeEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
-
-@SuppressWarnings("deprecation")
 public class PlayerLocaleChangeEventListener extends AbstractBukkitEventHandlerFactory<PlayerLocaleChangeEvent, SPlayerLocaleChangeEvent> {
 
     public PlayerLocaleChangeEventListener(Plugin plugin) {
@@ -18,8 +17,8 @@ public class PlayerLocaleChangeEventListener extends AbstractBukkitEventHandlerF
     @Override
     protected SPlayerLocaleChangeEvent wrapEvent(PlayerLocaleChangeEvent event, EventPriority priority) {
         return new SPlayerLocaleChangeEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                event.getLocale()
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(event::getLocale)
         );
     }
 }

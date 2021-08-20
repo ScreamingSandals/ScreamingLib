@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.bukkit.listener;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
@@ -8,8 +7,9 @@ import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SAsyncPlayerPreLoginEvent;
 import org.screamingsandals.lib.event.player.SPlayerLoginEvent;
-import org.screamingsandals.lib.utils.AdventureHelper;
-import org.screamingsandals.lib.utils.adventure.AdventureUtils;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 
 public class PlayerLoginEventListener extends AbstractBukkitEventHandlerFactory<PlayerLoginEvent, SPlayerLoginEvent> {
 
@@ -19,29 +19,15 @@ public class PlayerLoginEventListener extends AbstractBukkitEventHandlerFactory<
 
     @Override
     protected SPlayerLoginEvent wrapEvent(PlayerLoginEvent event, EventPriority priority) {
-        var kickMessage = AdventureUtils
-                .get(event, "kickMessage")
-                .ifPresentOrElseGet(classMethod ->
-                                classMethod.invokeInstanceResulted(event).as(Component.class),
-                        () -> AdventureHelper.toComponent(event.getKickMessage()));
-
         return new SPlayerLoginEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                event.getAddress(),
-                event.getHostname(),
-                SAsyncPlayerPreLoginEvent.Result.valueOf(event.getResult().name().toUpperCase()),
-                kickMessage
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(event::getAddress),
+                ImmutableObjectLink.of(event::getHostname),
+                ObjectLink.of(
+                        () -> SAsyncPlayerPreLoginEvent.Result.valueOf(event.getResult().name().toUpperCase()),
+                        result -> event.setResult(PlayerLoginEvent.Result.valueOf(result.name().toUpperCase()))
+                ),
+                ComponentObjectLink.of(event, "kickMessage", event::getKickMessage, event::setKickMessage)
         );
-    }
-
-    @Override
-    protected void postProcess(SPlayerLoginEvent wrappedEvent, PlayerLoginEvent event) {
-        AdventureUtils
-                .get(event, "kickMessage", Component.class)
-                .ifPresentOrElse(classMethod ->
-                                classMethod.invokeInstance(event, wrappedEvent.getMessage()),
-                        () ->
-                                event.setKickMessage(AdventureHelper.toLegacy(wrappedEvent.getMessage())));
-        event.setResult(PlayerLoginEvent.Result.valueOf(wrappedEvent.getResult().name().toUpperCase()));
     }
 }

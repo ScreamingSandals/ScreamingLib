@@ -4,6 +4,8 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.event.block.SRedstoneEvent;
 
@@ -16,18 +18,9 @@ public class RedstoneEventListener extends AbstractBukkitEventHandlerFactory<Blo
     @Override
     protected SRedstoneEvent wrapEvent(BlockRedstoneEvent event, EventPriority priority) {
         return new SRedstoneEvent(
-                BlockMapper.wrapBlock(event.getBlock()),
-                event.getOldCurrent(),
-                event.getNewCurrent()
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
+                ImmutableObjectLink.of(event::getOldCurrent),
+                ObjectLink.of(event::getNewCurrent, event::setNewCurrent)
         );
-    }
-
-    @Override
-    protected void postProcess(SRedstoneEvent wrappedEvent, BlockRedstoneEvent event) {
-        event.setNewCurrent(wrappedEvent.getNewCurrent());
-
-        if (wrappedEvent.isCancelled()) {
-            event.setNewCurrent(event.getOldCurrent());
-        }
     }
 }

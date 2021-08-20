@@ -7,6 +7,8 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerRespawnEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.LocationMapper;
 
 public class PlayerRespawnEventListener extends AbstractBukkitEventHandlerFactory<PlayerRespawnEvent, SPlayerRespawnEvent> {
@@ -18,13 +20,11 @@ public class PlayerRespawnEventListener extends AbstractBukkitEventHandlerFactor
     @Override
     protected SPlayerRespawnEvent wrapEvent(PlayerRespawnEvent event, EventPriority priority) {
         return new SPlayerRespawnEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                LocationMapper.wrapLocation(event.getRespawnLocation())
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ObjectLink.of(
+                        () -> LocationMapper.wrapLocation(event.getRespawnLocation()),
+                        locationHolder -> event.setRespawnLocation(locationHolder.as(Location.class))
+                )
         );
-    }
-
-    @Override
-    protected void postProcess(SPlayerRespawnEvent wrappedEvent, PlayerRespawnEvent event) {
-        event.setRespawnLocation(wrappedEvent.getLocation().as(Location.class));
     }
 }

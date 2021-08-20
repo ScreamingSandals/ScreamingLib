@@ -6,6 +6,8 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SSlimeSplitEvent;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 public class SlimeSplitEventListener extends AbstractBukkitEventHandlerFactory<SlimeSplitEvent, SSlimeSplitEvent> {
 
@@ -16,13 +18,8 @@ public class SlimeSplitEventListener extends AbstractBukkitEventHandlerFactory<S
     @Override
     protected SSlimeSplitEvent wrapEvent(SlimeSplitEvent event, EventPriority priority) {
         return new SSlimeSplitEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                event.getCount()
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ObjectLink.of(event::getCount, event::setCount)
         );
-    }
-
-    @Override
-    protected void postProcess(SSlimeSplitEvent wrappedEvent, SlimeSplitEvent event) {
-        event.setCount(wrappedEvent.getCount());
     }
 }

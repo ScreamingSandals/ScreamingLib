@@ -8,6 +8,7 @@ import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerUpdateSignEvent;
 import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
 
 import java.util.Arrays;
@@ -21,9 +22,9 @@ public class PlayerSignChangeEventListener extends AbstractBukkitEventHandlerFac
     @Override
     protected SPlayerUpdateSignEvent wrapEvent(SignChangeEvent event, EventPriority priority) {
         return new SPlayerUpdateSignEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
                 Arrays.stream(event.getLines()).map(AdventureHelper::toComponent).toArray(Component[]::new),
-                BlockMapper.wrapBlock(event.getBlock())
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock()))
         );
     }
 

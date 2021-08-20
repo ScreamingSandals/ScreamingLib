@@ -6,6 +6,8 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.event.world.STimeSkipEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 public class TimeSkipEventListener extends AbstractBukkitEventHandlerFactory<TimeSkipEvent, STimeSkipEvent> {
 
@@ -16,14 +18,9 @@ public class TimeSkipEventListener extends AbstractBukkitEventHandlerFactory<Tim
     @Override
     protected STimeSkipEvent wrapEvent(TimeSkipEvent event, EventPriority priority) {
         return new STimeSkipEvent(
-                new BukkitWorldHolder(event.getWorld()),
-                STimeSkipEvent.Reason.valueOf(event.getSkipReason().name()),
-                event.getSkipAmount()
+                ImmutableObjectLink.of(() -> new BukkitWorldHolder(event.getWorld())),
+                ImmutableObjectLink.of(() -> STimeSkipEvent.Reason.valueOf(event.getSkipReason().name())),
+                ObjectLink.of(event::getSkipAmount, event::setSkipAmount)
         );
-    }
-
-    @Override
-    protected void postProcess(STimeSkipEvent wrappedEvent, TimeSkipEvent event) {
-        event.setSkipAmount(wrappedEvent.getSkipAmount());
     }
 }

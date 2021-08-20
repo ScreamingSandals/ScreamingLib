@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ImmutableCollectionLinkedToCollection<L, O> implements Collection<L> {
-    private final Collection<O> original;
-    private final Function<L, O> linkToOriginal;
-    private final Function<O, L> originalToLink;
+    protected final Collection<O> original;
+    protected final Function<L, O> linkToOriginal;
+    protected final Function<O, L> originalToLink;
 
     @Override
     public int size() {
