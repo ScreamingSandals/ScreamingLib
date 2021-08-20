@@ -5,18 +5,37 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
 public class SVillagerCareerChangeEvent extends CancellableAbstractEvent {
-    private final EntityBasic entity;
-    private Profession profession;
-    private final ChangeReason reason;
+    private final ImmutableObjectLink<EntityBasic> entity;
+    private final ObjectLink<Profession> profession;
+    private final ImmutableObjectLink<ChangeReason> reason;
+
+    public EntityBasic getEntity() {
+        return entity.get();
+    }
+
+    public Profession getProfession() {
+        return profession.get();
+    }
+
+    public void setProfession(Profession profession) {
+        this.profession.set(profession);
+    }
+
+    public ChangeReason getReason() {
+        return reason.get();
+    }
 
     /**
      * Reasons for the villager's profession changing.
      */
+    // TODO: holder?
     public enum ChangeReason {
 
         /**
@@ -33,6 +52,7 @@ public class SVillagerCareerChangeEvent extends CancellableAbstractEvent {
      * Represents the various different Villager professions there may be.
      * Villagers have different trading options depending on their profession,
      */
+    // TODO: holder
     public enum Profession {
         NONE,
         /**

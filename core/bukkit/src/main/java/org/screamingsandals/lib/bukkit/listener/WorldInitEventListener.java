@@ -6,6 +6,7 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.event.world.SWorldInitEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 public class WorldInitEventListener extends AbstractBukkitEventHandlerFactory<WorldInitEvent, SWorldInitEvent> {
 
@@ -16,7 +17,7 @@ public class WorldInitEventListener extends AbstractBukkitEventHandlerFactory<Wo
     @Override
     protected SWorldInitEvent wrapEvent(WorldInitEvent event, EventPriority priority) {
         return new SWorldInitEvent(
-                new BukkitWorldHolder(event.getWorld())
+                ImmutableObjectLink.of(() -> new BukkitWorldHolder(event.getWorld()))
         );
     }
 }

@@ -6,9 +6,10 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
-import org.screamingsandals.lib.material.slot.EquipmentSlotMapping;
+import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerShearEntityEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 public class PlayerShearEntityEventListener extends AbstractBukkitEventHandlerFactory<PlayerShearEntityEvent, SPlayerShearEntityEvent> {
 
@@ -19,10 +20,10 @@ public class PlayerShearEntityEventListener extends AbstractBukkitEventHandlerFa
     @Override
     protected SPlayerShearEntityEvent wrapEvent(PlayerShearEntityEvent event, EventPriority priority) {
         return new SPlayerShearEntityEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                ItemFactory.build(event.getItem()).orElse(null),
-                EquipmentSlotMapping.resolve(event.getHand()).orElse(null)
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> ItemFactory.build(event.getItem()).orElse(null)),
+                ImmutableObjectLink.of(() -> EquipmentSlotHolder.ofOptional(event.getHand()).orElse(null))
         );
     }
 }

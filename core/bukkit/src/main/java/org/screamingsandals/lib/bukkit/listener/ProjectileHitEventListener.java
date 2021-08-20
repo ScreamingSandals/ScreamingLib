@@ -9,12 +9,14 @@ import org.screamingsandals.lib.event.entity.SExpBottleEvent;
 import org.screamingsandals.lib.event.entity.SProjectileHitEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.utils.BlockFace;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.BlockMapper;
 
 
 public class ProjectileHitEventListener extends AbstractBukkitEventHandlerFactory<ProjectileHitEvent, SProjectileHitEvent> {
-    private boolean hasExpEvent;
+    private final boolean hasExpEvent;
 
     public ProjectileHitEventListener(Plugin plugin) {
         super(ProjectileHitEvent.class, SProjectileHitEvent.class, plugin);
@@ -27,29 +29,19 @@ public class ProjectileHitEventListener extends AbstractBukkitEventHandlerFactor
 
         if (hasExpEvent && event instanceof ExpBottleEvent) {
             return new SExpBottleEvent(
-                    EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                    EntityMapper.wrapEntity(event.getHitEntity()).orElseThrow(),
-                    BlockMapper.wrapBlock(event.getHitBlock()),
-                    BlockFace.valueOf(hitBlockFace != null ? hitBlockFace.name().toUpperCase() : BlockFace.UP.name().toUpperCase()),
-                    ((ExpBottleEvent)event).getExperience(),
-                    ((ExpBottleEvent)event).getShowEffect()
+                    ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                    ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getHitEntity()).orElseThrow()),
+                    ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getHitBlock())),
+                    ImmutableObjectLink.of(() -> hitBlockFace != null ? BlockFace.valueOf(hitBlockFace.name().toUpperCase()) : BlockFace.UP),
+                    ObjectLink.of(((ExpBottleEvent) event)::getExperience, ((ExpBottleEvent) event)::setExperience),
+                    ObjectLink.of(((ExpBottleEvent) event)::getShowEffect, ((ExpBottleEvent) event)::setShowEffect)
             );
         }
         return new SProjectileHitEvent(
-                EntityMapper.wrapEntity(event.getEntity()).orElseThrow(),
-                EntityMapper.wrapEntity(event.getHitEntity()).orElseThrow(),
-                BlockMapper.wrapBlock(event.getHitBlock()),
-                BlockFace.valueOf(hitBlockFace != null ? hitBlockFace.name().toUpperCase() : BlockFace.UP.name().toUpperCase())
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getHitEntity()).orElseThrow()),
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getHitBlock())),
+                ImmutableObjectLink.of(() -> hitBlockFace != null ? BlockFace.valueOf(hitBlockFace.name().toUpperCase()) : BlockFace.UP)
         );
-    }
-
-    @Override
-    protected void postProcess(SProjectileHitEvent wrappedEvent, ProjectileHitEvent event) {
-        if (event instanceof ExpBottleEvent) {
-            var cWrappedEvent = (SExpBottleEvent) wrappedEvent;
-            var cEvent = (ExpBottleEvent) event;
-            cEvent.setExperience(cWrappedEvent.getExp());
-            cEvent.setShowEffect(cWrappedEvent.isShowEffect());
-        }
     }
 }

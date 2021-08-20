@@ -6,6 +6,7 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerToggleFlightEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 public class PlayerToggleFlightEventListener extends AbstractBukkitEventHandlerFactory<PlayerToggleFlightEvent, SPlayerToggleFlightEvent> {
 
@@ -16,8 +17,8 @@ public class PlayerToggleFlightEventListener extends AbstractBukkitEventHandlerF
     @Override
     protected SPlayerToggleFlightEvent wrapEvent(PlayerToggleFlightEvent event, EventPriority priority) {
         return new SPlayerToggleFlightEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                event.isFlying()
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(event::isFlying)
         );
     }
 }

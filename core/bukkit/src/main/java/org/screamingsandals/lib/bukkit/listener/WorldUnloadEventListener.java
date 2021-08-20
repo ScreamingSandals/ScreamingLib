@@ -6,6 +6,7 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.event.world.SWorldUnloadEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 public class WorldUnloadEventListener extends AbstractBukkitEventHandlerFactory<WorldUnloadEvent, SWorldUnloadEvent> {
 
@@ -16,7 +17,7 @@ public class WorldUnloadEventListener extends AbstractBukkitEventHandlerFactory<
     @Override
     protected SWorldUnloadEvent wrapEvent(WorldUnloadEvent event, EventPriority priority) {
         return new SWorldUnloadEvent(
-                new BukkitWorldHolder(event.getWorld())
+                ImmutableObjectLink.of(() -> new BukkitWorldHolder(event.getWorld()))
         );
     }
 }

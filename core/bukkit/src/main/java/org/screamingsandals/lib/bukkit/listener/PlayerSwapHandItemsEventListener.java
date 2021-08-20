@@ -8,6 +8,8 @@ import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerSwapHandItemsEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 public class PlayerSwapHandItemsEventListener extends AbstractBukkitEventHandlerFactory<PlayerSwapHandItemsEvent, SPlayerSwapHandItemsEvent> {
 
@@ -18,15 +20,15 @@ public class PlayerSwapHandItemsEventListener extends AbstractBukkitEventHandler
     @Override
     protected SPlayerSwapHandItemsEvent wrapEvent(PlayerSwapHandItemsEvent event, EventPriority priority) {
         return new SPlayerSwapHandItemsEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                ItemFactory.build(event.getMainHandItem()).orElse(null),
-                ItemFactory.build(event.getOffHandItem()).orElse(null)
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ObjectLink.of(
+                        () -> ItemFactory.build(event.getMainHandItem()).orElse(null),
+                        item -> event.setMainHandItem(item != null ? item.as(ItemStack.class) : null)
+                ),
+                ObjectLink.of(
+                        () -> ItemFactory.build(event.getOffHandItem()).orElse(null),
+                        item -> event.setOffHandItem(item != null ? item.as(ItemStack.class) : null)
+                )
         );
-    }
-
-    @Override
-    protected void postProcess(SPlayerSwapHandItemsEvent wrappedEvent, PlayerSwapHandItemsEvent event) {
-        event.setMainHandItem(wrappedEvent.getMainHandItem().as(ItemStack.class));
-        event.setOffHandItem(wrappedEvent.getOffHandItem().as(ItemStack.class));
     }
 }
