@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Custom event manager that has it's own {@link java.util.concurrent.ExecutorService}.
- *
+ * Custom event manager that has its own {@link java.util.concurrent.ExecutorService}.
+ * <p>
  * Always call {@link EventManager#destroy()} when shutting down!
  */
 @Service
@@ -89,7 +89,7 @@ public class EventManager {
     }
 
     public <T extends AbstractEvent> EventHandler<T> registerOneTime(Class<T> event, Function<T, Boolean> function, EventPriority eventPriority,
-                                                              boolean ignoreCancelled) {
+                                                                     boolean ignoreCancelled) {
         return register(event, EventHandler.ofOneTime(handler -> e -> {
             if (function.apply(e)) {
                 unregister(handler);
@@ -200,7 +200,8 @@ public class EventManager {
 
     @SuppressWarnings("unchecked")
     public void cloneEventManager(EventManager originalEventManager) {
-        originalEventManager.handlers.entries()
+        originalEventManager.handlers
+                .entries()
                 .forEach(entry ->
                         register((Class<AbstractEvent>) entry.getKey(), (EventHandler<AbstractEvent>) entry.getValue()));
     }

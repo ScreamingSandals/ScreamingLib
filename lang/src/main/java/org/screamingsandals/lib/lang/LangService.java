@@ -47,8 +47,12 @@ public abstract class LangService {
         return Lang.getDefaultPrefix();
     }
 
+    //To be implemented, added for hoz
+    public Component resolvePrefix(CommandSenderWrapper senderWrapper) {
+        return Lang.getDefaultPrefix();
+    }
+
     protected Locale getSenderLocale(CommandSenderWrapper sender) {
         return sender.getLocale();
     }
-
 }
