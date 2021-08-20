@@ -7,10 +7,12 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
-import org.screamingsandals.lib.material.slot.EquipmentSlotMapping;
+import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerInteractEvent;
 import org.screamingsandals.lib.utils.BlockFace;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
 
 public class PlayerInteractEventListener extends AbstractBukkitEventHandlerFactory<PlayerInteractEvent, SPlayerInteractEvent> {
@@ -22,20 +24,20 @@ public class PlayerInteractEventListener extends AbstractBukkitEventHandlerFacto
     @Override
     protected SPlayerInteractEvent wrapEvent(PlayerInteractEvent event, EventPriority priority) {
         return new SPlayerInteractEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                ItemFactory.build(event.getItem()).orElse(null),
-                SPlayerInteractEvent.Action.convert(event.getAction().name()),
-                BlockMapper.resolve(event.getClickedBlock()).orElse(null),
-                BlockFace.valueOf(event.getBlockFace().name().toUpperCase()),
-                AbstractEvent.Result.convert(event.useInteractedBlock().name()),
-                AbstractEvent.Result.convert(event.useItemInHand().name()),
-                EquipmentSlotMapping.resolve(event.getHand()).orElse(null)
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(() -> ItemFactory.build(event.getItem()).orElse(null)),
+                ImmutableObjectLink.of(() -> SPlayerInteractEvent.Action.convert(event.getAction().name())),
+                ImmutableObjectLink.of(() -> BlockMapper.resolve(event.getClickedBlock()).orElse(null)),
+                ImmutableObjectLink.of(() -> BlockFace.valueOf(event.getBlockFace().name().toUpperCase())),
+                ObjectLink.of(
+                        () -> AbstractEvent.Result.convert(event.useInteractedBlock().name()),
+                        result -> event.setUseInteractedBlock(Event.Result.valueOf(result.name().toUpperCase()))
+                ),
+                ObjectLink.of(
+                        () -> AbstractEvent.Result.convert(event.useItemInHand().name()),
+                        result -> event.setUseItemInHand(Event.Result.valueOf(result.name().toUpperCase()))
+                ),
+                ImmutableObjectLink.of(() -> EquipmentSlotHolder.ofOptional(event.getHand()).orElse(null))
         );
-    }
-
-    @Override
-    protected void postProcess(SPlayerInteractEvent wrappedEvent, PlayerInteractEvent event) {
-        event.setUseInteractedBlock(Event.Result.valueOf(wrappedEvent.getUseClickedBlock().name().toUpperCase()));
-        event.setUseItemInHand(Event.Result.valueOf(wrappedEvent.getUseItemInHand().name().toUpperCase()));
     }
 }

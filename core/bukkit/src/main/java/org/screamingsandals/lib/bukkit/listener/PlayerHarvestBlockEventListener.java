@@ -8,9 +8,9 @@ import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerHarvestBlockEvent;
+import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.BlockMapper;
-
-import java.util.stream.Collectors;
 
 public class PlayerHarvestBlockEventListener extends AbstractBukkitEventHandlerFactory<PlayerHarvestBlockEvent, SPlayerHarvestBlockEvent> {
 
@@ -21,22 +21,13 @@ public class PlayerHarvestBlockEventListener extends AbstractBukkitEventHandlerF
     @Override
     protected SPlayerHarvestBlockEvent wrapEvent(PlayerHarvestBlockEvent event, EventPriority priority) {
         return new SPlayerHarvestBlockEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                BlockMapper.wrapBlock(event.getHarvestedBlock()),
-                event.getItemsHarvested()
-                        .stream()
-                        .map(item -> ItemFactory.build(item).orElse(null))
-                        .collect(Collectors.toList())
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getHarvestedBlock())),
+                new CollectionLinkedToCollection<>(
+                        event.getItemsHarvested(),
+                        item -> item.as(ItemStack.class),
+                        itemStack -> ItemFactory.build(itemStack).orElse(null)
+                )
         );
-    }
-
-    @Override
-    protected void postProcess(SPlayerHarvestBlockEvent wrappedEvent, PlayerHarvestBlockEvent event) {
-        event.getItemsHarvested().clear();
-        wrappedEvent
-                .getItemsHarvested()
-                .stream()
-                .map(item -> item.as(ItemStack.class))
-                .forEach(event.getItemsHarvested()::add);
     }
 }

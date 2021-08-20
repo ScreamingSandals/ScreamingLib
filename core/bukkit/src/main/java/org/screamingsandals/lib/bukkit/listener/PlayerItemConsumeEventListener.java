@@ -8,6 +8,8 @@ import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerItemConsumeEvent;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 public class PlayerItemConsumeEventListener extends AbstractBukkitEventHandlerFactory<PlayerItemConsumeEvent, SPlayerItemConsumeEvent> {
 
@@ -18,13 +20,11 @@ public class PlayerItemConsumeEventListener extends AbstractBukkitEventHandlerFa
     @Override
     protected SPlayerItemConsumeEvent wrapEvent(PlayerItemConsumeEvent event, EventPriority priority) {
         return new SPlayerItemConsumeEvent(
-                PlayerMapper.wrapPlayer(event.getPlayer()),
-                ItemFactory.build(event.getItem()).orElseThrow()
+                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ObjectLink.of(
+                        () -> ItemFactory.build(event.getItem()).orElse(null),
+                        item -> event.setItem(item != null ? item.as(ItemStack.class) : null)
+                )
         );
-    }
-
-    @Override
-    protected void postProcess(SPlayerItemConsumeEvent wrappedEvent, PlayerItemConsumeEvent event) {
-        event.setItem(wrappedEvent.getItem().as(ItemStack.class));
     }
 }

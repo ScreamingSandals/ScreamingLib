@@ -13,6 +13,8 @@ import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.BlockFace;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.BlockHolder;
 
 import java.util.Arrays;
@@ -22,17 +24,57 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class SPlayerInteractEvent extends CancellableAbstractEvent {
-    private final PlayerWrapper player;
+    private final ImmutableObjectLink<PlayerWrapper> player;
+    private final ImmutableObjectLink<@Nullable Item> item;
+    private final ImmutableObjectLink<Action> action;
+    private final ImmutableObjectLink<@Nullable BlockHolder> blockClicked;
+    private final ImmutableObjectLink<BlockFace> blockFace;
+    private final ObjectLink<AbstractEvent.Result> useClickedBlock;
+    private final ObjectLink<AbstractEvent.Result> useItemInHand;
+    private final ImmutableObjectLink<@Nullable EquipmentSlotHolder> hand;
+
+    public PlayerWrapper getPlayer() {
+        return player.get();
+    }
+
     @Nullable
-    protected Item item;
-    protected Action action;
+    public Item getItem() {
+        return item.get();
+    }
+
+    public Action getAction() {
+        return action.get();
+    }
+
     @Nullable
-    protected BlockHolder blockClicked;
-    protected BlockFace blockFace;
-    private AbstractEvent.Result useClickedBlock;
-    private AbstractEvent.Result useItemInHand;
+    public BlockHolder getBlockClicked() {
+        return blockClicked.get();
+    }
+
+    public BlockFace getBlockFace() {
+        return blockFace.get();
+    }
+
+    public Result getUseClickedBlock() {
+        return useClickedBlock.get();
+    }
+
+    public void setUseClickedBlock(Result useClickedBlock) {
+        this.useClickedBlock.set(useClickedBlock);
+    }
+
+    public Result getUseItemInHand() {
+        return useItemInHand.get();
+    }
+
+    public void setUseItemInHand(Result useItemInHand) {
+        this.useItemInHand.set(useItemInHand);
+    }
+
     @Nullable
-    private EquipmentSlotHolder hand;
+    public EquipmentSlotHolder getHand() {
+        return hand.get();
+    }
 
     /**
      * Sets the cancellation state of this event. A canceled event will not be
@@ -46,8 +88,8 @@ public class SPlayerInteractEvent extends CancellableAbstractEvent {
      */
     @Override
     public void setCancelled(boolean cancel) {
-        setUseClickedBlock(cancel ? AbstractEvent.Result.DENY : useClickedBlock == AbstractEvent.Result.DENY ? AbstractEvent.Result.DEFAULT : useClickedBlock);
-        setUseItemInHand(cancel ? AbstractEvent.Result.DENY : useItemInHand == AbstractEvent.Result.DENY ? AbstractEvent.Result.DEFAULT : useItemInHand);
+        setUseClickedBlock(cancel ? AbstractEvent.Result.DENY : getUseClickedBlock() == AbstractEvent.Result.DENY ? AbstractEvent.Result.DEFAULT : getUseClickedBlock());
+        setUseItemInHand(cancel ? AbstractEvent.Result.DENY : getUseItemInHand() == AbstractEvent.Result.DENY ? AbstractEvent.Result.DEFAULT : getUseItemInHand());
     }
 
     /**
@@ -56,7 +98,7 @@ public class SPlayerInteractEvent extends CancellableAbstractEvent {
      * @return boolean true if it did
      */
     public boolean hasBlock() {
-        return this.blockClicked != null;
+        return getBlockClicked() != null;
     }
 
     /**
@@ -65,7 +107,7 @@ public class SPlayerInteractEvent extends CancellableAbstractEvent {
      * @return boolean true if it did
      */
     public boolean hasItem() {
-        return this.item != null;
+        return getItem() != null;
     }
 
     /**
@@ -80,7 +122,7 @@ public class SPlayerInteractEvent extends CancellableAbstractEvent {
             return MaterialMapping.getAir();
         }
 
-        return item.getMaterial();
+        return getItem().getMaterial();
     }
 
     /**
@@ -96,9 +138,10 @@ public class SPlayerInteractEvent extends CancellableAbstractEvent {
     @Deprecated
     @Override
     public boolean isCancelled() {
-        return useClickedBlock == Result.DENY;
+        return getUseClickedBlock() == Result.DENY;
     }
 
+    // TODO: holder?
     public enum Action {
         LEFT_CLICK_BLOCK,
         RIGHT_CLICK_BLOCK,

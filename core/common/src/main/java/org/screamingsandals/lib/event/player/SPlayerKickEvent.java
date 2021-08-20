@@ -6,12 +6,34 @@ import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.ObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
 public class SPlayerKickEvent extends CancellableAbstractEvent {
-    private final PlayerWrapper player;
-    private Component leaveMessage;
-    private Component kickReason;
+    private final ImmutableObjectLink<PlayerWrapper> player;
+    private final ObjectLink<Component> leaveMessage;
+    private final ObjectLink<Component> kickReason;
+
+    public PlayerWrapper getPlayer() {
+        return player.get();
+    }
+
+    public Component getLeaveMessage() {
+        return leaveMessage.get();
+    }
+
+    public void setLeaveMessage(Component leaveMessage) {
+        this.leaveMessage.set(leaveMessage);
+    }
+
+    public Component getKickReason() {
+        return kickReason.get();
+    }
+
+    public void setKickReason(Component kickReason) {
+        this.kickReason.set(kickReason);
+    }
 }
