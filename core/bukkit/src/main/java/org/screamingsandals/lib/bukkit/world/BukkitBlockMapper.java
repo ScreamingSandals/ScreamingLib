@@ -7,7 +7,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.material.MaterialHolder;
-import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.BlockHolder;
@@ -20,12 +19,13 @@ public class BukkitBlockMapper extends BlockMapper {
 
     public BukkitBlockMapper() {
         converter.registerP2W(Location.class, location -> {
-                    final var instanced = LocationMapper.resolve(location).orElseThrow();
-                    final var material = location.getBlock().getType();
+                    final var block = location.getBlock();
+                    final var instanced = LocationMapper.resolve(block.getLocation()).orElseThrow(); // normalize to block location
+                    final var material = block.getType();
                     if (!Version.isVersion(1,13)) {
-                        return new BlockHolder(instanced, MaterialMapping.resolve(material.name() + ":" + location.getBlock().getData()).orElseThrow());
+                        return new BlockHolder(instanced, MaterialHolder.of(material.name() + ":" + location.getBlock().getData()));
                     } else {
-                        return new BlockHolder(instanced, MaterialMapping.resolve(material).orElseThrow());
+                        return new BlockHolder(instanced, MaterialHolder.of(material));
                     }
                 })
                 .registerP2W(Block.class, block ->
