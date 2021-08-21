@@ -79,6 +79,12 @@ public abstract class PluginContainer implements Wrapper {
     public void enable() {
     }
 
+    public void postEnable() {
+    }
+
+    public void preDisable() {
+    }
+
     public void disable() {
     }
 }

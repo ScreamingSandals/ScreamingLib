@@ -75,9 +75,11 @@ public class BungeeMainClassGenerator extends MainClassGenerator {
                 .endControlFlow()
                 .addStatement("this.$N.enable()", "pluginControllable")
                 .addStatement("this.$N.enable()", "pluginContainer")
-                .addStatement("this.$N.postEnable()", "pluginControllable");
+                .addStatement("this.$N.postEnable()", "pluginControllable")
+                .addStatement("this.$N.postEnable()", "pluginContainer");
 
         onDisableBuilder
+                .addStatement("this.$N.preDisable()", "pluginContainer")
                 .addStatement("this.$N.preDisable()", "pluginControllable")
                 .addStatement("this.$N.disable()", "pluginContainer")
                 .addStatement("this.$N.disable()", "pluginControllable");
