@@ -2,6 +2,7 @@ package org.screamingsandals.lib.hologram;
 
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.Controllable;
@@ -21,7 +22,8 @@ import java.util.UUID;
         PlayerMapper.class,
         LocationMapper.class,
         Tasker.class,
-        ItemFactory.class
+        ItemFactory.class,
+        PacketMapper.class
 })
 public abstract class HologramManager extends AbstractVisualsManager<Hologram> {
     private static HologramManager manager = null;

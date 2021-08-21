@@ -4,9 +4,12 @@ buildscript {
         maven { url 'https://repo.screamingsandals.org/public' }
     }
     dependencies {
-        classpath 'org.screamingsandals.gradle.builder:screaming-plugin-builder:' + SCREAMING_PLUGIN_BUILDER_VERSION
         classpath 'org.screamingsandals.nms:NMSMapper:' + NMS_MAPPER_VERSION
     }
+}
+
+plugins {
+    id 'org.screamingsandals.plugin-builder' version '1.0.49'
 }
 
 defaultTasks 'clean', ':nms:generateNmsComponents', 'screamCompile'//, 'allowJavadocUpload'
@@ -19,7 +22,7 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'java-library'
-    apply plugin: 'org.screamingsandals.gradle.builder'
+    apply plugin: 'org.screamingsandals.plugin-builder'
 
     repositories {
         minecraftLibraries()
