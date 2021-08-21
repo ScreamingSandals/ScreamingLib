@@ -9,27 +9,22 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.material.MaterialHolder;
-import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.*;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 public class BukkitBlockDataMapper extends BlockDataMapper {
-    private final static Pattern MAPPING_PATTERN = Pattern.compile(
-            "(?:(?<namespace>[A-Za-z][A-Za-z0-9_.\\-]*):)?(?<material>[A-Za-z][A-Za-z0-9_.\\-/ ]+)(\\[(?<blockState>.+)])?");
-
     public BukkitBlockDataMapper() {
         converter
                 .registerP2W(BlockHolder.class, parent -> {
                     if (Version.isVersion(1, 13)) {
                         final var data = parent.as(Block.class).getBlockData();
-                        final var holder = new BlockDataHolder(MaterialMapping.resolve(data.getMaterial()).orElseThrow(), getDataFromString(data.getAsString()), parent);
+                        final var holder = new BlockDataHolder(MaterialHolder.of(data.getMaterial()), getDataFromString(data.getAsString()), parent);
 
                         if (!holder.getType().getPlatformName().equalsIgnoreCase(parent.getType().getPlatformName())) {
                             parent.setType(holder.getType());
@@ -38,7 +33,7 @@ public class BukkitBlockDataMapper extends BlockDataMapper {
                         return holder;
                     } else {
                         final var data = parent.as(Block.class).getState().getData();
-                        final var holder = new BlockDataHolder(MaterialMapping.resolve(data.getItemType() + ":" + data.getData()).orElseThrow(), LegacyBlockDataConverter.convertMaterialData(data), parent);
+                        final var holder = new BlockDataHolder(MaterialHolder.of(data.getItemType() + ":" + data.getData()), LegacyBlockDataConverter.convertMaterialData(data), parent);
 
                         if (!holder.getType().getPlatformName().equalsIgnoreCase(parent.getType().getPlatformName())) {
                             parent.setType(holder.getType());
@@ -57,14 +52,14 @@ public class BukkitBlockDataMapper extends BlockDataMapper {
         if (Version.isVersion(1, 13)) {
             converter
                     .registerP2W(BlockData.class, blockData ->
-                            new BlockDataHolder(MaterialMapping.resolve(blockData.getMaterial()).orElseThrow(), getDataFromString(blockData.getAsString()), null)
+                            new BlockDataHolder(MaterialHolder.of(blockData.getMaterial()), getDataFromString(blockData.getAsString()), null)
                     )
                     .registerW2P(BlockData.class, holder ->
                             Bukkit.createBlockData(getDataFromMap(holder.getType(), holder.getData())));
         } else {
             converter
                     .registerP2W(MaterialData.class, data ->
-                            new BlockDataHolder(MaterialMapping.resolve(data.getItemType() + ":" + data.getData()).orElseThrow(), LegacyBlockDataConverter.convertMaterialData(data), null)
+                            new BlockDataHolder(MaterialHolder.of(data.getItemType() + ":" + data.getData()), LegacyBlockDataConverter.convertMaterialData(data), null)
                     )
                     .registerW2P(MaterialData.class, holder -> LegacyBlockDataConverter.asMaterialData(holder.getType().as(Material.class), holder.getType().getDurability(), holder.getData()));
         }
@@ -90,10 +85,9 @@ public class BukkitBlockDataMapper extends BlockDataMapper {
 
     private Map<String, Object> getDataFromString(String data) {
         Preconditions.checkNotNull(data, "Data cannot be null!");
-        final var matcher = MAPPING_PATTERN.matcher(data);
-        if (matcher.group("material") != null) {
-            final var values = matcher.group("blockState");
-            if (values == null || values.isEmpty()) {
+        if (data.contains("[") && data.contains("]")) {
+            final var values = data.substring(data.indexOf("[") + 1, data.lastIndexOf("]"));
+            if (values.isEmpty()) {
                 return Map.of();
             }
             return Arrays.stream(values.split(","))
@@ -104,7 +98,7 @@ public class BukkitBlockDataMapper extends BlockDataMapper {
     }
 
     private String getDataFromMap(MaterialHolder material, Map<String, Object> data) {
-        final var builder = new StringBuilder("minecraft:" + material.getPlatformName());
+        final var builder = new StringBuilder("minecraft:" + material.getPlatformName().toLowerCase());
         if (!data.isEmpty()) {
             builder.append('[');
             builder.append(data
