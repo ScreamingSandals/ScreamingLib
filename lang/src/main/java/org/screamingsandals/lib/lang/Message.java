@@ -32,6 +32,7 @@ public final class Message implements TitleableSenderMessage, Cloneable {
     @Nullable
     private Title.Times times;
     private PrefixPolicy prefixPolicy = PrefixPolicy.ALL_MESSAGES;
+    private PrefixResolving prefixResolving = PrefixResolving.DEFAULT;
 
     public <M extends Messageable> Message(Collection<M> translations, LangService langService, @NotNull Component prefix) {
         this.translations.addAll(translations);
@@ -281,8 +282,18 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return this;
     }
 
+    public Message resolvePrefix() {
+        this.prefixResolving = PrefixResolving.PER_PLAYER;
+        return this;
+    }
+
     public Message prefixPolicy(PrefixPolicy prefixPolicy) {
         this.prefixPolicy = prefixPolicy;
+        return this;
+    }
+
+    public Message prefixResolving(PrefixResolving resolving) {
+        this.prefixResolving = resolving;
         return this;
     }
 
@@ -332,8 +343,12 @@ public final class Message implements TitleableSenderMessage, Cloneable {
     }
 
     public List<Component> getFor(CommandSenderWrapper sender) {
-        final var atomic = new AtomicBoolean(true);
+        final var prefixSetter = new AtomicBoolean(true);
         final var container = langService.getFor(sender);
+
+        if (prefixResolving == PrefixResolving.PER_PLAYER) {
+            this.prefix = langService.resolvePrefix(sender);
+        }
 
         return translations
                 .stream()
@@ -399,8 +414,8 @@ public final class Message implements TitleableSenderMessage, Cloneable {
                             })
                             .map(component -> {
                                 if (!Component.empty().equals(prefix)
-                                        && (prefixPolicy != PrefixPolicy.FIRST_MESSAGE || atomic.get())) {
-                                    atomic.set(false);
+                                        && (prefixPolicy != PrefixPolicy.FIRST_MESSAGE || prefixSetter.get())) {
+                                    prefixSetter.set(false);
                                     return Component.text()
                                             .append(prefix)
                                             .append(Component.space())
@@ -596,5 +611,10 @@ public final class Message implements TitleableSenderMessage, Cloneable {
     public enum PrefixPolicy {
         ALL_MESSAGES,
         FIRST_MESSAGE
+    }
+
+    public enum PrefixResolving {
+        DEFAULT,
+        PER_PLAYER
     }
 }
