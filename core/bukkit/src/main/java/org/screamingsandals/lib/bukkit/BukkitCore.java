@@ -88,6 +88,7 @@ public class BukkitCore extends Core {
         new EntityUnleashEventListener(plugin);
         new ExplosionPrimeEventListener(plugin);
         new FireworkExplodeEventListener(plugin);
+        new VehicleCreateEventListener(plugin);
 
         // player
         new AsyncPlayerPreLoginEventListener(plugin);
@@ -142,6 +143,8 @@ public class BukkitCore extends Core {
         new PlayerToggleSneakEventListener(plugin);
         new PlayerToggleSprintEventListener(plugin);
         new PlayerVelocityEventListener(plugin);
+        new PlayerInventoryOpenEventListener(plugin);
+        new PlayerInventoryCloseEventListener(plugin);
 
         // block
         new BlockBurnEventListener(plugin);

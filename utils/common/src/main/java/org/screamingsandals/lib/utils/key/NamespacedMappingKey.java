@@ -4,19 +4,18 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.key.Keyed;
 import net.kyori.adventure.key.Namespaced;
-import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.ComparableWrapper;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class NamespacedMappingKey implements MappingKey, Wrapper, Namespaced, Key {
+public class NamespacedMappingKey implements MappingKey, ComparableWrapper, Namespaced, Key {
     public static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?:(?<namespace>[A-Za-z0-9_.\\-]+):)?(?<key>[A-Za-z0-9_.\\-/ ]+)$");
     public static final Pattern VALID_NAMESPACE = Pattern.compile("^[a-z0-9_.\\-]+$");
     public static final Pattern VALID_KEY = Pattern.compile("^[a-z0-9_.\\-/]+$");
@@ -106,5 +105,15 @@ public class NamespacedMappingKey implements MappingKey, Wrapper, Namespaced, Ke
     @NotNull
     public String namespace() {
         return namespace;
+    }
+
+    @Override
+    public boolean is(Object object) {
+        return equals(object);
+    }
+
+    @Override
+    public boolean is(Object... objects) {
+        return Arrays.stream(objects).anyMatch(this::is);
     }
 }
