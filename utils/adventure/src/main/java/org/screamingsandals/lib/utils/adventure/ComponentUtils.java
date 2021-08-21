@@ -17,6 +17,9 @@ public class ComponentUtils {
             Reflect.getMethod(NATIVE_GSON_COMPONENT_SERIALIZER_CLASS, "gson");
 
     public Object componentToPlatform(Component component) {
+        if (component == null) {
+            return null;
+        }
         if (NATIVE_COMPONENT_CLASS.isInstance(component)) {
             return component;
         }
@@ -24,11 +27,17 @@ public class ComponentUtils {
     }
 
     public Object componentToPlatform(Component component, Object nativeGsonSerializer) {
+        if (component == null) {
+            return null;
+        }
         var result = GsonComponentSerializer.gson().serialize(component);
         return Reflect.getMethod(nativeGsonSerializer, "deserialize", String.class).invoke(result);
     }
 
     public Component componentFromPlatform(Object platformComponent) {
+        if (platformComponent == null) {
+            return null;
+        }
         if (platformComponent instanceof Component) {
             return (Component) platformComponent;
         }
@@ -36,6 +45,9 @@ public class ComponentUtils {
     }
 
     public Component componentFromPlatform(Object platformComponent, Object nativeGsonSerializer, Class<?> nativeComponentClass) {
+        if (platformComponent == null) {
+            return null;
+        }
         var result = Reflect
                 .getMethod(nativeGsonSerializer, "serialize", nativeComponentClass)
                 .invokeResulted(platformComponent)
