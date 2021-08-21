@@ -1,3 +1,13 @@
+pluginManagement {
+    repositories {
+        maven {
+            url = "https://repo.screamingsandals.org/public/"
+        }
+
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = "ScreamingLib"
 
 include 'api-utils'
