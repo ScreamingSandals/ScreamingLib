@@ -6,7 +6,9 @@ import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
+import org.screamingsandals.lib.utils.key.MappingKey;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.NumericMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -41,8 +43,8 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
                     .duration(durationNode.getInt(holder.getDuration()))
                     .amplifier(amplifierNode.getInt(holder.getAmplifier()))
                     .ambient(ambientNode.getBoolean(holder.isAmbient()))
-                    .particles(particlesNode.getBoolean(holder.isParticles()))
-                    .icon(iconNode.getBoolean(holder.isIcon()));
+                    .particles(particlesNode.getBoolean(node.node("has-particles").getBoolean(holder.isParticles()))) // older bw shop support
+                    .icon(iconNode.getBoolean(node.node("has-icon").getBoolean(holder.isIcon()))); // older bw shop support
         }
         return null;
     };
@@ -78,11 +80,17 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
 
             if (matcher.matches() && matcher.group("namespaced") != null) {
 
-                var namespaced = NamespacedMappingKey.of(matcher.group("namespaced"));
+                MappingKey mappingKey;
+                try {
+                    var id = Integer.valueOf(matcher.group("namespaced"));
+                    mappingKey = NumericMappingKey.of(id);
+                } catch (Throwable ignored) {
+                    mappingKey = NamespacedMappingKey.of(matcher.group("namespaced"));
+                }
 
                 var duration_str = matcher.group("duration");
 
-                if (potionEffectMapping.mapping.containsKey(namespaced)) {
+                if (potionEffectMapping.mapping.containsKey(mappingKey)) {
                     if (duration_str != null && !duration_str.isEmpty()) {
                         int duration;
                         try {
@@ -90,9 +98,9 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
                         } catch (Throwable t) {
                             duration = RomanToDecimal.romanToDecimal(duration_str);
                         }
-                        return Optional.of(potionEffectMapping.mapping.get(namespaced).duration(duration));
+                        return Optional.of(potionEffectMapping.mapping.get(mappingKey).duration(duration));
                     } else {
-                        return Optional.of(potionEffectMapping.mapping.get(namespaced));
+                        return Optional.of(potionEffectMapping.mapping.get(mappingKey));
                     }
                 }
             }

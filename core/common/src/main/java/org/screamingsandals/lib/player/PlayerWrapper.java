@@ -182,7 +182,7 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
     /**
      * Wrapper for hands
      */
-    // TODO: No enum
+    // TODO: holder?
     public enum Hand implements Wrapper {
         MAIN,
         OFF;
