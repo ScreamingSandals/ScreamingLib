@@ -1,4 +1,5 @@
 package org.screamingsandals.lib.bukkit.container;
+
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
@@ -82,7 +83,7 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
             inventory.setChestplate(null);
             return;
         }
-        inventory.setHelmet(chestplate.as(ItemStack.class));
+        inventory.setChestplate(chestplate.as(ItemStack.class));
     }
 
     @Override
@@ -92,7 +93,7 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
             inventory.setLeggings(null);
             return;
         }
-        inventory.setHelmet(leggings.as(ItemStack.class));
+        inventory.setLeggings(leggings.as(ItemStack.class));
     }
 
     @Override
@@ -102,7 +103,7 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
             inventory.setBoots(null);
             return;
         }
-        inventory.setHelmet(boots.as(ItemStack.class));
+        inventory.setBoots(boots.as(ItemStack.class));
     }
 
     @Override
