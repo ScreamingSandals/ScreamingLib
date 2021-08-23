@@ -4,5 +4,5 @@ dependencies {
 
     api project(':nms')
     api project(':utils-common')
-    api 'net.kyori:adventure-text-serializer-craftbukkit:' + ADVENTURE_PLATFORM_VERSION
+    api 'org.screamingsandals:adventure-text-serializer-craftbukkit:' + ADVENTURE_PLATFORM_VERSION
 }
