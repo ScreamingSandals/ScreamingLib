@@ -6,6 +6,7 @@ import org.screamingsandals.lib.entity.damage.DamageCauseMapping;
 import org.screamingsandals.lib.entity.pose.EntityPoseMapping;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.item.ItemTypeMapper;
 import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeTypeMapping;
@@ -56,7 +57,8 @@ import org.screamingsandals.lib.world.state.BlockStateMapper;
         EntityPoseMapping.class,
         DifficultyMapping.class,
         DimensionMapping.class,
-        ChunkMapper.class
+        ChunkMapper.class,
+        ItemTypeMapper.class
 })
 @InternalCoreService
 public abstract class Core {
