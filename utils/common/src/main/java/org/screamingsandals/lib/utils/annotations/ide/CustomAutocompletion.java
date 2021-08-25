@@ -24,6 +24,7 @@ public @interface CustomAutocompletion {
         INVENTORY_TYPE,
         ENTITY_POSE,
         DIFFICULTY,
-        DIMENSION
+        DIMENSION,
+        BLOCK
     }
 }

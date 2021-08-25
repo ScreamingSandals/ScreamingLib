@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.item;
+package org.screamingsandals.lib.block;
 
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -15,33 +15,33 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 @AbstractService
-public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> {
+public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder> {
 
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?::)?(?<durability>\\d+)?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
-    protected BidirectionalConverter<ItemTypeHolder> itemTypeConverter = BidirectionalConverter.<ItemTypeHolder>build()
-            .registerP2W(ItemTypeHolder.class, i -> i);
+    protected BidirectionalConverter<BlockTypeHolder> blockTypeConverter = BidirectionalConverter.<BlockTypeHolder>build()
+            .registerP2W(BlockTypeHolder.class, i -> i);
 
-    private static ItemTypeMapper itemTypeMapper;
+    private static BlockTypeMapper blockTypeMapper;
 
-    protected ItemTypeMapper() {
-        if (itemTypeMapper != null) {
-            throw new UnsupportedOperationException("ItemTypeMapper is already initialized.");
+    protected BlockTypeMapper() {
+        if (blockTypeMapper != null) {
+            throw new UnsupportedOperationException("BlockTypeMapper is already initialized.");
         }
 
-        itemTypeMapper = this;
+        blockTypeMapper = this;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
-    @OfMethodAlternative(value = ItemTypeHolder.class, methodName = "ofOptional")
-    public static Optional<ItemTypeHolder> resolve(Object materialObject) {
-        if (itemTypeMapper == null) {
-            throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
+    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
+    @OfMethodAlternative(value = BlockTypeHolder.class, methodName = "ofOptional")
+    public static Optional<BlockTypeHolder> resolve(Object materialObject) {
+        if (blockTypeMapper == null) {
+            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
         }
         if (materialObject == null) {
             return Optional.empty();
         }
 
-        return itemTypeMapper.itemTypeConverter.convertOptional(materialObject).or(() -> {
+        return blockTypeMapper.blockTypeConverter.convertOptional(materialObject).or(() -> {
             var material = materialObject.toString().trim();
 
             var matcher = RESOLUTION_PATTERN.matcher(material);
@@ -60,14 +60,14 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
                     if (data != null) {
                         var namespacedDurability = ComplexMappingKey.of(namespaced, NumericMappingKey.of(data));
 
-                        if (itemTypeMapper.mapping.containsKey(namespacedDurability)) {
-                            return Optional.of(itemTypeMapper.mapping.get(namespacedDurability));
-                        } else if (itemTypeMapper.mapping.containsKey(namespaced)) {
-                            var holder = itemTypeMapper.mapping.get(namespaced);
-                            return Optional.of(holder.withDurability(data.shortValue()));
+                        if (blockTypeMapper.mapping.containsKey(namespacedDurability)) {
+                            return Optional.of(blockTypeMapper.mapping.get(namespacedDurability));
+                        } else if (blockTypeMapper.mapping.containsKey(namespaced)) {
+                            var holder = blockTypeMapper.mapping.get(namespaced);
+                            return Optional.of(holder.withLegacyData(data.byteValue()));
                         }
-                    } else if (itemTypeMapper.mapping.containsKey(namespaced)) {
-                        return Optional.of(itemTypeMapper.mapping.get(namespaced));
+                    } else if (blockTypeMapper.mapping.containsKey(namespaced)) {
+                        return Optional.of(blockTypeMapper.mapping.get(namespaced));
                     }
                 } else if (matcher.group("id") != null) {
                     try {
@@ -81,11 +81,11 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
                         var keyWithData = ComplexMappingKey.of(NumericMappingKey.of(id), NumericMappingKey.of(data));
                         var key = NumericMappingKey.of(id);
 
-                        if (itemTypeMapper.mapping.containsKey(keyWithData)) {
-                            return Optional.of(itemTypeMapper.mapping.get(keyWithData));
-                        } else if (itemTypeMapper.mapping.containsKey(key)) {
-                            var holder = itemTypeMapper.mapping.get(key);
-                            return Optional.of(holder.withDurability((short) data));
+                        if (blockTypeMapper.mapping.containsKey(keyWithData)) {
+                            return Optional.of(blockTypeMapper.mapping.get(keyWithData));
+                        } else if (blockTypeMapper.mapping.containsKey(key)) {
+                            var holder = blockTypeMapper.mapping.get(key);
+                            return Optional.of(holder.withLegacyData((byte) data));
                         }
                     } catch (NumberFormatException ignored) {
                     }
@@ -95,14 +95,14 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
         });
     }
 
-    public static <T> T convertItemTypeHolder(ItemTypeHolder holder, Class<T> newType) {
-        if (itemTypeMapper == null) {
-            throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
+    public static <T> T convertBlockTypeHolder(BlockTypeHolder holder, Class<T> newType) {
+        if (blockTypeMapper == null) {
+            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
         }
-        return itemTypeMapper.itemTypeConverter.convert(holder, newType);
+        return blockTypeMapper.blockTypeConverter.convert(holder, newType);
     }
 
-    public Map<MappingKey, ItemTypeHolder> getUNSAFE_mapping() {
+    public Map<MappingKey, BlockTypeHolder> getUNSAFE_mapping() {
         return mapping;
     }
 

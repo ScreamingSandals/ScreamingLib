@@ -1,5 +1,6 @@
 package org.screamingsandals.lib;
 
+import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.container.type.InventoryTypeMapping;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.damage.DamageCauseMapping;
@@ -44,6 +45,9 @@ import org.screamingsandals.lib.world.state.BlockStateMapper;
         PotionEffectMapping.class,
         PotionMapping.class,
         EquipmentSlotMapping.class,
+        ItemTypeMapper.class,
+        BlockTypeMapper.class,
+        ItemBlockIdsRemapper.class,
         MaterialMapping.class,
         ItemFactory.class,
         PlayerMapper.class,
@@ -57,8 +61,7 @@ import org.screamingsandals.lib.world.state.BlockStateMapper;
         EntityPoseMapping.class,
         DifficultyMapping.class,
         DimensionMapping.class,
-        ChunkMapper.class,
-        ItemTypeMapper.class
+        ChunkMapper.class
 })
 @InternalCoreService
 public abstract class Core {

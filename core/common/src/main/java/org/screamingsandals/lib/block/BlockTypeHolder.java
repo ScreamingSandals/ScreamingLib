@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.item;
+package org.screamingsandals.lib.block;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -11,55 +11,56 @@ import java.util.Optional;
 @Accessors(fluent = true)
 @Data
 @RequiredArgsConstructor
-public class ItemTypeHolder implements ComparableWrapper {
+public class BlockTypeHolder implements ComparableWrapper {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private static ItemTypeHolder cachedAir;
+    private static BlockTypeHolder cachedAir;
 
     private final String platformName;
     @With
-    private final short durability;
+    @Deprecated
+    private final byte legacyData;
 
-    public ItemTypeHolder(String platformName) {
-        this(platformName, (short) 0);
+    public BlockTypeHolder(String platformName) {
+        this(platformName, (byte) 0);
     }
 
     @Override
     public <T> T as(Class<T> type) {
-        return ItemTypeMapper.convertItemTypeHolder(this, type);
+        return BlockTypeMapper.convertBlockTypeHolder(this, type);
     }
 
     public boolean isAir() {
-        return equals(air());
+        return is(air(), "minecraft:cave_air", "minecraft:void_air");
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
+    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     @Override
     public boolean is(Object object) {
         return equals(ofOptional(object).orElse(null));
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
+    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     @Override
     public boolean is(Object... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
-    public static ItemTypeHolder of(Object type) {
+    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
+    public static BlockTypeHolder of(Object type) {
         return ofOptional(type).orElseThrow();
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
+    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     @SuppressWarnings("AlternativeMethodAvailable")
-    public static Optional<ItemTypeHolder> ofOptional(Object type) {
-        if (type instanceof ItemTypeHolder) {
-            return Optional.of((ItemTypeHolder) type);
+    public static Optional<BlockTypeHolder> ofOptional(Object type) {
+        if (type instanceof BlockTypeHolder) {
+            return Optional.of((BlockTypeHolder) type);
         }
-        return ItemTypeMapper.resolve(type);
+        return BlockTypeMapper.resolve(type);
     }
 
-    public static ItemTypeHolder air() {
+    public static BlockTypeHolder air() {
         if (cachedAir == null) {
             cachedAir = of("minecraft:air");
         }
