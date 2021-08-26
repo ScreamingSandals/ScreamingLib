@@ -2,6 +2,8 @@ package org.screamingsandals.lib.bukkit.world;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.screamingsandals.lib.entity.EntityBasic;
+import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -12,8 +14,10 @@ import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import org.screamingsandals.lib.world.dimension.DimensionHolder;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @ConfigSerializable
 public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolder {
@@ -66,4 +70,20 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
         return ChunkMapper.wrapChunk(wrappedObject.getChunkAt(location.as(Location.class)));
     }
 
+    @Override
+    public List<EntityBasic> getEntities() {
+        return wrappedObject.getEntities().stream()
+                .map(EntityMapper::wrapEntity)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public <T extends EntityBasic> List<T> getEntitiesByClass(Class<T> clazz) {
+        return getEntities().stream()
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
+                .collect(Collectors.toList());
+    }
 }
