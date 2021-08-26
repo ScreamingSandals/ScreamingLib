@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.world.BlockHolder;
+import org.screamingsandals.lib.block.BlockHolder;
 
 import java.util.Collection;
 

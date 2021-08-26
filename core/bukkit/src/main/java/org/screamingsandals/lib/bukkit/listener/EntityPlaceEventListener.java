@@ -8,7 +8,7 @@ import org.screamingsandals.lib.event.entity.SEntityPlaceEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockMapper;
 
 public class EntityPlaceEventListener extends AbstractBukkitEventHandlerFactory<EntityPlaceEvent, SEntityPlaceEvent> {
 

@@ -1,14 +1,14 @@
-package org.screamingsandals.lib.bukkit.world.state;
+package org.screamingsandals.lib.bukkit.block.state;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.block.TileState;
-import org.screamingsandals.lib.bukkit.world.BukkitBlockMapper;
+import org.screamingsandals.lib.bukkit.block.BukkitBlockMapper;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.world.BlockHolder;
-import org.screamingsandals.lib.world.state.BlockStateHolder;
-import org.screamingsandals.lib.world.state.BlockStateMapper;
+import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.block.state.BlockStateHolder;
+import org.screamingsandals.lib.block.state.BlockStateMapper;
 
 import java.util.Optional;
 

@@ -7,7 +7,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityInteractEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockMapper;
 
 public class EntityInteractEventListener extends AbstractBukkitEventHandlerFactory<EntityInteractEvent, SEntityInteractEvent> {
 

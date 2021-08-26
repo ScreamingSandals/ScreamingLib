@@ -11,7 +11,7 @@ import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.block.SBlockDropItemEvent;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.world.state.BlockStateMapper;
+import org.screamingsandals.lib.block.state.BlockStateMapper;
 
 public class BlockDropItemEventListener extends AbstractBukkitEventHandlerFactory<BlockDropItemEvent, SBlockDropItemEvent> {
 

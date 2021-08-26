@@ -6,7 +6,7 @@ import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockPhysicsEvent;
 
 public class BlockPhysicsEventListener extends AbstractBukkitEventHandlerFactory<BlockPhysicsEvent, SBlockPhysicsEvent> {

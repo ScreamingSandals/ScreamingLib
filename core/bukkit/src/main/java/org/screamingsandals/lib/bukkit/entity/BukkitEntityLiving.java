@@ -21,8 +21,8 @@ import org.screamingsandals.lib.attribute.AttributeTypeHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.math.Vector3D;
-import org.screamingsandals.lib.world.BlockHolder;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 

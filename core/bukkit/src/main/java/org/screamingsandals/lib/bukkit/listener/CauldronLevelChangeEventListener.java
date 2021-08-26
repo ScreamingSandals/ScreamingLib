@@ -7,7 +7,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.block.SCauldronLevelChangeEvent;
 
 public class CauldronLevelChangeEventListener extends AbstractBukkitEventHandlerFactory<CauldronLevelChangeEvent, SCauldronLevelChangeEvent> {

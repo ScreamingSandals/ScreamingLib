@@ -6,7 +6,7 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockFromToEvent;
 
 public class BlockFromToEventListener extends AbstractBukkitEventHandlerFactory<BlockFromToEvent, SBlockFromToEvent> {

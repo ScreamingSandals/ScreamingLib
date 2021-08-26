@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
-import org.screamingsandals.lib.world.BlockHolder;
+import org.screamingsandals.lib.block.BlockHolder;
 
 import java.util.Collection;
 

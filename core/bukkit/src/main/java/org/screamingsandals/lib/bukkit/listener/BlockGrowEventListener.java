@@ -9,12 +9,12 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockFormEvent;
 import org.screamingsandals.lib.event.block.SBlockFormedByEntityEvent;
 import org.screamingsandals.lib.event.block.SBlockGrowEvent;
 import org.screamingsandals.lib.event.block.SBlockSpreadEvent;
-import org.screamingsandals.lib.world.state.BlockStateMapper;
+import org.screamingsandals.lib.block.state.BlockStateMapper;
 
 public class BlockGrowEventListener extends AbstractBukkitEventHandlerFactory<BlockGrowEvent, SBlockGrowEvent> {
 

@@ -1,10 +1,10 @@
-package org.screamingsandals.lib.bukkit.world.state;
+package org.screamingsandals.lib.bukkit.block.state;
 
 import net.kyori.adventure.text.Component;
 import org.bukkit.block.Sign;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.utils.AdventureHelper;
-import org.screamingsandals.lib.world.state.SignHolder;
+import org.screamingsandals.lib.block.state.SignHolder;
 
 import java.util.Arrays;
 

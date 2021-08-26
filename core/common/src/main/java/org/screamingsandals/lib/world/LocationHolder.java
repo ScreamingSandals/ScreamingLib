@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.utils.MathUtils;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;

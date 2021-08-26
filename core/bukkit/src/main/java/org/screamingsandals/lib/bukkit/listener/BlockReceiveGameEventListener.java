@@ -9,7 +9,7 @@ import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.block.SSculkSensorReceiveEvent;
 
 // TODO: what about not doing it via reflection? huh

@@ -10,7 +10,7 @@ import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerBedEnterEvent;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockMapper;
 
 public class PlayerBedEnterEventListener extends AbstractBukkitEventHandlerFactory<PlayerBedEnterEvent, SPlayerBedEnterEvent> {
 

@@ -1,10 +1,10 @@
-package org.screamingsandals.lib.world;
+package org.screamingsandals.lib.block;
 
-import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
+import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.Optional;
 

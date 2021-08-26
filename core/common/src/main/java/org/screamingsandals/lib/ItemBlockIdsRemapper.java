@@ -195,7 +195,7 @@ public abstract class ItemBlockIdsRemapper {
         f2l("CUT_SANDSTONE", "SANDSTONE", 24, 2);
 
         f2l("NOTE_BLOCK", 25, "NOTEBLOCK");
-        f2lBlock("BED", "BED_BLOCK", 26, 0);
+        f2lColoredToNonColoredBlock("BED", "BED_BLOCK", 26);
         f2l("POWERED_RAIL", 27, "GOLDEN_RAIL");
         f2l("DETECTOR_RAIL", 28);
         f2l("STICKY_PISTON", 29, "PISTON_STICKY_BASE");

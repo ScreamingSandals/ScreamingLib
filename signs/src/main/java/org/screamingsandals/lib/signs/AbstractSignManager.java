@@ -9,7 +9,7 @@ import org.screamingsandals.lib.event.player.SPlayerUpdateSignEvent;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
-import org.screamingsandals.lib.world.state.SignHolder;
+import org.screamingsandals.lib.block.state.SignHolder;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.loader.ConfigurationLoader;
 import org.spongepowered.configurate.serialize.SerializationException;

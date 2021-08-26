@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
-import org.screamingsandals.lib.world.BlockDataHolder;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.io.OutputStream;
@@ -261,7 +261,7 @@ public abstract class PacketWriter extends OutputStream {
         }
     }
 
-    public void writeBlockData(BlockDataHolder blockDataHolder) {
+    public void writeBlockData(BlockTypeHolder blockDataHolder) {
         writeVarInt(getBlockStateId(blockDataHolder));
     }
 
@@ -289,7 +289,7 @@ public abstract class PacketWriter extends OutputStream {
 
     protected abstract int getItemId(ItemTypeHolder material);
 
-    protected abstract int getBlockStateId(BlockDataHolder blockDataHolder);
+    protected abstract int getBlockStateId(BlockTypeHolder blockDataHolder);
 
     public abstract int getEquipmentSlotId(EquipmentSlotHolder equipmentSlotHolder);
 

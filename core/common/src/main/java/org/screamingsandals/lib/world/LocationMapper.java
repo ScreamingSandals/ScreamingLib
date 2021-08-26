@@ -1,5 +1,7 @@
 package org.screamingsandals.lib.world;
 
+import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 

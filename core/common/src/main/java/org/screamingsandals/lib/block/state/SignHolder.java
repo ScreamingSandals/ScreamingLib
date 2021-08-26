@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.world.state;
+package org.screamingsandals.lib.block.state;
 
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Range;

@@ -10,8 +10,8 @@ import org.screamingsandals.lib.entity.EntityProjectile;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
-import org.screamingsandals.lib.world.BlockHolder;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.block.BlockMapper;
 
 import java.util.Optional;
 

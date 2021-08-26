@@ -1,11 +1,11 @@
 package org.screamingsandals.lib.vanilla.packet;
 
 import io.netty.buffer.ByteBuf;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.packet.PacketWriter;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import org.screamingsandals.lib.world.BlockDataHolder;
 
 public abstract class VanillaPacketWriter extends PacketWriter {
 
@@ -21,7 +21,7 @@ public abstract class VanillaPacketWriter extends PacketWriter {
     }
 
     @Override
-    protected int getBlockStateId(BlockDataHolder blockDataHolder) {
+    protected int getBlockStateId(BlockTypeHolder blockDataHolder) {
         return Reflect.fastInvokeResulted(BlockAccessor.getMethodGetId1(), blockDataToBlockState(blockDataHolder)).as(Integer.class);
         // TODO: check if this works for legacy too
     }
@@ -43,7 +43,7 @@ public abstract class VanillaPacketWriter extends PacketWriter {
 
     protected abstract Object materialHolderToItem(ItemTypeHolder material);
 
-    protected abstract Object blockDataToBlockState(BlockDataHolder blockData);
+    protected abstract Object blockDataToBlockState(BlockTypeHolder blockData);
 
     protected abstract Object getMinecraftServerInstance();
 }

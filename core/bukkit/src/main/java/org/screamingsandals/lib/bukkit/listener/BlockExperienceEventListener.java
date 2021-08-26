@@ -9,7 +9,7 @@ import org.screamingsandals.lib.event.player.SPlayerBlockBreakEvent;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockExperienceEvent;
 
 public class BlockExperienceEventListener extends AbstractBukkitEventHandlerFactory<BlockExpEvent, SBlockExperienceEvent> {

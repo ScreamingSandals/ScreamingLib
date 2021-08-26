@@ -7,9 +7,9 @@ import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.world.SSpongeAbsorbEvent;
-import org.screamingsandals.lib.world.state.BlockStateMapper;
+import org.screamingsandals.lib.block.state.BlockStateMapper;
 
 public class SpongeAbsorbEventListener extends AbstractBukkitEventHandlerFactory<SpongeAbsorbEvent, SSpongeAbsorbEvent> {
 

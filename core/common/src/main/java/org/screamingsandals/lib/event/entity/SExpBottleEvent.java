@@ -5,7 +5,7 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
-import org.screamingsandals.lib.world.BlockHolder;
+import org.screamingsandals.lib.block.BlockHolder;
 
 @EqualsAndHashCode(callSuper = true)
 public class SExpBottleEvent extends SProjectileHitEvent {

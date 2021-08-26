@@ -6,13 +6,13 @@ import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.MaterialData;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.nms.accessors.BlockAccessor;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.vanilla.packet.VanillaPacketWriter;
-import org.screamingsandals.lib.world.BlockDataHolder;
 
 public class CraftBukkitPacketWriter extends VanillaPacketWriter {
     public CraftBukkitPacketWriter(ByteBuf buffer) {
@@ -30,7 +30,7 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
     }
 
     @Override
-    protected Object blockDataToBlockState(BlockDataHolder blockData) {
+    protected Object blockDataToBlockState(BlockTypeHolder blockData) {
         if (Reflect.has("org.bukkit.block.data.BlockData")) {
             return Reflect.fastInvoke(blockData.as(BlockData.class), "getState");
         } else {

@@ -21,13 +21,12 @@ import org.screamingsandals.lib.player.gamemode.GameModeMapping;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.internal.InternalCoreService;
-import org.screamingsandals.lib.world.BlockDataMapper;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.chunk.ChunkMapper;
 import org.screamingsandals.lib.world.difficulty.DifficultyMapping;
 import org.screamingsandals.lib.world.dimension.DimensionMapping;
-import org.screamingsandals.lib.world.state.BlockStateMapper;
+import org.screamingsandals.lib.block.state.BlockStateMapper;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
@@ -51,7 +50,6 @@ import org.screamingsandals.lib.world.state.BlockStateMapper;
         PlayerMapper.class,
         LocationMapper.class,
         BlockMapper.class,
-        BlockDataMapper.class,
         BlockStateMapper.class,
         DamageCauseMapping.class,
         GameModeMapping.class,

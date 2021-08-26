@@ -8,7 +8,7 @@ import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
-import org.screamingsandals.lib.world.BlockHolder;
+import org.screamingsandals.lib.block.BlockHolder;
 
 @EqualsAndHashCode(callSuper = false)
 @Data

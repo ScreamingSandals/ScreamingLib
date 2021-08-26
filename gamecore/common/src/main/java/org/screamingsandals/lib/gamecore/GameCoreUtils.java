@@ -17,7 +17,7 @@ import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.world.BlockDataMapper;
 import org.screamingsandals.lib.world.BlockMapper;
-import org.screamingsandals.lib.world.state.BlockStateMapper;
+import org.screamingsandals.lib.block.state.BlockStateMapper;
 
 import java.util.function.Supplier;
 

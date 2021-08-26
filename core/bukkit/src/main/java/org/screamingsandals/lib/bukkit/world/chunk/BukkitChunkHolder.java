@@ -6,8 +6,8 @@ import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.world.BlockHolder;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 

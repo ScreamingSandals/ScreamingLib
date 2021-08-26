@@ -12,7 +12,7 @@ import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.BlockMapper;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.state.BlockStateHolder;
+import org.screamingsandals.lib.block.state.BlockStateHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;

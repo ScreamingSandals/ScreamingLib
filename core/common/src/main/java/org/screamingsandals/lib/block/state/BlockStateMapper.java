@@ -1,7 +1,7 @@
-package org.screamingsandals.lib.world.state;
+package org.screamingsandals.lib.block.state;
 
 import org.screamingsandals.lib.utils.annotations.AbstractService;
-import org.screamingsandals.lib.world.BlockHolder;
+import org.screamingsandals.lib.block.BlockHolder;
 
 import java.util.Optional;
 

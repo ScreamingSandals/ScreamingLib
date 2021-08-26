@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.world.state;
+package org.screamingsandals.lib.block.state;
 
 public interface TileStateHolder extends BlockStateHolder {
 }

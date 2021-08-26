@@ -3,14 +3,14 @@ package org.screamingsandals.lib.bukkit.listener;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityBreakDoorEvent;
 import org.screamingsandals.lib.event.entity.SEntityChangeBlockEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.world.BlockDataMapper;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockMapper;
 
 public class EntityChangeBlockEventListener extends AbstractBukkitEventHandlerFactory<EntityChangeBlockEvent, SEntityChangeBlockEvent> {
 
@@ -26,9 +26,9 @@ public class EntityChangeBlockEventListener extends AbstractBukkitEventHandlerFa
                     ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
                     ImmutableObjectLink.of(() -> {
                         try {
-                            return BlockDataMapper.resolve(event.getBlockData()).orElseThrow();
+                            return BlockTypeHolder.of(event.getBlockData());
                         } catch (Throwable ignored) {
-                            return BlockDataMapper.resolve(event.getTo().getNewData((byte) 0)).orElseThrow();
+                            return BlockTypeHolder.of(event.getTo().getNewData((byte) 0));
                         }
                     })
             );
@@ -38,9 +38,9 @@ public class EntityChangeBlockEventListener extends AbstractBukkitEventHandlerFa
                 ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
                 ImmutableObjectLink.of(() -> {
                     try {
-                        return BlockDataMapper.resolve(event.getBlockData()).orElseThrow();
+                        return BlockTypeHolder.of(event.getBlockData());
                     } catch (Throwable ignored) {
-                        return BlockDataMapper.resolve(event.getTo().getNewData((byte) 0)).orElseThrow();
+                        return BlockTypeHolder.of(event.getTo().getNewData((byte) 0));
                     }
                 })
         );

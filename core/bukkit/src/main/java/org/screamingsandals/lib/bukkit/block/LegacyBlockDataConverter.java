@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.bukkit.world;
+package org.screamingsandals.lib.bukkit.block;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.CropState;

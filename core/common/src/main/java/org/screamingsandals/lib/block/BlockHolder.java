@@ -1,10 +1,10 @@
-package org.screamingsandals.lib.world;
+package org.screamingsandals.lib.block;
 
 import lombok.Data;
-import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
-import org.screamingsandals.lib.world.state.BlockStateHolder;
-import org.screamingsandals.lib.world.state.BlockStateMapper;
+import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.block.state.BlockStateHolder;
+import org.screamingsandals.lib.block.state.BlockStateMapper;
 
 import java.util.Optional;
 
@@ -12,8 +12,6 @@ import java.util.Optional;
 public class BlockHolder implements Wrapper {
     private final LocationHolder location;
     private BlockTypeHolder type;
-    @Deprecated
-    private BlockDataHolder blockData;
 
     public BlockHolder(LocationHolder location, BlockTypeHolder type) {
         this.location = location;
@@ -31,43 +29,11 @@ public class BlockHolder implements Wrapper {
     }
 
     /**
-     * Changes state of this block to new one
-     *
-     * @param data data to change
-     */
-    public void setBlockData(BlockDataHolder data) {
-        BlockDataMapper.setBlockDataAt(location, data);
-        this.blockData = data;
-    }
-
-    /**
      * @return current block at this BlockHolder's location
      */
     public BlockTypeHolder getCurrentType() {
         final var toReturn = BlockMapper.getBlockAt(location).getType();
         this.type = toReturn;
-        return toReturn;
-    }
-
-    /**
-     * Gets BlockData.
-     *
-     * @return {@link Optional#empty()} if none is found
-     */
-    @Deprecated
-    public Optional<BlockDataHolder> getBlockData() {
-        return Optional.ofNullable(blockData);
-    }
-
-    /**
-     * Gets updated BlockData
-     *
-     * @return {@link Optional#empty()} if none is found
-     */
-    @Deprecated
-    public Optional<BlockDataHolder> getCurrentBlockData() {
-        final var toReturn = BlockDataMapper.getBlockDataAt(location);
-        toReturn.ifPresent(data -> this.blockData = data);
         return toReturn;
     }
 

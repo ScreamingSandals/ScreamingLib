@@ -3,7 +3,7 @@ package org.screamingsandals.lib.gamecore.region;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.state.BlockStateHolder;
+import org.screamingsandals.lib.block.state.BlockStateHolder;
 
 public interface Region {
     boolean isBlockAddedDuringGame(LocationHolder loc);

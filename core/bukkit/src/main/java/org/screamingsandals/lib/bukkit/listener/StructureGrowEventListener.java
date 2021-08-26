@@ -10,7 +10,7 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.event.world.SPlantGrowEvent;
-import org.screamingsandals.lib.world.state.BlockStateMapper;
+import org.screamingsandals.lib.block.state.BlockStateMapper;
 
 public class StructureGrowEventListener extends AbstractBukkitEventHandlerFactory<StructureGrowEvent, SPlantGrowEvent> {
 

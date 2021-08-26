@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.bukkit.world;
+package org.screamingsandals.lib.bukkit.block;
 
 import io.papermc.lib.PaperLib;
 import org.bukkit.Location;
@@ -9,8 +9,8 @@ import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import org.screamingsandals.lib.world.BlockHolder;
-import org.screamingsandals.lib.world.BlockMapper;
+import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
@@ -21,11 +21,10 @@ public class BukkitBlockMapper extends BlockMapper {
         converter.registerP2W(Location.class, location -> {
                     final var block = location.getBlock();
                     final var instanced = LocationMapper.resolve(block.getLocation()).orElseThrow(); // normalize to block location
-                    final var material = block.getType();
                     if (!Version.isVersion(1,13)) {
-                        return new BlockHolder(instanced, BlockTypeHolder.of(material.name() + ":" + location.getBlock().getData()));
+                        return new BlockHolder(instanced, BlockTypeHolder.of(block.getState().getData()));
                     } else {
-                        return new BlockHolder(instanced, BlockTypeHolder.of(material));
+                        return new BlockHolder(instanced, BlockTypeHolder.of(block.getBlockData()));
                     }
                 })
                 .registerP2W(Block.class, block ->
@@ -38,14 +37,7 @@ public class BukkitBlockMapper extends BlockMapper {
                 });
 
         if (Reflect.has("org.bukkit.block.data.BlockData")) {
-           converter.registerW2P(BlockData.class, holder -> {
-                final var data = holder.getBlockData().orElse(null);
-                if (data == null) {
-                    return null;
-                }
-
-                return data.as(BlockData.class);
-           });
+           converter.registerW2P(BlockData.class, holder -> holder.getType().as(BlockData.class));
         }
     }
 
@@ -59,9 +51,11 @@ public class BukkitBlockMapper extends BlockMapper {
         final var bukkitLocation = location.as(Location.class);
         PaperLib.getChunkAtAsync(bukkitLocation)
                 .thenAccept(result -> {
-                    bukkitLocation.getBlock().setType(material.as(Material.class));
                     if (!Version.isVersion(1,13)) {
+                        bukkitLocation.getBlock().setType(material.as(Material.class));
                         Reflect.getMethod(bukkitLocation.getBlock(), "setData", byte.class).invoke(material.legacyData());
+                    } else {
+                        bukkitLocation.getBlock().setBlockData(material.as(BlockData.class));
                     }
                 });
     }
