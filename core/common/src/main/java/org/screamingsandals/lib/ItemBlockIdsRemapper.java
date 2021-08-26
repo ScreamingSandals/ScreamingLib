@@ -26,7 +26,8 @@ public abstract class ItemBlockIdsRemapper {
     private final ItemTypeMapper itemTypeMapper;
     private final BlockTypeMapper blockTypeMapper;
     protected Platform platform;
-    protected final List<MappingFlags> mappingFlags = new ArrayList<>(); private static final List<String> colors = List.of(
+    protected final List<MappingFlags> mappingFlags = new ArrayList<>();
+    private static final List<String> colors = List.of(
             "WHITE",
             "ORANGE",
             "MAGENTA",
@@ -207,7 +208,7 @@ public abstract class ItemBlockIdsRemapper {
         f2l("DEAD_BUSH", "LONG_GRASS", 31, 3, "TALLGRASS"); // another shrub == dead_bush?? wtf??
         f2l("PISTON", 33, "PISTON_BASE");
         f2lBlock("PISTON_HEAD", 34, "PISTON_EXTENSION"); // TODO: bukkit mapping collision
-        f2lcolored("WOOL", 35);
+        f2lColored("WOOL", 35);
         f2lBlock("MOVING_PISTON", "PISTON_EXTENSION", 36, 0, "PISTON_MOVING_PIECE"); // TODO: bukkit mapping collision
         f2l("DANDELION", "YELLOW_FLOWER", 37, 0);
 
@@ -243,54 +244,54 @@ public abstract class ItemBlockIdsRemapper {
         f2l("MOSSY_COBBLESTONE", 48);
         f2l("OBSIDIAN", 49);
         f2l("TORCH", 50);
-        // flattening WALL_TORCH - only block (blocks will be supported later)
-        f2lBlock( "FIRE", 51);
+        // flattening WALL_TORCH // TODO: block state
+        f2lBlock("FIRE", 51);
         f2l("SPAWNER", "MOB_SPAWNER", 52);
         f2l("OAK_STAIRS", "WOOD_STAIRS", 53);
         f2l("CHEST", 54);
-        //f2l("", "REDSTONE_WIRE", 55, 0); - block only
+        f2lBlock("REDSTONE_WIRE", 55);
         f2l("DIAMOND_ORE", 56);
         f2l("DIAMOND_BLOCK", 57);
         f2l("CRAFTING_TABLE", 58, "WORKBENCH");
-        //f2l("WHEAT", 59, "CROPS");
+        f2lBlock("WHEAT", 59, "CROPS");
         f2l("FARMLAND", 60, "SOIL");
         f2l("FURNACE", 61);
-        //f2l("", "LIT_FURNACE", 62, 0, "BURNING_FURNACE"); - block only
-        //f2l("", "STANDING_SIGN", 63, "SIGN_POST"); - block only
-        //f2l("", "WOODEN_DOOR", 64, 0); - block only
+        //f2l("", "LIT_FURNACE", 62, 0, "BURNING_FURNACE"); // TODO: block state
+        f2lBlock("OAK_SIGN", "STANDING_SIGN", 63, "SIGN_POST");
+        f2lBlock("OAK_DOOR", "WOODEN_DOOR", 64);
         f2l("LADDER", 65);
         f2l("RAIL", 66, "RAILS");
         f2l("COBBLESTONE_STAIRS", 67, "STONE_STAIRS");
         // actually official legacy name STONE_STAIRS is colliding with flattening name of another item
-        //f2l("", "WALL_SIGN", 68, 0); - block
+        f2lBlock("OAK_WALL_SIGN", 68);
         f2l("LEVER", 69);
         f2l("STONE_PRESSURE_PLATE", 70, "STONE_PLATE");
-        //f2l("", "IRON_DOOR_BLOCK", 71, 0); - block
+        f2lBlock("IRON_DOOR", 71, "IRON_DOOR_BLOCK");
         f2l("OAK_PRESSURE_PLATE", "WOODEN_PRESSURE_PLATE", 72, "WOOD_PLATE");
         f2l("REDSTONE_ORE", 73);
-        //f2l("", "GLOWING_REDSTONE_ORE", 74, 0); - block
-        //f2l("", "REDSTONE_TORCH_OFF", 75, 0); - block
-        // Flattening WALL_REDSTONE_TORCH - block
-        f2l("REDSTONE_TORCH", "REDSTONE_TORCH_ON", 76);
+        //f2l("", "GLOWING_REDSTONE_ORE", 74, 0); // TODO: block  state
+        //f2l("", "REDSTONE_TORCH_OFF", 75, 0); // TODO: block state
+        // Flattening WALL_REDSTONE_TORCH // TODO: block state
+        f2l("REDSTONE_TORCH", "REDSTONE_TORCH", 76, "REDSTONE_TORCH_ON");
         f2l("STONE_BUTTON", 77);
         f2l("SNOW", 78, "SNOW_LAYER"); // name snow collision with legacy snow_block namespace
         f2l("ICE", 79);
         f2l("SNOW_BLOCK", 80, "SNOW"); // name snow collision with flattening snow_layer namespace
         f2l("CACTUS", 81);
         f2l("CLAY", 82);
-        //f2l("", "REEDS", 83, 0", SUGAR_CANE_BLOCK"); - block
+        f2lBlock("SUGAR_CANE", "REEDS", 83, "SUGAR_CANE_BLOCK");
         f2l("JUKEBOX", 84);
         f2l("OAK_FENCE", "FENCE", 85);
         f2l("CARVED_PUMPKIN", "PUMPKIN", 86); // colliding with flattening carved_pumpkin
         f2l("NETHERRACK", 87);
         f2l("SOUL_SAND", 88);
         f2l("GLOWSTONE", 89);
-        //f2l("NETHER_PORTAL", "PORTAL", 90); - block
+        f2lBlock("NETHER_PORTAL", "PORTAL", 90);
         f2l("JACK_O_LANTERN", 91, "LIT_PUMPKIN");
-        //f2l("", "CAKE_BLOCK", 92, 0); - block
-        // f2l("", "DIODE_BLOCK_OFF", 93, 0); - block
-        //f2l("", "DIODE_BLOCK_ON", 94, 0); - block
-        f2lcolored("STAINED_GLASS", 95);
+        f2lBlock("CAKE", 92, "CAKE_BLOCK");
+        f2lBlock("REPEATER", "POWERED_REPEATER", 93, "DIODE_BLOCK_OFF");
+        //f2l("", "DIODE_BLOCK_ON", 94, 0); // TODO: block state
+        f2lColored("STAINED_GLASS", 95);
         f2l("OAK_TRAPDOOR", "TRAPDOOR", 96, "TRAP_DOOR");
 
         // TODO: UNRESOLVABLE COLLISION: can't add official minecraft mapping MONSTER_EGG, colliding with bukkit mapping of spawn eggs which is lower in code
@@ -311,8 +312,8 @@ public abstract class ItemBlockIdsRemapper {
         f2l("IRON_BARS", 101, "IRON_FENCE");
         f2l("GLASS_PANE", 102, "THIN_GLASS");
         f2l("MELON", "MELON_BLOCK", 103); // colliding with melon_slice?
-        //f2l("", "PUMPKIN_STEM", 104, 0); - block
-        //f2l("", "MELON_STEM", 105, 0); - block
+        f2lBlock("PUMPKIN_STEM", 104);
+        f2lBlock("MELON_STEM", 105);
         f2l("VINE", 106);
         f2l("OAK_FENCE_GATE", "FENCE_GATE", 107);
         f2l("BRICK_STAIRS", 108);
@@ -331,8 +332,8 @@ public abstract class ItemBlockIdsRemapper {
         f2l("END_STONE_BRICKS", "END_BRICKS", 121, "ENDER_STONE");
         f2l("DRAGON_EGG", 122);
         f2l("REDSTONE_LAMP", 123, "REDSTONE_LAMP_OFF");
-        //f2l("", "REDSTONE_LAMP_ON", 124, 0); - block
-        //f2l("", "WOOD_DOUBLE_STEP", 125, 0); - block
+        //f2lBlock("", "REDSTONE_LAMP_ON", 124, 0); // TODO: block state
+        //f2lBlock("", "WOOD_DOUBLE_STEP", 125, 0); // TODO: block state
 
         f2l("OAK_SLAB", "WOODEN_SLAB", 126, 0, "WOOD_STEP");
         f2l("SPRUCE_SLAB", "WOODEN_SLAB", 126, 1, "WOOD_STEP");
@@ -341,7 +342,7 @@ public abstract class ItemBlockIdsRemapper {
         f2l("ACACIA_SLAB", "WOODEN_SLAB", 126, 4, "WOOD_STEP");
         f2l("DARK_OAK_SLAB", "WOODEN_SLAB", 126, 5, "WOOD_STEP");
 
-        //f2l("", "COCOA", 127, 0); - block
+        f2lBlock("COCOA", 127);
         f2l("SANDSTONE_STAIRS", 128);
         f2l("EMERALD_ORE", 129);
         f2l("ENDER_CHEST", 130);
@@ -355,19 +356,19 @@ public abstract class ItemBlockIdsRemapper {
         f2l("BEACON", 138);
         f2l("COBBLESTONE_WALL", 139, "COBBLE_WALL");
         f2l("MOSSY_COBBLESTONE_WALL", "COBBLESTONE_WALL", 139, 1, "COBBLE_WALL");
-        //f2l("", "FLOWER_POT", 140, 0); - block
-        //f2l("", "CARROTS", 141, "CARROT"); - block
-        //f2l("", "POTATOES", 142, "POTATO"); - block
+        f2lBlock("FLOWER_POT", 140); // TODO: flower info in tile entity
+        f2lBlock("CARROTS", 141, "CARROT");
+        f2lBlock("POTATOES", 142, "POTATO");
         f2l("OAK_BUTTON", "WOODEN_BUTTON", 143, "WOOD_BUTTON");
-        //f2l("", "SKULL", 144, 0); - block
+        f2lBlock("SKELETON_SKULL", "SKULL", 144, 0); // TODO: Tile entity
         f2l("ANVIL", 145);
         f2l("CHIPPED_ANVIL", "ANVIL", 145, 1);
         f2l("DAMAGED_ANVIL", "ANVIL", 145, 2);
         f2l("TRAPPED_CHEST", 146);
         f2l("LIGHT_WEIGHTED_PRESSURE_PLATE", 147, "GOLD_PLATE");
         f2l("heavy_weighted_pressure_plate", 148, "IRON_PLATE");
-        //f2l("", "REDSTONE_COMPARATOR_OFF", 149, 0); - block
-        //f2l("", "REDSTONE_COMPARATOR_ON", 150, 0); - block
+        f2lBlock("COMPARATOR", "POWERED_COMPARATOR", 149, "REDSTONE_COMPARATOR_OFF");
+        //f2l("", "REDSTONE_COMPARATOR_ON", 150, 0); // TODO: block state
         f2l("DAYLIGHT_DETECTOR", 151);
         f2l("REDSTONE_BLOCK", 152);
         f2l("NETHER_QUARTZ_ORE", 153, "QUARTZ_ORE");
@@ -380,8 +381,8 @@ public abstract class ItemBlockIdsRemapper {
         f2l("QUARTZ_STAIRS", 156);
         f2l("ACTIVATOR_RAIL", 157);
         f2l("DROPPER", 158);
-        f2lcolored("TERRACOTTA", "STAINED_HARDENED_CLAY", 159, "STAINED_CLAY");
-        f2lcolored("STAINED_GLASS_PANE", 160);
+        f2lColored("TERRACOTTA", "STAINED_HARDENED_CLAY", 159, "STAINED_CLAY");
+        f2lColored("STAINED_GLASS_PANE", 160);
 
         f2l("ACACIA_LEAVES", "LEAVES2", 161, 0, "LEAVES_2");
         f2l("DARK_OAK_LEAVES", "LEAVES2", 161, 1, "LEAVES_2");
@@ -404,7 +405,7 @@ public abstract class ItemBlockIdsRemapper {
 
         f2l("SEA_LANTERN", 169);
         f2l("HAY_BLOCK", 170);
-        f2lcolored("CARPET", 171);
+        f2lColored("CARPET", 171);
         f2l("TERRACOTTA", "hardened_clay", 172, "HARD_CLAY");
         f2l("COAL_BLOCK", 173);
         f2l("PACKED_ICE", 174);
@@ -416,19 +417,18 @@ public abstract class ItemBlockIdsRemapper {
         f2l("ROSE_BUSH", "DOUBLE_PLANT", 175, 4);
         f2l("PEONY", "DOUBLE_PLANT", 175, 5);
 
-        //f2l("", "STANDING_BANNER", 176, 0); - block
-        //f2l("", "WALL_BANNER", 177, 0); - block
+        f2lColoredBlock("BANNER", "STANDING_BANNER", 176);
+        f2lColoredBlock("WALL_BANNER", 177);
 
-        //f2l("", "DAYLIGHT_DETECTOR_INVERTED", 178, 0); - block
+        //f2l("", "DAYLIGHT_DETECTOR_INVERTED", 178, 0); // TODO: block state in flattening
 
         f2l("RED_SANDSTONE", 179);
         f2l("CHISELED_RED_SANDSTONE", "RED_SANDSTONE", 179, 1);
         f2l("CUT_RED_SANDSTONE", "RED_SANDSTONE", 179, 2);
 
         f2l("RED_SANDSTONE_STAIRS", 180);
-        //f2l("", "DOUBLE_STONE_SLAB2", 181, 0); - block
+        f2l("SMOOTH_RED_STONE", "DOUBLE_STONE_SLAB2", 181); // TODO: it's not just smooth_red_stone but also double slab
         f2l("RED_SANDSTONE_SLAB", "STONE_SLAB2", 182);
-        // flattening SMOOTH_RED_SANDSTONE - block in legacy, item in flattening
         f2l("SPRUCE_FENCE_GATE", 183);
         f2l("BIRCH_FENCE_GATE", 184);
         f2l("JUNGLE_FENCE_GATE", 185);
@@ -439,23 +439,23 @@ public abstract class ItemBlockIdsRemapper {
         f2l("JUNGLE_FENCE", 190);
         f2l("DARK_OAK_FENCE", 191);
         f2l("ACACIA_FENCE", 192);
-        //f2l("", "SPRUCE_DOOR", 193, 0); - block
-        //f2l("", "BIRCH_DOOR", 194, 0); - block
-        //f2l("", "JUNGLE_DOOR", 195, 0); - block
-        //f2l("", "ACACIA_DOOR", 196, 0); - block
-        //f2l("", "DARK_OAK_DOOR", 197, 0); - block
+        f2lBlock("SPRUCE_DOOR", 193);
+        f2lBlock("BIRCH_DOOR", 194);
+        f2lBlock("JUNGLE_DOOR", 195);
+        f2lBlock("ACACIA_DOOR", 196);
+        f2lBlock("DARK_OAK_DOOR", 197);
         f2l("END_ROD", 198);
         f2l("CHORUS_PLANT", 199);
         f2l("CHORUS_FLOWER", 200);
         f2l("PURPUR_BLOCK", 201);
         f2l("PURPUR_PILLAR", 202);
         f2l("PURPUR_STAIRS", 203);
-        //f2l("", "PURPUR_DOUBLE_SLAB", 204, 0); - block
+        //f2l("", "PURPUR_DOUBLE_SLAB", 204, 0); - TODO: block
         f2l("PURPUR_SLAB", 205);
         f2l("END_BRICKS", 206);
-        //f2l("", "BEETROOT_BLOCK", 207, "BEETROOTS"); - block
+        f2lBlock("BEETROOTS", 207, "BEETROOTS");
         f2l("GRASS_PATH", 208);
-        //f2l("", "END_GATEWAY", 209, 0); - block
+        f2lBlock("END_GATEWAY", 209);
         f2l("REPEATING_COMMAND_BLOCK", 210, "COMMAND_REPEATING");
         f2l("CHAIN_COMMAND_BLOCK", 211, "COMMAND_CHAIN");
         f2l("FROSTED_ICE", 212);
@@ -497,8 +497,8 @@ public abstract class ItemBlockIdsRemapper {
         f2l("GREEN_GLAZED_TERRACOTTA", 248);
         f2l("RED_GLAZED_TERRACOTTA", 249);
         f2l("BLACK_GLAZED_TERRACOTTA", 250);
-        f2lcolored("CONCRETE", 251);
-        f2lcolored("CONCRETE_POWDER", 252);
+        f2lColored("CONCRETE", 251);
+        f2lColored("CONCRETE_POWDER", 252);
         f2l("STRUCTURE_BLOCK", 255);
 
         // ITEMS
@@ -629,9 +629,9 @@ public abstract class ItemBlockIdsRemapper {
         f2lItem("CAKE", 354);
 
         if (mappingFlags.contains(MappingFlags.NO_COLORED_BEDS)) {
-            f2lcoloredToNonColored("BED", 355);
+            f2lColoredToNonColoredItem("BED", 355);
         } else {
-            f2lcolored("BED", 355);
+            f2lColoredItem("BED", 355);
         }
 
         f2lItem("REPEATER", 356, "DIODE");
@@ -755,7 +755,7 @@ public abstract class ItemBlockIdsRemapper {
         f2lItem("COMMAND_BLOCK_MINECART", 422, "COMMAND_MINECART");
         f2lItem("MUTTON", 423);
         f2lItem("COOKED_MUTTON", 424);
-        f2lcolored("BANNER", 425);
+        f2lColoredItem("BANNER", 425);
         f2lItem("END_CRYSTAL", 426);
         f2lItem("SPRUCE_DOOR", 427, "SPRUCE_DOOR_ITEM");
         f2lItem("BIRCH_DOOR", 428, "BIRCH_DOOR_ITEM");
@@ -836,37 +836,97 @@ public abstract class ItemBlockIdsRemapper {
         blockTypeMapper.mapAlias(mappingKey, alias);
     }
 
-    private void f2lcolored(String material, int legacyId) {
-        f2lcolored(material, material, legacyId);
+    private void f2lColored(String material, int legacyId) {
+        f2lColored(material, material, legacyId);
     }
 
-    private void f2lcolored(String flatteningMaterialSuffix, String legacyMaterial, int legacyId) {
-        f2lcolored(flatteningMaterialSuffix, legacyMaterial, legacyId, null);
+    private void f2lColoredBlock(String material, int legacyId) {
+        f2lColoredBlock(material, material, legacyId);
     }
 
-    private void f2lcolored(String flatteningMaterialSuffix, String legacyMaterial, int legacyId, String alternativeLegacyName) {
+    private void f2lColoredItem(String material, int legacyId) {
+        f2lColoredItem(material, material, legacyId);
+    }
+
+    private void f2lColored(String flatteningMaterialSuffix, String legacyMaterial, int legacyId) {
+        f2lColored(flatteningMaterialSuffix, legacyMaterial, legacyId, null);
+    }
+
+    private void f2lColoredBlock(String flatteningMaterialSuffix, String legacyMaterial, int legacyId) {
+        f2lColoredBlock(flatteningMaterialSuffix, legacyMaterial, legacyId, null);
+    }
+
+    private void f2lColoredItem(String flatteningMaterialSuffix, String legacyMaterial, int legacyId) {
+        f2lColoredItem(flatteningMaterialSuffix, legacyMaterial, legacyId, null);
+    }
+
+    private void f2lColored(String flatteningMaterialSuffix, String legacyMaterial, int legacyId, String alternativeLegacyName) {
+        f2lColoredBlock(flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
+        f2lColoredItem(flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
+    }
+
+    private void f2lColoredItem(String flatteningMaterialSuffix, String legacyMaterial, int legacyId, String alternativeLegacyName) {
         if (flatteningMaterialSuffix == null || legacyMaterial == null) {
             throw new IllegalArgumentException("Both materials mustn't be null!");
         }
         for (int i = 0; i <= 15; i++) {
-            f2l(colors.get(i) + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, i, alternativeLegacyName);
+            f2lItem(colors.get(i) + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, i, alternativeLegacyName);
         }
     }
 
-    private void f2lcoloredToNonColored(String material, int legacyId) {
-        f2lcoloredToNonColored(material, material, legacyId);
+    private void f2lColoredBlock(String flatteningMaterialSuffix, String legacyMaterial, int legacyId, String alternativeLegacyName) {
+        if (flatteningMaterialSuffix == null || legacyMaterial == null) {
+            throw new IllegalArgumentException("Both materials mustn't be null!");
+        }
+        for (int i = 0; i <= 15; i++) {
+            f2lBlock(colors.get(i) + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, i, alternativeLegacyName);
+        }
     }
 
-    private void f2lcoloredToNonColored(String flatteningMaterialSuffix, String legacyMaterial, int legacyId) {
-        f2lcoloredToNonColored(flatteningMaterialSuffix, legacyMaterial, legacyId, null);
+    private void f2lColoredToNonColored(String material, int legacyId) {
+        f2lColoredToNonColored(material, material, legacyId);
     }
 
-    private void f2lcoloredToNonColored(String flatteningMaterialSuffix, String legacyMaterial, int legacyId, String alternativeLegacyName) {
+    private void f2lColoredToNonColoredBlock(String material, int legacyId) {
+        f2lColoredToNonColoredBlock(material, material, legacyId);
+    }
+
+    private void f2lColoredToNonColoredItem(String material, int legacyId) {
+        f2lColoredToNonColoredItem(material, material, legacyId);
+    }
+
+    private void f2lColoredToNonColored(String flatteningMaterialSuffix, String legacyMaterial, int legacyId) {
+        f2lColoredToNonColored(flatteningMaterialSuffix, legacyMaterial, legacyId, null);
+    }
+
+    private void f2lColoredToNonColoredBlock(String flatteningMaterialSuffix, String legacyMaterial, int legacyId) {
+        f2lColoredToNonColoredBlock(flatteningMaterialSuffix, legacyMaterial, legacyId, null);
+    }
+
+    private void f2lColoredToNonColoredItem(String flatteningMaterialSuffix, String legacyMaterial, int legacyId) {
+        f2lColoredToNonColoredItem(flatteningMaterialSuffix, legacyMaterial, legacyId, null);
+    }
+
+    private void f2lColoredToNonColored(String flatteningMaterialSuffix, String legacyMaterial, int legacyId, String alternativeLegacyName) {
+        f2lColoredToNonColoredBlock(flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
+        f2lColoredToNonColoredItem(flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
+    }
+
+    private void f2lColoredToNonColoredBlock(String flatteningMaterialSuffix, String legacyMaterial, int legacyId, String alternativeLegacyName) {
         if (flatteningMaterialSuffix == null || legacyMaterial == null) {
             throw new IllegalArgumentException("Both materials mustn't be null!");
         }
         colors.forEach(s ->
-                f2l(s + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName)
+                f2lBlock(s + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName)
+        );
+    }
+
+    private void f2lColoredToNonColoredItem(String flatteningMaterialSuffix, String legacyMaterial, int legacyId, String alternativeLegacyName) {
+        if (flatteningMaterialSuffix == null || legacyMaterial == null) {
+            throw new IllegalArgumentException("Both materials mustn't be null!");
+        }
+        colors.forEach(s ->
+                f2lItem(s + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName)
         );
     }
 
