@@ -4,7 +4,7 @@ import net.minestom.server.entity.ItemEntity;
 import net.minestom.server.item.ItemStack;
 import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.item.builder.ItemFactory;
 
 import java.util.concurrent.TimeUnit;
 

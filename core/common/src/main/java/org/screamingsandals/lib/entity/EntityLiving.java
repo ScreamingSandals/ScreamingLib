@@ -1,9 +1,9 @@
 package org.screamingsandals.lib.entity;
 
-import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.attribute.AttributeHolder;
 import org.screamingsandals.lib.attribute.AttributeTypeHolder;
-import org.screamingsandals.lib.material.meta.PotionEffectHolder;
+import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.LocationHolder;
 
@@ -21,7 +21,7 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
     LocationHolder getEyeLocation();
 
-    BlockHolder getTargetBlock(Collection<MaterialHolder> transparent, int maxDistance);
+    BlockHolder getTargetBlock(Collection<BlockTypeHolder> transparent, int maxDistance);
 
     Optional<BlockHolder> getTargetBlock(int maxDistance);
 

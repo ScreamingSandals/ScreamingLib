@@ -1,9 +1,9 @@
 package org.screamingsandals.lib.bukkit.world.state;
 
+import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
-import org.screamingsandals.lib.material.MaterialHolder;
-import org.screamingsandals.lib.material.MaterialMapping;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.world.BlockDataHolder;
 import org.screamingsandals.lib.world.BlockDataMapper;
@@ -17,8 +17,13 @@ public class GenericBlockStateHolder extends BasicWrapper<BlockState> implements
     }
 
     @Override
-    public MaterialHolder getType() {
-        return MaterialMapping.resolve(wrappedObject.getType()).orElseThrow();
+    public BlockTypeHolder getType() {
+        return BlockTypeHolder.of(wrappedObject.getType());
+    }
+
+    @Override
+    public void setType(BlockTypeHolder type) {
+        wrappedObject.setType(type.as(Material.class)); // todo: make type holding whole block data
     }
 
     @Override

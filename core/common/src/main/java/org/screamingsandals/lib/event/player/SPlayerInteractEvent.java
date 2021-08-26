@@ -7,10 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.MaterialHolder;
-import org.screamingsandals.lib.material.MaterialMapping;
-import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemTypeHolder;;
+import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
@@ -117,9 +116,9 @@ public class SPlayerInteractEvent extends CancellableAbstractEvent {
      * @return Material the material of the item used
      */
     @NotNull
-    public MaterialHolder getMaterial() {
+    public ItemTypeHolder getMaterial() {
         if (!hasItem()) {
-            return MaterialMapping.getAir();
+            return ItemTypeHolder.air();
         }
 
         return getItem().getMaterial();

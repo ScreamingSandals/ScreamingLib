@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.material;
+package org.screamingsandals.lib.item;
 
 import lombok.Data;
 import net.kyori.adventure.text.Component;
@@ -6,12 +6,12 @@ import net.kyori.adventure.util.RGBLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.ItemAttributeHolder;
-import org.screamingsandals.lib.material.builder.ItemFactory;
-import org.screamingsandals.lib.material.data.ItemData;
+import org.screamingsandals.lib.item.builder.ItemFactory;
+import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
-import org.screamingsandals.lib.material.meta.EnchantmentHolder;
-import org.screamingsandals.lib.material.meta.PotionEffectHolder;
-import org.screamingsandals.lib.material.meta.PotionHolder;
+import org.screamingsandals.lib.item.meta.EnchantmentHolder;
+import org.screamingsandals.lib.item.meta.PotionEffectHolder;
+import org.screamingsandals.lib.item.meta.PotionHolder;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.NormalizableWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -43,7 +43,7 @@ public class Item implements Cloneable, NormalizableWrapper<Item> {
      */
     private final List<FireworkEffectHolder> fireworkEffects = new LinkedList<>();
     //@Nullable // in initial state it's null
-    private MaterialHolder material;
+    private ItemTypeHolder material;
     @Nullable
     private Component displayName;
     @Nullable

@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.material.data;
+package org.screamingsandals.lib.item.data;
 
 import org.jetbrains.annotations.Nullable;
 

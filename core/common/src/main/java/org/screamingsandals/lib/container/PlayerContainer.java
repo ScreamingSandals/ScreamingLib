@@ -2,7 +2,7 @@ package org.screamingsandals.lib.container;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.item.Item;
 
 public interface PlayerContainer extends Container {
 

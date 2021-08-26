@@ -2,14 +2,15 @@ package org.screamingsandals.lib.world;
 
 import lombok.Data;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.Map;
 
 @Data
+@Deprecated
 public class BlockDataHolder implements Wrapper {
-    private final MaterialHolder type;
+    private final BlockTypeHolder type;
     private final Map<String, Object> data;
     @Nullable
     private final BlockHolder parent;

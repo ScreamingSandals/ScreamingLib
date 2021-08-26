@@ -4,8 +4,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.bukkit.material.builder.BukkitItemFactory;
-import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.bukkit.item.builder.BukkitItemFactory;
+import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.container.PlayerContainer;
 
 import java.util.Arrays;

@@ -1,8 +1,8 @@
 package org.screamingsandals.lib.sponge.material.slot;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;
-import org.screamingsandals.lib.material.slot.EquipmentSlotMapping;
+import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.sponge.utils.SpongeRegistryMapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.spongepowered.api.ResourceKey;

@@ -6,8 +6,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
-import org.screamingsandals.lib.material.MaterialHolder;
-import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerBucketEvent;
 import org.screamingsandals.lib.utils.BlockFace;
@@ -29,7 +29,7 @@ public class PlayerBucketEventListener extends AbstractBukkitEventHandlerFactory
                 ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
                 ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlockClicked())),
                 ImmutableObjectLink.of(() -> BlockFace.valueOf(event.getBlockFace().name().toUpperCase())),
-                ImmutableObjectLink.of(() -> MaterialHolder.of(event.getBucket())),
+                ImmutableObjectLink.of(() -> ItemTypeHolder.of(event.getBucket())),
                 ObjectLink.of(
                         () -> ItemFactory.build(event.getItemStack()).orElse(null),
                         item -> event.setItemStack(item.as(ItemStack.class))

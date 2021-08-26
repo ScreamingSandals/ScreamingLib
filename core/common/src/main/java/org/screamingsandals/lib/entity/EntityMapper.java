@@ -2,8 +2,8 @@ package org.screamingsandals.lib.entity;
 
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
-import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.meta.PotionEffectMapping;
+import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.world.LocationHolder;

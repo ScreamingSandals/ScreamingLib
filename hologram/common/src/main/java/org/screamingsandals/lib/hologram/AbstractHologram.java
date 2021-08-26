@@ -1,8 +1,7 @@
 package org.screamingsandals.lib.hologram;
 
 import lombok.Getter;
-import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.data.DataContainer;

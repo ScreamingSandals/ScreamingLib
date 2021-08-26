@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.material.meta;
+package org.screamingsandals.lib.item.meta;
 
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;

@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.vanilla.packet;
 
 import io.netty.buffer.ByteBuf;
-import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.packet.PacketWriter;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -16,7 +16,7 @@ public abstract class VanillaPacketWriter extends PacketWriter {
     }
 
     @Override
-    protected int getItemId(MaterialHolder material) {
+    protected int getItemId(ItemTypeHolder material) {
         return Reflect.fastInvokeResulted(ItemAccessor.getMethodGetId1(), materialHolderToItem(material)).as(Integer.class);
     }
 
@@ -41,7 +41,7 @@ public abstract class VanillaPacketWriter extends PacketWriter {
         return PROTOCOL;
     }
 
-    protected abstract Object materialHolderToItem(MaterialHolder material);
+    protected abstract Object materialHolderToItem(ItemTypeHolder material);
 
     protected abstract Object blockDataToBlockState(BlockDataHolder blockData);
 

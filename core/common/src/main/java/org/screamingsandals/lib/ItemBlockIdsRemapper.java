@@ -5,7 +5,6 @@ import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.ItemTypeMapper;
-import org.screamingsandals.lib.material.MappingFlags;
 import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
@@ -1125,4 +1124,7 @@ public abstract class ItemBlockIdsRemapper {
         }
     }
 
+    public enum MappingFlags {
+        NO_COLORED_BEDS
+    }
 }

@@ -10,6 +10,7 @@ import java.util.Optional;
 @ServiceDependencies(dependsOn = {
         BlockMapper.class
 })
+@Deprecated
 public abstract class BlockDataMapper {
     protected BidirectionalConverter<BlockDataHolder> converter = BidirectionalConverter.<BlockDataHolder>build()
             .registerP2W(BlockDataHolder.class, e -> e);

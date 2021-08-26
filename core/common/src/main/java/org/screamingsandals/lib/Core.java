@@ -8,15 +8,14 @@ import org.screamingsandals.lib.entity.pose.EntityPoseMapping;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.item.ItemTypeMapper;
-import org.screamingsandals.lib.material.MaterialMapping;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeTypeMapping;
-import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
-import org.screamingsandals.lib.material.meta.EnchantmentMapping;
-import org.screamingsandals.lib.material.meta.PotionEffectMapping;
-import org.screamingsandals.lib.material.meta.PotionMapping;
-import org.screamingsandals.lib.material.slot.EquipmentSlotMapping;
+import org.screamingsandals.lib.item.meta.EnchantmentMapping;
+import org.screamingsandals.lib.item.meta.PotionEffectMapping;
+import org.screamingsandals.lib.item.meta.PotionMapping;
+import org.screamingsandals.lib.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.gamemode.GameModeMapping;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -48,7 +47,6 @@ import org.screamingsandals.lib.world.state.BlockStateMapper;
         ItemTypeMapper.class,
         BlockTypeMapper.class,
         ItemBlockIdsRemapper.class,
-        MaterialMapping.class,
         ItemFactory.class,
         PlayerMapper.class,
         LocationMapper.class,

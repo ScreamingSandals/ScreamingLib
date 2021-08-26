@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.bukkit.material.builder;
+package org.screamingsandals.lib.bukkit.item.builder;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.material.data.ItemData;
+import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.utils.GsonUtils;
 
 import java.util.List;

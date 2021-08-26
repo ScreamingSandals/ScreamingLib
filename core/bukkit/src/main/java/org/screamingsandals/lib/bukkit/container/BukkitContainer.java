@@ -4,10 +4,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.screamingsandals.lib.bukkit.material.builder.BukkitItemFactory;
+import org.screamingsandals.lib.bukkit.item.builder.BukkitItemFactory;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
-import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -77,7 +77,7 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public boolean contains(MaterialHolder materialHolder) {
+    public boolean contains(ItemTypeHolder materialHolder) {
         return wrappedObject.contains(materialHolder.as(Material.class));
     }
 

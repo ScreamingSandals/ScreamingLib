@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.hologram;
 
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.tasker.Tasker;

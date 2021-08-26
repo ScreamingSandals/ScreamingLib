@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.material.slot;
+package org.screamingsandals.lib.slot;
 
 import lombok.Data;
 import org.screamingsandals.lib.utils.ComparableWrapper;

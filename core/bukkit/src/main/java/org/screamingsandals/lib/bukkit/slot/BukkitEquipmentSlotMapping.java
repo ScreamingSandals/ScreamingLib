@@ -1,8 +1,8 @@
-package org.screamingsandals.lib.bukkit.material.slot;
+package org.screamingsandals.lib.bukkit.slot;
 
 import org.bukkit.inventory.EquipmentSlot;
-import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;
-import org.screamingsandals.lib.material.slot.EquipmentSlotMapping;
+import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.Arrays;

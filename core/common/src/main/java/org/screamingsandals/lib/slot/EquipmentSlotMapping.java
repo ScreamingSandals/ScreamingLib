@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.material.slot;
+package org.screamingsandals.lib.slot;
 
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -10,9 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@AbstractService(
-        pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
-)
+@AbstractService
 public abstract class EquipmentSlotMapping {
     private static EquipmentSlotMapping equipmentSlotMapping;
 

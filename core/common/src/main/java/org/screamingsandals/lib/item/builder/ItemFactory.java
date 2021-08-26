@@ -1,19 +1,19 @@
-package org.screamingsandals.lib.material.builder;
+package org.screamingsandals.lib.item.builder;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
-import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.MaterialHolder;
-import org.screamingsandals.lib.material.MaterialMapping;
+import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.container.Container;
-import org.screamingsandals.lib.material.data.ItemData;
+import org.screamingsandals.lib.item.ItemTypeMapper;
+import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
-import org.screamingsandals.lib.material.meta.EnchantmentMapping;
-import org.screamingsandals.lib.material.meta.PotionEffectMapping;
-import org.screamingsandals.lib.material.meta.PotionMapping;
+import org.screamingsandals.lib.item.meta.EnchantmentMapping;
+import org.screamingsandals.lib.item.meta.PotionEffectMapping;
+import org.screamingsandals.lib.item.meta.PotionMapping;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
 @ServiceDependencies(dependsOn = {
-        MaterialMapping.class,
+        ItemTypeMapper.class,
         EnchantmentMapping.class,
         PotionMapping.class,
         PotionEffectMapping.class,
@@ -65,11 +65,11 @@ public abstract class ItemFactory {
 
         var damage = node.node("damage");
         if (!damage.empty()) {
-            item.setMaterial(item.getMaterial().newDurability(damage.getInt(0)));
+            item.setMaterial(item.getMaterial().withDurability((short) damage.getInt(0)));
         }
         var durability = node.node("durability");
         if (!durability.empty()) {
-            item.setMaterial(item.getMaterial().newDurability(durability.getInt(0)));
+            item.setMaterial(item.getMaterial().withDurability((short) durability.getInt(0)));
         }
 
         var displayName = node.node("display-name");
@@ -236,8 +236,8 @@ public abstract class ItemFactory {
     };
 
     protected BidirectionalConverter<Item> itemConverter = BidirectionalConverter.<Item>build()
-            .registerW2P(String.class, item -> item.getMaterial().getPlatformName())
-            .registerW2P(MaterialHolder.class, Item::getMaterial)
+            .registerW2P(String.class, item -> item.getMaterial().platformName())
+            .registerW2P(ItemTypeHolder.class, Item::getMaterial)
             .registerP2W(ConfigurationNode.class, CONFIGURATE_RESOLVER)
             .registerP2W(Map.class, map -> {
                 try {
@@ -312,7 +312,7 @@ public abstract class ItemFactory {
             shortStackObject = ((ConfigurationNode) shortStackObject).getString();
         }
         if (!(shortStackObject instanceof String)) {
-            var opt = MaterialMapping.resolve(shortStackObject);
+            var opt = ItemTypeHolder.ofOptional(shortStackObject);
             if (opt.isPresent()) {
                 item.setMaterial(opt.get());
                 return Optional.of(item);
@@ -348,7 +348,7 @@ public abstract class ItemFactory {
             }
         }
 
-        var materialHolder = MaterialMapping.resolve(material);
+        var materialHolder = ItemTypeHolder.ofOptional(material);
         if (materialHolder.isEmpty()) {
             return Optional.empty();
         }

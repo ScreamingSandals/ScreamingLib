@@ -1,8 +1,8 @@
 package org.screamingsandals.lib.container;
 
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
-import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public interface Container extends Openable, Wrapper {
 
     void setContents(Item[] items) throws IllegalArgumentException;
 
-    boolean contains(MaterialHolder materialHolder);
+    boolean contains(ItemTypeHolder materialHolder);
 
     boolean contains(Item item);
 

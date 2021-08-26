@@ -9,7 +9,7 @@ import org.screamingsandals.lib.gamecore.listeners.WorldListener;
 import org.screamingsandals.lib.gamecore.players.GamePlayer;
 import org.screamingsandals.lib.gamecore.players.PlayerManager;
 import org.screamingsandals.lib.gamecore.region.Region;
-import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.plugin.ServiceManager;
 import org.screamingsandals.lib.tasker.Tasker;

@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.sponge.material.attribute;
 
 import org.screamingsandals.lib.attribute.*;
-import org.screamingsandals.lib.material.slot.EquipmentSlotMapping;
+import org.screamingsandals.lib.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.sponge.material.slot.SpongeEquipmentSlotMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.spongepowered.api.ResourceKey;

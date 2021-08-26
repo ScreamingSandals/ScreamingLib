@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.screamingsandals.lib.ItemBlockIdsRemapper;
 import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.item.ItemTypeMapper;
-import org.screamingsandals.lib.material.MappingFlags;
 import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.annotations.Service;
 

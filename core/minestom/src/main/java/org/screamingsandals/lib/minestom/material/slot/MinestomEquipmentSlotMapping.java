@@ -2,8 +2,8 @@ package org.screamingsandals.lib.minestom.material.slot;
 
 import net.minestom.server.item.attribute.AttributeSlot;
 import net.minestom.server.network.packet.server.play.EntityEquipmentPacket;
-import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;
-import org.screamingsandals.lib.material.slot.EquipmentSlotMapping;
+import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.Arrays;

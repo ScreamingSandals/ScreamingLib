@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.world;
 
-import org.screamingsandals.lib.material.MaterialHolder;
-import org.screamingsandals.lib.material.MaterialMapping;
+import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
@@ -11,7 +11,7 @@ import java.util.Optional;
 @AbstractService
 @ServiceDependencies(dependsOn = {
         LocationMapper.class,
-        MaterialMapping.class
+        BlockTypeMapper.class
 })
 public abstract class BlockMapper {
     protected BidirectionalConverter<BlockHolder> converter = BidirectionalConverter.<BlockHolder>build()
@@ -57,7 +57,7 @@ public abstract class BlockMapper {
         return mapping.getBlockAt0(location);
     }
 
-    public static void setBlockAt(LocationHolder location, MaterialHolder material) {
+    public static void setBlockAt(LocationHolder location, BlockTypeHolder material) {
         if (mapping == null) {
             throw new UnsupportedOperationException("BlockMapper is already initialized.");
         }
@@ -75,7 +75,7 @@ public abstract class BlockMapper {
 
     protected abstract BlockHolder getBlockAt0(LocationHolder location);
 
-    protected abstract void setBlockAt0(LocationHolder location, MaterialHolder material);
+    protected abstract void setBlockAt0(LocationHolder location, BlockTypeHolder material);
 
     protected abstract void breakNaturally0(LocationHolder location);
 }

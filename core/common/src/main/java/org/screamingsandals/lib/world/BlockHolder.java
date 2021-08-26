@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.world;
 
 import lombok.Data;
-import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.world.state.BlockStateHolder;
 import org.screamingsandals.lib.world.state.BlockStateMapper;
@@ -11,10 +11,11 @@ import java.util.Optional;
 @Data
 public class BlockHolder implements Wrapper {
     private final LocationHolder location;
-    private MaterialHolder type;
+    private BlockTypeHolder type;
+    @Deprecated
     private BlockDataHolder blockData;
 
-    public BlockHolder(LocationHolder location, MaterialHolder type) {
+    public BlockHolder(LocationHolder location, BlockTypeHolder type) {
         this.location = location;
         this.type = type;
     }
@@ -24,7 +25,7 @@ public class BlockHolder implements Wrapper {
      *
      * @param type type to set
      */
-    public void setType(MaterialHolder type) {
+    public void setType(BlockTypeHolder type) {
         BlockMapper.setBlockAt(location, type);
         this.type = type;
     }
@@ -42,7 +43,7 @@ public class BlockHolder implements Wrapper {
     /**
      * @return current block at this BlockHolder's location
      */
-    public MaterialHolder getCurrentType() {
+    public BlockTypeHolder getCurrentType() {
         final var toReturn = BlockMapper.getBlockAt(location).getType();
         this.type = toReturn;
         return toReturn;
@@ -53,6 +54,7 @@ public class BlockHolder implements Wrapper {
      *
      * @return {@link Optional#empty()} if none is found
      */
+    @Deprecated
     public Optional<BlockDataHolder> getBlockData() {
         return Optional.ofNullable(blockData);
     }
@@ -62,6 +64,7 @@ public class BlockHolder implements Wrapper {
      *
      * @return {@link Optional#empty()} if none is found
      */
+    @Deprecated
     public Optional<BlockDataHolder> getCurrentBlockData() {
         final var toReturn = BlockDataMapper.getBlockDataAt(location);
         toReturn.ifPresent(data -> this.blockData = data);

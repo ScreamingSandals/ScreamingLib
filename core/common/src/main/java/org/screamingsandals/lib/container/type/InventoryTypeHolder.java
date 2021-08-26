@@ -3,7 +3,7 @@ package org.screamingsandals.lib.container.type;
 import lombok.Data;
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.container.Container;
-import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 

@@ -2,7 +2,7 @@ package org.screamingsandals.lib.attribute;
 
 import lombok.Data;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.UUID;

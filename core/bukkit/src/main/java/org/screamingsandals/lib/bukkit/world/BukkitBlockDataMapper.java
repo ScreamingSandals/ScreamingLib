@@ -7,8 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
-import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.*;
 
@@ -24,18 +24,18 @@ public class BukkitBlockDataMapper extends BlockDataMapper {
                 .registerP2W(BlockHolder.class, parent -> {
                     if (Version.isVersion(1, 13)) {
                         final var data = parent.as(Block.class).getBlockData();
-                        final var holder = new BlockDataHolder(MaterialHolder.of(data.getMaterial()), getDataFromString(data.getAsString()), parent);
+                        final var holder = new BlockDataHolder(BlockTypeHolder.of(data.getMaterial()), getDataFromString(data.getAsString()), parent);
 
-                        if (!holder.getType().getPlatformName().equalsIgnoreCase(parent.getType().getPlatformName())) {
+                        if (!holder.getType().platformName().equalsIgnoreCase(parent.getType().platformName())) {
                             parent.setType(holder.getType());
                         }
 
                         return holder;
                     } else {
                         final var data = parent.as(Block.class).getState().getData();
-                        final var holder = new BlockDataHolder(MaterialHolder.of(data.getItemType() + ":" + data.getData()), LegacyBlockDataConverter.convertMaterialData(data), parent);
+                        final var holder = new BlockDataHolder(BlockTypeHolder.of(data.getItemType() + ":" + data.getData()), LegacyBlockDataConverter.convertMaterialData(data), parent);
 
-                        if (!holder.getType().getPlatformName().equalsIgnoreCase(parent.getType().getPlatformName())) {
+                        if (!holder.getType().platformName().equalsIgnoreCase(parent.getType().platformName())) {
                             parent.setType(holder.getType());
                         }
 
@@ -52,16 +52,16 @@ public class BukkitBlockDataMapper extends BlockDataMapper {
         if (Version.isVersion(1, 13)) {
             converter
                     .registerP2W(BlockData.class, blockData ->
-                            new BlockDataHolder(MaterialHolder.of(blockData.getMaterial()), getDataFromString(blockData.getAsString()), null)
+                            new BlockDataHolder(BlockTypeHolder.of(blockData.getMaterial()), getDataFromString(blockData.getAsString()), null)
                     )
                     .registerW2P(BlockData.class, holder ->
                             Bukkit.createBlockData(getDataFromMap(holder.getType(), holder.getData())));
         } else {
             converter
                     .registerP2W(MaterialData.class, data ->
-                            new BlockDataHolder(MaterialHolder.of(data.getItemType() + ":" + data.getData()), LegacyBlockDataConverter.convertMaterialData(data), null)
+                            new BlockDataHolder(BlockTypeHolder.of(data.getItemType() + ":" + data.getData()), LegacyBlockDataConverter.convertMaterialData(data), null)
                     )
-                    .registerW2P(MaterialData.class, holder -> LegacyBlockDataConverter.asMaterialData(holder.getType().as(Material.class), holder.getType().getDurability(), holder.getData()));
+                    .registerW2P(MaterialData.class, holder -> LegacyBlockDataConverter.asMaterialData(holder.getType().as(Material.class), holder.getType().legacyData(), holder.getData()));
         }
     }
 
@@ -97,8 +97,8 @@ public class BukkitBlockDataMapper extends BlockDataMapper {
         return Map.of();
     }
 
-    private String getDataFromMap(MaterialHolder material, Map<String, Object> data) {
-        final var builder = new StringBuilder("minecraft:" + material.getPlatformName().toLowerCase());
+    private String getDataFromMap(BlockTypeHolder material, Map<String, Object> data) {
+        final var builder = new StringBuilder("minecraft:" + material.platformName().toLowerCase());
         if (!data.isEmpty()) {
             builder.append('[');
             builder.append(data

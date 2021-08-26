@@ -2,8 +2,8 @@ package org.screamingsandals.lib.minestom.material.meta;
 
 import net.minestom.server.potion.CustomPotionEffect;
 import net.minestom.server.potion.PotionEffect;
-import org.screamingsandals.lib.material.meta.PotionEffectHolder;
-import org.screamingsandals.lib.material.meta.PotionEffectMapping;
+import org.screamingsandals.lib.item.meta.PotionEffectHolder;
+import org.screamingsandals.lib.item.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 

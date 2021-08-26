@@ -3,7 +3,7 @@ package org.screamingsandals.lib.minestom.material.builder;
 import net.minestom.server.data.DataImpl;
 import net.minestom.server.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.material.data.ItemData;
+import org.screamingsandals.lib.item.data.ItemData;
 
 import java.util.Optional;
 import java.util.Set;

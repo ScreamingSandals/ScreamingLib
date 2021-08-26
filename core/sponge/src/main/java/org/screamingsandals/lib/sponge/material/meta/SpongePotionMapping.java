@@ -1,8 +1,8 @@
 package org.screamingsandals.lib.sponge.material.meta;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.material.meta.PotionHolder;
-import org.screamingsandals.lib.material.meta.PotionMapping;
+import org.screamingsandals.lib.item.meta.PotionHolder;
+import org.screamingsandals.lib.item.meta.PotionMapping;
 import org.screamingsandals.lib.sponge.utils.SpongeRegistryMapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;

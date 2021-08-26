@@ -5,7 +5,7 @@ import net.minestom.server.entity.ItemEntity;
 import net.minestom.server.event.player.PlayerBlockBreakEvent;
 import net.minestom.server.item.ItemStack;
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.minestom.world.InstancedPosition;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerBlockBreakEvent;

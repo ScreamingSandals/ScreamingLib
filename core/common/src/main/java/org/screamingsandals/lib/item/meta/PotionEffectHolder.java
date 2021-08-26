@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.material.meta;
+package org.screamingsandals.lib.item.meta;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

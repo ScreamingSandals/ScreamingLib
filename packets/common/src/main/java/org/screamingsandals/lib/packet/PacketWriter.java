@@ -1,14 +1,13 @@
 package org.screamingsandals.lib.packet;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.MaterialHolder;
-import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.BlockDataHolder;
@@ -234,7 +233,7 @@ public abstract class PacketWriter extends OutputStream {
 
             write(item.getAmount());
             if (protocol() < 351) {
-                writeShort((short) item.getMaterial().getDurability());
+                writeShort(item.getMaterial().durability());
             }
             write(0); // TODO: write nbt meta
             //write(item.get()); write meta
@@ -288,7 +287,7 @@ public abstract class PacketWriter extends OutputStream {
         writeByte((byte) b);
     }
 
-    protected abstract int getItemId(MaterialHolder material);
+    protected abstract int getItemId(ItemTypeHolder material);
 
     protected abstract int getBlockStateId(BlockDataHolder blockDataHolder);
 

@@ -2,8 +2,8 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
 import java.util.HashMap;
 import java.util.Map;

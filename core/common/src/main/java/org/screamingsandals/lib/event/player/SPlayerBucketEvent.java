@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
@@ -20,7 +20,7 @@ public class SPlayerBucketEvent extends CancellableAbstractEvent {
     private final ImmutableObjectLink<BlockHolder> block;
     private final ImmutableObjectLink<BlockHolder> blockClicked;
     private final ImmutableObjectLink<BlockFace> blockFace;
-    private final ImmutableObjectLink<MaterialHolder> bucket;
+    private final ImmutableObjectLink<ItemTypeHolder> bucket;
     private final ObjectLink<Item> item;
     private final ImmutableObjectLink<Action> action;
 
@@ -40,7 +40,7 @@ public class SPlayerBucketEvent extends CancellableAbstractEvent {
         return blockFace.get();
     }
 
-    public MaterialHolder getBucket() {
+    public ItemTypeHolder getBucket() {
         return bucket.get();
     }
 

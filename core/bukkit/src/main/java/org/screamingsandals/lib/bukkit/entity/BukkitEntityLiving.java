@@ -9,17 +9,17 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.EntityProjectile;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
-import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.attribute.AttributeHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeTypeHolder;
-import org.screamingsandals.lib.material.meta.PotionEffectHolder;
-import org.screamingsandals.lib.material.meta.PotionEffectMapping;
+import org.screamingsandals.lib.item.meta.PotionEffectHolder;
+import org.screamingsandals.lib.item.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.world.BlockMapper;
@@ -57,7 +57,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     }
 
     @Override
-    public BlockHolder getTargetBlock(Collection<MaterialHolder> transparent, int maxDistance) {
+    public BlockHolder getTargetBlock(Collection<BlockTypeHolder> transparent, int maxDistance) {
         return BlockMapper.wrapBlock(((LivingEntity) wrappedObject)
                 .getTargetBlock(transparent
                         .stream()

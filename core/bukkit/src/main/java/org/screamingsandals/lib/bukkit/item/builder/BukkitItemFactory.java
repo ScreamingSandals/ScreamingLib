@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.bukkit.material.builder;
+package org.screamingsandals.lib.bukkit.item.builder;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -15,22 +15,21 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
-import org.screamingsandals.lib.bukkit.material.BukkitMaterialMapping;
 import org.screamingsandals.lib.bukkit.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.bukkit.container.BukkitContainer;
 import org.screamingsandals.lib.bukkit.container.BukkitPlayerContainer;
-import org.screamingsandals.lib.bukkit.material.meta.BukkitEnchantmentMapping;
-import org.screamingsandals.lib.bukkit.material.meta.BukkitPotionMapping;
+import org.screamingsandals.lib.bukkit.item.meta.BukkitEnchantmentMapping;
+import org.screamingsandals.lib.bukkit.item.meta.BukkitPotionMapping;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
-import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
-import org.screamingsandals.lib.material.builder.ItemFactory;
+import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.container.Container;
-import org.screamingsandals.lib.material.data.ItemData;
+import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
-import org.screamingsandals.lib.material.meta.PotionEffectMapping;
+import org.screamingsandals.lib.item.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.adventure.AdventureUtils;
 import org.screamingsandals.lib.utils.adventure.ComponentUtils;
@@ -194,11 +193,11 @@ public class BukkitItemFactory extends ItemFactory {
                 })
                 .registerP2W(ItemStack.class, stack -> {
                     Item item = new Item();
-                    Optional<MaterialHolder> material = BukkitMaterialMapping.resolve(stack.getType());
+                    Optional<ItemTypeHolder> material = ItemTypeHolder.ofOptional(stack.getType());
                     if (material.isEmpty()) {
                         return null; // WHAT??
                     }
-                    item.setMaterial(material.get().newDurability(stack.getDurability()));
+                    item.setMaterial(material.get().withDurability(stack.getDurability()));
                     item.setAmount(stack.getAmount());
                     ItemMeta meta = stack.getItemMeta();
                     item.setPlatformMeta(meta);

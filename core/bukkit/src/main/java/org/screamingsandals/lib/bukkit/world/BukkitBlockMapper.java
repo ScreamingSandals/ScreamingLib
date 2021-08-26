@@ -5,8 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
-import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.BlockHolder;
@@ -23,9 +23,9 @@ public class BukkitBlockMapper extends BlockMapper {
                     final var instanced = LocationMapper.resolve(block.getLocation()).orElseThrow(); // normalize to block location
                     final var material = block.getType();
                     if (!Version.isVersion(1,13)) {
-                        return new BlockHolder(instanced, MaterialHolder.of(material.name() + ":" + location.getBlock().getData()));
+                        return new BlockHolder(instanced, BlockTypeHolder.of(material.name() + ":" + location.getBlock().getData()));
                     } else {
-                        return new BlockHolder(instanced, MaterialHolder.of(material));
+                        return new BlockHolder(instanced, BlockTypeHolder.of(material));
                     }
                 })
                 .registerP2W(Block.class, block ->
@@ -55,13 +55,13 @@ public class BukkitBlockMapper extends BlockMapper {
     }
 
     @Override
-    protected void setBlockAt0(LocationHolder location, MaterialHolder material) {
+    protected void setBlockAt0(LocationHolder location, BlockTypeHolder material) {
         final var bukkitLocation = location.as(Location.class);
         PaperLib.getChunkAtAsync(bukkitLocation)
                 .thenAccept(result -> {
                     bukkitLocation.getBlock().setType(material.as(Material.class));
                     if (!Version.isVersion(1,13)) {
-                        Reflect.getMethod(bukkitLocation.getBlock(), "setData", byte.class).invoke((byte) material.getDurability());
+                        Reflect.getMethod(bukkitLocation.getBlock(), "setData", byte.class).invoke(material.legacyData());
                     }
                 });
     }

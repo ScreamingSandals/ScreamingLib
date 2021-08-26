@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.material.builder;
+package org.screamingsandals.lib.item.builder;
 
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
@@ -7,13 +7,13 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.util.RGBLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.MaterialHolder;
+import org.screamingsandals.lib.firework.FireworkEffectHolder;
+import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
-import org.screamingsandals.lib.firework.FireworkEffectMapping;
-import org.screamingsandals.lib.material.meta.EnchantmentMapping;
-import org.screamingsandals.lib.material.meta.PotionEffectMapping;
-import org.screamingsandals.lib.material.meta.PotionMapping;
+import org.screamingsandals.lib.item.meta.EnchantmentMapping;
+import org.screamingsandals.lib.item.meta.PotionEffectHolder;
+import org.screamingsandals.lib.item.meta.PotionMapping;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
@@ -30,7 +30,7 @@ public class ItemBuilder {
     @NotNull
     private final Item item;
 
-    public static ItemBuilder of(MaterialHolder materialHolder) {
+    public static ItemBuilder of(ItemTypeHolder materialHolder) {
         return new ItemBuilder(materialHolder);
     }
 
@@ -39,7 +39,7 @@ public class ItemBuilder {
      *
      * @param material material to build item from
      */
-    public ItemBuilder(MaterialHolder material) {
+    public ItemBuilder(ItemTypeHolder material) {
         this.item = new Item();
         item.setMaterial(material);
     }
@@ -163,11 +163,11 @@ public class ItemBuilder {
     public ItemBuilder effect(@NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;
-            list.forEach(effect1 -> PotionEffectMapping.resolve(effect1).ifPresent(item::addPotionEffect));
+            list.forEach(effect1 -> PotionEffectHolder.ofOptional(effect1).ifPresent(item::addPotionEffect));
             return this;
         }
 
-        PotionEffectMapping.resolve(effect).ifPresent(item::addPotionEffect);
+        PotionEffectHolder.ofOptional(effect).ifPresent(item::addPotionEffect);
         return this;
     }
 
@@ -211,11 +211,11 @@ public class ItemBuilder {
     public ItemBuilder fireworkEffect(@NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;
-            list.forEach(effect1 -> FireworkEffectMapping.resolve(effect1).ifPresent(item::addFireworkEffect));
+            list.forEach(effect1 -> FireworkEffectHolder.ofOptional(effect1).ifPresent(item::addFireworkEffect));
             return this;
         }
 
-        FireworkEffectMapping.resolve(effect).ifPresent(item::addFireworkEffect);
+        FireworkEffectHolder.ofOptional(effect).ifPresent(item::addFireworkEffect);
         return this;
     }
 
@@ -227,7 +227,7 @@ public class ItemBuilder {
 
     // Or (durability is just alias for damage)
     public ItemBuilder durability(int durability) {
-        item.setMaterial(item.getMaterial().newDurability(durability));
+        item.setMaterial(item.getMaterial().withDurability((short) durability));
         return this;
     }
 

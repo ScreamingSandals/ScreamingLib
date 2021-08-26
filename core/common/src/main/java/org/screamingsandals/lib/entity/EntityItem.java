@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.entity;
 
-import org.screamingsandals.lib.material.Item;
+import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Optional;
