@@ -78,12 +78,4 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
-
-    @Override
-    public <T extends EntityBasic> List<T> getEntitiesByClass(Class<T> clazz) {
-        return getEntities().stream()
-                .filter(clazz::isInstance)
-                .map(clazz::cast)
-                .collect(Collectors.toList());
-    }
 }
