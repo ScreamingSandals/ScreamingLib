@@ -15,7 +15,6 @@ include 'sender'
 include 'screaming-annotation'
 include 'signs'
 include 'lang'
-include 'results'
 include 'nms'
 
 def registerModule(String name, String... platforms) {
