@@ -97,6 +97,14 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         return PlayerMapper.getExp(this);
     }
 
+    public void setLevel(int level) {
+        PlayerMapper.setLevel(this, level);
+    }
+
+    public void setExp(float exp) {
+        PlayerMapper.setExp(this, exp);
+    }
+
     public <T> T as(Class<T> type) {
         return PlayerMapper.convertPlayerWrapper(this, type);
     }

@@ -356,6 +356,20 @@ public abstract class PlayerMapper {
         }
         return playerMapper.getExp0(wrapper);
     }
+
+    public static void setLevel(PlayerWrapper wrapper, int level) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setLevel0(wrapper, level);
+    }
+
+    public static void setExp(PlayerWrapper wrapper, float exp) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setExp0(wrapper, exp);
+    }
     
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
@@ -435,4 +449,8 @@ public abstract class PlayerMapper {
     public abstract int getLevel0(PlayerWrapper player);
 
     public abstract float getExp0(PlayerWrapper player);
+
+    public abstract void setLevel0(PlayerWrapper player, int level);
+
+    public abstract void setExp0(PlayerWrapper player, float exp);
 }

@@ -356,4 +356,14 @@ public class BukkitPlayerMapper extends PlayerMapper {
     public float getExp0(PlayerWrapper player) {
         return player.as(Player.class).getExp();
     }
+
+    @Override
+    public void setLevel0(PlayerWrapper player, int level) {
+        player.as(Player.class).setLevel(level);
+    }
+
+    @Override
+    public void setExp0(PlayerWrapper player, float exp) {
+        player.as(Player.class).setExp(exp);
+    }
 }
