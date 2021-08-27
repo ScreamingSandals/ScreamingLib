@@ -1,20 +1,14 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.*;
 
 @EqualsAndHashCode(callSuper = false)
-@Data
-@AllArgsConstructor
-public class SPlayerInventoryClickEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
+public class SPlayerInventoryClickEvent extends SPlayerCancellableEvent {
     private final ObjectLink<@Nullable Item> cursorItem; // this field is mutable in bukkit api
     private final ObjectLink<@Nullable Item> currentItem; // this field is mutable in bukkit api
     private final ImmutableObjectLink<@Nullable Container> container;
@@ -27,8 +21,30 @@ public class SPlayerInventoryClickEvent extends CancellableAbstractEvent {
     private final ImmutableObjectLink<Integer> rawSlot;
     private final ObjectLink<Result> result;
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
+    public SPlayerInventoryClickEvent(ImmutableObjectLink<PlayerWrapper> player,
+                                      ObjectLink<@Nullable Item> cursorItem,
+                                      ObjectLink<@Nullable Item> currentItem,
+                                      ImmutableObjectLink<@Nullable Container> container,
+                                      ImmutableObjectLink<ClickType> clickType,
+                                      ImmutableObjectLink<Container> inventory,
+                                      ImmutableObjectLink<InventoryAction> action,
+                                      ImmutableObjectLink<Integer> hotbarButton,
+                                      ImmutableObjectLink<Integer> slot,
+                                      ImmutableObjectLink<SlotType> slotType,
+                                      ImmutableObjectLink<Integer> rawSlot,
+                                      ObjectLink<Result> result) {
+        super(player);
+        this.cursorItem = cursorItem;
+        this.currentItem = currentItem;
+        this.container = container;
+        this.clickType = clickType;
+        this.inventory = inventory;
+        this.action = action;
+        this.hotbarButton = hotbarButton;
+        this.slot = slot;
+        this.slotType = slotType;
+        this.rawSlot = rawSlot;
+        this.result = result;
     }
 
     @Nullable

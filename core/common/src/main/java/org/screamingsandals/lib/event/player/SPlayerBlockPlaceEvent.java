@@ -1,8 +1,6 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
@@ -12,9 +10,7 @@ import org.screamingsandals.lib.world.state.BlockStateHolder;
 import java.util.Collection;
 
 @EqualsAndHashCode(callSuper = false)
-@Data
-public class SPlayerBlockPlaceEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
+public class SPlayerBlockPlaceEvent extends SPlayerCancellableEvent {
     private final ImmutableObjectLink<PlayerWrapper.Hand> playerHand;
     private final ImmutableObjectLink<BlockHolder> block;
     private final ImmutableObjectLink<BlockStateHolder> replacedBlockState;
@@ -24,11 +20,18 @@ public class SPlayerBlockPlaceEvent extends CancellableAbstractEvent {
      */
     private final Collection<BlockStateHolder> replacedBlockStates;
 
-    /**
-     * Player who placed the block
-     */
-    public PlayerWrapper getPlayer() {
-        return player.get();
+    public SPlayerBlockPlaceEvent(ImmutableObjectLink<PlayerWrapper> player,
+                                 ImmutableObjectLink<PlayerWrapper.Hand> playerHand,
+                                 ImmutableObjectLink<BlockHolder> block,
+                                 ImmutableObjectLink<BlockStateHolder> replacedBlockState,
+                                 ImmutableObjectLink<Item> itemInHand,
+                                  Collection<BlockStateHolder> replacedBlockStates) {
+        super(player);
+        this.playerHand = playerHand;
+        this.block = block;
+        this.replacedBlockState = replacedBlockState;
+        this.itemInHand = itemInHand;
+        this.replacedBlockStates = replacedBlockStates;
     }
 
     /**

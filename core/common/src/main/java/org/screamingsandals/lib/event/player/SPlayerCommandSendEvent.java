@@ -1,21 +1,19 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 import java.util.Collection;
 
 @EqualsAndHashCode(callSuper = false)
-@Data
-public class SPlayerCommandSendEvent extends AbstractEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
+public class SPlayerCommandSendEvent extends SPlayerEvent {
     private final ImmutableObjectLink<Collection<String>> commands;
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
+    public SPlayerCommandSendEvent(ImmutableObjectLink<PlayerWrapper> player,
+                                   ImmutableObjectLink<Collection<String>> commands) {
+        super(player);
+        this.commands = commands;
     }
 
     public Collection<String> getCommands() {

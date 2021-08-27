@@ -1,27 +1,30 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
 
 import java.util.Collection;
-import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
-@AllArgsConstructor
-public class SPlayerChatEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<PlayerWrapper> sender;
+public class SPlayerChatEvent extends SPlayerCancellableEvent {
     private final ObjectLink<String> message;
     private final ObjectLink<String> format;
     private final Collection<PlayerWrapper> recipients;
 
+    public SPlayerChatEvent(ImmutableObjectLink<PlayerWrapper> player,
+                            ObjectLink<String> message,
+                            ObjectLink<String> format,
+                            Collection<PlayerWrapper> recipients) {
+        super(player);
+        this.message = message;
+        this.format = format;
+        this.recipients = recipients;
+    }
+
     public PlayerWrapper getSender() {
-        return sender.get();
+        return getPlayer();
     }
 
     public String getMessage() {

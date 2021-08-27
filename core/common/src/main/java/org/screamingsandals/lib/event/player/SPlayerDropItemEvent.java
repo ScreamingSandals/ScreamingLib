@@ -1,22 +1,18 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityItem;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
-@Data
-@AllArgsConstructor
-public class SPlayerDropItemEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
+public class SPlayerDropItemEvent extends SPlayerCancellableEvent {
     private final ImmutableObjectLink<EntityItem> itemDrop;
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
+    public SPlayerDropItemEvent(ImmutableObjectLink<PlayerWrapper> player,
+                                ImmutableObjectLink<EntityItem> itemDrop) {
+        super(player);
+        this.itemDrop = itemDrop;
     }
 
     public EntityItem getItemDrop() {

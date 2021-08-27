@@ -1,26 +1,28 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SPlayerFishEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
+public class SPlayerFishEvent extends SPlayerCancellableEvent {
     private final ImmutableObjectLink<EntityBasic> entity;
     private final ObjectLink<Integer> exp;
     private final ImmutableObjectLink<State> state;
     private final ImmutableObjectLink<EntityBasic> hookEntity;
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
+    public SPlayerFishEvent(ImmutableObjectLink<PlayerWrapper> player,
+                            ImmutableObjectLink<EntityBasic> entity,
+                            ObjectLink<Integer> exp,
+                            ImmutableObjectLink<State> state,
+                            ImmutableObjectLink<EntityBasic> hookEntity) {
+        super(player);
+        this.entity = entity;
+        this.exp = exp;
+        this.state = state;
+        this.hookEntity = hookEntity;
     }
 
     public EntityBasic getEntity() {

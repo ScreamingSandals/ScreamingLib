@@ -1,7 +1,5 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
@@ -11,15 +9,16 @@ import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
-@Data
-@AllArgsConstructor
-public class SPlayerFoodLevelChangeEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
+public class SPlayerFoodLevelChangeEvent extends SPlayerCancellableEvent {
     private final ImmutableObjectLink<@Nullable Item> item;
     private final ObjectLink<Integer> foodLevel;
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
+    public SPlayerFoodLevelChangeEvent(ImmutableObjectLink<PlayerWrapper> player,
+                                       ImmutableObjectLink<@Nullable Item> item,
+                                       ObjectLink<Integer> foodLevel) {
+        super(player);
+        this.item = item;
+        this.foodLevel = foodLevel;
     }
 
     @Nullable

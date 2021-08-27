@@ -1,21 +1,17 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Getter
-public class SPlayerLocaleChangeEvent extends AbstractEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
+public class SPlayerLocaleChangeEvent extends SPlayerEvent {
     private final ImmutableObjectLink<String> locale;
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
+    public SPlayerLocaleChangeEvent(ImmutableObjectLink<PlayerWrapper> player,
+                                    ImmutableObjectLink<String> locale) {
+        super(player);
+        this.locale = locale;
     }
 
     public String getLocale() {

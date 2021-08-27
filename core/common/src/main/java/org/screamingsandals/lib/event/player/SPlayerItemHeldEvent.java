@@ -1,20 +1,20 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-public class SPlayerItemHeldEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
+public class SPlayerItemHeldEvent extends SPlayerCancellableEvent {
     private final ImmutableObjectLink<Integer> previousSlot;
     private final ImmutableObjectLink<Integer> newSlot;
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
+    public SPlayerItemHeldEvent(ImmutableObjectLink<PlayerWrapper> player,
+                                ImmutableObjectLink<Integer> previousSlot,
+                                ImmutableObjectLink<Integer> newSlot) {
+        super(player);
+        this.previousSlot = previousSlot;
+        this.newSlot = newSlot;
     }
 
     /**

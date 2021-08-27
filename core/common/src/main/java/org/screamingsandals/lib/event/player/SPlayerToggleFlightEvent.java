@@ -1,21 +1,17 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SPlayerToggleFlightEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
+public class SPlayerToggleFlightEvent extends SPlayerCancellableEvent {
     private final ImmutableObjectLink<Boolean> flying;
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
+    public SPlayerToggleFlightEvent(ImmutableObjectLink<PlayerWrapper> player,
+                                    ImmutableObjectLink<Boolean> flying) {
+        super(player);
+        this.flying = flying;
     }
 
     public boolean isFlying() {

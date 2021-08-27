@@ -1,21 +1,15 @@
 package org.screamingsandals.lib.event.player;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SPlayerAnimationEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
+public class SPlayerAnimationEvent extends SPlayerEvent {
     private final ImmutableObjectLink<PlayerAnimationType> animationType;
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
+    public SPlayerAnimationEvent(ImmutableObjectLink<PlayerWrapper> player, ImmutableObjectLink<PlayerAnimationType> animationType) {
+        super(player);
+        this.animationType = animationType;
     }
 
     public PlayerAnimationType getAnimationType() {

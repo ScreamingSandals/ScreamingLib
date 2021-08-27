@@ -10,7 +10,6 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
-@Getter
 public class SPlayerArmorStandManipulateEvent extends SPlayerInteractEntityEvent {
     private final ImmutableObjectLink<Item> playerItem;
     private final ImmutableObjectLink<Item> armorStandItem;

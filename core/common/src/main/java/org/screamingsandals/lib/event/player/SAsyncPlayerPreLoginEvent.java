@@ -1,9 +1,8 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
-import org.screamingsandals.lib.event.AbstractAsyncEvent;
+import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
 
@@ -11,14 +10,31 @@ import java.net.InetAddress;
 import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = false)
-@Data
-public class SAsyncPlayerPreLoginEvent extends AbstractAsyncEvent {
+public class SAsyncPlayerPreLoginEvent extends SPlayerEvent {
     private final ImmutableObjectLink<UUID> uuid;
     private final ImmutableObjectLink<InetAddress> address;
     //name is changeable only on some platforms!
     private final ObjectLink<String> name;
     private final ObjectLink<Result> result;
     private final ObjectLink<Component> message;
+
+    public SAsyncPlayerPreLoginEvent(ImmutableObjectLink<UUID> uuid,
+                                     ImmutableObjectLink<InetAddress> address,
+                                     ObjectLink<String> name,
+                                     ObjectLink<Result> result,
+                                     ObjectLink<Component> message) {
+        super(null, false);
+        this.uuid = uuid;
+        this.address = address;
+        this.name = name;
+        this.result = result;
+        this.message = message;
+    }
+
+    @Override
+    public PlayerWrapper getPlayer() {
+        throw new UnsupportedOperationException("Cannot call getPlayer() on " + this.getClass().getSimpleName() + " as player instance is not constructed yet!");
+    }
 
     public UUID getUuid() {
         return uuid.get();
