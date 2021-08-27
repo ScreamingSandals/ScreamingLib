@@ -1,5 +1,7 @@
 package org.screamingsandals.lib.item;
 
+import org.screamingsandals.lib.ItemBlockIdsRemapper;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -95,6 +97,18 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
         });
     }
 
+    public static ItemTypeHolder colorize(ItemTypeHolder holder, String color) {
+        if (itemTypeMapper == null) {
+            throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
+        }
+        return ItemBlockIdsRemapper.colorableItems.entrySet().stream()
+                .filter(c -> c.getKey().test(holder))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .flatMap(fun -> fun.apply(color))
+                .orElse(holder);
+    }
+
     public static <T> T convertItemTypeHolder(ItemTypeHolder holder, Class<T> newType) {
         if (itemTypeMapper == null) {
             throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
@@ -110,4 +124,13 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
     public void mapAlias(String mappingKey, String alias) {
         super.mapAlias(mappingKey, alias);
     }
+
+    public static Optional<BlockTypeHolder> getBlock(ItemTypeHolder typeHolder) {
+        if (itemTypeMapper == null) {
+            throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
+        }
+        return itemTypeMapper.getBlock0(typeHolder);
+    }
+
+    protected abstract Optional<BlockTypeHolder> getBlock0(ItemTypeHolder typeHolder);
 }

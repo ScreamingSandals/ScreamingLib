@@ -50,6 +50,10 @@ public class BlockTypeHolder implements ComparableWrapper {
         }));
     }
 
+    public BlockTypeHolder colorize(String color) {
+        return BlockTypeMapper.colorize(this, color);
+    }
+
     @SuppressWarnings("unchecked")
     public <T> Optional<T> get(String attribute) {
         return flatteningData != null ? (Optional<T>) Optional.ofNullable(flatteningData.get(attribute)) : Optional.empty();

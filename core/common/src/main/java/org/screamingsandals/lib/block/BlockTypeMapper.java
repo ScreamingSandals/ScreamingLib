@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.block;
 
+import org.screamingsandals.lib.ItemBlockIdsRemapper;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -93,6 +94,18 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
             }
             return Optional.empty();
         });
+    }
+
+    public static BlockTypeHolder colorize(BlockTypeHolder holder, String color) {
+        if (blockTypeMapper == null) {
+            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
+        }
+        return ItemBlockIdsRemapper.colorableBlocks.entrySet().stream()
+                .filter(c -> c.getKey().test(holder))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .flatMap(fun -> fun.apply(color))
+                .orElse(holder);
     }
 
     public static <T> T convertBlockTypeHolder(BlockTypeHolder holder, Class<T> newType) {

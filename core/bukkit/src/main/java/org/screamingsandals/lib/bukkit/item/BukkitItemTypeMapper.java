@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.BukkitItemBlockIdsRemapper;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.ItemTypeMapper;
@@ -12,6 +13,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 public class BukkitItemTypeMapper extends ItemTypeMapper {
@@ -48,5 +50,18 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
                 .forEach(material ->
                         mapping.put(NamespacedMappingKey.of(material.name()), new ItemTypeHolder(material.name()))
                 );
+    }
+
+    @Override
+    protected Optional<BlockTypeHolder> getBlock0(ItemTypeHolder typeHolder) {
+        var material = typeHolder.as(Material.class);
+        if (!material.isBlock()) {
+            return Optional.empty();
+        }
+        if (BukkitItemBlockIdsRemapper.getPlatform() == Platform.JAVA_LEGACY) {
+            return Optional.of(BlockTypeHolder.of(material).withLegacyData((byte) typeHolder.durability()));
+        } else {
+            return Optional.of(BlockTypeHolder.of(material));
+        }
     }
 }

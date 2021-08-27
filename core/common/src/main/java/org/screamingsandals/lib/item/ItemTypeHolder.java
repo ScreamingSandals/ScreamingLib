@@ -2,6 +2,8 @@ package org.screamingsandals.lib.item;
 
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
@@ -31,6 +33,14 @@ public class ItemTypeHolder implements ComparableWrapper {
 
     public boolean isAir() {
         return equals(air());
+    }
+
+    public ItemTypeHolder colorize(String color) {
+        return ItemTypeMapper.colorize(this, color);
+    }
+
+    public Optional<BlockTypeHolder> block() {
+        return ItemTypeMapper.getBlock(this);
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)

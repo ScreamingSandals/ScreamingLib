@@ -26,7 +26,7 @@ public abstract class ItemBlockIdsRemapper {
     private final BlockTypeMapper blockTypeMapper;
     protected Platform platform;
     protected final List<MappingFlags> mappingFlags = new ArrayList<>();
-    private static final List<String> colors = List.of(
+    public static final List<String> COLORS = List.of(
             "WHITE",
             "ORANGE",
             "MAGENTA",
@@ -44,7 +44,8 @@ public abstract class ItemBlockIdsRemapper {
             "RED",
             "BLACK"
     );
-    protected Map<Predicate<BlockTypeHolder>, Function<String, Optional<BlockTypeHolder>>> colorable = new HashMap<>();
+    public static final Map<Predicate<BlockTypeHolder>, Function<String, Optional<BlockTypeHolder>>> colorableBlocks = new HashMap<>();
+    public static final Map<Predicate<ItemTypeHolder>, Function<String, Optional<ItemTypeHolder>>> colorableItems = new HashMap<>();
 
 
     @OnPostConstruct
@@ -88,12 +89,25 @@ public abstract class ItemBlockIdsRemapper {
     }
 
     private void makeColorable(String baseName) {
-        makeColorable(baseName, baseName);
+        makeColorableItem(baseName, baseName);
+    }
+
+    private void makeColorableBlock(String baseName) {
+        makeColorableBlock(baseName, baseName);
+    }
+
+    private void makeColorableItem(String baseName) {
+        makeColorableItem(baseName, baseName);
     }
 
     private void makeColorable(String baseName, String notColoredName) {
+        makeColorableBlock(baseName, notColoredName);
+        makeColorableItem(baseName, notColoredName);
+    }
+
+    private void makeColorableBlock(String baseName, String notColoredName) {
         var list = new ArrayList<BlockTypeHolder>();
-        colors.forEach(s -> BlockTypeHolder.ofOptional(s + "_" + baseName).ifPresent(materialHolder -> {
+        COLORS.forEach(s -> BlockTypeHolder.ofOptional(s + "_" + baseName).ifPresent(materialHolder -> {
             if (!list.contains(materialHolder)) {
                 list.add(materialHolder);
             }
@@ -106,14 +120,39 @@ public abstract class ItemBlockIdsRemapper {
         });
 
         if (!list.isEmpty()) { // if list is empty, we don't have this material
-            colorable.put(list::contains, s -> {
-                if (colors.contains(s.toUpperCase())) {
+            colorableBlocks.put(list::contains, s -> {
+                if (COLORS.contains(s.toUpperCase())) {
                     return BlockTypeHolder.ofOptional(s.toUpperCase() + "_" + baseName);
                 }
                 return Optional.empty();
             });
         }
     }
+
+    private void makeColorableItem(String baseName, String notColoredName) {
+        var list = new ArrayList<ItemTypeHolder>();
+        COLORS.forEach(s -> ItemTypeHolder.ofOptional(s + "_" + baseName).ifPresent(materialHolder -> {
+            if (!list.contains(materialHolder)) {
+                list.add(materialHolder);
+            }
+        }));
+
+        ItemTypeHolder.ofOptional(notColoredName).ifPresent(materialHolder -> {
+            if (!list.contains(materialHolder)) {
+                list.add(materialHolder);
+            }
+        });
+
+        if (!list.isEmpty()) { // if list is empty, we don't have this material
+            colorableItems.put(list::contains, s -> {
+                if (COLORS.contains(s.toUpperCase())) {
+                    return ItemTypeHolder.ofOptional(s.toUpperCase() + "_" + baseName);
+                }
+                return Optional.empty();
+            });
+        }
+    }
+
 
     private void flatteningLegacyMappingJava() {
         // Legacy remapping
@@ -869,7 +908,7 @@ public abstract class ItemBlockIdsRemapper {
             throw new IllegalArgumentException("Both materials mustn't be null!");
         }
         for (int i = 0; i <= 15; i++) {
-            f2lItem(colors.get(i) + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, i, alternativeLegacyName);
+            f2lItem(COLORS.get(i) + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, i, alternativeLegacyName);
         }
     }
 
@@ -878,7 +917,7 @@ public abstract class ItemBlockIdsRemapper {
             throw new IllegalArgumentException("Both materials mustn't be null!");
         }
         for (int i = 0; i <= 15; i++) {
-            f2lBlock(colors.get(i) + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, i, alternativeLegacyName);
+            f2lBlock(COLORS.get(i) + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, i, alternativeLegacyName);
         }
     }
 
@@ -915,7 +954,7 @@ public abstract class ItemBlockIdsRemapper {
         if (flatteningMaterialSuffix == null || legacyMaterial == null) {
             throw new IllegalArgumentException("Both materials mustn't be null!");
         }
-        colors.forEach(s ->
+        COLORS.forEach(s ->
                 f2lBlock(s + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName)
         );
     }
@@ -924,7 +963,7 @@ public abstract class ItemBlockIdsRemapper {
         if (flatteningMaterialSuffix == null || legacyMaterial == null) {
             throw new IllegalArgumentException("Both materials mustn't be null!");
         }
-        colors.forEach(s ->
+        COLORS.forEach(s ->
                 f2lItem(s + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName)
         );
     }
