@@ -346,4 +346,14 @@ public class BukkitPlayerMapper extends PlayerMapper {
     public boolean canBeStoredAsWrapped(Object wrapped) {
         return wrapped instanceof Player;
     }
+
+    @Override
+    public int getLevel0(PlayerWrapper player) {
+        return player.as(Player.class).getLevel();
+    }
+
+    @Override
+    public float getExp0(PlayerWrapper player) {
+        return player.as(Player.class).getExp();
+    }
 }
