@@ -13,7 +13,7 @@ import java.util.Collection;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class SPlayerBlockPlaceEvent extends CancellableAbstractEvent {
+public class SPlayerBlockPlaceEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<PlayerWrapper.Hand> playerHand;
     private final ImmutableObjectLink<BlockHolder> block;

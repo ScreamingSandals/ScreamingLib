@@ -14,7 +14,7 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerHarvestBlockEvent extends CancellableAbstractEvent {
+public class SPlayerHarvestBlockEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<BlockHolder> harvestedBlock;
     private final Collection<Item> itemsHarvested;

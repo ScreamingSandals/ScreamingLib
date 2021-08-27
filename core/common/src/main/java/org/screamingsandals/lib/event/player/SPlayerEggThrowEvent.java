@@ -13,7 +13,7 @@ import org.screamingsandals.lib.utils.ObjectLink;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerEggThrowEvent extends AbstractEvent {
+public class SPlayerEggThrowEvent extends AbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<EntityBasic> egg;
     private final ObjectLink<Boolean> hatching;

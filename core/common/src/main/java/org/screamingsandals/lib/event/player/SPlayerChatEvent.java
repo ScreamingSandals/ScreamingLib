@@ -14,7 +14,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
-public class SPlayerChatEvent extends CancellableAbstractEvent {
+public class SPlayerChatEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> sender;
     private final ObjectLink<String> message;
     private final ObjectLink<String> format;
@@ -38,5 +38,14 @@ public class SPlayerChatEvent extends CancellableAbstractEvent {
 
     public void setFormat(String format) {
         this.format.set(format);
+    }
+
+    /**
+     * same as {@link SPlayerChatEvent#getSender()}
+     * @return
+     */
+    @Override
+    public PlayerWrapper getPlayer() {
+        return sender.get();
     }
 }

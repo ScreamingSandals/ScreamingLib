@@ -7,7 +7,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
-public class SPlayerUnleashEntityEvent extends SEntityUnleashEvent {
+public class SPlayerUnleashEntityEvent extends SEntityUnleashEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
 
     public SPlayerUnleashEntityEvent(ImmutableObjectLink<EntityBasic> entity, ImmutableObjectLink<UnleashReason> reason, ImmutableObjectLink<PlayerWrapper> player) {

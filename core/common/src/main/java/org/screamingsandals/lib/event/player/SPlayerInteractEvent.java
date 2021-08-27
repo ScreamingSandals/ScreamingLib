@@ -23,7 +23,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerInteractEvent extends CancellableAbstractEvent {
+public class SPlayerInteractEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<@Nullable Item> item;
     private final ImmutableObjectLink<Action> action;

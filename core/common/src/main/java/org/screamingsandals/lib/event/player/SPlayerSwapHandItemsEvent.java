@@ -12,7 +12,7 @@ import org.screamingsandals.lib.utils.ObjectLink;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerSwapHandItemsEvent extends CancellableAbstractEvent {
+public class SPlayerSwapHandItemsEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ObjectLink<Item> mainHandItem;
     private final ObjectLink<Item> offHandItem;
