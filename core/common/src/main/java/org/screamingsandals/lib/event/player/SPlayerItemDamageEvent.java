@@ -1,22 +1,24 @@
 package org.screamingsandals.lib.event.player;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
-public class SPlayerItemDamageEvent extends SPlayerCancellableEvent {
+@AllArgsConstructor
+@Data
+public class SPlayerItemDamageEvent extends CancellableAbstractEvent {
+    private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<Item> item;
     private final ObjectLink<Integer> damage;
 
-    public SPlayerItemDamageEvent(ImmutableObjectLink<PlayerWrapper> player,
-                                  ImmutableObjectLink<Item> item,
-                                  ObjectLink<Integer> damage) {
-        super(player);
-        this.item = item;
-        this.damage = damage;
+    public PlayerWrapper getPlayer() {
+        return player.get();
     }
 
     public Item getItem() {

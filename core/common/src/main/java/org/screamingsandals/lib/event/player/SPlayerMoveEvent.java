@@ -10,16 +10,15 @@ import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.LocationHolder;
 
 @EqualsAndHashCode(callSuper = false)
-public class SPlayerMoveEvent extends SPlayerCancellableEvent {
+@Data
+@AllArgsConstructor
+public class SPlayerMoveEvent extends CancellableAbstractEvent {
+    private final ImmutableObjectLink<PlayerWrapper> player;
     private final ObjectLink<LocationHolder> currentLocation; // mutable in bukkit
     private final ObjectLink<LocationHolder> newLocation;
 
-    public SPlayerMoveEvent(ImmutableObjectLink<PlayerWrapper> player,
-                            ObjectLink<LocationHolder> currentLocation,
-                            ObjectLink<LocationHolder> newLocation) {
-        super(player);
-        this.currentLocation = currentLocation;
-        this.newLocation = newLocation;
+    public PlayerWrapper getPlayer() {
+        return player.get();
     }
 
     public LocationHolder getCurrentLocation() {

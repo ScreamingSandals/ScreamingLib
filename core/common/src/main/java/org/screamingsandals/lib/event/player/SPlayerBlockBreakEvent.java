@@ -8,7 +8,6 @@ import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.BlockHolder;
 import org.screamingsandals.lib.event.block.SBlockExperienceEvent;
 
-//TODO: SPlayerEvent.
 @EqualsAndHashCode(callSuper = false)
 @ToString
 @Getter

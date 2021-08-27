@@ -1,13 +1,18 @@
 package org.screamingsandals.lib.event.player;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.BlockHolder;
 
 @EqualsAndHashCode(callSuper = false)
-public class SPlayerBedEnterEvent extends SPlayerCancellableEvent {
+@RequiredArgsConstructor
+@Data
+public class SPlayerBedEnterEvent extends CancellableAbstractEvent {
     /**
      * Represents the default possible outcomes of this event.
      */
@@ -53,18 +58,13 @@ public class SPlayerBedEnterEvent extends SPlayerCancellableEvent {
         }
     }
 
+    private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<BlockHolder> bed;
     private final ImmutableObjectLink<BedEnterResult> bedEnterResult;
     private final ObjectLink<Result> useBed;
 
-    public SPlayerBedEnterEvent(ImmutableObjectLink<PlayerWrapper> player,
-                                ImmutableObjectLink<BlockHolder> bed,
-                                ImmutableObjectLink<BedEnterResult> bedEnterResult,
-                                ObjectLink<Result> useBed) {
-        super(player);
-        this.bed = bed;
-        this.bedEnterResult = bedEnterResult;
-        this.useBed = useBed;
+    public PlayerWrapper getPlayer() {
+        return player.get();
     }
 
     public BlockHolder getBed() {

@@ -3,20 +3,19 @@ package org.screamingsandals.lib.event.player;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.container.Container;
+import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = true)
-public class SPlayerInventoryOpenEvent extends SPlayerCancellableEvent {
+@Data
+public class SPlayerInventoryOpenEvent extends CancellableAbstractEvent {
+    private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<Container> topInventory;
     private final ImmutableObjectLink<Container> bottomInventory;
 
-    public SPlayerInventoryOpenEvent(ImmutableObjectLink<PlayerWrapper> player,
-                                     ImmutableObjectLink<Container> topInventory,
-                                     ImmutableObjectLink<Container> bottomInventory) {
-        super(player);
-        this.topInventory = topInventory;
-        this.bottomInventory = bottomInventory;
+    public PlayerWrapper getPlayer() {
+        return player.get();
     }
 
     public Container getTopInventory() {

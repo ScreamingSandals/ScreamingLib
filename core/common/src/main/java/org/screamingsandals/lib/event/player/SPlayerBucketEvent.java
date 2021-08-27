@@ -1,6 +1,9 @@
 package org.screamingsandals.lib.event.player;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.material.MaterialHolder;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -10,7 +13,10 @@ import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.world.BlockHolder;
 
 @EqualsAndHashCode(callSuper = false)
-public class SPlayerBucketEvent extends SPlayerCancellableEvent {
+@AllArgsConstructor
+@Data
+public class SPlayerBucketEvent extends CancellableAbstractEvent {
+    private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<BlockHolder> block;
     private final ImmutableObjectLink<BlockHolder> blockClicked;
     private final ImmutableObjectLink<BlockFace> blockFace;
@@ -18,20 +24,8 @@ public class SPlayerBucketEvent extends SPlayerCancellableEvent {
     private final ObjectLink<Item> item;
     private final ImmutableObjectLink<Action> action;
 
-    public SPlayerBucketEvent(ImmutableObjectLink<PlayerWrapper> player,
-                              ImmutableObjectLink<BlockHolder> block,
-                              ImmutableObjectLink<BlockHolder> blockClicked,
-                              ImmutableObjectLink<BlockFace> blockFace,
-                              ImmutableObjectLink<MaterialHolder> bucket,
-                              ObjectLink<Item> item,
-                              ImmutableObjectLink<Action> action) {
-        super(player);
-        this.block = block;
-        this.blockClicked = blockClicked;
-        this.blockFace = blockFace;
-        this.bucket = bucket;
-        this.item = item;
-        this.action = action;
+    public PlayerWrapper getPlayer() {
+        return player.get();
     }
 
     public BlockHolder getBlock() {

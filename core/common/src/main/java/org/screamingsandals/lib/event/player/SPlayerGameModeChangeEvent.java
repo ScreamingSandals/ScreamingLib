@@ -11,13 +11,12 @@ import org.screamingsandals.lib.utils.ImmutableObjectLink;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerGameModeChangeEvent extends SPlayerCancellableEvent {
+public class SPlayerGameModeChangeEvent extends CancellableAbstractEvent {
+    private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<GameModeHolder> gameMode;
 
-    public SPlayerGameModeChangeEvent(ImmutableObjectLink<PlayerWrapper> player,
-                                      ImmutableObjectLink<GameModeHolder> gameMode) {
-        super(player);
-        this.gameMode = gameMode;
+    public PlayerWrapper getPlayer() {
+        return player.get();
     }
 
     public GameModeHolder getGameMode() {

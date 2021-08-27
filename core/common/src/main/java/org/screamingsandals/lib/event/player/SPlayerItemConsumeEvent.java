@@ -1,20 +1,24 @@
 package org.screamingsandals.lib.event.player;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
-public class SPlayerItemConsumeEvent extends SPlayerCancellableEvent {
+@AllArgsConstructor
+@Data
+public class SPlayerItemConsumeEvent extends CancellableAbstractEvent {
+    private final ImmutableObjectLink<PlayerWrapper> player;
     private final ObjectLink<@Nullable Item> item;
 
-    public SPlayerItemConsumeEvent(ImmutableObjectLink<PlayerWrapper> player,
-                                   ObjectLink<@Nullable Item> item) {
-        super(player);
-        this.item = item;
+    public PlayerWrapper getPlayer() {
+        return player.get();
     }
 
     @Nullable

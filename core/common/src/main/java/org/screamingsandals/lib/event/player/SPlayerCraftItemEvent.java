@@ -4,13 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.material.Item;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.*;
 
 @EqualsAndHashCode(callSuper = false)
-public class SPlayerCraftItemEvent extends SPlayerCancellableEvent {
+@Data
+@AllArgsConstructor
+public class SPlayerCraftItemEvent extends CancellableAbstractEvent {
+    private final ImmutableObjectLink<PlayerWrapper> player;
     private final ObjectLink<Item> currentItem;
     private final ImmutableObjectLink<Container> clickedInventoryContainer;
     private final ImmutableObjectLink<Container> craftInventory;
@@ -23,30 +27,8 @@ public class SPlayerCraftItemEvent extends SPlayerCancellableEvent {
     private final ImmutableObjectLink<Integer> hotbarButton;
     private final ImmutableObjectLink<Integer> rawSlot;
 
-    public SPlayerCraftItemEvent(ImmutableObjectLink<PlayerWrapper> player,
-                                 ObjectLink<Item> currentItem,
-                                 ImmutableObjectLink<Container> clickedInventoryContainer,
-                                 ImmutableObjectLink<Container> craftInventory,
-                                 ImmutableObjectLink<ClickType> clickType,
-                                 ImmutableObjectLink<Recipe> recipe,
-                                 ObjectLink<Result> result,
-                                 ImmutableObjectLink<InventoryAction> inventoryAction,
-                                 ImmutableObjectLink<Item> cursor,
-                                 ImmutableObjectLink<SlotType> slotType,
-                                 ImmutableObjectLink<Integer> hotbarButton,
-                                 ImmutableObjectLink<Integer> rawSlot) {
-        super(player);
-        this.currentItem = currentItem;
-        this.clickedInventoryContainer = clickedInventoryContainer;
-        this.craftInventory = craftInventory;
-        this.clickType = clickType;
-        this.recipe = recipe;
-        this.result = result;
-        this.inventoryAction = inventoryAction;
-        this.cursor = cursor;
-        this.slotType = slotType;
-        this.hotbarButton = hotbarButton;
-        this.rawSlot = rawSlot;
+    public PlayerWrapper getPlayer() {
+        return player.get();
     }
 
     public Item getCurrentItem() {

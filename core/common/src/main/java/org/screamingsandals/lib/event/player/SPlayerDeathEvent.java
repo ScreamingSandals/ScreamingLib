@@ -15,7 +15,10 @@ import java.util.Collection;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = false)
-public class SPlayerDeathEvent extends SPlayerCancellableEvent {
+@Data
+@AllArgsConstructor
+public class SPlayerDeathEvent extends CancellableAbstractEvent {
+    private final ImmutableObjectLink<PlayerWrapper> player;
     private final ObjectLink<Component> deathMessage;
     private final Collection<Item> drops;
     private final ObjectLink<Boolean> keepInventory;
@@ -27,28 +30,8 @@ public class SPlayerDeathEvent extends SPlayerCancellableEvent {
     private final ObjectLink<Integer> droppedExp;
     private final ImmutableObjectLink<@Nullable PlayerWrapper> killer;
 
-    public SPlayerDeathEvent(ImmutableObjectLink<PlayerWrapper> player,
-                             ObjectLink<Component> deathMessage,
-                             Collection<Item> drops,
-                             ObjectLink<Boolean> keepInventory,
-                             ObjectLink<Boolean> shouldDropExperience,
-                             ObjectLink<Boolean> keepLevel,
-                             ObjectLink<Integer> newLevel,
-                             ObjectLink<Integer> newTotalExp,
-                             ObjectLink<Integer> newExp,
-                             ObjectLink<Integer> droppedExp,
-                             ImmutableObjectLink<@Nullable PlayerWrapper> killer) {
-        super(player);
-        this.deathMessage = deathMessage;
-        this.drops = drops;
-        this.keepInventory = keepInventory;
-        this.shouldDropExperience = shouldDropExperience;
-        this.keepLevel = keepLevel;
-        this.newLevel = newLevel;
-        this.newTotalExp = newTotalExp;
-        this.newExp = newExp;
-        this.droppedExp = droppedExp;
-        this.killer = killer;
+    public PlayerWrapper getPlayer() {
+        return player.get();
     }
 
     public Component getDeathMessage() {

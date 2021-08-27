@@ -1,20 +1,22 @@
 package org.screamingsandals.lib.event.player;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
-public class SPlayerLevelChangeEvent extends SPlayerEvent {
+@AllArgsConstructor
+@Data
+public class SPlayerLevelChangeEvent extends AbstractEvent {
+    private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<Integer> oldLevel;
     private final ImmutableObjectLink<Integer> newLevel;
 
-    public SPlayerLevelChangeEvent(ImmutableObjectLink<PlayerWrapper> player,
-                                   ImmutableObjectLink<Integer> oldLevel,
-                                   ImmutableObjectLink<Integer> newLevel) {
-        super(player);
-        this.oldLevel = oldLevel;
-        this.newLevel = newLevel;
+    public PlayerWrapper getPlayer() {
+        return player.get();
     }
 
     public int getOldLevel() {

@@ -1,8 +1,11 @@
 package org.screamingsandals.lib.event.player;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
@@ -10,22 +13,17 @@ import org.screamingsandals.lib.utils.ObjectLink;
 import java.net.InetAddress;
 
 @EqualsAndHashCode(callSuper = false)
-public class SPlayerLoginEvent extends SPlayerEvent {
+@AllArgsConstructor
+@Data
+public class SPlayerLoginEvent extends AbstractEvent {
+    private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<InetAddress> address;
     private final ImmutableObjectLink<String> hostname;
     private final ObjectLink<SAsyncPlayerPreLoginEvent.Result> result;
     private final ObjectLink<Component> message;
 
-    public SPlayerLoginEvent(ImmutableObjectLink<PlayerWrapper> player,
-                             ImmutableObjectLink<InetAddress> address,
-                             ImmutableObjectLink<String> hostname,
-                             ObjectLink<SAsyncPlayerPreLoginEvent.Result> result,
-                             ObjectLink<Component> message) {
-        super(player);
-        this.address = address;
-        this.hostname = hostname;
-        this.result = result;
-        this.message = message;
+    public PlayerWrapper getPlayer() {
+        return player.get();
     }
 
     public InetAddress getAddress() {
