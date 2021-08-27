@@ -11,8 +11,8 @@ import java.util.Map;
 
 @UtilityClass
 public class LegacyBlockDataConverter {
-    public Map<String, Object> convertMaterialData(MaterialData data) {
-        var map = new HashMap<String, Object>();
+    public Map<String, String> convertMaterialData(MaterialData data) {
+        var map = new HashMap<String, String>();
 
         // Banner: TODO
 
@@ -26,19 +26,19 @@ public class LegacyBlockDataConverter {
 
         // Cake
         if (data instanceof Cake) {
-            map.put("bites", ((Cake) data).getSlicesEaten());
+            map.put("bites", String.valueOf(((Cake) data).getSlicesEaten()));
         }
 
         // Cauldron
         if (data instanceof Cauldron) {
-            map.put("level", data.getData());
+            map.put("level", String.valueOf(data.getData()));
         }
 
         // Chest: TODO
 
         // CocoaPlant
         if (data instanceof CocoaPlant) {
-            map.put("age", ((CocoaPlant) data).getSize().ordinal());
+            map.put("age", String.valueOf(((CocoaPlant) data).getSize().ordinal()));
             map.put("facing", ((CocoaPlant) data).getFacing().name().toLowerCase());
         }
 
@@ -48,25 +48,25 @@ public class LegacyBlockDataConverter {
         if (data instanceof Comparator) {
             map.put("facing", ((Comparator) data).getFacing().name().toLowerCase());
             map.put("mode", ((Comparator) data).isSubtractionMode() ? "subtract" : "compare");
-            map.put("powered", ((Comparator) data).isPowered());
+            map.put("powered", String.valueOf(((Comparator) data).isPowered()));
         }
 
         // Crops
         if (data instanceof Crops) {
-            map.put("age", ((Crops) data).getState().getData());
+            map.put("age", String.valueOf(((Crops) data).getState().getData()));
         }
 
         // DetectorRail
         if (data instanceof DetectorRail) {
-            map.put("powered", ((DetectorRail) data).isPressed());
+            map.put("powered", String.valueOf(((DetectorRail) data).isPressed()));
         }
 
         // Diode
         if (data instanceof Diode) {
-            map.put("delay", ((Diode) data).getDelay());
+            map.put("delay", String.valueOf(((Diode) data).getDelay()));
             map.put("facing", ((Diode) data).getFacing().name().toLowerCase());
             // locked: TODO
-            map.put("powered", ((Diode) data).isPowered());
+            map.put("powered", String.valueOf(((Diode) data).isPowered()));
         }
 
         // Dispenser: TODO
@@ -76,7 +76,7 @@ public class LegacyBlockDataConverter {
             map.put("facing", ((Door) data).getFacing().name().toLowerCase());
             map.put("half", ((Door) data).isTopHalf() ? "upper" : "lower");
             map.put("hinge", ((Door) data).getHinge() ? "right" : "left");
-            map.put("open", ((Door) data).isOpen());
+            map.put("open", String.valueOf(((Door) data).isOpen()));
         }
 
         // EnderChest: TODO
@@ -88,12 +88,12 @@ public class LegacyBlockDataConverter {
         // Gate
         if (data instanceof Gate) {
             map.put("facing", ((Gate) data).getFacing().name().toLowerCase());
-            map.put("open", ((Gate) data).isOpen());
+            map.put("open", String.valueOf(((Gate) data).isOpen()));
         }
 
         // Hopper
         if (data instanceof Hopper) {
-            map.put("enabled", ((Hopper) data).isActive());
+            map.put("enabled", String.valueOf(((Hopper) data).isActive()));
             map.put("facing", ((Hopper) data).getFacing().name().toLowerCase());
         }
 
@@ -104,20 +104,20 @@ public class LegacyBlockDataConverter {
 
         // Leaves
         if (data instanceof Leaves) {
-            map.put("persistent", ((Leaves) data).isDecayable());
+            map.put("persistent", String.valueOf(((Leaves) data).isDecayable()));
         }
 
         // Lever: TODO
 
         // NetherWarts
         if (data instanceof NetherWarts) {
-            map.put("age", data.getData());
+            map.put("age", String.valueOf(data.getData()));
         }
 
         // Observer
         if (data instanceof Observer) {
             map.put("facing", ((Observer) data).getFacing().name().toLowerCase());
-            map.put("powered", ((Observer) data).isPowered());
+            map.put("powered", String.valueOf(((Observer) data).isPowered()));
         }
 
         // PistonBaseMaterial: TODO
@@ -175,7 +175,7 @@ public class LegacyBlockDataConverter {
         return map;
     }
 
-    public MaterialData asMaterialData(Material material, int damage, Map<String, Object> data) {
+    public MaterialData asMaterialData(Material material, int damage, Map<String, String> data) {
         var materialData = material.getNewData((byte) damage);
 
         // Banner: TODO
@@ -183,7 +183,7 @@ public class LegacyBlockDataConverter {
         // Bed
         if (materialData instanceof Bed) {
             if (data.containsKey("facing")) {
-                ((Bed) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing").toString()));
+                ((Bed) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing")));
             }
             if (data.containsKey("part")) {
                 ((Bed) materialData).setHeadOfBed(data.get("part").equals("head"));
@@ -194,12 +194,12 @@ public class LegacyBlockDataConverter {
 
         // Cake
         if (materialData instanceof Cake && data.containsKey("bites")) {
-            ((Cake) materialData).setSlicesEaten(Integer.parseInt(data.get("bites").toString()));
+            ((Cake) materialData).setSlicesEaten(Integer.parseInt(data.get("bites")));
         }
 
         // Cauldron
         if (materialData instanceof Cauldron && data.containsKey("level")) {
-            materialData.setData(Byte.parseByte(data.get("level").toString()));
+            materialData.setData(Byte.parseByte(data.get("level")));
         }
 
         // Chest: TODO
@@ -207,10 +207,10 @@ public class LegacyBlockDataConverter {
         // CocoaPlant
         if (materialData instanceof CocoaPlant) {
             if (data.containsKey("age")) {
-                ((CocoaPlant) materialData).setSize(CocoaPlant.CocoaPlantSize.values()[Integer.parseInt(data.get("age").toString())]);
+                ((CocoaPlant) materialData).setSize(CocoaPlant.CocoaPlantSize.values()[Integer.parseInt(data.get("age"))]);
             }
             if (data.containsKey("facing")) {
-                ((CocoaPlant) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing").toString()));
+                ((CocoaPlant) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing")));
             }
         }
 
@@ -219,7 +219,7 @@ public class LegacyBlockDataConverter {
         // Comparator
         if (materialData instanceof Comparator) {
             if (data.containsKey("facing")) {
-                ((Comparator) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing").toString()));
+                ((Comparator) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing")));
             }
             if (data.containsKey("mode")) {
                 ((Comparator) materialData).setSubtractionMode(data.get("mode").equals("subtract"));
@@ -229,21 +229,21 @@ public class LegacyBlockDataConverter {
 
         // Crops
         if (materialData instanceof Crops && data.containsKey("age")) {
-            ((Crops) materialData).setState(CropState.getByData(Byte.parseByte(data.get("age").toString())));
+            ((Crops) materialData).setState(CropState.getByData(Byte.parseByte(data.get("age"))));
         }
 
         // DetectorRail
         if (materialData instanceof DetectorRail && data.containsKey("powered")) {
-            ((DetectorRail) materialData).setPressed(Boolean.parseBoolean(data.get("powered").toString()));
+            ((DetectorRail) materialData).setPressed(Boolean.parseBoolean(data.get("powered")));
         }
 
         // Diode
         if (materialData instanceof Diode) {
             if (data.containsKey("delay")) {
-                ((Diode) materialData).setDelay(Integer.parseInt(data.get("delay").toString()));
+                ((Diode) materialData).setDelay(Integer.parseInt(data.get("delay")));
             }
             if (data.containsKey("facing")) {
-                ((Diode) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing").toString()));
+                ((Diode) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing")));
             }
             // locked: TODO
             // powered: TODO
@@ -256,7 +256,7 @@ public class LegacyBlockDataConverter {
         // Door
         if (materialData instanceof Door) {
             if (data.containsKey("facing")) {
-                ((Door) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing").toString()));
+                ((Door) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing")));
             }
             if (data.containsKey("half")) {
                 ((Door) materialData).setTopHalf(data.get("powered").equals("upper"));
@@ -265,7 +265,7 @@ public class LegacyBlockDataConverter {
                 ((Door) materialData).setHinge(data.get("hinge").equals("right"));
             }
             if (data.containsKey("open")) {
-                ((Door) materialData).setOpen(Boolean.parseBoolean(data.get("open").toString()));
+                ((Door) materialData).setOpen(Boolean.parseBoolean(data.get("open")));
             }
         }
 
@@ -278,31 +278,31 @@ public class LegacyBlockDataConverter {
         // Gate
         if (materialData instanceof Gate) {
             if (data.containsKey("facing")) {
-                ((Gate) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing").toString()));
+                ((Gate) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing")));
             }
             if (data.containsKey("open")) {
-                ((Gate) materialData).setOpen(Boolean.parseBoolean(data.get("open").toString()));
+                ((Gate) materialData).setOpen(Boolean.parseBoolean(data.get("open")));
             }
         }
 
         // Hopper
         if (materialData instanceof Hopper) {
             if (data.containsKey("enabled")) {
-                ((Hopper) materialData).setActive(Boolean.parseBoolean(data.get("enabled").toString()));
+                ((Hopper) materialData).setActive(Boolean.parseBoolean(data.get("enabled")));
             }
             if (data.containsKey("facing")) {
-                ((Hopper) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing").toString()));
+                ((Hopper) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing")));
             }
         }
 
         // Ladder
         if (materialData instanceof Ladder && data.containsKey("facing")) {
-            ((Ladder) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing").toString()));
+            ((Ladder) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing")));
         }
 
         // Leaves
         if (materialData instanceof Leaves && data.containsKey("persistent")) {
-            ((Leaves) materialData).setDecayable(Boolean.parseBoolean(data.get("persistent").toString()));
+            ((Leaves) materialData).setDecayable(Boolean.parseBoolean(data.get("persistent")));
         }
 
         // Lever: TODO
@@ -311,13 +311,13 @@ public class LegacyBlockDataConverter {
 
         // NetherWarts
         if (materialData instanceof NetherWarts && data.containsKey("age")) {
-            materialData.setData(Byte.parseByte(data.get("age").toString()));
+            materialData.setData(Byte.parseByte(data.get("age")));
         }
 
         // Observer
         if (materialData instanceof Observer) {
             if (data.containsKey("facing")) {
-                ((Observer) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing").toString()));
+                ((Observer) materialData).setFacingDirection(BlockFace.valueOf(data.get("facing")));
             }
             // TODO: powered
         }

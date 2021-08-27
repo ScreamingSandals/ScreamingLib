@@ -25,7 +25,7 @@ public class BlockTypeHolder implements ComparableWrapper {
     private final byte legacyData;
     @With
     @Unmodifiable
-    private final Map<String, Object> flatteningData;
+    private final Map<String, String> flatteningData;
 
     public BlockTypeHolder(String platformName) {
         this(platformName, (byte) 0);
@@ -35,11 +35,11 @@ public class BlockTypeHolder implements ComparableWrapper {
         this(platformName, legacyData, null);
     }
 
-    public BlockTypeHolder(String platformName, @Unmodifiable Map<String, Object> flatteningData) {
+    public BlockTypeHolder(String platformName, @Unmodifiable Map<String, String> flatteningData) {
         this(platformName, (byte) 0, flatteningData);
     }
 
-    public BlockTypeHolder with(String attribute, Object value) {
+    public BlockTypeHolder with(String attribute, String value) {
         return new BlockTypeHolder(platformName, legacyData, Map.copyOf(new HashMap<>() {
             {
                 if (flatteningData != null) {
@@ -55,8 +55,8 @@ public class BlockTypeHolder implements ComparableWrapper {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Optional<T> get(String attribute) {
-        return flatteningData != null ? (Optional<T>) Optional.ofNullable(flatteningData.get(attribute)) : Optional.empty();
+    public Optional<String> get(String attribute) {
+        return flatteningData != null ? Optional.ofNullable(flatteningData.get(attribute)) : Optional.empty();
     }
 
     @Override

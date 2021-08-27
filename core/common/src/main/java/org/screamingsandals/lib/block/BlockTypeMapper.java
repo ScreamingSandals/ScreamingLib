@@ -5,10 +5,7 @@ import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
-import org.screamingsandals.lib.utils.key.ComplexMappingKey;
-import org.screamingsandals.lib.utils.key.MappingKey;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
-import org.screamingsandals.lib.utils.key.NumericMappingKey;
+import org.screamingsandals.lib.utils.key.*;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
 import java.util.Map;
@@ -18,7 +15,7 @@ import java.util.regex.Pattern;
 @AbstractService
 public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder> {
 
-    private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?::)?(?<durability>\\d+)?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
+    private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?<blockState>:\\d*|\\[[^]]*])?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
     protected BidirectionalConverter<BlockTypeHolder> blockTypeConverter = BidirectionalConverter.<BlockTypeHolder>build()
             .registerP2W(BlockTypeHolder.class, i -> i);
 
@@ -53,9 +50,22 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
                     var namespaced = NamespacedMappingKey.of(matcher.group("namespaced"));
 
                     Integer data = null;
+                    Map<String, String> flatteningData = null;
                     try {
-                        data = Integer.parseInt(matcher.group("durability"));
+                        data = Integer.parseInt(matcher.group("blockState"));
                     } catch (NumberFormatException ignored) {
+                        // blockState don't have to be number
+                        var blockState = matcher.group("blockState");
+                        if (blockState.startsWith("[") && blockState.startsWith("]")) {
+                            var map = blockTypeMapper.getDataFromString(blockState);
+                            if (map.containsKey("legacyData") && map.size() == 1) {
+                                try {
+                                    data = Integer.parseInt(map.get("legacyData"));
+                                } catch (NumberFormatException ignored2) {}
+                            } else {
+                                flatteningData = map;
+                            }
+                        }
                     }
 
                     if (data != null) {
@@ -66,6 +76,15 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
                         } else if (blockTypeMapper.mapping.containsKey(namespaced)) {
                             var holder = blockTypeMapper.mapping.get(namespaced);
                             return Optional.of(holder.withLegacyData(data.byteValue()));
+                        }
+                    } else if (flatteningData != null) {
+                        var namespacedFlattening = ComplexMappingKey.of(namespaced, StringMappingKey.of(matcher.group("blockState")));
+
+                        if (blockTypeMapper.mapping.containsKey(namespacedFlattening)) {
+                            return Optional.of(blockTypeMapper.mapping.get(namespacedFlattening));
+                        } else if (blockTypeMapper.mapping.containsKey(namespaced)) {
+                            var holder = blockTypeMapper.mapping.get(namespaced);
+                            return Optional.of(holder.withFlatteningData(flatteningData));
                         }
                     } else if (blockTypeMapper.mapping.containsKey(namespaced)) {
                         return Optional.of(blockTypeMapper.mapping.get(namespaced));
@@ -123,4 +142,8 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
     public void mapAlias(String mappingKey, String alias) {
         super.mapAlias(mappingKey, alias);
     }
+
+    protected abstract String getDataFromMap(BlockTypeHolder material);
+
+    protected abstract Map<String, String> getDataFromString(String data);
 }

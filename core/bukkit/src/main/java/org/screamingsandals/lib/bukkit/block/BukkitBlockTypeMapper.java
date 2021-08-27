@@ -39,7 +39,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                 );
     }
 
-    private Map<String, Object> getDataFromString(String data) {
+    protected Map<String, String> getDataFromString(String data) {
         Preconditions.checkNotNull(data, "Data cannot be null!");
         if (data.contains("[") && data.contains("]")) {
             final var values = data.substring(data.indexOf("[") + 1, data.lastIndexOf("]"));
@@ -53,7 +53,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
         return Map.of();
     }
 
-    private String getDataFromMap(BlockTypeHolder material) {
+    protected String getDataFromMap(BlockTypeHolder material) {
         final var builder = new StringBuilder("minecraft:" + material.platformName().toLowerCase());
         final var data = material.flatteningData();
         if (data != null && !data.isEmpty()) {
