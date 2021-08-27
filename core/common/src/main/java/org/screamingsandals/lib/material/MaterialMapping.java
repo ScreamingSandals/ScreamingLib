@@ -1059,4 +1059,13 @@ public abstract class MaterialMapping extends AbstractTypeMapper<MaterialHolder>
     }
 
     protected abstract boolean isItem0(MaterialHolder materialHolder);
+
+    public static int getMaxStackSize(MaterialHolder materialHolder) {
+        if (materialMapping == null) {
+            throw new UnsupportedOperationException("Material mapping is not initialized yet.");
+        }
+        return materialMapping.getMaxStackSize0(materialHolder);
+    }
+
+    protected abstract int getMaxStackSize0(MaterialHolder materialHolder);
 }

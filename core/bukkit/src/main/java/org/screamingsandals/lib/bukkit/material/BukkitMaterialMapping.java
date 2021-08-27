@@ -76,4 +76,9 @@ public class BukkitMaterialMapping extends MaterialMapping {
             return true; // we are on older versions and yes, it is probably item xdd
         }
     }
+
+    @Override
+    protected int getMaxStackSize0(MaterialHolder materialHolder) {
+        return materialHolder.as(Material.class).getMaxStackSize();
+    }
 }

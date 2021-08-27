@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public interface WorldHolder extends Wrapper, Serializable {
 
@@ -35,7 +36,12 @@ public interface WorldHolder extends Wrapper, Serializable {
 
     List<EntityBasic> getEntities();
 
-    <T extends EntityBasic> List<T> getEntitiesByClass(Class<T> cls);
+    default <T extends EntityBasic> List<T> getEntitiesByClass(Class<T> clazz) {
+        return getEntities().stream()
+                .filter(clazz::isInstance)
+                .map(clazz::cast)
+                .collect(Collectors.toList());
+    }
 
     class WorldHolderTypeAdapter extends TypeAdapter<WorldHolder> {
         @Override
