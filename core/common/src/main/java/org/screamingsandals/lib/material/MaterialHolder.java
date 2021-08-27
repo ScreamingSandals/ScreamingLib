@@ -63,6 +63,10 @@ public final class MaterialHolder implements ComparableWrapper {
         return MaterialMapping.isItem(this);
     }
 
+    public int getMaxStackSize() {
+        return MaterialMapping.getMaxStackSize(this);
+    }
+
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     public static MaterialHolder of(Object material) {
         return ofOptional(material).orElseThrow();
