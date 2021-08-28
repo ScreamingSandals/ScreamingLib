@@ -53,6 +53,22 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
         return Map.of();
     }
 
+    @Override
+    public String getStateDataFromMap(Map<String, String> data) {
+        final var builder = new StringBuilder();
+        if (data != null && !data.isEmpty()) {
+            builder.append('[');
+            builder.append(data
+                    .entrySet()
+                    .stream()
+                    .map(entry -> entry.getKey() + "=" + entry.getValue())
+                    .collect(Collectors.joining(",")));
+            builder.append(']');
+        }
+
+        return builder.toString();
+    }
+
     protected String getDataFromMap(BlockTypeHolder material) {
         final var builder = new StringBuilder("minecraft:" + material.platformName().toLowerCase());
         final var data = material.flatteningData();
@@ -68,4 +84,6 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
 
         return builder.toString();
     }
+
+
 }

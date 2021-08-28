@@ -11,6 +11,7 @@ import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.key.ComplexMappingKey;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.key.NumericMappingKey;
+import org.screamingsandals.lib.utils.key.StringMappingKey;
 
 import java.util.*;
 import java.util.function.Function;
@@ -189,14 +190,24 @@ public abstract class ItemBlockIdsRemapper {
         f2l("JUNGLE_SAPLING", "SAPLING", 6, 3);
         f2l("ACACIA_SAPLING", "SAPLING", 6, 4);
         f2l("DARK_OAK_SAPLING", "SAPLING", 6, 5);
+        f2lBlock("OAK_SAPLING", Map.of("stage", "1"), "SAPLING", 6, 8);
+        f2lBlock("SPRUCE_SAPLING", Map.of("stage", "1"), "SAPLING", 6, 9);
+        f2lBlock("BIRCH_SAPLING", Map.of("stage", "1"), "SAPLING", 6, 10);
+        f2lBlock("JUNGLE_SAPLING", Map.of("stage", "1"), "SAPLING", 6, 11);
+        f2lBlock("ACACIA_SAPLING", Map.of("stage", "1"), "SAPLING", 6, 12);
+        f2lBlock("DARK_OAK_SAPLING", Map.of("stage", "1"), "SAPLING", 6, 13);
 
         f2l("BEDROCK", 7);
 
         // flowing_water and water can't be properly translated. same thing is for lava
-        f2lBlock("WATER", 9); // bukkit mapping collision
-        f2lBlock("WATER", "FLOWING_WATER", 10, "STATIONARY_WATER");
-        f2lBlock("LAVA", 11); // bukkit mapping collision
-        f2lBlock("LAVA", "FLOWING_LAVA", 12, "STATIONARY_LAVA");
+        f2lBlock("WATER", "FLOWING_WATER", 8, "WATER");
+        //f2lBlock("WATER", 9, "STATIONARY_WATER"); // bukkit mapping collision
+        f2lBlock("LAVA", "FLOWING_LAVA", 10, "LAVA");
+        //f2lBlock("LAVA", 11, "STATIONARY_LAVA"); // bukkit mapping collision
+        for (int i = 1; i < 15; i++) {
+            f2lBlock("WATER", Map.of("level", String.valueOf(i)), "FLOWING_WATER", 10, i, "WATER");
+            f2lBlock("LAVA", Map.of("level", String.valueOf(i)), "FLOWING_LAVA", 10, i, "LAVA");
+        }
 
         f2l("SAND", 12);
         f2l("RED_SAND", "SAND", 12, 1);
@@ -210,6 +221,14 @@ public abstract class ItemBlockIdsRemapper {
         f2l("SPRUCE_LOG", "LOG", 17, 1);
         f2l("BIRCH_LOG", "LOG", 17, 2);
         f2l("JUNGLE_LOG", "LOG", 17, 3);
+        f2lBlock("OAK_LOG", Map.of("axis", "x"), "LOG", 17, 4);
+        f2lBlock("SPRUCE_LOG", Map.of("axis", "x"), "LOG", 17, 5);
+        f2lBlock("SPRUCE_LOG", Map.of("axis", "x"), "LOG", 17, 6);
+        f2lBlock("SPRUCE_LOG", Map.of("axis", "x"), "LOG", 17, 7);
+        f2lBlock("OAK_LOG", Map.of("axis", "z"), "LOG", 17, 8);
+        f2lBlock("SPRUCE_LOG", Map.of("axis", "z"), "LOG", 17, 9);
+        f2lBlock("SPRUCE_LOG", Map.of("axis", "z"), "LOG", 17, 10);
+        f2lBlock("SPRUCE_LOG", Map.of("axis", "z"), "LOG", 17, 11);
 
         // is this correct?
         f2l("OAK_WOOD", "LOG", 17, 12);
@@ -221,6 +240,10 @@ public abstract class ItemBlockIdsRemapper {
         f2l("SPRUCE_LEAVES", "LEAVES", 18, 1);
         f2l("BIRCH_LEAVES", "LEAVES", 18, 2);
         f2l("JUNGLE_LEAVES", "LEAVES", 18, 3);
+        f2lBlock("OAK_LEAVES", Map.of("persistent", "true"), 18, 4);
+        f2lBlock("SPRUCE_LEAVES", Map.of("persistent", "true"), 18, 5);
+        f2lBlock("BIRCH_LEAVES", Map.of("persistent", "true"), 18, 6);
+        f2lBlock("JUNGLE_LEAVES", Map.of("persistent", "true"), 18, 7);
 
         f2l("SPONGE", 19);
         f2l("WET_SPONGE", "SPONGE", 19, 1);
@@ -234,7 +257,25 @@ public abstract class ItemBlockIdsRemapper {
         f2l("CUT_SANDSTONE", "SANDSTONE", 24, 2);
 
         f2l("NOTE_BLOCK", 25, "NOTEBLOCK");
-        f2lColoredToNonColoredBlock("BED", "BED_BLOCK", 26);
+
+        // TODO: also set default values
+        f2lColoredToNonColoredBlock("BED", "BED_BLOCK", 26, 2);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "east"), "BED_BLOCK", 26, 3);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "south"), "BED_BLOCK", 26, 0);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "west"), "BED_BLOCK", 26, 1);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "north", "occupied", "true"),"BED_BLOCK", 26, 6);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "east", "occupied", "true"), "BED_BLOCK", 26, 7);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "south", "occupied", "true"), "BED_BLOCK", 26, 4);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "west", "occupied", "true"), "BED_BLOCK", 26, 5);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "north", "part", "head"),"BED_BLOCK", 26, 10);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "east", "part", "head"), "BED_BLOCK", 26, 11);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "south", "part", "head"), "BED_BLOCK", 26, 8);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "west", "part", "head"), "BED_BLOCK", 26, 9);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "north", "part", "head", "occupied", "true"),"BED_BLOCK", 26, 14);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "east", "part", "head", "occupied", "true"), "BED_BLOCK", 26, 15);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "south", "part", "head", "occupied", "true"), "BED_BLOCK", 26, 12);
+        f2lColoredToNonColoredBlock("BED", Map.of("facing", "west", "part", "head", "occupied", "true"), "BED_BLOCK", 26, 13);
+
         f2l("POWERED_RAIL", 27, "GOLDEN_RAIL");
         f2l("DETECTOR_RAIL", 28);
         f2l("STICKY_PISTON", 29, "PISTON_STICKY_BASE");
@@ -941,6 +982,10 @@ public abstract class ItemBlockIdsRemapper {
         f2lColoredToNonColoredBlock(flatteningMaterialSuffix, legacyMaterial, legacyId, null);
     }
 
+    private void f2lColoredToNonColoredBlock(String flatteningMaterialSuffix, Map<String, String> state, String legacyMaterial, int legacyId, int data) {
+        f2lColoredToNonColoredBlock(flatteningMaterialSuffix, state, legacyMaterial, legacyId, data, null);
+    }
+
     private void f2lColoredToNonColoredItem(String flatteningMaterialSuffix, String legacyMaterial, int legacyId) {
         f2lColoredToNonColoredItem(flatteningMaterialSuffix, legacyMaterial, legacyId, null);
     }
@@ -950,12 +995,29 @@ public abstract class ItemBlockIdsRemapper {
         f2lColoredToNonColoredItem(flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName);
     }
 
+    private void f2lColoredToNonColoredBlock(String flatteningMaterialSuffix, String legacyMaterial, int legacyId, int data) {
+        f2lColoredToNonColoredBlock(flatteningMaterialSuffix, legacyMaterial, legacyId, data, null);
+    }
+
     private void f2lColoredToNonColoredBlock(String flatteningMaterialSuffix, String legacyMaterial, int legacyId, String alternativeLegacyName) {
+        f2lColoredToNonColoredBlock(flatteningMaterialSuffix, legacyMaterial, legacyId, 0, alternativeLegacyName);
+    }
+
+    private void f2lColoredToNonColoredBlock(String flatteningMaterialSuffix, String legacyMaterial, int legacyId, int data, String alternativeLegacyName) {
         if (flatteningMaterialSuffix == null || legacyMaterial == null) {
             throw new IllegalArgumentException("Both materials mustn't be null!");
         }
         COLORS.forEach(s ->
-                f2lBlock(s + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, alternativeLegacyName)
+                f2lBlock(s + "_" + flatteningMaterialSuffix, legacyMaterial, legacyId, data, alternativeLegacyName)
+        );
+    }
+
+    private void f2lColoredToNonColoredBlock(String flatteningMaterialSuffix, Map<String, String> state, String legacyMaterial, int legacyId, int data, String alternativeLegacyName) {
+        if (flatteningMaterialSuffix == null || legacyMaterial == null) {
+            throw new IllegalArgumentException("Both materials mustn't be null!");
+        }
+        COLORS.forEach(s ->
+                f2lBlock(s + "_" + flatteningMaterialSuffix, state, legacyMaterial, legacyId, data, alternativeLegacyName)
         );
     }
 
@@ -1137,6 +1199,91 @@ public abstract class ItemBlockIdsRemapper {
             }
         } else if (!platform.isUsingLegacyNames() && mapping.containsKey(flatteningMaterialNamespaced)) {
             holder = mapping.get(flatteningMaterialNamespaced);
+            if (data == 0 && !mapping.containsKey(legacyMaterialNamespaced) && !flatteningMaterialNamespaced.equals(legacyMaterialNamespaced)) {
+                mapping.put(legacyMaterialNamespaced, holder);
+            }
+            if (!mapping.containsKey(ComplexMappingKey.of(legacyMaterialNamespaced, NumericMappingKey.of(data)))) {
+                mapping.put(ComplexMappingKey.of(legacyMaterialNamespaced, NumericMappingKey.of(data)), holder);
+            }
+            if (data == 0 && alternativeLegacyNamespaced != null && !mapping.containsKey(alternativeLegacyNamespaced) && !flatteningMaterialNamespaced.equals(alternativeLegacyNamespaced)) {
+                mapping.put(alternativeLegacyNamespaced, holder);
+            }
+            if (alternativeLegacyNamespaced != null && !mapping.containsKey(ComplexMappingKey.of(alternativeLegacyNamespaced, NumericMappingKey.of(data)))) {
+                mapping.put(ComplexMappingKey.of(alternativeLegacyNamespaced, NumericMappingKey.of(data)), holder);
+            }
+        }
+
+        if (holder != null) {
+            var legacyIdKey = NumericMappingKey.of(legacyId);
+            if (!mapping.containsKey(legacyIdKey) && data == 0) {
+                mapping.put(legacyIdKey, holder);
+            }
+            var legacyIdDataKey = ComplexMappingKey.of(legacyIdKey, NumericMappingKey.of(data));
+            if (!mapping.containsKey(legacyIdDataKey)) {
+                mapping.put(legacyIdDataKey, holder);
+            }
+        }
+    }
+
+    private void f2lBlock(String flatteningMaterial, Map<String, String> state, int legacyId) {
+        f2lBlock(flatteningMaterial, state, legacyId, 0);
+    }
+
+    private void f2lBlock(String flatteningMaterial, Map<String, String> state, int legacyId, String alternativeLegacyName) {
+        f2lBlock(flatteningMaterial, state, legacyId, 0, alternativeLegacyName);
+    }
+
+    private void f2lBlock(String flatteningMaterial, Map<String, String> state, int legacyId, int data) {
+        f2lBlock(flatteningMaterial, state, legacyId, data, null);
+    }
+
+    private void f2lBlock(String flatteningMaterial, Map<String, String> state, int legacyId, int data, String alternativeLegacyName) {
+        f2lBlock(flatteningMaterial, state, flatteningMaterial, legacyId, data, alternativeLegacyName);
+    }
+
+    private void f2lBlock(String flatteningMaterial, Map<String, String> state, String legacyMaterial, int legacyId, int data) {
+        f2lBlock(flatteningMaterial, state, legacyMaterial, legacyId, data);
+    }
+
+    private void f2lBlock(String flatteningMaterial, Map<String, String> state, String legacyMaterial, int legacyId, int data, String alternativeLegacyName) {
+        if (flatteningMaterial == null || legacyMaterial == null) {
+            throw new IllegalArgumentException("Both flattening and legacy materials mustn't be null!");
+        }
+        var flatteningMaterialNamespaced = NamespacedMappingKey.of(flatteningMaterial);
+        var legacyMaterialNamespaced = NamespacedMappingKey.of(legacyMaterial);
+        var alternativeLegacyNamespaced =
+                alternativeLegacyName != null && !alternativeLegacyName.equalsIgnoreCase(legacyMaterial) ? NamespacedMappingKey.of(alternativeLegacyName) : null;
+        var stateNamespaced = StringMappingKey.of(blockTypeMapper.getStateDataFromMap(state));
+        var completeFlatteningMaterialNamespaced = ComplexMappingKey.of(flatteningMaterialNamespaced, stateNamespaced);
+
+        var mapping = blockTypeMapper.getUNSAFE_mapping();
+        BlockTypeHolder holder = null;
+        if (platform.isUsingLegacyNames() && (mapping.containsKey(legacyMaterialNamespaced) || (alternativeLegacyNamespaced != null && mapping.containsKey(alternativeLegacyNamespaced)))) {
+            if (mapping.containsKey(legacyMaterialNamespaced)) {
+                holder = mapping.get(legacyMaterialNamespaced).withLegacyData((byte) data);
+                if (!mapping.containsKey(completeFlatteningMaterialNamespaced)/* && !flatteningMaterialNamespaced.equals(legacyMaterialNamespaced)*/) {
+                    mapping.put(completeFlatteningMaterialNamespaced, holder);
+                }
+                if (data == 0 && alternativeLegacyNamespaced != null && !mapping.containsKey(alternativeLegacyNamespaced)) {
+                    mapping.put(alternativeLegacyNamespaced, holder);
+                }
+                if (alternativeLegacyNamespaced != null && !mapping.containsKey(ComplexMappingKey.of(alternativeLegacyNamespaced, NumericMappingKey.of(data)))) {
+                    mapping.put(ComplexMappingKey.of(alternativeLegacyNamespaced, NumericMappingKey.of(data)), holder);
+                }
+            } else if (alternativeLegacyNamespaced != null && mapping.containsKey(alternativeLegacyNamespaced)) {
+                holder = mapping.get(alternativeLegacyNamespaced).withLegacyData((byte) data);
+                if (!mapping.containsKey(completeFlatteningMaterialNamespaced)/* && !flatteningMaterialNamespaced.equals(legacyMaterialNamespaced)*/) {
+                    mapping.put(completeFlatteningMaterialNamespaced, holder);
+                }
+                if (data == 0 && !mapping.containsKey(legacyMaterialNamespaced)) {
+                    mapping.put(legacyMaterialNamespaced, holder);
+                }
+                if (!mapping.containsKey(ComplexMappingKey.of(legacyMaterialNamespaced, NumericMappingKey.of(data)))) {
+                    mapping.put(ComplexMappingKey.of(legacyMaterialNamespaced, NumericMappingKey.of(data)), holder);
+                }
+            }
+        } else if (!platform.isUsingLegacyNames() && mapping.containsKey(flatteningMaterialNamespaced)) {
+            holder = mapping.get(flatteningMaterialNamespaced).withFlatteningData(state);
             if (data == 0 && !mapping.containsKey(legacyMaterialNamespaced) && !flatteningMaterialNamespaced.equals(legacyMaterialNamespaced)) {
                 mapping.put(legacyMaterialNamespaced, holder);
             }

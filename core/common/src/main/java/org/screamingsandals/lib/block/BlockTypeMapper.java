@@ -146,4 +146,6 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
     protected abstract String getDataFromMap(BlockTypeHolder material);
 
     protected abstract Map<String, String> getDataFromString(String data);
+
+    public abstract String getStateDataFromMap(Map<String, String> map);
 }
