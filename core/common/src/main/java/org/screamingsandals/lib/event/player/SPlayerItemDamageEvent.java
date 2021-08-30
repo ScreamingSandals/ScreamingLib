@@ -12,7 +12,7 @@ import org.screamingsandals.lib.utils.ObjectLink;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerItemDamageEvent extends CancellableAbstractEvent {
+public class SPlayerItemDamageEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<Item> item;
     private final ObjectLink<Integer> damage;

@@ -10,7 +10,7 @@ import java.util.Collection;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class SPlayerCommandSendEvent extends AbstractEvent {
+public class SPlayerCommandSendEvent extends AbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<Collection<String>> commands;
 

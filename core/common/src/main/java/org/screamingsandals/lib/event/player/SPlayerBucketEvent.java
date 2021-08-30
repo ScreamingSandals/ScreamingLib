@@ -15,7 +15,7 @@ import org.screamingsandals.lib.world.BlockHolder;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerBucketEvent extends CancellableAbstractEvent {
+public class SPlayerBucketEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<BlockHolder> block;
     private final ImmutableObjectLink<BlockHolder> blockClicked;

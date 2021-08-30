@@ -10,7 +10,7 @@ import org.screamingsandals.lib.utils.ObjectLink;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
-public class SPlayerCommandPreprocessEvent extends CancellableAbstractEvent {
+public class SPlayerCommandPreprocessEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ObjectLink<PlayerWrapper> player;
     private final ObjectLink<String> command;
 

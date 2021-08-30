@@ -13,7 +13,7 @@ import org.screamingsandals.lib.world.BlockHolder;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
-public class SPlayerBlockDamageEvent extends CancellableAbstractEvent {
+public class SPlayerBlockDamageEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<BlockHolder> block;
     private final ImmutableObjectLink<Item> itemInHand;

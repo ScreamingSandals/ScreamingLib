@@ -12,7 +12,7 @@ import org.screamingsandals.lib.utils.ImmutableObjectLink;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerInteractEntityEvent extends CancellableAbstractEvent {
+public class SPlayerInteractEntityEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<EntityBasic> clickedEntity;
     private final ImmutableObjectLink<EquipmentSlotHolder> hand;

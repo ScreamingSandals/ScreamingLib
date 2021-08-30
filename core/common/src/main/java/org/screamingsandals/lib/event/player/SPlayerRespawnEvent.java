@@ -12,7 +12,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
-public class SPlayerRespawnEvent extends CancellableAbstractEvent {
+public class SPlayerRespawnEvent extends CancellableAbstractEvent implements SPlayerEvent  {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ObjectLink<LocationHolder> location;
 

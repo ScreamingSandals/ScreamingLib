@@ -12,7 +12,7 @@ import org.screamingsandals.lib.utils.math.Vector3D;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerVelocityChangeEvent extends CancellableAbstractEvent {
+public class SPlayerVelocityChangeEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ObjectLink<Vector3D> velocity;
 

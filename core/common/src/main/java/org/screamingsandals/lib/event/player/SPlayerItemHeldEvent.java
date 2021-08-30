@@ -8,7 +8,7 @@ import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-public class SPlayerItemHeldEvent extends CancellableAbstractEvent {
+public class SPlayerItemHeldEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<Integer> previousSlot;
     private final ImmutableObjectLink<Integer> newSlot;

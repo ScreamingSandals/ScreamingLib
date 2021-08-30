@@ -11,7 +11,7 @@ import org.screamingsandals.lib.utils.ObjectLink;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerExpChangeEvent extends AbstractEvent {
+public class SPlayerExpChangeEvent extends AbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ObjectLink<Integer> exp;
 

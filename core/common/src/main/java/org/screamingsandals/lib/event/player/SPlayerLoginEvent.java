@@ -15,7 +15,7 @@ import java.net.InetAddress;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerLoginEvent extends AbstractEvent {
+public class SPlayerLoginEvent extends AbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<InetAddress> address;
     private final ImmutableObjectLink<String> hostname;

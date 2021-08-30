@@ -11,7 +11,7 @@ import org.screamingsandals.lib.utils.ImmutableObjectLink;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerGameModeChangeEvent extends CancellableAbstractEvent {
+public class SPlayerGameModeChangeEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<GameModeHolder> gameMode;
 

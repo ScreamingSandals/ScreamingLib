@@ -10,7 +10,7 @@ import org.screamingsandals.lib.utils.ImmutableObjectLink;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Getter
-public class SPlayerLocaleChangeEvent extends AbstractEvent {
+public class SPlayerLocaleChangeEvent extends AbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<String> locale;
 

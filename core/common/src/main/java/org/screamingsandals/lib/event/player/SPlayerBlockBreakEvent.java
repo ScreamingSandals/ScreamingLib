@@ -12,7 +12,7 @@ import org.screamingsandals.lib.event.block.SBlockExperienceEvent;
 @ToString
 @Getter
 @Setter
-public class SPlayerBlockBreakEvent extends SBlockExperienceEvent implements Cancellable {
+public class SPlayerBlockBreakEvent extends SBlockExperienceEvent implements Cancellable, SPlayerEvent{
     /**
      * Player who placed the block
      */

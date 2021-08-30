@@ -10,7 +10,7 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SPlayerInventoryCloseEvent extends AbstractEvent {
+public class SPlayerInventoryCloseEvent extends AbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<Container> topInventory;
     private final ImmutableObjectLink<Container> bottomInventory;

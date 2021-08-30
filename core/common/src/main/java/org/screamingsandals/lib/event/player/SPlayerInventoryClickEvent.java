@@ -13,7 +13,7 @@ import org.screamingsandals.lib.utils.*;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
-public class SPlayerInventoryClickEvent extends CancellableAbstractEvent {
+public class SPlayerInventoryClickEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ObjectLink<@Nullable Item> cursorItem; // this field is mutable in bukkit api
     private final ObjectLink<@Nullable Item> currentItem; // this field is mutable in bukkit api
