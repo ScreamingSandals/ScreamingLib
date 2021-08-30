@@ -64,4 +64,9 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
             return Optional.of(BlockTypeHolder.of(material));
         }
     }
+
+    @Override
+    protected int getMaxStackSize0(ItemTypeHolder materialHolder) {
+        return materialHolder.as(Material.class).getMaxStackSize();
+    }
 }

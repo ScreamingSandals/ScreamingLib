@@ -3,7 +3,6 @@ package org.screamingsandals.lib.item;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
@@ -33,6 +32,10 @@ public class ItemTypeHolder implements ComparableWrapper {
 
     public boolean isAir() {
         return equals(air());
+    }
+
+    public int getMaxStackSize() {
+        return ItemTypeMapper.getMaxStackSize(this);
     }
 
     public ItemTypeHolder colorize(String color) {

@@ -133,4 +133,13 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
     }
 
     protected abstract Optional<BlockTypeHolder> getBlock0(ItemTypeHolder typeHolder);
+
+    public static int getMaxStackSize(ItemTypeHolder materialHolder) {
+        if (itemTypeMapper == null) {
+            throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
+        }
+        return itemTypeMapper.getMaxStackSize0(materialHolder);
+    }
+
+    protected abstract int getMaxStackSize0(ItemTypeHolder materialHolder);
 }
