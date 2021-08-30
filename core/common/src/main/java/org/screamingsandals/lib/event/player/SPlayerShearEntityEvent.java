@@ -11,7 +11,7 @@ import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-public class SPlayerShearEntityEvent extends CancellableAbstractEvent {
+public class SPlayerShearEntityEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<EntityBasic> what;
     private final ImmutableObjectLink<Item> item;

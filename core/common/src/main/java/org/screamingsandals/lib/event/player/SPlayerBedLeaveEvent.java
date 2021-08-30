@@ -12,7 +12,7 @@ import org.screamingsandals.lib.block.BlockHolder;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerBedLeaveEvent extends CancellableAbstractEvent {
+public class SPlayerBedLeaveEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<BlockHolder> bed;
     private final ObjectLink<Boolean> bedSpawn;

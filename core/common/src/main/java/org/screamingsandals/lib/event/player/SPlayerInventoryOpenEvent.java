@@ -9,7 +9,7 @@ import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SPlayerInventoryOpenEvent extends CancellableAbstractEvent {
+public class SPlayerInventoryOpenEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<Container> topInventory;
     private final ImmutableObjectLink<Container> bottomInventory;

@@ -16,7 +16,7 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
-public class SPlayerDeathEvent extends CancellableAbstractEvent {
+public class SPlayerDeathEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ObjectLink<Component> deathMessage;
     private final Collection<Item> drops;

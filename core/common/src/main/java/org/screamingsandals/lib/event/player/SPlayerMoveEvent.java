@@ -12,7 +12,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
-public class SPlayerMoveEvent extends CancellableAbstractEvent {
+public class SPlayerMoveEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ObjectLink<LocationHolder> currentLocation; // mutable in bukkit
     private final ObjectLink<LocationHolder> newLocation;

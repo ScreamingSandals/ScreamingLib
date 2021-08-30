@@ -13,7 +13,7 @@ import org.screamingsandals.lib.utils.ObjectLink;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
-public class SPlayerLeaveEvent extends AbstractEvent {
+public class SPlayerLeaveEvent extends AbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ObjectLink<@Nullable Component> leaveMessage;
 

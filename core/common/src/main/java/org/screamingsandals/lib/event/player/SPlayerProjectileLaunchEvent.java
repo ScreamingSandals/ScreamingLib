@@ -7,7 +7,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
-public class SPlayerProjectileLaunchEvent extends SProjectileLaunchEvent {
+public class SPlayerProjectileLaunchEvent extends SProjectileLaunchEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
 
     public SPlayerProjectileLaunchEvent(ImmutableObjectLink<PlayerWrapper> player, ImmutableObjectLink<EntityBasic> projectile) {

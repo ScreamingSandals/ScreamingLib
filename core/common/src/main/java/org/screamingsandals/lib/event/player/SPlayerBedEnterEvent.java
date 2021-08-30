@@ -12,7 +12,7 @@ import org.screamingsandals.lib.block.BlockHolder;
 @EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 @Data
-public class SPlayerBedEnterEvent extends CancellableAbstractEvent {
+public class SPlayerBedEnterEvent extends CancellableAbstractEvent implements SPlayerEvent {
     /**
      * Represents the default possible outcomes of this event.
      */

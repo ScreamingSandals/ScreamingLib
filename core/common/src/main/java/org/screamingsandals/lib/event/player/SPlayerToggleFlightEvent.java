@@ -10,7 +10,7 @@ import org.screamingsandals.lib.utils.ImmutableObjectLink;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerToggleFlightEvent extends CancellableAbstractEvent {
+public class SPlayerToggleFlightEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<Boolean> flying;
 

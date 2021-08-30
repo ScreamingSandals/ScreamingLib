@@ -10,7 +10,7 @@ import org.screamingsandals.lib.utils.ImmutableObjectLink;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Data
-public class SPlayerLevelChangeEvent extends AbstractEvent {
+public class SPlayerLevelChangeEvent extends AbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ImmutableObjectLink<Integer> oldLevel;
     private final ImmutableObjectLink<Integer> newLevel;

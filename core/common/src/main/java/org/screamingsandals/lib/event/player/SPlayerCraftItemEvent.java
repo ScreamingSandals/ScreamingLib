@@ -13,7 +13,7 @@ import org.screamingsandals.lib.utils.*;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
-public class SPlayerCraftItemEvent extends CancellableAbstractEvent {
+public class SPlayerCraftItemEvent extends CancellableAbstractEvent implements SPlayerEvent {
     private final ImmutableObjectLink<PlayerWrapper> player;
     private final ObjectLink<Item> currentItem;
     private final ImmutableObjectLink<Container> clickedInventoryContainer;
