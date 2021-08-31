@@ -43,13 +43,6 @@ public interface NPC extends TouchableVisual<NPC> {
 
     /**
      *
-     * @return current location of the NPC
-     */
-    @Nullable
-    LocationHolder getLocation();
-
-    /**
-     *
      * @return UUID of the NPC
      */
     @NotNull

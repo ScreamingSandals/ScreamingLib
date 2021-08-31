@@ -53,7 +53,7 @@ public class BukkitNPCManager extends NPCManager {
         final var player = event.getPlayer();
 
         getActiveNPCS().values().forEach(npc -> {
-            if (npc.isShown() && npc.shouldLookAtPlayer() && npc.getViewers().contains(player) && player.getLocation().getWorld().equals(Objects.requireNonNull(npc.getLocation()).getWorld())) {
+            if (npc.isShown() && npc.shouldLookAtPlayer() && npc.getViewers().contains(player) && player.getLocation().getWorld().equals(npc.getLocation().getWorld())) {
                 npc.lookAtPlayer(event.getNewLocation(), player);
             }
         });
