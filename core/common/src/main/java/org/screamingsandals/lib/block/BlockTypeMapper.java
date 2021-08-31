@@ -1,15 +1,20 @@
 package org.screamingsandals.lib.block;
 
+import lombok.Getter;
 import org.screamingsandals.lib.ItemBlockIdsRemapper;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
+import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.*;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 @AbstractService
@@ -18,6 +23,8 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?<blockState>:\\d*|\\[[^]]*])?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
     protected BidirectionalConverter<BlockTypeHolder> blockTypeConverter = BidirectionalConverter.<BlockTypeHolder>build()
             .registerP2W(BlockTypeHolder.class, i -> i);
+    @Getter
+    protected final Map<Predicate<NamespacedMappingKey>, Pair<Function<Byte, Map<String, String>>, Function<Map<String, String>, Byte>>> blockDataTranslators = new HashMap<>();
 
     private static BlockTypeMapper blockTypeMapper;
 
@@ -57,14 +64,42 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
                         // blockState don't have to be number
                         var blockState = matcher.group("blockState");
                         if (blockState.startsWith("[") && blockState.startsWith("]")) {
-                            var map = blockTypeMapper.getDataFromString(blockState);
-                            if (map.containsKey("legacyData") && map.size() == 1) {
+                            var map = blockTypeMapper.getDataFromString(blockState.toLowerCase());
+                            if (map.containsKey("legacy_data") && map.size() == 1) {
                                 try {
-                                    data = Integer.parseInt(map.get("legacyData"));
+                                    data = Integer.parseInt(map.get("legacy_data"));
                                 } catch (NumberFormatException ignored2) {}
                             } else {
                                 flatteningData = map;
                             }
+                        }
+                    }
+
+                    if (flatteningData != null && blockTypeMapper.isLegacy()) {
+                        final var finalFlatteningData = flatteningData;
+                        var newData = blockTypeMapper.blockDataTranslators.entrySet()
+                                .stream()
+                                .filter(predicatePairEntry -> predicatePairEntry.getKey().test(namespaced))
+                                .findFirst()
+                                .map(predicatePairEntry -> predicatePairEntry.getValue().second().apply(finalFlatteningData))
+                                .orElse(null);
+
+                        if (newData != null) {
+                            flatteningData = null;
+                            data = newData.intValue();
+                        }
+                    } else if (data != null && !blockTypeMapper.isLegacy()) {
+                        final var finalData = data;
+                        var newData = blockTypeMapper.blockDataTranslators.entrySet()
+                                .stream()
+                                .filter(predicatePairEntry -> predicatePairEntry.getKey().test(namespaced))
+                                .findFirst()
+                                .map(predicatePairEntry -> predicatePairEntry.getValue().first().apply(finalData.byteValue()))
+                                .orElse(null);
+
+                        if (newData != null) {
+                            data = null;
+                            flatteningData = newData;
                         }
                     }
 
@@ -78,7 +113,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
                             return Optional.of(holder.withLegacyData(data.byteValue()));
                         }
                     } else if (flatteningData != null) {
-                        var namespacedFlattening = ComplexMappingKey.of(namespaced, StringMappingKey.of(matcher.group("blockState")));
+                        var namespacedFlattening = ComplexMappingKey.of(namespaced, StringMapMappingKey.of(flatteningData));
 
                         if (blockTypeMapper.mapping.containsKey(namespacedFlattening)) {
                             return Optional.of(blockTypeMapper.mapping.get(namespacedFlattening));
@@ -148,4 +183,6 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
     protected abstract Map<String, String> getDataFromString(String data);
 
     public abstract String getStateDataFromMap(Map<String, String> map);
+
+    protected abstract boolean isLegacy();
 }

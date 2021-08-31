@@ -1,6 +1,7 @@
 package org.screamingsandals.lib;
 
 import lombok.RequiredArgsConstructor;
+import org.screamingsandals.lib.block.BlockDataTranslatorBuilder;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.item.ItemTypeHolder;
@@ -8,10 +9,7 @@ import org.screamingsandals.lib.item.ItemTypeMapper;
 import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
-import org.screamingsandals.lib.utils.key.ComplexMappingKey;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
-import org.screamingsandals.lib.utils.key.NumericMappingKey;
-import org.screamingsandals.lib.utils.key.StringMappingKey;
+import org.screamingsandals.lib.utils.key.*;
 
 import java.util.*;
 import java.util.function.Function;
@@ -204,7 +202,7 @@ public abstract class ItemBlockIdsRemapper {
         //f2lBlock("WATER", 9, "STATIONARY_WATER"); // bukkit mapping collision
         f2lBlock("LAVA", "FLOWING_LAVA", 10, "LAVA");
         //f2lBlock("LAVA", 11, "STATIONARY_LAVA"); // bukkit mapping collision
-        for (int i = 1; i < 15; i++) {
+        for (int i = 1; i <= 15; i++) {
             f2lBlock("WATER", Map.of("level", String.valueOf(i)), "FLOWING_WATER", 10, i, "WATER");
             f2lBlock("LAVA", Map.of("level", String.valueOf(i)), "FLOWING_LAVA", 10, i, "LAVA");
         }
@@ -251,34 +249,81 @@ public abstract class ItemBlockIdsRemapper {
         f2l("GLASS", 20);
         f2l("LAPIS_ORE", 21);
         f2l("LAPIS_BLOCK", 22);
+
+        var faced = new BlockDataTranslatorBuilder()
+                .lowerBitValueSet("facing", 0b0111, Map.of(
+                        0, "down",
+                        1, "up",
+                        2, "north",
+                        3, "south",
+                        4, "west",
+                        5, "east"
+                ), "north")
+                .maskedBoolean("triggered", 0x8)
+                .build();
+
         f2l("DISPENSER", 23);
+        blockTypeMapper.getBlockDataTranslators().put(mappingKey -> mappingKey.is("DISPENSER"), faced);
+
         f2l("SANDSTONE", 24);
         f2l("CHISELED_SANDSTONE", "SANDSTONE", 24, 1);
         f2l("CUT_SANDSTONE", "SANDSTONE", 24, 2);
 
         f2l("NOTE_BLOCK", 25, "NOTEBLOCK");
 
-        // TODO: also set default values
-        f2lColoredToNonColoredBlock("BED", "BED_BLOCK", 26, 2);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "east"), "BED_BLOCK", 26, 3);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "south"), "BED_BLOCK", 26, 0);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "west"), "BED_BLOCK", 26, 1);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "north", "occupied", "true"),"BED_BLOCK", 26, 6);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "east", "occupied", "true"), "BED_BLOCK", 26, 7);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "south", "occupied", "true"), "BED_BLOCK", 26, 4);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "west", "occupied", "true"), "BED_BLOCK", 26, 5);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "north", "part", "head"),"BED_BLOCK", 26, 10);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "east", "part", "head"), "BED_BLOCK", 26, 11);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "south", "part", "head"), "BED_BLOCK", 26, 8);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "west", "part", "head"), "BED_BLOCK", 26, 9);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "north", "part", "head", "occupied", "true"),"BED_BLOCK", 26, 14);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "east", "part", "head", "occupied", "true"), "BED_BLOCK", 26, 15);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "south", "part", "head", "occupied", "true"), "BED_BLOCK", 26, 12);
-        f2lColoredToNonColoredBlock("BED", Map.of("facing", "west", "part", "head", "occupied", "true"), "BED_BLOCK", 26, 13);
+        f2lColoredToNonColoredBlock("BED", "BED",26, "BED_BLOCK");
+        blockTypeMapper.getBlockDataTranslators().put(mappingKey -> mappingKey.is("BED"), new BlockDataTranslatorBuilder()
+                        .lowerBitValueSet("facing", 0b11, Map.of(
+                                0, "south",
+                                1, "west",
+                                2, "north",
+                                3, "east"
+                        ), "north")
+                        .maskedBoolean("occupied", 0x4)
+                        .maskedBoolean("part", 0x8, "head", "foot")
+                .build());
 
+        var redstoneRails = new BlockDataTranslatorBuilder()
+                .lowerBitValueSet("shape", 0b111, Map.of(
+                        0, "north_south",
+                        1, "east_west",
+                        2, "ascending_east",
+                        3, "ascending_west",
+                        4, "ascending_north",
+                        5, "ascending_south"
+                ), "north_south")
+                .maskedBoolean("powered", 0x8)
+                .build();
         f2l("POWERED_RAIL", 27, "GOLDEN_RAIL");
+        blockTypeMapper.getBlockDataTranslators().put(k -> k.is("POWERED_RAIL", "GOLDEN_RAIL", "DETECTOR_RAIL", "ACTIVATOR_RAIL"), redstoneRails);
         f2l("DETECTOR_RAIL", 28);
+
+        var piston = new BlockDataTranslatorBuilder()
+                .lowerBitValueSet("facing", 0b0111, Map.of(
+                        0, "down",
+                        1, "up",
+                        2, "north",
+                        3, "south",
+                        4, "west",
+                        5, "east"
+                ), "north")
+                .maskedBoolean("extended", 0x8)
+                .build();
+
+        var pistonExtension = new BlockDataTranslatorBuilder()
+                .lowerBitValueSet("facing", 0b0111, Map.of(
+                        0, "down",
+                        1, "up",
+                        2, "north",
+                        3, "south",
+                        4, "west",
+                        5, "east"
+                ), "north")
+                .maskedBoolean("type", 0x8, "sticky", "normal")
+                .build();
+
         f2l("STICKY_PISTON", 29, "PISTON_STICKY_BASE");
+        blockTypeMapper.getBlockDataTranslators().put(k -> k.is("STICKY_PISTON", "PISTON_STICKY_BASE", "PISTON", "PISTON_BASE"), piston);
         f2l("COBWEB", "WEB", 30);
         f2l("DEAD_BUSH", 32, "DEADBUSH");
         f2l("DEAD_BUSH", "LONG_GRASS", 31, "TALLGRASS"); // shrub == dead_bush but on grass
@@ -287,6 +332,7 @@ public abstract class ItemBlockIdsRemapper {
         f2l("DEAD_BUSH", "LONG_GRASS", 31, 3, "TALLGRASS"); // another shrub == dead_bush?? wtf??
         f2l("PISTON", 33, "PISTON_BASE");
         f2lBlock("PISTON_HEAD", 34, "PISTON_EXTENSION"); // TODO: bukkit mapping collision
+        blockTypeMapper.getBlockDataTranslators().put(k -> k.is("PISTON_HEAD", "PISTON_EXTENSION", "MOVING_PISTON", "PISTON_MOVING_PIECE"), pistonExtension);
         f2lColored("WOOL", 35);
         f2lBlock("MOVING_PISTON", "PISTON_EXTENSION", 36, 0, "PISTON_MOVING_PIECE"); // TODO: bukkit mapping collision
         f2l("DANDELION", "YELLOW_FLOWER", 37, 0);
@@ -301,43 +347,108 @@ public abstract class ItemBlockIdsRemapper {
         f2l("PINK_TULIP", "RED_FLOWER", 38, 7, "RED_ROSE");
         f2l("OXEYE_DAISY", "RED_FLOWER", 38, 8, "RED_ROSE");
 
-        f2l("BROWN_MUSHROOM", 39);
+        f2l("BROWN_MUSHROOM", 39); // TODO: map block state of this weird block
         f2l("RED_MUSHROOM", 40);
         f2l("GOLD_BLOCK", 41);
         f2l("IRON_BLOCK", 42);
 
-        //f2l("", "DOUBLE_STONE_SLAB", 43, 0, "DOUBLE_STEP"); // TODO: double slabs
-
         f2l("SMOOTH_STONE_SLAB", "STONE_SLAB", 44, 0, "STEP");
+        f2lBlock("SMOOTH_STONE_SLAB", Map.of("type", "top"), "STONE_SLAB", 44, 8, "STEP");
+        f2lBlock("SMOOTH_STONE_SLAB", Map.of("type", "double"), "DOUBLE_STONE_SLAB", 43, 0, "DOUBLE_STEP");
         f2l("SANDSTONE_SLAB", "STONE_SLAB", 44, 1, "STEP");
+        f2lBlock("SANDSTONE_SLAB", Map.of("type", "top"), "STONE_SLAB", 44, 9, "STEP");
+        f2lBlock("SANDSTONE_SLAB", Map.of("type", "double"), "DOUBLE_STONE_SLAB", 43, 1, "DOUBLE_STEP");
         f2l("PETRIFIED_OAK_SLAB", "STONE_SLAB", 44, 2, "STEP");
+        f2lBlock("PETRIFIED_OAK_SLAB", Map.of("type", "top"), "STONE_SLAB", 44, 10, "STEP");
+        f2lBlock("PETRIFIED_OAK_SLAB", Map.of("type", "double"), "DOUBLE_STONE_SLAB", 43, 2, "DOUBLE_STEP");
         f2l("COBBLESTONE_SLAB", "STONE_SLAB", 44, 3, "STEP");
+        f2lBlock("COBBLESTONE_SLAB", Map.of("type", "top"), "STONE_SLAB", 44, 11, "STEP");
+        f2lBlock("COBBLESTONE_SLAB", Map.of("type", "double"), "DOUBLE_STONE_SLAB", 43, 3, "DOUBLE_STEP");
         f2l("BRICK_SLAB", "STONE_SLAB", 44, 4, "STEP");
+        f2lBlock("BRICK_SLAB", Map.of("type", "top"), "STONE_SLAB", 44, 12, "STEP");
+        f2lBlock("BRICK_SLAB", Map.of("type", "double"), "DOUBLE_STONE_SLAB", 43, 4, "DOUBLE_STEP");
         f2l("STONE_BRICK_SLAB", "STONE_SLAB", 44, 5, "STEP");
+        f2lBlock("STONE_BRICK_SLAB", Map.of("type", "top"), "STONE_SLAB", 44, 13, "STEP");
+        f2lBlock("STONE_BRICK_SLAB", Map.of("type", "double"), "DOUBLE_STONE_SLAB", 43, 5, "DOUBLE_STEP");
         f2l("NETHER_BRICK_SLAB", "STONE_SLAB", 44, 6, "STEP");
+        f2lBlock("NETHER_BRICK_SLAB", Map.of("type", "top"), "STONE_SLAB", 44, 14, "STEP");
+        f2lBlock("NETHER_BRICK_SLAB", Map.of("type", "double"), "DOUBLE_STONE_SLAB", 43, 6, "DOUBLE_STEP");
         f2l("QUARTZ_SLAB", "STONE_SLAB", 44, 7, "STEP");
+        f2lBlock("QUARTZ_SLAB", Map.of("type", "top"), "STONE_SLAB", 44, 15, "STEP");
+        f2lBlock("QUARTZ_SLAB", Map.of("type", "double"), "DOUBLE_STONE_SLAB", 43, 7, "DOUBLE_STEP");
 
         f2l("BRICKS", "BRICK_BLOCK", 45, "BRICK");
         f2l("TNT", 46);
         f2l("BOOKSHELF", 47);
         f2l("MOSSY_COBBLESTONE", 48);
         f2l("OBSIDIAN", 49);
-        f2l("TORCH", 50);
-        // flattening WALL_TORCH // TODO: block state
+        f2lItem("TORCH", 50);
+        f2lBlock("WALL_TORCH", Map.of("facing", "east"), "TORCH", 50, 1);
+        f2lBlock("WALL_TORCH", Map.of("facing", "west"),"TORCH", 50, 2);
+        f2lBlock("WALL_TORCH", Map.of("facing", "south"), "TORCH", 50, 3);
+        f2lBlock("WALL_TORCH", "TORCH", 50, 4); // north, default one
+        f2lBlock("TORCH", "TORCH", 50, 5);
         f2lBlock("FIRE", 51);
+        for (int i = 1; i <= 15; i++) {
+            f2lBlock("FIRE", Map.of("age", String.valueOf(i)), 51, i);
+        }
         f2l("SPAWNER", "MOB_SPAWNER", 52);
+
+        var stairs = new BlockDataTranslatorBuilder()
+                .lowerBitValueSet("facing", 0b11, Map.of(
+                        0, "east",
+                        1, "west",
+                        2, "south",
+                        3, "north"
+                ), "north")
+                .maskedBoolean("half", 0x4, "top", "bottom")
+                .build();
         f2l("OAK_STAIRS", "WOOD_STAIRS", 53);
-        f2l("CHEST", 54);
+        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase().endsWith("_STAIRS"), stairs);
+        f2lItem("CHEST", 54);
+        f2lBlock("CHEST", "CHEST", 54, 2); // north, default value
+        f2lBlock("CHEST", Map.of("facing", "south"), 54, 3);
+        f2lBlock("CHEST", Map.of("facing", "west"), 54, 4);
+        f2lBlock("CHEST", Map.of("facing", "east"), 54, 5);
         f2lBlock("REDSTONE_WIRE", 55);
+        for (int i = 1; i <= 15; i++) {
+            f2lBlock("REDSTONE_WIRE", Map.of("power", String.valueOf(i)), 55, i);
+        }
         f2l("DIAMOND_ORE", 56);
         f2l("DIAMOND_BLOCK", 57);
         f2l("CRAFTING_TABLE", 58, "WORKBENCH");
         f2lBlock("WHEAT", 59, "CROPS");
         f2l("FARMLAND", 60, "SOIL");
-        f2l("FURNACE", 61);
-        //f2l("", "LIT_FURNACE", 62, 0, "BURNING_FURNACE"); // TODO: block state
+        for (int i = 1; i <= 7; i++) {
+            f2lBlock("WHEAT", Map.of("age", String.valueOf(i)), 59, i, "CROPS");
+            f2lBlock("FARMLAND", Map.of("moisture", String.valueOf(i)), 60, i, "SOIL");
+        }
+        f2lItem("FURNACE", 61);
+        f2lBlock("FURNACE", "FURNACE", 61, 2); // north, default value
+        f2lBlock("FURNACE", Map.of("facing", "south"), 61, 3);
+        f2lBlock("FURNACE", Map.of("facing", "west"), 61, 4);
+        f2lBlock("FURNACE", Map.of("facing", "east"), 61, 5);
+        f2lBlock("LIT_FURNACE", Map.of("lit", "true"), 62, 2, "BURNING_FURNACE"); // north, default value
+        f2lBlock("LIT_FURNACE", Map.of("lit", "true", "facing", "north"), 62, 2, "BURNING_FURNACE");
+        f2lBlock("LIT_FURNACE", Map.of("lit", "true", "facing", "south"), 62, 3, "BURNING_FURNACE");
+        f2lBlock("LIT_FURNACE", Map.of("lit", "true", "facing", "west"), 62, 4, "BURNING_FURNACE");
+        f2lBlock("LIT_FURNACE", Map.of("lit", "true", "facing", "east"), 62, 5, "BURNING_FURNACE");
         f2lBlock("OAK_SIGN", "STANDING_SIGN", 63, "SIGN_POST");
+        for (int i = 1; i <= 15; i++) {
+            f2lBlock("OAK_SIGN", Map.of("rotation", String.valueOf(i)), "STANDING_SIGN", 63, i, "SIGN_POST");
+        }
+        var lowerDoor = new BlockDataTranslatorBuilder()
+                .lowerBitValueSet("facing", 0b11, Map.of(
+                        0, "east",
+                        1, "south",
+                        2, "west",
+                        3, "north"
+                ), "north")
+                .maskedBoolean("open", 0x4)
+                .build();
         f2lBlock("OAK_DOOR", "WOODEN_DOOR", 64);
+        // TODO: this is retarded block
+        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase().endsWith("_DOOR"), lowerDoor);
         f2l("LADDER", 65);
         f2l("RAIL", 66, "RAILS");
         f2l("COBBLESTONE_STAIRS", 67, "STONE_STAIRS");
@@ -1253,7 +1364,7 @@ public abstract class ItemBlockIdsRemapper {
         var legacyMaterialNamespaced = NamespacedMappingKey.of(legacyMaterial);
         var alternativeLegacyNamespaced =
                 alternativeLegacyName != null && !alternativeLegacyName.equalsIgnoreCase(legacyMaterial) ? NamespacedMappingKey.of(alternativeLegacyName) : null;
-        var stateNamespaced = StringMappingKey.of(blockTypeMapper.getStateDataFromMap(state));
+        var stateNamespaced = StringMapMappingKey.of(state);
         var completeFlatteningMaterialNamespaced = ComplexMappingKey.of(flatteningMaterialNamespaced, stateNamespaced);
 
         var mapping = blockTypeMapper.getUNSAFE_mapping();

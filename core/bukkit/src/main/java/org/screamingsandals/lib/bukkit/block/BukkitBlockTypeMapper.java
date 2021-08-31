@@ -69,6 +69,11 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
         return builder.toString();
     }
 
+    @Override
+    protected boolean isLegacy() {
+        return !Version.isVersion(1, 13);
+    }
+
     protected String getDataFromMap(BlockTypeHolder material) {
         final var builder = new StringBuilder("minecraft:" + material.platformName().toLowerCase());
         final var data = material.flatteningData();
