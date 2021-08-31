@@ -18,6 +18,8 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.visuals.VisualsTouchListener;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
+
+import java.util.Objects;
 import java.util.UUID;
 
 @Service(dependsOn = {
@@ -37,11 +39,12 @@ public class BukkitNPCManager extends NPCManager {
     protected BukkitNPCManager(Plugin plugin, Controllable controllable) {
         super(controllable);
         controllable.child().postEnable(() -> {
-            EventManager.getDefaultEventManager().register(SPlayerMoveEvent.class, this::onPlayerMove);
+            // EventManager.getDefaultEventManager().register(SPlayerMoveEvent.class, this::onPlayerMove);
             new VisualsTouchListener<>(BukkitNPCManager.this, plugin);
         });
     }
 
+    @OnEvent
     public void onPlayerMove(SPlayerMoveEvent event) {
         if (getActiveNPCS().isEmpty()) {
             return;
@@ -50,7 +53,7 @@ public class BukkitNPCManager extends NPCManager {
         final var player = event.getPlayer();
 
         getActiveNPCS().values().forEach(npc -> {
-            if (npc.isShown() && npc.shouldLookAtPlayer() && npc.getViewers().contains(player)) {
+            if (npc.isShown() && npc.shouldLookAtPlayer() && npc.getViewers().contains(player) && player.getLocation().getWorld().equals(npc.getLocation().getWorld())) {
                 npc.lookAtPlayer(event.getNewLocation(), player);
             }
         });
