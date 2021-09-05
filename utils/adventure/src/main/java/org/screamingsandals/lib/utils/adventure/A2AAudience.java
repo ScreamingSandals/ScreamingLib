@@ -10,10 +10,12 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.sound.SoundStop;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.TitlePart;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 @RequiredArgsConstructor
+// TODO: Pointers
 public final class A2AAudience implements Audience {
     private final Object platformAudience;
 
@@ -84,6 +86,17 @@ public final class A2AAudience implements Audience {
     }
 
     @Override
+    public <T> void sendTitlePart(@NotNull TitlePart<T> part, @NotNull T value) {
+        if (platformAudience instanceof Audience) {
+            ((Audience) platformAudience).sendTitlePart(part, value);
+            return;
+        }
+        AdventureUtils
+                .get(platformAudience, "sendTitlePart", TitlePart.class, Object.class)
+                .invoke(part, value);
+    }
+
+    @Override
     public void clearTitle() {
         if (platformAudience instanceof Audience) {
             ((Audience) platformAudience).clearTitle();
@@ -107,7 +120,9 @@ public final class A2AAudience implements Audience {
             ((Audience) platformAudience).showBossBar(bar);
             return;
         }
-        // it's audience from platform
+        AdventureUtils
+                .get(platformAudience, "showBossBar", BossBar.class)
+                .invoke(bar);
     }
 
     @Override
@@ -116,7 +131,9 @@ public final class A2AAudience implements Audience {
             ((Audience) platformAudience).hideBossBar(bar);
             return;
         }
-        // it's audience from platform
+        AdventureUtils
+                .get(platformAudience, "hideBossBar", BossBar.class)
+                .invoke(bar);
     }
 
     @Override

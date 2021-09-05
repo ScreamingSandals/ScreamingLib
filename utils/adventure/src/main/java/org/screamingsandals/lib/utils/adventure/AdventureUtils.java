@@ -10,6 +10,7 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.sound.SoundStop;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.TitlePart;
 import org.screamingsandals.lib.utils.reflect.InstanceMethod;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -37,6 +38,8 @@ public class AdventureUtils {
                 types[i] = TitleUtils.NATIVE_TIMES_CLASS;
             } else if (Title.class.isAssignableFrom(types[i])) {
                 types[i] = TitleUtils.NATIVE_TITLE_CLASS;
+            } else if (TitlePart.class.isAssignableFrom(types[i])) {
+                types[i] = TitleUtils.NATIVE_TITLE_PART_CLASS;
             } else if (Book.class.isAssignableFrom(types[i])) {
                 types[i] = BookUtils.NATIVE_BOOK_CLASS;
             } else if (Identity.class.isAssignableFrom(types[i])) {
@@ -74,6 +77,8 @@ public class AdventureUtils {
                             result[i] = TitleUtils.timesToPlatform((Title.Times) parameters[i]);
                         } else if (TitleUtils.NATIVE_TITLE_CLASS.isAssignableFrom(parameterTypes[i])) {
                             result[i] = TitleUtils.titleToPlatform((Title) parameters[i]);
+                        } else if (TitleUtils.NATIVE_TITLE_PART_CLASS.isAssignableFrom(parameterTypes[i])) {
+                            result[i] = TitleUtils.titlePartToPlatform((TitlePart<?>) parameters[i]);
                         } else if (BookUtils.NATIVE_BOOK_CLASS.isAssignableFrom(parameterTypes[i])) {
                             result[i] = BookUtils.bookToPlatform((Book) parameters[i]);
                         } else if (IdentityUtils.NATIVE_IDENTITY_CLASS.isAssignableFrom(parameterTypes[i])) {
@@ -108,6 +113,8 @@ public class AdventureUtils {
                         return TitleUtils.timesFromPlatform(o);
                     } else if (TitleUtils.NATIVE_TITLE_CLASS.isInstance(o)) {
                         return TitleUtils.titleFromPlatform(o);
+                    } else if (TitleUtils.NATIVE_TITLE_PART_CLASS.isInstance(o)) {
+                        return TitleUtils.titlePartFromPlatform(o);
                     } else if (BookUtils.NATIVE_BOOK_CLASS.isInstance(o)) {
                         return BookUtils.bookFromPlatform(o);
                     } else if (IdentityUtils.NATIVE_IDENTITY_CLASS.isInstance(o)) {
