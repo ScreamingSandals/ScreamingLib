@@ -2,7 +2,7 @@ package org.screamingsandals.lib.utils.adventure.wrapper;
 
 import lombok.Data;
 import net.kyori.adventure.identity.Identity;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.adventure.IdentityUtils;
 
@@ -12,7 +12,7 @@ import java.util.UUID;
 public final class IdentityWrapper implements Wrapper {
     private final Identity identity;
 
-    @NonNull
+    @NotNull
     public Identity asIdentity() {
         return identity;
     }

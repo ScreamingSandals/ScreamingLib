@@ -2,7 +2,7 @@ package org.screamingsandals.lib.utils.adventure.wrapper;
 
 import lombok.Data;
 import net.kyori.adventure.sound.Sound;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.adventure.SoundUtils;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 public final class SoundWrapper implements Wrapper {
     private final Sound sound;
 
-    @NonNull
+    @NotNull
     public Sound asSound() {
         return sound;
     }

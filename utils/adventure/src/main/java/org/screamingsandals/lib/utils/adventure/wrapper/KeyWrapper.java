@@ -2,7 +2,7 @@ package org.screamingsandals.lib.utils.adventure.wrapper;
 
 import lombok.Data;
 import net.kyori.adventure.key.Key;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.adventure.KeyUtils;
 
@@ -10,7 +10,7 @@ import org.screamingsandals.lib.utils.adventure.KeyUtils;
 public final class KeyWrapper implements Wrapper {
     private final Key key;
 
-    @NonNull
+    @NotNull
     public Key asKey() {
         return key;
     }

@@ -2,7 +2,7 @@ package org.screamingsandals.lib.utils.adventure.wrapper;
 
 import lombok.Data;
 import net.kyori.adventure.inventory.Book;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.adventure.BookUtils;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 public final class BookWrapper implements Wrapper {
     private final Book book;
 
-    @NonNull
+    @NotNull
     public Book asBook() {
         return book;
     }

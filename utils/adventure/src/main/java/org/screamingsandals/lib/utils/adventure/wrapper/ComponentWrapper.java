@@ -3,7 +3,7 @@ package org.screamingsandals.lib.utils.adventure.wrapper;
 import lombok.Data;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.adventure.ComponentUtils;
@@ -14,7 +14,7 @@ public final class ComponentWrapper implements ComponentLike, Wrapper {
     private final Component component;
 
     @Override
-    @NonNull
+    @NotNull
     public Component asComponent() {
         return component;
     }

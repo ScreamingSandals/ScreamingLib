@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.audience.ForwardingAudience;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.Wrapper;
@@ -43,7 +43,7 @@ public class ProxiedSenderWrapper implements Wrapper, ForwardingAudience.Single,
     }
 
     @Override
-    public @NonNull Audience audience() {
+    public @NotNull Audience audience() {
         return as(Audience.class);
     }
 

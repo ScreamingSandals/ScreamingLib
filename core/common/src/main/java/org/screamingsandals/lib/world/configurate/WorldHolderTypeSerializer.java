@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.world.configurate;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.spongepowered.configurate.ConfigurationNode;

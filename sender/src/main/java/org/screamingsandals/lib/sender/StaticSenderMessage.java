@@ -2,7 +2,6 @@ package org.screamingsandals.lib.sender;
 
 import lombok.Data;
 import net.kyori.adventure.text.Component;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,7 +15,7 @@ public class StaticSenderMessage implements SenderMessage {
     }
 
     @Override
-    public @NonNull Component asComponent() {
+    public @NotNull Component asComponent() {
         return component;
     }
 }

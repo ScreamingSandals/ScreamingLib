@@ -3,7 +3,7 @@ package org.screamingsandals.lib.player;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.audience.Audience;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.Wrapper;
@@ -41,7 +41,7 @@ public class SenderWrapper implements Wrapper, CommandSenderWrapper {
     }
 
     @Override
-    @NonNull
+    @NotNull
     public Audience audience() {
         return PlayerMapper.getAudience(this);
     }
