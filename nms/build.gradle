@@ -198,4 +198,7 @@ nmsGen {
 
     reqClass('net.minecraft.network.Connection')
         .reqField('channel')
+
+    reqClass('net.minecraft.core.Direction')
+        .reqMethod('fromYRot', double)
 }
