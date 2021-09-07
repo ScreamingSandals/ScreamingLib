@@ -22,6 +22,17 @@ public class Vector3D implements Cloneable {
         return this;
     }
 
+    public Vector3D subtract(double x, double y, double z) {
+        this.x -= x;
+        this.y -= y;
+        this.z -= z;
+        return this;
+    }
+
+    public double dot(@NotNull Vector3D vector) {
+        return x * vector.x + y * vector.y + z * vector.z;
+    }
+
     public double length() {
         return Math.sqrt(lengthSquared());
     }
