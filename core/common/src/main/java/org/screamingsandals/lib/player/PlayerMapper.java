@@ -370,6 +370,13 @@ public abstract class PlayerMapper {
         }
         playerMapper.setExp0(wrapper, exp);
     }
+
+    public static int getPing(PlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getPing0(wrapper);
+    }
     
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
@@ -453,4 +460,6 @@ public abstract class PlayerMapper {
     public abstract void setLevel0(PlayerWrapper player, int level);
 
     public abstract void setExp0(PlayerWrapper player, float exp);
+
+    public abstract int getPing0(PlayerWrapper player);
 }

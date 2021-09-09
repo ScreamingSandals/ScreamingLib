@@ -38,8 +38,7 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
      *
      * @return the player's target (the living entity the player is looking at)
      */
-    @Nullable
-    public EntityLiving getTarget() {
+    public Optional<EntityLiving> getTarget() {
         return getTarget(3);
     }
 
@@ -49,16 +48,19 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
      * @param radius the max distance that the target can be detected from
      * @return the player's target (the living entity the player is looking at)
      */
-    @Nullable
-    public EntityLiving getTarget(int radius) {
+    public Optional<EntityLiving> getTarget(int radius) {
         for (EntityLiving e : getLocation().getNearbyEntitiesByClass(EntityLiving.class, radius)) {
             final LocationHolder eye = asEntity().getEyeLocation();
             final double dot = e.getLocation().asVector().subtract(eye.asVector()).normalize().dot(eye.getFacingDirection());
             if (dot > 0.99D) {
-                return e;
+                return Optional.of(e);
             }
         }
-        return null;
+        return Optional.empty();
+    }
+
+    public int getPing() {
+        return PlayerMapper.getPing(this);
     }
 
     @NotNull
