@@ -59,6 +59,10 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         return Optional.empty();
     }
 
+    public int getPing() {
+        return PlayerMapper.getPing(this);
+    }
+
     @NotNull
     public Component getDisplayName() {
         return PlayerMapper.getDisplayName(this);
