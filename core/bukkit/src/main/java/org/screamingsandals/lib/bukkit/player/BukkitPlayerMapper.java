@@ -371,4 +371,14 @@ public class BukkitPlayerMapper extends PlayerMapper {
         final Object handle = ClassStorage.getHandle(player.as(Player.class));
         return (int) Objects.requireNonNullElse(Reflect.getField(handle, ServerPlayerAccessor.getFieldLatency()), 0);
     }
+
+    @Override
+    public boolean isSprinting0(PlayerWrapper player) {
+        return player.as(Player.class).isSprinting();
+    }
+
+    @Override
+    public void setSprinting0(PlayerWrapper player, boolean sprinting) {
+        player.as(Player.class).setSprinting(sprinting);
+    }
 }
