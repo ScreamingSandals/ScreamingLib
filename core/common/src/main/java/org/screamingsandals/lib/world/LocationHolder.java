@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.utils.MathUtils;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -12,6 +13,8 @@ import org.screamingsandals.lib.world.chunk.ChunkHolder;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -130,5 +133,19 @@ public class LocationHolder implements Wrapper, Serializable {
         location.setWorld(getWorld());
 
         return location;
+    }
+
+    public List<EntityBasic> getNearbyEntities(int radius) {
+        final int squaredRadius = MathUtils.square(radius);
+        return world.getEntities().stream()
+                .filter(e -> e.getLocation().getDistanceSquared(this) <= squaredRadius)
+                .collect(Collectors.toList());
+    }
+
+    public <T extends EntityBasic> List<T> getNearbyEntitiesByClass(Class<T> clazz, int radius) {
+        final int squaredRadius = MathUtils.square(radius);
+        return world.getEntitiesByClass(clazz).stream()
+                .filter(e -> e.getLocation().getDistanceSquared(this) <= squaredRadius)
+                .collect(Collectors.toList());
     }
 }

@@ -5,11 +5,12 @@ import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.EntityHuman;
-import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.Openable;
 import org.screamingsandals.lib.container.PlayerContainer;
+import org.screamingsandals.lib.entity.EntityHuman;
+import org.screamingsandals.lib.entity.EntityLiving;
+import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.entity.SEntityDamageEvent;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
@@ -30,6 +31,34 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
     public PlayerWrapper(String name, UUID uuid) {
         super(name, Type.PLAYER);
         this.uuid = uuid;
+    }
+
+    /**
+     * <p>Gets the player's target.</p>
+     *
+     * @return the player's target (the living entity the player is looking at)
+     */
+    @Nullable
+    public EntityLiving getTarget() {
+        return getTarget(3);
+    }
+
+    /**
+     * <p>Gets the player's target.</p>
+     *
+     * @param radius the max distance that the target can be detected from
+     * @return the player's target (the living entity the player is looking at)
+     */
+    @Nullable
+    public EntityLiving getTarget(int radius) {
+        for (EntityLiving e : getLocation().getNearbyEntitiesByClass(EntityLiving.class, radius)) {
+            final LocationHolder eye = asEntity().getEyeLocation();
+            final double dot = e.getLocation().asVector().subtract(eye.asVector()).normalize().dot(eye.getFacingDirection());
+            if (dot > 0.99D) {
+                return e;
+            }
+        }
+        return null;
     }
 
     @NotNull
