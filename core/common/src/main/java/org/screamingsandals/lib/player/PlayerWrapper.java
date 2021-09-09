@@ -59,6 +59,14 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         return Optional.empty();
     }
 
+    public boolean isSprinting() {
+        return PlayerMapper.isSprinting(this);
+    }
+
+    public void setSprinting(boolean sprinting) {
+        PlayerMapper.setSprinting(this, sprinting);
+    }
+
     public int getPing() {
         return PlayerMapper.getPing(this);
     }
