@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
-    private final Map<UUID, T> activeVisuals = new ConcurrentHashMap<>();
+    protected final Map<UUID, T> activeVisuals = new ConcurrentHashMap<>();
 
     protected AbstractVisualsManager(Controllable controllable) {
         controllable.postEnable(() -> {

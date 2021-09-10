@@ -44,17 +44,20 @@ public class BukkitNPCManager extends NPCManager {
     }
 
     public void onPlayerMove(SPlayerMoveEvent event) {
-        if (getActiveNPCS().isEmpty()) {
+        if (activeVisuals.isEmpty()) {
             return;
         }
 
         final var player = event.getPlayer();
-
-        getActiveNPCS().values().forEach(npc -> {
-            if (npc.isShown() && npc.shouldLookAtPlayer() && npc.getViewers().contains(player) && player.getLocation().getWorld().equals(npc.getLocation().getWorld())) {
-                npc.lookAtPlayer(event.getNewLocation(), player);
+        for (final var npc : activeVisuals.values()) {
+            if (!npc.isShown() || !npc.shouldLookAtPlayer()) {
+                return;
             }
-        });
+            if (!npc.getViewers().contains(player) || !player.getLocation().isWorldSame(npc.getLocation())) {
+                return;
+            }
+            npc.lookAtPlayer(event.getNewLocation(), player);
+        }
     }
 
     @Override

@@ -24,7 +24,7 @@ public class TaskBuilderImpl implements Tasker.TaskBuilder {
     private long delay;
     private long repeat;
 
-    private TaskerTime timeUnit;
+    private TaskerTime timeUnit = TaskerTime.TICKS;
 
     @Override
     public Tasker.TaskBuilder afterOneTick() {
