@@ -99,6 +99,7 @@ nmsGen {
 
     reqClass('net.minecraft.server.level.ServerPlayer')
             .reqField('connection')
+            .reqField('latency')
 
     reqClass('net.minecraft.network.protocol.game.ClientboundAnimatePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket')

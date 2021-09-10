@@ -13,11 +13,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.material.builder.ItemFactory;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.PlayerContainer;
+import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
@@ -32,10 +34,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -365,5 +364,21 @@ public class BukkitPlayerMapper extends PlayerMapper {
     @Override
     public void setExp0(PlayerWrapper player, float exp) {
         player.as(Player.class).setExp(exp);
+    }
+
+    @Override
+    public int getPing0(PlayerWrapper player) {
+        final Object handle = ClassStorage.getHandle(player.as(Player.class));
+        return (int) Objects.requireNonNullElse(Reflect.getField(handle, ServerPlayerAccessor.getFieldLatency()), 0);
+    }
+
+    @Override
+    public boolean isSprinting0(PlayerWrapper player) {
+        return player.as(Player.class).isSprinting();
+    }
+
+    @Override
+    public void setSprinting0(PlayerWrapper player, boolean sprinting) {
+        player.as(Player.class).setSprinting(sprinting);
     }
 }
