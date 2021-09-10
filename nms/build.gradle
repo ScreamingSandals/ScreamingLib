@@ -201,4 +201,9 @@ nmsGen {
 
     reqClass('net.minecraft.core.Direction')
         .reqMethod('fromYRot', double)
+
+    var ItemStack = reqClass('net.minecraft.world.item.ItemStack')
+    reqClass('net.minecraft.network.FriendlyByteBuf')
+        .reqMethod('writeVarInt', int)
+        .reqMethod('writeItem', ItemStack)
 }
