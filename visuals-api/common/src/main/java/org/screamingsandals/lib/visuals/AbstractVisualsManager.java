@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.visuals;
+
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
@@ -53,14 +53,18 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
             return;
         }
 
-        activeVisuals.forEach((key, visual) -> {
-            if (visual.getViewers().contains(event.getPlayer())) {
-                visual.removeViewer(event.getPlayer());
+        final var player = event.getPlayer();
+        final var iterator = activeVisuals.entrySet().iterator();
+        while (iterator.hasNext()) {
+            final var visual = iterator.next().getValue();
+            if (visual.getViewers().contains(player)) {
+                visual.removeViewer(player);
             }
+
             if (!visual.hasViewers()) {
-                removeVisual(visual);
+                iterator.remove();
             }
-        });
+        }
     }
 
     public void onMove(SPlayerMoveEvent event) {
@@ -68,34 +72,29 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
             return;
         }
 
-        activeVisuals.forEach((key, visual) -> {
-            try {
-                if (!visual.hasViewers()) {
-                    return;
-                }
+        final var player = event.getPlayer();
+        final var newLocation = event.getNewLocation();
+        final var oldLocation = event.getCurrentLocation();
 
-                final var player = event.getPlayer();
-                final var viewers = visual.getViewers();
-                final var visualLocation = visual.getLocation();
-                if (visualLocation == null) {
-                    return;
-                }
-
-                final var viewDistance = visual.getViewDistance();
-                if (viewers.contains(player)
-                        && visualLocation.getWorld().equals(player.getLocation().getWorld())) {
-                    if (event.getNewLocation().getDistanceSquared(visualLocation) < viewDistance
-                            && event.getCurrentLocation().getDistanceSquared(visualLocation) >= viewDistance) {
-                        visual.onViewerAdded(player, false);
-                    } else if (event.getNewLocation().getDistanceSquared(visualLocation) >= viewDistance
-                            && event.getCurrentLocation().getDistanceSquared(visualLocation) < viewDistance) {
-                        visual.onViewerRemoved(player, false);
-                    }
-                }
-            } catch (Throwable t) {
-                t.printStackTrace();
+        for (final var visual : activeVisuals.values()) {
+            if (!visual.hasViewers()) {
+                continue;
             }
-        });
+
+            final var visualLocation = visual.getLocation();
+            final var viewDistance = visual.getViewDistance();
+            if (!visual.getViewers().contains(player) || !visualLocation.isWorldSame(newLocation)) {
+                continue;
+            }
+
+            if (newLocation.isInRange(visualLocation, viewDistance) && oldLocation.outOfRange(visualLocation, viewDistance)) {
+                // add viewer if new location is in range of visual, and old location is out of range.
+                visual.onViewerAdded(player, false);
+            } else if (newLocation.outOfRange(visualLocation, viewDistance) && oldLocation.isInRange(visualLocation, viewDistance)) {
+                // remove viewer if new location is out of range of visual, and old location was in range.
+                visual.onViewerRemoved(player, false);
+            }
+        }
     }
 
     public void onRespawn(SPlayerRespawnEvent event) {
@@ -103,34 +102,30 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
             return;
         }
 
-        activeVisuals.forEach((key, visual) -> {
-            try {
-                if (!visual.hasViewers()) {
-                    return;
-                }
+        final var player = event.getPlayer();
+        final var respawnLocation = event.getLocation();
 
-                final var player = event.getPlayer();
-                final var viewers = visual.getViewers();
-                final var visualLocation = visual.getLocation();
-                if (visualLocation == null) {
-                    return;
-                }
-
-                final var viewDistance = visual.getViewDistance();
-                if (viewers.contains(player)
-                        && event.getLocation().getWorld().equals(visualLocation.getWorld())) {
-                    if (player.getLocation().getDistanceSquared(visualLocation) < viewDistance) {
-                        Tasker.build(() -> {
-                            if (player.isOnline()) {
-                                visual.onViewerAdded(player, false);
-                            }
-                        }).async().delay(1L, TaskerTime.SECONDS).start();
-                    }
-                }
-            } catch (Throwable t) {
-                t.printStackTrace();
+        for (final var visual : activeVisuals.values()) {
+            if (!visual.hasViewers()) {
+                continue;
             }
-        });
+
+            final var viewers = visual.getViewers();
+            final var visualLocation = visual.getLocation();
+            final var viewDistance = visual.getViewDistance();
+
+            if (!viewers.contains(player)) {
+                continue;
+            }
+
+            if (!respawnLocation.isWorldSame(visualLocation)) {
+                return;
+            }
+
+            if (respawnLocation.isInRange(visualLocation, viewDistance)) {
+                softAddViewer(visual, player, 20L);
+            }
+        }
     }
 
     public void onWorldChange(SPlayerWorldChangeEvent event) {
@@ -138,80 +133,91 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
             return;
         }
 
-        activeVisuals.forEach((key, visual) -> {
-            try {
-                if (!visual.hasViewers()) {
-                    return;
-                }
+        final var player = event.getPlayer();
+        final var from = event.getFrom();
 
-                final var player = event.getPlayer();
-                final var viewers = visual.getViewers();
-                final var visualLocation = visual.getLocation();
-                if (visualLocation == null) {
-                    return;
-                }
-
-                final var viewDistance = visual.getViewDistance();
-
-                if (viewers.contains(player) && player.getLocation().getWorld().equals(visualLocation.getWorld())
-                        && !event.getFrom().equals(visualLocation.getWorld())) {
-                    if (player.getLocation().getDistanceSquared(visualLocation) < viewDistance) {
-                        Tasker.build(() -> {
-                            if (player.isOnline()) {
-                                visual.onViewerAdded(player, false);
-                            }
-                        }).delay(1L, TaskerTime.SECONDS).async().start();
-                    }
-                }
-
-            } catch (Throwable t) {
-                t.printStackTrace();
+        for (final var visual : activeVisuals.values()) {
+            if (!visual.hasViewers()) {
+                continue;
             }
-        });
+
+            final var viewers = visual.getViewers();
+            final var visualLocation = visual.getLocation();
+            final var viewDistance = visual.getViewDistance();
+
+            if (!viewers.contains(player)) {
+                continue;
+            }
+
+            if (!player.getLocation().isWorldSame(visualLocation)) {
+                continue;
+            }
+
+            if (from.equals(visualLocation.getWorld())) {
+                continue;
+            }
+
+            if (player.getLocation().isInRange(visualLocation, viewDistance)) {
+                softAddViewer(visual, player, 1L);
+            }
+        }
     }
 
     public void onTeleport(SPlayerTeleportEvent event) {
-        if (activeVisuals.isEmpty()
-                || !event.getCurrentLocation().getWorld().equals(event.getNewLocation().getWorld())) {
+        if (activeVisuals.isEmpty()) {
             return;
         }
 
-        activeVisuals.forEach((key, visual) -> {
-            try {
-                if (!visual.hasViewers()) {
-                    return;
-                }
+        final var currentLocation = event.getCurrentLocation();
+        final var newLocation = event.getNewLocation();
 
-                final var player = event.getPlayer();
-                final var viewers = visual.getViewers();
-                final var visualLocation = visual.getLocation();
-                if (visualLocation == null) {
-                    return;
-                }
+        // SPlayerWorldChangeEvent handler will handle this.
+        if (!currentLocation.isWorldSame(newLocation)) {
+            return;
+        }
 
-                final var viewDistance = visual.getViewDistance();
-                if (viewers.contains(player)
-                        && visualLocation.getWorld().equals(player.getLocation().getWorld())) {
-                    if (event.getNewLocation().getDistanceSquared(visualLocation) < viewDistance
-                            && event.getCurrentLocation().getDistanceSquared(visualLocation) >= viewDistance) {
-                        Tasker.build(() -> {
-                            if (player.isOnline()) {
-                                visual.onViewerAdded(player, false);
-                            }
-                        }).async().delay(1L, TaskerTime.SECONDS).start();
-                    } else if (event.getNewLocation().getDistanceSquared(visualLocation) >= viewDistance
-                            && event.getCurrentLocation().getDistanceSquared(visualLocation) < viewDistance) {
-                        Tasker.build(() -> {
-                            if (player.isOnline()) {
-                                visual.onViewerRemoved(player, false);
-                            }
-                        }).async().delay(1L, TaskerTime.SECONDS).start();
-                    }
-                }
-            } catch (Throwable t) {
-                t.printStackTrace();
+        final var player = event.getPlayer();
+        for (final var visual : activeVisuals.values()) {
+            if (!visual.hasViewers()) {
+                continue;
             }
-        });
+
+            final var viewers = visual.getViewers();
+            if (!viewers.contains(player)) {
+                continue;
+            }
+
+            final var visualLocation = visual.getLocation();
+            if (!visualLocation.isWorldSame(player.getLocation())) {
+                continue;
+            }
+
+            final var viewDistance = visual.getViewDistance();
+
+            if (newLocation.isInRange(visualLocation, viewDistance) && currentLocation.outOfRange(visualLocation, viewDistance)) {
+                softAddViewer(visual, player, 20L);
+            } else if (newLocation.outOfRange(visualLocation, viewDistance) && currentLocation.isInRange(visualLocation, viewDistance)) {
+                softRemoveViewer(visual, player, 20L);
+            }
+        }
+    }
+
+    private void softAddViewer(T visual, PlayerWrapper player, long tickedDelay) {
+        Tasker.build(() -> {
+            if (!player.isOnline()) {
+                return;
+            }
+            visual.onViewerAdded(player, false);
+        }).async().delay(tickedDelay, TaskerTime.TICKS).start();
+    }
+
+    private void softRemoveViewer(T visual, PlayerWrapper player, long tickedDelay) {
+        Tasker.build(() -> {
+            if (!player.isOnline()) {
+                return;
+            }
+            visual.onViewerRemoved(player, false);
+        }).async().delay(tickedDelay, TaskerTime.TICKS).start();
     }
 
     public abstract void fireVisualTouchEvent(PlayerWrapper sender, T visual, Object packet);

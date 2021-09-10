@@ -148,4 +148,16 @@ public class LocationHolder implements Wrapper, Serializable {
                 .filter(e -> e.getLocation().getDistanceSquared(this) <= squaredRadius)
                 .collect(Collectors.toList());
     }
+
+    public boolean isWorldSame(LocationHolder holder) {
+        return getWorld().equals(holder.getWorld());
+    }
+
+    public boolean isInRange(LocationHolder holder, int distance) {
+        return getDistanceSquared(holder) < distance;
+    }
+
+    public boolean outOfRange(LocationHolder holder, int distance) {
+        return getDistanceSquared(holder) >= distance;
+    }
 }
