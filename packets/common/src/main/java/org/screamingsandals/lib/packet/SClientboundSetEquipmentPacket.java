@@ -36,7 +36,7 @@ public class SClientboundSetEquipmentPacket extends AbstractPacket {
                     if (writer.protocol() >= 49) {
                         writer.writeVarInt(writer.getEquipmentSlotId(next.getKey()));
                     } else {
-                        writer.writeShort((short) writer.getEquipmentSlotId(next.getKey()));
+                        writer.writeShort(writer.getEquipmentSlotId(next.getKey()));
                     }
                     writer.writeItem(next.getValue());
                     first = true;
