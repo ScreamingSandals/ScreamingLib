@@ -236,8 +236,7 @@ public abstract class PacketWriter extends OutputStream {
             if (protocol() < 351) {
                 writeShort((short) item.getMaterial().getDurability());
             }
-            write(0); // TODO: write nbt meta
-            //write(item.get()); write meta
+            writeNBTFromItem(item);
         }
     }
 
@@ -272,6 +271,11 @@ public abstract class PacketWriter extends OutputStream {
         }
 
         writeByte((byte) 0xff); // termination sequence
+    }
+
+    // Platform classes must override this method
+    public void writeNBTFromItem(Item item) {
+        write(0);
     }
 
     //public void writeNBT(String name, Object nbt) {
