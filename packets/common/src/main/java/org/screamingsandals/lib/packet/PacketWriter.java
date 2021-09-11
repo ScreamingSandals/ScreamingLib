@@ -42,7 +42,7 @@ public abstract class PacketWriter extends OutputStream {
         buffer.writeChar(c);
     }
 
-    public void writeShort(short s) {
+    public void writeShort(int s) {
         buffer.writeShort(s);
     }
 
@@ -204,15 +204,15 @@ public abstract class PacketWriter extends OutputStream {
     }
 
     public void writeMotion(Vector3D vector3D) {
-        writeShort((short) (vector3D.getX() * 8000));
-        writeShort((short) (vector3D.getY() * 8000));
-        writeShort((short) (vector3D.getZ() * 8000));
+        writeShort((int) (vector3D.getX() * 8000));
+        writeShort((int) (vector3D.getY() * 8000));
+        writeShort((int) (vector3D.getZ() * 8000));
     }
 
     public void writeMove(Vector3D vector3D) {
-        writeShort((short) (vector3D.getX() * 4096));
-        writeShort((short) (vector3D.getY() * 4096));
-        writeShort((short) (vector3D.getZ() * 4096));
+        writeShort((int) (vector3D.getX() * 4096));
+        writeShort((int) (vector3D.getY() * 4096));
+        writeShort((int) (vector3D.getZ() * 4096));
     }
 
     public void writeItem(Item item) {
@@ -220,7 +220,7 @@ public abstract class PacketWriter extends OutputStream {
             if (protocol() >= 402) {
                 writeBoolean(false);
             } else {
-                writeShort((short) -1);
+                writeShort(-1);
             }
         } else {
             if (protocol() >= 402) {
@@ -228,15 +228,14 @@ public abstract class PacketWriter extends OutputStream {
 
                 writeVarInt(getItemId(item.getMaterial()));
             } else {
-                writeShort((short) getItemId(item.getMaterial()));
+                writeShort(getItemId(item.getMaterial()));
             }
 
             write(item.getAmount());
             if (protocol() < 351) {
                 writeShort(item.getMaterial().durability());
             }
-            write(0); // TODO: write nbt meta
-            //write(item.get()); write meta
+            writeNBTFromItem(item);
         }
     }
 
@@ -271,6 +270,11 @@ public abstract class PacketWriter extends OutputStream {
         }
 
         writeByte((byte) 0xff); // termination sequence
+    }
+
+    // Platform classes must override this method
+    public void writeNBTFromItem(Item item) {
+        write(0);
     }
 
     //public void writeNBT(String name, Object nbt) {

@@ -99,6 +99,7 @@ nmsGen {
 
     reqClass('net.minecraft.server.level.ServerPlayer')
             .reqField('connection')
+            .reqField('latency')
 
     reqClass('net.minecraft.network.protocol.game.ClientboundAnimatePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket')
@@ -198,4 +199,15 @@ nmsGen {
 
     reqClass('net.minecraft.network.Connection')
         .reqField('channel')
+
+    reqClass('net.minecraft.core.Direction')
+        .reqMethod('fromYRot', double)
+
+    var CompoundTag = reqClass('net.minecraft.nbt.CompoundTag')
+    reqClass('net.minecraft.network.FriendlyByteBuf')
+        .reqMethod('writeNbt', CompoundTag)
+
+    reqClass('net.minecraft.world.item.ItemStack')
+        .reqMethod('copy')
+        .reqMethod('getTag')
 }

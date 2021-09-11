@@ -2,6 +2,7 @@ package org.screamingsandals.lib.utils.adventure;
 
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.TitlePart;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.time.Duration;
@@ -12,6 +13,8 @@ public class TitleUtils {
             = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "title", "Title"));
     public final Class<?> NATIVE_TIMES_CLASS
             = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "title", "Title$Times"));
+    public final Class<?> NATIVE_TITLE_PART_CLASS
+            = Reflect.getClassSafe(String.join(".", "net", "kyori", "adventure", "title", "TitlePart"));
 
     public Object timesToPlatform(Title.Times times) {
         if (NATIVE_TIMES_CLASS.isInstance(times)) {
@@ -63,6 +66,28 @@ public class TitleUtils {
                 ComponentUtils.componentFromPlatform(Reflect.fastInvoke(platformObject, "subtitle")),
                 timesFromPlatform(Reflect.fastInvoke(platformObject, "times"))
         );
+    }
+
+    public Object titlePartToPlatform(TitlePart<?> part) {
+        if (NATIVE_TITLE_PART_CLASS.isInstance(part)) {
+            return part;
+        }
+        return titlePartToPlatform(part, NATIVE_TITLE_PART_CLASS);
+    }
+
+    public Object titlePartToPlatform(TitlePart<?> part, Class<?> partClass) {
+        var name = part.toString();
+        name = name.substring(name.indexOf(".") + 1);
+        return Reflect.getField(partClass, name);
+    }
+
+    public TitlePart<?> titlePartFromPlatform(Object platformObject) {
+        if (platformObject instanceof TitlePart) {
+            return (TitlePart<?>) platformObject;
+        }
+        var name = platformObject.toString();
+        name = name.substring(name.indexOf(".") + 1);
+        return (TitlePart<?>) Reflect.getField(TitlePart.class, name);
     }
 
 }

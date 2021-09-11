@@ -2,13 +2,13 @@ package org.screamingsandals.lib.sender;
 
 import net.kyori.adventure.audience.ForwardingAudience;
 import net.kyori.adventure.title.Title;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.AdventureHelper;
 
 public interface SForwardingAudience extends ForwardingAudience {
     @ApiStatus.OverrideOnly
-    @NonNull
+    @NotNull
     Iterable<CommandSenderWrapper> audiences();
 
     default void sendMessage(String message) {

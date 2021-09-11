@@ -2,7 +2,7 @@ package org.screamingsandals.lib.utils.adventure.wrapper;
 
 import lombok.Data;
 import net.kyori.adventure.audience.MessageType;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.adventure.AdventureUtils;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -11,7 +11,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 public final class MessageTypeWrapper implements Wrapper {
     private final MessageType messageType;
 
-    @NonNull
+    @NotNull
     public MessageType asMessageType() {
         return messageType;
     }

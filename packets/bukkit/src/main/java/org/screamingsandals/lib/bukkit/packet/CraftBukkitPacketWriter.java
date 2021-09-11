@@ -5,12 +5,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.nms.accessors.BlockAccessor;
+import org.screamingsandals.lib.nms.accessors.FriendlyByteBufAccessor;
+import org.screamingsandals.lib.nms.accessors.ItemStackAccessor;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.vanilla.packet.VanillaPacketWriter;
 
@@ -44,5 +48,16 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
     @Override
     protected Object getMinecraftServerInstance() {
         return Reflect.fastInvoke(Bukkit.getServer(), "getServer");
+    }
+
+    @Override
+    public void writeNBTFromItem(Item item) {
+        final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(item.as(ItemStack.class)), ItemStackAccessor.getMethodCopy1());
+
+        // create temporary friendly ByteBuf instance that will write the NBT for us.
+        final var friendlyByteBuf = Reflect.constructor(FriendlyByteBufAccessor.getType(), ByteBuf.class).construct(getBuffer());
+
+        final var nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.getMethodGetTag1());
+        Reflect.fastInvoke(friendlyByteBuf, FriendlyByteBufAccessor.getMethodWriteNbt1(), nbtTag);
     }
 }

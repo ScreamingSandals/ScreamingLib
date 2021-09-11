@@ -10,15 +10,17 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.sound.SoundStop;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import net.kyori.adventure.title.TitlePart;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 @RequiredArgsConstructor
+// TODO: Pointers
 public final class A2AAudience implements Audience {
     private final Object platformAudience;
 
     @Override
-    public void sendMessage(final @NonNull Identity source, final @NonNull Component message, final @NonNull MessageType type) {
+    public void sendMessage(final @NotNull Identity source, final @NotNull Component message, final @NotNull MessageType type) {
         if (platformAudience instanceof Audience) {
             ((Audience) platformAudience).sendMessage(source, message, type);
             return;
@@ -29,7 +31,7 @@ public final class A2AAudience implements Audience {
     }
 
     @Override
-    public void sendActionBar(final @NonNull Component message) {
+    public void sendActionBar(final @NotNull Component message) {
         if (platformAudience instanceof Audience) {
             ((Audience) platformAudience).sendActionBar(message);
             return;
@@ -40,7 +42,7 @@ public final class A2AAudience implements Audience {
     }
 
     @Override
-    public void sendPlayerListHeader(final @NonNull Component header) {
+    public void sendPlayerListHeader(final @NotNull Component header) {
         if (platformAudience instanceof Audience) {
             ((Audience) platformAudience).sendPlayerListHeader(header);
             return;
@@ -51,7 +53,7 @@ public final class A2AAudience implements Audience {
     }
 
     @Override
-    public void sendPlayerListFooter(final @NonNull Component footer) {
+    public void sendPlayerListFooter(final @NotNull Component footer) {
         if (platformAudience instanceof Audience) {
             ((Audience) platformAudience).sendPlayerListFooter(footer);
             return;
@@ -62,7 +64,7 @@ public final class A2AAudience implements Audience {
     }
 
     @Override
-    public void sendPlayerListHeaderAndFooter(final @NonNull Component header, final @NonNull Component footer) {
+    public void sendPlayerListHeaderAndFooter(final @NotNull Component header, final @NotNull Component footer) {
         if (platformAudience instanceof Audience) {
             ((Audience) platformAudience).sendPlayerListHeaderAndFooter(header, footer);
             return;
@@ -73,7 +75,7 @@ public final class A2AAudience implements Audience {
     }
 
     @Override
-    public void showTitle(final @NonNull Title title) {
+    public void showTitle(final @NotNull Title title) {
         if (platformAudience instanceof Audience) {
             ((Audience) platformAudience).showTitle(title);
             return;
@@ -81,6 +83,17 @@ public final class A2AAudience implements Audience {
         AdventureUtils
                 .get(platformAudience, "showTitle", Title.class)
                 .invoke(title);
+    }
+
+    @Override
+    public <T> void sendTitlePart(@NotNull TitlePart<T> part, @NotNull T value) {
+        if (platformAudience instanceof Audience) {
+            ((Audience) platformAudience).sendTitlePart(part, value);
+            return;
+        }
+        AdventureUtils
+                .get(platformAudience, "sendTitlePart", TitlePart.class, Object.class)
+                .invoke(part, value);
     }
 
     @Override
@@ -102,25 +115,29 @@ public final class A2AAudience implements Audience {
     }
 
     @Override
-    public void showBossBar(final @NonNull BossBar bar) {
+    public void showBossBar(final @NotNull BossBar bar) {
         if (platformAudience instanceof Audience) {
             ((Audience) platformAudience).showBossBar(bar);
             return;
         }
-        // it's audience from platform
+        AdventureUtils
+                .get(platformAudience, "showBossBar", BossBar.class)
+                .invoke(bar);
     }
 
     @Override
-    public void hideBossBar(final @NonNull BossBar bar) {
+    public void hideBossBar(final @NotNull BossBar bar) {
         if (platformAudience instanceof Audience) {
             ((Audience) platformAudience).hideBossBar(bar);
             return;
         }
-        // it's audience from platform
+        AdventureUtils
+                .get(platformAudience, "hideBossBar", BossBar.class)
+                .invoke(bar);
     }
 
     @Override
-    public void playSound(final @NonNull Sound sound) {
+    public void playSound(final @NotNull Sound sound) {
         if (platformAudience instanceof Audience) {
             ((Audience) platformAudience).playSound(sound);
             return;
@@ -131,7 +148,7 @@ public final class A2AAudience implements Audience {
     }
 
     @Override
-    public void playSound(final @NonNull Sound sound, final double x, final double y, final double z) {
+    public void playSound(final @NotNull Sound sound, final double x, final double y, final double z) {
         if (platformAudience instanceof Audience) {
             ((Audience) platformAudience).playSound(sound, x, y, z);
             return;
@@ -142,7 +159,7 @@ public final class A2AAudience implements Audience {
     }
 
     @Override
-    public void stopSound(final @NonNull SoundStop stop) {
+    public void stopSound(final @NotNull SoundStop stop) {
         if (platformAudience instanceof Audience) {
             ((Audience) platformAudience).stopSound(stop);
             return;
@@ -153,7 +170,7 @@ public final class A2AAudience implements Audience {
     }
 
     @Override
-    public void openBook(final @NonNull Book book) {
+    public void openBook(final @NotNull Book book) {
         if (platformAudience instanceof Audience) {
             ((Audience) platformAudience).openBook(book);
             return;

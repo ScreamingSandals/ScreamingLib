@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.packet.SClientboundSetPlayerTeamPacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.SenderWrapper;
@@ -124,7 +124,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public @NonNull Iterable<? extends Audience> audiences() {
+    public @NotNull Iterable<? extends Audience> audiences() {
         return players();
     }
 

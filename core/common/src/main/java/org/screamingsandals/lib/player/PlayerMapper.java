@@ -370,6 +370,27 @@ public abstract class PlayerMapper {
         }
         playerMapper.setExp0(wrapper, exp);
     }
+
+    public static int getPing(PlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getPing0(wrapper);
+    }
+
+    public static boolean isSprinting(PlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.isSprinting0(wrapper);
+    }
+
+    public static void setSprinting(PlayerWrapper wrapper, boolean sprinting) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setSprinting0(wrapper, sprinting);
+    }
     
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
@@ -453,4 +474,10 @@ public abstract class PlayerMapper {
     public abstract void setLevel0(PlayerWrapper player, int level);
 
     public abstract void setExp0(PlayerWrapper player, float exp);
+
+    public abstract int getPing0(PlayerWrapper player);
+
+    public abstract boolean isSprinting0(PlayerWrapper player);
+
+    public abstract void setSprinting0(PlayerWrapper player, boolean sprinting);
 }

@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.bukkit.npc;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.SPlayerMoveEvent;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacket_i_ActionTypeAccessor;
@@ -18,6 +17,8 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.visuals.VisualsTouchListener;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
+
+import java.util.Objects;
 import java.util.UUID;
 
 @Service(dependsOn = {
@@ -43,17 +44,20 @@ public class BukkitNPCManager extends NPCManager {
     }
 
     public void onPlayerMove(SPlayerMoveEvent event) {
-        if (getActiveNPCS().isEmpty()) {
+        if (activeVisuals.isEmpty()) {
             return;
         }
 
         final var player = event.getPlayer();
-
-        getActiveNPCS().values().forEach(npc -> {
-            if (npc.isShown() && npc.shouldLookAtPlayer() && npc.getViewers().contains(player)) {
-                npc.lookAtPlayer(event.getNewLocation(), player);
+        for (final var npc : activeVisuals.values()) {
+            if (!npc.isShown() || !npc.shouldLookAtPlayer()) {
+                return;
             }
-        });
+            if (!npc.getViewers().contains(player) || !player.getLocation().isWorldSame(npc.getLocation())) {
+                return;
+            }
+            npc.lookAtPlayer(event.getNewLocation(), player);
+        }
     }
 
     @Override

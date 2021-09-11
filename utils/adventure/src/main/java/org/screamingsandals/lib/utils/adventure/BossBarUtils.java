@@ -3,7 +3,7 @@ package org.screamingsandals.lib.utils.adventure;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Set;
@@ -77,35 +77,35 @@ public class BossBarUtils {
         // Mirroring changes from the original to the transformed
         bossBar.addListener(new BossBar.Listener() {
             @Override
-            public void bossBarNameChanged(@NonNull BossBar bar, @NonNull Component oldName, @NonNull Component newName) {
+            public void bossBarNameChanged(@NotNull BossBar bar, @NotNull Component oldName, @NotNull Component newName) {
                 platformBossBar
                         .getMethod("name", componentClass)
                         .invoke(ComponentUtils.componentToPlatform(newName, componentSerializer));
             }
 
             @Override
-            public void bossBarProgressChanged(@NonNull BossBar bar, float oldProgress, float newProgress) {
+            public void bossBarProgressChanged(@NotNull BossBar bar, float oldProgress, float newProgress) {
                 platformBossBar
                         .getMethod("progress", float.class)
                         .invoke(newProgress);
             }
 
             @Override
-            public void bossBarColorChanged(@NonNull BossBar bar, BossBar.@NonNull Color oldColor, BossBar.@NonNull Color newColor) {
+            public void bossBarColorChanged(@NotNull BossBar bar, BossBar.@NotNull Color oldColor, BossBar.@NotNull Color newColor) {
                 platformBossBar
                         .getMethod("color", colorClass)
                         .invoke(colorToPlatform(newColor, colorClass));
             }
 
             @Override
-            public void bossBarOverlayChanged(@NonNull BossBar bar, BossBar.@NonNull Overlay oldOverlay, BossBar.@NonNull Overlay newOverlay) {
+            public void bossBarOverlayChanged(@NotNull BossBar bar, BossBar.@NotNull Overlay oldOverlay, BossBar.@NotNull Overlay newOverlay) {
                 platformBossBar
                         .getMethod("overlay", overlayClass)
                         .invoke(overlayToPlatform(newOverlay, overlayClass));
             }
 
             @Override
-            public void bossBarFlagsChanged(@NonNull BossBar bar, @NonNull Set<BossBar.Flag> flagsAdded, @NonNull Set<BossBar.Flag> flagsRemoved) {
+            public void bossBarFlagsChanged(@NotNull BossBar bar, @NotNull Set<BossBar.Flag> flagsAdded, @NotNull Set<BossBar.Flag> flagsRemoved) {
                 platformBossBar
                         .getMethod("addFlags", Iterable.class)
                         .invoke(flagsAdded

@@ -7,7 +7,7 @@ import cloud.commandframework.paper.PaperCommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 
@@ -20,7 +20,7 @@ public class PaperScreamingCloudManager extends PaperCommandManager<CommandSende
      * @param owningPlugin       Plugin that is constructing the manager
      * @param commandCoordinator Coordinator provider
      */
-    public PaperScreamingCloudManager(@NonNull Plugin owningPlugin,
+    public PaperScreamingCloudManager(@NotNull Plugin owningPlugin,
                                       Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) throws Exception {
         super(owningPlugin, commandCoordinator,
                 sender -> {

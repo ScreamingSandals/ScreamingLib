@@ -2,7 +2,7 @@ package org.screamingsandals.lib.utils.adventure.wrapper;
 
 import lombok.Data;
 import net.kyori.adventure.title.Title;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.adventure.TitleUtils;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -13,7 +13,7 @@ import java.util.Arrays;
 public final class TitleWrapper implements Wrapper {
     private final Title title;
 
-    @NonNull
+    @NotNull
     public Title asTitle() {
         return title;
     }
