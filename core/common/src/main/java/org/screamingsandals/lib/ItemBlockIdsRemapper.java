@@ -1699,7 +1699,7 @@ public abstract class ItemBlockIdsRemapper {
     }
 
     private void f2lBlock(String flatteningMaterial, Map<String, String> state, String legacyMaterial, int legacyId, int data) {
-        f2lBlock(flatteningMaterial, state, legacyMaterial, legacyId, data);
+        f2lBlock(flatteningMaterial, state, legacyMaterial, legacyId, data, null);
     }
 
     private void f2lBlock(String flatteningMaterial, Map<String, String> state, String legacyMaterial, int legacyId, int data, String alternativeLegacyName) {
