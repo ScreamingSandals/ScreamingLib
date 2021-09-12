@@ -275,7 +275,7 @@ public abstract class ItemBlockIdsRemapper {
         f2l("NOTE_BLOCK", 25, "NOTEBLOCK");
 
         f2lColoredToNonColoredBlock("BED", "BED",26, "BED_BLOCK");
-        blockTypeMapper.getBlockDataTranslators().put(mappingKey -> mappingKey.is("BED"), new BlockDataTranslatorBuilder()
+        blockTypeMapper.getBlockDataTranslators().put(mappingKey -> mappingKey.is("BED", "BED_BLOCK"), new BlockDataTranslatorBuilder()
                         .lowerBitValueSet("facing", 0b11, Map.of(
                                 0, "south",
                                 1, "west",
