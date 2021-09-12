@@ -156,7 +156,10 @@ public abstract class ItemBlockIdsRemapper {
     private void flatteningLegacyMappingJava() {
         // Legacy remapping
 
+        //<editor-fold desc="Blocks" defaultstate="collapsed">
+
         // BLOCKS
+        // Some block states still don't have correct mapping
         f2l("AIR", 0);
 
         f2l("STONE", 1);
@@ -1029,6 +1032,9 @@ public abstract class ItemBlockIdsRemapper {
         f2lBlock("STRUCTURE_BLOCK", Map.of("mode", "save"), 255, 1);
         f2lBlock("STRUCTURE_BLOCK", Map.of("mode", "load"), 255, 2);
         f2lBlock("STRUCTURE_BLOCK", Map.of("mode", "corner"), 255, 3);
+        //</editor-fold>
+
+        //<editor-fold desc="Items" defaultstate="collapsed">
 
         // ITEMS
         f2lItem("IRON_SHOVEL", 256, "IRON_SPADE");
@@ -1326,6 +1332,7 @@ public abstract class ItemBlockIdsRemapper {
         f2lItem("MUSIC_DISC_WARD", "RECORD_WARD", 2265, "RECORD_10");
         f2lItem("MUSIC_DISC_11", "RECORD_11", 2266);
         f2lItem("MUSIC_DISC_WAIT", "RECORD_WAIT", 2267, "RECORD_12");
+        //</editor-fold>
 
     }
 

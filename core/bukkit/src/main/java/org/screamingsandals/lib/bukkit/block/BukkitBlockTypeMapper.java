@@ -12,11 +12,14 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class BukkitBlockTypeMapper extends BlockTypeMapper {
+    private final Map<String, Map<String, String>> defaultFlatteningBlockDataCache = new HashMap<>();
+
     public BukkitBlockTypeMapper() {
         blockTypeConverter
                 .registerW2P(Material.class, holder -> Material.valueOf(holder.platformName()))
@@ -28,8 +31,8 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                     .registerW2P(BlockData.class, holder -> Bukkit.createBlockData(getDataFromMap(holder)));
         } else {
             blockTypeConverter
-                    .registerP2W(MaterialData.class, data -> BlockTypeHolder.of(data.getItemType() + ":" + data.getData()).withFlatteningData(LegacyBlockDataConverter.convertMaterialData(data)))
-                    .registerW2P(MaterialData.class, holder -> LegacyBlockDataConverter.asMaterialData(holder.as(Material.class), holder.legacyData(), holder.flatteningData()));
+                    .registerP2W(MaterialData.class, data -> BlockTypeHolder.of(data.getItemType() + ":" + data.getData()))
+                    .registerW2P(MaterialData.class, holder -> holder.as(Material.class).getNewData(holder.legacyData()));
         }
 
         Arrays.stream(Material.values())
@@ -51,6 +54,36 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                     .collect(Collectors.toMap(next -> next[0], next1 -> next1[1]));
         }
         return Map.of();
+    }
+
+    @Override
+    protected BlockTypeHolder normalize(BlockTypeHolder abnormal) {
+        try {
+            if (Version.isVersion(1, 13)) {
+                var cache = defaultFlatteningBlockDataCache.get(abnormal.platformName());
+                if (cache == null) {
+                    cache = getDataFromString(abnormal.as(Material.class).createBlockData().getAsString());
+                    defaultFlatteningBlockDataCache.put(abnormal.platformName(), cache);
+                }
+                if (cache.isEmpty()) {
+                    return abnormal;
+                }
+                var flatteningData = abnormal.flatteningData();
+                if (flatteningData != null && !flatteningData.isEmpty()) {
+                    var clone = new HashMap<>(flatteningData);
+                    cache.forEach((s, s2) -> {
+                        if (!clone.containsKey(s)) {
+                            clone.put(s, s2);
+                        }
+                    });
+                }
+                return abnormal.withFlatteningData(cache);
+            } else {
+                // non-flattening versions don't have flattening data
+                return abnormal.withFlatteningData(null);
+            }
+        } catch (Exception ignored) {}
+        return abnormal;
     }
 
     @Override
