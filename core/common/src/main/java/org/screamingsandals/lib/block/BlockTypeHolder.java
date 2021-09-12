@@ -65,7 +65,7 @@ public class BlockTypeHolder implements ComparableWrapper {
     }
 
     public boolean isAir() {
-        return is(air(), "minecraft:cave_air", "minecraft:void_air");
+        return isSameType(air(), "minecraft:cave_air", "minecraft:void_air");
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)

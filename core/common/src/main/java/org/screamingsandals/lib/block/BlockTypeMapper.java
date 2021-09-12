@@ -58,19 +58,22 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
 
                     Integer data = null;
                     Map<String, String> flatteningData = null;
-                    try {
-                        data = Integer.parseInt(matcher.group("blockState"));
-                    } catch (NumberFormatException ignored) {
-                        // blockState don't have to be number
-                        var blockState = matcher.group("blockState");
-                        if (blockState.startsWith("[") && blockState.startsWith("]")) {
-                            var map = blockTypeMapper.getDataFromString(blockState.toLowerCase());
-                            if (map.containsKey("legacy_data") && map.size() == 1) {
-                                try {
-                                    data = Integer.parseInt(map.get("legacy_data"));
-                                } catch (NumberFormatException ignored2) {}
-                            } else {
-                                flatteningData = map;
+                    var blockState = matcher.group("blockState");
+                    if (blockState != null) {
+                        try {
+                            data = Integer.parseInt(blockState);
+                        } catch (NumberFormatException ignored) {
+                            // blockState don't have to be number
+                            if (blockState.startsWith("[") && blockState.startsWith("]")) {
+                                var map = blockTypeMapper.getDataFromString(blockState.toLowerCase());
+                                if (map.containsKey("legacy_data") && map.size() == 1) {
+                                    try {
+                                        data = Integer.parseInt(map.get("legacy_data"));
+                                    } catch (NumberFormatException ignored2) {
+                                    }
+                                } else {
+                                    flatteningData = map;
+                                }
                             }
                         }
                     }
