@@ -211,3 +211,5 @@ nmsGen {
         .reqMethod('copy')
         .reqMethod('getTag')
 }
+
+tasks.getByName('compileJava').dependsOn('generateNmsComponents')

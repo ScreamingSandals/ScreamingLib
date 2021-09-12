@@ -25,6 +25,7 @@ public @interface CustomAutocompletion {
         ENTITY_POSE,
         DIFFICULTY,
         DIMENSION,
-        BLOCK
+        BLOCK,
+        GAME_RULE
     }
 }

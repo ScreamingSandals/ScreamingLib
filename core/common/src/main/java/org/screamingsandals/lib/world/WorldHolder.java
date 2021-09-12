@@ -8,6 +8,7 @@ import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import org.screamingsandals.lib.world.dimension.DimensionHolder;
+import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -42,6 +43,10 @@ public interface WorldHolder extends Wrapper, Serializable {
                 .map(clazz::cast)
                 .collect(Collectors.toList());
     }
+
+    <T> T getGameRuleValue(GameRuleHolder holder);
+
+    <T> void setGameRuleValue(GameRuleHolder holder, T value);
 
     class WorldHolderTypeAdapter extends TypeAdapter<WorldHolder> {
         @Override

@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.world;
 
+import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.screamingsandals.lib.entity.EntityBasic;
@@ -12,6 +13,7 @@ import org.screamingsandals.lib.world.chunk.ChunkHolder;
 import org.screamingsandals.lib.world.chunk.ChunkMapper;
 import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import org.screamingsandals.lib.world.dimension.DimensionHolder;
+import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.List;
@@ -77,5 +79,37 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getGameRuleValue(GameRuleHolder holder) {
+        if (Reflect.has("org.bukkit.GameRule")) {
+            return (T) wrappedObject.getGameRuleValue(holder.as(GameRule.class));
+        } else {
+            var val = wrappedObject.getGameRuleValue(holder.getPlatformName());
+            if (val == null) {
+                return null;
+            }
+            try {
+                return (T) Integer.valueOf(val);
+            } catch (Throwable ignored) {
+                if (val.equalsIgnoreCase("true") || val.equalsIgnoreCase("false")) {
+                    return (T) Boolean.valueOf(val);
+                } else {
+                    return (T) val;
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> void setGameRuleValue(GameRuleHolder holder, T value) {
+        if (Reflect.has("org.bukkit.GameRule")) {
+            wrappedObject.setGameRule((GameRule<T>) holder.as(GameRule.class), value);
+        } else {
+            wrappedObject.setGameRuleValue(holder.getPlatformName(), value.toString());
+        }
     }
 }

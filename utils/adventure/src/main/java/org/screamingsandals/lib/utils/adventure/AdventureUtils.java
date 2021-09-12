@@ -30,6 +30,7 @@ public class AdventureUtils {
             return Reflect.getMethod(instance, method, types);
         }
 
+        // TODO: Pointers
         var classes = new Class<?>[types.length];
         for (var i = 0; i < classes.length; i++) {
             if (Component.class.isAssignableFrom(types[i])) {
@@ -71,35 +72,35 @@ public class AdventureUtils {
                 .withTransformers((parameterTypes, parameters) -> {
                     var result = new Object[parameters.length];
                     for (var i = 0; i < result.length; i++) {
-                        if (ComponentUtils.NATIVE_COMPONENT_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        if (parameters[i] instanceof Component) {
                             result[i] = ComponentUtils.componentToPlatform((Component) parameters[i]);
-                        } else if (TitleUtils.NATIVE_TIMES_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (TitleUtils.NATIVE_TIMES_CLASS != null && parameters[i] instanceof Title.Times) {
                             result[i] = TitleUtils.timesToPlatform((Title.Times) parameters[i]);
-                        } else if (TitleUtils.NATIVE_TITLE_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (TitleUtils.NATIVE_TITLE_CLASS != null && parameters[i] instanceof Title) {
                             result[i] = TitleUtils.titleToPlatform((Title) parameters[i]);
-                        } else if (TitleUtils.NATIVE_TITLE_PART_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (TitleUtils.NATIVE_TITLE_PART_CLASS != null && parameters[i] instanceof TitlePart) {
                             result[i] = TitleUtils.titlePartToPlatform((TitlePart<?>) parameters[i]);
-                        } else if (BookUtils.NATIVE_BOOK_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (BookUtils.NATIVE_BOOK_CLASS != null && parameters[i] instanceof Book) {
                             result[i] = BookUtils.bookToPlatform((Book) parameters[i]);
-                        } else if (IdentityUtils.NATIVE_IDENTITY_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (IdentityUtils.NATIVE_IDENTITY_CLASS != null && parameters[i] instanceof Identity) {
                             result[i] = IdentityUtils.identityToPlatform((Identity) parameters[i]);
-                        } else if (NATIVE_MESSAGE_TYPE_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (NATIVE_MESSAGE_TYPE_CLASS != null && parameters[i] instanceof MessageType) {
                             result[i] = Reflect.findEnumConstant(NATIVE_MESSAGE_TYPE_CLASS, ((MessageType) parameters[i]).name());
-                        } else if (KeyUtils.NATIVE_KEY_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (KeyUtils.NATIVE_KEY_CLASS != null && parameters[i] instanceof Key) {
                             result[i] = KeyUtils.keyToPlatform((Key) parameters[i]);
-                        } else if (SoundUtils.NATIVE_SOUND_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (SoundUtils.NATIVE_SOUND_CLASS != null && parameters[i] instanceof Sound) {
                             result[i] = SoundUtils.soundToPlatform((Sound) parameters[i]);
-                        } else if (SoundUtils.NATIVE_SOURCE_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (SoundUtils.NATIVE_SOURCE_CLASS != null && parameters[i] instanceof Sound.Source) {
                             result[i] = SoundUtils.sourceToPlatform((Sound.Source) parameters[i]);
-                        } else if (SoundUtils.NATIVE_SOUND_STOP_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (SoundUtils.NATIVE_SOUND_STOP_CLASS != null && parameters[i] instanceof SoundStop) {
                             result[i] = SoundUtils.stopSoundToPlatform((SoundStop) parameters[i]);
-                        } else if (BossBarUtils.NATIVE_BOSSBAR_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (BossBarUtils.NATIVE_BOSSBAR_CLASS != null && parameters[i] instanceof BossBar) {
                             result[i] = BossBarUtils.bossBarToPlatform((BossBar) parameters[i]);
-                        } else if (BossBarUtils.NATIVE_BOSSBAR_COLOR_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (BossBarUtils.NATIVE_BOSSBAR_COLOR_CLASS != null && parameters[i] instanceof BossBar.Color) {
                             result[i] = BossBarUtils.colorToPlatform((BossBar.Color) parameters[i]);
-                        } else if (BossBarUtils.NATIVE_BOSSBAR_FLAG_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (BossBarUtils.NATIVE_BOSSBAR_FLAG_CLASS != null && parameters[i] instanceof BossBar.Flag) {
                             result[i] = BossBarUtils.flagToPlatform((BossBar.Flag) parameters[i]);
-                        } else if (BossBarUtils.NATIVE_BOSSBAR_OVERLAY_CLASS.isAssignableFrom(parameterTypes[i])) {
+                        } else if (BossBarUtils.NATIVE_BOSSBAR_OVERLAY_CLASS != null && parameters[i] instanceof BossBar.Overlay) {
                             result[i] = BossBarUtils.overlayToPlatform((BossBar.Overlay) parameters[i]);
                         } else {
                             result[i] = parameters[i];
@@ -109,33 +110,33 @@ public class AdventureUtils {
                 }, o -> {
                     if (ComponentUtils.NATIVE_COMPONENT_CLASS.isInstance(o)) {
                         return ComponentUtils.componentFromPlatform(o);
-                    } else if (TitleUtils.NATIVE_TIMES_CLASS.isInstance(o)) {
+                    } else if (TitleUtils.NATIVE_TIMES_CLASS != null && TitleUtils.NATIVE_TIMES_CLASS.isInstance(o)) {
                         return TitleUtils.timesFromPlatform(o);
-                    } else if (TitleUtils.NATIVE_TITLE_CLASS.isInstance(o)) {
+                    } else if (TitleUtils.NATIVE_TITLE_CLASS != null && TitleUtils.NATIVE_TITLE_CLASS.isInstance(o)) {
                         return TitleUtils.titleFromPlatform(o);
-                    } else if (TitleUtils.NATIVE_TITLE_PART_CLASS.isInstance(o)) {
+                    } else if (TitleUtils.NATIVE_TITLE_PART_CLASS != null && TitleUtils.NATIVE_TITLE_PART_CLASS.isInstance(o)) {
                         return TitleUtils.titlePartFromPlatform(o);
-                    } else if (BookUtils.NATIVE_BOOK_CLASS.isInstance(o)) {
+                    } else if (BookUtils.NATIVE_BOOK_CLASS != null && BookUtils.NATIVE_BOOK_CLASS.isInstance(o)) {
                         return BookUtils.bookFromPlatform(o);
-                    } else if (IdentityUtils.NATIVE_IDENTITY_CLASS.isInstance(o)) {
+                    } else if (IdentityUtils.NATIVE_IDENTITY_CLASS != null && IdentityUtils.NATIVE_IDENTITY_CLASS.isInstance(o)) {
                         return IdentityUtils.identityFromPlatform(o);
-                    } else if (NATIVE_MESSAGE_TYPE_CLASS.isInstance(o)) {
+                    } else if (NATIVE_MESSAGE_TYPE_CLASS != null && NATIVE_MESSAGE_TYPE_CLASS.isInstance(o)) {
                         return MessageType.valueOf(Reflect.fastInvokeResulted(o, "name").as(String.class));
-                    } else if (KeyUtils.NATIVE_KEY_CLASS.isInstance(o)) {
+                    } else if (KeyUtils.NATIVE_KEY_CLASS != null && KeyUtils.NATIVE_KEY_CLASS.isInstance(o)) {
                         return KeyUtils.keyFromPlatform(o);
-                    } else if (SoundUtils.NATIVE_SOUND_CLASS.isInstance(o)) {
+                    } else if (SoundUtils.NATIVE_SOUND_CLASS != null && SoundUtils.NATIVE_SOUND_CLASS.isInstance(o)) {
                         return SoundUtils.soundFromPlatform(o);
-                    } else if (SoundUtils.NATIVE_SOURCE_CLASS.isInstance(o)) {
+                    } else if (SoundUtils.NATIVE_SOURCE_CLASS != null && SoundUtils.NATIVE_SOURCE_CLASS.isInstance(o)) {
                         return SoundUtils.sourceFromPlatform(o);
-                    } else if (SoundUtils.NATIVE_SOUND_STOP_CLASS.isInstance(o)) {
+                    } else if (SoundUtils.NATIVE_SOUND_STOP_CLASS != null && SoundUtils.NATIVE_SOUND_STOP_CLASS.isInstance(o)) {
                         return SoundUtils.stopSoundFromPlatform(o);
-                    } else if (BossBarUtils.NATIVE_BOSSBAR_CLASS.isInstance(o)) {
+                    } else if (BossBarUtils.NATIVE_BOSSBAR_CLASS != null && BossBarUtils.NATIVE_BOSSBAR_CLASS.isInstance(o)) {
                         return BossBarUtils.bossBarFromPlatform(o);
-                    } else if (BossBarUtils.NATIVE_BOSSBAR_COLOR_CLASS.isInstance(o)) {
+                    } else if (BossBarUtils.NATIVE_BOSSBAR_COLOR_CLASS != null && BossBarUtils.NATIVE_BOSSBAR_COLOR_CLASS.isInstance(o)) {
                         return BossBarUtils.colorFromPlatform(o);
-                    } else if (BossBarUtils.NATIVE_BOSSBAR_FLAG_CLASS.isInstance(o)) {
+                    } else if (BossBarUtils.NATIVE_BOSSBAR_FLAG_CLASS != null && BossBarUtils.NATIVE_BOSSBAR_FLAG_CLASS.isInstance(o)) {
                         return BossBarUtils.flagFromPlatform(o);
-                    } else if (BossBarUtils.NATIVE_BOSSBAR_OVERLAY_CLASS.isInstance(o)) {
+                    } else if (BossBarUtils.NATIVE_BOSSBAR_OVERLAY_CLASS != null && BossBarUtils.NATIVE_BOSSBAR_OVERLAY_CLASS.isInstance(o)) {
                         return BossBarUtils.overlayFromPlatform(o);
                     }
                     return o;

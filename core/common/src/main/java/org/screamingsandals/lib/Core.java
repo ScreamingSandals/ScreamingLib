@@ -27,6 +27,7 @@ import org.screamingsandals.lib.world.chunk.ChunkMapper;
 import org.screamingsandals.lib.world.difficulty.DifficultyMapping;
 import org.screamingsandals.lib.world.dimension.DimensionMapping;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
+import org.screamingsandals.lib.world.gamerule.GameRuleMapping;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
@@ -57,7 +58,8 @@ import org.screamingsandals.lib.block.state.BlockStateMapper;
         EntityPoseMapping.class,
         DifficultyMapping.class,
         DimensionMapping.class,
-        ChunkMapper.class
+        ChunkMapper.class,
+        GameRuleMapping.class
 })
 @InternalCoreService
 public abstract class Core {
