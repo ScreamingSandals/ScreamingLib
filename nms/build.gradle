@@ -190,6 +190,7 @@ nmsGen {
         .reqEnumField('LOGIN')
         .reqField('flows') // new
         .reqField('mojang:packets:1.14.4') // old
+        .reqMethod('getId')
 
     reqClass('net.minecraft.network.ConnectionProtocol$PacketSet')
         .reqMethod('getId', Class)
@@ -199,6 +200,7 @@ nmsGen {
 
     reqClass('net.minecraft.network.Connection')
         .reqField('channel')
+        .reqMethod('getCurrentProtocol')
 
     reqClass('net.minecraft.core.Direction')
         .reqMethod('fromYRot', double)
