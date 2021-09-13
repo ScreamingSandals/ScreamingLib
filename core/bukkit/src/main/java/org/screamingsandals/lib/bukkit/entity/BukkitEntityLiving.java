@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.entity;
 
+import org.jetbrains.annotations.Nullable;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
@@ -57,9 +58,9 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     }
 
     @Override
-    public BlockHolder getTargetBlock(Collection<BlockTypeHolder> transparent, int maxDistance) {
+    public BlockHolder getTargetBlock(@Nullable Collection<BlockTypeHolder> transparent, int maxDistance) {
         return BlockMapper.wrapBlock(((LivingEntity) wrappedObject)
-                .getTargetBlock(transparent
+                .getTargetBlock((transparent == null) ? null : transparent
                         .stream()
                         .map(material -> material.as(Material.class))
                         .collect(Collectors.toSet()), maxDistance));
