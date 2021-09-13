@@ -35,7 +35,10 @@ public abstract class PacketInboundListener{
 						}
 					}
 				};
-				channel.pipeline().addBefore("packet_handler", channelName, handler);
+				if (channel.pipeline().get("packet_handler") != null) {
+					// TODO: maybe add a delay?
+					channel.pipeline().addBefore("packet_handler", channelName, handler);
+				}
 			}
 		} catch (Throwable t) {
 			t.printStackTrace();

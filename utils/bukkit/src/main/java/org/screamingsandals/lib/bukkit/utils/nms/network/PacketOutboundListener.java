@@ -4,6 +4,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -31,7 +32,10 @@ public abstract class PacketOutboundListener {
                         }
                     }
                 };
-                channel.pipeline().addBefore("packet_handler", channelName, handler);
+                if (channel.pipeline().get("packet_handler") != null) {
+                    // TODO: maybe add a delay?
+                    channel.pipeline().addBefore("packet_handler", channelName, handler);
+                }
             }
         } catch (Throwable ignored) {
         }
