@@ -9,6 +9,7 @@ import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
 import org.screamingsandals.lib.world.gamerule.GameRuleMapping;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class BukkitGameRuleMapping extends GameRuleMapping {
@@ -21,7 +22,14 @@ public class BukkitGameRuleMapping extends GameRuleMapping {
             Arrays.stream(GameRule.values()).forEach(gameRule -> mapping.put(NamespacedMappingKey.of(gameRule.getName()), new GameRuleHolder(gameRule.getName())));
         } else {
             // bukkit api for legacy version didn't have proper game rules api
-            Arrays.stream(Bukkit.getWorlds().get(0).getGameRules()).forEach(gameRule -> mapping.put(NamespacedMappingKey.of(gameRule), new GameRuleHolder(gameRule)));
+            // TODO: Actually fix this using NMS
+            //Arrays.stream(Bukkit.getWorlds().get(0).getGameRules())
+            List.of("doFireTick", "mobGriefing", "keepInventory", "doMobSpawning", "doMobLoot", "doTileDrops", "commandBlockOutput", "naturalRegeneration", "doDaylightCycle",
+                            "logAdminCommands", "showDeathMessages", "randomTickSpeed", "sendCommandFeedback", "reducedDebugInfo", "doEntityDrops", "spectatorsGenerateChunks",
+                            "spawnRadius", "disableElytraMovementCheck", "doWeatherCycle", "maxEntityCramming", "doLimitedCrafting", "maxCommandChainLength", "announceAdvancements",
+                            "gameLoopFunction"
+                    )
+                    .forEach(gameRule -> mapping.put(NamespacedMappingKey.of(gameRule), new GameRuleHolder(gameRule)));
         }
 
         gameRuleConverter
