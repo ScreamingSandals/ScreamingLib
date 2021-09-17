@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.player;
 
+import io.netty.channel.Channel;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.Component;
@@ -398,6 +399,13 @@ public abstract class PlayerMapper {
         }
         return playerMapper.getProtocolVersion0(wrapper);
     }
+
+    public static Channel getChannel(PlayerWrapper player) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getChannel0(player);
+    }
     
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
@@ -489,4 +497,6 @@ public abstract class PlayerMapper {
     public abstract void setSprinting0(PlayerWrapper player, boolean sprinting);
 
     public abstract int getProtocolVersion0(PlayerWrapper player);
+
+    public abstract Channel getChannel0(PlayerWrapper player);
 }

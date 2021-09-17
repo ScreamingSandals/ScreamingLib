@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.player;
 
+import io.netty.channel.Channel;
 import io.papermc.lib.PaperLib;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -387,9 +388,14 @@ public class BukkitPlayerMapper extends PlayerMapper {
 
     @Override
     public int getProtocolVersion0(PlayerWrapper player) {
-        final Object connection1 = Reflect.getField(ClassStorage.getHandle(player.as(Player.class)), ServerPlayerAccessor.getFieldConnection());
-        final Object connection2 = Reflect.getField(connection1, ServerGamePacketListenerImplAccessor.getFieldConnection());
-        final Object protocol = Reflect.getMethod(connection2, ConnectionAccessor.getMethodGetCurrentProtocol1()).invoke();
+        final var connection = Reflect.getField(ClassStorage.getPlayerConnection(player.as(Player.class)), ServerGamePacketListenerImplAccessor.getFieldConnection());
+        final Object protocol = Reflect.getMethod(connection, ConnectionAccessor.getMethodGetCurrentProtocol1()).invoke();
         return (int) Reflect.getMethod(protocol, ConnectionProtocolAccessor.getMethodGetId1()).invoke();
+    }
+
+    @Override
+    public Channel getChannel0(PlayerWrapper player) {
+        final var connection = Reflect.getField(ClassStorage.getPlayerConnection(player.as(Player.class)), ServerGamePacketListenerImplAccessor.getFieldConnection());
+        return (Channel) Reflect.getField(connection, ConnectionAccessor.getFieldChannel());
     }
 }

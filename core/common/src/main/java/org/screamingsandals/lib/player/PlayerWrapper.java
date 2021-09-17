@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.player;
 
+import io.netty.channel.Channel;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
@@ -206,6 +207,10 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
     @Override
     public void setWhitelisted(boolean whitelisted) {
         PlayerMapper.setWhitelisted(this, whitelisted);
+    }
+
+    public Channel getChannel() {
+        return PlayerMapper.getChannel(this);
     }
 
     public void launch(double multiply, double y) {
