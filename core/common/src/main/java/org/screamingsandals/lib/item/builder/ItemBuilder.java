@@ -139,7 +139,7 @@ public class ItemBuilder {
         return lore(AdventureHelper.toComponent(lore));
     }
 
-    public ItemBuilder lore(@NotNull List<ComponentLike> lore) {
+    public <C extends ComponentLike> ItemBuilder lore(@NotNull List<C> lore) {
         item.getLore().addAll(lore.stream().map(ComponentLike::asComponent).collect(Collectors.toList()));
         return this;
     }
