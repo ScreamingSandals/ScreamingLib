@@ -329,11 +329,6 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return this;
     }
 
-    public Message placeholder(String placeholder, Supplier<Component> componentFunction) {
-        placeholders.put(placeholder, sender -> componentFunction.get());
-        return this;
-    }
-
     public Message prefix(Component prefix) {
         if (prefix == null) {
             return noPrefix();
