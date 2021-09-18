@@ -1,0 +1,1 @@
+# Cloud Command Framework support extension

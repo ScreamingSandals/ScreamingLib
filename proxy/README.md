@@ -1,4 +1,4 @@
-# Proxy
+# Base Module for Minecraft Proxy Plugin
 Library for working with players on proxy side (BungeeCord and Velocity).
 
 ## Features
