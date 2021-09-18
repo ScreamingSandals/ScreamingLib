@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -48,6 +49,10 @@ public class SPlayerLoginEvent extends AbstractEvent implements SPlayerEvent {
 
     public void setMessage(Component message) {
         this.message.set(message);
+    }
+
+    public void setMessage(ComponentLike message) {
+        this.message.set(message.asComponent());
     }
 
     /**

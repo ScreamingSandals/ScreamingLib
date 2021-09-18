@@ -3,6 +3,7 @@ package org.screamingsandals.lib.player;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
@@ -84,6 +85,10 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         PlayerMapper.setDisplayName(this, component);
     }
 
+    public void setDisplayName(@Nullable ComponentLike component) {
+        PlayerMapper.setDisplayName(this, component != null ? component.asComponent() : null);
+    }
+
     public EntityHuman asEntity() {
         return as(EntityHuman.class);
     }
@@ -122,6 +127,10 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
 
     public void kick(Component message) {
         PlayerMapper.kick(this, message);
+    }
+
+    public void kick(ComponentLike message) {
+        PlayerMapper.kick(this, message.asComponent());
     }
 
     public void setGameMode(@NotNull GameModeHolder gameMode) {

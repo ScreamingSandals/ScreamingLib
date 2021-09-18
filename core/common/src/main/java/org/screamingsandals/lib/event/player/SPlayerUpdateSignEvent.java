@@ -3,6 +3,7 @@ package org.screamingsandals.lib.event.player;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -30,5 +31,9 @@ public class SPlayerUpdateSignEvent extends CancellableAbstractEvent implements 
 
     public void line(@Range(from = 0, to = 3) int index, Component component) {
         lines[index] = component;
+    }
+
+    public void line(@Range(from = 0, to = 3) int index, ComponentLike component) {
+        lines[index] = component.asComponent();
     }
 }

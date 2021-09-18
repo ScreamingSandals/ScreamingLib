@@ -3,6 +3,7 @@ package org.screamingsandals.lib.player;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.PlayerContainer;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;

@@ -2,6 +2,7 @@ package org.screamingsandals.lib.utils;
 
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -48,14 +49,30 @@ public class AdventureHelper {
     }
 
     @NotNull
+    public String toLegacy(@NotNull ComponentLike component) {
+        return serializer.serialize(component.asComponent());
+    }
+
+    @NotNull
     public String toLegacyNullable(@Nullable Component component) {
         return component == null ? "" : serializer.serialize(component);
+    }
+
+    @NotNull
+    public String toLegacyNullable(@Nullable ComponentLike component) {
+        return component == null ? "" : serializer.serialize(component.asComponent());
     }
 
     @Nullable
     public String toLegacyNullableResult(@Nullable Component component) {
         return component == null ? null : serializer.serialize(component);
     }
+
+    @Nullable
+    public String toLegacyNullableResult(@Nullable ComponentLike component) {
+        return component == null ? null : serializer.serialize(component.asComponent());
+    }
+
 
     @NotNull
     public TextComponent toComponent(@NotNull String input) {

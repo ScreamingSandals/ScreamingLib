@@ -2,6 +2,7 @@ package org.screamingsandals.lib.lang;
 
 import lombok.Data;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.minimessage.Template;
 import net.kyori.adventure.title.Title;
 import org.jetbrains.annotations.NotNull;
@@ -48,12 +49,20 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return new Message(List.of(), Lang.getDefaultService(), prefix);
     }
 
+    public static Message empty(ComponentLike prefix) {
+        return new Message(List.of(), Lang.getDefaultService(), prefix.asComponent());
+    }
+
     public static Message empty(LangService service) {
         return new Message(List.of(), service, Component.empty());
     }
 
     public static Message empty(LangService service, Component prefix) {
         return new Message(List.of(), service, prefix);
+    }
+
+    public static Message empty(LangService service, ComponentLike prefix) {
+        return new Message(List.of(), service, prefix.asComponent());
     }
 
     public static Message ofPlainText(String message) {
@@ -72,12 +81,24 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return new Message(List.of(StringMessageable.of(message)), Lang.getDefaultService(), prefix);
     }
 
+    public static Message ofPlainText(ComponentLike prefix, String message) {
+        return new Message(List.of(StringMessageable.of(message)), Lang.getDefaultService(), prefix.asComponent());
+    }
+
     public static Message ofPlainText(Component prefix, String... messages) {
         return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix);
     }
 
+    public static Message ofPlainText(ComponentLike prefix, String... messages) {
+        return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix.asComponent());
+    }
+
     public static Message ofPlainText(Component prefix, List<String> messages) {
         return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix);
+    }
+
+    public static Message ofPlainText(ComponentLike prefix, List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix.asComponent());
     }
 
     public static Message ofPlainText(LangService service, String message) {
@@ -96,12 +117,24 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return new Message(List.of(StringMessageable.of(message)), service, prefix);
     }
 
+    public static Message ofPlainText(LangService service, ComponentLike prefix, String message) {
+        return new Message(List.of(StringMessageable.of(message)), service, prefix.asComponent());
+    }
+
     public static Message ofPlainText(LangService service, Component prefix, String... messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, prefix);
     }
 
+    public static Message ofPlainText(LangService service, ComponentLike prefix, String... messages) {
+        return new Message(List.of(StringMessageable.of(messages)), service, prefix.asComponent());
+    }
+
     public static Message ofPlainText(LangService service, Component prefix, List<String> messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, prefix);
+    }
+
+    public static Message ofPlainText(LangService service, ComponentLike prefix, List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages)), service, prefix.asComponent());
     }
 
     public static Message ofPlainText(Supplier<List<String>> message) {
@@ -112,12 +145,20 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return new Message(List.of(SupplierStringMessageable.of(message)), Lang.getDefaultService(), prefix);
     }
 
+    public static Message ofPlainText(ComponentLike prefix, Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message)), Lang.getDefaultService(), prefix.asComponent());
+    }
+
     public static Message ofPlainText(LangService service, Supplier<List<String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message)), service, Component.empty());
     }
 
     public static Message ofPlainText(LangService service, Component prefix, Supplier<List<String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message)), service, prefix);
+    }
+
+    public static Message ofPlainText(LangService service, ComponentLike prefix, Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message)), service, prefix.asComponent());
     }
 
     public static Message of(String... key) {
@@ -148,24 +189,48 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix);
     }
 
+    public static Message of(ComponentLike prefix, String... key) {
+        return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix.asComponent());
+    }
+
     public static Message of(Component prefix, Messageable translation) {
         return new Message(List.of(translation), Lang.getDefaultService(), prefix);
+    }
+
+    public static Message of(ComponentLike prefix, Messageable translation) {
+        return new Message(List.of(translation), Lang.getDefaultService(), prefix.asComponent());
     }
 
     public static <M extends Messageable> Message of(Component prefix, List<M> translations) {
         return new Message(translations, Lang.getDefaultService(), prefix);
     }
 
+    public static <M extends Messageable> Message of(ComponentLike prefix, List<M> translations) {
+        return new Message(translations, Lang.getDefaultService(), prefix.asComponent());
+    }
+
     public static Message of(LangService langService, Component prefix, String... key) {
         return new Message(List.of(Translation.of(key)), langService, prefix);
+    }
+
+    public static Message of(LangService langService, ComponentLike prefix, String... key) {
+        return new Message(List.of(Translation.of(key)), langService, prefix.asComponent());
     }
 
     public static Message of(LangService langService, Component prefix, Messageable translation) {
         return new Message(List.of(translation), langService, prefix);
     }
 
+    public static Message of(LangService langService, ComponentLike prefix, Messageable translation) {
+        return new Message(List.of(translation), langService, prefix.asComponent());
+    }
+
     public static <M extends Messageable> Message of(LangService langService, Component prefix, List<M> translations) {
         return new Message(translations, langService, prefix);
+    }
+
+    public static <M extends Messageable> Message of(LangService langService, ComponentLike prefix, List<M> translations) {
+        return new Message(translations, langService, prefix.asComponent());
     }
 
     public static Message of(Collection<String> key) {
@@ -180,8 +245,16 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix);
     }
 
+    public static Message of(ComponentLike prefix, Collection<String> key) {
+        return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix.asComponent());
+    }
+
     public static Message of(LangService langService, Component prefix, Collection<String> key) {
         return new Message(List.of(Translation.of(key)), langService, prefix);
+    }
+
+    public static Message of(LangService langService, ComponentLike prefix, Collection<String> key) {
+        return new Message(List.of(Translation.of(key)), langService, prefix.asComponent());
     }
 
     public Message placeholder(String placeholder, byte value) {
@@ -235,6 +308,11 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return this;
     }
 
+    public Message placeholder(String placeholder, ComponentLike component) {
+        placeholders.put(placeholder, sender -> component.asComponent());
+        return this;
+    }
+
     public Message placeholder(String placeholder, Translation translation) {
         var msg = of(translation);
         placeholders.put(placeholder, msg::getForJoined);
@@ -264,11 +342,27 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return this;
     }
 
+    public Message prefix(ComponentLike prefix) {
+        if (prefix == null) {
+            return noPrefix();
+        }
+        this.prefix = prefix.asComponent();
+        return this;
+    }
+
     public Message prefixOrDefault(Component prefix) {
         if (prefix == null || Component.empty().equals(prefix)) {
             return defaultPrefix();
         }
         this.prefix = prefix;
+        return this;
+    }
+
+    public Message prefixOrDefault(ComponentLike prefix) {
+        if (prefix == null || Component.empty().equals(prefix.asComponent())) {
+            return defaultPrefix();
+        }
+        this.prefix = prefix.asComponent();
         return this;
     }
 

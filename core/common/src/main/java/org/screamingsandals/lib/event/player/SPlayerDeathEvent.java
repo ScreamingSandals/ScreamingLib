@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.item.Item;
@@ -39,6 +40,10 @@ public class SPlayerDeathEvent extends CancellableAbstractEvent implements SPlay
 
     public void setDeathMessage(Component deathMessage) {
         this.deathMessage.set(deathMessage);
+    }
+
+    public void setDeathMessage(ComponentLike deathMessage) {
+        this.deathMessage.set(deathMessage.asComponent());
     }
 
     public boolean isKeepInventory() {
