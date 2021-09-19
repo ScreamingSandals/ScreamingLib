@@ -21,6 +21,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 import java.lang.ref.WeakReference;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper {
     @Getter
@@ -117,12 +118,16 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         return PlayerMapper.getLocation(this);
     }
 
-    public void teleport(LocationHolder location, Runnable callback) {
-        PlayerMapper.teleport(this, location, callback);
+    public CompletableFuture<Void> teleport(LocationHolder location, Runnable callback) {
+        return PlayerMapper.teleport(this, location, callback, false);
     }
 
-    public void teleport(LocationHolder location) {
-        teleport(location, null);
+    public CompletableFuture<Void> teleport(LocationHolder location, Runnable callback, boolean forceCallback) {
+        return PlayerMapper.teleport(this, location, callback, forceCallback);
+    }
+
+    public CompletableFuture<Boolean> teleport(LocationHolder location) {
+        return PlayerMapper.teleport(this, location);
     }
 
     public void kick(Component message) {

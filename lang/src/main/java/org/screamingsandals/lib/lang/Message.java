@@ -24,9 +24,11 @@ import java.util.stream.Collectors;
 @Data
 public final class Message implements TitleableSenderMessage, Cloneable {
     private static final Pattern LEGACY_PLACEHOLDERS = Pattern.compile("[%]([^%]+)[%]");
+    private static final Pattern EARLY_MINI_MESSAGE_PLACEHOLDERS = Pattern.compile("[<]([^>]+)[>]");
 
     private final List<Messageable> translations = new LinkedList<>();
     private final Map<String, Function<CommandSenderWrapper, Component>> placeholders = new HashMap<>();
+    private final Map<String, String> earlyPlaceholders = new HashMap<>();
     private final LangService langService;
     @NotNull
     private Component prefix;
@@ -329,6 +331,34 @@ public final class Message implements TitleableSenderMessage, Cloneable {
         return this;
     }
 
+    /**
+     * This method works only with Messages using MiniMessage format.
+     * It replaces the placeholder BEFORE the message is processed by MiniMessage,
+     * so you can change format for whole message, not just the inserted part.
+     *
+     * @param placeholder Placeholder
+     * @param value Component which will replace the placeholder
+     * @return self
+     */
+    public Message earlyPlaceholder(String placeholder, Component value) {
+        earlyPlaceholders.put(placeholder, Lang.MINIMESSAGE.serialize(value));
+        return this;
+    }
+
+    /**
+     * This method works only with Messages using MiniMessage format.
+     * It replaces the placeholder BEFORE the message is processed by MiniMessage,
+     * so you can change format for whole message, not just the inserted part.
+     *
+     * @param placeholder Placeholder
+     * @param value String which will replace the placeholder. It must be in MiniMessage format
+     * @return self
+     */
+    public Message earlyPlaceholder(String placeholder, String value) {
+        earlyPlaceholders.put(placeholder, value);
+        return this;
+    }
+
     public Message prefix(Component prefix) {
         if (prefix == null) {
             return noPrefix();
@@ -474,6 +504,27 @@ public final class Message implements TitleableSenderMessage, Cloneable {
                                 }
 
                                 if (translation.getType() == Messageable.Type.ADVENTURE) {
+                                    if (!earlyPlaceholders.isEmpty()) {
+                                        var matcher = EARLY_MINI_MESSAGE_PLACEHOLDERS.matcher(s);
+
+                                        var lastIndex = 0;
+                                        var output = new StringBuilder();
+                                        while (matcher.find()) {
+                                            output.append(s, lastIndex, matcher.start());
+                                            if (earlyPlaceholders.containsKey(matcher.group(1))) {
+                                                output.append(earlyPlaceholders.get(matcher.group(1)));
+                                            } else {
+                                                output.append("<").append(matcher.group(1)).append(">");
+                                            }
+
+                                            lastIndex = matcher.end();
+                                        }
+                                        if (lastIndex < s.length()) {
+                                            output.append(s, lastIndex, s.length());
+                                        }
+                                        s = output.toString();
+                                    }
+
                                     return Lang.MINIMESSAGE.parse(s, placeholders
                                             .entrySet()
                                             .stream()

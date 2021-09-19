@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.item.builder.BukkitItemFactory;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.item.Item;
@@ -53,7 +54,7 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public Item[] getContents() {
+    public @Nullable Item[] getContents() {
         var array = new Item[getSize()];
 
         var oldArray = wrappedObject.getContents();
@@ -65,7 +66,19 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public void setContents(Item[] items) throws IllegalArgumentException {
+    public @Nullable Item[] getStorageContents() {
+        var oldArray = wrappedObject.getStorageContents();
+        var array = new Item[oldArray.length];
+
+        for (var i = 0; i < oldArray.length; i++) {
+            array[i] = BukkitItemFactory.build(oldArray[i]).orElse(null);
+        }
+
+        return array;
+    }
+
+    @Override
+    public void setContents(@Nullable Item[] items) throws IllegalArgumentException {
         if (items.length != getSize()) {
             throw new IllegalArgumentException("Wrong size of items array. Must be " + getSize());
         }
@@ -74,6 +87,18 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
             array[i] = items[i] != null ? items[i].as(ItemStack.class) : null;
         }
         wrappedObject.setContents(array);
+    }
+
+    @Override
+    public void setStorageContents(@Nullable Item[] items) throws IllegalArgumentException {
+        if (items.length > getSize()) {
+            throw new IllegalArgumentException("Wrong size of items array. Must be " + getSize());
+        }
+        var array = new ItemStack[items.length];
+        for (var i = 0; i < array.length; i++) {
+            array[i] = items[i] != null ? items[i].as(ItemStack.class) : null;
+        }
+        wrappedObject.setStorageContents(array);
     }
 
     @Override

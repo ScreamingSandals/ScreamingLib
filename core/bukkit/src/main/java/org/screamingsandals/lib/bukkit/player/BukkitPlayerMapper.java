@@ -38,6 +38,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -193,10 +194,10 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
-        PaperLib.teleportAsync(wrapper.as(Player.class), location.as(Location.class))
+    public CompletableFuture<Void> teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback, boolean forceCallback) {
+        return teleport0(wrapper, location)
                 .thenAccept(result -> {
-                    if (result) {
+                    if (result || forceCallback) {
                         callback.run();
                     }
                 })
@@ -204,6 +205,11 @@ public class BukkitPlayerMapper extends PlayerMapper {
                     ex.printStackTrace();
                     return null;
                 });
+    }
+
+    @Override
+    public CompletableFuture<Boolean> teleport0(PlayerWrapper wrapper, LocationHolder location) {
+        return PaperLib.teleportAsync(wrapper.as(Player.class), location.as(Location.class));
     }
 
     @Override

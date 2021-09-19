@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @AbstractService
 public abstract class PlayerMapper {
@@ -172,11 +173,18 @@ public abstract class PlayerMapper {
         return playerMapper.getBedLocation0(wrapper);
     }
 
-    public static void teleport(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
+    public static CompletableFuture<Boolean> teleport(PlayerWrapper wrapper, LocationHolder location) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
-        playerMapper.teleport0(wrapper, location, callback);
+        return playerMapper.teleport0(wrapper, location);
+    }
+
+    public static CompletableFuture<Void> teleport(PlayerWrapper wrapper, LocationHolder location, Runnable callback, boolean forceCallback) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.teleport0(wrapper, location, callback, forceCallback);
     }
 
     public static void kick(PlayerWrapper wrapper, Component message) {
@@ -435,7 +443,9 @@ public abstract class PlayerMapper {
 
     public abstract Optional<LocationHolder> getBedLocation0(OfflinePlayerWrapper playerWrapper);
 
-    public abstract void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback);
+    public abstract CompletableFuture<Void> teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback, boolean forceCallback);
+
+    public abstract CompletableFuture<Boolean> teleport0(PlayerWrapper wrapper, LocationHolder location);
 
     public abstract void kick0(PlayerWrapper wrapper, Component message);
 
