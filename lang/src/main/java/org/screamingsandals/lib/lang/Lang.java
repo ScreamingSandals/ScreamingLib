@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.markdown.DiscordFlavor;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.lang.container.TranslationContainer;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
@@ -12,10 +11,7 @@ import org.screamingsandals.lib.sender.CommandSenderWrapper;
 public class Lang {
     /* Package Private, we want this customizable */
     @Getter
-    static MiniMessage MINIMESSAGE = MiniMessage.builder()
-            .markdown()
-            .markdownFlavor(DiscordFlavor.get())
-            .build();
+    static MiniMessage MINIMESSAGE = MiniMessage.get();
 
     @Getter
     private static LangService defaultService;
