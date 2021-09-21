@@ -404,13 +404,6 @@ public abstract class PlayerMapper {
         playerMapper.setSprinting0(wrapper, sprinting);
     }
 
-    public static int getProtocolVersion(PlayerWrapper wrapper) {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return playerMapper.getProtocolVersion0(wrapper);
-    }
-
     public static Optional<WeatherHolder> getWeather(PlayerWrapper wrapper) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
@@ -543,8 +536,6 @@ public abstract class PlayerMapper {
     public abstract boolean isSprinting0(PlayerWrapper player);
 
     public abstract void setSprinting0(PlayerWrapper player, boolean sprinting);
-
-    public abstract int getProtocolVersion0(PlayerWrapper player);
 
     public abstract Optional<WeatherHolder> getWeather0(PlayerWrapper player);
 
