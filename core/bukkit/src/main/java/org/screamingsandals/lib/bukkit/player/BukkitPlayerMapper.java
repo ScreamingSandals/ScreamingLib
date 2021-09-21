@@ -19,6 +19,8 @@ import org.screamingsandals.lib.container.PlayerContainer;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.item.builder.ItemFactory;
+import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
+import org.screamingsandals.lib.nms.accessors.ServerGamePacketListenerImplAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.*;

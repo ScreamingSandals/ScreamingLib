@@ -64,7 +64,7 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         ChunkMapper.class,
         GameRuleMapping.class,
         WeatherMapping.class,
-        ParticleTypeMapping.class
+        ParticleTypeMapping.class,
         GameRuleMapping.class,
         PlayerPacketEventProviderService.class
 })
