@@ -26,6 +26,8 @@ public @interface CustomAutocompletion {
         DIFFICULTY,
         DIMENSION,
         BLOCK,
-        GAME_RULE
+        GAME_RULE,
+        WEATHER,
+        PARTICLE_TYPE
     }
 }

@@ -12,6 +12,7 @@ import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.item.meta.PotionHolder;
+import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.NormalizableWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -23,7 +24,7 @@ import java.util.Objects;
 
 @Data
 @ConfigSerializable
-public class Item implements Cloneable, NormalizableWrapper<Item> {
+public class Item implements Cloneable, NormalizableWrapper<Item>, ParticleData {
     private final List<EnchantmentHolder> enchantments = new LinkedList<>();
     /**
      * Item types: Potion, tipped arrow

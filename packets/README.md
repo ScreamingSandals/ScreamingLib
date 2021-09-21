@@ -3,8 +3,6 @@ Library for better accessibility of packets.
 
 Supported versions: [1.9.4 - 1.16.5].
 
-[World](../world/README.md) is optional dependency. If you want features connected with worlds and locations, you need to shade it.
-
 ## Implementing lib to your project
 
 Supported platforms are: bukkit (more platform support will be added later)

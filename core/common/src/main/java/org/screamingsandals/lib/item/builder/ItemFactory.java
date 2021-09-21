@@ -404,6 +404,13 @@ public abstract class ItemFactory {
 
     public abstract <C extends Container> Optional<C> wrapContainer0(Object container);
 
+    public static <C extends Container> Optional<C> createContainer(InventoryTypeHolder type) {
+        if (factory == null) {
+            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
+        }
+        return factory.createContainer0(type);
+    }
+
     public static <C extends Container> Optional<C> createContainer(InventoryTypeHolder type, Component name) {
         if (factory == null) {
             throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
@@ -411,7 +418,27 @@ public abstract class ItemFactory {
         return factory.createContainer0(type, name);
     }
 
+    public static <C extends Container> Optional<C> createContainer(int size) {
+        if (factory == null) {
+            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
+        }
+        return factory.createContainer0(size);
+    }
+
+    public static <C extends Container> Optional<C> createContainer(int size, Component name) {
+        if (factory == null) {
+            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
+        }
+        return factory.createContainer0(size, name);
+    }
+
+    public abstract <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type);
+
     public abstract <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type, Component name);
+
+    public abstract <C extends Container> Optional<C> createContainer0(int size);
+
+    public abstract <C extends Container> Optional<C> createContainer0(int size, Component name);
 
     public static ItemData createNewItemData() {
         if (factory == null) {

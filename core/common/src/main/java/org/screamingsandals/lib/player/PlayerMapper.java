@@ -4,8 +4,11 @@ import io.netty.channel.Channel;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.PlayerContainer;
+import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
@@ -15,12 +18,14 @@ import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.WorldHolder;
+import org.screamingsandals.lib.world.weather.WeatherHolder;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @AbstractService
 public abstract class PlayerMapper {
@@ -172,11 +177,18 @@ public abstract class PlayerMapper {
         return playerMapper.getBedLocation0(wrapper);
     }
 
-    public static void teleport(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
+    public static CompletableFuture<Boolean> teleport(PlayerWrapper wrapper, LocationHolder location) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
-        playerMapper.teleport0(wrapper, location, callback);
+        return playerMapper.teleport0(wrapper, location);
+    }
+
+    public static CompletableFuture<Void> teleport(PlayerWrapper wrapper, LocationHolder location, Runnable callback, boolean forceCallback) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.teleport0(wrapper, location, callback, forceCallback);
     }
 
     public static void kick(PlayerWrapper wrapper, Component message) {
@@ -393,11 +405,46 @@ public abstract class PlayerMapper {
         playerMapper.setSprinting0(wrapper, sprinting);
     }
 
-    public static int getProtocolVersion(PlayerWrapper wrapper) {
+    public static Optional<WeatherHolder> getWeather(PlayerWrapper wrapper) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
-        return playerMapper.getProtocolVersion0(wrapper);
+        return playerMapper.getWeather0(wrapper);
+    }
+
+    public static void setWeather(PlayerWrapper wrapper, @Nullable WeatherHolder weather) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setWeather0(wrapper, weather);
+    }
+
+    public static long getTime(PlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getTime0(wrapper);
+    }
+
+    public static void setTime(PlayerWrapper wrapper, long time, boolean relative) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setTime0(wrapper, time, relative);
+    }
+
+    public static void resetTime(PlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.resetTime0(wrapper);
+    }
+
+    public static void sendParticle(PlayerWrapper player, ParticleHolder particle, LocationHolder location) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.sendParticle0(player, particle, location);
     }
 
     public static Channel getChannel(PlayerWrapper player) {
@@ -406,7 +453,7 @@ public abstract class PlayerMapper {
         }
         return playerMapper.getChannel0(player);
     }
-    
+
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
@@ -442,7 +489,9 @@ public abstract class PlayerMapper {
 
     public abstract Optional<LocationHolder> getBedLocation0(OfflinePlayerWrapper playerWrapper);
 
-    public abstract void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback);
+    public abstract CompletableFuture<Void> teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback, boolean forceCallback);
+
+    public abstract CompletableFuture<Boolean> teleport0(PlayerWrapper wrapper, LocationHolder location);
 
     public abstract void kick0(PlayerWrapper wrapper, Component message);
 
@@ -496,7 +545,17 @@ public abstract class PlayerMapper {
 
     public abstract void setSprinting0(PlayerWrapper player, boolean sprinting);
 
-    public abstract int getProtocolVersion0(PlayerWrapper player);
+    public abstract Optional<WeatherHolder> getWeather0(PlayerWrapper player);
+
+    public abstract void setWeather0(PlayerWrapper player, @Nullable WeatherHolder weather);
+
+    public abstract long getTime0(PlayerWrapper player);
+
+    public abstract void setTime0(PlayerWrapper player, long time, boolean relative);
+
+    public abstract void resetTime0(PlayerWrapper player);
+
+    public abstract void sendParticle0(PlayerWrapper player, ParticleHolder particle, LocationHolder location);
 
     public abstract Channel getChannel0(PlayerWrapper player);
 }

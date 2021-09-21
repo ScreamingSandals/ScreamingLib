@@ -3,6 +3,7 @@ package org.screamingsandals.lib.block;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Unmodifiable;
+import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
@@ -14,7 +15,7 @@ import java.util.Optional;
 @Accessors(fluent = true)
 @Data
 @RequiredArgsConstructor
-public class BlockTypeHolder implements ComparableWrapper {
+public class BlockTypeHolder implements ComparableWrapper, ParticleData {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private static BlockTypeHolder cachedAir;
@@ -50,6 +51,28 @@ public class BlockTypeHolder implements ComparableWrapper {
         }));
     }
 
+    public BlockTypeHolder with(String attribute, int value) {
+        return new BlockTypeHolder(platformName, legacyData, Map.copyOf(new HashMap<>() {
+            {
+                if (flatteningData != null) {
+                    putAll(flatteningData);
+                }
+                put(attribute, String.valueOf(value));
+            }
+        }));
+    }
+
+    public BlockTypeHolder with(String attribute, boolean value) {
+        return new BlockTypeHolder(platformName, legacyData, Map.copyOf(new HashMap<>() {
+            {
+                if (flatteningData != null) {
+                    putAll(flatteningData);
+                }
+                put(attribute, String.valueOf(value));
+            }
+        }));
+    }
+
     public BlockTypeHolder colorize(String color) {
         return BlockTypeMapper.colorize(this, color);
     }
@@ -57,6 +80,28 @@ public class BlockTypeHolder implements ComparableWrapper {
     @SuppressWarnings("unchecked")
     public Optional<String> get(String attribute) {
         return flatteningData != null ? Optional.ofNullable(flatteningData.get(attribute)) : Optional.empty();
+    }
+
+    public Optional<Integer> getInt(String attribute) {
+        if (flatteningData != null) {
+            var attr = flatteningData.get(attribute);
+            if (attr != null) {
+                try {
+                    return Optional.of(Integer.parseInt(attr));
+                } catch (NumberFormatException ignored) { }
+            }
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Boolean> getBoolean(String attribute) {
+        if (flatteningData != null) {
+            var attr = flatteningData.get(attribute);
+            if (attr != null) {
+                return Optional.of(Boolean.parseBoolean(attr));
+            }
+        }
+        return Optional.empty();
     }
 
     @Override

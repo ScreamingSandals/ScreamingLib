@@ -3,6 +3,7 @@ package org.screamingsandals.lib.event.player;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.event.AbstractAsyncEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
@@ -51,6 +52,10 @@ public class SAsyncPlayerPreLoginEvent extends AbstractAsyncEvent implements SPl
 
     public void setMessage(Component message) {
         this.message.set(message);
+    }
+
+    public void setMessage(ComponentLike message) {
+        this.message.set(message.asComponent());
     }
 
     @Override

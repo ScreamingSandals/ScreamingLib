@@ -3,6 +3,7 @@ package org.screamingsandals.lib.item;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
 @Accessors(fluent = true)
 @Data
 @RequiredArgsConstructor
-public class ItemTypeHolder implements ComparableWrapper {
+public class ItemTypeHolder implements ComparableWrapper, ParticleData {
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private static ItemTypeHolder cachedAir;

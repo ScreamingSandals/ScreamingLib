@@ -2,6 +2,7 @@ package org.screamingsandals.lib.lang;
 
 import lombok.Data;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.Arrays;
@@ -31,6 +32,10 @@ public final class Translation implements Messageable {
         return new Translation(keys, fallback);
     }
 
+    public static Translation of(Collection<String> keys, ComponentLike fallback) {
+        return new Translation(keys, fallback.asComponent());
+    }
+
     public Translation join(String... key) {
         final var copied = new LinkedList<>(keys);
         copied.addAll(Arrays.asList(key));
@@ -46,6 +51,13 @@ public final class Translation implements Messageable {
     }
 
     public Translation join(Collection<String> keys, Component fallback) {
+        final var copied = new LinkedList<>(this.keys);
+        copied.addAll(keys);
+
+        return of(copied, fallback);
+    }
+
+    public Translation join(Collection<String> keys, ComponentLike fallback) {
         final var copied = new LinkedList<>(this.keys);
         copied.addAll(keys);
 

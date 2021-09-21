@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -28,5 +29,9 @@ public class SPlayerLeaveEvent extends AbstractEvent implements SPlayerEvent {
 
     public void setLeaveMessage(@Nullable Component leaveMessage) {
         this.leaveMessage.set(leaveMessage);
+    }
+
+    public void setLeaveMessage(@Nullable ComponentLike leaveMessage) {
+        this.leaveMessage.set(leaveMessage != null ? leaveMessage.asComponent() : null);
     }
 }

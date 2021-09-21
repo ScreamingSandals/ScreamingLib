@@ -19,6 +19,10 @@ public final class ComponentWrapper implements ComponentLike, Wrapper {
         return component;
     }
 
+    public static ComponentWrapper of(ComponentLike component) {
+        return new ComponentWrapper(component.asComponent());
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

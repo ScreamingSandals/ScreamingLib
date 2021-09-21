@@ -19,7 +19,11 @@ public interface Container extends Openable, Wrapper {
 
     Item[] getContents();
 
+    Item[] getStorageContents();
+
     void setContents(Item[] items) throws IllegalArgumentException;
+
+    void setStorageContents(Item[] items) throws IllegalArgumentException;
 
     boolean contains(ItemTypeHolder materialHolder);
 
