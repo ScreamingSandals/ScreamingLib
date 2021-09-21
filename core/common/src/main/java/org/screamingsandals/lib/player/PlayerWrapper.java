@@ -63,10 +63,6 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         return Optional.empty();
     }
 
-    public int getProtocolVersion() {
-        return PlayerMapper.getProtocolVersion(this);
-    }
-
     public boolean isSprinting() {
         return PlayerMapper.isSprinting(this);
     }
