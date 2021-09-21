@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -29,5 +30,9 @@ public class SPlayerJoinEvent extends AbstractEvent implements SPlayerEvent {
 
     public void setJoinMessage(@Nullable Component joinMessage) {
         this.joinMessage.set(joinMessage);
+    }
+
+    public void setJoinMessage(@Nullable ComponentLike joinMessage) {
+        this.joinMessage.set(joinMessage.asComponent());
     }
 }

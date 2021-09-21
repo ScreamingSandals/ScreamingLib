@@ -2,6 +2,7 @@ package org.screamingsandals.lib.container.type;
 
 import lombok.Data;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.utils.ComparableWrapper;
@@ -24,8 +25,16 @@ public class InventoryTypeHolder implements ComparableWrapper {
         return InventoryTypeMapping.getSize(this);
     }
 
+    public <C extends Container> Optional<C> createContainer(ComponentLike name) {
+        return createContainer(name.asComponent());
+    }
+
     public <C extends Container> Optional<C> createContainer(Component name) {
         return ItemFactory.createContainer(this, name);
+    }
+
+    public <C extends Container> Optional<C> createContainer() {
+        return ItemFactory.createContainer(this);
     }
 
     /**

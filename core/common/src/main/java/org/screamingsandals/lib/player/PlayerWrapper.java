@@ -3,6 +3,7 @@ package org.screamingsandals.lib.player;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
@@ -12,14 +13,17 @@ import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.entity.SEntityDamageEvent;
+import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.weather.WeatherHolder;
 
 import java.lang.ref.WeakReference;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper {
     @Getter
@@ -84,6 +88,10 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         PlayerMapper.setDisplayName(this, component);
     }
 
+    public void setDisplayName(@Nullable ComponentLike component) {
+        PlayerMapper.setDisplayName(this, component != null ? component.asComponent() : null);
+    }
+
     public EntityHuman asEntity() {
         return as(EntityHuman.class);
     }
@@ -112,16 +120,24 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         return PlayerMapper.getLocation(this);
     }
 
-    public void teleport(LocationHolder location, Runnable callback) {
-        PlayerMapper.teleport(this, location, callback);
+    public CompletableFuture<Void> teleport(LocationHolder location, Runnable callback) {
+        return PlayerMapper.teleport(this, location, callback, false);
     }
 
-    public void teleport(LocationHolder location) {
-        teleport(location, null);
+    public CompletableFuture<Void> teleport(LocationHolder location, Runnable callback, boolean forceCallback) {
+        return PlayerMapper.teleport(this, location, callback, forceCallback);
+    }
+
+    public CompletableFuture<Boolean> teleport(LocationHolder location) {
+        return PlayerMapper.teleport(this, location);
     }
 
     public void kick(Component message) {
         PlayerMapper.kick(this, message);
+    }
+
+    public void kick(ComponentLike message) {
+        PlayerMapper.kick(this, message.asComponent());
     }
 
     public void setGameMode(@NotNull GameModeHolder gameMode) {
@@ -201,6 +217,30 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
     @Override
     public boolean isOnline() {
         return PlayerMapper.isOnline(this);
+    }
+
+    public Optional<WeatherHolder> getPlayerWeather() {
+        return PlayerMapper.getWeather(this);
+    }
+
+    public void setPlayerWeather(@Nullable WeatherHolder weather) {
+        PlayerMapper.setWeather(this, weather);
+    }
+
+    public long getPlayerTime() {
+        return PlayerMapper.getTime(this);
+    }
+
+    public void setPlayerTime(long time, boolean relative) {
+        PlayerMapper.setTime(this, time, relative);
+    }
+
+    public void resetPlayerTime() {
+        PlayerMapper.resetTime(this);
+    }
+
+    public void sendParticle(ParticleHolder particle, LocationHolder location) {
+
     }
 
     @Override

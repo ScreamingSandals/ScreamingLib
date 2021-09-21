@@ -2,6 +2,7 @@ package org.screamingsandals.lib.item.builder;
 
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.util.RGBLike;
@@ -11,9 +12,7 @@ import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
-import org.screamingsandals.lib.item.meta.EnchantmentMapping;
-import org.screamingsandals.lib.item.meta.PotionEffectHolder;
-import org.screamingsandals.lib.item.meta.PotionMapping;
+import org.screamingsandals.lib.item.meta.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
@@ -65,12 +64,22 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder name(@NotNull ComponentLike name) {
+        item.setDisplayName(name.asComponent());
+        return this;
+    }
+
     public ItemBuilder name(@Nullable String name) {
         if (name == null) {
             item.setDisplayName(null);
             return this;
         }
         return name(AdventureHelper.toComponent(name));
+    }
+
+    public ItemBuilder localizedName(@Nullable ComponentLike name) {
+        item.setLocalizedName(name != null ? name.asComponent() : null);
+        return this;
     }
 
     public ItemBuilder localizedName(@Nullable Component name) {
@@ -117,6 +126,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder lore(@NotNull ComponentLike lore) {
+        item.addLore(lore.asComponent());
+        return this;
+    }
+
     public ItemBuilder lore(@Nullable String lore) {
         if (lore == null) {
             item.addLore(Component.empty());
@@ -125,8 +139,8 @@ public class ItemBuilder {
         return lore(AdventureHelper.toComponent(lore));
     }
 
-    public ItemBuilder lore(@NotNull List<Component> lore) {
-        item.getLore().addAll(lore);
+    public <C extends ComponentLike> ItemBuilder lore(@NotNull List<C> lore) {
+        item.getLore().addAll(lore.stream().map(ComponentLike::asComponent).collect(Collectors.toList()));
         return this;
     }
 
@@ -146,12 +160,12 @@ public class ItemBuilder {
     }
 
     public ItemBuilder enchant(@NotNull Object enchant) {
-        EnchantmentMapping.resolve(enchant).ifPresent(item::addEnchant);
+        EnchantmentHolder.ofOptional(enchant).ifPresent(item::addEnchant);
         return this;
     }
 
     public ItemBuilder potion(@NotNull Object potion) {
-        PotionMapping.resolve(potion).ifPresent(item::setPotion);
+        PotionHolder.ofOptional(potion).ifPresent(item::setPotion);
         return this;
     }
 

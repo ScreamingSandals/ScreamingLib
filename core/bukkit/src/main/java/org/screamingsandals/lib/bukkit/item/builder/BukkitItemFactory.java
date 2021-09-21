@@ -344,6 +344,11 @@ public class BukkitItemFactory extends ItemFactory {
     }
 
     @Override
+    public <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type) {
+        return wrapContainer0(Bukkit.createInventory(null, type.as(InventoryType.class)));
+    }
+
+    @Override
     public <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type, Component name) {
         var container = AdventureUtils
                 .get(Bukkit.getServer(), "createInventory", InventoryHolder.class, InventoryType.class, Component.class)
@@ -352,6 +357,23 @@ public class BukkitItemFactory extends ItemFactory {
                                         .invokeInstanceResulted(Bukkit.getServer(), null, type.as(InventoryType.class), name)
                                         .as(Inventory.class),
                         () -> Bukkit.createInventory(null, type.as(InventoryType.class), AdventureHelper.toLegacy(name)));
+        return wrapContainer0(container);
+    }
+
+    @Override
+    public <C extends Container> Optional<C> createContainer0(int size) {
+        return wrapContainer0(Bukkit.createInventory(null, size));
+    }
+
+    @Override
+    public <C extends Container> Optional<C> createContainer0(int size, Component name) {
+        var container = AdventureUtils
+                .get(Bukkit.getServer(), "createInventory", InventoryHolder.class, int.class, Component.class)
+                .ifPresentOrElseGet(classMethod ->
+                                classMethod
+                                        .invokeInstanceResulted(Bukkit.getServer(), null, size, name)
+                                        .as(Inventory.class),
+                        () -> Bukkit.createInventory(null, size, AdventureHelper.toLegacy(name)));
         return wrapContainer0(container);
     }
 

@@ -15,6 +15,7 @@ import org.screamingsandals.lib.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.item.meta.EnchantmentMapping;
 import org.screamingsandals.lib.item.meta.PotionEffectMapping;
 import org.screamingsandals.lib.item.meta.PotionMapping;
+import org.screamingsandals.lib.particle.ParticleTypeMapping;
 import org.screamingsandals.lib.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.gamemode.GameModeMapping;
@@ -28,6 +29,7 @@ import org.screamingsandals.lib.world.difficulty.DifficultyMapping;
 import org.screamingsandals.lib.world.dimension.DimensionMapping;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
 import org.screamingsandals.lib.world.gamerule.GameRuleMapping;
+import org.screamingsandals.lib.world.weather.WeatherMapping;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
@@ -59,7 +61,9 @@ import org.screamingsandals.lib.world.gamerule.GameRuleMapping;
         DifficultyMapping.class,
         DimensionMapping.class,
         ChunkMapper.class,
-        GameRuleMapping.class
+        GameRuleMapping.class,
+        WeatherMapping.class,
+        ParticleTypeMapping.class
 })
 @InternalCoreService
 public abstract class Core {

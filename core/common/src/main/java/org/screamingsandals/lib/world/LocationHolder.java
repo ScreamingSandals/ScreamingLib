@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
+import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.utils.MathUtils;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -120,6 +121,10 @@ public class LocationHolder implements Wrapper, Serializable {
 
     public ChunkHolder getChunk() {
         return getWorld().getChunkAt(this).orElseThrow();
+    }
+
+    public void sendParticle(ParticleHolder particle) {
+        getWorld().sendParticle(particle, this);
     }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")

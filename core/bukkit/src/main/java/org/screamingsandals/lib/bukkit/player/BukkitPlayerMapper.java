@@ -5,14 +5,13 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.apache.commons.lang.LocaleUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.PlayerContainer;
@@ -23,6 +22,7 @@ import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
 import org.screamingsandals.lib.nms.accessors.ConnectionProtocolAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerGamePacketListenerImplAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
+import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
@@ -36,8 +36,10 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
+import org.screamingsandals.lib.world.weather.WeatherHolder;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -193,10 +195,10 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public void teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback) {
-        PaperLib.teleportAsync(wrapper.as(Player.class), location.as(Location.class))
+    public CompletableFuture<Void> teleport0(PlayerWrapper wrapper, LocationHolder location, Runnable callback, boolean forceCallback) {
+        return teleport0(wrapper, location)
                 .thenAccept(result -> {
-                    if (result) {
+                    if (result || forceCallback) {
                         callback.run();
                     }
                 })
@@ -204,6 +206,11 @@ public class BukkitPlayerMapper extends PlayerMapper {
                     ex.printStackTrace();
                     return null;
                 });
+    }
+
+    @Override
+    public CompletableFuture<Boolean> teleport0(PlayerWrapper wrapper, LocationHolder location) {
+        return PaperLib.teleportAsync(wrapper.as(Player.class), location.as(Location.class));
     }
 
     @Override
@@ -391,5 +398,49 @@ public class BukkitPlayerMapper extends PlayerMapper {
         final Object connection2 = Reflect.getField(connection1, ServerGamePacketListenerImplAccessor.getFieldConnection());
         final Object protocol = Reflect.getMethod(connection2, ConnectionAccessor.getMethodGetCurrentProtocol1()).invoke();
         return (int) Reflect.getMethod(protocol, ConnectionProtocolAccessor.getMethodGetId1()).invoke();
+    }
+
+    @Override
+    public Optional<WeatherHolder> getWeather0(PlayerWrapper player) {
+        return WeatherHolder.ofOptional(player.as(Player.class).getPlayerWeather());
+    }
+
+    @Override
+    public void setWeather0(PlayerWrapper player, @Nullable WeatherHolder weather) {
+        if (weather == null) {
+            player.as(Player.class).resetPlayerWeather();
+        } else {
+            player.as(Player.class).setPlayerWeather(weather.as(WeatherType.class));
+        }
+    }
+
+    @Override
+    public long getTime0(PlayerWrapper player) {
+        return player.as(Player.class).getPlayerTime();
+    }
+
+    @Override
+    public void setTime0(PlayerWrapper player, long time, boolean relative) {
+        player.as(Player.class).setPlayerTime(time, relative);
+    }
+
+    @Override
+    public void resetTime0(PlayerWrapper player) {
+        player.as(Player.class).resetPlayerTime();
+    }
+
+    @Override
+    public void sendParticle0(PlayerWrapper player, ParticleHolder particle, LocationHolder location) {
+        player.as(Player.class).spawnParticle(
+                particle.particleType().as(Particle.class),
+                location.as(Location.class),
+                particle.count(),
+                particle.offset().getX(),
+                particle.offset().getY(),
+                particle.offset().getZ(),
+                particle.particleData(),
+                particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null
+                // hey bukkit api, where's the last argument?
+        );
     }
 }
