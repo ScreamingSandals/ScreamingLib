@@ -4,11 +4,13 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import org.screamingsandals.lib.entity.EntityBasic;
+import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import org.screamingsandals.lib.world.dimension.DimensionHolder;
 import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
+import org.screamingsandals.lib.world.weather.WeatherHolder;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -47,6 +49,12 @@ public interface WorldHolder extends Wrapper, Serializable {
     <T> T getGameRuleValue(GameRuleHolder holder);
 
     <T> void setGameRuleValue(GameRuleHolder holder, T value);
+
+    long getTime();
+
+    void setTime(long time);
+
+    void sendParticle(ParticleHolder particle, LocationHolder location);
 
     class WorldHolderTypeAdapter extends TypeAdapter<WorldHolder> {
         @Override

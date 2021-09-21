@@ -2,9 +2,12 @@ package org.screamingsandals.lib.bukkit.world;
 
 import org.bukkit.GameRule;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.World;
+import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
+import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -14,6 +17,7 @@ import org.screamingsandals.lib.world.chunk.ChunkMapper;
 import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import org.screamingsandals.lib.world.dimension.DimensionHolder;
 import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
+import org.screamingsandals.lib.world.weather.WeatherHolder;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.List;
@@ -111,5 +115,30 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
         } else {
             wrappedObject.setGameRuleValue(holder.getPlatformName(), value.toString());
         }
+    }
+
+    @Override
+    public long getTime() {
+        return wrappedObject.getTime();
+    }
+
+    @Override
+    public void setTime(long time) {
+        wrappedObject.setTime(time);
+    }
+
+    @Override
+    public void sendParticle(ParticleHolder particle, LocationHolder location) {
+        wrappedObject.spawnParticle(
+                particle.particleType().as(Particle.class),
+                location.as(Location.class),
+                particle.count(),
+                particle.offset().getX(),
+                particle.offset().getY(),
+                particle.offset().getZ(),
+                particle.particleData(),
+                particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null,
+                particle.longDistance()
+        );
     }
 }

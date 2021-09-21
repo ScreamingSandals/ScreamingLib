@@ -33,6 +33,10 @@ public class InventoryTypeHolder implements ComparableWrapper {
         return ItemFactory.createContainer(this, name);
     }
 
+    public <C extends Container> Optional<C> createContainer() {
+        return ItemFactory.createContainer(this);
+    }
+
     /**
      * Compares the entity type and the object
      *

@@ -11,6 +11,8 @@ import org.jetbrains.annotations.NotNull;
 @AllArgsConstructor
 @Accessors(chain = true)
 public class Vector3D implements Cloneable {
+    public static final Vector3D ZERO = new Vector3D(0,0,0);
+
     private double x;
     private double y;
     private double z;

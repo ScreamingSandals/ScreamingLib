@@ -4,8 +4,10 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.PlayerContainer;
+import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
@@ -15,6 +17,7 @@ import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.WorldHolder;
+import org.screamingsandals.lib.world.weather.WeatherHolder;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -407,6 +410,48 @@ public abstract class PlayerMapper {
         }
         return playerMapper.getProtocolVersion0(wrapper);
     }
+
+    public static Optional<WeatherHolder> getWeather(PlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getWeather0(wrapper);
+    }
+
+    public static void setWeather(PlayerWrapper wrapper, @Nullable WeatherHolder weather) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setWeather0(wrapper, weather);
+    }
+
+    public static long getTime(PlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getTime0(wrapper);
+    }
+
+    public static void setTime(PlayerWrapper wrapper, long time, boolean relative) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setTime0(wrapper, time, relative);
+    }
+
+    public static void resetTime(PlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.resetTime0(wrapper);
+    }
+
+    public static void sendParticle(PlayerWrapper player, ParticleHolder particle, LocationHolder location) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.sendParticle0(player, particle, location);
+    }
     
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
@@ -500,4 +545,16 @@ public abstract class PlayerMapper {
     public abstract void setSprinting0(PlayerWrapper player, boolean sprinting);
 
     public abstract int getProtocolVersion0(PlayerWrapper player);
+
+    public abstract Optional<WeatherHolder> getWeather0(PlayerWrapper player);
+
+    public abstract void setWeather0(PlayerWrapper player, @Nullable WeatherHolder weather);
+
+    public abstract long getTime0(PlayerWrapper player);
+
+    public abstract void setTime0(PlayerWrapper player, long time, boolean relative);
+
+    public abstract void resetTime0(PlayerWrapper player);
+
+    public abstract void sendParticle0(PlayerWrapper player, ParticleHolder particle, LocationHolder location);
 }

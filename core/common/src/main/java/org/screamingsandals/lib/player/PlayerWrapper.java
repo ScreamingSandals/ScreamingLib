@@ -13,10 +13,12 @@ import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.entity.SEntityDamageEvent;
+import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.weather.WeatherHolder;
 
 import java.lang.ref.WeakReference;
 import java.util.Optional;
@@ -215,6 +217,30 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
     @Override
     public boolean isOnline() {
         return PlayerMapper.isOnline(this);
+    }
+
+    public Optional<WeatherHolder> getPlayerWeather() {
+        return PlayerMapper.getWeather(this);
+    }
+
+    public void setPlayerWeather(@Nullable WeatherHolder weather) {
+        PlayerMapper.setWeather(this, weather);
+    }
+
+    public long getPlayerTime() {
+        return PlayerMapper.getTime(this);
+    }
+
+    public void setPlayerTime(long time, boolean relative) {
+        PlayerMapper.setTime(this, time, relative);
+    }
+
+    public void resetPlayerTime() {
+        PlayerMapper.resetTime(this);
+    }
+
+    public void sendParticle(ParticleHolder particle, LocationHolder location) {
+
     }
 
     @Override
