@@ -438,7 +438,9 @@ public class BukkitPlayerMapper extends PlayerMapper {
 
     @Override
     public Channel getChannel0(PlayerWrapper player) {
-        final var connection = Reflect.getField(ClassStorage.getPlayerConnection(player.as(Player.class)), ServerGamePacketListenerImplAccessor.getFieldConnection());
-        return (Channel) Reflect.getField(connection, ConnectionAccessor.getFieldChannel());
+        return Reflect.getFieldResulted(ClassStorage.getHandle(player.as(Player.class)), ServerPlayerAccessor.getFieldConnection())
+                .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
+                .getFieldResulted(ConnectionAccessor.getFieldChannel())
+                .as(Channel.class);
     }
 }

@@ -1,20 +1,12 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
-import org.screamingsandals.lib.nms.accessors.ServerGamePacketListenerImplAccessor;
-import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
 @Service
@@ -50,11 +42,7 @@ public class BukkitPacketMapper extends PacketMapper {
                 throw new IllegalArgumentException("Packet too big (is " + j + ", should be less than 2097152): " + packet);
             }
 
-            var channel = Reflect.getFieldResulted(ClassStorage.getHandle(player.as(Player.class)), ServerPlayerAccessor.getFieldConnection())
-                    .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
-                    .getFieldResulted(ConnectionAccessor.getFieldChannel())
-                    .as(Channel.class);
-
+            var channel = player.getChannel();
             if (channel.isActive()) {
                 if (channel.eventLoop().inEventLoop()) {
                     var future = channel.writeAndFlush(writer.getBuffer());
