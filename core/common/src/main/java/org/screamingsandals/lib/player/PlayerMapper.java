@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.player;
 
+import io.netty.channel.Channel;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.Component;
@@ -404,13 +405,6 @@ public abstract class PlayerMapper {
         playerMapper.setSprinting0(wrapper, sprinting);
     }
 
-    public static int getProtocolVersion(PlayerWrapper wrapper) {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return playerMapper.getProtocolVersion0(wrapper);
-    }
-
     public static Optional<WeatherHolder> getWeather(PlayerWrapper wrapper) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
@@ -452,7 +446,14 @@ public abstract class PlayerMapper {
         }
         playerMapper.sendParticle0(player, particle, location);
     }
-    
+
+    public static Channel getChannel(PlayerWrapper player) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getChannel0(player);
+    }
+
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
@@ -544,8 +545,6 @@ public abstract class PlayerMapper {
 
     public abstract void setSprinting0(PlayerWrapper player, boolean sprinting);
 
-    public abstract int getProtocolVersion0(PlayerWrapper player);
-
     public abstract Optional<WeatherHolder> getWeather0(PlayerWrapper player);
 
     public abstract void setWeather0(PlayerWrapper player, @Nullable WeatherHolder weather);
@@ -557,4 +556,6 @@ public abstract class PlayerMapper {
     public abstract void resetTime0(PlayerWrapper player);
 
     public abstract void sendParticle0(PlayerWrapper player, ParticleHolder particle, LocationHolder location);
+
+    public abstract Channel getChannel0(PlayerWrapper player);
 }

@@ -7,6 +7,7 @@ import org.screamingsandals.lib.entity.damage.DamageCauseMapping;
 import org.screamingsandals.lib.entity.pose.EntityPoseMapping;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.event.player.PlayerPacketEventProviderService;
 import org.screamingsandals.lib.item.ItemTypeMapper;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeTypeMapping;
@@ -63,7 +64,9 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         ChunkMapper.class,
         GameRuleMapping.class,
         WeatherMapping.class,
-        ParticleTypeMapping.class
+        ParticleTypeMapping.class,
+        GameRuleMapping.class,
+        PlayerPacketEventProviderService.class
 })
 @InternalCoreService
 public abstract class Core {

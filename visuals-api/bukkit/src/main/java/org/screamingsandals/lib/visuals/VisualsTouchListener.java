@@ -1,9 +1,9 @@
 package org.screamingsandals.lib.visuals;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.screamingsandals.lib.bukkit.utils.nms.network.AutoPacketInboundListener;
+
+import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.event.player.SPlayerPacketEvent;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;
-import org.screamingsandals.lib.player.PlayerMapper;
+import org.screamingsandals.lib.utils.PacketMethod;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,35 +11,41 @@ import java.util.UUID;
 
 public class VisualsTouchListener<T extends TouchableVisual<T>> {
     private final Map<UUID, Long> coolDownMap = new HashMap<>();
+    private final AbstractVisualsManager<T> manager;
 
-    public VisualsTouchListener(AbstractVisualsManager<T> manager, Plugin plugin) {
-        new AutoPacketInboundListener(plugin) {
-            @Override
-            protected Object handle(Player sender, Object packet) {
-                if (ServerboundInteractPacketAccessor.getType().isInstance(packet)) {
-                    final var entityId = (int) Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldEntityId());
-                    final var activeVisuals = manager.getActiveVisuals();
+    public VisualsTouchListener(AbstractVisualsManager<T> manager) {
+        this.manager = manager;
+        EventManager.getDefaultEventManager().register(SPlayerPacketEvent.class, this::onInteract);
+    }
 
-                    for (var entry : activeVisuals.entrySet()) {
-                        var visual = entry.getValue();
-                        if (visual.hasId(entityId) && visual.isTouchable()) {
-                            synchronized (coolDownMap) {
-                                if (coolDownMap.containsKey(sender.getUniqueId())) {
-                                    final var lastClick = coolDownMap.get(sender.getUniqueId());
-                                    if (System.currentTimeMillis() - lastClick < visual.getClickCoolDown()) {
-                                        break;
-                                    }
-                                }
-                                coolDownMap.put(sender.getUniqueId(), System.currentTimeMillis());
+    public void onInteract(SPlayerPacketEvent event) {
+        if (event.getMethod() != PacketMethod.INBOUND) {
+            return;
+        }
+
+        final var packet = event.getPacket();
+        final var player = event.getPlayer();
+
+        if (ServerboundInteractPacketAccessor.getType().isInstance(packet)) {
+            final var entityId = (int) Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldEntityId());
+            final var activeVisuals = manager.getActiveVisuals();
+
+            for (var entry : activeVisuals.entrySet()) {
+                var visual = entry.getValue();
+                if (visual.hasId(entityId) && visual.isTouchable()) {
+                    synchronized (coolDownMap) {
+                        if (coolDownMap.containsKey(player.getUuid())) {
+                            final var lastClick = coolDownMap.get(player.getUuid());
+                            if (System.currentTimeMillis() - lastClick < visual.getClickCoolDown()) {
+                                break;
                             }
-
-                            manager.fireVisualTouchEvent(PlayerMapper.wrapPlayer(sender), visual, packet);
-                            break;
                         }
+                        coolDownMap.put(player.getUuid(), System.currentTimeMillis());
                     }
+                    manager.fireVisualTouchEvent(player, visual, packet);
+                    break;
                 }
-                return packet;
             }
-        };
+        }
     }
 }

@@ -59,7 +59,7 @@ public class PacketIdMapping {
         // all mapped packets are just from play protocol, we don't rly need to touch handshaking, status or login protocol
         var playProtocol = ConnectionProtocolAccessor.getFieldPLAY();
 
-        // all our mapped packets are just clientbound. server bound listener is not implemented yet
+        // all our mapped packets are just client bound. server bound listener is not implemented yet
         var outgoing = PacketFlowAccessor.getFieldCLIENTBOUND();
 
         if (ConnectionProtocolAccessor.getFieldFlows() == null) {

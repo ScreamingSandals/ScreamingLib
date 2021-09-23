@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.player;
 
+import io.netty.channel.Channel;
 import io.papermc.lib.PaperLib;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -19,7 +20,6 @@ import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
-import org.screamingsandals.lib.nms.accessors.ConnectionProtocolAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerGamePacketListenerImplAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.particle.ParticleHolder;
@@ -393,14 +393,6 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public int getProtocolVersion0(PlayerWrapper player) {
-        final Object connection1 = Reflect.getField(ClassStorage.getHandle(player.as(Player.class)), ServerPlayerAccessor.getFieldConnection());
-        final Object connection2 = Reflect.getField(connection1, ServerGamePacketListenerImplAccessor.getFieldConnection());
-        final Object protocol = Reflect.getMethod(connection2, ConnectionAccessor.getMethodGetCurrentProtocol1()).invoke();
-        return (int) Reflect.getMethod(protocol, ConnectionProtocolAccessor.getMethodGetId1()).invoke();
-    }
-
-    @Override
     public Optional<WeatherHolder> getWeather0(PlayerWrapper player) {
         return WeatherHolder.ofOptional(player.as(Player.class).getPlayerWeather());
     }
@@ -442,5 +434,13 @@ public class BukkitPlayerMapper extends PlayerMapper {
                 particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null
                 // hey bukkit api, where's the last argument?
         );
+    }
+
+    @Override
+    public Channel getChannel0(PlayerWrapper player) {
+        return Reflect.getFieldResulted(ClassStorage.getHandle(player.as(Player.class)), ServerPlayerAccessor.getFieldConnection())
+                .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
+                .getFieldResulted(ConnectionAccessor.getFieldChannel())
+                .as(Channel.class);
     }
 }
