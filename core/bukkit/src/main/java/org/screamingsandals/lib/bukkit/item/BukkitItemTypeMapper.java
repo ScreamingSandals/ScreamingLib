@@ -21,7 +21,7 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
         itemTypeConverter
                 .registerW2P(Material.class, holder -> Material.valueOf(holder.platformName()))
                 .registerW2P(ItemStack.class, holder -> {
-                    if (BukkitItemBlockIdsRemapper.getPlatform() == Platform.JAVA_FLATTENING) {
+                    if (BukkitItemBlockIdsRemapper.getBPlatform() == Platform.JAVA_FLATTENING) {
                         ItemStack stack = new ItemStack(Material.valueOf(holder.platformName()));
                         ItemMeta meta = stack.getItemMeta();
                         if (meta instanceof Damageable) {
@@ -29,7 +29,7 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
                             stack.setItemMeta(meta);
                         }
                         return stack;
-                    } else if (BukkitItemBlockIdsRemapper.getPlatform() == Platform.JAVA_LEGACY) {
+                    } else if (BukkitItemBlockIdsRemapper.getBPlatform() == Platform.JAVA_LEGACY) {
                         return new ItemStack(Material.valueOf(holder.platformName()), 1, holder.durability());
                     } else {
                         throw new UnsupportedOperationException("Unknown platform!");
@@ -60,7 +60,7 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
         if (!material.isBlock()) {
             return Optional.empty();
         }
-        if (BukkitItemBlockIdsRemapper.getPlatform() == Platform.JAVA_LEGACY) {
+        if (BukkitItemBlockIdsRemapper.getBPlatform() == Platform.JAVA_LEGACY) {
             return Optional.of(BlockTypeHolder.of(material).withLegacyData((byte) typeHolder.durability()));
         } else {
             return Optional.of(BlockTypeHolder.of(material));

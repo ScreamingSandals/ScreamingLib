@@ -62,4 +62,9 @@ public class BukkitPacketMapper extends PacketMapper {
         }
     }
 
+    @Override
+    public int getId0(Class<? extends AbstractPacket> clazz) {
+        return PacketIdMapping.getPacketId(clazz);
+    }
+
 }

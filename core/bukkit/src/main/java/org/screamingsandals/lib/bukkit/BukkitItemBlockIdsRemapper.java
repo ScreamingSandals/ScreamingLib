@@ -13,7 +13,7 @@ public class BukkitItemBlockIdsRemapper extends ItemBlockIdsRemapper {
     @Getter
     private static final int versionNumber;
     @Getter
-    private static final Platform platform;
+    private static final Platform bPlatform;
 
     static {
         var bukkitVersion = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
@@ -24,13 +24,13 @@ public class BukkitItemBlockIdsRemapper extends ItemBlockIdsRemapper {
         }
         versionNumber = ver;
 
-        platform = versionNumber < 113 ? Platform.JAVA_LEGACY : Platform.JAVA_FLATTENING;
+        bPlatform = versionNumber < 113 ? Platform.JAVA_LEGACY : Platform.JAVA_FLATTENING;
     }
 
     public BukkitItemBlockIdsRemapper(ItemTypeMapper itemTypeMapper, BlockTypeMapper blockTypeMapper) {
         super(itemTypeMapper, blockTypeMapper);
 
-        super.platform = platform;
+        super.platform = bPlatform;
 
         if (versionNumber < 112) {
             mappingFlags.add(MappingFlags.NO_COLORED_BEDS);

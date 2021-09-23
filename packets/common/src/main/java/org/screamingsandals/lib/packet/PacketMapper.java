@@ -55,4 +55,13 @@ public abstract class PacketMapper {
      * @param packet the packet instance to send the player
      */
     public abstract void sendPacket0(PlayerWrapper player, AbstractPacket packet);
+
+    public static int getId(Class<? extends AbstractPacket> clazz) {
+        if (packetMapper == null) {
+            throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
+        }
+        return packetMapper.getId0(clazz);
+    }
+
+    public abstract int getId0(Class<? extends AbstractPacket> clazz);
 }

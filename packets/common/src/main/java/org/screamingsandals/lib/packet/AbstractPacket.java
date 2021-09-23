@@ -41,5 +41,7 @@ public abstract class AbstractPacket {
      *
      * @return the id of this packet
      */
-    abstract int getId();
+    public int getId() {
+        return PacketMapper.getId(this.getClass());
+    }
 }
