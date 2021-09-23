@@ -166,7 +166,7 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
      *
      * On some platforms it can be useless.
      */
-    private void forceUpdateInventory() {
+    public void forceUpdateInventory() {
         PlayerMapper.forceUpdateInventory(this);
     }
 
