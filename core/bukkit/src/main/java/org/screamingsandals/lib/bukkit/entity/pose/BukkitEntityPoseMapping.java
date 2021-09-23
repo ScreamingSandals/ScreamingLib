@@ -17,7 +17,11 @@ public class BukkitEntityPoseMapping extends EntityPoseMapping {
                     .registerP2W(Pose.class, pose -> new EntityPoseHolder(pose.name()))
                     .registerW2P(Pose.class, entityPoseHolder -> Pose.valueOf(entityPoseHolder.getPlatformName()));
 
-            Arrays.stream(Pose.values()).forEach(pose -> mapping.put(NamespacedMappingKey.of(pose.name()), new EntityPoseHolder(pose.name())));
+            Arrays.stream(Pose.values()).forEach(pose -> {
+                var holder = new EntityPoseHolder(pose.name());
+                mapping.put(NamespacedMappingKey.of(pose.name()), holder);
+                values.add(holder);
+            });
         }
     }
 }

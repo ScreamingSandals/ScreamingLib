@@ -7,10 +7,7 @@ import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Accessors(fluent = true)
 @Data
@@ -154,5 +151,9 @@ public class BlockTypeHolder implements ComparableWrapper, ParticleData {
             cachedAir = of("minecraft:air");
         }
         return cachedAir;
+    }
+
+    public static List<BlockTypeHolder> all() {
+        return BlockTypeMapper.getValues();
     }
 }

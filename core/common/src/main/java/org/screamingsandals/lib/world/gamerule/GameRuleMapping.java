@@ -6,6 +6,8 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @AbstractService(
@@ -36,6 +38,14 @@ public abstract class GameRuleMapping extends AbstractTypeMapper<GameRuleHolder>
         }
 
         return gameRuleMapping.gameRuleConverter.convertOptional(gameRule).or(() -> gameRuleMapping.resolveFromMapping(gameRule));
+    }
+
+    @OfMethodAlternative(value = GameRuleHolder.class, methodName = "all")
+    public static List<GameRuleHolder> getValues() {
+        if (gameRuleMapping == null) {
+            throw new UnsupportedOperationException("GameRuleMapping is not initialized yet.");
+        }
+        return Collections.unmodifiableList(gameRuleMapping.values);
     }
 
     public static <T> T convertGameRuleHolder(GameRuleHolder holder, Class<T> newType) {

@@ -15,7 +15,11 @@ public class BukkitGameModeMapping extends GameModeMapping {
                 .registerP2W(GameMode.class, gameMode -> new GameModeHolder(gameMode.name()))
                 .registerW2P(GameMode.class, gameModeHolder -> GameMode.valueOf(gameModeHolder.getPlatformName()));
 
-        Arrays.stream(GameMode.values()).forEach(gameMode -> mapping.put(NamespacedMappingKey.of(gameMode.name()), new GameModeHolder(gameMode.name())));
+        Arrays.stream(GameMode.values()).forEach(gameMode -> {
+            var holder = new GameModeHolder(gameMode.name());
+            mapping.put(NamespacedMappingKey.of(gameMode.name()), holder);
+            values.add(holder);
+        });
     }
 
     @Override

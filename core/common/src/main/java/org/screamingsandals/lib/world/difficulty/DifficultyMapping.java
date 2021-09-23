@@ -6,6 +6,8 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @AbstractService(
@@ -36,6 +38,14 @@ public abstract class DifficultyMapping extends AbstractTypeMapper<DifficultyHol
         }
 
         return difficultyMapping.difficultyConverter.convertOptional(difficulty).or(() -> difficultyMapping.resolveFromMapping(difficulty));
+    }
+
+    @OfMethodAlternative(value = DifficultyHolder.class, methodName = "all")
+    public static List<DifficultyHolder> getValues() {
+        if (difficultyMapping == null) {
+            throw new UnsupportedOperationException("DifficultyMapping is not initialized yet.");
+        }
+        return Collections.unmodifiableList(difficultyMapping.values);
     }
 
     public static <T> T convertDifficultyHolder(DifficultyHolder holder, Class<T> newType) {

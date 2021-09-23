@@ -12,10 +12,7 @@ import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -162,6 +159,14 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
         }
 
         return fireworkEffectMapping.fireworkEffectConverter.convertOptional(fireworkEffectObject).or(() -> fireworkEffectMapping.resolveFromMapping(fireworkEffectObject));
+    }
+
+    @OfMethodAlternative(value = FireworkEffectHolder.class, methodName = "all")
+    public static List<FireworkEffectHolder> getValues() {
+        if (fireworkEffectMapping == null) {
+            throw new UnsupportedOperationException("FireworkEffectMapping is not initialized yet.");
+        }
+        return Collections.unmodifiableList(fireworkEffectMapping.values);
     }
 
     public static <T> T convertFireworkEffectHolder(FireworkEffectHolder holder, Class<T> newType) {

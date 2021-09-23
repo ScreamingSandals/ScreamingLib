@@ -50,8 +50,10 @@ public class BukkitPotionEffectMapping extends PotionEffectMapping {
 
         Arrays.stream(PotionEffectType.values()).forEach(potionEffectType -> {
             if (potionEffectType != null) { // Yeah, this is possible
-                mapping.put(NamespacedMappingKey.of(potionEffectType.getName()), new PotionEffectHolder(potionEffectType.getName()));
-                mapping.put(NumericMappingKey.of(potionEffectType.getId()), new PotionEffectHolder(potionEffectType.getName())); // compatibility with older bw shops
+                var holder = new PotionEffectHolder(potionEffectType.getName());
+                mapping.put(NamespacedMappingKey.of(potionEffectType.getName()), holder);
+                mapping.put(NumericMappingKey.of(potionEffectType.getId()), holder); // compatibility with older bw shops
+                values.add(holder);
             }
         });
     }

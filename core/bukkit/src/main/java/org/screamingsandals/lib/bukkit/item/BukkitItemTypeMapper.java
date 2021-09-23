@@ -47,9 +47,11 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
                         return true; // we are on older versions and yes, it is probably item xdd
                     }
                 })
-                .forEach(material ->
-                        mapping.put(NamespacedMappingKey.of(material.name()), new ItemTypeHolder(material.name()))
-                );
+                .forEach(material -> {
+                    var holder = new ItemTypeHolder(material.name());
+                    mapping.put(NamespacedMappingKey.of(material.name()), holder);
+                    values.add(holder);
+                });
     }
 
     @Override

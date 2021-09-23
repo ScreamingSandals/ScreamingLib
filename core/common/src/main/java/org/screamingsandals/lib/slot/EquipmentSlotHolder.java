@@ -5,6 +5,7 @@ import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
@@ -28,6 +29,10 @@ public class EquipmentSlotHolder implements ComparableWrapper {
             return Optional.of((EquipmentSlotHolder) slot);
         }
         return EquipmentSlotMapping.resolve(slot);
+    }
+
+    public static List<EquipmentSlotHolder> all() {
+        return EquipmentSlotMapping.getValues();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)

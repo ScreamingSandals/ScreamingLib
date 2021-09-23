@@ -16,6 +16,10 @@ public class BukkitAttributeTypeMapping extends AttributeTypeMapping {
                 .registerP2W(Attribute.class, entityType -> new AttributeTypeHolder(entityType.name()))
                 .registerW2P(Attribute.class, entityTypeHolder -> Attribute.valueOf(entityTypeHolder.getPlatformName()));
 
-        Arrays.stream(Attribute.values()).forEach(entityType -> mapping.put(AttributeMappingKey.of(entityType.name()), new AttributeTypeHolder(entityType.name())));
+        Arrays.stream(Attribute.values()).forEach(entityType -> {
+            var holder = new AttributeTypeHolder(entityType.name());
+            mapping.put(AttributeMappingKey.of(entityType.name()), holder);
+            values.add(holder);
+        });
     }
 }

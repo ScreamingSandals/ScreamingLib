@@ -7,6 +7,8 @@ import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.AttributeMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @AbstractService
@@ -44,6 +46,14 @@ public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeT
 
             return Optional.empty();
         });
+    }
+
+    @OfMethodAlternative(value = AttributeTypeHolder.class, methodName = "all")
+    public static List<AttributeTypeHolder> getValues() {
+        if (attributeTypeMapping == null) {
+            throw new UnsupportedOperationException("AttributeTypeMapping is not initialized yet.");
+        }
+        return Collections.unmodifiableList(attributeTypeMapping.values);
     }
 
     public static <T> T convertAttributeTypeHolder(AttributeTypeHolder holder, Class<T> newType) {

@@ -6,6 +6,8 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @AbstractService(
@@ -37,6 +39,14 @@ public abstract class InventoryTypeMapping extends AbstractTypeMapper<InventoryT
         }
 
         return inventoryTypeMapping.inventoryTypeConverter.convertOptional(entity).or(() -> inventoryTypeMapping.resolveFromMapping(entity));
+    }
+
+    @OfMethodAlternative(value = InventoryTypeHolder.class, methodName = "all")
+    public static List<InventoryTypeHolder> getValues() {
+        if (inventoryTypeMapping == null) {
+            throw new UnsupportedOperationException("InventoryTypeMapping is not initialized yet.");
+        }
+        return Collections.unmodifiableList(inventoryTypeMapping.values);
     }
 
     public static <T> T convertInventoryTypeHolder(InventoryTypeHolder holder, Class<T> newType) {

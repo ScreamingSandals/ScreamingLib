@@ -6,6 +6,8 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @AbstractService(
@@ -36,6 +38,14 @@ public abstract class DamageCauseMapping extends AbstractTypeMapper<DamageCauseH
         }
 
         return damageCauseMapping.damageCauseConverter.convertOptional(damageCause).or(() -> damageCauseMapping.resolveFromMapping(damageCause));
+    }
+
+    @OfMethodAlternative(value = DamageCauseHolder.class, methodName = "all")
+    public static List<DamageCauseHolder> getValues() {
+        if (damageCauseMapping == null) {
+            throw new UnsupportedOperationException("DamageCauseMapping is not initialized yet.");
+        }
+        return Collections.unmodifiableList(damageCauseMapping.values);
     }
 
     public static <T> T convertDamageCauseHolder(DamageCauseHolder holder, Class<T> newType) {

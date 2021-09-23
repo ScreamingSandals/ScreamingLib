@@ -2,11 +2,13 @@ package org.screamingsandals.lib.item.meta;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.With;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
@@ -15,14 +17,16 @@ import java.util.Optional;
 @ConfigSerializable
 public final class EnchantmentHolder implements ComparableWrapper {
     private final String platformName;
+    @With
     private final int level;
 
     public EnchantmentHolder(String platformName) {
         this(platformName, 1);
     }
 
+    @Deprecated
     public EnchantmentHolder newLevel(int level) {
-        return new EnchantmentHolder(this.platformName, level);
+        return withLevel(level);
     }
 
     public <R> R as(Class<R> type) {
@@ -40,6 +44,10 @@ public final class EnchantmentHolder implements ComparableWrapper {
             return Optional.of((EnchantmentHolder) enchantment);
         }
         return EnchantmentMapping.resolve(enchantment);
+    }
+
+    public static List<EnchantmentHolder> all() {
+        return EnchantmentMapping.getValues();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)

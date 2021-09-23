@@ -15,7 +15,11 @@ public class BukkitInventoryTypeMapping extends InventoryTypeMapping {
                 .registerP2W(InventoryType.class, inventoryType -> new InventoryTypeHolder(inventoryType.name()))
                 .registerW2P(InventoryType.class, inventoryTypeHolder -> InventoryType.valueOf(inventoryTypeHolder.getPlatformName()));
 
-        Arrays.stream(InventoryType.values()).forEach(inventoryType -> mapping.put(NamespacedMappingKey.of(inventoryType.name()), new InventoryTypeHolder(inventoryType.name())));
+        Arrays.stream(InventoryType.values()).forEach(inventoryType -> {
+            var holder = new InventoryTypeHolder(inventoryType.name());
+            mapping.put(NamespacedMappingKey.of(inventoryType.name()), holder);
+            values.add(holder);
+        });
     }
 
     @Override

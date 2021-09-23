@@ -5,6 +5,7 @@ import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
@@ -42,5 +43,9 @@ public class GameModeHolder implements Wrapper {
             return Optional.of((GameModeHolder) gameMode);
         }
         return GameModeMapping.resolve(gameMode);
+    }
+
+    public static List<GameModeHolder> all() {
+        return GameModeMapping.getValues();
     }
 }

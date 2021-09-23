@@ -4,6 +4,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
 
@@ -14,6 +15,10 @@ public class BukkitEquipmentSlotMapping extends EquipmentSlotMapping {
                 .registerP2W(EquipmentSlot.class, equipmentSlot -> new EquipmentSlotHolder(equipmentSlot.name()))
                 .registerW2P(EquipmentSlot.class, equipmentSlotHolder -> EquipmentSlot.valueOf(equipmentSlotHolder.getPlatformName()));
 
-        Arrays.stream(EquipmentSlot.values()).forEach(equipmentSlot -> mapping.put(equipmentSlot.name(), new EquipmentSlotHolder(equipmentSlot.name())));
+        Arrays.stream(EquipmentSlot.values()).forEach(equipmentSlot -> {
+            var holder = new EquipmentSlotHolder(equipmentSlot.name());
+            mapping.put(NamespacedMappingKey.of(equipmentSlot.name()), holder);
+            values.add(holder);
+        });
     }
 }

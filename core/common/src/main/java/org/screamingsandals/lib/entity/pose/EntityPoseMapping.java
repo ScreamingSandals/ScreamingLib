@@ -6,6 +6,8 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @AbstractService(
@@ -36,6 +38,14 @@ public abstract class EntityPoseMapping extends AbstractTypeMapper<EntityPoseHol
         }
 
         return entityPoseMapping.entityPoseConverter.convertOptional(entityPose).or(() -> entityPoseMapping.resolveFromMapping(entityPose));
+    }
+
+    @OfMethodAlternative(value = EntityPoseHolder.class, methodName = "all")
+    public static List<EntityPoseHolder> getValues() {
+        if (entityPoseMapping == null) {
+            throw new UnsupportedOperationException("EntityPoseMapping is not initialized yet.");
+        }
+        return Collections.unmodifiableList(entityPoseMapping.values);
     }
 
     public static <T> T convertEntityPoseHolder(EntityPoseHolder holder, Class<T> newType) {

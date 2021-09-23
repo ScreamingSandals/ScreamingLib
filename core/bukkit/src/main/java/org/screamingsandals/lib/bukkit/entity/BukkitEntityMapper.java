@@ -29,6 +29,10 @@ public class BukkitEntityMapper extends EntityMapper {
             return Optional.of((T) new BukkitEntityLiving((LivingEntity) entity));
         }
 
+        if (entity instanceof Firework) {
+            return Optional.of((T) new BukkitEntityFirework((Firework) entity));
+        }
+
         if (entity instanceof Projectile) {
             return Optional.of((T) new BukkitEntityProjectile((Projectile) entity));
         }

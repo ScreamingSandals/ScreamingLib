@@ -37,9 +37,11 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
 
         Arrays.stream(Material.values())
                 .filter(t -> !t.name().startsWith("LEGACY") && t.isBlock())
-                .forEach(material ->
-                        mapping.put(NamespacedMappingKey.of(material.name()), new BlockTypeHolder(material.name()))
-                );
+                .forEach(material -> {
+                    var holder = new BlockTypeHolder(material.name());
+                    mapping.put(NamespacedMappingKey.of(material.name()), holder);
+                    values.add(holder);
+                });
     }
 
     protected Map<String, String> getDataFromString(String data) {

@@ -6,6 +6,8 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @AbstractService(
@@ -36,6 +38,14 @@ public abstract class WeatherMapping extends AbstractTypeMapper<WeatherHolder> {
         }
 
         return weatherMapping.weatherConverter.convertOptional(weather).or(() -> weatherMapping.resolveFromMapping(weather));
+    }
+
+    @OfMethodAlternative(value = WeatherHolder.class, methodName = "all")
+    public static List<WeatherHolder> getValues() {
+        if (weatherMapping == null) {
+            throw new UnsupportedOperationException("WeatherMapping is not initialized yet.");
+        }
+        return Collections.unmodifiableList(weatherMapping.values);
     }
 
     public static <T> T convertWeatherHolder(WeatherHolder holder, Class<T> newType) {

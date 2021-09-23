@@ -19,7 +19,11 @@ public class BukkitGameRuleMapping extends GameRuleMapping {
                     .registerP2W(GameRule.class, gameRule -> new GameRuleHolder(gameRule.getName()))
                     .registerW2P(GameRule.class, dimensionHolder -> GameRule.getByName(dimensionHolder.getPlatformName()));
 
-            Arrays.stream(GameRule.values()).forEach(gameRule -> mapping.put(NamespacedMappingKey.of(gameRule.getName()), new GameRuleHolder(gameRule.getName())));
+            Arrays.stream(GameRule.values()).forEach(gameRule -> {
+                var holder = new GameRuleHolder(gameRule.getName());
+                mapping.put(NamespacedMappingKey.of(gameRule.getName()), holder);
+                values.add(holder);
+            });
         } else {
             // bukkit api for legacy version didn't have proper game rules api
             // TODO: Actually fix this using NMS
@@ -29,7 +33,11 @@ public class BukkitGameRuleMapping extends GameRuleMapping {
                             "spawnRadius", "disableElytraMovementCheck", "doWeatherCycle", "maxEntityCramming", "doLimitedCrafting", "maxCommandChainLength", "announceAdvancements",
                             "gameLoopFunction"
                     )
-                    .forEach(gameRule -> mapping.put(NamespacedMappingKey.of(gameRule), new GameRuleHolder(gameRule)));
+                    .forEach(gameRule -> {
+                        var holder = new GameRuleHolder(gameRule);
+                        mapping.put(NamespacedMappingKey.of(gameRule), holder);
+                        values.add(holder);
+                    });
         }
 
         gameRuleConverter

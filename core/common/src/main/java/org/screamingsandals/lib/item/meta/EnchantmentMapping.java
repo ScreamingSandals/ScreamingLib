@@ -11,6 +11,8 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.ConfigurationNode;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -44,7 +46,7 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
                             level = RomanToDecimal.romanToDecimal(entry.getValue().toString());
                         }
                     }
-                    return holder.get().newLevel(level);
+                    return holder.get().withLevel(level);
                 }
                 return null;
             });
@@ -78,7 +80,7 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
                         } catch (Throwable t) {
                             level = RomanToDecimal.romanToDecimal(level_str);
                         }
-                        return Optional.of(enchantmentMapping.mapping.get(namespaced).newLevel(level));
+                        return Optional.of(enchantmentMapping.mapping.get(namespaced).withLevel(level));
                     } else {
                         return Optional.of(enchantmentMapping.mapping.get(namespaced));
                     }
@@ -87,6 +89,14 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
 
             return Optional.empty();
         });
+    }
+
+    @OfMethodAlternative(value = EnchantmentHolder.class, methodName = "all")
+    public static List<EnchantmentHolder> getValues() {
+        if (enchantmentMapping == null) {
+            throw new UnsupportedOperationException("EnchantmentMapping is not initialized yet.");
+        }
+        return Collections.unmodifiableList(enchantmentMapping.values);
     }
 
     @SneakyThrows

@@ -12,6 +12,8 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.key.NumericMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -95,6 +97,14 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
             }
             return Optional.empty();
         });
+    }
+
+    @OfMethodAlternative(value = ItemTypeHolder.class, methodName = "all")
+    public static List<ItemTypeHolder> getValues() {
+        if (itemTypeMapper == null) {
+            throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
+        }
+        return Collections.unmodifiableList(itemTypeMapper.values);
     }
 
     public static ItemTypeHolder colorize(ItemTypeHolder holder, String color) {

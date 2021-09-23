@@ -4,12 +4,11 @@ import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.key.MappingKey;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class AbstractTypeMapper<T extends Wrapper> {
     protected final Map<MappingKey, T> mapping = new HashMap<>();
+    protected final List<T> values = new LinkedList<>();
 
     protected Optional<T> resolveFromMapping(Object key) {
         var namespaced = !(key instanceof MappingKey) ?

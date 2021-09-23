@@ -15,7 +15,11 @@ public class BukkitEntityTypeMapping extends EntityTypeMapping {
                 .registerP2W(EntityType.class, entityType -> new EntityTypeHolder(entityType.name()))
                 .registerW2P(EntityType.class, entityTypeHolder -> EntityType.valueOf(entityTypeHolder.getPlatformName()));
 
-        Arrays.stream(EntityType.values()).forEach(entityType -> mapping.put(NamespacedMappingKey.of(entityType.name()), new EntityTypeHolder(entityType.name())));
+        Arrays.stream(EntityType.values()).forEach(entityType -> {
+            var holder = new EntityTypeHolder(entityType.name());
+            mapping.put(NamespacedMappingKey.of(entityType.name()), holder);
+            values.add(holder);
+        });
     }
 
     @Override

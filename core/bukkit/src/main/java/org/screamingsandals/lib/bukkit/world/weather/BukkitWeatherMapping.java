@@ -15,6 +15,10 @@ public class BukkitWeatherMapping extends WeatherMapping {
                 .registerP2W(WeatherType.class, weather -> new WeatherHolder(weather.name()))
                 .registerW2P(WeatherType.class, weatherHolder -> WeatherType.valueOf(weatherHolder.getPlatformName()));
 
-        Arrays.stream(WeatherType.values()).forEach(weather -> mapping.put(NamespacedMappingKey.of(weather.name()), new WeatherHolder(weather.name())));
+        Arrays.stream(WeatherType.values()).forEach(weather -> {
+            var holder = new WeatherHolder(weather.name());
+            mapping.put(NamespacedMappingKey.of(weather.name()), holder);
+            values.add(holder);
+        });
     }
 }

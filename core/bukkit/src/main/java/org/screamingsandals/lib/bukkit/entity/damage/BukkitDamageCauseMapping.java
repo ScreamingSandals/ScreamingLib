@@ -15,6 +15,10 @@ public class BukkitDamageCauseMapping extends DamageCauseMapping {
                 .registerP2W(EntityDamageEvent.DamageCause.class, entityType -> new DamageCauseHolder(entityType.name()))
                 .registerW2P(EntityDamageEvent.DamageCause.class, entityTypeHolder -> EntityDamageEvent.DamageCause.valueOf(entityTypeHolder.getPlatformName()));
 
-        Arrays.stream(EntityDamageEvent.DamageCause.values()).forEach(damageCause -> mapping.put(NamespacedMappingKey.of(damageCause.name()), new DamageCauseHolder(damageCause.name())));
+        Arrays.stream(EntityDamageEvent.DamageCause.values()).forEach(damageCause -> {
+            var holder = new DamageCauseHolder(damageCause.name());
+            mapping.put(NamespacedMappingKey.of(damageCause.name()), holder);
+            values.add(holder);
+        });
     }
 }

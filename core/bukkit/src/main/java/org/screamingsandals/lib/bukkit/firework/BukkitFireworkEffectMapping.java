@@ -34,8 +34,10 @@ public class BukkitFireworkEffectMapping extends FireworkEffectMapping {
                         )
                 );
 
-        Arrays.stream(FireworkEffect.Type.values()).forEach(fireworkEffectType ->
-                mapping.put(NamespacedMappingKey.of(fireworkEffectType.name()), new FireworkEffectHolder(fireworkEffectType.name()))
-        );
+        Arrays.stream(FireworkEffect.Type.values()).forEach(fireworkEffectType -> {
+            var holder = new FireworkEffectHolder(fireworkEffectType.name());
+            mapping.put(NamespacedMappingKey.of(fireworkEffectType.name()), holder);
+            values.add(holder);
+        });
     }
 }

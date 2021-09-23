@@ -6,6 +6,7 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
@@ -40,5 +41,9 @@ public class EntityPoseHolder implements ComparableWrapper {
             return Optional.of((EntityPoseHolder) entityPose);
         }
         return EntityPoseMapping.resolve(entityPose);
+    }
+
+    public static List<EntityPoseHolder> all() {
+        return EntityPoseMapping.getValues();
     }
 }

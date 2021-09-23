@@ -56,12 +56,18 @@ public class BukkitPotionMapping extends PotionMapping {
                 });
 
         Arrays.stream(PotionType.values()).forEach(potion -> {
-            mapping.put(NamespacedMappingKey.of(potion.name()), new PotionHolder(potion.name()));
+            var holder = new PotionHolder(potion.name());
+            mapping.put(NamespacedMappingKey.of(potion.name()), holder);
+            values.add(holder);
             if (potion.isExtendable()) {
-                mapping.put(NamespacedMappingKey.of("long_" + potion.name()), new PotionHolder("LONG_" + potion.name()));
+                var holder2 = new PotionHolder("LONG_" + potion.name());
+                mapping.put(NamespacedMappingKey.of("long_" + potion.name()), holder2);
+                values.add(holder2);
             }
             if (potion.isUpgradeable()) {
-                mapping.put(NamespacedMappingKey.of("strong_" + potion.name()), new PotionHolder("STRONG_" + potion.name()));
+                var holder3 = new PotionHolder("STRONG_" + potion.name());
+                mapping.put(NamespacedMappingKey.of("strong_" + potion.name()), holder3);
+                values.add(holder3);
             }
         });
     }

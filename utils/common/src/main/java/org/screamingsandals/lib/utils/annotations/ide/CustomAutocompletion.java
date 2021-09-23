@@ -28,6 +28,8 @@ public @interface CustomAutocompletion {
         BLOCK,
         GAME_RULE,
         WEATHER,
-        PARTICLE_TYPE
+        PARTICLE_TYPE,
+        SOUND,
+        SOUND_SOURCE
     }
 }

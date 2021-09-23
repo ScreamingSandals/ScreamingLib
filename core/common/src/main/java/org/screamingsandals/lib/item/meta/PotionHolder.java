@@ -7,6 +7,7 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
@@ -31,6 +32,10 @@ public class PotionHolder implements ComparableWrapper {
             return Optional.of((PotionHolder) potion);
         }
         return PotionMapping.resolve(potion);
+    }
+
+    public static List<PotionHolder> all() {
+        return PotionMapping.getValues();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION)

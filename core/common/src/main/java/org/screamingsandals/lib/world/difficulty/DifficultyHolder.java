@@ -5,6 +5,7 @@ import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
@@ -38,5 +39,9 @@ public class DifficultyHolder implements ComparableWrapper {
             return Optional.of((DifficultyHolder) difficulty);
         }
         return DifficultyMapping.resolve(difficulty);
+    }
+
+    public static List<DifficultyHolder> all() {
+        return DifficultyMapping.getValues();
     }
 }

@@ -8,6 +8,7 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
@@ -61,5 +62,9 @@ public class EntityTypeHolder implements ComparableWrapper {
             return Optional.of((EntityTypeHolder) entityType);
         }
         return EntityTypeMapping.resolve(entityType);
+    }
+
+    public static List<EntityTypeHolder> all() {
+        return EntityTypeMapping.getValues();
     }
 }

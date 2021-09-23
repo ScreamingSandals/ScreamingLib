@@ -6,6 +6,8 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @AbstractService(
@@ -36,6 +38,14 @@ public abstract class DimensionMapping extends AbstractTypeMapper<DimensionHolde
         }
 
         return dimensionMapping.dimensionConverter.convertOptional(dimension).or(() -> dimensionMapping.resolveFromMapping(dimension));
+    }
+
+    @OfMethodAlternative(value = DimensionHolder.class, methodName = "all")
+    public static List<DimensionHolder> getValues() {
+        if (dimensionMapping == null) {
+            throw new UnsupportedOperationException("DimensionMapping is not initialized yet.");
+        }
+        return Collections.unmodifiableList(dimensionMapping.values);
     }
 
     public static <T> T convertDimensionHolder(DimensionHolder holder, Class<T> newType) {

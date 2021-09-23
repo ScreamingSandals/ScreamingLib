@@ -10,9 +10,7 @@ import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.*;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -151,6 +149,14 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
             }
             return Optional.empty();
         });
+    }
+
+    @OfMethodAlternative(value = BlockTypeHolder.class, methodName = "all")
+    public static List<BlockTypeHolder> getValues() {
+        if (blockTypeMapper == null) {
+            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
+        }
+        return Collections.unmodifiableList(blockTypeMapper.values);
     }
 
     public static BlockTypeHolder colorize(BlockTypeHolder holder, String color) {

@@ -56,4 +56,8 @@ public class FireworkEffectHolder implements Wrapper {
         }
         return FireworkEffectMapping.resolve(effect);
     }
+
+    public static List<FireworkEffectHolder> all() {
+        return FireworkEffectMapping.getValues();
+    }
 }

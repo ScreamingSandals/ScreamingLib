@@ -15,6 +15,10 @@ public class BukkitDifficultyMapping extends DifficultyMapping {
                 .registerP2W(Difficulty.class, difficulty -> new DifficultyHolder(difficulty.name()))
                 .registerW2P(Difficulty.class, difficultyHolder -> Difficulty.valueOf(difficultyHolder.getPlatformName()));
 
-        Arrays.stream(Difficulty.values()).forEach(difficulty -> mapping.put(NamespacedMappingKey.of(difficulty.name()), new DifficultyHolder(difficulty.name())));
+        Arrays.stream(Difficulty.values()).forEach(difficulty -> {
+            var holder = new DifficultyHolder(difficulty.name());
+            mapping.put(NamespacedMappingKey.of(difficulty.name()), holder);
+            values.add(holder);
+        });
     }
 }

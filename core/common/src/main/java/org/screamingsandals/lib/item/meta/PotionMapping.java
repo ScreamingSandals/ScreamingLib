@@ -7,6 +7,8 @@ import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
@@ -55,6 +57,14 @@ public abstract class PotionMapping extends AbstractTypeMapper<PotionHolder> {
         }
 
         return potionMapping.potionConverter.convertOptional(potionObject).or(() -> potionMapping.resolveFromMapping(potionObject));
+    }
+
+    @OfMethodAlternative(value = PotionHolder.class, methodName = "all")
+    public static List<PotionHolder> getValues() {
+        if (potionMapping == null) {
+            throw new UnsupportedOperationException("PotionMapping is not initialized yet.");
+        }
+        return Collections.unmodifiableList(potionMapping.values);
     }
 
     public static <T> T convertPotionHolder(PotionHolder holder, Class<T> newType) {

@@ -14,6 +14,8 @@ import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -107,6 +109,14 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
 
             return Optional.empty();
         });
+    }
+
+    @OfMethodAlternative(value = PotionEffectHolder.class, methodName = "all")
+    public static List<PotionEffectHolder> getValues() {
+        if (potionEffectMapping == null) {
+            throw new UnsupportedOperationException("PotionEffectMapping is not initialized yet.");
+        }
+        return Collections.unmodifiableList(potionEffectMapping.values);
     }
 
     protected PotionEffectMapping() {
