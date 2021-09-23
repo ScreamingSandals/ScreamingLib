@@ -38,4 +38,6 @@ public interface Container extends Openable, Wrapper {
     InventoryTypeHolder getType();
 
     void clear();
+
+    int firstEmptySlot();
 }

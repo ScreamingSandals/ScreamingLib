@@ -161,6 +161,15 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         PlayerMapper.setExp(this, exp);
     }
 
+    /**
+     * Forces an update of the player's entire inventory.
+     *
+     * On some platforms it can be useless.
+     */
+    private void forceUpdateInventory() {
+        PlayerMapper.forceUpdateInventory(this);
+    }
+
     public <T> T as(Class<T> type) {
         return PlayerMapper.convertPlayerWrapper(this, type);
     }

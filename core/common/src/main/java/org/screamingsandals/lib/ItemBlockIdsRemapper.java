@@ -1,5 +1,6 @@
 package org.screamingsandals.lib;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.block.BlockDataTranslatorBuilder;
 import org.screamingsandals.lib.block.BlockTypeHolder;
@@ -23,6 +24,7 @@ import java.util.function.Predicate;
 public abstract class ItemBlockIdsRemapper {
     private final ItemTypeMapper itemTypeMapper;
     private final BlockTypeMapper blockTypeMapper;
+    @Getter
     protected Platform platform;
     protected final List<MappingFlags> mappingFlags = new ArrayList<>();
     public static final List<String> COLORS = List.of(

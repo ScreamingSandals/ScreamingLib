@@ -88,4 +88,16 @@ public class AdventureHelper {
     public TextComponent toComponentNullableResult(@Nullable String input) {
         return input == null ? null : serializer.deserialize(input);
     }
+
+    @NotNull
+    public String translateAlternateColorCodes(char altColorChar, @NotNull String textToTranslate) {
+        char[] b = textToTranslate.toCharArray();
+        for (int i = 0; i < b.length - 1; i++) {
+            if (b[i] == altColorChar && "0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx".indexOf(b[i + 1]) > -1) {
+                b[i] = LegacyComponentSerializer.SECTION_CHAR;
+                b[i + 1] = Character.toLowerCase(b[i + 1]);
+            }
+        }
+        return new String(b);
+    }
 }

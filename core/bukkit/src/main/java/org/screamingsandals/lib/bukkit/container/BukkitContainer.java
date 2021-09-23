@@ -137,6 +137,11 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
+    public int firstEmptySlot() {
+        return wrappedObject.firstEmpty();
+    }
+
+    @Override
     public void openInventory(PlayerWrapper wrapper) {
         wrapper.asOptional(Player.class).ifPresent(player ->
                 player.openInventory(wrappedObject)

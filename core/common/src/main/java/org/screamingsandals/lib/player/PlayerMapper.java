@@ -5,6 +5,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.PlayerContainer;
@@ -216,6 +217,13 @@ public abstract class PlayerMapper {
 
     public abstract Optional<PlayerWrapper> getPlayer0(UUID uuid);
 
+    public static Optional<PlayerWrapper> getPlayerExact(String name) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getPlayerExact0(name);
+    }
+
     public static List<PlayerWrapper> getPlayers() {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
@@ -319,6 +327,21 @@ public abstract class PlayerMapper {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.getOfflinePlayer0(uuid);
+    }
+
+    /**
+     * This method may involve a blocking web request to get the UUID for the given name.
+     *
+     * @param name Name of the player
+     * @return the offline player or empty optional if not found
+     * @deprecated see {@link PlayerMapper#getOfflinePlayer(UUID)}
+     */
+    @Deprecated
+    public static Optional<OfflinePlayerWrapper> getOfflinePlayer(String name) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getOfflinePlayer0(name);
     }
 
     public static Locale getLocale(SenderWrapper senderWrapper) {
@@ -454,6 +477,13 @@ public abstract class PlayerMapper {
         return playerMapper.getChannel0(player);
     }
 
+    public static void forceUpdateInventory(PlayerWrapper player) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.forceUpdateInventory0(player);
+    }
+
     public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
@@ -519,6 +549,8 @@ public abstract class PlayerMapper {
 
     public abstract OfflinePlayerWrapper getOfflinePlayer0(UUID uuid);
 
+    public abstract Optional<OfflinePlayerWrapper> getOfflinePlayer0(String name);
+
     public abstract Locale getLocale0(SenderWrapper senderWrapper);
 
     public abstract GameModeHolder getGameMode0(PlayerWrapper player);
@@ -558,4 +590,8 @@ public abstract class PlayerMapper {
     public abstract void sendParticle0(PlayerWrapper player, ParticleHolder particle, LocationHolder location);
 
     public abstract Channel getChannel0(PlayerWrapper player);
+
+    public abstract void forceUpdateInventory0(PlayerWrapper player);
+
+    public abstract Optional<PlayerWrapper> getPlayerExact0(String name);
 }

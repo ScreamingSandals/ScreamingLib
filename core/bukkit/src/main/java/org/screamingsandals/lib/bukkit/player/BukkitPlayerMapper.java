@@ -304,6 +304,11 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
+    public Optional<OfflinePlayerWrapper> getOfflinePlayer0(String name) {
+        return offlinePlayerConverter.convertOptional(Bukkit.getOfflinePlayer(name));
+    }
+
+    @Override
     public Locale getLocale0(SenderWrapper senderWrapper) {
         return senderWrapper.asOptional(Player.class)
                 .map(player -> {
@@ -442,5 +447,15 @@ public class BukkitPlayerMapper extends PlayerMapper {
                 .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
                 .getFieldResulted(ConnectionAccessor.getFieldChannel())
                 .as(Channel.class);
+    }
+
+    @Override
+    public void forceUpdateInventory0(PlayerWrapper player) {
+        player.as(Player.class).updateInventory();
+    }
+
+    @Override
+    public Optional<PlayerWrapper> getPlayerExact0(String name) {
+        return playerConverter.convertOptional(Bukkit.getPlayerExact(name));
     }
 }
