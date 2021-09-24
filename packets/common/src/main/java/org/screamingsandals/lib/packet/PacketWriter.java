@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.packet;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
@@ -224,7 +223,7 @@ public abstract class PacketWriter extends OutputStream {
      * @param maxLength the maximum length the string can hold
      */
     public void writeSizedString(String string, int maxLength) {
-        int size = ByteBufUtil.utf8Bytes(string);
+        var size = string.getBytes(StandardCharsets.UTF_8).length;
         if (size > maxLength) {
             throw new UnsupportedOperationException("String too big! (is " + size + " bytes encoded, should be less than: " + maxLength + ")");
         }
