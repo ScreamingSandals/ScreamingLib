@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.packet;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
@@ -26,6 +27,39 @@ import java.util.function.Consumer;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public abstract class PacketWriter extends OutputStream {
+
+    /**
+     * Maximum string length in bytes allowed by the current protocol.
+     */
+    public static int MAX_STRING_LENGTH = 32767;
+
+    /**
+     * Gets the size of the variable integer.
+     *
+     * @param value the integer value to calculate the variable size from
+     * @return the variable size this value can be contained into, upto 5 bytes in total.
+     */
+    public static int getVarIntSize(int value) {
+        for (int j = 1; j < 5; j++) {
+            if ((value & -1 << j * 7) == 0)
+                return j;
+        }
+        return 5;
+    }
+
+    /**
+     * Gets the size of the variable long.
+     *
+     * @param value the long value to calculate the variable size from
+     * @return the variable size this value can be contained into, upto 10 bytes in total.
+     */
+    public static long getVarLongSize(long value) {
+        for (int j = 1; j < 10; j++) {
+            if ((value & -1L << j * 7) == 0L)
+                return j;
+        }
+        return 10;
+    }
 
     /**
      * The ByteBuf buffer that will be populated according to packet contents.
@@ -119,11 +153,28 @@ public abstract class PacketWriter extends OutputStream {
     }
 
     /**
-     * Writes an int with variable size to the buffer
+     * Writes an int with variable size to the buffer.
      *
      * @param value the int to write
      */
     public void writeVarInt(int value) {
+        // Taken from velocity
+        if ((value & (0xFFFFFFFF << 7)) == 0) {
+            buffer.writeByte(value);
+        } else if ((value & (0xFFFFFFFF << 14)) == 0) {
+            int w = (value & 0x7F | 0x80) << 8 | (value >>> 7);
+            buffer.writeShort(w);
+        } else {
+            writeVarIntFull(value);
+        }
+    }
+
+    /**
+     * Writes an int with variable size to the buffer.
+     *
+     * @param value the int to write
+     */
+    public void writeVarIntFull(int value) {
         // Took from velocity
         if ((value & (0xFFFFFFFF << 7)) == 0) {
             buffer.writeByte(value);
@@ -142,7 +193,7 @@ public abstract class PacketWriter extends OutputStream {
     }
 
     /**
-     * Writes a long with variable size to the buffer
+     * Writes a long with variable size to the buffer.
      *
      * @param value the long to write
      */
@@ -163,9 +214,22 @@ public abstract class PacketWriter extends OutputStream {
      * @param string to write
      */
     public void writeSizedString(String string) {
-        var bytes = string.getBytes(StandardCharsets.UTF_8);
-        writeVarInt(bytes.length);
-        buffer.writeBytes(bytes);
+        writeSizedString(string, MAX_STRING_LENGTH);
+    }
+
+    /**
+     * Writes a string with provided size to the buffer.
+     *
+     * @param string the string to write
+     * @param maxLength the maximum length the string can hold
+     */
+    public void writeSizedString(String string, int maxLength) {
+        int size = ByteBufUtil.utf8Bytes(string);
+        if (size > maxLength) {
+            throw new UnsupportedOperationException("String too big! (is " + size + " bytes encoded, should be less than: " + maxLength + ")");
+        }
+        writeVarInt(size);
+        buffer.writeCharSequence(string, StandardCharsets.UTF_8);
     }
 
     /**
