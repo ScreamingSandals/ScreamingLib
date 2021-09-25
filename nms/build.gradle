@@ -212,6 +212,9 @@ nmsGen {
     reqClass('net.minecraft.world.item.ItemStack')
         .reqMethod('copy')
         .reqMethod('getTag')
+
+    reqClass('net.minecraft.network.protocol.handshake.ClientIntentionPacket')
+        .reqField('protocolVersion')
 }
 
 tasks.getByName('compileJava').dependsOn('generateNmsComponents')
