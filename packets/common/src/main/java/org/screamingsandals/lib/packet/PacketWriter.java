@@ -521,7 +521,6 @@ public abstract class PacketWriter extends OutputStream {
         appendedPackets.add(packet);
     }
 
-
     @Override
     public void write(int b) {
         writeByte((byte) b);

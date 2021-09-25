@@ -19,6 +19,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.vanilla.packet.VanillaPacketWriter;
 
 public class CraftBukkitPacketWriter extends VanillaPacketWriter {
+
     public CraftBukkitPacketWriter(ByteBuf buffer) {
         super(buffer);
     }

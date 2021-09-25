@@ -5,10 +5,12 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
-
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class BukkitEntityMapper extends EntityMapper {
@@ -86,5 +88,22 @@ public class BukkitEntityMapper extends EntityMapper {
         var bukkitLoc = locationHolder.as(Location.class);
         var lightning = bukkitLoc.getWorld().strikeLightning(bukkitLoc);
         return Optional.of(new BukkitEntityLightning(lightning));
+    }
+
+    @Override
+    public synchronized int getNewEntityId0() {
+        final var entityCount = Reflect.getField(EntityAccessor.getFieldField_70152_a());
+        if (entityCount != null) {
+            final var newCount = ((int) entityCount) + 1;
+            Reflect.setField(EntityAccessor.getFieldField_70152_a(), newCount);
+            return newCount;
+        }
+
+        final var entityCounter = Reflect.getField(EntityAccessor.getFieldENTITY_COUNTER());
+        if (entityCounter instanceof AtomicInteger) {
+            return ((AtomicInteger) entityCounter).incrementAndGet();
+        }
+
+        throw new UnsupportedOperationException("Can't obtain new Entity id");
     }
 }

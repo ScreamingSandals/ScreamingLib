@@ -4,6 +4,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
+import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.EventPriority;
@@ -34,42 +35,10 @@ public class PlayerPacketEventProviderService {
                 throw new UnsupportedOperationException("Failed to find player channel!");
             }
 
-            final var handler = new ChannelDuplexHandler() {
-                @Override
-                public void channelRead(ChannelHandlerContext ctx, Object packet) {
-                    try {
-                        final var event = EventManager.fire(new SPlayerPacketEvent(player, PacketMethod.INBOUND, packet));
-                        if (!event.isCancelled()) {
-                            packet = event.getPacket();
-                            if (packet != null) {
-                                super.channelRead(ctx, packet);
-                            }
-                        }
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void write(ChannelHandlerContext ctx, Object packet, ChannelPromise promise) {
-                    try {
-                        final var event = EventManager.fire(new SPlayerPacketEvent(player, PacketMethod.OUTBOUND, packet));
-                        if (!event.isCancelled()) {
-                            packet = event.getPacket();
-                            if (packet != null) {
-                                super.write(ctx, packet, promise);
-                            }
-                        }
-                    } catch (Throwable t) {
-                        t.printStackTrace();
-                    }
-                }
-            };
-
+            final var handler = new PacketHandler(player);
             if (channel.pipeline().get(CHANNEL_NAME) == null && channel.pipeline().get("packet_handler") != null) {
                 channel.pipeline().addBefore("packet_handler", CHANNEL_NAME, handler);
             }
-
         } catch (Throwable t) {
             if (onLogin) {
                 // could be possible we did this a bit too early, SPlayerJoinEvent will take care of this now.
@@ -87,6 +56,45 @@ public class PlayerPacketEventProviderService {
                 ch.pipeline().remove(CHANNEL_NAME);
             }
         } catch (Throwable ignored) {
+        }
+    }
+
+    @RequiredArgsConstructor(staticName = "of")
+    private static class PacketHandler extends ChannelDuplexHandler {
+        private final PlayerWrapper player;
+
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object packet) {
+            try {
+                final var event = EventManager.fire(new SPlayerPacketEvent(player, PacketMethod.INBOUND, packet));
+                if (event.isCancelled()) {
+                    return;
+                }
+
+                packet = event.getPacket();
+                if (packet != null) {
+                    super.channelRead(ctx, packet);
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+
+        @Override
+        public void write(ChannelHandlerContext ctx, Object packet, ChannelPromise promise) {
+            try {
+                final var event = EventManager.fire(new SPlayerPacketEvent(player, PacketMethod.OUTBOUND, packet));
+                if (event.isCancelled()) {
+                    return;
+                }
+
+                packet = event.getPacket();
+                if (packet != null) {
+                    super.write(ctx, packet, promise);
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
         }
     }
 }

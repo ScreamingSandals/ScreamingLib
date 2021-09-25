@@ -8,7 +8,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
-import org.screamingsandals.lib.bukkit.utils.nms.entity.EntityNMS;
+import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.npc.AbstractNPC;
 import org.screamingsandals.lib.npc.NPC;
 import org.screamingsandals.lib.npc.NPCSkin;
@@ -25,11 +25,12 @@ import java.util.*;
 @Slf4j
 public class BukkitNPC extends AbstractNPC {
     private final int id;
-    private final List<MetadataItem> metadata = new ArrayList<>();
+    private final List<MetadataItem> metadata;
 
     protected BukkitNPC(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
-        id = EntityNMS.incrementAndGetId();
+        this.id = EntityMapper.getNewEntityId();
+        this.metadata = new ArrayList<>();
         log.trace("Initialized BukkitNPC of id: {}", id);
         metadata.add(MetadataItem.of((byte) SkinLayerValues.findLayerByVersion(), (byte) 127));
         log.trace("Added Second Skin MetaData value {}", SkinLayerValues.findLayerByVersion());

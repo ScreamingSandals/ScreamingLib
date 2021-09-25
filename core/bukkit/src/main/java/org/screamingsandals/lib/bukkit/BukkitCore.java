@@ -6,6 +6,7 @@ import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.bukkit.listener.*;
+import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -191,5 +192,15 @@ public class BukkitCore extends Core {
         new ChunkLoadEventListener(plugin);
         new ChunkPopulateEventListener(plugin);
         new ChunkUnloadEventListener(plugin);
+    }
+
+    @Override
+    public boolean isVersion0(int major, int minor) {
+        return Version.isVersion(major, minor);
+    }
+
+    @Override
+    public boolean isVersion0(int major, int minor, int patch) {
+        return Version.isVersion(major, minor, patch);
     }
 }

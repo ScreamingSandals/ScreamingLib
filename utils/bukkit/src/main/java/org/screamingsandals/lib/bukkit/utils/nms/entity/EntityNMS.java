@@ -18,23 +18,6 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class EntityNMS {
-
-	public synchronized static int incrementAndGetId() {
-		final var entityCount = Reflect.getField(EntityAccessor.getFieldField_70152_a());
-		if (entityCount != null) {
-			final var newCount = ((int)entityCount) + 1;
-			Reflect.setField(EntityAccessor.getFieldField_70152_a(), newCount);
-			return newCount;
-		}
-
-		final var entityCounter = Reflect.getField(EntityAccessor.getFieldENTITY_COUNTER());
-		if (entityCounter instanceof AtomicInteger) {
-			return ((AtomicInteger) entityCounter).incrementAndGet();
-		}
-
-		throw new UnsupportedOperationException("Can't obtain new Entity id");
-	}
-
 	protected Object handler;
 
 	public EntityNMS(Object handler) {

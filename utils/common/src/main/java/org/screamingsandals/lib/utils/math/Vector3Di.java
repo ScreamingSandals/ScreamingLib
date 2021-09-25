@@ -1,26 +1,27 @@
 package org.screamingsandals.lib.utils.math;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Vector3Df implements Cloneable {
-    private float x;
-    private float y;
-    private float z;
+@Accessors(chain = true)
+public class Vector3Di implements Cloneable {
+    private int x;
+    private int y;
+    private int z;
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
-    public Vector3Df clone() {
-        return new Vector3Df(x, y, z);
+    public Vector3Di clone() {
+        return new Vector3Di(x, y, z);
     }
 
-    public Vector3Df add(float x, float y, float z) {
+    public Vector3Di add(float x, float y, float z) {
         this.x += x;
         this.y += y;
         this.z += z;
@@ -35,11 +36,11 @@ public class Vector3Df implements Cloneable {
         return x * x + y * y + z * z;
     }
 
-    public float distance(@NotNull Vector3Df o) {
+    public float distance(@NotNull Vector3Di o) {
         return (float) Math.sqrt(distanceSquared(o));
     }
 
-    public float distanceSquared(@NotNull Vector3Df o) {
+    public int distanceSquared(@NotNull Vector3Di o) {
         var deltaX = x - o.x;
         var deltaY = y - o.y;
         var deltaZ = z - o.z;
@@ -48,7 +49,7 @@ public class Vector3Df implements Cloneable {
     }
 
     @NotNull
-    public Vector3Df normalize() {
+    public Vector3Di normalize() {
         var length = length();
 
         x /= length;

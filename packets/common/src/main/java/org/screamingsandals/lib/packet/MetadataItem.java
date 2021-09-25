@@ -3,6 +3,8 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
+import org.screamingsandals.lib.block.BlockPosition;
+import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 
 /**
@@ -30,7 +32,6 @@ public abstract class MetadataItem {
 
     /**
      * Returns a new {@link ByteMetadataItem} instance from the given index and value.
-     * This MetaDataItem can only hold data of the type byte.
      *
      * @param index the index position of the MetaDataItem
      * @param value the value the MetaDataItem should hold
@@ -42,7 +43,6 @@ public abstract class MetadataItem {
 
     /**
      * Returns a new {@link VarIntMetadataItem} instance from the given index and value.
-     * This MetaDataItem can only hold data of the type int.
      *
      * @param index the index position of the MetaDataItem
      * @param value the value the MetaDataItem should hold
@@ -54,7 +54,6 @@ public abstract class MetadataItem {
 
     /**
      * Returns a new {@link FloatMetadataItem} instance from the given index and value.
-     * This MetaDataItem can only hold data of the type float.
      *
      * @param index the index position of the MetaDataItem
      * @param value the value the MetaDataItem should hold
@@ -66,7 +65,6 @@ public abstract class MetadataItem {
 
     /**
      * Returns a new {@link StringMetadataItem} instance from the given index and value.
-     * This MetaDataItem can only hold data of the type string.
      *
      * @param index the index position of the MetaDataItem
      * @param value the value the MetaDataItem should hold
@@ -78,7 +76,6 @@ public abstract class MetadataItem {
 
     /**
      * Returns a new {@link ComponentMetadataItem} instance from the given index and value.
-     * This MetaDataItem can only hold data of the type component.
      *
      * @param index the index position of the MetaDataItem
      * @param value the value the MetaDataItem should hold
@@ -90,7 +87,6 @@ public abstract class MetadataItem {
 
     /**
      * Returns a new {@link BooleanMetadataItem} instance from the given index and value.
-     * This MetaDataItem can only hold data of the type boolean.
      *
      * @param index the index position of the MetaDataItem
      * @param value the value the MetaDataItem should hold
@@ -102,7 +98,6 @@ public abstract class MetadataItem {
 
     /**
      * Returns a new {@link Vector3DfMetadataItem} instance from the given index and value.
-     * This MetaDataItem can only hold data of the type Vector3Df.
      *
      * @param index the index position of the MetaDataItem
      * @param value the value the MetaDataItem should hold
@@ -114,7 +109,6 @@ public abstract class MetadataItem {
 
     /**
      * Returns a new {@link OptionalComponentMetadataItem} instance from the given index and value.
-     * This MetaDataItem can only hold data of the type Optional which holds a Component.
      *
      * @param index the index position of the MetaDataItem
      * @param value the value the MetaDataItem should hold
@@ -122,6 +116,17 @@ public abstract class MetadataItem {
      */
     public static OptionalComponentMetadataItem ofOpt(byte index, Component value) {
         return new OptionalComponentMetadataItem(index, value);
+    }
+
+    /**
+     * Returns a new {@link OptionalBlockPositionMetadataItem} instance from the given index and value.
+     *
+     * @param index the index position of the MetaDataItem
+     * @param value the value the MetaDataItem should hold
+     * @return a OptionalBlockPositionMetadataItem instance that holds the index and value provided
+     */
+    public static OptionalBlockPositionMetadataItem ofOpt(byte index, BlockPosition value) {
+        return new OptionalBlockPositionMetadataItem(index, value);
     }
 
     /**
@@ -145,7 +150,7 @@ public abstract class MetadataItem {
     }
 
     /**
-     * Represents a ByteMetadataItem which is used to serialize data of type int to a PacketWriter.
+     * Represents a VarIntMetadataItem which is used to serialize data of type int to a PacketWriter.
      */
     @Getter
     public static class VarIntMetadataItem extends MetadataItem {
@@ -165,7 +170,7 @@ public abstract class MetadataItem {
     }
 
     /**
-     * Represents a ByteMetadataItem which is used to serialize data of type float to a PacketWriter.
+     * Represents a FloatMetadataItem which is used to serialize data of type float to a PacketWriter.
      */
     @Getter
     public static class FloatMetadataItem extends MetadataItem {
@@ -185,7 +190,7 @@ public abstract class MetadataItem {
     }
 
     /**
-     * Represents a ByteMetadataItem which is used to serialize data of type string to a PacketWriter.
+     * Represents a StringMetadataItem which is used to serialize data of type string to a PacketWriter.
      */
     @Getter
     public static class StringMetadataItem extends MetadataItem {
@@ -205,7 +210,7 @@ public abstract class MetadataItem {
     }
 
     /**
-     * Represents a ByteMetadataItem which is used to serialize data of type component to a PacketWriter.
+     * Represents a ComponentMetadataItem which is used to serialize data of type component to a PacketWriter.
      */
     @Getter
     public static class ComponentMetadataItem extends MetadataItem {
@@ -225,31 +230,31 @@ public abstract class MetadataItem {
     }
 
     /**
-     * Represents a ByteMetadataItem which is used to serialize data of type Optional that holds a Component to a PacketWriter.
+     * Represents a OptionalComponentMetadataItem which is used to serialize data of Component with a flag that indicates its presence to a PacketWriter.
      */
     @Getter
     public static class OptionalComponentMetadataItem extends MetadataItem {
-        private final Component text;
+        private final Component val;
 
-        public OptionalComponentMetadataItem(byte index, Component text) {
+        public OptionalComponentMetadataItem(byte index, Component val) {
             super(index);
-            this.text = text;
+            this.val = val;
         }
 
         @Override
         public void write(PacketWriter writer) {
             super.write(writer);
             writer.writeVarInt(5);
-            var flag = text != null && !text.equals(Component.empty());
+            var flag = val != null && !val.equals(Component.empty());
             writer.writeBoolean(flag);
             if (flag) {
-                writer.writeComponent(text);
+                writer.writeComponent(val);
             }
         }
     }
 
     /**
-     * Represents a ByteMetadataItem which is used to serialize data of type boolean to a PacketWriter.
+     * Represents a BooleanMetadataItem which is used to serialize data of type boolean to a PacketWriter.
      */
     @Getter
     public static class BooleanMetadataItem extends MetadataItem {
@@ -273,7 +278,7 @@ public abstract class MetadataItem {
     }
 
     /**
-     * Represents a ByteMetadataItem which is used to serialize data of type Vector3Df to a PacketWriter.
+     * Represents a Vector3DfMetadataItem which is used to serialize data of type Vector3Df to a PacketWriter.
      */
     @Getter
     public static class Vector3DfMetadataItem extends MetadataItem {
@@ -295,6 +300,60 @@ public abstract class MetadataItem {
             writer.writeVector(val);
         }
     }
+
+    /**
+     * Represents a BlockPositionMetadataItem which is used to serialize data of type BlockPosition to a PacketWriter.
+     */
+    @Getter
+    public static class BlockPositionMetadataItem extends MetadataItem {
+        private final BlockPosition val;
+
+        public BlockPositionMetadataItem(byte index, BlockPosition val) {
+            super(index);
+            this.val = val;
+        }
+
+        @Override
+        public void write(PacketWriter writer) {
+            super.write(writer);
+            if (writer.protocol() < 393) {
+                writer.writeVarInt(8);
+            } else {
+                writer.writeVarInt(9);
+            }
+            writer.writeLong(val.asLong());
+        }
+    }
+
+    /**
+     * Represents a OptionalBlockPositionMetadataItem which is used to serialize data of BlockPosition with a flag that indicates its presence to a PacketWriter.
+     */
+    @Getter
+    public static class OptionalBlockPositionMetadataItem extends MetadataItem {
+        private final BlockPosition blockPosition;
+
+        public OptionalBlockPositionMetadataItem(byte index, BlockPosition blockPosition) {
+            super(index);
+            this.blockPosition = blockPosition;
+        }
+
+        @Override
+        public void write(PacketWriter writer) {
+            super.write(writer);
+            if (writer.protocol() < 393) {
+                writer.writeVarInt(9);
+            } else {
+                writer.writeVarInt(10);
+            }
+            var present = blockPosition != null;
+            writer.writeBoolean(present);
+            if (present) {
+                writer.writeLong(blockPosition.asLong());
+            }
+        }
+    }
+
+
 
     // TODO: add more metadata types
 }

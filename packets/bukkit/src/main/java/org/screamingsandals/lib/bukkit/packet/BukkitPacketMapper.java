@@ -32,7 +32,7 @@ public class BukkitPacketMapper extends PacketMapper {
 
         try {
             var writer = new CraftBukkitPacketWriter(Unpooled.buffer());
-            writer.writeVarInt(PacketIdMapping.getPacketId(packet.getClass()));
+            writer.writeVarInt(packet.getId());
 
             int i = writer.getBuffer().writerIndex();
             packet.write(writer);
@@ -55,7 +55,9 @@ public class BukkitPacketMapper extends PacketMapper {
                 }
             }
 
-            writer.getAppendedPackets().forEach(packet1 -> sendPacket0(player, packet1));
+            for (var extraPacket : writer.getAppendedPackets()) {
+                sendPacket0(player, extraPacket);
+            }
         } catch(Throwable t) {
             Bukkit.getLogger().severe("An exception occurred sending packet of class: " + packet.getClass().getSimpleName() + " to player: " + player.getName());
             t.printStackTrace();

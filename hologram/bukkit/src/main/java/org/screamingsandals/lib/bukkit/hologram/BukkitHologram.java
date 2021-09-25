@@ -23,13 +23,14 @@ import java.util.stream.Stream;
 
 @Slf4j
 public class BukkitHologram extends AbstractHologram {
-    private final Map<Integer, HologramPiece> entitiesOnLines = new ConcurrentHashMap<>();
+    private final Map<Integer, HologramPiece> entitiesOnLines;
     private HologramPiece itemEntity;
     private TaskerTask rotationTask;
     private LocationHolder cachedLocation;
 
     BukkitHologram(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
+        this.entitiesOnLines = new ConcurrentHashMap<>();
         this.cachedLocation = location;
         log.trace("Initialized hologram of uuid: {} in location: {}", uuid, location);
     }
@@ -67,25 +68,25 @@ public class BukkitHologram extends AbstractHologram {
     public Hologram show() {
         super.show();
         if (rotationMode != RotationMode.NONE) {
-            rotationTask = Tasker.build(() -> {
-                if (itemEntity == null) {
-                    log.trace("Item entity is null");
-                    return;
-                }
+            if (rotationTask != null) {
+                rotationTask = Tasker.build(() -> {
+                            if (itemEntity == null) {
+                                log.trace("Item entity is null");
+                                return;
+                            }
 
-                itemEntity.setHeadPose(checkAndAdd(itemEntity.getHeadPose()));
+                            itemEntity.setHeadPose(checkAndAdd(itemEntity.getHeadPose()));
 
-                final var metadataPacket = new SClientboundSetEntityDataPacket()
-                        .entityId(itemEntity.getId());
-                metadataPacket.metadata().addAll(itemEntity.getMetadataItems());
+                            final var metadataPacket = new SClientboundSetEntityDataPacket()
+                                    .entityId(itemEntity.getId());
+                            metadataPacket.metadata().addAll(itemEntity.getMetadataItems());
 
-                viewers.forEach(player -> update(player, List.of(metadataPacket), false));
-
-            }).repeat(rotationTime.getFirst(), rotationTime.getSecond())
-                    .async()
-                    .start();
+                            viewers.forEach(player -> update(player, List.of(metadataPacket), false));
+                        }).repeat(rotationTime.getFirst(), rotationTime.getSecond())
+                        .async()
+                        .start();
+            }
         }
-
         return this;
     }
 
@@ -152,7 +153,7 @@ public class BukkitHologram extends AbstractHologram {
                         ? (-lines.size() * .25 - .5)
                         : (lines.size() * .25), 0));
 
-                packets.add(getTeleportPacket(itemEntity));
+                packets.add(itemEntity.getTeleportPacket());
             }
 
             lines.forEach((key, value) -> {
@@ -165,15 +166,10 @@ public class BukkitHologram extends AbstractHologram {
                         }
 
                         entityOnLine.setCustomName(value.getText());
-
-                        final var metadataPacket = new SClientboundSetEntityDataPacket()
-                                .entityId(entityOnLine.getId());
-                        metadataPacket.metadata().addAll(entityOnLine.getMetadataItems());
-                        packets.add(metadataPacket);
-
+                        packets.add(entityOnLine.getMetadataPacket());
                         entityOnLine.setCustomName(value.getText());
                         entityOnLine.setLocation(cachedLocation.clone().add(0, (lines.size() - key) * .25, 0));
-                        packets.add(getTeleportPacket(entityOnLine));
+                        packets.add(entityOnLine.getTeleportPacket());
                     } else {
                         final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0);
                         final var entity = new HologramPiece(newLocation);
@@ -186,8 +182,7 @@ public class BukkitHologram extends AbstractHologram {
                         entity.setBasePlate(false);
                         entity.setGravity(false);
                         entity.setMarker(!touchable);
-                        packets.addAll(getSpawnPacket(entity));
-
+                        packets.addAll(entity.getSpawnPackets());
                         entitiesOnLines.put(key, entity);
                     }
                 } catch (Throwable throwable) {
@@ -210,7 +205,7 @@ public class BukkitHologram extends AbstractHologram {
                         entity.setGravity(false);
                         entity.setMarker(!touchable);
 
-                        packets.addAll(getSpawnPacket(entity));
+                        packets.addAll(entity.getSpawnPackets());
                         packets.add(getEquipmentPacket(entity, item));
 
                         this.itemEntity = entity;
@@ -259,29 +254,6 @@ public class BukkitHologram extends AbstractHologram {
         return packet;
     }
 
-    private SClientboundTeleportEntityPacket getTeleportPacket(HologramPiece entity) {
-        return new SClientboundTeleportEntityPacket()
-                .entityId(entity.getId())
-                .location(LocationMapper.wrapLocation(entity.getLocation()))
-                .onGround(true);
-    }
-
-    private List<AbstractPacket> getSpawnPacket(HologramPiece entity) {
-        final var toReturn = new LinkedList<AbstractPacket>();
-
-        final var spawnPacket = new SClientboundAddMobPacket()
-                .entityId(entity.getId())
-                .uuid(entity.getUuid())
-                .typeId(entity.getTypeId())
-                .velocity(new Vector3D(0, 0, 0))
-                .headYaw((byte) 3.9f)
-                .location(LocationMapper.wrapLocation(entity.getLocation()));
-        spawnPacket.metadata().addAll(entity.getMetadataItems());
-        toReturn.add(spawnPacket);
-
-        return toReturn;
-    }
-
     private SClientboundRemoveEntitiesPacket getFullDestroyPacket() {
         final var lines = entitiesOnLines.values()
                 .stream()
@@ -305,9 +277,9 @@ public class BukkitHologram extends AbstractHologram {
 
     private List<AbstractPacket> getAllSpawnPackets() {
         final var packets = new LinkedList<AbstractPacket>();
-        entitiesOnLines.forEach((line, entity) -> packets.addAll(getSpawnPacket(entity)));
+        entitiesOnLines.forEach((line, entity) -> packets.addAll(entity.getSpawnPackets()));
         if (itemEntity != null) {
-            packets.addAll(getSpawnPacket(itemEntity));
+            packets.addAll(itemEntity.getSpawnPackets());
             packets.add(getEquipmentPacket(itemEntity, item));
         }
         return packets;

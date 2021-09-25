@@ -25,7 +25,6 @@ public abstract class EntityMapper {
         if (mapper != null) {
             throw new UnsupportedOperationException("EntityMapper is already initialized");
         }
-
         mapper = this;
     }
 
@@ -81,6 +80,13 @@ public abstract class EntityMapper {
         return mapper.strikeLightning0(locationHolder);
     }
 
+    public static synchronized int getNewEntityId() {
+        if (mapper == null) {
+            throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
+        }
+        return mapper.getNewEntityId0();
+    }
+
     protected abstract <T extends EntityBasic> Optional<T> wrapEntity0(Object entity);
 
     public abstract <T extends EntityBasic>  Optional<T> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder);
@@ -90,4 +96,6 @@ public abstract class EntityMapper {
     public abstract Optional<EntityExperience> dropExperience0(int experience, LocationHolder locationHolder);
 
     public abstract Optional<EntityLightning> strikeLightning0(LocationHolder locationHolder);
+
+    public abstract int getNewEntityId0();
 }
