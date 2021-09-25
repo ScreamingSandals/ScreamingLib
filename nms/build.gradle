@@ -114,6 +114,7 @@ nmsGen {
     reqClass('net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket')
         .reqField('entityId')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket')
+        .reqField('entity')
     reqClass('net.minecraft.network.protocol.game.ClientboundRotateHeadPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket$Rot')
