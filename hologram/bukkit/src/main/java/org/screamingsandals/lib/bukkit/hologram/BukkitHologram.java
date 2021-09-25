@@ -68,7 +68,7 @@ public class BukkitHologram extends AbstractHologram {
     public Hologram show() {
         super.show();
         if (rotationMode != RotationMode.NONE) {
-            if (rotationTask != null) {
+            if (rotationTask == null) {
                 rotationTask = Tasker.build(() -> {
                             if (itemEntity == null) {
                                 log.trace("Item entity is null");
