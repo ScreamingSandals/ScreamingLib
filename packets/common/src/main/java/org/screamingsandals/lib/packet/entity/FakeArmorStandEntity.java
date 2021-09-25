@@ -6,9 +6,9 @@ import org.screamingsandals.lib.packet.MetadataItem;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.LocationHolder;
 
+@Getter
 public class FakeArmorStandEntity extends FakeLivingEntity {
     private byte armorStandFlags;
-    @Getter
     private Vector3Df headPose;
 
     public FakeArmorStandEntity(LocationHolder location, int typeId) {

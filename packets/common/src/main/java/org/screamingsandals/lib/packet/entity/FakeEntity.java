@@ -1,12 +1,14 @@
 package org.screamingsandals.lib.packet.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 import java.util.*;
@@ -14,15 +16,17 @@ import java.util.*;
 /**
  * Represents entity class that is manipulated via DataWatchers and packets without actually registering the entity onto the server.
  */
-@Data
+@Getter
 public class FakeEntity {
     private final int id;
+    @Setter
     private LocationHolder location;
     private final int typeId;
-    private UUID uuid;
+    private final UUID uuid;
     private final List<MetadataItem> metadataItems;
     private byte entityFlags;
     private Component customName;
+    @Setter
     private boolean isOnGround;
 
     FakeEntity(LocationHolder location, int typeId) {
@@ -44,6 +48,19 @@ public class FakeEntity {
         setGravity(true);
         setPose(0);
         setTicksFrozen(0);
+    }
+
+    public void setCustomName(Component name) {
+        if (Core.isVersion(1, 13)) {
+            put(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), name));
+        } else {
+            var str = AdventureHelper.toLegacy(name);
+            if (str.length() > 256) {
+                str = str.substring(0, 256);
+            }
+            put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), str));
+        }
+        customName = name;
     }
 
     public void put(MetadataItem metadataItem) {
