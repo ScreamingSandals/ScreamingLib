@@ -208,7 +208,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
                 return;
             }
             visual.onViewerAdded(player, false);
-        }).async().delay(tickedDelay, TaskerTime.TICKS).start();
+        }).delay(tickedDelay, TaskerTime.TICKS).start();
     }
 
     private void softRemoveViewer(T visual, PlayerWrapper player, long tickedDelay) {
@@ -217,7 +217,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
                 return;
             }
             visual.onViewerRemoved(player, false);
-        }).async().delay(tickedDelay, TaskerTime.TICKS).start();
+        }).delay(tickedDelay, TaskerTime.TICKS).start();
     }
 
     public abstract void fireVisualTouchEvent(PlayerWrapper sender, T visual, Object packet);

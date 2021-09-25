@@ -9,11 +9,8 @@ import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
-import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapper;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -167,25 +164,22 @@ public class BukkitHologram extends AbstractHologram {
 
                         entityOnLine.setCustomName(value.getText());
                         packets.add(entityOnLine.getMetadataPacket());
-                        entityOnLine.setCustomName(value.getText());
                         entityOnLine.setLocation(cachedLocation.clone().add(0, (lines.size() - key) * .25, 0));
                         packets.add(entityOnLine.getTeleportPacket());
                     } else {
-                        Tasker.build(() -> {
-                            final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0);
-                            final var entity = new HologramPiece(newLocation);
-                            log.trace("Creating new ArmorStand entity of id {} for hologram: {} of text: {}", uuid, entity.getId(), value.getText());
-                            entity.setCustomName(value.getText());
-                            entity.setCustomNameVisible(true);
-                            entity.setInvisible(true);
-                            entity.setSmall(!touchable);
-                            entity.setArms(false);
-                            entity.setBasePlate(false);
-                            entity.setGravity(false);
-                            entity.setMarker(!touchable);
-                            viewers.forEach(viewer -> update(viewer, entity.getSpawnPackets(), true));
-                            entitiesOnLines.put(key, entity);
-                        }).afterOneTick().start();
+                        final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0);
+                        final var entity = new HologramPiece(newLocation);
+                        log.trace("Creating new ArmorStand entity of id {} for hologram: {} of text: {}", uuid, entity.getId(), value.getText());
+                        entity.setCustomName(value.getText());
+                        entity.setCustomNameVisible(true);
+                        entity.setInvisible(true);
+                        entity.setSmall(!touchable);
+                        entity.setArms(false);
+                        entity.setBasePlate(false);
+                        entity.setGravity(false);
+                        entity.setMarker(!touchable);
+                        packets.addAll(entity.getSpawnPackets());
+                        entitiesOnLines.put(key, entity);
                     }
                 } catch (Throwable throwable) {
                     throwable.printStackTrace();
@@ -195,22 +189,20 @@ public class BukkitHologram extends AbstractHologram {
             try {
                 if (rotationMode != RotationMode.NONE) {
                     if (itemEntity == null) {
-                        Tasker.build(() -> {
-                            log.trace("Spawning Rotating Entity!");
-                            final var newLocation = cachedLocation.clone().add(0, itemPosition == ItemPosition.BELOW
-                                    ? (-lines.size() * .25 - .5)
-                                    : (lines.size() * .25), 0);
-                            final var entity = new HologramPiece(newLocation);
-                            entity.setInvisible(true);
-                            entity.setSmall(!touchable);
-                            entity.setArms(false);
-                            entity.setBasePlate(false);
-                            entity.setGravity(false);
-                            entity.setMarker(!touchable);
-                            viewers.forEach(viewer -> update(viewer, entity.getSpawnPackets(), true));
-                            viewers.forEach(viewer -> update(viewer, List.of(getEquipmentPacket(entity, item)), true));
-                            this.itemEntity = entity;
-                        }).afterOneTick().start();
+                        log.trace("Spawning Rotating Entity!");
+                        final var newLocation = cachedLocation.clone().add(0, itemPosition == ItemPosition.BELOW
+                                ? (-lines.size() * .25 - .5)
+                                : (lines.size() * .25), 0);
+                        final var entity = new HologramPiece(newLocation);
+                        entity.setInvisible(true);
+                        entity.setSmall(!touchable);
+                        entity.setArms(false);
+                        entity.setBasePlate(false);
+                        entity.setGravity(false);
+                        entity.setMarker(!touchable);
+                        packets.addAll(entity.getSpawnPackets());
+                        packets.add(getEquipmentPacket(entity, item));
+                        this.itemEntity = entity;
                     }
                 }
             } catch (Throwable t) {
