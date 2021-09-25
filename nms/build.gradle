@@ -215,6 +215,7 @@ nmsGen {
 
     reqClass('net.minecraft.network.protocol.handshake.ClientIntentionPacket')
         .reqField('protocolVersion')
+        .reqField('intention')
 }
 
 tasks.getByName('compileJava').dependsOn('generateNmsComponents')
