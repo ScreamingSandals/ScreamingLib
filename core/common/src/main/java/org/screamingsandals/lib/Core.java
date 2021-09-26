@@ -7,7 +7,6 @@ import org.screamingsandals.lib.entity.damage.DamageCauseMapping;
 import org.screamingsandals.lib.entity.pose.EntityPoseMapping;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.event.player.PlayerPacketEventProviderService;
 import org.screamingsandals.lib.item.ItemTypeMapper;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeTypeMapping;
@@ -67,7 +66,6 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         WeatherMapping.class,
         ParticleTypeMapping.class,
         GameRuleMapping.class,
-        PlayerPacketEventProviderService.class
 })
 @InternalCoreService
 public abstract class Core {
@@ -78,15 +76,37 @@ public abstract class Core {
         instance = this;
     }
 
+    //TODO: maybe make a Server class that defines methods like the ones below
+
+    /**
+     * Returns a boolean stating if the current thread is the server thread.
+     *
+     * @return true if current thread is same as the Server thread, false otherwise
+     */
+    public static boolean isServerThread() {
+        if (instance == null) {
+            throw new UnsupportedOperationException("Core has not yet been initialized!");
+        }
+        return instance.isServerThread0();
+    }
+
     public static boolean isVersion(int major, int minor) {
+        if (instance == null) {
+            throw new UnsupportedOperationException("Core has not yet been initialized!");
+        }
         return instance.isVersion0(major, minor);
     }
 
     public static boolean isVersion(int major, int minor, int patch) {
+        if (instance == null) {
+            throw new UnsupportedOperationException("Core has not yet been initialized!");
+        }
         return instance.isVersion0(major, minor, patch);
     }
 
     public abstract boolean isVersion0(int major, int minor);
 
     public abstract boolean isVersion0(int major, int minor, int patch);
+
+    public abstract boolean isServerThread0();
 }

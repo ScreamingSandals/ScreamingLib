@@ -8,10 +8,8 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Getter
@@ -32,6 +30,7 @@ public class ClassMethod implements ReflectedExecutable<ClassMethod> {
         return new InvocationResult(invokeStatic(params));
     }
 
+    @SuppressWarnings("deprecated")
     public Object invokeInstance(Object instance, Object... params) {
         if (method == null) {
             return null;

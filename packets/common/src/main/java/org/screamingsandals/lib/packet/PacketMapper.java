@@ -3,6 +3,7 @@ package org.screamingsandals.lib.packet;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 
 import java.util.function.Supplier;
 
@@ -10,6 +11,9 @@ import java.util.function.Supplier;
  *  Represents the PacketMapper instance which is useful for sending {@link AbstractPacket} to Player connections.
  */
 @AbstractService
+@ServiceDependencies(dependsOn = {
+        ProtocolInjector.class
+})
 public abstract class PacketMapper {
     private static PacketMapper packetMapper = null;
 

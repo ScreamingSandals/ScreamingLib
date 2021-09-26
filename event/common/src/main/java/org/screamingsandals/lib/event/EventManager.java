@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Controllable;
-import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.executor.ExecutorProvider;
 
 import java.util.LinkedList;
@@ -17,6 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,32 +26,32 @@ import java.util.stream.Stream;
  * <p>
  * Always call {@link EventManager#destroy()} when shutting down!
  */
-@Service
+@AbstractService
 @NoArgsConstructor
-public class EventManager {
+public abstract class EventManager {
     private final static ExecutorService executor;
-    private final Multimap<Class<?>, EventHandler<? extends AbstractEvent>> handlers = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
-
     @Getter
     private static EventManager defaultEventManager;
-    @Getter
-    private EventManager customManager;
 
     static {
         executor = ExecutorProvider.buildExecutor("SEventManager");
     }
 
-    public static void init(Controllable controllable) {
-        if (defaultEventManager != null) {
-            throw new UnsupportedOperationException("Default EventManager has been already initialized!");
-        }
-
-        defaultEventManager = new EventManager(controllable);
-    }
+    private final Multimap<Class<?>, EventHandler<? extends AbstractEvent>> handlers = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+    @Getter
+    private EventManager customManager;
 
     public EventManager(Controllable controllable) {
         controllable.preDisable(this::destroy);
     }
+
+    public static void init(Supplier<EventManager> supplier) {
+        if (defaultEventManager != null) {
+            throw new UnsupportedOperationException("Default EventManager has been already initialized!");
+        }
+        defaultEventManager = supplier.get();
+    }
+
 
     public static <K extends AbstractEvent> K fire(K event) {
         return defaultEventManager.fireEvent(event);
@@ -58,6 +59,10 @@ public class EventManager {
 
     public static <K extends AbstractEvent> CompletableFuture<K> fireAsync(K event) {
         return defaultEventManager.fireEventAsync(event);
+    }
+
+    public static boolean isDefaultInitialized() {
+        return defaultEventManager != null;
     }
 
     public <T extends AbstractEvent> EventHandler<T> register(Class<T> event, Consumer<T> consumer) {
@@ -129,6 +134,10 @@ public class EventManager {
             throw new UnsupportedOperationException("Async event cannot be fired sync!");
         }
 
+        if (!isServerThread()) {
+            throw new UnsupportedOperationException("Cannot fire synchronized events in async thread!");
+        }
+
         findEventHandlers(event, eventPriority)
                 .forEach(eventHandler -> eventHandler.fire(event));
 
@@ -156,11 +165,16 @@ public class EventManager {
         }
 
         final var futures = findEventHandlers(event, eventPriority)
-                .map(eventHandler ->
-                        CompletableFuture.runAsync(() -> eventHandler.fire(event), executor)
+                .map(eventHandler -> {
+                    // checks for server thread
+                    if (isServerThread()) {
+                        return CompletableFuture.runAsync(() -> eventHandler.fire(event), executor)
                                 .exceptionally(ex -> {
                                     throw new RuntimeException("Exception occurred while firing event!", ex);
-                                }))
+                                });
+                    }
+                    return CompletableFuture.completedFuture(fireEvent(event, eventPriority));
+                })
                 .collect(Collectors.toCollection(LinkedList::new));
 
         if (customManager != null) {
@@ -222,7 +236,5 @@ public class EventManager {
                 .filter(eventHandler -> eventHandler.getEventPriority() == priority);
     }
 
-    public static boolean isDefaultInitialized() {
-        return defaultEventManager != null;
-    }
+    public abstract boolean isServerThread();
 }

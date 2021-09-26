@@ -2,4 +2,5 @@ dependencies {
     api project(':core-common')
     api project(':event-common')
     api project(':tasker-common')
+    api project(':packets-common')
 }

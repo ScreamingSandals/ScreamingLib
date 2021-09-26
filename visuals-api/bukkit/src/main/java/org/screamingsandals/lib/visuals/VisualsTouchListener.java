@@ -1,8 +1,8 @@
 package org.screamingsandals.lib.visuals;
 
 import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.event.player.SPlayerPacketEvent;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;
+import org.screamingsandals.lib.packet.event.SPacketEvent;
 import org.screamingsandals.lib.utils.PacketMethod;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.HashMap;
@@ -15,10 +15,10 @@ public class VisualsTouchListener<T extends TouchableVisual<T>> {
 
     public VisualsTouchListener(AbstractVisualsManager<T> manager) {
         this.manager = manager;
-        EventManager.getDefaultEventManager().register(SPlayerPacketEvent.class, this::onInteract);
+        EventManager.getDefaultEventManager().register(SPacketEvent.class, this::onInteract);
     }
 
-    public void onInteract(SPlayerPacketEvent event) {
+    public void onInteract(SPacketEvent event) {
         if (event.getMethod() != PacketMethod.INBOUND) {
             return;
         }

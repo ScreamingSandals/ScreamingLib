@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.event.player;
+package org.screamingsandals.lib.packet;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
@@ -8,16 +8,25 @@ import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.EventPriority;
+import org.screamingsandals.lib.event.player.SPlayerJoinEvent;
+import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
+import org.screamingsandals.lib.event.player.SPlayerLoginEvent;
+import org.screamingsandals.lib.packet.event.SPacketEvent;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.PacketMethod;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
 
 @Service(dependsOn = {
         EventManager.class
 })
-public class PlayerPacketEventProviderService {
+@ServiceDependencies(dependsOn = {
+        EventManager.class,
+        PlayerMapper.class,
+})
+public class ProtocolInjector {
     private static final String CHANNEL_NAME = "SPacketInboundOutboundChannelHandler";
 
     @OnPostEnable
@@ -65,36 +74,36 @@ public class PlayerPacketEventProviderService {
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object packet) {
-            try {
-                final var event = EventManager.fire(new SPlayerPacketEvent(player, PacketMethod.INBOUND, packet));
+            final var future = EventManager.fireAsync(new SPacketEvent(player, PacketMethod.INBOUND, packet));
+
+            future.thenAccept(event -> {
                 if (event.isCancelled()) {
                     return;
                 }
-
-                packet = event.getPacket();
-                if (packet != null) {
-                    super.channelRead(ctx, packet);
+                var modifiedPacket = event.getPacket();
+                try {
+                    super.channelRead(ctx, modifiedPacket);
+                } catch (Throwable t) {
+                    t.printStackTrace();
                 }
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
+            });
         }
 
         @Override
         public void write(ChannelHandlerContext ctx, Object packet, ChannelPromise promise) {
-            try {
-                final var event = EventManager.fire(new SPlayerPacketEvent(player, PacketMethod.OUTBOUND, packet));
+            final var future = EventManager.fireAsync(new SPacketEvent(player, PacketMethod.OUTBOUND, packet));
+
+            future.thenAccept(event -> {
                 if (event.isCancelled()) {
                     return;
                 }
-
-                packet = event.getPacket();
-                if (packet != null) {
-                    super.write(ctx, packet, promise);
+                var modifiedPacket = event.getPacket();
+                try {
+                    super.write(ctx, modifiedPacket, promise);
+                } catch (Throwable t) {
+                    t.printStackTrace();
                 }
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
+            });
         }
     }
 }

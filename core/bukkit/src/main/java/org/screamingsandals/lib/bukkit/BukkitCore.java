@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.bukkit;
 
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.plugin.Plugin;
@@ -202,5 +203,10 @@ public class BukkitCore extends Core {
     @Override
     public boolean isVersion0(int major, int minor, int patch) {
         return Version.isVersion(major, minor, patch);
+    }
+
+    @Override
+    public boolean isServerThread0() {
+        return Bukkit.getServer().isPrimaryThread();
     }
 }
