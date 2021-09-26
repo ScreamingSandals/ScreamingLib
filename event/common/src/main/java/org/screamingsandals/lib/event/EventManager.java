@@ -139,12 +139,8 @@ public abstract class EventManager {
     }
 
     public <K extends AbstractEvent> K fireEvent(@NotNull K event, @NotNull EventPriority eventPriority) {
-        if (event instanceof AbstractAsyncEvent) {
+        if (event instanceof AbstractAsyncEvent && isServerThread()) {
             throw new UnsupportedOperationException("Async event cannot be fired sync!");
-        }
-
-        if (!isServerThread()) {
-            throw new UnsupportedOperationException("Cannot fire synchronized events in async thread!");
         }
 
         findEventHandlers(event, eventPriority)
