@@ -16,12 +16,6 @@ public class FakeArmorStandEntity extends FakeLivingEntity {
         this.armorStandFlags = 0;
         this.headRotation = new Vector3Df(0.0f, 0.0f, 0.0f);
         setArmorStandFlags();
-        setHeadRotation(headRotation);
-        setBodyRotation(new Vector3Df(0.0f, 0.0f, 0.0f));
-        setLeftArmRotation(new Vector3Df(-10.0f, 0.0f, -10.0f));
-        setRightArmRotation(new Vector3Df(-15.0f, 0.0f, 10.0f));
-        setLeftLegRotation(new Vector3Df(-1.0f, 0.0f, -1.0f));
-        setRightLegRotation(new Vector3Df(1.0f, 0.0f, 1.0f));
     }
 
     @Override
@@ -87,7 +81,7 @@ public class FakeArmorStandEntity extends FakeLivingEntity {
         if (flag) {
             armorStandFlags = (byte) (armorStandFlags | i);
         } else {
-            armorStandFlags = (byte)(armorStandFlags & (~i));
+            armorStandFlags = (byte) (armorStandFlags & (~i));
         }
     }
 }

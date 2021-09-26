@@ -7,6 +7,7 @@ import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.npc.AbstractNPC;
@@ -21,6 +22,7 @@ import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 public class BukkitNPC extends AbstractNPC {
@@ -29,7 +31,15 @@ public class BukkitNPC extends AbstractNPC {
 
     protected BukkitNPC(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
-        this.id = EntityMapper.getNewEntityId();
+        if (!Server.isServerThread()) {
+            try {
+                this.id = EntityMapper.getNewEntityIdSynchronously().get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            this.id = EntityMapper.getNewEntityId();
+        }
         this.metadata = new ArrayList<>();
         log.trace("Initialized BukkitNPC of id: {}", id);
         metadata.add(MetadataItem.of((byte) SkinLayerValues.findLayerByVersion(), (byte) 127));

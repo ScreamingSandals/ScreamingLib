@@ -12,6 +12,7 @@ import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Represents entity class that is manipulated via DataWatchers and packets without actually registering the entity onto the server.
@@ -31,7 +32,15 @@ public class FakeEntity {
 
     FakeEntity(LocationHolder location, int typeId) {
         // default values
-        this.id = EntityMapper.getNewEntityId();
+        if (!Server.isServerThread()) {
+            try {
+                this.id = EntityMapper.getNewEntityIdSynchronously().get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            this.id = EntityMapper.getNewEntityId();
+        }
         this.typeId = typeId;
         this.location = location;
         this.uuid = UUID.randomUUID();
@@ -41,13 +50,6 @@ public class FakeEntity {
         this.isOnGround = true;
 
         setEntityFlags();
-        setAirTicks(300);
-        setCustomName(Component.empty());
-        setCustomNameVisible(false);
-        setSilent(false);
-        setGravity(true);
-        setPose(0);
-        setTicksFrozen(0);
     }
 
     public void setCustomName(Component name) {

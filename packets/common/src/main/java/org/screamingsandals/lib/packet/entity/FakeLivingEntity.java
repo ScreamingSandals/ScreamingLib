@@ -9,14 +9,6 @@ public class FakeLivingEntity extends FakeEntity {
 
     FakeLivingEntity(LocationHolder location, int typeId) {
         super(location, typeId);
-
-        setHandStates((byte) 0);
-        setHealth(1.0f);
-        setPotionEffectColor(0);
-        setPotionAmbiency(false);
-        setBodyArrowCount(0);
-        setBeeStingerCount(0);
-        setBedPosition(null);
     }
 
     public void setHandStates(byte handStates) {

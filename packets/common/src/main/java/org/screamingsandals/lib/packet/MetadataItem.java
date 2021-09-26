@@ -2,9 +2,9 @@ package org.screamingsandals.lib.packet;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.ToString;
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.block.BlockPosition;
-import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 
 /**
@@ -133,6 +133,7 @@ public abstract class MetadataItem {
      * Represents a ByteMetadataItem which is used to serialize data of type byte to a PacketWriter.
      */
     @Getter
+    @ToString(callSuper = true)
     public static class ByteMetadataItem extends MetadataItem {
         private final byte data;
 
@@ -153,6 +154,7 @@ public abstract class MetadataItem {
      * Represents a VarIntMetadataItem which is used to serialize data of type int to a PacketWriter.
      */
     @Getter
+    @ToString(callSuper = true)
     public static class VarIntMetadataItem extends MetadataItem {
         private final int data;
 
@@ -173,6 +175,7 @@ public abstract class MetadataItem {
      * Represents a FloatMetadataItem which is used to serialize data of type float to a PacketWriter.
      */
     @Getter
+    @ToString(callSuper = true)
     public static class FloatMetadataItem extends MetadataItem {
         private final float data;
 
@@ -193,6 +196,7 @@ public abstract class MetadataItem {
      * Represents a StringMetadataItem which is used to serialize data of type string to a PacketWriter.
      */
     @Getter
+    @ToString(callSuper = true)
     public static class StringMetadataItem extends MetadataItem {
         private final String text;
 
@@ -213,6 +217,7 @@ public abstract class MetadataItem {
      * Represents a ComponentMetadataItem which is used to serialize data of type component to a PacketWriter.
      */
     @Getter
+    @ToString(callSuper = true)
     public static class ComponentMetadataItem extends MetadataItem {
         private final Component text;
 
@@ -233,6 +238,7 @@ public abstract class MetadataItem {
      * Represents a OptionalComponentMetadataItem which is used to serialize data of Component with a flag that indicates its presence to a PacketWriter.
      */
     @Getter
+    @ToString(callSuper = true)
     public static class OptionalComponentMetadataItem extends MetadataItem {
         private final Component val;
 
@@ -257,6 +263,7 @@ public abstract class MetadataItem {
      * Represents a BooleanMetadataItem which is used to serialize data of type boolean to a PacketWriter.
      */
     @Getter
+    @ToString(callSuper = true)
     public static class BooleanMetadataItem extends MetadataItem {
         private final boolean val;
 
@@ -281,6 +288,7 @@ public abstract class MetadataItem {
      * Represents a Vector3DfMetadataItem which is used to serialize data of type Vector3Df to a PacketWriter.
      */
     @Getter
+    @ToString(callSuper = true)
     public static class Vector3DfMetadataItem extends MetadataItem {
         private final Vector3Df val;
 
@@ -305,6 +313,7 @@ public abstract class MetadataItem {
      * Represents a BlockPositionMetadataItem which is used to serialize data of type BlockPosition to a PacketWriter.
      */
     @Getter
+    @ToString(callSuper = true)
     public static class BlockPositionMetadataItem extends MetadataItem {
         private final BlockPosition val;
 
@@ -329,6 +338,7 @@ public abstract class MetadataItem {
      * Represents a OptionalBlockPositionMetadataItem which is used to serialize data of BlockPosition with a flag that indicates its presence to a PacketWriter.
      */
     @Getter
+    @ToString(callSuper = true)
     public static class OptionalBlockPositionMetadataItem extends MetadataItem {
         private final BlockPosition blockPosition;
 
