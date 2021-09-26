@@ -229,8 +229,7 @@ public class FakeEntity {
                 if (Server.isVersion(1, 14)) {
                     register(EntityMetadata.POSE);
                 }
-                // TODO: not sure if this is 1.16.4 or 1.17 since wiki.vg history seems like it's wrong, let's find it ourselves.
-                if (Server.isVersion(1, 16, 4)) {
+                if (Server.isVersion(1, 17)) {
                     register(EntityMetadata.TICKS_FROZEN);
                 }
 
