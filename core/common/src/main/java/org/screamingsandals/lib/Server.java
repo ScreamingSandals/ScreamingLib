@@ -60,6 +60,16 @@ public abstract class Server {
         return server.getConnectedPlayersFromWorld0(world);
     }
 
+    public static void runSynchronously(Runnable task) {
+        if (server == null) {
+            throw new UnsupportedOperationException("Server has not yet been initialized!");
+        }
+        if (task == null) {
+            throw new UnsupportedOperationException("Invalid task provided!");
+        }
+        server.runSynchronously0(task);
+    }
+
     public abstract boolean isVersion0(int major, int minor);
 
     public abstract boolean isVersion0(int major, int minor, int patch);
@@ -69,4 +79,6 @@ public abstract class Server {
     public abstract List<PlayerWrapper> getConnectedPlayers0();
 
     public abstract List<PlayerWrapper> getConnectedPlayersFromWorld0(WorldHolder world);
+
+    public abstract void runSynchronously0(Runnable task);
 }

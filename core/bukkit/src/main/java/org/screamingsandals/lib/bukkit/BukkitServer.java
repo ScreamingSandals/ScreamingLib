@@ -1,7 +1,9 @@
 package org.screamingsandals.lib.bukkit;
 
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.player.PlayerMapper;
@@ -12,8 +14,10 @@ import org.screamingsandals.lib.world.WorldHolder;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class BukkitServer extends Server {
+    private final Plugin plugin;
 
     @Override
     public boolean isVersion0(int major, int minor) {
@@ -44,5 +48,10 @@ public class BukkitServer extends Server {
                 .stream()
                 .map(PlayerMapper::wrapPlayer)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void runSynchronously0(Runnable task) {
+        Bukkit.getServer().getScheduler().runTask(plugin, task);
     }
 }

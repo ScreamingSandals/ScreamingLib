@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.entity;
 
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.item.Item;
@@ -10,6 +11,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @AbstractService
 @ServiceDependencies(dependsOn = {
@@ -80,11 +82,21 @@ public abstract class EntityMapper {
         return mapper.strikeLightning0(locationHolder);
     }
 
-    public static synchronized int getNewEntityId() {
+    public static int getNewEntityId() {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
+        if (!Server.isServerThread()) {
+            throw new UnsupportedOperationException("EntityMapper#getNewEntityId() method must be called from the Server thread!, or use EntityMapper#getNewEntityIdSynchronously() instead");
+        }
         return mapper.getNewEntityId0();
+    }
+
+    public static CompletableFuture<Integer> getNewEntityIdSynchronously() {
+        if (mapper == null) {
+            throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
+        }
+        return mapper.getNewEntityIdSynchronously0();
     }
 
     protected abstract <T extends EntityBasic> Optional<T> wrapEntity0(Object entity);
@@ -98,4 +110,6 @@ public abstract class EntityMapper {
     public abstract Optional<EntityLightning> strikeLightning0(LocationHolder locationHolder);
 
     public abstract int getNewEntityId0();
+
+    public abstract CompletableFuture<Integer> getNewEntityIdSynchronously0();
 }

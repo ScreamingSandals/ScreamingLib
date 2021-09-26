@@ -18,7 +18,7 @@ import java.util.*;
  */
 @Getter
 public class FakeEntity {
-    private final int id;
+    private int id;
     @Setter
     private LocationHolder location;
     private final int typeId;

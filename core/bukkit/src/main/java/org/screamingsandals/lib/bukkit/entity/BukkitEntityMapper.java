@@ -3,6 +3,7 @@ package org.screamingsandals.lib.bukkit.entity;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.nms.accessors.*;
@@ -10,6 +11,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -91,7 +93,7 @@ public class BukkitEntityMapper extends EntityMapper {
     }
 
     @Override
-    public synchronized int getNewEntityId0() {
+    public int getNewEntityId0() {
         final var entityCount = Reflect.getField(EntityAccessor.getFieldField_70152_a());
         if (entityCount != null) {
             final var newCount = ((int) entityCount) + 1;
@@ -103,7 +105,17 @@ public class BukkitEntityMapper extends EntityMapper {
         if (entityCounter instanceof AtomicInteger) {
             return ((AtomicInteger) entityCounter).incrementAndGet();
         }
-
         throw new UnsupportedOperationException("Can't obtain new Entity id");
+    }
+
+    @Override
+    public CompletableFuture<Integer> getNewEntityIdSynchronously0() {
+        CompletableFuture<Integer> future = new CompletableFuture<>();
+        if (Server.isServerThread()) {
+            future.complete(getNewEntityId());
+        } else {
+            Server.runSynchronously(() -> future.complete(getNewEntityId()));
+        }
+        return future;
     }
 }
