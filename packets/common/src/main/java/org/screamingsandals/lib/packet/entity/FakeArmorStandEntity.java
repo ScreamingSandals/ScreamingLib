@@ -9,15 +9,14 @@ import org.screamingsandals.lib.world.LocationHolder;
 @Getter
 public class FakeArmorStandEntity extends FakeLivingEntity {
     private byte armorStandFlags;
-    private Vector3Df headPose;
+    private Vector3Df headRotation;
 
     public FakeArmorStandEntity(LocationHolder location, int typeId) {
         super(location, typeId);
         this.armorStandFlags = 0;
-        this.headPose = new Vector3Df(0.0f, 0.0f, 0.0f);
-        setHeadPose(headPose);
+        this.headRotation = new Vector3Df(0.0f, 0.0f, 0.0f);
         setArmorStandFlags();
-        setHeadRotation(new Vector3Df(0.0f, 0.0f, 0.0f));
+        setHeadRotation(headRotation);
         setBodyRotation(new Vector3Df(0.0f, 0.0f, 0.0f));
         setLeftArmRotation(new Vector3Df(-10.0f, 0.0f, -10.0f));
         setRightArmRotation(new Vector3Df(-15.0f, 0.0f, 10.0f));
@@ -40,6 +39,7 @@ public class FakeArmorStandEntity extends FakeLivingEntity {
     }
 
     public void setHeadRotation(Vector3Df value) {
+        this.headRotation = value;
         put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.HEAD_ROTATION), value));
     }
 
@@ -81,11 +81,6 @@ public class FakeArmorStandEntity extends FakeLivingEntity {
     public void setSmall(boolean isSmall) {
         setArmorStandFlagsFromValue(1, isSmall);
         put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.ARMOR_STAND_FLAGS), armorStandFlags));
-    }
-
-    public void setHeadPose(Vector3Df vector3Df) {
-        this.headPose = vector3Df;
-        put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.HEAD_ROTATION), headPose));
     }
 
     private void setArmorStandFlagsFromValue(int i, boolean flag) {

@@ -72,7 +72,7 @@ public class BukkitHologram extends AbstractHologram {
                                 return;
                             }
 
-                            itemEntity.setHeadPose(checkAndAdd(itemEntity.getHeadPose()));
+                            itemEntity.setHeadRotation(checkAndAdd(itemEntity.getHeadRotation()));
 
                             final var metadataPacket = new SClientboundSetEntityDataPacket()
                                     .entityId(itemEntity.getId());
