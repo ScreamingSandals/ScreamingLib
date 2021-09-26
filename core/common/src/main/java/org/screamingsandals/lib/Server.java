@@ -13,9 +13,9 @@ import java.util.List;
 public abstract class Server {
     private static Server server;
 
-    public Server() {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
+    protected Server() {
+        if (server != null) {
+            throw new UnsupportedOperationException("Server has already been initialized!");
         }
         server = this;
     }
