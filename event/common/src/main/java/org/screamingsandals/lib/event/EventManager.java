@@ -61,6 +61,15 @@ public abstract class EventManager {
         return defaultEventManager.fireEventAsync(event);
     }
 
+    public static EventManager createChildManager() {
+        return new EventManager() {
+            @Override
+            public boolean isServerThread() {
+                return defaultEventManager.isServerThread();
+            }
+        };
+    }
+
     public static boolean isDefaultInitialized() {
         return defaultEventManager != null;
     }
