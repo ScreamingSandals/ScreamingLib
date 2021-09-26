@@ -13,7 +13,9 @@ public class FakeArmorStandEntity extends FakeLivingEntity {
 
     public FakeArmorStandEntity(LocationHolder location, int typeId) {
         super(location, typeId);
+        this.armorStandFlags = 0;
         this.headPose = new Vector3Df(0.0f, 0.0f, 0.0f);
+        setHeadPose(headPose);
         setArmorStandFlags();
         setHeadRotation(new Vector3Df(0.0f, 0.0f, 0.0f));
         setBodyRotation(new Vector3Df(0.0f, 0.0f, 0.0f));

@@ -14,15 +14,12 @@ public class BlockPosition {
     protected int y;
     protected int z;
 
-    public static BlockPosition fromLong(long packedPos) {
-        return new BlockPosition((int) (packedPos >> 38L), (int) (packedPos << 52L >> 52L), (int) (packedPos << 26L >> 38L));
+    // TODO:
+    public static long toLong(int x, int y, int z) {
+        return 0;
     }
 
     public long asLong() {
         return toLong(getX(), getY(), getZ());
-    }
-
-    public static long toLong(int x, int y, int z) {
-        return (x & 0x3FFFFFFL) << 38L | y & 0xFFFL | (z & 0x3FFFFFFL) << 12L;
     }
 }

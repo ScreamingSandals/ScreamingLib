@@ -99,8 +99,7 @@ public class FakeEntity {
     }
 
     public void setTicksFrozen(int ticksFrozen) {
-        // TODO: seems like this was either added in 1.16.4 or 1.17, wiki.vg isn't really clear about this, let's find it out ourselves :>
-        if (Server.isVersion(1, 16, 4)) {
+        if (Server.isVersion(1, 17)) {
             MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.TICKS_FROZEN), ticksFrozen);
         }
     }
