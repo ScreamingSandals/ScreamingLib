@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.packet.entity;
 
-import org.screamingsandals.lib.Core;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockPosition;
 import org.screamingsandals.lib.packet.MetadataItem;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -44,13 +44,13 @@ public class FakeLivingEntity extends FakeEntity {
     }
 
     public void setBeeStingerCount(int beeStingerCount) {
-        if (Core.isVersion(1,15)) {
+        if (Server.isVersion(1,15)) {
             put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.BEE_STINGER_COUNT), beeStingerCount));
         }
     }
 
     public void setBedPosition(BlockPosition bedPosition) {
-        if (Core.isVersion(1, 14)) {
+        if (Server.isVersion(1, 14)) {
             put(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.BED_BLOCK_POSITION), bedPosition));
         }
     }

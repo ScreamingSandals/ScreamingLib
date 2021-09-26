@@ -35,12 +35,9 @@ import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
-import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
-
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Service
 public class BukkitPlayerMapper extends PlayerMapper {
@@ -146,22 +143,6 @@ public class BukkitPlayerMapper extends PlayerMapper {
     @Override
     public CommandSenderWrapper getConsoleSender0() {
         return senderConverter.convert(Bukkit.getConsoleSender());
-    }
-
-    @Override
-    public List<PlayerWrapper> getPlayersOnServer0() {
-        return Bukkit.getOnlinePlayers()
-                .stream()
-                .map(playerConverter::convert)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<PlayerWrapper> getPlayers0(WorldHolder holder) {
-        return holder.as(World.class).getPlayers()
-                .stream()
-                .map(playerConverter::convert)
-                .collect(Collectors.toList());
     }
 
     @Override

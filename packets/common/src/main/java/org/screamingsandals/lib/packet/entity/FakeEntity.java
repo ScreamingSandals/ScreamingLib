@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
-import org.screamingsandals.lib.Core;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -51,7 +51,7 @@ public class FakeEntity {
     }
 
     public void setCustomName(Component name) {
-        if (Core.isVersion(1, 13)) {
+        if (Server.isVersion(1, 13)) {
             put(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), name));
         } else {
             var str = AdventureHelper.toLegacy(name);
@@ -86,21 +86,21 @@ public class FakeEntity {
 
     // armor stand must override this method for legacy
     public void setGravity(boolean gravity) {
-        if (Core.isVersion(1, 10)) {
+        if (Server.isVersion(1, 10)) {
             put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.HAS_NO_GRAVITY), !gravity));
         }
     }
 
     // TODO: maybe introduce EntityPose enum
     public void setPose(int poseOrdinal) {
-        if (Core.isVersion(1, 14)) {
+        if (Server.isVersion(1, 14)) {
             put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.POSE), poseOrdinal));
         }
     }
 
     public void setTicksFrozen(int ticksFrozen) {
         // TODO: seems like this was either added in 1.16.4 or 1.17, wiki.vg isn't really clear about this, let's find it out ourselves :>
-        if (Core.isVersion(1, 16, 4)) {
+        if (Server.isVersion(1, 16, 4)) {
             MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.TICKS_FROZEN), ticksFrozen);
         }
     }
@@ -223,14 +223,14 @@ public class FakeEntity {
                 register(EntityMetadata.CUSTOM_NAME);
                 register(EntityMetadata.CUSTOM_NAME_VISIBLE);
                 register(EntityMetadata.IS_SILENT);
-                if (Core.isVersion(1, 10)) {
+                if (Server.isVersion(1, 10)) {
                     register(EntityMetadata.HAS_NO_GRAVITY);
                 }
-                if (Core.isVersion(1, 14)) {
+                if (Server.isVersion(1, 14)) {
                     register(EntityMetadata.POSE);
                 }
                 // TODO: not sure if this is 1.16.4 or 1.17 since wiki.vg history seems like it's wrong, let's find it ourselves.
-                if (Core.isVersion(1, 16, 4)) {
+                if (Server.isVersion(1, 16, 4)) {
                     register(EntityMetadata.TICKS_FROZEN);
                 }
 
@@ -239,10 +239,10 @@ public class FakeEntity {
                 register(EntityMetadata.POTION_EFFECT_COLOR);
                 register(EntityMetadata.POTION_AMBIENCY);
                 register(EntityMetadata.BODY_ARROW_COUNT);
-                if (Core.isVersion(1, 15)) {
+                if (Server.isVersion(1, 15)) {
                     register(EntityMetadata.BEE_STINGER_COUNT);
                 }
-                if (Core.isVersion(1, 14)) {
+                if (Server.isVersion(1, 14)) {
                     register(EntityMetadata.BED_BLOCK_POSITION);
                 }
 

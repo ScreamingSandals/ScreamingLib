@@ -23,7 +23,6 @@ import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.internal.InternalCoreService;
 import org.screamingsandals.lib.block.BlockMapper;
-import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.chunk.ChunkMapper;
 import org.screamingsandals.lib.world.difficulty.DifficultyMapping;
@@ -37,6 +36,7 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         replaceRule = "{basePackage}.{platform}.{Platform}{className}"
 )
 @ServiceDependencies(dependsOn = {
+        Server.class,
         EventManager.class,
         EntityTypeMapping.class,
         EntityMapper.class,
@@ -65,48 +65,8 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         GameRuleMapping.class,
         WeatherMapping.class,
         ParticleTypeMapping.class,
-        GameRuleMapping.class,
+        GameRuleMapping.class
 })
 @InternalCoreService
 public abstract class Core {
-    private static Core instance;
-
-    @OnPostConstruct
-    public void onPostConstruct() {
-        instance = this;
-    }
-
-    //TODO: maybe make a Server class that defines methods like the ones below
-
-    /**
-     * Returns a boolean stating if the current thread is the server thread.
-     *
-     * @return true if current thread is same as the Server thread, false otherwise
-     */
-    public static boolean isServerThread() {
-        if (instance == null) {
-            throw new UnsupportedOperationException("Core has not yet been initialized!");
-        }
-        return instance.isServerThread0();
-    }
-
-    public static boolean isVersion(int major, int minor) {
-        if (instance == null) {
-            throw new UnsupportedOperationException("Core has not yet been initialized!");
-        }
-        return instance.isVersion0(major, minor);
-    }
-
-    public static boolean isVersion(int major, int minor, int patch) {
-        if (instance == null) {
-            throw new UnsupportedOperationException("Core has not yet been initialized!");
-        }
-        return instance.isVersion0(major, minor, patch);
-    }
-
-    public abstract boolean isVersion0(int major, int minor);
-
-    public abstract boolean isVersion0(int major, int minor, int patch);
-
-    public abstract boolean isServerThread0();
 }

@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.packet.entity;
 
 import lombok.Getter;
-import org.screamingsandals.lib.Core;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.packet.MetadataItem;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -25,7 +25,7 @@ public class FakeArmorStandEntity extends FakeLivingEntity {
 
     @Override
     public void setGravity(boolean gravity) {
-        if (Core.isVersion(1, 10)) {
+        if (Server.isVersion(1, 10)) {
             put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.HAS_NO_GRAVITY), !gravity));
         } else {
             setArmorStandFlagsFromValue( 2, gravity);

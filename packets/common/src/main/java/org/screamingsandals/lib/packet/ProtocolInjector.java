@@ -6,6 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.event.player.SPlayerJoinEvent;
@@ -34,7 +35,7 @@ public class ProtocolInjector {
         EventManager.getDefaultEventManager().register(SPlayerLoginEvent.class, sPlayerLoginEvent -> addPlayer(sPlayerLoginEvent.getPlayer(), true), EventPriority.LOWEST);
         EventManager.getDefaultEventManager().register(SPlayerJoinEvent.class, sPlayerJoinEvent -> addPlayer(sPlayerJoinEvent.getPlayer(), false), EventPriority.HIGH);
         EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, sPlayerLeaveEvent -> removePlayer(sPlayerLeaveEvent.getPlayer()), EventPriority.HIGHEST);
-        PlayerMapper.getPlayers().forEach(player -> addPlayer(player, false));
+        Server.getConnectedPlayers().forEach(player -> addPlayer(player, false));
     }
 
     public void addPlayer(PlayerWrapper player, boolean onLogin) {

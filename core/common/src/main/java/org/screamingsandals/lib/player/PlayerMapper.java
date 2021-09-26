@@ -4,8 +4,6 @@ import io.netty.channel.Channel;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.PlayerContainer;
@@ -41,7 +39,6 @@ public abstract class PlayerMapper {
         if (playerMapper != null) {
             throw new UnsupportedOperationException("PlayerMapper is already initialized.");
         }
-
         playerMapper = this;
     }
 
@@ -222,20 +219,6 @@ public abstract class PlayerMapper {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.getPlayerExact0(name);
-    }
-
-    public static List<PlayerWrapper> getPlayers() {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return playerMapper.getPlayersOnServer0();
-    }
-
-    public static List<PlayerWrapper> getPlayers(WorldHolder holder) {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return playerMapper.getPlayers0(holder);
     }
 
     public static CommandSenderWrapper getConsoleSender() {
@@ -500,10 +483,6 @@ public abstract class PlayerMapper {
     }
 
     public abstract CommandSenderWrapper getConsoleSender0();
-
-    public abstract List<PlayerWrapper> getPlayersOnServer0();
-
-    public abstract List<PlayerWrapper> getPlayers0(WorldHolder holder);
 
     public abstract void closeInventory0(PlayerWrapper playerWrapper);
 
