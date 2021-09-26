@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.entity;
 
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -19,6 +20,8 @@ import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.attribute.AttributeHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeTypeHolder;
+import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -331,6 +334,156 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     @Override
     public void setHealth(double health) {
         ((LivingEntity) wrappedObject).setHealth(health);
+    }
+
+    @Override
+    @Nullable
+    public Item getHelmet() {
+        var eq = ((LivingEntity) wrappedObject).getEquipment();
+        if (eq == null || eq.getHelmet() == null) {
+            return null;
+        }
+
+        return ItemFactory.build(eq.getHelmet()).orElse(null);
+    }
+
+    @Override
+    @Nullable
+    public Item getChestplate() {
+        var eq = ((LivingEntity) wrappedObject).getEquipment();
+        if (eq == null || eq.getChestplate() == null) {
+            return null;
+        }
+
+        return ItemFactory.build(eq.getChestplate()).orElse(null);
+    }
+
+    @Override
+    @Nullable
+    public Item getLeggings() {
+        var eq = ((LivingEntity) wrappedObject).getEquipment();
+        if (eq == null || eq.getLeggings() == null) {
+            return null;
+        }
+
+        return ItemFactory.build(eq.getLeggings()).orElse(null);
+    }
+
+    @Override
+    @Nullable
+    public Item getBoots() {
+        var eq = ((LivingEntity) wrappedObject).getEquipment();
+        if (eq == null || eq.getBoots() == null) {
+            return null;
+        }
+
+        return ItemFactory.build(eq.getBoots()).orElse(null);
+    }
+
+    @Override
+    public void setHelmet(@Nullable Item helmet) {
+        var eq = ((LivingEntity) wrappedObject).getEquipment();
+        if (eq == null) {
+            return;
+        }
+
+        if (helmet == null) {
+            eq.setHelmet(null);
+        } else {
+            eq.setHelmet(helmet.as(ItemStack.class));
+        }
+    }
+
+    @Override
+    public void setChestplate(@Nullable Item chestplate) {
+        var eq = ((LivingEntity) wrappedObject).getEquipment();
+        if (eq == null) {
+            return;
+        }
+
+        if (chestplate == null) {
+            eq.setChestplate(null);
+        } else {
+            eq.setChestplate(chestplate.as(ItemStack.class));
+        }
+    }
+
+    @Override
+    public void setLeggings(@Nullable Item leggings) {
+        var eq = ((LivingEntity) wrappedObject).getEquipment();
+        if (eq == null) {
+            return;
+        }
+
+        if (leggings == null) {
+            eq.setLeggings(null);
+        } else {
+            eq.setLeggings(leggings.as(ItemStack.class));
+        }
+    }
+
+    @Override
+    public void setBoots(@Nullable Item boots) {
+        var eq = ((LivingEntity) wrappedObject).getEquipment();
+        if (eq == null) {
+            return;
+        }
+
+        if (boots == null) {
+            eq.setBoots(null);
+        } else {
+            eq.setBoots(boots.as(ItemStack.class));
+        }
+    }
+
+    @Override
+    @Nullable
+    public Item getItemInMainHand() {
+        var eq = ((LivingEntity) wrappedObject).getEquipment();
+        if (eq == null) {
+            return null;
+        }
+
+        return ItemFactory.build(eq.getItemInMainHand()).orElse(null);
+    }
+
+    @Override
+    public void setItemInMainHand(@Nullable Item item) {
+        var eq = ((LivingEntity) wrappedObject).getEquipment();
+        if (eq == null) {
+            return;
+        }
+
+        if (item == null) {
+            eq.setItemInMainHand(null);
+        } else {
+            eq.setItemInMainHand(item.as(ItemStack.class));
+        }
+    }
+
+    @Override
+    @Nullable
+    public Item getItemInOffHand() {
+        var eq = ((LivingEntity) wrappedObject).getEquipment();
+        if (eq == null) {
+            return null;
+        }
+
+        return ItemFactory.build(eq.getItemInOffHand()).orElse(null);
+    }
+
+    @Override
+    public void setItemInOffHand(@Nullable Item item) {
+        var eq = ((LivingEntity) wrappedObject).getEquipment();
+        if (eq == null) {
+            return;
+        }
+
+        if (item == null) {
+            eq.setItemInOffHand(null);
+        } else {
+            eq.setItemInOffHand(item.as(ItemStack.class));
+        }
     }
 
     @SuppressWarnings({"ConstantConditions", "unchecked"})

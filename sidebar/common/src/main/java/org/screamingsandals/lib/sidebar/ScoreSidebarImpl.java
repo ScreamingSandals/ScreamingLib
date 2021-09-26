@@ -11,6 +11,7 @@ import org.screamingsandals.lib.packet.SClientboundSetObjectivePacket;
 import org.screamingsandals.lib.packet.SClientboundSetScorePacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sender.SenderMessage;
+import org.screamingsandals.lib.sender.StaticSenderMessage;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeamImpl;
 import org.screamingsandals.lib.utils.AdventureHelper;
@@ -93,9 +94,11 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
                 .filter(entryA -> entryA.getIdentifier().equals(identifier))
                 .findFirst()
                 .ifPresentOrElse(scoreEntry -> {
-                    scoreEntry.setComponent(displayName);
-                    scoreEntry.setReloadCache(true);
-                    update();
+                    if (!displayName.equals(scoreEntry.getComponent())) {
+                        scoreEntry.setComponent(displayName);
+                        scoreEntry.setReloadCache(true);
+                        update();
+                    }
                 }, () -> {
                     var scoreEntry = new ScoreEntry(identifier);
                     scoreEntry.setComponent(displayName);
@@ -233,7 +236,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
                 .action(SClientboundSetScorePacket.ScoreboardAction.CHANGE);
     }
 
-    private Object destroyScore(String value) {
+    private SClientboundSetScorePacket destroyScore(String value) {
         return new SClientboundSetScorePacket()
                 .entityName(value)
                 .objectiveKey(objectiveKey)
@@ -280,19 +283,22 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
                 .collect(Collectors.toList());
 
         var packets = new ArrayList<AbstractPacket>();
-        var forRemoval = new ArrayList<ScoreEntry>();
 
-        lines.stream().filter(scoreEntry -> !list.contains(scoreEntry)).forEach(forRemoval::add);
-        forRemoval.forEach(scoreEntry -> {
-            lines.remove(scoreEntry);
-            destroyScore(scoreEntry.getCache());
-        });
+        lines.stream()
+                .filter(scoreEntry -> !list.contains(scoreEntry))
+                .forEach(scoreEntry -> {
+                    lines.remove(scoreEntry);
+                    packets.add(destroyScore(scoreEntry.getCache()));
+                });
 
         list.forEach(scoreEntry -> {
             if (!lines.contains(scoreEntry)) {
                 lines.add(scoreEntry);
             }
             if (scoreEntry.getCache() == null || scoreEntry.isReloadCache()) {
+                if (scoreEntry.getCache() != null) {
+                    packets.add(destroyScore(scoreEntry.getCache()));
+                }
                 scoreEntry.setCache(crop(AdventureHelper.toLegacy(scoreEntry.getComponent())));
                 scoreEntry.setReloadCache(false);
             }
@@ -301,6 +307,10 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
 
         if (visible) {
             viewers.forEach(viewer -> packets.forEach(packet -> packet.sendPacket(viewer)));
+        }
+
+        if (!(this.title instanceof StaticSenderMessage)) {
+            updateTitle0();
         }
     }
 

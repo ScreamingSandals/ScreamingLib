@@ -14,8 +14,11 @@ import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerInteractAtEntityEvent;
 import org.screamingsandals.lib.event.player.SPlayerInteractEntityEvent;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 public class PlayerInteractEntityEventListener extends AbstractBukkitEventHandlerFactory<PlayerInteractEntityEvent, SPlayerInteractEntityEvent> {
+
+    private final boolean hasArmorStandManipulateEvent = Reflect.has("org.bukkit.event.player.PlayerArmorStandManipulateEvent");
 
     public PlayerInteractEntityEventListener(Plugin plugin) {
         super(PlayerInteractEntityEvent.class, SPlayerInteractEntityEvent.class, plugin);
@@ -23,7 +26,7 @@ public class PlayerInteractEntityEventListener extends AbstractBukkitEventHandle
 
     @Override
     protected SPlayerInteractEntityEvent wrapEvent(PlayerInteractEntityEvent event, EventPriority priority) {
-        if (event instanceof PlayerArmorStandManipulateEvent) {
+        if (hasArmorStandManipulateEvent && event instanceof PlayerArmorStandManipulateEvent) {
             return new SPlayerArmorStandManipulateEvent(
                     ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
                     ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getRightClicked()).orElseThrow()),

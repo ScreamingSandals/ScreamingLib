@@ -1,8 +1,11 @@
 package org.screamingsandals.lib.entity;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.attribute.AttributeHolder;
 import org.screamingsandals.lib.attribute.AttributeTypeHolder;
+import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -123,6 +126,36 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
     void setAbsorptionAmount(double amount);
 
     void setHealth(double health);
+
+    @Nullable
+    Item getHelmet();
+
+    @Nullable
+    Item getChestplate();
+
+    @Nullable
+    Item getLeggings();
+
+    @Nullable
+    Item getBoots();
+
+    void setHelmet(@Nullable Item helmet);
+
+    void setChestplate(@Nullable Item chestplate);
+
+    void setLeggings(@Nullable Item leggings);
+
+    void setBoots(@Nullable Item boots);
+
+    @Nullable
+    Item getItemInMainHand();
+
+    void setItemInMainHand(@Nullable Item item);
+
+    @Nullable
+    Item getItemInOffHand();
+
+    void setItemInOffHand(@Nullable Item item);
 
 
 }

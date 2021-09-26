@@ -44,7 +44,7 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
                             .stream()
                             .map(node2 -> {
                                 if (node2.isMap()) {
-                                    return TextColor.color(node2.node("red").getInt(), node2.node("green").getInt(), node2.node("blue").getInt());
+                                    return TextColor.color(node2.node("red").getInt(node2.node("RED").getInt()), node2.node("green").getInt(node2.node("GREEN").getInt()), node2.node("blue").getInt(node2.node("BLUE").getInt()));
                                 } else {
                                     var color = node2.getString("");
                                     var c = TextColor.fromCSSHexString(color);
@@ -62,7 +62,7 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
                             .filter(Objects::nonNull)
                             .collect(Collectors.toList()));
                 } else if (colorsNode.isMap()) {
-                    holder = holder.colors(List.of(TextColor.color(colorsNode.node("red").getInt(), colorsNode.node("green").getInt(), colorsNode.node("blue").getInt())));
+                    holder = holder.colors(List.of(TextColor.color(colorsNode.node("red").getInt(colorsNode.node("RED").getInt()), colorsNode.node("green").getInt(colorsNode.node("GREEN").getInt()), colorsNode.node("blue").getInt(colorsNode.node("BLUE").getInt()))));
                 } else {
                     var color = colorsNode.getString("");
                     var c = TextColor.fromCSSHexString(color);
@@ -84,7 +84,7 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
                             .stream()
                             .map(node2 -> {
                                 if (node2.isMap()) {
-                                    return TextColor.color(node2.node("red").getInt(), node2.node("green").getInt(), node2.node("blue").getInt());
+                                    return TextColor.color(node2.node("red").getInt(node2.node("RED").getInt()), node2.node("green").getInt(node2.node("GREEN").getInt()), node2.node("blue").getInt(node2.node("BLUE").getInt()));
                                 } else {
                                     var color = node2.getString("");
                                     var c = TextColor.fromCSSHexString(color);
@@ -102,7 +102,7 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
                             .filter(Objects::nonNull)
                             .collect(Collectors.toList()));
                 } else if (fadeColorsNode.isMap()) {
-                    holder = holder.fadeColors(List.of(TextColor.color(fadeColorsNode.node("red").getInt(), fadeColorsNode.node("green").getInt(), fadeColorsNode.node("blue").getInt())));
+                    holder = holder.fadeColors(List.of(TextColor.color(fadeColorsNode.node("red").getInt(fadeColorsNode.node("RED").getInt()), fadeColorsNode.node("green").getInt(fadeColorsNode.node("GREEN").getInt()), fadeColorsNode.node("blue").getInt(fadeColorsNode.node("BLUE").getInt()))));
                 } else {
                     var color = fadeColorsNode.getString("");
                     var c = TextColor.fromCSSHexString(color);
