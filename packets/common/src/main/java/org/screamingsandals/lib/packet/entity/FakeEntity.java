@@ -45,7 +45,7 @@ public class FakeEntity {
         setCustomName(Component.empty());
         setCustomNameVisible(false);
         setSilent(false);
-        setGravity(true);
+        setGravity(false);
         setPose(0);
         setTicksFrozen(0);
     }
