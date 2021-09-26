@@ -116,6 +116,10 @@ public class BukkitEntityMapper extends EntityMapper {
         } else {
             Server.runSynchronously(() -> future.complete(getNewEntityId()));
         }
+        future.exceptionally(ex -> {
+            ex.printStackTrace();
+            return null;
+        });
         return future;
     }
 }
