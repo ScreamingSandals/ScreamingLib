@@ -1,11 +1,8 @@
 package org.screamingsandals.lib.packet;
 
-import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
-
-import java.util.function.Supplier;
 
 /**
  *  Represents the PacketMapper instance which is useful for sending {@link AbstractPacket} to Player connections.
@@ -17,6 +14,13 @@ import java.util.function.Supplier;
 public abstract class PacketMapper {
     private static PacketMapper packetMapper = null;
 
+    public PacketMapper() {
+        if (packetMapper != null) {
+            throw new UnsupportedOperationException("PacketMapper is already initialized.");
+        }
+        packetMapper = this;
+    }
+
     /**
      * Returns if this PacketMapper instance has been initialized.
      *
@@ -24,18 +28,6 @@ public abstract class PacketMapper {
      */
     public static boolean isInitialized() {
         return packetMapper != null;
-    }
-
-    /**
-     * Initializes this PacketMapper instance with a PacketMapper that is provided by a {@link Supplier}
-     *
-     * @param packetMapperSupplier the provider for this PacketMapper instance
-     */
-    public static void init(@NotNull Supplier<PacketMapper> packetMapperSupplier) {
-        if (packetMapper != null) {
-            throw new UnsupportedOperationException("PacketMapper is already initialized.");
-        }
-        packetMapper = packetMapperSupplier.get();
     }
 
     /**
@@ -66,5 +58,17 @@ public abstract class PacketMapper {
         return packetMapper.getId0(clazz);
     }
 
+    public static int getProtocolVersion(PlayerWrapper player) {
+        if (packetMapper == null) {
+            throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
+        }
+        if (player == null || !player.isOnline()) {
+            throw new UnsupportedOperationException("Invalid player provided!");
+        }
+        return packetMapper.getProtocolVersion0(player);
+    }
+
     public abstract int getId0(Class<? extends AbstractPacket> clazz);
+
+    public abstract int getProtocolVersion0(PlayerWrapper player);
 }

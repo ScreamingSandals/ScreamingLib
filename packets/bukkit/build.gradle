@@ -2,6 +2,7 @@ dependencies {
     api project(':packets-vanilla')
     api project(':utils-bukkit')
     api project(':core-bukkit')
+    api project(':nms')
     compileOnly paperLegacy(PAPER_LEGACY_VERSION)
     compileOnly 'com.mojang:datafixerupper:' + DATAFIXERUPPER_VERSION
     compileOnly 'com.mojang:authlib:' + MOJANG_AUTHLIB_VERSION
