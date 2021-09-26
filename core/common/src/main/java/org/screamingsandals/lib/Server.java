@@ -6,7 +6,10 @@ import org.screamingsandals.lib.world.WorldHolder;
 
 import java.util.List;
 
-@AbstractService
+@AbstractService(
+        pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
+        replaceRule = "{basePackage}.{platform}.{Platform}{className}"
+)
 public abstract class Server {
     private static Server server;
 
