@@ -2,6 +2,7 @@ package org.screamingsandals.lib.entity;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -79,6 +80,9 @@ public interface EntityBasic extends Wrapper {
     default void setCustomName(ComponentLike name) {
         setCustomName(name.asComponent());
     }
+
+    @Nullable
+    Component getCustomName();
 
     void setCustomNameVisible(boolean flag);
 
