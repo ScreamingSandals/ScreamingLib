@@ -31,6 +31,9 @@ import org.screamingsandals.lib.block.state.BlockStateMapper;
 import org.screamingsandals.lib.world.gamerule.GameRuleMapping;
 import org.screamingsandals.lib.world.weather.WeatherMapping;
 
+/**
+ * <p>Main entry point of the core module.</p>
+ */
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
         replaceRule = "{basePackage}.{platform}.{Platform}{className}"

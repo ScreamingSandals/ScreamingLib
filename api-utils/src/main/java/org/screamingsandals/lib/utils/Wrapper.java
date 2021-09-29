@@ -6,7 +6,6 @@ import java.util.Optional;
  * Indicates something that can be wrapped and converted to different types of choice.
  */
 public interface Wrapper {
-
     /**
      * Converts the WrappedObject to represent a subclass of the specified class object.
      *

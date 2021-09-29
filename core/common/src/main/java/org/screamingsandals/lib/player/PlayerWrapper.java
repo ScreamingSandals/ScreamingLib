@@ -26,6 +26,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * <p>Class representing a player.</p>
+ */
 public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper {
     @Getter
     private final UUID uuid;
@@ -36,6 +39,15 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
     public PlayerWrapper(String name, UUID uuid) {
         super(name, Type.PLAYER);
         this.uuid = uuid;
+    }
+
+    /**
+     * <p>Checks if the player is on ground.</p>
+     *
+     * @return is the player on ground?
+     */
+    public boolean isOnGround() {
+        return asEntity().getVelocity().getY() == 0 && !getLocation().remove(0, 1, 0).getBlock().isEmpty();
     }
 
     /**
@@ -64,99 +76,223 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         return Optional.empty();
     }
 
+    /**
+     * <p>Checks if the player is sprinting.</p>
+     *
+     * @return is the player sprinting?
+     */
     public boolean isSprinting() {
         return PlayerMapper.isSprinting(this);
     }
 
+    /**
+     * <p>Sets the player's sprinting status.</p>
+     *
+     * @param sprinting the new sprinting status
+     */
     public void setSprinting(boolean sprinting) {
         PlayerMapper.setSprinting(this, sprinting);
     }
 
+    /**
+     * <p>Gets the player's accurate network latency to the server.</p>
+     *
+     * @return the player's ping
+     */
     public int getPing() {
         return PlayerMapper.getPing(this);
     }
 
+    /**
+     * <p>Gets the player's display name.</p>
+     *
+     * @return the player's display name
+     */
     @NotNull
     public Component getDisplayName() {
         return PlayerMapper.getDisplayName(this);
     }
 
+    /**
+     * <p>Sets the player's display name.</p>
+     *
+     * @param component the display name component
+     */
     public void setDisplayName(@Nullable Component component) {
         PlayerMapper.setDisplayName(this, component);
     }
 
+    /**
+     * <p>Sets the player's display name.</p>
+     *
+     * @param component the display name component
+     */
     public void setDisplayName(@Nullable ComponentLike component) {
         PlayerMapper.setDisplayName(this, component != null ? component.asComponent() : null);
     }
 
+    /**
+     * <p>Converts this player to an {@link EntityHuman}.</p>
+     *
+     * @return the player as an entity
+     */
     public EntityHuman asEntity() {
         return as(EntityHuman.class);
     }
 
+    /**
+     * <p>Gets the player's ender chest container.</p>
+     *
+     * @return the player's ender chest
+     */
     public Container getEnderChest() {
         return PlayerMapper.getEnderChest(this);
     }
 
+    /**
+     * <p>Gets the player's inventory container.</p>
+     *
+     * @return the player's inventory
+     */
     public PlayerContainer getPlayerInventory() {
         return PlayerMapper.getPlayerInventory(this);
     }
 
+    /**
+     * <p>Gets the inventory that this player has currently opened.</p>
+     *
+     * @return the inventory the player has currently opened, empty if the player doesn't have an inventory opened
+     */
     public Optional<Container> getOpenedInventory() {
         return PlayerMapper.getOpenedInventory(this);
     }
 
+    /**
+     * <p>Opens the supplied inventory container for this player.</p>
+     *
+     * @param container the inventory container
+     */
     public void openInventory(Openable container) {
         container.openInventory(this);
     }
 
+    /**
+     * <p>Closes the inventory that the player has currently opened.</p>
+     */
     public void closeInventory() {
         PlayerMapper.closeInventory(this);
     }
 
+    /**
+     * <p>Gets the player's location.</p>
+     *
+     * @return the player's location
+     */
     public LocationHolder getLocation() {
         return PlayerMapper.getLocation(this);
     }
 
+    /**
+     * <p>Teleports this player to a location asynchronously.</p>
+     *
+     * @param location the location to teleport to
+     * @param callback the callback runnable
+     * @return the teleport future
+     */
     public CompletableFuture<Void> teleport(LocationHolder location, Runnable callback) {
         return PlayerMapper.teleport(this, location, callback, false);
     }
 
+    /**
+     * <p>Teleports this player to a location asynchronously.</p>
+     *
+     * @param location the location to teleport to
+     * @param callback the callback runnable
+     * @param forceCallback should the callback be run even if the teleport didn't succeed?
+     * @return the teleport future
+     */
     public CompletableFuture<Void> teleport(LocationHolder location, Runnable callback, boolean forceCallback) {
         return PlayerMapper.teleport(this, location, callback, forceCallback);
     }
 
+    /**
+     * <p>Teleports this player to a location asynchronously.</p>
+     *
+     * @param location the location to teleport to
+     * @return the teleport future
+     */
     public CompletableFuture<Boolean> teleport(LocationHolder location) {
         return PlayerMapper.teleport(this, location);
     }
 
+    /**
+     * <p>Kicks this player with a message.</p>
+     *
+     * @param message the kick message
+     */
     public void kick(Component message) {
         PlayerMapper.kick(this, message);
     }
 
+    /**
+     * <p>Kicks this player with a message.</p>
+     *
+     * @param message the kick message
+     */
     public void kick(ComponentLike message) {
         PlayerMapper.kick(this, message.asComponent());
     }
 
-    public void setGameMode(@NotNull GameModeHolder gameMode) {
-        PlayerMapper.setGameMode(this, gameMode);
-    }
-
+    /**
+     * <p>Gets the player's current gamemode.</p>
+     *
+     * @return the player's gamemode
+     */
     public GameModeHolder getGameMode() {
         return PlayerMapper.getGameMode(this);
     }
 
+    /**
+     * <p>Sets the gamemode for this player.</p>
+     *
+     * @param gameMode the new gamemode holder
+     */
+    public void setGameMode(@NotNull GameModeHolder gameMode) {
+        PlayerMapper.setGameMode(this, gameMode);
+    }
+
+    /**
+     * <p>Gets the experience level of this player.</p>
+     *
+     * @return the player's level
+     */
     public int getLevel() {
         return PlayerMapper.getLevel(this);
     }
 
+    /**
+     * <p>Gets the player's experience.</p>
+     *
+     * @return the player's experience
+     */
     public float getExp() {
         return PlayerMapper.getExp(this);
     }
 
+    /**
+     * <p>Sets the experience level of this player.</p>
+     *
+     * @param level the player's new experience level
+     */
     public void setLevel(int level) {
         PlayerMapper.setLevel(this, level);
     }
 
+    /**
+     * <p>Sets the player's experience.</p>
+     *
+     * @param exp the player's new experience
+     */
     public void setExp(float exp) {
         PlayerMapper.setExp(this, exp);
     }
@@ -190,36 +326,81 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         return uuid.hashCode();
     }
 
+    /**
+     * <p>Gets the location of the bed of this player.</p>
+     *
+     * @return the location of the bed of this player, can be empty if the player does not have a bed
+     */
     @Override
     public Optional<LocationHolder> getBedLocation() {
         return PlayerMapper.getBedLocation(this);
     }
 
+    /**
+     * <p>Gets the player's last name.</p>
+     *
+     * @return the player's last name
+     */
     @Override
     public Optional<String> getLastName() {
         return Optional.ofNullable(getName());
     }
 
+    /**
+     * <p>Gets the first played time.</p>
+     *
+     * @return the first played time
+     */
     @Override
     public long getFirstPlayed() {
         return PlayerMapper.getFirstPlayed(this);
     }
 
+    /**
+     * <p>Gets the last played time.</p>
+     *
+     * @return the last played time
+     */
     @Override
     public long getLastPlayed() {
         return PlayerMapper.getLastPlayed(this);
     }
 
+    /**
+     * <p>Checks if this player is banned.</p>
+     *
+     * @return is the player banned?
+     */
     @Override
     public boolean isBanned() {
         return PlayerMapper.isBanned(this);
     }
 
+    /**
+     * <p>Checks if this player is whitelisted.</p>
+     *
+     * @return is the player whitelisted?
+     */
     @Override
     public boolean isWhitelisted() {
         return PlayerMapper.isWhitelisted(this);
     }
 
+    /**
+     * <p>Sets the whitelisted status for this player.</p>
+     *
+     * @param whitelisted the new whitelisted status
+     */
+    @Override
+    public void setWhitelisted(boolean whitelisted) {
+        PlayerMapper.setWhitelisted(this, whitelisted);
+    }
+
+    /**
+     * <p>Checks if this player is online.</p>
+     *
+     * @return is the player online?
+     */
     @Override
     public boolean isOnline() {
         return PlayerMapper.isOnline(this);
@@ -246,18 +427,25 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
     }
 
     public void sendParticle(ParticleHolder particle, LocationHolder location) {
-
+        // TODO: misat xdd
     }
 
-    @Override
-    public void setWhitelisted(boolean whitelisted) {
-        PlayerMapper.setWhitelisted(this, whitelisted);
-    }
-
+    /**
+     * <p>Gets the player's connection.</p>
+     *
+     * @return the player connection
+     * @see Channel
+     */
     public Channel getChannel() {
         return PlayerMapper.getChannel(this);
     }
 
+    /**
+     * <p>Launches the player in it's facing direction.</p>
+     *
+     * @param multiply the velocity multiplier
+     * @param y the y velocity
+     */
     public void launch(double multiply, double y) {
         if (isOnline()) {
             var entity = as(EntityHuman.class);
@@ -273,6 +461,11 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
         }
     }
 
+    /**
+     * <p>Launches the player in it's facing direction.</p>
+     *
+     * @param velocity the new velocity vector
+     */
     public void launch(Vector3D velocity) {
         if (isOnline()) {
             var entity = as(EntityHuman.class);

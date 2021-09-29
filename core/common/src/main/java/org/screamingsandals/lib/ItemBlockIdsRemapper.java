@@ -16,6 +16,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * <p>Class responsible for remapping item and block id's.</p>
+ */
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
         replaceRule = "{basePackage}.{platform}.{Platform}{className}"
@@ -49,9 +52,12 @@ public abstract class ItemBlockIdsRemapper {
     public static final Map<Predicate<ItemTypeHolder>, Function<String, Optional<ItemTypeHolder>>> colorableItems = new HashMap<>();
 
 
+    /**
+     * <p>Starts the remapping upon construction.</p>
+     */
     @OnPostConstruct
     public void doMapping() {
- /*
+        /*
         if server is running Java Edition Post-Flattening version, flattening remappings have to been applied first
         on legacy versions you had to run it after the legacy
 
@@ -131,7 +137,7 @@ public abstract class ItemBlockIdsRemapper {
     }
 
     private void makeColorableItem(String baseName, String notColoredName) {
-        var list = new ArrayList<ItemTypeHolder>();
+        List<ItemTypeHolder> list = new ArrayList<>();
         COLORS.forEach(s -> ItemTypeHolder.ofOptional(s + "_" + baseName).ifPresent(materialHolder -> {
             if (!list.contains(materialHolder)) {
                 list.add(materialHolder);

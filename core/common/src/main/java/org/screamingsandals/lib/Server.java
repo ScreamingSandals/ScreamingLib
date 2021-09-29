@@ -6,13 +6,22 @@ import org.screamingsandals.lib.world.WorldHolder;
 
 import java.util.List;
 
+/**
+ * <p>Class holding various methods for manipulating with the Minecraft server.</p>
+ */
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
         replaceRule = "{basePackage}.{platform}.{Platform}{className}"
 )
 public abstract class Server {
+    /**
+     * <p>Server class instance.</p>
+     */
     private static Server server;
 
+    /**
+     * <p>Constructs the Server class, internal use only.</p>
+     */
     public Server() {
         if (server != null) {
             throw new UnsupportedOperationException("Server has been already initialized!");
@@ -21,7 +30,7 @@ public abstract class Server {
     }
 
     /**
-     * Returns a boolean stating if the current thread is the server thread.
+     * <p>Returns a boolean stating if the current thread is the server thread.</p>
      *
      * @return true if current thread is same as the Server thread, false otherwise
      */
@@ -32,6 +41,13 @@ public abstract class Server {
         return server.isServerThread0();
     }
 
+    /**
+     * <p>Compares the server version with a supplied value.</p>
+     *
+     * @param major major version number (for example, 1.16.5 -> 1)
+     * @param minor minor version number (for example, 1.16.5 -> 16)
+     * @return is this server version matching the supplied version?
+     */
     public static boolean isVersion(int major, int minor) {
         if (server == null) {
             throw new UnsupportedOperationException("Server has not yet been initialized!");
@@ -39,6 +55,14 @@ public abstract class Server {
         return server.isVersion0(major, minor);
     }
 
+    /**
+     * <p>Compares the server version with a supplied value.</p>
+     *
+     * @param major major version number (for example, 1.16.5 -> 1)
+     * @param minor minor version number (for example, 1.16.5 -> 16)
+     * @param patch patch version number (for example, 1.16.5 -> 5)
+     * @return is this server version matching the supplied version?
+     */
     public static boolean isVersion(int major, int minor, int patch) {
         if (server == null) {
             throw new UnsupportedOperationException("Server has not yet been initialized!");
@@ -46,6 +70,11 @@ public abstract class Server {
         return server.isVersion0(major, minor, patch);
     }
 
+    /**
+     * <p>Gets the list of players that are currently connected to the server.</p>
+     *
+     * @return list of players currently connected to the server
+     */
     public static List<PlayerWrapper> getConnectedPlayers() {
         if (server == null) {
             throw new UnsupportedOperationException("Server has not yet been initialized!");
@@ -53,6 +82,12 @@ public abstract class Server {
         return server.getConnectedPlayers0();
     }
 
+    /**
+     * <p>Gets a list of players that are currently in the supplied world.</p>
+     *
+     * @param world the world
+     * @return list of players currently in the world
+     */
     public static List<PlayerWrapper> getConnectedPlayersFromWorld(WorldHolder world) {
         if (server == null) {
             throw new UnsupportedOperationException("Server has not yet been initialized!");
@@ -63,6 +98,11 @@ public abstract class Server {
         return server.getConnectedPlayersFromWorld0(world);
     }
 
+    /**
+     * <p>Runs a {@link Runnable} synchronously (on the main server thread).</p>
+     *
+     * @param task the runnable
+     */
     public static void runSynchronously(Runnable task) {
         if (server == null) {
             throw new UnsupportedOperationException("Server has not yet been initialized!");
@@ -72,6 +112,8 @@ public abstract class Server {
         }
         server.runSynchronously0(task);
     }
+
+    // abstract methods for implementations
 
     public abstract boolean isVersion0(int major, int minor);
 
