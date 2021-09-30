@@ -42,6 +42,18 @@ public abstract class Server {
     }
 
     /**
+     * <p>Returns the version string of the current Minecraft server.</p>
+     *
+     * @return the version string (1.17.1 for example)
+     */
+    public static String getVersion() {
+        if (server == null) {
+            throw new UnsupportedOperationException("Server has not yet been initialized!");
+        }
+        return server.getVersion0();
+    }
+
+    /**
      * <p>Compares the server version with a supplied value.</p>
      *
      * @param major major version number (for example, 1.16.5 -> 1)
@@ -114,6 +126,8 @@ public abstract class Server {
     }
 
     // abstract methods for implementations
+
+    public abstract String getVersion0();
 
     public abstract boolean isVersion0(int major, int minor);
 
