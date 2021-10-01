@@ -111,8 +111,9 @@ public class ProtocolInjector {
     }
 
     private void unregisterChannelHandler() {
-        if (serverChannelHandler == null)
+        if (serverChannelHandler == null) {
             return;
+        }
 
         for (Channel serverChannel : serverChannels) {
             final ChannelPipeline pipeline = serverChannel.pipeline();
@@ -135,9 +136,25 @@ public class ProtocolInjector {
         }
         final var player = event.getPlayer();
         final var channel = player.getChannel();
-        if (!uninjectedChannels.contains(channel)) {
-            injectPlayer(player);
+        if (channel != null && !uninjectedChannels.contains(channel)) {
+            injectChannelInternal(channel).setPlayer(player);
         }
+    }
+
+    @OnEvent(priority = EventPriority.HIGH)
+    public void onPlayerJoin(SPlayerJoinEvent event) {
+        if (closed) {
+            return;
+        }
+        final var player = event.getPlayer();
+        final var channel = player.getChannel();
+        if (channel != null && !uninjectedChannels.contains(channel) && !hasInjected(channel)) {
+            injectChannelInternal(channel).setPlayer(player);
+        }
+    }
+
+    public boolean hasInjected(Channel channel) {
+        return channel.pipeline().get(CHANNEL_NAME) != null;
     }
 
     @OnEvent(priority = EventPriority.HIGHEST)
@@ -148,7 +165,10 @@ public class ProtocolInjector {
     }
 
     public void injectPlayer(PlayerWrapper player) {
-        injectChannelInternal(player.getChannel()).setPlayer(player);
+        final var channel = player.getChannel();
+        if (channel != null) {
+            injectChannelInternal(player.getChannel()).setPlayer(player);
+        }
     }
 
     private PacketHandler injectChannelInternal(Channel channel) {
@@ -170,7 +190,10 @@ public class ProtocolInjector {
     }
 
     public void uninjectPlayer(PlayerWrapper player) {
-        uninjectChannel(player.getChannel());
+        final var channel = player.getChannel();
+        if (channel != null) {
+            uninjectChannel(player.getChannel());
+        }
     }
 
     public void uninjectChannel(Channel channel) {
