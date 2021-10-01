@@ -8,6 +8,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.event.OnEvent;
+import org.screamingsandals.lib.event.player.SPlayerJoinEvent;
 import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
 import org.screamingsandals.lib.event.player.SPlayerLoginEvent;
 import org.screamingsandals.lib.packet.event.SPacketEvent;
@@ -132,10 +133,25 @@ public class ProtocolInjector {
         if (closed) {
             return;
         }
+        final var player = event.getPlayer();
+        try {
+            final var channel = player.getChannel();
+            if (!uninjectedChannels.contains(channel)) {
+                injectPlayer(player);
+            }
+        } catch (Throwable ignored) {
+        }
+    }
+
+    // just in case onPlayerLogin event was done too early.
+    @OnEvent(priority = EventPriority.HIGH)
+    public void onPlayerJoin(SPlayerJoinEvent event) {
+        if (closed) {
+            return;
+        }
 
         final var player = event.getPlayer();
         final var channel = player.getChannel();
-        // Don't inject players that have been explicitly uninjected
         if (!uninjectedChannels.contains(channel)) {
             injectPlayer(player);
         }
