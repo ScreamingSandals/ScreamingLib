@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Bukkit;
@@ -19,12 +20,11 @@ import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @Slf4j
 public class BukkitPacketMapper extends PacketMapper {
-    private final Map<UUID, Integer> protocolVersionMap = new HashMap<>();
+    private final Map<Channel, Integer> protocolVersionMap = new HashMap<>();
 
     public BukkitPacketMapper(Controllable controllable) {
         controllable.postEnable(() -> {
@@ -87,10 +87,11 @@ public class BukkitPacketMapper extends PacketMapper {
 
     @Override
     public int getProtocolVersion0(PlayerWrapper player) {
-        if (!protocolVersionMap.containsKey(player.getUuid())) {
+        final var cachedProtocolVersion = protocolVersionMap.get(player.getChannel());
+        if (cachedProtocolVersion == null) {
             throw new UnsupportedOperationException("Could not query protocol version for player: " + player.getName());
         }
-        return protocolVersionMap.get(player.getUuid());
+        return cachedProtocolVersion;
     }
 
     private void onClientHandshake(SPacketEvent event) {
@@ -98,20 +99,18 @@ public class BukkitPacketMapper extends PacketMapper {
             return;
         }
 
-        final var player = event.getPlayer();
         final var packet = event.getPacket();
 
         if (ClientIntentionPacketAccessor.getType().isInstance(packet)) {
             final var intention = Reflect.getField(packet, ClientIntentionPacketAccessor.getFieldIntention());
             if (intention.toString().equalsIgnoreCase("LOGIN")) {
                 final var protocolVersion = (int) Reflect.getField(packet, ClientIntentionPacketAccessor.getFieldProtocolVersion());
-                protocolVersionMap.put(player.getUuid(), protocolVersion);
-                // log.trace("Player: {} has logged in with protocol version: {}", player.getName(), protocolVersion);
+                protocolVersionMap.put(event.getChannel(), protocolVersion);
             }
         }
     }
 
     private void onPlayerLeave(SPlayerLeaveEvent event) {
-        protocolVersionMap.remove(event.getPlayer().getUuid());
+        protocolVersionMap.remove(event.getPlayer().getChannel());
     }
 }

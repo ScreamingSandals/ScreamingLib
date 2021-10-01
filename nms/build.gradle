@@ -167,6 +167,11 @@ nmsGen {
 
     reqClass('net.minecraft.server.MinecraftServer')
         .reqField('status')
+        .reqField('connection')
+
+    reqClass('net.minecraft.server.network.ServerConnectionListener')
+        .reqField('channels')
+        .reqField('connections')
 
     // old way of getting protocol
     reqClass('net.minecraft.network.protocol.status.ServerStatus')

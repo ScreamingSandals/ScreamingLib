@@ -1,5 +1,6 @@
 package org.screamingsandals.lib;
 
+import io.netty.channel.ChannelFuture;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.WorldHolder;
@@ -73,6 +74,20 @@ public abstract class Server {
         server.runSynchronously0(task);
     }
 
+    public static List<ChannelFuture> getConnections() {
+        if (server == null) {
+            throw new UnsupportedOperationException("Server has not yet been initialized!");
+        }
+        return server.getConnections0();
+    }
+
+    public static Object getNetworkManagerSynchronizationObject() {
+        if (server == null) {
+            throw new UnsupportedOperationException("Server has not yet been initialized!");
+        }
+        return server.getNetworkManagerSynchronizationObject0();
+    }
+
     public abstract boolean isVersion0(int major, int minor);
 
     public abstract boolean isVersion0(int major, int minor, int patch);
@@ -84,4 +99,8 @@ public abstract class Server {
     public abstract List<PlayerWrapper> getConnectedPlayersFromWorld0(WorldHolder world);
 
     public abstract void runSynchronously0(Runnable task);
+
+    public abstract List<ChannelFuture> getConnections0();
+
+    public abstract Object getNetworkManagerSynchronizationObject0();
 }

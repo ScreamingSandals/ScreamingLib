@@ -16,14 +16,10 @@ import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @AbstractService
@@ -32,6 +28,7 @@ public abstract class PlayerMapper {
     protected final BidirectionalConverter<PlayerWrapper> playerConverter = BidirectionalConverter.build();
     protected final BidirectionalConverter<CommandSenderWrapper> senderConverter = BidirectionalConverter.build();
     protected final BidirectionalConverter<PlayerWrapper.Hand> handConverter = BidirectionalConverter.build();
+    protected final Map<UUID, Channel> channelCache = new HashMap<>();
     protected AudienceProvider provider;
     private static PlayerMapper playerMapper;
 
@@ -457,7 +454,17 @@ public abstract class PlayerMapper {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
-        return playerMapper.getChannel0(player);
+        if (player == null) {
+            throw new UnsupportedOperationException("Invalid player provided!");
+        }
+
+        final var cachedChannel = playerMapper.channelCache.get(player.getUuid());
+        if (cachedChannel == null) {
+            final var newLookup = playerMapper.getChannel0(player);
+            playerMapper.channelCache.put(player.getUuid(), newLookup);
+            return newLookup;
+        }
+        throw new UnsupportedOperationException("Could not obtain Channel for player: " + player.getName());
     }
 
     public static void forceUpdateInventory(PlayerWrapper player) {

@@ -1,14 +1,18 @@
 package org.screamingsandals.lib.bukkit;
 
+import io.netty.channel.ChannelFuture;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.nms.accessors.MinecraftServerAccessor;
+import org.screamingsandals.lib.nms.accessors.ServerConnectionListenerAccessor;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.WorldHolder;
 
 import java.util.List;
@@ -53,5 +57,22 @@ public class BukkitServer extends Server {
     @Override
     public void runSynchronously0(Runnable task) {
         Bukkit.getServer().getScheduler().runTask(plugin, task);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<ChannelFuture> getConnections0() {
+        return (List<ChannelFuture>) Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer")
+                .getFieldResulted(MinecraftServerAccessor.getFieldConnection())
+                .getFieldResulted(ServerConnectionListenerAccessor.getFieldChannels())
+                .raw();
+    }
+
+    @Override
+    public Object getNetworkManagerSynchronizationObject0() {
+        return Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer")
+                .getFieldResulted(MinecraftServerAccessor.getFieldConnection())
+                .getFieldResulted(ServerConnectionListenerAccessor.getFieldConnections())
+                .raw();
     }
 }
