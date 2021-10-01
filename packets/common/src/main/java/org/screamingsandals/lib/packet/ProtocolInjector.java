@@ -134,23 +134,6 @@ public class ProtocolInjector {
             return;
         }
         final var player = event.getPlayer();
-        try {
-            final var channel = player.getChannel();
-            if (!uninjectedChannels.contains(channel)) {
-                injectPlayer(player);
-            }
-        } catch (Throwable ignored) {
-        }
-    }
-
-    // just in case onPlayerLogin event was done too early.
-    @OnEvent(priority = EventPriority.HIGH)
-    public void onPlayerJoin(SPlayerJoinEvent event) {
-        if (closed) {
-            return;
-        }
-
-        final var player = event.getPlayer();
         final var channel = player.getChannel();
         if (!uninjectedChannels.contains(channel)) {
             injectPlayer(player);
