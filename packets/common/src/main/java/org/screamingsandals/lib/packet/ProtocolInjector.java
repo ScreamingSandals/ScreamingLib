@@ -6,7 +6,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.event.OnEvent;
+import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
 import org.screamingsandals.lib.event.player.SPlayerLoginEvent;
 import org.screamingsandals.lib.packet.event.SPacketEvent;
 import org.screamingsandals.lib.player.PlayerMapper;
@@ -125,7 +127,7 @@ public class ProtocolInjector {
         }
     }
 
-    @OnEvent
+    @OnEvent(priority = EventPriority.LOWEST)
     public void onPlayerLogin(SPlayerLoginEvent event) {
         if (closed) {
             return;
@@ -137,6 +139,11 @@ public class ProtocolInjector {
         if (!uninjectedChannels.contains(channel)) {
             injectPlayer(player);
         }
+    }
+
+    @OnEvent(priority = EventPriority.HIGHEST)
+    public void onPlayerLeave(SPlayerLeaveEvent event) {
+        uninjectedChannels.remove(event.getPlayer().getChannel());
     }
 
     public void injectPlayer(PlayerWrapper player) {
