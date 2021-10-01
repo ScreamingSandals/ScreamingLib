@@ -7,12 +7,14 @@ import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.nms.accessors.MinecraftServerAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerConnectionListenerAccessor;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
+import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 
 import java.util.List;
@@ -29,6 +31,11 @@ public class BukkitServer extends Server {
             return Version.MAJOR_VERSION + "." + Version.MINOR_VERSION;
         }
         return Version.MAJOR_VERSION + "." + Version.MINOR_VERSION + "." + Version.PATCH_VERSION;
+    }
+
+    @Override
+    public String getServerSoftwareVersion0() {
+        return Bukkit.getVersion();
     }
 
     @Override
@@ -59,6 +66,13 @@ public class BukkitServer extends Server {
         return holder.as(World.class).getPlayers()
                 .stream()
                 .map(PlayerMapper::wrapPlayer)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<WorldHolder> getWorlds0() {
+        return Bukkit.getWorlds().stream()
+                .map(BukkitWorldHolder::new)
                 .collect(Collectors.toList());
     }
 

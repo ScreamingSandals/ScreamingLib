@@ -95,6 +95,60 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
     }
 
     /**
+     * <p>Checks if the player is flying.</p>
+     *
+     * @return is the player flying?
+     */
+    public boolean isFlying() {
+        return PlayerMapper.isFlying(this);
+    }
+
+    /**
+     * <p>Sets the player's flying status.</p>
+     *
+     * @param flying the new flying status
+     */
+    public void setFlying(boolean flying) {
+        PlayerMapper.setFlying(this, flying);
+    }
+
+    /**
+     * <p>Checks if the player flying is allowed.</p>
+     *
+     * @return is the player flying allowed?
+     */
+    public boolean isAllowFlight() {
+        return PlayerMapper.isAllowFlight(this);
+    }
+
+    /**
+     * <p>Sets the player's flying status.</p>
+     *
+     * @param flying is the player flying allowed
+     */
+    public void setAllowFlight(boolean flying) {
+        PlayerMapper.setAllowFlight(this, flying);
+    }
+
+    /**
+     * <p>Checks if the player is sneaking.</p>
+     *
+     * @return is the player sneaking?
+     */
+    public boolean isSneaking() {
+        return PlayerMapper.isSneaking(this);
+    }
+
+    /**
+     * <p>Sets the player's sneaking status.</p>
+     *
+     * @param flying the new sneaking status
+     */
+    public void setSneaking(boolean sneaking) {
+        PlayerMapper.setSneaking(this, sneaking);
+    }
+
+    /**
      * <p>Gets the player's accurate network latency to the server.</p>
      *
      * @return the player's ping
@@ -108,7 +162,7 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
      *
      * @return the player's display name
      */
-    @NotNull
+    @Nullable
     public Component getDisplayName() {
         return PlayerMapper.getDisplayName(this);
     }
@@ -427,7 +481,7 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
     }
 
     public void sendParticle(ParticleHolder particle, LocationHolder location) {
-        // TODO: misat xdd
+        PlayerMapper.sendParticle(this, particle, location);
     }
 
     /**

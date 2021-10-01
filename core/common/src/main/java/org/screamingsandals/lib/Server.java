@@ -54,6 +54,13 @@ public abstract class Server {
         return server.getVersion0();
     }
 
+    public static String getServerSoftwareVersion() {
+        if (server == null) {
+            throw new UnsupportedOperationException("Server has not yet been initialized!");
+        }
+        return server.getServerSoftwareVersion0();
+    }
+
     /**
      * <p>Compares the server version with a supplied value.</p>
      *
@@ -95,6 +102,13 @@ public abstract class Server {
         return server.getConnectedPlayers0();
     }
 
+    public static List<WorldHolder> getWorlds() {
+        if (server == null) {
+            throw new UnsupportedOperationException("Server has not yet been initialized!");
+        }
+        return server.getWorlds0();
+    }
+
     /**
      * <p>Gets a list of players that are currently in the supplied world.</p>
      *
@@ -130,6 +144,8 @@ public abstract class Server {
 
     public abstract String getVersion0();
 
+    public abstract String getServerSoftwareVersion0();
+
     public static List<ChannelFuture> getConnections() {
         if (server == null) {
             throw new UnsupportedOperationException("Server has not yet been initialized!");
@@ -153,6 +169,8 @@ public abstract class Server {
     public abstract List<PlayerWrapper> getConnectedPlayers0();
 
     public abstract List<PlayerWrapper> getConnectedPlayersFromWorld0(WorldHolder world);
+
+    public abstract List<WorldHolder> getWorlds0();
 
     public abstract void runSynchronously0(Runnable task);
 

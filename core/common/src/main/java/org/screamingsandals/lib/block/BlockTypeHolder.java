@@ -110,6 +110,30 @@ public class BlockTypeHolder implements ComparableWrapper, ParticleData {
         return isSameType(air(), "minecraft:cave_air", "minecraft:void_air");
     }
 
+    public boolean isSolid() {
+        return BlockTypeMapper.isSolid(this);
+    }
+
+    public boolean isTransparent() {
+        return BlockTypeMapper.isTransparent(this);
+    }
+
+    public boolean isFlammable() {
+        return BlockTypeMapper.isFlammable(this);
+    }
+
+    public boolean isBurnable() {
+        return BlockTypeMapper.isBurnable(this);
+    }
+
+    public boolean isOccluding() {
+        return BlockTypeMapper.isOccluding(this);
+    }
+
+    public boolean hasGravity() {
+        return BlockTypeMapper.hasGravity(this);
+    }
+
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     public boolean isSameType(Object object) {
         return ofOptional(object).map(h -> h.platformName.equals(platformName)).orElse(false);
