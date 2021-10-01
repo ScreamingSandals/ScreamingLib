@@ -338,6 +338,25 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
+    public Component getPlayerListName0(PlayerWrapper player) {
+        var bukkitPlayer = player.as(Player.class);
+        return AdventureUtils
+                .get(bukkitPlayer, "playerListName")
+                .ifPresentOrElseGet(classMethod ->
+                                classMethod.invokeInstanceResulted(bukkitPlayer).as(Component.class),
+                        () -> AdventureHelper.toComponentNullableResult(bukkitPlayer.getPlayerListName()));
+    }
+
+    @Override
+    public void setPlayerListName0(PlayerWrapper player, Component component) {
+        var bukkitPlayer = player.as(Player.class);
+        AdventureUtils
+                .get(bukkitPlayer, "playerListName", Component.class)
+                .ifPresentOrElse(classMethod -> classMethod.invokeInstance(bukkitPlayer, component),
+                        () -> bukkitPlayer.setPlayerListName(AdventureHelper.toLegacyNullableResult(component)));
+    }
+
+    @Override
     public boolean canBeStoredAsWrapped(Object wrapped) {
         return wrapped instanceof Player;
     }

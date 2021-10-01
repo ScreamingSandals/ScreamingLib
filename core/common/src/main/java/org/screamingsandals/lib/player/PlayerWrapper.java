@@ -142,7 +142,7 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
     /**
      * <p>Sets the player's sneaking status.</p>
      *
-     * @param flying the new sneaking status
+     * @param sneaking the new sneaking status
      */
     public void setSneaking(boolean sneaking) {
         PlayerMapper.setSneaking(this, sneaking);
@@ -155,6 +155,34 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
      */
     public int getPing() {
         return PlayerMapper.getPing(this);
+    }
+
+    /**
+     * <p>Gets the player's tab list name.</p>
+     *
+     * @return the player's tab list name
+     */
+    @Nullable
+    public Component getPlayerListName() {
+        return PlayerMapper.getPlayerListName(this);
+    }
+
+    /**
+     * <p>Sets the player's display name.</p>
+     *
+     * @param component the display name component
+     */
+    public void setPlayerListName(@Nullable Component component) {
+        PlayerMapper.setPlayerListName(this, component);
+    }
+
+    /**
+     * <p>Sets the player's display name.</p>
+     *
+     * @param component the display name component
+     */
+    public void setPlayerListName(@Nullable ComponentLike component) {
+        PlayerMapper.setPlayerListName(this, component != null ? component.asComponent() : null);
     }
 
     /**

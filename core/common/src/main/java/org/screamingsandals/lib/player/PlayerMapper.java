@@ -359,6 +359,20 @@ public abstract class PlayerMapper {
         playerMapper.setDisplayName0(player, displayName);
     }
 
+    public static Component getPlayerListName(PlayerWrapper player) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.getPlayerListName0(player);
+    }
+
+    public static void setPlayerListName(PlayerWrapper player, Component playerListName) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setPlayerListName0(player, playerListName);
+    }
+
     public static int getLevel(PlayerWrapper wrapper) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
@@ -588,6 +602,10 @@ public abstract class PlayerMapper {
     public abstract Component getDisplayName0(PlayerWrapper player);
 
     public abstract void setDisplayName0(PlayerWrapper player, Component component);
+
+    public abstract Component getPlayerListName0(PlayerWrapper player);
+
+    public abstract void setPlayerListName0(PlayerWrapper player, Component playerListName);
 
     public abstract boolean canBeStoredAsWrapped(Object wrapped);
 
