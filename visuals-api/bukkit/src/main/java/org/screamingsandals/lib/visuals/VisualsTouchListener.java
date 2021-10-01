@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.visuals;
 
-import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;
 import org.screamingsandals.lib.packet.event.SPacketEvent;
@@ -10,10 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@RequiredArgsConstructor(staticName = "of")
 public class VisualsTouchListener<T extends TouchableVisual<T>> {
     private final Map<UUID, Long> coolDownMap = new HashMap<>();
     private final AbstractVisualsManager<T> manager;
+
+    public VisualsTouchListener(AbstractVisualsManager<T> manager) {
+        this.manager = manager;
+    }
 
     @OnEvent
     public void onInteract(SPacketEvent event) {

@@ -11,6 +11,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
 import org.screamingsandals.lib.visuals.VisualsTouchListener;
 import org.screamingsandals.lib.world.LocationHolder;
 import java.util.UUID;
@@ -19,9 +20,9 @@ import java.util.UUID;
 @Service
 public class BukkitHologramManager extends HologramManager {
 
-    public BukkitHologramManager(Plugin plugin, Controllable controllable) {
-        super(controllable);
-        controllable.child().postEnable(() -> new VisualsTouchListener<>(BukkitHologramManager.this));
+    @OnPostEnable
+    public void onPostEnable() {
+        new VisualsTouchListener<>(BukkitHologramManager.this);
     }
 
     @Override

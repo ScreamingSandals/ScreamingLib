@@ -32,7 +32,7 @@ public class BukkitNPCManager extends NPCManager {
 
     @OnPostEnable
     public void onPostEnable() {
-        VisualsTouchListener.of(BukkitNPCManager.this);
+        new VisualsTouchListener<>(BukkitNPCManager.this);
     }
 
     @OnEvent

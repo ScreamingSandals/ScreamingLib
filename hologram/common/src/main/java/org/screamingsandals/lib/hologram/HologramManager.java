@@ -28,12 +28,10 @@ import java.util.UUID;
 public abstract class HologramManager extends AbstractVisualsManager<Hologram> {
     private static HologramManager manager = null;
 
-    protected HologramManager(Controllable controllable) {
-        super(controllable);
+    protected HologramManager() {
         if (manager != null) {
             throw new UnsupportedOperationException("HologramManager is already initialized");
         }
-
         manager = this;
     }
 
@@ -63,7 +61,6 @@ public abstract class HologramManager extends AbstractVisualsManager<Hologram> {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
-
         return manager.getActiveVisuals();
     }
 
@@ -71,7 +68,6 @@ public abstract class HologramManager extends AbstractVisualsManager<Hologram> {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
-
         return Optional.ofNullable(getActiveHolograms().get(uuid));
     }
 
@@ -79,7 +75,6 @@ public abstract class HologramManager extends AbstractVisualsManager<Hologram> {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
-
         manager.addVisual(hologram.getUuid(), hologram);
     }
 
@@ -91,7 +86,6 @@ public abstract class HologramManager extends AbstractVisualsManager<Hologram> {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
-
         manager.removeVisual(hologram.getUuid());
     }
 }
