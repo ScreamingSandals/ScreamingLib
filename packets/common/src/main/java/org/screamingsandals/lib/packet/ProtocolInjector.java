@@ -14,6 +14,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.PacketMethod;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
+import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class ProtocolInjector {
         Server.getConnectedPlayers().forEach(this::injectPlayer);
     }
 
-    @OnEvent
+    @OnDisable
     public void onDisable() {
         close();
     }
