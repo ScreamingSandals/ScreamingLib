@@ -28,7 +28,7 @@ import java.util.UUID;
 public abstract class HologramManager extends AbstractVisualsManager<Hologram> {
     private static HologramManager manager = null;
 
-    protected HologramManager() {
+    public HologramManager() {
         if (manager != null) {
             throw new UnsupportedOperationException("HologramManager is already initialized");
         }
