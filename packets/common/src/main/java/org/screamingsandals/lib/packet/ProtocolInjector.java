@@ -143,7 +143,9 @@ public class ProtocolInjector {
 
     @OnEvent(priority = EventPriority.HIGHEST)
     public void onPlayerLeave(SPlayerLeaveEvent event) {
-        uninjectedChannels.remove(event.getPlayer().getChannel());
+        final var channel = event.getPlayer().getChannel();
+        uninjectedChannels.remove(channel);
+        serverChannels.remove(channel);
     }
 
     public void injectPlayer(PlayerWrapper player) {
