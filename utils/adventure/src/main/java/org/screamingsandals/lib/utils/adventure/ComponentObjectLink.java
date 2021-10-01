@@ -47,4 +47,12 @@ public class ComponentObjectLink extends ObjectLink<Component> {
     public static ComponentObjectLink of(Object objectHavingMethod, String name, Supplier<String> fallbackGetter, Consumer<String> fallbackSetter) {
         return of(objectHavingMethod, name, fallbackGetter, name, fallbackSetter);
     }
+
+    public static Component processGetter(Object objectHavingMethod, String getterName, Supplier<String> fallbackGetter) {
+        return of(objectHavingMethod, getterName, fallbackGetter, null).get();
+    }
+
+    public static void processSetter(Object objectHavingMethod, String setterName, Consumer<String> fallbackSetter, Component component) {
+        of(objectHavingMethod, setterName, null, fallbackSetter).set(component);
+    }
 }

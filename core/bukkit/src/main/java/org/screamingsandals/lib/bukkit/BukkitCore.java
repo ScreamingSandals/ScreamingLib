@@ -2,12 +2,14 @@ package org.screamingsandals.lib.bukkit;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.bukkit.listener.*;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.event.player.SPlayerArmorStandManipulateEvent;
+import org.screamingsandals.lib.event.player.SPlayerInteractAtEntityEvent;
+import org.screamingsandals.lib.event.player.SPlayerInteractEntityEvent;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -112,7 +114,11 @@ public class BukkitCore extends Core {
         new PlayerDropItemEventListener(plugin);
         new PlayerBedEnterEventListener(plugin);
         new PlayerAnimationEventListener(plugin);
-        new PlayerInteractEntityEventListener(plugin);
+        new PlayerInteractEntityEventListener(plugin, PlayerInteractEntityEvent.class);
+        new PlayerInteractEntityEventListener(plugin,  PlayerInteractAtEntityEvent.class);
+        if (Reflect.has("org.bukkit.event.player.PlayerArmorStandManipulateEvent")) {
+            new PlayerInteractEntityEventListener(plugin,  PlayerArmorStandManipulateEvent.class);
+        }
         new PlayerBedLeaveEventListener(plugin);
 
         // PlayerBucketEvent is abstract and doesn't have implemented handler list

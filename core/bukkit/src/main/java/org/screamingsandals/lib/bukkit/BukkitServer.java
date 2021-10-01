@@ -24,6 +24,14 @@ public class BukkitServer extends Server {
     private final Plugin plugin;
 
     @Override
+    public String getVersion0() {
+        if (Version.PATCH_VERSION == 0) {
+            return Version.MAJOR_VERSION + "." + Version.MINOR_VERSION;
+        }
+        return Version.MAJOR_VERSION + "." + Version.MINOR_VERSION + "." + Version.PATCH_VERSION;
+    }
+
+    @Override
     public boolean isVersion0(int major, int minor) {
         return Version.isVersion(major, minor);
     }

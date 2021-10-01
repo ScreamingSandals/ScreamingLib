@@ -20,8 +20,10 @@ public class PlayerInteractEntityEventListener extends AbstractBukkitEventHandle
 
     private final boolean hasArmorStandManipulateEvent = Reflect.has("org.bukkit.event.player.PlayerArmorStandManipulateEvent");
 
-    public PlayerInteractEntityEventListener(Plugin plugin) {
-        super(PlayerInteractEntityEvent.class, SPlayerInteractEntityEvent.class, plugin);
+    // Because PlayerInteractAtEntityEvent has another Handler list instance than PlayerInteractEntityEvent, we need to create this listener multiple times (fucking bukkit)
+    @SuppressWarnings("unchecked")
+    public PlayerInteractEntityEventListener(Plugin plugin, Class<? extends PlayerInteractEntityEvent> clazz) {
+        super((Class<PlayerInteractEntityEvent>) clazz, SPlayerInteractEntityEvent.class, plugin);
     }
 
     @Override

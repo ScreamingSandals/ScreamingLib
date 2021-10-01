@@ -7,4 +7,5 @@ dependencies {
     api 'com.google.code.gson:gson:' + GSON_VERSION
     api 'org.screamingsandals:adventure-platform-api:' + ADVENTURE_PLATFORM_VERSION
     api 'net.kyori:adventure-text-serializer-legacy:' + ADVENTURE_VERSION
+    api 'net.kyori:adventure-text-serializer-plain:' + ADVENTURE_VERSION
 }
