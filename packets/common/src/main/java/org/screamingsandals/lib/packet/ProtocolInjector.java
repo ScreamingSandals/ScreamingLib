@@ -200,7 +200,6 @@ public class ProtocolInjector {
         channel.eventLoop().execute(() -> channel.pipeline().remove(CHANNEL_NAME));
     }
 
-
     public void close() {
         if (!closed) {
             closed = true;

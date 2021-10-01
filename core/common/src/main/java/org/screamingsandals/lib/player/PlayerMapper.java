@@ -464,7 +464,7 @@ public abstract class PlayerMapper {
             playerMapper.channelCache.put(player.getUuid(), newLookup);
             return newLookup;
         }
-        throw new UnsupportedOperationException("Could not obtain Channel for player: " + player.getName());
+        return cachedChannel;
     }
 
     public static void forceUpdateInventory(PlayerWrapper player) {
