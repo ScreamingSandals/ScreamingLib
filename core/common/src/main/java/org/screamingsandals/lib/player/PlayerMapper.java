@@ -15,6 +15,7 @@ import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
+import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
 
@@ -37,6 +38,12 @@ public abstract class PlayerMapper {
             throw new UnsupportedOperationException("PlayerMapper is already initialized.");
         }
         playerMapper = this;
+    }
+
+    @OnPreDisable
+    public void onPreDisable() {
+        // gc will do this anyways, but why not be a little extra safe smh
+        channelCache.clear();
     }
 
     @OnPostConstruct

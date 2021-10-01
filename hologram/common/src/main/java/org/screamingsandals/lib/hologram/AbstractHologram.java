@@ -176,7 +176,6 @@ public abstract class AbstractHologram extends AbstractLinedVisual<Hologram> imp
         data = null;
         hide();
         viewers.clear();
-
         HologramManager.removeHologram(this);
     }
 
