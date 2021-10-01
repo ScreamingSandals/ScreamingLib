@@ -17,8 +17,9 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.PacketMethod;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
-import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
+import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,10 +54,14 @@ public class ProtocolInjector {
     @OnEnable
     public void onEnable() {
         registerChannelHandler();
+    }
+
+    @OnPostEnable
+    public void onPostEnable() {
         Server.getConnectedPlayers().forEach(this::injectPlayer);
     }
 
-    @OnDisable
+    @OnPreDisable
     public void onDisable() {
         close();
     }
@@ -167,7 +172,7 @@ public class ProtocolInjector {
     public void injectPlayer(PlayerWrapper player) {
         final var channel = player.getChannel();
         if (channel != null) {
-            injectChannelInternal(player.getChannel()).setPlayer(player);
+            injectChannelInternal(channel).setPlayer(player);
         }
     }
 
@@ -192,7 +197,7 @@ public class ProtocolInjector {
     public void uninjectPlayer(PlayerWrapper player) {
         final var channel = player.getChannel();
         if (channel != null) {
-            uninjectChannel(player.getChannel());
+            uninjectChannel(channel);
         }
     }
 

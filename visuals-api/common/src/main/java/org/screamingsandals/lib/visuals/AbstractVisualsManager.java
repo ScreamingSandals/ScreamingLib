@@ -1,11 +1,11 @@
 package org.screamingsandals.lib.visuals;
 
-import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
-import org.screamingsandals.lib.utils.Controllable;
+import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Map;
@@ -14,16 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     protected final Map<UUID, T> activeVisuals = new ConcurrentHashMap<>();
-
-    protected AbstractVisualsManager(Controllable controllable) {
-        controllable.postEnable(() -> {
-            EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, this::onLeave);
-            EventManager.getDefaultEventManager().register(SPlayerMoveEvent.class, this::onMove);
-            EventManager.getDefaultEventManager().register(SPlayerRespawnEvent.class, this::onRespawn);
-            EventManager.getDefaultEventManager().register(SPlayerTeleportEvent.class, this::onTeleport);
-            EventManager.getDefaultEventManager().register(SPlayerWorldChangeEvent.class, this::onWorldChange);
-        }).preDisable(this::destroy);
-    }
 
     public void addVisual(UUID uuid, T visual) {
         activeVisuals.put(uuid, visual);
@@ -41,13 +31,15 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         return Map.copyOf(activeVisuals);
     }
 
-    protected void destroy() {
+    @OnPreDisable
+    public void destroy() {
         getActiveVisuals()
                 .values()
                 .forEach(Visual::destroy);
         activeVisuals.clear();
     }
 
+    @OnEvent
     public void onLeave(SPlayerLeaveEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
@@ -67,6 +59,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         }
     }
 
+    @OnEvent
     public void onMove(SPlayerMoveEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
@@ -97,6 +90,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         }
     }
 
+    @OnEvent
     public void onRespawn(SPlayerRespawnEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
@@ -128,6 +122,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         }
     }
 
+    @OnEvent
     public void onWorldChange(SPlayerWorldChangeEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
@@ -163,6 +158,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         }
     }
 
+    @OnEvent
     public void onTeleport(SPlayerTeleportEvent event) {
         if (activeVisuals.isEmpty()) {
             return;

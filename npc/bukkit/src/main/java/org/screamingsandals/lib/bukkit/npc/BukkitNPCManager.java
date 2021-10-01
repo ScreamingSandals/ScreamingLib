@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.bukkit.npc;
-import org.bukkit.plugin.Plugin;
+
 import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.SPlayerMoveEvent;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacket_i_ActionTypeAccessor;
@@ -11,14 +12,12 @@ import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
-import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.visuals.VisualsTouchListener;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
-
-import java.util.Objects;
 import java.util.UUID;
 
 @Service(dependsOn = {
@@ -29,20 +28,14 @@ import java.util.UUID;
 })
 public class BukkitNPCManager extends NPCManager {
     private static final Object ATTACK_ACTION_FIELD = Reflect.getField(ServerboundInteractPacketAccessor.getFieldATTACK_ACTION());
+    private static final Object ATTACK_FIELD = Reflect.getField(ServerboundInteractPacket_i_ActionTypeAccessor.getFieldATTACK());
 
-    @Deprecated //INTERNAL USE ONLY!
-    public static void init(Plugin plugin, Controllable controllable) {
-        NPCManager.init(() -> new BukkitNPCManager(plugin, controllable));
+    @OnPostEnable
+    public void onPostEnable() {
+        VisualsTouchListener.of(BukkitNPCManager.this);
     }
 
-    protected BukkitNPCManager(Plugin plugin, Controllable controllable) {
-        super(controllable);
-        controllable.child().postEnable(() -> {
-            EventManager.getDefaultEventManager().register(SPlayerMoveEvent.class, this::onPlayerMove);
-            new VisualsTouchListener<>(BukkitNPCManager.this);
-        });
-    }
-
+    @OnEvent
     public void onPlayerMove(SPlayerMoveEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
@@ -63,9 +56,9 @@ public class BukkitNPCManager extends NPCManager {
     @Override
     public void fireVisualTouchEvent(PlayerWrapper sender, NPC visual, Object packet) {
         final var nmsEnum = Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldAction());
-        final var attackEnum = Reflect.getField(ServerboundInteractPacket_i_ActionTypeAccessor.getFieldATTACK());
 
-        NPCInteractEvent.InteractType interactType = (nmsEnum == attackEnum  || nmsEnum == ATTACK_ACTION_FIELD || (nmsEnum != null && nmsEnum.toString().equals("ATTACK")))
+        var interactType = (nmsEnum == ATTACK_FIELD  ||
+                nmsEnum == ATTACK_ACTION_FIELD || (nmsEnum != null && nmsEnum.toString().equals("ATTACK")))
                 ?  NPCInteractEvent.InteractType.LEFT_CLICK : NPCInteractEvent.InteractType.RIGHT_CLICK;
 
         Tasker.build(() -> EventManager.fire(new NPCInteractEvent(sender, visual, interactType))).afterOneTick().start();
