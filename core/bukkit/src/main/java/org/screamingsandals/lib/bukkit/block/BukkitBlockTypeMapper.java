@@ -109,6 +109,36 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
         return !Version.isVersion(1, 13);
     }
 
+    @Override
+    protected boolean isSolid0(BlockTypeHolder blockType) {
+        return blockType.as(Material.class).isSolid();
+    }
+
+    @Override
+    protected boolean isTransparent0(BlockTypeHolder blockType) {
+        return blockType.as(Material.class).isTransparent();
+    }
+
+    @Override
+    protected boolean isFlammable0(BlockTypeHolder blockType) {
+        return blockType.as(Material.class).isFlammable();
+    }
+
+    @Override
+    protected boolean isBurnable0(BlockTypeHolder blockType) {
+        return blockType.as(Material.class).isBurnable();
+    }
+
+    @Override
+    protected boolean isOccluding0(BlockTypeHolder blockType) {
+        return blockType.as(Material.class).isOccluding();
+    }
+
+    @Override
+    protected boolean hasGravity0(BlockTypeHolder blockType) {
+        return blockType.as(Material.class).hasGravity();
+    }
+
     protected String getDataFromMap(BlockTypeHolder material) {
         final var builder = new StringBuilder("minecraft:" + material.platformName().toLowerCase());
         final var data = material.flatteningData();

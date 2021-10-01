@@ -415,6 +415,48 @@ public abstract class PlayerMapper {
         playerMapper.setSprinting0(wrapper, sprinting);
     }
 
+    public static boolean isFlying(PlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.isFlying0(wrapper);
+    }
+
+    public static void setFlying(PlayerWrapper wrapper, boolean flying) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setFlying0(wrapper, flying);
+    }
+
+    public static boolean isSneaking(PlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.isSneaking0(wrapper);
+    }
+
+    public static void setSneaking(PlayerWrapper wrapper, boolean sneaking) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setSneaking0(wrapper, sneaking);
+    }
+
+    public static boolean isAllowFlight(PlayerWrapper wrapper) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        return playerMapper.isAllowFlight0(wrapper);
+    }
+
+    public static void setAllowFlight(PlayerWrapper wrapper, boolean flight) {
+        if (playerMapper == null) {
+            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        playerMapper.setAllowFlight0(wrapper, flight);
+    }
+
     public static Optional<WeatherHolder> getWeather(PlayerWrapper wrapper) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
@@ -569,6 +611,18 @@ public abstract class PlayerMapper {
     public abstract boolean isSprinting0(PlayerWrapper player);
 
     public abstract void setSprinting0(PlayerWrapper player, boolean sprinting);
+
+    public abstract boolean isFlying0(PlayerWrapper player);
+
+    public abstract void setFlying0(PlayerWrapper player, boolean flying);
+
+    public abstract boolean isAllowFlight0(PlayerWrapper player);
+
+    public abstract void setAllowFlight0(PlayerWrapper player, boolean allowFlight);
+
+    public abstract boolean isSneaking0(PlayerWrapper player);
+
+    public abstract void setSneaking0(PlayerWrapper player, boolean sneaking);
 
     public abstract Optional<WeatherHolder> getWeather0(PlayerWrapper player);
 

@@ -178,6 +178,48 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
         return blockTypeMapper.blockTypeConverter.convert(holder, newType);
     }
 
+    public static boolean isSolid(BlockTypeHolder blockType) {
+        if (blockTypeMapper == null) {
+            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
+        }
+        return blockTypeMapper.isSolid0(blockType);
+    }
+
+    public static boolean isTransparent(BlockTypeHolder blockType) {
+        if (blockTypeMapper == null) {
+            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
+        }
+        return blockTypeMapper.isTransparent0(blockType);
+    }
+
+    public static boolean isFlammable(BlockTypeHolder blockType) {
+        if (blockTypeMapper == null) {
+            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
+        }
+        return blockTypeMapper.isFlammable0(blockType);
+    }
+
+    public static boolean isBurnable(BlockTypeHolder blockType) {
+        if (blockTypeMapper == null) {
+            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
+        }
+        return blockTypeMapper.isBurnable0(blockType);
+    }
+
+    public static boolean isOccluding(BlockTypeHolder blockType) {
+        if (blockTypeMapper == null) {
+            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
+        }
+        return blockTypeMapper.isOccluding0(blockType);
+    }
+
+    public static boolean hasGravity(BlockTypeHolder blockType) {
+        if (blockTypeMapper == null) {
+            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
+        }
+        return blockTypeMapper.hasGravity0(blockType);
+    }
+
     public Map<MappingKey, BlockTypeHolder> getUNSAFE_mapping() {
         return mapping;
     }
@@ -196,4 +238,16 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
     public abstract String getStateDataFromMap(Map<String, String> map);
 
     protected abstract boolean isLegacy();
+
+    protected abstract boolean isSolid0(BlockTypeHolder blockType);
+
+    protected abstract boolean isTransparent0(BlockTypeHolder blockType);
+
+    protected abstract boolean isFlammable0(BlockTypeHolder blockType);
+
+    protected abstract boolean isBurnable0(BlockTypeHolder blockType);
+
+    protected abstract boolean isOccluding0(BlockTypeHolder blockType);
+
+    protected abstract boolean hasGravity0(BlockTypeHolder blockType);
 }

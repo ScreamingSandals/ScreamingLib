@@ -143,6 +143,12 @@ public interface WorldHolder extends Wrapper, Serializable {
      */
     void sendParticle(ParticleHolder particle, LocationHolder location);
 
+    boolean isSpawnKeptInMemory();
+
+    boolean isSpawningOfAnimalsAllowed();
+
+    boolean isSpawningOfMonstersAllowed();
+
     /**
      * <p>A gson {@link TypeAdapter} for serializing and deserializing a world holder.</p>
      */

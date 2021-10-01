@@ -141,4 +141,19 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
                 particle.longDistance()
         );
     }
+
+    @Override
+    public boolean isSpawnKeptInMemory() {
+        return wrappedObject.getKeepSpawnInMemory();
+    }
+
+    @Override
+    public boolean isSpawningOfAnimalsAllowed() {
+        return wrappedObject.getAllowAnimals();
+    }
+
+    @Override
+    public boolean isSpawningOfMonstersAllowed() {
+        return wrappedObject.getAllowMonsters();
+    }
 }

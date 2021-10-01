@@ -6,4 +6,16 @@ public interface EntityHuman extends EntityLiving {
     PlayerWrapper asPlayer();
 
     int getExpToLevel();
+
+    float getSaturation();
+
+    void setSaturation(float saturation);
+
+    float getExhaustion();
+
+    void setExhaustion(float exhaustion);
+
+    int getFoodLevel();
+
+    void setFoodLevel(int foodLevel);
 }

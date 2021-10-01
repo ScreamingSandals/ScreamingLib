@@ -325,7 +325,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
                 .get(bukkitPlayer, "displayName")
                 .ifPresentOrElseGet(classMethod ->
                                 classMethod.invokeInstanceResulted(bukkitPlayer).as(Component.class),
-                        () -> AdventureHelper.toComponent(bukkitPlayer.getDisplayName()));
+                        () -> AdventureHelper.toComponentNullableResult(bukkitPlayer.getDisplayName()));
     }
 
     @Override
@@ -376,6 +376,36 @@ public class BukkitPlayerMapper extends PlayerMapper {
     @Override
     public void setSprinting0(PlayerWrapper player, boolean sprinting) {
         player.as(Player.class).setSprinting(sprinting);
+    }
+
+    @Override
+    public boolean isFlying0(PlayerWrapper player) {
+        return player.as(Player.class).isFlying();
+    }
+
+    @Override
+    public void setFlying0(PlayerWrapper player, boolean flying) {
+        player.as(Player.class).setFlying(flying);
+    }
+
+    @Override
+    public boolean isAllowFlight0(PlayerWrapper player) {
+        return player.as(Player.class).getAllowFlight();
+    }
+
+    @Override
+    public void setAllowFlight0(PlayerWrapper player, boolean flying) {
+        player.as(Player.class).setAllowFlight(flying);
+    }
+
+    @Override
+    public boolean isSneaking0(PlayerWrapper player) {
+        return player.as(Player.class).isSneaking();
+    }
+
+    @Override
+    public void setSneaking0(PlayerWrapper player, boolean sneaking) {
+        player.as(Player.class).setSneaking(sneaking);
     }
 
     @Override
