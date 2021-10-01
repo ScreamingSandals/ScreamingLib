@@ -454,10 +454,10 @@ public class BukkitPlayerMapper extends PlayerMapper {
 
     @Override
     public Channel getChannel0(PlayerWrapper player) {
-        return Reflect.getFieldResulted(ClassStorage.getHandle(player.as(Player.class)), ServerPlayerAccessor.getFieldConnection())
+        return (Channel) Reflect.getFieldResulted(ClassStorage.getHandle(player.as(Player.class)), ServerPlayerAccessor.getFieldConnection())
                 .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
                 .getFieldResulted(ConnectionAccessor.getFieldChannel())
-                .as(Channel.class);
+                .raw();
     }
 
     @Override
