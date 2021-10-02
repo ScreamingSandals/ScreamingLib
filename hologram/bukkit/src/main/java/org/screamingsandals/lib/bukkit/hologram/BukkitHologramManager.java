@@ -21,8 +21,8 @@ import java.util.UUID;
 public class BukkitHologramManager extends HologramManager {
 
     @OnPostEnable
-    public void onPostEnable() {
-        new VisualsTouchListener<>(BukkitHologramManager.this);
+    public void onPostEnable(Controllable controllable) {
+        new VisualsTouchListener<>(controllable, BukkitHologramManager.this);
     }
 
     @Override

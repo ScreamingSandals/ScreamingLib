@@ -12,6 +12,7 @@ import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
+import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -31,8 +32,8 @@ public class BukkitNPCManager extends NPCManager {
     private static final Object ATTACK_FIELD = Reflect.getField(ServerboundInteractPacket_i_ActionTypeAccessor.getFieldATTACK());
 
     @OnPostEnable
-    public void onPostEnable() {
-        new VisualsTouchListener<>(BukkitNPCManager.this);
+    public void onPostEnable(Controllable controllable) {
+        new VisualsTouchListener<>(controllable, BukkitNPCManager.this);
     }
 
     @OnEvent

@@ -1,8 +1,10 @@
 package org.screamingsandals.lib.visuals;
 
+import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;
 import org.screamingsandals.lib.packet.event.SPacketEvent;
+import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.PacketMethod;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.HashMap;
@@ -13,8 +15,9 @@ public class VisualsTouchListener<T extends TouchableVisual<T>> {
     private final Map<UUID, Long> coolDownMap = new HashMap<>();
     private final AbstractVisualsManager<T> manager;
 
-    public VisualsTouchListener(AbstractVisualsManager<T> manager) {
+    public VisualsTouchListener(Controllable controllable, AbstractVisualsManager<T> manager) {
         this.manager = manager;
+        controllable.postEnable(() -> EventManager.getDefaultEventManager().register(SPacketEvent.class, this::onInteract));
     }
 
     @OnEvent
