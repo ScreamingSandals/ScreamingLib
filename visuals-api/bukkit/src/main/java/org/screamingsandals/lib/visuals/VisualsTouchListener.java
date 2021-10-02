@@ -20,7 +20,6 @@ public class VisualsTouchListener<T extends TouchableVisual<T>> {
         controllable.postEnable(() -> EventManager.getDefaultEventManager().register(SPacketEvent.class, this::onInteract));
     }
 
-    @OnEvent
     public void onInteract(SPacketEvent event) {
         if (event.getMethod() != PacketMethod.INBOUND) {
             return;
