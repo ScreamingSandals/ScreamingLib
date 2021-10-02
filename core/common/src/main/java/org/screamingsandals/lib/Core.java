@@ -40,6 +40,7 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
 )
 @ServiceDependencies(dependsOn = {
         Server.class,
+        CustomPayload.class,
         EventManager.class,
         EntityTypeMapping.class,
         EntityMapper.class,

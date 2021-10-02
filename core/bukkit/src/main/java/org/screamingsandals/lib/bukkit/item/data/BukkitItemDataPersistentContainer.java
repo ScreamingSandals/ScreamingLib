@@ -1,5 +1,6 @@
-package org.screamingsandals.lib.bukkit.item.builder;
+package org.screamingsandals.lib.bukkit.item.data;
 
+import com.google.common.primitives.Primitives;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.NamespacedKey;
@@ -20,15 +21,15 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class BukkitItemData implements ItemData {
-    private static final List<Class<?>> WRAPPER_TYPES = List.of(Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class);
+public class BukkitItemDataPersistentContainer implements ItemData {
+    private static final List<Class<?>> BASE_TAGS = List.of(Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, String.class, int[].class, byte[].class, long[].class);
 
     private final Plugin plugin;
     @Getter
     private final PersistentDataContainer dataContainer;
 
     public static boolean isWrapperType(Class<?> clazz) {
-        return WRAPPER_TYPES.contains(clazz);
+        return BASE_TAGS.contains(clazz);
     }
 
     @Override
@@ -42,6 +43,10 @@ public class BukkitItemData implements ItemData {
 
     @Override
     public <T> void set(String key, T data, Class<T> tClass) {
+        if (!Primitives.isWrapperType(tClass)) {
+            tClass = Primitives.wrap(tClass); //Make sure we will always "switch" over the wrapper types
+        }
+
         final var container = this.dataContainer;
         final var namespacedKey = new NamespacedKey(plugin, key);
         if (isWrapperType(tClass)) {
@@ -87,6 +92,24 @@ public class BukkitItemData implements ItemData {
                 return;
             }
 
+            if (data instanceof byte[]) {
+                final var s = (byte[]) data;
+                container.set(namespacedKey, PersistentDataType.BYTE_ARRAY, s);
+                return;
+            }
+
+            if (data instanceof int[]) {
+                final var s = (int[]) data;
+                container.set(namespacedKey, PersistentDataType.INTEGER_ARRAY, s);
+                return;
+            }
+
+            if (data instanceof long[]) {
+                final var s = (long[]) data;
+                container.set(namespacedKey, PersistentDataType.LONG_ARRAY, s);
+                return;
+            }
+
             throw new UnsupportedOperationException("This stuff is not supported!");
         }
 
@@ -97,6 +120,10 @@ public class BukkitItemData implements ItemData {
     @Nullable
     @SuppressWarnings("unchecked")
     public <T> T get(String key, Class<T> tClass) {
+        if (!Primitives.isWrapperType(tClass)) {
+            tClass = Primitives.wrap(tClass); //Make sure we will always "switch" over the wrapper types
+        }
+
         final var container = dataContainer;
         final var namespacedKey = new NamespacedKey(plugin, key);
         if (isWrapperType(tClass)) {
@@ -126,6 +153,18 @@ public class BukkitItemData implements ItemData {
 
             if (Double.class.isAssignableFrom(tClass)) {
                 return (T) container.get(namespacedKey, PersistentDataType.DOUBLE);
+            }
+
+            if (byte[].class.isAssignableFrom(tClass)) {
+                return (T) container.get(namespacedKey, PersistentDataType.BYTE_ARRAY);
+            }
+
+            if (int[].class.isAssignableFrom(tClass)) {
+                return (T) container.get(namespacedKey, PersistentDataType.INTEGER_ARRAY);
+            }
+
+            if (long[].class.isAssignableFrom(tClass)) {
+                return (T) container.get(namespacedKey, PersistentDataType.LONG_ARRAY);
             }
 
             throw new UnsupportedOperationException("This stuff is not supported!");

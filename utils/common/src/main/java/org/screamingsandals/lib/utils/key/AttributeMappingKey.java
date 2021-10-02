@@ -26,7 +26,7 @@ public class AttributeMappingKey extends NamespacedMappingKey {
         var key = matcher.group("key").replaceAll(" ", "_");
         if (attributeGroup == null) {
             // Bukkit -> Vanilla Attribute
-            if (key.startsWith("generic_") || key.startsWith("horse_") || key.startsWith("zombie_")) {
+            if (key.toLowerCase().startsWith("generic_") || key.toLowerCase().startsWith("horse_") || key.toLowerCase().startsWith("zombie_")) {
                 var split1 = key.split("_", 2);
                 attributeGroup = split1[0];
                 key = split1[1];
@@ -41,7 +41,7 @@ public class AttributeMappingKey extends NamespacedMappingKey {
         }
         key = key.toLowerCase();
 
-        return ofAttributeOptional(namespace, attributeGroup + "." + key);
+        return ofAttributeOptional(namespace, attributeGroup.toLowerCase() + "." + key);
     }
 
     public static AttributeMappingKey of(String combinedString) {

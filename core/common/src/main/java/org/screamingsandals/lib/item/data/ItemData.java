@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public interface ItemData {
+    @Deprecated
     ItemData EMPTY = new EmptyItemData();
 
     Set<String> getKeys();

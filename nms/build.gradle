@@ -210,9 +210,66 @@ nmsGen {
     reqClass('net.minecraft.core.Direction')
         .reqMethod('fromYRot', double)
 
+    var Tag = reqClass('net.minecraft.nbt.Tag')
+        .reqMethod('getAsString')
+
+    reqClass('net.minecraft.nbt.ByteArrayTag')
+        .reqConstructor(byte[])
+        .reqMethod('getAsByteArray')
+
+    reqClass('net.minecraft.nbt.ByteTag')
+        .reqConstructor(byte)
+        .reqMethod('getAsByte')
+        .reqMethod('valueOf', byte)
+
     var CompoundTag = reqClass('net.minecraft.nbt.CompoundTag')
+        .reqConstructor()
+        .reqMethod('getAllKeys')
+        .reqMethod('get', String)
+        .reqMethod('put', String, Tag)
+
     reqClass('net.minecraft.network.FriendlyByteBuf')
         .reqMethod('writeNbt', CompoundTag)
+
+    reqClass('net.minecraft.nbt.DoubleTag')
+        .reqConstructor(double)
+        .reqMethod('getAsDouble')
+        .reqMethod('valueOf', double)
+
+    reqClass('net.minecraft.nbt.FloatTag')
+        .reqConstructor(float)
+        .reqMethod('getAsFloat')
+        .reqMethod('valueOf', float)
+
+    reqClass('net.minecraft.nbt.IntArrayTag')
+        .reqConstructor(int[])
+        .reqMethod('getAsIntArray')
+
+    reqClass('net.minecraft.nbt.IntTag')
+        .reqConstructor(int)
+        .reqMethod('getAsInt')
+        .reqMethod('valueOf', int)
+
+    // ListTag
+
+    reqClass('net.minecraft.nbt.LongArrayTag')
+        .reqConstructor(long[])
+        .reqMethod('getAsLongArray')
+
+    reqClass('net.minecraft.nbt.LongTag')
+        .reqConstructor(long)
+        .reqMethod('getAsLong')
+        .reqMethod('valueOf', long)
+
+    reqClass('net.minecraft.nbt.ShortTag')
+        .reqConstructor(short)
+        .reqMethod('getAsShort')
+        .reqMethod('valueOf', short)
+
+    reqClass('net.minecraft.nbt.StringTag')
+        .reqConstructor(String)
+        .reqMethod('valueOf', String)
+
 
     reqClass('net.minecraft.world.item.ItemStack')
         .reqMethod('copy')

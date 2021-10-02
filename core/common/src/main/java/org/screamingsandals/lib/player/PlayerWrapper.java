@@ -190,7 +190,7 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
      *
      * @return the player's display name
      */
-    @Nullable
+    @NotNull
     public Component getDisplayName() {
         return PlayerMapper.getDisplayName(this);
     }
