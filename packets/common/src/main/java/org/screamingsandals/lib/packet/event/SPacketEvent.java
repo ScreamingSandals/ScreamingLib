@@ -16,7 +16,6 @@ public class SPacketEvent extends CancellableAbstractAsyncEvent implements SPlay
     private final PlayerWrapper player;
     private final PacketMethod method;
     private final Object packet;
-    private final Channel channel;
 
     @Override
     public PlayerWrapper getPlayer() {
