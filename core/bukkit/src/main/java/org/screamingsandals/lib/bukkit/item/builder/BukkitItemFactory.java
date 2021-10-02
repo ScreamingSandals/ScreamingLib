@@ -11,6 +11,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.*;
+import org.bukkit.inventory.meta.tags.CustomItemTagContainer;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionData;
@@ -18,6 +19,9 @@ import org.bukkit.potion.PotionEffect;
 import org.screamingsandals.lib.bukkit.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.bukkit.container.BukkitContainer;
 import org.screamingsandals.lib.bukkit.container.BukkitPlayerContainer;
+import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataCustomTags;
+import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataPersistentContainer;
+import org.screamingsandals.lib.bukkit.item.data.CraftBukkitItemData;
 import org.screamingsandals.lib.bukkit.item.meta.BukkitEnchantmentMapping;
 import org.screamingsandals.lib.bukkit.item.meta.BukkitPotionMapping;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
@@ -30,6 +34,7 @@ import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.item.meta.PotionEffectMapping;
+import org.screamingsandals.lib.nms.accessors.CompoundTagAccessor;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.adventure.AdventureUtils;
 import org.screamingsandals.lib.utils.adventure.ComponentUtils;
@@ -150,12 +155,34 @@ public class BukkitItemFactory extends ItemFactory {
                                     .forEach(holder -> meta.addAttributeModifier(holder.getAttribute(), holder.getAttributeModifier()));
                         }
 
-                        if (Reflect.hasMethod(meta, "getPersistentDataContainer")) { // 1.14
+                        if (Reflect.hasMethod(meta, "getPersistentDataContainer")) { // 1.14+
                             var data = item.getData();
-                            if (data instanceof BukkitItemData && !data.isEmpty()) {
-                                var origDataContainer = ((BukkitItemData) data).getDataContainer();
+                            if (data instanceof BukkitItemDataPersistentContainer && !data.isEmpty()) {
+                                var origDataContainer = ((BukkitItemDataPersistentContainer) data).getDataContainer();
                                 Reflect.getMethod(meta.getPersistentDataContainer(), "putAll", Map.class)
                                         .invoke(Reflect.fastInvoke(origDataContainer, "getRaw"));
+                            }
+                        } else if (Reflect.hasMethod(meta, "getCustomTagContainer")) { // 1.13.2
+                            var data = item.getData();
+                            if (data instanceof BukkitItemDataCustomTags && !data.isEmpty()) {
+                                var origDataContainer = ((BukkitItemDataCustomTags) data).getDataContainer();
+                                Reflect.getMethod(meta.getCustomTagContainer(), "putAll", Map.class)
+                                        .invoke(Reflect.fastInvoke(origDataContainer, "getRaw"));
+                            }
+                        } else {
+                            var data = item.getData();
+                            if (data instanceof CraftBukkitItemData && !data.isEmpty()) {
+                                var unhandled = (Map<String,Object>) Reflect.getField(meta, "unhandledTags");
+                                Object compound;
+                                if (unhandled.containsKey("PublicBukkitValues")) {
+                                    compound = unhandled.get("PublicBukkitValues");
+                                } else {
+                                    compound = Reflect.construct(CompoundTagAccessor.getConstructor0());
+                                    unhandled.put("PublicBukkitValues", compound);
+                                }
+                                ((CraftBukkitItemData) data).getKeyNBTMap().forEach((s, o) ->
+                                        Reflect.fastInvoke(compound, CompoundTagAccessor.getMethodPut1(), s, o)
+                                );
                             }
                         }
 
@@ -321,8 +348,26 @@ public class BukkitItemFactory extends ItemFactory {
                                     .ifPresent(item.getFireworkEffects()::add);
                         }
 
-                        if (Reflect.hasMethod(meta, "getPersistentDataContainer")) { // 1.14
-                            item.setData(new BukkitItemData(plugin, meta.getPersistentDataContainer()));
+                        if (Reflect.hasMethod(meta, "getPersistentDataContainer")) { // 1.14+
+                            item.setData(new BukkitItemDataPersistentContainer(plugin, meta.getPersistentDataContainer()));
+                        } else if (Reflect.hasMethod(meta, "getCustomTagContainer")) { // 1.13.2
+                            item.setData(new BukkitItemDataCustomTags(plugin, meta.getCustomTagContainer()));
+                        } else {
+                            var unhandled = (Map<String,Object>) Reflect.getField(meta, "unhandledTags");
+                            if (unhandled.containsKey("PublicBukkitValues")) {
+                                var compound = unhandled.get("PublicBukkitValues");
+                                var nmap = new HashMap<String, Object>();
+                                if (CompoundTagAccessor.getType().isInstance(compound)) {
+                                    var keys = (Set) Reflect.fastInvoke(compound, CompoundTagAccessor.getMethodGetAllKeys1());
+                                    for (var key : keys) {
+                                        nmap.put(key.toString(), Reflect.fastInvoke(compound, CompoundTagAccessor.getMethodGet1(), key));
+                                    }
+                                }
+                                item.setData(new CraftBukkitItemData(nmap));
+                            } else {
+                                item.setData(new CraftBukkitItemData(new HashMap<>()));
+                            }
+
                         }
                     }
                     return item;
@@ -379,10 +424,20 @@ public class BukkitItemFactory extends ItemFactory {
 
     @Override
     public ItemData createNewItemData0() {
-        var r = Reflect.constructor(ClassStorage.CB.CraftPersistentDataContainer, ClassStorage.CB.CraftPersistentDataTypeRegistry)
-                .constructResulted(Reflect.getField(ClassStorage.CB.CraftMetaItem, "DATA_TYPE_REGISTRY"));
-        if (r.raw() != null) {
-            return new BukkitItemData(plugin, (PersistentDataContainer) r.raw());
+        if (ClassStorage.CB.CraftPersistentDataContainer != null) { // 1.14+
+            var r = Reflect.constructor(ClassStorage.CB.CraftPersistentDataContainer, ClassStorage.CB.CraftPersistentDataTypeRegistry)
+                    .constructResulted(Reflect.getField(ClassStorage.CB.CraftMetaItem, "DATA_TYPE_REGISTRY"));
+            if (r.raw() != null) {
+                return new BukkitItemDataPersistentContainer(plugin, (PersistentDataContainer) r.raw());
+            }
+        } else if (ClassStorage.CB.CraftCustomItemTagContainer != null) { // 1.13.2
+            var r = Reflect.constructor(ClassStorage.CB.CraftCustomItemTagContainer, ClassStorage.CB.CraftCustomTagTypeRegistry)
+                    .constructResulted(Reflect.getField(ClassStorage.CB.CraftMetaItem, "TAG_TYPE_REGISTRY"));
+            if (r.raw() != null) {
+                return new BukkitItemDataCustomTags(plugin, (CustomItemTagContainer) r.raw());
+            }
+        } else { // any craftbukkit
+            return new CraftBukkitItemData(new HashMap<>());
         }
         return ItemData.EMPTY;
     }

@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -99,5 +100,9 @@ public class AdventureHelper {
             }
         }
         return new String(b);
+    }
+
+    public String toLegacyColorCode(TextColor color) {
+        return LegacyComponentSerializer.SECTION_CHAR + Integer.toString(NAMED_TEXT_COLOR_ID_MAP.get(NamedTextColor.nearestTo(color)), 16);
     }
 }

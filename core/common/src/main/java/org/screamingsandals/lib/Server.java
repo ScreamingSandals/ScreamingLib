@@ -1,6 +1,7 @@
 package org.screamingsandals.lib;
 
 import io.netty.channel.ChannelFuture;
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.WorldHolder;
@@ -15,14 +16,9 @@ import java.util.List;
         replaceRule = "{basePackage}.{platform}.{Platform}{className}"
 )
 public abstract class Server {
-    /**
-     * <p>Server class instance.</p>
-     */
     private static Server server;
 
-    /**
-     * <p>Constructs the Server class, internal use only.</p>
-     */
+    @ApiStatus.Internal
     public Server() {
         if (server != null) {
             throw new UnsupportedOperationException("Server has been already initialized!");

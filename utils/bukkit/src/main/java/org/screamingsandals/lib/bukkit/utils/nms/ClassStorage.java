@@ -27,8 +27,10 @@ public class ClassStorage {
 		public static final Class<?> CraftMagicNumbers = safeGetClass("{obc}.util.CraftMagicNumbers");
 		public static final Class<?> CraftVector = safeGetClass("{obc}.util.CraftVector");
 		public static final Class<?> CraftPersistentDataContainer = safeGetClass("{obc}.persistence.CraftPersistentDataContainer");
+		public static final Class<?> CraftCustomItemTagContainer = safeGetClass("{obc}.inventory.tags.CraftCustomItemTagContainer");
 		public static final Class<?> CraftMetaItem = safeGetClass("{obc}.inventory.CraftMetaItem");
 		public static final Class<?> CraftPersistentDataTypeRegistry = safeGetClass("{obc}.persistence.CraftPersistentDataTypeRegistry");
+		public static final Class<?> CraftCustomTagTypeRegistry = safeGetClass("{obc}.inventory.CraftCustomTagTypeRegistry");
 	}
 	
 	private static String checkNMSVersion() {
