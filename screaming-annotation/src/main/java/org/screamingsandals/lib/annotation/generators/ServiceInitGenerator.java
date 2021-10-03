@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 public class ServiceInitGenerator {
     private long index = 0;
 
+    private final String platformClassName;
     private final MethodSpec.Builder methodSpec;
     private final Types types;
     private final Elements elements;
@@ -138,15 +139,15 @@ public class ServiceInitGenerator {
     private final Map<String, BiConsumer<StringBuilder, List<Object>>> initArguments = new HashMap<>() {
         {
             put("org.screamingsandals.lib.utils.ControllableImpl", (statement, processedArguments) -> {
-                statement.append("this.$N.child()");
+                statement.append(ServiceInitGenerator.this.platformClassName).append(".this.$N.child()");
                 processedArguments.add("pluginControllable");
             });
             put("org.screamingsandals.lib.utils.Controllable", (statement, processedArguments) -> {
-                statement.append("this.$N.child()");
+                statement.append(ServiceInitGenerator.this.platformClassName).append(".this.$N.child()");
                 processedArguments.add("pluginControllable");
             });
             put("org.screamingsandals.lib.plugin.PluginContainer", (statement, processedArguments) -> {
-                statement.append("this.$N");
+                statement.append(ServiceInitGenerator.this.platformClassName).append(".this.$N");
                 processedArguments.add("pluginContainer");
             });
             put("org.screamingsandals.lib.plugin.PluginDescription", (statement, processedArguments) -> {

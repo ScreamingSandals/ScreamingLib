@@ -35,7 +35,7 @@ public class MinestomMainClassGenerator extends MainClassGenerator {
 
 
         var serviceInitGenerator = ServiceInitGenerator
-                .builder(onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
+                .builder(pluginContainer.getSimpleName() + "_MinestomImpl", onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
                 .add("net.minestom.server.extensions.Extension", (statement, objects) ->
                         statement.append(pluginContainer.getSimpleName()).append("_MinestomImpl.this")
                 )

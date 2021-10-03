@@ -42,7 +42,7 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
 
 
         var serviceInitGenerator = ServiceInitGenerator
-                .builder(constructorBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
+                .builder(pluginContainer.getSimpleName() + "_VelocityImpl", constructorBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
                 .add(velocityProxyServerClass.canonicalName(), (statement, objects) -> {
                     statement.append("$N");
                     objects.add("proxyServer");
