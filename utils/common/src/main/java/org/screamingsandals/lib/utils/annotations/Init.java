@@ -2,13 +2,11 @@ package org.screamingsandals.lib.utils.annotations;
 
 import org.screamingsandals.lib.utils.PlatformType;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
+@Repeatable(Init.List.class)
 public @interface Init {
     /**
      * Contains all platforms which need these services. If empty, it means all platforms
@@ -23,4 +21,10 @@ public @interface Init {
      * @return All services which should be initialized
      */
     Class<?>[] services();
+
+    @Retention(RetentionPolicy.SOURCE)
+    @Target(ElementType.TYPE)
+    @interface List {
+        Init[] value();
+    }
 }
