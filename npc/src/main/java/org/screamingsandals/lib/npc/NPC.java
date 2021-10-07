@@ -1,23 +1,18 @@
 package org.screamingsandals.lib.npc;
 
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.hologram.Hologram;
+import org.screamingsandals.lib.npc.skin.NPCSkin;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.visuals.TouchableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 /**
- * API For the NPC (non-player-character)
+ * Represents the API for NPCs.
  */
 public interface NPC extends TouchableVisual<NPC> {
 
@@ -91,25 +86,4 @@ public interface NPC extends TouchableVisual<NPC> {
      * @return the hologram instance that displays the name of the entity.
      */
     Hologram getHologram();
-
-    @RequiredArgsConstructor
-    enum SkinLayerValues {
-        V9(12, 8),
-        V13(13, 13),
-        V14(15, 14),
-        V16(16, 15),
-        V17(17, 17);
-
-        private final int layerValue;
-        private final int minVersion;
-
-        public static int findLayerByVersion() {
-            return Arrays.stream(values())
-                    .sorted(Collections.reverseOrder())
-                    .filter(value -> Server.isVersion(1, value.minVersion))
-                    .map(value -> value.layerValue)
-                    .findAny()
-                    .orElse(V9.layerValue);
-        }
-    }
 }

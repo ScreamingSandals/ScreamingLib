@@ -32,7 +32,8 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     private LocationHolder location;
     private int viewDistance;
     private boolean touchable;
-    private boolean ready;
+    private boolean destroyed;
+    private boolean created;
     private DataContainer data;
     private float rotationIncrement;
     private Pair<Integer, TaskerTime> rotationTime;
@@ -48,7 +49,8 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         this.touchable = touchable;
 
         //default values
-        this.ready = false;
+        this.destroyed = false;
+        this.created = false;
         this.clickCoolDown = DEFAULT_CLICK_COOL_DOWN;
         this.viewDistance = DEFAULT_VIEW_DISTANCE;
         this.rotationIncrement = DEFAULT_ROTATION_INCREMENT;
@@ -85,7 +87,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
 
     @Override
     public Hologram spawn() {
-        return null;
+        return show();
     }
 
     @Override
@@ -106,10 +108,9 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
                 .anyMatch(entity -> entity.getId() == entityId);
     }
 
-
     @Override
     public Hologram update() {
-        if (ready) {
+        if (visible) {
             update0();
         }
         return this;
@@ -120,7 +121,10 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         if (isShown()) {
             return this;
         }
-        ready = true;
+        if (isDestroyed()) {
+            throw new UnsupportedOperationException("Cannot call Hologram#show() for destroyed holograms!");
+        }
+        created = true;
         visible = true;
         update();
 
@@ -159,7 +163,6 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         }
 
         visible = false;
-        ready = false;
         update();
         return this;
     }
@@ -228,14 +231,29 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
 
     @Override
     public void destroy() {
+        if (destroyed) {
+            return;
+        }
+
         if (rotationTask != null) {
             rotationTask.cancel();
             rotationTask = null;
         }
+        destroyed = true;
         data = null;
         hide();
         viewers.clear();
         HologramManager.removeHologram(this);
+    }
+
+    @Override
+    public boolean isCreated() {
+        return created;
+    }
+
+    @Override
+    public boolean isDestroyed() {
+        return destroyed;
     }
 
     @Override
@@ -249,16 +267,6 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     @Override
     public void onViewerRemoved(PlayerWrapper viewer, boolean checkDistance) {
         removeForPlayer(viewer);
-    }
-
-    @Override
-    public boolean isCreated() {
-        return false;
-    }
-
-    @Override
-    public boolean isDestroyed() {
-        return false;
     }
 
     @Override

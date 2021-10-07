@@ -1,4 +1,5 @@
-package org.screamingsandals.lib.npc;
+package org.screamingsandals.lib.npc.skin;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

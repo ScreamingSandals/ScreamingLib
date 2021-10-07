@@ -8,6 +8,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.hologram.HologramManager;
+import org.screamingsandals.lib.npc.skin.NPCSkin;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
@@ -36,7 +37,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     private final List<MetadataItem> metadata;
 
     public NPCImpl(UUID uuid, LocationHolder location, boolean touchable) {
-        super(uuid, location);
+        super(uuid, location, touchable);
 
         if (!Server.isServerThread()) {
             try {
@@ -48,7 +49,6 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
             this.id = EntityMapper.getNewEntityId();
         }
 
-        setTouchable(touchable);
         this.displayName = AdventureHelper.toComponent("[NPC] " + uuid.toString().replace("-", "").substring(0, 10));
         this.hologram = HologramManager.hologram(location.clone().add(0.0D, 1.5D, 0.0D));
         this.metadata = new ArrayList<>();
@@ -164,6 +164,9 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         if (visible) {
             return this;
         }
+        if (isDestroyed()) {
+            throw new UnsupportedOperationException("Cannot call NPC#show() for destroyed npcs!");
+        }
         visible = true;
         hologram.show();
         viewers.forEach(viewer -> onViewerAdded(viewer, false));
@@ -214,6 +217,23 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                 .action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
                 .data(getNPCInfoData())
                 .sendPacket(player);
+    }
+
+    @Override
+    public NPC spawn() {
+        show();
+        return this;
+    }
+
+    @Override
+    public void destroy() {
+        if (isDestroyed()) {
+            return;
+        }
+        super.destroy();
+        hide();
+        viewers.clear();
+        NPCManager.removeNPC(this);
     }
 
     @Override

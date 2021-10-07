@@ -9,8 +9,9 @@ public abstract class AbstractTouchableVisual<T extends TouchableVisual<T>> exte
     private volatile boolean touchable;
     private volatile long clickCoolDown;
 
-    public AbstractTouchableVisual(UUID uuid, LocationHolder location) {
+    public AbstractTouchableVisual(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location);
+        this.touchable = touchable;
         this.clickCoolDown = TouchableVisual.DEFAULT_CLICK_COOL_DOWN;
     }
 
