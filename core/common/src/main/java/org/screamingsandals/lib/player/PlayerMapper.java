@@ -7,6 +7,8 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.PlayerContainer;
+import org.screamingsandals.lib.event.OnEvent;
+import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
@@ -42,8 +44,12 @@ public abstract class PlayerMapper {
 
     @OnPreDisable
     public void onPreDisable() {
-        // gc will do this anyways, but why not be a little extra safe smh
         channelCache.clear();
+    }
+
+    @OnEvent
+    public void onPlayerLeave(SPlayerLeaveEvent event) {
+        channelCache.remove(event.getPlayer().getUuid());
     }
 
     @OnPostConstruct

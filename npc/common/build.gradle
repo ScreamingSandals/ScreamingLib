@@ -1,8 +1,0 @@
-dependencies {
-    api project(':core-common')
-    api project(':visuals-api-common')
-    api project(':tasker-common')
-    api project(':utils-common')
-    api project(':hologram-common')
-    compileOnly 'com.mojang:authlib:' + MOJANG_AUTHLIB_VERSION
-}

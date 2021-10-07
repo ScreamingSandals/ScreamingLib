@@ -68,7 +68,16 @@ public abstract class PacketMapper {
         return packetMapper.getProtocolVersion0(player);
     }
 
+    public static int getArmorStandTypeId() {
+        if (packetMapper == null) {
+            throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
+        }
+        return packetMapper.getArmorStandTypeId0();
+    }
+
     public abstract int getId0(Class<? extends AbstractPacket> clazz);
 
     public abstract int getProtocolVersion0(PlayerWrapper player);
+
+    public abstract int getArmorStandTypeId0();
 }

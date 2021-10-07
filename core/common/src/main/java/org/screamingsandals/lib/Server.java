@@ -149,13 +149,6 @@ public abstract class Server {
         return server.getConnections0();
     }
 
-    public static Object getNetworkManagerSynchronizationObject() {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
-        }
-        return server.getNetworkManagerSynchronizationObject0();
-    }
-
     public abstract boolean isVersion0(int major, int minor);
 
     public abstract boolean isVersion0(int major, int minor, int patch);
@@ -171,6 +164,4 @@ public abstract class Server {
     public abstract void runSynchronously0(Runnable task);
 
     public abstract List<ChannelFuture> getConnections0();
-
-    public abstract Object getNetworkManagerSynchronizationObject0();
 }

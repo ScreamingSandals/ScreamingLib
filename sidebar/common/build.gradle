@@ -2,5 +2,5 @@ dependencies {
     api project(':core-common')
     api project(':event-common')
     api project(':packets-common')
-    api project(':visuals-api-common')
+    api project(':visuals-api')
 }

@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.packet.event;
 
-import io.netty.channel.Channel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

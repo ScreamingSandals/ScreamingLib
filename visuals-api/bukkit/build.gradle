@@ -1,7 +1,0 @@
-dependencies {
-    api project(':visuals-api-common')
-    api project(':core-bukkit')
-    api project(':plugin-bukkit')
-
-    compileOnly paperLegacy(PAPER_LEGACY_VERSION)
-}

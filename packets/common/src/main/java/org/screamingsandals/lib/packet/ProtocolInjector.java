@@ -53,7 +53,12 @@ public class ProtocolInjector {
 
             final var handler = new PacketHandler(player);
             if (channel.pipeline().get(CHANNEL_NAME) == null && channel.pipeline().get("packet_handler") != null) {
-                channel.pipeline().addBefore("packet_handler", CHANNEL_NAME, handler);
+                final Runnable task = () -> channel.pipeline().addBefore("packet_handler", CHANNEL_NAME, handler);
+                if (channel.eventLoop().inEventLoop()) {
+                    task.run();
+                } else {
+                    channel.eventLoop().submit(task);
+                }
             }
         } catch (Throwable t) {
             if (onLogin) {
@@ -69,7 +74,12 @@ public class ProtocolInjector {
         try {
             Channel ch = player.getChannel();
             if (ch != null && ch.pipeline().get(CHANNEL_NAME) != null) {
-                ch.pipeline().remove(CHANNEL_NAME);
+                final Runnable task = () -> ch.pipeline().remove(CHANNEL_NAME);
+                if (ch.eventLoop().inEventLoop()) {
+                    task.run();
+                } else {
+                    ch.eventLoop().submit(task);
+                }
             }
         } catch (Throwable ignored) {
         }

@@ -14,7 +14,6 @@ import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 
 import java.util.List;
@@ -87,14 +86,6 @@ public class BukkitServer extends Server {
         return (List<ChannelFuture>) Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer")
                 .getFieldResulted(MinecraftServerAccessor.getFieldConnection())
                 .getFieldResulted(ServerConnectionListenerAccessor.getFieldChannels())
-                .raw();
-    }
-
-    @Override
-    public Object getNetworkManagerSynchronizationObject0() {
-        return Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer")
-                .getFieldResulted(MinecraftServerAccessor.getFieldConnection())
-                .getFieldResulted(ServerConnectionListenerAccessor.getFieldConnections())
                 .raw();
     }
 }

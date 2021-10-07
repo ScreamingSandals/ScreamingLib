@@ -4,12 +4,17 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Bukkit;
+import org.screamingsandals.lib.bukkit.packet.listener.ServerboundInteractPacketListener;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.nms.accessors.ArmorStandAccessor;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
-@Service
+@Service(dependsOn = {
+        ServerboundInteractPacketListener.class
+})
 @Slf4j
 public class BukkitPacketMapper extends PacketMapper {
 
@@ -40,20 +45,18 @@ public class BukkitPacketMapper extends PacketMapper {
 
             var channel = player.getChannel();
             if (channel.isActive()) {
-                if (channel.eventLoop().inEventLoop()) {
+                Runnable task = () -> {
                     var future = channel.writeAndFlush(writer.getBuffer());
                     future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+                };
+                if (channel.eventLoop().inEventLoop()) {
+                    task.run();
                 } else {
-                    channel.eventLoop().execute(() -> {
-                        var future = channel.writeAndFlush(writer.getBuffer());
-                        future.addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
-                    });
+                    channel.eventLoop().execute(task);
                 }
             }
 
-            for (var extraPacket : writer.getAppendedPackets()) {
-                sendPacket0(player, extraPacket);
-            }
+            writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(player, extraPacket));
         } catch(Throwable t) {
             Bukkit.getLogger().severe("An exception occurred sending packet of class: " + packet.getClass().getSimpleName() + " to player: " + player.getName());
             t.printStackTrace();
@@ -69,5 +72,10 @@ public class BukkitPacketMapper extends PacketMapper {
     public int getProtocolVersion0(PlayerWrapper player) {
         // TODO: use Via API or Protocol Support API for this
         throw new UnsupportedOperationException("BukkitPacketMapper#getProtocolVersion0() not been implemented yet!");
+    }
+
+    @Override
+    public int getArmorStandTypeId0() {
+        return ClassStorage.getEntityTypeId("armor_stand", ArmorStandAccessor.getType());
     }
 }

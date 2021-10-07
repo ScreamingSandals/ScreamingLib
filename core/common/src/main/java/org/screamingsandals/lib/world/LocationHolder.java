@@ -73,7 +73,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location and increments the coordinates by the XYZ values of the supplied {@link Vector3D}.</p>
+     * <p>Clones the current location increments the coordinates by the XYZ values of the supplied {@link Vector3D}.</p>
      *
      * @param vec the vector to add
      * @return the new location
@@ -92,6 +92,52 @@ public class LocationHolder implements Wrapper, Serializable {
         return add(vec.getX(), vec.getY(), vec.getZ());
     }
 
+    /**
+     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3Df}.</p>
+     *
+     * @param x X coordinate to subtract
+     * @param y Y coordinate to subtract
+     * @param z Z coordinate to subtract
+     * @return the new location
+     */
+    @NotNull
+    public LocationHolder subtract(double x, double y, double z) {
+        final var clone = clone();
+        clone.x -= x;
+        clone.y -= y;
+        clone.z -= z;
+        return clone;
+    }
+
+    /**
+     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link LocationHolder}.</p>
+     *
+     * @param holder the location holder to subtract
+     * @return the new location
+     */
+    public LocationHolder subtract(LocationHolder holder) {
+        return subtract(holder.getX(), holder.getY(), holder.getZ());
+    }
+
+    /**
+     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3D}.</p>
+     *
+     * @param vec the vector to subtract
+     * @return the new location
+     */
+    public LocationHolder subtract(Vector3D vec) {
+        return subtract(vec.getX(), vec.getY(), vec.getZ());
+    }
+
+    /**
+     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3Df}.</p>
+     *
+     * @param vec the vector to subtract
+     * @return the new location
+     */
+    public LocationHolder subtract(Vector3Df vec) {
+        return subtract(vec.getX(), vec.getY(), vec.getZ());
+    }
 
     /**
      * <p>Clones the current location and decrements the coordinates by the supplied values.</p>
@@ -320,5 +366,52 @@ public class LocationHolder implements Wrapper, Serializable {
      */
     public boolean outOfRange(LocationHolder holder, int distance) {
         return getDistanceSquared(holder) >= distance;
+    }
+
+    /**
+     * Sets the {@link #getYaw() yaw} and {@link #getPitch() pitch} to point
+     * in the direction of the vector.
+     *
+     * @param vector the direction vector
+     * @return the same location
+     */
+    @NotNull
+    public LocationHolder setDirection(@NotNull Vector3D vector) {
+        /*
+         * Sin = Opp / Hyp
+         * Cos = Adj / Hyp
+         * Tan = Opp / Adj
+         *
+         * x = -Opp
+         * z = Adj
+         */
+        final double _2PI = 2 * Math.PI;
+        final double x = vector.getX();
+        final double z = vector.getZ();
+
+        if (x == 0 && z == 0) {
+            pitch = vector.getY() > 0 ? -90 : 90;
+            return this;
+        }
+
+        double theta = Math.atan2(-x, z);
+        yaw = (float) Math.toDegrees((theta + _2PI) % _2PI);
+
+        double x2 = Math.pow(x, 2);
+        double z2 = Math.pow(z, 2);
+        double xz = Math.sqrt(x2 + z2);
+        pitch = (float) Math.toDegrees(Math.atan(-vector.getY() / xz));
+
+        return this;
+    }
+
+    /**
+     * Constructs a new {@link Vector3D} based on this Location
+     *
+     * @return New Vector containing the coordinates represented by this
+     *     Location
+     */
+    public Vector3D toVector() {
+        return new Vector3D(x, y, z);
     }
 }
