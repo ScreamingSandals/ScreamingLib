@@ -11,9 +11,16 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'java'
-    apply plugin: 'java-library'
-    apply plugin: 'org.screamingsandals.plugin-builder'
+    // TODO: find a way how to fill this list from settings.gradle
+    if (project.name in ['sidebar-bukkit', 'healthindicator-bukkit', 'npc-bukkit', 'hologram-bukkit', 'visuals-api-bukkit',  'signs-bukkit']) {
+        project.ext['onlyPomArtifact'] = true
+
+        apply plugin: 'org.screamingsandals.plugin-builder-lite'
+    } else {
+        apply plugin: 'java'
+        apply plugin: 'java-library'
+        apply plugin: 'org.screamingsandals.plugin-builder'
+    }
 
     repositories {
         minecraftLibraries()
