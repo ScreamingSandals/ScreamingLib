@@ -9,7 +9,7 @@ import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
-import org.screamingsandals.lib.world.LocationHolder;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

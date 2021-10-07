@@ -1,15 +1,6 @@
-buildscript {
-    repositories {
-        mavenLocal()
-        maven { url 'https://repo.screamingsandals.org/public' }
-    }
-    dependencies {
-        classpath 'org.screamingsandals.nms:NMSMapper:' + NMS_MAPPER_VERSION
-    }
-}
-
 plugins {
-    id 'org.screamingsandals.plugin-builder' version '1.0.49' apply false
+    id 'org.screamingsandals.plugin-builder' version "${SCREAMING_PLUGIN_BUILDER_VERSION}" apply false
+    id 'org.screamingsandals.nms-mapper' version "${NMS_MAPPER_VERSION}" apply false
 }
 
 defaultTasks 'clean', 'screamCompile'//, 'allowJavadocUpload'

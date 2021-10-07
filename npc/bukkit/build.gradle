@@ -1,0 +1,9 @@
+// Meta project, exists due to screaming plugin builder
+
+dependencies {
+    api project(':npc-common')
+    api project(':core-bukkit')
+    api project(':visuals-api-bukkit')
+    api project(':tasker-bukkit')
+    api project(':hologram-bukkit')
+}

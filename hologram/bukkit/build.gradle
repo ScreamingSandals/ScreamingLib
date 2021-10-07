@@ -1,0 +1,11 @@
+// Meta project, exists due to screaming plugin builder
+
+dependencies {
+    api project(':hologram-common')
+
+    api project(':core-bukkit')
+    api project(':tasker-bukkit')
+    api project(':packets-bukkit')
+
+    api project(':visuals-api-bukkit')
+}

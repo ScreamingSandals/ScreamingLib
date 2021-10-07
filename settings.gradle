@@ -13,12 +13,8 @@ rootProject.name = "ScreamingLib"
 include 'api-utils'
 include 'sender'
 include 'screaming-annotation'
-include 'signs'
 include 'lang'
 include 'nms'
-include 'visuals-api'
-include 'hologram'
-include 'npc'
 
 def registerModule(String name, String... platforms) {
     include(':' + name + '-common')
@@ -32,6 +28,10 @@ def registerModule(String name, String... platforms) {
 registerModule('utils', 'bukkit', 'minestom', 'sponge', 'adventure')
 registerModule('sidebar', 'bukkit') //TODO: add others
 registerModule('healthindicator', 'bukkit') //TODO: add others
+registerModule('npc', 'bukkit') //TODO: add others
+registerModule('hologram', 'bukkit') //TODO: add others
+registerModule('visuals-api', 'bukkit') //TODO: add others
+registerModule('signs', 'bukkit') //TODO: add others
 registerModule('placeholders', 'bukkit') //TODO: add others
 registerModule('packets', 'vanilla', 'bukkit') //TODO: add others
 // registerModule('gamecore', 'bukkit') //TODO: add others

@@ -4,7 +4,5 @@ dependencies {
     api project(':core-bukkit')
     api project(':nms')
     compileOnly paperLegacy(PAPER_LEGACY_VERSION)
-    compileOnly 'com.mojang:datafixerupper:' + DATAFIXERUPPER_VERSION
-    compileOnly 'com.mojang:authlib:' + MOJANG_AUTHLIB_VERSION
     compileOnly 'io.netty:netty-all:' + NETTY_VERSION
 }
