@@ -233,6 +233,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         super.destroy();
         hide();
         viewers.clear();
+        hologram.destroy();
         NPCManager.removeNPC(this);
     }
 
