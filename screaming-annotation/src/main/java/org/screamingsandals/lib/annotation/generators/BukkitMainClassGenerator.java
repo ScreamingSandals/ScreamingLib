@@ -36,7 +36,7 @@ public class BukkitMainClassGenerator extends MainClassGenerator {
 
 
         var serviceInitGenerator = ServiceInitGenerator
-                .builder(onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
+                .builder(pluginContainer.getSimpleName() + "_BukkitImpl", onLoadBuilder, processingEnvironment.getTypeUtils(), processingEnvironment.getElementUtils())
                 .add(List.of("org.bukkit.plugin.java.JavaPlugin", "org.bukkit.plugin.Plugin"), (statement, objects) ->
                         statement.append(pluginContainer.getSimpleName()).append("_BukkitImpl.this")
                 )
