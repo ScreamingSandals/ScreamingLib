@@ -47,7 +47,7 @@ public class PlayerWrapper extends SenderWrapper implements OfflinePlayerWrapper
      * @return is the player on ground?
      */
     public boolean isOnGround() {
-        return asEntity().getVelocity().getY() == 0 && !getLocation().remove(0, 1, 0).getBlock().isEmpty();
+        return asEntity().getVelocity().getY() == 0 && !getLocation().subtract(0, 1, 0).getBlock().isEmpty();
     }
 
     /**
