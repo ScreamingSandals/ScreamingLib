@@ -73,7 +73,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location increments the coordinates by the XYZ values of the supplied {@link Vector3D}.</p>
+     * <p>Clones the current location and increments the coordinates by the XYZ values of the supplied {@link Vector3D}.</p>
      *
      * @param vec the vector to add
      * @return the new location
@@ -137,52 +137,6 @@ public class LocationHolder implements Wrapper, Serializable {
      */
     public LocationHolder subtract(Vector3Df vec) {
         return subtract(vec.getX(), vec.getY(), vec.getZ());
-    }
-
-    /**
-     * <p>Clones the current location and decrements the coordinates by the supplied values.</p>
-     *
-     * @param x X coordinate to remove
-     * @param y Y coordinate to remove
-     * @param z Z coordinate to remove
-     * @return the new location
-     */
-    public LocationHolder remove(double x, double y, double z) {
-        final var clone = clone();
-        clone.x -= x;
-        clone.y -= y;
-        clone.z -= z;
-        return clone;
-    }
-
-    /**
-     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link LocationHolder}.</p>
-     *
-     * @param holder the location holder to remove
-     * @return the new location
-     */
-    public LocationHolder remove(LocationHolder holder) {
-        return remove(holder.getX(), holder.getY(), holder.getZ());
-    }
-
-    /**
-     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3D}.</p>
-     *
-     * @param vec the vector to remove
-     * @return the new location
-     */
-    public LocationHolder remove(Vector3D vec) {
-        return remove(vec.getX(), vec.getY(), vec.getZ());
-    }
-
-    /**
-     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3Df}.</p>
-     *
-     * @param vec the vector to remove
-     * @return the new location
-     */
-    public LocationHolder remove(Vector3Df vec) {
-        return remove(vec.getX(), vec.getY(), vec.getZ());
     }
 
     @Override
@@ -403,15 +357,5 @@ public class LocationHolder implements Wrapper, Serializable {
         pitch = (float) Math.toDegrees(Math.atan(-vector.getY() / xz));
 
         return this;
-    }
-
-    /**
-     * Constructs a new {@link Vector3D} based on this Location
-     *
-     * @return New Vector containing the coordinates represented by this
-     *     Location
-     */
-    public Vector3D toVector() {
-        return new Vector3D(x, y, z);
     }
 }
