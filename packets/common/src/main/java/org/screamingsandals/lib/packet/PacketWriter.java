@@ -223,12 +223,12 @@ public abstract class PacketWriter extends OutputStream {
      * @param maxLength the maximum length the string can hold
      */
     public void writeSizedString(String string, int maxLength) {
-        var size = string.getBytes(StandardCharsets.UTF_8).length;
-        if (size > maxLength) {
-            throw new UnsupportedOperationException("String too big! (is " + size + " bytes encoded, should be less than: " + maxLength + ")");
+        var bytes = string.getBytes(StandardCharsets.UTF_8);
+        if (bytes.length > maxLength) {
+            throw new UnsupportedOperationException("String too big! (is " + bytes.length + " bytes encoded, should be less than: " + maxLength + ")");
         }
-        writeVarInt(size);
-        buffer.writeCharSequence(string, StandardCharsets.UTF_8);
+        writeVarInt(bytes.length);
+        buffer.writeBytes(bytes);
     }
 
     /**
