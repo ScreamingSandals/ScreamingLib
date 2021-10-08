@@ -2,7 +2,7 @@ package org.screamingsandals.lib.bukkit.packet;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.screamingsandals.lib.bukkit.packet.listener.ServerboundInteractPacketListener;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
@@ -10,13 +10,15 @@ import org.screamingsandals.lib.nms.accessors.ArmorStandAccessor;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
 @Service(dependsOn = {
         ServerboundInteractPacketListener.class
 })
-@Slf4j
+@RequiredArgsConstructor
 public class BukkitPacketMapper extends PacketMapper {
+    private final LoggerWrapper logger;
 
     @Override
     public void sendPacket0(PlayerWrapper player, AbstractPacket packet) {
@@ -27,7 +29,7 @@ public class BukkitPacketMapper extends PacketMapper {
             throw new UnsupportedOperationException("Player cannot be null!");
         }
         if (!player.isOnline()) {
-            log.trace("Ignoring packet!, not sending packet to offline player.");
+            logger.trace("Ignoring packet!, not sending packet to offline player.");
             return;
         }
 
