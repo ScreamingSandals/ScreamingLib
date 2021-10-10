@@ -96,6 +96,9 @@ public class BukkitEntityMapper extends EntityMapper {
     public int getNewEntityId0() {
         final var entityCount = Reflect.getField(EntityAccessor.getFieldField_70152_a());
         if (entityCount != null) {
+            if (entityCount instanceof AtomicInteger) {
+                return ((AtomicInteger) entityCount).incrementAndGet();
+            }
             final var newCount = ((int) entityCount) + 1;
             Reflect.setField(EntityAccessor.getFieldField_70152_a(), newCount);
             return newCount;
