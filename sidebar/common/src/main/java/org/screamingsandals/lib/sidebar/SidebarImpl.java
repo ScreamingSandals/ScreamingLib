@@ -18,6 +18,7 @@ import org.screamingsandals.lib.visuals.impl.AbstractLinedVisual;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar {
     @Getter
@@ -152,6 +153,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
         List.copyOf(viewers).forEach(this::updateForPlayer);
     }
 
+    @SuppressWarnings("unchecked")
     private void updateForPlayer(PlayerWrapper playerWrapper) {
         var lines = this.lines.get(playerWrapper.getUuid());
         if (lines == null) {
@@ -169,10 +171,17 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
                     if (textEntry instanceof SimpleCLTextEntry) {
                         var like = ((SimpleCLTextEntry) textEntry).getComponentLike();
                         if (like instanceof SenderMessage) {
-                            return ((SenderMessage) like).asComponent(playerWrapper);
+                            return ((SenderMessage) like).asComponentList(playerWrapper);
                         }
                     }
                     return textEntry.getText();
+                })
+                .flatMap(o -> {
+                    if (o instanceof List) {
+                        return ((List<Component>) o).stream();
+                    } else {
+                        return Stream.of((Component) o);
+                    }
                 })
                 .map(AdventureHelper::toLegacy)
                 .collect(Collectors.toList());
