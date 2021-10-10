@@ -6,9 +6,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 
+import java.util.List;
+
 public interface SenderMessage extends ComponentLike {
     @NotNull
     Component asComponent(@Nullable CommandSenderWrapper wrapper);
+
+    @NotNull
+    List<Component> asComponentList(@Nullable CommandSenderWrapper wrapper);
 
     @NotNull
     default TextEntry asTextEntry(@Nullable CommandSenderWrapper wrapper) {

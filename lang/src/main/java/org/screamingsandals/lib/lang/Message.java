@@ -709,6 +709,12 @@ public class Message implements TitleableSenderMessage, Cloneable {
 
     @Override
     @NotNull
+    public List<Component> asComponentList(@Nullable CommandSenderWrapper wrapper) {
+        return getFor(wrapper);
+    }
+
+    @Override
+    @NotNull
     public Component asComponent() {
         return getForAnyoneJoined();
     }
