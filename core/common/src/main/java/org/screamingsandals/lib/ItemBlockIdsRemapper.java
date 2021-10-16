@@ -97,6 +97,7 @@ public abstract class ItemBlockIdsRemapper {
 
     private void makeColorable(String baseName) {
         makeColorableItem(baseName, baseName);
+        makeColorableBlock(baseName, baseName);
     }
 
     private void makeColorableBlock(String baseName) {
