@@ -9,6 +9,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.hologram.HologramManager;
 import org.screamingsandals.lib.npc.skin.NPCSkin;
+import org.screamingsandals.lib.npc.skin.SkinLayerValues;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
@@ -52,6 +53,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         this.displayName = AdventureHelper.toComponent("[NPC] " + uuid.toString().replace("-", "").substring(0, 10));
         this.hologram = HologramManager.hologram(location.clone().add(0.0D, 1.5D, 0.0D));
         this.metadata = new ArrayList<>();
+        metadata.add(MetadataItem.of((byte) SkinLayerValues.findLayerByVersion(), (byte) 127));
         this.properties = new ArrayList<>();
         this.shouldLookAtPlayer = false;
     }
@@ -63,7 +65,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     }
 
     @Override
-    public NPCSkin getSKin() {
+    public NPCSkin getSkin() {
         return skin;
     }
 
@@ -82,6 +84,15 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
     @Override
     public NPC setSkin(NPCSkin skin) {
+        if (!isShown()) {
+            this.skin = skin;
+            properties.removeIf(property -> property.name().equals("textures"));
+            if (skin == null) {
+                return this;
+            }
+            properties.add(new SClientboundPlayerInfoPacket.Property("textures", skin.getValue(), skin.getSignature()));
+            return this;
+        }
         final var playerInfoPacket = new SClientboundPlayerInfoPacket()
                 .action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
                 .data(getNPCInfoData());
@@ -202,7 +213,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
             return;
         }
 
-        hologram.onViewerAdded(player, checkDistance);
+        hologram.addViewer(player);
         sendSpawnPackets(player);
     }
 
@@ -211,7 +222,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         if (!player.isOnline()) {
             return;
         }
-        hologram.onViewerRemoved(player, checkDistance);
+        hologram.removeViewer(player);
         getFullDestroyPacket().sendPacket(player);
         new SClientboundPlayerInfoPacket()
                 .action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)

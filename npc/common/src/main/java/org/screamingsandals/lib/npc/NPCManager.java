@@ -93,6 +93,6 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
 
     @Override
     public void fireVisualTouchEvent(PlayerWrapper sender, NPC visual, InteractType interactType) {
-        EventManager.fire(new NPCInteractEvent(sender, visual, interactType));
+        EventManager.fireAsync(new NPCInteractEvent(sender, visual, interactType));
     }
 }

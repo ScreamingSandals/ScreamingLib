@@ -91,6 +91,6 @@ public class HologramManager extends AbstractVisualsManager<Hologram> {
 
     @Override
     public void fireVisualTouchEvent(PlayerWrapper sender, Hologram visual, InteractType interactType) {
-        EventManager.fire(new HologramTouchEvent(sender, visual, interactType));
+        EventManager.fireAsync(new HologramTouchEvent(sender, visual, interactType));
     }
 }

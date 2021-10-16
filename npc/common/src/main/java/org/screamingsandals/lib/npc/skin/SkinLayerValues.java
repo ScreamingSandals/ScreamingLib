@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 @RequiredArgsConstructor
-enum SkinLayerValues {
+public enum SkinLayerValues {
     V9(12, 8),
     V13(13, 13),
     V14(15, 14),

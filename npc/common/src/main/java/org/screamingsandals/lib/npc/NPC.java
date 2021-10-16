@@ -33,7 +33,7 @@ public interface NPC extends TouchableVisual<NPC> {
     @Nullable
     List<TextEntry> getDisplayName();
 
-    NPCSkin getSKin();
+    NPCSkin getSkin();
 
     /**
      *
