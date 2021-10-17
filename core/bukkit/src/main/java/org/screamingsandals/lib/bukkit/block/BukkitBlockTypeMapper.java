@@ -78,6 +78,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                             clone.put(s, s2);
                         }
                     });
+                    return abnormal.withFlatteningData(clone);
                 }
                 return abnormal.withFlatteningData(cache);
             } else {

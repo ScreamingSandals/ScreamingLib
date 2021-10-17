@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
+import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.utils.MathUtils;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -93,6 +94,27 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
+     * <p>Clones the current location and increments the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.</p>
+     *
+     * @param blockFace the block face to add
+     * @return the new location
+     */
+    public LocationHolder add(BlockFace blockFace) {
+        return add(blockFace.getBlockDirection());
+    }
+
+    /**
+     * <p>Clones the current location and increments the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.</p>
+     *
+     * @param blockFace the block face to add
+     * @param distance how far in the direction the new location should be
+     * @return the new location
+     */
+    public LocationHolder add(BlockFace blockFace, int distance) {
+        return add(blockFace.getBlockDirection().multiply(distance));
+    }
+
+    /**
      * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3Df}.</p>
      *
      * @param x X coordinate to subtract
@@ -137,6 +159,27 @@ public class LocationHolder implements Wrapper, Serializable {
      */
     public LocationHolder subtract(Vector3Df vec) {
         return subtract(vec.getX(), vec.getY(), vec.getZ());
+    }
+
+    /**
+     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.</p>
+     *
+     * @param blockFace the block face to add
+     * @return the new location
+     */
+    public LocationHolder subtract(BlockFace blockFace) {
+        return subtract(blockFace.getBlockDirection());
+    }
+
+    /**
+     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.</p>
+     *
+     * @param blockFace the block face to add
+     * @param distance how far in the direction the new location should be
+     * @return the new location
+     */
+    public LocationHolder subtract(BlockFace blockFace, int distance) {
+        return subtract(blockFace.getBlockDirection().multiply(distance));
     }
 
     @Override

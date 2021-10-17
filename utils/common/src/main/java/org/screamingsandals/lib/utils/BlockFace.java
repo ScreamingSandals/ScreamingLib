@@ -50,6 +50,11 @@ public enum BlockFace {
     }
 
     @NotNull
+    public Vector3D getBlockDirection() {
+        return new Vector3D(modX, modY, modZ);
+    }
+
+    @NotNull
     public BlockFace getOppositeFace() {
         switch (this) {
             case NORTH:

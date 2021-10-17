@@ -62,7 +62,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
                             data = Integer.parseInt(blockState);
                         } catch (NumberFormatException ignored) {
                             // blockState don't have to be number
-                            if (blockState.startsWith("[") && blockState.startsWith("]")) {
+                            if (blockState.startsWith("[") && blockState.endsWith("]")) {
                                 var map = blockTypeMapper.getDataFromString(blockState.toLowerCase());
                                 if (map.containsKey("legacy_data") && map.size() == 1) {
                                     try {
