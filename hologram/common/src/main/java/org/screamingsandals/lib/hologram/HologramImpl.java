@@ -7,21 +7,22 @@ import org.screamingsandals.lib.packet.SClientboundRemoveEntitiesPacket;
 import org.screamingsandals.lib.packet.SClientboundSetEntityDataPacket;
 import org.screamingsandals.lib.packet.SClientboundSetEquipmentPacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.slot.EquipmentSlotMapping;
+import org.screamingsandals.lib.sender.SenderMessage;
+import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
 import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.utils.math.Vector3Df;
+import org.screamingsandals.lib.utils.visual.SimpleCLTextEntry;
 import org.screamingsandals.lib.visuals.impl.AbstractLinedVisual;
 import org.screamingsandals.lib.world.LocationHolder;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class HologramImpl extends AbstractLinedVisual<Hologram> implements Hologram {
@@ -261,7 +262,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         if (visible && entitiesOnLines.size() != lines.size()) { // fix if you show hologram and then you add viewers
             updateEntities();
         }
-        update(viewer, getAllSpawnPackets(), checkDistance);
+        update(viewer, getAllSpawnPackets(viewer), checkDistance);
     }
 
     @Override
@@ -294,7 +295,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     private void updateEntities() {
-        final var packets = new LinkedList<AbstractPacket>();
+        final var packets = new LinkedList<Function<PlayerWrapper, List<AbstractPacket>>>();
         if (visible && viewers.size() > 0) {
             if (lines.size() != originalLinesSize
                     && itemEntity != null) {
@@ -302,26 +303,36 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
                         ? (-lines.size() * .25 - .5)
                         : (lines.size() * .25), 0));
 
-                packets.add(itemEntity.getTeleportPacket());
+                packets.add(p -> List.of(itemEntity.getTeleportPacket()));
             }
 
             lines.forEach((key, value) -> {
                 try {
                     if (entitiesOnLines.containsKey(key)) {
                         final var entityOnLine = entitiesOnLines.get(key);
-                        if (entityOnLine.getCustomName().equals(value)
-                                && originalLinesSize == lines.size()) {
-                            return;
+                        var isSenderMessage = value instanceof SimpleCLTextEntry && ((SimpleCLTextEntry) value).getComponentLike() instanceof SenderMessage;
+                        if (originalLinesSize == lines.size()) {
+                            if (isSenderMessage) {
+                                if (entityOnLine.getCustomNameSenderMessage() != null && entityOnLine.getCustomNameSenderMessage().equals(((SimpleCLTextEntry) value).getComponentLike())) {
+                                    return;
+                                }
+                            } else if (entityOnLine.getCustomName().equals(value.getText())) {
+                                return;
+                            }
                         }
 
                         entityOnLine.setCustomName(value.getText());
-                        packets.add(entityOnLine.getMetadataPacket());
+                        entityOnLine.setCustomNameSenderMessage(isSenderMessage ? (SenderMessage) ((SimpleCLTextEntry) value).getComponentLike() : null);
+                        packets.add(p -> List.of(entityOnLine.getMetadataPacket(p)));
                         entityOnLine.setLocation(cachedLocation.clone().add(0, (lines.size() - key) * .25, 0));
-                        packets.add(entityOnLine.getTeleportPacket());
+                        packets.add(p -> List.of(entityOnLine.getTeleportPacket()));
                     } else {
                         final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0);
                         final var entity = new HologramPiece(newLocation);
                         entity.setCustomName(value.getText());
+                        if (value instanceof SimpleCLTextEntry && ((SimpleCLTextEntry) value).getComponentLike() instanceof SenderMessage) {
+                            entity.setCustomNameSenderMessage((SenderMessage) ((SimpleCLTextEntry) value).getComponentLike());
+                        }
                         entity.setCustomNameVisible(true);
                         entity.setInvisible(true);
                         entity.setSmall(!touchable);
@@ -329,7 +340,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
                         entity.setBasePlate(false);
                         entity.setGravity(false);
                         entity.setMarker(!touchable);
-                        packets.addAll(entity.getSpawnPackets());
+                        packets.add(entity::getSpawnPackets);
                         entitiesOnLines.put(key, entity);
                     }
                 } catch (Throwable throwable) {
@@ -350,8 +361,8 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
                         entity.setBasePlate(false);
                         entity.setGravity(false);
                         entity.setMarker(!touchable);
-                        packets.addAll(entity.getSpawnPackets());
-                        packets.add(getEquipmentPacket(entity, item));
+                        packets.add(entity::getSpawnPackets);
+                        packets.add(p -> List.of(getEquipmentPacket(entity, item)));
                         this.itemEntity = entity;
                     }
                 }
@@ -382,19 +393,19 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
                         .mapToInt(i -> i)
                         .toArray()
                 );
-                packets.add(destroyPacket);
+                packets.add(p -> List.of(destroyPacket));
             }
         } catch (Throwable t) {
             t.printStackTrace();
         }
 
-        viewers.forEach(viewer -> update(viewer, packets, true));
+        viewers.forEach(viewer -> update(viewer, packets.stream().map(f -> f.apply(viewer)).flatMap(Collection::stream).collect(Collectors.toList()), true));
     }
 
     private SClientboundSetEquipmentPacket getEquipmentPacket(HologramPiece entity, Item item) {
         var packet = new SClientboundSetEquipmentPacket()
                 .entityId(entity.getId());
-        packet.slots().put(EquipmentSlotMapping.resolve("HEAD").orElseThrow(), item);
+        packet.slots().put(EquipmentSlotHolder.of("HEAD"), item);
         return packet;
     }
 
@@ -419,9 +430,9 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         return destroyPacket;
     }
 
-    private List<AbstractPacket> getAllSpawnPackets() {
+    private List<AbstractPacket> getAllSpawnPackets(PlayerWrapper viewer) {
         final var packets = new LinkedList<AbstractPacket>();
-        entitiesOnLines.forEach((line, entity) -> packets.addAll(entity.getSpawnPackets()));
+        entitiesOnLines.forEach((line, entity) -> packets.addAll(entity.getSpawnPackets(viewer)));
         if (itemEntity != null) {
             packets.addAll(itemEntity.getSpawnPackets());
             packets.add(getEquipmentPacket(itemEntity, item));

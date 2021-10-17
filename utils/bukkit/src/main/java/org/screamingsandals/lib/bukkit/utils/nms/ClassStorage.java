@@ -82,7 +82,7 @@ public class ClassStorage {
 			Object world = Reflect.fastInvoke(handler, EntityAccessor.getMethodGetCommandSenderWorld1());
 			try {
 				// 1.17
-				return Reflect.fastInvoke(world, LevelAccessor.getMethodGetProfilerSupplier1());
+				return GoalSelectorAccessor.getConstructor0().newInstance(Reflect.fastInvoke(world, LevelAccessor.getMethodGetProfilerSupplier1()));
 			} catch (Throwable ignored) {
 				try {
 					// 1.16

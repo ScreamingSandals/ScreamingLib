@@ -4,10 +4,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -27,6 +29,10 @@ public class FakeEntity {
     private final List<MetadataItem> metadataItems;
     private byte entityFlags;
     private Component customName;
+    @Getter
+    @Setter
+    @Nullable
+    private SenderMessage customNameSenderMessage;
     @Setter
     private boolean isOnGround;
 
@@ -128,6 +134,25 @@ public class FakeEntity {
     }
 
     public List<AbstractPacket> getSpawnPackets() {
+        return getSpawnPackets(List.of());
+    }
+
+    public List<AbstractPacket> getSpawnPackets(PlayerWrapper viewer) {
+        if (customNameSenderMessage != null) {
+            if (Server.isVersion(1, 13)) {
+                return getSpawnPackets(List.of(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), customNameSenderMessage.asComponent(viewer))));
+            } else {
+                var str = AdventureHelper.toLegacy(customNameSenderMessage.asComponent(viewer));
+                if (str.length() > 256) {
+                    str = str.substring(0, 256);
+                }
+                return getSpawnPackets(List.of(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), str)));
+            }
+        }
+        return getSpawnPackets(List.of());
+    }
+
+    public List<AbstractPacket> getSpawnPackets(List<MetadataItem> additionalMetadata) {
         final var toReturn = new LinkedList<AbstractPacket>();
         final var spawnPacket = new SClientboundAddMobPacket()
                 .entityId(id)
@@ -137,6 +162,10 @@ public class FakeEntity {
                 .headYaw((byte) 3.9f)
                 .location(location);
         spawnPacket.metadata().addAll(metadataItems);
+        additionalMetadata.forEach(metadataItem -> {
+            spawnPacket.metadata().removeIf(metadataItem1 -> metadataItem1.getIndex() == metadataItem.getIndex());
+            spawnPacket.metadata().add(metadataItem);
+        });
         toReturn.add(spawnPacket);
         return toReturn;
     }
@@ -149,9 +178,32 @@ public class FakeEntity {
     }
 
     public SClientboundSetEntityDataPacket getMetadataPacket() {
+        return getMetadataPacket(List.of());
+    }
+
+    public SClientboundSetEntityDataPacket getMetadataPacket(PlayerWrapper viewer) {
+        if (customNameSenderMessage != null) {
+            if (Server.isVersion(1, 13)) {
+                return getMetadataPacket(List.of(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), customNameSenderMessage.asComponent(viewer))));
+            } else {
+                var str = AdventureHelper.toLegacy(customNameSenderMessage.asComponent(viewer));
+                if (str.length() > 256) {
+                    str = str.substring(0, 256);
+                }
+                return getMetadataPacket(List.of(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), str)));
+            }
+        }
+        return getMetadataPacket(List.of());
+    }
+
+    public SClientboundSetEntityDataPacket getMetadataPacket(List<MetadataItem> additionalMetadata) {
         final var metadataPacket = new SClientboundSetEntityDataPacket()
                 .entityId(id);
         metadataPacket.metadata().addAll(metadataItems);
+        additionalMetadata.forEach(metadataItem -> {
+            metadataPacket.metadata().removeIf(metadataItem1 -> metadataItem1.getIndex() == metadataItem.getIndex());
+            metadataPacket.metadata().add(metadataItem);
+        });
         return metadataPacket;
     }
 
