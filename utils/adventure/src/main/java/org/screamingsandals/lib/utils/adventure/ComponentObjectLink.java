@@ -28,7 +28,7 @@ public class ComponentObjectLink extends ObjectLink<Component> {
         return AdventureUtils
                 .get(objectHavingMethod, getterName)
                 .ifPresentOrElseGet(classMethod ->
-                                classMethod.invokeInstanceResulted(objectHavingMethod).as(Component.class),
+                                classMethod.invokeInstanceResulted(objectHavingMethod).asOptional(Component.class).orElse(null),
                         () -> AdventureHelper.toComponentNullableResult(getter.get()));
     }
 

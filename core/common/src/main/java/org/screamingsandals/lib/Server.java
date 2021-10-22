@@ -136,6 +136,15 @@ public abstract class Server {
         server.runSynchronously0(task);
     }
 
+    @ApiStatus.Internal
+    @ApiStatus.Experimental
+    public static String UNSAFE_normalizeSoundKey(String s) {
+        if (server == null) {
+            throw new UnsupportedOperationException("Server has not yet been initialized!");
+        }
+        return server.UNSAFE_normalizeSoundKey0(s);
+    }
+
     // abstract methods for implementations
 
     public abstract String getVersion0();
@@ -164,4 +173,8 @@ public abstract class Server {
     public abstract void runSynchronously0(Runnable task);
 
     public abstract List<ChannelFuture> getConnections0();
+
+    public String UNSAFE_normalizeSoundKey0(String s) {
+        return s;
+    }
 }

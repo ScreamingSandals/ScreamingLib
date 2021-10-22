@@ -1,9 +1,12 @@
 package org.screamingsandals.lib.bukkit.world;
 
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -17,7 +20,6 @@ import org.screamingsandals.lib.world.chunk.ChunkMapper;
 import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import org.screamingsandals.lib.world.dimension.DimensionHolder;
 import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
-import org.screamingsandals.lib.world.weather.WeatherHolder;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.List;
@@ -155,5 +157,11 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
     @Override
     public boolean isSpawningOfMonstersAllowed() {
         return wrappedObject.getAllowMonsters();
+    }
+
+    @Override
+    @NotNull
+    public Iterable<? extends Audience> audiences() {
+        return Server.getConnectedPlayersFromWorld(this);
     }
 }
