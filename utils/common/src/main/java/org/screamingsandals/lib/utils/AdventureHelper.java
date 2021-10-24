@@ -1,5 +1,7 @@
 package org.screamingsandals.lib.utils;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
@@ -14,6 +16,7 @@ import java.util.Map;
 
 @UtilityClass
 public class AdventureHelper {
+    @Getter
     private final static LegacyComponentSerializer serializer;
 
     public static final Map<NamedTextColor, Integer> NAMED_TEXT_COLOR_ID_MAP = Map.ofEntries(

@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(staticName = "builder")
 public class ServiceInitGenerator {
     private long index = 0;
+    private String indexOfAdventureConfigurateSerializer;
 
     private final String platformClassName;
     private final MethodSpec.Builder methodSpec;
@@ -116,6 +117,23 @@ public class ServiceInitGenerator {
                                 processedArguments.add("BLOCK");
                             }
                         });
+                if (configFile.adventureSerializers()) {
+                    if (indexOfAdventureConfigurateSerializer == null) {
+                        indexOfAdventureConfigurateSerializer = "indexedVariable" + (index++);
+                        ServiceInitGenerator.this.methodSpec.addStatement("$T $N = $T.getMethod($T.builder().scalarSerializer($T.getSerializer()).build(), $S, $T.class)",
+                                ClassName.get("org.screamingsandals.lib.utils.reflect","InstanceMethod"),
+                                indexOfAdventureConfigurateSerializer,
+                                ClassName.get("org.screamingsandals.lib.utils.reflect", "Reflect"),
+                                ClassName.get("net.kyori.adventure.serializer.configurate4", "ConfigurateComponentSerializer"),
+                                ClassName.get("org.screamingsandals.lib.utils", "AdventureHelper"),
+                                "makeSerializers",
+                                ClassName.get("org.spongepowered.configurate.serialize", "TypeSerializerCollection", "Builder")
+                        );
+                    }
+
+                    statement.append(".defaultOptions(t -> t.serializers($N::invoke))");
+                    processedArguments.add(indexOfAdventureConfigurateSerializer);
+                }
                 statement.append(".build()");
             });
             put(Triple.of(CheckType.ALLOW_CHILDREN, "java.lang.Object", ProvidedBy.class), (statement, processedArguments, annotation, variableType) -> {

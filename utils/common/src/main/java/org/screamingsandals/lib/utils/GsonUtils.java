@@ -3,6 +3,7 @@ package org.screamingsandals.lib.utils;
 import com.google.gson.Gson;
 import lombok.experimental.UtilityClass;
 
+@Deprecated
 @UtilityClass
 public class GsonUtils {
     private final static Gson instance = new Gson();

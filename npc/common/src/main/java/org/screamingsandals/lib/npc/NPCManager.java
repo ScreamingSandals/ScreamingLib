@@ -8,6 +8,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.visuals.AbstractVisualsManager;
+import org.screamingsandals.lib.visuals.LocatableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
 import java.util.Map;
 import java.util.Optional;
@@ -81,11 +82,10 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
 
         final var player = event.getPlayer();
         for (final var npc : activeVisuals.values()) {
-            if (!npc.isShown() || !npc.shouldLookAtPlayer()) {
-                return;
-            }
-            if (!npc.getViewers().contains(player) || !player.getLocation().isWorldSame(npc.getLocation())) {
-                return;
+            if (!npc.isShown() || !npc.shouldLookAtPlayer()
+                    || !npc.getViewers().contains(player) || !player.getLocation().isWorldSame(npc.getLocation())
+                    || npc.getLocation().getDistanceSquared(player.getLocation()) > LocatableVisual.DEFAULT_VIEW_DISTANCE) {
+                continue;
             }
             npc.lookAtPlayer(event.getNewLocation(), player);
         }

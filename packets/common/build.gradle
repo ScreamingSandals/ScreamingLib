@@ -1,6 +1,5 @@
 dependencies {
     api project(':core-common')
-    api 'net.kyori:adventure-text-serializer-gson:' + ADVENTURE_VERSION
 
     compileOnly 'io.netty:netty-all:' + NETTY_VERSION
 }

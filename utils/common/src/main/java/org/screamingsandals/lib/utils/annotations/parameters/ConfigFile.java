@@ -25,4 +25,11 @@ public @interface ConfigFile {
      * @return the old path of the file
      */
     String old() default "";
+
+    /**
+     * If the annotated field is ConfigurationLoader, should Adventure serializers be included?
+     *
+     * @return should adventure serializers be included
+     */
+    boolean adventureSerializers() default true;
 }
