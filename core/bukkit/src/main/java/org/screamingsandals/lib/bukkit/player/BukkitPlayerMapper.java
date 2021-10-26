@@ -126,7 +126,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public void sendMessage0(SenderWrapper wrapper, String message) {
+    public void sendMessage0(CommandSenderWrapper wrapper, String message) {
         wrapper.as(CommandSender.class).sendMessage(message);
     }
 

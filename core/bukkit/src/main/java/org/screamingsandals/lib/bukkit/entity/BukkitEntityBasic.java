@@ -1,8 +1,10 @@
 package org.screamingsandals.lib.bukkit.entity;
 
+import io.papermc.lib.PaperLib;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
@@ -17,6 +19,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBasic {
@@ -66,8 +69,22 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public boolean teleport(LocationHolder locationHolder) {
-        return wrappedObject.teleport(locationHolder.as(Location.class));
+    public CompletableFuture<Boolean> teleport(LocationHolder locationHolder) {
+        return PaperLib.teleportAsync(wrappedObject, locationHolder.as(Location.class));
+    }
+
+    @Override
+    public CompletableFuture<Void> teleport(LocationHolder location, Runnable callback, boolean forceCallback) {
+        return teleport(location)
+                .thenAccept(result -> {
+                    if (result || forceCallback) {
+                        callback.run();
+                    }
+                })
+                .exceptionally(ex -> {
+                    ex.printStackTrace();
+                    return null;
+                });
     }
 
     @Override

@@ -136,7 +136,7 @@ public abstract class PlayerMapper {
         return playerMapper.offlinePlayerConverter.convert(player, type);
     }
 
-    public static void sendMessage(SenderWrapper playerWrapper, String message) {
+    public static void sendMessage(CommandSenderWrapper playerWrapper, String message) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
@@ -337,7 +337,7 @@ public abstract class PlayerMapper {
         return playerMapper.getOfflinePlayer0(name);
     }
 
-    public static Locale getLocale(SenderWrapper senderWrapper) {
+    public static Locale getLocale(CommandSenderWrapper senderWrapper) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
@@ -562,7 +562,7 @@ public abstract class PlayerMapper {
 
     public abstract void closeInventory0(PlayerWrapper playerWrapper);
 
-    public abstract void sendMessage0(SenderWrapper playerWrapper, String message);
+    public abstract void sendMessage0(CommandSenderWrapper playerWrapper, String message);
 
     public abstract Container getEnderChest0(PlayerWrapper playerWrapper);
 
@@ -606,7 +606,7 @@ public abstract class PlayerMapper {
 
     public abstract Optional<OfflinePlayerWrapper> getOfflinePlayer0(String name);
 
-    public abstract Locale getLocale0(SenderWrapper senderWrapper);
+    public abstract Locale getLocale0(CommandSenderWrapper senderWrapper);
 
     public abstract GameModeHolder getGameMode0(PlayerWrapper player);
 

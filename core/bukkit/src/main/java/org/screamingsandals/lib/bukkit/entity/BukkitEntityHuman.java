@@ -12,14 +12,6 @@ public class BukkitEntityHuman extends BukkitEntityLiving implements EntityHuman
     }
 
     @Override
-    public PlayerWrapper asPlayer() {
-        if (wrappedObject instanceof Player) {
-            return PlayerMapper.wrapPlayer(wrappedObject);
-        }
-        return null;
-    }
-
-    @Override
     public int getExpToLevel() {
         return ((HumanEntity) wrappedObject).getExpToLevel();
     }
