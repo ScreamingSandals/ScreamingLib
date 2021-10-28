@@ -60,6 +60,7 @@ public interface CommandSenderWrapper extends Wrapper, ForwardingAudience.Single
 
     enum Type {
         PLAYER,
-        CONSOLE
+        CONSOLE,
+        UNKNOWN
     }
 }

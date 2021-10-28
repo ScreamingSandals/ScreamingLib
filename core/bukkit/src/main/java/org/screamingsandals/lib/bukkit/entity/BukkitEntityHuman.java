@@ -7,7 +7,7 @@ import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 public class BukkitEntityHuman extends BukkitEntityLiving implements EntityHuman {
-    protected BukkitEntityHuman(HumanEntity wrappedObject) {
+    public BukkitEntityHuman(HumanEntity wrappedObject) {
         super(wrappedObject);
     }
 

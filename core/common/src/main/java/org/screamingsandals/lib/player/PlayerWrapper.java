@@ -1,10 +1,8 @@
 package org.screamingsandals.lib.player;
 
 import io.netty.channel.Channel;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
@@ -16,7 +14,6 @@ import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.entity.SEntityDamageEvent;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -27,7 +24,7 @@ import java.util.Optional;
 /**
  * <p>Class representing a player.</p>
  */
-public interface PlayerWrapper extends CommandSenderWrapper, OfflinePlayerWrapper, EntityHuman {
+public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, EntityHuman {
 
     /**
      * <p>Gets the player's target.</p>
@@ -268,86 +265,6 @@ public interface PlayerWrapper extends CommandSenderWrapper, OfflinePlayerWrappe
      */
     void forceUpdateInventory();
 
-    /*@Override
-    default boolean equals(Object obj) {
-        if (!(obj instanceof PlayerWrapper)) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        return ((PlayerWrapper) obj).uuid.equals(this.uuid);
-    }
-
-    @Override
-    public int hashCode() {
-        return uuid.hashCode();
-    }*/
-
-    /**
-     * <p>Gets the location of the bed of this player.</p>
-     *
-     * @return the location of the bed of this player, can be empty if the player does not have a bed
-     */
-    @Override
-    Optional<LocationHolder> getBedLocation();
-
-    /**
-     * <p>Gets the player's last name.</p>
-     *
-     * @return the player's last name
-     */
-    @Override
-    Optional<String> getLastName();
-
-    /**
-     * <p>Gets the first played time.</p>
-     *
-     * @return the first played time
-     */
-    @Override
-    long getFirstPlayed();
-
-    /**
-     * <p>Gets the last played time.</p>
-     *
-     * @return the last played time
-     */
-    @Override
-    long getLastPlayed();
-
-    /**
-     * <p>Checks if this player is banned.</p>
-     *
-     * @return is the player banned?
-     */
-    @Override
-    boolean isBanned();
-
-    /**
-     * <p>Checks if this player is whitelisted.</p>
-     *
-     * @return is the player whitelisted?
-     */
-    @Override
-    boolean isWhitelisted();
-
-    /**
-     * <p>Sets the whitelisted status for this player.</p>
-     *
-     * @param whitelisted the new whitelisted status
-     */
-    @Override
-    void setWhitelisted(boolean whitelisted);
-
-    /**
-     * <p>Checks if this player is online.</p>
-     *
-     * @return is the player online?
-     */
-    @Override
-    boolean isOnline();
-
     Optional<WeatherHolder> getPlayerWeather();
 
     void setPlayerWeather(@Nullable WeatherHolder weather);
@@ -407,13 +324,6 @@ public interface PlayerWrapper extends CommandSenderWrapper, OfflinePlayerWrappe
                 return true;
             });
         }
-    }
-
-    @ApiStatus.Internal
-    @Override
-    @NotNull
-    default Audience audience() {
-        return PlayerMapper.getAudience(this);
     }
 
     @Override

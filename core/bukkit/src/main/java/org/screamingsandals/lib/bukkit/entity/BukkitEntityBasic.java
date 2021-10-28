@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBasic {
-    protected BukkitEntityBasic(Entity wrappedObject) {
+    public BukkitEntityBasic(Entity wrappedObject) {
         super(wrappedObject);
     }
 
@@ -85,6 +85,11 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
                     ex.printStackTrace();
                     return null;
                 });
+    }
+
+    @Override
+    public boolean teleportSync(LocationHolder location) {
+        return wrappedObject.teleport(location.as(Location.class));
     }
 
     @Override

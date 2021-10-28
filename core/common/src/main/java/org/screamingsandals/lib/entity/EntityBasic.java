@@ -64,6 +64,14 @@ public interface EntityBasic extends Wrapper {
      */
     CompletableFuture<Void> teleport(LocationHolder location, Runnable callback, boolean forceCallback);
 
+    /**
+     * <p>Teleports this entity to a location synchronously.</p>
+     *
+     * @param location the location to teleport to
+     * @return true if the teleport was successful
+     */
+    boolean teleportSync(LocationHolder location);
+
     int getEntityId();
 
     int getFireTicks();
