@@ -12,7 +12,7 @@ import org.screamingsandals.lib.utils.ImmutableObjectLink;
 @AllArgsConstructor
 @Data
 public class SEntityPickupItemEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
+    private final ImmutableObjectLink<? extends EntityBasic> entity;
     private final ImmutableObjectLink<EntityItem> item;
     private final ImmutableObjectLink<Integer> remaining;
 

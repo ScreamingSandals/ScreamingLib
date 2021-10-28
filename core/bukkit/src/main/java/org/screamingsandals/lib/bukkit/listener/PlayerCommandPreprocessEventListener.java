@@ -4,9 +4,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
+import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.EventPriority;
-import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerCommandPreprocessEvent;
+import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ObjectLink;
 
 public class PlayerCommandPreprocessEventListener extends AbstractBukkitEventHandlerFactory<PlayerCommandPreprocessEvent, SPlayerCommandPreprocessEvent> {
@@ -19,7 +20,7 @@ public class PlayerCommandPreprocessEventListener extends AbstractBukkitEventHan
     protected SPlayerCommandPreprocessEvent wrapEvent(PlayerCommandPreprocessEvent event, EventPriority priority) {
         return new SPlayerCommandPreprocessEvent(
                 ObjectLink.of(
-                        () -> PlayerMapper.wrapPlayer(event.getPlayer()),
+                        () -> EntityMapper.<PlayerWrapper>wrapEntity(event.getPlayer()).orElseThrow(),
                         playerWrapper -> event.setPlayer(playerWrapper.as(Player.class))
                 ),
                 ObjectLink.of(event::getMessage, event::setMessage)

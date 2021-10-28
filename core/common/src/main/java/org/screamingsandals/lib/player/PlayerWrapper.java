@@ -43,7 +43,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      */
     default Optional<EntityLiving> getTarget(int radius) {
         for (EntityLiving e : getLocation().getNearbyEntitiesByClass(EntityLiving.class, radius)) {
-            final LocationHolder eye = asEntity().getEyeLocation();
+            final LocationHolder eye = getEyeLocation();
             final double dot = e.getLocation().asVector().subtract(eye.asVector()).normalize().dot(eye.getFacingDirection());
             if (dot > 0.99D) {
                 return Optional.of(e);
@@ -293,11 +293,10 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      */
     default void launch(double multiply, double y) {
         if (isOnline()) {
-            var entity = as(EntityHuman.class);
-            entity.setVelocity(entity.getVelocity().multiply(multiply).setY(y));
+            setVelocity(getVelocity().multiply(multiply).setY(y));
 
             EventManager.getDefaultEventManager().registerOneTime(SEntityDamageEvent.class, event -> {
-                if (!(event.getEntity() instanceof EntityHuman) || !equals(((EntityHuman) event.getEntity()).asPlayer()) || !event.getDamageCause().is("FALL")) {
+                if (!(event.getEntity() instanceof PlayerWrapper) || !equals(event.getEntity()) || !event.getDamageCause().is("FALL")) {
                     return false;
                 }
                 event.setCancelled(true);
@@ -313,11 +312,10 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      */
     default void launch(Vector3D velocity) {
         if (isOnline()) {
-            var entity = as(EntityHuman.class);
-            entity.setVelocity(velocity);
+            setVelocity(velocity);
 
             EventManager.getDefaultEventManager().registerOneTime(SEntityDamageEvent.class, event -> {
-                if (!(event.getEntity() instanceof EntityHuman) || !equals(((EntityHuman) event.getEntity()).asPlayer()) || !event.getDamageCause().is("FALL")) {
+                if (!(event.getEntity() instanceof PlayerWrapper) || !equals(event.getEntity()) || !event.getDamageCause().is("FALL")) {
                     return false;
                 }
                 event.setCancelled(true);

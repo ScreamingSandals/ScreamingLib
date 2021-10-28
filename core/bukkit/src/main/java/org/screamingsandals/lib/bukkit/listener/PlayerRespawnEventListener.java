@@ -3,9 +3,9 @@ package org.screamingsandals.lib.bukkit.listener;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
-import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerRespawnEvent;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
@@ -20,7 +20,7 @@ public class PlayerRespawnEventListener extends AbstractBukkitEventHandlerFactor
     @Override
     protected SPlayerRespawnEvent wrapEvent(PlayerRespawnEvent event, EventPriority priority) {
         return new SPlayerRespawnEvent(
-                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(() -> new BukkitEntityPlayer(event.getPlayer())),
                 ObjectLink.of(
                         () -> LocationMapper.wrapLocation(event.getRespawnLocation()),
                         locationHolder -> event.setRespawnLocation(locationHolder.as(Location.class))
