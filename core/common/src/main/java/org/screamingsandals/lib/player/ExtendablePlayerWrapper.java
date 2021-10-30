@@ -866,7 +866,7 @@ public class ExtendablePlayerWrapper extends BasicWrapper<PlayerWrapper> impleme
         try {
             return super.as(type);
         } catch (UnsupportedOperationException ignored) {
-            return PlayerMapper.UNSAFE_getPlayerConverter().convert(this, type);
+            return wrappedObject.as(type);
         }
     }
 }

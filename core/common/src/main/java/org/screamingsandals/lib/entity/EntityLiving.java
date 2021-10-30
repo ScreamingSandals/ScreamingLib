@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.entity;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.attribute.AttributeHolder;
@@ -156,6 +155,32 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
     Item getItemInOffHand();
 
     void setItemInOffHand(@Nullable Item item);
+
+    /**
+     * <p>Gets the player's target.</p>
+     *
+     * @return the player's target (the living entity the player is looking at)
+     */
+    default Optional<EntityLiving> getTarget() {
+        return getTarget(3);
+    }
+
+    /**
+     * <p>Gets the player's target.</p>
+     *
+     * @param radius the max distance that the target can be detected from
+     * @return the player's target (the living entity the player is looking at)
+     */
+    default Optional<EntityLiving> getTarget(int radius) {
+        for (EntityLiving e : getLocation().getNearbyEntitiesByClass(EntityLiving.class, radius)) {
+            final LocationHolder eye = getEyeLocation();
+            final double dot = e.getLocation().asVector().subtract(eye.asVector()).normalize().dot(eye.getFacingDirection());
+            if (dot > 0.99D) {
+                return Optional.of(e);
+            }
+        }
+        return Optional.empty();
+    }
 
 
 }

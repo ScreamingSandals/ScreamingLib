@@ -27,32 +27,6 @@ import java.util.Optional;
 public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, EntityHuman {
 
     /**
-     * <p>Gets the player's target.</p>
-     *
-     * @return the player's target (the living entity the player is looking at)
-     */
-    default Optional<EntityLiving> getTarget() {
-        return getTarget(3);
-    }
-
-    /**
-     * <p>Gets the player's target.</p>
-     *
-     * @param radius the max distance that the target can be detected from
-     * @return the player's target (the living entity the player is looking at)
-     */
-    default Optional<EntityLiving> getTarget(int radius) {
-        for (EntityLiving e : getLocation().getNearbyEntitiesByClass(EntityLiving.class, radius)) {
-            final LocationHolder eye = getEyeLocation();
-            final double dot = e.getLocation().asVector().subtract(eye.asVector()).normalize().dot(eye.getFacingDirection());
-            if (dot > 0.99D) {
-                return Optional.of(e);
-            }
-        }
-        return Optional.empty();
-    }
-
-    /**
      * <p>Checks if the player is sprinting.</p>
      *
      * @return is the player sprinting?
