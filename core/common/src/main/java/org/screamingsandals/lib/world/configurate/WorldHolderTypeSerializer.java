@@ -1,8 +1,8 @@
 package org.screamingsandals.lib.world.configurate;
 
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
+import org.screamingsandals.lib.world.WorldMapper;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
@@ -15,7 +15,7 @@ public class WorldHolderTypeSerializer implements TypeSerializer<WorldHolder> {
 
     @Override
     public WorldHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
-        return LocationMapper.getWorld(node.node(UUID_FIELD).get(UUID.class)).orElseThrow();
+        return WorldMapper.getWorld(node.node(UUID_FIELD).get(UUID.class)).orElseThrow();
     }
 
     @Override

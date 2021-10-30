@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapper;
+import org.screamingsandals.lib.world.WorldMapper;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 @Data
@@ -30,7 +30,7 @@ public class SignLocation implements Wrapper {
     public <T> T as(Class<T> type) {
         if (type == LocationHolder.class) {
             var holder = new LocationHolder(x, y, z);
-            holder.setWorld(LocationMapper.getWorld(world).orElseThrow());
+            holder.setWorld(WorldMapper.getWorld(world).orElseThrow());
             return (T) holder;
         }
         throw new UnsupportedOperationException("Unsupported type!");

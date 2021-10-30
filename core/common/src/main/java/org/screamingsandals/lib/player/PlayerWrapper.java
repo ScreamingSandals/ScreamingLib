@@ -260,7 +260,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     Channel getChannel();
 
     /**
-     * <p>Launches the player in it's facing direction.</p>
+     * <p>Launches the player in its facing direction.</p>
      *
      * @param multiply the velocity multiplier
      * @param y the y velocity
@@ -280,7 +280,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     }
 
     /**
-     * <p>Launches the player in it's facing direction.</p>
+     * <p>Launches the player in its facing direction.</p>
      *
      * @param velocity the new velocity vector
      */

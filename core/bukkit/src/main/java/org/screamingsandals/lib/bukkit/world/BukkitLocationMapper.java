@@ -24,18 +24,4 @@ public class BukkitLocationMapper extends LocationMapper {
                 new LocationHolder(location.getX(), location.getY(), location.getZ(),
                         location.getYaw(), location.getPitch(), new BukkitWorldHolder(location.getWorld())));
     }
-
-    @Override
-    protected Optional<WorldHolder> getWorld0(UUID uuid) {
-        return Optional.ofNullable(Bukkit.getWorld(uuid)).map(BukkitWorldHolder::new);
-    }
-
-    @Override
-    protected Optional<WorldHolder> getWorld0(String name) {
-        try {
-            return getWorld0(UUID.fromString(name));
-        } catch (IllegalArgumentException ignored) {
-        }
-        return Optional.ofNullable(Bukkit.getWorld(name)).map(BukkitWorldHolder::new);
-    }
 }

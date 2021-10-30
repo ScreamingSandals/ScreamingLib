@@ -108,7 +108,7 @@ public class SEntityTargetEvent extends CancellableAbstractEvent {
         FOLLOW_LEADER,
         /**
          * When another entity tempts this entity by having a desired item such
-         * as wheat in it's hand.
+         * as wheat in its hand.
          */
         TEMPT,
         /**

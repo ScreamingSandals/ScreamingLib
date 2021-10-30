@@ -166,7 +166,7 @@ public interface WorldHolder extends Wrapper, Serializable, ForwardingAudience {
             in.beginObject();
             final var name = in.nextName();
             if (name.equals("uuid")) {
-                final var toReturn = LocationMapper.getWorld(UUID.fromString(in.nextString())).orElseThrow();
+                final var toReturn = WorldMapper.getWorld(UUID.fromString(in.nextString())).orElseThrow();
                 in.endObject();
                 return toReturn;
             }
