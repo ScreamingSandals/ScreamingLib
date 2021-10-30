@@ -286,4 +286,42 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     public void setPortalCooldown(int cooldown) {
         wrappedObject.setPortalCooldown(cooldown);
     }
+
+    @Override
+    public Object get(String metadata) {
+        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Object.class);
+    }
+
+    @Override
+    public int getInt(String metadata) {
+        var i = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Integer.class);
+        return i == null ? 0 : i;
+    }
+
+    @Override
+    public boolean getBoolean(String metadata) {
+        var b = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Boolean.class);
+        return b != null && b;
+    }
+
+    @Override
+    public byte getByte(String metadata) {
+        var b = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Byte.class);
+        return b == null ? 0 : b;
+    }
+
+    @Override
+    public String getString(String metadata) {
+        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, String.class);
+    }
+
+    @Override
+    public Component getComponent(String metadata) {
+        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Component.class);
+    }
+
+    @Override
+    public void set(String metadata, Object value) {
+        BukkitEntityMetadataMapper.set(wrappedObject, metadata, value);
+    }
 }

@@ -148,4 +148,18 @@ public interface EntityBasic extends Wrapper {
     int getPortalCooldown();
 
     void setPortalCooldown(int cooldown);
+
+    Object get(String metadata);
+
+    int getInt(String metadata);
+
+    boolean getBoolean(String metadata);
+
+    byte getByte(String metadata);
+
+    String getString(String metadata);
+
+    Component getComponent(String metadata);
+
+    void set(String metadata, Object value);
 }
