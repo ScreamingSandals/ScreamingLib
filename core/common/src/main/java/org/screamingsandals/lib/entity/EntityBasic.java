@@ -10,6 +10,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 // TODO: Metadata
 public interface EntityBasic extends Wrapper {
@@ -25,11 +26,51 @@ public interface EntityBasic extends Wrapper {
 
     double getWidth();
 
+    /**
+     * <p>Checks if the entity is on ground.</p>
+     *
+     * @return is the entity on ground?
+     */
     boolean isOnGround();
 
     boolean isInWater();
 
-    boolean teleport(LocationHolder locationHolder);
+    /**
+     * <p>Teleports this entity to a location asynchronously.</p>
+     *
+     * @param location the location to teleport to
+     * @return the teleport future
+     */
+    CompletableFuture<Boolean> teleport(LocationHolder location);
+
+    /**
+     * <p>Teleports this entity to a location asynchronously.</p>
+     *
+     * @param location the location to teleport to
+     * @param callback the callback runnable
+     * @return the teleport future
+     */
+    default CompletableFuture<Void> teleport(LocationHolder location, Runnable callback) {
+        return teleport(location, callback, false);
+    }
+
+    /**
+     * <p>Teleports this entity to a location asynchronously.</p>
+     *
+     * @param location the location to teleport to
+     * @param callback the callback runnable
+     * @param forceCallback should the callback be run even if the teleport didn't succeed?
+     * @return the teleport future
+     */
+    CompletableFuture<Void> teleport(LocationHolder location, Runnable callback, boolean forceCallback);
+
+    /**
+     * <p>Teleports this entity to a location synchronously.</p>
+     *
+     * @param location the location to teleport to
+     * @return true if the teleport was successful
+     */
+    boolean teleportSync(LocationHolder location);
 
     int getEntityId();
 

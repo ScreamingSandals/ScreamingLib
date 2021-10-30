@@ -3,7 +3,10 @@ package org.screamingsandals.lib.entity;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 public interface EntityHuman extends EntityLiving {
-    PlayerWrapper asPlayer();
+    @Deprecated
+    default PlayerWrapper asPlayer() {
+        return this instanceof PlayerWrapper ? (PlayerWrapper) this : null;
+    }
 
     int getExpToLevel();
 

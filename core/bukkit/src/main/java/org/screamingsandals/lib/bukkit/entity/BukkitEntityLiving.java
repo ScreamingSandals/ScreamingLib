@@ -36,7 +36,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLiving {
-    protected BukkitEntityLiving(LivingEntity wrappedObject) {
+    public BukkitEntityLiving(LivingEntity wrappedObject) {
         super(wrappedObject);
     }
 

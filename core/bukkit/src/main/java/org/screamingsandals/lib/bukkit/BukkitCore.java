@@ -1,15 +1,11 @@
 package org.screamingsandals.lib.bukkit;
 
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.event.player.*;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.bukkit.listener.*;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
-import org.screamingsandals.lib.event.player.SPlayerArmorStandManipulateEvent;
-import org.screamingsandals.lib.event.player.SPlayerInteractAtEntityEvent;
-import org.screamingsandals.lib.event.player.SPlayerInteractEntityEvent;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -17,10 +13,13 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 @Service
 @RequiredArgsConstructor
 public class BukkitCore extends Core {
+    private static BukkitAudiences provider;
     private final Plugin plugin;
 
     @OnEnable
     public void onEnable() {
+        provider = BukkitAudiences.create(plugin);
+
         // TODO: this rly needs to be simplified. Lot of events are just child events of another event, so one listener can catch them all
 
         // entity
@@ -199,5 +198,9 @@ public class BukkitCore extends Core {
         new ChunkLoadEventListener(plugin);
         new ChunkPopulateEventListener(plugin);
         new ChunkUnloadEventListener(plugin);
+    }
+
+    public static BukkitAudiences audiences() {
+        return provider;
     }
 }

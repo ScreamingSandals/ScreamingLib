@@ -4,10 +4,10 @@ import org.bukkit.Location;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.event.player.SPlayerPortalEvent;
-import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerTeleportEvent;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.ObjectLink;
@@ -23,7 +23,7 @@ public class PlayerTeleportEventListener extends AbstractBukkitEventHandlerFacto
     protected SPlayerTeleportEvent wrapEvent(PlayerTeleportEvent event, EventPriority priority) {
         if (event instanceof PlayerPortalEvent) {
             return new SPlayerPortalEvent(
-                    ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                    ImmutableObjectLink.of(() -> new BukkitEntityPlayer(event.getPlayer())),
                     ObjectLink.of(
                             () -> LocationMapper.wrapLocation(event.getFrom()),
                             locationHolder -> event.setFrom(locationHolder.as(Location.class))
@@ -41,7 +41,7 @@ public class PlayerTeleportEventListener extends AbstractBukkitEventHandlerFacto
         }
 
         return new SPlayerTeleportEvent(
-                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(() -> new BukkitEntityPlayer(event.getPlayer())),
                 ObjectLink.of(
                         () -> LocationMapper.wrapLocation(event.getFrom()),
                         locationHolder -> event.setFrom(locationHolder.as(Location.class))

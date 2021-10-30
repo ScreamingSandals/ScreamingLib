@@ -9,11 +9,11 @@ import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
 @EqualsAndHashCode(callSuper = false)
 public class SPlayerPickupItemEvent extends SEntityPickupItemEvent implements SPlayerEvent  {
-    public SPlayerPickupItemEvent(ImmutableObjectLink<EntityBasic> entity, ImmutableObjectLink<EntityItem> item, ImmutableObjectLink<Integer> remaining) {
+    public SPlayerPickupItemEvent(ImmutableObjectLink<PlayerWrapper> entity, ImmutableObjectLink<EntityItem> item, ImmutableObjectLink<Integer> remaining) {
         super(entity, item, remaining);
     }
 
     public PlayerWrapper getPlayer() {
-        return getEntity().as(PlayerWrapper.class);
+        return (PlayerWrapper) getEntity();
     }
 }

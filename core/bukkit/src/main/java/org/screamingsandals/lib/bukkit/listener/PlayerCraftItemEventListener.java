@@ -5,11 +5,11 @@ import org.bukkit.event.Event;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.item.builder.ItemFactory;
-import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerCraftItemEvent;
 import org.screamingsandals.lib.utils.*;
 
@@ -23,7 +23,7 @@ public class PlayerCraftItemEventListener extends AbstractBukkitEventHandlerFact
     protected SPlayerCraftItemEvent wrapEvent(CraftItemEvent event, EventPriority priority) {
         if (event.getWhoClicked() instanceof Player) {
             return new SPlayerCraftItemEvent(
-                    ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer((Player) event.getWhoClicked())),
+                    ImmutableObjectLink.of(() -> new BukkitEntityPlayer((Player) event.getWhoClicked())),
                     ObjectLink.of(
                             () -> ItemFactory.build(event.getCurrentItem()).orElseThrow(),
                             item -> event.setCurrentItem(item.as(ItemStack.class))

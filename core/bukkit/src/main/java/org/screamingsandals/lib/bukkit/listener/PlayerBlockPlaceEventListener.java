@@ -4,6 +4,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockMultiPlaceEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.item.builder.ItemFactory;
@@ -25,7 +26,7 @@ public class PlayerBlockPlaceEventListener extends AbstractBukkitEventHandlerFac
     @Override
     protected SPlayerBlockPlaceEvent wrapEvent(BlockPlaceEvent event, EventPriority priority) {
         return new SPlayerBlockPlaceEvent(
-                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(() -> new BukkitEntityPlayer(event.getPlayer())),
                 ImmutableObjectLink.of(() -> PlayerMapper.wrapHand(event.getHand())),
                 ImmutableObjectLink.of(() -> BlockMapper.wrapBlock(event.getBlock())),
                 ImmutableObjectLink.of(() -> BlockStateMapper.wrapBlockState(event.getBlockReplacedState()).orElseThrow()),

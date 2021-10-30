@@ -3,6 +3,7 @@ package org.screamingsandals.lib.bukkit.listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.item.builder.ItemFactory;
@@ -25,7 +26,7 @@ public class PlayerDeathEventListener extends AbstractBukkitEventHandlerFactory<
         var killer = event.getEntity().getKiller();
 
         return new SPlayerDeathEvent(
-                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getEntity().getPlayer())),
+                ImmutableObjectLink.of(() -> new BukkitEntityPlayer(event.getEntity().getPlayer())),
                 ComponentObjectLink.of(event, "deathMessage", event::getDeathMessage, event::setDeathMessage),
                 new CollectionLinkedToCollection<>(
                         event.getDrops(),
@@ -39,7 +40,7 @@ public class PlayerDeathEventListener extends AbstractBukkitEventHandlerFactory<
                 ObjectLink.of(event::getNewTotalExp, event::setNewTotalExp),
                 ObjectLink.of(event::getNewExp, event::setNewExp),
                 ObjectLink.of(event::getDroppedExp, event::setDroppedExp),
-                ImmutableObjectLink.of(() -> killer != null ? PlayerMapper.wrapPlayer(killer) : null)
+                ImmutableObjectLink.of(() -> killer != null ? new BukkitEntityPlayer(killer) : null)
         );
     }
 }

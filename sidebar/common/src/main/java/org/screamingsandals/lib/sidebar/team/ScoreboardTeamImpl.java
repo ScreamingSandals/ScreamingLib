@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.sidebar.team;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -9,7 +8,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.packet.SClientboundSetPlayerTeamPacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.player.SenderWrapper;
+import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sidebar.TeamedSidebar;
 
 import java.util.LinkedList;
@@ -157,7 +156,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     private void packPlayers(SClientboundSetPlayerTeamPacket packet, List<PlayerWrapper> players) {
-        packet.entities(players.stream().map(SenderWrapper::getName).collect(Collectors.toList()));
+        packet.entities(players.stream().map(CommandSenderWrapper::getName).collect(Collectors.toList()));
     }
 
     protected void updateInfo() {

@@ -3,6 +3,7 @@ package org.screamingsandals.lib.bukkit.listener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -21,7 +22,7 @@ public class EntityPickupItemEventListener extends AbstractBukkitEventHandlerFac
     protected SEntityPickupItemEvent wrapEvent(EntityPickupItemEvent event, EventPriority priority) {
         if (event.getEntity() instanceof Player) {
             return new SPlayerPickupItemEvent(
-                    ImmutableObjectLink.of(() -> EntityMapper.wrapEntity(event.getEntity()).orElseThrow()),
+                    ImmutableObjectLink.of(() -> new BukkitEntityPlayer((Player) event.getEntity())),
                     ImmutableObjectLink.of(() -> EntityMapper.<EntityItem>wrapEntity(event.getItem()).orElseThrow()),
                     ImmutableObjectLink.of(event::getRemaining)
             );

@@ -3,12 +3,12 @@ package org.screamingsandals.lib.bukkit.listener;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
+import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
-import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.event.player.SPlayerInteractEvent;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.utils.ImmutableObjectLink;
@@ -24,7 +24,7 @@ public class PlayerInteractEventListener extends AbstractBukkitEventHandlerFacto
     @Override
     protected SPlayerInteractEvent wrapEvent(PlayerInteractEvent event, EventPriority priority) {
         return new SPlayerInteractEvent(
-                ImmutableObjectLink.of(() -> PlayerMapper.wrapPlayer(event.getPlayer())),
+                ImmutableObjectLink.of(() -> new BukkitEntityPlayer(event.getPlayer())),
                 ImmutableObjectLink.of(() -> ItemFactory.build(event.getItem()).orElse(null)),
                 ImmutableObjectLink.of(() -> SPlayerInteractEvent.Action.convert(event.getAction().name())),
                 ImmutableObjectLink.of(() -> BlockMapper.resolve(event.getClickedBlock()).orElse(null)),
