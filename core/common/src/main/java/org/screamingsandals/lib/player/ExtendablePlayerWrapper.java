@@ -4,7 +4,6 @@ import io.netty.channel.Channel;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeHolder;
@@ -34,7 +33,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 // TODO: This class should be generated
-@ApiStatus.OverrideOnly
 public class ExtendablePlayerWrapper extends BasicWrapper<PlayerWrapper> implements PlayerWrapper {
     protected ExtendablePlayerWrapper(PlayerWrapper wrappedObject) {
         super(wrappedObject);
@@ -861,5 +859,14 @@ public class ExtendablePlayerWrapper extends BasicWrapper<PlayerWrapper> impleme
     @Override
     public Optional<String> getLastName() {
         return wrappedObject.getLastName();
+    }
+
+    @Override
+    public <T> T as(Class<T> type) {
+        try {
+            return super.as(type);
+        } catch (UnsupportedOperationException ignored) {
+            return PlayerMapper.UNSAFE_getPlayerConverter().convert(this, type);
+        }
     }
 }
