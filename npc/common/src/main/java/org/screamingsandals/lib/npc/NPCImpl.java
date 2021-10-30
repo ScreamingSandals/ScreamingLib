@@ -71,9 +71,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
     @Override
     public NPC setDisplayName(List<Component> name) {
-        for (int i = 0; i < name.size(); i++) {
-            hologram.replaceLine(i, name.get(i));
-        }
+        hologram.setLines(name);
         return this;
     }
 

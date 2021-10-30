@@ -119,7 +119,7 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
     @SuppressWarnings("unchecked")
     @Override
     public T setLines(Map<Integer, TextEntry> lines) {
-        originalLinesSize = lines.size();
+        originalLinesSize = this.lines.size();
         this.lines = new ConcurrentSkipListMap<>(lines);
         update();
         return (T) this;

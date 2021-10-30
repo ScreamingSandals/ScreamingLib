@@ -29,20 +29,18 @@ import java.util.stream.Stream;
 @AbstractService
 @NoArgsConstructor
 public abstract class EventManager {
-    private final static ExecutorService executor;
+    private static ExecutorService executor;
     @Getter
     private static EventManager defaultEventManager;
-
-    static {
-        executor = ExecutorProvider.buildExecutor("SEventManager");
-    }
 
     private final Multimap<Class<?>, EventHandler<? extends AbstractEvent>> handlers = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
     @Getter
     private EventManager customManager;
 
     public EventManager(Controllable controllable) {
-        controllable.preDisable(this::destroy);
+        controllable
+                .enable(() -> executor = ExecutorProvider.buildExecutor("SEventManager"))
+                .preDisable(this::destroy);
     }
 
     public static void init(Supplier<EventManager> supplier) {
