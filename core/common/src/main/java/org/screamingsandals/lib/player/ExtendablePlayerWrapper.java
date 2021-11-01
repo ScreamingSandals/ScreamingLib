@@ -4,6 +4,7 @@ import io.netty.channel.Channel;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.util.RGBLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeHolder;
@@ -23,6 +24,7 @@ import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
+import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
 
@@ -274,6 +276,71 @@ public class ExtendablePlayerWrapper extends BasicWrapper<PlayerWrapper> impleme
     @Override
     public void setPortalCooldown(int cooldown) {
         wrappedObject.setPortalCooldown(cooldown);
+    }
+
+    @Override
+    public boolean hasMetadata(String metadata) {
+        return wrappedObject.hasMetadata(metadata);
+    }
+
+    @Override
+    public Object getMetadata(String metadata) {
+        return wrappedObject.getMetadata(metadata);
+    }
+
+    @Override
+    public int getIntMetadata(String metadata) {
+        return wrappedObject.getIntMetadata(metadata);
+    }
+
+    @Override
+    public boolean getBooleanMetadata(String metadata) {
+        return wrappedObject.getBooleanMetadata(metadata);
+    }
+
+    @Override
+    public byte getByteMetadata(String metadata) {
+        return wrappedObject.getByteMetadata(metadata);
+    }
+
+    @Override
+    public long getLongMetadata(String metadata) {
+        return wrappedObject.getLongMetadata(metadata);
+    }
+
+    @Override
+    public String getStringMetadata(String metadata) {
+        return wrappedObject.getStringMetadata(metadata);
+    }
+
+    @Override
+    public Component getComponentMetadata(String metadata) {
+        return wrappedObject.getComponentMetadata(metadata);
+    }
+
+    @Override
+    public LocationHolder getLocationMetadata(String metadata) {
+        return wrappedObject.getLocationMetadata(metadata);
+    }
+
+    @Override
+    public RGBLike getColorMetadata(String metadata) {
+        return wrappedObject.getColorMetadata(metadata);
+    }
+
+    @Override
+    public Vector3D getVectorMetadata(String metadata) {
+        return wrappedObject.getVectorMetadata(metadata);
+    }
+
+    @Override
+    public Vector3Df getFloatVectorMetadata(String metadata) {
+        return wrappedObject.getFloatVectorMetadata(metadata);
+    }
+
+    @Override
+    public void setMetadata(String metadata, Object value) {
+        wrappedObject.setMetadata(metadata, value);
     }
 
     @Override

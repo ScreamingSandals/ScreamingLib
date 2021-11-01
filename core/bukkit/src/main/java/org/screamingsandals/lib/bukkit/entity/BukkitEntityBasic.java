@@ -2,6 +2,7 @@ package org.screamingsandals.lib.bukkit.entity;
 
 import io.papermc.lib.PaperLib;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.util.RGBLike;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 import org.screamingsandals.lib.utils.math.Vector3D;
+import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
@@ -288,40 +290,71 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public Object get(String metadata) {
+    public boolean hasMetadata(String metadata) {
+        return BukkitEntityMetadataMapper.has(wrappedObject, metadata);
+    }
+
+    @Override
+    public Object getMetadata(String metadata) {
         return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Object.class);
     }
 
     @Override
-    public int getInt(String metadata) {
+    public int getIntMetadata(String metadata) {
         var i = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Integer.class);
         return i == null ? 0 : i;
     }
 
     @Override
-    public boolean getBoolean(String metadata) {
+    public boolean getBooleanMetadata(String metadata) {
         var b = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Boolean.class);
         return b != null && b;
     }
 
     @Override
-    public byte getByte(String metadata) {
+    public byte getByteMetadata(String metadata) {
         var b = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Byte.class);
         return b == null ? 0 : b;
     }
 
     @Override
-    public String getString(String metadata) {
+    public long getLongMetadata(String metadata) {
+        var b = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Long.class);
+        return b == null ? 0 : b;
+    }
+
+    @Override
+    public String getStringMetadata(String metadata) {
         return BukkitEntityMetadataMapper.get(wrappedObject, metadata, String.class);
     }
 
     @Override
-    public Component getComponent(String metadata) {
+    public Component getComponentMetadata(String metadata) {
         return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Component.class);
     }
 
     @Override
-    public void set(String metadata, Object value) {
+    public LocationHolder getLocationMetadata(String metadata) {
+        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, LocationHolder.class);
+    }
+
+    @Override
+    public RGBLike getColorMetadata(String metadata) {
+        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, RGBLike.class);
+    }
+
+    @Override
+    public Vector3D getVectorMetadata(String metadata) {
+        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Vector3D.class);
+    }
+
+    @Override
+    public Vector3Df getFloatVectorMetadata(String metadata) {
+        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Vector3Df.class);
+    }
+
+    @Override
+    public void setMetadata(String metadata, Object value) {
         BukkitEntityMetadataMapper.set(wrappedObject, metadata, value);
     }
 }

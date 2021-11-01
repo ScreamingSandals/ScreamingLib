@@ -2,10 +2,12 @@ package org.screamingsandals.lib.entity;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.util.RGBLike;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
+import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.List;
@@ -149,17 +151,29 @@ public interface EntityBasic extends Wrapper {
 
     void setPortalCooldown(int cooldown);
 
-    Object get(String metadata);
+    boolean hasMetadata(String metadata);
 
-    int getInt(String metadata);
+    Object getMetadata(String metadata);
 
-    boolean getBoolean(String metadata);
+    int getIntMetadata(String metadata);
 
-    byte getByte(String metadata);
+    boolean getBooleanMetadata(String metadata);
 
-    String getString(String metadata);
+    byte getByteMetadata(String metadata);
 
-    Component getComponent(String metadata);
+    long getLongMetadata(String metadata);
 
-    void set(String metadata, Object value);
+    String getStringMetadata(String metadata);
+
+    Component getComponentMetadata(String metadata);
+
+    LocationHolder getLocationMetadata(String metadata);
+
+    RGBLike getColorMetadata(String metadata);
+
+    Vector3D getVectorMetadata(String metadata);
+
+    Vector3Df getFloatVectorMetadata(String metadata);
+
+    void setMetadata(String metadata, Object value);
 }
