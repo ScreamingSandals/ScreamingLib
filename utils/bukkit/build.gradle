@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly paperLegacy(PAPER_LEGACY_VERSION)
+    compileOnly paper(PAPER_VERSION)
     compileOnly 'io.netty:netty-all:' + NETTY_VERSION
 
     api project(':nms')

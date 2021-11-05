@@ -4,7 +4,7 @@ dependencies {
     api project(':event-bukkit')
     api project(':utils-bukkit')
     api project(':core-common')
-    compileOnly paperLegacy(PAPER_LEGACY_VERSION)
+    compileOnly paper(PAPER_VERSION)
     api 'org.screamingsandals:adventure-platform-bukkit:' + ADVENTURE_PLATFORM_VERSION
     compileOnly 'io.netty:netty-all:' + NETTY_VERSION
 }

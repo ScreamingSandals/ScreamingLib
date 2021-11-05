@@ -6,5 +6,5 @@ dependencies {
     api project(':plugin-bukkit')
     api project(':utils-bukkit')
 
-    compileOnly paperLegacy(PAPER_LEGACY_VERSION)
+    compileOnly paper(PAPER_VERSION)
 }

@@ -8,6 +8,13 @@ pluginManagement {
     }
 }
 
+// The result will be for Java 11 but some dependencies requires Java 16 or Java 17
+float javaVersion = Float.parseFloat(System.getProperty("java.class.version"))
+if (javaVersion < 60.0) {
+    // TODO: change to class version 61 (JDK 17) when we will start implementing Minestom
+    throw new GradleException("ScreamingLib requires JDK 16 to compile")
+}
+
 rootProject.name = "ScreamingLib"
 
 include 'api-utils'

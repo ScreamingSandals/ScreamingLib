@@ -1,5 +1,5 @@
 dependencies {
     api project(':plugin-common')
     api project(':event-bukkit')
-    compileOnly paperLegacy(PAPER_LEGACY_VERSION)
+    compileOnly paper(PAPER_VERSION)
 }

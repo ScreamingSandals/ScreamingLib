@@ -22,6 +22,10 @@ subprojects {
         apply plugin: 'org.screamingsandals.plugin-builder'
     }
 
+    java {
+        disableAutoTargetJvm()
+    }
+
     repositories {
         minecraftLibraries()
         jitpack()

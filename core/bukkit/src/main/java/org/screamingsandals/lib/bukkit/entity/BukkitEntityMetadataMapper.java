@@ -8,6 +8,7 @@ import net.kyori.adventure.util.RGBLike;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
+import org.bukkit.TreeSpecies;
 import org.bukkit.entity.*;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
@@ -30,11 +31,29 @@ public class BukkitEntityMetadataMapper {
     private static final Map<Class<? extends Entity>, Map<String, BukkitMetadata<?, ?>>> METADATA = new HashMap<>();
 
     static {
+        var breedableExist = Reflect.has("org.bukkit.entity.Breedable");
+
+        Builder.begin(Ageable.class) // TODO: Fix for Piglin & Zoglin are not Ageable in early 1.16 spigot days
+                .map("is_baby", "data_baby_id", Boolean.class, ageable -> !ageable.isAdult(), (ageable, aBoolean) -> {
+                    if (aBoolean) {
+                        ageable.setBaby();
+                    } else {
+                        ageable.setAdult();
+                    }
+                })
+                .map("age", Integer.class, Ageable::getAge, Ageable::setAge)
+                .when(!breedableExist, b -> b
+                        .map("breed", Boolean.class, Ageable::canBreed, Ageable::setBreed)
+                        .map("ageLock", Boolean.class, Ageable::getAgeLock, Ageable::setAgeLock)
+                );
+
+        // TODO: Animals? (not rly metadata)
+
         Builder.begin(AreaEffectCloud.class)
                 .map("radius", "data_radius", Float.class, AreaEffectCloud::getRadius, AreaEffectCloud::setRadius)
                 .map("color", "data_color", Color.class, AreaEffectCloud::getColor, AreaEffectCloud::setColor);
-                // TODO: data_waiting BOOLEAN
-                // TODO: data_particle PARTICLE
+        // TODO: data_waiting BOOLEAN
+        // TODO: data_particle PARTICLE
 
         Builder.begin(ArmorStand.class)
                 .map("small", Boolean.class, ArmorStand::isSmall, ArmorStand::setSmall)
@@ -42,17 +61,6 @@ public class BukkitEntityMetadataMapper {
                 .map("base_plate", Boolean.class, ArmorStand::hasBasePlate, ArmorStand::setBasePlate)
                 .map("marker", Boolean.class, ArmorStand::isMarker, ArmorStand::setMarker)
 
-                .map("client_flags", "data_client_flags", byte.class, armorStand ->
-                                (byte) ((armorStand.isSmall() ? 0x01 : 0x00)
-                                        | (armorStand.hasArms() ? 0x04 : 0x00)
-                                        | (armorStand.hasBasePlate() ? 0x08 : 0x00)
-                                        | (armorStand.isMarker() ? 0x10 : 0x00)),
-                        (armorStand, aByte) -> {
-                            armorStand.setSmall((aByte & 0x01) == 0x01);
-                            armorStand.setArms((aByte & 0x04) == 0x04);
-                            armorStand.setBasePlate((aByte & 0x08) == 0x08);
-                            armorStand.setMarker((aByte & 0x10) == 0x10);
-                        })
                 .map("head_pose", "data_head_pose", EulerAngle.class, ArmorStand::getHeadPose, ArmorStand::setHeadPose)
                 .map("body_pose", "data_body_pose", EulerAngle.class, ArmorStand::getBodyPose, ArmorStand::setBodyPose)
                 .map("left_arm_pose", "data_left_arm_pose", EulerAngle.class, ArmorStand::getLeftArmPose, ArmorStand::setLeftArmPose)
@@ -63,10 +71,12 @@ public class BukkitEntityMetadataMapper {
         Builder.begin(Arrow.class)
                 .map("effect_color", "id_effect_color", Color.class, Arrow::getColor, Arrow::setColor);
 
-        // TODO: Axolotl
-                // TODO: data_variant INT
-                // TODO: data_playing_dead BOOLEAN
-                // TODO: from_bucket BOOLEAN
+        if (Reflect.has("org.bukkit.entity.Axolotl")) {
+            Builder.begin(Axolotl.class)
+                    .map("variant", "data_variant", Axolotl.Variant.class, Axolotl::getVariant, Axolotl::setVariant)
+                    .map("playing_dead", "data_playing_dead", Boolean.class, Axolotl::isPlayingDead, Axolotl::setPlayingDead);
+            // TODO: from_bucket BOOLEAN (not present in Bukkit api)
+        }
 
         Builder.begin(Bat.class)
                 .map("awake", Boolean.class, Bat::isAwake, Bat::setAwake)
@@ -75,23 +85,196 @@ public class BukkitEntityMetadataMapper {
                 .map("flags", "data_id_flags", Byte.class, bat -> (byte) (bat.isAwake() ? 0x0 : 0x1), (bat, aByte) -> bat.setAwake((aByte & 0x1) == 0x1));
 
         if (Reflect.has("org.bukkit.entity.Bee")) {
-            Builder.begin(Bee.class) // TODO: add check if the mob exists
-                    // TODO: data_flags_id BYTE
-                    .map("remaining_anger_time", "data_remaining_anger_time", Integer.class, Bee::getAnger, Bee::setAnger);
+            Builder.begin(Bee.class)
+                    .map("hive", Location.class, Bee::getHive, Bee::setHive)
+                    .map("flower", Location.class, Bee::getFlower, Bee::setFlower)
+                    .map("has_nectar", Boolean.class, Bee::hasNectar, Bee::setHasNectar)
+                    .when(() -> Reflect.hasMethod(Bee.class, "getCannotEnterHiveTicks"), b -> b
+                            .map("remaining_anger_time", "data_remaining_anger_time", Integer.class, Bee::getAnger, Bee::setAnger)
+                            .map("cannot_enter_hive_ticks", Integer.class, Bee::getCannotEnterHiveTicks, Bee::setCannotEnterHiveTicks)
+                    );
         }
 
-        // TODO: the rest https://github.com/Articdive/ArticData/blob/1.17.1/1_17_1_entities.json
+        Builder.begin(Boat.class)
+                .map("wood_type", "data_id_type", TreeSpecies.class, Boat::getWoodType, Boat::setWoodType);
 
-        // required by bedwars
+        if (breedableExist) {
+            Builder.begin(Breedable.class)
+                    .map("breed", Boolean.class, Breedable::canBreed, Breedable::setBreed)
+                    .map("ageLock", Boolean.class, Breedable::getAgeLock, Breedable::setAgeLock);
+        }
 
-        Builder.begin(Ageable.class) // TODO: Fix for Piglin & Zoglin are not Ageable in early 1.16 spigot days
-                .map("is_baby", "data_baby_id", Boolean.class, ageable -> !ageable.isAdult(), (ageable, aBoolean) -> {
-                    if (aBoolean) {
-                        ageable.setBaby();
-                    } else {
-                        ageable.setAdult();
-                    }
-                });
+        if (Reflect.has("org.bukkit.entity.Cat")) {
+            Builder.begin(Cat.class)
+                    .map("cat_type", "data_type_id", Cat.Type.class, Cat::getCatType, Cat::setCatType)
+                    .map("collar_color", "data_collar_color", DyeColor.class, Cat::getCollarColor, Cat::setCollarColor);
+        }
+
+        if (Reflect.has("org.bukkit.entity.ChestedHorse")) {
+            Builder.begin(ChestedHorse.class)
+                    .map("is_carrying_chest", "data_has_chat", Boolean.class, ChestedHorse::isCarryingChest, ChestedHorse::setCarryingChest);
+        }
+
+        Builder.begin(Creeper.class)
+                .map("powered", "data_is_powered", Boolean.class, Creeper::isPowered, Creeper::setPowered)
+                .when(Reflect.hasMethod(Creeper.class, "getMaxFuseTicks"), b -> b
+                        .map("max_fuse_ticks", Integer.class, Creeper::getMaxFuseTicks, Creeper::setMaxFuseTicks)
+                        .map("explosion_radius", Integer.class, Creeper::getExplosionRadius, Creeper::setExplosionRadius)
+                        .when(Reflect.hasMethod(Creeper.class, "getFuseTicks"), b2 -> b2
+                                .map("fuse_ticks", Integer.class, Creeper::getFuseTicks, Creeper::setFuseTicks)
+                        )
+                );
+
+        Builder.begin(EnderCrystal.class)
+                .map("showing_bottom", "data_show_bottom", Boolean.class, EnderCrystal::isShowingBottom, EnderCrystal::setShowingBottom)
+                .map("beam_target", "data_beam_target", Location.class, EnderCrystal::getBeamTarget, EnderCrystal::setBeamTarget);
+
+        Builder.begin(EnderDragon.class)
+                .map("phase", "data_phase", EnderDragon.Phase.class, EnderDragon::getPhase, EnderDragon::setPhase);
+
+        // TODO Enderman: carried block
+
+        // TODO: Eye of Ender (EnderSignal)
+
+        // TODO: Evoker spelling (on older versions)
+
+        // TODO: Evoker fangs owner
+
+        Builder.begin(Explosive.class)
+                .map("is_incendiary", Boolean.class, Explosive::isIncendiary, Explosive::setIsIncendiary)
+                .map("yield", Float.class, Explosive::getYield, Explosive::setYield);
+
+        // TODO: Falling Block
+
+        Builder.begin(Fireball.class)
+                .map("direction", Vector.class, Fireball::getDirection, Fireball::setDirection);
+
+        // TODO: Firework
+
+        // TODO: Fish hook
+
+        // TODO: Foxes
+
+        if (Reflect.has("org.bukkit.entity.GlowSquid")) {
+            Builder.begin(GlowSquid.class)
+                    .map("dark_ticks_remaining", "data_dark_ticks_remaining", Integer.class, GlowSquid::getDarkTicksRemaining, GlowSquid::setDarkTicksRemaining);
+        }
+
+        if (Reflect.has("org.bukkit.entity.Goat")) {
+            Builder.begin(Goat.class)
+                    .map("screaming", "data_is_screaming_goat", Boolean.class, Goat::isScreaming, Goat::setScreaming);
+        }
+
+        Builder.begin(Guardian.class)
+                .map("has_laser", Boolean.class, Guardian::hasLaser, Guardian::setLaser);
+
+        // TODO: Hoglin
+
+        // TODO: Horse
+
+        // TODO: Husk
+
+        Builder.begin(IronGolem.class)
+                .map("is_player_created", Boolean.class, IronGolem::isPlayerCreated, IronGolem::setPlayerCreated);
+
+        // TODO: Item Frame
+
+        // TODO: Llama
+
+        // TODO: Minecart and its variants
+
+        if (Reflect.hasMethod(MushroomCow.class, "getVariant")) {
+            Builder.begin(MushroomCow.class)
+                    .map("variant", "data_type", MushroomCow.Variant.class, MushroomCow::getVariant, MushroomCow::setVariant);
+        }
+
+        // TODO: Ocelot + cat type for older versions
+
+        // TODO: Painting
+
+        // TODO: Panda
+
+        if (Reflect.has("org.bukkit.entity.Panda")) {
+            Builder.begin(Panda.class)
+                    .map("main_gene", "main_gene_id", Panda.Gene.class, Panda::getMainGene, Panda::setMainGene)
+                    .map("hidden_gene", "hidden_gene_id", Panda.Gene.class, Panda::getHiddenGene, Panda::setHiddenGene);
+        }
+
+        if (Reflect.has("org.bukkit.entity.Parrot")) {
+            Builder.begin(Parrot.class)
+                    .map("variant", "data_variant_id", Parrot.Variant.class, Parrot::getVariant, Parrot::setVariant);
+        }
+
+        if (Reflect.has("org.bukkit.entity.Phantom")) {
+            Builder.begin(Phantom.class)
+                    .map("size", "id_size", Integer.class, Phantom::getSize, Phantom::setSize);
+        }
+
+        // TODO: Piglin
+
+        // TODO: Piglin Abstract
+
+        // TODO: Pig Zombie
+
+        if (Reflect.has("org.bukkit.entity.PufferFish")) {
+            Builder.begin(PufferFish.class)
+                    .map("puff_state", Integer.class, PufferFish::getPuffState, PufferFish::setPuffState);
+        }
+
+        Builder.begin(Rabbit.class)
+                .map("rabbit_type", "data_type_id", Rabbit.Type.class, Rabbit::getRabbitType, Rabbit::setRabbitType);
+
+        // TODO: Raider
+
+        Builder.begin(Sheep.class)
+                .map("color", DyeColor.class, Sheep::getColor, Sheep::setColor)
+                .map("sheared", Boolean.class, Sheep::isSheared, Sheep::setSheared);
+
+        // TODO: Shulker
+
+        // TODO: Shulker Bullet
+
+        // TODO: Sittable (why it doesn't extend Entity?)
+
+        // TODO: Sized Fireball
+
+        // TODO: Skeleton
+
+        Builder.begin(Slime.class)
+                .map("size", "id_size", Integer.class, Slime::getSize, Slime::setSize);
+
+
+        if (Reflect.hasMethod(Snowman.class, "isDerp")) {
+            Builder.begin(Snowman.class)
+                    .map("derp", Boolean.class, Snowman::isDerp, Snowman::setDerp);
+        }
+
+        Builder.begin(SpectralArrow.class)
+                .map("glowing_ticks", Integer.class, SpectralArrow::getGlowingTicks, SpectralArrow::setGlowingTicks);
+
+        // TODO: Spellcaster
+
+        // TODO: Steerable
+
+        if (Reflect.has("org.bukkit.entity.Strider")) {
+            Builder.begin(Strider.class)
+                    .map("shivering", "data_suffocating", Boolean.class, Strider::isShivering, Strider::setShivering);
+        }
+
+        // TODO: Tameable
+
+        // TODO: Thrown Potion
+
+        Builder.begin(TNTPrimed.class)
+                .map("fuse_ticks", "data_fuse_id", Integer.class, TNTPrimed::getFuseTicks, TNTPrimed::setFuseTicks);
+                // TODO: source
+
+        // TODO: Tropical fish
+
+        if (Reflect.has("org.bukkit.entity.Vex") && Reflect.hasMethod("org.bukkit.entity.Vex", "isCharging")) {
+            Builder.begin(Vex.class)
+                    .map("is_charging", "data_is_charging", Boolean.class, Vex::isCharging, Vex::setCharging);
+        }
 
         Builder.begin(Villager.class)
                 .map("villager_profession", Villager.Profession.class, Villager::getProfession, Villager::setProfession)
@@ -101,17 +284,21 @@ public class BukkitEntityMetadataMapper {
                         .map("villager_experience", Integer.class, Villager::getVillagerExperience, Villager::setVillagerExperience)
                 );
 
-        Builder.begin(Sheep.class)
-                .map("color", DyeColor.class, Sheep::getColor, Sheep::setColor)
-                .map("sheared", Boolean.class, Sheep::isSheared, Sheep::setSheared);
+        if (Reflect.has("org.bukkit.entity.WanderingTrader") && Reflect.hasMethod("org.bukkit.entity.WanderingTrader", "isCharging")) {
+            Builder.begin(WanderingTrader.class)
+                    .map("despawn_delay", Integer.class, WanderingTrader::getDespawnDelay, WanderingTrader::setDespawnDelay);
+        }
 
-        Builder.begin(Explosive.class)
-                .map("is_incendiary", Boolean.class, Explosive::isIncendiary, Explosive::setIsIncendiary)
-                .map("yield", Float.class, Explosive::getYield, Explosive::setYield);;
+        Builder.begin(WitherSkull.class)
+                .map("is_charged", "data_dangerous", Boolean.class, WitherSkull::isCharged, WitherSkull::setCharged);
 
-        Builder.begin(TNTPrimed.class)
-                .map("fuse_ticks", "data_fuse_id", Integer.class, TNTPrimed::getFuseTicks, TNTPrimed::setFuseTicks);
+        Builder.begin(Wolf.class)
+                .map("is_angry", Boolean.class, Wolf::isAngry, Wolf::setAngry)
+                .map("collar_color", "data_collar_color", DyeColor.class, Wolf::getCollarColor, Wolf::setCollarColor);
 
+        // TODO: Zombie
+
+        // TODO: Zombie Villager
     }
 
     public static boolean has(Entity entity, String metadata) {
@@ -163,7 +350,7 @@ public class BukkitEntityMetadataMapper {
         if (value != null) {
             if (bukkitMetadata.valueClass == Boolean.class) {
                 if (!(value instanceof Boolean)) {
-                   value = Boolean.parseBoolean(value.toString());
+                    value = Boolean.parseBoolean(value.toString());
                 }
             } else if (bukkitMetadata.valueClass == Integer.class) {
                 if (value instanceof Number) {
@@ -277,7 +464,8 @@ public class BukkitEntityMetadataMapper {
             } else {
                 try {
                     return (T) Integer.valueOf(value.toString());
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
         } else if (valueClass == Long.class) {
             if (value instanceof Number) {
@@ -285,7 +473,8 @@ public class BukkitEntityMetadataMapper {
             } else {
                 try {
                     return (T) Long.valueOf(value.toString());
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
         } else if (valueClass == Byte.class) {
             if (value instanceof Number) {
@@ -295,7 +484,8 @@ public class BukkitEntityMetadataMapper {
             } else {
                 try {
                     return (T) Byte.valueOf(value.toString());
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
         } else if (valueClass == Double.class) {
             if (value instanceof Number) {
@@ -303,7 +493,8 @@ public class BukkitEntityMetadataMapper {
             } else {
                 try {
                     return (T) Double.valueOf(value.toString());
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
         } else if (valueClass == Float.class) {
             if (value instanceof Number) {
@@ -311,7 +502,8 @@ public class BukkitEntityMetadataMapper {
             } else {
                 try {
                     return (T) Float.valueOf(value.toString());
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
         }
 
