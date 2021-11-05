@@ -116,7 +116,7 @@ public interface WorldHolder extends Wrapper, Serializable, ForwardingAudience {
         if (other == null) {
             return false;
         }
-        return other.getUuid() == this.getUuid();
+        return other.getUuid().equals(this.getUuid());
     }
 
     /**
