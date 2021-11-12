@@ -4,7 +4,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.util.RGBLike;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.container.ContainerHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
@@ -14,8 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-// TODO: Metadata
-public interface EntityBasic extends Wrapper {
+public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
     EntityTypeHolder getEntityType();
 
     LocationHolder getLocation();

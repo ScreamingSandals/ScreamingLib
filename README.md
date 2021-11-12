@@ -23,7 +23,7 @@ ScreamingLib is a multiplatform library for creating Minecraft plugins.
 ## Compiling
 
 Requirements:
-* JDK 11 and higher
+* JDK 17 and higher (compiled artifacts are than compatible with Java 11 and higher)
 * Internet connection
 
 Clone this repo and run `./gradlew screamCompile`. Binaries for each module will be present in the `build/libs` folder of each subproject and also in your local maven repository.

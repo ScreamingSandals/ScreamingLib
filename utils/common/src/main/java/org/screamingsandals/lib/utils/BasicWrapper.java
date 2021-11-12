@@ -7,13 +7,12 @@ import java.util.Objects;
 
 /**
  * Basic Wrapper is class used for directly wrapping objects without using Mapping classes and Bidirectional Converters.
- * Can be used for example for wrapping players in Material Resolver without having Player Utils.
  *
  * @see BasicWrapper#wrap(Object)
  * @param <O> type of wrapped object
  */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class BasicWrapper<O> implements Wrapper {
+public class BasicWrapper<O> implements Wrapper, RawValueHolder {
     protected transient final O wrappedObject;
 
     public static <O> BasicWrapper<O> wrap(O wrappedObject) {

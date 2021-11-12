@@ -936,4 +936,19 @@ public class ExtendablePlayerWrapper extends BasicWrapper<PlayerWrapper> impleme
             return wrappedObject.as(type);
         }
     }
+
+    @Override
+    public Object raw() {
+        return wrappedObject.raw();
+    }
+
+    @Override
+    public boolean holdsInventory() {
+        return wrappedObject.holdsInventory();
+    }
+
+    @Override
+    public Optional<Container> getInventory() {
+        return wrappedObject.getInventory();
+    }
 }
