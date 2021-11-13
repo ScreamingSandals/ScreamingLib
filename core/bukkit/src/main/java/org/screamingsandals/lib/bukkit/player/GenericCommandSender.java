@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.bukkit.player;
 
 import net.kyori.adventure.audience.Audience;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -48,5 +49,10 @@ public class GenericCommandSender extends BasicWrapper<CommandSender> implements
     @Override
     public void setOp(boolean op) {
         wrappedObject.setOp(op);
+    }
+
+    @Override
+    public void tryToDispatchCommand(String command) {
+        Bukkit.dispatchCommand(wrappedObject, command);
     }
 }

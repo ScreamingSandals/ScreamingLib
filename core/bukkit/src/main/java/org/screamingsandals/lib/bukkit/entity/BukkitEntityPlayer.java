@@ -4,10 +4,8 @@ import io.netty.channel.Channel;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.WeatherType;
+import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +15,8 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.Openable;
 import org.screamingsandals.lib.container.PlayerContainer;
+import org.screamingsandals.lib.entity.EntityBasic;
+import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerGamePacketListenerImplAccessor;
@@ -28,6 +28,7 @@ import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
 
 import java.util.Locale;
@@ -130,6 +131,11 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     @Override
     public String getName() {
         return wrappedObject.getName();
+    }
+
+    @Override
+    public void tryToDispatchCommand(String command) {
+        Bukkit.dispatchCommand(wrappedObject, command);
     }
 
     @Override
@@ -269,6 +275,35 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
                 particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null
                 // hey bukkit api, where's the last argument?
         );
+    }
+
+    @Override
+    public void setCompassTarget(LocationHolder location) {
+        ((Player) wrappedObject).setCompassTarget(location.as(Location.class));
+    }
+
+    @Override
+    public void restoreDefaultScoreboard() {
+        ((Player) wrappedObject).setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
+    }
+
+    @Override
+    public Optional<EntityBasic> getSpectatorTarget() {
+        var target = ((Player) wrappedObject).getSpectatorTarget();
+        if (target == null) {
+            return Optional.empty();
+        }
+        return EntityMapper.wrapEntity(target);
+    }
+
+    @Override
+    public void setSpectatorTarget(@Nullable EntityBasic entity) {
+        ((Player) wrappedObject).setSpectatorTarget(entity == null ? null : entity.as(Entity.class));
+    }
+
+    @Override
+    public LocationHolder getCompassTarget() {
+        return LocationMapper.wrapLocation(((Player) wrappedObject).getCompassTarget());
     }
 
     @Override

@@ -145,6 +145,13 @@ public abstract class Server {
         return server.UNSAFE_normalizeSoundKey0(s);
     }
 
+    public static void shutdown() {
+        if (server == null) {
+            throw new UnsupportedOperationException("Server has not yet been initialized!");
+        }
+        server.shutdown0();
+    }
+
     // abstract methods for implementations
 
     public abstract String getVersion0();
@@ -173,6 +180,8 @@ public abstract class Server {
     public abstract void runSynchronously0(Runnable task);
 
     public abstract List<ChannelFuture> getConnections0();
+
+    public abstract void shutdown0();
 
     public String UNSAFE_normalizeSoundKey0(String s) {
         return s;

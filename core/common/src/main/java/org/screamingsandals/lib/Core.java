@@ -24,6 +24,7 @@ import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.internal.InternalCoreService;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.world.LocationMapper;
+import org.screamingsandals.lib.world.WorldMapper;
 import org.screamingsandals.lib.world.chunk.ChunkMapper;
 import org.screamingsandals.lib.world.difficulty.DifficultyMapping;
 import org.screamingsandals.lib.world.dimension.DimensionMapping;
@@ -69,7 +70,8 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         GameRuleMapping.class,
         WeatherMapping.class,
         ParticleTypeMapping.class,
-        GameRuleMapping.class
+        GameRuleMapping.class,
+        WorldMapper.class
 })
 @InternalCoreService
 public abstract class Core {

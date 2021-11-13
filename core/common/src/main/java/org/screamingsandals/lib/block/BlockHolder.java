@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.block;
 
 import lombok.Data;
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
@@ -24,7 +25,18 @@ public class BlockHolder implements Wrapper {
      * @param type type to set
      */
     public void setType(BlockTypeHolder type) {
-        BlockMapper.setBlockAt(location, type);
+        BlockMapper.setBlockAt(location, type, false);
+        this.type = type;
+    }
+
+    /**
+     * Sets new material at this location without applying physics
+     *
+     * @param type type to set
+     */
+    @ApiStatus.Experimental
+    public void setTypeWithoutPhysics(BlockTypeHolder type) {
+        BlockMapper.setBlockAt(location, type, true);
         this.type = type;
     }
 

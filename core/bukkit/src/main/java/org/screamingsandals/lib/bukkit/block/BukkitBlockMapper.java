@@ -47,15 +47,15 @@ public class BukkitBlockMapper extends BlockMapper {
     }
 
     @Override
-    protected void setBlockAt0(LocationHolder location, BlockTypeHolder material) {
+    protected void setBlockAt0(LocationHolder location, BlockTypeHolder material, boolean ignorePhysics) {
         final var bukkitLocation = location.as(Location.class);
         PaperLib.getChunkAtAsync(bukkitLocation)
                 .thenAccept(result -> {
                     if (!Version.isVersion(1,13)) {
-                        bukkitLocation.getBlock().setType(material.as(Material.class));
-                        Reflect.getMethod(bukkitLocation.getBlock(), "setData", byte.class).invoke(material.legacyData());
+                        bukkitLocation.getBlock().setType(material.as(Material.class), !ignorePhysics);
+                        Reflect.getMethod(bukkitLocation.getBlock(), "setData", byte.class, boolean.class).invoke(material.legacyData(), !ignorePhysics);
                     } else {
-                        bukkitLocation.getBlock().setBlockData(material.as(BlockData.class));
+                        bukkitLocation.getBlock().setBlockData(material.as(BlockData.class), !ignorePhysics);
                     }
                 });
     }

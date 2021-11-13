@@ -65,7 +65,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public CommandSenderWrapper getConsoleSender0() {
+    public SenderWrapper getConsoleSender0() {
         return new GenericCommandSender(Bukkit.getConsoleSender());
     }
 

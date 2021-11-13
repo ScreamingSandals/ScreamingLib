@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityPathfindingMob;
 import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.nms.accessors.*;
@@ -16,6 +17,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class BukkitEntityMapper extends EntityMapper {
+
+    public static boolean HAS_MOB_INTERFACE = Reflect.has("org.bukkit.entity.Mob");
 
     @Override
     @SuppressWarnings("unchecked")
@@ -31,6 +34,14 @@ public class BukkitEntityMapper extends EntityMapper {
 
         if (entity instanceof HumanEntity) {
             return Optional.of((T) new BukkitEntityHuman((HumanEntity) entity));
+        }
+
+        if (HAS_MOB_INTERFACE) {
+            if (entity instanceof Mob) {
+                return Optional.of((T) new BukkitEntityPathfindingMob((LivingEntity) entity));
+            }
+        } else if (entity instanceof Slime || entity instanceof Creature) {
+            return Optional.of((T) new BukkitEntityPathfindingMob((LivingEntity) entity));
         }
 
         if (entity instanceof LivingEntity) {

@@ -114,6 +114,11 @@ public class BukkitServer extends Server {
     }
 
     @Override
+    public void shutdown0() {
+        Bukkit.shutdown();
+    }
+
+    @Override
     public String UNSAFE_normalizeSoundKey0(String s) {
         if (UNSAFE_SOUND_CACHE.containsKey(s.toUpperCase())) {
             // TODO: map legacy <-> flattening conversion

@@ -7,6 +7,8 @@ import java.util.Locale;
 
 public interface SenderWrapper extends CommandSenderWrapper {
 
+    void tryToDispatchCommand(String command);
+
     /**
      * {@inheritDoc}
      */

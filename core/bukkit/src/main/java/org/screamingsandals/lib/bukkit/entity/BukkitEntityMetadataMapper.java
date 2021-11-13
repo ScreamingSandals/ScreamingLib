@@ -8,6 +8,9 @@ import net.kyori.adventure.util.RGBLike;
 import org.bukkit.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.*;
+import org.bukkit.entity.minecart.CommandMinecart;
+import org.bukkit.entity.minecart.HopperMinecart;
+import org.bukkit.entity.minecart.PoweredMinecart;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.util.EulerAngle;
@@ -44,6 +47,13 @@ public class BukkitEntityMetadataMapper {
         var breedableExist = Reflect.has("org.bukkit.entity.Breedable");
         var steerableExist = Reflect.has("org.bukkit.entity.Steerable");
         var spellcasterExist = Reflect.has("org.bukkit.entity.Spellcaster");
+
+        if (Reflect.has("org.bukkit.entity.AbstractHorse")) {
+            Builder.begin(AbstractHorse.class)
+                    .map("domestication", Integer.class, AbstractHorse::getDomestication, AbstractHorse::setDomestication)
+                    .map("max_domestication", Integer.class, AbstractHorse::getMaxDomestication, AbstractHorse::setMaxDomestication)
+                    .map("jump_strength", Double.class, AbstractHorse::getJumpStrength, AbstractHorse::setJumpStrength);
+        }
 
         Builder.begin(Ageable.class) // TODO: Fix for Piglin & Zoglin are not Ageable in early 1.16 spigot days
                 .map("is_baby", "data_baby_id", Boolean.class, ageable -> !ageable.isAdult(), (ageable, aBoolean) -> {
@@ -231,7 +241,16 @@ public class BukkitEntityMetadataMapper {
                     );
         }
 
-        // TODO: Horse
+        Builder.begin(Horse.class)
+                .map("color", Horse.Color.class, Horse::getColor, Horse::setColor)
+                .map("style", Horse.Style.class, Horse::getStyle, Horse::setStyle)
+                .whenNot(1, 11, b -> b
+                        .map("variant", Horse.Variant.class, Horse::getVariant, Horse::setVariant)
+                        .map("is_carrying_chest", Boolean.class, Horse::isCarryingChest, Horse::setCarryingChest)
+                        .map("domestication", Integer.class, Horse::getDomestication, Horse::setDomestication)
+                        .map("max_domestication", Integer.class, Horse::getMaxDomestication, Horse::setMaxDomestication)
+                        .map("jump_strength", Double.class, Horse::getJumpStrength, Horse::setJumpStrength)
+                );
 
         if (Reflect.has("org.bukkit.entity.Husk")) {
             Builder.begin(Husk.class)
@@ -261,7 +280,30 @@ public class BukkitEntityMetadataMapper {
                     .map("strength", Integer.class, Llama::getStrength, Llama::setStrength);
         }
 
-        // TODO: Minecart and its variants
+        Builder.begin(Minecart.class)
+                .map("damage", Double.class, Minecart::getDamage, Minecart::setDamage)
+                .map("max_speed", Double.class, Minecart::getMaxSpeed, Minecart::setMaxSpeed)
+                .map("is_slow_when_empty", Boolean.class, Minecart::isSlowWhenEmpty, Minecart::setSlowWhenEmpty)
+                .map("flying_velocity_mod", Vector.class, Minecart::getFlyingVelocityMod, Minecart::setFlyingVelocityMod)
+                .map("derailed_velocity_mod", Vector.class, Minecart::getDerailedVelocityMod, Minecart::setDerailedVelocityMod)
+                .map("display_block_offset", Integer.class, Minecart::getDisplayBlockOffset, Minecart::setDisplayBlockOffset)
+                .whenNot(1, 13, b -> b
+                        .map("display_block_data", MaterialData.class, Minecart::getDisplayBlock, Minecart::setDisplayBlock)
+                )
+                .when(1, 13, b -> b
+                        .map("display_block_data", BlockData.class, Minecart::getDisplayBlockData, Minecart::setDisplayBlockData)
+                );
+
+        Builder.begin(CommandMinecart.class)
+                .map("command", String.class, CommandMinecart::getCommand, CommandMinecart::setCommand);
+
+        Builder.begin(HopperMinecart.class)
+                .map("is_enabled", Boolean.class, HopperMinecart::isEnabled, HopperMinecart::setEnabled);
+
+        if (Reflect.hasMethod(PoweredMinecart.class, "getFuel")) {
+            Builder.begin(PoweredMinecart.class)
+                    .map("fuel", Integer.class, PoweredMinecart::getFuel, PoweredMinecart::setFuel);
+        }
 
         if (Reflect.hasMethod(MushroomCow.class, "getVariant")) {
             Builder.begin(MushroomCow.class)
@@ -300,11 +342,36 @@ public class BukkitEntityMetadataMapper {
                     .map("has_saddle", Boolean.class, Pig::hasSaddle, Pig::setSaddle);
         }
 
-        // TODO: Piglin
+        if (Reflect.has("org.bukkit.entity.Piglin")) {
+            Builder.begin(Piglin.class)
+                    .map("is_able_to_hunt", Boolean.class, Piglin::isAbleToHunt, Piglin::setIsAbleToHunt)
+                    .whenNot(breedableExist, b -> b
+                            .map("is_baby", "data_baby_id", Boolean.class, Piglin::isBaby, Piglin::setBaby)
+                    )
+                    .whenNot(1, 16, 2, b -> b
+                        .map("is_immune_to_zombification", Boolean.class, Piglin::isImmuneToZombification, Piglin::setImmuneToZombification)
+                        .when(Reflect.hasMethod(Piglin.class, "isConverting"), b2 -> b2
+                                .map("is_converting", Boolean.class, Piglin::isConverting, null)
+                                .map("conversion_time", Integer.class, Piglin::getConversionTime, Piglin::setConversionTime)
+                        )
+                    );
+        }
 
-        // TODO: Piglin Abstract
+        if (Reflect.has("org.bukkit.entity.PiglinAbstract")) {
+            Builder.begin(PiglinAbstract.class)
+                    .whenNot(breedableExist, b -> b
+                            .map("is_baby", "data_baby_id", Boolean.class, PiglinAbstract::isBaby, PiglinAbstract::setBaby)
+                    )
+                    .map("is_immune_to_zombification", Boolean.class, PiglinAbstract::isImmuneToZombification, PiglinAbstract::setImmuneToZombification)
+                    .when(Reflect.hasMethod(Piglin.class, "isConverting"), b2 -> b2
+                            .map("is_converting", Boolean.class, PiglinAbstract::isConverting, null)
+                            .map("conversion_time", Integer.class, PiglinAbstract::getConversionTime, PiglinAbstract::setConversionTime)
+                    );
+        }
 
-        // TODO: Pig Zombie
+        Builder.begin(PigZombie.class)
+                .map("anger_level", Integer.class, PigZombie::getAnger, PigZombie::setAnger)
+                .map("is_angry", Boolean.class, PigZombie::isAngry, PigZombie::setAngry);
 
         if (Reflect.has("org.bukkit.entity.PufferFish")) {
             Builder.begin(PufferFish.class)
@@ -336,7 +403,8 @@ public class BukkitEntityMetadataMapper {
 
         // TODO: Shulker
 
-        // TODO: Shulker Bullet
+        Builder.begin(ShulkerBullet.class)
+                .map("target", Entity.class, ShulkerBullet::getTarget, ShulkerBullet::setTarget);
 
         // TODO: Sittable (why it doesn't extend Entity?)
 

@@ -8,8 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.Openable;
 import org.screamingsandals.lib.container.PlayerContainer;
+import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityHuman;
-import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.entity.SEntityDamageEvent;
 import org.screamingsandals.lib.particle.ParticleHolder;
@@ -133,17 +133,6 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     void setDisplayName(@Nullable ComponentLike component);
 
     /**
-     * <p>Converts this player to an {@link EntityHuman}.</p>
-     *
-     * @return the player as an entity
-     * @deprecated PlayerWrapper is now instance of {@link EntityHuman}
-     */
-    @Deprecated
-    default EntityHuman asEntity() {
-        return this;
-    }
-
-    /**
      * <p>Gets the player's ender chest container.</p>
      *
      * @return the player's ender chest
@@ -250,6 +239,16 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     void resetPlayerTime();
 
     void sendParticle(ParticleHolder particle, LocationHolder location);
+
+    void setCompassTarget(LocationHolder location);
+
+    void restoreDefaultScoreboard();
+
+    Optional<EntityBasic> getSpectatorTarget();
+
+    void setSpectatorTarget(@Nullable EntityBasic entity);
+
+    LocationHolder getCompassTarget();
 
     /**
      * <p>Gets the player's connection.</p>

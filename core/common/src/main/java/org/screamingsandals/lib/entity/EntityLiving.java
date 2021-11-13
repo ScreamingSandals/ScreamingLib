@@ -157,7 +157,7 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
     void setItemInOffHand(@Nullable Item item);
 
     /**
-     * <p>Gets the player's target.</p>
+     * <p>Gets the entity's target.</p>
      *
      * @return the player's target (the living entity the player is looking at)
      */
@@ -166,7 +166,7 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
     }
 
     /**
-     * <p>Gets the player's target.</p>
+     * <p>Gets the entity's target.</p>
      *
      * @param radius the max distance that the target can be detected from
      * @return the player's target (the living entity the player is looking at)

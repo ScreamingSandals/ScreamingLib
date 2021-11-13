@@ -57,12 +57,12 @@ public abstract class BlockMapper {
         return mapping.getBlockAt0(location);
     }
 
-    public static void setBlockAt(LocationHolder location, BlockTypeHolder material) {
+    public static void setBlockAt(LocationHolder location, BlockTypeHolder material, boolean ignorePhysics) {
         if (mapping == null) {
             throw new UnsupportedOperationException("BlockMapper is already initialized.");
         }
 
-        mapping.setBlockAt0(location, material);
+        mapping.setBlockAt0(location, material, ignorePhysics);
     }
 
     public static void breakNaturally(LocationHolder location) {
@@ -75,7 +75,7 @@ public abstract class BlockMapper {
 
     protected abstract BlockHolder getBlockAt0(LocationHolder location);
 
-    protected abstract void setBlockAt0(LocationHolder location, BlockTypeHolder material);
+    protected abstract void setBlockAt0(LocationHolder location, BlockTypeHolder material, boolean ignorePhysics);
 
     protected abstract void breakNaturally0(LocationHolder location);
 }

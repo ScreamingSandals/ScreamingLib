@@ -899,6 +899,31 @@ public class ExtendablePlayerWrapper extends BasicWrapper<PlayerWrapper> impleme
     }
 
     @Override
+    public void setCompassTarget(LocationHolder location) {
+        wrappedObject.setCompassTarget(location);
+    }
+
+    @Override
+    public void restoreDefaultScoreboard() {
+        wrappedObject.restoreDefaultScoreboard();
+    }
+
+    @Override
+    public Optional<EntityBasic> getSpectatorTarget() {
+        return wrappedObject.getSpectatorTarget();
+    }
+
+    @Override
+    public void setSpectatorTarget(@Nullable EntityBasic entity) {
+        wrappedObject.setSpectatorTarget(entity);
+    }
+
+    @Override
+    public LocationHolder getCompassTarget() {
+        return wrappedObject.getCompassTarget();
+    }
+
+    @Override
     public Channel getChannel() {
         return wrappedObject.getChannel();
     }
@@ -950,5 +975,10 @@ public class ExtendablePlayerWrapper extends BasicWrapper<PlayerWrapper> impleme
     @Override
     public Optional<Container> getInventory() {
         return wrappedObject.getInventory();
+    }
+
+    @Override
+    public void tryToDispatchCommand(String command) {
+        wrappedObject.tryToDispatchCommand(command);
     }
 }
