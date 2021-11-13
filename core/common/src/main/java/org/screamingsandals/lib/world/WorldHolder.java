@@ -4,6 +4,8 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.kyori.adventure.audience.ForwardingAudience;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.utils.Wrapper;
@@ -103,6 +105,20 @@ public interface WorldHolder extends Wrapper, Serializable, ForwardingAudience {
                 .collect(Collectors.toList());
     }
 
+
+    /**
+     * Compares two worlds and returns the similarity result.
+     *
+     * @param other other world to compare with
+     * @return true if both worlds have the same unique ids, false otherwise.
+     */
+    default boolean isSimilar(@Nullable WorldHolder other) {
+        if (other == null) {
+            return false;
+        }
+        return other.getUuid().equals(this.getUuid());
+    }
+
     /**
      * <p>Gets the value of the supplied gamerule holder in this world.</p>
      *
@@ -166,7 +182,7 @@ public interface WorldHolder extends Wrapper, Serializable, ForwardingAudience {
             in.beginObject();
             final var name = in.nextName();
             if (name.equals("uuid")) {
-                final var toReturn = LocationMapper.getWorld(UUID.fromString(in.nextString())).orElseThrow();
+                final var toReturn = WorldMapper.getWorld(UUID.fromString(in.nextString())).orElseThrow();
                 in.endObject();
                 return toReturn;
             }

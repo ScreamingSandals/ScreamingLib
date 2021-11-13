@@ -55,7 +55,7 @@ public class SEntityPotionEffectEvent extends CancellableAbstractEvent {
     public enum Action {
 
         /**
-         * When the potion effect is added because the entity didn't have it's
+         * When the potion effect is added because the entity didn't have its
          * type.
          */
         ADDED,
@@ -157,7 +157,7 @@ public class SEntityPotionEffectEvent extends CancellableAbstractEvent {
          */
         SPIDER_SPAWN,
         /**
-         * When the entity gets effects from a totem item saving it's life.
+         * When the entity gets effects from a totem item saving its life.
          */
         TOTEM,
         /**

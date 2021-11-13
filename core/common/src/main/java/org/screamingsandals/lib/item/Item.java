@@ -43,7 +43,7 @@ public class Item implements Cloneable, NormalizableWrapper<Item>, ParticleData 
      * NOTE: for Firework start only first effect is used
      */
     private final List<FireworkEffectHolder> fireworkEffects = new LinkedList<>();
-    //@Nullable // in initial state it's null
+    //@Nullable // in initial state its null
     private ItemTypeHolder material;
     @Nullable
     private Component displayName;

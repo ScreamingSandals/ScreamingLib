@@ -70,7 +70,7 @@ public interface NPC extends TouchableVisual<NPC> {
 
     /**
      *
-     * @param shouldLook if true the npc will rotate it's head towards the viewer
+     * @param shouldLook if true the npc will rotate its head towards the viewer
      * @return this NPC
      */
     NPC setShouldLookAtPlayer(boolean shouldLook);
