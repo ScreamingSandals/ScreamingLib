@@ -40,7 +40,6 @@ registerModule('visuals-api', 'bukkit') //TODO: add others
 registerModule('signs', 'bukkit') //TODO: add others
 registerModule('placeholders', 'bukkit') //TODO: add others
 registerModule('packets', 'vanilla', 'bukkit') //TODO: add others
-// registerModule('gamecore', 'bukkit') //TODO: add others
 registerModule('core', 'bukkit') //TODO: add others
 registerModule('proxy', 'bungee', 'velocity')
 registerModule('plugin', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
