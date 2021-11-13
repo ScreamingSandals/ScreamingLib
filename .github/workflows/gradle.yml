@@ -29,4 +29,5 @@ jobs:
         JAVADOC_HOST: ${{ secrets.JAVADOC_HOST }}
         JAVADOC_SECRET: ${{ secrets.JAVADOC_SECRET }}
         JAVADOC_USER: ${{ secrets.JAVADOC_USER }}
+        OPTIMIZE_FOR_CI_CD: "1"
 
