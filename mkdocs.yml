@@ -51,8 +51,8 @@ markdown_extensions:
       permalink: true
 
 edit_uri: ""
-repo_url: https://github.com/ScreamingSandals/ScreamingLib-Docs
-repo_name: ScreamingSandals/ScreamingLib-Docs
+repo_url: https://github.com/ScreamingSandals/ScreamingLib
+repo_name: ScreamingSandals/ScreamingLib
 
 plugins:
   - git-revision-date:
