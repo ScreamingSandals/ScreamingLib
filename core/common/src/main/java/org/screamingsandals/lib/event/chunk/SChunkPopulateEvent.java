@@ -8,10 +8,7 @@ import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SChunkPopulateEvent extends AbstractEvent {
-    private final ImmutableObjectLink<ChunkHolder> chunk;
+public abstract class SChunkPopulateEvent extends AbstractEvent {
 
-    public ChunkHolder getChunk() {
-        return chunk.get();
-    }
+    public abstract ChunkHolder getChunk();
 }

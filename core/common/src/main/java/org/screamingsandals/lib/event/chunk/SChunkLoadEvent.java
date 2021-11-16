@@ -3,20 +3,13 @@ package org.screamingsandals.lib.event.chunk;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.event.AbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SChunkLoadEvent extends AbstractEvent {
-    private final ImmutableObjectLink<ChunkHolder> chunk;
-    private final ImmutableObjectLink<Boolean> newChunk;
+public abstract class SChunkLoadEvent extends AbstractEvent {
 
-    public ChunkHolder getChunk() {
-        return chunk.get();
-    }
+    public abstract ChunkHolder getChunk();
 
-    public Boolean getNewChunk() {
-        return newChunk.get();
-    }
+    public abstract boolean isNewChunk();
 }
