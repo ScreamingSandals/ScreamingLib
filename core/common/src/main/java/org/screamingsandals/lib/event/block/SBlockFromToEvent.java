@@ -1,28 +1,14 @@
 package org.screamingsandals.lib.event.block;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.utils.BlockFace;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.block.BlockHolder;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class SBlockFromToEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<BlockHolder> sourceBlock;
-    private final ImmutableObjectLink<BlockHolder> facedBlock;
-    private final ImmutableObjectLink<BlockFace> face;
+public interface SBlockFromToEvent extends SCancellableEvent {
 
-    public BlockHolder getSourceBlock() {
-        return sourceBlock.get();
-    }
+    BlockHolder getSourceBlock();
 
-    public BlockHolder getFacedBlock() {
-        return facedBlock.get();
-    }
+    BlockHolder getFacedBlock();
 
-    public BlockFace getFace() {
-        return face.get();
-    }
+    BlockFace getFace();
 }

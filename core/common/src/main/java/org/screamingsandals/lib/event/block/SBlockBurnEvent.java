@@ -1,24 +1,13 @@
 package org.screamingsandals.lib.event.block;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class SBlockBurnEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<BlockHolder> block;
-    private final ImmutableObjectLink<@Nullable BlockHolder> ignitingBlock;
+public interface SBlockBurnEvent extends SCancellableEvent {
 
-    public BlockHolder getBlock() {
-        return block.get();
-    }
+    BlockHolder getBlock();
 
     @Nullable
-    public BlockHolder getIgnitingBlock() {
-        return ignitingBlock.get();
-    }
+    BlockHolder getIgnitingBlock();
 }

@@ -1,40 +1,27 @@
 package org.screamingsandals.lib.event.block;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityLiving;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.block.BlockHolder;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class SBlockDispenseEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<BlockHolder> block;
-    private final ImmutableObjectLink<Item> item;
-    private final ImmutableObjectLink<Vector3D> velocity;
-    private final ImmutableObjectLink<@Nullable EntityLiving> receiver;
+public interface SBlockDispenseEvent extends SCancellableEvent {
 
-    public BlockHolder getBlock() {
-        return block.get();
-    }
+    BlockHolder getBlock();
 
-    public Item getItem() {
-        return item.get();
-    }
+    Item getItem();
 
-    public Vector3D getVelocity() {
-        return velocity.get();
-    }
+    void setItem(Item item);
+
+    Vector3D getVelocity();
+
+    void setVelocity(Vector3D velocity);
 
     /*
-     * Only in case when dispenser is used to attach armor on entity
+     * Only in case when dispenser is used to attach armor to an entity
      */
     @Nullable
-    public EntityLiving getReceiver() {
-        return receiver.get();
-    }
+    EntityLiving getReceiver();
 }

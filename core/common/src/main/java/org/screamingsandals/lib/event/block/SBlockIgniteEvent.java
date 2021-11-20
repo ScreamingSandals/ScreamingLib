@@ -1,41 +1,24 @@
 package org.screamingsandals.lib.event.block;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class SBlockIgniteEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<BlockHolder> block;
-    private final ImmutableObjectLink<IgniteCause> igniteCause;
-    private final ImmutableObjectLink<@Nullable BlockHolder> ignitingBlock;
-    private final ImmutableObjectLink<@Nullable EntityBasic> ignitingEntity;
+public interface SBlockIgniteEvent extends SCancellableEvent {
 
-    public BlockHolder getBlock() {
-        return block.get();
-    }
+    BlockHolder getBlock();
 
-    public IgniteCause getIgniteCause() {
-        return igniteCause.get();
-    }
+    IgniteCause getIgniteCause();
 
     @Nullable
-    public BlockHolder getIgnitingBlock() {
-        return ignitingBlock.get();
-    }
+    BlockHolder getIgnitingBlock();
 
     @Nullable
-    public EntityBasic getIgnitingEntity() {
-        return ignitingEntity.get();
-    }
+    EntityBasic getIgnitingEntity();
 
     // TODO: holder?
-    public enum IgniteCause {
+    enum IgniteCause {
         ARROW,
         ENDER_CRYSTAL,
         EXPLOSION,

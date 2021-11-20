@@ -1,29 +1,13 @@
 package org.screamingsandals.lib.event.block;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.AbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-@AllArgsConstructor
-public class SBlockExperienceEvent extends AbstractEvent {
-    private final ImmutableObjectLink<BlockHolder> block;
-    private final ObjectLink<Integer> experience;
+public interface SBlockExperienceEvent extends SEvent {
 
-    public BlockHolder getBlock() {
-        return block.get();
-    }
+    BlockHolder getBlock();
 
-    public int getExperience() {
-        return experience.get();
-    }
+    int getExperience();
 
-    public void setExperience(int experience) {
-        this.experience.set(experience);
-    }
+    void setExperience(int experience);
 }

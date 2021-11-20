@@ -10,18 +10,13 @@ import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.bukkit.event.block.*;
-import org.screamingsandals.lib.bukkit.event.chunk.SBukkitChunkLoadEvent;
-import org.screamingsandals.lib.bukkit.event.chunk.SBukkitChunkPopulateEvent;
-import org.screamingsandals.lib.bukkit.event.chunk.SBukkitChunkUnloadEvent;
+import org.screamingsandals.lib.bukkit.event.chunk.*;
 import org.screamingsandals.lib.bukkit.event.world.*;
 import org.screamingsandals.lib.bukkit.listener.*;
-import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.event.block.*;
-import org.screamingsandals.lib.event.chunk.SChunkLoadEvent;
-import org.screamingsandals.lib.event.chunk.SChunkPopulateEvent;
-import org.screamingsandals.lib.event.chunk.SChunkUnloadEvent;
+import org.screamingsandals.lib.event.chunk.*;
 import org.screamingsandals.lib.event.world.*;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
@@ -173,23 +168,26 @@ public class BukkitCore extends Core {
         new PlayerInventoryCloseEventListener(plugin);
 
         // block
-        new BlockBurnEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.block.BlockCookEvent"))
-            new BlockCookEventListener(plugin);
-        new BlockDispenseEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.block.BlockDropItemEvent"))
-            new BlockDropItemEventListener(plugin);
+        constructDefaultListener(BlockBurnEvent.class, SBlockBurnEvent.class, SBukkitBlockBurnEvent::new);
+        if (Reflect.has("org.bukkit.event.block.BlockCookEvent")) {
+            constructDefaultListener(BlockCookEvent.class, SBlockCookEvent.class, SBukkitBlockCookEvent::new);
+        }
+        constructDefaultListener(BlockDispenseEvent.class, SBlockDispenseEvent.class, SBukkitBlockDispenseEvent::new);
+        if (Reflect.has("org.bukkit.event.block.BlockDropItemEvent")) {
+            constructDefaultListener(BlockDropItemEvent.class, SBlockDropItemEvent.class, SBukkitBlockDropItemEvent::new);
+        }
         new BlockExperienceEventListener(plugin);
-        new BlockExplodeEventListener(plugin);
-        new BlockFadeEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.block.BlockFertilizeEvent"))
-            new BlockFertilizeEventListener(plugin);
+        constructDefaultListener(BlockExplodeEvent.class, SBlockExplodeEvent.class, SBukkitBlockExplodeEvent::new);
+        constructDefaultListener(BlockFadeEvent.class, SBlockFadeEvent.class, SBukkitBlockFadeEvent::new);
+        if (Reflect.has("org.bukkit.event.block.BlockFertilizeEvent")) {
+            constructDefaultListener(BlockFertilizeEvent.class, SBlockFertilizeEvent.class, SBukkitBlockFertilizeEvent::new);
+        }
         new BlockGrowEventListener(plugin);
-        new BlockFromToEventListener(plugin);
-        new BlockIgniteEventListener(plugin);
-        new BlockPhysicsEventListener(plugin);
-        new RedstoneEventListener(plugin);
-        new LeavesDecayEventListener(plugin);
+        constructDefaultListener(BlockFromToEvent.class, SBlockFromToEvent.class, SBukkitBlockFromToEvent::new);
+        constructDefaultListener(BlockIgniteEvent.class, SBlockIgniteEvent.class, SBukkitBlockIgniteEvent::new);
+        constructDefaultListener(BlockPhysicsEvent.class, SBlockPhysicsEvent.class, SBukkitBlockPhysicsEvent::new);
+        constructDefaultListener(BlockRedstoneEvent.class, SRedstoneEvent.class, SBukkitRedstoneEvent::new);
+        constructDefaultListener(LeavesDecayEvent.class, SLeavesDecayEvent.class, SBukkitLeavesDecayEvent::new);
         new BlockPistonEventListener(plugin);
         if (Reflect.has("org.bukkit.event.block.BlockShearEntityEvent")) {
             constructDefaultListener(BlockShearEntityEvent.class, SBlockShearEntityEvent.class, SBukkitBlockShearEntityEvent::new);
