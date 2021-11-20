@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @Data
 @RequiredArgsConstructor
-public class HandlerRegisteredEvent extends AbstractEvent {
+public class HandlerRegisteredEvent implements SEvent {
     private final EventManager eventManager;
     private final Class<?> eventClass;
     private final EventHandler<?> handler;

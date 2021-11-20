@@ -1,8 +1,6 @@
 package org.screamingsandals.lib.event;
 
-public abstract class AbstractAsyncEvent extends AbstractEvent {
+@Deprecated
+public abstract class AbstractAsyncEvent extends AbstractEvent implements SAsyncEvent {
 
-    public AbstractAsyncEvent() {
-        super(true);
-    }
 }

@@ -10,50 +10,50 @@ import java.util.function.Function;
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, staticName = "of")
 @AllArgsConstructor(staticName = "of")
-public class EventHandler<E extends AbstractEvent> {
+public class EventHandler<E extends SEvent> {
     @Setter(value = AccessLevel.NONE)
     private Consumer<E> consumer;
     private final EventPriority eventPriority;
     private final boolean ignoreCancelled;
 
-    public static <E extends AbstractEvent> EventHandler<E> of(Consumer<E> consumer) {
+    public static <E extends SEvent> EventHandler<E> of(Consumer<E> consumer) {
         return of(consumer, EventPriority.NORMAL, false);
     }
 
-    public static <E extends AbstractEvent> EventHandler<E> of(Consumer<E> consumer, EventPriority eventPriority) {
+    public static <E extends SEvent> EventHandler<E> of(Consumer<E> consumer, EventPriority eventPriority) {
         return of(consumer, eventPriority, false);
     }
 
-    public static <E extends AbstractEvent> EventHandler<E> of(Consumer<E> consumer, boolean ignoreCancelled) {
+    public static <E extends SEvent> EventHandler<E> of(Consumer<E> consumer, boolean ignoreCancelled) {
         return of(consumer, EventPriority.NORMAL, ignoreCancelled);
     }
 
-    public static <E extends AbstractEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull Consumer<E>> function) {
+    public static <E extends SEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull Consumer<E>> function) {
         EventHandler<E> manager = of(EventPriority.NORMAL, false);
         manager.consumer = function.apply(manager);
         return manager;
     }
 
-    public static <E extends AbstractEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull Consumer<E>> function, EventPriority eventPriority) {
+    public static <E extends SEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull Consumer<E>> function, EventPriority eventPriority) {
         EventHandler<E> manager = of(eventPriority, false);
         manager.consumer = function.apply(manager);
         return manager;
     }
 
-    public static <E extends AbstractEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull Consumer<E>> function, boolean ignoreCancelled) {
+    public static <E extends SEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull Consumer<E>> function, boolean ignoreCancelled) {
         EventHandler<E> manager = of(EventPriority.NORMAL, ignoreCancelled);
         manager.consumer = function.apply(manager);
         return manager;
     }
 
-    public static <E extends AbstractEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull Consumer<E>> function, EventPriority eventPriority, boolean ignoreCancelled) {
+    public static <E extends SEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull Consumer<E>> function, EventPriority eventPriority, boolean ignoreCancelled) {
         EventHandler<E> manager = of(eventPriority, ignoreCancelled);
         manager.consumer = function.apply(manager);
         return manager;
     }
 
     @SuppressWarnings("unchecked")
-    public void fire(AbstractEvent event) {
+    public void fire(SEvent event) {
         try {
             if (ignoreCancelled
                     && event instanceof Cancellable

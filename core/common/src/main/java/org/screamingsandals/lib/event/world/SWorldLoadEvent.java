@@ -1,13 +1,9 @@
 package org.screamingsandals.lib.event.world;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.AbstractEvent;
+import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.world.WorldHolder;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public abstract class SWorldLoadEvent extends AbstractEvent {
+public interface SWorldLoadEvent extends SEvent {
 
-    public abstract WorldHolder getWorld();
+    WorldHolder getWorld();
 }

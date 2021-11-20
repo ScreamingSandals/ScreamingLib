@@ -3,16 +3,13 @@ package org.screamingsandals.lib.bukkit;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockReceiveGameEvent;
-import org.bukkit.event.block.MoistureChangeEvent;
-import org.bukkit.event.block.SpongeAbsorbEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.*;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
-import org.screamingsandals.lib.bukkit.event.block.SBukkitMoistureChangeEvent;
-import org.screamingsandals.lib.bukkit.event.block.SBukkitSculkSensorReceiveEvent;
+import org.screamingsandals.lib.bukkit.event.block.*;
 import org.screamingsandals.lib.bukkit.event.chunk.SBukkitChunkLoadEvent;
 import org.screamingsandals.lib.bukkit.event.chunk.SBukkitChunkPopulateEvent;
 import org.screamingsandals.lib.bukkit.event.chunk.SBukkitChunkUnloadEvent;
@@ -20,8 +17,8 @@ import org.screamingsandals.lib.bukkit.event.world.*;
 import org.screamingsandals.lib.bukkit.listener.*;
 import org.screamingsandals.lib.event.AbstractEvent;
 import org.screamingsandals.lib.event.EventPriority;
-import org.screamingsandals.lib.event.block.SMoistureChangeEvent;
-import org.screamingsandals.lib.event.block.SSculkSensorReceiveEvent;
+import org.screamingsandals.lib.event.SEvent;
+import org.screamingsandals.lib.event.block.*;
 import org.screamingsandals.lib.event.chunk.SChunkLoadEvent;
 import org.screamingsandals.lib.event.chunk.SChunkPopulateEvent;
 import org.screamingsandals.lib.event.chunk.SChunkUnloadEvent;
@@ -194,11 +191,13 @@ public class BukkitCore extends Core {
         new RedstoneEventListener(plugin);
         new LeavesDecayEventListener(plugin);
         new BlockPistonEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.block.BlockShearEntityEvent"))
-            new BlockShearEntityEventListener(plugin);
-        new CauldronLevelChangeEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.block.FluidLevelChangeEvent"))
-            new FluidLevelChangeEventListener(plugin);
+        if (Reflect.has("org.bukkit.event.block.BlockShearEntityEvent")) {
+            constructDefaultListener(BlockShearEntityEvent.class, SBlockShearEntityEvent.class, SBukkitBlockShearEntityEvent::new);
+        }
+        constructDefaultListener(CauldronLevelChangeEvent.class, SCauldronLevelChangeEvent.class, SBukkitCauldronLevelChangeEvent::new);
+        if (Reflect.has("org.bukkit.event.block.FluidLevelChangeEvent")) {
+            constructDefaultListener(FluidLevelChangeEvent.class, SFluidLevelChangeEvent.class, SBukkitFluidLevelChangeEvent::new);
+        }
         if (Reflect.has("org.bukkit.event.block.MoistureChangeEvent")) {
             constructDefaultListener(MoistureChangeEvent.class, SMoistureChangeEvent.class, SBukkitMoistureChangeEvent::new);
         }
@@ -235,7 +234,7 @@ public class BukkitCore extends Core {
      * @param screamingEvent screaming event class, must be the abstract class from core module!!!
      * @param function which returns the constructed screaming event
      */
-    private <S extends AbstractEvent, B extends Event> void constructDefaultListener(Class<B> bukkitEvent, Class<S> screamingEvent, Function<B, S> function) {
+    private <S extends SEvent, B extends Event> void constructDefaultListener(Class<B> bukkitEvent, Class<S> screamingEvent, Function<B, S> function) {
         new AbstractBukkitEventHandlerFactory<>(bukkitEvent, screamingEvent, plugin) {
             @Override
             protected S wrapEvent(B event, EventPriority priority) {

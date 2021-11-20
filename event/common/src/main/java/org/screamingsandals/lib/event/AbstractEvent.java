@@ -1,25 +1,13 @@
 package org.screamingsandals.lib.event;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Abstract event class, every event should extend this
+ * Abstract event class
  */
-@Getter
-@RequiredArgsConstructor
-public abstract class AbstractEvent {
-    /**
-     * Indicates if this event is async
-     */
-    private final boolean async;
-
-    public AbstractEvent() {
-        this.async = false;
-    }
+@Deprecated
+public abstract class AbstractEvent implements SEvent {
 
     public enum Result {
         DENY,

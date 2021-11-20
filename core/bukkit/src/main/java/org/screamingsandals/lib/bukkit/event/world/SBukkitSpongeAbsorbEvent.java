@@ -1,21 +1,20 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.SpongeAbsorbEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
+import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.world.SSpongeAbsorbEvent;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class SBukkitSpongeAbsorbEvent extends SSpongeAbsorbEvent {
+public class SBukkitSpongeAbsorbEvent implements SSpongeAbsorbEvent, BukkitCancellable {
     private final SpongeAbsorbEvent event;
 
     // Internal cache

@@ -1,19 +1,14 @@
 package org.screamingsandals.lib.event.world;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.AbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.WorldHolder;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public abstract class SSpawnChangeEvent extends AbstractEvent {
+public interface SSpawnChangeEvent extends SEvent {
 
-    public abstract WorldHolder getWorld();
+    WorldHolder getWorld();
 
-    public abstract LocationHolder getOldLocation();
+    LocationHolder getOldLocation();
 
-    public abstract LocationHolder getNewLocation();
+    LocationHolder getNewLocation();
 }

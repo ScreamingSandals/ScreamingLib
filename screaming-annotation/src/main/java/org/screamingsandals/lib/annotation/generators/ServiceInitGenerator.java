@@ -696,7 +696,7 @@ public class ServiceInitGenerator {
             return;
         }
 
-        var abstractEventClass = elements.getTypeElement("org.screamingsandals.lib.event.AbstractEvent");
+        var abstractEventClass = elements.getTypeElement("org.screamingsandals.lib.event.SEvent");
         var eventManagerClass = ClassName.get("org.screamingsandals.lib.event", "EventManager");
         var eventHandlerClass = ClassName.get("org.screamingsandals.lib.event", "EventHandler");
         var eventPriorityClass = ClassName.get("org.screamingsandals.lib.event", "EventPriority");

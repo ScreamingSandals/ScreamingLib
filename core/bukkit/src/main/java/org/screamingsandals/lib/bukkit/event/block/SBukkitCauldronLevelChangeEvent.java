@@ -1,25 +1,24 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.Data;
-import org.bukkit.event.block.BlockReceiveGameEvent;
+import org.bukkit.event.block.CauldronLevelChangeEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
-import org.screamingsandals.lib.event.block.SSculkSensorReceiveEvent;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.event.block.SCauldronLevelChangeEvent;
 
 @Data
-public class SBukkitSculkSensorReceiveEvent implements SSculkSensorReceiveEvent, BukkitCancellable {
-    private final BlockReceiveGameEvent event;
+public class SBukkitCauldronLevelChangeEvent implements SCauldronLevelChangeEvent, BukkitCancellable {
+    private final CauldronLevelChangeEvent event;
 
     // Internal cache
     private BlockHolder block;
     private EntityBasic entity;
     private boolean entityConverted;
-    private NamespacedMappingKey underlyingEvent;
+    private Reason reason;
 
     @Override
     public BlockHolder getBlock() {
@@ -30,7 +29,8 @@ public class SBukkitSculkSensorReceiveEvent implements SSculkSensorReceiveEvent,
     }
 
     @Override
-    public @Nullable EntityBasic getEntity() {
+    @Nullable
+    public EntityBasic getEntity() {
         if (!entityConverted) {
             if (event.getEntity() != null) {
                 entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
@@ -41,10 +41,25 @@ public class SBukkitSculkSensorReceiveEvent implements SSculkSensorReceiveEvent,
     }
 
     @Override
-    public NamespacedMappingKey getUnderlyingEvent() {
-        if (underlyingEvent == null) {
-            underlyingEvent = NamespacedMappingKey.of(event.getEvent().getKey().toString());
+    public int getOldLevel() {
+        return event.getOldLevel();
+    }
+
+    @Override
+    public Reason getReason() {
+        if (reason == null) {
+            reason = Reason.get(event.getReason().name());
         }
-        return underlyingEvent;
+        return reason;
+    }
+
+    @Override
+    public int getNewLevel() {
+        return event.getNewLevel();
+    }
+
+    @Override
+    public void setNewLevel(int newLevel) {
+        event.setNewLevel(newLevel);
     }
 }

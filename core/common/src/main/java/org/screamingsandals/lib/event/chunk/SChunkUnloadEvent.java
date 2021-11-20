@@ -1,20 +1,16 @@
 package org.screamingsandals.lib.event.chunk;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
 /**
  * NOTE: This event is cancellable only on old minecraft versions
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
-public abstract class SChunkUnloadEvent extends CancellableAbstractEvent {
+public interface SChunkUnloadEvent extends SCancellableEvent {
 
-    public abstract ChunkHolder getChunk();
+    ChunkHolder getChunk();
 
-    public abstract boolean isSaveChunk();
+    boolean isSaveChunk();
 
-    public abstract void setSaveChunk(boolean saveChunk);
+    void setSaveChunk(boolean saveChunk);
 }

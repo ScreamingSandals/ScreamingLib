@@ -1,16 +1,12 @@
 package org.screamingsandals.lib.event.block;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public abstract class SMoistureChangeEvent extends CancellableAbstractEvent {
+public interface SMoistureChangeEvent extends SCancellableEvent {
 
-    public abstract BlockHolder getBlock();
+    BlockHolder getBlock();
 
-    public abstract BlockStateHolder getNewBlockState();
+    BlockStateHolder getNewBlockState();
 }

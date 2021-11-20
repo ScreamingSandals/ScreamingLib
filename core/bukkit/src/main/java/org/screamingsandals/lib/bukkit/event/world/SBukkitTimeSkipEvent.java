@@ -1,15 +1,14 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.bukkit.event.world.TimeSkipEvent;
+import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.event.world.STimeSkipEvent;
 import org.screamingsandals.lib.world.WorldHolder;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class SBukkitTimeSkipEvent extends STimeSkipEvent {
+public class SBukkitTimeSkipEvent implements STimeSkipEvent, BukkitCancellable {
     private final TimeSkipEvent event;
 
     // Internal cache

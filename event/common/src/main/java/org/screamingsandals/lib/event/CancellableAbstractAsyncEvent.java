@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public abstract class CancellableAbstractAsyncEvent extends AbstractAsyncEvent implements Cancellable {
+@Deprecated
+public abstract class CancellableAbstractAsyncEvent extends AbstractAsyncEvent implements SCancellableAsyncEvent {
     private boolean cancelled;
 }

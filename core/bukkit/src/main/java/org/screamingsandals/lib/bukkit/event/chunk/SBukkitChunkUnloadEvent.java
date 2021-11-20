@@ -1,16 +1,15 @@
 package org.screamingsandals.lib.bukkit.event.chunk;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.screamingsandals.lib.bukkit.world.chunk.BukkitChunkHolder;
 import org.screamingsandals.lib.event.chunk.SChunkUnloadEvent;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class SBukkitChunkUnloadEvent extends SChunkUnloadEvent {
+public class SBukkitChunkUnloadEvent implements SChunkUnloadEvent {
     private final ChunkUnloadEvent event;
+    private boolean cancelled; // on newer versions the event is not cancellable
 
     // Internal cache
     private ChunkHolder cachedChunk;

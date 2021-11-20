@@ -1,13 +1,13 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
+import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.world.SPlantGrowEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
@@ -17,8 +17,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 import java.util.Collection;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class SBukkitPlantGrowEvent extends SPlantGrowEvent {
+public class SBukkitPlantGrowEvent implements SPlantGrowEvent, BukkitCancellable {
     private final StructureGrowEvent event;
 
     // Internal cache

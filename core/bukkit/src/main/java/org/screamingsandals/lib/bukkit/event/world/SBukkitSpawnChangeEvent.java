@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.bukkit.event.world.SpawnChangeEvent;
 import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.event.world.SSpawnChangeEvent;
@@ -10,8 +9,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class SBukkitSpawnChangeEvent extends SSpawnChangeEvent {
+public class SBukkitSpawnChangeEvent implements SSpawnChangeEvent {
     private final SpawnChangeEvent event;
 
     // Internal cache

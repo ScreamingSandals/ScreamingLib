@@ -1,15 +1,13 @@
 package org.screamingsandals.lib.bukkit.event.chunk;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.screamingsandals.lib.bukkit.world.chunk.BukkitChunkHolder;
 import org.screamingsandals.lib.event.chunk.SChunkPopulateEvent;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class SBukkitChunkPopulateEvent extends SChunkPopulateEvent {
+public class SBukkitChunkPopulateEvent implements SChunkPopulateEvent {
     private final ChunkPopulateEvent event;
 
     // Internal cache

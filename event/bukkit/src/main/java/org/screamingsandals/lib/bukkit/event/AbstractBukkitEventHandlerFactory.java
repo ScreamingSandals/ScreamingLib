@@ -11,7 +11,7 @@ import org.screamingsandals.lib.event.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE extends AbstractEvent> implements Listener {
+public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE extends SEvent> implements Listener {
 
     protected final Map<EventPriority, EventExecutor> eventMap = new HashMap<>();
     protected final boolean fireAsync;
@@ -50,7 +50,7 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
                     }
 
                     if (wrapped instanceof Cancellable
-                            && event instanceof org.bukkit.event.Cancellable) {
+                            && event instanceof org.bukkit.event.Cancellable && !(event instanceof BukkitCancellable)) {
                         ((Cancellable) wrapped).setCancelled(((org.bukkit.event.Cancellable) event).isCancelled());
                     }
 
@@ -68,7 +68,7 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
                        }
                     }
 
-                    if (wrapped instanceof Cancellable && event instanceof org.bukkit.event.Cancellable) {
+                    if (wrapped instanceof Cancellable && event instanceof org.bukkit.event.Cancellable && !(event instanceof BukkitCancellable)) {
                         final var isCancelled = ((Cancellable) wrapped).isCancelled();
                         ((org.bukkit.event.Cancellable) event).setCancelled(isCancelled);
                     }

@@ -8,7 +8,8 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-public abstract class CancellableAbstractEvent extends AbstractEvent implements Cancellable {
+@Deprecated
+public abstract class CancellableAbstractEvent extends AbstractEvent implements SCancellableEvent {
     /**
      * Indicates if the event was cancelled or not
      */

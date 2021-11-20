@@ -1,50 +1,25 @@
 package org.screamingsandals.lib.event.block;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-@AllArgsConstructor
-public class SCauldronLevelChangeEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<BlockHolder> block;
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ImmutableObjectLink<Integer> oldLevel;
-    private final ImmutableObjectLink<Reason> reason;
-    private final ObjectLink<Integer> newLevel;
+public interface SCauldronLevelChangeEvent extends SCancellableEvent {
+    BlockHolder getBlock();
 
-    public BlockHolder getBlock() {
-        return block.get();
-    }
+    @Nullable EntityBasic getEntity();
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    int getOldLevel();
 
-    public int getOldLevel() {
-        return oldLevel.get();
-    }
+    Reason getReason();
 
-    public Reason getReason() {
-        return reason.get();
-    }
+    int getNewLevel();
 
-    public int getNewLevel() {
-        return newLevel.get();
-    }
-
-    public void setNewLevel(int newLevel) {
-        this.newLevel.set(newLevel);
-    }
+    void setNewLevel(int newLevel);
 
     // TODO: holder?
-    public enum Reason {
+    enum Reason {
         ARMOR_WASH,
         BANNER_WASH,
         BOTTLE_EMPTY,
@@ -57,7 +32,7 @@ public class SCauldronLevelChangeEvent extends CancellableAbstractEvent {
         SHULKER_WASH,
         UNKNOWN;
 
-        public Reason get(String name) {
+        public static Reason get(String name) {
             try {
                 return valueOf(name.toUpperCase());
             } catch (Throwable ignored) {

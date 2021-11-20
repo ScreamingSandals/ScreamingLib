@@ -1,15 +1,13 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.bukkit.event.world.WorldInitEvent;
 import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.event.world.SWorldInitEvent;
 import org.screamingsandals.lib.world.WorldHolder;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class SBukkitWorldInitEvent extends SWorldInitEvent {
+public class SBukkitWorldInitEvent implements SWorldInitEvent {
     private final WorldInitEvent event;
 
     // Internal cache

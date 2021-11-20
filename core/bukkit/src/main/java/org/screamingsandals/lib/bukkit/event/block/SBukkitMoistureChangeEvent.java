@@ -1,17 +1,16 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.bukkit.event.block.MoistureChangeEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
+import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.SMoistureChangeEvent;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class SBukkitMoistureChangeEvent extends SMoistureChangeEvent {
+public class SBukkitMoistureChangeEvent implements SMoistureChangeEvent, BukkitCancellable {
     private final MoistureChangeEvent event;
 
     // Internal cache
