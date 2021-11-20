@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.*;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.*;
 import org.bukkit.plugin.Plugin;
@@ -11,12 +13,14 @@ import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.bukkit.event.block.*;
 import org.screamingsandals.lib.bukkit.event.chunk.*;
+import org.screamingsandals.lib.bukkit.event.player.*;
 import org.screamingsandals.lib.bukkit.event.world.*;
 import org.screamingsandals.lib.bukkit.listener.*;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.event.block.*;
 import org.screamingsandals.lib.event.chunk.*;
+import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.event.world.*;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
@@ -154,18 +158,20 @@ public class BukkitCore extends Core {
             new PlayerItemMendEventListener(plugin);
         new PlayerKickEventListener(plugin);
         new PlayerLevelChangeEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.player.PlayerLocaleChangeEvent"))
-            new PlayerLocaleChangeEventListener(plugin);
-        new PlayerLoginEventListener(plugin);
-        new PlayerShearEntityEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.player.PlayerSwapHandItemsEvent"))
-            new PlayerSwapHandItemsEventListener(plugin);
-        new PlayerToggleFlightEventListener(plugin);
-        new PlayerToggleSneakEventListener(plugin);
-        new PlayerToggleSprintEventListener(plugin);
-        new PlayerVelocityEventListener(plugin);
-        new PlayerInventoryOpenEventListener(plugin);
-        new PlayerInventoryCloseEventListener(plugin);
+        if (Reflect.has("org.bukkit.event.player.PlayerLocaleChangeEvent")) {
+            constructDefaultListener(PlayerLocaleChangeEvent.class, SPlayerLocaleChangeEvent.class, SBukkitPlayerLocaleChangeEvent::new);
+        }
+        constructDefaultListener(PlayerLoginEvent.class, SPlayerLoginEvent.class, SBukkitPlayerLoginEvent::new);
+        constructDefaultListener(PlayerShearEntityEvent.class, SPlayerShearEntityEvent.class, SBukkitPlayerShearEntityEvent::new);
+        if (Reflect.has("org.bukkit.event.player.PlayerSwapHandItemsEvent")) {
+            constructDefaultListener(PlayerSwapHandItemsEvent.class, SPlayerSwapHandItemsEvent.class, SBukkitPlayerSwapHandItemsEvent::new);
+        }
+        constructDefaultListener(PlayerToggleFlightEvent.class, SPlayerToggleFlightEvent.class, SBukkitPlayerToggleFlightEvent::new);
+        constructDefaultListener(PlayerToggleSneakEvent.class, SPlayerToggleSneakEvent.class, SBukkitPlayerToggleSneakEvent::new);
+        constructDefaultListener(PlayerToggleSprintEvent.class, SPlayerToggleSprintEvent.class, SBukkitPlayerToggleSprintEvent::new);
+        constructDefaultListener(PlayerVelocityEvent.class, SPlayerVelocityChangeEvent.class, SBukkitPlayerVelocityChangeEvent::new);
+        constructDefaultListener(InventoryOpenEvent.class, SPlayerInventoryOpenEvent.class, SBukkitPlayerInventoryOpenEvent::new);
+        constructDefaultListener(InventoryCloseEvent.class, SPlayerInventoryCloseEvent.class, SBukkitPlayerInventoryCloseEvent::new);
 
         // block
         constructDefaultListener(BlockBurnEvent.class, SBlockBurnEvent.class, SBukkitBlockBurnEvent::new);

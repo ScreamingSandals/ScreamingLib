@@ -1,28 +1,11 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.container.Container;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class SPlayerInventoryOpenEvent extends CancellableAbstractEvent implements SPlayerEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
-    private final ImmutableObjectLink<Container> topInventory;
-    private final ImmutableObjectLink<Container> bottomInventory;
+public interface SPlayerInventoryOpenEvent extends SCancellableEvent, SPlayerEvent {
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
-    }
+    Container getTopInventory();
 
-    public Container getTopInventory() {
-        return topInventory.get();
-    }
-
-    public Container getBottomInventory() {
-        return bottomInventory.get();
-    }
+    Container getBottomInventory();
 }
