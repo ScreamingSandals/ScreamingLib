@@ -9,20 +9,11 @@ import org.screamingsandals.lib.world.WorldHolder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SSpawnChangeEvent extends AbstractEvent {
-    private final ImmutableObjectLink<WorldHolder> world;
-    private final ImmutableObjectLink<LocationHolder> oldLocation;
-    private final ImmutableObjectLink<LocationHolder> newLocation;
+public abstract class SSpawnChangeEvent extends AbstractEvent {
 
-    public WorldHolder getWorld() {
-        return world.get();
-    }
+    public abstract WorldHolder getWorld();
 
-    public LocationHolder getOldLocation() {
-        return oldLocation.get();
-    }
+    public abstract LocationHolder getOldLocation();
 
-    public LocationHolder getNewLocation() {
-        return newLocation.get();
-    }
+    public abstract LocationHolder getNewLocation();
 }

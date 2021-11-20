@@ -13,26 +13,15 @@ import org.screamingsandals.lib.world.WorldHolder;
 @Data
 @AllArgsConstructor
 @LimitedVersionSupport("Bukkit >= 1.15.1")
-public class STimeSkipEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<WorldHolder> world;
-    private final ImmutableObjectLink<Reason> reason;
-    private final ObjectLink<Long> skipAmount;
+public abstract class STimeSkipEvent extends CancellableAbstractEvent {
 
-    public WorldHolder getWorld() {
-        return world.get();
-    }
+    public abstract WorldHolder getWorld();
 
-    public Reason getReason() {
-        return reason.get();
-    }
+    public abstract Reason getReason();
 
-    public long getSkipAmount() {
-        return skipAmount.get();
-    }
+    public abstract long getSkipAmount();
 
-    public void setSkipAmount(long skipAmount) {
-        this.skipAmount.set(skipAmount);
-    }
+    public abstract void setSkipAmount(long skipAmount);
 
     // TODO: holder?
     public enum Reason {

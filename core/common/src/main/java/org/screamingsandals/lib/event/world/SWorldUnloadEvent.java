@@ -8,10 +8,7 @@ import org.screamingsandals.lib.world.WorldHolder;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SWorldUnloadEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<WorldHolder> world;
+public abstract class SWorldUnloadEvent extends CancellableAbstractEvent {
 
-    public WorldHolder getWorld() {
-        return world.get();
-    }
+    public abstract WorldHolder getWorld();
 }

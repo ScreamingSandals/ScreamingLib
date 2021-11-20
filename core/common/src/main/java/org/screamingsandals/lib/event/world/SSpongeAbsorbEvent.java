@@ -13,11 +13,9 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @LimitedVersionSupport("Bukkit >= 1.13")
-public class SSpongeAbsorbEvent extends CancellableAbstractEvent {
-    public final ImmutableObjectLink<BlockHolder> block;
-    public final Collection<BlockStateHolder> waterBlocks;
+public abstract class SSpongeAbsorbEvent extends CancellableAbstractEvent {
 
-    public BlockHolder getBlock() {
-        return block.get();
-    }
+    public abstract BlockHolder getBlock();
+
+    public abstract Collection<BlockStateHolder> getWaterBlocks();
 }

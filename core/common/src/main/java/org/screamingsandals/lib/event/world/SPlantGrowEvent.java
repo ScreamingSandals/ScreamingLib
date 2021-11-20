@@ -13,24 +13,14 @@ import java.util.Collection;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SPlantGrowEvent extends CancellableAbstractEvent {
-    private final Collection<BlockStateHolder> blockStates;
-    private final ImmutableObjectLink<LocationHolder> location;
-    private final ImmutableObjectLink<@Nullable PlayerWrapper> player;
-    private final ImmutableObjectLink<Boolean> bonemealed;
-    // TODO: Tree type
+public abstract class SPlantGrowEvent extends CancellableAbstractEvent {
 
+    public abstract Collection<BlockStateHolder> getBlockStates();
 
-    public LocationHolder getLocation() {
-        return location.get();
-    }
+    public abstract LocationHolder getLocation();
 
     @Nullable
-    public PlayerWrapper getPlayer() {
-        return player.get();
-    }
+    public abstract PlayerWrapper getPlayer();
 
-    public boolean isBonemealed() {
-        return bonemealed.get();
-    }
+    public abstract boolean isBonemealed();
 }
