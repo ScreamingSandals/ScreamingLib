@@ -30,7 +30,7 @@ public class SBukkitPlayerLocaleChangeEvent implements SPlayerLocaleChangeEvent 
     public Locale getLocale() {
         if (locale == null) {
             if (Reflect.hasMethod(event, "locale")) {
-                locale = event.locale();
+                locale = event.locale(); // java.util.Locale is not an adventure thing so we can
             } else {
                 locale = Translator.parseLocale(event.getLocale());
             }

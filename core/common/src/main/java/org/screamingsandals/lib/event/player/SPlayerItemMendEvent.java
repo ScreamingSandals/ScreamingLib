@@ -1,41 +1,16 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityExperience;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SPlayerItemMendEvent extends CancellableAbstractEvent implements SPlayerEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
-    private final ImmutableObjectLink<Item> item;
-    private final ImmutableObjectLink<EntityExperience> experienceOrb;
-    private final ObjectLink<Integer> repairAmount;
+public interface SPlayerItemMendEvent extends SCancellableEvent, SPlayerEvent {
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
-    }
+    Item getItem();
 
-    public Item getItem() {
-        return item.get();
-    }
+    EntityExperience getExperienceOrb();
 
-    public EntityExperience getExperienceOrb() {
-        return experienceOrb.get();
-    }
+    int getRepairAmount();
 
-    public int getRepairAmount() {
-        return repairAmount.get();
-    }
-
-    public void setRepairAmount(int repairAmount) {
-        this.repairAmount.set(repairAmount);
-    }
+    void setRepairAmount(int repairAmount);
 }

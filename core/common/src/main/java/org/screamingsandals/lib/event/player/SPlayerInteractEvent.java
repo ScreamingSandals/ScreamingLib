@@ -1,79 +1,40 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.AbstractEvent;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
-import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.BlockFace;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
 import org.screamingsandals.lib.block.BlockHolder;
 
 import java.util.Arrays;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SPlayerInteractEvent extends CancellableAbstractEvent implements SPlayerEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
-    private final ImmutableObjectLink<@Nullable Item> item;
-    private final ImmutableObjectLink<Action> action;
-    private final ImmutableObjectLink<@Nullable BlockHolder> blockClicked;
-    private final ImmutableObjectLink<BlockFace> blockFace;
-    private final ObjectLink<AbstractEvent.Result> useClickedBlock;
-    private final ObjectLink<AbstractEvent.Result> useItemInHand;
-    private final ImmutableObjectLink<@Nullable EquipmentSlotHolder> hand;
-
-    public PlayerWrapper getPlayer() {
-        return player.get();
-    }
+public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent {
 
     @Nullable
-    public Item getItem() {
-        return item.get();
-    }
+    Item getItem();
 
-    public Action getAction() {
-        return action.get();
-    }
+    Action getAction();
 
     @Nullable
-    public BlockHolder getBlockClicked() {
-        return blockClicked.get();
-    }
+    BlockHolder getBlockClicked();
 
-    public BlockFace getBlockFace() {
-        return blockFace.get();
-    }
+    BlockFace getBlockFace();
 
-    public Result getUseClickedBlock() {
-        return useClickedBlock.get();
-    }
+    Result getUseClickedBlock();
 
-    public void setUseClickedBlock(Result useClickedBlock) {
-        this.useClickedBlock.set(useClickedBlock);
-    }
+    void setUseClickedBlock(Result useClickedBlock);
 
-    public Result getUseItemInHand() {
-        return useItemInHand.get();
-    }
+    Result getUseItemInHand();
 
-    public void setUseItemInHand(Result useItemInHand) {
-        this.useItemInHand.set(useItemInHand);
-    }
+    void setUseItemInHand(Result useItemInHand);
 
     @Nullable
-    public EquipmentSlotHolder getHand() {
-        return hand.get();
-    }
+    EquipmentSlotHolder getHand();
 
     /**
      * Sets the cancellation state of this event. A canceled event will not be
@@ -86,7 +47,7 @@ public class SPlayerInteractEvent extends CancellableAbstractEvent implements SP
      * @param cancel true if you wish to cancel this event
      */
     @Override
-    public void setCancelled(boolean cancel) {
+    default void setCancelled(boolean cancel) {
         setUseClickedBlock(cancel ? AbstractEvent.Result.DENY : getUseClickedBlock() == AbstractEvent.Result.DENY ? AbstractEvent.Result.DEFAULT : getUseClickedBlock());
         setUseItemInHand(cancel ? AbstractEvent.Result.DENY : getUseItemInHand() == AbstractEvent.Result.DENY ? AbstractEvent.Result.DEFAULT : getUseItemInHand());
     }
@@ -96,7 +57,7 @@ public class SPlayerInteractEvent extends CancellableAbstractEvent implements SP
      *
      * @return boolean true if it did
      */
-    public boolean hasBlock() {
+    default boolean hasBlock() {
         return getBlockClicked() != null;
     }
 
@@ -105,7 +66,7 @@ public class SPlayerInteractEvent extends CancellableAbstractEvent implements SP
      *
      * @return boolean true if it did
      */
-    public boolean hasItem() {
+    default boolean hasItem() {
         return getItem() != null;
     }
 
@@ -116,7 +77,7 @@ public class SPlayerInteractEvent extends CancellableAbstractEvent implements SP
      * @return Material the material of the item used
      */
     @NotNull
-    public ItemTypeHolder getMaterial() {
+    default ItemTypeHolder getMaterial() {
         if (!hasItem()) {
             return ItemTypeHolder.air();
         }
@@ -136,12 +97,12 @@ public class SPlayerInteractEvent extends CancellableAbstractEvent implements SP
      */
     @Deprecated
     @Override
-    public boolean isCancelled() {
+    default boolean isCancelled() {
         return getUseClickedBlock() == Result.DENY;
     }
 
     // TODO: holder?
-    public enum Action {
+    enum Action {
         LEFT_CLICK_BLOCK,
         RIGHT_CLICK_BLOCK,
         LEFT_CLICK_AIR,

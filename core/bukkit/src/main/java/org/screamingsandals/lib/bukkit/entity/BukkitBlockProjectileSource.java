@@ -16,7 +16,7 @@ import org.screamingsandals.lib.block.BlockMapper;
 import java.util.Optional;
 
 public class BukkitBlockProjectileSource extends BasicWrapper<BlockProjectileSource> implements BlockProjectileShooter {
-    protected BukkitBlockProjectileSource(BlockProjectileSource wrappedObject) {
+    public BukkitBlockProjectileSource(BlockProjectileSource wrappedObject) {
         super(wrappedObject);
     }
 

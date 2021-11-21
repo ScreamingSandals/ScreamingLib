@@ -1,53 +1,27 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SPlayerFishEvent extends CancellableAbstractEvent implements SPlayerEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ObjectLink<Integer> exp;
-    private final ImmutableObjectLink<State> state;
-    private final ImmutableObjectLink<EntityBasic> hookEntity;
+public interface SPlayerFishEvent extends SCancellableEvent, SPlayerEvent {
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
-    }
+    @Nullable
+    EntityBasic getEntity();
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    int getExp();
 
-    public int getExp() {
-        return exp.get();
-    }
+    void setExp(int exp);
 
-    public void setExp(int exp) {
-        this.exp.set(exp);
-    }
+    State getState();
 
-    public State getState() {
-        return state.get();
-    }
-
-    public EntityBasic getHookEntity() {
-        return hookEntity.get();
-    }
+    EntityBasic getHookEntity();
 
     /**
      * An enum to specify the state of the fishing
      */
     // TODO: holder?
-    public enum State {
+    enum State {
 
         /**
          * When a player is fishing, ie casting the line out.

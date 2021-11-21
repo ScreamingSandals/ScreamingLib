@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BukkitEntityFirework extends BukkitEntityProjectile implements EntityFirework {
-    protected BukkitEntityFirework(Firework wrappedObject) {
+    public BukkitEntityFirework(Firework wrappedObject) {
         super(wrappedObject);
     }
 

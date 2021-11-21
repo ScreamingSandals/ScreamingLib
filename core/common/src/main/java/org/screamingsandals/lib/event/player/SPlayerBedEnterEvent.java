@@ -1,23 +1,14 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 
-@EqualsAndHashCode(callSuper = false)
-@RequiredArgsConstructor
-@Data
-public class SPlayerBedEnterEvent extends CancellableAbstractEvent implements SPlayerEvent {
+public interface SPlayerBedEnterEvent extends SCancellableEvent, SPlayerEvent {
     /**
      * Represents the default possible outcomes of this event.
      */
     // TODO: holder?
-    public enum BedEnterResult {
+    enum BedEnterResult {
         /**
          * The player will enter the bed.
          */
@@ -58,33 +49,22 @@ public class SPlayerBedEnterEvent extends CancellableAbstractEvent implements SP
         }
     }
 
-    private final ImmutableObjectLink<PlayerWrapper> player;
-    private final ImmutableObjectLink<BlockHolder> bed;
-    private final ImmutableObjectLink<BedEnterResult> bedEnterResult;
-    private final ObjectLink<Result> useBed;
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
-    }
+    BlockHolder getBed();
 
-    public BlockHolder getBed() {
-        return bed.get();
-    }
+    BedEnterResult getBedEnterResult();
 
-    public BedEnterResult getBedEnterResult() {
-        return bedEnterResult.get();
-    }
+    Result getUseBed();
 
-    public Result getUseBed() {
-        return useBed.get();
-    }
+    void setUseBed(Result useBed);
 
-    public void setUseBed(Result useBed) {
-        this.useBed.set(useBed);
+    @Override
+    default boolean isCancelled() {
+        return (getUseBed() == Result.DENY || getUseBed() == Result.DEFAULT && getBedEnterResult() != BedEnterResult.OK);
     }
 
     @Override
-    public boolean isCancelled() {
-        return (useBed.get() == Result.DENY || useBed.get() == Result.DEFAULT && bedEnterResult.get() != BedEnterResult.OK);
+    default void setCancelled(boolean cancelled) {
+        setUseBed(cancelled ? Result.DENY: Result.DEFAULT);
     }
 }

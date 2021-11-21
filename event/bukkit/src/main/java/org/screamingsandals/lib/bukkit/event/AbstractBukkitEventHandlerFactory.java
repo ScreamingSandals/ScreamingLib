@@ -50,7 +50,7 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
                     }
 
                     if (wrapped instanceof Cancellable
-                            && event instanceof org.bukkit.event.Cancellable && !(event instanceof BukkitCancellable)) {
+                            && event instanceof org.bukkit.event.Cancellable && !(event instanceof NoAutoCancellable)) {
                         ((Cancellable) wrapped).setCancelled(((org.bukkit.event.Cancellable) event).isCancelled());
                     }
 
@@ -68,7 +68,7 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
                        }
                     }
 
-                    if (wrapped instanceof Cancellable && event instanceof org.bukkit.event.Cancellable && !(event instanceof BukkitCancellable)) {
+                    if (wrapped instanceof Cancellable && event instanceof org.bukkit.event.Cancellable && !(event instanceof NoAutoCancellable)) {
                         final var isCancelled = ((Cancellable) wrapped).isCancelled();
                         ((org.bukkit.event.Cancellable) event).setCancelled(isCancelled);
                     }

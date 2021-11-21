@@ -129,35 +129,40 @@ public class BukkitCore extends Core {
         new PlayerFoodLevelChangeListener(plugin);
         new PlayerCraftItemEventListener(plugin);
         new PlayerDropItemEventListener(plugin);
-        new PlayerBedEnterEventListener(plugin);
-        new PlayerAnimationEventListener(plugin);
-        new PlayerInteractEntityEventListener(plugin, PlayerInteractEntityEvent.class);
-        new PlayerInteractEntityEventListener(plugin,  PlayerInteractAtEntityEvent.class);
+        constructDefaultListener(PlayerBedEnterEvent.class, SPlayerBedEnterEvent.class, SBukkitPlayerBedEnterEvent::new);
+        constructDefaultListener(PlayerAnimationEvent.class, SPlayerAnimationEvent.class, SBukkitPlayerAnimationEvent::new);
+
+        // PlayerInteractEntityEvent is a weird event, every child has its own event handler
+        constructDefaultListener(PlayerInteractEntityEvent.class, SPlayerInteractEntityEvent.class, SBukkitPlayerInteractEntityEvent::new);
+        constructDefaultListener(PlayerInteractAtEntityEvent.class, SPlayerInteractEntityEvent.class, SBukkitPlayerInteractAtEntityEvent::new);
         if (Reflect.has("org.bukkit.event.player.PlayerArmorStandManipulateEvent")) {
-            new PlayerInteractEntityEventListener(plugin,  PlayerArmorStandManipulateEvent.class);
+            constructDefaultListener(PlayerArmorStandManipulateEvent.class, SPlayerInteractEntityEvent.class, SBukkitPlayerArmorStandManipulateEvent::new);
         }
-        new PlayerBedLeaveEventListener(plugin);
+        constructDefaultListener(PlayerBedLeaveEvent.class, SPlayerBedLeaveEvent.class, SBukkitPlayerBedLeaveEvent::new);
 
         // PlayerBucketEvent is abstract and doesn't have implemented handler list
-        new PlayerBucketEventListener(plugin, PlayerBucketEmptyEvent.class);
-        new PlayerBucketEventListener(plugin, PlayerBucketFillEvent.class);
+        constructDefaultListener(PlayerBucketEmptyEvent.class, SPlayerBucketEvent.class, SBukkitPlayerBucketEvent::new);
+        constructDefaultListener(PlayerBucketFillEvent.class, SPlayerBucketEvent.class, SBukkitPlayerBucketEvent::new);
 
-        if (Reflect.has("org.bukkit.event.player.PlayerCommandSendEvent"))
-            new PlayerCommandSendEventListener(plugin);
-        new PlayerEggThrowEventListener(plugin);
-        new PlayerExpChangeEventListener(plugin);
-        new PlayerFishEventListener(plugin);
-        new PlayerGameModeChangeEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.player.PlayerHarvestBlockEvent"))
-            new PlayerHarvestBlockEventListener(plugin);
-        new PlayerInteractEventListener(plugin);
-        new PlayerItemConsumeEventListener(plugin);
-        new PlayerItemDamageEventListener(plugin);
-        new PlayerItemHeldEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.player.PlayerItemMendEvent"))
-            new PlayerItemMendEventListener(plugin);
-        new PlayerKickEventListener(plugin);
-        new PlayerLevelChangeEventListener(plugin);
+        if (Reflect.has("org.bukkit.event.player.PlayerCommandSendEvent")) {
+            constructDefaultListener(PlayerCommandSendEvent.class, SPlayerCommandSendEvent.class, SBukkitPlayerCommandSendEvent::new);
+        }
+        constructDefaultListener(PlayerEggThrowEvent.class, SPlayerEggThrowEvent.class, SBukkitPlayerEggThrowEvent::new);
+        constructDefaultListener(PlayerExpChangeEvent.class, SPlayerExpChangeEvent.class, SBukkitPlayerExpChangeEvent::new);
+        constructDefaultListener(PlayerFishEvent.class, SPlayerFishEvent.class, SBukkitPlayerFishEvent::new);
+        constructDefaultListener(PlayerGameModeChangeEvent.class, SPlayerGameModeChangeEvent.class, SBukkitPlayerGameModeChangeEvent::new);
+        if (Reflect.has("org.bukkit.event.player.PlayerHarvestBlockEvent")) {
+            constructDefaultListener(PlayerHarvestBlockEvent.class, SPlayerHarvestBlockEvent.class, SBukkitPlayerHarvestBlockEvent::new);
+        }
+        constructDefaultListener(PlayerInteractEvent.class, SPlayerInteractEvent.class, SBukkitPlayerInteractEvent::new);
+        constructDefaultListener(PlayerItemConsumeEvent.class, SPlayerItemConsumeEvent.class, SBukkitPlayerItemConsumeEvent::new);
+        constructDefaultListener(PlayerItemDamageEvent.class, SPlayerItemDamageEvent.class, SBukkitPlayerItemDamageEvent::new);
+        constructDefaultListener(PlayerItemHeldEvent.class, SPlayerItemHeldEvent.class, SBukkitPlayerItemHeldEvent::new);
+        if (Reflect.has("org.bukkit.event.player.PlayerItemMendEvent")) {
+            constructDefaultListener(PlayerItemMendEvent.class, SPlayerItemMendEvent.class, SBukkitPlayerItemMendEvent::new);
+        }
+        constructDefaultListener(PlayerKickEvent.class, SPlayerKickEvent.class, SBukkitPlayerKickEvent::new);
+        constructDefaultListener(PlayerLevelChangeEvent.class, SPlayerLevelChangeEvent.class, SBukkitPlayerLevelChangeEvent::new);
         if (Reflect.has("org.bukkit.event.player.PlayerLocaleChangeEvent")) {
             constructDefaultListener(PlayerLocaleChangeEvent.class, SPlayerLocaleChangeEvent.class, SBukkitPlayerLocaleChangeEvent::new);
         }

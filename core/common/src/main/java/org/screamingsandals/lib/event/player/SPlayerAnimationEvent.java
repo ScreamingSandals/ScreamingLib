@@ -1,32 +1,16 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SPlayerAnimationEvent extends CancellableAbstractEvent implements SPlayerEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
-    private final ImmutableObjectLink<PlayerAnimationType> animationType;
+public interface SPlayerAnimationEvent extends SCancellableEvent, SPlayerEvent {
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
-    }
-
-    public PlayerAnimationType getAnimationType() {
-        return animationType.get();
-    }
+    PlayerAnimationType getAnimationType();
 
     /**
      * Different types of player animations
      */
     // TODO: holder?
-    public enum PlayerAnimationType {
+    enum PlayerAnimationType {
         ARM_SWING;
 
         public static PlayerAnimationType convert(String cause) {

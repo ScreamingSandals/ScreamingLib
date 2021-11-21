@@ -4,7 +4,7 @@ import org.bukkit.entity.LightningStrike;
 import org.screamingsandals.lib.entity.EntityLightning;
 
 public class BukkitEntityLightning extends BukkitEntityBasic implements EntityLightning {
-    protected BukkitEntityLightning(LightningStrike wrappedObject) {
+    public BukkitEntityLightning(LightningStrike wrappedObject) {
         super(wrappedObject);
     }
 

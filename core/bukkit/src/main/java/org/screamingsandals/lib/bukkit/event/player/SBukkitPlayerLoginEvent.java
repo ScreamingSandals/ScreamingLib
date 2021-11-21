@@ -61,7 +61,7 @@ public class SBukkitPlayerLoginEvent implements SPlayerLoginEvent {
     @Override
     public void setMessage(ComponentLike message) {
         if (message instanceof SenderMessage) {
-            setMessage(((SenderMessage) message).asComponent(player));
+            setMessage(((SenderMessage) message).asComponent(getPlayer()));
         } else {
             setMessage(message.asComponent());
         }

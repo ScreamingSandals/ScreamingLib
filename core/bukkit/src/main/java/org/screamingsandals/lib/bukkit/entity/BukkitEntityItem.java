@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public class BukkitEntityItem extends BukkitEntityBasic implements EntityItem {
 
-    protected BukkitEntityItem(org.bukkit.entity.Item wrappedObject) {
+    public BukkitEntityItem(org.bukkit.entity.Item wrappedObject) {
         super(wrappedObject);
     }
 

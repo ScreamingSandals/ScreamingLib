@@ -1,54 +1,21 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
-import org.screamingsandals.lib.event.AbstractEvent;
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SPlayerEggThrowEvent extends AbstractEvent implements SPlayerEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
-    private final ImmutableObjectLink<EntityBasic> egg;
-    private final ObjectLink<Boolean> hatching;
-    private final ObjectLink<EntityTypeHolder> hatchType;
-    private final ObjectLink<Byte> numHatches;
+public interface SPlayerEggThrowEvent extends SPlayerEvent {
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
-    }
+    EntityBasic getEgg();
 
-    public EntityBasic getEgg() {
-        return egg.get();
-    }
+    boolean isHatching();
 
-    public boolean isHatching() {
-        return hatching.get();
-    }
+    void setHatching(boolean hatching);
 
-    public void setHatching(boolean hatching) {
-        this.hatching.set(hatching);
-    }
+    EntityTypeHolder getHatchType();
 
-    public EntityTypeHolder getHatchType() {
-        return hatchType.get();
-    }
+    void setHatchType(EntityTypeHolder hatchType);
 
-    public void setHatchType(EntityTypeHolder hatchType) {
-        this.hatchType.set(hatchType);
-    }
+    byte getNumHatches();
 
-    public byte getNumHatches() {
-        return numHatches.get();
-    }
-
-    public void setNumHatches(byte numHatches) {
-        this.numHatches.set(numHatches);
-    }
+    void setNumHatches(byte numHatches);
 }

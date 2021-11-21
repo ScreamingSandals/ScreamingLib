@@ -1,38 +1,13 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
 
-@EqualsAndHashCode(callSuper = false)
-@Getter
-public class SPlayerArmorStandManipulateEvent extends SPlayerInteractEntityEvent {
-    private final ImmutableObjectLink<Item> playerItem;
-    private final ImmutableObjectLink<Item> armorStandItem;
-    private final ImmutableObjectLink<EquipmentSlotHolder> slot;
+public interface SPlayerArmorStandManipulateEvent extends SPlayerInteractEntityEvent {
 
-    public SPlayerArmorStandManipulateEvent(ImmutableObjectLink<PlayerWrapper> who, ImmutableObjectLink<EntityBasic> clickedEntity,
-                                            ImmutableObjectLink<Item> playerItem, ImmutableObjectLink<Item> armorStandItem,
-                                            ImmutableObjectLink<EquipmentSlotHolder> slot, ImmutableObjectLink<EquipmentSlotHolder> hand) {
-        super(who, clickedEntity, hand);
-        this.playerItem = playerItem;
-        this.armorStandItem = armorStandItem;
-        this.slot = slot;
-    }
+    Item getPlayerItem();
 
-    public Item getPlayerItem() {
-        return playerItem.get();
-    }
+    Item getArmorStandItem();
 
-    public Item getArmorStandItem() {
-        return armorStandItem.get();
-    }
-
-    public EquipmentSlotHolder getSlot() {
-        return slot.get();
-    }
+    EquipmentSlotHolder getSlot();
 }

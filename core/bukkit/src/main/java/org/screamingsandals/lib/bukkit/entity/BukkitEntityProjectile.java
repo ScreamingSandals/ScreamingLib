@@ -10,7 +10,7 @@ import org.screamingsandals.lib.entity.EntityProjectile;
 import org.screamingsandals.lib.entity.ProjectileShooter;
 
 public class BukkitEntityProjectile extends BukkitEntityBasic implements EntityProjectile {
-    protected BukkitEntityProjectile(Projectile wrappedObject) {
+    public BukkitEntityProjectile(Projectile wrappedObject) {
         super(wrappedObject);
     }
 

@@ -4,7 +4,7 @@ import org.bukkit.entity.ExperienceOrb;
 import org.screamingsandals.lib.entity.EntityExperience;
 
 public class BukkitEntityExperience extends BukkitEntityBasic implements EntityExperience {
-    protected BukkitEntityExperience(ExperienceOrb wrappedObject) {
+    public BukkitEntityExperience(ExperienceOrb wrappedObject) {
         super(wrappedObject);
     }
 
