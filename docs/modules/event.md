@@ -17,6 +17,10 @@ Supported platforms are: `bukkit, sponge, bungee, velocity`
         <id>screamingrepo</id>
         <url>https://repo.screamingsandals.org/repository/maven-public</url>
     </repository>
+    <repository>
+        <id>papermc</id>
+        <url>https://papermc.io/repo/repository/maven-public</url>
+    </repository>
 </repositories>
 
 <dependencies>
@@ -41,7 +45,10 @@ Supported platforms are: `bukkit, sponge, bungee, velocity`
 ```groovy
 repositories {
     maven { 
-        url 'https://repo.screamingsandals.org/repository/maven-public' 
+        url 'https://repo.screamingsandals.org/repository/maven-public'
+    }
+    maven {
+        url 'https://papermc.io/repo/repository/maven-public'
     }
 }
 

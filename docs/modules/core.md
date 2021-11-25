@@ -32,6 +32,10 @@ Supported platforms are: `bukkit, minestom, sponge`
         <id>screamingrepo</id>
         <url>https://repo.screamingsandals.org/repository/maven-public</url>
     </repository>
+    <repository>
+        <id>papermc</id>
+        <url>https://papermc.io/repo/repository/maven-public</url>
+    </repository>
 </repositories>
 
 <dependencies>
@@ -57,7 +61,10 @@ Supported platforms are: `bukkit, minestom, sponge`
 ```groovy
 repositories {
     maven { 
-        url 'https://repo.screamingsandals.org/repository/maven-public' 
+        url 'https://repo.screamingsandals.org/repository/maven-public'
+    }
+    maven {
+        url 'https://papermc.io/repo/repository/maven-public'
     }
 }
 
@@ -159,6 +166,8 @@ public class ExampleService {
 ## Configuration
 ScreamingLib doesn't bundle a configuration system like Bukkit, so you will have to use an external library. We recommend using Sponge's [Configurate](https://github.com/SpongePowered/Configurate) library, which I will demonstrate the usage for in this chapter.
 
+Configurate supports many formats, but I'll use `configurate-yaml` in this example (all work on the same principle). You can check out the available formats [here](https://github.com/SpongePowered/Configurate#configurate-loaders).
+
 ### Usage
 
 #### Maven
@@ -166,6 +175,7 @@ ScreamingLib doesn't bundle a configuration system like Bukkit, so you will have
 <dependencies>
     <dependency>
         <groupId>org.spongepowered</groupId>
+        <!--- https://github.com/SpongePowered/Configurate#configurate-loaders -->
         <artifactId>configurate-yaml</artifactId>
         <version>4.1.2</version>
     </dependency>
@@ -179,6 +189,7 @@ repositories {
 }
 
 dependencies {
+    // https://github.com/SpongePowered/Configurate#configurate-loaders
     implementation 'org.spongepowered:configurate-yaml:4.1.2'
 }
 ```
@@ -189,7 +200,6 @@ dependencies {
 ```java
 @Service
 public final class ConfigManager {
-    private AbstractConfigurationLoader<?> loader;
     private ConfigurationNode node;
 
     // used for retrieving the config values
@@ -198,25 +208,14 @@ public final class ConfigManager {
     }
 
     @OnEnable
-    public void enable(ExamplePlugin plugin) { // SLib injects the plugin instance automatically
-        final File configFile = Paths.get(
-            plugin.getDataFolder().getAbsolutePath(), "config.yml"
-        ).toFile();
-        // checking if the file exists and is not a directory
-        if (!configFile.isFile()) {
-            // tries to copy the config file from the JAR, prints the stacktrace if something went wrong
-            try {
-                Files.copy(ExamplePlugin.class.getResourceAsStream("/config.yml"), configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        // constructs the loader
-        loader = YamlConfigurationLoader.builder().file(configFile).build();
+    public void enable(ExamplePlugin plugin) {
+        plugin.saveResource("config.yml", false); // saves the config file
     }
 
+    // SLib automatically provides the loader
+    // change the config loader implementation class if you don't use the yaml version
     @OnPostEnable
-    public void postEnable() {
+    public void postEnable(@ConfigFile("config.yml") YamlConfigurationLoader loader) {
         // tries to load the file, prints the stacktrace if something went wrong
         try {
             node = loader.load();
@@ -236,14 +235,17 @@ section:
 
 Retrieving values from the example config:
 ```java
-@OnEnable(dependsOn = {
+@Service(dependsOn = {
     ConfigManager.class
 })
-public void enable(ConfigManager configManager) {
-    // drills down through the structure
-    PlayerMapper.getConsoleSender().sendMessage(Integer.toString(configManager.node("section", "value").getInt(0))) // gets the value or default if not present
-    // yaml lists can be retrieved with ConfigurationNode#childrenList()
-    // yaml maps can be retrieved with ConfigurationNode#childrenMap()
+public final class ExampleService {
+    @OnEnable
+    public void enable(ConfigManager configManager) {
+        // drills down through the structure
+        PlayerMapper.getConsoleSender().sendMessage(Integer.toString(configManager.node("section", "value").getInt(0))) // gets the value or default if not present
+        // lists can be retrieved with ConfigurationNode#childrenList()
+        // maps can be retrieved with ConfigurationNode#childrenMap()
+    }
 }
 ```
 
@@ -279,10 +281,5 @@ PlayerMapper.getConsoleSender().sendMessage("Is player online? " + Boolean.toStr
 #### Converting a name to PlayerWrapper
 If you want to convert a player's name to PlayerWrapper, utilize the `Optional<PlayerWrapper> PlayerMapper#getPlayer(String)` method.
 ```java
-final Optional<PlayerWrapper> player = PlayerMapper.getPlayer("Misat11");
-if (player.isPresent()) {
-    player.orElseThrow().sendMessage("Hello misat!");
-} else {
-    PlayerMapper.getConsoleSender().sendMessage("Misat is not online!");
-}
+PlayerMapper.getPlayer("Misat11").ifPresent(player -> player.sendMessage("Hello misat!"));
 ```

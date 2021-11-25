@@ -16,6 +16,10 @@ Supported platforms are the same as the packets module, because this module does
         <id>screamingrepo</id>
         <url>https://repo.screamingsandals.org/repository/maven-public</url>
     </repository>
+    <repository>
+        <id>papermc</id>
+        <url>https://papermc.io/repo/repository/maven-public</url>
+    </repository>
 </repositories>
 
 <dependencies>
@@ -40,7 +44,10 @@ Supported platforms are the same as the packets module, because this module does
 ```groovy
 repositories {
     maven { 
-        url 'https://repo.screamingsandals.org/repository/maven-public' 
+        url 'https://repo.screamingsandals.org/repository/maven-public'
+    }
+    maven {
+        url 'https://papermc.io/repo/repository/maven-public'
     }
 }
 
