@@ -198,11 +198,9 @@ public final class ConfigManager {
     }
 
     @OnEnable
-    public void enable() {
-        // you will have to create a getInstance method in your plugin's main class to get the pluginInstance
-        // check the plugin example in the plugin chapter
+    public void enable(ExamplePlugin plugin) { // SLib injects the plugin instance automatically
         final File configFile = Paths.get(
-            ExamplePlugin.getInstance().getDataFolder().getAbsolutePath(), "config.yml"
+            plugin.getDataFolder().getAbsolutePath(), "config.yml"
         ).toFile();
         // checking if the file exists and is not a directory
         if (!configFile.isFile()) {
