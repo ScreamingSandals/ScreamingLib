@@ -54,14 +54,28 @@ dependencies {
 ### Making your first plugin
 !!! warning "Adventure"
 
-    If you're experiencing errors related to [Adventure](https://github.com/KyoriPowered/adventure), make sure to relocate the net.kyori.adventure package!
+    If you're experiencing errors related to [Adventure](https://github.com/KyoriPowered/adventure), make sure to relocate the `net.kyori.adventure` package!
 
 
 #### Creating the main plugin class
-
 Start with extending the `PluginContainer` class, like this:
 ```java
 public class ExamplePlugin extends PluginContainer {
+    private static ExamplePlugin INSTANCE;
+
+    public ExamplePlugin() {
+        INSTANCE = this;
+    }
+
+    // factory method for easy retrieval of the plugin instance
+    // ExamplePlugin.getInstance()
+    public static ExamplePlugin getInstance() {
+        if (INSTANCE == null) {
+            throw new UnsupportedOperationException("Plugin has not been initialized yet!");
+        }
+        return INSTANCE;
+    }
+
     @Override
     public void load() {
         // Plugin load logic
@@ -90,6 +104,21 @@ After that, add the `@Plugin` and `@Init` (only if you use SLib services) annota
         ExampleService.class
 })
 public class ExamplePlugin extends PluginContainer {
+    private static ExamplePlugin INSTANCE;
+
+    public ExamplePlugin() {
+        INSTANCE = this;
+    }
+
+    // factory method for easy retrieval of the plugin instance
+    // ExamplePlugin.getInstance()
+    public static ExamplePlugin getInstance() {
+        if (INSTANCE == null) {
+            throw new UnsupportedOperationException("Plugin has not been initialized yet!");
+        }
+        return INSTANCE;
+    }
+
     @Override
     public void load() {
         // Plugin load logic
@@ -125,6 +154,21 @@ If you want to depend on some plugin(s), you can add the `@PluginDependencies` a
         ExampleService.class
 })
 public class ExamplePlugin extends PluginContainer {
+    private static ExamplePlugin INSTANCE;
+
+    public ExamplePlugin() {
+        INSTANCE = this;
+    }
+
+    // factory method for easy retrieval of the plugin instance
+    // ExamplePlugin.getInstance()
+    public static ExamplePlugin getInstance() {
+        if (INSTANCE == null) {
+            throw new UnsupportedOperationException("Plugin has not been initialized yet!");
+        }
+        return INSTANCE;
+    }
+    
     @Override
     public void load() {
         // Plugin load logic

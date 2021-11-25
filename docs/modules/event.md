@@ -54,7 +54,7 @@ dependencies {
 ## Examples
 
 ### Handling events
-!!! warning "EventManager"
+!!! warning "Platform events"
 
     ScreamingLib `EventManager` is **not** listening to non-standard events fired through the event manager of the platform you're running on!
 
@@ -86,7 +86,7 @@ EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, event ->
 ```
 
 ### Firing events
-!!! warning "EventManager"
+!!! warning "Platform events"
 
     ScreamingLib `EventManager` is **not** firing events to the event manager of the platform you're running on!
 

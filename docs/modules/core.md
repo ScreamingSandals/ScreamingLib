@@ -156,6 +156,95 @@ public class ExampleService {
 * `@OnDisable` - Marks the annotated method to run after the service class is being disabled (plugin is disabling).
 * `@Init(platforms = {}, services = {})` (plugin class only) - Defines service classes that should be initialized when the plugin is loading (order sensitive). In the `platforms` field, you can specify platforms that the service classes in the annotation will be initialized on (array of `PlatformType`, can be left out).
 
+## Configuration
+ScreamingLib doesn't bundle a configuration system like Bukkit, so you will have to use an external library. We recommend using Sponge's [Configurate](https://github.com/SpongePowered/Configurate) library, which I will demonstrate the usage for in this chapter.
+
+### Usage
+
+#### Maven
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.spongepowered</groupId>
+        <artifactId>configurate-yaml</artifactId>
+        <version>4.1.2</version>
+    </dependency>
+</dependencies>
+```
+
+#### Gradle
+```groovy
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.spongepowered:configurate-yaml:4.1.2'
+}
+```
+
+### Examples
+
+#### Creating a config manager service
+```java
+@Service
+public final class ConfigManager {
+    private AbstractConfigurationLoader<?> loader;
+    private ConfigurationNode node;
+
+    // used for retrieving the config values
+    public ConfigurationNode node(Object... keys) {
+        return node.node(keys);
+    }
+
+    @OnEnable
+    public void enable() {
+        // you will have to create a getInstance method in your plugin's main class to get the pluginInstance
+        // check the plugin example in the plugin chapter
+        final File configFile = Paths.get(
+            ExamplePlugin.getInstance().getDataFolder().getAbsolutePath(), "config.yml"
+        ).toFile();
+        // checking if the file exists and is not a directory
+        if (!configFile.isFile()) {
+            // copying the config file from the JAR
+            Files.copy(ExamplePlugin.class.getResourceAsStream("/config.yml"), configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
+        // constructs the loader
+        loader = YamlConfigurationLoader.builder().file(configFile).build();
+    }
+
+    @OnPostEnable
+    public void postEnable() {
+        // tries to load the file, prints the stacktrace if something went wrong
+        try {
+            node = loader.load();
+        } catch (ConfigurateException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+#### Retrieving config values
+Example config:
+```yaml
+section:
+    value: 1
+```
+
+Retrieving values from the example config:
+```java
+@OnEnable(dependsOn = {
+    ConfigManager.class
+})
+public void enable(ConfigManager configManager) {
+    // drills down through the structure
+    PlayerMapper.getConsoleSender().sendMessage(Integer.toString(configManager.node("section", "value").getInt(0))) // gets the value or default if not present
+    // yaml lists can be retrieved with ConfigurationNode#childrenList()
+    // yaml maps can be retrieved with ConfigurationNode#childrenMap()
+}
+```
+
 ## Examples
 
 ### Iterating over online players
