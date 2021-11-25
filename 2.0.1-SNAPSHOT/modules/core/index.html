@@ -450,7 +450,74 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_1" class="md-nav__link">
+    Usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maven_1" class="md-nav__link">
+    Maven
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradle_1" class="md-nav__link">
+    Gradle
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#examples" class="md-nav__link">
+    Examples
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-config-manager-service" class="md-nav__link">
+    Creating a config manager service
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieving-config-values" class="md-nav__link">
+    Retrieving config values
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples_1" class="md-nav__link">
     Examples
   </a>
   
@@ -973,7 +1040,144 @@ It is possible to retrieve the service class instances with the ServiceManager c
 <li><code>@OnDisable</code> - Marks the annotated method to run after the service class is being disabled (plugin is disabling).</li>
 <li><code>@Init(platforms = {}, services = {})</code> (plugin class only) - Defines service classes that should be initialized when the plugin is loading (order sensitive). In the <code>platforms</code> field, you can specify platforms that the service classes in the annotation will be initialized on (array of <code>PlatformType</code>, can be left out).</li>
 </ul>
-<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<p>ScreamingLib doesn't bundle a configuration system like Bukkit, so you will have to use an external library. We recommend using Sponge's <a href="https://github.com/SpongePowered/Configurate">Configurate</a> library, which I will demonstrate the usage for in this chapter.</p>
+<h3 id="usage_1">Usage<a class="headerlink" href="#usage_1" title="Permanent link">&para;</a></h3>
+<h4 id="maven_1">Maven<a class="headerlink" href="#maven_1" title="Permanent link">&para;</a></h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nt">&lt;dependencies&gt;</span>
+    <span class="nt">&lt;dependency&gt;</span>
+        <span class="nt">&lt;groupId&gt;</span>org.spongepowered<span class="nt">&lt;/groupId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>configurate-yaml<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;version&gt;</span>4.1.2<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;/dependencies&gt;</span>
+</code></pre></div>
+</td></tr></table>
+<h4 id="gradle_1">Gradle<a class="headerlink" href="#gradle_1" title="Permanent link">&para;</a></h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">repositories</span> <span class="o">{</span>
+    <span class="n">mavenCentral</span><span class="o">()</span>
+<span class="o">}</span>
+
+<span class="n">dependencies</span> <span class="o">{</span>
+    <span class="n">implementation</span> <span class="s1">&#39;org.spongepowered:configurate-yaml:4.1.2&#39;</span>
+<span class="o">}</span>
+</code></pre></div>
+</td></tr></table>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<h4 id="creating-a-config-manager-service">Creating a config manager service<a class="headerlink" href="#creating-a-config-manager-service" title="Permanent link">&para;</a></h4>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nd">@Service</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">ConfigManager</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="n">AbstractConfigurationLoader</span><span class="o">&lt;?&gt;</span> <span class="n">loader</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ConfigurationNode</span> <span class="n">node</span><span class="p">;</span>
+
+    <span class="c1">// used for retrieving the config values</span>
+    <span class="kd">public</span> <span class="n">ConfigurationNode</span> <span class="nf">node</span><span class="p">(</span><span class="n">Object</span><span class="p">...</span> <span class="n">keys</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">node</span><span class="p">.</span><span class="na">node</span><span class="p">(</span><span class="n">keys</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nd">@OnEnable</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">enable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// you will have to create a getInstance method in your plugin&#39;s main class to get the pluginInstance</span>
+        <span class="c1">// check the plugin example in the plugin chapter</span>
+        <span class="kd">final</span> <span class="n">File</span> <span class="n">configFile</span> <span class="o">=</span> <span class="n">Paths</span><span class="p">.</span><span class="na">get</span><span class="p">(</span>
+            <span class="n">ExamplePlugin</span><span class="p">.</span><span class="na">getInstance</span><span class="p">().</span><span class="na">getDataFolder</span><span class="p">().</span><span class="na">getAbsolutePath</span><span class="p">(),</span> <span class="s">&quot;config.yml&quot;</span>
+        <span class="p">).</span><span class="na">toFile</span><span class="p">();</span>
+        <span class="c1">// checking if the file exists and is not a directory</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">configFile</span><span class="p">.</span><span class="na">isFile</span><span class="p">())</span> <span class="p">{</span>
+            <span class="c1">// copying the config file from the JAR</span>
+            <span class="n">Files</span><span class="p">.</span><span class="na">copy</span><span class="p">(</span><span class="n">ExamplePlugin</span><span class="p">.</span><span class="na">class</span><span class="p">.</span><span class="na">getResourceAsStream</span><span class="p">(</span><span class="s">&quot;/config.yml&quot;</span><span class="p">),</span> <span class="n">configFile</span><span class="p">.</span><span class="na">toPath</span><span class="p">(),</span> <span class="n">StandardCopyOption</span><span class="p">.</span><span class="na">REPLACE_EXISTING</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="c1">// constructs the loader</span>
+        <span class="n">loader</span> <span class="o">=</span> <span class="n">YamlConfigurationLoader</span><span class="p">.</span><span class="na">builder</span><span class="p">().</span><span class="na">file</span><span class="p">(</span><span class="n">configFile</span><span class="p">).</span><span class="na">build</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="nd">@OnPostEnable</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">postEnable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// tries to load the file, prints the stacktrace if something went wrong</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">loader</span><span class="p">.</span><span class="na">load</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">ConfigurateException</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</td></tr></table>
+<h4 id="retrieving-config-values">Retrieving config values<a class="headerlink" href="#retrieving-config-values" title="Permanent link">&para;</a></h4>
+<p>Example config:
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nt">section</span><span class="p">:</span>
+    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+</code></pre></div>
+</td></tr></table></p>
+<p>Retrieving values from the example config:
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nd">@OnEnable</span><span class="p">(</span><span class="n">dependsOn</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">ConfigManager</span><span class="p">.</span><span class="na">class</span>
+<span class="p">})</span>
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">enable</span><span class="p">(</span><span class="n">ConfigManager</span> <span class="n">configManager</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// drills down through the structure</span>
+    <span class="n">PlayerMapper</span><span class="p">.</span><span class="na">getConsoleSender</span><span class="p">().</span><span class="na">sendMessage</span><span class="p">(</span><span class="n">Integer</span><span class="p">.</span><span class="na">toString</span><span class="p">(</span><span class="n">configManager</span><span class="p">.</span><span class="na">node</span><span class="p">(</span><span class="s">&quot;section&quot;</span><span class="p">,</span> <span class="s">&quot;value&quot;</span><span class="p">).</span><span class="na">getInt</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span> <span class="c1">// gets the value or default if not present</span>
+    <span class="c1">// yaml lists can be retrieved with ConfigurationNode#childrenList()</span>
+    <span class="c1">// yaml maps can be retrieved with ConfigurationNode#childrenMap()</span>
+<span class="p">}</span>
+</code></pre></div>
+</td></tr></table></p>
+<h2 id="examples_1">Examples<a class="headerlink" href="#examples_1" title="Permanent link">&para;</a></h2>
 <h3 id="iterating-over-online-players">Iterating over online players<a class="headerlink" href="#iterating-over-online-players" title="Permanent link">&para;</a></h3>
 <p>If you want to iterate over all online players and compute something for each one, utilize the <code>List&lt;PlayerWrapper&gt; Server#getConnectedPlayers()</code> method.
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
@@ -1029,7 +1233,7 @@ It is possible to retrieve the service class instances with the ServiceManager c
 <div class="md-source-date">
   <small>
     
-      Last update: 2021-11-14
+      Last update: 2021-11-25
     
   </small>
 </div>
