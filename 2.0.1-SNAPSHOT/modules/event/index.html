@@ -624,10 +624,18 @@
 <span class="normal">20</span>
 <span class="normal">21</span>
 <span class="normal">22</span>
-<span class="normal">23</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nt">&lt;repositories&gt;</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nt">&lt;repositories&gt;</span>
     <span class="nt">&lt;repository&gt;</span>
         <span class="nt">&lt;id&gt;</span>screamingrepo<span class="nt">&lt;/id&gt;</span>
         <span class="nt">&lt;url&gt;</span>https://repo.screamingsandals.org/repository/maven-public<span class="nt">&lt;/url&gt;</span>
+    <span class="nt">&lt;/repository&gt;</span>
+    <span class="nt">&lt;repository&gt;</span>
+        <span class="nt">&lt;id&gt;</span>papermc<span class="nt">&lt;/id&gt;</span>
+        <span class="nt">&lt;url&gt;</span>https://papermc.io/repo/repository/maven-public<span class="nt">&lt;/url&gt;</span>
     <span class="nt">&lt;/repository&gt;</span>
 <span class="nt">&lt;/repositories&gt;</span>
 
@@ -659,9 +667,15 @@
 <span class="normal"> 7</span>
 <span class="normal"> 8</span>
 <span class="normal"> 9</span>
-<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">repositories</span> <span class="o">{</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">repositories</span> <span class="o">{</span>
     <span class="n">maven</span> <span class="o">{</span> 
-        <span class="n">url</span> <span class="s1">&#39;https://repo.screamingsandals.org/repository/maven-public&#39;</span> 
+        <span class="n">url</span> <span class="s1">&#39;https://repo.screamingsandals.org/repository/maven-public&#39;</span>
+    <span class="o">}</span>
+    <span class="n">maven</span> <span class="o">{</span>
+        <span class="n">url</span> <span class="s1">&#39;https://papermc.io/repo/repository/maven-public&#39;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 
