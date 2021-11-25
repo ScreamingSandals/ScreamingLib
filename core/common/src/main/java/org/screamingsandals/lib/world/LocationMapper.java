@@ -13,9 +13,6 @@ import java.util.UUID;
  */
 @AbstractService
 public abstract class LocationMapper {
-    /**
-     * <p></p>
-     */
     protected BidirectionalConverter<LocationHolder> converter = BidirectionalConverter.<LocationHolder>build()
             .registerP2W(LocationHolder.class, e -> e)
             .registerW2P(BlockHolder.class, locationHolder -> BlockMapper.resolve(locationHolder).orElse(null));
