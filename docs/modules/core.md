@@ -204,8 +204,12 @@ public final class ConfigManager {
         ).toFile();
         // checking if the file exists and is not a directory
         if (!configFile.isFile()) {
-            // copying the config file from the JAR
-            Files.copy(ExamplePlugin.class.getResourceAsStream("/config.yml"), configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            // tries to copy the config file from the JAR, prints the stacktrace if something went wrong
+            try {
+                Files.copy(ExamplePlugin.class.getResourceAsStream("/config.yml"), configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         // constructs the loader
         loader = YamlConfigurationLoader.builder().file(configFile).build();

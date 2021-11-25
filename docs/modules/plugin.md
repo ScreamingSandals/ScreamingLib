@@ -4,7 +4,7 @@ Module required for generating platform plugin classes.
 ## Features
 * List of all plugins
 * Main class generation
-* Plugin file (like plugin.yml) generation
+* Plugin file (e.g. plugin.yml) generation
 
 ## Usage
 Supported platforms are: `bukkit, sponge, minestom, bungee, velocity`

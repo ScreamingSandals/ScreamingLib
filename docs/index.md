@@ -18,7 +18,7 @@ ScreamingLib is a multiplatform library for creating Minecraft plugins/extension
 * Scoreboards and sidebars
 * Clickable signs
 
-### Modules for proxy
+### Modules for proxies
 * Core (proxy)
 * [Tasker](modules/tasker.md)
 * [Event](modules/event.md)
