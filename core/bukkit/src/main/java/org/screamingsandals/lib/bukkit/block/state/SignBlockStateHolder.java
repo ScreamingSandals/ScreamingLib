@@ -13,6 +13,7 @@ public class SignBlockStateHolder extends TileBlockStateHolder implements SignHo
         super(wrappedObject);
     }
 
+    // TODO: IMPLEMENT PLATFORM ADVENTURE
     @Override
     public Component[] lines() {
         return Arrays.stream(((Sign) wrappedObject).getLines()).map(AdventureHelper::toComponent).toArray(Component[]::new);

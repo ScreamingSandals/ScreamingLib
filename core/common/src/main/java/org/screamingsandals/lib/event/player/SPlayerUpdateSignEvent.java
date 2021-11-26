@@ -1,39 +1,22 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.Range;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class SPlayerUpdateSignEvent extends CancellableAbstractEvent implements SPlayerEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
-    private final Component[] lines;
-    private final ImmutableObjectLink<BlockHolder> block;
+public interface SPlayerUpdateSignEvent extends SCancellableEvent, SPlayerEvent {
 
-    public PlayerWrapper getPlayer() {
-        return player.get();
-    }
+    BlockHolder getBlock();
 
-    public BlockHolder getBlock() {
-        return block.get();
-    }
+    Component[] lines();
 
-    public Component line(@Range(from = 0, to = 3) int index) {
-        return lines[index];
-    }
+    Component line(@Range(from = 0, to = 3) int index);
 
-    public void line(@Range(from = 0, to = 3) int index, Component component) {
-        lines[index] = component;
-    }
+    void line(@Range(from = 0, to = 3) int index, Component component);
 
-    public void line(@Range(from = 0, to = 3) int index, ComponentLike component) {
-        lines[index] = component.asComponent();
+    default void line(@Range(from = 0, to = 3) int index, ComponentLike component) {
+        line(index, component.asComponent());
     }
 }

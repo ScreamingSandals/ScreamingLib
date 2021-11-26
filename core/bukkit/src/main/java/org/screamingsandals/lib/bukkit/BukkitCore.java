@@ -25,10 +25,11 @@ import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.event.world.*;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.*;
 import java.util.function.Function;
+
+import static org.screamingsandals.lib.utils.reflect.Reflect.has;
 
 @Service
 @RequiredArgsConstructor
@@ -42,49 +43,61 @@ public class BukkitCore extends Core {
 
         // entity
         new AreaEffectCloudApplyEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.ArrowBodyCountChangeEvent"))
+        if (has("org.bukkit.event.entity.ArrowBodyCountChangeEvent")) {
             new ArrowBodyCountChangeEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.BatToggleSleepEvent"))
+        }
+        if (has("org.bukkit.event.entity.BatToggleSleepEvent")) {
             new BatToggleSleepEventListener(plugin);
+        }
         new CreatureSpawnEventListener(plugin);
         new CreeperPowerEventListener(plugin);
         new EnderDragonChangePhaseEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.EntityAirChangeEvent"))
+        if (has("org.bukkit.event.entity.EntityAirChangeEvent")) {
             new EntityAirChangeEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.EntityBreedEvent"))
+        }
+        if (has("org.bukkit.event.entity.EntityBreedEvent")) {
             new EntityBreedEventListener(plugin);
+        }
         new EntityChangeBlockEventListener(plugin);
         new EntityCombustEventListener(plugin);
         new EntityCreatePortalEventListener(plugin);
         new EntityDamageEventListener(plugin);
         new EntityDeathEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.EntityDropItemEvent"))
+        if (has("org.bukkit.event.entity.EntityDropItemEvent")) {
             new EntityDropItemEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.EntityEnterBlockEvent"))
+        }
+        if (has("org.bukkit.event.entity.EntityEnterBlockEvent")) {
             new EntityEnterBlockEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.EntityEnterLoveModeEvent"))
+        }
+        if (has("org.bukkit.event.entity.EntityEnterLoveModeEvent")) {
             new EntityEnterLoveModeEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.EntityExhaustionEvent"))
+        }
+        if (has("org.bukkit.event.entity.EntityExhaustionEvent")) {
             new EntityExhaustionEventListener(plugin);
+        }
         new EntityExplodeEventListener(plugin);
         new EntityInteractEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.EntityPickupItemEvent")) {
+        if (has("org.bukkit.event.entity.EntityPickupItemEvent")) {
             new EntityPickupItemEventListener(plugin);
         } else {
             new LegacyPlayerPickupItemListener(plugin);
         }
-        if (Reflect.has("org.bukkit.event.entity.EntityPlaceEvent"))
+        if (has("org.bukkit.event.entity.EntityPlaceEvent")) {
             new EntityPlaceEventListener(plugin);
+        }
         new EntityTeleportEventListener(plugin);
         new EntityPortalEnterEventListener(plugin);
         new EntityPortalEnterExitListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.EntityPoseChangeEvent"))
+        if (has("org.bukkit.event.entity.EntityPoseChangeEvent")) {
             new EntityPoseChangeEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.EntityPotionEffectEvent"))
+        }
+        if (has("org.bukkit.event.entity.EntityPotionEffectEvent")) {
             new EntityPotionEffectEventListener(plugin);
+        }
         new EntityRegainHealthEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.EntityResurrectEvent"))
+        if (has("org.bukkit.event.entity.EntityResurrectEvent")) {
             new EntityResurrectEventListener(plugin);
+        }
         new EntityShootBowEventListener(plugin);
         new EntitySpawnEventListener(plugin);
         new EntityTameEventListener(plugin);
@@ -97,15 +110,18 @@ public class BukkitCore extends Core {
         new SheepDyeWoolEventListener(plugin);
         new SheepRegrowWoolEventListener(plugin);
         new SlimeSplitEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.StriderTemperatureChangeEvent"))
+        if (has("org.bukkit.event.entity.StriderTemperatureChangeEvent")) {
             new StriderTemperatureChangeEventListener(plugin);
+        }
         new VillagerAcquireTradeEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.VillagerCareerChangeEvent"))
+        if (has("org.bukkit.event.entity.VillagerCareerChangeEvent")) {
             new VillagerCareerChangeEventListener(plugin);
+        }
         new VillagerReplenishTradeEventListener(plugin);
         new EntityToggleGlideEventListener(plugin);
-        if (Reflect.has("org.bukkit.event.entity.EntityToggleSwimEvent"))
+        if (has("org.bukkit.event.entity.EntityToggleSwimEvent")) {
             new EntityToggleSwimEventListener(plugin);
+        }
         new EntityUnleashEventListener(plugin);
         new ExplosionPrimeEventListener(plugin);
         new FireworkExplodeEventListener(plugin);
@@ -120,10 +136,10 @@ public class BukkitCore extends Core {
         new PlayerBlockDamageEventListener(plugin);
         new PlayerMoveEventListener(plugin);
         new PlayerTeleportEventListener(plugin);
-        new PlayerChangeWorldEventListener(plugin);
-        new PlayerSignChangeEventListener(plugin);
-        new PlayerDeathEventListener(plugin);
-        new PlayerRespawnEventListener(plugin);
+        constructDefaultListener(PlayerChangedWorldEvent.class, SPlayerWorldChangeEvent.class, SBukkitPlayerWorldChangeEvent::new);
+        constructDefaultListener(SignChangeEvent.class, SPlayerUpdateSignEvent.class, SBukkitPlayerUpdateSignEvent::new);
+        new PlayerDeathEventListener(plugin); // TODO: will be mapped with EntityDeathEvent because it's children
+        constructDefaultListener(PlayerRespawnEvent.class, SPlayerRespawnEvent.class, SBukkitPlayerRespawnEvent::new);
         constructDefaultListener(PlayerCommandPreprocessEvent.class, SPlayerCommandPreprocessEvent.class, SBukkitPlayerCommandPreprocessEvent::new);
         constructDefaultListener(InventoryClickEvent.class, SPlayerInventoryClickEvent.class, factory(SBukkitPlayerInventoryClickEvent::new)
                         .sub(CraftItemEvent.class, SBukkitPlayerCraftItemEvent::new)
@@ -136,7 +152,7 @@ public class BukkitCore extends Core {
         // PlayerInteractEntityEvent is a weird event, each child has its own HandlerList
         constructDefaultListener(PlayerInteractEntityEvent.class, SPlayerInteractEntityEvent.class, SBukkitPlayerInteractEntityEvent::new);
         constructDefaultListener(PlayerInteractAtEntityEvent.class, SPlayerInteractEntityEvent.class, SBukkitPlayerInteractAtEntityEvent::new);
-        if (Reflect.has("org.bukkit.event.player.PlayerArmorStandManipulateEvent")) {
+        if (has("org.bukkit.event.player.PlayerArmorStandManipulateEvent")) {
             constructDefaultListener(PlayerArmorStandManipulateEvent.class, SPlayerInteractEntityEvent.class, SBukkitPlayerArmorStandManipulateEvent::new);
         }
         constructDefaultListener(PlayerBedLeaveEvent.class, SPlayerBedLeaveEvent.class, SBukkitPlayerBedLeaveEvent::new);
@@ -145,31 +161,31 @@ public class BukkitCore extends Core {
         constructDefaultListener(PlayerBucketEmptyEvent.class, SPlayerBucketEvent.class, SBukkitPlayerBucketEvent::new);
         constructDefaultListener(PlayerBucketFillEvent.class, SPlayerBucketEvent.class, SBukkitPlayerBucketEvent::new);
 
-        if (Reflect.has("org.bukkit.event.player.PlayerCommandSendEvent")) {
+        if (has("org.bukkit.event.player.PlayerCommandSendEvent")) {
             constructDefaultListener(PlayerCommandSendEvent.class, SPlayerCommandSendEvent.class, SBukkitPlayerCommandSendEvent::new);
         }
         constructDefaultListener(PlayerEggThrowEvent.class, SPlayerEggThrowEvent.class, SBukkitPlayerEggThrowEvent::new);
         constructDefaultListener(PlayerExpChangeEvent.class, SPlayerExpChangeEvent.class, SBukkitPlayerExpChangeEvent::new);
         constructDefaultListener(PlayerFishEvent.class, SPlayerFishEvent.class, SBukkitPlayerFishEvent::new);
         constructDefaultListener(PlayerGameModeChangeEvent.class, SPlayerGameModeChangeEvent.class, SBukkitPlayerGameModeChangeEvent::new);
-        if (Reflect.has("org.bukkit.event.player.PlayerHarvestBlockEvent")) {
+        if (has("org.bukkit.event.player.PlayerHarvestBlockEvent")) {
             constructDefaultListener(PlayerHarvestBlockEvent.class, SPlayerHarvestBlockEvent.class, SBukkitPlayerHarvestBlockEvent::new);
         }
         constructDefaultListener(PlayerInteractEvent.class, SPlayerInteractEvent.class, SBukkitPlayerInteractEvent::new);
         constructDefaultListener(PlayerItemConsumeEvent.class, SPlayerItemConsumeEvent.class, SBukkitPlayerItemConsumeEvent::new);
         constructDefaultListener(PlayerItemDamageEvent.class, SPlayerItemDamageEvent.class, SBukkitPlayerItemDamageEvent::new);
         constructDefaultListener(PlayerItemHeldEvent.class, SPlayerItemHeldEvent.class, SBukkitPlayerItemHeldEvent::new);
-        if (Reflect.has("org.bukkit.event.player.PlayerItemMendEvent")) {
+        if (has("org.bukkit.event.player.PlayerItemMendEvent")) {
             constructDefaultListener(PlayerItemMendEvent.class, SPlayerItemMendEvent.class, SBukkitPlayerItemMendEvent::new);
         }
         constructDefaultListener(PlayerKickEvent.class, SPlayerKickEvent.class, SBukkitPlayerKickEvent::new);
         constructDefaultListener(PlayerLevelChangeEvent.class, SPlayerLevelChangeEvent.class, SBukkitPlayerLevelChangeEvent::new);
-        if (Reflect.has("org.bukkit.event.player.PlayerLocaleChangeEvent")) {
+        if (has("org.bukkit.event.player.PlayerLocaleChangeEvent")) {
             constructDefaultListener(PlayerLocaleChangeEvent.class, SPlayerLocaleChangeEvent.class, SBukkitPlayerLocaleChangeEvent::new);
         }
         constructDefaultListener(PlayerLoginEvent.class, SPlayerLoginEvent.class, SBukkitPlayerLoginEvent::new);
         constructDefaultListener(PlayerShearEntityEvent.class, SPlayerShearEntityEvent.class, SBukkitPlayerShearEntityEvent::new);
-        if (Reflect.has("org.bukkit.event.player.PlayerSwapHandItemsEvent")) {
+        if (has("org.bukkit.event.player.PlayerSwapHandItemsEvent")) {
             constructDefaultListener(PlayerSwapHandItemsEvent.class, SPlayerSwapHandItemsEvent.class, SBukkitPlayerSwapHandItemsEvent::new);
         }
         constructDefaultListener(PlayerToggleFlightEvent.class, SPlayerToggleFlightEvent.class, SBukkitPlayerToggleFlightEvent::new);
@@ -181,11 +197,11 @@ public class BukkitCore extends Core {
 
         // block
         constructDefaultListener(BlockBurnEvent.class, SBlockBurnEvent.class, SBukkitBlockBurnEvent::new);
-        if (Reflect.has("org.bukkit.event.block.BlockCookEvent")) {
+        if (has("org.bukkit.event.block.BlockCookEvent")) {
             constructDefaultListener(BlockCookEvent.class, SBlockCookEvent.class, SBukkitBlockCookEvent::new);
         }
         constructDefaultListener(BlockDispenseEvent.class, SBlockDispenseEvent.class, SBukkitBlockDispenseEvent::new);
-        if (Reflect.has("org.bukkit.event.block.BlockDropItemEvent")) {
+        if (has("org.bukkit.event.block.BlockDropItemEvent")) {
             constructDefaultListener(BlockDropItemEvent.class, SBlockDropItemEvent.class, SBukkitBlockDropItemEvent::new);
         }
         constructDefaultListener(BlockExpEvent.class, SBlockExperienceEvent.class, factory(SBukkitBlockExperienceEvent::new)
@@ -193,7 +209,7 @@ public class BukkitCore extends Core {
         );
         constructDefaultListener(BlockExplodeEvent.class, SBlockExplodeEvent.class, SBukkitBlockExplodeEvent::new);
         constructDefaultListener(BlockFadeEvent.class, SBlockFadeEvent.class, SBukkitBlockFadeEvent::new);
-        if (Reflect.has("org.bukkit.event.block.BlockFertilizeEvent")) {
+        if (has("org.bukkit.event.block.BlockFertilizeEvent")) {
             constructDefaultListener(BlockFertilizeEvent.class, SBlockFertilizeEvent.class, SBukkitBlockFertilizeEvent::new);
         }
 
@@ -214,27 +230,27 @@ public class BukkitCore extends Core {
         constructDefaultListener(BlockPistonExtendEvent.class, SBlockPistonEvent.class, SBukkitBlockPistonExtendEvent::new);
         constructDefaultListener(BlockPistonRetractEvent.class, SBlockPistonEvent.class, SBukkitBlockPistonRetractEvent::new);
 
-        if (Reflect.has("org.bukkit.event.block.BlockShearEntityEvent")) {
+        if (has("org.bukkit.event.block.BlockShearEntityEvent")) {
             constructDefaultListener(BlockShearEntityEvent.class, SBlockShearEntityEvent.class, SBukkitBlockShearEntityEvent::new);
         }
         constructDefaultListener(CauldronLevelChangeEvent.class, SCauldronLevelChangeEvent.class, SBukkitCauldronLevelChangeEvent::new);
-        if (Reflect.has("org.bukkit.event.block.FluidLevelChangeEvent")) {
+        if (has("org.bukkit.event.block.FluidLevelChangeEvent")) {
             constructDefaultListener(FluidLevelChangeEvent.class, SFluidLevelChangeEvent.class, SBukkitFluidLevelChangeEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.block.MoistureChangeEvent")) {
+        if (has("org.bukkit.event.block.MoistureChangeEvent")) {
             constructDefaultListener(MoistureChangeEvent.class, SMoistureChangeEvent.class, SBukkitMoistureChangeEvent::new);
         }
         constructDefaultListener(StructureGrowEvent.class, SPlantGrowEvent.class, SBukkitPlantGrowEvent::new);
-        if (Reflect.has("org.bukkit.event.block.SpongeAbsorbEvent")) {
+        if (has("org.bukkit.event.block.SpongeAbsorbEvent")) {
             constructDefaultListener(SpongeAbsorbEvent.class, SSpongeAbsorbEvent.class, SBukkitSpongeAbsorbEvent::new);
         }
-        if (Reflect.has("org.bukkit.event.block.BlockReceiveGameEvent")) {
+        if (has("org.bukkit.event.block.BlockReceiveGameEvent")) {
             constructDefaultListener(BlockReceiveGameEvent.class, SSculkSensorReceiveEvent.class, SBukkitSculkSensorReceiveEvent::new);
         }
 
         // world
         constructDefaultListener(SpawnChangeEvent.class, SSpawnChangeEvent.class, SBukkitSpawnChangeEvent::new);
-        if (Reflect.has("org.bukkit.event.world.TimeSkipEvent")) {
+        if (has("org.bukkit.event.world.TimeSkipEvent")) {
             constructDefaultListener(TimeSkipEvent.class, STimeSkipEvent.class, SBukkitTimeSkipEvent::new);
         }
         constructDefaultListener(WorldInitEvent.class, SWorldInitEvent.class, SBukkitWorldInitEvent::new);
