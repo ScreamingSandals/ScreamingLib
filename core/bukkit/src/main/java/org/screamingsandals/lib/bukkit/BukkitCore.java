@@ -1,11 +1,12 @@
 package org.screamingsandals.lib.bukkit;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.*;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.*;
 import org.bukkit.plugin.Plugin;
@@ -26,6 +27,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -37,8 +39,6 @@ public class BukkitCore extends Core {
     @OnEnable
     public void onEnable() {
         provider = BukkitAudiences.create(plugin);
-
-        // TODO: this rly needs to be simplified. Lot of events are just child events of another event, so one listener can catch them all
 
         // entity
         new AreaEffectCloudApplyEventListener(plugin);
@@ -124,15 +124,16 @@ public class BukkitCore extends Core {
         new PlayerSignChangeEventListener(plugin);
         new PlayerDeathEventListener(plugin);
         new PlayerRespawnEventListener(plugin);
-        new PlayerCommandPreprocessEventListener(plugin);
-        new PlayerInventoryClickEventListener(plugin);
-        new PlayerFoodLevelChangeListener(plugin);
-        new PlayerCraftItemEventListener(plugin);
-        new PlayerDropItemEventListener(plugin);
+        constructDefaultListener(PlayerCommandPreprocessEvent.class, SPlayerCommandPreprocessEvent.class, SBukkitPlayerCommandPreprocessEvent::new);
+        constructDefaultListener(InventoryClickEvent.class, SPlayerInventoryClickEvent.class, factory(SBukkitPlayerInventoryClickEvent::new)
+                        .sub(CraftItemEvent.class, SBukkitPlayerCraftItemEvent::new)
+        );
+        constructDefaultListener(FoodLevelChangeEvent.class, SPlayerFoodLevelChangeEvent.class, SBukkitPlayerFoodLevelChangeEvent::new);
+        constructDefaultListener(PlayerDropItemEvent.class, SPlayerDropItemEvent.class, SBukkitPlayerDropItemEvent::new);
         constructDefaultListener(PlayerBedEnterEvent.class, SPlayerBedEnterEvent.class, SBukkitPlayerBedEnterEvent::new);
         constructDefaultListener(PlayerAnimationEvent.class, SPlayerAnimationEvent.class, SBukkitPlayerAnimationEvent::new);
 
-        // PlayerInteractEntityEvent is a weird event, every child has its own event handler
+        // PlayerInteractEntityEvent is a weird event, each child has its own HandlerList
         constructDefaultListener(PlayerInteractEntityEvent.class, SPlayerInteractEntityEvent.class, SBukkitPlayerInteractEntityEvent::new);
         constructDefaultListener(PlayerInteractAtEntityEvent.class, SPlayerInteractEntityEvent.class, SBukkitPlayerInteractAtEntityEvent::new);
         if (Reflect.has("org.bukkit.event.player.PlayerArmorStandManipulateEvent")) {
@@ -187,19 +188,32 @@ public class BukkitCore extends Core {
         if (Reflect.has("org.bukkit.event.block.BlockDropItemEvent")) {
             constructDefaultListener(BlockDropItemEvent.class, SBlockDropItemEvent.class, SBukkitBlockDropItemEvent::new);
         }
-        new BlockExperienceEventListener(plugin);
+        constructDefaultListener(BlockExpEvent.class, SBlockExperienceEvent.class, factory(SBukkitBlockExperienceEvent::new)
+                .sub(BlockBreakEvent.class, SBukkitPlayerBlockBreakEvent::new)
+        );
         constructDefaultListener(BlockExplodeEvent.class, SBlockExplodeEvent.class, SBukkitBlockExplodeEvent::new);
         constructDefaultListener(BlockFadeEvent.class, SBlockFadeEvent.class, SBukkitBlockFadeEvent::new);
         if (Reflect.has("org.bukkit.event.block.BlockFertilizeEvent")) {
             constructDefaultListener(BlockFertilizeEvent.class, SBlockFertilizeEvent.class, SBukkitBlockFertilizeEvent::new);
         }
-        new BlockGrowEventListener(plugin);
+
+        // children of BlockGrowEvent have their own HandlerList's (Bukkit is retarded, change my mind)
+        constructDefaultListener(BlockGrowEvent.class, SBlockGrowEvent.class, SBukkitBlockGrowEvent::new);
+        constructDefaultListener(BlockFormEvent.class, SBlockGrowEvent.class, factory(SBukkitBlockFormEvent::new)
+                .sub(EntityBlockFormEvent.class, SBukkitBlockFormedByEntityEvent::new)
+        );
+        constructDefaultListener(BlockSpreadEvent.class, SBlockGrowEvent.class, SBukkitBlockSpreadEvent::new);
+
         constructDefaultListener(BlockFromToEvent.class, SBlockFromToEvent.class, SBukkitBlockFromToEvent::new);
         constructDefaultListener(BlockIgniteEvent.class, SBlockIgniteEvent.class, SBukkitBlockIgniteEvent::new);
         constructDefaultListener(BlockPhysicsEvent.class, SBlockPhysicsEvent.class, SBukkitBlockPhysicsEvent::new);
         constructDefaultListener(BlockRedstoneEvent.class, SRedstoneEvent.class, SBukkitRedstoneEvent::new);
         constructDefaultListener(LeavesDecayEvent.class, SLeavesDecayEvent.class, SBukkitLeavesDecayEvent::new);
-        new BlockPistonEventListener(plugin);
+
+        // BlockPistonEvent is abstract and doesn't have implemented handler list
+        constructDefaultListener(BlockPistonExtendEvent.class, SBlockPistonEvent.class, SBukkitBlockPistonExtendEvent::new);
+        constructDefaultListener(BlockPistonRetractEvent.class, SBlockPistonEvent.class, SBukkitBlockPistonRetractEvent::new);
+
         if (Reflect.has("org.bukkit.event.block.BlockShearEntityEvent")) {
             constructDefaultListener(BlockShearEntityEvent.class, SBlockShearEntityEvent.class, SBukkitBlockShearEntityEvent::new);
         }
@@ -243,12 +257,48 @@ public class BukkitCore extends Core {
      * @param screamingEvent screaming event class, must be the abstract class from core module!!!
      * @param function which returns the constructed screaming event
      */
-    private <S extends SEvent, B extends Event> void constructDefaultListener(Class<B> bukkitEvent, Class<S> screamingEvent, Function<B, S> function) {
+    private <S extends SEvent, B extends Event> void constructDefaultListener(Class<B> bukkitEvent, Class<S> screamingEvent, Function<B, ? extends S> function) {
         new AbstractBukkitEventHandlerFactory<>(bukkitEvent, screamingEvent, plugin) {
             @Override
             protected S wrapEvent(B event, EventPriority priority) {
                 return function.apply(event);
             }
         };
+    }
+
+    /**
+     * @param bukkitEvent the bukkit event
+     * @param screamingEvent screaming event class, must be the abstract class from core module!!!
+     * @param factory which constructs screaming event
+     */
+    private <S extends SEvent, B extends Event> void constructDefaultListener(Class<B> bukkitEvent, Class<S> screamingEvent, EventFactory<? extends S, B> factory) {
+        constructDefaultListener(bukkitEvent, screamingEvent, factory.finish());
+    }
+
+    private static <S extends SEvent, B extends Event> EventFactory<S, B> factory(Function<B, S> function) {
+        return new EventFactory<>(function);
+    }
+
+    @Data
+    private static class EventFactory<S extends SEvent, B extends Event>  {
+        private final Function<B, S> defaultOne;
+        private final List<Map.Entry<Class<?>, Function<? extends B, S>>> customSubEvents = new ArrayList<>();
+
+        private <T extends B> EventFactory<S, B> sub(Class<T> clazz, Function<T, S> func) {
+            customSubEvents.add(Map.entry(clazz, func));
+            return this;
+        }
+
+        private Function<B, S> finish() {
+            Collections.reverse(customSubEvents); // the last registered are the one that should run first because why not
+            return event -> {
+                for (var entry : customSubEvents) {
+                    if (entry.getKey().isInstance(event)) {
+                        return ((Function<B,S>) entry.getValue()).apply(event);
+                    }
+                }
+                return defaultOne.apply(event);
+            };
+        }
     }
 }

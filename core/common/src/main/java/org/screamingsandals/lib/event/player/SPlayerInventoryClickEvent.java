@@ -1,84 +1,46 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.container.Container;
-import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.*;
 
-@EqualsAndHashCode(callSuper = false)
-@Data
-@AllArgsConstructor
-public class SPlayerInventoryClickEvent extends CancellableAbstractEvent implements SPlayerEvent {
-    private final ImmutableObjectLink<PlayerWrapper> player;
-    private final ObjectLink<@Nullable Item> cursorItem; // this field is mutable in bukkit api
-    private final ObjectLink<@Nullable Item> currentItem; // this field is mutable in bukkit api
-    private final ImmutableObjectLink<@Nullable Container> container;
-    private final ImmutableObjectLink<ClickType> clickType;
-    private final ImmutableObjectLink<Container> inventory;
-    private final ImmutableObjectLink<InventoryAction> action;
-    private final ImmutableObjectLink<Integer> hotbarButton;
-    private final ImmutableObjectLink<Integer> slot;
-    private final ImmutableObjectLink<SlotType> slotType;
-    private final ImmutableObjectLink<Integer> rawSlot;
-    private final ObjectLink<Result> result;
-
-    public PlayerWrapper getPlayer() {
-        return player.get();
-    }
+public interface SPlayerInventoryClickEvent extends SCancellableEvent, SPlayerEvent {
 
     @Nullable
-    public Item getCursorItem() {
-        return cursorItem.get();
-    }
+    Item getCursorItem();
 
     @Nullable
-    public Item getCurrentItem() {
-        return currentItem.get();
-    }
+    Item getCurrentItem();
+
+    void setCurrentItem(Item currentItem);
 
     @Nullable
-    public Container getContainer() {
-        return container.get();
+    Container getClickedInventory();
+
+    // Who tf called this method getContainer()?
+    @Nullable
+    @Deprecated
+    default Container getContainer() {
+        return getClickedInventory();
     }
 
-    public ClickType getClickType() {
-        return clickType.get();
-    }
+    ClickType getClickType();
 
-    public Container getInventory() {
-        return inventory.get();
-    }
+    Container getInventory();
 
-    public InventoryAction getAction() {
-        return action.get();
-    }
+    InventoryAction getAction();
 
-    public int getHotbarButton() {
-        return hotbarButton.get();
-    }
+    int getHotbarButton();
 
-    public int getSlot() {
-        return slot.get();
-    }
+    int getSlot();
 
-    public SlotType getSlotType() {
-        return slotType.get();
-    }
+    SlotType getSlotType();
 
-    public int getRawSlot() {
-        return rawSlot.get();
-    }
+    int getRawSlot();
 
-    public Result getResult() {
-        return result.get();
-    }
+    Result getResult();
 
-    public void setResult(Result result) {
-        this.result.set(result);
-    }
+    void setResult(Result result);
 }
