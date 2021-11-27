@@ -18,18 +18,6 @@ public class SBukkitPlayerCraftItemEvent extends SBukkitPlayerInventoryClickEven
     @Override
     public Recipe getRecipe() {
         if (recipe == null) {
-            // TODO: Proper Recipe API
-            class BukkitRecipe extends BasicWrapper<org.bukkit.inventory.Recipe> implements Recipe {
-
-                protected BukkitRecipe(org.bukkit.inventory.Recipe wrappedObject) {
-                    super(wrappedObject);
-                }
-
-                @Override
-                public Item getResult() {
-                    return ItemFactory.build(wrappedObject.getResult()).orElseThrow();
-                }
-            }
             recipe = new BukkitRecipe(getEvent().getRecipe());
         }
         return recipe;
@@ -38,5 +26,18 @@ public class SBukkitPlayerCraftItemEvent extends SBukkitPlayerInventoryClickEven
     @Override
     public CraftItemEvent getEvent() {
         return (CraftItemEvent) super.getEvent();
+    }
+
+    // TODO: Proper Recipe API
+    public static class BukkitRecipe extends BasicWrapper<org.bukkit.inventory.Recipe> implements Recipe {
+
+        public BukkitRecipe(org.bukkit.inventory.Recipe wrappedObject) {
+            super(wrappedObject);
+        }
+
+        @Override
+        public Item getResult() {
+            return ItemFactory.build(wrappedObject.getResult()).orElseThrow();
+        }
     }
 }

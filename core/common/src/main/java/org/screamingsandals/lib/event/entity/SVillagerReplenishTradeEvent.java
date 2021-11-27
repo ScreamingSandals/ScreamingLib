@@ -1,40 +1,19 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.player.SPlayerCraftItemEvent;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SVillagerReplenishTradeEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    //TODO:
-    private final ObjectLink<Object> recipe;
-    private final ObjectLink<Integer> bonus;
+public interface SVillagerReplenishTradeEvent extends SCancellableEvent {
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    EntityBasic getEntity();
 
-    public Object getRecipe() {
-        return recipe.get();
-    }
+    SPlayerCraftItemEvent.Recipe getRecipe();
 
-    @Deprecated
-    public void setRecipe(Object recipe) {
-        this.recipe.set(recipe);
-    }
+    @Deprecated // because there's no proper Recipe API yet
+    void setRecipe(SPlayerCraftItemEvent.Recipe recipe);
 
-    public int getBonus() {
-        return bonus.get();
-    }
+    int getBonus();
 
-    public void setBonus(int bonus) {
-        this.bonus.set(bonus);
-    }
+    void setBonus(int bonus);
 }

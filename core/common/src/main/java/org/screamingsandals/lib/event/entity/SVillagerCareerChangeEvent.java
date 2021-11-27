@@ -1,42 +1,23 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SVillagerCareerChangeEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ObjectLink<Profession> profession;
-    private final ImmutableObjectLink<ChangeReason> reason;
+public interface SVillagerCareerChangeEvent extends SCancellableEvent {
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    EntityBasic getEntity();
 
-    public Profession getProfession() {
-        return profession.get();
-    }
+    Profession getProfession();
 
-    public void setProfession(Profession profession) {
-        this.profession.set(profession);
-    }
+    void setProfession(Profession profession);
 
-    public ChangeReason getReason() {
-        return reason.get();
-    }
+    ChangeReason getReason();
 
     /**
      * Reasons for the villager's profession changing.
      */
     // TODO: holder?
-    public enum ChangeReason {
+    enum ChangeReason {
 
         /**
          * Villager lost their job due to too little experience.
@@ -53,7 +34,7 @@ public class SVillagerCareerChangeEvent extends CancellableAbstractEvent {
      * Villagers have different trading options depending on their profession,
      */
     // TODO: holder
-    public enum Profession {
+    enum Profession {
         NONE,
         /**
          * Armorer profession. Wears a black apron. Armorers primarily trade for

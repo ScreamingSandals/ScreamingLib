@@ -1,29 +1,15 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.AbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.event.SEvent;
+public interface SEntityUnleashEvent extends SEvent {
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SEntityUnleashEvent extends AbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ImmutableObjectLink<UnleashReason> reason;
+    EntityBasic getEntity();
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
-
-    public UnleashReason getReason() {
-        return reason.get();
-    }
+    UnleashReason getReason();
 
     // TODO: holder?
-    public enum UnleashReason {
+    enum UnleashReason {
         /**
          * When the entity's leashholder has died or logged out, and so is
          * unleashed

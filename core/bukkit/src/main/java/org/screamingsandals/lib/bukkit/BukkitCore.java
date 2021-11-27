@@ -5,15 +5,17 @@ import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.*;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.*;
+import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.world.*;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.bukkit.event.block.*;
 import org.screamingsandals.lib.bukkit.event.chunk.*;
+import org.screamingsandals.lib.bukkit.event.entity.*;
 import org.screamingsandals.lib.bukkit.event.player.*;
 import org.screamingsandals.lib.bukkit.event.world.*;
 import org.screamingsandals.lib.bukkit.listener.*;
@@ -21,6 +23,7 @@ import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.event.block.*;
 import org.screamingsandals.lib.event.chunk.*;
+import org.screamingsandals.lib.event.entity.*;
 import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.event.world.*;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -111,21 +114,23 @@ public class BukkitCore extends Core {
         new SheepRegrowWoolEventListener(plugin);
         new SlimeSplitEventListener(plugin);
         if (has("org.bukkit.event.entity.StriderTemperatureChangeEvent")) {
-            new StriderTemperatureChangeEventListener(plugin);
+            constructDefaultListener(StriderTemperatureChangeEvent.class, SStriderTemperatureChangeEvent.class, SBukkitStriderTemperatureChangeEvent::new);
         }
-        new VillagerAcquireTradeEventListener(plugin);
+        constructDefaultListener(VillagerAcquireTradeEvent.class, SVillagerAcquireTradeEvent.class, SBukkitVillagerAcquireTradeEvent::new);
         if (has("org.bukkit.event.entity.VillagerCareerChangeEvent")) {
-            new VillagerCareerChangeEventListener(plugin);
+            constructDefaultListener(VillagerCareerChangeEvent.class, SVillagerCareerChangeEvent.class, SBukkitVillagerCareerChangeEvent::new);
         }
-        new VillagerReplenishTradeEventListener(plugin);
-        new EntityToggleGlideEventListener(plugin);
+        constructDefaultListener(VillagerReplenishTradeEvent.class, SVillagerReplenishTradeEvent.class, SBukkitVillagerReplenishTradeEvent::new);
+        constructDefaultListener(EntityToggleGlideEvent.class, SEntityToggleGlideEvent.class, SBukkitEntityToggleGlideEvent::new);
         if (has("org.bukkit.event.entity.EntityToggleSwimEvent")) {
-            new EntityToggleSwimEventListener(plugin);
+            constructDefaultListener(EntityToggleSwimEvent.class, SEntityToggleSwimEvent.class, SBukkitEntityToggleSwimEvent::new);
         }
-        new EntityUnleashEventListener(plugin);
-        new ExplosionPrimeEventListener(plugin);
-        new FireworkExplodeEventListener(plugin);
-        new VehicleCreateEventListener(plugin);
+        constructDefaultListener(EntityUnleashEvent.class, SEntityUnleashEvent.class, factory(SBukkitEntityUnleashEvent::new)
+                .sub(PlayerUnleashEntityEvent.class, SBukkitPlayerUnleashEntityEvent::new)
+        );
+        constructDefaultListener(ExplosionPrimeEvent.class, SExplosionPrimeEvent.class, SBukkitExplosionPrimeEvent::new);
+        constructDefaultListener(FireworkExplodeEvent.class, SFireworkExplodeEvent.class, SBukkitFireworkExplodeEvent::new);
+        constructDefaultListener(VehicleCreateEvent.class, SVehicleCreateEvent.class, SBukkitVehicleCreateEvent::new);
 
         // player
         new AsyncPlayerPreLoginEventListener(plugin);
