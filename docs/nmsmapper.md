@@ -27,7 +27,8 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'org.screamingsandals.nms:NMSMapper:1.0.7'
+        // make sure you have the latest version
+        classpath 'org.screamingsandals.nms:NMSMapper:1.0.12'
     }
 }
 
