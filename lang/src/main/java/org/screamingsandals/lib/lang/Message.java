@@ -4,6 +4,7 @@ import lombok.Data;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.template.TemplateResolver;
 import net.kyori.adventure.title.Title;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -337,7 +338,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * so you can change format for whole message, not just the inserted part.
      *
      * @param placeholder Placeholder
-     * @param value Component which will replace the placeholder
+     * @param value       Component which will replace the placeholder
      * @return self
      */
     public Message earlyPlaceholder(String placeholder, Component value) {
@@ -351,7 +352,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * so you can change format for whole message, not just the inserted part.
      *
      * @param placeholder Placeholder
-     * @param value String which will replace the placeholder. It must be in MiniMessage format
+     * @param value       String which will replace the placeholder. It must be in MiniMessage format
      * @return self
      */
     public Message earlyPlaceholder(String placeholder, String value) {
@@ -525,11 +526,14 @@ public class Message implements TitleableSenderMessage, Cloneable {
                                         s = output.toString();
                                     }
 
-                                    return Lang.MINIMESSAGE.parse(s, placeholders
-                                            .entrySet()
-                                            .stream()
-                                            .map(entry -> Template.of(entry.getKey(), entry.getValue().apply(sender)))
-                                            .collect(Collectors.toList()));
+                                    final var resolvedTemplates = TemplateResolver
+                                            .templates(placeholders
+                                                    .entrySet()
+                                                    .stream()
+                                                    .map(entry -> Template.template(entry.getKey(), entry.getValue().apply(sender)))
+                                                    .collect(Collectors.toList()));
+
+                                    return Lang.MINIMESSAGE.deserialize(s, resolvedTemplates);
                                 } else {
                                     // Black magic again
                                     var matcher = LEGACY_PLACEHOLDERS.matcher(s);
