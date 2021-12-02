@@ -233,6 +233,8 @@ public abstract class PlayerMapper {
         return playerMapper.specialPlayerConverter;
     }
 
+    // abstract methods for implementations
+
     protected abstract <T> CommandSenderWrapper wrapSender0(T sender);
 
     public abstract SenderWrapper getConsoleSender0();

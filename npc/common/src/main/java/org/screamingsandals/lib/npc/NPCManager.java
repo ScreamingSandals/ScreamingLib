@@ -87,7 +87,7 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
                     || npc.getLocation().getDistanceSquared(player.getLocation()) > LocatableVisual.DEFAULT_VIEW_DISTANCE) {
                 continue;
             }
-            npc.lookAtPlayer(event.getNewLocation(), player);
+            npc.lookAtLocation(event.getNewLocation(), player);
         }
     }
 

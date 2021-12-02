@@ -22,10 +22,9 @@ import org.screamingsandals.lib.world.weather.WeatherHolder;
 import java.util.Optional;
 
 /**
- * <p>Class representing a player.</p>
+ * <p>A player representation.</p>
  */
 public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, EntityHuman {
-
     /**
      * <p>Checks if the player is sprinting.</p>
      *
@@ -228,8 +227,18 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      */
     void forceUpdateInventory();
 
+    /**
+     * <p>Gets the weather for this player.</p>
+     *
+     * @return the weather for this player
+     */
     Optional<WeatherHolder> getPlayerWeather();
 
+    /**
+     * <p>Sets the weather for this player.</p>
+     *
+     * @param weather the weather
+     */
     void setPlayerWeather(@Nullable WeatherHolder weather);
 
     long getPlayerTime();
@@ -238,23 +247,51 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
 
     void resetPlayerTime();
 
+    /**
+     * <p>Shows a particle to this player.</p>
+     *
+     * @param particle the particle
+     * @param location the location of the particle
+     */
     void sendParticle(ParticleHolder particle, LocationHolder location);
 
-    void setCompassTarget(LocationHolder location);
-
-    void restoreDefaultScoreboard();
-
-    Optional<EntityBasic> getSpectatorTarget();
-
-    void setSpectatorTarget(@Nullable EntityBasic entity);
-
+    /**
+     * <p>Gets the compass target location for this player.</p>
+     *
+     * @return the compass target location
+     */
     LocationHolder getCompassTarget();
 
     /**
-     * <p>Gets the player's connection.</p>
+     * <p>Sets the compass target for this player.</p>
+     *
+     * @param location the compass target location
+     */
+    void setCompassTarget(LocationHolder location);
+
+    /**
+     * <p>Resets the scoreboard for this player.</p>
+     */
+    void restoreDefaultScoreboard();
+
+    /**
+     * <p>Gets the spectator target for this player.</p>
+     *
+     * @return the spectator target, empty if there is no target
+     */
+    Optional<EntityBasic> getSpectatorTarget();
+
+    /**
+     * <p>Sets the spectator target for this player.</p>
+     *
+     * @param entity the spectator target, null to clear the target
+     */
+    void setSpectatorTarget(@Nullable EntityBasic entity);
+
+    /**
+     * <p>Gets the player's {@link Channel}.</p>
      *
      * @return the player connection
-     * @see Channel
      */
     Channel getChannel();
 
@@ -297,13 +334,16 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     default Type getType() {
         return Type.PLAYER;
     }
 
     /**
-     * Wrapper for hands
+     * Wrapper for hands.
      */
     // TODO: holder?
     enum Hand implements Wrapper {

@@ -119,7 +119,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     }
 
     @Override
-    public void lookAtPlayer(LocationHolder location, PlayerWrapper player) {
+    public void lookAtLocation(LocationHolder location, PlayerWrapper player) {
         final var direction = getLocation().setDirection(player.getLocation().subtract(getLocation()).asVector());
         new SClientboundMoveEntityPacket.Rot()
                 .entityId(getEntityId())

@@ -5,8 +5,15 @@ import org.screamingsandals.lib.sender.permissions.Permission;
 
 import java.util.Locale;
 
+/**
+ * <p>A sender wrapper.</p>
+ */
 public interface SenderWrapper extends CommandSenderWrapper {
-
+    /**
+     * <p>Attempts to dispatch a command as this sender.</p>
+     *
+     * @param command the command
+     */
     void tryToDispatchCommand(String command);
 
     /**
