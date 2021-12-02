@@ -32,6 +32,8 @@ subprojects {
         sponge()
         velocity()
         placeholderApi()
+        paper()
+        screaming()
     }
 
     sourceCompatibility = JavaVersion.VERSION_11
