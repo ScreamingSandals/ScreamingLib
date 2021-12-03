@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.utils.WrappedLocation;
+import org.screamingsandals.lib.utils.WrappedVector3D;
 
 @Data
 @NoArgsConstructor
@@ -16,6 +18,22 @@ public class Vector3D implements Cloneable {
     private double x;
     private double y;
     private double z;
+
+    public static Vector3D unwrap(WrappedVector3D wrapped) {
+        return new Vector3D(wrapped.getX(), wrapped.getY(), wrapped.getZ());
+    }
+
+    public static Vector3D unwrap(WrappedLocation wrapped) {
+        return new Vector3D(wrapped.getX(), wrapped.getY(), wrapped.getZ());
+    }
+
+    public WrappedVector3D wrap() {
+        return WrappedVector3D.newBuilder()
+                .setX(this.x)
+                .setY(this.y)
+                .setZ(this.z)
+                .build();
+    }
 
     public Vector3D add(double x, double y, double z) {
         this.x += x;
@@ -53,6 +71,7 @@ public class Vector3D implements Cloneable {
     public double distance(@NotNull Vector3D o) {
         return Math.sqrt(distanceSquared(o));
     }
+
     public double distanceSquared(@NotNull Vector3D o) {
         var deltaX = x - o.x;
         var deltaY = y - o.y;

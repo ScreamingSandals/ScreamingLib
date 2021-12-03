@@ -7,9 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
-import org.screamingsandals.lib.utils.BlockFace;
-import org.screamingsandals.lib.utils.MathUtils;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
@@ -107,7 +105,7 @@ public class LocationHolder implements Wrapper, Serializable {
      * <p>Clones the current location and increments the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.</p>
      *
      * @param blockFace the block face to add
-     * @param distance how far in the direction the new location should be
+     * @param distance  how far in the direction the new location should be
      * @return the new location
      */
     public LocationHolder add(BlockFace blockFace, int distance) {
@@ -175,7 +173,7 @@ public class LocationHolder implements Wrapper, Serializable {
      * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.</p>
      *
      * @param blockFace the block face to add
-     * @param distance how far in the direction the new location should be
+     * @param distance  how far in the direction the new location should be
      * @return the new location
      */
     public LocationHolder subtract(BlockFace blockFace, int distance) {
@@ -215,6 +213,40 @@ public class LocationHolder implements Wrapper, Serializable {
      */
     public Vector3Df asVectorf() {
         return new Vector3Df((float) this.x, (float) this.y, (float) this.z);
+    }
+
+    /**
+     * Converts this location into a {@link WrappedLocation}. Useful for Protobuf sending :)
+     *
+     * @return wrapped location into a Protobuf message
+     */
+    public WrappedLocation asWrappedLocation() {
+        return WrappedLocation.newBuilder()
+                .setX(this.x)
+                .setY(this.y)
+                .setZ(this.z)
+                .setPitch(this.pitch)
+                .setYaw(this.yaw)
+                .setWorldUuid(this.world.getUuid().toString())
+                .build();
+    }
+
+    /**
+     * Converts this location into a {@link WrappedVector3D}. Useful for Protobuf sending :)
+     *
+     * @return wrapped location into a Protobuf message
+     */
+    public WrappedVector3D asWrappedVector() {
+       return asVector().wrap();
+    }
+
+    /**
+     * Converts this location into a {@link WrappedVector3Df}. Useful for Protobuf sending :)
+     *
+     * @return wrapped location into a Protobuf message
+     */
+    public WrappedVector3Df asWrappedVectorf() {
+        return asVectorf().wrap();
     }
 
     /**
@@ -322,9 +354,9 @@ public class LocationHolder implements Wrapper, Serializable {
     /**
      * <p>Gets the entities extending the supplied class in the radius from this location.</p>
      *
-     * @param clazz the entity type class
+     * @param clazz  the entity type class
      * @param radius the radius
-     * @param <T> the entity type
+     * @param <T>    the entity type
      * @return the entities
      */
     public <T extends EntityBasic> List<T> getNearbyEntitiesByClass(Class<T> clazz, int radius) {
@@ -346,7 +378,7 @@ public class LocationHolder implements Wrapper, Serializable {
     /**
      * <p>Checks if the supplied location is within the radius from this location.</p>
      *
-     * @param holder the location holder to compare
+     * @param holder   the location holder to compare
      * @param distance the radius
      * @return is the supplied location within the radius of this location?
      */
@@ -357,7 +389,7 @@ public class LocationHolder implements Wrapper, Serializable {
     /**
      * <p>Checks if the supplied location is out of range from this location.</p>
      *
-     * @param holder the location holder to compare
+     * @param holder   the location holder to compare
      * @param distance the radius
      * @return is the supplied location out of range of this location?
      */
