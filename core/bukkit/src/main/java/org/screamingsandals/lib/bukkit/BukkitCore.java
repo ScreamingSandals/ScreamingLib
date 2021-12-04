@@ -104,15 +104,23 @@ public class BukkitCore extends Core {
         new EntityShootBowEventListener(plugin);
         new EntitySpawnEventListener(plugin);
         new EntityTameEventListener(plugin);
-        new EntityTargetEventListener(plugin);
-        new FoodLevelChangeEventListener(plugin);
-        new HorseJumpEventListener(plugin);
-        new ItemDespawnEventListener(plugin);
-        new ItemMergeEventListener(plugin);
-        new ProjectileHitEventListener(plugin);
-        new SheepDyeWoolEventListener(plugin);
-        new SheepRegrowWoolEventListener(plugin);
-        new SlimeSplitEventListener(plugin);
+        constructDefaultListener(EntityTargetEvent.class, SEntityTargetEvent.class, factory(SBukkitEntityTargetEvent::new)
+                .sub(EntityTargetLivingEntityEvent.class, SBukkitEntityTargetLivingEntityEvent::new)
+        );
+        constructDefaultListener(FoodLevelChangeEvent.class, SFoodLevelChangeEvent.class, SBukkitFoodLevelChangeEvent::new);
+        constructDefaultListener(HorseJumpEvent.class, SHorseJumpEvent.class, SBukkitHorseJumpEvent::new);
+        constructDefaultListener(ItemDespawnEvent.class, SItemDespawnEvent.class, SBukkitItemDespawnEvent::new);
+        constructDefaultListener(ItemMergeEvent.class, SItemMergeEvent.class, SBukkitItemMergeEvent::new);
+
+        // ProjectileHitEvent is a weird event, the child has its own HandlerList
+        constructDefaultListener(ProjectileHitEvent.class, SProjectileHitEvent.class, SBukkitProjectileHitEvent::new);
+        if (has("org.bukkit.event.entity.ExpBottleEvent")) {
+            constructDefaultListener(ExpBottleEvent.class, SProjectileHitEvent.class, SBukkitExpBottleEvent::new);
+        }
+
+        constructDefaultListener(SheepDyeWoolEvent.class, SSheepDyeWoolEvent.class, SBukkitSheepDyeWoolEvent::new);
+        constructDefaultListener(SheepRegrowWoolEvent.class, SSheepRegrowWoolEvent.class, SBukkitSheepRegrowWoolEvent::new);
+        constructDefaultListener(SlimeSplitEvent.class, SSlimeSplitEvent.class, SBukkitSlimeSplitEvent::new);
         if (has("org.bukkit.event.entity.StriderTemperatureChangeEvent")) {
             constructDefaultListener(StriderTemperatureChangeEvent.class, SStriderTemperatureChangeEvent.class, SBukkitStriderTemperatureChangeEvent::new);
         }

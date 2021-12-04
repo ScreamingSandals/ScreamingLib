@@ -1,42 +1,25 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SEntityTargetEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ObjectLink<EntityBasic> target;
-    private final ImmutableObjectLink<TargetReason> targetReason;
+public interface SEntityTargetEvent extends SCancellableEvent {
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    EntityBasic getEntity();
 
-    public EntityBasic getTarget() {
-        return target.get();
-    }
+    @Nullable
+    EntityBasic getTarget();
 
-    public void setTarget(EntityBasic target) {
-        this.target.set(target);
-    }
+    void setTarget(@Nullable EntityBasic target);
 
-    public TargetReason getTargetReason() {
-        return targetReason.get();
-    }
+    TargetReason getTargetReason();
 
     /**
      * An enum to specify the reason for the targeting
      */
     // TODO: holder?
-    public enum TargetReason {
+    enum TargetReason {
 
         /**
          * When the entity's target has died, and so it no longer targets it

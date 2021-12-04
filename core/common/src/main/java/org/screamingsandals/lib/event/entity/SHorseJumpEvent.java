@@ -1,30 +1,14 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SHorseJumpEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ObjectLink<Float> power;
+public interface SHorseJumpEvent extends SCancellableEvent {
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    EntityBasic getEntity();
 
-    public float getPower() {
-        return power.get();
-    }
+    float getPower();
 
     @Deprecated
-    public void setPower(float power) {
-        this.power.set(power);
-    }
+    void setPower(float power);
 }

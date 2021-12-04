@@ -1,35 +1,18 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SFoodLevelChangeEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ObjectLink<Integer> level;
-    private final ImmutableObjectLink<Item> item;
+public interface SFoodLevelChangeEvent extends SCancellableEvent {
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    EntityBasic getEntity();
 
-    public int getLevel() {
-        return level.get();
-    }
+    int getLevel();
 
-    public void setLevel(int level) {
-        this.level.set(level);
-    }
+    void setLevel(int level);
 
-    public Item getItem() {
-        return item.get();
-    }
+    @Nullable
+    Item getItem();
 }

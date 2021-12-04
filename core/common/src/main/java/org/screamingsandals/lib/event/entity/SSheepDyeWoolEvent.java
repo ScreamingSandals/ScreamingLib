@@ -1,30 +1,14 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SSheepDyeWoolEvent extends CancellableAbstractEvent {
+public interface SSheepDyeWoolEvent extends SCancellableEvent {
+
+    EntityBasic getEntity();
+
     //TODO: DyeColor holder
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ObjectLink<String> dyeColor;
+    String getDyeColor();
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
-
-    public String getDyeColor() {
-        return dyeColor.get();
-    }
-
-    public void setDyeColor(String dyeColor) {
-        this.dyeColor.set(dyeColor);
-    }
+    void setDyeColor(String dyeColor);
 }
