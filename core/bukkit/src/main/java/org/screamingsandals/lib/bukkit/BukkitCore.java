@@ -3,6 +3,7 @@ package org.screamingsandals.lib.bukkit;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
@@ -89,21 +90,29 @@ public class BukkitCore extends Core {
             new EntityPlaceEventListener(plugin);
         }
         new EntityTeleportEventListener(plugin);
-        new EntityPortalEnterEventListener(plugin);
-        new EntityPortalEnterExitListener(plugin);
+        constructDefaultListener(EntityPortalEnterEvent.class, SEntityPortalEnterEvent.class, SBukkitEntityPortalEnterEvent::new);
+        constructDefaultListener(EntityPortalExitEvent.class, SEntityPortalExitEvent.class, SBukkitEntityPortalExitEvent::new);
         if (has("org.bukkit.event.entity.EntityPoseChangeEvent")) {
-            new EntityPoseChangeEventListener(plugin);
+            constructDefaultListener(EntityPoseChangeEvent.class, SEntityPoseChangeEvent.class, SBukkitEntityPoseChangeEvent::new);
         }
         if (has("org.bukkit.event.entity.EntityPotionEffectEvent")) {
-            new EntityPotionEffectEventListener(plugin);
+            constructDefaultListener(EntityPotionEffectEvent.class, SEntityPotionEffectEvent.class, SBukkitEntityPotionEffectEvent::new);
         }
-        new EntityRegainHealthEventListener(plugin);
+        constructDefaultListener(EntityRegainHealthEvent.class, SEntityRegainHealthEvent.class, SBukkitEntityRegainHealthEvent::new);
         if (has("org.bukkit.event.entity.EntityResurrectEvent")) {
-            new EntityResurrectEventListener(plugin);
+            constructDefaultListener(EntityResurrectEvent.class, SEntityResurrectEvent.class, SBukkitEntityResurrectEvent::new);
         }
-        new EntityShootBowEventListener(plugin);
-        new EntitySpawnEventListener(plugin);
-        new EntityTameEventListener(plugin);
+        constructDefaultListener(EntityShootBowEvent.class, SEntityShootBowEvent.class, SBukkitEntityShootBowEvent::new);
+        constructDefaultListener(EntitySpawnEvent.class, SEntitySpawnEvent.class, factory(SBukkitEntitySpawnEvent::new)
+                .sub(ItemSpawnEvent.class, SBukkitItemSpawnEvent::new)
+                .sub(ProjectileLaunchEvent.class, projectileLaunchEvent -> {
+                    if (projectileLaunchEvent.getEntity().getShooter() instanceof Player) {
+                        return new SBukkitPlayerProjectileLaunchEvent(projectileLaunchEvent);
+                    }
+                    return new SBukkitProjectileLaunchEvent(projectileLaunchEvent);
+                })
+        );
+        constructDefaultListener(EntityTameEvent.class, SEntityTameEvent.class, SBukkitEntityTameEvent::new);
         constructDefaultListener(EntityTargetEvent.class, SEntityTargetEvent.class, factory(SBukkitEntityTargetEvent::new)
                 .sub(EntityTargetLivingEntityEvent.class, SBukkitEntityTargetLivingEntityEvent::new)
         );

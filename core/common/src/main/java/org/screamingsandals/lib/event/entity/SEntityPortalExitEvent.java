@@ -1,36 +1,25 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.AbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SEntityPortalExitEvent extends AbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ImmutableObjectLink<Vector3D> before;
-    private final ObjectLink<Vector3D> after;
+public interface SEntityPortalExitEvent extends SEvent {
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    EntityBasic getEntity();
 
-    public Vector3D getBefore() {
-        return before.get();
-    }
+    LocationHolder getFrom();
 
-    public Vector3D getAfter() {
-        return after.get();
-    }
+    void setFrom(LocationHolder location);
 
-    public void setAfter(Vector3D after) {
-        this.after.set(after);
-    }
+    LocationHolder getTo();
+
+    void setTo(LocationHolder location);
+
+    Vector3D getBefore();
+
+    Vector3D getAfter();
+
+    void setAfter(Vector3D after);
 }

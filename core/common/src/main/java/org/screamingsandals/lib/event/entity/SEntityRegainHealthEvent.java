@@ -1,42 +1,22 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SEntityRegainHealthEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ObjectLink<Double> amount;
-    private final ImmutableObjectLink<RegainReason> regainReason;
+public interface SEntityRegainHealthEvent extends SCancellableEvent {
+    EntityBasic getEntity();
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    RegainReason getRegainReason();
 
-    public RegainReason getRegainReason() {
-        return regainReason.get();
-    }
+    double getAmount();
 
-    public double getAmount() {
-        return amount.get();
-    }
-
-    public void setAmount(double amount) {
-        this.amount.set(amount);
-    }
+    void setAmount(double amount);
 
     /**
      * An enum to specify the type of health regaining that is occurring
      */
     // TODO: holder?
-    public enum RegainReason {
+    enum RegainReason {
 
         /**
          * When a player regains health from regenerating due to Peaceful mode
