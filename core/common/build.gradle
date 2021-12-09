@@ -1,7 +1,10 @@
 dependencies {
+    //proto
+    compileOnly group: 'com.google.protobuf', name: 'protobuf-java', version: PROTOBUF_VERSION
+    compileOnly 'io.netty:netty-all:' + NETTY_VERSION
+
     api project(':utils-common')
     api project(':event-common')
     api project(':sender')
     api 'org.spongepowered:configurate-core:' + CONFIGURATE_VERSION
-    compileOnly 'io.netty:netty-all:' + NETTY_VERSION
 }

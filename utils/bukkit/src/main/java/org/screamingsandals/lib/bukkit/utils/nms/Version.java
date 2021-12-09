@@ -13,7 +13,7 @@ public class Version {
 	public static final int PATCH_VERSION;
 	
 	static {
-		Pattern versionPattern = Pattern.compile("\\(MC: (\\d+)\\.(\\d+)\\.?(\\d+?)?\\)");
+		Pattern versionPattern = Pattern.compile("\\(MC: (\\d+)\\.(\\d+)\\.?(\\d+?)?");
         Matcher matcher = versionPattern.matcher(Bukkit.getVersion());
         int majorVersion = 1;
         int minorVersion = 0;

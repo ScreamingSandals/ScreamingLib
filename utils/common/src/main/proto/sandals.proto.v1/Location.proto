@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package sandals.proto.v1;
+
+option java_multiple_files = true;
+option java_package = "org.screamingsandals.lib.utils";
+
+import "google/protobuf/timestamp.proto";
+
+message WrappedLocation {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+  float yaw = 4;
+  float pitch = 5;
+  string worldUuid = 6;
+}
+
+message WrappedVector3D {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+}
+
+message WrappedVector3Df {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}

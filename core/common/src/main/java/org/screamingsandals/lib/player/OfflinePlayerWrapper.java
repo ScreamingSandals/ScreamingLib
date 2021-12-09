@@ -5,11 +5,14 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Optional;
 
+/**
+ * <p>A representation of an offline player.</p>
+ */
 public interface OfflinePlayerWrapper extends MultiPlatformOfflinePlayer {
     /**
      * <p>Gets the location of the bed of this player.</p>
      *
-     * @return the location of the bed of this player, can be empty if the player does not have a bed
+     * @return the location, can be empty if the player does not have a bed
      */
     default Optional<LocationHolder> getBedLocation() {
         return PlayerMapper.getBedLocation(this);

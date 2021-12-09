@@ -11,7 +11,7 @@ import org.screamingsandals.lib.sender.CommandSenderWrapper;
 public class Lang {
     /* Package Private, we want this customizable */
     @Getter
-    static MiniMessage MINIMESSAGE = MiniMessage.get();
+    static MiniMessage MINIMESSAGE = MiniMessage.miniMessage();
 
     @Getter
     private static LangService defaultService;

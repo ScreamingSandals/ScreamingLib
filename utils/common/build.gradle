@@ -1,4 +1,13 @@
+plugins {
+    id "com.google.protobuf" version "0.8.18"
+}
+
+apply plugin: "com.google.protobuf"
+
 dependencies {
+    //proto
+    compileOnly group: 'com.google.protobuf', name: 'protobuf-java', version: PROTOBUF_VERSION
+
     compileOnly 'com.google.guava:guava:' + GUAVA_VERSION
     compileOnly 'org.slf4j:slf4j-api:' + SLF4J_VERSION
 
@@ -10,4 +19,31 @@ dependencies {
     api 'net.kyori:adventure-text-serializer-plain:' + ADVENTURE_VERSION
     api 'net.kyori:adventure-text-serializer-gson:' + ADVENTURE_VERSION
     api 'net.kyori:adventure-serializer-configurate4:' + ADVENTURE_VERSION
+}
+
+sourceSets.configureEach{s->
+    java {
+        srcDir project.buildDir.toPath()
+                .resolve("generatedProto")
+                .resolve(s.name)
+                .resolve("java")
+                .toFile()
+
+        srcDir project.buildDir.toPath()
+                .resolve("generatedProto")
+                .resolve(s.name)
+                .resolve("grpc")
+                .toFile()
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:${PROTOBUF_VERSION}"
+    }
+    generateProtoTasks {
+        all()
+    }
+
+    generatedFilesBaseDir = "${project.buildDir}/generatedProto"
 }

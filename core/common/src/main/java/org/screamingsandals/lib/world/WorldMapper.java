@@ -11,9 +11,6 @@ import java.util.UUID;
  */
 @AbstractService
 public abstract class WorldMapper {
-    /**
-     * <p></p>
-     */
     protected BidirectionalConverter<WorldHolder> converter = BidirectionalConverter.<WorldHolder>build()
             .registerP2W(WorldHolder.class, e -> e);
 

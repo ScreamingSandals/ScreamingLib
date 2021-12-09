@@ -1,10 +1,12 @@
 package org.screamingsandals.lib.utils.math;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.utils.WrappedLocation;
+import org.screamingsandals.lib.utils.WrappedVector3D;
+import org.screamingsandals.lib.utils.WrappedVector3Df;
 
 @Data
 @NoArgsConstructor
@@ -13,6 +15,26 @@ public class Vector3Df implements Cloneable {
     private float x;
     private float y;
     private float z;
+
+    public static Vector3Df unwrap(WrappedVector3Df wrapped) {
+        return new Vector3Df(wrapped.getX(), wrapped.getY(), wrapped.getZ());
+    }
+
+    public static Vector3Df unwrap(WrappedVector3D wrapped) {
+        return new Vector3Df((float) wrapped.getX(), (float) wrapped.getY(), (float) wrapped.getZ());
+    }
+
+    public static Vector3Df unwrap(WrappedLocation wrapped) {
+        return new Vector3Df((float) wrapped.getX(), (float) wrapped.getY(), (float) wrapped.getZ());
+    }
+
+    public WrappedVector3Df wrap() {
+        return WrappedVector3Df.newBuilder()
+                .setX(this.x)
+                .setY(this.y)
+                .setZ(this.z)
+                .build();
+    }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
