@@ -1,14 +1,19 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.entity.ItemMergeEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.event.entity.SItemMergeEvent;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitItemMergeEvent implements SItemMergeEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final ItemMergeEvent event;
 
     // Internal cache

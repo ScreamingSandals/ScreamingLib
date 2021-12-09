@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.entity.Item;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
@@ -15,8 +15,13 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitBlockDropItemEvent implements SBlockDropItemEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final BlockDropItemEvent event;
 
     // Internal cache

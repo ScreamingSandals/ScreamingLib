@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -11,8 +11,13 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitBlockExplodeEvent implements SBlockExplodeEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final BlockExplodeEvent event;
 
     // Internal cache

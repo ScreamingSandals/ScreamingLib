@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -13,8 +13,13 @@ import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 
 import java.net.InetAddress;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerLoginEvent implements SPlayerLoginEvent {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final PlayerLoginEvent event;
 
     // Internal cache

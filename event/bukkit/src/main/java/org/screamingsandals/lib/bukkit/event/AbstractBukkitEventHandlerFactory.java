@@ -49,8 +49,7 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
                         return;
                     }
 
-                    if (wrapped instanceof Cancellable
-                            && event instanceof org.bukkit.event.Cancellable && !(event instanceof NoAutoCancellable)) {
+                    if (!(event instanceof NoAutoCancellable) && wrapped instanceof Cancellable && event instanceof org.bukkit.event.Cancellable) {
                         ((Cancellable) wrapped).setCancelled(((org.bukkit.event.Cancellable) event).isCancelled());
                     }
 
@@ -68,12 +67,10 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
                        }
                     }
 
-                    if (wrapped instanceof Cancellable && event instanceof org.bukkit.event.Cancellable && !(event instanceof NoAutoCancellable)) {
+                    if (!(event instanceof NoAutoCancellable) && wrapped instanceof Cancellable && event instanceof org.bukkit.event.Cancellable) {
                         final var isCancelled = ((Cancellable) wrapped).isCancelled();
                         ((org.bukkit.event.Cancellable) event).setCancelled(isCancelled);
                     }
-
-                    postProcess(wrapped, (T) event);
                 };
 
                 eventMap.put(handlerRegisteredEvent.getHandler().getEventPriority(), handler);
@@ -89,13 +86,4 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
      * @return wrapped event or null (if null, nothing happens)
      */
     protected abstract SE wrapEvent(T event, EventPriority priority);
-
-    /**
-     * For additional processing of the event.
-     * If the event is instance of {@link org.bukkit.event.Cancellable}, the result is set from our wrapped event
-     * @param wrappedEvent wrapped event
-     * @param event bukkit event
-     */
-    @Deprecated
-    protected void postProcess(SE wrappedEvent, T event) {}
 }

@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -9,8 +9,13 @@ import org.screamingsandals.lib.block.state.BlockStateMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.SBlockGrowEvent;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitBlockGrowEvent implements SBlockGrowEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final BlockGrowEvent event;
 
     // Internal cache

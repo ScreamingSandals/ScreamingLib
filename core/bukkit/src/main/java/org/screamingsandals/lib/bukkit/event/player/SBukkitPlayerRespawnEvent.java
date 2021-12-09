@@ -1,17 +1,21 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
-import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerRespawnEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
-@Data
-public class SBukkitPlayerRespawnEvent implements SPlayerRespawnEvent, BukkitCancellable {
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
+public class SBukkitPlayerRespawnEvent implements SPlayerRespawnEvent {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final PlayerRespawnEvent event;
 
     // Internal cache

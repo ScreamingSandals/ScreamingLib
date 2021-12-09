@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockFertilizeEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -15,8 +15,13 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitBlockFertilizeEvent implements SBlockFertilizeEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final BlockFertilizeEvent event;
 
     // Internal cache

@@ -80,16 +80,25 @@ public class BukkitCore extends Core {
             new EntityExhaustionEventListener(plugin);
         }
         new EntityExplodeEventListener(plugin);
-        new EntityInteractEventListener(plugin);
+        constructDefaultListener(EntityInteractEvent.class, SEntityInteractEvent.class, SBukkitEntityInteractEvent::new);
         if (has("org.bukkit.event.entity.EntityPickupItemEvent")) {
-            new EntityPickupItemEventListener(plugin);
+            constructDefaultListener(EntityPickupItemEvent.class, SEntityPickupItemEvent.class, event -> {
+                if (event.getEntity() instanceof Player) {
+                    return new SBukkitModernPlayerPickupItemEvent(event);
+                }
+                return new SBukkitEntityPickupItemEvent(event);
+            });
         } else {
-            new LegacyPlayerPickupItemListener(plugin);
+            constructDefaultListener(PlayerPickupItemEvent.class, SEntityPickupItemEvent.class, SBukkitLegacyPlayerPickupItemEvent::new);
         }
         if (has("org.bukkit.event.entity.EntityPlaceEvent")) {
-            new EntityPlaceEventListener(plugin);
+            constructDefaultListener(EntityPlaceEvent.class, SEntityPlaceEvent.class, SBukkitEntityPlaceEvent::new);
         }
-        new EntityTeleportEventListener(plugin);
+
+        // EntityTeleportEvent is a weird event, the child has its own HandlerList
+        constructDefaultListener(EntityTeleportEvent.class, SEntityTeleportEvent.class, SBukkitEntityTeleportEvent::new);
+        constructDefaultListener(EntityPortalEvent.class, SEntityTeleportEvent.class, SBukkitEntityPortalEvent::new);
+
         constructDefaultListener(EntityPortalEnterEvent.class, SEntityPortalEnterEvent.class, SBukkitEntityPortalEnterEvent::new);
         constructDefaultListener(EntityPortalExitEvent.class, SEntityPortalExitEvent.class, SBukkitEntityPortalExitEvent::new);
         if (has("org.bukkit.event.entity.EntityPoseChangeEvent")) {
@@ -292,7 +301,7 @@ public class BukkitCore extends Core {
 
     /**
      * @param bukkitEvent the bukkit event
-     * @param screamingEvent screaming event class, must be the abstract class from core module!!!
+     * @param screamingEvent screaming event class, must be the interface from core module!!! (if it's a child event, you should specify the parent here)
      * @param function which returns the constructed screaming event
      */
     private <S extends SEvent, B extends Event> void constructDefaultListener(Class<B> bukkitEvent, Class<S> screamingEvent, Function<B, ? extends S> function) {

@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.block.CauldronLevelChangeEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -10,8 +10,13 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.block.SCauldronLevelChangeEvent;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitCauldronLevelChangeEvent implements SCauldronLevelChangeEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final CauldronLevelChangeEvent event;
 
     // Internal cache

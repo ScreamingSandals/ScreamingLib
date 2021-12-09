@@ -1,6 +1,9 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -9,8 +12,13 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityPotionEffectEvent;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitEntityPotionEffectEvent implements SEntityPotionEffectEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final EntityPotionEffectEvent event;
 
     // Internal cache

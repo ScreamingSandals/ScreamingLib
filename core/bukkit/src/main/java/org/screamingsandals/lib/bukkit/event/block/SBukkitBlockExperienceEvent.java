@@ -1,13 +1,18 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.block.BlockExpEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockExperienceEvent;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitBlockExperienceEvent implements SBlockExperienceEvent {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final BlockExpEvent event;
 
     // Internal cache

@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
-import lombok.EqualsAndHashCode;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -10,7 +9,6 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
-@EqualsAndHashCode(callSuper = true)
 public class SBukkitBlockPistonExtendEvent extends SBukkitBlockPistonEvent implements SBlockPistonExtendEvent {
 
     // Internal cache

@@ -1,25 +1,26 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.*;
-import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
+import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
-import org.screamingsandals.lib.event.entity.SEntityTameEvent;
-
+import org.screamingsandals.lib.event.entity.SEntityInteractEvent;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-public class SBukkitEntityTameEvent implements SEntityTameEvent, BukkitCancellable {
+public class SBukkitEntityInteractEvent implements SEntityInteractEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityTameEvent event;
+    private final EntityInteractEvent event;
 
     // Internal cache
     private EntityBasic entity;
-    private EntityBasic owner;
+    private BlockHolder block;
 
     @Override
     public EntityBasic getEntity() {
@@ -30,10 +31,10 @@ public class SBukkitEntityTameEvent implements SEntityTameEvent, BukkitCancellab
     }
 
     @Override
-    public EntityBasic getOwner() {
-        if (owner == null) {
-            owner = EntityMapper.wrapEntity(event.getOwner()).orElseThrow();
+    public BlockHolder getBlock() {
+        if (block == null) {
+            block = BlockMapper.wrapBlock(event.getBlock());
         }
-        return owner;
+        return block;
     }
 }

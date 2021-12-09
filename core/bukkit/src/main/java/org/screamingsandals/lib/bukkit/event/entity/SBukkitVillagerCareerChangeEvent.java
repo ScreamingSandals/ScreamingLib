@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.entity.VillagerCareerChangeEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -8,8 +8,13 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SVillagerCareerChangeEvent;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitVillagerCareerChangeEvent implements SVillagerCareerChangeEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final VillagerCareerChangeEvent event;
 
     // Internal cache

@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.world.SpawnChangeEvent;
 import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.event.world.SSpawnChangeEvent;
@@ -8,8 +8,13 @@ import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitSpawnChangeEvent implements SSpawnChangeEvent {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final SpawnChangeEvent event;
 
     // Internal cache

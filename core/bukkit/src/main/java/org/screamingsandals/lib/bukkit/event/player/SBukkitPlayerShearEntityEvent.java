@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -12,8 +12,13 @@ import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final PlayerShearEntityEvent event;
 
     // Internal cache

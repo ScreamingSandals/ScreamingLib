@@ -1,15 +1,19 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
-import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.SRedstoneEvent;
 
-@Data
-public class SBukkitRedstoneEvent implements SRedstoneEvent, BukkitCancellable {
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
+public class SBukkitRedstoneEvent implements SRedstoneEvent {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final BlockRedstoneEvent event;
 
     // Internal cache

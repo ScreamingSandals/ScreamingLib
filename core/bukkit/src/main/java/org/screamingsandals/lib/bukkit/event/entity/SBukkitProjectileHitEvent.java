@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -11,8 +11,13 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SProjectileHitEvent;
 import org.screamingsandals.lib.utils.BlockFace;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitProjectileHitEvent implements SProjectileHitEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final ProjectileHitEvent event;
 
     // Internal cache

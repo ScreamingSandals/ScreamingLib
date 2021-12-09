@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -11,8 +11,13 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerKickEvent implements SPlayerKickEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final PlayerKickEvent event;
 
     // Internal cache

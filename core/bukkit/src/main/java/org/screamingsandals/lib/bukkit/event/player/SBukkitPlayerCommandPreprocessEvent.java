@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -8,8 +8,13 @@ import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerCommandPreprocessEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerCommandPreprocessEvent implements SPlayerCommandPreprocessEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final PlayerCommandPreprocessEvent event;
 
     @Override

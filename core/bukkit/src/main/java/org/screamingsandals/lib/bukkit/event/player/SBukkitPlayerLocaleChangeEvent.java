@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import net.kyori.adventure.translation.Translator;
 import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -10,8 +10,13 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Locale;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerLocaleChangeEvent implements SPlayerLocaleChangeEvent {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final PlayerLocaleChangeEvent event;
 
     // Internal cache

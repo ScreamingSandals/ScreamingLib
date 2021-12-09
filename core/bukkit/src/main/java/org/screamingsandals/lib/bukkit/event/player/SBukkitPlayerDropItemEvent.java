@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -9,8 +9,13 @@ import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.event.player.SPlayerDropItemEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerDropItemEvent implements SPlayerDropItemEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final PlayerDropItemEvent event;
 
     // Internal cache

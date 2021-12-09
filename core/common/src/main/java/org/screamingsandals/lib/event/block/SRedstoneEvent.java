@@ -1,10 +1,10 @@
 package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.Range;
-import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.event.SEvent;
 
-public interface SRedstoneEvent extends SCancellableEvent {
+public interface SRedstoneEvent extends SEvent {
 
     BlockHolder getBlock();
 

@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -10,8 +10,13 @@ import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
 import org.screamingsandals.lib.event.player.SPlayerBedEnterEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final PlayerBedEnterEvent event;
 
     // Internal cache

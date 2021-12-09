@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
@@ -16,8 +16,13 @@ import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitBlockDispenseEvent implements SBlockDispenseEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final BlockDispenseEvent event;
 
     // Internal cache

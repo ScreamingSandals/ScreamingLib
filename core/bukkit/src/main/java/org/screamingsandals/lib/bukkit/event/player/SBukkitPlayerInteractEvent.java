@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.Nullable;
@@ -15,8 +15,13 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.BlockFace;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerInteractEvent implements SPlayerInteractEvent, NoAutoCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final PlayerInteractEvent event;
 
     // Internal cache

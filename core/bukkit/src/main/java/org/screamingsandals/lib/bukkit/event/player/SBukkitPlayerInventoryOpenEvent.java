@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -10,8 +10,13 @@ import org.screamingsandals.lib.event.player.SPlayerInventoryOpenEvent;
 import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerInventoryOpenEvent implements SPlayerInventoryOpenEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final InventoryOpenEvent event;
 
     // Internal cache

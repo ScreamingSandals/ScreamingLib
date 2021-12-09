@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerCommandSendEvent;
@@ -8,8 +8,13 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 
 import java.util.Collection;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerCommandSendEvent implements SPlayerCommandSendEvent {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final PlayerCommandSendEvent event;
 
     // Internal cache

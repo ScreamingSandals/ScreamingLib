@@ -10,7 +10,6 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
-@EqualsAndHashCode(callSuper = true)
 public class SBukkitBlockPistonRetractEvent extends SBukkitBlockPistonEvent implements SBlockPistonRetractEvent {
     // Internal cache
     private Collection<BlockHolder> pushedBlocks;

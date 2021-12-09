@@ -1,13 +1,18 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.event.world.SWorldLoadEvent;
 import org.screamingsandals.lib.world.WorldHolder;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitWorldLoadEvent implements SWorldLoadEvent {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final WorldLoadEvent event;
 
     // Internal cache

@@ -5,27 +5,26 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.bukkit.Location;
-import org.bukkit.event.entity.EntityPortalExitEvent;
-import org.bukkit.util.Vector;
+import org.bukkit.event.entity.EntityTeleportEvent;
+import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
-import org.screamingsandals.lib.event.entity.SEntityPortalExitEvent;
-import org.screamingsandals.lib.utils.math.Vector3D;
+import org.screamingsandals.lib.event.entity.SEntityTeleportEvent;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
+
 
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-public class SBukkitEntityPortalExitEvent implements SEntityPortalExitEvent {
+public class SBukkitEntityTeleportEvent implements SEntityTeleportEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityPortalExitEvent event;
+    private final EntityTeleportEvent event;
 
     // Internal cache
     private EntityBasic entity;
-    private Vector3D before;
 
     @Override
     public EntityBasic getEntity() {
@@ -41,8 +40,8 @@ public class SBukkitEntityPortalExitEvent implements SEntityPortalExitEvent {
     }
 
     @Override
-    public void setFrom(LocationHolder location) {
-        event.setFrom(location.as(Location.class));
+    public void setFrom(LocationHolder from) {
+        event.setFrom(from.as(Location.class));
     }
 
     @Override
@@ -51,25 +50,7 @@ public class SBukkitEntityPortalExitEvent implements SEntityPortalExitEvent {
     }
 
     @Override
-    public void setTo(LocationHolder location) {
-        event.setTo(location.as(Location.class));
-    }
-
-    @Override
-    public Vector3D getBefore() {
-        if (before == null) {
-            before = new Vector3D(event.getBefore().getX(), event.getBefore().getY(), event.getBefore().getZ());
-        }
-        return before;
-    }
-
-    @Override
-    public Vector3D getAfter() {
-        return new Vector3D(event.getAfter().getX(), event.getAfter().getY(), event.getAfter().getZ());
-    }
-
-    @Override
-    public void setAfter(Vector3D after) {
-        event.setAfter(new Vector(after.getX(), after.getY(), after.getZ()));
+    public void setTo(LocationHolder to) {
+        event.setFrom(to.as(Location.class));
     }
 }

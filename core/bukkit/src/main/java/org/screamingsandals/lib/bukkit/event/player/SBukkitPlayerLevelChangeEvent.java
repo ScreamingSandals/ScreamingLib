@@ -1,13 +1,18 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerLevelChangeEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerLevelChangeEvent implements SPlayerLevelChangeEvent {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final PlayerLevelChangeEvent event;
 
     // Internal cache

@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.SpongeAbsorbEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -13,8 +13,13 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitSpongeAbsorbEvent implements SSpongeAbsorbEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final SpongeAbsorbEvent event;
 
     // Internal cache

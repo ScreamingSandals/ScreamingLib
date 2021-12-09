@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.block.BlockReceiveGameEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -11,8 +11,13 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.block.SSculkSensorReceiveEvent;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitSculkSensorReceiveEvent implements SSculkSensorReceiveEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final BlockReceiveGameEvent event;
 
     // Internal cache

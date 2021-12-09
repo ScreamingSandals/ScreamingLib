@@ -1,13 +1,18 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityUnleashEvent;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitEntityUnleashEvent implements SEntityUnleashEvent {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final EntityUnleashEvent event;
 
     // Internal cache

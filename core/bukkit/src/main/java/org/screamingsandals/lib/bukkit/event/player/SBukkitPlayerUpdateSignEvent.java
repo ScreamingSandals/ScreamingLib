@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.block.SignChangeEvent;
 import org.jetbrains.annotations.Range;
@@ -14,8 +14,13 @@ import org.screamingsandals.lib.utils.AdventureHelper;
 
 import java.util.Arrays;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerUpdateSignEvent implements SPlayerUpdateSignEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final SignChangeEvent event;
 
     // Internal cache

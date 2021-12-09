@@ -1,14 +1,19 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.event.world.WorldUnloadEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.event.world.SWorldUnloadEvent;
 import org.screamingsandals.lib.world.WorldHolder;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitWorldUnloadEvent implements SWorldUnloadEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final WorldUnloadEvent event;
 
     // Internal cache

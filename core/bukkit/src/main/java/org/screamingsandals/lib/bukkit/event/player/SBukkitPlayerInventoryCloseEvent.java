@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -10,8 +10,13 @@ import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerInventoryCloseEvent implements SPlayerInventoryCloseEvent {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final InventoryCloseEvent event;
 
     // Internal cache

@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.jetbrains.annotations.Nullable;
@@ -16,8 +16,13 @@ import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.Collection;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlantGrowEvent implements SPlantGrowEvent, BukkitCancellable {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final StructureGrowEvent event;
 
     // Internal cache

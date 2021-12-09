@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.Data;
+import lombok.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -10,8 +10,13 @@ import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.event.player.SPlayerEggThrowEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
-@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class SBukkitPlayerEggThrowEvent implements SPlayerEggThrowEvent {
+    @Getter
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final PlayerEggThrowEvent event;
 
     // Internal cache
