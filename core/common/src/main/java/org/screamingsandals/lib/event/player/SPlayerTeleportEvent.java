@@ -1,30 +1,17 @@
 package org.screamingsandals.lib.event.player;
 
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
-import org.screamingsandals.lib.world.LocationHolder;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-public class SPlayerTeleportEvent extends SPlayerMoveEvent {
-    private final ImmutableObjectLink<TeleportCause> cause;
+public interface SPlayerTeleportEvent extends SPlayerMoveEvent {
 
-    public SPlayerTeleportEvent(ImmutableObjectLink<PlayerWrapper> player, ObjectLink<LocationHolder> currentLocation, ObjectLink<LocationHolder> newLocation, ImmutableObjectLink<TeleportCause> cause) {
-        super(player, currentLocation, newLocation);
-        this.cause = cause;
-    }
-
-    public TeleportCause getCause() {
-        return cause.get();
-    }
+    TeleportCause getCause();
 
     //from bukkit
     // TODO: holder
-    public enum TeleportCause {
+    enum TeleportCause {
         ENDER_PEARL,
         /**
          * Indicates the teleportation was caused by a player executing a
@@ -66,7 +53,7 @@ public class SPlayerTeleportEvent extends SPlayerMoveEvent {
          */
         UNKNOWN;
 
-        public static List<TeleportCause> VALUES = Arrays.asList(values());
+        public static final List<TeleportCause> VALUES = Arrays.asList(values());
 
         public static Optional<TeleportCause> getByName(String name) {
             return VALUES.stream()

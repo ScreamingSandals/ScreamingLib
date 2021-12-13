@@ -163,10 +163,14 @@ public class BukkitCore extends Core {
         new AsyncPlayerChatEventListener(plugin);
         new PlayerJoinEventListener(plugin);
         new PlayerLeaveEventListener(plugin);
-        new PlayerBlockPlaceEventListener(plugin);
-        new PlayerBlockDamageEventListener(plugin);
-        new PlayerMoveEventListener(plugin);
-        new PlayerTeleportEventListener(plugin);
+        constructDefaultListener(BlockPlaceEvent.class, SPlayerBlockPlaceEvent.class, SBukkitPlayerBlockPlaceEvent::new);
+        constructDefaultListener(BlockDamageEvent.class, SPlayerBlockDamageEvent.class, SBukkitPlayerBlockDamageEvent::new);
+        /* TODO: we should register this only if someone exactly wants PlayerMoveEvent and not PlayerTeleportEvent */
+        constructDefaultListener(PlayerMoveEvent.class, SPlayerMoveEvent.class, SBukkitPlayerMoveEvent::new);
+        // although PlayerTeleportEvent extends PlayerMoveEvent, it has its own HandlerList
+        constructDefaultListener(PlayerTeleportEvent.class, SPlayerMoveEvent.class, SBukkitPlayerTeleportEvent::new);
+        // although PlayerPortalEvent extends PlayerTeleportEvent, it has its own HandlerList
+        constructDefaultListener(PlayerPortalEvent.class, SPlayerMoveEvent.class, SBukkitPlayerPortalEvent::new);
         constructDefaultListener(PlayerChangedWorldEvent.class, SPlayerWorldChangeEvent.class, SBukkitPlayerWorldChangeEvent::new);
         constructDefaultListener(SignChangeEvent.class, SPlayerUpdateSignEvent.class, SBukkitPlayerUpdateSignEvent::new);
         new PlayerDeathEventListener(plugin); // TODO: will be mapped with EntityDeathEvent because it's children
