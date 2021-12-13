@@ -1,42 +1,23 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SEntityExhaustionEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ImmutableObjectLink<ExhaustionReason> exhaustionReason;
-    private final ObjectLink<Float> exhaustion;
+public interface SEntityExhaustionEvent extends SCancellableEvent {
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    EntityBasic getEntity();
 
-    public ExhaustionReason getExhaustionReason() {
-        return exhaustionReason.get();
-    }
+    ExhaustionReason getExhaustionReason();
 
-    public float getExhaustion() {
-        return exhaustion.get();
-    }
+    float getExhaustion();
 
-    public void setExhaustion(float exhaustion) {
-        this.exhaustion.set(exhaustion);
-    }
+    void setExhaustion(float exhaustion);
 
     /**
      * The reason for why a PlayerExhaustionEvent takes place
      */
     // TODO: holder?
-    public enum ExhaustionReason {
+    enum ExhaustionReason {
 
         /**
          * Player mines a block

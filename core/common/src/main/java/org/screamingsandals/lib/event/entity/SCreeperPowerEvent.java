@@ -1,40 +1,23 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityLightning;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SCreeperPowerEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ImmutableObjectLink<@Nullable EntityLightning> bolt;
-    private final ImmutableObjectLink<PowerCause> cause;
-
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+public interface SCreeperPowerEvent extends SCancellableEvent {
+    EntityBasic getEntity();
 
     @Nullable
-    public EntityLightning getBolt() {
-        return bolt.get();
-    }
+    EntityLightning getBolt();
 
-    public PowerCause getCause() {
-        return cause.get();
-    }
+    PowerCause getCause();
 
     /**
      * An enum to specify the cause of the change in power
      */
     // TODO: holder?
-    public enum PowerCause {
+    enum PowerCause {
 
         /**
          * Power change caused by a lightning bolt

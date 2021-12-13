@@ -1,38 +1,17 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.*;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-@Getter(AccessLevel.NONE)
-public class SArrowBodyCountChangeEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ImmutableObjectLink<Boolean> isReset;
-    private final ImmutableObjectLink<Integer> oldAmount;
-    private final ObjectLink<Integer> newAmount;
+public interface SArrowBodyCountChangeEvent extends SCancellableEvent {
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    EntityBasic getEntity();
 
-    public boolean isReset() {
-        return isReset.get();
-    }
+    boolean isReset();
 
-    public int getOldAmount() {
-        return oldAmount.get();
-    }
+    int getOldAmount();
 
-    public int getNewAmount() {
-        return newAmount.get();
-    }
+    int getNewAmount();
 
-    public void setNewAmount(int newAmount) {
-        this.newAmount.set(newAmount);
-    }
+    void setNewAmount(int newAmount);
 }

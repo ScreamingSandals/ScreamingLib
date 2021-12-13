@@ -1,53 +1,25 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SEntityBreedEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ImmutableObjectLink<EntityBasic> mother;
-    private final ImmutableObjectLink<EntityBasic> father;
-    private final ImmutableObjectLink<@Nullable EntityBasic> breeder;
-    private final ImmutableObjectLink<@Nullable Item> bredWith;
-    private final ObjectLink<Integer> experience;
+public interface SEntityBreedEvent extends SCancellableEvent {
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    EntityBasic getEntity();
 
-    public EntityBasic getMother() {
-        return mother.get();
-    }
+    EntityBasic getMother();
 
-    public EntityBasic getFather() {
-        return father.get();
-    }
+    EntityBasic getFather();
 
     @Nullable
-    public EntityBasic getBreeder() {
-        return breeder.get();
-    }
+    EntityBasic getBreeder();
 
     @Nullable
-    public Item getBredWith() {
-        return bredWith.get();
-    }
+    Item getBredWith();
 
-    public int getExperience() {
-        return experience.get();
-    }
+    int getExperience();
 
-    public void setExperience(int experience) {
-        this.experience.set(experience);
-    }
+    void setExperience(int experience);
 }

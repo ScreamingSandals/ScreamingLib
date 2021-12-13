@@ -1,32 +1,14 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
+public interface SCreatureSpawnEvent extends SEntitySpawnEvent {
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SCreatureSpawnEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ImmutableObjectLink<SpawnReason> spawnReason;
-
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
-
-    public SpawnReason getSpawnReason() {
-        return spawnReason.get();
-    }
+    SpawnReason getSpawnReason();
 
     /**
      * An enum to specify the type of spawning
      */
     // TODO: holder?
-    public enum SpawnReason {
+    enum SpawnReason {
 
         /**
          * When something spawns from natural means

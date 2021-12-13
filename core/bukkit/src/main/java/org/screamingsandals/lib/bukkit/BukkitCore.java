@@ -46,21 +46,20 @@ public class BukkitCore extends Core {
         provider = BukkitAudiences.create(plugin);
 
         // entity
-        new AreaEffectCloudApplyEventListener(plugin);
+        constructDefaultListener(AreaEffectCloudApplyEvent.class, SAreaEffectCloudApplyEvent.class, SBukkitAreaEffectCloudApplyEvent::new);
         if (has("org.bukkit.event.entity.ArrowBodyCountChangeEvent")) {
-            new ArrowBodyCountChangeEventListener(plugin);
+            constructDefaultListener(ArrowBodyCountChangeEvent.class, SArrowBodyCountChangeEvent.class, SBukkitArrowBodyCountChangeEvent::new);
         }
         if (has("org.bukkit.event.entity.BatToggleSleepEvent")) {
-            new BatToggleSleepEventListener(plugin);
+            constructDefaultListener(BatToggleSleepEvent.class, SBatToggleSleepEvent.class, SBukkitBatToggleSleepEvent::new);
         }
-        new CreatureSpawnEventListener(plugin);
-        new CreeperPowerEventListener(plugin);
-        new EnderDragonChangePhaseEventListener(plugin);
+        constructDefaultListener(CreeperPowerEvent.class, SCreeperPowerEvent.class, SBukkitCreeperPowerEvent::new);
+        constructDefaultListener(EnderDragonChangePhaseEvent.class, SEnderDragonChangePhaseEvent.class, SBukkitEnderDragonChangePhaseEvent::new);
         if (has("org.bukkit.event.entity.EntityAirChangeEvent")) {
-            new EntityAirChangeEventListener(plugin);
+            constructDefaultListener(EntityAirChangeEvent.class, SEntityAirChangeEvent.class, SBukkitEntityAirChangeEvent::new);
         }
         if (has("org.bukkit.event.entity.EntityBreedEvent")) {
-            new EntityBreedEventListener(plugin);
+            constructDefaultListener(EntityBreedEvent.class, SEntityBreedEvent.class, SBukkitEntityBreedEvent::new);
         }
         new EntityChangeBlockEventListener(plugin);
         new EntityCombustEventListener(plugin);
@@ -68,18 +67,18 @@ public class BukkitCore extends Core {
         new EntityDamageEventListener(plugin);
         new EntityDeathEventListener(plugin);
         if (has("org.bukkit.event.entity.EntityDropItemEvent")) {
-            new EntityDropItemEventListener(plugin);
+            constructDefaultListener(EntityDropItemEvent.class, SEntityDropItemEvent.class, SBukkitEntityDropItemEvent::new);
         }
         if (has("org.bukkit.event.entity.EntityEnterBlockEvent")) {
-            new EntityEnterBlockEventListener(plugin);
+            constructDefaultListener(EntityEnterBlockEvent.class, SEntityEnterBlockEvent.class, SBukkitEntityEnterBlockEvent::new);
         }
         if (has("org.bukkit.event.entity.EntityEnterLoveModeEvent")) {
-            new EntityEnterLoveModeEventListener(plugin);
+            constructDefaultListener(EntityEnterLoveModeEvent.class, SEntityEnterLoveModeEvent.class, SBukkitEntityEnterLoveModeEvent::new);
         }
         if (has("org.bukkit.event.entity.EntityExhaustionEvent")) {
-            new EntityExhaustionEventListener(plugin);
+            constructDefaultListener(EntityExhaustionEvent.class, SEntityExhaustionEvent.class, SBukkitEntityExhaustionEvent::new);
         }
-        new EntityExplodeEventListener(plugin);
+        constructDefaultListener(EntityExplodeEvent.class, SEntityExplodeEvent.class, SBukkitEntityExplodeEvent::new);
         constructDefaultListener(EntityInteractEvent.class, SEntityInteractEvent.class, SBukkitEntityInteractEvent::new);
         if (has("org.bukkit.event.entity.EntityPickupItemEvent")) {
             constructDefaultListener(EntityPickupItemEvent.class, SEntityPickupItemEvent.class, event -> {
@@ -120,6 +119,7 @@ public class BukkitCore extends Core {
                     }
                     return new SBukkitProjectileLaunchEvent(projectileLaunchEvent);
                 })
+                .sub(CreatureSpawnEvent.class, SBukkitCreatureSpawnEvent::new)
         );
         constructDefaultListener(EntityTameEvent.class, SEntityTameEvent.class, SBukkitEntityTameEvent::new);
         constructDefaultListener(EntityTargetEvent.class, SEntityTargetEvent.class, factory(SBukkitEntityTargetEvent::new)
