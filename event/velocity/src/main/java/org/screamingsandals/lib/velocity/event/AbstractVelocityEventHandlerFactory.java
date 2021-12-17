@@ -9,7 +9,7 @@ import org.screamingsandals.lib.event.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractVelocityEventHandlerFactory<T, SE extends AbstractEvent> {
+public abstract class AbstractVelocityEventHandlerFactory<T, SE extends SEvent> {
     protected static final Map<EventPriority, PostOrder> EVENT_PRIORITY_POST_ORDER_MAP = Map.of(
             EventPriority.LOWEST, PostOrder.FIRST,
             EventPriority.LOW, PostOrder.EARLY,
@@ -58,9 +58,9 @@ public abstract class AbstractVelocityEventHandlerFactory<T, SE extends Abstract
                     } else {
                         EventManager.getDefaultEventManager().fireEvent(wrapped, priority);
                     }
-                    if (wrapped instanceof CancellableAbstractEvent
+                    if (wrapped instanceof Cancellable
                             && event instanceof ResultedEvent) {
-                        final var isCancelled = ((CancellableAbstractEvent) wrapped).isCancelled();
+                        final var isCancelled = ((Cancellable) wrapped).isCancelled();
                         if (isCancelled) {
                             ((ResultedEvent<ResultedEvent.Result>) event).setResult(ResultedEvent.GenericResult.denied());
                         } else {

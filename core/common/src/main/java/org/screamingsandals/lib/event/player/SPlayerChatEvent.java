@@ -1,51 +1,30 @@
 package org.screamingsandals.lib.event.player;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.event.PlatformEventWrapper;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
 
 import java.util.Collection;
-import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-@AllArgsConstructor
-public class SPlayerChatEvent extends CancellableAbstractEvent implements SPlayerEvent {
-    private final ImmutableObjectLink<PlayerWrapper> sender;
-    private final ObjectLink<String> message;
-    private final ObjectLink<String> format;
-    private final Collection<PlayerWrapper> recipients;
+public interface SPlayerChatEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
+    Collection<PlayerWrapper> getRecipients();
 
-    public PlayerWrapper getSender() {
-        return sender.get();
-    }
+    PlayerWrapper getSender();
 
-    public String getMessage() {
-        return message.get();
-    }
+    String getMessage();
 
-    public void setMessage(String message) {
-        this.message.set(message);
-    }
+    void setMessage(String message);
 
-    public String getFormat() {
-        return format.get();
-    }
+    String getFormat();
 
-    public void setFormat(String format) {
-        this.format.set(format);
-    }
+    void setFormat(String format);
 
     /**
      * same as {@link SPlayerChatEvent#getSender()}
      * @return
      */
     @Override
-    public PlayerWrapper getPlayer() {
-        return sender.get();
+    default PlayerWrapper getPlayer() {
+        return getSender();
     }
 }

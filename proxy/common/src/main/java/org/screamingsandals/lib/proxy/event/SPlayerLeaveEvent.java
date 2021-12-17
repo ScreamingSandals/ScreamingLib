@@ -2,7 +2,7 @@ package org.screamingsandals.lib.proxy.event;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.AbstractEvent;
+import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 
 import java.util.Arrays;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class SPlayerLeaveEvent extends AbstractEvent {
+public class SPlayerLeaveEvent implements SEvent {
     private final ProxiedPlayerWrapper player;
     private final LoginStatus status;
 

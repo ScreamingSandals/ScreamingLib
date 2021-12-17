@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
-import lombok.EqualsAndHashCode;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.screamingsandals.lib.block.BlockHolder;

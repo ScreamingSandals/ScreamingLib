@@ -1,5 +1,8 @@
 package org.screamingsandals.lib.event.player;
-public interface SPlayerExpChangeEvent extends SPlayerEvent {
+
+import org.screamingsandals.lib.event.PlatformEventWrapper;
+
+public interface SPlayerExpChangeEvent extends SPlayerEvent, PlatformEventWrapper {
 
     int getExp();
 

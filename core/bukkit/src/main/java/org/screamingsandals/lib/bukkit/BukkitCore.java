@@ -19,7 +19,6 @@ import org.screamingsandals.lib.bukkit.event.chunk.*;
 import org.screamingsandals.lib.bukkit.event.entity.*;
 import org.screamingsandals.lib.bukkit.event.player.*;
 import org.screamingsandals.lib.bukkit.event.world.*;
-import org.screamingsandals.lib.bukkit.listener.*;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.event.block.*;
@@ -61,11 +60,19 @@ public class BukkitCore extends Core {
         if (has("org.bukkit.event.entity.EntityBreedEvent")) {
             constructDefaultListener(EntityBreedEvent.class, SEntityBreedEvent.class, SBukkitEntityBreedEvent::new);
         }
-        new EntityChangeBlockEventListener(plugin);
-        new EntityCombustEventListener(plugin);
-        new EntityCreatePortalEventListener(plugin);
-        new EntityDamageEventListener(plugin);
-        new EntityDeathEventListener(plugin);
+        constructDefaultListener(EntityChangeBlockEvent.class, SEntityChangeBlockEvent.class, SBukkitEntityChangeBlockEvent::new);
+        constructDefaultListener(EntityCombustEvent.class, SEntityCombustEvent.class, factory(SBukkitEntityCombustEvent::new)
+                .sub(EntityCombustByBlockEvent.class, SBukkitEntityCombustByBlockEvent::new)
+                .sub(EntityCombustByEntityEvent.class, SBukkitEntityCombustByEntityEvent::new)
+        );
+        constructDefaultListener(EntityCreatePortalEvent.class, SEntityCreatePortalEvent.class, SBukkitEntityCreatePortalEvent::new);
+        constructDefaultListener(EntityDamageEvent.class, SEntityDamageEvent.class, factory(SBukkitEntityDamageEvent::new)
+                .sub(EntityDamageByEntityEvent.class, SBukkitEntityDamageByEntityEvent::new)
+                .sub(EntityDamageByBlockEvent.class, SBukkitEntityDamageByBlockEvent::new)
+        );
+        constructDefaultListener(EntityDeathEvent.class, SEntityDeathEvent.class, factory(SBukkitEntityDeathEvent::new)
+                .sub(PlayerDeathEvent.class, SBukkitPlayerDeathEvent::new)
+        );
         if (has("org.bukkit.event.entity.EntityDropItemEvent")) {
             constructDefaultListener(EntityDropItemEvent.class, SEntityDropItemEvent.class, SBukkitEntityDropItemEvent::new);
         }
@@ -159,21 +166,25 @@ public class BukkitCore extends Core {
         constructDefaultListener(VehicleCreateEvent.class, SVehicleCreateEvent.class, SBukkitVehicleCreateEvent::new);
 
         // player
-        new AsyncPlayerPreLoginEventListener(plugin);
-        new AsyncPlayerChatEventListener(plugin);
-        new PlayerJoinEventListener(plugin);
-        new PlayerLeaveEventListener(plugin);
+        constructDefaultListener(AsyncPlayerPreLoginEvent.class, SAsyncPlayerPreLoginEvent.class, SBukkitAsyncPlayerPreLoginEvent::new);
+        constructDefaultListener(AsyncPlayerChatEvent.class, SPlayerChatEvent.class, SBukkitPlayerChatEvent::new);
+        constructDefaultListener(PlayerJoinEvent.class, SPlayerJoinEvent.class, SBukkitPlayerJoinEvent::new);
+        constructDefaultListener(PlayerQuitEvent.class, SPlayerLeaveEvent.class, SBukkitPlayerLeaveEvent::new);
         constructDefaultListener(BlockPlaceEvent.class, SPlayerBlockPlaceEvent.class, SBukkitPlayerBlockPlaceEvent::new);
         constructDefaultListener(BlockDamageEvent.class, SPlayerBlockDamageEvent.class, SBukkitPlayerBlockDamageEvent::new);
-        /* TODO: we should register this only if someone exactly wants PlayerMoveEvent and not PlayerTeleportEvent */
-        constructDefaultListener(PlayerMoveEvent.class, SPlayerMoveEvent.class, SBukkitPlayerMoveEvent::new);
+        /* we should register this only if someone exactly wants PlayerMoveEvent and not PlayerTeleportEvent */
+        new AbstractBukkitEventHandlerFactory<>(PlayerMoveEvent.class, SPlayerMoveEvent.class, plugin, false, true) {
+            @Override
+            protected SPlayerMoveEvent wrapEvent(PlayerMoveEvent event, EventPriority priority) {
+                return new SBukkitPlayerMoveEvent(event);
+            }
+        };
         // although PlayerTeleportEvent extends PlayerMoveEvent, it has its own HandlerList
         constructDefaultListener(PlayerTeleportEvent.class, SPlayerMoveEvent.class, SBukkitPlayerTeleportEvent::new);
         // although PlayerPortalEvent extends PlayerTeleportEvent, it has its own HandlerList
         constructDefaultListener(PlayerPortalEvent.class, SPlayerMoveEvent.class, SBukkitPlayerPortalEvent::new);
         constructDefaultListener(PlayerChangedWorldEvent.class, SPlayerWorldChangeEvent.class, SBukkitPlayerWorldChangeEvent::new);
         constructDefaultListener(SignChangeEvent.class, SPlayerUpdateSignEvent.class, SBukkitPlayerUpdateSignEvent::new);
-        new PlayerDeathEventListener(plugin); // TODO: will be mapped with EntityDeathEvent because it's children
         constructDefaultListener(PlayerRespawnEvent.class, SPlayerRespawnEvent.class, SBukkitPlayerRespawnEvent::new);
         constructDefaultListener(PlayerCommandPreprocessEvent.class, SPlayerCommandPreprocessEvent.class, SBukkitPlayerCommandPreprocessEvent::new);
         constructDefaultListener(InventoryClickEvent.class, SPlayerInventoryClickEvent.class, factory(SBukkitPlayerInventoryClickEvent::new)

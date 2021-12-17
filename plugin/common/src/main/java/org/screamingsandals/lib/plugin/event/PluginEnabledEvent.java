@@ -1,15 +1,13 @@
 package org.screamingsandals.lib.plugin.event;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.screamingsandals.lib.event.AbstractEvent;
+import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.plugin.PluginDescription;
 
 /**
  * NOTE: Only Platforms that support plugin enabling and disabling of plugins have this event.
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class PluginEnabledEvent extends AbstractEvent {
+public class PluginEnabledEvent implements SEvent {
     private final PluginDescription plugin;
 }

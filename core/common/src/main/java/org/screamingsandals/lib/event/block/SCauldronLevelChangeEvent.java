@@ -3,9 +3,10 @@ package org.screamingsandals.lib.event.block;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
-public interface SCauldronLevelChangeEvent extends SCancellableEvent {
+public interface SCauldronLevelChangeEvent extends SCancellableEvent, PlatformEventWrapper {
     BlockHolder getBlock();
 
     @Nullable EntityBasic getEntity();

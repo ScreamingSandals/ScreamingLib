@@ -2,8 +2,9 @@ package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.event.AbstractEvent;
+import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
+import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
@@ -13,7 +14,7 @@ import org.screamingsandals.lib.block.BlockHolder;
 import java.util.Arrays;
 import java.util.List;
 
-public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent {
+public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
     @Nullable
     Item getItem();
@@ -48,8 +49,8 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent {
      */
     @Override
     default void setCancelled(boolean cancel) {
-        setUseClickedBlock(cancel ? AbstractEvent.Result.DENY : getUseClickedBlock() == AbstractEvent.Result.DENY ? AbstractEvent.Result.DEFAULT : getUseClickedBlock());
-        setUseItemInHand(cancel ? AbstractEvent.Result.DENY : getUseItemInHand() == AbstractEvent.Result.DENY ? AbstractEvent.Result.DEFAULT : getUseItemInHand());
+        setUseClickedBlock(cancel ? SEvent.Result.DENY : getUseClickedBlock() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : getUseClickedBlock());
+        setUseItemInHand(cancel ? SEvent.Result.DENY : getUseItemInHand() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : getUseItemInHand());
     }
 
     /**

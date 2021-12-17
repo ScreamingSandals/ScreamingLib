@@ -1,12 +1,13 @@
 package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.utils.*;
 
-public interface SPlayerInventoryClickEvent extends SCancellableEvent, SPlayerEvent {
+public interface SPlayerInventoryClickEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
     @Nullable
     Item getCursorItem();

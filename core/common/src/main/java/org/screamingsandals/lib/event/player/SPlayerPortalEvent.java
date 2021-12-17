@@ -1,6 +1,8 @@
 package org.screamingsandals.lib.event.player;
 
-public interface SPlayerPortalEvent extends SPlayerTeleportEvent {
+import org.screamingsandals.lib.event.PlatformEventWrapper;
+
+public interface SPlayerPortalEvent extends SPlayerTeleportEvent, PlatformEventWrapper {
 
     int getSearchRadius();
 

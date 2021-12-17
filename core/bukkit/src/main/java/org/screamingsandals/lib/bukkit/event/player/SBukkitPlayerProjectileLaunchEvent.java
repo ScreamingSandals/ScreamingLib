@@ -10,14 +10,8 @@ public class SBukkitPlayerProjectileLaunchEvent extends SBukkitProjectileLaunchE
         super(event);
     }
 
-    // Internal cache
-    private PlayerWrapper player;
-
     @Override
     public PlayerWrapper getPlayer() {
-        if (player == null) {
-            player = (PlayerWrapper) getEntity().getShooter();
-        }
-        return player;
+        return (PlayerWrapper) getShooter();
     }
 }

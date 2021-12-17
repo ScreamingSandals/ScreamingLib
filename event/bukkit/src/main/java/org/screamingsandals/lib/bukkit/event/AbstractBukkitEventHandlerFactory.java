@@ -15,6 +15,7 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
 
     protected final Map<EventPriority, EventExecutor> eventMap = new HashMap<>();
     protected final boolean fireAsync;
+    protected final boolean checkOnlySameNotChildren;
     protected final Class<SE> eventClass;
     protected final Class<T> platformEventClass;
 
@@ -22,11 +23,16 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
         this(platformEventClass, eventClass, plugin, false);
     }
 
-    @SuppressWarnings("unchecked")
     public AbstractBukkitEventHandlerFactory(Class<T> platformEventClass, Class<SE> eventClass, final Plugin plugin, boolean fireAsync) {
+        this(platformEventClass, eventClass, plugin, fireAsync, false);
+    }
+
+    @SuppressWarnings("unchecked")
+    public AbstractBukkitEventHandlerFactory(Class<T> platformEventClass, Class<SE> eventClass, final Plugin plugin, boolean fireAsync, boolean checkOnlySameNotChildren) {
         this.eventClass = eventClass;
         this.platformEventClass = platformEventClass;
         this.fireAsync = fireAsync;
+        this.checkOnlySameNotChildren = checkOnlySameNotChildren;
 
         EventManager.getDefaultEventManager().register(HandlerRegisteredEvent.class, handlerRegisteredEvent -> {
             if (handlerRegisteredEvent.getEventManager() != EventManager.getDefaultEventManager()) {
@@ -40,7 +46,11 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
             final var priority = handlerRegisteredEvent.getHandler().getEventPriority();
             if (!eventMap.containsKey(priority)) {
                 final EventExecutor handler = (listener, event) -> {
-                    if (!platformEventClass.isInstance(event)) {
+                    if (checkOnlySameNotChildren) {
+                        if (!platformEventClass.equals(event.getClass())) {
+                            return;
+                        }
+                    } else if (!platformEventClass.isInstance(event)) {
                         return;
                     }
 

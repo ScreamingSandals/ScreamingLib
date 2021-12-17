@@ -32,7 +32,8 @@ public class SBukkitPlayerItemConsumeEvent implements SPlayerItemConsumeEvent, B
     }
 
     @Override
-    public @Nullable Item getItem() {
+    @Nullable
+    public Item getItem() {
         return event.getItem() != null ? ItemFactory.build(event.getItem()).orElseThrow() : null;
     }
 

@@ -2,9 +2,10 @@ package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
+import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
-public interface SPlayerFishEvent extends SCancellableEvent, SPlayerEvent {
+public interface SPlayerFishEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
     @Nullable
     EntityBasic getEntity();

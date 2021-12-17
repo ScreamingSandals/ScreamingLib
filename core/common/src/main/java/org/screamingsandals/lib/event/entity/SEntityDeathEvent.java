@@ -1,33 +1,18 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
+import org.screamingsandals.lib.event.PlatformEventWrapper;
+import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
 
 import java.util.Collection;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SEntityDeathEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final Collection<Item> drops;
-    private final ObjectLink<Integer> dropExp;
+public interface SEntityDeathEvent extends SCancellableEvent, PlatformEventWrapper {
+    Collection<Item> getDrops();
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    EntityBasic getEntity();
 
-    public int getDropExp() {
-        return dropExp.get();
-    }
+    int getDropExp();
 
-    public void setDropExp(int dropExp) {
-        this.dropExp.set(dropExp);
-    }
+    void setDropExp(int dropExp);
 }

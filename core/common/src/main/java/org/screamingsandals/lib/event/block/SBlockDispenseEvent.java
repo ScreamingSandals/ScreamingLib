@@ -2,12 +2,13 @@ package org.screamingsandals.lib.event.block;
 
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityLiving;
+import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.block.BlockHolder;
 
-public interface SBlockDispenseEvent extends SCancellableEvent {
+public interface SBlockDispenseEvent extends SCancellableEvent, PlatformEventWrapper {
 
     BlockHolder getBlock();
 

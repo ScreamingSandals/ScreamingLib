@@ -3,11 +3,12 @@ package org.screamingsandals.lib.event.player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 import java.net.InetAddress;
 
-public interface SPlayerLoginEvent extends SPlayerEvent {
+public interface SPlayerLoginEvent extends SPlayerEvent, PlatformEventWrapper {
 
     PlayerWrapper getPlayer();
 

@@ -1,29 +1,14 @@
 package org.screamingsandals.lib.event.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.event.CancellableAbstractEvent;
-import org.screamingsandals.lib.utils.ImmutableObjectLink;
-import org.screamingsandals.lib.utils.ObjectLink;
+import org.screamingsandals.lib.event.PlatformEventWrapper;
+import org.screamingsandals.lib.event.SCancellableEvent;
 
-@EqualsAndHashCode(callSuper = false)
-@AllArgsConstructor
-@Data
-public class SEntityCombustEvent extends CancellableAbstractEvent {
-    private final ImmutableObjectLink<EntityBasic> entity;
-    private final ObjectLink<Integer> duration;
+public interface SEntityCombustEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    public EntityBasic getEntity() {
-        return entity.get();
-    }
+    EntityBasic getEntity();
 
-    public int getDuration() {
-        return duration.get();
-    }
+    int getDuration();
 
-    public void setDuration(int duration) {
-        this.duration.set(duration);
-    }
+    void setDuration(int duration);
 }
