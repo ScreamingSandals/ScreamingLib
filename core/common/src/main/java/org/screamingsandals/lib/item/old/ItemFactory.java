@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.item.builder;
+package org.screamingsandals.lib.item.old.builder;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
