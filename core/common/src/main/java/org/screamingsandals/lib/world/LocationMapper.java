@@ -5,6 +5,7 @@ import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.WrappedLocation;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,17 +17,7 @@ import java.util.UUID;
 public abstract class LocationMapper {
     protected BidirectionalConverter<LocationHolder> converter = BidirectionalConverter.<LocationHolder>build()
             .registerP2W(LocationHolder.class, e -> e)
-            .registerW2P(BlockHolder.class, locationHolder -> BlockMapper.resolve(locationHolder).orElse(null))
-            .registerP2W(WrappedLocation.class, location -> {
-                final var world = WorldMapper.getWorld(UUID.fromString(location.getWorldUuid()));
-                if (world.isEmpty()) {
-                    return null;
-                }
-                return new LocationHolder(
-                        location.getX(), location.getY(), location.getZ(),
-                        location.getYaw(), location.getPitch(),
-                        world.get());
-            });
+            .registerW2P(BlockHolder.class, locationHolder -> BlockMapper.resolve(locationHolder).orElse(null));
 
     private static LocationMapper mapping;
 
@@ -38,6 +29,20 @@ public abstract class LocationMapper {
             throw new UnsupportedOperationException("LocationMapper is already initialized.");
         }
         mapping = this;
+
+        if (Reflect.has("com.google.protobuf.MessageOrBuilder")) {
+            converter
+                .registerP2W(WrappedLocation.class, location -> {
+                    final var world = WorldMapper.getWorld(UUID.fromString(location.getWorldUuid()));
+                    if (world.isEmpty()) {
+                        return null;
+                    }
+                    return new LocationHolder(
+                            location.getX(), location.getY(), location.getZ(),
+                            location.getYaw(), location.getPitch(),
+                            world.get());
+                });
+        }
     }
 
     /**
