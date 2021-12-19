@@ -8,6 +8,7 @@ import org.screamingsandals.lib.attribute.ItemAttributeHolder;
 import org.screamingsandals.lib.item.builder.ItemBuilder;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
+import org.screamingsandals.lib.metadata.MetadataProvider;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * Represents an immutable Item.
  */
-public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable {
+public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, MetadataProvider {
     ItemTypeHolder getType();
 
     default ItemTypeHolder getMaterial() { // alternative getter (old name)

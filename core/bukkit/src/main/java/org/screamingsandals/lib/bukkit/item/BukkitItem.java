@@ -14,13 +14,14 @@ import org.screamingsandals.lib.bukkit.item.builder.BukkitItemBuilder;
 import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.bukkit.item.data.CraftBukkitItemData;
-import org.screamingsandals.lib.bukkit.item.meta.BukkitEnchantmentMapping;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.builder.ItemBuilder;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
+import org.screamingsandals.lib.metadata.MetadataCollectionKey;
+import org.screamingsandals.lib.metadata.MetadataKey;
 import org.screamingsandals.lib.nms.accessors.CompoundTagAccessor;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -210,5 +211,50 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     @Override
     public Item clone() {
         return new BukkitItem(wrappedObject.clone());
+    }
+
+    @Override
+    public boolean supportsMetadata(MetadataKey<?> key) {
+        var meta = wrappedObject.getItemMeta();
+        if (meta != null) {
+
+        }
+        return false;
+    }
+
+    @Override
+    public boolean supportsMetadata(MetadataCollectionKey<?> key) {
+        var meta = wrappedObject.getItemMeta();
+        if (meta != null) {
+
+        }
+        return false;
+    }
+
+    @Override
+    public <T> @Nullable T getMetadata(MetadataKey<T> key) {
+        var meta = wrappedObject.getItemMeta();
+        if (meta != null) {
+
+        }
+        return null;
+    }
+
+    @Override
+    public <T> Optional<T> getMetadataOptional(MetadataKey<T> key) {
+        var meta = wrappedObject.getItemMeta();
+        if (meta != null) {
+
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public @Nullable <T> Collection<T> getMetadata(MetadataCollectionKey<T> key) {
+        var meta = wrappedObject.getItemMeta();
+        if (meta != null) {
+
+        }
+        return null;
     }
 }
