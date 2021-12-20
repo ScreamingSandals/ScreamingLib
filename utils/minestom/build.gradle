@@ -1,6 +1,0 @@
-dependencies {
-    compileOnly 'com.github.Minestom:Minestom:' + MINESTOM_VERSION
-
-    api project(':utils-common')
-    api 'com.github.mworzala:adventure-platform-minestom:' + ADVENTURE_MINESTOM_PLATFORM_VERSION
-}
