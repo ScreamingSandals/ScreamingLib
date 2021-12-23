@@ -6,8 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
-import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.ComponentAccessor;
 import org.screamingsandals.lib.nms.accessors.EntityAccessor;
 import org.screamingsandals.lib.utils.AdventureHelper;
@@ -15,7 +15,6 @@ import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class EntityNMS {
 	protected Object handler;

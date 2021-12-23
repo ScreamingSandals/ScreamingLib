@@ -3,7 +3,6 @@
 dependencies {
     api project(':visuals-api-common')
     api project(':core-bukkit')
-    api project(':event-bukkit')
     api project(':tasker-bukkit')
     api project(':packets-bukkit')
 }

@@ -6,7 +6,7 @@ import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSeriali
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.utils.math.Vector3Df;

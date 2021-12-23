@@ -1,23 +1,22 @@
-package org.screamingsandals.lib.velocity.event;
+package org.screamingsandals.lib.bungee.event;
 
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 @Service
-public class SpongeEventManager extends EventManager {
+public class BungeeEventManager extends EventManager {
 
-    public SpongeEventManager(Controllable controllable) {
+    public BungeeEventManager(Controllable controllable) {
         super(controllable);
     }
 
     public static void init(Controllable controllable) {
-        EventManager.init(() -> new SpongeEventManager(controllable));
+        EventManager.init(() -> new BungeeEventManager(controllable));
     }
 
-    // TODO:
     @Override
     public boolean isServerThread() {
-        return true;
+        return false;
     }
 }

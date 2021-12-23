@@ -1,5 +1,0 @@
-dependencies {
-    compileOnly paper(PAPER_VERSION)
-
-    api project(":event-common")
-}

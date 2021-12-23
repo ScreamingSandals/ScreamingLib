@@ -6,8 +6,6 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.ArmorStandAccessor;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.lang.reflect.InvocationTargetException;
-
 
 public class ArmorStandNMS extends EntityNMS {
 

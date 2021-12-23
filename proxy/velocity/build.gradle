@@ -1,6 +1,5 @@
 dependencies {
     api project(':proxy-common')
-    api project(':event-velocity')
 
     compileOnly velocity(VELOCITY_VERSION)
 }
