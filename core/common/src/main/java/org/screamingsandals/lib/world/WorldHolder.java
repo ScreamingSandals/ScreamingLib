@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonWriter;
 import net.kyori.adventure.audience.ForwardingAudience;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 /**
  * <p>An interface representing a world.</p>
  */
-public interface WorldHolder extends Wrapper, Serializable, ForwardingAudience {
+public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, ForwardingAudience {
     /**
      * <p>Gets the world's {@link UUID}.</p>
      *
