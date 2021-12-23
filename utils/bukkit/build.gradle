@@ -1,8 +1,0 @@
-dependencies {
-    compileOnly paper(PAPER_VERSION)
-    compileOnly 'io.netty:netty-all:' + NETTY_VERSION
-
-    api project(':nms')
-    api project(':utils-common')
-    api 'org.screamingsandals:adventure-platform-bukkit:' + ADVENTURE_PLATFORM_VERSION
-}

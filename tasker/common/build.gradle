@@ -1,5 +1,5 @@
 dependencies {
     api project(':utils-common')
-    api project(':event-common')
+    api project(':event')
     compileOnly 'com.google.guava:guava:' + GUAVA_VERSION
 }

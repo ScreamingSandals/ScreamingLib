@@ -1,5 +1,0 @@
-dependencies {
-    compileOnly waterfall(WATERFALL_VERSION)
-
-    api project(":event-common")
-}

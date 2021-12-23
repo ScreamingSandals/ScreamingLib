@@ -21,6 +21,7 @@ include 'sender'
 include 'screaming-annotation'
 include 'lang'
 include 'nms'
+include 'event'
 
 def registerModule(String name, String... platforms) {
     include(':' + name + '-common')
@@ -31,7 +32,7 @@ def registerModule(String name, String... platforms) {
     }
 }
 
-registerModule('utils', 'bukkit', 'sponge', 'adventure')
+registerModule('utils', /*'sponge',*/ 'adventure')
 registerModule('sidebar', 'bukkit') //TODO: add others
 registerModule('healthindicator', 'bukkit') //TODO: add others
 registerModule('npc', 'bukkit') //TODO: add others
@@ -42,8 +43,7 @@ registerModule('placeholders', 'bukkit') //TODO: add others
 registerModule('packets', 'vanilla', 'bukkit') //TODO: add others
 registerModule('core', 'bukkit') //TODO: add others
 registerModule('proxy', 'bungee', 'velocity')
-registerModule('plugin', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
-registerModule('tasker', 'bukkit', 'minestom', 'sponge', 'bungee', 'velocity')
-registerModule('command', 'bukkit', /*'minestom' ,*/ 'sponge', 'bungee', 'velocity')
-registerModule('event', 'bukkit', 'sponge', 'bungee', 'velocity')
+registerModule('plugin', 'bukkit', /*'minestom', 'sponge',*/ 'bungee', 'velocity')
+registerModule('tasker', 'bukkit', /*'minestom', 'sponge',*/ 'bungee', 'velocity')
+registerModule('command', 'bukkit', /*'minestom' , 'sponge',*/ 'bungee', 'velocity')
 

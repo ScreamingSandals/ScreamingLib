@@ -1,5 +1,6 @@
 dependencies {
     api project(':plugin-common')
+    api project(':proxy-velocity')
 
     compileOnly velocity(VELOCITY_VERSION)
 }

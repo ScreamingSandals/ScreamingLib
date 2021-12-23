@@ -1,10 +1,12 @@
 dependencies {
-    api paperlib()
+    api project(':utils-common')
     api project(':utils-adventure')
-    api project(':event-bukkit')
-    api project(':utils-bukkit')
     api project(':core-common')
-    compileOnly paper(PAPER_VERSION)
+    api project(':nms')
+
+    api paperlib()
     api 'org.screamingsandals:adventure-platform-bukkit:' + ADVENTURE_PLATFORM_VERSION
+
+    compileOnly paper(PAPER_VERSION)
     compileOnly 'io.netty:netty-all:' + NETTY_VERSION
 }

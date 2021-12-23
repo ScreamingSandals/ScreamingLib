@@ -1,4 +1,5 @@
 dependencies {
     api project(':plugin-common')
+    api project(':proxy-bungee')
     compileOnly waterfall(WATERFALL_VERSION)
 }

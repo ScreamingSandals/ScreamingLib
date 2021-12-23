@@ -1,5 +1,5 @@
 dependencies {
     api project(':plugin-common')
-    api project(':event-bukkit')
+    api project(':core-bukkit')
     compileOnly paper(PAPER_VERSION)
 }
