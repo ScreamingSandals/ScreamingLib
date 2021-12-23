@@ -9,9 +9,9 @@ import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.SPlayerBlockDamageEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 @RequiredArgsConstructor
@@ -47,7 +47,7 @@ public class SBukkitPlayerBlockDamageEvent implements SPlayerBlockDamageEvent, B
     @Override
     public Item getItemInHand() {
         if (itemInHand == null) {
-            itemInHand = ItemFactory.build(event.getItemInHand()).orElseThrow();
+            itemInHand = new BukkitItem(event.getItemInHand());
         }
         return itemInHand;
     }

@@ -1,9 +1,9 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.SPlayerArmorStandManipulateEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
 public class SBukkitPlayerArmorStandManipulateEvent extends SBukkitPlayerInteractEntityEvent implements SPlayerArmorStandManipulateEvent {
@@ -19,7 +19,7 @@ public class SBukkitPlayerArmorStandManipulateEvent extends SBukkitPlayerInterac
     @Override
     public Item getPlayerItem() {
         if (playerItem == null) {
-            playerItem = ItemFactory.build(getEvent().getPlayerItem()).orElseThrow();
+            playerItem = new BukkitItem(getEvent().getPlayerItem());
         }
         return playerItem;
     }
@@ -27,7 +27,7 @@ public class SBukkitPlayerArmorStandManipulateEvent extends SBukkitPlayerInterac
     @Override
     public Item getArmorStandItem() {
         if (armorStandItem == null) {
-            armorStandItem = ItemFactory.build(getEvent().getArmorStandItem()).orElseThrow();
+            armorStandItem = new BukkitItem(getEvent().getArmorStandItem());
         }
         return armorStandItem;
     }

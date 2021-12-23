@@ -6,9 +6,9 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.SPlayerFoodLevelChangeEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 @RequiredArgsConstructor
@@ -37,7 +37,7 @@ public class SBukkitPlayerFoodLevelChangeEvent implements SPlayerFoodLevelChange
     public @Nullable Item getItem() {
         if (!itemCached) {
             if (event.getItem() != null) {
-                item = ItemFactory.build(event.getItem()).orElseThrow();
+                item = new BukkitItem(event.getItem());
             }
             itemCached = true;
         }

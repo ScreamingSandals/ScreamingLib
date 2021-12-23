@@ -5,11 +5,11 @@ import org.bukkit.event.block.BlockShearEntityEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.block.SBlockShearEntityEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -44,7 +44,7 @@ public class SBukkitBlockShearEntityEvent implements SBlockShearEntityEvent, Buk
     @Override
     public Item getTool() {
         if (tool == null) {
-            tool = ItemFactory.build(event.getTool()).orElseThrow();
+            tool = new BukkitItem(event.getTool());
         }
         return tool;
     }

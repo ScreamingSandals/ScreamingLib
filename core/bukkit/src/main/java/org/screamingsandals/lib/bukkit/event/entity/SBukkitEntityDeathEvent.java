@@ -8,11 +8,11 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityDeathEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
@@ -36,7 +36,7 @@ public class SBukkitEntityDeathEvent implements SEntityDeathEvent, NoAutoCancell
             drops = new CollectionLinkedToCollection<>(
                     event.getDrops(),
                     item -> item.as(ItemStack.class),
-                    itemStack -> ItemFactory.build(itemStack).orElseThrow()
+                    BukkitItem::new
             );
         }
         return drops;

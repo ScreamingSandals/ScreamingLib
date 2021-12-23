@@ -4,11 +4,11 @@ import lombok.*;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.player.SPlayerShearEntityEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
@@ -46,7 +46,7 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     @Override
     public Item getItem() {
         if (item == null) {
-            item = ItemFactory.build(event.getItem()).orElseThrow();
+            item = new BukkitItem(event.getItem());
         }
         return item;
     }

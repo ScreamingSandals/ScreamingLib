@@ -1,11 +1,8 @@
 package org.screamingsandals.lib.item.builder;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.screamingsandals.lib.attribute.AttributeMapping;
-import org.screamingsandals.lib.container.Container;
-import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.item.HideFlags;
@@ -320,61 +317,6 @@ public abstract class ItemFactory {
         }
         return factory.itemConverter.convert(item, newType);
     }
-
-    @Deprecated // move this method to its own service
-    public static <C extends Container> Optional<C> wrapContainer(Object container) {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
-        }
-        return factory.wrapContainer0(container);
-    }
-
-    @Deprecated // move this method to its own service
-    public abstract <C extends Container> Optional<C> wrapContainer0(Object container);
-
-    @Deprecated // move this method to its own service
-    public static <C extends Container> Optional<C> createContainer(InventoryTypeHolder type) {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
-        }
-        return factory.createContainer0(type);
-    }
-
-    @Deprecated // move this method to its own service
-    public static <C extends Container> Optional<C> createContainer(InventoryTypeHolder type, Component name) {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
-        }
-        return factory.createContainer0(type, name);
-    }
-
-    @Deprecated // move this method to its own service
-    public static <C extends Container> Optional<C> createContainer(int size) {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
-        }
-        return factory.createContainer0(size);
-    }
-
-    @Deprecated // move this method to its own service
-    public static <C extends Container> Optional<C> createContainer(int size, Component name) {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
-        }
-        return factory.createContainer0(size, name);
-    }
-
-    @Deprecated // move this method to its own service
-    public abstract <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type);
-
-    @Deprecated // move this method to its own service
-    public abstract <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type, Component name);
-
-    @Deprecated // move this method to its own service
-    public abstract <C extends Container> Optional<C> createContainer0(int size);
-
-    @Deprecated // move this method to its own service
-    public abstract <C extends Container> Optional<C> createContainer0(int size, Component name);
 
     protected abstract ItemBuilder builder0();
 }

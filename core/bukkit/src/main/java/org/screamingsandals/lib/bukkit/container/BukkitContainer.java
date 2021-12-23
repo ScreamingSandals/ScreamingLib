@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.bukkit.item.builder.BukkitItemFactory;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
@@ -15,6 +15,7 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,8 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
 
     @Override
     public Optional<Item> getItem(int index) {
-        return BukkitItemFactory.build(wrappedObject.getItem(index));
+        var item = wrappedObject.getItem(index);
+        return item == null ? Optional.empty() : Optional.of(new BukkitItem(wrappedObject.getItem(index)));
     }
 
     @Override
@@ -36,7 +38,7 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     @Override
     public List<Item> addItem(Item... items) {
         return wrappedObject.addItem(Arrays.stream(items).map(item -> item.as(ItemStack.class)).toArray(ItemStack[]::new))
-                .values().stream().map(BukkitItemFactory::build).filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+                .values().stream().filter(Objects::nonNull).map(BukkitItem::new).collect(Collectors.toList());
     }
 
     @Override
@@ -47,9 +49,8 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
                         .toArray(ItemStack[]::new))
                 .values()
                 .stream()
-                .map(BukkitItemFactory::build)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .filter(Objects::nonNull)
+                .map(BukkitItem::new)
                 .collect(Collectors.toList());
     }
 
@@ -59,7 +60,7 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
 
         var oldArray = wrappedObject.getContents();
         for (var i = 0; i < getSize(); i++) {
-            array[i] = BukkitItemFactory.build(oldArray[i]).orElse(null);
+            array[i] = oldArray[i] == null ? null : new BukkitItem(oldArray[i]);
         }
 
         return array;
@@ -71,7 +72,7 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
         var array = new Item[oldArray.length];
 
         for (var i = 0; i < oldArray.length; i++) {
-            array[i] = BukkitItemFactory.build(oldArray[i]).orElse(null);
+            array[i] = oldArray[i] == null ? null : new BukkitItem(oldArray[i]);
         }
 
         return array;

@@ -6,8 +6,8 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.container.Container;
+import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.event.player.SPlayerInventoryOpenEvent;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 @RequiredArgsConstructor
@@ -35,7 +35,7 @@ public class SBukkitPlayerInventoryOpenEvent implements SPlayerInventoryOpenEven
     @Override
     public Container getTopInventory() {
         if (topInventory == null) {
-            topInventory = ItemFactory.wrapContainer(event.getInventory()).orElseThrow();
+            topInventory = ContainerFactory.wrapContainer(event.getInventory()).orElseThrow();
         }
         return topInventory;
     }
@@ -43,7 +43,7 @@ public class SBukkitPlayerInventoryOpenEvent implements SPlayerInventoryOpenEven
     @Override
     public Container getBottomInventory() {
         if (bottomInventory == null) {
-            bottomInventory = ItemFactory.wrapContainer(event.getView().getBottomInventory()).orElseThrow();
+            bottomInventory = ContainerFactory.wrapContainer(event.getView().getBottomInventory()).orElseThrow();
         }
         return bottomInventory;
     }

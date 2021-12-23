@@ -18,12 +18,12 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -681,7 +681,7 @@ public class BukkitEntityMetadataMapper {
         } else if (EntityBasic.class.isAssignableFrom(valueClass) && value instanceof Entity) {
             return (T) EntityMapper.wrapEntity(value).orElseThrow();
         } else if (value instanceof ItemStack && valueClass == Item.class) {
-            return (T) ItemFactory.build(value).orElseThrow();
+            return (T) new BukkitItem((ItemStack) value);
         } else if (valueClass == LocationHolder.class) {
             if (value instanceof Location) {
                 return (T) LocationMapper.wrapLocation(value);

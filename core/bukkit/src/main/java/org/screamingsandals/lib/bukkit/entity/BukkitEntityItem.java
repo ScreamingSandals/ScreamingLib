@@ -1,9 +1,9 @@
 package org.screamingsandals.lib.bukkit.entity;
 
 import org.bukkit.inventory.ItemStack;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -15,12 +15,12 @@ public class BukkitEntityItem extends BukkitEntityBasic implements EntityItem {
 
     @Override
     public Item getItem() {
-        return ItemFactory.build(getWrappedObject().getItemStack()).orElse(null);
+        return new BukkitItem(getWrappedObject().getItemStack());
     }
 
     @Override
     public void setItem(Item stack) {
-        getWrappedObject().setItemStack(ItemFactory.convertItem(stack, ItemStack.class));
+        getWrappedObject().setItemStack(stack.as(ItemStack.class));
     }
 
     @Override

@@ -8,9 +8,9 @@ import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.SPlayerInteractEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.BlockFace;
@@ -47,7 +47,7 @@ public class SBukkitPlayerInteractEvent implements SPlayerInteractEvent, NoAutoC
     public @Nullable Item getItem() {
         if (!itemCached) {
             if (event.getItem() != null) {
-                item = ItemFactory.build(event.getItem()).orElseThrow();
+                item = new BukkitItem(event.getItem());
             }
             itemCached = true;
         }

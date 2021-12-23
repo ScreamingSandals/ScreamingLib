@@ -1,6 +1,7 @@
 package org.screamingsandals.lib;
 
 import org.screamingsandals.lib.block.BlockTypeMapper;
+import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.container.type.InventoryTypeMapping;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.damage.DamageCauseMapping;
@@ -71,7 +72,8 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         WeatherMapping.class,
         ParticleTypeMapping.class,
         GameRuleMapping.class,
-        WorldMapper.class
+        WorldMapper.class,
+        ContainerFactory.class
 })
 @InternalCoreService
 public abstract class Core {

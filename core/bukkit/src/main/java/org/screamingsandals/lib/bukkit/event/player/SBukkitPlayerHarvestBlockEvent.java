@@ -7,9 +7,9 @@ import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.SPlayerHarvestBlockEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
@@ -43,7 +43,7 @@ public class SBukkitPlayerHarvestBlockEvent implements SPlayerHarvestBlockEvent,
             itemsHarvested = new CollectionLinkedToCollection<>(
                     event.getItemsHarvested(),
                     item -> item.as(ItemStack.class),
-                    itemStack -> ItemFactory.build(itemStack).orElse(null)
+                    BukkitItem::new
             );
         }
         return itemsHarvested;

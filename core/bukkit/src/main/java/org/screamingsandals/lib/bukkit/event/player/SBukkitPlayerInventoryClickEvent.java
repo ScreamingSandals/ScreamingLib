@@ -8,10 +8,11 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.container.Container;
+import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.event.player.SPlayerInventoryClickEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ClickType;
 import org.screamingsandals.lib.utils.InventoryAction;
@@ -49,7 +50,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
         if (event.getCursor() == null) {
             return null;
         }
-        return ItemFactory.build(event.getCursor()).orElseThrow();
+        return new BukkitItem(event.getCursor());
     }
 
     @Override
@@ -57,7 +58,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
         if (event.getCurrentItem() == null) {
             return null;
         }
-        return ItemFactory.build(event.getCurrentItem()).orElseThrow();
+        return new BukkitItem(event.getCurrentItem());
     }
 
     @Override
@@ -68,7 +69,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     public @Nullable Container getClickedInventory() {
         if (!clickedInventoryCached) {
             if (event.getClickedInventory() != null) {
-                clickedInventory = ItemFactory.wrapContainer(event.getClickedInventory()).orElseThrow();
+                clickedInventory = ContainerFactory.wrapContainer(event.getClickedInventory()).orElseThrow();
             }
             clickedInventoryCached = true;
         }
@@ -86,7 +87,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     @Override
     public Container getInventory() {
         if (inventory == null) {
-            inventory = ItemFactory.wrapContainer(event.getInventory()).orElseThrow();
+            inventory = ContainerFactory.wrapContainer(event.getInventory()).orElseThrow();
         }
         return inventory;
     }

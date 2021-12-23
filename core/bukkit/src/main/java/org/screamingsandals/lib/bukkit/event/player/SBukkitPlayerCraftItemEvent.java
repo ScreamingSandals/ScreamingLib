@@ -1,9 +1,9 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.SPlayerCraftItemEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
 public class SBukkitPlayerCraftItemEvent extends SBukkitPlayerInventoryClickEvent implements SPlayerCraftItemEvent {
@@ -37,7 +37,7 @@ public class SBukkitPlayerCraftItemEvent extends SBukkitPlayerInventoryClickEven
 
         @Override
         public Item getResult() {
-            return ItemFactory.build(wrappedObject.getResult()).orElseThrow();
+            return new BukkitItem(wrappedObject.getResult());
         }
     }
 }
