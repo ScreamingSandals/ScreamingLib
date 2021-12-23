@@ -63,9 +63,15 @@ public interface ItemBuilder extends MetadataConsumer {
 
     Optional<Item> build();
 
+    @Deprecated
+    ItemBuilder platformMeta(Object meta);
+
     // DSL
 
-    ItemBuilder type(@NotNull Object type);
+    default ItemBuilder type(@NotNull Object type) {
+        ShortStackDeserializer.deserializeShortStack(this, type);
+        return this;
+    }
 
     default ItemBuilder name(@NotNull Component name) {
         return displayName(name);
@@ -87,7 +93,7 @@ public interface ItemBuilder extends MetadataConsumer {
         return repairCost(repair);
     }
 
-    default ItemBuilder flags(@Nullable List<Object> flags) {
+    default <C> ItemBuilder flags(@Nullable List<C> flags) {
         if (flags == null) {
             return this;
         } else {

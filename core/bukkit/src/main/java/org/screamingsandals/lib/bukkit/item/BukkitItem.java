@@ -18,6 +18,7 @@ import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.builder.ItemBuilder;
+import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
@@ -259,5 +260,14 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
             return ItemMetaHelper.getMetadata(meta, key);
         }
         return null;
+    }
+
+    @Override
+    public <T> T as(Class<T> type) {
+        try {
+            return super.as(type);
+        } catch (Throwable ignored) {
+            return ItemFactory.convertItem(this, type);
+        }
     }
 }

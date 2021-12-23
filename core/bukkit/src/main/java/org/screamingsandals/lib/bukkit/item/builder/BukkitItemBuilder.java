@@ -3,11 +3,13 @@ package org.screamingsandals.lib.bukkit.item.builder;
 import lombok.AllArgsConstructor;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -334,10 +336,23 @@ public class BukkitItemBuilder implements ItemBuilder {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public ItemBuilder type(@NotNull Object type) {
-        // TODO: Reimplement short stack deserializer
-        ItemTypeHolder.ofOptional(type).ifPresent(this::type);
+    public ItemBuilder platformMeta(Object meta) {
+        if (item == null) {
+            return this;
+        }
+        if (meta instanceof ItemMeta) {
+            try {
+                item.setItemMeta((ItemMeta) meta);
+            } catch (Throwable ignored) {
+            }
+        } else if (meta instanceof Map) {
+            try {
+                item.setItemMeta((ItemMeta) ConfigurationSerialization.deserializeObject((Map<String, ?>) meta));
+            } catch (Throwable ignored) {
+            }
+        }
         return this;
     }
 
