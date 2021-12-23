@@ -4,8 +4,6 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.kyori.adventure.audience.ForwardingAudience;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.utils.Wrapper;
@@ -103,20 +101,6 @@ public interface WorldHolder extends Wrapper, Serializable, ForwardingAudience {
                 .filter(clazz::isInstance)
                 .map(clazz::cast)
                 .collect(Collectors.toList());
-    }
-
-
-    /**
-     * Compares two worlds and returns the similarity result.
-     *
-     * @param other other world to compare with
-     * @return true if both worlds have the same unique ids, false otherwise.
-     */
-    default boolean isSimilar(@Nullable WorldHolder other) {
-        if (other == null) {
-            return false;
-        }
-        return other.getUuid().equals(this.getUuid());
     }
 
     /**
