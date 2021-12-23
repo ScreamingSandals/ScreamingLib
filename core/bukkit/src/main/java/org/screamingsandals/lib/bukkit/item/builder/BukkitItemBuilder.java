@@ -15,6 +15,7 @@ import org.screamingsandals.lib.attribute.ItemAttributeHolder;
 import org.screamingsandals.lib.bukkit.BukkitItemBlockIdsRemapper;
 import org.screamingsandals.lib.bukkit.attribute.BukkitItemAttribute;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
+import org.screamingsandals.lib.bukkit.item.ItemMetaHelper;
 import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.bukkit.item.data.CraftBukkitItemData;
@@ -24,6 +25,8 @@ import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.builder.ItemBuilder;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
+import org.screamingsandals.lib.metadata.MetadataCollectionKey;
+import org.screamingsandals.lib.metadata.MetadataKey;
 import org.screamingsandals.lib.nms.accessors.CompoundTagAccessor;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.Platform;
@@ -32,9 +35,7 @@ import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 import org.screamingsandals.lib.utils.adventure.ComponentUtils;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -48,15 +49,25 @@ public class BukkitItemBuilder implements ItemBuilder {
         }
 
         this.item.setType(type.as(Material.class));
+        if (type.durability() != 0) {
+            durability(type.durability());
+        }
+        return this;
+    }
+
+    @Override
+    public ItemBuilder durability(int durability) {
+        return durability((short) durability);
+    }
+
+    public ItemBuilder durability(short durability) {
         if (BukkitItemBlockIdsRemapper.getBPlatform() == Platform.JAVA_LEGACY) {
-            this.item.setDurability(type.durability());
+            this.item.setDurability(durability);
         } else {
-            if (type.durability() != 0) {
-                var meta = item.getItemMeta();
-                if (meta instanceof Damageable) {
-                    ((Damageable) meta).setDamage(type.durability());
-                    item.setItemMeta(meta);
-                }
+            var meta = item.getItemMeta();
+            if (meta instanceof Damageable) {
+                ((Damageable) meta).setDamage(durability);
+                item.setItemMeta(meta);
             }
         }
         return this;
@@ -85,7 +96,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder lore(@Nullable List<@NotNull Component> lore) {
+    public ItemBuilder itemLore(@Nullable List<@NotNull Component> lore) {
         if (item == null) {
             return this;
         }
@@ -321,5 +332,96 @@ public class BukkitItemBuilder implements ItemBuilder {
         } else {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public ItemBuilder type(@NotNull Object type) {
+        // TODO: Reimplement short stack deserializer
+        ItemTypeHolder.ofOptional(type).ifPresent(this::type);
+        return this;
+    }
+
+    @Override
+    public ItemBuilder lore(@NotNull Component component) {
+        if (item != null) {
+            var meta = item.getItemMeta();
+            if (meta != null) {
+                var list = new ArrayList<Component>();
+                AdventureUtils
+                        .get(meta, "lore")
+                        .ifPresentOrElse(classMethod ->
+                                        classMethod.invokeInstanceResulted(meta)
+                                                .as(List.class)
+                                                .stream()
+                                                .map(ComponentUtils::componentFromPlatform)
+                                                .forEach(o -> list.add((Component) o)),
+                                () -> Objects.requireNonNull(meta.getLore())
+                                        .stream()
+                                        .map(AdventureHelper::toComponent)
+                                        .forEach(list::add)
+                        );
+                list.add(component);
+                itemLore(list); // meta will be saved inside the itemLore method
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public boolean supportsMetadata(MetadataKey<?> key) {
+        if (item != null) {
+            var meta = item.getItemMeta();
+            if (meta != null) {
+                return ItemMetaHelper.supportsMetadata(meta, key);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean supportsMetadata(MetadataCollectionKey<?> key) {
+        if (item != null) {
+            var meta = item.getItemMeta();
+            if (meta != null) {
+                return ItemMetaHelper.supportsMetadata(meta, key);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public <T> ItemBuilder setMetadata(MetadataKey<T> key, T value) {
+        if (item != null) {
+            var meta = item.getItemMeta();
+            if (meta != null) {
+                ItemMetaHelper.setMetadata(meta, key, value);
+                item.setItemMeta(meta);
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public <T> ItemBuilder setMetadata(MetadataCollectionKey<T> key, Collection<T> value) {
+        if (item != null) {
+            var meta = item.getItemMeta();
+            if (meta != null) {
+                ItemMetaHelper.setMetadata(meta, key, value);
+                item.setItemMeta(meta);
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public <T> ItemBuilder addToListMetadata(MetadataCollectionKey<T> key, T value) {
+        if (item != null) {
+            var meta = item.getItemMeta();
+            if (meta != null) {
+                ItemMetaHelper.addMetadata(meta, key, value);
+                item.setItemMeta(meta);
+            }
+        }
+        return this;
     }
 }

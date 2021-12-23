@@ -1,11 +1,8 @@
 package org.screamingsandals.lib.metadata;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Collection;
-import java.util.Optional;
 
-public interface MetadataProvider {
+public interface MetadataConsumer {
 
     /**
      *
@@ -23,15 +20,9 @@ public interface MetadataProvider {
      */
     boolean supportsMetadata(MetadataCollectionKey<?> key);
 
-    @Nullable
-    <T> T getMetadata(MetadataKey<T> key);
+    <T> MetadataConsumer setMetadata(MetadataKey<T> key, T value);
 
-    <T> Optional<T> getMetadataOptional(MetadataKey<T> key);
+    <T> MetadataConsumer setMetadata(MetadataCollectionKey<T> key, Collection<T> value);
 
-    default <T> T getMetadataOrElse(MetadataKey<T> key, T orElse) {
-        return getMetadataOptional(key).orElse(orElse);
-    }
-
-    @Nullable
-    <T> Collection<T> getMetadata(MetadataCollectionKey<T> key);
+    <T> MetadataConsumer addToListMetadata(MetadataCollectionKey<T> key, T value);
 }

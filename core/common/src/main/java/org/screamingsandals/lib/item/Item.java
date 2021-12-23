@@ -97,8 +97,8 @@ public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, C
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withLore(@Nullable List<@NotNull Component> lore) {
-        return builder().lore(lore).build().orElseThrow();
+    default Item withItemLore(@Nullable List<@NotNull Component> lore) {
+        return builder().itemLore(lore).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)

@@ -167,7 +167,8 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
                 if (meta.hasCustomModelData()) {
                     return meta.getCustomModelData();
                 }
-            } catch (Throwable ignored) {}
+            } catch (Throwable ignored) {
+            }
         }
         return null;
     }
@@ -217,7 +218,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     public boolean supportsMetadata(MetadataKey<?> key) {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
-
+            return ItemMetaHelper.supportsMetadata(meta, key);
         }
         return false;
     }
@@ -226,16 +227,17 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     public boolean supportsMetadata(MetadataCollectionKey<?> key) {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
-
+            return ItemMetaHelper.supportsMetadata(meta, key);
         }
         return false;
     }
 
     @Override
-    public <T> @Nullable T getMetadata(MetadataKey<T> key) {
+    @Nullable
+    public <T> T getMetadata(MetadataKey<T> key) {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
-
+            return ItemMetaHelper.getMetadata(meta, key);
         }
         return null;
     }
@@ -244,16 +246,17 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     public <T> Optional<T> getMetadataOptional(MetadataKey<T> key) {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
-
+            return Optional.ofNullable(ItemMetaHelper.getMetadata(meta, key));
         }
         return Optional.empty();
     }
 
     @Override
-    public @Nullable <T> Collection<T> getMetadata(MetadataCollectionKey<T> key) {
+    @Nullable
+    public <T> Collection<T> getMetadata(MetadataCollectionKey<T> key) {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
-
+            return ItemMetaHelper.getMetadata(meta, key);
         }
         return null;
     }
