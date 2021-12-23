@@ -1,7 +1,5 @@
 package org.screamingsandals.lib.utils.reflect;
 
-import sun.reflect.ReflectionFactory;
-
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -237,6 +235,9 @@ public class Reflect {
                                 modifiers &= ~Modifier.FINAL;
                                 modifiersField.setInt(field, modifiers);
                             } catch (Throwable ignored2) {
+                                try {
+                                    return setFinalFieldUnsafe(field, instance, set);
+                                } catch (Throwable ignored3) {}
                             }
                         }
                         field.set(instance, set);
@@ -264,6 +265,9 @@ public class Reflect {
                     modifiers &= ~Modifier.FINAL;
                     modifiersField.setInt(field, modifiers);
                 } catch (Throwable ignored) {
+                    try {
+                        return setFinalFieldUnsafe(field, instance, value);
+                    } catch (Throwable ignored2) {}
                 }
             }
             field.set(instance, value);
@@ -465,7 +469,7 @@ public class Reflect {
     // create objects without constructor
     public static <T> T forceConstruct(Class<T> clazz) {
         try {
-            ReflectionFactory rf = ReflectionFactory.getReflectionFactory();
+            sun.reflect.ReflectionFactory rf = sun.reflect.ReflectionFactory.getReflectionFactory();
             java.lang.reflect.Constructor<?> objDef = Object.class.getDeclaredConstructor();
             java.lang.reflect.Constructor<?> intConstr = rf.newConstructorForSerialization(
                     clazz, objDef
@@ -476,5 +480,18 @@ public class Reflect {
         } catch (Exception e) {
             throw new IllegalStateException("Cannot create object", e);
         }
+    }
+
+    private static Object setFinalFieldUnsafe(Field field, Object holder, Object value) throws Exception {
+        final Field theUnsafeField = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");
+        theUnsafeField.setAccessible(true);
+        final sun.misc.Unsafe theUnsafe = (sun.misc.Unsafe) theUnsafeField.get(null);
+
+        final Object ufo = holder != null ? holder : theUnsafe.staticFieldBase(field);
+        final long offset = holder != null ? theUnsafe.objectFieldOffset(field) : theUnsafe.staticFieldOffset(field);
+
+        theUnsafe.putObject(ufo, offset, value);
+        field.setAccessible(true);
+        return field.get(holder);
     }
 }

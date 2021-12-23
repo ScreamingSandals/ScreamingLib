@@ -31,7 +31,7 @@ def registerModule(String name, String... platforms) {
     }
 }
 
-registerModule('utils', 'bukkit', 'minestom', 'sponge', 'adventure')
+registerModule('utils', 'bukkit', 'sponge', 'adventure')
 registerModule('sidebar', 'bukkit') //TODO: add others
 registerModule('healthindicator', 'bukkit') //TODO: add others
 registerModule('npc', 'bukkit') //TODO: add others
