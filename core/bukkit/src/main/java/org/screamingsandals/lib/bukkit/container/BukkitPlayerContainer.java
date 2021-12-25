@@ -16,8 +16,8 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
     }
 
     @Override
-    public Item[] getArmorContents() {
-        return Arrays.stream(((PlayerInventory)wrappedObject)
+    public @Nullable Item @NotNull [] getArmorContents() {
+        return Arrays.stream(((PlayerInventory) wrappedObject)
                 .getArmorContents())
                 .map(item -> item == null ? null : new BukkitItem(item)) // does your ide see problem? well bukkit api is badly annotated
                 .toArray(Item[]::new);
@@ -48,19 +48,18 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
     }
 
     @Override
-    public void setArmorContents(@Nullable Item[] items) {
+    public void setArmorContents(@Nullable Item @Nullable [] items) {
         if (items == null) {
-            ((PlayerInventory)wrappedObject).setArmorContents(null);
+            ((PlayerInventory) wrappedObject).setArmorContents(null);
             return;
         }
-        ((PlayerInventory)wrappedObject).setArmorContents(Arrays.stream(items).map(item -> {
+        ((PlayerInventory) wrappedObject).setArmorContents(Arrays.stream(items).map(item -> {
             if (item == null) {
                 return null;
             }
             return item.as(ItemStack.class);
         }).toArray(ItemStack[]::new));
     }
-
 
     @Override
     public void setHelmet(@Nullable Item helmet) {
@@ -134,11 +133,11 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
 
     @Override
     public int getHeldItemSlot() {
-        return ((PlayerInventory)wrappedObject).getHeldItemSlot();
+        return ((PlayerInventory) wrappedObject).getHeldItemSlot();
     }
 
     @Override
     public void setHeldItemSlot(int slot) {
-        ((PlayerInventory)wrappedObject).setHeldItemSlot(slot);
+        ((PlayerInventory) wrappedObject).setHeldItemSlot(slot);
     }
 }

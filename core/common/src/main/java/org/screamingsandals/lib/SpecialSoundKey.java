@@ -7,9 +7,9 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import java.util.Optional;
 
 /**
- * Adds support for bukkit names and capital letters
+ * Adds support for bukkit sound names and capital letters.
  */
-@ApiStatus.Experimental // will be replaced with custom adventure in future
+@ApiStatus.Experimental // will be replaced with custom adventure in the future
 public class SpecialSoundKey extends NamespacedMappingKey {
     protected SpecialSoundKey(String namespace, String key) {
         super(namespace, key);
