@@ -272,7 +272,7 @@ public abstract class ItemFactory {
         }
 
         if (builderConsumer != null) {
-            var builder = builder();
+            var builder = item.get().builder();
             ConsumerExecutor.execute(builderConsumer, builder);
             return builder.build();
         }

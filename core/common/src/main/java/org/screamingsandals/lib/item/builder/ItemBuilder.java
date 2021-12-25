@@ -69,6 +69,9 @@ public interface ItemBuilder extends MetadataConsumer {
     // DSL
 
     default ItemBuilder type(@NotNull Object type) {
+        if (type instanceof ItemTypeHolder) {
+            return type((ItemTypeHolder) type);
+        }
         ShortStackDeserializer.deserializeShortStack(this, type);
         return this;
     }
