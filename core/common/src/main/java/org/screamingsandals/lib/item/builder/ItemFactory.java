@@ -5,10 +5,7 @@ import net.kyori.adventure.text.format.TextColor;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
-import org.screamingsandals.lib.item.HideFlags;
-import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.ItemTypeHolder;
-import org.screamingsandals.lib.item.ItemTypeMapper;
+import org.screamingsandals.lib.item.*;
 import org.screamingsandals.lib.item.meta.*;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
@@ -255,6 +252,13 @@ public abstract class ItemFactory {
         return factory.builder0();
     }
 
+    public static ItemView asView(Item item) {
+        if (factory == null) {
+            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
+        }
+        return factory.asView0(item);
+    }
+
     public static Optional<Item> build(Object stack) {
         return readStack(stack);
     }
@@ -319,4 +323,6 @@ public abstract class ItemFactory {
     }
 
     protected abstract ItemBuilder builder0();
+
+    protected abstract ItemView asView0(Item item);
 }

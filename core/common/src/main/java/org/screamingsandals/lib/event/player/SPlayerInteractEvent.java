@@ -5,8 +5,8 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.event.SEvent;
-import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;;
+import org.screamingsandals.lib.item.ItemView;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -17,7 +17,7 @@ import java.util.List;
 public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
     @Nullable
-    Item getItem();
+    ItemView getItem();
 
     Action getAction();
 
