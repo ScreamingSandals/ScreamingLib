@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.item.builder.BukkitItemFactory;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
@@ -54,7 +55,7 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public @Nullable Item[] getContents() {
+    public @Nullable Item @NotNull [] getContents() {
         var array = new Item[getSize()];
 
         var oldArray = wrappedObject.getContents();
@@ -66,7 +67,7 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public @Nullable Item[] getStorageContents() {
+    public @Nullable Item @NotNull [] getStorageContents() {
         var oldArray = wrappedObject.getStorageContents();
         var array = new Item[oldArray.length];
 
@@ -78,7 +79,7 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public void setContents(@Nullable Item[] items) throws IllegalArgumentException {
+    public void setContents(@Nullable Item @NotNull [] items) throws IllegalArgumentException {
         if (items.length != getSize()) {
             throw new IllegalArgumentException("Wrong size of items array. Must be " + getSize());
         }
@@ -90,7 +91,7 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public void setStorageContents(@Nullable Item[] items) throws IllegalArgumentException {
+    public void setStorageContents(@Nullable Item @NotNull [] items) throws IllegalArgumentException {
         if (items.length > getSize()) {
             throw new IllegalArgumentException("Wrong size of items array. Must be " + getSize());
         }
