@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.entity;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
@@ -23,7 +24,8 @@ public abstract class EntityMapper {
 
     private static EntityMapper mapper;
 
-    protected EntityMapper() {
+    @ApiStatus.Internal
+    public EntityMapper() {
         if (mapper != null) {
             throw new UnsupportedOperationException("EntityMapper is already initialized");
         }

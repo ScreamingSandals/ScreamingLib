@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.world;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
@@ -24,7 +25,8 @@ public abstract class LocationMapper {
     /**
      * <p>Constructs the location mapper.</p>
      */
-    protected LocationMapper() {
+    @ApiStatus.Internal
+    public LocationMapper() {
         if (mapping != null) {
             throw new UnsupportedOperationException("LocationMapper is already initialized.");
         }

@@ -1,5 +1,3 @@
 dependencies {
-    api project(':proxy-common')
-
     compileOnly waterfall(WATERFALL_VERSION)
 }

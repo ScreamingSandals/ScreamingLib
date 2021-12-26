@@ -1,5 +1,0 @@
-dependencies {
-    api project(':plugin-common')
-    api project(':core-bukkit')
-    compileOnly paper(PAPER_VERSION)
-}

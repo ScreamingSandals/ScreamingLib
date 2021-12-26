@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.player;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.Permission;
@@ -17,7 +18,8 @@ public abstract class PlayerMapper {
     protected final BidirectionalConverter<PlayerWrapper.Hand> handConverter = BidirectionalConverter.build();
     private static PlayerMapper playerMapper;
 
-    protected PlayerMapper() {
+    @ApiStatus.Internal
+    public PlayerMapper() {
         if (playerMapper != null) {
             throw new UnsupportedOperationException("PlayerMapper is already initialized.");
         }

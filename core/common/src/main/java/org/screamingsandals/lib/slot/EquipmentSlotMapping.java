@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.slot;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -18,7 +19,8 @@ public abstract class EquipmentSlotMapping extends AbstractTypeMapper<EquipmentS
     protected final BidirectionalConverter<EquipmentSlotHolder> equipmentSlotConverter = BidirectionalConverter.<EquipmentSlotHolder>build()
             .registerP2W(EquipmentSlotHolder.class, e -> e);
 
-    protected EquipmentSlotMapping() {
+    @ApiStatus.Internal
+    public EquipmentSlotMapping() {
         if (equipmentSlotMapping != null) {
             throw new UnsupportedOperationException("EquipmentSlotMapping is already initialized.");
         }

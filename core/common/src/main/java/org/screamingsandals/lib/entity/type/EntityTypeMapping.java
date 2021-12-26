@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.entity.type;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -20,7 +21,8 @@ public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHol
     protected final BidirectionalConverter<EntityTypeHolder> entityTypeConverter = BidirectionalConverter.<EntityTypeHolder>build()
             .registerP2W(EntityTypeHolder.class, e -> e);
 
-    protected EntityTypeMapping() {
+    @ApiStatus.Internal
+    public EntityTypeMapping() {
         if (entityTypeMapping != null) {
             throw new UnsupportedOperationException("EntityTypeMapping is already initialized.");
         }

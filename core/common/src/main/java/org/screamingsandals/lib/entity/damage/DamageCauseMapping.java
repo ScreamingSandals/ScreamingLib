@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.entity.damage;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -19,7 +20,8 @@ public abstract class DamageCauseMapping extends AbstractTypeMapper<DamageCauseH
     protected final BidirectionalConverter<DamageCauseHolder> damageCauseConverter = BidirectionalConverter.<DamageCauseHolder>build()
             .registerP2W(DamageCauseHolder.class, d -> d);
 
-    protected DamageCauseMapping() {
+    @ApiStatus.Internal
+    public DamageCauseMapping() {
         if (damageCauseMapping != null) {
             throw new UnsupportedOperationException("DamageCauseMapping is already initialized!");
         }

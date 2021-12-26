@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.world.difficulty;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -19,7 +20,8 @@ public abstract class DifficultyMapping extends AbstractTypeMapper<DifficultyHol
     protected final BidirectionalConverter<DifficultyHolder> difficultyConverter = BidirectionalConverter.<DifficultyHolder>build()
             .registerP2W(DifficultyHolder.class, d -> d);
 
-    protected DifficultyMapping() {
+    @ApiStatus.Internal
+    public DifficultyMapping() {
         if (difficultyMapping != null) {
             throw new UnsupportedOperationException("DifficultyMapping is already initialized!");
         }

@@ -1,3 +1,1 @@
-dependencies {
-    api project(':core-common')
-}
+includeModule('core')

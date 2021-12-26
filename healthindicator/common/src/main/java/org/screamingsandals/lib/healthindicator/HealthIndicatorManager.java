@@ -1,10 +1,10 @@
 package org.screamingsandals.lib.healthindicator;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
-import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 import org.screamingsandals.lib.visuals.Visual;
@@ -16,14 +16,13 @@ import java.util.UUID;
 
 @Service(dependsOn = {
         Core.class,
-        PacketMapper.class,
-        Tasker.class
+        PacketMapper.class
 })
 public class HealthIndicatorManager {
     private static HealthIndicatorManager manager;
     protected final Map<UUID, HealthIndicator> activeIndicators = new HashMap<>();
 
-    @Deprecated // internal use only
+    @ApiStatus.Internal
     public HealthIndicatorManager() {
         if (manager != null) {
             throw new UnsupportedOperationException("HealthIndicatorManager is already initialized!");

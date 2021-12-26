@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.attribute;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -18,7 +19,8 @@ public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeT
     protected final BidirectionalConverter<AttributeTypeHolder> attributeTypeConverter = BidirectionalConverter.<AttributeTypeHolder>build()
             .registerP2W(AttributeTypeHolder.class, e -> e);
 
-    protected AttributeTypeMapping() {
+    @ApiStatus.Internal
+    public AttributeTypeMapping() {
         if (attributeTypeMapping != null) {
             throw new UnsupportedOperationException("AttributeTypeMapping is already initialized.");
         }

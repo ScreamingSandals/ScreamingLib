@@ -2,6 +2,7 @@ package org.screamingsandals.lib.item.builder;
 
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
@@ -237,7 +238,8 @@ public abstract class ItemFactory {
 
     private static ItemFactory factory;
 
-    protected ItemFactory() {
+    @ApiStatus.Internal
+    public ItemFactory() {
         if (factory != null) {
             throw new UnsupportedOperationException("ItemFactory is already initialized.");
         }

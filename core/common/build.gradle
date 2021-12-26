@@ -4,7 +4,6 @@ dependencies {
     compileOnly 'io.netty:netty-all:' + NETTY_VERSION
 
     api project(':utils-common')
-    api project(':event')
-    api project(':sender')
+    api project(':shared-core')
     api 'org.spongepowered:configurate-core:' + CONFIGURATE_VERSION
 }

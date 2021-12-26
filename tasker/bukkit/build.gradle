@@ -1,6 +1,0 @@
-dependencies {
-    api project(':tasker-common')
-
-    compileOnly paper(PAPER_VERSION)
-    api paperlib()
-}

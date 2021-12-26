@@ -1,6 +1,0 @@
-dependencies {
-    api project(':utils-common')
-    api project(':event')
-
-    compileOnly 'org.slf4j:slf4j-api:' + SLF4J_VERSION
-}

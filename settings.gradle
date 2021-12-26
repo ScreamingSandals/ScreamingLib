@@ -16,13 +16,6 @@ if (javaVersion < 61.0) {
 
 rootProject.name = "ScreamingLib"
 
-include 'api-utils'
-include 'sender'
-include 'screaming-annotation'
-include 'lang'
-include 'nms'
-include 'event'
-
 def registerModule(String name, String... platforms) {
     include(':' + name + '-common')
     project(':' + name + '-common').projectDir = file(name + '/common')
@@ -32,7 +25,19 @@ def registerModule(String name, String... platforms) {
     }
 }
 
-registerModule('utils', /*'sponge',*/ 'adventure')
+// Shared content
+include 'api-utils'
+registerModule('utils', 'adventure')
+include 'nms'
+include 'shared-core'
+include 'lang'
+include 'annotation'
+
+// Main modules
+registerModule('core', 'bukkit') //TODO: add others (minestom, sponge)
+registerModule('proxy', 'bungee', 'velocity')
+
+// Optional modules
 registerModule('sidebar', 'bukkit') //TODO: add others
 registerModule('healthindicator', 'bukkit') //TODO: add others
 registerModule('npc', 'bukkit') //TODO: add others
@@ -41,9 +46,5 @@ registerModule('visuals-api', 'bukkit') //TODO: add others
 registerModule('signs', 'bukkit') //TODO: add others
 registerModule('placeholders', 'bukkit') //TODO: add others
 registerModule('packets', 'vanilla', 'bukkit') //TODO: add others
-registerModule('core', 'bukkit') //TODO: add others
-registerModule('proxy', 'bungee', 'velocity')
-registerModule('plugin', 'bukkit', /*'minestom', 'sponge',*/ 'bungee', 'velocity')
-registerModule('tasker', 'bukkit', /*'minestom', 'sponge',*/ 'bungee', 'velocity')
 registerModule('command', 'bukkit', /*'minestom' , 'sponge',*/ 'bungee', 'velocity')
 

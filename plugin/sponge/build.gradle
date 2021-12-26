@@ -1,5 +1,0 @@
-dependencies {
-    api project(':plugin-common')
-
-    compileOnly 'org.spongepowered:spongeapi:' + SPONGE_VERSION
-}

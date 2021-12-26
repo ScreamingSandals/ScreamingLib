@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.block;
 
 import lombok.Getter;
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.ItemBlockIdsRemapper;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Pair;
@@ -26,7 +27,8 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
 
     private static BlockTypeMapper blockTypeMapper;
 
-    protected BlockTypeMapper() {
+    @ApiStatus.Internal
+    public BlockTypeMapper() {
         if (blockTypeMapper != null) {
             throw new UnsupportedOperationException("BlockTypeMapper is already initialized.");
         }

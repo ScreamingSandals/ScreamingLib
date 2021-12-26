@@ -1,5 +1,4 @@
 dependencies {
-    api project(':packets-common')
     api project(':nms')
 
     compileOnly 'io.netty:netty-all:' + NETTY_VERSION

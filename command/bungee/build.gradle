@@ -1,6 +1,5 @@
 dependencies {
     compileOnly waterfall(WATERFALL_VERSION)
-    api project(':command-common')
     api project(':proxy-bungee')
     api cloudBungee(CLOUD_VERSION)
 }

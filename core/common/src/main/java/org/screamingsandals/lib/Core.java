@@ -20,6 +20,7 @@ import org.screamingsandals.lib.particle.ParticleTypeMapping;
 import org.screamingsandals.lib.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.gamemode.GameModeMapping;
+import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.internal.InternalCoreService;
@@ -44,6 +45,7 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         Server.class,
         CustomPayload.class,
         EventManager.class,
+        Tasker.class,
         EntityTypeMapping.class,
         EntityMapper.class,
         AttributeTypeMapping.class,

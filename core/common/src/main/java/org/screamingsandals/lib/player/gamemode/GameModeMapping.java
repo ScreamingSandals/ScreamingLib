@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.player.gamemode;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -19,7 +20,8 @@ public abstract class GameModeMapping extends AbstractTypeMapper<GameModeHolder>
     protected final BidirectionalConverter<GameModeHolder> gameModeConverter = BidirectionalConverter.<GameModeHolder>build()
             .registerP2W(GameModeHolder.class, g -> g);
 
-    protected GameModeMapping() {
+    @ApiStatus.Internal
+    public GameModeMapping() {
         if (gameModeMapping != null) {
             throw new UnsupportedOperationException("GameModeMapping is already initialized!");
         }

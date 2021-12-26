@@ -11,8 +11,28 @@ allprojects {
 }
 
 subprojects {
-    // TODO: find a way how to fill this list from settings.gradle
-    if (project.name in ['sidebar-bukkit', 'healthindicator-bukkit', 'npc-bukkit', 'hologram-bukkit', 'visuals-api-bukkit',  'signs-bukkit']) {
+    ext.includeModule = { String module ->
+        if (!project.name.endsWith('-common')) {
+            throw new UnsupportedOperationException("This method can be used only in common modules!")
+        }
+
+        dependencies {
+            api project(":${module}-common")
+        }
+
+        rootProject.subprojects.each { Project sub ->
+            if (!sub.name.endsWith('-common') && sub.name.matches("${project.name.replace('-common', '')}-[^-]+")) {
+                var moduleProject = rootProject.findProject(":${module}-${sub.name.split("-")[1]}")
+                if (moduleProject != null) {
+                    sub.dependencies {
+                        api moduleProject
+                    }
+                }
+            }
+        }
+    }
+
+    if (!project.file('src').exists() && !project.file('build.gradle').exists()) {
         project.ext['onlyPomArtifact'] = true
 
         apply plugin: 'org.screamingsandals.plugin-builder-lite'
@@ -20,6 +40,29 @@ subprojects {
         apply plugin: 'java'
         apply plugin: 'java-library'
         apply plugin: 'org.screamingsandals.plugin-builder'
+    }
+
+    if (project.name.matches('[a-z]+-[a-z]+') && !project.name.endsWith("-common")) {
+        boolean foundAnotherModule = false
+        // modules for NMS based platforms can have shared vanilla modules
+        if (project.name.split('-')[1] in ['bukkit', 'sponge']) {
+            def vanillaProject = rootProject.findProject(":${project.name.split('-')[0]}-vanilla")
+            if (vanillaProject != null) {
+                dependencies {
+                    api vanillaProject
+                }
+                foundAnotherModule = true
+            }
+        }
+
+        if (!foundAnotherModule) {
+            def commonProject = rootProject.findProject(":${project.name.split('-')[0]}-common")
+            if (commonProject != null) {
+                dependencies {
+                    api commonProject
+                }
+            }
+        }
     }
 
     java {

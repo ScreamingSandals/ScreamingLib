@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.block;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
@@ -19,7 +20,8 @@ public abstract class BlockMapper {
 
     private static BlockMapper mapping;
 
-    protected BlockMapper() {
+    @ApiStatus.Internal
+    public BlockMapper() {
         if (mapping != null) {
             throw new UnsupportedOperationException("BlockMapper is already initialized.");
         }

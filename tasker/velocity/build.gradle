@@ -1,5 +1,0 @@
-dependencies {
-    api project(':tasker-common')
-
-    compileOnly velocity(VELOCITY_VERSION)
-}

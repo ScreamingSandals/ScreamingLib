@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.world.weather;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -19,7 +20,8 @@ public abstract class WeatherMapping extends AbstractTypeMapper<WeatherHolder> {
     protected final BidirectionalConverter<WeatherHolder> weatherConverter = BidirectionalConverter.<WeatherHolder>build()
             .registerP2W(WeatherHolder.class, d -> d);
 
-    protected WeatherMapping() {
+    @ApiStatus.Internal
+    public WeatherMapping() {
         if (weatherMapping != null) {
             throw new UnsupportedOperationException("WeatherMapping is already initialized!");
         }
