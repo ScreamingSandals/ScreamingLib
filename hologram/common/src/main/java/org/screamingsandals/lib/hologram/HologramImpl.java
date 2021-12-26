@@ -1,6 +1,9 @@
 package org.screamingsandals.lib.hologram;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.SClientboundRemoveEntitiesPacket;
@@ -11,6 +14,7 @@ import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
+import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
 import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.data.DataContainer;
@@ -18,17 +22,21 @@ import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.visual.SimpleCLTextEntry;
 import org.screamingsandals.lib.visuals.impl.AbstractLinedVisual;
 import org.screamingsandals.lib.world.LocationHolder;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Accessors(chain = true)
+@Getter
+@Setter
 public class HologramImpl extends AbstractLinedVisual<Hologram> implements Hologram {
+    @Getter(value = AccessLevel.NONE)
     private final Map<Integer, HologramPiece> entitiesOnLines;
-    private HologramPiece itemEntity;
-    private TaskerTask rotationTask;
+    @Getter(value = AccessLevel.NONE)
+    private volatile HologramPiece itemEntity;
+    private volatile TaskerTask rotationTask;
     private LocationHolder cachedLocation;
     private LocationHolder location;
     private int viewDistance;
@@ -64,22 +72,6 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public int getViewDistance() {
-        return viewDistance;
-    }
-
-    @Override
-    public Hologram setViewDistance(int viewDistance) {
-        this.viewDistance = viewDistance;
-        return this;
-    }
-
-    @Override
-    public LocationHolder getLocation() {
-        return location;
-    }
-
-    @Override
     public Hologram setLocation(LocationHolder location) {
         this.location = location;
         this.cachedLocation = location;
@@ -88,17 +80,12 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
 
     @Override
     public Hologram spawn() {
-        return show();
-    }
+        if (created) {
+            throw new UnsupportedOperationException("Hologram has already been spawned!");
+        }
 
-    @Override
-    public boolean isTouchable() {
-        return touchable;
-    }
-
-    @Override
-    public Hologram setTouchable(boolean touchable) {
-        this.touchable = touchable;
+        show();
+        created = true;
         return this;
     }
 
@@ -119,35 +106,13 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
 
     @Override
     public Hologram show() {
-        if (isShown()) {
-            return this;
-        }
         if (isDestroyed()) {
-            throw new UnsupportedOperationException("Cannot call Hologram#show() for destroyed holograms!");
+            throw new UnsupportedOperationException("Cannot call Hologram#show() on destroyed holograms!");
         }
-        created = true;
+
         visible = true;
         update();
-
-        if (rotationMode != RotationMode.NONE) {
-            if (rotationTask == null) {
-                rotationTask = Tasker.build(() -> {
-                            if (itemEntity == null) {
-                                return;
-                            }
-
-                            itemEntity.setHeadRotation(checkAndAdd(itemEntity.getHeadRotation()));
-
-                            final var metadataPacket = new SClientboundSetEntityDataPacket()
-                                    .entityId(itemEntity.getId());
-                            metadataPacket.metadata().addAll(itemEntity.getMetadataItems());
-
-                            viewers.forEach(player -> update(player, List.of(metadataPacket), false));
-                        }).repeat(rotationTime.getFirst(), rotationTime.getSecond())
-                        .async()
-                        .start();
-            }
-        }
+        startRotationTask();
         return this;
     }
 
@@ -157,109 +122,72 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
             return this;
         }
 
-        viewers.forEach(this::removeForPlayer);
-        if (rotationTask != null) {
-            rotationTask.cancel();
-            rotationTask = null;
-        }
-
         visible = false;
-        update();
+        viewers.forEach(viewer -> onViewerRemoved(viewer, false));
+        cancelRotationTask();
         return this;
-    }
-
-    @Override
-    public DataContainer getData() {
-        return data;
-    }
-
-    @Override
-    public void setData(DataContainer data) {
-        this.data = data;
     }
 
     @Override
     public boolean hasData() {
-        if (data == null) {
-            return false;
-        }
-        return !data.isEmpty();
+        return data != null && !data.isEmpty();
     }
 
     @Override
-    public Pair<Integer, TaskerTime> getRotationTime() {
-        return rotationTime;
-    }
-
-    @Override
-    public Hologram rotationTime(Pair<Integer, TaskerTime> rotatingTime) {
+    public Hologram setRotationTime(Pair<Integer, TaskerTime> rotatingTime) {
         this.rotationTime = rotatingTime;
         update();
+        restartRotationTask();
         return this;
     }
 
     @Override
-    public Hologram rotationMode(RotationMode mode) {
+    public Hologram setRotationMode(RotationMode mode) {
         this.rotationMode = mode;
         update();
+        restartRotationTask();
         return this;
     }
 
     @Override
-    public RotationMode getRotationMode() {
-        return rotationMode;
-    }
-
-    @Override
-    public Hologram item(Item item) {
+    public Hologram setItem(Item item) {
         this.item = item;
         update();
+        restartRotationTask();
         return this;
     }
 
     @Override
-    public Hologram rotationIncrement(float toIncrement) {
-        this.rotationIncrement = toIncrement;
-        return this;
-    }
-
-    @Override
-    public Hologram itemPosition(ItemPosition location) {
+    public Hologram setItemPosition(ItemPosition location) {
         this.itemPosition = location;
         update();
+        restartRotationTask();
         return this;
     }
 
     @Override
     public void destroy() {
-        if (destroyed) {
+        if (isDestroyed()) {
             return;
         }
 
-        if (rotationTask != null) {
-            rotationTask.cancel();
-            rotationTask = null;
-        }
-        destroyed = true;
-        data = null;
         hide();
         viewers.clear();
+
+        visible = false;
+        destroyed = true;
+        data = null;
+
         HologramManager.removeHologram(this);
     }
 
     @Override
-    public boolean isCreated() {
-        return created;
-    }
-
-    @Override
-    public boolean isDestroyed() {
-        return destroyed;
-    }
-
-    @Override
     public void onViewerAdded(PlayerWrapper viewer, boolean checkDistance) {
-        if (visible && entitiesOnLines.size() != lines.size()) { // fix if you show hologram and then you add viewers
+        if (!viewer.isOnline()) {
+            return;
+        }
+        if (visible
+                && entitiesOnLines.size() != lines.size()) { // fix if you show hologram and then you add viewers
             updateEntities();
         }
         update(viewer, getAllSpawnPackets(viewer), checkDistance);
@@ -267,18 +195,15 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
 
     @Override
     public void onViewerRemoved(PlayerWrapper viewer, boolean checkDistance) {
-        removeForPlayer(viewer);
-    }
+        if (!viewer.isOnline()) {
+            return;
+        }
 
-    @Override
-    public long getClickCoolDown() {
-        return clickCoolDown;
-    }
-
-    @Override
-    public Hologram setClickCoolDown(long clickCoolDown) {
-        this.clickCoolDown = clickCoolDown;
-        return this;
+        final var toSend = new LinkedList<AbstractPacket>();
+        if (itemEntity != null || entitiesOnLines.size() > 0) {
+            toSend.add(getFullDestroyPacket());
+            update(viewer, toSend, false);
+        }
     }
 
     private void update(PlayerWrapper player, List<AbstractPacket> packets, boolean checkDistance) {
@@ -474,21 +399,36 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         }
     }
 
-    private void removeForPlayer(PlayerWrapper player) {
-        if (!player.isOnline()) {
-            return;
-        }
+    private void startRotationTask() {
+        if (rotationMode != RotationMode.NONE && rotationTask != null) {
+            rotationTask = Tasker.build(() -> {
+                        if (itemEntity == null || !visible) {
+                            return;
+                        }
 
-        final var toSend = new LinkedList<AbstractPacket>();
-        if (itemEntity != null && rotationTask != null) {
+                        itemEntity.setHeadRotation(checkAndAdd(itemEntity.getHeadRotation()));
+                        final var metadataPacket = new SClientboundSetEntityDataPacket()
+                                .entityId(itemEntity.getId());
+                        metadataPacket.metadata().addAll(itemEntity.getMetadataItems());
+                        viewers.forEach(player -> update(player, List.of(metadataPacket), false));
+                    })
+                    .repeat(rotationTime.getFirst(), rotationTime.getSecond())
+                    .async()
+                    .start();
+        }
+    }
+
+    private void cancelRotationTask() {
+        if (rotationTask != null
+                && rotationTask.getState() != TaskState.CANCELLED) {
             rotationTask.cancel();
             rotationTask = null;
         }
+    }
 
-        if (itemEntity != null || entitiesOnLines.size() > 0) {
-            toSend.add(getFullDestroyPacket());
-            update(player, toSend, false);
-        }
+    private void restartRotationTask() {
+        cancelRotationTask();
+        startRotationTask();
     }
 
     @Override
