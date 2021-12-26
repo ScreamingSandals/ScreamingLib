@@ -11,7 +11,7 @@
         <link rel="canonical" href="http://localhost:8000/2.0.1-SNAPSHOT/modules/core/">
       
       <link rel="icon" href="../../assets/icon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.0.0">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.3">
     
     
       
@@ -19,10 +19,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ad626c1e.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.edf004c2.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.9204c3b2.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
         
       
     
@@ -36,10 +36,9 @@
       
     
     
-    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../..":"../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
-
 
     
     
@@ -268,12 +267,6 @@
       
       
       
-        
-          
-        
-          
-        
-          
         
           
         
@@ -566,6 +559,168 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#handling-events" class="md-nav__link">
+    Handling events
+  </a>
+  
+    <nav class="md-nav" aria-label="Handling events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#onevent-annotation" class="md-nav__link">
+    OnEvent annotation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eventmanager-registration" class="md-nav__link">
+    EventManager registration
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firing-events" class="md-nav__link">
+    Firing events
+  </a>
+  
+    <nav class="md-nav" aria-label="Firing events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#synchronously" class="md-nav__link">
+    Synchronously
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asynchronously" class="md-nav__link">
+    Asynchronously
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-events" class="md-nav__link">
+    Creating events
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#synchronous" class="md-nav__link">
+    Synchronous
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asynchronous" class="md-nav__link">
+    Asynchronous
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#running-tasks" class="md-nav__link">
+    Running tasks
+  </a>
+  
+    <nav class="md-nav" aria-label="Running tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#normal-task" class="md-nav__link">
+    Normal task
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-cancelling-task" class="md-nav__link">
+    Self-cancelling task
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#making-your-first-plugin" class="md-nav__link">
+    Making your first plugin
+  </a>
+  
+    <nav class="md-nav" aria-label="Making your first plugin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-the-main-plugin-class" class="md-nav__link">
+    Creating the main plugin class
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interacting-with-other-plugins" class="md-nav__link">
+    Interacting with other plugins
+  </a>
+  
+    <nav class="md-nav" aria-label="Interacting with other plugins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#checking-if-a-plugin-is-enabled" class="md-nav__link">
+    Checking if a plugin is enabled
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-the-plugins-main-class" class="md-nav__link">
+    Getting the plugin's main class
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-all-plugins-on-the-server" class="md-nav__link">
+    Getting all plugins on the server
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -575,48 +730,6 @@
   
 </nav>
       
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../event/" class="md-nav__link">
-        Event
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../plugin/" class="md-nav__link">
-        Plugin
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tasker/" class="md-nav__link">
-        Tasker
-      </a>
     </li>
   
 
@@ -855,7 +968,7 @@
     <span class="nt">&lt;/dependency&gt;</span>
     <span class="nt">&lt;dependency&gt;</span>
         <span class="nt">&lt;groupId&gt;</span>org.screamingsandals.lib<span class="nt">&lt;/groupId&gt;</span>
-        <span class="nt">&lt;artifactId&gt;</span>screaming-annotation<span class="nt">&lt;/artifactId&gt;</span>
+        <span class="nt">&lt;artifactId&gt;</span>annotation<span class="nt">&lt;/artifactId&gt;</span>
         <span class="nt">&lt;version&gt;</span>2.0.1-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
         <span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
     <span class="nt">&lt;/dependency&gt;</span>
@@ -888,7 +1001,7 @@
 
 <span class="n">dependencies</span> <span class="o">{</span>
     <span class="n">implementation</span> <span class="s1">&#39;org.screamingsandals.lib:core-YOUR_PLATFORM:2.0.1-SNAPSHOT&#39;</span>
-    <span class="n">annotationProcessor</span> <span class="s1">&#39;org.screamingsandals.lib:screaming-annotation:2.0.1-SNAPSHOT&#39;</span>
+    <span class="n">annotationProcessor</span> <span class="s1">&#39;org.screamingsandals.lib:annotation:2.0.1-SNAPSHOT&#39;</span>
 <span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
@@ -1221,13 +1334,498 @@ It is possible to retrieve the service class instances with the ServiceManager c
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">PlayerMapper</span><span class="p">.</span><span class="na">getPlayer</span><span class="p">(</span><span class="s">&quot;Misat11&quot;</span><span class="p">).</span><span class="na">ifPresent</span><span class="p">(</span><span class="n">player</span> <span class="o">-&gt;</span> <span class="n">player</span><span class="p">.</span><span class="na">sendMessage</span><span class="p">(</span><span class="s">&quot;Hello misat!&quot;</span><span class="p">));</span>
 </code></pre></div>
 </td></tr></table></p>
+<h3 id="handling-events">Handling events<a class="headerlink" href="#handling-events" title="Permanent link">&para;</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Platform events</p>
+<p>ScreamingLib <code>EventManager</code> is <strong>not</strong> listening to non-standard events fired through the event manager of the platform you're running on!</p>
+</div>
+<h4 id="onevent-annotation">OnEvent annotation<a class="headerlink" href="#onevent-annotation" title="Permanent link">&para;</a></h4>
+<p>First of all, start by making a simple service class, like this:
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nd">@Service</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExampleService</span> <span class="p">{</span>
+    <span class="c1">// Service class</span>
+<span class="p">}</span>
+</code></pre></div>
+</td></tr></table>
+Then create a new public method that returns void, has an event parameter and annotate it with <code>@OnEvent</code>. It is possible to specify the priority field and the ignoreCancelled field in the annotation.
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nd">@Service</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExampleService</span> <span class="p">{</span>
+    <span class="nd">@OnEvent</span><span class="p">(</span><span class="n">priority</span> <span class="o">=</span> <span class="n">EventPriority</span><span class="p">.</span><span class="na">HIGHEST</span><span class="p">,</span> <span class="n">ignoreCancelled</span> <span class="o">=</span> <span class="kc">true</span><span class="p">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onPlayerInteract</span><span class="p">(</span><span class="n">SPlayerInteractEvent</span> <span class="n">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Event handling logic</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</td></tr></table>
+Then register the service class in the <code>@Init</code> annotation on the main plugin class, and you're done!</p>
+<h4 id="eventmanager-registration">EventManager registration<a class="headerlink" href="#eventmanager-registration" title="Permanent link">&para;</a></h4>
+<p>You can also listen to events by registering a <code>Consumer&lt;AbstractEvent&gt;</code> with the <code>EventManager</code>.
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">EventManager</span><span class="p">.</span><span class="na">getDefaultEventManager</span><span class="p">().</span><span class="na">register</span><span class="p">(</span><span class="n">SPlayerLeaveEvent</span><span class="p">.</span><span class="na">class</span><span class="p">,</span> <span class="n">event</span> <span class="o">-&gt;</span> <span class="n">PlayerMapper</span><span class="p">.</span><span class="na">getConsoleSender</span><span class="p">().</span><span class="na">sendMessage</span><span class="p">(</span><span class="s">&quot;Player &quot;</span> <span class="o">+</span> <span class="n">event</span><span class="p">.</span><span class="na">getPlayer</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot; has left.&quot;</span><span class="p">));</span>
+</code></pre></div>
+</td></tr></table></p>
+<h3 id="firing-events">Firing events<a class="headerlink" href="#firing-events" title="Permanent link">&para;</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Platform events</p>
+<p>ScreamingLib <code>EventManager</code> is <strong>not</strong> firing events to the event manager of the platform you're running on!</p>
+</div>
+<h4 id="synchronously">Synchronously<a class="headerlink" href="#synchronously" title="Permanent link">&para;</a></h4>
+<p>You can fire an event synchronously with the <code>&lt;T extends SEvent&gt; T EventManager#fire(T)</code> method.
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">final</span> <span class="n">ExampleEvent</span> <span class="n">event</span> <span class="o">=</span> <span class="n">EventManager</span><span class="p">.</span><span class="na">fire</span><span class="p">(</span><span class="k">new</span> <span class="n">ExampleEvent</span><span class="p">());</span>
+<span class="c1">// if your event is cancellable, you can check for it</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">event</span><span class="p">.</span><span class="na">isCancelled</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">PlayerMapper</span><span class="p">.</span><span class="na">getConsoleSender</span><span class="p">().</span><span class="na">sendMessage</span><span class="p">(</span><span class="s">&quot;Hello World!&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+</td></tr></table></p>
+<h4 id="asynchronously">Asynchronously<a class="headerlink" href="#asynchronously" title="Permanent link">&para;</a></h4>
+<p>You can fire an event asynchronously with the <code>&lt;T extends SAsyncEvent&gt; CompletableFuture&lt;T&gt; EventManager#fireAsync(T)</code> method.
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">EventManager</span><span class="p">.</span><span class="na">fireAsync</span><span class="p">(</span><span class="k">new</span> <span class="n">ExampleAsynchronousEvent</span><span class="p">()).</span><span class="na">thenAccept</span><span class="p">(</span><span class="n">event</span> <span class="o">-&gt;</span> <span class="p">{</span>
+    <span class="c1">// if your event is cancellable, you can check for it</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">event</span><span class="p">.</span><span class="na">isCancelled</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">PlayerMapper</span><span class="p">.</span><span class="na">getConsoleSender</span><span class="p">().</span><span class="na">sendMessage</span><span class="p">(</span><span class="s">&quot;Hello World!&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+</td></tr></table></p>
+<h3 id="creating-events">Creating events<a class="headerlink" href="#creating-events" title="Permanent link">&para;</a></h3>
+<h4 id="synchronous">Synchronous<a class="headerlink" href="#synchronous" title="Permanent link">&para;</a></h4>
+<p>A synchronous event needs to implement the <code>SEvent</code> class (or the <code>SCancellableEvent</code> class, if cancellable).</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExampleEvent</span> <span class="kd">extends</span> <span class="n">SCancellableEvent</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">cancelled</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCancelled</span><span class="p">(</span><span class="kt">boolean</span> <span class="n">cancelled</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">cancelled</span> <span class="o">=</span> <span class="n">cancelled</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isCancelled</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">cancelled</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</td></tr></table>
+<h4 id="asynchronous">Asynchronous<a class="headerlink" href="#asynchronous" title="Permanent link">&para;</a></h4>
+<p>An asynchronous event needs to implement the <code>SAsyncEvent</code> class (or the <code>SCancellableAsyncEvent</code>, if cancellable).</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExampleEvent</span> <span class="kd">implements</span> <span class="n">SCancellableAsyncEvent</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">cancelled</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCancelled</span><span class="p">(</span><span class="kt">boolean</span> <span class="n">cancelled</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">cancelled</span> <span class="o">=</span> <span class="n">cancelled</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isCancelled</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">cancelled</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</td></tr></table>
+<h3 id="running-tasks">Running tasks<a class="headerlink" href="#running-tasks" title="Permanent link">&para;</a></h3>
+<div class="admonition tip">
+<p class="admonition-title">Managing tasks without Tasker</p>
+<p>If you want to manage tasks yourself (without the Tasker library), you can utilize the <code>Server#runSynchronously(Runnable)</code> method to run a task synchronously.</p>
+</div>
+<p>Start with registering the Tasker service class in your plugin's <code>@Init</code> annotation.
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nd">@Init</span><span class="p">(</span><span class="n">services</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">Tasker</span><span class="p">.</span><span class="na">class</span>
+<span class="p">})</span>
+</code></pre></div>
+</td></tr></table></p>
+<h4 id="normal-task">Normal task<a class="headerlink" href="#normal-task" title="Permanent link">&para;</a></h4>
+<p>So let's say, that we want to create a task to send a message to console every 30 seconds until the server stops/plugin disables.  </p>
+<p>First of all, let's create a task builder, which takes in a <code>Runnable</code>.
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">Tasker</span><span class="p">.</span><span class="na">build</span><span class="p">(()</span> <span class="o">-&gt;</span> <span class="n">PlayerMapper</span><span class="p">.</span><span class="na">getConsoleSender</span><span class="p">().</span><span class="na">sendMessage</span><span class="p">(</span><span class="s">&quot;Hello World!&quot;</span><span class="p">));</span>
+</code></pre></div>
+</td></tr></table>
+Then, let's add the repeat time period.
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">Tasker</span><span class="p">.</span><span class="na">build</span><span class="p">(()</span> <span class="o">-&gt;</span> <span class="n">PlayerMapper</span><span class="p">.</span><span class="na">getConsoleSender</span><span class="p">().</span><span class="na">sendMessage</span><span class="p">(</span><span class="s">&quot;Hello World!&quot;</span><span class="p">)).</span><span class="na">repeat</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="n">TaskerTime</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">);</span>
+</code></pre></div>
+</td></tr></table>
+Now let's start the task.
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="n">Tasker</span><span class="p">.</span><span class="na">build</span><span class="p">(()</span> <span class="o">-&gt;</span> <span class="n">PlayerMapper</span><span class="p">.</span><span class="na">getConsoleSender</span><span class="p">().</span><span class="na">sendMessage</span><span class="p">(</span><span class="s">&quot;Hello World!&quot;</span><span class="p">)).</span><span class="na">repeat</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="n">TaskerTime</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">).</span><span class="na">start</span><span class="p">();</span>
+</code></pre></div>
+</td></tr></table>
+And you're done!</p>
+<h4 id="self-cancelling-task">Self-cancelling task<a class="headerlink" href="#self-cancelling-task" title="Permanent link">&para;</a></h4>
+<p>Let's create a task which sends a message to the console 10 times and then stops.  </p>
+<p>First of all, let's create a task builder, which takes in a <code>Function&lt;TaskBase, Runnable&gt;</code>.
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">final</span> <span class="n">AtomicInteger</span> <span class="n">count</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicInteger</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">Tasker</span><span class="p">.</span><span class="na">build</span><span class="p">(</span><span class="n">taskBase</span> <span class="o">-&gt;</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">count</span><span class="p">.</span><span class="na">get</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">taskBase</span><span class="p">.</span><span class="na">cancel</span><span class="p">();</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">PlayerMapper</span><span class="p">.</span><span class="na">getConsoleSender</span><span class="p">().</span><span class="na">sendMessage</span><span class="p">(</span><span class="s">&quot;Hello World!&quot;</span><span class="p">);</span>
+    <span class="n">count</span><span class="p">.</span><span class="na">getAndIncrement</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div>
+</td></tr></table>
+Then, let's run the task right away.
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">final</span> <span class="n">AtomicInteger</span> <span class="n">count</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicInteger</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">Tasker</span><span class="p">.</span><span class="na">build</span><span class="p">(</span><span class="n">taskBase</span> <span class="o">-&gt;</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">count</span><span class="p">.</span><span class="na">get</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">10</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">taskBase</span><span class="p">.</span><span class="na">cancel</span><span class="p">();</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">PlayerMapper</span><span class="p">.</span><span class="na">getConsoleSender</span><span class="p">().</span><span class="na">sendMessage</span><span class="p">(</span><span class="s">&quot;Hello World!&quot;</span><span class="p">);</span>
+    <span class="n">count</span><span class="p">.</span><span class="na">getAndIncrement</span><span class="p">();</span>
+<span class="p">}).</span><span class="na">afterOneTick</span><span class="p">().</span><span class="na">start</span><span class="p">();</span>
+</code></pre></div>
+</td></tr></table>
+Congrats, you've just made a self-cancelling task!</p>
+<h3 id="making-your-first-plugin">Making your first plugin<a class="headerlink" href="#making-your-first-plugin" title="Permanent link">&para;</a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Adventure</p>
+<p>If you're experiencing errors related to <a href="https://github.com/KyoriPowered/adventure">Adventure</a>, make sure to relocate the <code>net.kyori.adventure</code> package!</p>
+</div>
+<h4 id="creating-the-main-plugin-class">Creating the main plugin class<a class="headerlink" href="#creating-the-main-plugin-class" title="Permanent link">&para;</a></h4>
+<p>Start with extending the <code>PluginContainer</code> class, like this:
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExamplePlugin</span> <span class="kd">extends</span> <span class="n">PluginContainer</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">ExamplePlugin</span> <span class="n">INSTANCE</span><span class="p">;</span>
+
+    <span class="kd">public</span> <span class="nf">ExamplePlugin</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">INSTANCE</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// factory method for easy retrieval of the plugin instance</span>
+    <span class="c1">// ExamplePlugin.getInstance()</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">ExamplePlugin</span> <span class="nf">getInstance</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">INSTANCE</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">UnsupportedOperationException</span><span class="p">(</span><span class="s">&quot;Plugin has not been initialized yet!&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">INSTANCE</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">load</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Plugin load logic</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">enable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Plugin enable logic</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">disable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Plugin disable logic</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</td></tr></table>
+After that, add the <code>@Plugin</code> and <code>@Init</code> (only if you use SLib services) annotations.
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nd">@Plugin</span><span class="p">(</span>
+        <span class="n">id</span> <span class="o">=</span> <span class="s">&quot;ExamplePlugin&quot;</span><span class="p">,</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;ExamplePlugin&quot;</span><span class="p">,</span>
+        <span class="n">authors</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;ScreamingSandals&quot;</span><span class="p">},</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="s">&quot;0.0.1-SNAPSHOT&quot;</span>
+<span class="p">)</span>
+<span class="nd">@Init</span><span class="p">(</span><span class="n">services</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">ExampleService</span><span class="p">.</span><span class="na">class</span>
+<span class="p">})</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExamplePlugin</span> <span class="kd">extends</span> <span class="n">PluginContainer</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">ExamplePlugin</span> <span class="n">INSTANCE</span><span class="p">;</span>
+
+    <span class="kd">public</span> <span class="nf">ExamplePlugin</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">INSTANCE</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// factory method for easy retrieval of the plugin instance</span>
+    <span class="c1">// ExamplePlugin.getInstance()</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">ExamplePlugin</span> <span class="nf">getInstance</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">INSTANCE</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">UnsupportedOperationException</span><span class="p">(</span><span class="s">&quot;Plugin has not been initialized yet!&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">INSTANCE</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">load</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Plugin load logic</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">enable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Plugin enable logic</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">disable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Plugin disable logic</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</td></tr></table>
+If you want to depend on some plugin(s), you can add the <code>@PluginDependencies</code> annotation.
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nd">@Plugin</span><span class="p">(</span>
+        <span class="n">id</span> <span class="o">=</span> <span class="s">&quot;ExamplePlugin&quot;</span><span class="p">,</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;ExamplePlugin&quot;</span><span class="p">,</span>
+        <span class="n">authors</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;ScreamingSandals&quot;</span><span class="p">},</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="s">&quot;0.0.1-SNAPSHOT&quot;</span>
+<span class="p">)</span>
+<span class="nd">@PluginDependencies</span><span class="p">(</span><span class="n">platform</span> <span class="o">=</span> <span class="n">PlatformType</span><span class="p">.</span><span class="na">BUKKIT</span><span class="p">,</span> <span class="n">dependencies</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&quot;DependencyPlugin&quot;</span>
+<span class="p">},</span> <span class="n">softDependencies</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&quot;SoftDependencyPlugin&quot;</span>
+<span class="p">},</span> <span class="n">loadBefore</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&quot;LoadBeforePlugin&quot;</span>
+<span class="p">})</span>
+<span class="nd">@Init</span><span class="p">(</span><span class="n">services</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">ExampleService</span><span class="p">.</span><span class="na">class</span>
+<span class="p">})</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExamplePlugin</span> <span class="kd">extends</span> <span class="n">PluginContainer</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">ExamplePlugin</span> <span class="n">INSTANCE</span><span class="p">;</span>
+
+    <span class="kd">public</span> <span class="nf">ExamplePlugin</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">INSTANCE</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// factory method for easy retrieval of the plugin instance</span>
+    <span class="c1">// ExamplePlugin.getInstance()</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">ExamplePlugin</span> <span class="nf">getInstance</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">INSTANCE</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">UnsupportedOperationException</span><span class="p">(</span><span class="s">&quot;Plugin has not been initialized yet!&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">INSTANCE</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">load</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Plugin load logic</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">enable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Plugin enable logic</span>
+    <span class="p">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">disable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// Plugin disable logic</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+</td></tr></table>
+And that's it!</p>
+<h3 id="interacting-with-other-plugins">Interacting with other plugins<a class="headerlink" href="#interacting-with-other-plugins" title="Permanent link">&para;</a></h3>
+<p>There's the <code>PluginManager</code> class for that, let me show you an example.</p>
+<p>For all next steps, you will need the plugin key, which you can get with the <code>PluginKey PluginManager#createKey(String)</code>  method, like this:
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="c1">// takes the plugin name</span>
+<span class="kd">final</span> <span class="n">PluginKey</span> <span class="n">key</span> <span class="o">=</span> <span class="n">PluginManager</span><span class="p">.</span><span class="na">createKey</span><span class="p">(</span><span class="s">&quot;ExamplePlugin&quot;</span><span class="p">);</span>
+</code></pre></div>
+</td></tr></table></p>
+<h4 id="checking-if-a-plugin-is-enabled">Checking if a plugin is enabled<a class="headerlink" href="#checking-if-a-plugin-is-enabled" title="Permanent link">&para;</a></h4>
+<p>For checking if a plugin is enabled, you can use the <code>boolean PluginManager#isEnabled(PluginKey)</code> method.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="p">(</span><span class="n">PluginManager</span><span class="p">.</span><span class="na">isEnabled</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">PlayerMapper</span><span class="p">.</span><span class="na">getConsoleSender</span><span class="p">().</span><span class="na">sendMessage</span><span class="p">(</span><span class="s">&quot;Plugin is enabled!&quot;</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">PlayerMapper</span><span class="p">.</span><span class="na">getConsoleSender</span><span class="p">().</span><span class="na">sendMessage</span><span class="p">(</span><span class="s">&quot;Plugin is not enabled!&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+</td></tr></table>
+<h4 id="getting-the-plugins-main-class">Getting the plugin's main class<a class="headerlink" href="#getting-the-plugins-main-class" title="Permanent link">&para;</a></h4>
+<p>For getting the plugin's main class, you can use the <code>@Nullable Object PluginManager#getPlatformClass(PluginKey)</code> method.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">final</span> <span class="n">ExamplePlugin</span> <span class="n">plugin</span> <span class="o">=</span> <span class="p">(</span><span class="n">ExamplePlugin</span><span class="p">)</span> <span class="n">PluginManager</span><span class="p">.</span><span class="na">getPlatformClass</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+</code></pre></div>
+</td></tr></table>
+<h4 id="getting-all-plugins-on-the-server">Getting all plugins on the server<a class="headerlink" href="#getting-all-plugins-on-the-server" title="Permanent link">&para;</a></h4>
+<p>For getting all plugins on the server, you can use the <code>List&lt;PluginDescription&gt; PluginManager#getAllPlugins()</code> method.</p>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="p">(</span><span class="kd">final</span> <span class="n">PluginDescription</span> <span class="n">plugin</span> <span class="p">:</span> <span class="n">PluginManager</span><span class="p">.</span><span class="na">getAllPlugins</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">PlayerMapper</span><span class="p">.</span><span class="na">getConsoleSender</span><span class="p">().</span><span class="na">sendMessage</span><span class="p">(</span><span class="n">plugin</span><span class="p">.</span><span class="na">getName</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div>
+</td></tr></table>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      2021-11-28
+      2021-12-26
     
   </small>
 </div>
@@ -1265,13 +1863,13 @@ It is possible to retrieve the service class instances with the ServiceManager c
       
       
         
-        <a href="../event/" class="md-footer__link md-footer__link--next" aria-label="Next: Event" rel="next">
+        <a href="../command/" class="md-footer__link md-footer__link--next" aria-label="Next: Command" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Event
+              Command
             </div>
           </div>
           <div class="md-footer__button md-icon">
@@ -1327,10 +1925,10 @@ It is possible to retrieve the service class instances with the ServiceManager c
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.indexes", "toc.integrate", "navigation.top"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.01824240.min.js", "version": {"provider": "mike", "default": "latest"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.indexes", "toc.integrate", "navigation.top"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.0bbba5b5.min.js", "version": {"provider": "mike", "default": "latest"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.e8a254df.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e1a181d9.min.js"></script>
       
     
   </body>
