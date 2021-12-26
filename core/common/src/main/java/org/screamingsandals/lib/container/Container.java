@@ -6,7 +6,7 @@ import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.utils.RawValueHolder;
-\import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.List;
 import java.util.Optional;
