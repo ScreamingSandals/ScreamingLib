@@ -50,13 +50,6 @@ public abstract class EquipmentSlotMapping extends AbstractTypeMapper<EquipmentS
         return Collections.unmodifiableList(equipmentSlotMapping.values);
     }
 
-    public static <T> T convertEquipmentSlotHolder(EquipmentSlotHolder holder, Class<T> newType) {
-        if (equipmentSlotMapping == null) {
-            throw new UnsupportedOperationException("EquipmentSlotMapping is not initialized yet.");
-        }
-        return equipmentSlotMapping.equipmentSlotConverter.convert(holder, newType);
-    }
-
     @OnPostConstruct
     public void legacyMapping() {
         // Vanilla <-> Bukkit

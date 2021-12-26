@@ -49,11 +49,4 @@ public abstract class DifficultyMapping extends AbstractTypeMapper<DifficultyHol
         }
         return Collections.unmodifiableList(difficultyMapping.values);
     }
-
-    public static <T> T convertDifficultyHolder(DifficultyHolder holder, Class<T> newType) {
-        if (difficultyMapping == null) {
-            throw new UnsupportedOperationException("DifficultyMapping is not initialized yet.");
-        }
-        return difficultyMapping.difficultyConverter.convert(holder, newType);
-    }
 }
