@@ -2,6 +2,7 @@ package org.screamingsandals.lib.healthindicator;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.entity.EntityHuman;
@@ -24,6 +25,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     private final String tabListKey;
     private final ConcurrentSkipListMap<String, Integer> values = new ConcurrentSkipListMap<>();
     protected final List<PlayerWrapper> trackedPlayers = new LinkedList<>();
+    @Accessors(chain = true)
     @Getter
     @Setter
     protected DataContainer data;

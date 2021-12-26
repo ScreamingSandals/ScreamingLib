@@ -2,6 +2,7 @@ package org.screamingsandals.lib.sidebar;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.packet.*;
@@ -23,6 +24,7 @@ import java.util.stream.Stream;
 public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar {
     @Getter
     protected final List<ScoreboardTeam> teams = new LinkedList<>();
+    @Accessors(chain = true)
     @Getter
     @Setter
     protected DataContainer data;
