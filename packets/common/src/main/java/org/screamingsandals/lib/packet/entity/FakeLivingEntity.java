@@ -7,7 +7,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 public class FakeLivingEntity extends FakeEntity {
 
-    FakeLivingEntity(LocationHolder location, int typeId) {
+    public FakeLivingEntity(LocationHolder location, int typeId) {
         super(location, typeId);
     }
 

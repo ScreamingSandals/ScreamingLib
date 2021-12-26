@@ -36,7 +36,7 @@ public class FakeEntity {
     @Setter
     private boolean isOnGround;
 
-    FakeEntity(LocationHolder location, int typeId) {
+    public FakeEntity(LocationHolder location, int typeId) {
         // default values
         if (!Server.isServerThread()) {
             try {
