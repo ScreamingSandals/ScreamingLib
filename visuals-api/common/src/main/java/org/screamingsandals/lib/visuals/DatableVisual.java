@@ -6,7 +6,7 @@ public interface DatableVisual<T> extends Visual<T> {
 
     DataContainer getData();
 
-    void setData(DataContainer data);
+    T setData(DataContainer data);
 
     boolean hasData();
 }

@@ -50,7 +50,7 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param rotatingTime {@link Pair} of time and unit.
      * @return this hologram
      */
-    Hologram rotationTime(Pair<Integer, TaskerTime> rotatingTime);
+    Hologram setRotationTime(Pair<Integer, TaskerTime> rotatingTime);
 
     /**
      * @return current rotation mode
@@ -63,7 +63,7 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param mode rotation mode
      * @return this hologram
      */
-    Hologram rotationMode(RotationMode mode);
+    Hologram setRotationMode(RotationMode mode);
 
     /**
      * Stands for how much should this hologram rotate per one cycle
@@ -71,7 +71,7 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param toIncrement
      * @return
      */
-    Hologram rotationIncrement(float toIncrement);
+    Hologram setRotationIncrement(float toIncrement);
 
     /**
      * Changes the item to show
@@ -79,7 +79,7 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param item item to show
      * @return this hologram
      */
-    Hologram item(Item item);
+    Hologram setItem(Item item);
 
     /**
      * Position of the item shown as hologram
@@ -87,7 +87,7 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param position position of the item
      * @return this hologram
      */
-    Hologram itemPosition(ItemPosition position);
+    Hologram setItemPosition(ItemPosition position);
 
     /**
      * @return current item position
