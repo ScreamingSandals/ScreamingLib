@@ -13,9 +13,9 @@ import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.SPlayerBlockPlaceEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableCollectionLinkedToCollection;
@@ -84,7 +84,7 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
     @Override
     public Item getItemInHand() {
         if (itemInHand == null) {
-            itemInHand = ItemFactory.build(event.getItemInHand()).orElseThrow();
+            itemInHand = new BukkitItem(event.getItemInHand());
         }
         return itemInHand;
     }

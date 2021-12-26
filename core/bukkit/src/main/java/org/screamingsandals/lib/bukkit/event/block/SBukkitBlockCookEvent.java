@@ -6,9 +6,9 @@ import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.block.SBlockCookEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -34,14 +34,14 @@ public class SBukkitBlockCookEvent implements SBlockCookEvent, BukkitCancellable
     @Override
     public Item getSource() {
         if (source == null) {
-            source = ItemFactory.build(event.getSource()).orElseThrow();
+            source = new BukkitItem(event.getSource());
         }
         return source;
     }
 
     @Override
     public Item getResult() {
-        return ItemFactory.build(event.getResult()).orElseThrow();
+        return new BukkitItem(event.getResult());
     }
 
     @Override

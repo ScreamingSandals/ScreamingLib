@@ -7,6 +7,8 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -14,6 +16,7 @@ import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 import org.screamingsandals.lib.world.chunk.ChunkMapper;
@@ -48,9 +51,8 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
     public int getMinY() {
         if (Reflect.hasMethod(wrappedObject, "getMinHeight")) {
             return wrappedObject.getMinHeight();
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     @Override
@@ -157,6 +159,16 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
     @Override
     public boolean isSpawningOfMonstersAllowed() {
         return wrappedObject.getAllowMonsters();
+    }
+
+    @Override
+    public BlockHolder getHighestBlockAt(int x, int z) {
+        return BlockMapper.wrapBlock(wrappedObject.getHighestBlockAt(x, z));
+    }
+
+    @Override
+    public int getHighestYAt(int x, int z) {
+        return wrappedObject.getHighestBlockYAt(x, z);
     }
 
     @Override

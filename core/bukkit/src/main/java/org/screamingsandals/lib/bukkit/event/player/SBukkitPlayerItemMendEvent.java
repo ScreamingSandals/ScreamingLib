@@ -5,10 +5,10 @@ import org.bukkit.event.player.PlayerItemMendEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityExperience;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.EntityExperience;
 import org.screamingsandals.lib.event.player.SPlayerItemMendEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 @RequiredArgsConstructor
@@ -36,7 +36,7 @@ public class SBukkitPlayerItemMendEvent implements SPlayerItemMendEvent, BukkitC
     @Override
     public Item getItem() {
         if (item == null) {
-            item = ItemFactory.build(event.getItem()).orElseThrow();
+            item = new BukkitItem(event.getItem());
         }
         return item;
     }

@@ -1,5 +1,0 @@
-dependencies {
-    api project(':plugin-common')
-
-    compileOnly velocity(VELOCITY_VERSION)
-}

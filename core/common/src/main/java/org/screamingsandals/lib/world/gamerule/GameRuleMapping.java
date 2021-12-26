@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.world.gamerule;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -19,7 +20,8 @@ public abstract class GameRuleMapping extends AbstractTypeMapper<GameRuleHolder>
     protected final BidirectionalConverter<GameRuleHolder> gameRuleConverter = BidirectionalConverter.<GameRuleHolder>build()
             .registerP2W(GameRuleHolder.class, d -> d);
 
-    protected GameRuleMapping() {
+    @ApiStatus.Internal
+    public GameRuleMapping() {
         if (gameRuleMapping != null) {
             throw new UnsupportedOperationException("GameRuleMapping is already initialized!");
         }

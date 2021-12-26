@@ -4,7 +4,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.bukkit.item.builder.BukkitItemFactory;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.container.PlayerContainer;
 
@@ -16,55 +16,50 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
     }
 
     @Override
-    public Item[] getArmorContents() {
-        return Arrays.stream(((PlayerInventory)wrappedObject)
+    public @Nullable Item @NotNull [] getArmorContents() {
+        return Arrays.stream(((PlayerInventory) wrappedObject)
                 .getArmorContents())
-                .map(item -> BukkitItemFactory.build(item).orElse(null))
+                .map(item -> item == null ? null : new BukkitItem(item)) // does your ide see problem? well bukkit api is badly annotated
                 .toArray(Item[]::new);
     }
 
     @Override
     public @Nullable Item getHelmet() {
-        return BukkitItemFactory
-                .build(((PlayerInventory)wrappedObject).getHelmet())
-                .orElse(null);
+        var item = ((PlayerInventory) wrappedObject).getHelmet();
+        return item == null ? null : new BukkitItem(item);
     }
 
     @Override
     public @Nullable Item getChestplate() {
-        return BukkitItemFactory
-                .build(((PlayerInventory)wrappedObject).getChestplate())
-                .orElse(null);
+        var item = ((PlayerInventory) wrappedObject).getChestplate();
+        return item == null ? null : new BukkitItem(item);
     }
 
     @Override
     public @Nullable Item getLeggings() {
-        return BukkitItemFactory
-                .build(((PlayerInventory)wrappedObject).getLeggings())
-                .orElse(null);
+        var item = ((PlayerInventory) wrappedObject).getLeggings();
+        return item == null ? null : new BukkitItem(item);
     }
 
     @Override
     public @Nullable Item getBoots() {
-        return BukkitItemFactory
-                .build(((PlayerInventory)wrappedObject).getBoots())
-                .orElse(null);
+        var item = ((PlayerInventory) wrappedObject).getBoots();
+        return item == null ? null : new BukkitItem(item);
     }
 
     @Override
-    public void setArmorContents(@Nullable Item[] items) {
+    public void setArmorContents(@Nullable Item @Nullable [] items) {
         if (items == null) {
-            ((PlayerInventory)wrappedObject).setArmorContents(null);
+            ((PlayerInventory) wrappedObject).setArmorContents(null);
             return;
         }
-        ((PlayerInventory)wrappedObject).setArmorContents(Arrays.stream(items).map(item -> {
+        ((PlayerInventory) wrappedObject).setArmorContents(Arrays.stream(items).map(item -> {
             if (item == null) {
                 return null;
             }
             return item.as(ItemStack.class);
         }).toArray(ItemStack[]::new));
     }
-
 
     @Override
     public void setHelmet(@Nullable Item helmet) {
@@ -108,9 +103,7 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
 
     @Override
     public @NotNull Item getItemInMainHand() {
-        return BukkitItemFactory
-                .build(((PlayerInventory)wrappedObject).getItemInMainHand())
-                .orElseThrow();
+        return new BukkitItem(((PlayerInventory) wrappedObject).getItemInMainHand());
     }
 
     @Override
@@ -125,9 +118,7 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
 
     @Override
     public @NotNull Item getItemInOffHand() {
-        return BukkitItemFactory
-                .build(((PlayerInventory)wrappedObject).getItemInOffHand())
-                .orElseThrow();
+        return new BukkitItem(((PlayerInventory) wrappedObject).getItemInOffHand());
     }
 
     @Override
@@ -142,11 +133,11 @@ public class BukkitPlayerContainer extends BukkitContainer implements PlayerCont
 
     @Override
     public int getHeldItemSlot() {
-        return ((PlayerInventory)wrappedObject).getHeldItemSlot();
+        return ((PlayerInventory) wrappedObject).getHeldItemSlot();
     }
 
     @Override
     public void setHeldItemSlot(int slot) {
-        ((PlayerInventory)wrappedObject).setHeldItemSlot(slot);
+        ((PlayerInventory) wrappedObject).setHeldItemSlot(slot);
     }
 }

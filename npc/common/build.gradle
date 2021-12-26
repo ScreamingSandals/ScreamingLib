@@ -1,6 +1,3 @@
-dependencies {
-    api project(':core-common')
-    api project(':visuals-api-common')
-    api project(':tasker-common')
-    api project(':hologram-common')
-}
+includeModule('core')
+includeModule('visuals-api')
+includeModule('hologram')

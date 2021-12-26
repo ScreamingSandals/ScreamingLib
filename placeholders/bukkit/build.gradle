@@ -1,6 +1,5 @@
 dependencies {
     api project(':core-bukkit')
-    api project(':placeholders-common')
 
     compileOnly paper(PAPER_VERSION)
 

@@ -321,6 +321,24 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
+     * <p>Gets the highest non-empty block on the X and Z coordinates of this location.</p>
+     *
+     * @return the highest non-empty block
+     */
+    public BlockHolder getHighestBlock() {
+        return getWorld().getHighestBlockAt(getBlockX(), getBlockZ());
+    }
+
+    /**
+     * <p>Gets the highest non-empty Y coordinate on the X and Z coordinates of this location.</p>
+     *
+     * @return the highest non-empty Y coordinate
+     */
+    public int getHighestY() {
+        return getWorld().getHighestYAt(getBlockX(), getBlockZ());
+    }
+
+    /**
      * <p>Clones this location holder.</p>
      *
      * @return the cloned holder

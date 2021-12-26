@@ -4,7 +4,7 @@ import lombok.Data;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.container.Container;
-import org.screamingsandals.lib.item.builder.ItemFactory;
+import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
@@ -31,11 +31,11 @@ public class InventoryTypeHolder implements ComparableWrapper {
     }
 
     public <C extends Container> Optional<C> createContainer(Component name) {
-        return ItemFactory.createContainer(this, name);
+        return ContainerFactory.createContainer(this, name);
     }
 
     public <C extends Container> Optional<C> createContainer() {
-        return ItemFactory.createContainer(this);
+        return ContainerFactory.createContainer(this);
     }
 
     /**

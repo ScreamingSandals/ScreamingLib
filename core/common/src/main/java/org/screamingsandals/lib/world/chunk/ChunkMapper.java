@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.world.chunk;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.Optional;
@@ -11,7 +12,8 @@ public abstract class ChunkMapper {
 
     private static ChunkMapper chunkMapper;
 
-    protected ChunkMapper() {
+    @ApiStatus.Internal
+    public ChunkMapper() {
         if (chunkMapper != null) {
             throw new UnsupportedOperationException("ChunkMapper is already initialized.");
         }

@@ -1,5 +1,0 @@
-dependencies {
-    api project(':tasker-common')
-
-    compileOnly 'org.spongepowered:spongeapi:' + SPONGE_VERSION
-}

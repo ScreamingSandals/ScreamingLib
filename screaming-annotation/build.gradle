@@ -1,9 +1,0 @@
-dependencies {
-    implementation project(':utils-common')
-    implementation project(':event-common')
-    implementation 'com.squareup:javapoet:1.13.0'
-    implementation 'org.spongepowered:configurate-yaml:' + CONFIGURATE_VERSION
-    implementation 'org.spongepowered:configurate-gson:' + CONFIGURATE_VERSION
-}
-
-enableShadowPlugin()

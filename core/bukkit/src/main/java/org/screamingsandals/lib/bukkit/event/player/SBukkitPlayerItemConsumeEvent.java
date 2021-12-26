@@ -6,9 +6,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.SPlayerItemConsumeEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 @RequiredArgsConstructor
@@ -34,7 +34,7 @@ public class SBukkitPlayerItemConsumeEvent implements SPlayerItemConsumeEvent, B
     @Override
     @Nullable
     public Item getItem() {
-        return event.getItem() != null ? ItemFactory.build(event.getItem()).orElseThrow() : null;
+        return event.getItem() != null ? new BukkitItem(event.getItem()) : null;
     }
 
     @Override

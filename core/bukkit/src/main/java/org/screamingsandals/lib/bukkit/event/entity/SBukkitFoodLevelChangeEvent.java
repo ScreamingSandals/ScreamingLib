@@ -4,11 +4,11 @@ import lombok.*;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SFoodLevelChangeEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -47,7 +47,7 @@ public class SBukkitFoodLevelChangeEvent implements SFoodLevelChangeEvent, Bukki
     public Item getItem() {
         if (!itemCached) {
             if (event.getItem() != null) {
-                item = ItemFactory.build(event.getItem()).orElseThrow();
+                item = new BukkitItem(event.getItem());
             }
             itemCached = true;
         }

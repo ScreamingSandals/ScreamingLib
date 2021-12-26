@@ -1,5 +1,0 @@
-dependencies {
-    compileOnly 'org.spongepowered:spongeapi:' + SPONGE_VERSION
-
-    api project(":event-common")
-}

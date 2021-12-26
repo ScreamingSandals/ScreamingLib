@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.world;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
@@ -19,7 +20,8 @@ public abstract class WorldMapper {
     /**
      * <p>Constructs the location mapper.</p>
      */
-    protected WorldMapper() {
+    @ApiStatus.Internal
+    public WorldMapper() {
         if (mapping != null) {
             throw new UnsupportedOperationException("WorldMapper is already initialized.");
         }

@@ -2,6 +2,7 @@ package org.screamingsandals.lib.utils.reflect;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Reflect {
     @SuppressWarnings("unchecked")
@@ -89,6 +90,15 @@ public class Reflect {
     public static InstanceMethod getMethod(Object instance, String names, Class<?>...params) {
         var method = getMethod(retrieveClasses(instance), names.split(","), params);
         return new InstanceMethod(instance, method.getMethod());
+    }
+
+    public static List<InstanceMethod> getMethodsCalled(Object instance, String names, int parametersCount) {
+        var namesS = Arrays.asList(names.split(","));
+        var classes = retrieveClasses(instance);
+        return classes.stream().flatMap(aClass -> Arrays.stream(aClass.getMethods()))
+                .filter(method -> namesS.contains(method.getName()) && method.getParameterCount() == parametersCount)
+                .map(method -> new InstanceMethod(instance, method))
+                .collect(Collectors.toList());
     }
 
     public static InstanceMethod getMethod(Object instance, String[] names, Class<?>...params) {

@@ -12,6 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -21,7 +22,6 @@ import org.screamingsandals.lib.attribute.AttributeHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeTypeHolder;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -344,7 +344,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
             return null;
         }
 
-        return ItemFactory.build(eq.getHelmet()).orElse(null);
+        return new BukkitItem(eq.getHelmet());
     }
 
     @Override
@@ -355,7 +355,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
             return null;
         }
 
-        return ItemFactory.build(eq.getChestplate()).orElse(null);
+        return new BukkitItem(eq.getChestplate());
     }
 
     @Override
@@ -366,7 +366,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
             return null;
         }
 
-        return ItemFactory.build(eq.getLeggings()).orElse(null);
+        return new BukkitItem(eq.getLeggings());
     }
 
     @Override
@@ -377,7 +377,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
             return null;
         }
 
-        return ItemFactory.build(eq.getBoots()).orElse(null);
+        return new BukkitItem(eq.getBoots());
     }
 
     @Override
@@ -444,7 +444,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
             return null;
         }
 
-        return ItemFactory.build(eq.getItemInMainHand()).orElse(null);
+        return new BukkitItem(eq.getItemInMainHand());
     }
 
     @Override
@@ -469,7 +469,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
             return null;
         }
 
-        return ItemFactory.build(eq.getItemInOffHand()).orElse(null);
+        return new BukkitItem(eq.getItemInOffHand());
     }
 
     @Override

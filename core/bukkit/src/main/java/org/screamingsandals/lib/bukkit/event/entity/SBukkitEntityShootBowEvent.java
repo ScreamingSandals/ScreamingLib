@@ -4,11 +4,11 @@ import lombok.*;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityShootBowEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
 @RequiredArgsConstructor
@@ -41,7 +41,7 @@ public class SBukkitEntityShootBowEvent implements SEntityShootBowEvent, BukkitC
     public Item getBow() {
         if (!bowCached) {
             if (event.getBow() != null) {
-                bow = ItemFactory.build(event.getBow()).orElseThrow();
+                bow = new BukkitItem(event.getBow());
             }
             bowCached = true;
         }
@@ -53,7 +53,7 @@ public class SBukkitEntityShootBowEvent implements SEntityShootBowEvent, BukkitC
     public Item getConsumable() {
         if (!consumableCached) {
             if (event.getBow() != null) {
-                consumable = ItemFactory.build(event.getConsumable()).orElseThrow();
+                consumable = new BukkitItem(event.getConsumable());
             }
             consumableCached = true;
         }

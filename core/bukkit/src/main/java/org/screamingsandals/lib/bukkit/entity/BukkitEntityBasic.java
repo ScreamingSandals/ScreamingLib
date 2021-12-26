@@ -9,10 +9,10 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
+import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 import org.screamingsandals.lib.utils.math.Vector3D;
@@ -370,6 +370,6 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
         if (!(wrappedObject instanceof InventoryHolder)) {
             return Optional.empty();
         }
-        return ItemFactory.wrapContainer(((InventoryHolder) wrappedObject).getInventory());
+        return ContainerFactory.wrapContainer(((InventoryHolder) wrappedObject).getInventory());
     }
 }

@@ -4,6 +4,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.kyori.adventure.audience.ForwardingAudience;
+import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -144,11 +145,44 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Forw
      */
     void sendParticle(ParticleHolder particle, LocationHolder location);
 
+    /**
+     * <p>Determines if the spawn point of this world is loaded and being held in memory.</p>
+     *
+     * @return is this world's spawn point loaded?
+     */
     boolean isSpawnKeptInMemory();
 
+    /**
+     * <p>Determines if spawning of animals is allowed in this world.</p>
+     *
+     * @return is spawning of animals allowed in this world?
+     */
     boolean isSpawningOfAnimalsAllowed();
 
+    /**
+     * <p>Determines if spawning of monsters is allowed in this world.</p>
+     *
+     * @return is spawning of monsters allowed in this world?
+     */
     boolean isSpawningOfMonstersAllowed();
+
+    /**
+     * <p>Gets the highest non-empty block at the given X and Z coordinates.</p>
+     *
+     * @param x the x coordinate
+     * @param z the z coordinate
+     * @return the highest non-empty block
+     */
+    BlockHolder getHighestBlockAt(int x, int z);
+
+    /**
+     * <p>Gets the highest non-empty Y coordinate at the given X and Z coordinates.</p>
+     *
+     * @param x the x coordinate
+     * @param z the z coordinate
+     * @return the highest non-empty Y coordinate
+     */
+    int getHighestYAt(int x, int z);
 
     /**
      * <p>A gson {@link TypeAdapter} for serializing and deserializing a world holder.</p>

@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.block.state;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.block.BlockHolder;
 
@@ -12,7 +13,8 @@ public abstract class BlockStateMapper {
 
     private static BlockStateMapper blockStateMapper;
 
-    protected BlockStateMapper() {
+    @ApiStatus.Internal
+    public BlockStateMapper() {
         if (blockStateMapper != null) {
             throw new UnsupportedOperationException("BlockStateMapper is already initialized.");
         }

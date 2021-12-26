@@ -1,4 +1,0 @@
-dependencies {
-    api project(':plugin-common')
-    compileOnly waterfall(WATERFALL_VERSION)
-}

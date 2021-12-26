@@ -1,5 +1,5 @@
-dependencies {
-    api project(':core-common')
+includeModule('core')
 
+dependencies {
     compileOnly 'io.netty:netty-all:' + NETTY_VERSION
 }

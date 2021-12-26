@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.entity.pose;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -19,7 +20,8 @@ public abstract class EntityPoseMapping extends AbstractTypeMapper<EntityPoseHol
     protected final BidirectionalConverter<EntityPoseHolder> entityPoseConverter = BidirectionalConverter.<EntityPoseHolder>build()
             .registerP2W(EntityPoseHolder.class, d -> d);
 
-    protected EntityPoseMapping() {
+    @ApiStatus.Internal
+    public EntityPoseMapping() {
         if (entityPoseMapping != null) {
             throw new UnsupportedOperationException("EntityPoseMapping is already initialized!");
         }

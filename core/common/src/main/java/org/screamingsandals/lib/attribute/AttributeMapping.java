@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.attribute;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -94,7 +95,8 @@ public abstract class AttributeMapping {
             })
             .registerP2W(ItemAttributeHolder.class, e -> e);
 
-    protected AttributeMapping() {
+    @ApiStatus.Internal
+    public AttributeMapping() {
         if (attributeMapping != null) {
             throw new UnsupportedOperationException("AttributeMapping is already initialized.");
         }

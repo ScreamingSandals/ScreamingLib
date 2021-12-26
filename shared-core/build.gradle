@@ -1,0 +1,6 @@
+dependencies {
+    compileOnly 'com.google.guava:guava:' + GUAVA_VERSION
+    compileOnly 'org.slf4j:slf4j-api:' + SLF4J_VERSION
+
+    api project(':utils-common')
+}

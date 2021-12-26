@@ -1,20 +1,17 @@
 package org.screamingsandals.lib.item.builder;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
-import org.screamingsandals.lib.container.type.InventoryTypeHolder;
-import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.attribute.AttributeMapping;
-import org.screamingsandals.lib.container.Container;
-import org.screamingsandals.lib.item.ItemTypeMapper;
-import org.screamingsandals.lib.item.data.ItemData;
+import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
-import org.screamingsandals.lib.item.meta.EnchantmentMapping;
-import org.screamingsandals.lib.item.meta.PotionEffectMapping;
-import org.screamingsandals.lib.item.meta.PotionMapping;
-import org.screamingsandals.lib.utils.*;
+import org.screamingsandals.lib.item.*;
+import org.screamingsandals.lib.item.meta.*;
+import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.utils.BidirectionalConverter;
+import org.screamingsandals.lib.utils.ConfigurateUtils;
+import org.screamingsandals.lib.utils.ConsumerExecutor;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -22,103 +19,98 @@ import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("AlternativeMethodAvailable")
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
 @ServiceDependencies(dependsOn = {
-        ItemTypeMapper.class,
-        EnchantmentMapping.class,
-        PotionMapping.class,
-        PotionEffectMapping.class,
-        AttributeMapping.class,
-        FireworkEffectMapping.class
+        ItemTypeMapper.class
 })
 public abstract class ItemFactory {
 
-    private static ItemFactory factory;
-    @SuppressWarnings("deprecation")
     private static final Function<ConfigurationNode, Item> CONFIGURATE_RESOLVER = node -> {
         if (!node.isMap()) {
             return readStack(node.getString()).orElse(null);
         }
 
+        var builder = builder();
+
         var type = node.node("type");
 
-        var optionalItem = readStack(type.getString());
-        if (optionalItem.isEmpty()) {
-            return null;
+        ShortStackDeserializer.deserializeShortStack(builder, type.getString());
+
+        var meta = node.node("meta");
+        if (!meta.empty()) {
+            builder.platformMeta(ConfigurateUtils.toMap(meta));
         }
-        var item = optionalItem.get();
 
         var amount = node.node("amount");
         if (!amount.empty()) {
-            item.setAmount(amount.getInt(1));
+            builder.amount(amount.getInt(1));
         }
 
         var damage = node.node("damage");
         if (!damage.empty()) {
-            item.setMaterial(item.getMaterial().withDurability((short) damage.getInt(0)));
+            builder.durability(damage.getInt(0));
         }
         var durability = node.node("durability");
         if (!durability.empty()) {
-            item.setMaterial(item.getMaterial().withDurability((short) durability.getInt(0)));
+            builder.durability(durability.getInt(0));
         }
 
         var displayName = node.node("display-name");
         if (!displayName.empty()) {
-            item.setDisplayName(AdventureHelper.toComponent(Objects.requireNonNull(displayName.getString())));
+            builder.displayName(AdventureHelper.toComponent(Objects.requireNonNull(displayName.getString())));
         }
         var locName = node.node("loc-name");
         if (!locName.empty()) {
-            item.setLocalizedName(AdventureHelper.toComponent(Objects.requireNonNull(locName.getString())));
+            builder.localizedName(locName.getString());
         }
         var customModelData = node.node("custom-model-data");
         if (!customModelData.empty()) {
             try {
-                item.setCustomModelData(locName.get(Integer.class));
+                builder.customModelData(locName.get(Integer.class));
             } catch (SerializationException ignored) {
             }
         }
         var repairCost = node.node("repair-cost");
         if (!repairCost.empty()) {
-            item.setRepair(repairCost.getInt());
+            builder.repairCost(repairCost.getInt());
         }
         var itemFlags = node.node("ItemFlags");
         if (!itemFlags.empty()) {
             if (itemFlags.isList()) {
                 try {
-                    item.getItemFlags()
-                            .addAll(Objects.requireNonNull(itemFlags.getList(String.class)));
+                    builder.flags(itemFlags.getList(String.class));
                 } catch (SerializationException e) {
                     e.printStackTrace();
                 }
             } else {
-                item.getItemFlags().add(itemFlags.getString());
+                builder.hideFlag(HideFlags.convert(itemFlags.getString("")));
             }
         }
         var unbreakable = node.node("Unbreakable");
         if (!unbreakable.empty()) {
-            item.setUnbreakable(unbreakable.getBoolean(false));
+            builder.unbreakable(unbreakable.getBoolean(false));
         }
         var lore = node.node("lore");
         if (!lore.empty()) {
             if (lore.isList()) {
                 try {
                     final var list = Objects.requireNonNull(lore.getList(String.class));
-                    list.forEach(next -> item.getLore().add(AdventureHelper.toComponent(next)));
+                    builder.lore(list);
                 } catch (SerializationException e) {
                     e.printStackTrace();
                 }
             } else {
-                item.getLore().add(AdventureHelper.toComponent(Objects.requireNonNull(lore.getString())));
+                builder.lore(lore.getString());
             }
         }
         var enchants = node.node("enchants");
@@ -128,7 +120,7 @@ public abstract class ItemFactory {
                         .map(EnchantmentMapping::resolve)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
-                        .forEach(item.getEnchantments()::add);
+                        .forEach(builder::enchantment);
             } else if (enchants.isList()) {
                 try {
                     //noinspection ConstantConditions
@@ -136,13 +128,13 @@ public abstract class ItemFactory {
                             .map(EnchantmentMapping::resolve)
                             .filter(Optional::isPresent)
                             .map(Optional::get)
-                            .forEach(item.getEnchantments()::add);
+                            .forEach(builder::enchantment);
                 } catch (SerializationException e) {
                     e.printStackTrace();
                 }
             } else {
                 try {
-                    EnchantmentMapping.resolve(enchants.get(Object.class)).ifPresent(item.getEnchantments()::add);
+                    EnchantmentHolder.ofOptional(enchants.get(Object.class)).ifPresent(builder::enchantment);
                 } catch (SerializationException e) {
                     e.printStackTrace();
                 }
@@ -151,7 +143,7 @@ public abstract class ItemFactory {
         var potionType = node.node("potion-type");
         if (!potionType.empty()) {
             try {
-                PotionMapping.resolve(potionType.get(Object.class)).ifPresent(item::setPotion);
+                PotionHolder.ofOptional(potionType.get(Object.class)).ifPresent(builder::potion);
             } catch (SerializationException e) {
                 e.printStackTrace();
             }
@@ -159,13 +151,13 @@ public abstract class ItemFactory {
         var potionEffects = node.node("effects");
         if (!potionEffects.empty()) {
             if (potionEffects.isList()) {
-                item.getPotionEffects().addAll(potionEffects.childrenList().stream()
+                builder.effect(potionEffects.childrenList().stream()
                         .map(PotionEffectMapping::resolve)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toList()));
             } else {
-                PotionEffectMapping.resolve(potionEffects).ifPresent(item.getPotionEffects()::add);
+                PotionEffectHolder.ofOptional(potionEffects).ifPresent(builder::effect);
             }
         }
 
@@ -176,9 +168,9 @@ public abstract class ItemFactory {
                         .map(AttributeMapping::wrapItemAttribute)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
-                        .forEach(item::addItemAttribute);
+                        .forEach(builder::attributeModifier);
             } else {
-                AttributeMapping.wrapItemAttribute(attributes).ifPresent(item::addItemAttribute);
+                AttributeMapping.wrapItemAttribute(attributes).ifPresent(builder::attributeModifier);
             }
         }
 
@@ -190,9 +182,9 @@ public abstract class ItemFactory {
                         .map(NamespacedMappingKey::ofOptional)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
-                        .forEach(item::addRecipe);
+                        .forEach(builder::recipe);
             } else {
-                NamespacedMappingKey.ofOptional(recipes.getString()).ifPresent(item::addRecipe);
+                NamespacedMappingKey.ofOptional(recipes.getString()).ifPresent(builder::recipe);
             }
         }
 
@@ -200,11 +192,11 @@ public abstract class ItemFactory {
         if (!color.empty()) {
             var c = TextColor.fromCSSHexString(color.getString(""));
             if (c != null) {
-                item.setColor(c);
+                builder.color(c);
             } else {
                 var c2 = NamedTextColor.NAMES.value(color.getString("").trim().toLowerCase());
                 if (c2 != null) {
-                    item.setColor(c2);
+                    builder.color(c2);
                 }
             }
         }
@@ -212,27 +204,22 @@ public abstract class ItemFactory {
         var fireworkEffects = node.node("firework-effects");
         if (!fireworkEffects.empty()) {
             if (fireworkEffects.isList()) {
-                item.getFireworkEffects().addAll(fireworkEffects.childrenList().stream()
+                builder.fireworkEffect(fireworkEffects.childrenList().stream()
                         .map(FireworkEffectMapping::resolve)
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .collect(Collectors.toList()));
             } else {
-                FireworkEffectMapping.resolve(fireworkEffects).ifPresent(item.getFireworkEffects()::add);
+                FireworkEffectHolder.ofOptional(fireworkEffects).ifPresent(builder::fireworkEffect);
             }
         }
 
         var power = node.node("power");
         if (!power.empty()) {
-            item.setPower(power.getInt());
+            builder.power(power.getInt());
         }
 
-        var meta = node.node("meta");
-        if (!meta.empty()) {
-            item.setPlatformMeta(ConfigurateUtils.toMap(meta));
-        }
-
-        return item;
+        return builder.build().orElse(null);
     };
 
     protected BidirectionalConverter<Item> itemConverter = BidirectionalConverter.<Item>build()
@@ -249,10 +236,10 @@ public abstract class ItemFactory {
             })
             .registerP2W(Item.class, Item::clone);
 
-    private static final Pattern SHORT_STACK_PATTERN = Pattern.compile("^(?<material>(?:(?!(?<!\\\\)(?:\\\\\\\\)*;).)+)(\\\\*)?(;(?<amount>(?:(?!(?<!\\\\)(?:\\\\\\\\)*;).)+)?(\\\\*)?(;(?<name>(\"((?!(?<!\\\\)(?:\\\\\\\\)*\").)+|(?:(?!(?<!\\\\)(?:\\\\\\\\)*;).)+))?(\\\\*)?(;(?<lore>.*))?)?)?$");
-    private static final Pattern LORE_SPLIT = Pattern.compile("((\"((?!(?<!\\\\)(?:\\\\\\\\)*\").)+\")|((?!(?<!\\\\)(?:\\\\\\\\)*;).)+)(?=($|;))");
+    private static ItemFactory factory;
 
-    protected ItemFactory() {
+    @ApiStatus.Internal
+    public ItemFactory() {
         if (factory != null) {
             throw new UnsupportedOperationException("ItemFactory is already initialized.");
         }
@@ -261,111 +248,60 @@ public abstract class ItemFactory {
     }
 
     public static ItemBuilder builder() {
-        return new ItemBuilder(new Item());
+        if (factory == null) {
+            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
+        }
+        return factory.builder0();
+    }
+
+    public static ItemView asView(Item item) {
+        if (factory == null) {
+            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
+        }
+        return factory.asView0(item);
     }
 
     public static Optional<Item> build(Object stack) {
         return readStack(stack);
     }
 
-    public static Optional<Item> build(Consumer<ItemBuilder> builder) {
-        var item = new Item();
-
-        if (builder != null) {
-            ConsumerExecutor.execute(builder, new ItemBuilder(item));
-        }
-
-        if (item.getMaterial() != null) {
-            return Optional.of(item);
-        }
-
-        return Optional.empty();
+    public static Optional<Item> build(Consumer<ItemBuilder> builderConsumer) {
+        var builder = builder();
+        ConsumerExecutor.execute(builderConsumer, builder);
+        return builder.build();
     }
 
-    public static Optional<Item> build(Object shortStack, Consumer<ItemBuilder> builder) {
-        var item = readStack(shortStack);
+    public static Optional<Item> build(Object stack, Consumer<ItemBuilder> builderConsumer) {
+        var item = readStack(stack);
         if (item.isEmpty()) {
             return Optional.empty();
         }
 
-        if (builder != null) {
-            ConsumerExecutor.execute(builder, new ItemBuilder(item.get()));
+        if (builderConsumer != null) {
+            var builder = item.get().builder();
+            ConsumerExecutor.execute(builderConsumer, builder);
+            return builder.build();
         }
-
         return item;
     }
 
     public static Optional<Item> readStack(Object stackObject) {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactor is not initialized yet!");
-        }
-
         var it = factory.itemConverter.convertOptional(stackObject);
         if (it.isPresent()) {
             return it;
         }
-        return readShortStack(new Item(), stackObject);
+        return readShortStack(builder(), stackObject);
     }
 
     public static Optional<Item> readShortStack(Item item, Object shortStackObject) {
-        if (shortStackObject instanceof ConfigurationNode) {
-            shortStackObject = ((ConfigurationNode) shortStackObject).getString();
-        }
-        if (!(shortStackObject instanceof String)) {
-            var opt = ItemTypeHolder.ofOptional(shortStackObject);
-            if (opt.isPresent()) {
-                item.setMaterial(opt.get());
-                return Optional.of(item);
-            }
-        }
-        if (shortStackObject == null) {
-            return Optional.empty();
-        }
+        var builder = item.builder();
+        ShortStackDeserializer.deserializeShortStack(builder, shortStackObject);
+        return builder.build();
+    }
 
-        var shortStack = shortStackObject.toString().trim();
-        if (shortStack.startsWith("(cast to ItemStack)")) {
-            shortStack = shortStack.substring(19).trim();
-        }
-
-        var matcher = SHORT_STACK_PATTERN.matcher(shortStack);
-
-        if (!matcher.matches() || matcher.group("material") == null) {
-            return Optional.empty();
-        }
-
-        var material = matcher.group("material");
-        var amount = matcher.group("amount");
-        var name = matcher.group("name");
-        if (name != null && name.startsWith("\"") && name.endsWith("\"")) {
-            name = name.substring(1, name.length() - 1);
-        }
-        var lore_string = matcher.group("lore");
-        var lore = new ArrayList<String>();
-        if (lore_string != null) {
-            Matcher loreMatcher = LORE_SPLIT.matcher(lore_string);
-            while (loreMatcher.find()) {
-                lore.add(loreMatcher.group());
-            }
-        }
-
-        var materialHolder = ItemTypeHolder.ofOptional(material);
-        if (materialHolder.isEmpty()) {
-            return Optional.empty();
-        }
-        item.setMaterial(materialHolder.get());
-        try {
-            if (amount != null && !amount.trim().isEmpty()) {
-                item.setAmount(Integer.parseInt(amount.trim()));
-            }
-        } catch (NumberFormatException ignored) {
-        }
-        if (name != null && !name.trim().isEmpty()) {
-            item.setDisplayName(AdventureHelper.toComponent(name.trim()));
-        }
-        item.getLore().clear();
-        lore.forEach(next -> item.getLore().add(AdventureHelper.toComponent(next)));
-
-        return Optional.of(item);
+    public static Optional<Item> readShortStack(ItemBuilder builder, Object shortStackObject) {
+        ShortStackDeserializer.deserializeShortStack(builder, shortStackObject);
+        return builder.build();
     }
 
     public static List<Item> buildAll(List<Object> objects) {
@@ -388,65 +324,7 @@ public abstract class ItemFactory {
         return factory.itemConverter.convert(item, newType);
     }
 
-    public static Item normalize(Item item) {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
-        }
-        return factory.itemConverter.normalize(item);
-    }
+    protected abstract ItemBuilder builder0();
 
-    public static <C extends Container> Optional<C> wrapContainer(Object container) {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
-        }
-        return factory.wrapContainer0(container);
-    }
-
-    public abstract <C extends Container> Optional<C> wrapContainer0(Object container);
-
-    public static <C extends Container> Optional<C> createContainer(InventoryTypeHolder type) {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
-        }
-        return factory.createContainer0(type);
-    }
-
-    public static <C extends Container> Optional<C> createContainer(InventoryTypeHolder type, Component name) {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
-        }
-        return factory.createContainer0(type, name);
-    }
-
-    public static <C extends Container> Optional<C> createContainer(int size) {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
-        }
-        return factory.createContainer0(size);
-    }
-
-    public static <C extends Container> Optional<C> createContainer(int size, Component name) {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
-        }
-        return factory.createContainer0(size, name);
-    }
-
-    public abstract <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type);
-
-    public abstract <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type, Component name);
-
-    public abstract <C extends Container> Optional<C> createContainer0(int size);
-
-    public abstract <C extends Container> Optional<C> createContainer0(int size, Component name);
-
-    public static ItemData createNewItemData() {
-        if (factory == null) {
-            throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
-        }
-        return factory.createNewItemData0();
-    }
-
-    public abstract ItemData createNewItemData0();
-
+    protected abstract ItemView asView0(Item item);
 }

@@ -1,6 +1,7 @@
 package org.screamingsandals.lib;
 
 import org.screamingsandals.lib.block.BlockTypeMapper;
+import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.container.type.InventoryTypeMapping;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.damage.DamageCauseMapping;
@@ -19,6 +20,7 @@ import org.screamingsandals.lib.particle.ParticleTypeMapping;
 import org.screamingsandals.lib.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.gamemode.GameModeMapping;
+import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.internal.InternalCoreService;
@@ -43,6 +45,7 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         Server.class,
         CustomPayload.class,
         EventManager.class,
+        Tasker.class,
         EntityTypeMapping.class,
         EntityMapper.class,
         AttributeTypeMapping.class,
@@ -71,7 +74,8 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         WeatherMapping.class,
         ParticleTypeMapping.class,
         GameRuleMapping.class,
-        WorldMapper.class
+        WorldMapper.class,
+        ContainerFactory.class
 })
 @InternalCoreService
 public abstract class Core {

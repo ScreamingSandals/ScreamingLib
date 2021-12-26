@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.item.builder;
 
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -8,193 +7,198 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.util.RGBLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.firework.FireworkEffectHolder;
-import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
-import org.screamingsandals.lib.item.meta.*;
+import org.screamingsandals.lib.attribute.ItemAttributeHolder;
+import org.screamingsandals.lib.firework.FireworkEffectHolder;
+import org.screamingsandals.lib.item.HideFlags;
+import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemMeta;
+import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.data.ItemData;
+import org.screamingsandals.lib.item.meta.EnchantmentHolder;
+import org.screamingsandals.lib.item.meta.PotionEffectHolder;
+import org.screamingsandals.lib.item.meta.PotionHolder;
+import org.screamingsandals.lib.metadata.MetadataCollectionKey;
+import org.screamingsandals.lib.metadata.MetadataConsumer;
+import org.screamingsandals.lib.metadata.MetadataKey;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * ItemBuilder. Modifies or creates new Item. Simple, right?
- */
-@RequiredArgsConstructor
-public class ItemBuilder {
-    @NotNull
-    private final Item item;
+public interface ItemBuilder extends MetadataConsumer {
+    ItemBuilder type(@NotNull ItemTypeHolder type);
 
-    public static ItemBuilder of(ItemTypeHolder materialHolder) {
-        return new ItemBuilder(materialHolder);
-    }
+    ItemBuilder durability(int durability);
 
-    /**
-     * Creates new ItemBuilder.
-     *
-     * @param material material to build item from
-     */
-    public ItemBuilder(ItemTypeHolder material) {
-        this.item = new Item();
-        item.setMaterial(material);
-    }
+    ItemBuilder amount(int amount);
 
-    /**
-     * Sets new type of the item
-     *
-     * @param type Anything that can be an Item. Name, ItemStack, serialized ItemStack and so on.
-     * @return this item builder
-     */
-    public ItemBuilder type(@NotNull Object type) {
-        ItemFactory.readShortStack(item, type);
-        return this;
-    }
+    ItemBuilder displayName(@Nullable Component displayName);
 
-    public ItemBuilder amount(int amount) {
-        item.setAmount(amount);
-        return this;
-    }
+    ItemBuilder itemLore(@Nullable List<@NotNull Component> lore);
 
-    public ItemBuilder name(@NotNull Component name) {
-        item.setDisplayName(name);
-        return this;
-    }
+    ItemBuilder attributeModifiers(@Nullable List<@NotNull ItemAttributeHolder> modifiers);
 
-    public ItemBuilder name(@NotNull ComponentLike name) {
-        item.setDisplayName(name.asComponent());
-        return this;
-    }
+    ItemBuilder attributeModifier(@NotNull ItemAttributeHolder modifier);
 
-    public ItemBuilder name(@Nullable String name) {
-        if (name == null) {
-            item.setDisplayName(null);
-            return this;
+    ItemBuilder data(@NotNull ItemData data);
+
+    ItemBuilder hideFlags(@Nullable List<@NotNull HideFlags> flags);
+
+    ItemBuilder hideFlag(@NotNull HideFlags flag);
+
+    ItemBuilder enchantments(@Nullable List<@NotNull EnchantmentHolder> enchantments);
+
+    ItemBuilder enchantment(@NotNull EnchantmentHolder enchantment);
+
+    ItemBuilder customModelData(@Nullable Integer data);
+
+    ItemBuilder unbreakable(boolean unbreakable);
+
+    ItemBuilder repairCost(int repairCost);
+
+    Optional<Item> build();
+
+    @Deprecated
+    ItemBuilder platformMeta(Object meta);
+
+    // DSL
+
+    default ItemBuilder type(@NotNull Object type) {
+        if (type instanceof ItemTypeHolder) {
+            return type((ItemTypeHolder) type);
         }
-        return name(AdventureHelper.toComponent(name));
-    }
-
-    public ItemBuilder localizedName(@Nullable ComponentLike name) {
-        item.setLocalizedName(name != null ? name.asComponent() : null);
+        ShortStackDeserializer.deserializeShortStack(this, type);
         return this;
     }
 
-    public ItemBuilder localizedName(@Nullable Component name) {
-        item.setLocalizedName(name);
-        return this;
+    default ItemBuilder name(@NotNull Component name) {
+        return displayName(name);
     }
 
-    public ItemBuilder localizedName(@Nullable String name) {
-        if (name == null) {
-            item.setLocalizedName(null);
-            return this;
-        }
-        return localizedName(AdventureHelper.toComponent(name));
+    default ItemBuilder name(@NotNull ComponentLike name) {
+        return displayName(name.asComponent());
     }
 
-    public ItemBuilder customModelData(Integer data) {
-        item.setCustomModelData(data);
-        return this;
+    default ItemBuilder name(@Nullable String name) {
+        return displayName(name == null ? null : AdventureHelper.toComponent(name));
     }
 
-    public ItemBuilder repair(int repair) {
-        item.setRepair(repair);
-        return this;
+    default ItemBuilder localizedName(@Nullable String name) {
+        return displayName(name == null ? null : Component.translatable(name));
     }
 
-    public ItemBuilder flags(@Nullable List<Object> flags) {
+    default ItemBuilder repair(int repair) {
+        return repairCost(repair);
+    }
+
+    default <C> ItemBuilder flags(@Nullable List<C> flags) {
         if (flags == null) {
             return this;
         } else {
-            item.getItemFlags().addAll(flags.stream()
-                    .map(Object::toString)
-                    .collect(Collectors.toList()));
+            return hideFlags(
+                    flags.stream()
+                            .map(o -> {
+                                if (o instanceof HideFlags) {
+                                    return (HideFlags) o;
+                                } else {
+                                    return HideFlags.convert(o.toString());
+                                }
+                            }).collect(Collectors.toList())
+            );
         }
-        return this;
     }
 
-    public ItemBuilder unbreakable(boolean unbreakable) {
-        item.setUnbreakable(unbreakable);
-        return this;
+    /**
+     * Adds new line to the lore.
+     *
+     * @param component
+     * @return
+     */
+    ItemBuilder lore(@NotNull Component component);
+
+    default ItemBuilder lore(@NotNull ComponentLike component) {
+        return lore(component.asComponent());
     }
 
-    public ItemBuilder lore(@NotNull Component lore) {
-        item.addLore(lore);
-        return this;
+    default ItemBuilder lore(@Nullable String lore) {
+        return lore(lore == null ? Component.empty() : AdventureHelper.toComponent(lore));
     }
 
-    public ItemBuilder lore(@NotNull ComponentLike lore) {
-        item.addLore(lore.asComponent());
-        return this;
+    default <C> ItemBuilder lore(@NotNull List<C> lore) {
+        return itemLore(lore.stream()
+                .map(c -> {
+                    if (c instanceof ComponentLike) {
+                        return ((ComponentLike) c).asComponent();
+                    } else {
+                        return c == null ? Component.empty() : AdventureHelper.toComponent(c.toString());
+                    }
+                })
+                .collect(Collectors.toList())
+        );
     }
 
-    public ItemBuilder lore(@Nullable String lore) {
-        if (lore == null) {
-            item.addLore(Component.empty());
-            return this;
-        }
-        return lore(AdventureHelper.toComponent(lore));
+    default ItemBuilder enchant(@NotNull Object enchant, int level) {
+        return enchant(enchant + " " + level);
     }
 
-    public <C extends ComponentLike> ItemBuilder lore(@NotNull List<C> lore) {
-        item.getLore().addAll(lore.stream().map(ComponentLike::asComponent).collect(Collectors.toList()));
-        return this;
-    }
-
-    public ItemBuilder enchant(@NotNull Object enchant, int level) {
-        enchant(enchant + " " + level);
-        return this;
-    }
-
-    public ItemBuilder enchant(@NotNull Map<Object, Integer> enchants) {
+    default ItemBuilder enchant(@NotNull Map<Object, Integer> enchants) {
         enchants.forEach(this::enchant);
         return this;
     }
 
-    public ItemBuilder enchant(@NotNull List<Object> enchants) {
+    default ItemBuilder enchant(@NotNull List<Object> enchants) {
         enchants.forEach(this::enchant);
         return this;
     }
 
-    public ItemBuilder enchant(@NotNull Object enchant) {
-        EnchantmentHolder.ofOptional(enchant).ifPresent(item::addEnchant);
+    default ItemBuilder enchant(@NotNull Object enchant) {
+        EnchantmentHolder.ofOptional(enchant).ifPresent(this::enchantment);
         return this;
     }
 
-    public ItemBuilder potion(@NotNull Object potion) {
-        PotionHolder.ofOptional(potion).ifPresent(item::setPotion);
+    default ItemBuilder potion(@NotNull Object potion) {
+        PotionHolder.ofOptional(potion).ifPresent(potionHolder -> {
+            this.setMetadata(ItemMeta.POTION_TYPE, potionHolder);
+        });
         return this;
     }
 
-    public ItemBuilder attribute(@NotNull Object itemAttribute) {
-        AttributeMapping.wrapItemAttribute(itemAttribute).ifPresent(item::addItemAttribute);
+    default ItemBuilder attribute(@NotNull Object itemAttribute) {
+        AttributeMapping.wrapItemAttribute(itemAttribute).ifPresent(this::attributeModifier);
         return this;
     }
 
-    public ItemBuilder effect(@NotNull Object effect) {
+    default ItemBuilder effect(@NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;
-            list.forEach(effect1 -> PotionEffectHolder.ofOptional(effect1).ifPresent(item::addPotionEffect));
+            list.forEach(effect1 -> PotionEffectHolder.ofOptional(effect1).ifPresent(potionEffectHolder -> {
+                this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder);
+            }));
             return this;
         }
 
-        PotionEffectHolder.ofOptional(effect).ifPresent(item::addPotionEffect);
+        PotionEffectHolder.ofOptional(effect).ifPresent(potionEffectHolder -> {
+            this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder);
+        });
         return this;
     }
 
-    public ItemBuilder recipe(@NotNull String key) {
+
+    default ItemBuilder recipe(@NotNull String key) {
         return recipe(NamespacedMappingKey.of(key));
     }
 
-    public ItemBuilder recipe(@NotNull NamespacedMappingKey key) {
-        item.addRecipe(key);
+    default ItemBuilder recipe(@NotNull NamespacedMappingKey key) {
+        this.addToListMetadata(ItemMeta.RECIPES, key);
         return this;
     }
 
-    public ItemBuilder color(@NotNull String color) {
+    default ItemBuilder color(@NotNull String color) {
         var c = TextColor.fromCSSHexString(color);
         if (c != null) {
             return color(c);
@@ -207,49 +211,58 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder color(@NotNull RGBLike color) {
-        item.setColor(color);
+    default ItemBuilder color(@NotNull RGBLike color) {
+        if (this.supportsMetadata(ItemMeta.CUSTOM_POTION_COLOR)) {
+            this.setMetadata(ItemMeta.CUSTOM_POTION_COLOR, color);
+        } else {
+            this.setMetadata(ItemMeta.COLOR, color);
+        }
         return this;
     }
 
-    public ItemBuilder color(int r, int g, int b) {
-        item.setColor(TextColor.color(r, g, b));
+    default ItemBuilder color(int r, int g, int b) {
+        return color(TextColor.color(r, g, b));
+    }
+
+    default ItemBuilder skullOwner(@Nullable String skullOwner) {
+        this.setMetadata(ItemMeta.SKULL_OWNER, skullOwner);
         return this;
     }
 
-    public ItemBuilder skullOwner(@Nullable String skullOwner) {
-        item.setSkullOwner(skullOwner);
-        return this;
-    }
-
-    public ItemBuilder fireworkEffect(@NotNull Object effect) {
+    default ItemBuilder fireworkEffect(@NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;
-            list.forEach(effect1 -> FireworkEffectHolder.ofOptional(effect1).ifPresent(item::addFireworkEffect));
+            list.forEach(effect1 -> FireworkEffectHolder.ofOptional(effect1).ifPresent(fireworkEffectHolder -> {
+                this.addToListMetadata(ItemMeta.FIREWORK_EFFECTS, fireworkEffectHolder);
+            }));
             return this;
         }
 
-        FireworkEffectHolder.ofOptional(effect).ifPresent(item::addFireworkEffect);
+        FireworkEffectHolder.ofOptional(effect).ifPresent(fireworkEffectHolder -> {
+            if (this.supportsMetadata(ItemMeta.FIREWORK_EFFECTS)) {
+                this.addToListMetadata(ItemMeta.FIREWORK_EFFECTS, fireworkEffectHolder);
+            } else {
+                this.setMetadata(ItemMeta.FIREWORK_STAR_EFFECT, fireworkEffectHolder);
+            }
+        });
         return this;
     }
 
-    // For legacy versions
-    @Deprecated
-    public ItemBuilder damage(int damage) {
+    default ItemBuilder power(int power) {
+        this.setMetadata(ItemMeta.FIREWORK_POWER, power);
+        return this;
+    }
+
+    default ItemBuilder damage(int damage) {
         return durability(damage);
     }
 
-    // Or (durability is just alias for damage)
-    public ItemBuilder durability(int durability) {
-        item.setMaterial(item.getMaterial().withDurability((short) durability));
-        return this;
-    }
+    @Override
+    <T> ItemBuilder setMetadata(MetadataKey<T> key, T value);
 
-    public Optional<Item> build() {
-        if (item.getMaterial() != null) {
-            return Optional.of(item);
-        }
+    @Override
+    <T> ItemBuilder setMetadata(MetadataCollectionKey<T> key, Collection<T> value);
 
-        return Optional.empty();
-    }
+    @Override
+    <T> ItemBuilder addToListMetadata(MetadataCollectionKey<T> key, T value);
 }

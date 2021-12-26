@@ -13,11 +13,11 @@ import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.container.Container;
+import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.container.Openable;
 import org.screamingsandals.lib.container.PlayerContainer;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerGamePacketListenerImplAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
@@ -159,17 +159,17 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
 
     @Override
     public Container getEnderChest() {
-        return ItemFactory.wrapContainer(((Player) wrappedObject).getEnderChest()).orElseThrow();
+        return ContainerFactory.wrapContainer(((Player) wrappedObject).getEnderChest()).orElseThrow();
     }
 
     @Override
     public PlayerContainer getPlayerInventory() {
-        return ItemFactory.<PlayerContainer>wrapContainer(((Player) wrappedObject).getInventory()).orElseThrow();
+        return ContainerFactory.<PlayerContainer>wrapContainer(((Player) wrappedObject).getInventory()).orElseThrow();
     }
 
     @Override
     public Optional<Container> getOpenedInventory() {
-        return ItemFactory.wrapContainer(((Player) wrappedObject).getOpenInventory().getTopInventory());
+        return ContainerFactory.wrapContainer(((Player) wrappedObject).getOpenInventory().getTopInventory());
     }
 
     @Override

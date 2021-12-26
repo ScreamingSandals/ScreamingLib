@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.item;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.ItemBlockIdsRemapper;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
@@ -27,7 +28,8 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
 
     private static ItemTypeMapper itemTypeMapper;
 
-    protected ItemTypeMapper() {
+    @ApiStatus.Internal
+    public ItemTypeMapper() {
         if (itemTypeMapper != null) {
             throw new UnsupportedOperationException("ItemTypeMapper is already initialized.");
         }

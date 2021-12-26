@@ -1,7 +1,7 @@
 package org.screamingsandals.lib.bukkit;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -35,10 +35,14 @@ import java.util.function.Function;
 import static org.screamingsandals.lib.utils.reflect.Reflect.has;
 
 @Service
-@RequiredArgsConstructor
 public class BukkitCore extends Core {
     private static BukkitAudiences provider;
-    private final Plugin plugin;
+    @Getter
+    private static Plugin plugin;
+
+    public BukkitCore(Plugin plugin) {
+        BukkitCore.plugin = plugin;
+    }
 
     @OnEnable
     public void onEnable() {

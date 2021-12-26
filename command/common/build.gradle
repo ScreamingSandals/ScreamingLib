@@ -1,4 +1,4 @@
 dependencies {
-    api project(':sender')
+    api project(':shared-core')
     api cloud(CLOUD_VERSION)
 }

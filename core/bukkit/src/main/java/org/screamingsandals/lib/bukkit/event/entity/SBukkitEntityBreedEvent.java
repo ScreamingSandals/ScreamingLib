@@ -7,11 +7,11 @@ import lombok.ToString;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityBreedEvent;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -74,7 +74,7 @@ public class SBukkitEntityBreedEvent implements SEntityBreedEvent, BukkitCancell
     public Item getBredWith() {
         if (!bredWithCached) {
             if (event.getBredWith() != null) {
-                bredWith = ItemFactory.build(event.getBredWith()).orElseThrow();
+                bredWith = new BukkitItem(event.getBredWith());
             }
             bredWithCached = true;
         }

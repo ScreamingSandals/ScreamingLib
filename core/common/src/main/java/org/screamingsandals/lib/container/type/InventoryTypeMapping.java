@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.container.type;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -20,7 +21,8 @@ public abstract class InventoryTypeMapping extends AbstractTypeMapper<InventoryT
     protected final BidirectionalConverter<InventoryTypeHolder> inventoryTypeConverter = BidirectionalConverter.<InventoryTypeHolder>build()
             .registerP2W(InventoryTypeHolder.class, e -> e);
 
-    protected InventoryTypeMapping() {
+    @ApiStatus.Internal
+    public InventoryTypeMapping() {
         if (inventoryTypeMapping != null) {
             throw new UnsupportedOperationException("InventoryTypeMapping is already initialized.");
         }

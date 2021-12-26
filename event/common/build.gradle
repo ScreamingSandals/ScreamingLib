@@ -1,5 +1,0 @@
-dependencies {
-    compileOnly 'com.google.guava:guava:' + GUAVA_VERSION
-
-    api project(":utils-common")
-}

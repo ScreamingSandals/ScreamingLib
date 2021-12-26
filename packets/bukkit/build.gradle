@@ -1,8 +1,4 @@
 dependencies {
-    api project(':packets-vanilla')
-    api project(':utils-bukkit')
-    api project(':core-bukkit')
-    api project(':nms')
     compileOnly paper(PAPER_VERSION)
     compileOnly 'io.netty:netty-all:' + NETTY_VERSION
 }

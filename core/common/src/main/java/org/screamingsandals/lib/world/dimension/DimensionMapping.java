@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.world.dimension;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -19,7 +20,8 @@ public abstract class DimensionMapping extends AbstractTypeMapper<DimensionHolde
     protected final BidirectionalConverter<DimensionHolder> dimensionConverter = BidirectionalConverter.<DimensionHolder>build()
             .registerP2W(DimensionHolder.class, d -> d);
 
-    protected DimensionMapping() {
+    @ApiStatus.Internal
+    public DimensionMapping() {
         if (dimensionMapping != null) {
             throw new UnsupportedOperationException("DimensionMapping is already initialized!");
         }

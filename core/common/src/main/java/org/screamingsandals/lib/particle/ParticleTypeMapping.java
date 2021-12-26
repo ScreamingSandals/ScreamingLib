@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.particle;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -19,7 +20,8 @@ public abstract class ParticleTypeMapping extends AbstractTypeMapper<ParticleTyp
     protected final BidirectionalConverter<ParticleTypeHolder> particleTypeConverter = BidirectionalConverter.<ParticleTypeHolder>build()
             .registerP2W(ParticleTypeHolder.class, d -> d);
 
-    protected ParticleTypeMapping() {
+    @ApiStatus.Internal
+    public ParticleTypeMapping() {
         if (particleTypeMapping != null) {
             throw new UnsupportedOperationException("ParticleTypeMapping is already initialized!");
         }
