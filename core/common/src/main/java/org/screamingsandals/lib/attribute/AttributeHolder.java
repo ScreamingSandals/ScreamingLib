@@ -1,10 +1,11 @@
 package org.screamingsandals.lib.attribute;
 
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.List;
 
-public interface AttributeHolder extends Wrapper{
+public interface AttributeHolder extends Wrapper, RawValueHolder {
     AttributeTypeHolder getAttributeType();
 
     double getBaseValue();

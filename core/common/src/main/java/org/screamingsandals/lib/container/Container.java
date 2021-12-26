@@ -3,12 +3,13 @@ package org.screamingsandals.lib.container;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface Container extends Openable, Wrapper {
+public interface Container extends Openable, Wrapper, RawValueHolder {
     Optional<Item> getItem(int index);
 
     void setItem(int index, Item item);
