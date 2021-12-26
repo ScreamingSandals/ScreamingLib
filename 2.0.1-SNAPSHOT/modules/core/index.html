@@ -276,6 +276,10 @@
         
           
         
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_2">
@@ -771,6 +775,34 @@
     <li class="md-nav__item">
       <a href="../packets/" class="md-nav__link">
         Packets
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../visuals/" class="md-nav__link">
+        Visuals
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sidebar/" class="md-nav__link">
+        Sidebar
       </a>
     </li>
   
@@ -1420,7 +1452,7 @@ Then register the service class in the <code>@Init</code> annotation on the main
 <span class="normal">10</span>
 <span class="normal">11</span>
 <span class="normal">12</span>
-<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExampleEvent</span> <span class="kd">extends</span> <span class="n">SCancellableEvent</span> <span class="p">{</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ExampleEvent</span> <span class="kd">implements</span> <span class="n">SCancellableEvent</span> <span class="p">{</span>
     <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">cancelled</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
 
     <span class="nd">@Override</span>
@@ -1469,14 +1501,6 @@ Then register the service class in the <code>@Init</code> annotation on the main
 <p class="admonition-title">Managing tasks without Tasker</p>
 <p>If you want to manage tasks yourself (without the Tasker library), you can utilize the <code>Server#runSynchronously(Runnable)</code> method to run a task synchronously.</p>
 </div>
-<p>Start with registering the Tasker service class in your plugin's <code>@Init</code> annotation.
-<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span>
-<span class="normal">3</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><code><span class="nd">@Init</span><span class="p">(</span><span class="n">services</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">Tasker</span><span class="p">.</span><span class="na">class</span>
-<span class="p">})</span>
-</code></pre></div>
-</td></tr></table></p>
 <h4 id="normal-task">Normal task<a class="headerlink" href="#normal-task" title="Permanent link">&para;</a></h4>
 <p>So let's say, that we want to create a task to send a message to console every 30 seconds until the server stops/plugin disables.  </p>
 <p>First of all, let's create a task builder, which takes in a <code>Runnable</code>.

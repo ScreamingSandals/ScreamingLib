@@ -30,4 +30,14 @@
          <lastmod>2021-12-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
+    <url>
+         <loc>http://localhost:8000/2.0.1-SNAPSHOT/modules/sidebar/</loc>
+         <lastmod>2021-12-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>http://localhost:8000/2.0.1-SNAPSHOT/modules/visuals/</loc>
+         <lastmod>2021-12-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
 </urlset>

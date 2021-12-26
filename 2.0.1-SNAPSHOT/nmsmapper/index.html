@@ -274,6 +274,10 @@
         
           
         
+          
+        
+          
+        
       
       
         <label class="md-nav__link" for="__nav_2">
@@ -338,6 +342,34 @@
     <li class="md-nav__item">
       <a href="../modules/packets/" class="md-nav__link">
         Packets
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/visuals/" class="md-nav__link">
+        Visuals
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/sidebar/" class="md-nav__link">
+        Sidebar
       </a>
     </li>
   
@@ -601,8 +633,8 @@ We can see that we got a new static method, named <code>getType()</code>, which 
         <span class="o">.</span><span class="na">reqMethod</span><span class="o">(</span><span class="s1">&#39;getZ&#39;</span><span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>
-</td></tr></table>
-This will generate access methods for one constructor, three fields and three methods.
+</td></tr></table></p>
+<p>This will generate access methods for one constructor, three fields and three methods.
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
 <span class="normal"> 3</span>
@@ -681,7 +713,11 @@ A generated access method for a method will always be called <code>getMethod&lt;
 <span class="o">}</span>
 </code></pre></div>
 </td></tr></table>
-Parameters can be classes (e.g. <code>String.class</code>, in groovy you don't have to specify the .class suffix), strings (<code>java.lang.String</code>) or an another requested class (in this example it's Level).  </p>
+Parameters can be classes (e.g. <code>String.class</code>, in groovy you don't have to specify the .class suffix), strings (<code>java.lang.String</code>) or an another requested class (in this example it's Level).</p>
+<div class="admonition tip">
+<p class="admonition-title">Arrays of requested classes</p>
+<p>You can create an array of a requested class by calling <code>.array()</code> on it, useful for defining parameters of a NMS type.</p>
+</div>
 <p>You can also specify an another NMS class as a parameter without requesting it, in this case you will have to add a prefix: <code>&amp;</code>
 <table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
@@ -761,7 +797,7 @@ Available mapping types are <code>mojang, searge, spigot, obfuscated</code>. Moj
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../modules/packets/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Packets" rel="prev">
+        <a href="../modules/sidebar/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Sidebar" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -770,7 +806,7 @@ Available mapping types are <code>mojang, searge, spigot, obfuscated</code>. Moj
               <span class="md-footer__direction">
                 Previous
               </span>
-              Packets
+              Sidebar
             </div>
           </div>
         </a>
