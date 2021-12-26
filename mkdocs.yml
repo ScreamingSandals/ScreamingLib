@@ -66,4 +66,6 @@ nav:
     - Command: modules/command.md
     - NPC: modules/npc.md
     - Packets: modules/packets.md
+    - Visuals: modules/visuals.md
+    - Sidebar: modules/sidebar.md
   - NMSMapper: nmsmapper.md

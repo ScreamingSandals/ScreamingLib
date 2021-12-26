@@ -1,5 +1,4 @@
 # Home
-
 ScreamingLib is a multiplatform library for creating Minecraft plugins/extensions.
 
 ## Module list
@@ -13,8 +12,8 @@ ScreamingLib is a multiplatform library for creating Minecraft plugins/extension
 * [Packets](modules/packets.md)
 * Placeholders
 * [Command](modules/command.md)
-* Scoreboards and sidebars
-* Clickable signs
+* [Sidebar](modules/sidebar.md) (includes scoreboards)
+* Signs
 
 ### Modules for proxies
 * Core (proxy)
@@ -22,10 +21,9 @@ ScreamingLib is a multiplatform library for creating Minecraft plugins/extension
 * [Command](modules/command.md)
 
 ## Compiling
-
 ### Requirements
 
-* JDK 11 and higher
+* JDK 17 or higher
 * Internet connection
 
 Clone the [repo](https://github.com/ScreamingSandals/ScreamingLib) and run `./gradlew screamCompile`.

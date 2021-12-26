@@ -349,7 +349,7 @@ EventManager.fireAsync(new ExampleAsynchronousEvent()).thenAccept(event -> {
 A synchronous event needs to implement the `SEvent` class (or the `SCancellableEvent` class, if cancellable).
 
 ```java
-public class ExampleEvent extends SCancellableEvent {
+public class ExampleEvent implements SCancellableEvent {
     private boolean cancelled = false;
 
     @Override
@@ -388,13 +388,6 @@ public class ExampleEvent implements SCancellableAsyncEvent {
 !!! tip "Managing tasks without Tasker"
 
     If you want to manage tasks yourself (without the Tasker library), you can utilize the `Server#runSynchronously(Runnable)` method to run a task synchronously.
-
-Start with registering the Tasker service class in your plugin's `@Init` annotation.
-```java
-@Init(services = {
-    Tasker.class
-})
-```
 
 #### Normal task
 So let's say, that we want to create a task to send a message to console every 30 seconds until the server stops/plugin disables.  

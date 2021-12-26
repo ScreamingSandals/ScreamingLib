@@ -94,6 +94,7 @@ nmsGen {
         .reqMethod('getZ')
 }
 ```
+
 This will generate access methods for one constructor, three fields and three methods.
 ```java
 public class RotationsAccessor {
@@ -142,7 +143,11 @@ nmsGen {
         .reqMethod('setSmall', boolean)
 }
 ```
-Parameters can be classes (e.g. `String.class`, in groovy you don't have to specify the .class suffix), strings (`java.lang.String`) or an another requested class (in this example it's Level).  
+Parameters can be classes (e.g. `String.class`, in groovy you don't have to specify the .class suffix), strings (`java.lang.String`) or an another requested class (in this example it's Level).
+
+!!! tip "Arrays of requested classes"
+
+    You can create an array of a requested class by calling `.array()` on it, useful for defining parameters of a NMS type.
 
 You can also specify an another NMS class as a parameter without requesting it, in this case you will have to add a prefix: `&`
 ```groovy
