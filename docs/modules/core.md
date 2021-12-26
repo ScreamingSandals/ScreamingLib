@@ -47,7 +47,7 @@ Supported platforms are: `bukkit, minestom, sponge`
     </dependency>
     <dependency>
         <groupId>org.screamingsandals.lib</groupId>
-        <artifactId>screaming-annotation</artifactId>
+        <artifactId>annotation</artifactId>
         <version>LATEST_VERSION_HERE</version>
         <scope>provided</scope>
     </dependency>
@@ -70,7 +70,7 @@ repositories {
 
 dependencies {
     implementation 'org.screamingsandals.lib:core-YOUR_PLATFORM:LATEST_VERSION_HERE'
-    annotationProcessor 'org.screamingsandals.lib:screaming-annotation:LATEST_VERSION_HERE'
+    annotationProcessor 'org.screamingsandals.lib:annotation:LATEST_VERSION_HERE'
 }
 ```
 
@@ -282,4 +282,334 @@ PlayerMapper.getConsoleSender().sendMessage("Is player online? " + Boolean.toStr
 If you want to convert a player's name to PlayerWrapper, utilize the `Optional<PlayerWrapper> PlayerMapper#getPlayer(String)` method.
 ```java
 PlayerMapper.getPlayer("Misat11").ifPresent(player -> player.sendMessage("Hello misat!"));
+```
+
+### Handling events
+!!! warning "Platform events"
+
+    ScreamingLib `EventManager` is **not** listening to non-standard events fired through the event manager of the platform you're running on!
+
+
+#### OnEvent annotation
+First of all, start by making a simple service class, like this:
+```java
+@Service
+public class ExampleService {
+    // Service class
+}
+```
+Then create a new public method that returns void, has an event parameter and annotate it with `@OnEvent`. It is possible to specify the priority field and the ignoreCancelled field in the annotation.
+```java
+@Service
+public class ExampleService {
+    @OnEvent(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerInteract(SPlayerInteractEvent event) {
+        // Event handling logic
+    }
+}
+```
+Then register the service class in the `@Init` annotation on the main plugin class, and you're done!
+
+#### EventManager registration
+You can also listen to events by registering a `Consumer<AbstractEvent>` with the `EventManager`.
+```java
+EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, event -> PlayerMapper.getConsoleSender().sendMessage("Player " + event.getPlayer() + " has left."));
+```
+
+### Firing events
+!!! warning "Platform events"
+
+    ScreamingLib `EventManager` is **not** firing events to the event manager of the platform you're running on!
+
+
+#### Synchronously
+You can fire an event synchronously with the `<T extends SEvent> T EventManager#fire(T)` method.
+```java
+final ExampleEvent event = EventManager.fire(new ExampleEvent());
+// if your event is cancellable, you can check for it
+if (!event.isCancelled()) {
+    PlayerMapper.getConsoleSender().sendMessage("Hello World!");
+}
+```
+
+#### Asynchronously
+You can fire an event asynchronously with the `<T extends SAsyncEvent> CompletableFuture<T> EventManager#fireAsync(T)` method.
+```java
+EventManager.fireAsync(new ExampleAsynchronousEvent()).thenAccept(event -> {
+    // if your event is cancellable, you can check for it
+    if (!event.isCancelled()) {
+        PlayerMapper.getConsoleSender().sendMessage("Hello World!");
+    }
+});
+```
+
+### Creating events
+
+#### Synchronous
+A synchronous event needs to implement the `SEvent` class (or the `SCancellableEvent` class, if cancellable).
+
+```java
+public class ExampleEvent extends SCancellableEvent {
+    private boolean cancelled = false;
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+}
+```
+
+#### Asynchronous
+An asynchronous event needs to implement the `SAsyncEvent` class (or the `SCancellableAsyncEvent`, if cancellable).
+
+```java
+public class ExampleEvent implements SCancellableAsyncEvent {
+    private boolean cancelled = false;
+
+    @Override
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+}
+```
+
+### Running tasks
+
+!!! tip "Managing tasks without Tasker"
+
+    If you want to manage tasks yourself (without the Tasker library), you can utilize the `Server#runSynchronously(Runnable)` method to run a task synchronously.
+
+Start with registering the Tasker service class in your plugin's `@Init` annotation.
+```java
+@Init(services = {
+    Tasker.class
+})
+```
+
+#### Normal task
+So let's say, that we want to create a task to send a message to console every 30 seconds until the server stops/plugin disables.  
+
+First of all, let's create a task builder, which takes in a `Runnable`.
+```java
+Tasker.build(() -> PlayerMapper.getConsoleSender().sendMessage("Hello World!"));
+```
+Then, let's add the repeat time period.
+```java
+Tasker.build(() -> PlayerMapper.getConsoleSender().sendMessage("Hello World!")).repeat(30, TaskerTime.SECONDS);
+```
+Now let's start the task.
+```java
+Tasker.build(() -> PlayerMapper.getConsoleSender().sendMessage("Hello World!")).repeat(30, TaskerTime.SECONDS).start();
+```
+And you're done!
+
+#### Self-cancelling task
+Let's create a task which sends a message to the console 10 times and then stops.  
+
+First of all, let's create a task builder, which takes in a `Function<TaskBase, Runnable>`.
+```java
+final AtomicInteger count = new AtomicInteger(0);
+Tasker.build(taskBase -> () -> {
+    if (count.get() >= 10) {
+        taskBase.cancel();
+        return;
+    }
+    PlayerMapper.getConsoleSender().sendMessage("Hello World!");
+    count.getAndIncrement();
+});
+``` 
+Then, let's run the task right away.
+```java
+final AtomicInteger count = new AtomicInteger(0);
+Tasker.build(taskBase -> () -> {
+    if (count.get() >= 10) {
+        taskBase.cancel();
+        return;
+    }
+    PlayerMapper.getConsoleSender().sendMessage("Hello World!");
+    count.getAndIncrement();
+}).afterOneTick().start();
+```
+Congrats, you've just made a self-cancelling task!
+
+### Making your first plugin
+!!! warning "Adventure"
+
+    If you're experiencing errors related to [Adventure](https://github.com/KyoriPowered/adventure), make sure to relocate the `net.kyori.adventure` package!
+
+
+#### Creating the main plugin class
+Start with extending the `PluginContainer` class, like this:
+```java
+public class ExamplePlugin extends PluginContainer {
+    private static ExamplePlugin INSTANCE;
+
+    public ExamplePlugin() {
+        INSTANCE = this;
+    }
+
+    // factory method for easy retrieval of the plugin instance
+    // ExamplePlugin.getInstance()
+    public static ExamplePlugin getInstance() {
+        if (INSTANCE == null) {
+            throw new UnsupportedOperationException("Plugin has not been initialized yet!");
+        }
+        return INSTANCE;
+    }
+
+    @Override
+    public void load() {
+        // Plugin load logic
+    }
+
+    @Override
+    public void enable() {
+        // Plugin enable logic
+    }
+
+    @Override
+    public void disable() {
+        // Plugin disable logic
+    }
+}
+```
+After that, add the `@Plugin` and `@Init` (only if you use SLib services) annotations.
+```java
+@Plugin(
+        id = "ExamplePlugin",
+        name = "ExamplePlugin",
+        authors = {"ScreamingSandals"},
+        version = "0.0.1-SNAPSHOT"
+)
+@Init(services = {
+        ExampleService.class
+})
+public class ExamplePlugin extends PluginContainer {
+    private static ExamplePlugin INSTANCE;
+
+    public ExamplePlugin() {
+        INSTANCE = this;
+    }
+
+    // factory method for easy retrieval of the plugin instance
+    // ExamplePlugin.getInstance()
+    public static ExamplePlugin getInstance() {
+        if (INSTANCE == null) {
+            throw new UnsupportedOperationException("Plugin has not been initialized yet!");
+        }
+        return INSTANCE;
+    }
+
+    @Override
+    public void load() {
+        // Plugin load logic
+    }
+
+    @Override
+    public void enable() {
+        // Plugin enable logic
+    }
+
+    @Override
+    public void disable() {
+        // Plugin disable logic
+    }
+}
+```
+If you want to depend on some plugin(s), you can add the `@PluginDependencies` annotation.
+```java
+@Plugin(
+        id = "ExamplePlugin",
+        name = "ExamplePlugin",
+        authors = {"ScreamingSandals"},
+        version = "0.0.1-SNAPSHOT"
+)
+@PluginDependencies(platform = PlatformType.BUKKIT, dependencies = {
+    "DependencyPlugin"
+}, softDependencies = {
+    "SoftDependencyPlugin"
+}, loadBefore = {
+    "LoadBeforePlugin"
+})
+@Init(services = {
+        ExampleService.class
+})
+public class ExamplePlugin extends PluginContainer {
+    private static ExamplePlugin INSTANCE;
+
+    public ExamplePlugin() {
+        INSTANCE = this;
+    }
+
+    // factory method for easy retrieval of the plugin instance
+    // ExamplePlugin.getInstance()
+    public static ExamplePlugin getInstance() {
+        if (INSTANCE == null) {
+            throw new UnsupportedOperationException("Plugin has not been initialized yet!");
+        }
+        return INSTANCE;
+    }
+    
+    @Override
+    public void load() {
+        // Plugin load logic
+    }
+
+    @Override
+    public void enable() {
+        // Plugin enable logic
+    }
+
+    @Override
+    public void disable() {
+        // Plugin disable logic
+    }
+}
+```
+And that's it!
+
+### Interacting with other plugins
+There's the `PluginManager` class for that, let me show you an example.
+
+For all next steps, you will need the plugin key, which you can get with the `PluginKey PluginManager#createKey(String)`  method, like this:
+```java
+// takes the plugin name
+final PluginKey key = PluginManager.createKey("ExamplePlugin");
+```
+
+#### Checking if a plugin is enabled
+For checking if a plugin is enabled, you can use the `boolean PluginManager#isEnabled(PluginKey)` method.
+
+```java
+if (PluginManager.isEnabled(key)) {
+    PlayerMapper.getConsoleSender().sendMessage("Plugin is enabled!");
+} else {
+    PlayerMapper.getConsoleSender().sendMessage("Plugin is not enabled!");
+}
+```
+
+#### Getting the plugin's main class
+For getting the plugin's main class, you can use the `@Nullable Object PluginManager#getPlatformClass(PluginKey)` method.
+
+```java
+final ExamplePlugin plugin = (ExamplePlugin) PluginManager.getPlatformClass(key);
+```
+
+#### Getting all plugins on the server
+For getting all plugins on the server, you can use the `List<PluginDescription> PluginManager#getAllPlugins()` method.
+
+```java
+for (final PluginDescription plugin : PluginManager.getAllPlugins()) {
+    PlayerMapper.getConsoleSender().sendMessage(plugin.getName());
+}
 ```

@@ -63,9 +63,6 @@ nav:
   - Home: index.md
   - Modules:
     - Core: modules/core.md
-    - Event: modules/event.md
-    - Plugin: modules/plugin.md
-    - Tasker: modules/tasker.md
     - Command: modules/command.md
     - NPC: modules/npc.md
     - Packets: modules/packets.md

@@ -6,8 +6,6 @@ ScreamingLib is a multiplatform library for creating Minecraft plugins/extension
 
 ### Modules for servers
 * [Core](modules/core.md) (server)
-* [Tasker](modules/tasker.md)
-* [Event](modules/event.md)
 * Hologram
 * Healthindicator
 * Lang
@@ -20,8 +18,6 @@ ScreamingLib is a multiplatform library for creating Minecraft plugins/extension
 
 ### Modules for proxies
 * Core (proxy)
-* [Tasker](modules/tasker.md)
-* [Event](modules/event.md)
 * Lang
 * [Command](modules/command.md)
 

@@ -34,7 +34,7 @@ Supported platforms are: `bukkit`
     </dependency>
     <dependency>
         <groupId>org.screamingsandals.lib</groupId>
-        <artifactId>screaming-annotation</artifactId>
+        <artifactId>annotation</artifactId>
         <version>LATEST_VERSION_HERE</version>
         <scope>provided</scope>
     </dependency>
@@ -56,7 +56,7 @@ repositories {
 
 dependencies {
     implementation 'org.screamingsandals.lib:packets-YOUR_PLATFORM:LATEST_VERSION_HERE'
-    annotationProcessor 'org.screamingsandals.lib:screaming-annotation:LATEST_VERSION_HERE'
+    annotationProcessor 'org.screamingsandals.lib:annotation:LATEST_VERSION_HERE'
 }
 ```
 
