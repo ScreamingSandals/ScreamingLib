@@ -480,11 +480,6 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         }
 
         final var toSend = new LinkedList<AbstractPacket>();
-        if (itemEntity != null && rotationTask != null) {
-            rotationTask.cancel();
-            rotationTask = null;
-        }
-
         if (itemEntity != null || entitiesOnLines.size() > 0) {
             toSend.add(getFullDestroyPacket());
             update(player, toSend, false);
