@@ -6,8 +6,8 @@ import org.screamingsandals.lib.item.Item;
 
 /**
  * An interface representing a player's inventory.
- *
- * A visualization of slot indexes in a player inventory:
+ * <p>
+ * A visualization of slot indexes in a player inventory: <br>
  * <img src="https://i.imgur.com/wZ1B8jC.png">
  */
 public interface PlayerContainer extends Container {
