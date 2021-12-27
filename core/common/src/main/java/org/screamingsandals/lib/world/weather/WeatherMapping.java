@@ -49,11 +49,4 @@ public abstract class WeatherMapping extends AbstractTypeMapper<WeatherHolder> {
         }
         return Collections.unmodifiableList(weatherMapping.values);
     }
-
-    public static <T> T convertWeatherHolder(WeatherHolder holder, Class<T> newType) {
-        if (weatherMapping == null) {
-            throw new UnsupportedOperationException("WeatherMapping is not initialized yet.");
-        }
-        return weatherMapping.weatherConverter.convert(holder, newType);
-    }
 }

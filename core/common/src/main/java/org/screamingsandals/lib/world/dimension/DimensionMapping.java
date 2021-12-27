@@ -49,11 +49,4 @@ public abstract class DimensionMapping extends AbstractTypeMapper<DimensionHolde
         }
         return Collections.unmodifiableList(dimensionMapping.values);
     }
-
-    public static <T> T convertDimensionHolder(DimensionHolder holder, Class<T> newType) {
-        if (dimensionMapping == null) {
-            throw new UnsupportedOperationException("DimensionMapping is not initialized yet.");
-        }
-        return dimensionMapping.dimensionConverter.convert(holder, newType);
-    }
 }

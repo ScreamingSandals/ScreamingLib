@@ -49,20 +49,4 @@ public abstract class GameModeMapping extends AbstractTypeMapper<GameModeHolder>
         }
         return Collections.unmodifiableList(gameModeMapping.values);
     }
-
-    public static <T> T convertGameModeHolder(GameModeHolder holder, Class<T> newType) {
-        if (gameModeMapping == null) {
-            throw new UnsupportedOperationException("GameModeMapping is not initialized yet.");
-        }
-        return gameModeMapping.gameModeConverter.convert(holder, newType);
-    }
-
-    public static int getId(GameModeHolder holder) {
-        if (gameModeMapping == null) {
-            throw new UnsupportedOperationException("GameModeMapping is not initialized yet.");
-        }
-        return gameModeMapping.getId0(holder);
-    }
-
-    protected abstract int getId0(GameModeHolder holder);
 }
