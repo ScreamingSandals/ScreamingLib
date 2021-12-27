@@ -105,6 +105,9 @@ public class BlockTypeHolder implements ComparableWrapper, ParticleData {
         return Optional.empty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return BlockTypeMapper.convertBlockTypeHolder(this, type);

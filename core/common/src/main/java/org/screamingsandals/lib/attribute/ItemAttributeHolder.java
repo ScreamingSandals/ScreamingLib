@@ -17,6 +17,9 @@ public class ItemAttributeHolder implements Wrapper {
     @Nullable
     private final EquipmentSlotHolder slot;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return AttributeMapping.convertItemAttributeHolder(this, type);

@@ -76,6 +76,9 @@ public class NamespacedMappingKey implements MappingKey, ComparableWrapper, Name
         return namespace + ":" + key;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

@@ -39,6 +39,9 @@ public class FireworkEffectHolder implements Wrapper {
         return new FireworkEffectHolder(this.platformName, this.colors, this.fadeColors, this.flicker, trail);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return FireworkEffectMapping.convertFireworkEffectHolder(this, type);

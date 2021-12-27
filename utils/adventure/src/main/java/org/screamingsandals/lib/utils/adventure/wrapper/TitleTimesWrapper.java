@@ -13,6 +13,9 @@ public final class TitleTimesWrapper implements Wrapper {
         return times;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

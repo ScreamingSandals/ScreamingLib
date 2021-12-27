@@ -46,6 +46,9 @@ public class PotionEffectHolder implements ComparableWrapper {
         return new PotionEffectHolder(this.platformName, this.duration, this.amplifier, this.ambient, this.particles, icon);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return PotionEffectMapping.convertPotionEffectHolder(this, type);

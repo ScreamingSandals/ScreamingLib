@@ -19,6 +19,9 @@ public class ParticleTypeHolder implements ComparableWrapper {
         return ParticleTypeMapping.getExpectedParticleDataClass(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return ParticleTypeMapping.convertParticleTypeHolder(this, type);

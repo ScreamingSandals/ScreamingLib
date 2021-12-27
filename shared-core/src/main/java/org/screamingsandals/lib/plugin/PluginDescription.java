@@ -27,6 +27,9 @@ public class PluginDescription implements Wrapper {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

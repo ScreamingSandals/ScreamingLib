@@ -17,6 +17,9 @@ public class FinalOfflinePlayerWrapper implements OfflinePlayerWrapper {
         return Optional.ofNullable(name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return PlayerMapper.convertOfflinePlayer(this, type);

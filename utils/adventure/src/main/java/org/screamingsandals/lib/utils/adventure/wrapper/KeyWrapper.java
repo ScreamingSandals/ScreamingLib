@@ -15,6 +15,9 @@ public final class KeyWrapper implements Wrapper {
         return key;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

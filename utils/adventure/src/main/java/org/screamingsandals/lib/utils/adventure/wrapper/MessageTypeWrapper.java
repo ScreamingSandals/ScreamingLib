@@ -16,6 +16,9 @@ public final class MessageTypeWrapper implements Wrapper {
         return messageType;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

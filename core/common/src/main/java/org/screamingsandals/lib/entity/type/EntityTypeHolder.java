@@ -16,6 +16,9 @@ import java.util.Optional;
 public class EntityTypeHolder implements ComparableWrapper {
     private final String platformName;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return EntityTypeMapping.convertEntityTypeHolder(this, type);

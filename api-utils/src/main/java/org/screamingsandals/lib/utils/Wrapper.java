@@ -7,7 +7,7 @@ import java.util.Optional;
  */
 public interface Wrapper {
     /**
-     * Converts the WrappedObject to represent a subclass of the specified class object.
+     * Converts the wrapped object to represent a subclass of the specified class object.
      *
      * @param type the class to convert the wrapped object to
      * @param <T> the type to cast the class object of the wrapped object to
@@ -16,7 +16,7 @@ public interface Wrapper {
     <T> T as(Class<T> type);
 
     /**
-     * Converts the WrappedObject to represent a subclass of the specified class object.
+     * Converts the wrapped object to represent a subclass of the specified class object.
      * Returns {@link Optional#empty()} if failed to do so.
      *
      * @param type the class to convert the wrapped object to

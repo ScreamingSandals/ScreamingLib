@@ -12,6 +12,9 @@ public class AttributeModifierHolder implements Wrapper {
     private final double amount;
     private final Operation operation;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return AttributeMapping.convertAttributeModifierHolder(this, type);

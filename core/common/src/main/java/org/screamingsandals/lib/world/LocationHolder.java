@@ -200,6 +200,9 @@ public class LocationHolder implements Wrapper, Serializable {
         return subtract(blockFace.getBlockDirection().multiply(distance));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return LocationMapper.convert(this, type);

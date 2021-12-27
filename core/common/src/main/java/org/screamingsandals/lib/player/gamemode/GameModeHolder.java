@@ -13,6 +13,9 @@ import java.util.Optional;
 public class GameModeHolder implements Wrapper {
     private final String platformName;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return GameModeMapping.convertGameModeHolder(this, type);

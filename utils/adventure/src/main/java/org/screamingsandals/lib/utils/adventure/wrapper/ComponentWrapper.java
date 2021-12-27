@@ -23,6 +23,9 @@ public final class ComponentWrapper implements ComponentLike, Wrapper {
         return new ComponentWrapper(component.asComponent());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

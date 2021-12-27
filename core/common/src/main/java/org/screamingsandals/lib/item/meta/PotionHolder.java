@@ -17,6 +17,9 @@ import java.util.Optional;
 public class PotionHolder implements ComparableWrapper {
     private final String platformName;
 
+    /**
+     * {@inheritDoc}
+     */
     public <R> R as(Class<R> type) {
         return PotionMapping.convertPotionHolder(this, type);
     }

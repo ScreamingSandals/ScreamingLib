@@ -13,6 +13,9 @@ import java.util.Optional;
 public class GameRuleHolder implements ComparableWrapper {
     private final String platformName;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return GameRuleMapping.convertGameRuleHolder(this, type);

@@ -11,6 +11,9 @@ public class DustTransition implements ParticleData {
     private final RGBLike toColor;
     private final float size;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         throw new UnsupportedOperationException("Not supported.");
