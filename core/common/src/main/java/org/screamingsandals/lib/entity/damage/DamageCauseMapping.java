@@ -49,11 +49,4 @@ public abstract class DamageCauseMapping extends AbstractTypeMapper<DamageCauseH
         }
         return Collections.unmodifiableList(damageCauseMapping.values);
     }
-
-    public static <T> T convertDamageCauseHolder(DamageCauseHolder holder, Class<T> newType) {
-        if (damageCauseMapping == null) {
-            throw new UnsupportedOperationException("DamageCauseMapping is not initialized yet.");
-        }
-        return damageCauseMapping.damageCauseConverter.convert(holder, newType);
-    }
 }

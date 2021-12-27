@@ -52,20 +52,6 @@ public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHol
         return Collections.unmodifiableList(entityTypeMapping.values);
     }
 
-    public static <T> T convertEntityTypeHolder(EntityTypeHolder holder, Class<T> newType) {
-        if (entityTypeMapping == null) {
-            throw new UnsupportedOperationException("EntityTypeMapping is not initialized yet.");
-        }
-        return entityTypeMapping.entityTypeConverter.convert(holder, newType);
-    }
-
-    public static boolean isAlive(EntityTypeHolder entityTypeHolder) {
-        if (entityTypeMapping == null) {
-            throw new UnsupportedOperationException("EntityTypeMapping is not initialized yet.");
-        }
-        return entityTypeMapping.isAlive0(entityTypeHolder);
-    }
-
     @OnPostConstruct
     public void legacyMapping() {
         // Flattening <-> Bukkit
@@ -90,6 +76,4 @@ public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHol
 
         // TODO check legacy
     }
-
-    public abstract boolean isAlive0(EntityTypeHolder entityTypeHolder);
 }

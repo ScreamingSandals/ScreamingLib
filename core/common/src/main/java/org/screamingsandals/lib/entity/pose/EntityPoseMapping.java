@@ -49,11 +49,4 @@ public abstract class EntityPoseMapping extends AbstractTypeMapper<EntityPoseHol
         }
         return Collections.unmodifiableList(entityPoseMapping.values);
     }
-
-    public static <T> T convertEntityPoseHolder(EntityPoseHolder holder, Class<T> newType) {
-        if (entityPoseMapping == null) {
-            throw new UnsupportedOperationException("EntityPoseMapping is not initialized yet.");
-        }
-        return entityPoseMapping.entityPoseConverter.convert(holder, newType);
-    }
 }

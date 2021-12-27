@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.particle;
 
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -89,22 +88,4 @@ public abstract class ParticleTypeMapping extends AbstractTypeMapper<ParticleTyp
         }
         return Collections.unmodifiableList(particleTypeMapping.values);
     }
-
-    public static <T> T convertParticleTypeHolder(ParticleTypeHolder holder, Class<T> newType) {
-        if (particleTypeMapping == null) {
-            throw new UnsupportedOperationException("ParticleTypeMapping is not initialized yet.");
-        }
-        return particleTypeMapping.particleTypeConverter.convert(holder, newType);
-    }
-
-    @Nullable
-    public static Class<? extends ParticleData> getExpectedParticleDataClass(ParticleTypeHolder particle) {
-        if (particleTypeMapping == null) {
-            throw new UnsupportedOperationException("ParticleTypeMapping is not initialized yet.");
-        }
-        return particleTypeMapping.getExpectedParticleDataClass0(particle);
-    }
-
-    @Nullable
-    protected abstract Class<? extends ParticleData> getExpectedParticleDataClass0(ParticleTypeHolder particle);
 }
