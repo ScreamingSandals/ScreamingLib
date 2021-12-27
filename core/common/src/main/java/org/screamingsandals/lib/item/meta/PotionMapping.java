@@ -15,7 +15,6 @@ import java.util.Optional;
 public abstract class PotionMapping extends AbstractTypeMapper<PotionHolder> {
     private static PotionMapping potionMapping;
     protected BidirectionalConverter<PotionHolder> potionConverter = BidirectionalConverter.<PotionHolder>build()
-            .registerW2P(String.class, PotionHolder::getPlatformName)
             .registerP2W(PotionHolder.class, e -> e);
 
     protected PotionMapping() {
@@ -65,12 +64,5 @@ public abstract class PotionMapping extends AbstractTypeMapper<PotionHolder> {
             throw new UnsupportedOperationException("PotionMapping is not initialized yet.");
         }
         return Collections.unmodifiableList(potionMapping.values);
-    }
-
-    public static <T> T convertPotionHolder(PotionHolder holder, Class<T> newType) {
-        if (potionMapping == null) {
-            throw new UnsupportedOperationException("Potion mapping is not initialized yet.");
-        }
-        return potionMapping.potionConverter.convert(holder, newType);
     }
 }

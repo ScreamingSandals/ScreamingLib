@@ -7,7 +7,7 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 import java.util.Arrays;
 
 public class BukkitGameModeHolder extends BasicWrapper<GameMode> implements GameModeHolder {
-    protected BukkitGameModeHolder(GameMode wrappedObject) {
+    public BukkitGameModeHolder(GameMode wrappedObject) {
         super(wrappedObject);
     }
 

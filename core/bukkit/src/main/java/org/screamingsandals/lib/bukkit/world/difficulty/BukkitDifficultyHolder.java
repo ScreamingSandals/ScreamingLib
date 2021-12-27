@@ -7,7 +7,7 @@ import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import java.util.Arrays;
 
 public class BukkitDifficultyHolder extends BasicWrapper<Difficulty> implements DifficultyHolder {
-    protected BukkitDifficultyHolder(Difficulty wrappedObject) {
+    public BukkitDifficultyHolder(Difficulty wrappedObject) {
         super(wrappedObject);
     }
 

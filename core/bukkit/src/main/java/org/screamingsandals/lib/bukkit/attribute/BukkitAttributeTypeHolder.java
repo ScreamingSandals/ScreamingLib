@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class BukkitAttributeTypeHolder extends BasicWrapper<Attribute> implements AttributeTypeHolder {
 
-    protected BukkitAttributeTypeHolder(Attribute wrappedObject) {
+    public BukkitAttributeTypeHolder(Attribute wrappedObject) {
         super(wrappedObject);
     }
 

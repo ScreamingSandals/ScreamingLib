@@ -7,7 +7,7 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 import java.util.Arrays;
 
 public class BukkitEquipmentSlotHolder extends BasicWrapper<EquipmentSlot> implements EquipmentSlotHolder {
-    protected BukkitEquipmentSlotHolder(EquipmentSlot wrappedObject) {
+    public BukkitEquipmentSlotHolder(EquipmentSlot wrappedObject) {
         super(wrappedObject);
     }
 

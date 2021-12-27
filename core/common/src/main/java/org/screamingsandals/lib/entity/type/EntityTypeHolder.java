@@ -11,6 +11,15 @@ import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder {
+
+    /**
+     * Use fluent variant!
+     */
+    @Deprecated(forRemoval = true)
+    default String getPlatformName() {
+        return platformName();
+    }
+
     String platformName();
 
     boolean isAlive();

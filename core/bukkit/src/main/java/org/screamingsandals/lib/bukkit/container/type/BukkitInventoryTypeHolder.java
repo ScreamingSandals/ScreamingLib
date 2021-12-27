@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class BukkitInventoryTypeHolder extends BasicWrapper<InventoryType> implements InventoryTypeHolder {
 
-    protected BukkitInventoryTypeHolder(InventoryType wrappedObject) {
+    public BukkitInventoryTypeHolder(InventoryType wrappedObject) {
         super(wrappedObject);
     }
 

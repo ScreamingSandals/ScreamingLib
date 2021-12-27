@@ -9,7 +9,7 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 import java.util.Arrays;
 
 public class BukkitParticleTypeHolder extends BasicWrapper<Particle> implements ParticleTypeHolder {
-    protected BukkitParticleTypeHolder(Particle wrappedObject) {
+    public BukkitParticleTypeHolder(Particle wrappedObject) {
         super(wrappedObject);
     }
 

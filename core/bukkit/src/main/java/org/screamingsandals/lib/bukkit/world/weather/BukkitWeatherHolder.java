@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class BukkitWeatherHolder extends BasicWrapper<WeatherType> implements WeatherHolder {
 
-    protected BukkitWeatherHolder(WeatherType wrappedObject) {
+    public BukkitWeatherHolder(WeatherType wrappedObject) {
         super(wrappedObject);
     }
 

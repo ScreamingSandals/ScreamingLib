@@ -42,18 +42,17 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
         if (holderOptional.isPresent()) {
             var holder = holderOptional.get();
             return holder
-                    .duration(durationNode.getInt(holder.getDuration()))
-                    .amplifier(amplifierNode.getInt(holder.getAmplifier()))
-                    .ambient(ambientNode.getBoolean(holder.isAmbient()))
-                    .particles(particlesNode.getBoolean(node.node("has-particles").getBoolean(holder.isParticles()))) // older bw shop support
-                    .icon(iconNode.getBoolean(node.node("has-icon").getBoolean(holder.isIcon()))); // older bw shop support
+                    .withDuration(durationNode.getInt(holder.duration()))
+                    .withAmplifier(amplifierNode.getInt(holder.amplifier()))
+                    .withAmbient(ambientNode.getBoolean(holder.ambient()))
+                    .withParticles(particlesNode.getBoolean(node.node("has-particles").getBoolean(holder.particles()))) // older bw shop support
+                    .withIcon(iconNode.getBoolean(node.node("has-icon").getBoolean(holder.icon()))); // older bw shop support
         }
         return null;
     };
     private static PotionEffectMapping potionEffectMapping;
 
     protected BidirectionalConverter<PotionEffectHolder> potionEffectConverter = BidirectionalConverter.<PotionEffectHolder>build()
-            .registerW2P(String.class, PotionEffectHolder::getPlatformName)
             .registerP2W(PotionEffectHolder.class, e -> e)
             .registerP2W(ConfigurationNode.class, CONFIGURATE_METHOD)
             .registerP2W(Map.class, map -> {
@@ -100,7 +99,7 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
                         } catch (Throwable t) {
                             duration = RomanToDecimal.romanToDecimal(duration_str);
                         }
-                        return Optional.of(potionEffectMapping.mapping.get(mappingKey).duration(duration));
+                        return Optional.of(potionEffectMapping.mapping.get(mappingKey).withDuration(duration));
                     } else {
                         return Optional.of(potionEffectMapping.mapping.get(mappingKey));
                     }
@@ -138,12 +137,5 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
         mapAlias("JUMP_BOOST", "JUMP");
         mapAlias("NAUSEA", "CONFUSION");
         mapAlias("RESISTANCE", "DAMAGE_RESISTANCE");
-    }
-
-    public static <T> T convertPotionEffectHolder(PotionEffectHolder holder, Class<T> newType) {
-        if (potionEffectMapping == null) {
-            throw new UnsupportedOperationException("PotionEffect mapping is not initialized yet.");
-        }
-        return potionEffectMapping.potionEffectConverter.convert(holder, newType);
     }
 }

@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class BukkitDamageCauseHolder extends BasicWrapper<EntityDamageEvent.DamageCause> implements DamageCauseHolder {
 
-    protected BukkitDamageCauseHolder(EntityDamageEvent.DamageCause wrappedObject) {
+    public BukkitDamageCauseHolder(EntityDamageEvent.DamageCause wrappedObject) {
         super(wrappedObject);
     }
 

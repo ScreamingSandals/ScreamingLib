@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class BukkitEntityPoseHolder extends BasicWrapper<Pose> implements EntityPoseHolder {
 
-    protected BukkitEntityPoseHolder(Pose wrappedObject) {
+    public BukkitEntityPoseHolder(Pose wrappedObject) {
         super(wrappedObject);
     }
 

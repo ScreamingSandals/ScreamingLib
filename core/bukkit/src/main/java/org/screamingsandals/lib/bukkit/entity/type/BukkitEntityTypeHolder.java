@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements EntityTypeHolder {
 
-    protected BukkitEntityTypeHolder(EntityType wrappedObject) {
+    public BukkitEntityTypeHolder(EntityType wrappedObject) {
         super(wrappedObject);
     }
 

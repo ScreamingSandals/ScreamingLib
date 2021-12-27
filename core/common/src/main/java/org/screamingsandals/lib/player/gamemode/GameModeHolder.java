@@ -10,6 +10,14 @@ import java.util.Optional;
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface GameModeHolder extends ComparableWrapper, RawValueHolder {
 
+    /**
+     * Use fluent variant!
+     */
+    @Deprecated(forRemoval = true)
+    default String getPlatformName() {
+        return platformName();
+    }
+
     String platformName();
 
     int id();

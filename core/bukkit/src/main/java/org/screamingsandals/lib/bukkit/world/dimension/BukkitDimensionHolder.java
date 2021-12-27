@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class BukkitDimensionHolder extends BasicWrapper<World.Environment> implements DimensionHolder {
 
-    protected BukkitDimensionHolder(World.Environment wrappedObject) {
+    public BukkitDimensionHolder(World.Environment wrappedObject) {
         super(wrappedObject);
     }
 

@@ -11,6 +11,15 @@ import java.util.Optional;
 @SuppressWarnings("AlternativeMethodAvailable")
 @LimitedVersionSupport("Bukkit >= 1.17")
 public interface EntityPoseHolder extends ComparableWrapper, RawValueHolder {
+
+    /**
+     * Use fluent variant!
+     */
+    @Deprecated(forRemoval = true)
+    default String getPlatformName() {
+        return platformName();
+    }
+
     String platformName();
 
     /**

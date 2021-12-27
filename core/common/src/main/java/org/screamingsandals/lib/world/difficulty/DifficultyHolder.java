@@ -10,6 +10,14 @@ import java.util.Optional;
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface DifficultyHolder extends ComparableWrapper, RawValueHolder {
 
+    /**
+     * Use fluent variant!
+     */
+    @Deprecated(forRemoval = true)
+    default String getPlatformName() {
+        return platformName();
+    }
+
     String platformName();
 
     @CustomAutocompletion(CustomAutocompletion.Type.DIFFICULTY)

@@ -13,6 +13,15 @@ import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
+
+    /**
+     * Use fluent variant!
+     */
+    @Deprecated(forRemoval = true)
+    default String getPlatformName() {
+        return platformName();
+    }
+
     String platformName();
 
     int size();
