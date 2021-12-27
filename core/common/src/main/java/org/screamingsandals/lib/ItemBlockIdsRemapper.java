@@ -17,7 +17,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * <p>Class responsible for remapping item and block id's.</p>
+ * Class responsible for remapping item and block id's.
  */
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
@@ -53,7 +53,7 @@ public abstract class ItemBlockIdsRemapper {
 
 
     /**
-     * <p>Starts the remapping upon construction.</p>
+     * Starts the remapping upon construction.
      */
     @OnPostConstruct
     public void doMapping() {

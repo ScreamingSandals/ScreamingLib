@@ -6,11 +6,11 @@ import org.screamingsandals.lib.sender.permissions.Permission;
 import java.util.Locale;
 
 /**
- * <p>A sender wrapper.</p>
+ * A sender wrapper.
  */
 public interface SenderWrapper extends CommandSenderWrapper {
     /**
-     * <p>Attempts to dispatch a command as this sender.</p>
+     * Attempts to dispatch a command as this sender.
      *
      * @param command the command
      */

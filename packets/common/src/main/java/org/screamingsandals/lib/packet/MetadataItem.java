@@ -22,7 +22,7 @@ public abstract class MetadataItem {
     /**
      * Serializes the index position of this MetadataItem instance to the provided PacketWriter object.
      *
-     * <p>Note: This method is to be overridden by subclasses to also serialize the data to the provided PacketWriter
+     * Note: This method is to be overridden by subclasses to also serialize the data to the provided PacketWriter
      *
      * @param writer the PacketWriter instance to serialize this MetaDataItem to
      */

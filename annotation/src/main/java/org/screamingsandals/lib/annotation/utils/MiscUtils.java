@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.annotation.utils;
 
-import lombok.experimental.UtilityClass;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.*;
@@ -18,11 +17,24 @@ import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
+import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class MiscUtils {
+    private static final Class<? extends Annotation> LOMBOK_UTILITY_CLASS;
+
+    static {
+        Class<? extends Annotation> lombok = null;
+        try {
+            //noinspection unchecked
+            lombok = (Class<? extends Annotation>) Class.forName("lombok.experimental.UtilityClass");
+        } catch (Throwable ignored) {
+        }
+        LOMBOK_UTILITY_CLASS = lombok;
+    }
+
     public static List<TypeElement> getSafelyTypeElements(ProcessingEnvironment environment, Service annotation) {
         try {
             annotation.dependsOn();
@@ -134,7 +146,7 @@ public class MiscUtils {
                         typeElement,
                         forwardedAnnotation != null ? originalTypeElement : null,
                         typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
-                        service.staticOnly() || typeElement.getAnnotation(UtilityClass.class) != null,
+                        service.staticOnly() || (LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null),
                         typeElement.getAnnotation(InternalCoreService.class) != null
                 );
                 container.getDependencies().addAll(getSafelyTypeElements(environment, service));
@@ -196,7 +208,7 @@ public class MiscUtils {
                         resolvedElement,
                         forwardedAnnotation != null ? originalTypeElement : null,
                         resolvedElement.getAnnotation(InternalEarlyInitialization.class) != null || typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
-                        (resolvedElementService != null && resolvedElementService.staticOnly()) || resolvedElement.getAnnotation(UtilityClass.class) != null,
+                        (resolvedElementService != null && resolvedElementService.staticOnly()) || (LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null),
                         resolvedElement.getAnnotation(InternalCoreService.class) != null || typeElement.getAnnotation(InternalCoreService.class) != null
                 );
                 if (resolvedElementService != null) {

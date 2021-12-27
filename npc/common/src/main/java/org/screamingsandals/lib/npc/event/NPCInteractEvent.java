@@ -6,7 +6,7 @@ import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.visuals.event.VisualsTouchEvent;
 
 /**
- * <p>An event signifying that a NPC has been interacted with.</p>
+ * An event signifying that a NPC has been interacted with.
  */
 public class NPCInteractEvent extends VisualsTouchEvent<NPC> {
     public NPCInteractEvent(PlayerWrapper player, NPC visual, InteractType interactType) {

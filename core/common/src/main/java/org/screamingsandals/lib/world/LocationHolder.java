@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * <p>A class holding a specific location in a world.</p>
+ * A class holding a specific location in a world.
  */
 @Data
 @AllArgsConstructor
@@ -33,7 +33,7 @@ public class LocationHolder implements Wrapper, Serializable {
     private WorldHolder world;
 
     /**
-     * <p>Constructs a new location.</p>
+     * Constructs a new location.
      *
      * @param x X coordinate
      * @param y Y coordinate
@@ -46,7 +46,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location and increments the coordinates by the supplied values.</p>
+     * Clones the current location and increments the coordinates by the supplied values.
      *
      * @param x X coordinate to add
      * @param y Y coordinate to add
@@ -62,7 +62,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location and increments the coordinates by the XYZ values of the supplied {@link LocationHolder}.</p>
+     * Clones the current location and increments the coordinates by the XYZ values of the supplied {@link LocationHolder}.
      *
      * @param holder the location holder to add
      * @return the new location
@@ -72,7 +72,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location and increments the coordinates by the XYZ values of the supplied {@link Vector3D}.</p>
+     * Clones the current location and increments the coordinates by the XYZ values of the supplied {@link Vector3D}.
      *
      * @param vec the vector to add
      * @return the new location
@@ -82,7 +82,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location and increments the coordinates by the XYZ values of the supplied {@link Vector3Df}.</p>
+     * Clones the current location and increments the coordinates by the XYZ values of the supplied {@link Vector3Df}.
      *
      * @param vec the vector to add
      * @return the new location
@@ -92,7 +92,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location and increments the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.</p>
+     * Clones the current location and increments the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.
      *
      * @param blockFace the block face to add
      * @return the new location
@@ -102,7 +102,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location and increments the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.</p>
+     * Clones the current location and increments the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.
      *
      * @param blockFace the block face to add
      * @param distance  how far in the direction the new location should be
@@ -113,7 +113,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3Df}.</p>
+     * Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3Df}.
      *
      * @param x X coordinate to subtract
      * @param y Y coordinate to subtract
@@ -130,7 +130,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link LocationHolder}.</p>
+     * Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link LocationHolder}.
      *
      * @param holder the location holder to subtract
      * @return the new location
@@ -140,7 +140,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3D}.</p>
+     * Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3D}.
      *
      * @param vec the vector to subtract
      * @return the new location
@@ -150,7 +150,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3Df}.</p>
+     * Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3Df}.
      *
      * @param vec the vector to subtract
      * @return the new location
@@ -160,7 +160,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.</p>
+     * Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.
      *
      * @param blockFace the block face to add
      * @return the new location
@@ -170,7 +170,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.</p>
+     * Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.
      *
      * @param blockFace the block face to add
      * @param distance  how far in the direction the new location should be
@@ -186,7 +186,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Gets the squared distance between this location and a supplied one.</p>
+     * Gets the squared distance between this location and a supplied one.
      *
      * @param holder the second location holder
      * @return the squared distance
@@ -198,7 +198,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Converts this location to a {@link Vector3D}.</p>
+     * Converts this location to a {@link Vector3D}.
      *
      * @return the vector
      */
@@ -207,7 +207,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Converts this location to a {@link Vector3Df}.</p>
+     * Converts this location to a {@link Vector3Df}.
      *
      * @return the vector
      */
@@ -250,7 +250,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Gets the rounded X coordinate of this location (a block coordinate).</p>
+     * Gets the rounded X coordinate of this location (a block coordinate).
      *
      * @return the block X coordinate
      */
@@ -259,7 +259,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Gets the rounded Y coordinate of this location (a block coordinate).</p>
+     * Gets the rounded Y coordinate of this location (a block coordinate).
      *
      * @return the block Y coordinate
      */
@@ -268,7 +268,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Gets the rounded Z coordinate of this location (a block coordinate).</p>
+     * Gets the rounded Z coordinate of this location (a block coordinate).
      *
      * @return the block Z coordinate
      */
@@ -277,7 +277,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Gets the facing direction vector of this location.</p>
+     * Gets the facing direction vector of this location.
      *
      * @return the facing direction vector
      */
@@ -294,7 +294,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Gets the block at this location.</p>
+     * Gets the block at this location.
      *
      * @return the block
      */
@@ -303,7 +303,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Gets the chunk which this location is in.</p>
+     * Gets the chunk which this location is in.
      *
      * @return the chunk
      */
@@ -312,7 +312,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Spawns a particle at this location.</p>
+     * Spawns a particle at this location.
      *
      * @param particle the particle
      */
@@ -321,7 +321,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Gets the highest non-empty block on the X and Z coordinates of this location.</p>
+     * Gets the highest non-empty block on the X and Z coordinates of this location.
      *
      * @return the highest non-empty block
      */
@@ -330,7 +330,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Gets the highest non-empty Y coordinate on the X and Z coordinates of this location.</p>
+     * Gets the highest non-empty Y coordinate on the X and Z coordinates of this location.
      *
      * @return the highest non-empty Y coordinate
      */
@@ -339,7 +339,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Clones this location holder.</p>
+     * Clones this location holder.
      *
      * @return the cloned holder
      */
@@ -358,7 +358,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Gets the entities in the radius from this location.</p>
+     * Gets the entities in the radius from this location.
      *
      * @param radius the radius
      * @return the entities
@@ -370,7 +370,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Gets the entities extending the supplied class in the radius from this location.</p>
+     * Gets the entities extending the supplied class in the radius from this location.
      *
      * @param clazz  the entity type class
      * @param radius the radius
@@ -384,7 +384,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Compares the supplied world to the world of this location.</p>
+     * Compares the supplied world to the world of this location.
      *
      * @param holder the world to compare
      * @return is the world the same?
@@ -394,7 +394,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Checks if the supplied location is within the radius from this location.</p>
+     * Checks if the supplied location is within the radius from this location.
      *
      * @param holder   the location holder to compare
      * @param distance the radius
@@ -405,7 +405,7 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * <p>Checks if the supplied location is out of range from this location.</p>
+     * Checks if the supplied location is out of range from this location.
      *
      * @param holder   the location holder to compare
      * @param distance the radius

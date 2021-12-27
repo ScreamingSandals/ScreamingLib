@@ -35,7 +35,7 @@ import org.screamingsandals.lib.world.gamerule.GameRuleMapping;
 import org.screamingsandals.lib.world.weather.WeatherMapping;
 
 /**
- * <p>Main entry point of the core module.</p>
+ * Main entry point of the core module.
  */
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
