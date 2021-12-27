@@ -3,6 +3,7 @@ package org.screamingsandals.lib.lang;
 import lombok.Data;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.minimessage.Template;
 import net.kyori.adventure.text.minimessage.template.TemplateResolver;
 import net.kyori.adventure.title.Title;
@@ -22,6 +23,9 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * Translated message.
+ */
 @Data
 public class Message implements TitleableSenderMessage, Cloneable {
     private static final Pattern LEGACY_PLACEHOLDERS = Pattern.compile("[%]([^%]+)[%]");
@@ -44,290 +48,807 @@ public class Message implements TitleableSenderMessage, Cloneable {
         this.prefix = prefix;
     }
 
-    public static Message empty() {
+    /**
+     * Creates new empty Message.
+     *
+     * @return empty message.
+     */
+    public static @NotNull Message empty() {
         return new Message(List.of(), Lang.getDefaultService(), Component.empty());
     }
 
-    public static Message empty(Component prefix) {
+    /**
+     * Creates new empty Message.
+     *
+     * @param prefix custom prefix to use
+     * @return empty message.
+     */
+    public static @NotNull Message empty(@NotNull Component prefix) {
         return new Message(List.of(), Lang.getDefaultService(), prefix);
     }
 
-    public static Message empty(ComponentLike prefix) {
+    /**
+     * Creates new empty Message.
+     *
+     * @param prefix custom prefix to use
+     * @return empty message.
+     */
+    public static @NotNull Message empty(@NotNull ComponentLike prefix) {
         return new Message(List.of(), Lang.getDefaultService(), prefix.asComponent());
     }
 
-    public static Message empty(LangService service) {
+    /**
+     * Creates new empty Message.
+     *
+     * @param service custom {@link LangService} to use.
+     * @return empty message.
+     */
+    public static @NotNull Message empty(@NotNull LangService service) {
         return new Message(List.of(), service, Component.empty());
     }
 
-    public static Message empty(LangService service, Component prefix) {
+    /**
+     * Creates new empty Message.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @return empty message.
+     */
+    public static @NotNull Message empty(@NotNull LangService service, @NotNull Component prefix) {
         return new Message(List.of(), service, prefix);
     }
 
-    public static Message empty(LangService service, ComponentLike prefix) {
+    /**
+     * Creates new empty Message.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @return empty message.
+     */
+    public static @NotNull Message empty(@NotNull LangService service, @NotNull ComponentLike prefix) {
         return new Message(List.of(), service, prefix.asComponent());
     }
 
-    public static Message ofPlainText(String message) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull String message) {
         return new Message(List.of(StringMessageable.of(message)), Lang.getDefaultService(), Component.empty());
     }
 
-    public static Message ofPlainText(String... messages) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull String... messages) {
         return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), Component.empty());
     }
 
-    public static Message ofPlainText(List<String> messages) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull List<String> messages) {
         return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), Component.empty());
     }
 
-    public static Message ofPlainText(Component prefix, String message) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param prefix  custom prefix to use
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull Component prefix, @NotNull String message) {
         return new Message(List.of(StringMessageable.of(message)), Lang.getDefaultService(), prefix);
     }
 
-    public static Message ofPlainText(ComponentLike prefix, String message) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param prefix  custom prefix to use
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull ComponentLike prefix, @NotNull String message) {
         return new Message(List.of(StringMessageable.of(message)), Lang.getDefaultService(), prefix.asComponent());
     }
 
-    public static Message ofPlainText(Component prefix, String... messages) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull Component prefix, @NotNull String... messages) {
         return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix);
     }
 
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
     public static Message ofPlainText(ComponentLike prefix, String... messages) {
         return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix.asComponent());
     }
 
-    public static Message ofPlainText(Component prefix, List<String> messages) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull Component prefix, @NotNull List<String> messages) {
         return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix);
     }
 
-    public static Message ofPlainText(ComponentLike prefix, List<String> messages) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull ComponentLike prefix, @NotNull List<String> messages) {
         return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix.asComponent());
     }
 
-    public static Message ofPlainText(LangService service, String message) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull String message) {
         return new Message(List.of(StringMessageable.of(message)), service, Component.empty());
     }
 
-    public static Message ofPlainText(LangService service, String... messages) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull String... messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, Component.empty());
     }
 
-    public static Message ofPlainText(LangService service, List<String> messages) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull List<String> messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, Component.empty());
     }
 
-    public static Message ofPlainText(LangService service, Component prefix, String message) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull Component prefix, @NotNull String message) {
         return new Message(List.of(StringMessageable.of(message)), service, prefix);
     }
 
-    public static Message ofPlainText(LangService service, ComponentLike prefix, String message) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull String message) {
         return new Message(List.of(StringMessageable.of(message)), service, prefix.asComponent());
     }
 
-    public static Message ofPlainText(LangService service, Component prefix, String... messages) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull Component prefix, @NotNull String... messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, prefix);
     }
 
-    public static Message ofPlainText(LangService service, ComponentLike prefix, String... messages) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull String... messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, prefix.asComponent());
     }
 
-    public static Message ofPlainText(LangService service, Component prefix, List<String> messages) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull Component prefix, @NotNull List<String> messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, prefix);
     }
 
-    public static Message ofPlainText(LangService service, ComponentLike prefix, List<String> messages) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull List<String> messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, prefix.asComponent());
     }
 
-    public static Message ofPlainText(Supplier<List<String>> message) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull Supplier<List<String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message)), Lang.getDefaultService(), Component.empty());
     }
 
-    public static Message ofPlainText(Component prefix, Supplier<List<String>> message) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param prefix  custom prefix to use
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull Component prefix, @NotNull Supplier<List<String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message)), Lang.getDefaultService(), prefix);
     }
 
-    public static Message ofPlainText(ComponentLike prefix, Supplier<List<String>> message) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param prefix  custom prefix to use
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull ComponentLike prefix, @NotNull Supplier<List<String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message)), Lang.getDefaultService(), prefix.asComponent());
     }
 
-    public static Message ofPlainText(LangService service, Supplier<List<String>> message) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull Supplier<List<String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message)), service, Component.empty());
     }
 
-    public static Message ofPlainText(LangService service, Component prefix, Supplier<List<String>> message) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull Component prefix, @NotNull Supplier<List<String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message)), service, prefix);
     }
 
-    public static Message ofPlainText(LangService service, ComponentLike prefix, Supplier<List<String>> message) {
+    /**
+     * Creates new {@link Message} from plain text.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull Supplier<List<String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message)), service, prefix.asComponent());
     }
 
-    public static Message of(String... key) {
+    /**
+     * Creates new {@link Message} from given Translation key.
+     *
+     * @param key key of the translation
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull String... key) {
         return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), Component.empty());
     }
 
-    public static Message of(Translation translation) {
+    /**
+     * Creates new {@link Message} from given {@link Translation}
+     *
+     * @param translation key of the translation
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull Translation translation) {
         return new Message(List.of(translation), Lang.getDefaultService(), Component.empty());
     }
 
-    public static <M extends Messageable> Message of(List<M> translations) {
+    /**
+     * Creates new {@link Message} from given {@link Messageable}
+     *
+     * @param translations translation keys
+     * @param <M>          type that extends {@link Messageable}
+     * @return new message.
+     */
+    public static <M extends Messageable> @NotNull Message of(@NotNull List<M> translations) {
         return new Message(translations, Lang.getDefaultService(), Component.empty());
     }
 
-    public static Message of(LangService langService, String... key) {
-        return new Message(List.of(Translation.of(key)), langService, Component.empty());
+    /**
+     * Creates new {@link Message} from given Translation key.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param key     key of the translation
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull LangService service, @NotNull String... key) {
+        return new Message(List.of(Translation.of(key)), service, Component.empty());
     }
 
-    public static Message of(LangService langService, Translation translation) {
-        return new Message(List.of(translation), langService, Component.empty());
+    /**
+     * Creates new {@link Message} from given Translation key.
+     *
+     * @param service     custom {@link LangService} to use.
+     * @param translation key of the translation
+     * @return new message.
+     */
+    public static Message of(LangService service, Translation translation) {
+        return new Message(List.of(translation), service, Component.empty());
     }
 
-    public static <M extends Messageable> Message of(LangService langService, List<M> translations) {
-        return new Message(translations, langService, Component.empty());
+    /**
+     * Creates new {@link Message} from given {@link Messageable}
+     *
+     * @param service      custom {@link LangService} to use.
+     * @param translations translation keys
+     * @param <M>          type that extends {@link Messageable}
+     * @return new message.
+     */
+    public static <M extends Messageable> @NotNull Message of(@NotNull LangService service, @NotNull List<M> translations) {
+        return new Message(translations, service, Component.empty());
     }
 
-    public static Message of(Component prefix, String... key) {
+    /**
+     * Creates new {@link Message} from given Translation key.
+     *
+     * @param prefix custom prefix to use
+     * @param key    key of the translation
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull Component prefix, @NotNull String... key) {
         return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix);
     }
 
-    public static Message of(ComponentLike prefix, String... key) {
+    /**
+     * Creates new {@link Message} from given Translation key.
+     *
+     * @param prefix custom prefix to use
+     * @param key    key of the translation
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull ComponentLike prefix, @NotNull String... key) {
         return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix.asComponent());
     }
 
-    public static Message of(Component prefix, Messageable translation) {
+    /**
+     * Creates new {@link Message} from given Translation key.
+     *
+     * @param prefix      custom prefix to use
+     * @param translation key of the translation
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull Component prefix, @NotNull Messageable translation) {
         return new Message(List.of(translation), Lang.getDefaultService(), prefix);
     }
 
-    public static Message of(ComponentLike prefix, Messageable translation) {
+    /**
+     * Creates new {@link Message} from given Translation key.
+     *
+     * @param prefix      custom prefix to use
+     * @param translation key of the translation
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull ComponentLike prefix, @NotNull Messageable translation) {
         return new Message(List.of(translation), Lang.getDefaultService(), prefix.asComponent());
     }
 
-    public static <M extends Messageable> Message of(Component prefix, List<M> translations) {
+    /**
+     * Creates new {@link Message} from given {@link Messageable}
+     *
+     * @param prefix       custom prefix to use
+     * @param translations translation keys
+     * @param <M>          type that extends {@link Messageable}
+     * @return new message.
+     */
+    public static <M extends Messageable> @NotNull Message of(@NotNull Component prefix, @NotNull List<M> translations) {
         return new Message(translations, Lang.getDefaultService(), prefix);
     }
 
-    public static <M extends Messageable> Message of(ComponentLike prefix, List<M> translations) {
+    /**
+     * Creates new {@link Message} from given {@link Messageable}
+     *
+     * @param prefix       custom prefix to use
+     * @param translations translation keys
+     * @param <M>          type that extends {@link Messageable}
+     * @return new message.
+     */
+    public static <M extends Messageable> @NotNull Message of(@NotNull ComponentLike prefix, @NotNull List<M> translations) {
         return new Message(translations, Lang.getDefaultService(), prefix.asComponent());
     }
 
-    public static Message of(LangService langService, Component prefix, String... key) {
-        return new Message(List.of(Translation.of(key)), langService, prefix);
+
+    /**
+     * Creates new {@link Message} from given Translation key.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param key     translation keys
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull LangService service, @NotNull Component prefix, @NotNull String... key) {
+        return new Message(List.of(Translation.of(key)), service, prefix);
     }
 
-    public static Message of(LangService langService, ComponentLike prefix, String... key) {
-        return new Message(List.of(Translation.of(key)), langService, prefix.asComponent());
+    /**
+     * Creates new {@link Message} from given Translation key.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param key     translation keys
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull String... key) {
+        return new Message(List.of(Translation.of(key)), service, prefix.asComponent());
     }
 
-    public static Message of(LangService langService, Component prefix, Messageable translation) {
-        return new Message(List.of(translation), langService, prefix);
+    /**
+     * Creates new {@link Message} from given Translation key.
+     *
+     * @param service     custom {@link LangService} to use.
+     * @param prefix      custom prefix to use
+     * @param translation translation keys
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull LangService service, @NotNull Component prefix, @NotNull Messageable translation) {
+        return new Message(List.of(translation), service, prefix);
     }
 
-    public static Message of(LangService langService, ComponentLike prefix, Messageable translation) {
-        return new Message(List.of(translation), langService, prefix.asComponent());
+    /**
+     * Creates new {@link Message} from given Translation key.
+     *
+     * @param service     custom {@link LangService} to use.
+     * @param prefix      custom prefix to use
+     * @param translation translation keys
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull Messageable translation) {
+        return new Message(List.of(translation), service, prefix.asComponent());
     }
 
-    public static <M extends Messageable> Message of(LangService langService, Component prefix, List<M> translations) {
-        return new Message(translations, langService, prefix);
+    /**
+     * Creates new {@link Message} from given {@link Messageable}
+     *
+     * @param service      custom {@link LangService} to use.
+     * @param prefix       custom prefix to use
+     * @param translations translation keys
+     * @param <M>          type that extends {@link Messageable}
+     * @return new message.
+     */
+    public static <M extends Messageable> @NotNull Message of(@NotNull LangService service, @NotNull Component prefix, @NotNull List<M> translations) {
+        return new Message(translations, service, prefix);
     }
 
-    public static <M extends Messageable> Message of(LangService langService, ComponentLike prefix, List<M> translations) {
-        return new Message(translations, langService, prefix.asComponent());
+    /**
+     * Creates new {@link Message} from given {@link Messageable}
+     *
+     * @param service      custom {@link LangService} to use.
+     * @param prefix       custom prefix to use
+     * @param translations translation keys
+     * @param <M>          type that extends {@link Messageable}
+     * @return new message.
+     */
+    public static <M extends Messageable> @NotNull Message of(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull List<M> translations) {
+        return new Message(translations, service, prefix.asComponent());
     }
 
-    public static Message of(Collection<String> key) {
+    /**
+     * Creates new {@link Message} from given {@link Messageable}
+     *
+     * @param key translation keys
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull Collection<String> key) {
         return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), Component.empty());
     }
 
-    public static Message of(LangService langService, Collection<String> key) {
-        return new Message(List.of(Translation.of(key)), langService, Component.empty());
+    /**
+     * Creates new {@link Message} from given {@link Messageable}
+     *
+     * @param service custom {@link LangService} to use.
+     * @param key     translation keys
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull LangService service, @NotNull Collection<String> key) {
+        return new Message(List.of(Translation.of(key)), service, Component.empty());
     }
 
-    public static Message of(Component prefix, Collection<String> key) {
+    /**
+     * Creates new {@link Message} from given {@link Messageable}
+     *
+     * @param prefix custom prefix to use
+     * @param key    translation keys
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull Component prefix, @NotNull Collection<String> key) {
         return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix);
     }
 
-    public static Message of(ComponentLike prefix, Collection<String> key) {
+    /**
+     * Creates new {@link Message} from given {@link Messageable}
+     *
+     * @param prefix custom prefix to use
+     * @param key    translation keys
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull ComponentLike prefix, @NotNull Collection<String> key) {
         return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix.asComponent());
     }
 
-    public static Message of(LangService langService, Component prefix, Collection<String> key) {
-        return new Message(List.of(Translation.of(key)), langService, prefix);
+    /**
+     * Creates new {@link Message} from given {@link Messageable}
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param key     translation keys
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull LangService service, @NotNull Component prefix, @NotNull Collection<String> key) {
+        return new Message(List.of(Translation.of(key)), service, prefix);
     }
 
-    public static Message of(LangService langService, ComponentLike prefix, Collection<String> key) {
-        return new Message(List.of(Translation.of(key)), langService, prefix.asComponent());
+    /**
+     * Creates new {@link Message} from given {@link Messageable}
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param key     translation keys
+     * @return new message.
+     */
+    public static @NotNull Message of(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull Collection<String> key) {
+        return new Message(List.of(Translation.of(key)), service, prefix.asComponent());
     }
 
-    public Message placeholder(String placeholder, byte value) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, byte value) {
         return placeholder(placeholder, Component.text(value));
     }
 
-    public Message placeholder(String placeholder, short value) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, short value) {
         return placeholder(placeholder, Component.text(value));
     }
 
-    public Message placeholder(String placeholder, int value) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, int value) {
         return placeholder(placeholder, Component.text(value));
     }
 
-    public Message placeholder(String placeholder, long value) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, long value) {
         return placeholder(placeholder, Component.text(value));
     }
 
-    public Message placeholder(String placeholder, char value) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, char value) {
         return placeholder(placeholder, Component.text(value));
     }
 
-    public Message placeholder(String placeholder, boolean value) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, boolean value) {
         return placeholder(placeholder, Component.text(value));
     }
 
-    public Message placeholder(String placeholder, double value) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, double value) {
         return placeholder(placeholder, Component.text(value));
     }
 
-    public Message placeholder(String placeholder, float value) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, float value) {
         return placeholder(placeholder, Component.text(value));
     }
 
-    public Message placeholder(String placeholder, double value, int round) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @param round       how many decimal points should the number have
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, double value, int round) {
         double pow = Math.pow(10, round);
         return placeholder(placeholder, Component.text(Math.round(value * pow) / pow));
     }
 
-    public Message placeholder(String placeholder, float value, int round) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @param round       how many decimal points should the number have
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, float value, int round) {
         double pow = Math.pow(10, round);
         return placeholder(placeholder, Component.text(Math.round(value * pow) / pow));
     }
 
-    public Message placeholder(String placeholder, String value) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, @NotNull String value) {
         return placeholder(placeholder, Lang.MINIMESSAGE.parse(value));
     }
 
-    public Message placeholder(String placeholder, Component component) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param component   placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, @NotNull Component component) {
         placeholders.put(placeholder, sender -> component);
         return this;
     }
 
-    public Message placeholder(String placeholder, ComponentLike component) {
-        placeholders.put(placeholder, sender -> component.asComponent());
-        return this;
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param component   placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, @NotNull ComponentLike component) {
+        return placeholder(placeholder, component.asComponent());
     }
 
-    public Message placeholder(String placeholder, Translation translation) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param translation placeholder value, resolved from {@link Translation}
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, @NotNull Translation translation) {
         var msg = of(translation);
         placeholders.put(placeholder, msg::getForJoined);
         return this;
     }
 
-    public Message placeholder(String placeholder, Message message) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param message     placeholder value, resolved from {@link Message}
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, @NotNull Message message) {
         placeholders.put(placeholder, message::getForJoined);
         return this;
     }
 
-    public Message placeholder(String placeholder, Function<CommandSenderWrapper, Component> componentFunction) {
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder       placeholder key
+     * @param componentFunction function that returns a {@link Component} as the placeholder value.
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull String placeholder, @NotNull Function<CommandSenderWrapper, Component> componentFunction) {
         placeholders.put(placeholder, componentFunction);
         return this;
     }
@@ -341,7 +862,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       Component which will replace the placeholder
      * @return self
      */
-    public Message earlyPlaceholder(String placeholder, Component value) {
+    public @NotNull Message earlyPlaceholder(@NotNull String placeholder, @NotNull Component value) {
         earlyPlaceholders.put(placeholder, Lang.MINIMESSAGE.serialize(value));
         return this;
     }
@@ -355,12 +876,19 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       String which will replace the placeholder. It must be in MiniMessage format
      * @return self
      */
-    public Message earlyPlaceholder(String placeholder, String value) {
+    public @NotNull Message earlyPlaceholder(@NotNull String placeholder, @NotNull String value) {
         earlyPlaceholders.put(placeholder, value);
         return this;
     }
 
-    public Message prefix(Component prefix) {
+    /**
+     * Sets the prefix for this message.
+     * NOTE:  if the parameter is null, {@link Message#noPrefix()} is used.
+     *
+     * @param prefix prefix to use
+     * @return self
+     */
+    public @NotNull Message prefix(@Nullable Component prefix) {
         if (prefix == null) {
             return noPrefix();
         }
@@ -368,7 +896,14 @@ public class Message implements TitleableSenderMessage, Cloneable {
         return this;
     }
 
-    public Message prefix(ComponentLike prefix) {
+    /**
+     * Sets the prefix for this message.
+     * NOTE:  if the parameter is null, {@link Message#noPrefix()} is used.
+     *
+     * @param prefix prefix to use
+     * @return self
+     */
+    public @NotNull Message prefix(ComponentLike prefix) {
         if (prefix == null) {
             return noPrefix();
         }
@@ -376,7 +911,14 @@ public class Message implements TitleableSenderMessage, Cloneable {
         return this;
     }
 
-    public Message prefixOrDefault(Component prefix) {
+    /**
+     * Sets the prefix for this message.
+     * NOTE:  if the parameter is null, {@link Message#defaultPrefix()} is used.
+     *
+     * @param prefix prefix to use
+     * @return self
+     */
+    public @NotNull Message prefixOrDefault(Component prefix) {
         if (prefix == null || Component.empty().equals(prefix)) {
             return defaultPrefix();
         }
@@ -384,7 +926,14 @@ public class Message implements TitleableSenderMessage, Cloneable {
         return this;
     }
 
-    public Message prefixOrDefault(ComponentLike prefix) {
+    /**
+     * Sets the prefix for this message.
+     * NOTE:  if the parameter is null, {@link Message#defaultPrefix()} is used.
+     *
+     * @param prefix prefix to use
+     * @return self
+     */
+    public @NotNull Message prefixOrDefault(ComponentLike prefix) {
         if (prefix == null || Component.empty().equals(prefix.asComponent())) {
             return defaultPrefix();
         }
@@ -392,77 +941,168 @@ public class Message implements TitleableSenderMessage, Cloneable {
         return this;
     }
 
-    public Message noPrefix() {
+    /**
+     * Resets the prefix for this message.
+     *
+     * @return self
+     */
+    public @NotNull Message noPrefix() {
         this.prefix = Component.empty();
         return this;
     }
 
-    public Message defaultPrefix() {
+    /**
+     * Uses default prefix from {@link LangService#getDefaultPrefix()}
+     *
+     * @return self
+     */
+    public @NotNull Message defaultPrefix() {
         this.prefix = Lang.getDefaultService().getDefaultPrefix();
         return this;
     }
 
-    public Message resolvePrefix() {
+    /**
+     * Uses the {@link PrefixResolving#PER_PLAYER} prefix resolving policy.
+     * This means that the prefix is resolved per-player from {@link LangService#resolvePrefix(CommandSenderWrapper)}.
+     *
+     * @return self
+     */
+    public @NotNull Message resolvePrefix() {
         this.prefixResolving = PrefixResolving.PER_PLAYER;
         return this;
     }
 
-    public Message prefixPolicy(PrefixPolicy prefixPolicy) {
+    /**
+     * Sets new prefix policy.
+     * This changes the prefix behavior accordingly:
+     * - {@link PrefixPolicy#ALL_MESSAGES} - all messages will have the prefix attached
+     * - {@link PrefixPolicy#FIRST_MESSAGE} - only first message will have the prefix.
+     *
+     * @return self
+     */
+    public @NotNull Message prefixPolicy(PrefixPolicy prefixPolicy) {
         this.prefixPolicy = prefixPolicy;
         return this;
     }
 
-    public Message prefixResolving(PrefixResolving resolving) {
+    /**
+     * Sets new prefix resolving policy.
+     * If the policy is {@link PrefixResolving#PER_PLAYER}, prefix is resolved per-player from {@link LangService#resolvePrefix(CommandSenderWrapper)}.
+     *
+     * @return self
+     */
+    public @NotNull Message prefixResolving(PrefixResolving resolving) {
         this.prefixResolving = resolving;
         return this;
     }
 
-    public Message join(String key) {
+    /**
+     * Joins given key into this message.
+     *
+     * @param key key to join
+     * @return self
+     */
+    public @NotNull Message join(@NotNull String key) {
         this.translations.add(Translation.of(key));
         return this;
     }
 
-    public Message join(String... keys) {
+    /**
+     * Joins given keys into this message.
+     *
+     * @param keys keys to join
+     * @return self
+     */
+    public @NotNull Message join(String... keys) {
         this.translations.add(Translation.of(keys));
         return this;
     }
 
-    public Message join(Collection<String> keys) {
+    /**
+     * Joins given keys into this message.
+     *
+     * @param keys keys to join
+     * @return self
+     */
+    public @NotNull Message join(Collection<String> keys) {
         this.translations.add(Translation.of(keys));
         return this;
     }
 
-    public Message joinPlainText(String message) {
+    /**
+     * Joins given plain text into this message.
+     *
+     * @param message message to join
+     * @return self
+     */
+    public @NotNull Message joinPlainText(String message) {
         this.translations.add(StringMessageable.of(message));
         return this;
     }
 
-    public Message joinPlainText(List<String> messages) {
+    /**
+     * Joins given plain text into this message.
+     *
+     * @param messages messages to join
+     * @return self
+     */
+    public @NotNull Message joinPlainText(List<String> messages) {
         this.translations.add(StringMessageable.of(messages));
         return this;
     }
 
-    public Message joinPlainText(Supplier<List<String>> messages) {
+    /**
+     * Joins given plain text into this message.
+     *
+     * @param messages messages to join
+     * @return self
+     */
+    public @NotNull Message joinPlainText(Supplier<List<String>> messages) {
         this.translations.add(SupplierStringMessageable.of(messages));
         return this;
     }
 
-    public Message join(Messageable translation) {
+    /**
+     * Joins given translation into this message.
+     *
+     * @param translation translation to join
+     * @return self
+     */
+    public @NotNull Message join(Messageable translation) {
         this.translations.add(translation);
         return this;
     }
 
-    public <M extends Messageable> Message join(List<M> translations) {
+    /**
+     * Joins given translation into this message.
+     *
+     * @param translations translation to join
+     * @param <M>          type of the {@link Messageable}
+     * @return self
+     */
+    public @NotNull <M extends Messageable> Message join(List<M> translations) {
         this.translations.addAll(translations);
         return this;
     }
 
-    public Message times(Title.Times times) {
+    /**
+     * Sets the {@link Title.Times} for this message.
+     *
+     * @param times times to set
+     * @return self
+     */
+    public @NotNull Message times(Title.Times times) {
         this.times = times;
         return this;
     }
 
-    public List<Component> getFor(CommandSenderWrapper sender) {
+    /**
+     * Tries to get all the {@link Component} from this message for given sender.
+     *
+     * @param sender sender to resolve the components for
+     * @return list of components.
+     */
+    public @NotNull List<Component> getFor(CommandSenderWrapper sender) {
         final var prefixSetter = new AtomicBoolean(true);
         final var container = langService.getFor(sender);
 
@@ -479,6 +1119,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
                             .map(s -> {
                                 if (PlaceholderManager.isInitialized()) {
                                     // Skip this code block to avoid impact of black magic on your mind
+                                    //FOR REAL.
                                     var matcher = LEGACY_PLACEHOLDERS.matcher(s);
 
                                     var lastIndex = 0;
@@ -536,6 +1177,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
                                     return Lang.MINIMESSAGE.deserialize(s, resolvedTemplates);
                                 } else {
                                     // Black magic again
+                                    // SKIP THIS.
                                     var matcher = LEGACY_PLACEHOLDERS.matcher(s);
 
                                     var lastIndex = 0;
@@ -579,16 +1221,36 @@ public class Message implements TitleableSenderMessage, Cloneable {
                 .collect(Collectors.toList());
     }
 
-    public Component getForJoined(CommandSenderWrapper sender) {
-        return Component.join(Component.newline(), getFor(sender));
+    /**
+     * Tries to get all the {@link Component} from this message for given sender.
+     * This method will join the components together and each component will be on new line.
+     *
+     * @param sender sender to resolve the components for
+     * @return component
+     */
+    public @NotNull Component getForJoined(CommandSenderWrapper sender) {
+        return Component.join(JoinConfiguration.separator(Component.newline()), getFor(sender));
     }
 
-    public List<Component> getForAnyone() {
+    /**
+     * Tries to get all the {@link Component} from this message for anyone.
+     * NOTE: this will resolve the message with the {@link LangService#getFallbackContainer()}
+     *
+     * @return list of components
+     */
+    public @NotNull List<Component> getForAnyone() {
         return getFor(null);
     }
 
+    /**
+     * Tries to get all the {@link Component} from this message for anyone.
+     * This method will join the components together and each component will be on new line.
+     * NOTE: this will resolve the message with the {@link LangService#getFallbackContainer()}
+     *
+     * @return component
+     */
     public Component getForAnyoneJoined() {
-        return Component.join(Component.newline(), getForAnyone());
+        return Component.join(JoinConfiguration.separator(Component.newline()), getForAnyone());
     }
 
     public <W extends CommandSenderWrapper> Message title(W sender) {

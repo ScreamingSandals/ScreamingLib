@@ -8,6 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.lang.container.TranslationContainer;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 
+/**
+ * Access point for default values.
+ */
 public class Lang {
     /* Package Private, we want this customizable */
     @Getter
