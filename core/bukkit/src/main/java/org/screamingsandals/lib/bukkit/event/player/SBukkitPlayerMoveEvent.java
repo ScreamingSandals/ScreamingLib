@@ -50,7 +50,7 @@ public class SBukkitPlayerMoveEvent implements SPlayerMoveEvent, BukkitCancellab
                     currentLocationBukkit.getYaw(),
                     currentLocationBukkit.getPitch(),
                     new BukkitWorldHolder(currentLocationBukkit.getWorld())
-                    );
+            );
         }
         return currentLocation;
     }

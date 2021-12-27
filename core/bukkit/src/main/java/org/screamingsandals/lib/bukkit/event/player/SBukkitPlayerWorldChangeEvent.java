@@ -1,12 +1,15 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
-import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.event.player.SPlayerWorldChangeEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.world.WorldHolder;
+import org.screamingsandals.lib.world.WorldMapper;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -32,7 +35,7 @@ public class SBukkitPlayerWorldChangeEvent implements SPlayerWorldChangeEvent {
     @Override
     public WorldHolder getFrom() {
         if (from == null) {
-            from = new BukkitWorldHolder(event.getFrom());
+            from = WorldMapper.wrapWorld(event.getFrom());
         }
         return from;
     }
