@@ -29,6 +29,9 @@ public final class EnchantmentHolder implements ComparableWrapper {
         return withLevel(level);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public <R> R as(Class<R> type) {
         return EnchantmentMapping.convertEnchantmentHolder(this, type);
     }

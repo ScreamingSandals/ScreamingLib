@@ -49,7 +49,7 @@ public class ItemMetaHelper {
         var getMethod = Reflect.getMethod(meta, "get" + name);
 
         if (hasMethod.isPresent()) {
-            if (!hasMethod.invokeResulted().as(boolean.class)) {
+            if (!(boolean) hasMethod.invoke()) {
                 return null;
             }
         }
@@ -76,7 +76,7 @@ public class ItemMetaHelper {
         var getMethod = Reflect.getMethod(meta, "get" + name);
 
         if (hasMethod.isPresent()) {
-            if (!hasMethod.invokeResulted().as(boolean.class)) {
+            if (!(boolean) hasMethod.invoke()) {
                 return null;
             }
         }
@@ -159,7 +159,7 @@ public class ItemMetaHelper {
 
         List orig = List.of();
         if (hasMethod.isPresent()) {
-            if (hasMethod.invokeResulted().as(boolean.class)) {
+            if ((boolean) hasMethod.invoke()) {
                 orig = getMethod.invokeResulted().as(List.class);
             }
         }

@@ -140,6 +140,9 @@ public class DualLoggerWrapper extends Pair<LoggerWrapper, LoggerWrapper> implem
         getFirstNonNull().error(msg, t);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         try {

@@ -18,18 +18,38 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * A class holding a specific location in a world.
+ * A class holding a specific location at XYZ coordinates in a world.
+ * <p>
+ * <img src="https://i.imgur.com/dpRCb53.png">
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ConfigSerializable
 public class LocationHolder implements Wrapper, Serializable {
+    /**
+     * The X coordinate of this location.
+     */
     private double x;
+    /**
+     * The Y coordinate of this location.
+     */
     private double y;
+    /**
+     * The Z coordinate of this location.
+     */
     private double z;
+    /**
+     * The yaw of this location (horizontal rotation), 0 is the default.
+     */
     private float yaw;
+    /**
+     * The pitch of this location (vertical rotation), 0 is the default.
+     */
     private float pitch;
+    /**
+     * The world of this location.
+     */
     private WorldHolder world;
 
     /**
@@ -180,6 +200,9 @@ public class LocationHolder implements Wrapper, Serializable {
         return subtract(blockFace.getBlockDirection().multiply(distance));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return LocationMapper.convert(this, type);

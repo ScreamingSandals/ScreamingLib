@@ -14,6 +14,9 @@ public class ExtendablePlayerWrapper implements PlayerWrapper {
         this.wrappedObject = wrappedObject;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

@@ -16,6 +16,9 @@ public interface PlatformEventWrapper extends Wrapper, RawValueHolder {
     @ApiStatus.Experimental
     Object getEvent();
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     @ApiStatus.Experimental

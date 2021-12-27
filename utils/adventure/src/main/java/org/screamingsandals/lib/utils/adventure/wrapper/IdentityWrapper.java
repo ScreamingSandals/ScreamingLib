@@ -17,6 +17,9 @@ public final class IdentityWrapper implements Wrapper {
         return identity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

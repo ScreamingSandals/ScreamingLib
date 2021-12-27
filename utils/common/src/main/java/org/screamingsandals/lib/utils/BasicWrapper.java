@@ -23,6 +23,9 @@ public class BasicWrapper<O> implements Wrapper, RawValueHolder {
         return wrappedObject;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @SuppressWarnings("unchecked")
     public <T> T as(Class<T> type) {

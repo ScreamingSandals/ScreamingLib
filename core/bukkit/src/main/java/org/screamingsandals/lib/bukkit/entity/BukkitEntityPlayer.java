@@ -320,6 +320,9 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
         return BukkitCore.audiences().player((Player) wrappedObject);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         try {

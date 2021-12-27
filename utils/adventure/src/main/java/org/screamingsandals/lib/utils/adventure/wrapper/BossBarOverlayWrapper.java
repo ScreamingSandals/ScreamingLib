@@ -13,6 +13,9 @@ public final class BossBarOverlayWrapper implements Wrapper {
         return overlay;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

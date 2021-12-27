@@ -18,6 +18,9 @@ public final class SoundWrapper implements Wrapper {
         return sound;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

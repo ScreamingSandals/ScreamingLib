@@ -9,6 +9,11 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.*;
 
+/**
+ * Class representing a <strong>block</strong> material.
+ *
+ * Use {@link org.screamingsandals.lib.item.ItemTypeHolder} for item materials.
+ */
 @Accessors(fluent = true)
 @Data
 @RequiredArgsConstructor
@@ -74,7 +79,6 @@ public class BlockTypeHolder implements ComparableWrapper, ParticleData {
         return BlockTypeMapper.colorize(this, color);
     }
 
-    @SuppressWarnings("unchecked")
     public Optional<String> get(String attribute) {
         return flatteningData != null ? Optional.ofNullable(flatteningData.get(attribute)) : Optional.empty();
     }
@@ -101,6 +105,9 @@ public class BlockTypeHolder implements ComparableWrapper, ParticleData {
         return Optional.empty();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return BlockTypeMapper.convertBlockTypeHolder(this, type);

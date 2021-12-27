@@ -18,12 +18,11 @@ import java.util.regex.Pattern;
 
 @AbstractService
 public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder> {
-
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?<blockState>:\\d*|\\[[^]]*])?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
-    protected BidirectionalConverter<BlockTypeHolder> blockTypeConverter = BidirectionalConverter.<BlockTypeHolder>build()
-            .registerP2W(BlockTypeHolder.class, i -> i);
     @Getter
     protected final Map<Predicate<NamespacedMappingKey>, Pair<Function<Byte, Map<String, String>>, Function<Map<String, String>, Byte>>> blockDataTranslators = new HashMap<>();
+    protected BidirectionalConverter<BlockTypeHolder> blockTypeConverter = BidirectionalConverter.<BlockTypeHolder>build()
+            .registerP2W(BlockTypeHolder.class, i -> i);
 
     private static BlockTypeMapper blockTypeMapper;
 

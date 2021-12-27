@@ -18,6 +18,9 @@ public final class TitleWrapper implements Wrapper {
         return title;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

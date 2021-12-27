@@ -9,20 +9,39 @@ import org.screamingsandals.lib.block.state.BlockStateMapper;
 
 import java.util.Optional;
 
+/**
+ * A class representing a block at a specific location.
+ */
 @Data
 public class BlockHolder implements Wrapper {
+    /**
+     * The block location.
+     */
     private final LocationHolder location;
+    /**
+     * The block material.
+     */
     private BlockTypeHolder type;
 
+    /**
+     * Constructs a new BlockHolder.
+     *
+     * Should only be used by a {@link BlockMapper} internally, if you want to get a block at a specified location,
+     * use {@link BlockMapper#getBlockAt(LocationHolder)}.
+     *
+     * @param location the block's location
+     * @param type the block's material
+     */
+    @ApiStatus.Internal
     public BlockHolder(LocationHolder location, BlockTypeHolder type) {
         this.location = location;
         this.type = type;
     }
 
     /**
-     * Sets new material at this location
+     * Sets this block to a new material.
      *
-     * @param type type to set
+     * @param type new material
      */
     public void setType(BlockTypeHolder type) {
         BlockMapper.setBlockAt(location, type, false);
@@ -30,9 +49,9 @@ public class BlockHolder implements Wrapper {
     }
 
     /**
-     * Sets new material at this location without applying physics
+     * Sets this block to a new material without applying physics.
      *
-     * @param type type to set
+     * @param type new material
      */
     @ApiStatus.Experimental
     public void setTypeWithoutPhysics(BlockTypeHolder type) {
@@ -41,7 +60,9 @@ public class BlockHolder implements Wrapper {
     }
 
     /**
-     * @return current block at this BlockHolder's location
+     * Gets the current material at the location of this block.
+     *
+     * @return current material
      */
     public BlockTypeHolder getCurrentType() {
         final var toReturn = BlockMapper.getBlockAt(location).getType();
@@ -50,25 +71,33 @@ public class BlockHolder implements Wrapper {
     }
 
     /**
-     * Gets BlockState.
+     * Gets the {@link BlockStateHolder} of this block.
      *
-     * @return {@link Optional#empty()} if none is found
+     * @return the block state, empty if there is none
      */
     public <T extends BlockStateHolder> Optional<T> getBlockState() {
         return BlockStateMapper.getBlockStateFromBlock(this);
     }
 
     /**
-     * Breaks the block
+     * Breaks this block naturally.
      */
     public void breakNaturally() {
         BlockMapper.breakNaturally(location);
     }
 
+    /**
+     * Determines if this block is empty (is of the minecraft:air material or its derivatives).
+     *
+     * @return is this block empty?
+     */
     public boolean isEmpty() {
         return type.isAir();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return BlockMapper.convert(this, type);

@@ -350,6 +350,9 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
         MAIN,
         OFF;
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public <T> T as(Class<T> type) {
             return PlayerMapper.convertHand(this, type);

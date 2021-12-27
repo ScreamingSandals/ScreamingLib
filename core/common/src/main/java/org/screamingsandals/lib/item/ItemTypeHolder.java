@@ -27,6 +27,9 @@ public class ItemTypeHolder implements ComparableWrapper, ParticleData {
         this(platformName, (short) 0);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return ItemTypeMapper.convertItemTypeHolder(this, type);

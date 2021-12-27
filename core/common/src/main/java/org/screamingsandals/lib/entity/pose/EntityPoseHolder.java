@@ -12,6 +12,9 @@ import java.util.Optional;
 public interface EntityPoseHolder extends ComparableWrapper {
     String platformName();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_POSE)
     boolean is(Object object);

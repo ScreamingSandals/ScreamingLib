@@ -4,8 +4,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 import net.kyori.adventure.text.Component;
-import org.screamingsandals.lib.block.BlockPosition;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.utils.math.Vector3Df;
+import org.screamingsandals.lib.utils.math.Vector3Di;
 
 /**
  * Represents an abstract MetaDataItem that contains a byte indicating the index position of this item.
@@ -13,7 +14,6 @@ import org.screamingsandals.lib.utils.math.Vector3Df;
  */
 @Data
 public abstract class MetadataItem {
-
     /**
      *  The index position of this MetadataItem.
      */
@@ -125,8 +125,24 @@ public abstract class MetadataItem {
      * @param value the value the MetaDataItem should hold
      * @return a OptionalBlockPositionMetadataItem instance that holds the index and value provided
      */
-    public static OptionalBlockPositionMetadataItem ofOpt(byte index, BlockPosition value) {
+    public static OptionalBlockPositionMetadataItem ofOpt(byte index, Vector3Di value) {
         return new OptionalBlockPositionMetadataItem(index, value);
+    }
+
+    /**
+     * Turns XYZ coordinates to a protocol BlockPosition.
+     *
+     * @param x the X coordinate
+     * @param y the Y coordinate
+     * @param z the Z coordinate
+     * @return the protocol BlockPosition
+     * @see <a href="https://wiki.vg/Protocol#Position">https://wiki.vg/Protocol#Position</a>
+     */
+    public static long blockPosToLong(int x, int y, int z) {
+        if (Server.isVersion(1, 14)) {
+            return (((long) x & 0x3FFFFFF) << 38) | (((long) z & 0x3FFFFFF) << 12) | ((long) y & 0xFFF);
+        }
+        return (((long) x & 0x3FFFFFF) << 38) | (((long) y & 0xFFF) << 26) | ((long) z & 0x3FFFFFF);
     }
 
     /**
@@ -315,9 +331,9 @@ public abstract class MetadataItem {
     @Getter
     @ToString(callSuper = true)
     public static class BlockPositionMetadataItem extends MetadataItem {
-        private final BlockPosition val;
+        private final Vector3Di val;
 
-        public BlockPositionMetadataItem(byte index, BlockPosition val) {
+        public BlockPositionMetadataItem(byte index, Vector3Di val) {
             super(index);
             this.val = val;
         }
@@ -330,7 +346,7 @@ public abstract class MetadataItem {
             } else {
                 writer.writeVarInt(9);
             }
-            writer.writeLong(val.asLong());
+            writer.writeLong(blockPosToLong(val.getX(), val.getY(), val.getZ()));
         }
     }
 
@@ -340,9 +356,9 @@ public abstract class MetadataItem {
     @Getter
     @ToString(callSuper = true)
     public static class OptionalBlockPositionMetadataItem extends MetadataItem {
-        private final BlockPosition blockPosition;
+        private final Vector3Di blockPosition;
 
-        public OptionalBlockPositionMetadataItem(byte index, BlockPosition blockPosition) {
+        public OptionalBlockPositionMetadataItem(byte index, Vector3Di blockPosition) {
             super(index);
             this.blockPosition = blockPosition;
         }
@@ -358,12 +374,10 @@ public abstract class MetadataItem {
             var present = blockPosition != null;
             writer.writeBoolean(present);
             if (present) {
-                writer.writeLong(blockPosition.asLong());
+                writer.writeLong(blockPosToLong(blockPosition.getX(), blockPosition.getY(), blockPosition.getZ()));
             }
         }
     }
-
-
 
     // TODO: add more metadata types
 }

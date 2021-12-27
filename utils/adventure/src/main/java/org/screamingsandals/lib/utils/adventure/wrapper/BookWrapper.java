@@ -18,6 +18,9 @@ public final class BookWrapper implements Wrapper {
         return book;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <T> T as(Class<T> type) {

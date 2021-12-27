@@ -262,6 +262,9 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         try {

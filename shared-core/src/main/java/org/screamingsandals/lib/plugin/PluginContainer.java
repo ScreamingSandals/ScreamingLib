@@ -74,6 +74,9 @@ public abstract class PluginContainer implements Wrapper {
         return logger.as(Logger.class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return getPluginDescription().as(type);

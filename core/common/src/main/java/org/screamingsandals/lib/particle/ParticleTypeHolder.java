@@ -14,6 +14,9 @@ public interface ParticleTypeHolder extends ComparableWrapper {
     @Nullable
     Class<? extends ParticleData> expectedDataClass();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
     boolean is(Object object);

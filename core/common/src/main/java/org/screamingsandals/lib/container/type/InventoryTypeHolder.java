@@ -17,6 +17,9 @@ import java.util.Optional;
 public class InventoryTypeHolder implements ComparableWrapper {
     private final String platformName;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public <T> T as(Class<T> type) {
         return InventoryTypeMapping.convertInventoryTypeHolder(this, type);
