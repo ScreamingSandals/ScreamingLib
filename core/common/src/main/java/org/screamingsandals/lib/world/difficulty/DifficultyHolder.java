@@ -1,13 +1,14 @@
 package org.screamingsandals.lib.world.difficulty;
 
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface DifficultyHolder extends ComparableWrapper {
+public interface DifficultyHolder extends ComparableWrapper, RawValueHolder {
 
     String platformName();
 

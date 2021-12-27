@@ -5,7 +5,7 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlot;
 import org.screamingsandals.lib.attribute.*;
-import org.screamingsandals.lib.slot.EquipmentSlotMapping;
+import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.Optional;
@@ -55,16 +55,16 @@ public class BukkitAttributeMapping extends AttributeMapping {
                 .registerP2W(BukkitItemAttribute.class, bukkitItemAttribute -> {
                     try {
                         return new ItemAttributeHolder(
-                                AttributeTypeMapping.resolve(bukkitItemAttribute.getAttribute()).orElseThrow(),
+                                AttributeTypeHolder.of(bukkitItemAttribute.getAttribute()),
                                 bukkitItemAttribute.getAttributeModifier().getUniqueId(),
                                 bukkitItemAttribute.getAttributeModifier().getName(),
                                 bukkitItemAttribute.getAttributeModifier().getAmount(),
                                 AttributeModifierHolder.Operation.values()[bukkitItemAttribute.getAttributeModifier().getOperation().ordinal()],
-                                EquipmentSlotMapping.resolve(bukkitItemAttribute.getAttributeModifier().getOperation()).orElse(null) // nullable
+                                EquipmentSlotHolder.ofOptional(bukkitItemAttribute.getAttributeModifier().getOperation()).orElse(null) // nullable
                         );
                     } catch (Throwable throwable) {
                         return new ItemAttributeHolder(
-                                AttributeTypeMapping.resolve(bukkitItemAttribute.getAttribute()).orElseThrow(),
+                                AttributeTypeHolder.of(bukkitItemAttribute.getAttribute()),
                                 bukkitItemAttribute.getAttributeModifier().getUniqueId(),
                                 bukkitItemAttribute.getAttributeModifier().getName(),
                                 bukkitItemAttribute.getAttributeModifier().getAmount(),

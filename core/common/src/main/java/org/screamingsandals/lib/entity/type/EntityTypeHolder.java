@@ -2,6 +2,7 @@ package org.screamingsandals.lib.entity.type;
 
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.world.LocationHolder;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface EntityTypeHolder extends ComparableWrapper {
+public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder {
     String platformName();
 
     boolean isAlive();

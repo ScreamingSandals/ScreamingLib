@@ -57,11 +57,4 @@ public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeT
         }
         return Collections.unmodifiableList(attributeTypeMapping.values);
     }
-
-    public static <T> T convertAttributeTypeHolder(AttributeTypeHolder holder, Class<T> newType) {
-        if (attributeTypeMapping == null) {
-            throw new UnsupportedOperationException("AttributeTypeMapping is not initialized yet.");
-        }
-        return attributeTypeMapping.attributeTypeConverter.convert(holder, newType);
-    }
 }

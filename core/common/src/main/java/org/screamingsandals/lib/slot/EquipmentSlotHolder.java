@@ -1,13 +1,14 @@
 package org.screamingsandals.lib.slot;
 
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface EquipmentSlotHolder extends ComparableWrapper {
+public interface EquipmentSlotHolder extends ComparableWrapper, RawValueHolder {
 
     String platformName();
 

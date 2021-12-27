@@ -50,20 +50,4 @@ public abstract class InventoryTypeMapping extends AbstractTypeMapper<InventoryT
         }
         return Collections.unmodifiableList(inventoryTypeMapping.values);
     }
-
-    public static <T> T convertInventoryTypeHolder(InventoryTypeHolder holder, Class<T> newType) {
-        if (inventoryTypeMapping == null) {
-            throw new UnsupportedOperationException("InventoryTypeMapping is not initialized yet.");
-        }
-        return inventoryTypeMapping.inventoryTypeConverter.convert(holder, newType);
-    }
-
-    public static int getSize(InventoryTypeHolder holder) {
-        if (inventoryTypeMapping == null) {
-            throw new UnsupportedOperationException("InventoryTypeMapping is not initialized yet.");
-        }
-        return inventoryTypeMapping.getSize0(holder);
-    }
-
-    public abstract int getSize0(InventoryTypeHolder holder);
 }

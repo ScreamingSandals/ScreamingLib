@@ -2,13 +2,14 @@ package org.screamingsandals.lib.particle;
 
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface ParticleTypeHolder extends ComparableWrapper {
+public interface ParticleTypeHolder extends ComparableWrapper, RawValueHolder {
     String platformName();
 
     @Nullable

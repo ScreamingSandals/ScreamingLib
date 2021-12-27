@@ -1,43 +1,39 @@
 package org.screamingsandals.lib.container.type;
 
-import lombok.Data;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-@Data
-public class InventoryTypeHolder implements ComparableWrapper {
-    private final String platformName;
+public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
+    String platformName();
+
+    int size();
 
     /**
-     * {@inheritDoc}
+     * Use the fluent variant
      */
-    @Override
-    public <T> T as(Class<T> type) {
-        return InventoryTypeMapping.convertInventoryTypeHolder(this, type);
+    @Deprecated(forRemoval = true)
+    default int getSize() {
+        return size();
     }
 
-    public int getSize() {
-        return InventoryTypeMapping.getSize(this);
-    }
-
-    public <C extends Container> Optional<C> createContainer(ComponentLike name) {
+    default <C extends Container> Optional<C> createContainer(ComponentLike name) {
         return createContainer(name.asComponent());
     }
 
-    public <C extends Container> Optional<C> createContainer(Component name) {
+    default <C extends Container> Optional<C> createContainer(Component name) {
         return ContainerFactory.createContainer(this, name);
     }
 
-    public <C extends Container> Optional<C> createContainer() {
+    default <C extends Container> Optional<C> createContainer() {
         return ContainerFactory.createContainer(this);
     }
 
@@ -47,10 +43,9 @@ public class InventoryTypeHolder implements ComparableWrapper {
      * @param object Object that represents entity type
      * @return true if specified entity type is the same as this
      */
+    @Override
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    public boolean is(Object object) {
-        return equals(ofOptional(object).orElse(null));
-    }
+    boolean is(Object object);
 
     /**
      * Compares the entity type and the objects
@@ -58,25 +53,24 @@ public class InventoryTypeHolder implements ComparableWrapper {
      * @param objects Array of objects that represents entity type
      * @return true if at least one of the entity type objects is same as this
      */
+    @Override
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    public boolean is(Object... objects) {
-        return Arrays.stream(objects).anyMatch(this::is);
-    }
+    boolean is(Object... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    public static InventoryTypeHolder of(Object inventoryType) {
+    static InventoryTypeHolder of(Object inventoryType) {
         return ofOptional(inventoryType).orElseThrow();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    public static Optional<InventoryTypeHolder> ofOptional(Object inventoryType) {
+    static Optional<InventoryTypeHolder> ofOptional(Object inventoryType) {
         if (inventoryType instanceof InventoryTypeHolder) {
             return Optional.of((InventoryTypeHolder) inventoryType);
         }
         return InventoryTypeMapping.resolve(inventoryType);
     }
 
-    public static List<InventoryTypeHolder> all() {
+    static List<InventoryTypeHolder> all() {
         return InventoryTypeMapping.getValues();
     }
 }
