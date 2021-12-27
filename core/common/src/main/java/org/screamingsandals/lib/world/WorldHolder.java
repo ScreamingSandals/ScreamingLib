@@ -22,53 +22,53 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * <p>An interface representing a world.</p>
+ * An interface representing a world.
  */
 public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, ForwardingAudience {
     /**
-     * <p>Gets the world's {@link UUID}.</p>
+     * Gets the world's {@link UUID}.
      *
      * @return the world uuid
      */
     UUID getUuid();
 
     /**
-     * <p>Gets the world's name.</p>
+     * Gets the world's name.
      *
      * @return the world name
      */
     String getName();
 
     /**
-     * <p>Gets the world's minimal Y coordinate.</p>
+     * Gets the world's minimal Y coordinate.
      *
      * @return the minimal Y coordinate
      */
     int getMinY();
 
     /**
-     * <p>Gets the world's maximal Y coordinate.</p>
+     * Gets the world's maximal Y coordinate.
      *
      * @return the maximal Y coordinate
      */
     int getMaxY();
 
     /**
-     * <p>Gets the world difficulty holder.</p>
+     * Gets the world difficulty holder.
      *
      * @return the world difficulty
      */
     DifficultyHolder getDifficulty();
 
     /**
-     * <p>Gets the world dimension holder.</p>
+     * Gets the world dimension holder.
      *
      * @return the world dimension
      */
     DimensionHolder getDimension();
 
     /**
-     * <p>Gets the world's chunk at the supplied coordinates.</p>
+     * Gets the world's chunk at the supplied coordinates.
      *
      * @param x the chunk X coordinate
      * @param z the chunk Y coordinate
@@ -77,7 +77,7 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Forw
     Optional<ChunkHolder> getChunkAt(int x, int z);
 
     /**
-     * <p>Gets the world's chunk at the supplied {@link LocationHolder}.</p>
+     * Gets the world's chunk at the supplied {@link LocationHolder}.
      *
      * @param location the chunk location holder
      * @return the chunk holder, can be empty
@@ -85,14 +85,14 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Forw
     Optional<ChunkHolder> getChunkAt(LocationHolder location);
 
     /**
-     * <p>Gets the list of entities in this world.</p>
+     * Gets the list of entities in this world.
      *
      * @return the list of the entities in this world
      */
     List<EntityBasic> getEntities();
 
     /**
-     * <p>Gets the list of entities extending the supplied class in this world.</p>
+     * Gets the list of entities extending the supplied class in this world.
      *
      * @param clazz the entity type class
      * @param <T> the entity type
@@ -106,7 +106,7 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Forw
     }
 
     /**
-     * <p>Gets the value of the supplied gamerule holder in this world.</p>
+     * Gets the value of the supplied gamerule holder in this world.
      *
      * @param holder the gamerule holder
      * @param <T> the gamerule value type
@@ -115,7 +115,7 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Forw
     <T> T getGameRuleValue(GameRuleHolder holder);
 
     /**
-     * <p>Sets the value of the supplied gamerule holder in this world.</p>
+     * Sets the value of the supplied gamerule holder in this world.
      *
      * @param holder the gamerule holder
      * @param value the gamerule value
@@ -124,21 +124,21 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Forw
     <T> void setGameRuleValue(GameRuleHolder holder, T value);
 
     /**
-     * <p>Gets the time in this world.</p>
+     * Gets the time in this world.
      *
      * @return the time in this world
      */
     long getTime();
 
     /**
-     * <p>Sets the time in this world.</p>
+     * Sets the time in this world.
      *
      * @param time the time
      */
     void setTime(long time);
 
     /**
-     * <p>Spawns a particle at the specified location in this world.</p>
+     * Spawns a particle at the specified location in this world.
      *
      * @param particle the particle
      * @param location the location
@@ -146,28 +146,28 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Forw
     void sendParticle(ParticleHolder particle, LocationHolder location);
 
     /**
-     * <p>Determines if the spawn point of this world is loaded and being held in memory.</p>
+     * Determines if the spawn point of this world is loaded and being held in memory.
      *
      * @return is this world's spawn point loaded?
      */
     boolean isSpawnKeptInMemory();
 
     /**
-     * <p>Determines if spawning of animals is allowed in this world.</p>
+     * Determines if spawning of animals is allowed in this world.
      *
      * @return is spawning of animals allowed in this world?
      */
     boolean isSpawningOfAnimalsAllowed();
 
     /**
-     * <p>Determines if spawning of monsters is allowed in this world.</p>
+     * Determines if spawning of monsters is allowed in this world.
      *
      * @return is spawning of monsters allowed in this world?
      */
     boolean isSpawningOfMonstersAllowed();
 
     /**
-     * <p>Gets the highest non-empty block at the given X and Z coordinates.</p>
+     * Gets the highest non-empty block at the given X and Z coordinates.
      *
      * @param x the x coordinate
      * @param z the z coordinate
@@ -176,7 +176,7 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Forw
     BlockHolder getHighestBlockAt(int x, int z);
 
     /**
-     * <p>Gets the highest non-empty Y coordinate at the given X and Z coordinates.</p>
+     * Gets the highest non-empty Y coordinate at the given X and Z coordinates.
      *
      * @param x the x coordinate
      * @param z the z coordinate
@@ -185,7 +185,7 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Forw
     int getHighestYAt(int x, int z);
 
     /**
-     * <p>A gson {@link TypeAdapter} for serializing and deserializing a world holder.</p>
+     * A gson {@link TypeAdapter} for serializing and deserializing a world holder.
      */
     class WorldHolderTypeAdapter extends TypeAdapter<WorldHolder> {
         @Override

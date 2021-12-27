@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * <p>An interface representing an inventory.</p>
+ * An interface representing an inventory.
  */
 public interface Container extends Openable, Wrapper, RawValueHolder {
     /**
-     * <p>Gets the item at the specified slot in this inventory.</p>
+     * Gets the item at the specified slot in this inventory.
      *
      * @param index the inventory slot index
      * @return the item, empty if there is no item
@@ -24,7 +24,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
     Optional<Item> getItem(int index);
 
     /**
-     * <p>Sets an item at the specified slot index in this inventory.</p>
+     * Sets an item at the specified slot index in this inventory.
      *
      * @param index the inventory slot index
      * @param item the item
@@ -32,7 +32,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
     void setItem(int index, Item item);
 
     /**
-     * <p>Tries to add items to empty slots in this inventory.</p>
+     * Tries to add items to empty slots in this inventory.
      *
      * @param items the items
      * @return the items that didn't fit the inventory
@@ -40,7 +40,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
     List<Item> addItem(Item... items);
 
     /**
-     * <p>Tries to remove the supplied items from this inventory.</p>
+     * Tries to remove the supplied items from this inventory.
      *
      * @param items the items
      * @return the items that couldn't be removed
@@ -48,23 +48,23 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
     List<Item> removeItem(Item... items);
 
     /**
-     * <p>Returns all items in this inventory.</p>
-     * <p>Individual items may be null.</p>
+     * Returns all items in this inventory.
+     * Individual items may be null.
      *
      * @return contents of this inventory
      */
     @Nullable Item @NotNull [] getContents();
 
     /**
-     * <p>Returns the contents from the section of this inventory where items can be stored.</p>
-     * <p>In most cases, this will mean the entire inventory. Individual items may be null.</p>
+     * Returns the contents from the section of this inventory where items can be stored.
+     * In most cases, this will mean the entire inventory. Individual items may be null.
      *
      * @return storage contents of this inventory
      */
     @Nullable Item @NotNull [] getStorageContents();
 
     /**
-     * <p>Sets the complete contents of this inventory to the supplied items.</p>
+     * Sets the complete contents of this inventory to the supplied items.
      *
      * @param items the items
      * @throws IllegalArgumentException when the size of the items array doesn't match the inventory size
@@ -72,7 +72,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
     void setContents(@Nullable Item @NotNull [] items) throws IllegalArgumentException;
 
     /**
-     * <p>Sets the contents of the storable section of this inventory to the supplied items.</p>
+     * Sets the contents of the storable section of this inventory to the supplied items.
      *
      * @param items the items
      * @throws IllegalArgumentException when the size of the items array doesn't match the inventory size
@@ -80,7 +80,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
     void setStorageContents(@Nullable Item @NotNull [] items) throws IllegalArgumentException;
 
     /**
-     * <p>Checks if the supplied item type is present in this inventory.</p>
+     * Checks if the supplied item type is present in this inventory.
      *
      * @param materialHolder the item type
      * @return is the supplied item type present in this inventory?
@@ -88,7 +88,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
     boolean contains(ItemTypeHolder materialHolder);
 
     /**
-     * <p>Checks if the supplied item is present in this inventory.</p>
+     * Checks if the supplied item is present in this inventory.
      *
      * @param item the item
      * @return is the supplied item present in this inventory?
@@ -96,7 +96,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
     boolean contains(Item item);
 
     /**
-     * <p>Checks if the amount of occurrences of the supplied item in this inventory is higher than or equal to the supplied amount.</p>
+     * Checks if the amount of occurrences of the supplied item in this inventory is higher than or equal to the supplied amount.
      *
      * @param item the item
      * @param amount the amount
@@ -105,33 +105,33 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
     boolean containsAtLeast(Item item, int amount);
 
     /**
-     * <p>Gets the size of this inventory.</p>
+     * Gets the size of this inventory.
      *
      * @return the size of this inventory
      */
     int getSize();
 
     /**
-     * <p>Checks if this inventory is empty.</p>
+     * Checks if this inventory is empty.
      *
      * @return is this inventory empty?
      */
     boolean isEmpty();
 
     /**
-     * <p>Gets the type of this inventory.</p>
+     * Gets the type of this inventory.
      *
      * @return the type of this inventory
      */
     InventoryTypeHolder getType();
 
     /**
-     * <p>Completely wipes the contents of this inventory.</p>
+     * Completely wipes the contents of this inventory.
      */
     void clear();
 
     /**
-     * <p>Gets the index of the first empty slot in this inventory.</p>
+     * Gets the index of the first empty slot in this inventory.
      *
      * @return the index of the first empty slot, -1 if there is no empty slot
      */

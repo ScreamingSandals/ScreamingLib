@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * <p>Class responsible for converting platform worlds to wrappers.</p>
+ * Class responsible for converting platform worlds to wrappers.
  */
 @AbstractService
 public abstract class WorldMapper {
@@ -18,7 +18,7 @@ public abstract class WorldMapper {
     private static WorldMapper mapping;
 
     /**
-     * <p>Constructs the location mapper.</p>
+     * Constructs the location mapper.
      */
     @ApiStatus.Internal
     public WorldMapper() {
@@ -29,7 +29,7 @@ public abstract class WorldMapper {
     }
 
     /**
-     * <p>Resolves the supplied platform world to its {@link WorldHolder} wrapper, can be empty.</p>
+     * Resolves the supplied platform world to its {@link WorldHolder} wrapper, can be empty.
      *
      * @param obj the platform world
      * @return the world wrapper
@@ -42,7 +42,7 @@ public abstract class WorldMapper {
     }
 
     /**
-     * <p>Maps the supplied platform world to its {@link WorldHolder} wrapper.</p>
+     * Maps the supplied platform world to its {@link WorldHolder} wrapper.
      *
      * @param input the platform world
      * @param <T> the platform world type
@@ -54,7 +54,7 @@ public abstract class WorldMapper {
     }
 
     /**
-     * <p>Converts the world holder to a new type (like a platform world type).</p>
+     * Converts the world holder to a new type (like a platform world type).
      *
      * @param holder the world holder to convert
      * @param newType the new type class
@@ -71,7 +71,7 @@ public abstract class WorldMapper {
 
 
     /**
-     * <p>Gets the world holder by a supplied {@link UUID}.</p>
+     * Gets the world holder by a supplied {@link UUID}.
      *
      * @param uuid the world uuid
      * @return the world, can be empty
@@ -84,7 +84,7 @@ public abstract class WorldMapper {
     }
 
     /**
-     * <p>Gets the world holder by a supplied name.</p>
+     * Gets the world holder by a supplied name.
      *
      * @param name the world name
      * @return the world, can be empty

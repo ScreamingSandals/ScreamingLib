@@ -22,74 +22,74 @@ import org.screamingsandals.lib.world.weather.WeatherHolder;
 import java.util.Optional;
 
 /**
- * <p>A player representation.</p>
+ * A player representation.
  */
 public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, EntityHuman {
     /**
-     * <p>Checks if the player is sprinting.</p>
+     * Checks if the player is sprinting.
      *
      * @return is the player sprinting?
      */
     boolean isSprinting();
 
     /**
-     * <p>Sets the player's sprinting status.</p>
+     * Sets the player's sprinting status.
      *
      * @param sprinting the new sprinting status
      */
     void setSprinting(boolean sprinting);
 
     /**
-     * <p>Checks if the player is flying.</p>
+     * Checks if the player is flying.
      *
      * @return is the player flying?
      */
     boolean isFlying();
 
     /**
-     * <p>Sets the player's flying status.</p>
+     * Sets the player's flying status.
      *
      * @param flying the new flying status
      */
     void setFlying(boolean flying);
 
     /**
-     * <p>Checks if the player flying is allowed.</p>
+     * Checks if the player flying is allowed.
      *
      * @return is the player flying allowed?
      */
     boolean isAllowFlight();
 
     /**
-     * <p>Sets the player's flying status.</p>
+     * Sets the player's flying status.
      *
      * @param flying is the player flying allowed
      */
     void setAllowFlight(boolean flying);
 
     /**
-     * <p>Checks if the player is sneaking.</p>
+     * Checks if the player is sneaking.
      *
      * @return is the player sneaking?
      */
     boolean isSneaking();
 
     /**
-     * <p>Sets the player's sneaking status.</p>
+     * Sets the player's sneaking status.
      *
      * @param sneaking the new sneaking status
      */
     void setSneaking(boolean sneaking);
 
     /**
-     * <p>Gets the player's accurate network latency to the server.</p>
+     * Gets the player's accurate network latency to the server.
      *
      * @return the player's ping
      */
     int getPing();
 
     /**
-     * <p>Gets the player's tab list name.</p>
+     * Gets the player's tab list name.
      *
      * @return the player's tab list name
      */
@@ -97,20 +97,20 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     Component getPlayerListName();
 
     /**
-     * <p>Sets the player's display name.</p>
+     * Sets the player's display name.
      *
      * @param component the display name component
      */
     void setPlayerListName(@Nullable Component component);
     /**
-     * <p>Sets the player's display name.</p>
+     * Sets the player's display name.
      *
      * @param component the display name component
      */
     void setPlayerListName(@Nullable ComponentLike component);
 
     /**
-     * <p>Gets the player's display name.</p>
+     * Gets the player's display name.
      *
      * @return the player's display name
      */
@@ -118,103 +118,103 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     Component getDisplayName();
 
     /**
-     * <p>Sets the player's display name.</p>
+     * Sets the player's display name.
      *
      * @param component the display name component
      */
     void setDisplayName(@Nullable Component component);
 
     /**
-     * <p>Sets the player's display name.</p>
+     * Sets the player's display name.
      *
      * @param component the display name component
      */
     void setDisplayName(@Nullable ComponentLike component);
 
     /**
-     * <p>Gets the player's ender chest container.</p>
+     * Gets the player's ender chest container.
      *
      * @return the player's ender chest
      */
     Container getEnderChest();
 
     /**
-     * <p>Gets the player's inventory container.</p>
+     * Gets the player's inventory container.
      *
      * @return the player's inventory
      */
     PlayerContainer getPlayerInventory();
 
     /**
-     * <p>Gets the inventory that this player has currently opened.</p>
+     * Gets the inventory that this player has currently opened.
      *
      * @return the inventory the player has currently opened, empty if the player doesn't have an inventory opened
      */
     Optional<Container> getOpenedInventory();
 
     /**
-     * <p>Opens the supplied inventory container for this player.</p>
+     * Opens the supplied inventory container for this player.
      *
      * @param container the inventory container
      */
     void openInventory(Openable container);
 
     /**
-     * <p>Closes the inventory that the player has currently opened.</p>
+     * Closes the inventory that the player has currently opened.
      */
     void closeInventory();
 
     /**
-     * <p>Kicks this player with a message.</p>
+     * Kicks this player with a message.
      *
      * @param message the kick message
      */
     void kick(Component message);
 
     /**
-     * <p>Kicks this player with a message.</p>
+     * Kicks this player with a message.
      *
      * @param message the kick message
      */
     void kick(ComponentLike message);
 
     /**
-     * <p>Gets the player's current gamemode.</p>
+     * Gets the player's current gamemode.
      *
      * @return the player's gamemode
      */
     GameModeHolder getGameMode();
 
     /**
-     * <p>Sets the gamemode for this player.</p>
+     * Sets the gamemode for this player.
      *
      * @param gameMode the new gamemode holder
      */
     void setGameMode(@NotNull GameModeHolder gameMode);
 
     /**
-     * <p>Gets the experience level of this player.</p>
+     * Gets the experience level of this player.
      *
      * @return the player's level
      */
     int getLevel();
 
     /**
-     * <p>Gets the player's experience.</p>
+     * Gets the player's experience.
      *
      * @return the player's experience
      */
     float getExp();
 
     /**
-     * <p>Sets the experience level of this player.</p>
+     * Sets the experience level of this player.
      *
      * @param level the player's new experience level
      */
     void setLevel(int level);
 
     /**
-     * <p>Sets the player's experience.</p>
+     * Sets the player's experience.
      *
      * @param exp the player's new experience
      */
@@ -228,14 +228,14 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     void forceUpdateInventory();
 
     /**
-     * <p>Gets the weather for this player.</p>
+     * Gets the weather for this player.
      *
      * @return the weather for this player
      */
     Optional<WeatherHolder> getPlayerWeather();
 
     /**
-     * <p>Sets the weather for this player.</p>
+     * Sets the weather for this player.
      *
      * @param weather the weather
      */
@@ -248,7 +248,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     void resetPlayerTime();
 
     /**
-     * <p>Shows a particle to this player.</p>
+     * Shows a particle to this player.
      *
      * @param particle the particle
      * @param location the location of the particle
@@ -256,47 +256,47 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     void sendParticle(ParticleHolder particle, LocationHolder location);
 
     /**
-     * <p>Gets the compass target location for this player.</p>
+     * Gets the compass target location for this player.
      *
      * @return the compass target location
      */
     LocationHolder getCompassTarget();
 
     /**
-     * <p>Sets the compass target for this player.</p>
+     * Sets the compass target for this player.
      *
      * @param location the compass target location
      */
     void setCompassTarget(LocationHolder location);
 
     /**
-     * <p>Resets the scoreboard for this player.</p>
+     * Resets the scoreboard for this player.
      */
     void restoreDefaultScoreboard();
 
     /**
-     * <p>Gets the spectator target for this player.</p>
+     * Gets the spectator target for this player.
      *
      * @return the spectator target, empty if there is no target
      */
     Optional<EntityBasic> getSpectatorTarget();
 
     /**
-     * <p>Sets the spectator target for this player.</p>
+     * Sets the spectator target for this player.
      *
      * @param entity the spectator target, null to clear the target
      */
     void setSpectatorTarget(@Nullable EntityBasic entity);
 
     /**
-     * <p>Gets the player's {@link Channel}.</p>
+     * Gets the player's {@link Channel}.
      *
      * @return the player connection
      */
     Channel getChannel();
 
     /**
-     * <p>Launches the player in its facing direction.</p>
+     * Launches the player in its facing direction.
      *
      * @param multiply the velocity multiplier
      * @param y the y velocity
@@ -316,7 +316,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     }
 
     /**
-     * <p>Launches the player in its facing direction.</p>
+     * Launches the player in its facing direction.
      *
      * @param velocity the new velocity vector
      */

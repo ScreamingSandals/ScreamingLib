@@ -9,7 +9,7 @@ import org.screamingsandals.lib.world.WorldHolder;
 import java.util.List;
 
 /**
- * <p>Class holding various methods for manipulating with the Minecraft server.</p>
+ * Class holding various methods for manipulating with the Minecraft server.
  */
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
@@ -27,7 +27,7 @@ public abstract class Server {
     }
 
     /**
-     * <p>Returns a boolean stating if the current thread is the server thread.</p>
+     * Returns a boolean stating if the current thread is the server thread.
      *
      * @return true if current thread is same as the Server thread, false otherwise
      */
@@ -39,7 +39,7 @@ public abstract class Server {
     }
 
     /**
-     * <p>Returns the version string of the current Minecraft server.</p>
+     * Returns the version string of the current Minecraft server.
      *
      * @return the version string (1.17.1 for example)
      */
@@ -58,7 +58,7 @@ public abstract class Server {
     }
 
     /**
-     * <p>Compares the server version with a supplied value.</p>
+     * Compares the server version with a supplied value.
      *
      * @param major major version number (for example, 1.16.5 -> 1)
      * @param minor minor version number (for example, 1.16.5 -> 16)
@@ -72,7 +72,7 @@ public abstract class Server {
     }
 
     /**
-     * <p>Compares the server version with a supplied value.</p>
+     * Compares the server version with a supplied value.
      *
      * @param major major version number (for example, 1.16.5 -> 1)
      * @param minor minor version number (for example, 1.16.5 -> 16)
@@ -87,7 +87,7 @@ public abstract class Server {
     }
 
     /**
-     * <p>Gets the list of players that are currently connected to the server.</p>
+     * Gets the list of players that are currently connected to the server.
      *
      * @return list of players currently connected to the server
      */
@@ -106,7 +106,7 @@ public abstract class Server {
     }
 
     /**
-     * <p>Gets a list of players that are currently in the supplied world.</p>
+     * Gets a list of players that are currently in the supplied world.
      *
      * @param world the world
      * @return list of players currently in the world
@@ -122,7 +122,7 @@ public abstract class Server {
     }
 
     /**
-     * <p>Runs a {@link Runnable} synchronously (on the main server thread).</p>
+     * Runs a {@link Runnable} synchronously (on the main server thread).
      *
      * @param task the runnable
      */
