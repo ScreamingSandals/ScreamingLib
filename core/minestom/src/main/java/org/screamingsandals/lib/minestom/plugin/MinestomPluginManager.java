@@ -9,6 +9,8 @@ import org.screamingsandals.lib.plugin.PluginManager;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,7 +18,6 @@ import java.util.stream.Collectors;
 @Service
 @InternalEarlyInitialization
 public class MinestomPluginManager extends PluginManager {
-
     public static void init() {
         PluginManager.init(MinestomPluginManager::new);
     }
@@ -66,15 +67,14 @@ public class MinestomPluginManager extends PluginManager {
 
     private PluginDescription wrap(Extension extension) {
         return new PluginDescription(
-                MinestomPluginKey.of(extension.getDescription().getName()),
-                extension.getDescription().getName(),
-                extension.getDescription().getVersion(),
+                MinestomPluginKey.of(extension.getOrigin().getName()),
+                extension.getOrigin().getName(),
+                extension.getOrigin().getVersion(),
                 "",
-                extension.getDescription().getAuthors(),
-                extension.getDescription().getDependents(),
+                Arrays.asList(extension.getOrigin().getAuthors()),
+                new ArrayList<>(extension.getDependents()),
                 List.of(),
-                // TODO: check if this is the right directory
-                MinecraftServer.getExtensionManager().getExtensionFolder().toPath().resolve(extension.getDescription().getName())
+                extension.getDataDirectory()
         );
     }
 }

@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.minestom.world;
 
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.instance.Instance;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.WorldMapper;
@@ -10,6 +11,11 @@ import java.util.UUID;
 
 @Service
 public class MinestomWorldMapper extends WorldMapper {
+    public MinestomWorldMapper() {
+        converter.registerW2P(Instance.class, holder -> MinecraftServer.getInstanceManager().getInstance(holder.getUuid()))
+                .registerP2W(Instance.class, MinestomWorldHolder::new);
+    }
+
     @Override
     protected Optional<WorldHolder> getWorld0(UUID uuid) {
         return Optional.ofNullable(MinecraftServer.getInstanceManager().getInstance(uuid))
@@ -18,13 +24,11 @@ public class MinestomWorldMapper extends WorldMapper {
 
     @Override
     protected Optional<WorldHolder> getWorld0(String name) {
-        final UUID uuid;
         try {
-            uuid = UUID.fromString(name);
+            return getWorld0(UUID.fromString(name));
         } catch (IllegalArgumentException ignored) {
-            return Optional.empty();
+            // ignored
         }
-        return Optional.ofNullable(MinecraftServer.getInstanceManager().getInstance(uuid))
-                .map(MinestomWorldHolder::new);
+        return Optional.empty();
     }
 }

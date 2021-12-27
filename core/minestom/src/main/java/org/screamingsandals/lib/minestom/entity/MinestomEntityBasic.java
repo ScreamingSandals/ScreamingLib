@@ -9,7 +9,6 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.minestom.utils.MinestomAdventureHelper;
-import org.screamingsandals.lib.minestom.world.InstancedPosition;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;

@@ -17,18 +17,18 @@ import org.screamingsandals.lib.tasker.task.TaskerTask;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 
+import java.time.temporal.TemporalUnit;
+
 @Service
 public class MinestomTaskInitializer extends AbstractTaskInitializer {
     private final SchedulerManager scheduler = MinecraftServer.getSchedulerManager();
-    private final Extension plugin;
 
-    public MinestomTaskInitializer(Controllable controllable, Extension plugin) {
+    public MinestomTaskInitializer(Controllable controllable) {
         super(controllable);
-        this.plugin = plugin;
     }
 
     public static void init(Controllable controllable, Extension plugin) {
-        Tasker.init(() -> new MinestomTaskInitializer(controllable, plugin));
+        Tasker.init(() -> new MinestomTaskInitializer(controllable));
     }
 
     @Override
@@ -75,7 +75,7 @@ public class MinestomTaskInitializer extends AbstractTaskInitializer {
         toCancel.cancel();
     }
 
-    private TimeUnit convert(TaskerTime time) {
+    private TemporalUnit convert(TaskerTime time) {
         switch (time) {
             case SECONDS:
                 return TimeUnit.SECOND;
@@ -84,7 +84,7 @@ public class MinestomTaskInitializer extends AbstractTaskInitializer {
             case HOURS:
                 return TimeUnit.HOUR;
             default:
-                return TimeUnit.TICK;
+                return TimeUnit.SERVER_TICK;
         }
     }
 

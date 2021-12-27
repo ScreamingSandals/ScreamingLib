@@ -12,8 +12,8 @@ import java.util.UUID;
 @Service
 public class BukkitWorldMapper extends WorldMapper {
     public BukkitWorldMapper() {
-        converter.registerW2P(World.class, holder -> Bukkit.getWorld(holder.getUuid()));
-        converter.registerP2W(World.class, BukkitWorldHolder::new);
+        converter.registerW2P(World.class, holder -> Bukkit.getWorld(holder.getUuid()))
+                .registerP2W(World.class, BukkitWorldHolder::new);
     }
 
     @Override
