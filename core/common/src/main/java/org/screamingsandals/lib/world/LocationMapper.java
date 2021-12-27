@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * <p>Class responsible for converting platform locations to wrappers.</p>
+ * Class responsible for converting platform locations to wrappers.
  */
 @AbstractService
 public abstract class LocationMapper {
@@ -23,7 +23,7 @@ public abstract class LocationMapper {
     private static LocationMapper mapping;
 
     /**
-     * <p>Constructs the location mapper.</p>
+     * Constructs the location mapper.
      */
     @ApiStatus.Internal
     public LocationMapper() {
@@ -48,7 +48,7 @@ public abstract class LocationMapper {
     }
 
     /**
-     * <p>Resolves the supplied platform location to its {@link LocationHolder} wrapper, can be empty.</p>
+     * Resolves the supplied platform location to its {@link LocationHolder} wrapper, can be empty.
      *
      * @param obj the platform location
      * @return the location wrapper
@@ -61,7 +61,7 @@ public abstract class LocationMapper {
     }
 
     /**
-     * <p>Maps the supplied platform location to its {@link LocationHolder} wrapper.</p>
+     * Maps the supplied platform location to its {@link LocationHolder} wrapper.
      *
      * @param input the platform location
      * @param <T>   the platform location type
@@ -73,7 +73,7 @@ public abstract class LocationMapper {
     }
 
     /**
-     * <p>Converts the location holder to a new type (like a platform location type).</p>
+     * Converts the location holder to a new type (like a platform location type).
      *
      * @param holder  the location holder to convert
      * @param newType the new type class

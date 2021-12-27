@@ -30,7 +30,7 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
     double getWidth();
 
     /**
-     * <p>Checks if the entity is on ground.</p>
+     * Checks if the entity is on ground.
      *
      * @return is the entity on ground?
      */
@@ -39,7 +39,7 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
     boolean isInWater();
 
     /**
-     * <p>Teleports this entity to a location asynchronously.</p>
+     * Teleports this entity to a location asynchronously.
      *
      * @param location the location to teleport to
      * @return the teleport future
@@ -47,7 +47,7 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
     CompletableFuture<Boolean> teleport(LocationHolder location);
 
     /**
-     * <p>Teleports this entity to a location asynchronously.</p>
+     * Teleports this entity to a location asynchronously.
      *
      * @param location the location to teleport to
      * @param callback the callback runnable
@@ -58,7 +58,7 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
     }
 
     /**
-     * <p>Teleports this entity to a location asynchronously.</p>
+     * Teleports this entity to a location asynchronously.
      *
      * @param location the location to teleport to
      * @param callback the callback runnable
@@ -68,7 +68,7 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
     CompletableFuture<Void> teleport(LocationHolder location, Runnable callback, boolean forceCallback);
 
     /**
-     * <p>Teleports this entity to a location synchronously.</p>
+     * Teleports this entity to a location synchronously.
      *
      * @param location the location to teleport to
      * @return true if the teleport was successful

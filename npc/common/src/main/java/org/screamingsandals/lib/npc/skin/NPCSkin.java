@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * <p>A class representation of a Minecraft skin.</p>
+ * A class representation of a Minecraft skin.
  */
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,26 +21,26 @@ import java.util.concurrent.ConcurrentHashMap;
 @ConfigSerializable
 public class NPCSkin {
     /**
-     * <p>A skin cache based on player names.</p>
+     * A skin cache based on player names.
      */
     private static final Map<String, NPCSkin> PLAYER_NAME_SKIN_CACHE = new ConcurrentHashMap<>();
     /**
-     * <p>A skin cache based on player UUID's.</p>
+     * A skin cache based on player UUID's.
      */
     private static final Map<UUID, NPCSkin> PLAYER_UUID_SKIN_CACHE = new ConcurrentHashMap<>();
 
     /**
-     * <p>The skin value.</p>
+     * The skin value.
      */
     private String value;
     /**
-     * <p>The skin signature.</p>
+     * The skin signature.
      */
     private String signature;
 
     /**
-     * <p>Attempts to retrieve a player skin from Mojang's API asynchronously.</p>
-     * <p>Will use a cached value if it's available.</p>
+     * Attempts to retrieve a player skin from Mojang's API asynchronously.
+     * Will use a cached value if it's available.
      *
      * @param playerName the player name
      * @return the {@link CompletableFuture} with the {@link NPCSkin}
@@ -50,8 +50,8 @@ public class NPCSkin {
     }
 
     /**
-     * <p>Attempts to retrieve a player skin from Mojang's API asynchronously.</p>
-     * <p>Cache lookup will be skipped if force is true.</p>
+     * Attempts to retrieve a player skin from Mojang's API asynchronously.
+     * Cache lookup will be skipped if force is true.
      *
      * @param playerName the player name
      * @param force should the cache be skipped?
@@ -94,8 +94,8 @@ public class NPCSkin {
     }
 
     /**
-     * <p>Attempts to retrieve a player skin from Mojang's API asynchronously.</p>
-     * <p>Will use a cached value if it's available.</p>
+     * Attempts to retrieve a player skin from Mojang's API asynchronously.
+     * Will use a cached value if it's available.
      *
      * @param uuid the player uuid
      * @return the {@link CompletableFuture} with the {@link NPCSkin}
@@ -105,8 +105,8 @@ public class NPCSkin {
     }
 
     /**
-     * <p>Attempts to retrieve a player skin from Mojang's API asynchronously.</p>
-     * <p>Cache lookup will be skipped if force is true.</p>
+     * Attempts to retrieve a player skin from Mojang's API asynchronously.
+     * Cache lookup will be skipped if force is true.
      *
      * @param uuid the player uuid
      * @param force should the cache be skipped?

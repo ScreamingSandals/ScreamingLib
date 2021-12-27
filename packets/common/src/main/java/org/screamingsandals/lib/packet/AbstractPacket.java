@@ -11,8 +11,8 @@ public abstract class AbstractPacket {
     /**
      * Writes the contents of this packet to an {@link PacketWriter} instance.
      *
-     * <p> Note that the writer must have written the packet id at the header before this method is called,
-     *  packets may not be functional otherwise.
+     * Note that the writer must have written the packet id at the header before this method is called,
+     * packets may not be functional otherwise.
      *
      * @param writer the writer to populate packet contents
      */

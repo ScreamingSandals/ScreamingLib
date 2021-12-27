@@ -27,7 +27,7 @@ public interface NPC extends TouchableVisual<NPC> {
     }
 
     /**
-     * <p>Gets the display name text entries of this NPC.</p>
+     * Gets the display name text entries of this NPC.
      *
      * @return a list containing text entries for the NPC name, null if not set
      * @see NPC#setDisplayName(List) for setting the display name
@@ -36,7 +36,7 @@ public interface NPC extends TouchableVisual<NPC> {
     List<TextEntry> getDisplayName();
 
     /**
-     * <p>Gets the skin of this NPC.</p>
+     * Gets the skin of this NPC.
      *
      * @return the skin of this NPC
      * @see NPC#setSkin(NPCSkin) for setting the skin of this NPC
@@ -44,7 +44,7 @@ public interface NPC extends TouchableVisual<NPC> {
     NPCSkin getSkin();
 
     /**
-     * <p>Sets the display name text entries of this NPC.</p>
+     * Sets the display name text entries of this NPC.
      *
      * @param name name (multi-lined) of the NPC.
      * @return this NPC
@@ -53,7 +53,7 @@ public interface NPC extends TouchableVisual<NPC> {
     NPC setDisplayName(List<Component> name);
 
     /**
-     * <p>Gets the ID of this NPC entity.</p>
+     * Gets the ID of this NPC entity.
      *
      * @return the ID of this NPC entity
      */
@@ -77,14 +77,14 @@ public interface NPC extends TouchableVisual<NPC> {
     void lookAtLocation(LocationHolder location, PlayerWrapper player);
 
     /**
-     * <p>Gets the entity name.</p>
+     * Gets the entity name.
      *
      * @return a single line name of the entity generated from the UUID
      */
     Component getName();
 
     /**
-     * <p>Sets whether the line of sight of this NPC should follow a viewer.</p>
+     * Sets whether the line of sight of this NPC should follow a viewer.
      *
      * @param shouldLook should the NPC rotate its head towards a viewer?
      * @return this NPC
@@ -93,7 +93,7 @@ public interface NPC extends TouchableVisual<NPC> {
     NPC setShouldLookAtPlayer(boolean shouldLook);
 
     /**
-     * <p>Determines if the line of sight of this NPC is following a viewer.</p>
+     * Determines if the line of sight of this NPC is following a viewer.
      *
      * @return is the NPC rotating its head towards the viewer?
      * @see NPC#setShouldLookAtPlayer(boolean) for setting the current state
@@ -101,7 +101,7 @@ public interface NPC extends TouchableVisual<NPC> {
     boolean shouldLookAtPlayer();
 
     /**
-     * <p>Gets the {@link Hologram} instance that displays the name of this NPC.</p>
+     * Gets the {@link Hologram} instance that displays the name of this NPC.
      *
      * @return the hologram
      */
