@@ -11,7 +11,6 @@ import org.screamingsandals.lib.utils.annotations.Service;
 
 @Service
 public class BukkitItemFactory extends ItemFactory {
-
     public BukkitItemFactory() {
         itemConverter
                 .registerW2P(ItemStack.class, item -> (ItemStack) item.raw())

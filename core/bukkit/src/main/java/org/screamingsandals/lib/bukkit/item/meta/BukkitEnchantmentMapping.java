@@ -10,7 +10,6 @@ import java.util.Arrays;
 
 @Service
 public class BukkitEnchantmentMapping extends EnchantmentMapping {
-
     public BukkitEnchantmentMapping() {
         enchantmentConverter
                 .registerW2P(Enchantment.class, e -> Enchantment.getByName(e.getPlatformName()))
@@ -22,5 +21,4 @@ public class BukkitEnchantmentMapping extends EnchantmentMapping {
             values.add(holder);
         });
     }
-
 }

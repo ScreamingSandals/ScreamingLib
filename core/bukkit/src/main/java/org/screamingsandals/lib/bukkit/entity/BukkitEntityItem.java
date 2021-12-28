@@ -8,7 +8,6 @@ import org.screamingsandals.lib.item.Item;
 import java.util.concurrent.TimeUnit;
 
 public class BukkitEntityItem extends BukkitEntityBasic implements EntityItem {
-
     public BukkitEntityItem(org.bukkit.entity.Item wrappedObject) {
         super(wrappedObject);
     }

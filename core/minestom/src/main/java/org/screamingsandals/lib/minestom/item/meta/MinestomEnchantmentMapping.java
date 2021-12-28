@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.minestom.material.meta;
+package org.screamingsandals.lib.minestom.item.meta;
 
 import net.minestom.server.item.Enchantment;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
@@ -10,16 +10,15 @@ import java.util.Arrays;
 
 @Service
 public class MinestomEnchantmentMapping extends EnchantmentMapping {
-
-    public static void init() {
-        EnchantmentMapping.init(MinestomEnchantmentMapping::new);
-    }
-
     public MinestomEnchantmentMapping() {
         enchantmentConverter
-                .registerW2P(Enchantment.class, e -> Enchantment.valueOf(e.getPlatformName()))
+                .registerW2P(Enchantment.class, e -> Enchantment.fromNamespaceId(e.getPlatformName()))
                 .registerP2W(Enchantment.class, e -> new EnchantmentHolder(e.name()));
 
-        Arrays.stream(Enchantment.values()).forEach(enchantment -> mapping.put(NamespacedMappingKey.of(enchantment.getNamespaceID()), new EnchantmentHolder(enchantment.name())));
+        Enchantment.values().forEach(enchantment -> {
+            final var holder = new EnchantmentHolder(enchantment.name());
+            mapping.put(NamespacedMappingKey.of(enchantment.name()), holder);
+            values.add(holder);
+        });
     }
 }

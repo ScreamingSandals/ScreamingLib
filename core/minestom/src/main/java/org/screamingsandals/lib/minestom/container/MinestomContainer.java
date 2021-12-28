@@ -1,19 +1,20 @@
-package org.screamingsandals.lib.minestom.material.container;
+package org.screamingsandals.lib.minestom.container;
 
-import net.minestom.server.entity.Player;
 import net.minestom.server.inventory.Inventory;
 import net.minestom.server.item.ItemStack;
-import org.screamingsandals.lib.material.Item;
-import org.screamingsandals.lib.material.MaterialHolder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
-import org.screamingsandals.lib.minestom.material.builder.MinestomItemFactory;
+import org.screamingsandals.lib.container.type.InventoryTypeHolder;
+import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.minestom.item.builder.MinestomItemFactory;
+import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.*;
 
 public class MinestomContainer extends BasicWrapper<Inventory> implements Container {
-
     public MinestomContainer(Inventory wrappedObject) {
         super(wrappedObject);
     }
@@ -66,8 +67,7 @@ public class MinestomContainer extends BasicWrapper<Inventory> implements Contai
                 var first = first(stack);
 
                 if (first == -1) {
-                    item.setAmount(toDelete);
-                    list.add(item);
+                    list.add(item.withAmount(toDelete));
                     break;
                 } else {
                     var itemStack = wrappedObject.getItemStack(first);
@@ -75,11 +75,10 @@ public class MinestomContainer extends BasicWrapper<Inventory> implements Contai
 
                     if (amount <= toDelete) {
                         toDelete -= amount;
-                        wrappedObject.setItemStack(first, ItemStack.getAirItem());
+                        wrappedObject.setItemStack(first, ItemStack.AIR);
                     } else {
-                        itemStack.setAmount((byte) (amount - toDelete));
-                        wrappedObject.setItemStack(first, itemStack);
                         toDelete = 0;
+                        wrappedObject.setItemStack(first, itemStack.withAmount(amount - toDelete));
                     }
                 }
             }
@@ -88,8 +87,13 @@ public class MinestomContainer extends BasicWrapper<Inventory> implements Contai
     }
 
     @Override
-    public Item[] getContents() {
+    public @Nullable Item @NotNull [] getContents() {
         return Arrays.stream(wrappedObject.getItemStacks()).map(MinestomItemFactory::build).map(item -> item.orElse(null)).toArray(Item[]::new);
+    }
+
+    @Override
+    public @Nullable Item @NotNull [] getStorageContents() {
+        return getContents();
     }
 
     @Override
@@ -103,8 +107,13 @@ public class MinestomContainer extends BasicWrapper<Inventory> implements Contai
     }
 
     @Override
-    public boolean contains(MaterialHolder materialHolder) {
-        return Arrays.stream(getContents()).filter(Objects::nonNull).anyMatch(item -> item.getMaterial().equals(materialHolder));
+    public void setStorageContents(@Nullable Item @NotNull [] items) throws IllegalArgumentException {
+        setContents(items);
+    }
+
+    @Override
+    public boolean contains(ItemTypeHolder materialHolder) {
+        return Arrays.stream(getContents()).filter(Objects::nonNull).anyMatch(e -> e.getType() == materialHolder);
     }
 
     @Override
@@ -114,7 +123,7 @@ public class MinestomContainer extends BasicWrapper<Inventory> implements Contai
 
     @Override
     public boolean containsAtLeast(Item item, int amount) {
-        var amount2 = Arrays.stream(getContents()).filter(item::isSimilar).mapToInt(Item::getAmount).sum();
+        var amount2 = Arrays.stream(getContents()).filter(item::isSimilar).filter(Objects::nonNull).mapToInt(Item::getAmount).sum();
         return amount2 >= amount;
     }
 
@@ -129,9 +138,22 @@ public class MinestomContainer extends BasicWrapper<Inventory> implements Contai
     }
 
     @Override
-    public void openInventory(Wrapper wrapper) {
-        wrapper.asOptional(Player.class).ifPresent(player ->
-                player.openInventory(wrappedObject)
-        );
+    public InventoryTypeHolder getType() {
+        return null;
+    }
+
+    @Override
+    public void clear() {
+
+    }
+
+    @Override
+    public int firstEmptySlot() {
+        return 0;
+    }
+
+    @Override
+    public void openInventory(PlayerWrapper wrapper) {
+
     }
 }

@@ -8,7 +8,7 @@ import net.minestom.server.item.attribute.AttributeSlot;
 import net.minestom.server.item.attribute.ItemAttribute;
 import org.screamingsandals.lib.attribute.*;
 import org.screamingsandals.lib.slot.EquipmentSlotMapping;
-import org.screamingsandals.lib.minestom.material.slot.MinestomEquipmentSlotMapping;
+import org.screamingsandals.lib.minestom.slot.MinestomEquipmentSlotMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.Optional;

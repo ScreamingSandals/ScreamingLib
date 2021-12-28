@@ -13,7 +13,6 @@ import java.util.Arrays;
 
 @Service
 public class BukkitPotionMapping extends PotionMapping {
-
     @Getter
     private int versionNumber;
 

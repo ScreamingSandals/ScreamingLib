@@ -181,11 +181,6 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public void kick(ComponentLike message) {
-        kick(message.asComponent());
-    }
-
-    @Override
     public GameModeHolder getGameMode() {
         return GameModeHolder.of(((Player) wrappedObject).getGameMode());
     }

@@ -177,7 +177,9 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @param message the kick message
      */
-    void kick(ComponentLike message);
+    default void kick(ComponentLike message) {
+        kick(message.asComponent());
+    }
 
     /**
      * Gets the player's current gamemode.

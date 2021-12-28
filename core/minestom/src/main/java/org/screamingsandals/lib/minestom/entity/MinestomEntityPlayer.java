@@ -3,13 +3,15 @@ package org.screamingsandals.lib.minestom.entity;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
+import net.minestom.server.particle.Particle;
+import net.minestom.server.particle.ParticleCreator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
-import org.screamingsandals.lib.container.Openable;
 import org.screamingsandals.lib.container.PlayerContainer;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
@@ -116,7 +118,7 @@ public class MinestomEntityPlayer extends MinestomEntityHuman implements PlayerW
     @Override
     public Optional<Container> getOpenedInventory() {
         if (((Player) wrappedObject).getOpenInventory() != null) {
-            return ContainerFactory.wrapContainer(((Player) wrappedObject).getOpenInventory())
+            return ContainerFactory.wrapContainer(((Player) wrappedObject).getOpenInventory());
         }
         return Optional.empty();
     }
@@ -129,11 +131,6 @@ public class MinestomEntityPlayer extends MinestomEntityHuman implements PlayerW
     @Override
     public void kick(Component message) {
         ((Player) wrappedObject).kick(message);
-    }
-
-    @Override
-    public void kick(ComponentLike message) {
-        kick(message.asComponent());
     }
 
     @Override
@@ -198,7 +195,21 @@ public class MinestomEntityPlayer extends MinestomEntityHuman implements PlayerW
 
     @Override
     public void sendParticle(ParticleHolder particle, LocationHolder location) {
-
+        final var minestomParticle = ParticleCreator.createParticlePacket(
+                particle.particleType().as(Particle.class),
+                particle.longDistance(),
+                location.getX(),
+                location.getY(),
+                location.getZ(),
+                (float) particle.offset().getX(),
+                (float) particle.offset().getY(),
+                (float) particle.offset().getZ(),
+                (float) particle.particleData(),
+                particle.count(),
+                null
+        );
+        //noinspection UnstableApiUsage
+        ((Player) wrappedObject).getPlayerConnection().sendPacket(minestomParticle);
     }
 
     @Override
@@ -213,7 +224,7 @@ public class MinestomEntityPlayer extends MinestomEntityHuman implements PlayerW
 
     @Override
     public void restoreDefaultScoreboard() {
-
+        // TODO
     }
 
     @Override
@@ -228,17 +239,17 @@ public class MinestomEntityPlayer extends MinestomEntityHuman implements PlayerW
 
     @Override
     public @NotNull Audience audience() {
-        return null;
+        return wrappedObject.getViewersAsAudience();
     }
 
     @Override
     public void tryToDispatchCommand(String command) {
-
+        MinecraftServer.getCommandManager().execute(((Player) wrappedObject), command);
     }
 
     @Override
     public void sendMessage(String message) {
-
+        ((Player) wrappedObject).sendMessage(message);
     }
 
     @Override
