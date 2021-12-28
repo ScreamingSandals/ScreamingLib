@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class BukkitEntityMapper extends EntityMapper {
-
     public static boolean HAS_MOB_INTERFACE = Reflect.has("org.bukkit.entity.Mob");
 
     @Override

@@ -19,9 +19,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
     public BukkitPlayerMapper() {
         offlinePlayerConverter
                 .registerP2W(OfflinePlayer.class, offlinePlayer -> new FinalOfflinePlayerWrapper(offlinePlayer.getUniqueId(), offlinePlayer.getName()))
-                .registerP2W(PlayerWrapper.class, playerWrapper -> new FinalOfflinePlayerWrapper(playerWrapper.getUuid(), playerWrapper.getName()))
-                .registerW2P(OfflinePlayer.class, offlinePlayerWrapper -> Bukkit.getOfflinePlayer(offlinePlayerWrapper.getUuid()))
-                .registerW2P(PlayerWrapper.class, offlinePlayerWrapper -> getPlayer0(offlinePlayerWrapper.getUuid()).orElse(null));
+                .registerW2P(OfflinePlayer.class, offlinePlayerWrapper -> Bukkit.getOfflinePlayer(offlinePlayerWrapper.getUuid()));
 
         handConverter
                 .registerW2P(EquipmentSlot.class, wrapper -> {
@@ -59,14 +57,14 @@ public class BukkitPlayerMapper extends PlayerMapper {
         } else if (sender instanceof OfflinePlayer) {
             return getPlayer0(((OfflinePlayer) sender).getUniqueId()).orElseThrow();
         } else if (sender instanceof CommandSender) {
-            return new GenericCommandSender((CommandSender) sender);
+            return new BukkitCommandSender((CommandSender) sender);
         }
         throw new UnsupportedOperationException("Can't wrap " + sender + " to CommandSenderWrapper");
     }
 
     @Override
     public SenderWrapper getConsoleSender0() {
-        return new GenericCommandSender(Bukkit.getConsoleSender());
+        return new BukkitCommandSender(Bukkit.getConsoleSender());
     }
 
     @Override

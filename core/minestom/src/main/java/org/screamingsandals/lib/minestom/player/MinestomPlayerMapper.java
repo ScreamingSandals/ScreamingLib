@@ -3,12 +3,8 @@ package org.screamingsandals.lib.minestom.player;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
 import net.minestom.server.entity.Player;
-import net.minestom.server.extensions.Extension;
 import org.screamingsandals.lib.minestom.entity.MinestomEntityPlayer;
-import org.screamingsandals.lib.player.FinalOfflinePlayerWrapper;
-import org.screamingsandals.lib.player.OfflinePlayerWrapper;
-import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.*;
@@ -20,7 +16,10 @@ import java.util.UUID;
 
 @Service
 public class MinestomPlayerMapper extends PlayerMapper {
-    public MinestomPlayerMapper(Extension extension) {
+    public MinestomPlayerMapper() {
+        offlinePlayerConverter
+                .registerP2W(Player.class, player -> getPlayer0(player.getUuid()).orElse(null))
+                .registerW2P(Player.class, offlinePlayerWrapper -> MinecraftServer.getConnectionManager().getPlayer(offlinePlayerWrapper.getUuid()));
         handConverter
                 .registerW2P(Player.Hand.class, wrapper -> Player.Hand.valueOf(wrapper.name()))
                 .registerP2W(Player.Hand.class, hand -> PlayerWrapper.Hand.valueOf(hand.name()));
@@ -37,13 +36,21 @@ public class MinestomPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public CommandSenderWrapper getConsoleSender0() {
-        return senderConverter.convert(MinecraftServer.getCommandManager().getConsoleSender());
+    protected <T> CommandSenderWrapper wrapSender0(T sender) {
+        if (sender instanceof CommandSender) {
+            return new MinestomCommandSender(MinecraftServer.getCommandManager().getConsoleSender());
+        }
+        throw new UnsupportedOperationException("Can't wrap " + sender + " to CommandSenderWrapper");
+    }
+
+    @Override
+    public SenderWrapper getConsoleSender0() {
+        return new MinestomCommandSender(MinecraftServer.getCommandManager().getConsoleSender());
     }
 
     @Override
     public Optional<LocationHolder> getBedLocation0(OfflinePlayerWrapper playerWrapper) {
-        return Optional.empty(); // TODO
+        return Optional.empty();
     }
 
     @Override
@@ -74,12 +81,12 @@ public class MinestomPlayerMapper extends PlayerMapper {
 
     @Override
     public boolean isOp0(Operator wrapper) {
-        return false; // TODO: check if op exists in Minestom
+        return false;
     }
 
     @Override
     public void setOp0(Operator wrapper, boolean op) {
-        // TODO: check if op exists in Minestom
+        // empty stub
     }
 
     @Override
@@ -116,5 +123,18 @@ public class MinestomPlayerMapper extends PlayerMapper {
     @Override
     public OfflinePlayerWrapper getOfflinePlayer0(UUID uuid) {
         return new FinalOfflinePlayerWrapper(uuid, null);
+    }
+
+    @Override
+    public Optional<OfflinePlayerWrapper> getOfflinePlayer0(String name) {
+        return Optional.ofNullable(MinecraftServer.getConnectionManager().getPlayer(name)).map(MinestomEntityPlayer::new);
+    }
+
+    @Override
+    public Optional<PlayerWrapper> getPlayerExact0(String name) {
+        return MinecraftServer.getConnectionManager().getOnlinePlayers().stream()
+                .filter(e -> e.getUsername().equals(name))
+                .findFirst()
+                .map(MinestomEntityPlayer::new);
     }
 }

@@ -10,8 +10,8 @@ import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
-public class GenericCommandSender extends BasicWrapper<CommandSender> implements SenderWrapper {
-    public GenericCommandSender(CommandSender wrappedObject) {
+public class BukkitCommandSender extends BasicWrapper<CommandSender> implements SenderWrapper {
+    public BukkitCommandSender(CommandSender wrappedObject) {
         super(wrappedObject);
     }
 
@@ -21,9 +21,8 @@ public class GenericCommandSender extends BasicWrapper<CommandSender> implements
             return Type.PLAYER;
         } else if (wrappedObject instanceof ConsoleCommandSender) {
             return Type.CONSOLE;
-        } else {
-            return Type.UNKNOWN;
         }
+        return Type.UNKNOWN;
     }
 
     @Override
