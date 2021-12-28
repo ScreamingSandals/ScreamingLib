@@ -400,7 +400,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     private void startRotationTask() {
-        if (rotationMode != RotationMode.NONE && rotationTask != null) {
+        if (rotationMode != RotationMode.NONE && rotationTask == null) {
             rotationTask = Tasker.build(() -> {
                         if (itemEntity == null || !visible) {
                             return;

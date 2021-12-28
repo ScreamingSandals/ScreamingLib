@@ -9,7 +9,6 @@ import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
-import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.nms.accessors.MinecraftServerAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerConnectionListenerAccessor;
 import org.screamingsandals.lib.player.PlayerMapper;
@@ -17,6 +16,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.WorldHolder;
+import org.screamingsandals.lib.world.WorldMapper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -95,7 +95,7 @@ public class BukkitServer extends Server {
     @Override
     public List<WorldHolder> getWorlds0() {
         return Bukkit.getWorlds().stream()
-                .map(BukkitWorldHolder::new)
+                .map(WorldMapper::wrapWorld)
                 .collect(Collectors.toList());
     }
 

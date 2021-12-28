@@ -32,7 +32,6 @@ import java.util.stream.Collectors;
 
 @ConfigSerializable
 public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolder {
-
     public BukkitWorldHolder(World wrappedObject) {
         super(wrappedObject);
     }

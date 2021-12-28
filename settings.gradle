@@ -36,7 +36,7 @@ include 'lang'
 include 'annotation'
 
 // Main modules
-registerModule('core', 'bukkit') //TODO: add others (minestom, sponge)
+registerModule('core', 'bukkit'/*, 'minestom'*/) //TODO: add others (minestom, sponge)
 registerModule('proxy', 'bungee', 'velocity')
 
 // Optional modules

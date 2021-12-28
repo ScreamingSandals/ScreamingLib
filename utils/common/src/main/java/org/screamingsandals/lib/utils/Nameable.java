@@ -1,9 +1,24 @@
 package org.screamingsandals.lib.utils;
 
-import java.util.Optional;
+import java.io.Serializable;
 
-public interface Nameable {
-    Optional<String> getName();
+/**
+ * Something that can have a name.
+ */
+public interface Nameable extends Serializable {
 
-    void setName(String name);
+    /**
+     * Creates new {@link Nameable}.
+     *
+     * @param name the name to use
+     * @return new Nameable instance.
+     */
+    static Nameable of(String name) {
+        return () -> name;
+    }
+
+    /**
+     * @return the name
+     */
+    String name();
 }

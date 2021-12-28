@@ -2,13 +2,13 @@ package org.screamingsandals.lib.bukkit.world.chunk;
 
 import org.bukkit.Chunk;
 import org.jetbrains.annotations.Range;
-import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
+import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.block.BlockHolder;
-import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.world.WorldHolder;
+import org.screamingsandals.lib.world.WorldMapper;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
 import java.util.Arrays;
@@ -31,7 +31,7 @@ public class BukkitChunkHolder extends BasicWrapper<Chunk> implements ChunkHolde
 
     @Override
     public WorldHolder getWorld() {
-        return new BukkitWorldHolder(wrappedObject.getWorld());
+        return WorldMapper.wrapWorld(wrappedObject.getWorld());
     }
 
     @Override

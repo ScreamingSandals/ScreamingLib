@@ -1,10 +1,13 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.bukkit.event.world.WorldSaveEvent;
-import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.event.world.SWorldSaveEvent;
 import org.screamingsandals.lib.world.WorldHolder;
+import org.screamingsandals.lib.world.WorldMapper;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -21,7 +24,7 @@ public class SBukkitWorldSaveEvent implements SWorldSaveEvent {
     @Override
     public WorldHolder getWorld() {
         if (world == null) {
-            world = new BukkitWorldHolder(event.getWorld());
+            world = WorldMapper.wrapWorld(event.getWorld());
         }
         return world;
     }

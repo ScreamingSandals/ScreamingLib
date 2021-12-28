@@ -1,12 +1,15 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.bukkit.event.world.SpawnChangeEvent;
-import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
 import org.screamingsandals.lib.event.world.SSpawnChangeEvent;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
+import org.screamingsandals.lib.world.WorldMapper;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -25,7 +28,7 @@ public class SBukkitSpawnChangeEvent implements SSpawnChangeEvent {
     @Override
     public WorldHolder getWorld() {
         if (world == null) {
-            world = new BukkitWorldHolder(event.getWorld());
+            world = WorldMapper.wrapWorld(event.getWorld());
         }
         return world;
     }
