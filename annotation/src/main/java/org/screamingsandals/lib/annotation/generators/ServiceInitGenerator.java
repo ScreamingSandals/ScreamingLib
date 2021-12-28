@@ -135,7 +135,7 @@ public class ServiceInitGenerator {
                     processedArguments.add(indexOfAdventureConfigurateSerializer);
                 }
                 if (configFile.screamingLibSerializers()) {
-                    if (elements.getTypeElement("org.screamingsandals.lib.configurate.SLibSerializers") != null) { // only for Core
+                    if (ServiceInitGenerator.this.elements.getTypeElement("org.screamingsandals.lib.configurate.SLibSerializers") != null) { // only for Core
                         statement.append(".defaultOptions(t -> t.serializers($T::makeSerializers))");
                         processedArguments.add(ClassName.get("org.screamingsandals.lib.configurate", "SLibSerializers"));
                     }
