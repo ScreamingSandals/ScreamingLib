@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.bukkit.block;
 
 import com.google.common.base.Preconditions;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
@@ -21,27 +20,31 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
     private final Map<String, Map<String, String>> defaultFlatteningBlockDataCache = new HashMap<>();
 
     public BukkitBlockTypeMapper() {
-        blockTypeConverter
-                .registerW2P(Material.class, holder -> Material.valueOf(holder.platformName()))
-                .registerP2W(Material.class, material -> new BlockTypeHolder(material.name()));
-
         if (Version.isVersion(1, 13)) {
             blockTypeConverter
-                    .registerP2W(BlockData.class, blockData -> new BlockTypeHolder(blockData.getMaterial().name(), getDataFromString(blockData.getAsString())))
-                    .registerW2P(BlockData.class, holder -> Bukkit.createBlockData(getDataFromMap(holder)));
+                    .registerP2W(Material.class, BukkitBlockTypeHolder::new)
+                    .registerP2W(BlockData.class, BukkitBlockTypeHolder::new);
+
+            Arrays.stream(Material.values())
+                    .filter(t -> !t.name().startsWith("LEGACY") && t.isBlock())
+                    .forEach(material -> {
+                        var holder = new BukkitBlockTypeHolder(material);
+                        mapping.put(NamespacedMappingKey.of(material.name()), holder);
+                        values.add(holder);
+                    });
         } else {
             blockTypeConverter
-                    .registerP2W(MaterialData.class, data -> BlockTypeHolder.of(data.getItemType() + ":" + data.getData()))
-                    .registerW2P(MaterialData.class, holder -> holder.as(Material.class).getNewData(holder.legacyData()));
-        }
+                    .registerP2W(Material.class, BukkitBlockTypeLegacyHolder::new)
+                    .registerP2W(MaterialData.class, BukkitBlockTypeLegacyHolder::new);
 
-        Arrays.stream(Material.values())
-                .filter(t -> !t.name().startsWith("LEGACY") && t.isBlock())
-                .forEach(material -> {
-                    var holder = new BlockTypeHolder(material.name());
-                    mapping.put(NamespacedMappingKey.of(material.name()), holder);
-                    values.add(holder);
-                });
+            Arrays.stream(Material.values())
+                    .filter(Material::isBlock)
+                    .forEach(material -> {
+                        var holder = new BukkitBlockTypeLegacyHolder(material);
+                        mapping.put(NamespacedMappingKey.of(material.name()), holder);
+                        values.add(holder);
+                    });
+        }
     }
 
     protected Map<String, String> getDataFromString(String data) {
@@ -90,70 +93,8 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
     }
 
     @Override
-    public String getStateDataFromMap(Map<String, String> data) {
-        final var builder = new StringBuilder();
-        if (data != null && !data.isEmpty()) {
-            builder.append('[');
-            builder.append(data
-                    .entrySet()
-                    .stream()
-                    .map(entry -> entry.getKey() + "=" + entry.getValue())
-                    .collect(Collectors.joining(",")));
-            builder.append(']');
-        }
-
-        return builder.toString();
-    }
-
-    @Override
     protected boolean isLegacy() {
         return !Version.isVersion(1, 13);
-    }
-
-    @Override
-    protected boolean isSolid0(BlockTypeHolder blockType) {
-        return blockType.as(Material.class).isSolid();
-    }
-
-    @Override
-    protected boolean isTransparent0(BlockTypeHolder blockType) {
-        return blockType.as(Material.class).isTransparent();
-    }
-
-    @Override
-    protected boolean isFlammable0(BlockTypeHolder blockType) {
-        return blockType.as(Material.class).isFlammable();
-    }
-
-    @Override
-    protected boolean isBurnable0(BlockTypeHolder blockType) {
-        return blockType.as(Material.class).isBurnable();
-    }
-
-    @Override
-    protected boolean isOccluding0(BlockTypeHolder blockType) {
-        return blockType.as(Material.class).isOccluding();
-    }
-
-    @Override
-    protected boolean hasGravity0(BlockTypeHolder blockType) {
-        return blockType.as(Material.class).hasGravity();
-    }
-
-    protected String getDataFromMap(BlockTypeHolder material) {
-        final var builder = new StringBuilder("minecraft:" + material.platformName().toLowerCase());
-        final var data = material.flatteningData();
-        if (data != null && !data.isEmpty()) {
-            builder.append('[');
-            builder.append(data
-                    .entrySet()
-                    .stream()
-                    .map(entry -> entry.getKey() + "=" + entry.getValue())
-                    .collect(Collectors.joining(",")));
-            builder.append(']');
-        }
-
-        return builder.toString();
     }
 
 

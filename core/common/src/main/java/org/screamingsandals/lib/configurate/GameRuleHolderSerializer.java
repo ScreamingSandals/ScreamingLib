@@ -22,6 +22,6 @@ public class GameRuleHolderSerializer extends AbstractScreamingSerializer implem
 
     @Override
     public void serialize(Type type, @Nullable GameRuleHolder obj, ConfigurationNode node) throws SerializationException {
-        node.set(obj == null ? null : obj.getPlatformName());
+        node.set(obj == null ? null : obj.platformName());
     }
 }

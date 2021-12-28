@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.block;
 
-import lombok.*;
-import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
@@ -14,177 +13,92 @@ import java.util.*;
  *
  * Use {@link org.screamingsandals.lib.item.ItemTypeHolder} for item materials.
  */
-@Accessors(fluent = true)
-@Data
-@RequiredArgsConstructor
-public class BlockTypeHolder implements ComparableWrapper, ParticleData {
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private static BlockTypeHolder cachedAir;
+@SuppressWarnings("AlternativeMethodAvailable")
+public interface BlockTypeHolder extends ComparableWrapper, ParticleData {
 
-    private final String platformName;
-    @With(onMethod_=@Deprecated)
-    @Getter(onMethod_=@Deprecated)
-    private final byte legacyData;
-    @With
+    String platformName();
+
+    @Deprecated
+    byte legacyData();
+
+    @Deprecated
+    @Contract(value = "_ -> new", pure = true)
+    BlockTypeHolder withLegacyData(byte legacyData);
+
     @Unmodifiable
-    private final Map<String, String> flatteningData;
+    Map<String, String> flatteningData();
 
-    public BlockTypeHolder(String platformName) {
-        this(platformName, (byte) 0);
-    }
+    @Contract(value = "_ -> new", pure = true)
+    BlockTypeHolder withFlatteningData(Map<String, String> flatteningData);
 
-    public BlockTypeHolder(String platformName, @Deprecated byte legacyData) {
-        this(platformName, legacyData, null);
-    }
+    @Contract(value = "_, _ -> new", pure = true)
+    BlockTypeHolder with(String attribute, String value);
 
-    public BlockTypeHolder(String platformName, @Unmodifiable Map<String, String> flatteningData) {
-        this(platformName, (byte) 0, flatteningData);
-    }
+    @Contract(value = "_, _ -> new", pure = true)
+    BlockTypeHolder with(String attribute, int value);
 
-    public BlockTypeHolder with(String attribute, String value) {
-        return new BlockTypeHolder(platformName, legacyData, Map.copyOf(new HashMap<>() {
-            {
-                if (flatteningData != null) {
-                    putAll(flatteningData);
-                }
-                put(attribute, value);
-            }
-        }));
-    }
+    @Contract(value = "_, _ -> new", pure = true)
+    BlockTypeHolder with(String attribute, boolean value);
 
-    public BlockTypeHolder with(String attribute, int value) {
-        return new BlockTypeHolder(platformName, legacyData, Map.copyOf(new HashMap<>() {
-            {
-                if (flatteningData != null) {
-                    putAll(flatteningData);
-                }
-                put(attribute, String.valueOf(value));
-            }
-        }));
-    }
-
-    public BlockTypeHolder with(String attribute, boolean value) {
-        return new BlockTypeHolder(platformName, legacyData, Map.copyOf(new HashMap<>() {
-            {
-                if (flatteningData != null) {
-                    putAll(flatteningData);
-                }
-                put(attribute, String.valueOf(value));
-            }
-        }));
-    }
-
-    public BlockTypeHolder colorize(String color) {
+    @Contract(value = "_ -> new", pure = true)
+    default BlockTypeHolder colorize(String color) {
         return BlockTypeMapper.colorize(this, color);
     }
 
-    public Optional<String> get(String attribute) {
-        return flatteningData != null ? Optional.ofNullable(flatteningData.get(attribute)) : Optional.empty();
-    }
+    Optional<String> get(String attribute);
 
-    public Optional<Integer> getInt(String attribute) {
-        if (flatteningData != null) {
-            var attr = flatteningData.get(attribute);
-            if (attr != null) {
-                try {
-                    return Optional.of(Integer.parseInt(attr));
-                } catch (NumberFormatException ignored) { }
-            }
-        }
-        return Optional.empty();
-    }
+    Optional<Integer> getInt(String attribute);
 
-    public Optional<Boolean> getBoolean(String attribute) {
-        if (flatteningData != null) {
-            var attr = flatteningData.get(attribute);
-            if (attr != null) {
-                return Optional.of(Boolean.parseBoolean(attr));
-            }
-        }
-        return Optional.empty();
-    }
+    Optional<Boolean> getBoolean(String attribute);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public <T> T as(Class<T> type) {
-        return BlockTypeMapper.convertBlockTypeHolder(this, type);
-    }
-
-    public boolean isAir() {
+    default boolean isAir() {
         return isSameType(air(), "minecraft:cave_air", "minecraft:void_air");
     }
 
-    public boolean isSolid() {
-        return BlockTypeMapper.isSolid(this);
-    }
+    boolean isSolid();
 
-    public boolean isTransparent() {
-        return BlockTypeMapper.isTransparent(this);
-    }
+    boolean isTransparent();
 
-    public boolean isFlammable() {
-        return BlockTypeMapper.isFlammable(this);
-    }
+    boolean isFlammable();
 
-    public boolean isBurnable() {
-        return BlockTypeMapper.isBurnable(this);
-    }
+    boolean isBurnable();
 
-    public boolean isOccluding() {
-        return BlockTypeMapper.isOccluding(this);
-    }
+    boolean isOccluding();
 
-    public boolean hasGravity() {
-        return BlockTypeMapper.hasGravity(this);
-    }
+    boolean hasGravity();
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
-    public boolean isSameType(Object object) {
-        return ofOptional(object).map(h -> h.platformName.equals(platformName)).orElse(false);
-    }
+    boolean isSameType(Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
-    public boolean isSameType(Object... objects) {
-        return Arrays.stream(objects).anyMatch(this::isSameType);
-    }
+    boolean isSameType(Object... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     @Override
-    public boolean is(Object object) {
-        return equals(ofOptional(object).orElse(null));
-    }
+    boolean is(Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     @Override
-    public boolean is(Object... objects) {
-        return Arrays.stream(objects).anyMatch(this::is);
-    }
+    boolean is(Object... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
-    public static BlockTypeHolder of(Object type) {
+    static BlockTypeHolder of(Object type) {
         return ofOptional(type).orElseThrow();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
-    @SuppressWarnings("AlternativeMethodAvailable")
-    public static Optional<BlockTypeHolder> ofOptional(Object type) {
+    static Optional<BlockTypeHolder> ofOptional(Object type) {
         if (type instanceof BlockTypeHolder) {
             return Optional.of((BlockTypeHolder) type);
         }
         return BlockTypeMapper.resolve(type);
     }
 
-    public static BlockTypeHolder air() {
-        if (cachedAir == null) {
-            cachedAir = of("minecraft:air");
-        }
-        return cachedAir;
+    static BlockTypeHolder air() {
+        return BlockTypeMapper.getCachedAir();
     }
 
-    public static List<BlockTypeHolder> all() {
+    static List<BlockTypeHolder> all() {
         return BlockTypeMapper.getValues();
     }
 }

@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class BukkitItemTypeHolder extends BasicWrapper<Material> implements ItemTypeHolder {
 
-    // Because people can be stupid
+    // Because people can be stupid + it's also used in our current code for deserializing items ;)
     private short forcedDurability;
 
     public BukkitItemTypeHolder(Material wrappedObject) {

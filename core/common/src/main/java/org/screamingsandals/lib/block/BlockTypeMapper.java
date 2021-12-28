@@ -16,6 +16,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @AbstractService
 public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder> {
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?<blockState>:\\d*|\\[[^]]*])?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
@@ -25,6 +26,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
             .registerP2W(BlockTypeHolder.class, i -> i);
 
     private static BlockTypeMapper blockTypeMapper;
+    private static BlockTypeHolder cachedAir;
 
     @ApiStatus.Internal
     public BlockTypeMapper() {
@@ -172,53 +174,12 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
                 .orElse(holder);
     }
 
-    public static <T> T convertBlockTypeHolder(BlockTypeHolder holder, Class<T> newType) {
-        if (blockTypeMapper == null) {
-            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
+    @OfMethodAlternative(value = BlockTypeHolder.class, methodName = "air")
+    public static BlockTypeHolder getCachedAir() {
+        if (cachedAir == null) {
+            cachedAir = resolve("minecraft:air").orElseThrow();
         }
-        return blockTypeMapper.blockTypeConverter.convert(holder, newType);
-    }
-
-    public static boolean isSolid(BlockTypeHolder blockType) {
-        if (blockTypeMapper == null) {
-            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
-        }
-        return blockTypeMapper.isSolid0(blockType);
-    }
-
-    public static boolean isTransparent(BlockTypeHolder blockType) {
-        if (blockTypeMapper == null) {
-            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
-        }
-        return blockTypeMapper.isTransparent0(blockType);
-    }
-
-    public static boolean isFlammable(BlockTypeHolder blockType) {
-        if (blockTypeMapper == null) {
-            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
-        }
-        return blockTypeMapper.isFlammable0(blockType);
-    }
-
-    public static boolean isBurnable(BlockTypeHolder blockType) {
-        if (blockTypeMapper == null) {
-            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
-        }
-        return blockTypeMapper.isBurnable0(blockType);
-    }
-
-    public static boolean isOccluding(BlockTypeHolder blockType) {
-        if (blockTypeMapper == null) {
-            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
-        }
-        return blockTypeMapper.isOccluding0(blockType);
-    }
-
-    public static boolean hasGravity(BlockTypeHolder blockType) {
-        if (blockTypeMapper == null) {
-            throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
-        }
-        return blockTypeMapper.hasGravity0(blockType);
+        return cachedAir;
     }
 
     public Map<MappingKey, BlockTypeHolder> getUNSAFE_mapping() {
@@ -230,25 +191,9 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
         super.mapAlias(mappingKey, alias);
     }
 
-    protected abstract String getDataFromMap(BlockTypeHolder material);
-
     protected abstract Map<String, String> getDataFromString(String data);
 
     protected abstract BlockTypeHolder normalize(BlockTypeHolder abnormal);
 
-    public abstract String getStateDataFromMap(Map<String, String> map);
-
     protected abstract boolean isLegacy();
-
-    protected abstract boolean isSolid0(BlockTypeHolder blockType);
-
-    protected abstract boolean isTransparent0(BlockTypeHolder blockType);
-
-    protected abstract boolean isFlammable0(BlockTypeHolder blockType);
-
-    protected abstract boolean isBurnable0(BlockTypeHolder blockType);
-
-    protected abstract boolean isOccluding0(BlockTypeHolder blockType);
-
-    protected abstract boolean hasGravity0(BlockTypeHolder blockType);
 }

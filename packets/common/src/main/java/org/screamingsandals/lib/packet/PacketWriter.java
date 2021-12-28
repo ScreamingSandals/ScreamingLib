@@ -469,7 +469,7 @@ public abstract class PacketWriter extends OutputStream {
 
             write(item.getAmount());
             if (protocol() < 351) {
-                writeShort(item.getMaterial().durability());
+                writeShort(item.getMaterial().forcedDurability());
             }
             writeNBTFromItem(item);
         }

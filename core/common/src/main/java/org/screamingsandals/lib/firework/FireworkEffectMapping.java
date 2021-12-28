@@ -35,13 +35,13 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
         var holderOptional = resolve(effectNode.getString());
         if (holderOptional.isPresent()) {
             var holder = holderOptional.get()
-                    .flicker(flickerNode.getBoolean(true))
-                    .trail(trailNode.getBoolean(true));
+                    .withFlicker(flickerNode.getBoolean(true))
+                    .withTrail(trailNode.getBoolean(true));
 
 
             if (!colorsNode.empty()) {
                 if (colorsNode.isList()) {
-                    holder = holder.colors(colorsNode.childrenList()
+                    holder = holder.withColors(colorsNode.childrenList()
                             .stream()
                             .map(node2 -> {
                                 if (node2.isMap()) {
@@ -63,16 +63,16 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
                             .filter(Objects::nonNull)
                             .collect(Collectors.toList()));
                 } else if (colorsNode.isMap()) {
-                    holder = holder.colors(List.of(TextColor.color(colorsNode.node("red").getInt(colorsNode.node("RED").getInt()), colorsNode.node("green").getInt(colorsNode.node("GREEN").getInt()), colorsNode.node("blue").getInt(colorsNode.node("BLUE").getInt()))));
+                    holder = holder.withColors(List.of(TextColor.color(colorsNode.node("red").getInt(colorsNode.node("RED").getInt()), colorsNode.node("green").getInt(colorsNode.node("GREEN").getInt()), colorsNode.node("blue").getInt(colorsNode.node("BLUE").getInt()))));
                 } else {
                     var color = colorsNode.getString("");
                     var c = TextColor.fromCSSHexString(color);
                     if (c != null) {
-                        holder = holder.colors(List.of(c));
+                        holder = holder.withColors(List.of(c));
                     } else {
                         var c2 = NamedTextColor.NAMES.value(color.toLowerCase().trim());
                         if (c2 != null) {
-                            holder = holder.colors(List.of(c2));
+                            holder = holder.withColors(List.of(c2));
                         }
                     }
                 }
@@ -81,7 +81,7 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
 
             if (!fadeColorsNode.empty()) {
                 if (fadeColorsNode.isList()) {
-                    holder = holder.fadeColors(fadeColorsNode.childrenList()
+                    holder = holder.withFadeColors(fadeColorsNode.childrenList()
                             .stream()
                             .map(node2 -> {
                                 if (node2.isMap()) {
@@ -103,16 +103,16 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
                             .filter(Objects::nonNull)
                             .collect(Collectors.toList()));
                 } else if (fadeColorsNode.isMap()) {
-                    holder = holder.fadeColors(List.of(TextColor.color(fadeColorsNode.node("red").getInt(fadeColorsNode.node("RED").getInt()), fadeColorsNode.node("green").getInt(fadeColorsNode.node("GREEN").getInt()), fadeColorsNode.node("blue").getInt(fadeColorsNode.node("BLUE").getInt()))));
+                    holder = holder.withFadeColors(List.of(TextColor.color(fadeColorsNode.node("red").getInt(fadeColorsNode.node("RED").getInt()), fadeColorsNode.node("green").getInt(fadeColorsNode.node("GREEN").getInt()), fadeColorsNode.node("blue").getInt(fadeColorsNode.node("BLUE").getInt()))));
                 } else {
                     var color = fadeColorsNode.getString("");
                     var c = TextColor.fromCSSHexString(color);
                     if (c != null) {
-                        holder = holder.fadeColors(List.of(c));
+                        holder = holder.withFadeColors(List.of(c));
                     } else {
                         var c2 = NamedTextColor.NAMES.value(color.toLowerCase().trim());
                         if (c2 != null) {
-                            holder = holder.fadeColors(List.of(c2));
+                            holder = holder.withFadeColors(List.of(c2));
                         }
                     }
                 }

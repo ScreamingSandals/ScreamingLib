@@ -1577,7 +1577,7 @@ public abstract class ItemBlockIdsRemapper {
         ItemTypeHolder holder = null;
         if (platform.isUsingLegacyNames() && (mapping.containsKey(legacyMaterialNamespaced) || (alternativeLegacyNamespaced != null && mapping.containsKey(alternativeLegacyNamespaced)))) {
             if (mapping.containsKey(legacyMaterialNamespaced)) {
-                holder = mapping.get(legacyMaterialNamespaced).withDurability((short) data);
+                holder = mapping.get(legacyMaterialNamespaced).withForcedDurability((short) data);
                 if (!mapping.containsKey(flatteningMaterialNamespaced) && !flatteningMaterialNamespaced.equals(legacyMaterialNamespaced)) {
                     mapping.put(flatteningMaterialNamespaced, holder);
                 }
@@ -1588,7 +1588,7 @@ public abstract class ItemBlockIdsRemapper {
                     mapping.put(ComplexMappingKey.of(alternativeLegacyNamespaced, NumericMappingKey.of(data)), holder);
                 }
             } else if (alternativeLegacyNamespaced != null && mapping.containsKey(alternativeLegacyNamespaced)) {
-                holder = mapping.get(alternativeLegacyNamespaced).withDurability((short) data);
+                holder = mapping.get(alternativeLegacyNamespaced).withForcedDurability((short) data);
                 if (!mapping.containsKey(flatteningMaterialNamespaced) && !flatteningMaterialNamespaced.equals(legacyMaterialNamespaced)) {
                     mapping.put(flatteningMaterialNamespaced, holder);
                 }

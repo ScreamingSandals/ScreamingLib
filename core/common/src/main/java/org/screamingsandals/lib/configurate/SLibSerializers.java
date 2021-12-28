@@ -3,6 +3,7 @@ package org.screamingsandals.lib.configurate;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.attribute.AttributeTypeHolder;
+import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.entity.damage.DamageCauseHolder;
 import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
@@ -41,6 +42,7 @@ public class SLibSerializers {
                 .register(WeatherHolder.class, WeatherHolderSerializer.INSTANCE)
                 .register(FireworkEffectHolder.class, FireworkEffectHolderSerializer.INSTANCE)
                 .register(ItemTypeHolder.class, ItemTypeHolderSerializer.INSTANCE)
+                .register(BlockTypeHolder.class, BlockTypeHolderSerializer.INSTANCE)
                 .build();
     }
 }
