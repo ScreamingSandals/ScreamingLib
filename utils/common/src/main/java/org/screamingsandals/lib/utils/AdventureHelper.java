@@ -1,13 +1,13 @@
 package org.screamingsandals.lib.utils;
 
 import lombok.Getter;
-import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +17,9 @@ import java.util.Map;
 @UtilityClass
 public class AdventureHelper {
     @Getter
-    private final static LegacyComponentSerializer serializer;
+    private final static LegacyComponentSerializer LEGACY_COMPONENT_SERIALIZER;
+    @Getter
+    private final static GsonComponentSerializer GSON_COMPONENT_SERIALIZER;
 
     public static final Map<NamedTextColor, Integer> NAMED_TEXT_COLOR_ID_MAP = Map.ofEntries(
             Map.entry(NamedTextColor.BLACK, 0),
@@ -40,57 +42,67 @@ public class AdventureHelper {
 
 
     static {
-        serializer = LegacyComponentSerializer.builder()
+        LEGACY_COMPONENT_SERIALIZER = LegacyComponentSerializer.builder()
                 .hexColors()
                 .useUnusualXRepeatedCharacterHexFormat()
                 .character(LegacyComponentSerializer.SECTION_CHAR)
                 .build();
+        GSON_COMPONENT_SERIALIZER = GsonComponentSerializer.gson();
+    }
+
+    @NotNull
+    public String toJson(@NotNull Component component) {
+        return GSON_COMPONENT_SERIALIZER.serialize(component);
+    }
+
+    @NotNull
+    public String toJson(@NotNull ComponentLike component) {
+        return GSON_COMPONENT_SERIALIZER.serialize(component.asComponent());
     }
 
     @NotNull
     public String toLegacy(@NotNull Component component) {
-        return serializer.serialize(component);
+        return LEGACY_COMPONENT_SERIALIZER.serialize(component);
     }
 
     @NotNull
     public String toLegacy(@NotNull ComponentLike component) {
-        return serializer.serialize(component.asComponent());
+        return LEGACY_COMPONENT_SERIALIZER.serialize(component.asComponent());
     }
 
     @NotNull
     public String toLegacyNullable(@Nullable Component component) {
-        return component == null ? "" : serializer.serialize(component);
+        return component == null ? "" : LEGACY_COMPONENT_SERIALIZER.serialize(component);
     }
 
     @NotNull
     public String toLegacyNullable(@Nullable ComponentLike component) {
-        return component == null ? "" : serializer.serialize(component.asComponent());
+        return component == null ? "" : LEGACY_COMPONENT_SERIALIZER.serialize(component.asComponent());
     }
 
     @Nullable
     public String toLegacyNullableResult(@Nullable Component component) {
-        return component == null ? null : serializer.serialize(component);
+        return component == null ? null : LEGACY_COMPONENT_SERIALIZER.serialize(component);
     }
 
     @Nullable
     public String toLegacyNullableResult(@Nullable ComponentLike component) {
-        return component == null ? null : serializer.serialize(component.asComponent());
+        return component == null ? null : LEGACY_COMPONENT_SERIALIZER.serialize(component.asComponent());
     }
-
 
     @NotNull
     public TextComponent toComponent(@NotNull String input) {
-        return serializer.deserialize(input);
+        return LEGACY_COMPONENT_SERIALIZER.deserialize(input);
     }
 
     @NotNull
     public TextComponent toComponentNullable(@Nullable String input) {
-        return input == null ? Component.empty() : serializer.deserialize(input);
+        return input == null ? Component.empty() : LEGACY_COMPONENT_SERIALIZER.deserialize(input);
     }
 
     @Nullable
     public TextComponent toComponentNullableResult(@Nullable String input) {
-        return input == null ? null : serializer.deserialize(input);
+        return input == null ? null : LEGACY_COMPONENT_SERIALIZER.deserialize(input);
     }
 
     @NotNull

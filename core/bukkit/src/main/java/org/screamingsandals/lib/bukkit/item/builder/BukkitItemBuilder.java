@@ -253,7 +253,7 @@ public class BukkitItemBuilder implements ItemBuilder {
                     if (meta instanceof EnchantmentStorageMeta) {
                         ((EnchantmentStorageMeta) meta).addStoredEnchant(e.as(Enchantment.class), e.getLevel(), true);
                     } else {
-                        meta.addEnchant(e.as(Enchantment.class), e.getLevel(), true);
+                        meta.addEnchant(e.as(Enchantment.class), e.level(), true);
                     }
                 });
             }
@@ -270,9 +270,9 @@ public class BukkitItemBuilder implements ItemBuilder {
         var meta = item.getItemMeta();
         if (meta != null) {
             if (meta instanceof EnchantmentStorageMeta) {
-                ((EnchantmentStorageMeta) meta).addStoredEnchant(enchantment.as(Enchantment.class), enchantment.getLevel(), true);
+                ((EnchantmentStorageMeta) meta).addStoredEnchant(enchantment.as(Enchantment.class), enchantment.level(), true);
             } else {
-                meta.addEnchant(enchantment.as(Enchantment.class), enchantment.getLevel(), true);
+                meta.addEnchant(enchantment.as(Enchantment.class), enchantment.level(), true);
             }
             item.setItemMeta(meta);
         }
