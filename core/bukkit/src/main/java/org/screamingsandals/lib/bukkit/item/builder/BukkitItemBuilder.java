@@ -51,8 +51,8 @@ public class BukkitItemBuilder implements ItemBuilder {
         }
 
         this.item.setType(type.as(Material.class));
-        if (type.durability() != 0) {
-            durability(type.durability());
+        if (type.forcedDurability() != 0) {
+            durability(type.forcedDurability());
         }
         return this;
     }
@@ -251,7 +251,7 @@ public class BukkitItemBuilder implements ItemBuilder {
             if (enchantments != null) {
                 enchantments.forEach(e -> {
                     if (meta instanceof EnchantmentStorageMeta) {
-                        ((EnchantmentStorageMeta) meta).addStoredEnchant(e.as(Enchantment.class), e.getLevel(), true);
+                        ((EnchantmentStorageMeta) meta).addStoredEnchant(e.as(Enchantment.class), e.level(), true);
                     } else {
                         meta.addEnchant(e.as(Enchantment.class), e.level(), true);
                     }

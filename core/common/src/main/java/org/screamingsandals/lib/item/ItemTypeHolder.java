@@ -2,96 +2,99 @@ package org.screamingsandals.lib.item;
 
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.ProtoItemType;
 import org.screamingsandals.lib.utils.ProtoWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @Accessors(fluent = true)
-@Data
-@RequiredArgsConstructor
-public class ItemTypeHolder implements ComparableWrapper, ProtoWrapper<ProtoItemType>, ParticleData {
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private static ItemTypeHolder cachedAir;
-
-    private final String platformName;
-    @With
-    private final short durability;
-
-    public ItemTypeHolder(String platformName) {
-        this(platformName, (short) 0);
-    }
+public interface ItemTypeHolder extends ComparableWrapper, ProtoWrapper<ProtoItemType>, ParticleData {
+    String platformName();
 
     /**
-     * {@inheritDoc}
+     * Use renamed form
      */
-    @Override
-    public <T> T as(Class<T> type) {
-        return ItemTypeMapper.convertItemTypeHolder(this, type);
+    @Deprecated(forRemoval = true)
+    default short durability() {
+        return forcedDurability();
     }
 
-    public boolean isAir() {
+    @Deprecated
+    @LimitedVersionSupport("<= 1.12.2")
+    short forcedDurability();
+
+    default boolean isAir() {
         return equals(air());
     }
 
-    public int getMaxStackSize() {
-        return ItemTypeMapper.getMaxStackSize(this);
+    int maxStackSize();
+
+    /**
+     * Use renamed form
+     */
+    @Deprecated(forRemoval = true)
+    default ItemTypeHolder withDurability(short durability) {
+        return withForcedDurability(durability);
     }
 
-    public ItemTypeHolder colorize(String color) {
+    @Deprecated
+    @LimitedVersionSupport("<= 1.12.2")
+    @Contract(value = "_ -> new", pure = true)
+    ItemTypeHolder withForcedDurability(short durability);
+
+    /**
+     * Use fluent variant!!
+     */
+    @Deprecated(forRemoval = true)
+    default int getMaxStackSize() {
+        return maxStackSize();
+    }
+
+    default ItemTypeHolder colorize(String color) {
         return ItemTypeMapper.colorize(this, color);
     }
 
-    public Optional<BlockTypeHolder> block() {
-        return ItemTypeMapper.getBlock(this);
-    }
+    Optional<BlockTypeHolder> block();
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Override
-    public boolean is(Object object) {
-        return equals(ofOptional(object).orElse(null));
-    }
+    boolean is(Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Override
-    public boolean is(Object... objects) {
-        return Arrays.stream(objects).anyMatch(this::is);
-    }
+    boolean is(Object... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
-    public static ItemTypeHolder of(Object type) {
+    static ItemTypeHolder of(Object type) {
         return ofOptional(type).orElseThrow();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
-    @SuppressWarnings("AlternativeMethodAvailable")
-    public static Optional<ItemTypeHolder> ofOptional(Object type) {
+    static Optional<ItemTypeHolder> ofOptional(Object type) {
         if (type instanceof ItemTypeHolder) {
             return Optional.of((ItemTypeHolder) type);
         }
         return ItemTypeMapper.resolve(type);
     }
 
-    public static ItemTypeHolder air() {
-        if (cachedAir == null) {
-            cachedAir = of("minecraft:air");
-        }
-        return cachedAir;
+    static ItemTypeHolder air() {
+        return ItemTypeMapper.getCachedAir();
     }
 
-    public static List<ItemTypeHolder> all() {
+    static List<ItemTypeHolder> all() {
         return ItemTypeMapper.getValues();
     }
 
     @Override
-    public ProtoItemType asProto() {
+    default ProtoItemType asProto() {
         return ProtoItemType.newBuilder()
                 .setPlatformName(platformName())
                 .setDurability(durability())
