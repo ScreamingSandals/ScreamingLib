@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.minestom.material.attribute;
+package org.screamingsandals.lib.minestom.attribute;
 
 import net.minestom.server.attribute.AttributeInstance;
 import net.minestom.server.attribute.AttributeModifier;
