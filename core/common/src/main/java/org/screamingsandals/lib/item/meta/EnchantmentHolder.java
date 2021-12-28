@@ -1,77 +1,102 @@
 package org.screamingsandals.lib.item.meta;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.With;
+import org.jetbrains.annotations.Contract;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.ProtoEnchantment;
+import org.screamingsandals.lib.utils.ProtoWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-@RequiredArgsConstructor
-@Data
-@ConfigSerializable
-public final class EnchantmentHolder implements ComparableWrapper {
-    private final String platformName;
-    @With
-    private final int level;
+public interface EnchantmentHolder extends ComparableWrapper, ProtoWrapper<ProtoEnchantment> {
 
-    public EnchantmentHolder(String platformName) {
-        this(platformName, 1);
-    }
+    String platformName();
 
-    @Deprecated
-    public EnchantmentHolder newLevel(int level) {
-        return withLevel(level);
+    int level();
+
+    @Contract(value = "_ -> new", pure = true)
+    EnchantmentHolder withLevel(int level);
+
+    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
+    @Override
+    boolean is(Object object);
+
+    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
+    @Override
+    boolean is(Object... objects);
+
+    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
+    boolean isSameType(Object object);
+
+    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
+    boolean isSameType(Object... objects);
+
+    /**
+     * Inconsistent naming (should be isSameType like in other holders)
+     */
+    @Deprecated(forRemoval = true)
+    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
+    default boolean isType(Object object) {
+        return isSameType(object);
     }
 
     /**
-     * {@inheritDoc}
+     * Inconsistent naming (should be isSameType like in other holders)
      */
-    public <R> R as(Class<R> type) {
-        return EnchantmentMapping.convertEnchantmentHolder(this, type);
+    @Deprecated(forRemoval = true)
+    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
+    default boolean isType(Object... objects) {
+        return isSameType(objects);
+    }
+
+    /**
+     * Use fluent variant
+     */
+    @Deprecated(forRemoval = true)
+    default String getPlatformName() {
+        return platformName();
+    }
+
+    /**
+     * Use fluent variant
+     */
+    @Deprecated(forRemoval = true)
+    default int getLevel() {
+        return level();
+    }
+
+    /**
+     * Inconsistent naming
+     */
+    @Deprecated(forRemoval = true)
+    default EnchantmentHolder newLevel(int level) {
+        return withLevel(level);
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    public static EnchantmentHolder of(Object enchantment) {
+    static EnchantmentHolder of(Object enchantment) {
         return ofOptional(enchantment).orElseThrow();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    public static Optional<EnchantmentHolder> ofOptional(Object enchantment) {
+    static Optional<EnchantmentHolder> ofOptional(Object enchantment) {
         if (enchantment instanceof EnchantmentHolder) {
             return Optional.of((EnchantmentHolder) enchantment);
         }
         return EnchantmentMapping.resolve(enchantment);
     }
 
-    public static List<EnchantmentHolder> all() {
+    static List<EnchantmentHolder> all() {
         return EnchantmentMapping.getValues();
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     @Override
-    public boolean is(Object object) {
-        return equals(ofOptional(object).orElse(null));
-    }
-
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    @Override
-    public boolean is(Object... objects) {
-        return Arrays.stream(objects).anyMatch(this::is);
-    }
-
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    public boolean isType(Object object) {
-        return platformName.equals(ofOptional(object).map(EnchantmentHolder::getPlatformName).orElse(null));
-    }
-
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    public boolean isType(Object... objects) {
-        return Arrays.stream(objects).anyMatch(this::isType);
+    default ProtoEnchantment asProto() {
+        return ProtoEnchantment.newBuilder()
+                .setPlatformName(platformName())
+                .setLevel(level())
+                .build();
     }
 }

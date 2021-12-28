@@ -1,11 +1,14 @@
 package org.screamingsandals.lib.world.dimension;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.screamingsandals.lib.configurate.DimensionHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +21,15 @@ public abstract class DimensionMapping extends AbstractTypeMapper<DimensionHolde
     private static DimensionMapping dimensionMapping;
 
     protected final BidirectionalConverter<DimensionHolder> dimensionConverter = BidirectionalConverter.<DimensionHolder>build()
-            .registerP2W(DimensionHolder.class, d -> d);
+            .registerP2W(DimensionHolder.class, d -> d)
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return DimensionHolderSerializer.INSTANCE.deserialize(DimensionHolder.class, node);
+                } catch (SerializationException ex) {
+                    ex.printStackTrace();
+                    return null;
+                }
+            });
 
     @ApiStatus.Internal
     public DimensionMapping() {
@@ -48,12 +59,5 @@ public abstract class DimensionMapping extends AbstractTypeMapper<DimensionHolde
             throw new UnsupportedOperationException("DimensionMapping is not initialized yet.");
         }
         return Collections.unmodifiableList(dimensionMapping.values);
-    }
-
-    public static <T> T convertDimensionHolder(DimensionHolder holder, Class<T> newType) {
-        if (dimensionMapping == null) {
-            throw new UnsupportedOperationException("DimensionMapping is not initialized yet.");
-        }
-        return dimensionMapping.dimensionConverter.convert(holder, newType);
     }
 }

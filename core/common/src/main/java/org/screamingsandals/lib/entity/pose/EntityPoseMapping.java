@@ -1,11 +1,14 @@
 package org.screamingsandals.lib.entity.pose;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.screamingsandals.lib.configurate.EntityPoseHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +21,15 @@ public abstract class EntityPoseMapping extends AbstractTypeMapper<EntityPoseHol
     private static EntityPoseMapping entityPoseMapping;
 
     protected final BidirectionalConverter<EntityPoseHolder> entityPoseConverter = BidirectionalConverter.<EntityPoseHolder>build()
-            .registerP2W(EntityPoseHolder.class, d -> d);
+            .registerP2W(EntityPoseHolder.class, d -> d)
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return EntityPoseHolderSerializer.INSTANCE.deserialize(EntityPoseHolder.class, node);
+                } catch (SerializationException ex) {
+                    ex.printStackTrace();
+                    return null;
+                }
+            });
 
     @ApiStatus.Internal
     public EntityPoseMapping() {
@@ -48,12 +59,5 @@ public abstract class EntityPoseMapping extends AbstractTypeMapper<EntityPoseHol
             throw new UnsupportedOperationException("EntityPoseMapping is not initialized yet.");
         }
         return Collections.unmodifiableList(entityPoseMapping.values);
-    }
-
-    public static <T> T convertEntityPoseHolder(EntityPoseHolder holder, Class<T> newType) {
-        if (entityPoseMapping == null) {
-            throw new UnsupportedOperationException("EntityPoseMapping is not initialized yet.");
-        }
-        return entityPoseMapping.entityPoseConverter.convert(holder, newType);
     }
 }

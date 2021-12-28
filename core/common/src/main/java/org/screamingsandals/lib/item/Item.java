@@ -10,8 +10,7 @@ import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.metadata.MetadataProvider;
 import org.screamingsandals.lib.particle.ParticleData;
-import org.screamingsandals.lib.utils.ComparableWrapper;
-import org.screamingsandals.lib.utils.RawValueHolder;
+import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Represents an immutable Item.
  */
-public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, MetadataProvider {
+public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, MetadataProvider, ProtoWrapper<ProtoItem> {
     ItemTypeHolder getType();
 
     default ItemTypeHolder getMaterial() { // alternative getter (old name)
@@ -152,4 +151,39 @@ public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, C
     }
 
     Item clone();
+
+    @Override
+    default ProtoItem asProto() {
+        final var builder = ProtoItem.newBuilder();
+        builder.setType(getType().asProto())
+                .setAmount(getAmount());
+
+        final var displayName = getDisplayName();
+        if (displayName != null) {
+            builder.setDisplayName(AdventureHelper.toJson(displayName));
+        }
+
+        final var lore = getLore();
+        if (lore != null) {
+            builder.addAllLore(lore.stream()
+                    .map(AdventureHelper::toJson)
+                    .collect(Collectors.toList()));
+        }
+
+        builder.addAllAttributeModifiers(getAttributeModifiers()
+                        .stream()
+                        .map(ProtoWrapper::asProto)
+                        .collect(Collectors.toList()))
+                .addAllEnchantments(getEnchantments().stream()
+                        .map(ProtoWrapper::asProto)
+                        .collect(Collectors.toList()))
+                .addAllHideFlags(getHideFlags().stream()
+                        .map(Enum::name)
+                        .collect(Collectors.toList()))
+                .setCustomModelData(getCustomModelData())
+                .setUnbreakable(isUnbreakable())
+                .setRepairCost(getRepairCost());
+
+        return builder.build();
+    }
 }

@@ -131,7 +131,6 @@ public class MiscUtils {
         return List.of();
     }
 
-    @SuppressWarnings("unchecked")
     public static Map<PlatformType, ServiceContainer> getAllSpecificPlatformImplementations(ProcessingEnvironment environment, TypeElement originalTypeElement, List<PlatformType> platformTypes, boolean strict) {
         var forwardedAnnotation = originalTypeElement.getAnnotation(ForwardToService.class);
 

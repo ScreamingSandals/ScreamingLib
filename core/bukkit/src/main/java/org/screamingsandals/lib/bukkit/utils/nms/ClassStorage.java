@@ -32,6 +32,7 @@ public class ClassStorage {
 		public static final Class<?> CraftPersistentDataTypeRegistry = safeGetClass("{obc}.persistence.CraftPersistentDataTypeRegistry");
 		public static final Class<?> CraftCustomTagTypeRegistry = safeGetClass("{obc}.inventory.CraftCustomTagTypeRegistry");
 		public static final Class<?> CraftSound = safeGetClass("{obc}.CraftSound");
+		public static final Class<?> CraftLegacy = safeGetClass("{obc}.legacy.CraftLegacy");
 	}
 	
 	private static String checkNMSVersion() {

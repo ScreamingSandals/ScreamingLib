@@ -4,7 +4,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
-import org.screamingsandals.lib.utils.WrappedLocation;
+import org.screamingsandals.lib.utils.ProtoLocation;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -34,16 +34,16 @@ public abstract class LocationMapper {
 
         if (Reflect.has("com.google.protobuf.MessageOrBuilder")) {
             converter
-                .registerP2W(WrappedLocation.class, location -> {
-                    final var world = WorldMapper.getWorld(UUID.fromString(location.getWorldUuid()));
-                    if (world.isEmpty()) {
-                        return null;
-                    }
-                    return new LocationHolder(
-                            location.getX(), location.getY(), location.getZ(),
-                            location.getYaw(), location.getPitch(),
-                            world.get());
-                });
+                    .registerP2W(ProtoLocation.class, location -> {
+                        final var world = WorldMapper.getWorld(UUID.fromString(location.getWorldUuid()));
+                        if (world.isEmpty()) {
+                            return null;
+                        }
+                        return new LocationHolder(
+                                location.getX(), location.getY(), location.getZ(),
+                                location.getYaw(), location.getPitch(),
+                                world.get());
+                    });
         }
     }
 

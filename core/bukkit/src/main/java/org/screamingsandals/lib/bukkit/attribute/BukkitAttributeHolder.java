@@ -17,7 +17,7 @@ public class BukkitAttributeHolder extends BasicWrapper<AttributeInstance> imple
 
     @Override
     public AttributeTypeHolder getAttributeType() {
-        return AttributeTypeMapping.resolve(wrappedObject.getAttribute()).orElseThrow();
+        return new BukkitAttributeTypeHolder(wrappedObject.getAttribute());
     }
 
     @Override

@@ -1,56 +1,54 @@
 package org.screamingsandals.lib.particle;
 
-import lombok.Data;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-@Data
-public class ParticleTypeHolder implements ComparableWrapper {
-    private final String platformName;
+public interface ParticleTypeHolder extends ComparableWrapper, RawValueHolder {
+
+    /**
+     * Use fluent variant!
+     */
+    @Deprecated(forRemoval = true)
+    default String getPlatformName() {
+        return platformName();
+    }
+
+    String platformName();
 
     @Nullable
-    public Class<? extends ParticleData> expectedDataClass() {
-        return ParticleTypeMapping.getExpectedParticleDataClass(this);
-    }
+    Class<? extends ParticleData> expectedDataClass();
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public <T> T as(Class<T> type) {
-        return ParticleTypeMapping.convertParticleTypeHolder(this, type);
-    }
+    @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
+    boolean is(Object object);
+
+    @Override
+    @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
+    boolean is(Object... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    public boolean is(Object object) {
-        return equals(ofOptional(object).orElse(null));
-    }
-
-    @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    public boolean is(Object... objects) {
-        return Arrays.stream(objects).anyMatch(this::is);
-    }
-
-    @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    public static ParticleTypeHolder of(Object particle) {
+    static ParticleTypeHolder of(Object particle) {
         return ofOptional(particle).orElseThrow();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    public static Optional<ParticleTypeHolder> ofOptional(Object particle) {
+    static Optional<ParticleTypeHolder> ofOptional(Object particle) {
         if (particle instanceof ParticleTypeHolder) {
             return Optional.of((ParticleTypeHolder) particle);
         }
         return ParticleTypeMapping.resolve(particle);
     }
 
-    public static List<ParticleTypeHolder> all() {
+    static List<ParticleTypeHolder> all() {
         return ParticleTypeMapping.getValues();
     }
 }

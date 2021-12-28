@@ -1,0 +1,155 @@
+package org.screamingsandals.lib.bukkit.block;
+
+import org.bukkit.Material;
+import org.bukkit.material.MaterialData;
+import org.jetbrains.annotations.Unmodifiable;
+import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.utils.BasicWrapper;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+
+public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> implements BlockTypeHolder {
+
+    public BukkitBlockTypeLegacyHolder(Material material) {
+        this(material.getNewData((byte) 0));
+    }
+
+    public BukkitBlockTypeLegacyHolder(Material material, byte legacyData) {
+        this(material.getNewData(legacyData));
+    }
+
+    public BukkitBlockTypeLegacyHolder(MaterialData wrappedObject) {
+        super(wrappedObject);
+        if (!wrappedObject.getItemType().isBlock()) {
+            throw new UnsupportedOperationException("Material must be a block!");
+        }
+    }
+
+    @Override
+    public String platformName() {
+        return wrappedObject.getItemType().name();
+    }
+
+    @Override
+    public byte legacyData() {
+        return wrappedObject.getData();
+    }
+
+    @Override
+    public BlockTypeHolder withLegacyData(byte legacyData) {
+        var clone = wrappedObject.clone();
+        clone.setData(legacyData);
+        return new BukkitBlockTypeLegacyHolder(clone);
+    }
+
+    @Override
+    public @Unmodifiable Map<String, String> flatteningData() {
+        return Map.of(); // TODO: some sort of conversion
+    }
+
+    @Override
+    public BlockTypeHolder withFlatteningData(Map<String, String> flatteningData) {
+        return new BukkitBlockTypeLegacyHolder(wrappedObject); // TODO: some sort of conversion
+    }
+
+    @Override
+    public BlockTypeHolder with(String attribute, String value) {
+        return new BukkitBlockTypeLegacyHolder(wrappedObject); // TODO: some sort of conversion
+    }
+
+    @Override
+    public BlockTypeHolder with(String attribute, int value) {
+        return new BukkitBlockTypeLegacyHolder(wrappedObject); // TODO: some sort of conversion
+    }
+
+    @Override
+    public BlockTypeHolder with(String attribute, boolean value) {
+        return new BukkitBlockTypeLegacyHolder(wrappedObject); // TODO: some sort of conversion
+    }
+
+    @Override
+    public Optional<String> get(String attribute) {
+        return Optional.empty(); // TODO: some sort of conversion
+    }
+
+    @Override
+    public Optional<Integer> getInt(String attribute) {
+        return Optional.empty(); // TODO: some sort of conversion
+    }
+
+    @Override
+    public Optional<Boolean> getBoolean(String attribute) {
+        return Optional.empty(); // TODO: some sort of conversion
+    }
+
+    @Override
+    public boolean isSolid() {
+        return wrappedObject.getItemType().isSolid();
+    }
+
+    @Override
+    public boolean isTransparent() {
+        return wrappedObject.getItemType().isTransparent();
+    }
+
+    @Override
+    public boolean isFlammable() {
+        return wrappedObject.getItemType().isFlammable();
+    }
+
+    @Override
+    public boolean isBurnable() {
+        return wrappedObject.getItemType().isBurnable();
+    }
+
+    @Override
+    public boolean isOccluding() {
+        return wrappedObject.getItemType().isOccluding();
+    }
+
+    @Override
+    public boolean hasGravity() {
+        return wrappedObject.getItemType().hasGravity();
+    }
+
+    @Override
+    public boolean isSameType(Object object) {
+        if (object instanceof Material) {
+            return wrappedObject.getItemType() == object;
+        }
+        if (object instanceof MaterialData) {
+            // TODO: This is complicated because we have variants, however as legacy versions are no longer in dev, we can just hardcode them here
+            return wrappedObject.getItemType() == ((MaterialData) object).getItemType();
+        }
+        return BlockTypeHolder.ofOptional(object).map(h -> h.platformName().equals(platformName())).orElse(false);
+    }
+
+    @Override
+    public boolean isSameType(Object... objects) {
+        return Arrays.stream(objects).anyMatch(this::isSameType);
+    }
+
+    @Override
+    public boolean is(Object object) {
+        if (object instanceof MaterialData || object instanceof BukkitBlockTypeLegacyHolder) {
+            return equals(object);
+        }
+        return equals(BlockTypeHolder.ofOptional(object).orElse(null));
+    }
+
+    @Override
+    public boolean is(Object... objects) {
+        return Arrays.stream(objects).anyMatch(this::is);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T as(Class<T> type) {
+        if (type == Material.class) {
+            return (T) wrappedObject.getItemType();
+        }
+        return super.as(type);
+    }
+}

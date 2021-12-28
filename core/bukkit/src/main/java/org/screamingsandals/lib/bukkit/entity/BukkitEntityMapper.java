@@ -4,7 +4,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityPathfindingMob;
 import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.nms.accessors.*;

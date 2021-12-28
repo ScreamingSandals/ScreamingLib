@@ -1,11 +1,9 @@
 package org.screamingsandals.lib.bukkit.world.gamerule;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
 import org.screamingsandals.lib.world.gamerule.GameRuleMapping;
 
 import java.util.Arrays;
@@ -16,11 +14,10 @@ public class BukkitGameRuleMapping extends GameRuleMapping {
     public BukkitGameRuleMapping() {
         if (Reflect.has("org.bukkit.GameRule")) {
             gameRuleConverter
-                    .registerP2W(GameRule.class, gameRule -> new GameRuleHolder(gameRule.getName()))
-                    .registerW2P(GameRule.class, dimensionHolder -> GameRule.getByName(dimensionHolder.getPlatformName()));
+                    .registerP2W(GameRule.class, BukkitGameRuleHolder::new);
 
             Arrays.stream(GameRule.values()).forEach(gameRule -> {
-                var holder = new GameRuleHolder(gameRule.getName());
+                var holder = new BukkitGameRuleHolder(gameRule);
                 mapping.put(NamespacedMappingKey.of(gameRule.getName()), holder);
                 values.add(holder);
             });
@@ -34,13 +31,10 @@ public class BukkitGameRuleMapping extends GameRuleMapping {
                             "gameLoopFunction"
                     )
                     .forEach(gameRule -> {
-                        var holder = new GameRuleHolder(gameRule);
+                        var holder = new BukkitLegacyGameRuleHolder(gameRule);
                         mapping.put(NamespacedMappingKey.of(gameRule), holder);
                         values.add(holder);
                     });
         }
-
-        gameRuleConverter
-                .registerW2P(String.class, GameRuleHolder::getPlatformName);
     }
 }

@@ -2,6 +2,7 @@ package org.screamingsandals.lib.world.chunk;
 
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.entity.EntityBasic;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.world.WorldHolder;
@@ -9,7 +10,7 @@ import org.screamingsandals.lib.world.WorldHolder;
 /**
  * An interface representing a chunk.
  */
-public interface ChunkHolder extends Wrapper {
+public interface ChunkHolder extends Wrapper, RawValueHolder {
     /**
      * Gets the X coordinate of this chunk.
      *

@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.item.meta;
 
 import lombok.SneakyThrows;
+import org.screamingsandals.lib.configurate.EnchantmentHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -10,6 +11,7 @@ import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +27,6 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
     private static EnchantmentMapping enchantmentMapping;
 
     protected BidirectionalConverter<EnchantmentHolder> enchantmentConverter = BidirectionalConverter.<EnchantmentHolder>build()
-            .registerW2P(String.class, EnchantmentHolder::getPlatformName)
             .registerP2W(EnchantmentHolder.class, e -> e)
             .registerP2W(Map.Entry.class, entry -> {
                 Optional<EnchantmentHolder> holder = resolve(entry.getKey());
@@ -49,6 +50,14 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
                     return holder.get().withLevel(level);
                 }
                 return null;
+            })
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return EnchantmentHolderSerializer.INSTANCE.deserialize(EnchantmentHolder.class, node);
+                } catch (SerializationException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             });
 
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
@@ -130,13 +139,6 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
         mapAlias("PROJECTILE_PROTECTION", "PROTECTION_PROJECTILE");
         mapAlias("SWEEPING", "SWEEPING_EDGE");
         mapAlias("AQUA_AFFINITY", "WATER_WORKER");
-    }
-
-    public static <T> T convertEnchantmentHolder(EnchantmentHolder holder, Class<T> newType) {
-        if (enchantmentMapping == null) {
-            throw new UnsupportedOperationException("Enchantment mapping is not initialized yet.");
-        }
-        return enchantmentMapping.enchantmentConverter.convert(holder, newType);
     }
 
 }

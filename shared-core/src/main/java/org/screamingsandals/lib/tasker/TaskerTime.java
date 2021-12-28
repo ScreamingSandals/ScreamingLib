@@ -1,11 +1,12 @@
 package org.screamingsandals.lib.tasker;
 
 import lombok.Getter;
-import org.screamingsandals.lib.utils.WrappedTaskerTime;
+import org.screamingsandals.lib.utils.ProtoTaskerTime;
+import org.screamingsandals.lib.utils.ProtoWrapper;
 
 import java.util.concurrent.TimeUnit;
 
-public enum TaskerTime {
+public enum TaskerTime implements ProtoWrapper<ProtoTaskerTime> {
     TICKS(1, 50, TimeUnit.MILLISECONDS),
     SECONDS(20, 1, TimeUnit.SECONDS),
     MINUTES(1200, 1, TimeUnit.MINUTES),
@@ -34,26 +35,27 @@ public enum TaskerTime {
         return timeUnitValue * multiplier;
     }
 
-    public WrappedTaskerTime getWrappedTime() {
+    @Override
+    public ProtoTaskerTime asProto() {
         switch (this) {
             case TICKS:
-                return WrappedTaskerTime.TICKS;
+                return ProtoTaskerTime.TICKS;
             case SECONDS:
-                return WrappedTaskerTime.SECONDS;
+                return ProtoTaskerTime.SECONDS;
             case MINUTES:
-                return WrappedTaskerTime.MINUTES;
+                return ProtoTaskerTime.MINUTES;
             case HOURS:
-                return WrappedTaskerTime.HOURS;
+                return ProtoTaskerTime.HOURS;
         }
-        return WrappedTaskerTime.SECONDS;
+        return ProtoTaskerTime.SECONDS;
     }
 
-    public static TaskerTime from(WrappedTaskerTime wrappedTime) {
-        if (wrappedTime == WrappedTaskerTime.TICKS) {
+    public static TaskerTime from(ProtoTaskerTime wrappedTime) {
+        if (wrappedTime == ProtoTaskerTime.TICKS) {
             return TICKS;
-        } else if (wrappedTime == WrappedTaskerTime.MINUTES) {
+        } else if (wrappedTime == ProtoTaskerTime.MINUTES) {
             return MINUTES;
-        } else if (wrappedTime == WrappedTaskerTime.HOURS) {
+        } else if (wrappedTime == ProtoTaskerTime.HOURS) {
             return HOURS;
         } else {
             return TaskerTime.SECONDS;

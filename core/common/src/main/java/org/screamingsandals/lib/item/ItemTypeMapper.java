@@ -2,7 +2,7 @@ package org.screamingsandals.lib.item;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.ItemBlockIdsRemapper;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.configurate.ItemTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -12,6 +12,8 @@ import org.screamingsandals.lib.utils.key.MappingKey;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.key.NumericMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,14 +21,24 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("AlternativeMethodAvailable")
 @AbstractService
 public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> {
 
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?::)?(?<durability>\\d+)?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
     protected BidirectionalConverter<ItemTypeHolder> itemTypeConverter = BidirectionalConverter.<ItemTypeHolder>build()
-            .registerP2W(ItemTypeHolder.class, i -> i);
+            .registerP2W(ItemTypeHolder.class, i -> i)
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return ItemTypeHolderSerializer.INSTANCE.deserialize(ItemTypeHolder.class, node);
+                } catch (SerializationException ex) {
+                    ex.printStackTrace();
+                    return null;
+                }
+            });
 
     private static ItemTypeMapper itemTypeMapper;
+    private static ItemTypeHolder cachedAir;
 
     @ApiStatus.Internal
     public ItemTypeMapper() {
@@ -70,7 +82,7 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
                             return Optional.of(itemTypeMapper.mapping.get(namespacedDurability));
                         } else if (itemTypeMapper.mapping.containsKey(namespaced)) {
                             var holder = itemTypeMapper.mapping.get(namespaced);
-                            return Optional.of(holder.withDurability(data.shortValue()));
+                            return Optional.of(holder.withForcedDurability(data.shortValue()));
                         }
                     } else if (itemTypeMapper.mapping.containsKey(namespaced)) {
                         return Optional.of(itemTypeMapper.mapping.get(namespaced));
@@ -91,7 +103,7 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
                             return Optional.of(itemTypeMapper.mapping.get(keyWithData));
                         } else if (itemTypeMapper.mapping.containsKey(key)) {
                             var holder = itemTypeMapper.mapping.get(key);
-                            return Optional.of(holder.withDurability((short) data));
+                            return Optional.of(holder.withForcedDurability((short) data));
                         }
                     } catch (NumberFormatException ignored) {
                     }
@@ -121,13 +133,6 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
                 .orElse(holder);
     }
 
-    public static <T> T convertItemTypeHolder(ItemTypeHolder holder, Class<T> newType) {
-        if (itemTypeMapper == null) {
-            throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
-        }
-        return itemTypeMapper.itemTypeConverter.convert(holder, newType);
-    }
-
     public Map<MappingKey, ItemTypeHolder> getUNSAFE_mapping() {
         return mapping;
     }
@@ -137,21 +142,11 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
         super.mapAlias(mappingKey, alias);
     }
 
-    public static Optional<BlockTypeHolder> getBlock(ItemTypeHolder typeHolder) {
-        if (itemTypeMapper == null) {
-            throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
+    @OfMethodAlternative(value = ItemTypeHolder.class, methodName = "air")
+    public static ItemTypeHolder getCachedAir() {
+        if (cachedAir == null) {
+            cachedAir = resolve("minecraft:air").orElseThrow();
         }
-        return itemTypeMapper.getBlock0(typeHolder);
+        return cachedAir;
     }
-
-    protected abstract Optional<BlockTypeHolder> getBlock0(ItemTypeHolder typeHolder);
-
-    public static int getMaxStackSize(ItemTypeHolder materialHolder) {
-        if (itemTypeMapper == null) {
-            throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
-        }
-        return itemTypeMapper.getMaxStackSize0(materialHolder);
-    }
-
-    protected abstract int getMaxStackSize0(ItemTypeHolder materialHolder);
 }

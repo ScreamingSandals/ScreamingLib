@@ -1,9 +1,7 @@
-package org.screamingsandals.lib.bukkit.entity.type;
+package org.screamingsandals.lib.bukkit.entity;
 
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.bukkit.entity.BukkitEntityLiving;
-import org.screamingsandals.lib.bukkit.entity.BukkitEntityMapper;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.EntityPathfindingMob;

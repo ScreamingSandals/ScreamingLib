@@ -1,11 +1,14 @@
 package org.screamingsandals.lib.container.type;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.screamingsandals.lib.configurate.InventoryTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +22,15 @@ public abstract class InventoryTypeMapping extends AbstractTypeMapper<InventoryT
     private static InventoryTypeMapping inventoryTypeMapping;
 
     protected final BidirectionalConverter<InventoryTypeHolder> inventoryTypeConverter = BidirectionalConverter.<InventoryTypeHolder>build()
-            .registerP2W(InventoryTypeHolder.class, e -> e);
+            .registerP2W(InventoryTypeHolder.class, e -> e)
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return InventoryTypeHolderSerializer.INSTANCE.deserialize(InventoryTypeHolder.class, node);
+                } catch (SerializationException ex) {
+                    ex.printStackTrace();
+                    return null;
+                }
+            });
 
     @ApiStatus.Internal
     public InventoryTypeMapping() {
@@ -50,20 +61,4 @@ public abstract class InventoryTypeMapping extends AbstractTypeMapper<InventoryT
         }
         return Collections.unmodifiableList(inventoryTypeMapping.values);
     }
-
-    public static <T> T convertInventoryTypeHolder(InventoryTypeHolder holder, Class<T> newType) {
-        if (inventoryTypeMapping == null) {
-            throw new UnsupportedOperationException("InventoryTypeMapping is not initialized yet.");
-        }
-        return inventoryTypeMapping.inventoryTypeConverter.convert(holder, newType);
-    }
-
-    public static int getSize(InventoryTypeHolder holder) {
-        if (inventoryTypeMapping == null) {
-            throw new UnsupportedOperationException("InventoryTypeMapping is not initialized yet.");
-        }
-        return inventoryTypeMapping.getSize0(holder);
-    }
-
-    public abstract int getSize0(InventoryTypeHolder holder);
 }

@@ -1,11 +1,14 @@
 package org.screamingsandals.lib.world.weather;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.screamingsandals.lib.configurate.WeatherHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +21,15 @@ public abstract class WeatherMapping extends AbstractTypeMapper<WeatherHolder> {
     private static WeatherMapping weatherMapping;
 
     protected final BidirectionalConverter<WeatherHolder> weatherConverter = BidirectionalConverter.<WeatherHolder>build()
-            .registerP2W(WeatherHolder.class, d -> d);
+            .registerP2W(WeatherHolder.class, d -> d)
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return WeatherHolderSerializer.INSTANCE.deserialize(WeatherHolder.class, node);
+                } catch (SerializationException ex) {
+                    ex.printStackTrace();
+                    return null;
+                }
+            });
 
     @ApiStatus.Internal
     public WeatherMapping() {
@@ -48,12 +59,5 @@ public abstract class WeatherMapping extends AbstractTypeMapper<WeatherHolder> {
             throw new UnsupportedOperationException("WeatherMapping is not initialized yet.");
         }
         return Collections.unmodifiableList(weatherMapping.values);
-    }
-
-    public static <T> T convertWeatherHolder(WeatherHolder holder, Class<T> newType) {
-        if (weatherMapping == null) {
-            throw new UnsupportedOperationException("WeatherMapping is not initialized yet.");
-        }
-        return weatherMapping.weatherConverter.convert(holder, newType);
     }
 }

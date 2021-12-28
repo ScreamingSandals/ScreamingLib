@@ -12,11 +12,10 @@ import java.util.Arrays;
 public class BukkitEnchantmentMapping extends EnchantmentMapping {
     public BukkitEnchantmentMapping() {
         enchantmentConverter
-                .registerW2P(Enchantment.class, e -> Enchantment.getByName(e.getPlatformName()))
-                .registerP2W(Enchantment.class, e -> new EnchantmentHolder(e.getName()));
+                .registerP2W(Enchantment.class, BukkitEnchantmentHolder::new);
 
         Arrays.stream(Enchantment.values()).forEach(enchantment -> {
-            var holder = new EnchantmentHolder(enchantment.getName());
+            var holder = new BukkitEnchantmentHolder(enchantment);
             mapping.put(NamespacedMappingKey.of(enchantment.getName()), holder);
             values.add(holder);
         });

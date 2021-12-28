@@ -12,11 +12,10 @@ import java.util.Arrays;
 public class BukkitDifficultyMapping extends DifficultyMapping {
     public BukkitDifficultyMapping() {
         difficultyConverter
-                .registerP2W(Difficulty.class, difficulty -> new DifficultyHolder(difficulty.name()))
-                .registerW2P(Difficulty.class, difficultyHolder -> Difficulty.valueOf(difficultyHolder.getPlatformName()));
+                .registerP2W(Difficulty.class, BukkitDifficultyHolder::new);
 
         Arrays.stream(Difficulty.values()).forEach(difficulty -> {
-            var holder = new DifficultyHolder(difficulty.name());
+            var holder = new BukkitDifficultyHolder(difficulty);
             mapping.put(NamespacedMappingKey.of(difficulty.name()), holder);
             values.add(holder);
         });
