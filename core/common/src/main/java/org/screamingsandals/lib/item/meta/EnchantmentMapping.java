@@ -25,7 +25,6 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
     private static EnchantmentMapping enchantmentMapping;
 
     protected BidirectionalConverter<EnchantmentHolder> enchantmentConverter = BidirectionalConverter.<EnchantmentHolder>build()
-            .registerW2P(String.class, EnchantmentHolder::getPlatformName)
             .registerP2W(EnchantmentHolder.class, e -> e)
             .registerP2W(Map.Entry.class, entry -> {
                 Optional<EnchantmentHolder> holder = resolve(entry.getKey());
@@ -130,13 +129,6 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
         mapAlias("PROJECTILE_PROTECTION", "PROTECTION_PROJECTILE");
         mapAlias("SWEEPING", "SWEEPING_EDGE");
         mapAlias("AQUA_AFFINITY", "WATER_WORKER");
-    }
-
-    public static <T> T convertEnchantmentHolder(EnchantmentHolder holder, Class<T> newType) {
-        if (enchantmentMapping == null) {
-            throw new UnsupportedOperationException("Enchantment mapping is not initialized yet.");
-        }
-        return enchantmentMapping.enchantmentConverter.convert(holder, newType);
     }
 
 }
