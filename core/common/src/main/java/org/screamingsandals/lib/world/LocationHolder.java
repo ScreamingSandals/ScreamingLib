@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 @ConfigSerializable
-public class LocationHolder implements Wrapper, Serializable {
+public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Serializable {
     /**
      * The X coordinate of this location.
      */
@@ -239,37 +239,21 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
-     * Converts this location into a {@link WrappedLocation}. Useful for Protobuf sending :)
+     * Converts this location into a {@link ProtoVector3D}. Useful for Protobuf sending :)
      *
      * @return wrapped location into a Protobuf message
      */
-    public WrappedLocation asWrappedLocation() {
-        return WrappedLocation.newBuilder()
-                .setX(this.x)
-                .setY(this.y)
-                .setZ(this.z)
-                .setPitch(this.pitch)
-                .setYaw(this.yaw)
-                .setWorldUuid(this.world.getUuid().toString())
-                .build();
+    public ProtoVector3D asWrappedVector() {
+       return asVector().asProto();
     }
 
     /**
-     * Converts this location into a {@link WrappedVector3D}. Useful for Protobuf sending :)
+     * Converts this location into a {@link ProtoVector3Df}. Useful for Protobuf sending :)
      *
      * @return wrapped location into a Protobuf message
      */
-    public WrappedVector3D asWrappedVector() {
-       return asVector().wrap();
-    }
-
-    /**
-     * Converts this location into a {@link WrappedVector3Df}. Useful for Protobuf sending :)
-     *
-     * @return wrapped location into a Protobuf message
-     */
-    public WrappedVector3Df asWrappedVectorf() {
-        return asVectorf().wrap();
+    public ProtoVector3Df asWrappedVectorf() {
+        return asVectorf().asProto();
     }
 
     /**
@@ -473,5 +457,22 @@ public class LocationHolder implements Wrapper, Serializable {
         pitch = (float) Math.toDegrees(Math.atan(-vector.getY() / xz));
 
         return this;
+    }
+
+    /**
+     * Converts this location into a {@link ProtoLocation}. Useful for Protobuf sending :)
+     *
+     * @return wrapped location into a Protobuf message
+     */
+    @Override
+    public ProtoLocation asProto() {
+        return ProtoLocation.newBuilder()
+                .setX(this.x)
+                .setY(this.y)
+                .setZ(this.z)
+                .setPitch(this.pitch)
+                .setYaw(this.yaw)
+                .setWorldUuid(this.world.getUuid().toString())
+                .build();
     }
 }

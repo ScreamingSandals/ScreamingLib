@@ -2,13 +2,16 @@ package org.screamingsandals.lib.item.meta;
 
 import org.jetbrains.annotations.Contract;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.ProtoEnchantment;
+import org.screamingsandals.lib.utils.ProtoPotionEffect;
+import org.screamingsandals.lib.utils.ProtoWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface PotionEffectHolder extends ComparableWrapper {
+public interface PotionEffectHolder extends ComparableWrapper, ProtoWrapper<ProtoPotionEffect> {
     String platformName();
 
     int duration();
@@ -176,5 +179,17 @@ public interface PotionEffectHolder extends ComparableWrapper {
 
     static List<PotionEffectHolder> all() {
         return PotionEffectMapping.getValues();
+    }
+
+    @Override
+    default ProtoPotionEffect asProto() {
+        return ProtoPotionEffect.newBuilder()
+                .setPlatformName(platformName())
+                .setAmplifier(amplifier())
+                .setDuration(duration())
+                .setAmbient(ambient())
+                .setIcon(icon())
+                .setParticles(particles())
+                .build();
     }
 }

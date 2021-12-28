@@ -30,7 +30,7 @@ public class ClassMethod implements ReflectedExecutable<ClassMethod> {
         return new InvocationResult(invokeStatic(params));
     }
 
-    @SuppressWarnings("deprecated")
+    @SuppressWarnings("deprecation")
     public Object invokeInstance(Object instance, Object... params) {
         if (method == null) {
             return null;

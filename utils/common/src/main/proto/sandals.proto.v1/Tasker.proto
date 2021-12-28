@@ -7,7 +7,7 @@ option java_package = "org.screamingsandals.lib.utils";
 
 import "google/protobuf/timestamp.proto";
 
-enum WrappedTaskerTime {
+enum ProtoTaskerTime {
   SECONDS = 0;
   TICKS = 1;
   MINUTES = 2;

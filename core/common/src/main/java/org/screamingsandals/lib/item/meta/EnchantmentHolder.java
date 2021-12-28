@@ -2,13 +2,15 @@ package org.screamingsandals.lib.item.meta;
 
 import org.jetbrains.annotations.Contract;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.ProtoEnchantment;
+import org.screamingsandals.lib.utils.ProtoWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface EnchantmentHolder extends ComparableWrapper {
+public interface EnchantmentHolder extends ComparableWrapper, ProtoWrapper<ProtoEnchantment> {
 
     String platformName();
 
@@ -88,5 +90,13 @@ public interface EnchantmentHolder extends ComparableWrapper {
 
     static List<EnchantmentHolder> all() {
         return EnchantmentMapping.getValues();
+    }
+
+    @Override
+    default ProtoEnchantment asProto() {
+        return ProtoEnchantment.newBuilder()
+                .setPlatformName(platformName())
+                .setLevel(level())
+                .build();
     }
 }

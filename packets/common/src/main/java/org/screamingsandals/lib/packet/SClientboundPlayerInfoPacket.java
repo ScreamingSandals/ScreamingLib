@@ -35,7 +35,7 @@ public class SClientboundPlayerInfoPacket extends AbstractPacket {
                             writer.writeSizedString(property.signature());
                         }
                     });
-                    writer.writeVarInt(playerInfoData.gameMode().getId());
+                    writer.writeVarInt(playerInfoData.gameMode().id());
                     writer.writeVarInt(playerInfoData.latency());
                     writer.writeBoolean(playerInfoData.displayName() != null);
                     if (playerInfoData.displayName() != null) {
@@ -44,7 +44,7 @@ public class SClientboundPlayerInfoPacket extends AbstractPacket {
                     break;
                 }
                 case UPDATE_GAME_MODE: {
-                    writer.writeVarInt(playerInfoData.gameMode().getId());
+                    writer.writeVarInt(playerInfoData.gameMode().id());
                     break;
                 }
                 case UPDATE_LATENCY: {

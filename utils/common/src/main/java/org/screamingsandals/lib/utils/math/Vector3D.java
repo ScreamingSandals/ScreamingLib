@@ -5,34 +5,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.utils.WrappedLocation;
-import org.screamingsandals.lib.utils.WrappedVector3D;
+import org.screamingsandals.lib.utils.ProtoLocation;
+import org.screamingsandals.lib.utils.ProtoVector3D;
+import org.screamingsandals.lib.utils.ProtoWrapper;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class Vector3D implements Cloneable {
-    public static final Vector3D ZERO = new Vector3D(0,0,0);
+public class Vector3D implements Cloneable, ProtoWrapper<ProtoVector3D> {
+    public static final Vector3D ZERO = new Vector3D(0, 0, 0);
 
     private double x;
     private double y;
     private double z;
 
-    public static Vector3D unwrap(WrappedVector3D wrapped) {
+    public static Vector3D unwrap(ProtoVector3D wrapped) {
         return new Vector3D(wrapped.getX(), wrapped.getY(), wrapped.getZ());
     }
 
-    public static Vector3D unwrap(WrappedLocation wrapped) {
+    public static Vector3D unwrap(ProtoLocation wrapped) {
         return new Vector3D(wrapped.getX(), wrapped.getY(), wrapped.getZ());
-    }
-
-    public WrappedVector3D wrap() {
-        return WrappedVector3D.newBuilder()
-                .setX(this.x)
-                .setY(this.y)
-                .setZ(this.z)
-                .build();
     }
 
     public Vector3D add(double x, double y, double z) {
@@ -103,5 +96,14 @@ public class Vector3D implements Cloneable {
     @Override
     public Vector3D clone() {
         return new Vector3D(x, y, z);
+    }
+
+    @Override
+    public ProtoVector3D asProto() {
+        return ProtoVector3D.newBuilder()
+                .setX(this.x)
+                .setY(this.y)
+                .setZ(this.z)
+                .build();
     }
 }
