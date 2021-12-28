@@ -9,6 +9,8 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class DamageCauseHolderSerializer implements TypeSerializer<DamageCauseHolder> {
+    public static final DamageCauseHolderSerializer INSTANCE = new DamageCauseHolderSerializer();
+
     @Override
     public DamageCauseHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {

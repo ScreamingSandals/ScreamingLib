@@ -9,6 +9,9 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class WeatherHolderSerializer implements TypeSerializer<WeatherHolder> {
+
+    public static final WeatherHolderSerializer INSTANCE = new WeatherHolderSerializer();
+
     @Override
     public WeatherHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {

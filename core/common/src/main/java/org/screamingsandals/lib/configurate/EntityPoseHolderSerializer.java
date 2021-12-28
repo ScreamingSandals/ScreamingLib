@@ -9,6 +9,8 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class EntityPoseHolderSerializer implements TypeSerializer<EntityPoseHolder> {
+    public static final EntityPoseHolderSerializer INSTANCE = new EntityPoseHolderSerializer();
+
     @Override
     public EntityPoseHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {

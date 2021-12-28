@@ -4,11 +4,9 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 import org.screamingsandals.lib.item.meta.PotionHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.Arrays;
 
-@ConfigSerializable
 public class BukkitPotionHolder extends BasicWrapper<PotionData> implements PotionHolder {
 
     public BukkitPotionHolder(PotionType type) {

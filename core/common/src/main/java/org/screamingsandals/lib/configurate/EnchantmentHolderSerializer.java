@@ -9,6 +9,8 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class EnchantmentHolderSerializer implements TypeSerializer<EnchantmentHolder> {
+    public static final EnchantmentHolderSerializer INSTANCE = new EnchantmentHolderSerializer();
+
     @Override
     public EnchantmentHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {

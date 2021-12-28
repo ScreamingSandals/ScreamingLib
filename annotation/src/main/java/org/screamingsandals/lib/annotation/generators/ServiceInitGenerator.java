@@ -134,6 +134,12 @@ public class ServiceInitGenerator {
                     statement.append(".defaultOptions(t -> t.serializers($N::invoke))");
                     processedArguments.add(indexOfAdventureConfigurateSerializer);
                 }
+                if (configFile.screamingLibSerializers()) {
+                    if (elements.getTypeElement("org.screamingsandals.lib.configurate.SLibSerializers") != null) { // only for Core
+                        statement.append(".defaultOptions(t -> t.serializers($T::makeSerializers))");
+                        processedArguments.add(ClassName.get("org.screamingsandals.lib.configurate", "SLibSerializers"));
+                    }
+                }
                 statement.append(".build()");
             });
             put(Triple.of(CheckType.ALLOW_CHILDREN, "java.lang.Object", ProvidedBy.class), (statement, processedArguments, annotation, variableType) -> {

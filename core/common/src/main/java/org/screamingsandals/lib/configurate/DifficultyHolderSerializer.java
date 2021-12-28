@@ -9,6 +9,8 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class DifficultyHolderSerializer implements TypeSerializer<DifficultyHolder> {
+    public static final DifficultyHolderSerializer INSTANCE = new DifficultyHolderSerializer();
+
     @Override
     public DifficultyHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {

@@ -3,13 +3,11 @@ package org.screamingsandals.lib.item.meta;
 import org.jetbrains.annotations.Contract;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-@ConfigSerializable // this shouldn't be there
 public interface EnchantmentHolder extends ComparableWrapper {
 
     String platformName();

@@ -16,6 +16,8 @@ public class PotionEffectHolderSerializer implements TypeSerializer<PotionEffect
     private static final String PARTICLES_KEY = "particles";
     private static final String ICON_KEY = "icon";
 
+    public static final PotionEffectHolderSerializer INSTANCE = new PotionEffectHolderSerializer();
+
     @Override
     public PotionEffectHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {

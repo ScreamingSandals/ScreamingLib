@@ -4,11 +4,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Pair;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.Arrays;
 
-@ConfigSerializable
 public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Integer>> implements EnchantmentHolder {
 
     public BukkitEnchantmentHolder(Enchantment enchantment) {

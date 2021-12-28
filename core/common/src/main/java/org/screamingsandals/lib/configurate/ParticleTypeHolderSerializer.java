@@ -9,6 +9,8 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class ParticleTypeHolderSerializer implements TypeSerializer<ParticleTypeHolder> {
+    public static final ParticleTypeHolderSerializer INSTANCE = new ParticleTypeHolderSerializer();
+
     @Override
     public ParticleTypeHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {

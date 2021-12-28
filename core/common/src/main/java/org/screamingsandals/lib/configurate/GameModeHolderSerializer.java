@@ -9,6 +9,8 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class GameModeHolderSerializer implements TypeSerializer<GameModeHolder> {
+    public static final GameModeHolderSerializer INSTANCE = new GameModeHolderSerializer();
+
     @Override
     public GameModeHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {

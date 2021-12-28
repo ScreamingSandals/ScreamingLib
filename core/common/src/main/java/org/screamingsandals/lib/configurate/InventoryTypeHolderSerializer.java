@@ -9,6 +9,8 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class InventoryTypeHolderSerializer implements TypeSerializer<InventoryTypeHolder> {
+    public static final InventoryTypeHolderSerializer INSTANCE = new InventoryTypeHolderSerializer();
+
     @Override
     public InventoryTypeHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {

@@ -9,6 +9,8 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class DimensionHolderSerializer implements TypeSerializer<DimensionHolder> {
+    public static final DimensionHolderSerializer INSTANCE = new DimensionHolderSerializer();
+
     @Override
     public DimensionHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {

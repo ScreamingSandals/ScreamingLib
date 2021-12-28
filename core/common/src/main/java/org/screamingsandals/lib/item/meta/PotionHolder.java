@@ -2,13 +2,11 @@ package org.screamingsandals.lib.item.meta;
 
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-@ConfigSerializable // this shouldn't have config serializable annotation ig
 public interface PotionHolder extends ComparableWrapper {
 
     /**
