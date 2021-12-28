@@ -1,12 +1,15 @@
 package org.screamingsandals.lib.slot;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.screamingsandals.lib.configurate.EquipmentSlotHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,7 +20,15 @@ public abstract class EquipmentSlotMapping extends AbstractTypeMapper<EquipmentS
     private static EquipmentSlotMapping equipmentSlotMapping;
 
     protected final BidirectionalConverter<EquipmentSlotHolder> equipmentSlotConverter = BidirectionalConverter.<EquipmentSlotHolder>build()
-            .registerP2W(EquipmentSlotHolder.class, e -> e);
+            .registerP2W(EquipmentSlotHolder.class, e -> e)
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return EquipmentSlotHolderSerializer.INSTANCE.deserialize(EquipmentSlotHolder.class, node);
+                } catch (SerializationException ex) {
+                    ex.printStackTrace();
+                    return null;
+                }
+            });
 
     @ApiStatus.Internal
     public EquipmentSlotMapping() {

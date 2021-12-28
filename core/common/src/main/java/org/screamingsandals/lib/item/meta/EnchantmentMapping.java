@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.item.meta;
 
 import lombok.SneakyThrows;
+import org.screamingsandals.lib.configurate.EnchantmentHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -10,6 +11,7 @@ import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +50,14 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
                     return holder.get().withLevel(level);
                 }
                 return null;
+            })
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return EnchantmentHolderSerializer.INSTANCE.deserialize(EnchantmentHolder.class, node);
+                } catch (SerializationException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             });
 
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)

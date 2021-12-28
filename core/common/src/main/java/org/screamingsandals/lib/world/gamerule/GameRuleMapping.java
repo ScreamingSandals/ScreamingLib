@@ -1,11 +1,14 @@
 package org.screamingsandals.lib.world.gamerule;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.screamingsandals.lib.configurate.GameRuleHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
@@ -18,7 +21,15 @@ public abstract class GameRuleMapping extends AbstractTypeMapper<GameRuleHolder>
     private static GameRuleMapping gameRuleMapping;
 
     protected final BidirectionalConverter<GameRuleHolder> gameRuleConverter = BidirectionalConverter.<GameRuleHolder>build()
-            .registerP2W(GameRuleHolder.class, d -> d);
+            .registerP2W(GameRuleHolder.class, d -> d)
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return GameRuleHolderSerializer.INSTANCE.deserialize(GameRuleHolder.class, node);
+                } catch (SerializationException ex) {
+                    ex.printStackTrace();
+                    return null;
+                }
+            });
 
     @ApiStatus.Internal
     public GameRuleMapping() {

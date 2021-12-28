@@ -3,6 +3,7 @@ package org.screamingsandals.lib.block;
 import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.ItemBlockIdsRemapper;
+import org.screamingsandals.lib.configurate.BlockTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -10,6 +11,8 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.*;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.*;
 import java.util.function.Function;
@@ -23,7 +26,15 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
     @Getter
     protected final Map<Predicate<NamespacedMappingKey>, Pair<Function<Byte, Map<String, String>>, Function<Map<String, String>, Byte>>> blockDataTranslators = new HashMap<>();
     protected BidirectionalConverter<BlockTypeHolder> blockTypeConverter = BidirectionalConverter.<BlockTypeHolder>build()
-            .registerP2W(BlockTypeHolder.class, i -> i);
+            .registerP2W(BlockTypeHolder.class, i -> i)
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return BlockTypeHolderSerializer.INSTANCE.deserialize(BlockTypeMapper.class, node);
+                } catch (SerializationException ex) {
+                    ex.printStackTrace();
+                    return null;
+                }
+            });
 
     private static BlockTypeMapper blockTypeMapper;
     private static BlockTypeHolder cachedAir;

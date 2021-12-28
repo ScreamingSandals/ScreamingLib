@@ -15,6 +15,7 @@ import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.item.meta.PotionHolder;
 import org.screamingsandals.lib.particle.ParticleTypeHolder;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import org.screamingsandals.lib.world.dimension.DimensionHolder;
 import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
@@ -43,6 +44,7 @@ public class SLibSerializers {
                 .register(FireworkEffectHolder.class, FireworkEffectHolderSerializer.INSTANCE)
                 .register(ItemTypeHolder.class, ItemTypeHolderSerializer.INSTANCE)
                 .register(BlockTypeHolder.class, BlockTypeHolderSerializer.INSTANCE)
+                .register(EquipmentSlotHolder.class, EquipmentSlotHolderSerializer.INSTANCE)
                 .build();
     }
 }

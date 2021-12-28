@@ -2,6 +2,7 @@ package org.screamingsandals.lib.item;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.ItemBlockIdsRemapper;
+import org.screamingsandals.lib.configurate.ItemTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -11,6 +12,8 @@ import org.screamingsandals.lib.utils.key.MappingKey;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.key.NumericMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +27,15 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
 
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?::)?(?<durability>\\d+)?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
     protected BidirectionalConverter<ItemTypeHolder> itemTypeConverter = BidirectionalConverter.<ItemTypeHolder>build()
-            .registerP2W(ItemTypeHolder.class, i -> i);
+            .registerP2W(ItemTypeHolder.class, i -> i)
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return ItemTypeHolderSerializer.INSTANCE.deserialize(ItemTypeHolder.class, node);
+                } catch (SerializationException ex) {
+                    ex.printStackTrace();
+                    return null;
+                }
+            });
 
     private static ItemTypeMapper itemTypeMapper;
     private static ItemTypeHolder cachedAir;

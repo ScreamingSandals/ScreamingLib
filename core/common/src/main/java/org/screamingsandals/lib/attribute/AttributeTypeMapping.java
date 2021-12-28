@@ -1,12 +1,15 @@
 package org.screamingsandals.lib.attribute;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.screamingsandals.lib.configurate.AttributeTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.AttributeMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,7 +20,15 @@ public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeT
     private static AttributeTypeMapping attributeTypeMapping;
 
     protected final BidirectionalConverter<AttributeTypeHolder> attributeTypeConverter = BidirectionalConverter.<AttributeTypeHolder>build()
-            .registerP2W(AttributeTypeHolder.class, e -> e);
+            .registerP2W(AttributeTypeHolder.class, e -> e)
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return AttributeTypeHolderSerializer.INSTANCE.deserialize(AttributeTypeHolder.class, node);
+                } catch (SerializationException ex) {
+                    ex.printStackTrace();
+                    return null;
+                }
+            });
 
     @ApiStatus.Internal
     public AttributeTypeMapping() {

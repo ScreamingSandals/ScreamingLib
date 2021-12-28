@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.item.meta;
 
+import org.screamingsandals.lib.configurate.PotionEffectHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -26,42 +27,25 @@ import java.util.regex.Pattern;
 public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffectHolder> {
 
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?<namespaced>[A-Za-z0-9_.\\-/:]+)(\\s+(?<duration>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
-    private static final Function<ConfigurationNode, PotionEffectHolder> CONFIGURATE_METHOD = node -> {
-        if (!node.isMap()) {
-            return resolve(node.getString()).orElse(null);
-        }
-
-        var effectNode = node.node("effect");
-        var durationNode = node.node("duration");
-        var amplifierNode = node.node("amplifier");
-        var ambientNode = node.node("ambient");
-        var particlesNode = node.node("particles");
-        var iconNode = node.node("icon");
-
-        var holderOptional = resolve(effectNode.getString());
-        if (holderOptional.isPresent()) {
-            var holder = holderOptional.get();
-            return holder
-                    .withDuration(durationNode.getInt(holder.duration()))
-                    .withAmplifier(amplifierNode.getInt(holder.amplifier()))
-                    .withAmbient(ambientNode.getBoolean(holder.ambient()))
-                    .withParticles(particlesNode.getBoolean(node.node("has-particles").getBoolean(holder.particles()))) // older bw shop support
-                    .withIcon(iconNode.getBoolean(node.node("has-icon").getBoolean(holder.icon()))); // older bw shop support
-        }
-        return null;
-    };
     private static PotionEffectMapping potionEffectMapping;
 
     protected BidirectionalConverter<PotionEffectHolder> potionEffectConverter = BidirectionalConverter.<PotionEffectHolder>build()
             .registerP2W(PotionEffectHolder.class, e -> e)
-            .registerP2W(ConfigurationNode.class, CONFIGURATE_METHOD)
             .registerP2W(Map.class, map -> {
                 try {
-                    return CONFIGURATE_METHOD.apply(BasicConfigurationNode.root().set(map));
+                    return PotionEffectHolderSerializer.INSTANCE.deserialize(PotionEffectHolder.class, BasicConfigurationNode.root().set(map));
                 } catch (SerializationException e) {
                     e.printStackTrace();
                 }
                 return null;
+            })
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return PotionEffectHolderSerializer.INSTANCE.deserialize(PotionEffectHolder.class, node);
+                } catch (SerializationException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             });
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)

@@ -1,11 +1,14 @@
 package org.screamingsandals.lib.item.meta;
 
+import org.screamingsandals.lib.configurate.PotionHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +18,15 @@ import java.util.Optional;
 public abstract class PotionMapping extends AbstractTypeMapper<PotionHolder> {
     private static PotionMapping potionMapping;
     protected BidirectionalConverter<PotionHolder> potionConverter = BidirectionalConverter.<PotionHolder>build()
-            .registerP2W(PotionHolder.class, e -> e);
+            .registerP2W(PotionHolder.class, e -> e)
+            .registerP2W(ConfigurationNode.class, node -> {
+                try {
+                    return PotionHolderSerializer.INSTANCE.deserialize(PotionHolder.class, node);
+                } catch (SerializationException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            });
 
     protected PotionMapping() {
         if (potionMapping != null) {

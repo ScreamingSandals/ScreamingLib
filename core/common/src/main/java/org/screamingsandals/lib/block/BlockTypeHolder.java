@@ -25,18 +25,33 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData {
     @Contract(value = "_ -> new", pure = true)
     BlockTypeHolder withLegacyData(byte legacyData);
 
+    /**
+     * NOTE: This method does not work in legacy environments yet!
+     */
     @Unmodifiable
     Map<String, String> flatteningData();
 
+    /**
+     * NOTE: This method does not work in legacy environments yet!
+     */
     @Contract(value = "_ -> new", pure = true)
     BlockTypeHolder withFlatteningData(Map<String, String> flatteningData);
 
+    /**
+     * NOTE: This method does not work in legacy environments yet!
+     */
     @Contract(value = "_, _ -> new", pure = true)
     BlockTypeHolder with(String attribute, String value);
 
+    /**
+     * NOTE: This method does not work in legacy environments yet!
+     */
     @Contract(value = "_, _ -> new", pure = true)
     BlockTypeHolder with(String attribute, int value);
 
+    /**
+     * NOTE: This method does not work in legacy environments yet!
+     */
     @Contract(value = "_, _ -> new", pure = true)
     BlockTypeHolder with(String attribute, boolean value);
 
@@ -45,10 +60,19 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData {
         return BlockTypeMapper.colorize(this, color);
     }
 
+    /**
+     * NOTE: This method does not work in legacy environments yet!
+     */
     Optional<String> get(String attribute);
 
+    /**
+     * NOTE: This method does not work in legacy environments yet!
+     */
     Optional<Integer> getInt(String attribute);
 
+    /**
+     * NOTE: This method does not work in legacy environments yet!
+     */
     Optional<Boolean> getBoolean(String attribute);
 
     default boolean isAir() {
