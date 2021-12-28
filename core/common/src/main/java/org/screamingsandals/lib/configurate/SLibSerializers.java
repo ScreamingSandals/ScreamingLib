@@ -7,6 +7,7 @@ import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.entity.damage.DamageCauseHolder;
 import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.item.meta.PotionHolder;
@@ -37,6 +38,7 @@ public class SLibSerializers {
                 .register(PotionEffectHolder.class, PotionEffectHolderSerializer.INSTANCE)
                 .register(PotionHolder.class, PotionHolderSerializer.INSTANCE)
                 .register(WeatherHolder.class, WeatherHolderSerializer.INSTANCE)
+                .register(FireworkEffectHolder.class, FireworkEffectHolderSerializer.INSTANCE)
                 .build();
     }
 }

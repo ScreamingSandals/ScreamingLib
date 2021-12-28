@@ -8,7 +8,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class DimensionHolderSerializer implements TypeSerializer<DimensionHolder> {
+public class DimensionHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<DimensionHolder> {
     public static final DimensionHolderSerializer INSTANCE = new DimensionHolderSerializer();
 
     @Override

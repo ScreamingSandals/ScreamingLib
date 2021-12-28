@@ -8,7 +8,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class PotionHolderSerializer implements TypeSerializer<PotionHolder> {
+public class PotionHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<PotionHolder> {
 
     public static final PotionHolderSerializer INSTANCE = new PotionHolderSerializer();
 

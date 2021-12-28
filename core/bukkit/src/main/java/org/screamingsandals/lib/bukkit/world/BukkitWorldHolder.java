@@ -95,7 +95,7 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
         if (Reflect.has("org.bukkit.GameRule")) {
             return (T) wrappedObject.getGameRuleValue(holder.as(GameRule.class));
         } else {
-            var val = wrappedObject.getGameRuleValue(holder.getPlatformName());
+            var val = wrappedObject.getGameRuleValue(holder.platformName());
             if (val == null) {
                 return null;
             }
@@ -117,7 +117,7 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
         if (Reflect.has("org.bukkit.GameRule")) {
             wrappedObject.setGameRule((GameRule<T>) holder.as(GameRule.class), value);
         } else {
-            wrappedObject.setGameRuleValue(holder.getPlatformName(), value.toString());
+            wrappedObject.setGameRuleValue(holder.platformName(), value.toString());
         }
     }
 

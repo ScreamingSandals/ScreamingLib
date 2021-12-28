@@ -8,7 +8,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class AttributeTypeHolderSerializer implements TypeSerializer<AttributeTypeHolder> {
+public class AttributeTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<AttributeTypeHolder> {
     public static final AttributeTypeHolderSerializer INSTANCE = new AttributeTypeHolderSerializer();
 
     @Override

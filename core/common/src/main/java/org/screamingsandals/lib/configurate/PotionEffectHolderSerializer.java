@@ -8,7 +8,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class PotionEffectHolderSerializer implements TypeSerializer<PotionEffectHolder> {
+public class PotionEffectHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<PotionEffectHolder> {
     private static final String EFFECT_KEY = "effect";
     private static final String DURATION_KEY = "duration";
     private static final String AMPLIFIER_KEY = "amplifier";

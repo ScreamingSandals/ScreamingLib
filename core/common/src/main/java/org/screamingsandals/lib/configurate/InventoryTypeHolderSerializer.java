@@ -8,7 +8,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class InventoryTypeHolderSerializer implements TypeSerializer<InventoryTypeHolder> {
+public class InventoryTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<InventoryTypeHolder> {
     public static final InventoryTypeHolderSerializer INSTANCE = new InventoryTypeHolderSerializer();
 
     @Override

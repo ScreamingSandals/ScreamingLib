@@ -8,7 +8,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class DamageCauseHolderSerializer implements TypeSerializer<DamageCauseHolder> {
+public class DamageCauseHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<DamageCauseHolder> {
     public static final DamageCauseHolderSerializer INSTANCE = new DamageCauseHolderSerializer();
 
     @Override

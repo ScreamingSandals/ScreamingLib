@@ -49,11 +49,4 @@ public abstract class GameRuleMapping extends AbstractTypeMapper<GameRuleHolder>
         }
         return Collections.unmodifiableList(gameRuleMapping.values);
     }
-
-    public static <T> T convertGameRuleHolder(GameRuleHolder holder, Class<T> newType) {
-        if (gameRuleMapping == null) {
-            throw new UnsupportedOperationException("GameRuleMapping is not initialized yet.");
-        }
-        return gameRuleMapping.gameRuleConverter.convert(holder, newType);
-    }
 }

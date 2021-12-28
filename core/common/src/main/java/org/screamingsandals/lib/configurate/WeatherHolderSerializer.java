@@ -8,7 +8,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class WeatherHolderSerializer implements TypeSerializer<WeatherHolder> {
+public class WeatherHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<WeatherHolder> {
 
     public static final WeatherHolderSerializer INSTANCE = new WeatherHolderSerializer();
 

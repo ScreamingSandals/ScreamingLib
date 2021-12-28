@@ -8,7 +8,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class EntityTypeHolderSerializer implements TypeSerializer<EntityTypeHolder> {
+public class EntityTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<EntityTypeHolder> {
     public static final EntityTypeHolderSerializer INSTANCE = new EntityTypeHolderSerializer();
 
     @Override

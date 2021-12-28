@@ -8,7 +8,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class ParticleTypeHolderSerializer implements TypeSerializer<ParticleTypeHolder> {
+public class ParticleTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<ParticleTypeHolder> {
     public static final ParticleTypeHolderSerializer INSTANCE = new ParticleTypeHolderSerializer();
 
     @Override

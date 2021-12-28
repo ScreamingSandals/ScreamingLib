@@ -123,7 +123,6 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
         return null;
     };
     protected BidirectionalConverter<FireworkEffectHolder> fireworkEffectConverter = BidirectionalConverter.<FireworkEffectHolder>build()
-            .registerW2P(String.class, FireworkEffectHolder::getPlatformName)
             .registerP2W(FireworkEffectHolder.class, e -> e)
             .registerP2W(ConfigurationNode.class, CONFIGURATE_METHOD)
             .registerP2W(Map.class, map -> {
@@ -169,12 +168,5 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
             throw new UnsupportedOperationException("FireworkEffectMapping is not initialized yet.");
         }
         return Collections.unmodifiableList(fireworkEffectMapping.values);
-    }
-
-    public static <T> T convertFireworkEffectHolder(FireworkEffectHolder holder, Class<T> newType) {
-        if (fireworkEffectMapping == null) {
-            throw new UnsupportedOperationException("FireworkEffectMapping is not initialized yet.");
-        }
-        return fireworkEffectMapping.fireworkEffectConverter.convert(holder, newType);
     }
 }

@@ -1,66 +1,132 @@
 package org.screamingsandals.lib.firework;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.util.RGBLike;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.jetbrains.annotations.Contract;
+import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-@Data
-@RequiredArgsConstructor
-public class FireworkEffectHolder implements Wrapper {
-    private final String platformName;
-    private final List<RGBLike> colors;
-    private final List<RGBLike> fadeColors;
-    private final boolean flicker;
-    private final boolean trail;
+public interface FireworkEffectHolder extends ComparableWrapper {
 
-    public FireworkEffectHolder(String name) {
-        this(name, List.of(), List.of(), true, true);
-    }
+    String platformName();
 
-    public FireworkEffectHolder colors(List<RGBLike> colors) {
-        return new FireworkEffectHolder(this.platformName, colors, this.fadeColors, this.flicker, this.trail);
-    }
+    List<RGBLike> colors();
 
-    public FireworkEffectHolder fadeColors(List<RGBLike> fadeColors) {
-        return new FireworkEffectHolder(this.platformName, this.colors, fadeColors, this.flicker, this.trail);
-    }
+    List<RGBLike> fadeColors();
 
-    public FireworkEffectHolder flicker(boolean flicker) {
-        return new FireworkEffectHolder(this.platformName, this.colors, this.fadeColors, flicker, this.trail);
-    }
+    boolean flicker();
 
-    public FireworkEffectHolder trail(boolean trail) {
-        return new FireworkEffectHolder(this.platformName, this.colors, this.fadeColors, this.flicker, trail);
+    boolean trail();
+
+    @Contract(value = "_ -> new", pure = true)
+    FireworkEffectHolder withColors(List<RGBLike> colors);
+
+    @Contract(value = "_ -> new", pure = true)
+    FireworkEffectHolder withFadeColors(List<RGBLike> fadeColors);
+
+    @Contract(value = "_ -> new", pure = true)
+    FireworkEffectHolder withFlicker(boolean flicker);
+
+    @Contract(value = "_ -> new", pure = true)
+    FireworkEffectHolder withTrail(boolean trail);
+
+    /**
+     * Use fluent variant!
+     */
+    @Deprecated(forRemoval = true)
+    default String getPlatformName() {
+        return platformName();
     }
 
     /**
-     * {@inheritDoc}
+     * Use fluent variant!
      */
-    @Override
-    public <T> T as(Class<T> type) {
-        return FireworkEffectMapping.convertFireworkEffectHolder(this, type);
+    @Deprecated(forRemoval = true)
+    default List<RGBLike> getColors() {
+        return colors();
     }
 
+    /**
+     * Use fluent variant!
+     */
+    @Deprecated(forRemoval = true)
+    default List<RGBLike> getFadeColors() {
+        return fadeColors();
+    }
+
+    /**
+     * Use fluent variant!
+     */
+    @Deprecated(forRemoval = true)
+    default boolean isFlicker() {
+        return flicker();
+    }
+
+    /**
+     * Use fluent variant!
+     */
+    @Deprecated(forRemoval = true)
+    default boolean isTrail() {
+        return trail();
+    }
+
+    /**
+     * Inconsistent naming (holders use with prefix)
+     */
+    @Deprecated(forRemoval = true)
+    default FireworkEffectHolder colors(List<RGBLike> colors) {
+        return withColors(colors);
+    }
+
+    /**
+     * Inconsistent naming (holders use with prefix)
+     */
+    @Deprecated(forRemoval = true)
+    default FireworkEffectHolder fadeColors(List<RGBLike> fadeColors) {
+        return withFadeColors(fadeColors);
+    }
+
+    /**
+     * Inconsistent naming (holders use with prefix)
+     */
+    @Deprecated(forRemoval = true)
+    default FireworkEffectHolder flicker(boolean flicker) {
+        return withFlicker(flicker);
+    }
+
+    /**
+     * Inconsistent naming (holders use with prefix)
+     */
+    @Deprecated(forRemoval = true)
+    default FireworkEffectHolder trail(boolean trail) {
+        return withTrail(trail);
+    }
+
+    @Override
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
-    public static FireworkEffectHolder of(Object effect) {
+    boolean is(Object... objects);
+
+    @Override
+    @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
+    boolean is(Object object);
+
+    @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
+    static FireworkEffectHolder of(Object effect) {
         return ofOptional(effect).orElseThrow();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
-    public static Optional<FireworkEffectHolder> ofOptional(Object effect) {
+    static Optional<FireworkEffectHolder> ofOptional(Object effect) {
         if (effect instanceof FireworkEffectHolder) {
             return Optional.of((FireworkEffectHolder) effect);
         }
         return FireworkEffectMapping.resolve(effect);
     }
 
-    public static List<FireworkEffectHolder> all() {
+    static List<FireworkEffectHolder> all() {
         return FireworkEffectMapping.getValues();
     }
 }

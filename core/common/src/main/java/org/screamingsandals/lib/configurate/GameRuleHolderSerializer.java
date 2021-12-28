@@ -8,7 +8,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class GameRuleHolderSerializer implements TypeSerializer<GameRuleHolder> {
+public class GameRuleHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<GameRuleHolder> {
     public static final GameRuleHolderSerializer INSTANCE = new GameRuleHolderSerializer();
 
     @Override
