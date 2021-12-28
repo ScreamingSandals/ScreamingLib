@@ -1,51 +1,54 @@
 package org.screamingsandals.lib.minestom.entity;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.util.RGBLike;
+import net.minestom.server.coordinate.Pos;
+import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
-import net.minestom.server.utils.Vector;
-import org.screamingsandals.lib.entity.DataWatcher;
+import net.minestom.server.fluid.Fluid;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
-import org.screamingsandals.lib.entity.type.EntityTypeMapping;
-import org.screamingsandals.lib.minestom.utils.MinestomAdventureHelper;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
+import org.screamingsandals.lib.utils.math.Vector3Df;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityBasic {
-
     protected MinestomEntityBasic(Entity wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
     public EntityTypeHolder getEntityType() {
-        return EntityTypeMapping.resolve(wrappedObject.getEntityType()).orElseThrow();
+        return EntityTypeHolder.of(wrappedObject.getEntityType());
     }
 
     @Override
     public LocationHolder getLocation() {
-        return LocationMapper.wrapLocation(
-                new InstancedPosition(wrappedObject.getInstance(), wrappedObject.getPosition()));
+        return LocationMapper.wrapLocation(wrappedObject);
     }
 
     @Override
     public Vector3D getVelocity() {
         var platformVector = wrappedObject.getVelocity();
-        return new Vector3D(platformVector.getX(), platformVector.getY(), platformVector.getZ());
+        return new Vector3D(platformVector.x(), platformVector.y(), platformVector.z());
     }
 
     @Override
     public void setVelocity(Vector3D velocity) {
-        wrappedObject.setVelocity(new Vector(velocity.getX(), velocity.getY(), velocity.getZ()));
+        wrappedObject.setVelocity(new Vec(velocity.getX(), velocity.getY(), velocity.getZ()));
     }
 
     @Override
@@ -65,20 +68,21 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
 
     @Override
     public boolean isInWater() {
-        return false; //TODO
+        if (wrappedObject.getInstance() == null) {
+            return false;
+        }
+        return wrappedObject.getInstance().getBlock(wrappedObject.getPosition()).namespace().equals(Fluid.WATER.getNamespaceID())
+                || wrappedObject.getInstance().getBlock(wrappedObject.getPosition()).namespace().equals(Fluid.FLOWING_WATER.getNamespaceID());
     }
 
     @Override
-    public boolean teleport(LocationHolder locationHolder) {
-       try {
-           final var location = locationHolder.as(InstancedPosition.class);
-           wrappedObject.setInstance(location.getInstance());
-           wrappedObject.teleport(location);
-           return true;
-       } catch (Throwable t) {
-           t.printStackTrace();
-           return false;
-       }
+    public CompletableFuture<Boolean> teleport(LocationHolder location) {
+        return wrappedObject.teleport(location.as(Pos.class)).handle((v, ex) -> ex == null);
+    }
+
+    @Override
+    public boolean teleportSync(LocationHolder location) {
+        return teleport(location).join();
     }
 
     @Override
@@ -88,17 +92,17 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
 
     @Override
     public int getFireTicks() {
-        return 0; //TODO
+        return 0;
     }
 
     @Override
     public int getMaxFireTicks() {
-        return 0; //TODO
+        return 0;
     }
 
     @Override
     public void setFireTicks(int fireTicks) {
-        //todo
+        // empty stub
     }
 
     @Override
@@ -113,13 +117,12 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
 
     @Override
     public boolean isPersistent() {
-        //todo
-        return false;
+        return true;
     }
 
     @Override
     public void setPersistent(boolean persistent) {
-
+        // empty stub
     }
 
     @Override
@@ -151,19 +154,18 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
 
     @Override
     public boolean ejectPassengers() {
-        List.copyOf(wrappedObject.getPassengers())
-                .forEach(Entity::remove);
+        List.copyOf(wrappedObject.getPassengers()).forEach(Entity::remove);
         return true;
     }
 
     @Override
     public float getFallDistance() {
-        return 0; //TODO
+        return 0;
     }
 
     @Override
     public void setFallDistance(float distance) {
-
+        // empty stub
     }
 
     @Override
@@ -178,12 +180,16 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
 
     @Override
     public void setTicksLived(int value) {
-        //TODO (maybe entity#tick()?);
+        try {
+            Reflect.setField(wrappedObject, "ticks", (long) value);
+        } catch (Throwable ignored) {
+            // ignored
+        }
     }
 
     @Override
     public boolean isInsideVehicle() {
-        return false;
+        return wrappedObject.getVehicle() != null;
     }
 
     @Override
@@ -203,12 +209,17 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
 
     @Override
     public void setCustomName(String name) {
-        wrappedObject.setCustomName(MinestomAdventureHelper.toMinestom(AdventureHelper.toComponent(name)));
+        wrappedObject.setCustomName(AdventureHelper.toComponent(name));
     }
 
     @Override
     public void setCustomName(Component name) {
-        wrappedObject.setCustomName(MinestomAdventureHelper.toMinestom(name));
+        wrappedObject.setCustomName(name);
+    }
+
+    @Override
+    public @Nullable Component getCustomName() {
+        return wrappedObject.getCustomName();
     }
 
     @Override
@@ -233,7 +244,7 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
 
     @Override
     public void setInvulnerable(boolean flag) {
-
+        // empty stub
     }
 
     @Override
@@ -263,17 +274,86 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
 
     @Override
     public int getPortalCooldown() {
-        return 0; //TODO
+        return 0;
     }
 
     @Override
     public void setPortalCooldown(int cooldown) {
+        // empty stub
+    }
+
+    @Override
+    public boolean hasMetadata(String metadata) {
+        return false;
+    }
+
+    @Override
+    public Object getMetadata(String metadata) {
+        return null;
+    }
+
+    @Override
+    public int getIntMetadata(String metadata) {
+        return 0;
+    }
+
+    @Override
+    public boolean getBooleanMetadata(String metadata) {
+        return false;
+    }
+
+    @Override
+    public byte getByteMetadata(String metadata) {
+        return 0;
+    }
+
+    @Override
+    public long getLongMetadata(String metadata) {
+        return 0;
+    }
+
+    @Override
+    public String getStringMetadata(String metadata) {
+        return null;
+    }
+
+    @Override
+    public Component getComponentMetadata(String metadata) {
+        return null;
+    }
+
+    @Override
+    public LocationHolder getLocationMetadata(String metadata) {
+        return null;
+    }
+
+    @Override
+    public RGBLike getColorMetadata(String metadata) {
+        return null;
+    }
+
+    @Override
+    public Vector3D getVectorMetadata(String metadata) {
+        return null;
+    }
+
+    @Override
+    public Vector3Df getFloatVectorMetadata(String metadata) {
+        return null;
+    }
+
+    @Override
+    public void setMetadata(String metadata, Object value) {
 
     }
 
-    //TODO:
     @Override
-    public DataWatcher getDataWatcher() {
-        return null;
+    public boolean holdsInventory() {
+        return false;
+    }
+
+    @Override
+    public Optional<Container> getInventory() {
+        return Optional.empty();
     }
 }

@@ -78,20 +78,6 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public CompletableFuture<Void> teleport(LocationHolder location, Runnable callback, boolean forceCallback) {
-        return teleport(location)
-                .thenAccept(result -> {
-                    if (result || forceCallback) {
-                        callback.run();
-                    }
-                })
-                .exceptionally(ex -> {
-                    ex.printStackTrace();
-                    return null;
-                });
-    }
-
-    @Override
     public boolean teleportSync(LocationHolder location) {
         return wrappedObject.teleport(location.as(Location.class));
     }

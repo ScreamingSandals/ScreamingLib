@@ -164,10 +164,9 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
 
     @Override
     public boolean addPotionEffects(Collection<PotionEffectHolder> effects) {
-        return ((LivingEntity) wrappedObject).addPotionEffects(effects
-                .stream()
+        return ((LivingEntity) wrappedObject).addPotionEffects(effects.stream()
                 .map(effect -> effect.as(PotionEffect.class))
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toList()));
     }
 
     @Override

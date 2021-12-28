@@ -65,7 +65,18 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
      * @param forceCallback should the callback be run even if the teleport didn't succeed?
      * @return the teleport future
      */
-    CompletableFuture<Void> teleport(LocationHolder location, Runnable callback, boolean forceCallback);
+    default CompletableFuture<Void> teleport(LocationHolder location, Runnable callback, boolean forceCallback) {
+        return teleport(location)
+                .thenAccept(result -> {
+                    if (result || forceCallback) {
+                        callback.run();
+                    }
+                })
+                .exceptionally(ex -> {
+                    ex.printStackTrace();
+                    return null;
+                });
+    }
 
     /**
      * Teleports this entity to a location synchronously.

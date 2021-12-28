@@ -2,7 +2,6 @@ package org.screamingsandals.lib.bukkit.event;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
-import org.bukkit.event.EventException;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
@@ -12,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE extends SEvent> implements Listener {
-
     protected final Map<EventPriority, EventExecutor> eventMap = new HashMap<>();
     protected final boolean fireAsync;
     protected final boolean checkOnlySameNotChildren;
@@ -78,8 +76,7 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
                     }
 
                     if (!(event instanceof NoAutoCancellable) && wrapped instanceof Cancellable && event instanceof org.bukkit.event.Cancellable) {
-                        final var isCancelled = ((Cancellable) wrapped).isCancelled();
-                        ((org.bukkit.event.Cancellable) event).setCancelled(isCancelled);
+                        ((org.bukkit.event.Cancellable) event).setCancelled(((Cancellable) wrapped).isCancelled());
                     }
                 };
 

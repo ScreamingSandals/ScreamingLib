@@ -2,6 +2,10 @@ package org.screamingsandals.lib.minestom.plugin;
 
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.extensions.Extension;
+import net.minestom.server.extensions.IExtensionObserver;
+import org.screamingsandals.lib.event.EventManager;
+import org.screamingsandals.lib.plugin.event.PluginDisabledEvent;
+import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
@@ -18,8 +22,17 @@ import java.util.stream.Collectors;
 @Service
 @InternalEarlyInitialization
 public class MinestomPluginManager extends PluginManager {
-    public static void init() {
+    private static final IExtensionObserver OBSERVER = extensionName -> {
+        final var plugin = getPlugin(PluginManager.createKey(extensionName).orElseThrow());
+        if (plugin.isPresent()) {
+            EventManager.getDefaultEventManager().fireEvent(new PluginDisabledEvent(plugin.orElseThrow()));
+        }
+    };
+
+    public static void init(Controllable controllable) {
         PluginManager.init(MinestomPluginManager::new);
+        // TODO: check for extension load
+        controllable.enable(() -> MinecraftServer.getExtensionManager().getExtensions().forEach(e -> e.observe(OBSERVER)));
     }
 
     @Override
@@ -29,7 +42,7 @@ public class MinestomPluginManager extends PluginManager {
 
     @Override
     protected boolean isEnabled0(PluginKey pluginKey) {
-        return MinecraftServer.getExtensionManager().getExtension(pluginKey.as(String.class)) != null;
+        return MinecraftServer.getExtensionManager().hasExtension(pluginKey.as(String.class));
     }
 
     @Override

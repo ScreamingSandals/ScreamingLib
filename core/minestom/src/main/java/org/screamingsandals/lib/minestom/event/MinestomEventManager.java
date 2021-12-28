@@ -1,22 +1,21 @@
-package org.screamingsandals.lib.bukkit.event;
+package org.screamingsandals.lib.minestom.event;
 
-import org.bukkit.Bukkit;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 @Service
-public class BukkitEventManager extends EventManager {
-    public BukkitEventManager(Controllable controllable) {
+public class MinestomEventManager extends EventManager {
+    public MinestomEventManager(Controllable controllable) {
         super(controllable);
     }
 
     public static void init(Controllable controllable) {
-        EventManager.init(() -> new BukkitEventManager(controllable));
+        EventManager.init(() -> new MinestomEventManager(controllable));
     }
 
     @Override
     public boolean isServerThread() {
-        return Bukkit.getServer().isPrimaryThread();
+        return true;
     }
 }

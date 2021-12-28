@@ -84,12 +84,12 @@ public class MinestomWorldHolder extends BasicWrapper<Instance> implements World
 
     @Override
     public <T> T getGameRuleValue(GameRuleHolder holder) {
-        return null;
+        throw new UnsupportedOperationException("Minestom does not support game rules");
     }
 
     @Override
     public <T> void setGameRuleValue(GameRuleHolder holder, T value) {
-
+        throw new UnsupportedOperationException("Minestom does not support game rules");
     }
 
     @Override
