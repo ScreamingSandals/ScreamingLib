@@ -4,6 +4,7 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.CommandSender;
 import net.minestom.server.entity.Player;
 import net.minestom.server.extensions.Extension;
+import org.screamingsandals.lib.minestom.entity.MinestomEntityPlayer;
 import org.screamingsandals.lib.player.FinalOfflinePlayerWrapper;
 import org.screamingsandals.lib.player.OfflinePlayerWrapper;
 import org.screamingsandals.lib.player.PlayerMapper;
@@ -27,12 +28,12 @@ public class MinestomPlayerMapper extends PlayerMapper {
 
     @Override
     public Optional<PlayerWrapper> getPlayer0(String name) {
-        return playerConverter.convertOptional(MinecraftServer.getConnectionManager().getPlayer(name));
+        return Optional.ofNullable(MinecraftServer.getConnectionManager().getPlayer(name)).map(MinestomEntityPlayer::new);
     }
 
     @Override
     public Optional<PlayerWrapper> getPlayer0(UUID uuid) {
-        return playerConverter.convertOptional(MinecraftServer.getConnectionManager().getPlayer(uuid));
+        return Optional.ofNullable(MinecraftServer.getConnectionManager().getPlayer(uuid)).map(MinestomEntityPlayer::new);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.bukkit.entity;
 
-import io.netty.channel.Channel;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
@@ -18,8 +17,6 @@ import org.screamingsandals.lib.container.Openable;
 import org.screamingsandals.lib.container.PlayerContainer;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
-import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
-import org.screamingsandals.lib.nms.accessors.ServerGamePacketListenerImplAccessor;
 import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.PlayerMapper;
@@ -173,11 +170,6 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public void openInventory(Openable container) {
-        container.openInventory(this);
-    }
-
-    @Override
     public void closeInventory() {
         ((Player) wrappedObject).closeInventory();
     }
@@ -304,14 +296,6 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     @Override
     public LocationHolder getCompassTarget() {
         return LocationMapper.wrapLocation(((Player) wrappedObject).getCompassTarget());
-    }
-
-    @Override
-    public Channel getChannel() {
-        return (Channel) Reflect.getFieldResulted(ClassStorage.getHandle(wrappedObject), ServerPlayerAccessor.getFieldConnection())
-                .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
-                .getFieldResulted(ConnectionAccessor.getFieldChannel())
-                .raw();
     }
 
     @Override

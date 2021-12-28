@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.player;
 
-import io.netty.channel.Channel;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
@@ -157,7 +156,9 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @param container the inventory container
      */
-    void openInventory(Openable container);
+    default void openInventory(Openable container) {
+        container.openInventory(this);
+    }
 
     /**
      * Closes the inventory that the player has currently opened.
@@ -287,13 +288,6 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      * @param entity the spectator target, null to clear the target
      */
     void setSpectatorTarget(@Nullable EntityBasic entity);
-
-    /**
-     * Gets the player's {@link Channel}.
-     *
-     * @return the player connection
-     */
-    Channel getChannel();
 
     /**
      * Launches the player in its facing direction.

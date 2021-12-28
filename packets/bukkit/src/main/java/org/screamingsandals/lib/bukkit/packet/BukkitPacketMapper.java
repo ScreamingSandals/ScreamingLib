@@ -1,16 +1,21 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.screamingsandals.lib.bukkit.packet.listener.ServerboundInteractPacketListener;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.ArmorStandAccessor;
+import org.screamingsandals.lib.nms.accessors.ConnectionAccessor;
+import org.screamingsandals.lib.nms.accessors.ServerGamePacketListenerImplAccessor;
+import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.logger.LoggerWrapper;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
 @Service(dependsOn = {
@@ -45,7 +50,7 @@ public class BukkitPacketMapper extends PacketMapper {
                 throw new IllegalArgumentException("Packet too big (is " + j + ", should be less than 2097152): " + packet);
             }
 
-            var channel = player.getChannel();
+            var channel = getChannel(player);
             if (channel.isActive()) {
                 Runnable task = () -> {
                     var future = channel.writeAndFlush(writer.getBuffer());
@@ -59,7 +64,7 @@ public class BukkitPacketMapper extends PacketMapper {
             }
 
             writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(player, extraPacket));
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Bukkit.getLogger().severe("An exception occurred sending packet of class: " + packet.getClass().getSimpleName() + " to player: " + player.getName());
             t.printStackTrace();
         }
@@ -79,5 +84,12 @@ public class BukkitPacketMapper extends PacketMapper {
     @Override
     public int getArmorStandTypeId0() {
         return ClassStorage.getEntityTypeId("armor_stand", ArmorStandAccessor.getType());
+    }
+
+    public Channel getChannel(PlayerWrapper player) {
+        return (Channel) Reflect.getFieldResulted(ClassStorage.getHandle(player.raw()), ServerPlayerAccessor.getFieldConnection())
+                .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
+                .getFieldResulted(ConnectionAccessor.getFieldChannel())
+                .raw();
     }
 }

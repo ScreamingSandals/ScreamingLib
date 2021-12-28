@@ -240,12 +240,12 @@ public class MinestomEntityLiving extends MinestomEntityBasic implements EntityL
 
     @Override
     public boolean isGliding() {
-        return wrappedObject.getPose() == Entity.Pose.FALL_FLYING;
+        return wrappedObject.getEntityMeta().isFlyingWithElytra();
     }
 
     @Override
     public void setGliding(boolean gliding) {
-        wrappedObject.setPose(gliding ? Entity.Pose.FALL_FLYING : Entity.Pose.STANDING);
+        wrappedObject.getEntityMeta().setFlyingWithElytra(true);
     }
 
     @Override
