@@ -19,14 +19,6 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
                     .registerP2W(ItemStack.class, stack -> new BukkitItemTypeLegacyHolder(stack.getType(), stack.getDurability()));
 
             Arrays.stream(Material.values())
-                    .filter(t -> !t.name().startsWith("LEGACY"))
-                    .filter(material -> {
-                        try { // TODO: ig this method doesn't exist here
-                            return material.isItem();
-                        } catch (Throwable ignored) {
-                            return true; // we are on older versions and yes, it is probably item xdd
-                        }
-                    })
                     .forEach(material -> {
                         var holder = new BukkitItemTypeLegacyHolder(material);
                         mapping.put(NamespacedMappingKey.of(material.name()), holder);
@@ -40,13 +32,7 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
 
             Arrays.stream(Material.values())
                     .filter(t -> !t.name().startsWith("LEGACY"))
-                    .filter(material -> {
-                        try { // TODO: ig this method always exists here
-                            return material.isItem();
-                        } catch (Throwable ignored) {
-                            return true; // we are on older versions and yes, it is probably item xdd
-                        }
-                    })
+                    .filter(Material::isItem)
                     .forEach(material -> {
                         var holder = new BukkitItemTypeHolder(material);
                         mapping.put(NamespacedMappingKey.of(material.name()), holder);

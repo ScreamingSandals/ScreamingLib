@@ -13,17 +13,13 @@ import java.util.Optional;
 
 public class BukkitItemTypeHolder extends BasicWrapper<Material> implements ItemTypeHolder {
 
-    // TODO: get rid of forced durability in modern bukkit impl
+    // Because people can be stupid
     private short forcedDurability;
 
     public BukkitItemTypeHolder(Material wrappedObject) {
         super(wrappedObject);
-        try { // TODO: check when this method has been added
-            if (!wrappedObject.isItem()) {
-                throw new UnsupportedOperationException("BukkitItemTypeHolder can wrap only item types!!!");
-            }
-        } catch (Throwable ignored) {
-            // we are on older versions and yes, it is probably item xdd
+        if (!wrappedObject.isItem()) {
+            throw new UnsupportedOperationException("BukkitItemTypeHolder can wrap only item types!!!");
         }
     }
 
