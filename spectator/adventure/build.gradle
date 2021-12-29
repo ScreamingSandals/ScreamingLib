@@ -1,0 +1,3 @@
+dependencies {
+    compileOnly 'net.kyori:adventure-api:' + ADVENTURE_VERSION
+}

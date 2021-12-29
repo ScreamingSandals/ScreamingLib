@@ -1,0 +1,3 @@
+dependencies {
+    compileOnly 'io.github.waterfallmc:waterfall-chat:' + WATERFALL_VERSION
+}
