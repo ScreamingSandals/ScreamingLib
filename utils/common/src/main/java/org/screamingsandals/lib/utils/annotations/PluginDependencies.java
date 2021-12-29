@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.utils.annotations;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.PlatformType;
 
 import java.lang.annotation.*;
@@ -15,6 +16,7 @@ public @interface PluginDependencies {
 
     @Retention(RetentionPolicy.SOURCE)
     @Target(ElementType.TYPE)
+    @ApiStatus.Internal
     @interface List {
         PluginDependencies[] value();
     }

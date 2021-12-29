@@ -82,33 +82,9 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
 
                 var supportedPlatforms = List.copyOf(platformManagers.keySet());
 
-                Arrays.stream(pluginContainer.getAnnotationsByType(Init.class)).forEach(init -> {
-                    var platformList = new ArrayList<>(Arrays.asList(init.platforms()));
-                    if (platformList.isEmpty()) {
-                        platformList.addAll(supportedPlatforms);
-                    } else {
-                        platformList.retainAll(supportedPlatforms);
-                    }
-                    if (!platformList.isEmpty()) {
-                        MiscUtils.getSafelyTypeElements(processingEnv, init)
-                                .stream()
-                                .map(typeElement ->
-                                        MiscUtils.getAllSpecificPlatformImplementations(
-                                                processingEnv,
-                                                typeElement,
-                                                platformList,
-                                                true
-                                        )
-                                )
-                                .forEach(map ->
-                                        map.forEach((platformType, serviceContainer) -> {
-                                            if (!platformInitiators.get(platformType).contains(serviceContainer)) {
-                                                platformInitiators.get(platformType).add(serviceContainer);
-                                            }
-                                        })
-                                );
-                    }
-                });
+                Arrays.stream(pluginContainer.getAnnotationsByType(Init.class)).forEach(init ->
+                    processInitAnnotation(supportedPlatforms, platformInitiators, init)
+                );
 
                 if (platformInitiators.containsKey(PlatformType.BUKKIT)) {
                     new BukkitMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.BUKKIT));
@@ -131,5 +107,41 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
             }
         }
         return true;
+    }
+
+    private void processInitAnnotation(List<PlatformType> supportedPlatforms, HashMap<PlatformType, List<ServiceContainer>> platformInitiators, Init init) {
+        var platformList = new ArrayList<>(Arrays.asList(init.platforms()));
+        if (platformList.isEmpty()) {
+            platformList.addAll(supportedPlatforms);
+        } else {
+            platformList.retainAll(supportedPlatforms);
+        }
+        if (!platformList.isEmpty()) {
+            MiscUtils.getSafelyTypeElements(processingEnv, init)
+                    .stream()
+                    .map(typeElement ->
+                            MiscUtils.getAllSpecificPlatformImplementations(
+                                    processingEnv,
+                                    typeElement,
+                                    platformList,
+                                    true
+                            )
+                    )
+                    .forEach(map ->
+                            map.forEach((platformType, serviceContainer) -> {
+                                if (!platformInitiators.get(platformType).contains(serviceContainer)) {
+                                    platformInitiators.get(platformType).add(serviceContainer);
+                                }
+                            })
+                    );
+
+            for (var packageName : init.packages()) {
+                var pkg = processingEnv.getElementUtils().getPackageElement(packageName);
+                Arrays.stream(pkg.getAnnotationsByType(Init.class)).forEach(init2 ->
+                        // why not supportedPlatforms? because we want to keep the effect of platforms field on the parent annotation
+                        processInitAnnotation(platformList, platformInitiators, init2)
+                );
+            }
+        }
     }
 }
