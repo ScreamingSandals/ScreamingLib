@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeHolder;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -50,7 +51,7 @@ public class BukkitItemTypeHolder extends BasicWrapper<Material> implements Item
         if (!wrappedObject.isBlock()) {
             return Optional.empty();
         }
-        return Optional.of(BlockTypeHolder.of(wrappedObject));
+        return Optional.of(new BukkitBlockTypeHolder(wrappedObject));
     }
 
     @Override
