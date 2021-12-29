@@ -6,8 +6,8 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Deprecated
 public class Version {
-	
 	public static final int MAJOR_VERSION;
 	public static final int MINOR_VERSION;
 	public static final int PATCH_VERSION;

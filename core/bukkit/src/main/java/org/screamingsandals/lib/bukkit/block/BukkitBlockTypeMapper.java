@@ -4,9 +4,9 @@ import com.google.common.base.Preconditions;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.block.BlockTypeMapper;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
@@ -20,7 +20,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
     private final Map<String, Map<String, String>> defaultFlatteningBlockDataCache = new HashMap<>();
 
     public BukkitBlockTypeMapper() {
-        if (Version.isVersion(1, 13)) {
+        if (Server.isVersion(1, 13)) {
             blockTypeConverter
                     .registerP2W(Material.class, BukkitBlockTypeHolder::new)
                     .registerP2W(BlockData.class, BukkitBlockTypeHolder::new);
@@ -64,7 +64,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
     @Override
     protected BlockTypeHolder normalize(BlockTypeHolder abnormal) {
         try {
-            if (Version.isVersion(1, 13)) {
+            if (Server.isVersion(1, 13)) {
                 var cache = defaultFlatteningBlockDataCache.get(abnormal.platformName());
                 if (cache == null) {
                     cache = getDataFromString(abnormal.as(Material.class).createBlockData().getAsString());
@@ -94,7 +94,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
 
     @Override
     protected boolean isLegacy() {
-        return !Version.isVersion(1, 13);
+        return !Server.isVersion(1, 13);
     }
 
 

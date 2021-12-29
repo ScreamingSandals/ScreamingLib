@@ -17,9 +17,9 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.item.Item;
@@ -36,7 +36,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class BukkitEntityMetadataMapper {
 
@@ -827,14 +830,14 @@ public class BukkitEntityMetadataMapper {
         }
 
         public Builder<E> when(int major, int minor, Consumer<Builder<E>> consumer) {
-            if (Version.isVersion(major, minor)) {
+            if (Server.isVersion(major, minor)) {
                 consumer.accept(this);
             }
             return this;
         }
 
         public Builder<E> when(int major, int minor, int patch, Consumer<Builder<E>> consumer) {
-            if (Version.isVersion(major, minor, patch)) {
+            if (Server.isVersion(major, minor, patch)) {
                 consumer.accept(this);
             }
             return this;
@@ -855,14 +858,14 @@ public class BukkitEntityMetadataMapper {
         }
 
         public Builder<E> whenNot(int major, int minor, Consumer<Builder<E>> consumer) {
-            if (!Version.isVersion(major, minor)) {
+            if (!Server.isVersion(major, minor)) {
                 consumer.accept(this);
             }
             return this;
         }
 
         public Builder<E> whenNot(int major, int minor, int patch, Consumer<Builder<E>> consumer) {
-            if (!Version.isVersion(major, minor, patch)) {
+            if (!Server.isVersion(major, minor, patch)) {
                 consumer.accept(this);
             }
             return this;

@@ -1,0 +1,65 @@
+package org.screamingsandals.lib.minestom;
+
+import net.minestom.server.MinecraftServer;
+import net.minestom.server.instance.Instance;
+import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.player.PlayerMapper;
+import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.Version;
+import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.world.WorldHolder;
+import org.screamingsandals.lib.world.WorldMapper;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class MinestomServer extends Server {
+    private final Version currentVersion = new Version(MinecraftServer.VERSION_NAME);
+
+    @Override
+    public Version getVersion0() {
+        return currentVersion;
+    }
+
+    @Override
+    public String getServerSoftwareVersion0() {
+        return MinecraftServer.VERSION_NAME;
+    }
+
+    @Override
+    public boolean isServerThread0() {
+        return true;
+    }
+
+    @Override
+    public List<PlayerWrapper> getConnectedPlayers0() {
+        return MinecraftServer.getConnectionManager().getOnlinePlayers().stream()
+                .map(PlayerMapper::wrapPlayer)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PlayerWrapper> getConnectedPlayersFromWorld0(WorldHolder world) {
+        return world.as(Instance.class).getPlayers().stream()
+                .map(PlayerMapper::wrapPlayer)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<WorldHolder> getWorlds0() {
+        return MinecraftServer.getInstanceManager().getInstances().stream()
+                .map(WorldMapper::wrapWorld)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void runSynchronously0(Runnable task) {
+        MinecraftServer.getSchedulerManager().buildTask(task).build().run();
+    }
+
+    @Override
+    public void shutdown0() {
+        MinecraftServer.getServer().stop();
+    }
+}

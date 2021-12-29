@@ -5,8 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -21,7 +21,7 @@ public class BukkitBlockMapper extends BlockMapper {
         converter.registerP2W(Location.class, location -> {
                     final var block = location.getBlock();
                     final var instanced = LocationMapper.resolve(block.getLocation()).orElseThrow(); // normalize to block location
-                    if (!Version.isVersion(1,13)) {
+                    if (!Server.isVersion(1,13)) {
                         return new BlockHolder(instanced, BlockTypeHolder.of(block.getState().getData()));
                     } else {
                         return new BlockHolder(instanced, BlockTypeHolder.of(block.getBlockData()));
@@ -51,7 +51,7 @@ public class BukkitBlockMapper extends BlockMapper {
         final var bukkitLocation = location.as(Location.class);
         PaperLib.getChunkAtAsync(bukkitLocation)
                 .thenAccept(result -> {
-                    if (!Version.isVersion(1,13)) {
+                    if (!Server.isVersion(1,13)) {
                         bukkitLocation.getBlock().setType(material.as(Material.class), !ignorePhysics);
                         Reflect.getMethod(bukkitLocation.getBlock(), "setData", byte.class, boolean.class).invoke(material.legacyData(), !ignorePhysics);
                     } else {

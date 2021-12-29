@@ -4,9 +4,9 @@ import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.InventoryHolder;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.container.BukkitContainer;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.world.*;
@@ -21,7 +21,7 @@ public class GenericBlockStateHolder extends BasicWrapper<BlockState> implements
 
     @Override
     public BlockTypeHolder getType() {
-        if (!Version.isVersion(1,13)) {
+        if (!Server.isVersion(1,13)) {
             return BlockTypeHolder.of(wrappedObject.getData());
         } else {
             return BlockTypeHolder.of(wrappedObject.getBlockData());
@@ -30,7 +30,7 @@ public class GenericBlockStateHolder extends BasicWrapper<BlockState> implements
 
     @Override
     public void setType(BlockTypeHolder type) {
-        if (!Version.isVersion(1,13)) {
+        if (!Server.isVersion(1,13)) {
             wrappedObject.setType(type.as(Material.class));
             wrappedObject.setRawData(type.legacyData());
         } else {

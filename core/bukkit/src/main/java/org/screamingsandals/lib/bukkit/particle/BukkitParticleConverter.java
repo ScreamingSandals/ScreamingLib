@@ -7,8 +7,8 @@ import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.particle.DustOptions;
@@ -19,7 +19,7 @@ import org.screamingsandals.lib.particle.ParticleData;
 public class BukkitParticleConverter {
     public Object convertParticleData(ParticleData data) {
         if (data instanceof BlockTypeHolder) {
-            if (Version.isVersion(1, 13)) {
+            if (Server.isVersion(1, 13)) {
                 return data.as(BlockData.class);
             } else {
                 return data.as(MaterialData.class);

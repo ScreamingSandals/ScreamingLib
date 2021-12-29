@@ -5,6 +5,7 @@ import net.minestom.server.entity.EntityProjectile;
 import net.minestom.server.entity.*;
 import net.minestom.server.entity.pathfinding.NavigableEntity;
 import net.minestom.server.instance.Instance;
+import net.minestom.server.item.ItemStack;
 import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.item.Item;
@@ -86,17 +87,31 @@ public class MinestomEntityMapper extends EntityMapper {
 
     @Override
     public Optional<EntityItem> dropItem0(Item item, LocationHolder locationHolder) {
-        return Optional.empty();
+        return item.asOptional(ItemStack.class).map(itemStack -> {
+            final var entity = new ItemEntity(itemStack);
+            if (locationHolder.getWorld() != null) {
+                entity.setInstance(locationHolder.getWorld().as(Instance.class), locationHolder.as(Pos.class)).thenRun(entity::spawn);
+            }
+            return new MinestomEntityItem(entity);
+        });
     }
 
     @Override
     public Optional<EntityExperience> dropExperience0(int experience, LocationHolder locationHolder) {
-        return Optional.empty();
+        final var entity = new ExperienceOrb((short) experience);
+        if (locationHolder.getWorld() != null) {
+            entity.setInstance(locationHolder.getWorld().as(Instance.class), locationHolder.as(Pos.class)).thenRun(entity::spawn);
+        }
+        return Optional.of(new MinestomEntityExperience(entity));
     }
 
     @Override
     public Optional<EntityLightning> strikeLightning0(LocationHolder locationHolder) {
-        return Optional.empty();
+        final var entity = new Entity(EntityType.LIGHTNING_BOLT);
+        if (locationHolder.getWorld() != null) {
+            entity.setInstance(locationHolder.getWorld().as(Instance.class), locationHolder.as(Pos.class)).thenRun(entity::spawn);
+        }
+        return wrapEntity0(entity);
     }
 
     @Override

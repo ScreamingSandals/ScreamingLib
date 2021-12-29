@@ -1,8 +1,8 @@
 package org.screamingsandals.lib;
 
-import io.netty.channel.ChannelFuture;
 import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.Version;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.WorldHolder;
 
@@ -43,7 +43,7 @@ public abstract class Server {
      *
      * @return the version string (1.17.1 for example)
      */
-    public static String getVersion() {
+    public static Version getVersion() {
         if (server == null) {
             throw new UnsupportedOperationException("Server has not yet been initialized!");
         }
@@ -68,7 +68,7 @@ public abstract class Server {
         if (server == null) {
             throw new UnsupportedOperationException("Server has not yet been initialized!");
         }
-        return server.isVersion0(major, minor);
+        return server.getVersion0().isVersion(major, minor);
     }
 
     /**
@@ -83,7 +83,7 @@ public abstract class Server {
         if (server == null) {
             throw new UnsupportedOperationException("Server has not yet been initialized!");
         }
-        return server.isVersion0(major, minor, patch);
+        return server.getVersion0().isVersion(major, minor, patch);
     }
 
     /**
@@ -154,20 +154,9 @@ public abstract class Server {
 
     // abstract methods for implementations
 
-    public abstract String getVersion0();
+    public abstract Version getVersion0();
 
     public abstract String getServerSoftwareVersion0();
-
-    public static List<ChannelFuture> getConnections() {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
-        }
-        return server.getConnections0();
-    }
-
-    public abstract boolean isVersion0(int major, int minor);
-
-    public abstract boolean isVersion0(int major, int minor, int patch);
 
     public abstract boolean isServerThread0();
 
@@ -178,8 +167,6 @@ public abstract class Server {
     public abstract List<WorldHolder> getWorlds0();
 
     public abstract void runSynchronously0(Runnable task);
-
-    public abstract List<ChannelFuture> getConnections0();
 
     public abstract void shutdown0();
 

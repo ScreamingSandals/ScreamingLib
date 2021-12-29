@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.ComponentAccessor;
 import org.screamingsandals.lib.nms.accessors.EntityAccessor;
@@ -28,12 +28,12 @@ public class EntityNMS {
 	}
 
 	public Location getLocation() {
-		if (Version.isVersion(1, 16)) {
+		if (Server.isVersion(1, 16)) {
 			double locX = (double) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetX1());
 			double locY = (double) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetY1());
 			double locZ = (double) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetZ1());
 			float yaw, pitch;
-			if (Version.isVersion(1,17)) {
+			if (Server.isVersion(1,17)) {
 				yaw = (float) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetXRot1());
 				pitch = (float) Reflect.fastInvoke(handler, EntityAccessor.getMethodGetYRot1());
 			} else {
