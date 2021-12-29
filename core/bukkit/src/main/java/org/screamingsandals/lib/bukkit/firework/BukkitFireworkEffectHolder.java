@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> implements FireworkEffectHolder {
     public BukkitFireworkEffectHolder(FireworkEffect.Type type) {
-        this(FireworkEffect.builder().with(type).build());
+        this(FireworkEffect.builder().with(type).withColor(Color.WHITE).build());
     }
 
     public BukkitFireworkEffectHolder(FireworkEffect wrappedObject) {
