@@ -7,6 +7,6 @@ import org.screamingsandals.lib.spectator.SpectatorBackend;
 public class BungeeBackend implements SpectatorBackend {
     @Override
     public Component empty() {
-        return new BungeeComponent(new TextComponent());
+        return new BungeeComponent(new TextComponent(""));
     }
 }
