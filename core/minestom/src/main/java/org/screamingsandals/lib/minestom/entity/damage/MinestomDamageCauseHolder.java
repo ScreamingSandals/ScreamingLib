@@ -1,24 +1,24 @@
-package org.screamingsandals.lib.bukkit.entity.damage;
+package org.screamingsandals.lib.minestom.entity.damage;
 
-import org.bukkit.event.entity.EntityDamageEvent;
+import net.minestom.server.entity.damage.DamageType;
 import org.screamingsandals.lib.entity.damage.DamageCauseHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
 import java.util.Arrays;
 
-public class BukkitDamageCauseHolder extends BasicWrapper<EntityDamageEvent.DamageCause> implements DamageCauseHolder {
-    public BukkitDamageCauseHolder(EntityDamageEvent.DamageCause wrappedObject) {
+public class MinestomDamageCauseHolder extends BasicWrapper<DamageType> implements DamageCauseHolder {
+    protected MinestomDamageCauseHolder(DamageType wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
     public String platformName() {
-        return wrappedObject.name();
+        return wrappedObject.getIdentifier();
     }
 
     @Override
     public boolean is(Object damageCause) {
-        if (damageCause instanceof EntityDamageEvent.DamageCause || damageCause instanceof DamageCauseHolder) {
+        if (damageCause instanceof DamageType || damageCause instanceof DamageCauseHolder) {
             return equals(damageCause);
         }
         return equals(DamageCauseHolder.ofOptional(damageCause).orElse(null));

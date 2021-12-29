@@ -1,17 +1,14 @@
-package org.screamingsandals.lib.bukkit.entity.type;
+package org.screamingsandals.lib.minestom.entity.type;
 
-import org.bukkit.entity.EntityType;
-import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.entity.EntityMapper;
+import net.minestom.server.entity.EntitySpawnType;
+import net.minestom.server.entity.EntityType;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Arrays;
-import java.util.Optional;
 
-public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements EntityTypeHolder {
-    public BukkitEntityTypeHolder(EntityType wrappedObject) {
+public class MinestomEntityTypeHolder extends BasicWrapper<EntityType> implements EntityTypeHolder {
+    protected MinestomEntityTypeHolder(EntityType wrappedObject) {
         super(wrappedObject);
     }
 
@@ -22,7 +19,8 @@ public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements 
 
     @Override
     public boolean isAlive() {
-        return wrappedObject.isAlive();
+        final var spawnType = wrappedObject.registry().spawnType();
+        return spawnType == EntitySpawnType.LIVING || spawnType == EntitySpawnType.PLAYER;
     }
 
     @Override

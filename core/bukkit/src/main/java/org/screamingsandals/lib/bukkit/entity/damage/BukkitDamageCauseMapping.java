@@ -11,7 +11,8 @@ import java.util.Arrays;
 public class BukkitDamageCauseMapping extends DamageCauseMapping {
     public BukkitDamageCauseMapping() {
         damageCauseConverter
-                .registerP2W(EntityDamageEvent.DamageCause.class, BukkitDamageCauseHolder::new);
+                .registerP2W(EntityDamageEvent.DamageCause.class, BukkitDamageCauseHolder::new)
+                .registerW2P(EntityDamageEvent.DamageCause.class, damageCauseHolder -> EntityDamageEvent.DamageCause.valueOf(damageCauseHolder.platformName()));
 
         Arrays.stream(EntityDamageEvent.DamageCause.values()).forEach(damageCause -> {
             var holder = new BukkitDamageCauseHolder(damageCause);

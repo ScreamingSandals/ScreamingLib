@@ -11,7 +11,8 @@ import java.util.Arrays;
 public class BukkitEntityTypeMapping extends EntityTypeMapping {
     public BukkitEntityTypeMapping() {
         entityTypeConverter
-                .registerP2W(EntityType.class, BukkitEntityTypeHolder::new);
+                .registerP2W(EntityType.class, BukkitEntityTypeHolder::new)
+                .registerW2P(EntityType.class, entityTypeHolder -> EntityType.valueOf(entityTypeHolder.platformName()));
 
         Arrays.stream(EntityType.values()).forEach(entityType -> {
             var holder = new BukkitEntityTypeHolder(entityType);

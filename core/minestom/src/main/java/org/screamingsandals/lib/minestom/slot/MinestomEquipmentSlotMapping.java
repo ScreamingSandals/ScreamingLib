@@ -6,6 +6,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 @Service
 public class MinestomEquipmentSlotMapping extends EquipmentSlotMapping {
@@ -16,7 +17,7 @@ public class MinestomEquipmentSlotMapping extends EquipmentSlotMapping {
 
         Arrays.stream(AttributeSlot.values()).forEach(equipmentSlot -> {
             final var holder = new MinestomEquipmentSlotHolder(equipmentSlot);
-            mapping.put(NamespacedMappingKey.of(equipmentSlot.name()), holder);
+            mapping.put(NamespacedMappingKey.of(equipmentSlot.name().toLowerCase(Locale.ROOT)), holder);
             values.add(holder);
         });
     }

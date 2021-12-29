@@ -13,7 +13,8 @@ public class BukkitEntityPoseMapping extends EntityPoseMapping {
     public BukkitEntityPoseMapping() {
         if (Reflect.has("org.bukkit.entity.Pose")) {
             entityPoseConverter
-                    .registerP2W(Pose.class, BukkitEntityPoseHolder::new);
+                    .registerP2W(Pose.class, BukkitEntityPoseHolder::new)
+                    .registerW2P(Pose.class, entityPoseHolder -> Pose.valueOf(entityPoseHolder.platformName()));
 
             Arrays.stream(Pose.values()).forEach(pose -> {
                 var holder = new BukkitEntityPoseHolder(pose);

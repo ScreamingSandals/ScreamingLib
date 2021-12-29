@@ -1,13 +1,13 @@
-package org.screamingsandals.lib.bukkit.entity.pose;
+package org.screamingsandals.lib.minestom.entity.pose;
 
-import org.bukkit.entity.Pose;
+import net.minestom.server.entity.Entity;
 import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
 import java.util.Arrays;
 
-public class BukkitEntityPoseHolder extends BasicWrapper<Pose> implements EntityPoseHolder {
-    public BukkitEntityPoseHolder(Pose wrappedObject) {
+public class MinestomEntityPoseHolder extends BasicWrapper<Entity.Pose> implements EntityPoseHolder {
+    protected MinestomEntityPoseHolder(Entity.Pose wrappedObject) {
         super(wrappedObject);
     }
 
@@ -18,7 +18,7 @@ public class BukkitEntityPoseHolder extends BasicWrapper<Pose> implements Entity
 
     @Override
     public boolean is(Object object) {
-        if (object instanceof Pose || object instanceof EntityPoseHolder) {
+        if (object instanceof Entity.Pose || object instanceof EntityPoseHolder) {
             return equals(object);
         }
         return equals(EntityPoseHolder.ofOptional(object).orElse(null));

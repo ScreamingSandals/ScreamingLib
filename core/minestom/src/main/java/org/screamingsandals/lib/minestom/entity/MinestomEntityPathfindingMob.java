@@ -1,4 +1,4 @@
-package org.screamingsandals.lib.minestom.entity.type;
+package org.screamingsandals.lib.minestom.entity;
 
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.LivingEntity;
@@ -6,7 +6,6 @@ import net.minestom.server.entity.pathfinding.NavigableEntity;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityPathfindingMob;
-import org.screamingsandals.lib.minestom.entity.MinestomEntityLiving;
 import org.screamingsandals.lib.minestom.world.MinestomLocationMapper;
 import org.screamingsandals.lib.world.WorldMapper;
 

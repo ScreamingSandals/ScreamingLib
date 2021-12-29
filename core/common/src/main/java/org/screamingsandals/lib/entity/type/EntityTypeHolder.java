@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.entity.type;
 
 import org.screamingsandals.lib.entity.EntityBasic;
+import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -44,7 +45,9 @@ public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder {
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
     boolean is(Object... entityTypes);
 
-    <T extends EntityBasic> Optional<T> spawn(LocationHolder location);
+    default <T extends EntityBasic> Optional<T> spawn(LocationHolder location) {
+        return EntityMapper.spawn(this, location);
+    }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
     static EntityTypeHolder of(Object entityType) {
