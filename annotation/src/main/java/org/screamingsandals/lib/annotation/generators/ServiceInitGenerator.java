@@ -120,7 +120,7 @@ public class ServiceInitGenerator {
                 if (configFile.adventureSerializers()) {
                     if (indexOfAdventureConfigurateSerializer == null) {
                         indexOfAdventureConfigurateSerializer = "indexedVariable" + (index++);
-                        ServiceInitGenerator.this.methodSpec.addStatement("$T $N = $T.getMethod($T.builder().scalarSerializer($T.getSerializer()).build(), $S, $T.class)",
+                        ServiceInitGenerator.this.methodSpec.addStatement("$T $N = $T.getMethod($T.builder().scalarSerializer($T.getLEGACY_COMPONENT_SERIALIZER()).build(), $S, $T.class)",
                                 ClassName.get("org.screamingsandals.lib.utils.reflect","InstanceMethod"),
                                 indexOfAdventureConfigurateSerializer,
                                 ClassName.get("org.screamingsandals.lib.utils.reflect", "Reflect"),
