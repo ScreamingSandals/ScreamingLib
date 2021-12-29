@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import io.netty.buffer.ByteBuf;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.EquipmentSlot;
@@ -43,11 +42,6 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
                     .invokeStaticResulted(materialData.getItemType())
                     .fastInvoke(BlockAccessor.getMethodFromLegacyData1(), (int) materialData.getData());
         }
-    }
-
-    @Override
-    protected Object getMinecraftServerInstance() {
-        return Reflect.fastInvoke(Bukkit.getServer(), "getServer");
     }
 
     @Override

@@ -17,6 +17,7 @@ import java.util.List;
 )
 public abstract class Server {
     private static Server server;
+    private static Integer PROTOCOL_VERSION = null;
 
     @ApiStatus.Internal
     public Server() {
@@ -152,6 +153,16 @@ public abstract class Server {
         server.shutdown0();
     }
 
+    public static Integer getProtocolVersion() {
+        if (PROTOCOL_VERSION == null) {
+            if (server == null) {
+                throw new UnsupportedOperationException("Server has not yet been initialized!");
+            }
+            PROTOCOL_VERSION = server.getProtocolVersion0();
+        }
+        return PROTOCOL_VERSION;
+    }
+
     /**
      * <pre>
      *  O   This is Paul.
@@ -198,6 +209,8 @@ public abstract class Server {
     public abstract List<ChannelFuture> getConnections0();
 
     public abstract void shutdown0();
+
+    public abstract Integer getProtocolVersion0();
 
     public String UNSAFE_normalizeSoundKey0(String s) {
         return s;
