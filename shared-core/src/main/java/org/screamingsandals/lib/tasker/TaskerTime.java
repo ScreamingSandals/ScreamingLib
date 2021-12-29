@@ -6,7 +6,7 @@ import org.screamingsandals.lib.utils.ProtoWrapper;
 
 import java.util.concurrent.TimeUnit;
 
-public enum TaskerTime implements ProtoWrapper<ProtoTaskerTime> {
+public enum TaskerTime {
     TICKS(1, 50, TimeUnit.MILLISECONDS),
     SECONDS(20, 1, TimeUnit.SECONDS),
     MINUTES(1200, 1, TimeUnit.MINUTES),
@@ -35,7 +35,6 @@ public enum TaskerTime implements ProtoWrapper<ProtoTaskerTime> {
         return timeUnitValue * multiplier;
     }
 
-    @Override
     public ProtoTaskerTime asProto() {
         switch (this) {
             case TICKS:
