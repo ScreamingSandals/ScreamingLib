@@ -663,7 +663,7 @@ public abstract class ItemBlockIdsRemapper {
         f2lBlock("BREWING_STAND", 117);
         f2lBlock("CAULDRON", 118);
         for (int i = 1; i <= 3; i++) {
-            f2lBlock("CAULDRON", Map.of("level", String.valueOf(i)), 118, i);
+            f2lBlock("WATER_CAULDRON", Map.of("level", String.valueOf(i)), 118, i);
         }
         f2lBlock("END_PORTAL", 119, "ENDER_PORTAL");
         f2lBlock("END_PORTAL_FRAME", 120, "ENDER_PORTAL_FRAME");
@@ -1366,6 +1366,7 @@ public abstract class ItemBlockIdsRemapper {
         mapAlias("SPRUCE_WALL_SIGN", "SIGN");
         mapAlias("ACACIA_WALL_SIGN", "SIGN");
         mapAlias("DIRT_PATH", "GRASS_PATH");
+        mapAlias("WATER_CAULDRON", "CAULDRON");
     }
 
     private void mapAlias(String mappingKey, String alias) {

@@ -152,6 +152,22 @@ public abstract class Server {
         server.shutdown0();
     }
 
+    /**
+     * <pre>
+     *  O   This is Paul.
+     * /|\  He checks the server version to decide
+     *  |   when to use legacy method or flattening method.
+     * / \  Be like Paul. Ignore this method.
+     * </pre>
+     */
+    @ApiStatus.Experimental
+    public static void UNSAFE_earlyInitializeLegacySupportAndIgnoreItsUsage() {
+        if (server == null) {
+            throw new UnsupportedOperationException("Server has not yet been initialized!");
+        }
+        server.UNSAFE_earlyInitializeLegacySupportAndIgnoreItsUsage0();
+    }
+
     // abstract methods for implementations
 
     public abstract String getVersion0();
@@ -185,5 +201,9 @@ public abstract class Server {
 
     public String UNSAFE_normalizeSoundKey0(String s) {
         return s;
+    }
+
+    @ApiStatus.OverrideOnly
+    public void UNSAFE_earlyInitializeLegacySupportAndIgnoreItsUsage0() {
     }
 }

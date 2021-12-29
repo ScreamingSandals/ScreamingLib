@@ -132,10 +132,14 @@ public class ItemMetaHelper {
         }
 
         var clearMethod = Reflect.getMethod(meta, "clear" + name);
-        var addMethod = Reflect.getMethodsCalled(meta, "add" + name, 1);
+        var addMethod = Reflect.getMethodsCalled(meta, "add" + name.substring(0, name.length() - 1), 1);
+        if (addMethod.isEmpty()) {
+            // Ah, addCustomEffect
+            addMethod = Reflect.getMethodsCalled(meta, "add" + name.substring(0, name.length() - 1), 2);
+        }
         if (clearMethod.isPresent() && !addMethod.isEmpty()) {
             clearMethod.invoke();
-            for (var m : setMethod) {
+            for (var m : addMethod) {
                 try {
                     if (!Collection.class.isAssignableFrom(m.getMethod().getParameterTypes()[0])) {
                         return;
@@ -182,18 +186,19 @@ public class ItemMetaHelper {
             }
         }
 
-        var clearMethod = Reflect.getMethod(meta, "clear" + name);
-        var addMethod = Reflect.getMethodsCalled(meta, "add" + name, 1);
-        if (clearMethod.isPresent() && !addMethod.isEmpty()) {
-            clearMethod.invoke();
-            for (var m : setMethod) {
+        var addMethod = Reflect.getMethodsCalled(meta, "add" + name.substring(0, name.length() - 1), 1);
+        if (addMethod.isEmpty()) {
+            // Ah, addCustomEffect
+            addMethod = Reflect.getMethodsCalled(meta, "add" + name.substring(0, name.length() - 1), 2);
+        }
+        if (!addMethod.isEmpty()) {
+            for (var m : addMethod) {
                 try {
-                    if (!Collection.class.isAssignableFrom(m.getMethod().getParameterTypes()[0])) {
-                        return;
+                    if (m.getMethod().getParameters().length == 2) {
+                        m.invoke(MetadataValuesRemapper.remapToPlatform(value, m.getMethod().getParameterTypes()[0]), true);
+                    } else {
+                        m.invoke(MetadataValuesRemapper.remapToPlatform(value, m.getMethod().getParameterTypes()[0]));
                     }
-                    var orig2 = new ArrayList<>(orig);
-                    orig2.add(MetadataValuesRemapper.remapToPlatform(value, ((Class<?>) ((ParameterizedType) m.getMethod().getParameters()[0].getParameterizedType()).getActualTypeArguments()[0])));
-                    m.invoke(orig2);
                     return;
                 } catch (Throwable ignored) {
                     // continue
