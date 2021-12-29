@@ -7,6 +7,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeHolder;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.nms.accessors.MinecraftServerAccessor;
@@ -125,5 +126,13 @@ public class BukkitServer extends Server {
             return UNSAFE_SOUND_CACHE.get(s.toUpperCase());
         }
         return super.UNSAFE_normalizeSoundKey0(s);
+    }
+
+    @Override
+    public void UNSAFE_earlyInitializeLegacySupportAndIgnoreItsUsage0() {
+        if (isVersion0(1,13)) {
+            ClassStorage.CB.UNSAFE_EVIL_GET_OUT_getCraftLegacy();
+            BukkitBlockTypeHolder.NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED = true;
+        }
     }
 }
