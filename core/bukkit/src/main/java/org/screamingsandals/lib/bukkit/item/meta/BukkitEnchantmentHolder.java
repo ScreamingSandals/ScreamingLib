@@ -62,4 +62,13 @@ public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Inte
     public boolean isSameType(Object... objects) {
         return Arrays.stream(objects).anyMatch(this::isSameType);
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T as(Class<T> type) {
+        if (type == Enchantment.class) {
+            return (T) wrappedObject.first();
+        }
+        return super.as(type);
+    }
 }
