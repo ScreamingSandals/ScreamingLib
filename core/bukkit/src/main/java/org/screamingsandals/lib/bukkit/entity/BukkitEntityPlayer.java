@@ -1,5 +1,6 @@
 package org.screamingsandals.lib.bukkit.entity;
 
+import com.viaversion.viaversion.api.Via;
 import io.netty.channel.Channel;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -9,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
@@ -30,6 +32,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
+import protocolsupport.api.ProtocolSupportAPI;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -312,6 +315,18 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
                 .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
                 .getFieldResulted(ConnectionAccessor.getFieldChannel())
                 .raw();
+    }
+
+    @SuppressWarnings("unchecked") // Via Version
+    @Override
+    public int getProtocolVersion() {
+        if (Reflect.has("com.viaversion.viaversion.api.Via")) {
+            return Via.getAPI().getPlayerVersion(wrappedObject);
+        }
+        if (Reflect.has("protocolsupport.api.ProtocolSupportAPI")) {
+            return ProtocolSupportAPI.getProtocolVersion((Player) wrappedObject).getId();
+        }
+        return Server.getProtocolVersion();
     }
 
     @Override

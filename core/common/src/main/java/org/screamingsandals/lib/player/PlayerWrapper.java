@@ -296,6 +296,13 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     Channel getChannel();
 
     /**
+     * Gets the player's protocol version.
+     *
+     * @return the protocol version the player's client is connected with
+     */
+    int getProtocolVersion();
+
+    /**
      * Launches the player in its facing direction.
      *
      * @param multiply the velocity multiplier

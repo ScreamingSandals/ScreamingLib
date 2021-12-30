@@ -1,12 +1,9 @@
 package org.screamingsandals.lib.bukkit.packet;
 
-import com.viaversion.viaversion.api.Via;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.packet.listener.ServerboundInteractPacketListener;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.ArmorStandAccessor;
@@ -14,9 +11,7 @@ import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.logger.LoggerWrapper;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
-import protocolsupport.api.ProtocolSupportAPI;
 
 @Service(dependsOn = {
         ServerboundInteractPacketListener.class
@@ -73,18 +68,6 @@ public class BukkitPacketMapper extends PacketMapper {
     @Override
     public int getId0(Class<? extends AbstractPacket> clazz) {
         return PacketIdMapping.getPacketId(clazz);
-    }
-
-    @SuppressWarnings("unchecked") // because of ViaAPI smh.
-    @Override
-    public int getProtocolVersion0(PlayerWrapper player) {
-        if (Reflect.has("com.viaversion.viaversion.api.Via")) {
-            return Via.getAPI().getPlayerVersion(player.as(Player.class));
-        }
-        if (Reflect.has("protocolsupport.api.ProtocolSupportAPI")) {
-            return ProtocolSupportAPI.getProtocolVersion(player.as(Player.class)).getId();
-        }
-        return Server.getProtocolVersion();
     }
 
     @Override

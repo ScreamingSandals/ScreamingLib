@@ -1,6 +1,4 @@
 dependencies {
     compileOnly paper(PAPER_VERSION)
     compileOnly 'io.netty:netty-all:' + NETTY_VERSION
-    compileOnly 'com.viaversion:viaversion-api:' + VIA_VERSION_VERSION
-    compileOnly 'com.github.ProtocolSupport:ProtocolSupport:' + PROTOCOL_SUPPORT_VERSION
 }
