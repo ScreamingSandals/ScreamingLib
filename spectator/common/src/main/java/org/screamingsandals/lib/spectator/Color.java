@@ -1,4 +1,11 @@
 package org.screamingsandals.lib.spectator;
 
-public interface Color {
+import org.screamingsandals.lib.utils.Wrapper;
+
+public interface Color extends Wrapper {
+    int red();
+
+    int green();
+
+    int blue();
 }
