@@ -1,5 +1,4 @@
 dependencies {
-    compileOnly 'com.google.guava:guava:' + GUAVA_VERSION
     compileOnly 'org.slf4j:slf4j-api:' + SLF4J_VERSION
     compileOnly group: 'com.google.protobuf', name: 'protobuf-java', version: PROTOBUF_VERSION
 

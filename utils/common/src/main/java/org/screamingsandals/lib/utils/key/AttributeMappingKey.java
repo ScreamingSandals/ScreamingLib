@@ -1,6 +1,6 @@
 package org.screamingsandals.lib.utils.key;
 
-import com.google.common.base.CaseFormat;
+import org.screamingsandals.lib.utils.StringUtils;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -37,7 +37,7 @@ public class AttributeMappingKey extends NamespacedMappingKey {
 
         if (!key.contains("_")) {
             // Camel to snake
-            key = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, key);
+            key = StringUtils.Case.LOWER_CAMEL.toSnake(key);
         }
         key = key.toLowerCase();
 

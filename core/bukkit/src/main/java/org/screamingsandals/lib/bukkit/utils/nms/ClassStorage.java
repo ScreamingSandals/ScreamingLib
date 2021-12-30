@@ -1,6 +1,5 @@
 package org.screamingsandals.lib.bukkit.utils.nms;
 
-import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
@@ -9,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.nms.accessors.*;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ClassStorage {
-
 	public static final boolean NMS_BASED_SERVER = safeGetClass("org.bukkit.craftbukkit.Main") != null;
 	public static final String NMS_VERSION = checkNMSVersion();
 
