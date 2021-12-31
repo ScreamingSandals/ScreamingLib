@@ -29,4 +29,16 @@ public interface NBTComponent extends SeparableComponent {
     interface StorageTarget extends Target {
         NamespacedMappingKey key();
     }
+
+    interface Builder extends SeparableComponent.Builder<Builder, NBTComponent> {
+        Builder nbtPath(String nbtPath);
+
+        default Builder interpret() {
+            return interpret(true);
+        }
+
+        Builder interpret(boolean interpret);
+
+        Builder target(Target target);
+    }
 }

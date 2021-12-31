@@ -23,4 +23,32 @@ public class AdventureSelectorComponent extends AdventureComponent implements Se
             return null; // added in Adventure 4.8.0
         }
     }
+
+    public static class AdventureSelectorBuilder extends AdventureBuilder<
+            net.kyori.adventure.text.SelectorComponent,
+            SelectorComponent.Builder,
+            SelectorComponent,
+            net.kyori.adventure.text.SelectorComponent.Builder
+            > implements SelectorComponent.Builder {
+
+        public AdventureSelectorBuilder(net.kyori.adventure.text.SelectorComponent.Builder builder) {
+            super(builder);
+        }
+
+        @Override
+        public SelectorComponent.Builder pattern(String pattern) {
+            getBuilder().pattern(pattern);
+            return self();
+        }
+
+        @Override
+        public SelectorComponent.Builder separator(@Nullable Component separator) {
+            try {
+                getBuilder().separator(separator == null ? null : separator.as(net.kyori.adventure.text.Component.class));
+            } catch (Throwable ignored) {
+                // added in Adventure 4.8.0
+            }
+            return self();
+        }
+    }
 }

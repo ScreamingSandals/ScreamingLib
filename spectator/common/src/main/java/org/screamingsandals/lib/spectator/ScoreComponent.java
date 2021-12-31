@@ -12,4 +12,14 @@ public interface ScoreComponent extends Component {
     @Deprecated
     @Nullable
     String value();
+
+    interface Builder extends Component.Builder<Builder, ScoreComponent> {
+        Builder name(String name);
+
+        Builder objective(String objective);
+
+        @LimitedVersionSupport("< 1.16.5")
+        @Deprecated
+        Builder value(@Nullable String value);
+    }
 }

@@ -11,4 +11,22 @@ public class AdventureTextComponent extends AdventureComponent implements TextCo
     public String content() {
         return ((TextComponent) wrappedObject).content();
     }
+
+    public static class AdventureTextBuilder extends AdventureBuilder<
+            net.kyori.adventure.text.TextComponent,
+            TextComponent.Builder,
+            TextComponent,
+            net.kyori.adventure.text.TextComponent.Builder
+            > implements TextComponent.Builder {
+
+        public AdventureTextBuilder(net.kyori.adventure.text.TextComponent.Builder builder) {
+            super(builder);
+        }
+
+        @Override
+        public TextComponent.Builder content(String content) {
+            getBuilder().content(content);
+            return self();
+        }
+    }
 }
