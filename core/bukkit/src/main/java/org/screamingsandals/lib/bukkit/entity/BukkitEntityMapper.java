@@ -26,6 +26,10 @@ public class BukkitEntityMapper extends EntityMapper {
             return Optional.empty();
         }
 
+        if (entity instanceof EntityBasic) {
+            return Optional.of((T) entity);
+        }
+
         // order is important here
         if (entity instanceof Player) {
             return Optional.of((T) new BukkitEntityPlayer((Player) entity));
