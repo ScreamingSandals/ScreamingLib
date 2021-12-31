@@ -2,6 +2,8 @@ package org.screamingsandals.lib.bungee.spectator;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bungee.spectator.event.BungeeClickEvent;
+import org.screamingsandals.lib.bungee.spectator.event.BungeeHoverEvent;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
@@ -90,12 +92,20 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     @Override
     @Nullable
     public HoverEvent hoverEvent() {
-        return null; // TODO
+        var hover = wrappedObject.getHoverEvent();
+        if (hover == null) {
+            return null;
+        }
+        return new BungeeHoverEvent(hover);
     }
 
     @Override
     @Nullable
     public ClickEvent clickEvent() {
-        return null; // TODO
+        var click = wrappedObject.getClickEvent();
+        if (click == null) {
+            return null;
+        }
+        return new BungeeClickEvent(click);
     }
 }
