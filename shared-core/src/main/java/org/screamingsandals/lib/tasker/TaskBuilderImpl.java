@@ -1,10 +1,10 @@
 package org.screamingsandals.lib.tasker;
 
-import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
+import org.screamingsandals.lib.utils.Preconditions;
 
 import java.util.LinkedList;
 import java.util.List;

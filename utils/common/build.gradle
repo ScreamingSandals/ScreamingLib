@@ -8,7 +8,6 @@ dependencies {
     //proto
     compileOnly group: 'com.google.protobuf', name: 'protobuf-java', version: PROTOBUF_VERSION
 
-    compileOnly 'com.google.guava:guava:' + GUAVA_VERSION
     compileOnly 'org.slf4j:slf4j-api:' + SLF4J_VERSION
 
     api project(':api-utils')

@@ -3,6 +3,7 @@ package org.screamingsandals.lib.world.gamerule;
 import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.configurate.GameRuleHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
@@ -33,18 +34,14 @@ public abstract class GameRuleMapping extends AbstractTypeMapper<GameRuleHolder>
 
     @ApiStatus.Internal
     public GameRuleMapping() {
-        if (gameRuleMapping != null) {
-            throw new UnsupportedOperationException("GameRuleMapping is already initialized!");
-        }
+        Preconditions.checkArgument(gameRuleMapping == null, "GameRuleMapping is already initialized!");
         gameRuleMapping = this;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_RULE)
     @OfMethodAlternative(value = GameRuleHolder.class, methodName = "ofOptional")
     public static Optional<GameRuleHolder> resolve(Object gameRule) {
-        if (gameRuleMapping == null) {
-            throw new UnsupportedOperationException("GameRuleMapping is not initialized yet.");
-        }
+        Preconditions.checkNotNull(gameRuleMapping, "GameRuleMapping is not initialized yet!");
 
         if (gameRule == null) {
             return Optional.empty();
@@ -55,9 +52,7 @@ public abstract class GameRuleMapping extends AbstractTypeMapper<GameRuleHolder>
 
     @OfMethodAlternative(value = GameRuleHolder.class, methodName = "all")
     public static List<GameRuleHolder> getValues() {
-        if (gameRuleMapping == null) {
-            throw new UnsupportedOperationException("GameRuleMapping is not initialized yet.");
-        }
+        Preconditions.checkNotNull(gameRuleMapping, "GameRuleMapping is not initialized yet!");
         return Collections.unmodifiableList(gameRuleMapping.values);
     }
 }

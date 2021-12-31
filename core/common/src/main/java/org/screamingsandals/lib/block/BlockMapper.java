@@ -2,6 +2,7 @@ package org.screamingsandals.lib.block;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -22,57 +23,32 @@ public abstract class BlockMapper {
 
     @ApiStatus.Internal
     public BlockMapper() {
-        if (mapping != null) {
-            throw new UnsupportedOperationException("BlockMapper is already initialized.");
-        }
-
+        Preconditions.checkArgument(mapping == null, "BlockMapper is already initialized!");
         mapping = this;
     }
 
     public static Optional<BlockHolder> resolve(Object obj) {
-        if (mapping == null) {
-            throw new UnsupportedOperationException("BlockMapper is not initialized yet.");
-        }
-        
-        return mapping.converter.convertOptional(obj);
+        return Preconditions.checkNotNull(mapping, "BlockMapper is not initialized yet!").converter.convertOptional(obj);
     }
 
     public static <T> BlockHolder wrapBlock(T block) {
-        if (mapping == null) {
-            throw new UnsupportedOperationException("BlockMapper is not initialized yet.");
-        }
-        return mapping.converter.convert(block);
+        return Preconditions.checkNotNull(mapping, "BlockMapper is not initialized yet!").converter.convert(block);
     }
 
     public static <T> T convert(BlockHolder holder, Class<T> newType) {
-        if (mapping == null) {
-            throw new UnsupportedOperationException("BlockMapper is not initialized yet.");
-        }
-        return mapping.converter.convert(holder, newType);
+        return Preconditions.checkNotNull(mapping, "BlockMapper is not initialized yet!").converter.convert(holder, newType);
     }
 
     public static BlockHolder getBlockAt(LocationHolder location) {
-        if (mapping == null) {
-            throw new UnsupportedOperationException("BlockMapper is already initialized.");
-        }
-
-        return mapping.getBlockAt0(location);
+        return Preconditions.checkNotNull(mapping, "BlockMapper is not initialized yet!").getBlockAt0(location);
     }
 
     public static void setBlockAt(LocationHolder location, BlockTypeHolder material, boolean ignorePhysics) {
-        if (mapping == null) {
-            throw new UnsupportedOperationException("BlockMapper is already initialized.");
-        }
-
-        mapping.setBlockAt0(location, material, ignorePhysics);
+        Preconditions.checkNotNull(mapping, "BlockMapper is not initialized yet!").setBlockAt0(location, material, ignorePhysics);
     }
 
     public static void breakNaturally(LocationHolder location) {
-        if (mapping == null) {
-            throw new UnsupportedOperationException("BlockMapper is already initialized.");
-        }
-
-        mapping.breakNaturally0(location);
+        Preconditions.checkNotNull(mapping, "BlockMapper is not initialized yet!").breakNaturally0(location);
     }
 
     protected abstract BlockHolder getBlockAt0(LocationHolder location);

@@ -1,12 +1,12 @@
 package org.screamingsandals.lib.bukkit.item.data;
 
-import com.google.common.primitives.Primitives;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.utils.GsonUtils;
+import org.screamingsandals.lib.utils.Primitives;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Map;
