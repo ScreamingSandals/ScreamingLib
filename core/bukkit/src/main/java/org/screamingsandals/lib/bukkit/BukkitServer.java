@@ -10,8 +10,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeHolder;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
-import org.screamingsandals.lib.nms.accessors.MinecraftServerAccessor;
-import org.screamingsandals.lib.nms.accessors.ServerConnectionListenerAccessor;
+import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -117,6 +116,17 @@ public class BukkitServer extends Server {
     @Override
     public void shutdown0() {
         Bukkit.shutdown();
+    }
+
+    @Override
+    public Integer getProtocolVersion0() {
+        if (SharedConstantsAccessor.getMethodGetProtocolVersion1() != null) {
+            return Reflect.fastInvokeResulted(SharedConstantsAccessor.getMethodGetProtocolVersion1()).as(Integer.class);
+        }
+        return Reflect.getFieldResulted(Reflect.fastInvoke(Bukkit.getServer(), "getServer"), MinecraftServerAccessor.getFieldStatus())
+                .fastInvokeResulted(ServerStatusAccessor.getMethodGetVersion1())
+                .fastInvokeResulted(ServerStatus_i_VersionAccessor.getMethodGetProtocol1())
+                .as(Integer.class);
     }
 
     @Override

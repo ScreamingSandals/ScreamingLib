@@ -1,12 +1,12 @@
 package org.screamingsandals.lib.bukkit.block;
 
-import com.google.common.base.Preconditions;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 

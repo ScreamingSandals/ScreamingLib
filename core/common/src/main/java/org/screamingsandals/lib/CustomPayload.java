@@ -2,6 +2,7 @@ package org.screamingsandals.lib;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
@@ -17,80 +18,48 @@ public abstract class CustomPayload {
 
     @ApiStatus.Internal
     public CustomPayload() {
-        if (customPayload != null) {
-            throw new UnsupportedOperationException("CustomPayload has been already initialized!");
-        }
+        Preconditions.checkArgument(customPayload == null, "CustomPayload has been already initialized!");
         customPayload = this;
     }
 
     public static void registerOutgoingChannel(String channel) {
-        if (customPayload == null) {
-            throw new UnsupportedOperationException("CustomPayload is not initialized yet!");
-        }
-        customPayload.registerOutgoingChannel0(channel);
+        Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").registerOutgoingChannel0(channel);
     }
 
     public static void unregisterOutgoingChannel(String channel) {
-        if (customPayload == null) {
-            throw new UnsupportedOperationException("CustomPayload is not initialized yet!");
-        }
-        customPayload.unregisterOutgoingChannel0(channel);
+        Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").unregisterOutgoingChannel0(channel);
     }
 
     public static void unregisterAllOutgoingChannels() {
-        if (customPayload == null) {
-            throw new UnsupportedOperationException("CustomPayload is not initialized yet!");
-        }
-        customPayload.unregisterAllOutgoingChannels0();
+        Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").unregisterAllOutgoingChannels0();
     }
 
     public static Collection<String> getRegisteredOutgoingChannels() {
-        if (customPayload == null) {
-            throw new UnsupportedOperationException("CustomPayload is not initialized yet!");
-        }
-        return customPayload.getRegisteredOutgoingChannels0();
+        return Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").getRegisteredOutgoingChannels0();
     }
 
     public static Registration registerIncomingChannel(String channel, BiConsumer<PlayerWrapper, byte[]> listener) {
-        if (customPayload == null) {
-            throw new UnsupportedOperationException("CustomPayload is not initialized yet!");
-        }
-        return customPayload.registerIncomingChannel0(channel, listener);
+        return Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").registerIncomingChannel0(channel, listener);
     }
 
     public static void unregisterIncomingChannel(Registration registration) {
-        if (customPayload == null) {
-            throw new UnsupportedOperationException("CustomPayload is not initialized yet!");
-        }
-        customPayload.unregisterIncomingChannel0(registration);
+        Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").unregisterIncomingChannel0(registration);
     }
 
     public static void unregisterAllIncomingChannels() {
-        if (customPayload == null) {
-            throw new UnsupportedOperationException("CustomPayload is not initialized yet!");
-        }
-        customPayload.unregisterAllIncomingChannels0();
+        Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").unregisterAllIncomingChannels0();
     }
 
     public static Collection<String> getRegisteredIncomingChannels() {
-        if (customPayload == null) {
-            throw new UnsupportedOperationException("CustomPayload is not initialized yet!");
-        }
-        return customPayload.getRegisteredIncomingChannels0();
+        return Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").getRegisteredIncomingChannels0();
     }
 
     public static void send(PlayerWrapper player, String channel, byte[] payload) {
-        if (customPayload == null) {
-            throw new UnsupportedOperationException("CustomPayload is not initialized yet!");
-        }
-        customPayload.send0(player, channel, payload);
+        Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").send0(player, channel, payload);
     }
 
     public static void send(String channel, byte[] payload) {
-        if (customPayload == null) {
-            throw new UnsupportedOperationException("CustomPayload is not initialized yet!");
-        }
-        customPayload.send0(channel, payload);
+        Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").send0(channel, payload);
     }
 
     protected abstract void registerOutgoingChannel0(String channel);

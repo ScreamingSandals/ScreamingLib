@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> implements PotionEffectHolder {
 
     public BukkitPotionEffectHolder(PotionEffectType type) {
-        this(new PotionEffect(type, 0,0));
+        this(new PotionEffect(type, 0, 0));
     }
 
     public BukkitPotionEffectHolder(PotionEffect wrappedObject) {
@@ -44,32 +44,133 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
 
     @Override
     public boolean icon() {
-        return wrappedObject.hasIcon();
+        try {
+            return wrappedObject.hasIcon();
+        } catch (Throwable ignored) {
+            return false;
+        }
     }
 
     @Override
     public PotionEffectHolder withDuration(int duration) {
-        return new BukkitPotionEffectHolder(wrappedObject.withDuration(duration));
+        try {
+            return new BukkitPotionEffectHolder(
+                    new PotionEffect(
+                            wrappedObject.getType(),
+                            duration,
+                            wrappedObject.getAmplifier(),
+                            wrappedObject.isAmbient(),
+                            wrappedObject.hasParticles(),
+                            wrappedObject.hasIcon()
+                    )
+            );
+        } catch (Throwable ignored) {
+            return new BukkitPotionEffectHolder(
+                    new PotionEffect(
+                            wrappedObject.getType(),
+                            duration,
+                            wrappedObject.getAmplifier(),
+                            wrappedObject.isAmbient(),
+                            wrappedObject.hasParticles()
+                    )
+            );
+        }
     }
 
     @Override
     public PotionEffectHolder withAmplifier(int amplifier) {
-        return new BukkitPotionEffectHolder(wrappedObject.withAmplifier(amplifier));
+        try {
+            return new BukkitPotionEffectHolder(
+                    new PotionEffect(
+                            wrappedObject.getType(),
+                            wrappedObject.getDuration(),
+                            amplifier,
+                            wrappedObject.isAmbient(),
+                            wrappedObject.hasParticles(),
+                            wrappedObject.hasIcon()
+                    )
+            );
+        } catch (Throwable ignored) {
+            return new BukkitPotionEffectHolder(
+                    new PotionEffect(
+                            wrappedObject.getType(),
+                            wrappedObject.getDuration(),
+                            amplifier,
+                            wrappedObject.isAmbient(),
+                            wrappedObject.hasParticles()
+                    )
+            );
+        }
     }
 
     @Override
     public PotionEffectHolder withAmbient(boolean ambient) {
-        return new BukkitPotionEffectHolder(wrappedObject.withAmbient(ambient));
+        try {
+            return new BukkitPotionEffectHolder(
+                    new PotionEffect(
+                            wrappedObject.getType(),
+                            wrappedObject.getDuration(),
+                            wrappedObject.getAmplifier(),
+                            ambient,
+                            wrappedObject.hasParticles(),
+                            wrappedObject.hasIcon()
+                    )
+            );
+        } catch (Throwable ignored) {
+            return new BukkitPotionEffectHolder(
+                    new PotionEffect(
+                            wrappedObject.getType(),
+                            wrappedObject.getDuration(),
+                            wrappedObject.getAmplifier(),
+                            ambient,
+                            wrappedObject.hasParticles()
+                    )
+            );
+        }
     }
 
     @Override
     public PotionEffectHolder withParticles(boolean particles) {
-        return new BukkitPotionEffectHolder(wrappedObject.withParticles(particles));
+        try {
+            return new BukkitPotionEffectHolder(
+                    new PotionEffect(
+                            wrappedObject.getType(),
+                            wrappedObject.getDuration(),
+                            wrappedObject.getAmplifier(),
+                            wrappedObject.isAmbient(),
+                            particles,
+                            wrappedObject.hasIcon()
+                    )
+            );
+        } catch (Throwable ignored) {
+            return new BukkitPotionEffectHolder(
+                    new PotionEffect(
+                            wrappedObject.getType(),
+                            wrappedObject.getDuration(),
+                            wrappedObject.getAmplifier(),
+                            wrappedObject.isAmbient(),
+                            particles
+                    )
+            );
+        }
     }
 
     @Override
     public PotionEffectHolder withIcon(boolean icon) {
-        return new BukkitPotionEffectHolder(wrappedObject.withIcon(icon));
+        try {
+            return new BukkitPotionEffectHolder(
+                    new PotionEffect(
+                            wrappedObject.getType(),
+                            wrappedObject.getDuration(),
+                            wrappedObject.getAmplifier(),
+                            wrappedObject.isAmbient(),
+                            wrappedObject.hasParticles(),
+                            icon
+                    )
+            );
+        } catch (Throwable ignored) {
+            return this;
+        }
     }
 
     @Override

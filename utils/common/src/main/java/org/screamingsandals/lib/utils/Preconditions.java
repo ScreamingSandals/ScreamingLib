@@ -18,15 +18,17 @@ public class Preconditions {
         }
     }
 
-    public void checkNotNull(@Nullable Object reference) {
+    public <T> T checkNotNull(@Nullable T reference) {
         if (reference == null) {
-            throw new UnsupportedOperationException();
+            throw new NullPointerException();
         }
+        return reference;
     }
 
-    public void checkNotNull(@Nullable Object reference, @NotNull Object errorMessage) {
+    public <T> T checkNotNull(@Nullable T reference, @NotNull Object errorMessage) {
         if (reference == null) {
-            throw new UnsupportedOperationException(String.valueOf(errorMessage));
+            throw new NullPointerException(String.valueOf(errorMessage));
         }
+        return reference;
     }
 }

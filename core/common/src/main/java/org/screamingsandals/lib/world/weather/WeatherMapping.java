@@ -3,6 +3,7 @@ package org.screamingsandals.lib.world.weather;
 import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.configurate.WeatherHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
@@ -33,18 +34,14 @@ public abstract class WeatherMapping extends AbstractTypeMapper<WeatherHolder> {
 
     @ApiStatus.Internal
     public WeatherMapping() {
-        if (weatherMapping != null) {
-            throw new UnsupportedOperationException("WeatherMapping is already initialized!");
-        }
+        Preconditions.checkArgument(weatherMapping == null, "WeatherMapping is already initialized!");
         weatherMapping = this;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.WEATHER)
     @OfMethodAlternative(value = WeatherHolder.class, methodName = "ofOptional")
     public static Optional<WeatherHolder> resolve(Object weather) {
-        if (weatherMapping == null) {
-            throw new UnsupportedOperationException("WeatherMapping is not initialized yet.");
-        }
+        Preconditions.checkNotNull(weatherMapping, "WeatherMapping is not initialized yet!");
 
         if (weather == null) {
             return Optional.empty();
@@ -55,9 +52,7 @@ public abstract class WeatherMapping extends AbstractTypeMapper<WeatherHolder> {
 
     @OfMethodAlternative(value = WeatherHolder.class, methodName = "all")
     public static List<WeatherHolder> getValues() {
-        if (weatherMapping == null) {
-            throw new UnsupportedOperationException("WeatherMapping is not initialized yet.");
-        }
+        Preconditions.checkNotNull(weatherMapping, "WeatherMapping is not initialized yet!");
         return Collections.unmodifiableList(weatherMapping.values);
     }
 }

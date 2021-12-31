@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
@@ -526,11 +527,13 @@ public abstract class PacketWriter extends OutputStream {
         writeByte((byte) b);
     }
 
+    public int protocol() {
+        return Server.getProtocolVersion();
+    }
+
     protected abstract int getItemId(ItemTypeHolder material);
 
     protected abstract int getBlockStateId(BlockTypeHolder blockDataHolder);
 
     public abstract int getEquipmentSlotId(EquipmentSlotHolder equipmentSlotHolder);
-
-    public abstract int protocol();
 }

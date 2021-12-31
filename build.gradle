@@ -77,6 +77,10 @@ subprojects {
         placeholderApi()
         paper()
         screaming()
+        // TODO: add this to ScreamingPluginBuilder
+        maven {
+            url = uri('https://repo.viaversion.com/')
+        }
     }
 
     sourceCompatibility = JavaVersion.VERSION_11

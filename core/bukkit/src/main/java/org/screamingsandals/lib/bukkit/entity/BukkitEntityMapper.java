@@ -22,6 +22,10 @@ public class BukkitEntityMapper extends EntityMapper {
     @Override
     @SuppressWarnings("unchecked")
     protected <T extends EntityBasic> Optional<T> wrapEntity0(Object entity) {
+        if (entity instanceof EntityBasic) {
+            return Optional.of((T) entity);
+        }
+
         if (!(entity instanceof Entity)) {
             return Optional.empty();
         }

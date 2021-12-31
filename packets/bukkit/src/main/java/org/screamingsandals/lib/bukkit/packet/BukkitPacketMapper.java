@@ -71,12 +71,6 @@ public class BukkitPacketMapper extends PacketMapper {
     }
 
     @Override
-    public int getProtocolVersion0(PlayerWrapper player) {
-        // TODO: use Via API or Protocol Support API for this
-        throw new UnsupportedOperationException("BukkitPacketMapper#getProtocolVersion0() not been implemented yet!");
-    }
-
-    @Override
     public int getArmorStandTypeId0() {
         return ClassStorage.getEntityTypeId("armor_stand", ArmorStandAccessor.getType());
     }
