@@ -5,13 +5,12 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.UtilityClass;
 
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @UtilityClass
 public class StringUtils {
     public String capitalizeFirst(String s) {
-        return s.substring(0, 1).toUpperCase(Locale.ROOT) + s.substring(1);
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 
     public interface Case {
