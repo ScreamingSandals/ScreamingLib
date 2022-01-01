@@ -1,7 +1,6 @@
 package org.screamingsandals.lib.spectator;
 
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 @LimitedVersionSupport(">= 1.14")
 public interface NBTComponent extends SeparableComponent {
@@ -9,36 +8,13 @@ public interface NBTComponent extends SeparableComponent {
 
     boolean interpret();
 
-    Target target();
+    interface Builder<B extends Builder<B, C>, C extends NBTComponent> extends SeparableComponent.Builder<B, C> {
+        B nbtPath(String nbtPath);
 
-    interface Target {
-
-    }
-
-    interface BlockTarget extends Target {
-
-        // TODO: real position API
-        String position();
-    }
-
-    interface EntityTarget extends Target {
-        String selector();
-    }
-
-    @LimitedVersionSupport(">= 1.15")
-    interface StorageTarget extends Target {
-        NamespacedMappingKey key();
-    }
-
-    interface Builder extends SeparableComponent.Builder<Builder, NBTComponent> {
-        Builder nbtPath(String nbtPath);
-
-        default Builder interpret() {
+        default B interpret() {
             return interpret(true);
         }
 
-        Builder interpret(boolean interpret);
-
-        Builder target(Target target);
+        B interpret(boolean interpret);
     }
 }

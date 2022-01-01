@@ -31,38 +31,33 @@ public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.N
             return null; // added in Adventure 4.8.0
         }
     }
-/*
-    public static class AdventureNBTBuilder extends AdventureBuilder<
-            net.kyori.adventure.text.BuildableComponent<?,?>,
-            NBTComponent.Builder,
-            NBTComponent,
-            NBTComponentBuilder
-            > implements NBTComponent.Builder {
 
-        public AdventureNBTBuilder(NBTComponentBuilder builder) {
+
+    public static class AdventureNBTBuilder<
+            A extends net.kyori.adventure.text.NBTComponent<A, D>,
+            B extends NBTComponent.Builder<B, C>,
+            C extends NBTComponent,
+            D extends NBTComponentBuilder<A, D>
+            > extends AdventureBuilder<A, B, C, D> implements NBTComponent.Builder<B, C> {
+
+        public AdventureNBTBuilder(D builder) {
             super(builder);
         }
 
         @Override
-        public NBTComponent.Builder nbtPath(String nbtPath) {
+        public B nbtPath(String nbtPath) {
             getBuilder().nbtPath(nbtPath);
             return self();
         }
 
         @Override
-        public NBTComponent.Builder interpret(boolean interpret) {
+        public B interpret(boolean interpret) {
             getBuilder().interpret(interpret);
             return self();
         }
 
         @Override
-        public NBTComponent.Builder target(Target target) {
-
-            return self();
-        }
-
-        @Override
-        public NBTComponent.Builder separator(@Nullable Component separator) {
+        public B separator(@Nullable Component separator) {
             try {
                 getBuilder().separator(separator == null ? null : separator.as(net.kyori.adventure.text.Component.class));
             } catch (Throwable ignored) {
@@ -70,5 +65,5 @@ public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.N
             }
             return self();
         }
-    }*/
+    }
 }
