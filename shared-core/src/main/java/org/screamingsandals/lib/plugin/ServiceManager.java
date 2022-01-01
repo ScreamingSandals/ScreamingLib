@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * ServiceManager contains all services which has instance. You can retrieve them in this way or via annotation processor.
+ * Class holding all instantiable services. You can retrieve them here or via the annotation processor.
  */
 public class ServiceManager {
     private static final List<Object> services = new LinkedList<>();

@@ -1,23 +1,23 @@
 package org.screamingsandals.lib.utils.annotations;
 
 /**
- * The ServiceDependencies annotation is used to specify service dependencies without using Service annotation.
- * This is used when the class is abstract.
+ * An annotation for specifying service dependencies without using a {@link Service} annotation.
+ * An example usage would be declaring service dependencies for abstract classes, which are yet to be subclassed.
  */
 public @interface ServiceDependencies {
     /**
-     * Defines all services which are required by this service to run.
-     * These services will be automatically initialized if using screaming-annotation processor.
+     * Defines services which are required by this service to run.
+     * These services will be automatically initialized if the annotation module is declared as an annotation processor in your build system.
      *
-     * @return All dependencies
+     * @return the service dependencies
      */
     Class<?>[] dependsOn() default {};
 
     /**
-     * Defines all services which are not required by this service, but can be optionally used.
-     * These services won't be loaded automatically if they are not specified as required by another service or PluginContainer.
+     * Defines services which are not required by this service, but can be loaded optionally.
+     * These services won't be loaded automatically if they are not declared as a required dependency anywhere else.
      *
-     * @return All services, that should be loaded before this service
+     * @return the services
      */
     Class<?>[] loadAfter() default {};
 }
