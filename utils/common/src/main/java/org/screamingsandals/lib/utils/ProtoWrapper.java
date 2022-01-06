@@ -16,8 +16,6 @@
 
 package org.screamingsandals.lib.utils;
 
-import com.google.protobuf.Message;
-
 /**
  * A wrapper for .proto conversions.
  * @param <T> .proto type of this class

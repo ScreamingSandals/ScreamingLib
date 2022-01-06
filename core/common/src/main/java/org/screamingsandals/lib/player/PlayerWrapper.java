@@ -35,6 +35,8 @@ import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.Optional;
 
 /**
@@ -118,6 +120,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      * @param component the display name component
      */
     void setPlayerListName(@Nullable Component component);
+
     /**
      * Sets the player's display name.
      *
@@ -238,7 +241,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
 
     /**
      * Forces an update of the player's entire inventory.
-     *
+     * <p>
      * On some platforms it can be useless.
      */
     void forceUpdateInventory();
@@ -319,10 +322,17 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     int getProtocolVersion();
 
     /**
+     * Retrieves players address.
+     *
+     * @return address
+     */
+    InetSocketAddress getAddress();
+
+    /**
      * Launches the player in its facing direction.
      *
      * @param multiply the velocity multiplier
-     * @param y the y velocity
+     * @param y        the y velocity
      */
     default void launch(double multiply, double y) {
         if (isOnline()) {
