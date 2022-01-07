@@ -76,12 +76,12 @@ public interface SPlayerBedEnterEvent extends SCancellableEvent, SPlayerEvent, P
     void setUseBed(Result useBed);
 
     @Override
-    default boolean isCancelled() {
+    default boolean cancelled() {
         return (getUseBed() == Result.DENY || getUseBed() == Result.DEFAULT && getBedEnterResult() != BedEnterResult.OK);
     }
 
     @Override
-    default void setCancelled(boolean cancelled) {
-        setUseBed(cancelled ? Result.DENY: Result.DEFAULT);
+    default void cancelled(boolean cancel) {
+        setUseBed(cancel ? Result.DENY: Result.DEFAULT);
     }
 }

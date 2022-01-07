@@ -32,5 +32,15 @@ public class VisualsTouchEvent<T extends Visual<T>> implements SCancellableAsync
     private final T visual;
     private final InteractType interactType;
     private boolean cancelled;
+
+    @Override
+    public boolean cancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void cancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
 }
 

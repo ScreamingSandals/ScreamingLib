@@ -73,7 +73,7 @@ public class EventHandler<E extends SEvent> {
         try {
             if (ignoreCancelled
                     && event instanceof Cancellable
-                    && ((Cancellable) event).isCancelled()) {
+                    && ((Cancellable) event).cancelled()) {
                 return;
             }
             ConsumerExecutor.execute(consumer, (E) event);

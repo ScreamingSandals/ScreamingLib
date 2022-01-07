@@ -22,12 +22,12 @@ public interface BukkitCancellable extends org.screamingsandals.lib.event.Cancel
     Cancellable getEvent();
 
     @Override
-    default boolean isCancelled() {
+    default boolean cancelled() {
         return getEvent().isCancelled();
     }
 
     @Override
-    default void setCancelled(boolean cancelled) {
-        getEvent().setCancelled(cancelled);
+    default void cancelled(boolean cancel) {
+        getEvent().setCancelled(cancel);
     }
 }

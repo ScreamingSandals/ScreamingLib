@@ -42,7 +42,7 @@ public class PlayerLoginEventFactory extends AbstractVelocityEventHandlerFactory
 
     @Override
     protected void postProcess(SPlayerLoginEvent wrappedEvent, LoginEvent event) {
-        if (wrappedEvent.isCancelled()) {
+        if (wrappedEvent.cancelled()) {
             event.setResult(ResultedEvent.ComponentResult.denied(wrappedEvent.getCancelMessage()));
         }
     }

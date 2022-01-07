@@ -152,7 +152,7 @@ public abstract class AbstractSignManager {
 
     @OnEvent
     public void onBreak(SPlayerBlockBreakEvent event) {
-        if (event.isCancelled()) {
+        if (event.cancelled()) {
             return;
         }
 
@@ -165,7 +165,7 @@ public abstract class AbstractSignManager {
                     unregisterSign(location);
                 } else {
                     player.sendMessage(signCannotBeDestroyedMessage(player));
-                    event.setCancelled(true);
+                    event.cancelled(true);
                 }
             }
         }
@@ -173,7 +173,7 @@ public abstract class AbstractSignManager {
 
     @OnEvent
     public void onEdit(SPlayerUpdateSignEvent event) {
-        if (event.isCancelled()) {
+        if (event.cancelled()) {
             return;
         }
 
@@ -183,7 +183,7 @@ public abstract class AbstractSignManager {
                 player.sendMessage(signCreatedMessage(player));
             } else {
                 player.sendMessage(signCannotBeCreatedMessage(player));
-                event.setCancelled(true);
+                event.cancelled(true);
                 event.getBlock().breakNaturally();
             }
         }

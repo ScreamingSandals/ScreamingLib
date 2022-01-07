@@ -78,7 +78,7 @@ public class SBukkitEntityDeathEvent implements SEntityDeathEvent, NoAutoCancell
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public boolean isCancelled() {
+    public boolean cancelled() {
         if (event instanceof Cancellable) { // event is cancellable only in Paper
             return ((Cancellable) event).isCancelled();
         }
@@ -87,9 +87,9 @@ public class SBukkitEntityDeathEvent implements SEntityDeathEvent, NoAutoCancell
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public void setCancelled(boolean cancelled) {
+    public void cancelled(boolean cancel) {
         if (event instanceof Cancellable) { // event is cancellable only in Paper
-            ((Cancellable) event).setCancelled(cancelled);
+            ((Cancellable) event).setCancelled(cancel);
         }
     }
 }

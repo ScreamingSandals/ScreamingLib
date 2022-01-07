@@ -31,4 +31,14 @@ public class SPlayerServerboundInteractEvent implements SCancellableAsyncEvent {
     private final int entityId;
     private final InteractType interactType;
     private boolean cancelled;
+
+    @Override
+    public boolean cancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void cancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
 }

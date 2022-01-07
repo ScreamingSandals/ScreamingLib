@@ -76,7 +76,7 @@ public abstract class AbstractVelocityEventHandlerFactory<T, SE extends SEvent> 
                     }
                     if (wrapped instanceof Cancellable
                             && event instanceof ResultedEvent) {
-                        final var isCancelled = ((Cancellable) wrapped).isCancelled();
+                        final var isCancelled = ((Cancellable) wrapped).cancelled();
                         if (isCancelled) {
                             ((ResultedEvent<ResultedEvent.Result>) event).setResult(ResultedEvent.GenericResult.denied());
                         } else {

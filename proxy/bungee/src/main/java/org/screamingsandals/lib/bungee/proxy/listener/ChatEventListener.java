@@ -40,7 +40,7 @@ public class ChatEventListener extends AbstractEventListener<ChatEvent> {
         );
 
         EventManager.getDefaultEventManager().fireEvent(event, eventPriority);
-        chatEvent.setCancelled(event.isCancelled());
+        chatEvent.setCancelled(event.cancelled());
         chatEvent.setMessage(event.getMessage());
     }
 }

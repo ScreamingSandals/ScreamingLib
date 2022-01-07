@@ -42,7 +42,7 @@ public class ChatEventHandlerFactory extends
 
     @Override
     protected void postProcess(SPlayerChatEvent wrappedEvent, PlayerChatEvent event) {
-        if (wrappedEvent.isCancelled()) {
+        if (wrappedEvent.cancelled()) {
             event.setResult(PlayerChatEvent.ChatResult.denied());
         } else {
             event.setResult(PlayerChatEvent.ChatResult.message(wrappedEvent.getMessage()));

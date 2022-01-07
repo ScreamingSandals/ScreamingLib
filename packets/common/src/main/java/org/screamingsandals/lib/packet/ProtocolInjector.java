@@ -110,7 +110,7 @@ public class ProtocolInjector {
             final var future = EventManager.fireAsync(new SPacketEvent(player, PacketMethod.INBOUND, packet));
 
             future.thenAccept(event -> {
-                if (event.isCancelled()) {
+                if (event.cancelled()) {
                     return;
                 }
                 var modifiedPacket = event.getPacket();
@@ -127,7 +127,7 @@ public class ProtocolInjector {
             final var future = EventManager.fireAsync(new SPacketEvent(player, PacketMethod.OUTBOUND, packet));
 
             future.thenAccept(event -> {
-                if (event.isCancelled()) {
+                if (event.cancelled()) {
                     return;
                 }
                 var modifiedPacket = event.getPacket();

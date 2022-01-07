@@ -55,13 +55,13 @@ public class SBukkitChunkUnloadEvent implements SChunkUnloadEvent, NoAutoCancell
     }
 
     // on newer versions the event is not cancellable
-    public boolean isCancelled() {
+    public boolean cancelled() {
         return event instanceof Cancellable && ((Cancellable) event).isCancelled();
     }
 
-    public void setCancelled(boolean cancelled) {
+    public void cancelled(boolean cancel) {
         if (event instanceof Cancellable) {
-            ((Cancellable) event).setCancelled(cancelled);
+            ((Cancellable) event).setCancelled(cancel);
         }
     }
 }

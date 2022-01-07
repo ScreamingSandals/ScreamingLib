@@ -19,6 +19,8 @@ package org.screamingsandals.lib.proxy.event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 
@@ -30,4 +32,14 @@ public class SPlayerChatEvent implements SCancellableEvent {
     private final boolean isCommand;
     private String message;
     private boolean cancelled;
+
+    @Override
+    public boolean cancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void cancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
 }

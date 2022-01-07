@@ -18,6 +18,7 @@ package org.screamingsandals.lib.proxy.event;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.event.SCancellableAsyncEvent;
 import org.screamingsandals.lib.proxy.PendingConnection;
@@ -29,4 +30,14 @@ public class SPlayerLoginEvent implements SCancellableAsyncEvent {
     private Result result = Result.ALLOW;
     private Component cancelMessage = Component.text("Nope.");
     private boolean cancelled;
+
+    @Override
+    public boolean cancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void cancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
 }

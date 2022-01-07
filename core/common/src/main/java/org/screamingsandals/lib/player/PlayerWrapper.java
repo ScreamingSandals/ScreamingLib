@@ -35,7 +35,6 @@ import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Optional;
 
@@ -342,7 +341,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
                 if (!(event.getEntity() instanceof PlayerWrapper) || !equals(event.getEntity()) || !event.getDamageCause().is("FALL")) {
                     return false;
                 }
-                event.setCancelled(true);
+                event.cancelled(true);
                 return true;
             });
         }
@@ -361,7 +360,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
                 if (!(event.getEntity() instanceof PlayerWrapper) || !equals(event.getEntity()) || !event.getDamageCause().is("FALL")) {
                     return false;
                 }
-                event.setCancelled(true);
+                event.cancelled(true);
                 return true;
             });
         }

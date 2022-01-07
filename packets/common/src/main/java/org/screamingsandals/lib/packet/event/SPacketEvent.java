@@ -35,4 +35,14 @@ public class SPacketEvent implements SPlayerEvent, SCancellableAsyncEvent {
     public PlayerWrapper getPlayer() {
         return player;
     }
+
+    @Override
+    public boolean cancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void cancelled(boolean cancel) {
+        this.cancelled = cancel;
+    }
 }

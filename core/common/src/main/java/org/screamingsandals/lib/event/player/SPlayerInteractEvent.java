@@ -64,7 +64,7 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
      * @param cancel true if you wish to cancel this event
      */
     @Override
-    default void setCancelled(boolean cancel) {
+    default void cancelled(boolean cancel) {
         setUseClickedBlock(cancel ? SEvent.Result.DENY : getUseClickedBlock() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : getUseClickedBlock());
         setUseItemInHand(cancel ? SEvent.Result.DENY : getUseItemInHand() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : getUseItemInHand());
     }
@@ -114,7 +114,7 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
      */
     @Deprecated
     @Override
-    default boolean isCancelled() {
+    default boolean cancelled() {
         return getUseClickedBlock() == Result.DENY;
     }
 

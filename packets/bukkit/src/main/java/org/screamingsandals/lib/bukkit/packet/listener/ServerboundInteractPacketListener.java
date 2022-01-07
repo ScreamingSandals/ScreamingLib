@@ -49,7 +49,7 @@ public class ServerboundInteractPacketListener {
                     ?  InteractType.LEFT_CLICK : InteractType.RIGHT_CLICK;
 
             final var completableFuture = EventManager.fireAsync(new SPlayerServerboundInteractEvent(player, entityId, interactType));
-            completableFuture.thenAccept(sPlayerServerboundInteractEvent -> event.setCancelled(sPlayerServerboundInteractEvent.isCancelled()));
+            completableFuture.thenAccept(sPlayerServerboundInteractEvent -> event.cancelled(sPlayerServerboundInteractEvent.cancelled()));
         }
     }
 }
