@@ -23,6 +23,7 @@ import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SCauldronLevelChangeEvent extends SCancellableEvent, PlatformEventWrapper {
+
     BlockHolder block();
 
     @Nullable EntityBasic entity();

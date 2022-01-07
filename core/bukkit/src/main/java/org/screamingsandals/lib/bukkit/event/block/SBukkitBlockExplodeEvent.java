@@ -52,7 +52,7 @@ public class SBukkitBlockExplodeEvent implements SBlockExplodeEvent, BukkitCance
     }
 
     @Override
-    public Collection<BlockHolder> destroyed() {
+    public Collection<BlockHolder> destroyedBlocks() {
         if (destroyed == null) {
             destroyed = new CollectionLinkedToCollection<>(event.blockList(), o -> o.as(Block.class), BlockMapper::wrapBlock);
         }

@@ -22,6 +22,7 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SBlockPhysicsEvent extends SCancellableEvent, PlatformEventWrapper {
+
     BlockHolder block();
 
     BlockTypeHolder material();

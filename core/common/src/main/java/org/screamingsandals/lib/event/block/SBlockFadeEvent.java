@@ -22,6 +22,7 @@ import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 
 public interface SBlockFadeEvent extends SCancellableEvent, PlatformEventWrapper {
+
     BlockHolder block();
 
     BlockStateHolder newBlockState();

@@ -26,7 +26,7 @@ public interface SBlockExplodeEvent extends SCancellableEvent, PlatformEventWrap
 
     BlockHolder block();
 
-    Collection<BlockHolder> destroyed();
+    Collection<BlockHolder> destroyedBlocks();
 
     float yield();
 
