@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -26,6 +28,7 @@ import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
 import org.screamingsandals.lib.event.player.SPlayerBedEnterEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -41,7 +44,7 @@ public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoC
     private BedEnterResult bedEnterResult;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -49,7 +52,7 @@ public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoC
     }
 
     @Override
-    public BlockHolder getBed() {
+    public BlockHolder bed() {
         if (bed == null) {
             bed = BlockMapper.wrapBlock(event.getBed());
         }
@@ -57,7 +60,7 @@ public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoC
     }
 
     @Override
-    public BedEnterResult getBedEnterResult() {
+    public BedEnterResult bedEnterResult() {
         if (bedEnterResult == null) {
             bedEnterResult = BedEnterResult.convert(event.getBedEnterResult().name());
         }
@@ -65,12 +68,12 @@ public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoC
     }
 
     @Override
-    public Result getUseBed() {
+    public Result useBed() {
         return Result.convert(event.useBed().name());
     }
 
     @Override
-    public void setUseBed(Result useBed) {
+    public void useBed(Result useBed) {
         event.setUseBed(Event.Result.valueOf(useBed.name()));
     }
 }

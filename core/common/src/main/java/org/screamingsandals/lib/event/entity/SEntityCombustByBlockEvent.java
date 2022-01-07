@@ -20,5 +20,5 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SEntityCombustByBlockEvent extends SEntityCombustEvent {
 
-    BlockHolder getCombuster();
+    BlockHolder combuster();
 }

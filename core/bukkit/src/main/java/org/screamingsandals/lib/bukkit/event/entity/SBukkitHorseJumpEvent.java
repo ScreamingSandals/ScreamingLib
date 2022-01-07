@@ -17,12 +17,15 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.HorseJumpEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SHorseJumpEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -36,7 +39,7 @@ public class SBukkitHorseJumpEvent implements SHorseJumpEvent, BukkitCancellable
     private EntityBasic entity;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -44,12 +47,12 @@ public class SBukkitHorseJumpEvent implements SHorseJumpEvent, BukkitCancellable
     }
 
     @Override
-    public float getPower() {
+    public float power() {
         return event.getPower();
     }
 
     @Override
-    public void setPower(float power) {
+    public void power(float power) {
         event.setPower(power);
     }
 }

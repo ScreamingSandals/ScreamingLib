@@ -24,12 +24,12 @@ import org.screamingsandals.lib.item.Item;
 
 public interface SFoodLevelChangeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    int getLevel();
+    int level();
 
-    void setLevel(int level);
+    void level(int level);
 
     @Nullable
-    Item getItem();
+    Item item();
 }

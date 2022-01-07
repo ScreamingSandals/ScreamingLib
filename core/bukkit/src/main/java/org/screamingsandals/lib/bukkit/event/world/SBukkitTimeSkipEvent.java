@@ -20,12 +20,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.world.TimeSkipEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.world.STimeSkipEvent;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.WorldMapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -40,7 +43,7 @@ public class SBukkitTimeSkipEvent implements STimeSkipEvent, BukkitCancellable {
     private Reason reason;
 
     @Override
-    public WorldHolder getWorld() {
+    public WorldHolder world() {
         if (world == null) {
             world = WorldMapper.wrapWorld(event.getWorld());
         }
@@ -48,7 +51,7 @@ public class SBukkitTimeSkipEvent implements STimeSkipEvent, BukkitCancellable {
     }
 
     @Override
-    public Reason getReason() {
+    public Reason reason() {
         if (reason == null) {
             reason = Reason.valueOf(event.getSkipReason().name());
         }
@@ -56,12 +59,12 @@ public class SBukkitTimeSkipEvent implements STimeSkipEvent, BukkitCancellable {
     }
 
     @Override
-    public long getSkipAmount() {
+    public long skipAmount() {
         return event.getSkipAmount();
     }
 
     @Override
-    public void setSkipAmount(long skipAmount) {
+    public void skipAmount(long skipAmount) {
         event.setSkipAmount(skipAmount);
     }
 }

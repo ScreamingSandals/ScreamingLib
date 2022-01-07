@@ -30,9 +30,9 @@ public class SBukkitEntityCombustByEntityEvent extends SBukkitEntityCombustEvent
     private EntityBasic combuster;
 
     @Override
-    public EntityBasic getCombuster() {
+    public EntityBasic combuster() {
         if (combuster == null) {
-            combuster = EntityMapper.wrapEntity(((EntityCombustByEntityEvent) getEvent()).getCombuster()).orElseThrow();
+            combuster = EntityMapper.wrapEntity(((EntityCombustByEntityEvent) event()).getCombuster()).orElseThrow();
         }
         return combuster;
     }

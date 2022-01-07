@@ -22,9 +22,9 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SSlimeSplitEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    int getCount();
+    int count();
 
-    void setCount(int count);
+    void count(int count);
 }

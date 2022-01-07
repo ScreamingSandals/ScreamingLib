@@ -24,7 +24,7 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 @LimitedVersionSupport("Bukkit >= 1.16")
 public interface SStriderTemperatureChangeEvent extends SEvent, PlatformEventWrapper {
 
-    EntityLiving getEntity();
+    EntityLiving entity();
 
-    boolean isShivering();
+    boolean shivering();
 }

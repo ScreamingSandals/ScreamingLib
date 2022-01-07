@@ -22,9 +22,9 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SEntityAirChangeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    int getAmount();
+    int amount();
 
-    void setAmount(int amount);
+    void amount(int amount);
 }

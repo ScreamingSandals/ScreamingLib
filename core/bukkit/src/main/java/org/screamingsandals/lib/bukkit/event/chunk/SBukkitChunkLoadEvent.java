@@ -17,11 +17,14 @@
 package org.screamingsandals.lib.bukkit.event.chunk;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.screamingsandals.lib.bukkit.world.chunk.BukkitChunkHolder;
 import org.screamingsandals.lib.event.chunk.SChunkLoadEvent;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -35,7 +38,7 @@ public class SBukkitChunkLoadEvent implements SChunkLoadEvent {
     private ChunkHolder cachedChunk;
 
     @Override
-    public ChunkHolder getChunk() {
+    public ChunkHolder chunk() {
         if (cachedChunk == null) {
             cachedChunk = new BukkitChunkHolder(event.getChunk());
         }
@@ -43,7 +46,7 @@ public class SBukkitChunkLoadEvent implements SChunkLoadEvent {
     }
 
     @Override
-    public boolean isNewChunk() {
+    public boolean newChunk() {
         return event.isNewChunk();
     }
 }

@@ -22,9 +22,9 @@ import org.screamingsandals.lib.item.Item;
 
 public interface SPlayerItemDamageEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    Item getItem();
+    Item item();
 
-    int getDamage();
+    int damage();
 
-    void setDamage(int damage);
+    void damage(int damage);
 }

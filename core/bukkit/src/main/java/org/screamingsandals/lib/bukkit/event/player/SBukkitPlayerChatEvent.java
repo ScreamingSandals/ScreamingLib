@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -30,6 +32,7 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -44,7 +47,7 @@ public class SBukkitPlayerChatEvent implements SPlayerChatEvent, BukkitCancellab
     private PlayerWrapper sender;
 
     @Override
-    public Collection<PlayerWrapper> getRecipients() {
+    public Collection<PlayerWrapper> recipients() {
         if (recipients == null) {
             recipients = new CollectionLinkedToCollection<>(event.getRecipients(), playerWrapper -> playerWrapper.as(Player.class), BukkitEntityPlayer::new);
         }
@@ -52,7 +55,7 @@ public class SBukkitPlayerChatEvent implements SPlayerChatEvent, BukkitCancellab
     }
 
     @Override
-    public PlayerWrapper getSender() {
+    public PlayerWrapper sender() {
         if (sender == null) {
             sender = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -60,22 +63,22 @@ public class SBukkitPlayerChatEvent implements SPlayerChatEvent, BukkitCancellab
     }
 
     @Override
-    public String getMessage() {
+    public String message() {
         return event.getMessage();
     }
 
     @Override
-    public void setMessage(String message) {
+    public void message(String message) {
         event.setMessage(message);
     }
 
     @Override
-    public String getFormat() {
+    public String format() {
         return event.getFormat();
     }
 
     @Override
-    public void setFormat(String format) {
+    public void format(String format) {
         event.setFormat(format);
     }
 }

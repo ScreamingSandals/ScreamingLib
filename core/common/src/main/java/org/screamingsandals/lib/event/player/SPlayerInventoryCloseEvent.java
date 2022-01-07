@@ -23,11 +23,11 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 public interface SPlayerInventoryCloseEvent extends SPlayerEvent, PlatformEventWrapper {
 
-    Container getTopInventory();
+    Container topInventory();
 
-    Container getBottomInventory();
+    Container bottomInventory();
 
     // TODO: holder?
     @LimitedVersionSupport("Paper")
-    NamespacedMappingKey getReason();
+    NamespacedMappingKey reason();
 }

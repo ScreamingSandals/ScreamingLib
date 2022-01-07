@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -41,7 +44,7 @@ public class SBukkitBlockExplodeEvent implements SBlockExplodeEvent, BukkitCance
     private Collection<BlockHolder> destroyed;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -49,7 +52,7 @@ public class SBukkitBlockExplodeEvent implements SBlockExplodeEvent, BukkitCance
     }
 
     @Override
-    public Collection<BlockHolder> getDestroyed() {
+    public Collection<BlockHolder> destroyedBlocks() {
         if (destroyed == null) {
             destroyed = new CollectionLinkedToCollection<>(event.blockList(), o -> o.as(Block.class), BlockMapper::wrapBlock);
         }
@@ -57,12 +60,12 @@ public class SBukkitBlockExplodeEvent implements SBlockExplodeEvent, BukkitCance
     }
 
     @Override
-    public float getYield() {
+    public float yield() {
         return event.getYield();
     }
 
     @Override
-    public void setYield(float yield) {
+    public void yield(float yield) {
         event.setYield(yield);
     }
 }

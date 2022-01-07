@@ -22,7 +22,7 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SItemMergeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityItem getEntity();
+    EntityItem entity();
 
-    EntityItem getTarget();
+    EntityItem target();
 }

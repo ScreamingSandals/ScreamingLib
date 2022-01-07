@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.translation.Translator;
 import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -26,6 +27,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Locale;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -40,7 +42,7 @@ public class SBukkitPlayerLocaleChangeEvent implements SPlayerLocaleChangeEvent 
     private Locale locale;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -48,7 +50,7 @@ public class SBukkitPlayerLocaleChangeEvent implements SPlayerLocaleChangeEvent 
     }
 
     @Override
-    public Locale getLocale() {
+    public Locale locale() {
         if (locale == null) {
             if (Reflect.hasMethod(event, "locale")) {
                 locale = event.locale(); // java.util.Locale is not an adventure thing so we can

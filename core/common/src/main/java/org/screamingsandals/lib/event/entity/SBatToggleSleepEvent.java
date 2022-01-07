@@ -21,7 +21,7 @@ import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SBatToggleSleepEvent extends SCancellableEvent, PlatformEventWrapper {
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    boolean isAwake();
+    boolean awake();
 }

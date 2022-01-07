@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerCommandSendEvent;
@@ -24,6 +26,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -37,7 +40,7 @@ public class SBukkitPlayerCommandSendEvent implements SPlayerCommandSendEvent {
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -45,7 +48,7 @@ public class SBukkitPlayerCommandSendEvent implements SPlayerCommandSendEvent {
     }
 
     @Override
-    public Collection<String> getCommands() {
+    public Collection<String> commands() {
         return event.getCommands();
     }
 }

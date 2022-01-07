@@ -25,14 +25,14 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SProjectileHitEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
     @Nullable
-    EntityBasic getHitEntity();
+    EntityBasic hitEntity();
 
     @Nullable
-    BlockHolder getHitBlock();
+    BlockHolder hitBlock();
 
     @Nullable
-    BlockFace getHitFace();
+    BlockFace hitFace();
 }

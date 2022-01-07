@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -29,6 +30,7 @@ import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 
 import java.net.InetAddress;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -42,7 +44,7 @@ public class SBukkitPlayerLoginEvent implements SPlayerLoginEvent {
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -50,41 +52,41 @@ public class SBukkitPlayerLoginEvent implements SPlayerLoginEvent {
     }
 
     @Override
-    public InetAddress getAddress() {
+    public InetAddress address() {
         return event.getAddress();
     }
 
     @Override
-    public String getHostname() {
+    public String hostname() {
         return event.getHostname();
     }
 
     @Override
-    public SAsyncPlayerPreLoginEvent.Result getResult() {
+    public SAsyncPlayerPreLoginEvent.Result result() {
         return SAsyncPlayerPreLoginEvent.Result.valueOf(event.getResult().name());
     }
 
     @Override
-    public void setResult(SAsyncPlayerPreLoginEvent.Result result) {
+    public void result(SAsyncPlayerPreLoginEvent.Result result) {
         event.setResult(PlayerLoginEvent.Result.valueOf(result.name()));
     }
 
     @Override
-    public Component getMessage() {
+    public Component message() {
         return ComponentObjectLink.processGetter(event, "kickMessage", event::getKickMessage);
     }
 
     @Override
-    public void setMessage(Component message) {
+    public void message(Component message) {
         ComponentObjectLink.processSetter(event, "kickMessage", event::setKickMessage, message);
     }
 
     @Override
-    public void setMessage(ComponentLike message) {
+    public void message(ComponentLike message) {
         if (message instanceof SenderMessage) {
-            setMessage(((SenderMessage) message).asComponent(getPlayer()));
+            message(((SenderMessage) message).asComponent(player()));
         } else {
-            setMessage(message.asComponent());
+            message(message.asComponent());
         }
     }
 }

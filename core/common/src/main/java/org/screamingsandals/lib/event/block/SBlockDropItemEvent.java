@@ -28,9 +28,9 @@ import java.util.Collection;
 @LimitedVersionSupport("Bukkit >= 1.13.2")
 public interface SBlockDropItemEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    PlayerWrapper getPlayer();
+    PlayerWrapper players();
 
-    BlockStateHolder getBlockState();
+    BlockStateHolder state();
 
-    Collection<EntityItem> getItems();
+    Collection<EntityItem> items();
 }

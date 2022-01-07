@@ -22,13 +22,13 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SVillagerCareerChangeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    Profession getProfession();
+    Profession profession();
 
-    void setProfession(Profession profession);
+    void profession(Profession profession);
 
-    ChangeReason getReason();
+    ChangeReason changeReason();
 
     /**
      * Reasons for the villager's profession changing.

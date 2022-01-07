@@ -39,7 +39,7 @@ public class ServerboundInteractPacketListener {
         }
 
         final var packet = event.getPacket();
-        final var player = event.getPlayer();
+        final var player = event.player();
         if (ServerboundInteractPacketAccessor.getType().isInstance(packet)) {
             final var nmsEnum = Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldAction());
             final var entityId = (int) Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldEntityId());

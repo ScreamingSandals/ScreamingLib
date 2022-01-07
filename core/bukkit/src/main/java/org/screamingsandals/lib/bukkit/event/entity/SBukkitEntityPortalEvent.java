@@ -25,17 +25,17 @@ public class SBukkitEntityPortalEvent extends SBukkitEntityTeleportEvent impleme
     }
 
     @Override
-    public EntityPortalEvent getEvent() {
-        return (EntityPortalEvent) super.getEvent();
+    public EntityPortalEvent event() {
+        return (EntityPortalEvent) super.event();
     }
 
     @Override
-    public int getSearchRadius() {
-        return getEvent().getSearchRadius();
+    public int searchRadius() {
+        return event().getSearchRadius();
     }
 
     @Override
-    public void setSearchRadius(int searchRadius) {
-        getEvent().setSearchRadius(searchRadius);
+    public void searchRadius(int searchRadius) {
+        event().setSearchRadius(searchRadius);
     }
 }

@@ -22,9 +22,9 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SEntityCombustEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    int getDuration();
+    int duration();
 
-    void setDuration(int duration);
+    void duration(int duration);
 }

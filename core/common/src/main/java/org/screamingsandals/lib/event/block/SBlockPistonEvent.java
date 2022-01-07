@@ -23,9 +23,9 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SBlockPistonEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    boolean isSticky();
+    boolean sticky();
 
-    BlockFace getDirection();
+    BlockFace direction();
 }

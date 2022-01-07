@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.FluidLevelChangeEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -24,6 +26,7 @@ import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.SFluidLevelChangeEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -38,7 +41,7 @@ public class SBukkitFluidLevelChangeEvent implements SFluidLevelChangeEvent, Buk
     private BlockTypeHolder blockType;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -46,7 +49,7 @@ public class SBukkitFluidLevelChangeEvent implements SFluidLevelChangeEvent, Buk
     }
 
     @Override
-    public BlockTypeHolder getNewBlockData() {
+    public BlockTypeHolder newBlockData() {
         if (blockType == null) {
             blockType = BlockTypeHolder.of(event.getNewData());
         }

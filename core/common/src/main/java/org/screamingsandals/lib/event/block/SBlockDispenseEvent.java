@@ -26,19 +26,19 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SBlockDispenseEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    Item getItem();
+    Item item();
 
-    void setItem(Item item);
+    void item(Item item);
 
-    Vector3D getVelocity();
+    Vector3D velocity();
 
-    void setVelocity(Vector3D velocity);
+    void velocity(Vector3D velocity);
 
     /*
      * Only in case when dispenser is used to attach armor to an entity
      */
     @Nullable
-    EntityLiving getReceiver();
+    EntityLiving receiver();
 }

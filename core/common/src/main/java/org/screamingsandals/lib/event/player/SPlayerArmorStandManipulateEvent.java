@@ -21,9 +21,9 @@ import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
 public interface SPlayerArmorStandManipulateEvent extends SPlayerInteractEntityEvent {
 
-    Item getPlayerItem();
+    Item playerItem();
 
-    Item getArmorStandItem();
+    Item armorStandItem();
 
-    EquipmentSlotHolder getSlot();
+    EquipmentSlotHolder slot();
 }

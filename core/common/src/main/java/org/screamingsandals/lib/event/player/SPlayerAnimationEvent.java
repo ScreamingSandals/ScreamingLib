@@ -21,7 +21,7 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SPlayerAnimationEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    PlayerAnimationType getAnimationType();
+    PlayerAnimationType animationType();
 
     /**
      * Different types of player animations

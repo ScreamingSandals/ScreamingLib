@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.BlockPistonEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -24,6 +26,7 @@ import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.SBlockPistonEvent;
 import org.screamingsandals.lib.utils.BlockFace;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -38,7 +41,7 @@ public class SBukkitBlockPistonEvent implements SBlockPistonEvent, BukkitCancell
     private BlockFace direction;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -46,12 +49,12 @@ public class SBukkitBlockPistonEvent implements SBlockPistonEvent, BukkitCancell
     }
 
     @Override
-    public boolean isSticky() {
+    public boolean sticky() {
         return event.isSticky();
     }
 
     @Override
-    public BlockFace getDirection() {
+    public BlockFace direction() {
         if (direction == null) {
             direction = BlockFace.valueOf(event.getDirection().name());
         }

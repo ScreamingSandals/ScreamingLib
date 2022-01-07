@@ -22,7 +22,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 public interface SPlayerRespawnEvent extends SEvent, SPlayerEvent, PlatformEventWrapper {
 
-    LocationHolder getLocation();
+    LocationHolder location();
 
-    void setLocation(LocationHolder location);
+    void location(LocationHolder location);
 }

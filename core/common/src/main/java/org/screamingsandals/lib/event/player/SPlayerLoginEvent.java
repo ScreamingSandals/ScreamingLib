@@ -26,28 +26,28 @@ import java.net.InetAddress;
 
 public interface SPlayerLoginEvent extends SPlayerEvent, PlatformEventWrapper {
 
-    PlayerWrapper getPlayer();
+    PlayerWrapper player();
 
-    InetAddress getAddress();
+    InetAddress address();
 
-    String getHostname();
+    String hostname();
 
-    SAsyncPlayerPreLoginEvent.Result getResult();
+    SAsyncPlayerPreLoginEvent.Result result();
 
-    void setResult(SAsyncPlayerPreLoginEvent.Result result);
+    void result(SAsyncPlayerPreLoginEvent.Result result);
 
-    Component getMessage();
+    Component message();
 
-    void setMessage(Component message);
+    void message(Component message);
 
-    void setMessage(ComponentLike message);
+    void message(ComponentLike message);
 
     /**
      * Allows the player to log in
      */
     default void allow() {
-        setResult(SAsyncPlayerPreLoginEvent.Result.ALLOWED);
-        setMessage(Component.empty());
+        result(SAsyncPlayerPreLoginEvent.Result.ALLOWED);
+        message(Component.empty());
     }
 
     /**
@@ -57,7 +57,7 @@ public interface SPlayerLoginEvent extends SPlayerEvent, PlatformEventWrapper {
      * @param message Kick message to display to the user
      */
     default void disallow(@NotNull final SAsyncPlayerPreLoginEvent.Result result, @NotNull final Component message) {
-        setResult(result);
-        setMessage(message);
+        result(result);
+        message(message);
     }
 }

@@ -22,17 +22,29 @@ import org.screamingsandals.lib.event.PlatformEventWrapper;
 
 public interface SPlayerEggThrowEvent extends SPlayerEvent, PlatformEventWrapper {
 
-    EntityBasic getEgg();
+    EntityBasic eggEntity();
 
-    boolean isHatching();
+    boolean hatching();
 
-    void setHatching(boolean hatching);
+    void hatching(boolean hatching);
 
-    EntityTypeHolder getHatchType();
+    EntityTypeHolder hatchType();
 
-    void setHatchType(EntityTypeHolder hatchType);
+    void hatchType(EntityTypeHolder hatchType);
 
-    byte getNumHatches();
+    /**
+     * //from bukkit
+     * Get the number of mob hatches from the egg. By default, the number will
+     * be the number the server would've done
+     * <ul>
+     * <li>7/8 chance of being 0
+     * <li>31/256 ~= 1/8 chance to be 1
+     * <li>1/256 chance to be 4
+     * </ul>
+     *
+     * @return The number of mobs going to be hatched by the egg
+     */
+    byte hatchesNumber();
 
-    void setNumHatches(byte numHatches);
+    void hatchesNumber(byte numHatches);
 }

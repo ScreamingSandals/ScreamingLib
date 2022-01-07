@@ -20,6 +20,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -30,6 +31,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -43,7 +45,7 @@ public class SBukkitPlayerLeaveEvent implements SPlayerLeaveEvent {
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -52,21 +54,21 @@ public class SBukkitPlayerLeaveEvent implements SPlayerLeaveEvent {
 
     @Override
     @Nullable
-    public Component getLeaveMessage() {
+    public Component leaveMessage() {
         return ComponentObjectLink.processGetter(event, "quitMessage", event::getQuitMessage);
     }
 
     @Override
-    public void setLeaveMessage(@Nullable Component leaveMessage) {
+    public void leaveMessage(@Nullable Component leaveMessage) {
         ComponentObjectLink.processSetter(event, "quitMessage", event::setQuitMessage, leaveMessage);
     }
 
     @Override
-    public void setLeaveMessage(@Nullable ComponentLike leaveMessage) {
+    public void leaveMessage(@Nullable ComponentLike leaveMessage) {
         if (leaveMessage instanceof SenderMessage) {
-            setLeaveMessage(((SenderMessage) leaveMessage).asComponent(getPlayer()));
+            leaveMessage(((SenderMessage) leaveMessage).asComponent(player()));
         } else {
-            setLeaveMessage(leaveMessage != null ? leaveMessage.asComponent() : null);
+            leaveMessage(leaveMessage != null ? leaveMessage.asComponent() : null);
         }
     }
 }

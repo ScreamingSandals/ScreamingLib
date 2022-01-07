@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.BlockDamageEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -30,6 +32,7 @@ import org.screamingsandals.lib.event.player.SPlayerBlockDamageEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -45,7 +48,7 @@ public class SBukkitPlayerBlockDamageEvent implements SPlayerBlockDamageEvent, B
     private Item itemInHand;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -53,7 +56,7 @@ public class SBukkitPlayerBlockDamageEvent implements SPlayerBlockDamageEvent, B
     }
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -61,7 +64,7 @@ public class SBukkitPlayerBlockDamageEvent implements SPlayerBlockDamageEvent, B
     }
 
     @Override
-    public Item getItemInHand() {
+    public Item itemInHand() {
         if (itemInHand == null) {
             itemInHand = new BukkitItem(event.getItemInHand());
         }
@@ -69,12 +72,12 @@ public class SBukkitPlayerBlockDamageEvent implements SPlayerBlockDamageEvent, B
     }
 
     @Override
-    public boolean isInstantBreak() {
+    public boolean instantBreak() {
         return event.getInstaBreak();
     }
 
     @Override
-    public void setInstantBreak(boolean instantBreak) {
+    public void instantBreak(boolean instantBreak) {
         event.setInstaBreak(instantBreak);
     }
 }

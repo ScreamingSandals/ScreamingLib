@@ -25,7 +25,7 @@ import java.util.Collection;
 
 public interface SPlayerHarvestBlockEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    Collection<Item> getItemsHarvested();
+    Collection<Item> itemsHarvested();
 
-    BlockHolder getHarvestedBlock();
+    BlockHolder harvestedBlock();
 }

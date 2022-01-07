@@ -33,10 +33,10 @@ public class SBukkitEntityDamageByBlockEvent extends SBukkitEntityDamageEvent im
 
     @Override
     @Nullable
-    public BlockHolder getDamager() {
+    public BlockHolder damager() {
         if (!damagerCached) {
-            if (getEvent().getDamager() != null) {
-                damager = BlockMapper.wrapBlock(getEvent().getDamager());
+            if (event().getDamager() != null) {
+                damager = BlockMapper.wrapBlock(event().getDamager());
             }
             damagerCached = true;
         }
@@ -44,7 +44,7 @@ public class SBukkitEntityDamageByBlockEvent extends SBukkitEntityDamageEvent im
     }
 
     @Override
-    public EntityDamageByBlockEvent getEvent() {
-        return (EntityDamageByBlockEvent) super.getEvent();
+    public EntityDamageByBlockEvent event() {
+        return (EntityDamageByBlockEvent) super.event();
     }
 }

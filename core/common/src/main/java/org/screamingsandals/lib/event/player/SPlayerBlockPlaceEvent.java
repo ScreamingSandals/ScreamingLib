@@ -29,25 +29,25 @@ public interface SPlayerBlockPlaceEvent extends SCancellableEvent, SPlayerEvent,
     /**
      * Other blocks that were also placed by the placement of block. They may have material type of AIR. This list also includes the main block
      */
-    Collection<BlockStateHolder> getReplacedBlockStates();
+    Collection<BlockStateHolder> replacedBlockStates();
 
     /**
      * Hand used to place this block
      */
-    PlayerWrapper.Hand getPlayerHand();
+    PlayerWrapper.Hand playerHand();
 
     /**
      * Placed block
      */
-    BlockHolder getBlock();
+    BlockHolder block();
 
     /**
      * Replaced block state
      */
-    BlockStateHolder getReplacedBlockState();
+    BlockStateHolder replacedBlockState();
 
     /**
      * Item in hand
      */
-    Item getItemInHand();
+    Item itemInHand();
 }

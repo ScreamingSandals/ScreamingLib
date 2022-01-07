@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.world.SpawnChangeEvent;
 import org.screamingsandals.lib.event.world.SSpawnChangeEvent;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.WorldMapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -42,7 +45,7 @@ public class SBukkitSpawnChangeEvent implements SSpawnChangeEvent {
     private LocationHolder newLocation;
 
     @Override
-    public WorldHolder getWorld() {
+    public WorldHolder world() {
         if (world == null) {
             world = WorldMapper.wrapWorld(event.getWorld());
         }
@@ -50,7 +53,7 @@ public class SBukkitSpawnChangeEvent implements SSpawnChangeEvent {
     }
 
     @Override
-    public LocationHolder getOldLocation() {
+    public LocationHolder oldLocation() {
         if (oldLocation == null) {
             oldLocation = LocationMapper.wrapLocation(event.getPreviousLocation());
         }
@@ -58,7 +61,7 @@ public class SBukkitSpawnChangeEvent implements SSpawnChangeEvent {
     }
 
     @Override
-    public LocationHolder getNewLocation() {
+    public LocationHolder newLocation() {
         if (newLocation == null) {
             newLocation = LocationMapper.wrapLocation(event.getWorld().getSpawnLocation());
         }

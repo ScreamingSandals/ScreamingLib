@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -26,6 +28,7 @@ import org.screamingsandals.lib.event.player.SPlayerInteractEntityEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -41,7 +44,7 @@ public class SBukkitPlayerInteractEntityEvent implements SPlayerInteractEntityEv
     private EquipmentSlotHolder hand;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -49,7 +52,7 @@ public class SBukkitPlayerInteractEntityEvent implements SPlayerInteractEntityEv
     }
 
     @Override
-    public EntityBasic getClickedEntity() {
+    public EntityBasic clickedEntity() {
         if (clickedEntity == null) {
             clickedEntity = EntityMapper.wrapEntity(event.getRightClicked()).orElseThrow();
         }
@@ -57,7 +60,7 @@ public class SBukkitPlayerInteractEntityEvent implements SPlayerInteractEntityEv
     }
 
     @Override
-    public EquipmentSlotHolder getHand() {
+    public EquipmentSlotHolder hand() {
         if (hand == null) {
             hand = EquipmentSlotHolder.of(event.getHand());
         }

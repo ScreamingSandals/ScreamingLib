@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.event.player.SPlayerItemConsumeEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -40,7 +43,7 @@ public class SBukkitPlayerItemConsumeEvent implements SPlayerItemConsumeEvent, B
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -49,12 +52,12 @@ public class SBukkitPlayerItemConsumeEvent implements SPlayerItemConsumeEvent, B
 
     @Override
     @Nullable
-    public Item getItem() {
+    public Item item() {
         return event.getItem() != null ? new BukkitItem(event.getItem()) : null;
     }
 
     @Override
-    public void setItem(@Nullable Item item) {
+    public void item(@Nullable Item item) {
         event.setItem(item != null ? item.as(ItemStack.class) : null);
     }
 }

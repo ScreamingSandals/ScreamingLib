@@ -21,5 +21,5 @@ import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SEntityResurrectEvent extends SCancellableEvent, PlatformEventWrapper {
-    EntityBasic getEntity();
+    EntityBasic entity();
 }

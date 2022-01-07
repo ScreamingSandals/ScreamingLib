@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -24,6 +26,7 @@ import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.SBlockPhysicsEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -39,7 +42,7 @@ public class SBukkitBlockPhysicsEvent implements SBlockPhysicsEvent, BukkitCance
     private BlockHolder causingBlock;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -47,7 +50,7 @@ public class SBukkitBlockPhysicsEvent implements SBlockPhysicsEvent, BukkitCance
     }
 
     @Override
-    public BlockTypeHolder getMaterial() {
+    public BlockTypeHolder material() {
         if (material == null) {
             material = BlockTypeHolder.of(event.getChangedType());
         }
@@ -55,7 +58,7 @@ public class SBukkitBlockPhysicsEvent implements SBlockPhysicsEvent, BukkitCance
     }
 
     @Override
-    public BlockHolder getCausingBlock() {
+    public BlockHolder causingBlock() {
         if (causingBlock == null) {
             causingBlock = BlockMapper.wrapBlock(event.getSourceBlock());
         }

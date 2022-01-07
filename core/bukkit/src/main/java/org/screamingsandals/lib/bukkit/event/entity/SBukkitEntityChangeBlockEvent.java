@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -29,6 +31,7 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityChangeBlockEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -44,7 +47,7 @@ public class SBukkitEntityChangeBlockEvent implements SEntityChangeBlockEvent, B
     private BlockTypeHolder to;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -52,7 +55,7 @@ public class SBukkitEntityChangeBlockEvent implements SEntityChangeBlockEvent, B
     }
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -60,7 +63,7 @@ public class SBukkitEntityChangeBlockEvent implements SEntityChangeBlockEvent, B
     }
 
     @Override
-    public BlockTypeHolder getTo() {
+    public BlockTypeHolder to() {
         if (to == null) {
             try {
                 to = BlockTypeHolder.of(event.getBlockData());

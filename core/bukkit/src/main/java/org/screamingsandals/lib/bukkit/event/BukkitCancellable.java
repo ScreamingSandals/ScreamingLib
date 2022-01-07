@@ -19,15 +19,15 @@ package org.screamingsandals.lib.bukkit.event;
 import org.bukkit.event.Cancellable;
 
 public interface BukkitCancellable extends org.screamingsandals.lib.event.Cancellable, NoAutoCancellable {
-    Cancellable getEvent();
+    Cancellable event();
 
     @Override
     default boolean cancelled() {
-        return getEvent().isCancelled();
+        return event().isCancelled();
     }
 
     @Override
     default void cancelled(boolean cancel) {
-        getEvent().setCancelled(cancel);
+        event().setCancelled(cancel);
     }
 }

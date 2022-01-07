@@ -17,12 +17,15 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.ItemMergeEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.event.entity.SItemMergeEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -37,7 +40,7 @@ public class SBukkitItemMergeEvent implements SItemMergeEvent, BukkitCancellable
     private EntityItem target;
 
     @Override
-    public EntityItem getEntity() {
+    public EntityItem entity() {
         if (entity == null) {
             entity = new BukkitEntityItem(event.getEntity());
         }
@@ -45,7 +48,7 @@ public class SBukkitItemMergeEvent implements SItemMergeEvent, BukkitCancellable
     }
 
     @Override
-    public EntityItem getTarget() {
+    public EntityItem target() {
         if (target == null) {
             target = new BukkitEntityItem(event.getTarget());
         }

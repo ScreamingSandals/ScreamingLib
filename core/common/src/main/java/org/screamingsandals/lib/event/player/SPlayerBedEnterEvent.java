@@ -21,6 +21,25 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SPlayerBedEnterEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
+
+    BlockHolder bed();
+
+    BedEnterResult bedEnterResult();
+
+    Result useBed();
+
+    void useBed(Result useBed);
+
+    @Override
+    default boolean cancelled() {
+        return (useBed() == Result.DENY || useBed() == Result.DEFAULT && bedEnterResult() != BedEnterResult.OK);
+    }
+
+    @Override
+    default void cancelled(boolean cancel) {
+        useBed(cancel ? Result.DENY: Result.DEFAULT);
+    }
+
     /**
      * Represents the default possible outcomes of this event.
      */
@@ -64,24 +83,5 @@ public interface SPlayerBedEnterEvent extends SCancellableEvent, SPlayerEvent, P
                 return BedEnterResult.OK;
             }
         }
-    }
-
-
-    BlockHolder getBed();
-
-    BedEnterResult getBedEnterResult();
-
-    Result getUseBed();
-
-    void setUseBed(Result useBed);
-
-    @Override
-    default boolean cancelled() {
-        return (getUseBed() == Result.DENY || getUseBed() == Result.DEFAULT && getBedEnterResult() != BedEnterResult.OK);
-    }
-
-    @Override
-    default void cancelled(boolean cancel) {
-        setUseBed(cancel ? Result.DENY: Result.DEFAULT);
     }
 }

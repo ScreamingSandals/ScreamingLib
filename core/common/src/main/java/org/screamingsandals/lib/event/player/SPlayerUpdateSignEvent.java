@@ -25,7 +25,7 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SPlayerUpdateSignEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
     Component[] lines();
 

@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -26,6 +28,7 @@ import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.event.player.SPlayerInventoryOpenEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -41,7 +44,7 @@ public class SBukkitPlayerInventoryOpenEvent implements SPlayerInventoryOpenEven
     private Container bottomInventory;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer((Player) event.getPlayer());
         }
@@ -49,7 +52,7 @@ public class SBukkitPlayerInventoryOpenEvent implements SPlayerInventoryOpenEven
     }
 
     @Override
-    public Container getTopInventory() {
+    public Container topInventory() {
         if (topInventory == null) {
             topInventory = ContainerFactory.wrapContainer(event.getInventory()).orElseThrow();
         }
@@ -57,7 +60,7 @@ public class SBukkitPlayerInventoryOpenEvent implements SPlayerInventoryOpenEven
     }
 
     @Override
-    public Container getBottomInventory() {
+    public Container bottomInventory() {
         if (bottomInventory == null) {
             bottomInventory = ContainerFactory.wrapContainer(event.getView().getBottomInventory()).orElseThrow();
         }

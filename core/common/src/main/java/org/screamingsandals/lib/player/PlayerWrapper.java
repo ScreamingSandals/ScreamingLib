@@ -338,7 +338,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
             setVelocity(getVelocity().multiply(multiply).setY(y));
 
             EventManager.getDefaultEventManager().registerOneTime(SEntityDamageEvent.class, event -> {
-                if (!(event.getEntity() instanceof PlayerWrapper) || !equals(event.getEntity()) || !event.getDamageCause().is("FALL")) {
+                if (!(event.entity() instanceof PlayerWrapper) || !equals(event.entity()) || !event.damageCause().is("FALL")) {
                     return false;
                 }
                 event.cancelled(true);
@@ -357,7 +357,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
             setVelocity(velocity);
 
             EventManager.getDefaultEventManager().registerOneTime(SEntityDamageEvent.class, event -> {
-                if (!(event.getEntity() instanceof PlayerWrapper) || !equals(event.getEntity()) || !event.getDamageCause().is("FALL")) {
+                if (!(event.entity() instanceof PlayerWrapper) || !equals(event.entity()) || !event.damageCause().is("FALL")) {
                     return false;
                 }
                 event.cancelled(true);

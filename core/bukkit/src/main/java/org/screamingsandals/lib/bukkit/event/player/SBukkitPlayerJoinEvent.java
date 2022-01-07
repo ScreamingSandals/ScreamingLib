@@ -20,6 +20,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -30,6 +31,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -43,7 +45,7 @@ public class SBukkitPlayerJoinEvent implements SPlayerJoinEvent {
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -52,21 +54,21 @@ public class SBukkitPlayerJoinEvent implements SPlayerJoinEvent {
 
     @Override
     @Nullable
-    public Component getJoinMessage() {
+    public Component joinMessage() {
         return ComponentObjectLink.processGetter(event, "joinMessage", event::getJoinMessage);
     }
 
     @Override
-    public void setJoinMessage(@Nullable Component joinMessage) {
+    public void joinMessage(@Nullable Component joinMessage) {
         ComponentObjectLink.processSetter(event, "joinMessage", event::setJoinMessage, joinMessage);
     }
 
     @Override
-    public void setJoinMessage(@Nullable ComponentLike joinMessage) {
+    public void joinMessage(@Nullable ComponentLike joinMessage) {
         if (joinMessage instanceof SenderMessage) {
-            setJoinMessage(((SenderMessage) joinMessage).asComponent(getPlayer()));
+            joinMessage(((SenderMessage) joinMessage).asComponent(player()));
         } else {
-            setJoinMessage(joinMessage != null ? joinMessage.asComponent() : null);
+            joinMessage(joinMessage != null ? joinMessage.asComponent() : null);
         }
     }
 }

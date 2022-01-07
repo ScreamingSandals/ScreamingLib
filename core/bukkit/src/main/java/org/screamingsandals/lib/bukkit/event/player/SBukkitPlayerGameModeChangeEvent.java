@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -24,6 +26,7 @@ import org.screamingsandals.lib.event.player.SPlayerGameModeChangeEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -38,7 +41,7 @@ public class SBukkitPlayerGameModeChangeEvent implements SPlayerGameModeChangeEv
     private GameModeHolder gameMode;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -46,7 +49,7 @@ public class SBukkitPlayerGameModeChangeEvent implements SPlayerGameModeChangeEv
     }
 
     @Override
-    public GameModeHolder getGameMode() {
+    public GameModeHolder gameMode() {
         if (gameMode == null) {
             gameMode = GameModeHolder.of(event.getNewGameMode());
         }

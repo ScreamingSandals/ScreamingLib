@@ -21,13 +21,13 @@ import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SEntityRegainHealthEvent extends SCancellableEvent, PlatformEventWrapper {
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    RegainReason getRegainReason();
+    RegainReason remainingReason();
 
-    double getAmount();
+    double amount();
 
-    void setAmount(double amount);
+    void amount(double amount);
 
     /**
      * An enum to specify the type of health regaining that is occurring

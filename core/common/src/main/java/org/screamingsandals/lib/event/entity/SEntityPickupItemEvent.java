@@ -23,9 +23,9 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SEntityPickupItemEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    EntityItem getItem();
+    EntityItem item();
 
-    int getRemaining();
+    int remaining();
 }

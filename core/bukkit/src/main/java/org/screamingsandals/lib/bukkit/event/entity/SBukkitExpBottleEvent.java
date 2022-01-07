@@ -25,27 +25,27 @@ public class SBukkitExpBottleEvent extends SBukkitProjectileHitEvent implements 
     }
 
     @Override
-    public int getExp() {
-        return getEvent().getExperience();
+    public int exp() {
+        return event().getExperience();
     }
 
     @Override
-    public void setExp(int exp) {
-        getEvent().setExperience(exp);
+    public void exp(int exp) {
+        event().setExperience(exp);
     }
 
     @Override
-    public boolean isShowEffect() {
-        return getEvent().getShowEffect();
+    public boolean showEffect() {
+        return event().getShowEffect();
     }
 
     @Override
-    public void setShowEffect(boolean showEffect) {
-        getEvent().setShowEffect(showEffect);
+    public void showEffect(boolean showEffect) {
+        event().setShowEffect(showEffect);
     }
 
     @Override
-    public ExpBottleEvent getEvent() {
-        return (ExpBottleEvent) super.getEvent();
+    public ExpBottleEvent event() {
+        return (ExpBottleEvent) super.event();
     }
 }

@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.damage.DamageCauseHolder;
 import org.screamingsandals.lib.event.entity.SEntityDamageEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -41,7 +44,7 @@ public class SBukkitEntityDamageEvent implements SEntityDamageEvent, BukkitCance
     private DamageCauseHolder damageCause;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -49,7 +52,7 @@ public class SBukkitEntityDamageEvent implements SEntityDamageEvent, BukkitCance
     }
 
     @Override
-    public DamageCauseHolder getDamageCause() {
+    public DamageCauseHolder damageCause() {
         if (damageCause == null) {
             damageCause = DamageCauseHolder.of(event.getCause());
         }
@@ -57,12 +60,12 @@ public class SBukkitEntityDamageEvent implements SEntityDamageEvent, BukkitCance
     }
 
     @Override
-    public double getDamage() {
+    public double damage() {
         return event.getDamage();
     }
 
     @Override
-    public void setDamage(double damage) {
+    public void damage(double damage) {
         event.setDamage(damage);
     }
 }

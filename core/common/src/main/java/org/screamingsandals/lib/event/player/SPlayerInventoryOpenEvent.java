@@ -22,7 +22,7 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SPlayerInventoryOpenEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    Container getTopInventory();
+    Container topInventory();
 
-    Container getBottomInventory();
+    Container bottomInventory();
 }

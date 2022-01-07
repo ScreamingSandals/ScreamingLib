@@ -33,25 +33,25 @@ import java.util.List;
 public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
     @Nullable
-    ItemView getItem();
+    ItemView item();
 
-    Action getAction();
-
-    @Nullable
-    BlockHolder getBlockClicked();
-
-    BlockFace getBlockFace();
-
-    Result getUseClickedBlock();
-
-    void setUseClickedBlock(Result useClickedBlock);
-
-    Result getUseItemInHand();
-
-    void setUseItemInHand(Result useItemInHand);
+    Action action();
 
     @Nullable
-    EquipmentSlotHolder getHand();
+    BlockHolder clickedBlock();
+
+    BlockFace blockFace();
+
+    Result useClickedBlock();
+
+    void useClickedBlock(Result useClickedBlock);
+
+    Result useItemInHand();
+
+    void useItemInHand(Result useItemInHand);
+
+    @Nullable
+    EquipmentSlotHolder hand();
 
     /**
      * Sets the cancellation state of this event. A canceled event will not be
@@ -65,8 +65,8 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
      */
     @Override
     default void cancelled(boolean cancel) {
-        setUseClickedBlock(cancel ? SEvent.Result.DENY : getUseClickedBlock() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : getUseClickedBlock());
-        setUseItemInHand(cancel ? SEvent.Result.DENY : getUseItemInHand() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : getUseItemInHand());
+        useClickedBlock(cancel ? SEvent.Result.DENY : useClickedBlock() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : useClickedBlock());
+        useItemInHand(cancel ? SEvent.Result.DENY : useItemInHand() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : useItemInHand());
     }
 
     /**
@@ -75,7 +75,7 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
      * @return boolean true if it did
      */
     default boolean hasBlock() {
-        return getBlockClicked() != null;
+        return clickedBlock() != null;
     }
 
     /**
@@ -84,7 +84,7 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
      * @return boolean true if it did
      */
     default boolean hasItem() {
-        return getItem() != null;
+        return item() != null;
     }
 
     /**
@@ -94,12 +94,12 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
      * @return Material the material of the item used
      */
     @NotNull
-    default ItemTypeHolder getMaterial() {
+    default ItemTypeHolder material() {
         if (!hasItem()) {
             return ItemTypeHolder.air();
         }
 
-        return getItem().getMaterial();
+        return item().getMaterial();
     }
 
     /**
@@ -115,7 +115,7 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
     @Deprecated
     @Override
     default boolean cancelled() {
-        return getUseClickedBlock() == Result.DENY;
+        return useClickedBlock() == Result.DENY;
     }
 
     // TODO: holder?

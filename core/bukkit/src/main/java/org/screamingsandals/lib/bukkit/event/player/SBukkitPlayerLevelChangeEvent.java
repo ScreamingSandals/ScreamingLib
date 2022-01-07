@@ -17,11 +17,14 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerLevelChangeEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -35,7 +38,7 @@ public class SBukkitPlayerLevelChangeEvent implements SPlayerLevelChangeEvent {
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -43,12 +46,12 @@ public class SBukkitPlayerLevelChangeEvent implements SPlayerLevelChangeEvent {
     }
 
     @Override
-    public int getOldLevel() {
+    public int oldLevel() {
         return event.getOldLevel();
     }
 
     @Override
-    public int getNewLevel() {
+    public int newLevel() {
         return event.getNewLevel();
     }
 }

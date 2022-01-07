@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.chunk;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
@@ -24,6 +26,7 @@ import org.screamingsandals.lib.bukkit.world.chunk.BukkitChunkHolder;
 import org.screamingsandals.lib.event.chunk.SChunkUnloadEvent;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -37,7 +40,7 @@ public class SBukkitChunkUnloadEvent implements SChunkUnloadEvent, NoAutoCancell
     private ChunkHolder cachedChunk;
 
     @Override
-    public ChunkHolder getChunk() {
+    public ChunkHolder chunk() {
         if (cachedChunk == null) {
             cachedChunk = new BukkitChunkHolder(event.getChunk());
         }
@@ -45,12 +48,12 @@ public class SBukkitChunkUnloadEvent implements SChunkUnloadEvent, NoAutoCancell
     }
 
     @Override
-    public boolean isSaveChunk() {
+    public boolean saveChunk() {
         return event.isSaveChunk();
     }
 
     @Override
-    public void setSaveChunk(boolean saveChunk) {
+    public void saveChunk(boolean saveChunk) {
         event.setSaveChunk(saveChunk);
     }
 

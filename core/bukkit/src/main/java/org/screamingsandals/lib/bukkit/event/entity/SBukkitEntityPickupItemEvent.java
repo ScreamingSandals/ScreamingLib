@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -28,6 +30,7 @@ import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityPickupItemEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -42,7 +45,7 @@ public class SBukkitEntityPickupItemEvent implements SEntityPickupItemEvent, Buk
     private EntityItem item;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -50,7 +53,7 @@ public class SBukkitEntityPickupItemEvent implements SEntityPickupItemEvent, Buk
     }
 
     @Override
-    public EntityItem getItem() {
+    public EntityItem item() {
         if (item == null) {
             item = new BukkitEntityItem(event.getItem());
         }
@@ -58,7 +61,7 @@ public class SBukkitEntityPickupItemEvent implements SEntityPickupItemEvent, Buk
     }
 
     @Override
-    public int getRemaining() {
+    public int remaining() {
         return event.getRemaining();
     }
 }

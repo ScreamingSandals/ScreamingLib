@@ -22,5 +22,5 @@ import java.util.Locale;
 
 public interface SPlayerLocaleChangeEvent extends SPlayerEvent, PlatformEventWrapper {
 
-    Locale getLocale();
+    Locale locale();
 }

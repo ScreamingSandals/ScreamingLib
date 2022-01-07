@@ -17,12 +17,15 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerAnimationEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -37,7 +40,7 @@ public class SBukkitPlayerAnimationEvent implements SPlayerAnimationEvent, Bukki
     private PlayerAnimationType animationType;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -45,7 +48,7 @@ public class SBukkitPlayerAnimationEvent implements SPlayerAnimationEvent, Bukki
     }
 
     @Override
-    public PlayerAnimationType getAnimationType() {
+    public PlayerAnimationType animationType() {
         if (animationType == null) {
             animationType = PlayerAnimationType.convert(event.getAnimationType().name());
         }

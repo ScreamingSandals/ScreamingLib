@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.EntityPlaceEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -32,6 +34,7 @@ import org.screamingsandals.lib.event.entity.SEntityPlaceEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.BlockFace;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -49,7 +52,7 @@ public class SBukkitEntityPlaceEvent implements SEntityPlaceEvent, BukkitCancell
     private BlockFace blockFace;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -58,7 +61,7 @@ public class SBukkitEntityPlaceEvent implements SEntityPlaceEvent, BukkitCancell
 
     @Override
     @Nullable
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (!playerCached) {
             if (event.getPlayer() != null) {
                 player = new BukkitEntityPlayer(event.getPlayer());
@@ -69,7 +72,7 @@ public class SBukkitEntityPlaceEvent implements SEntityPlaceEvent, BukkitCancell
     }
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -77,7 +80,7 @@ public class SBukkitEntityPlaceEvent implements SEntityPlaceEvent, BukkitCancell
     }
 
     @Override
-    public BlockFace getBlockFace() {
+    public BlockFace blockFace() {
         if (blockFace == null) {
             blockFace = BlockFace.valueOf(event.getBlockFace().name());
         }

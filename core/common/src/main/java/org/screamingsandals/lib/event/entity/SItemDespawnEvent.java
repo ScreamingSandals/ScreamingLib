@@ -22,7 +22,7 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.world.LocationHolder;
 
 public interface SItemDespawnEvent extends SCancellableEvent, PlatformEventWrapper {
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    LocationHolder getLocation();
+    LocationHolder location();
 }

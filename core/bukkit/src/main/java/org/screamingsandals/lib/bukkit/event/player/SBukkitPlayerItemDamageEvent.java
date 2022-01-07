@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -25,6 +27,7 @@ import org.screamingsandals.lib.event.player.SPlayerItemDamageEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -39,7 +42,7 @@ public class SBukkitPlayerItemDamageEvent implements SPlayerItemDamageEvent, Buk
     private Item item;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -47,7 +50,7 @@ public class SBukkitPlayerItemDamageEvent implements SPlayerItemDamageEvent, Buk
     }
 
     @Override
-    public Item getItem() {
+    public Item item() {
         if (item == null) {
             item = new BukkitItem(event.getItem());
         }
@@ -55,12 +58,12 @@ public class SBukkitPlayerItemDamageEvent implements SPlayerItemDamageEvent, Buk
     }
 
     @Override
-    public int getDamage() {
+    public int damage() {
         return event.getDamage();
     }
 
     @Override
-    public void setDamage(int damage) {
+    public void damage(int damage) {
         event.setDamage(damage);
     }
 }

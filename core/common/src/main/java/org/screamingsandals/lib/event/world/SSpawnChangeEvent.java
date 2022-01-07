@@ -23,9 +23,9 @@ import org.screamingsandals.lib.world.WorldHolder;
 
 public interface SSpawnChangeEvent extends SEvent, PlatformEventWrapper {
 
-    WorldHolder getWorld();
+    WorldHolder world();
 
-    LocationHolder getOldLocation();
+    LocationHolder oldLocation();
 
-    LocationHolder getNewLocation();
+    LocationHolder newLocation();
 }

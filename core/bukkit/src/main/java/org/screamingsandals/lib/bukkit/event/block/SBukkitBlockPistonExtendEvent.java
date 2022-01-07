@@ -35,9 +35,9 @@ public class SBukkitBlockPistonExtendEvent extends SBukkitBlockPistonEvent imple
     }
 
     @Override
-    public Collection<BlockHolder> getPushedBlocks() {
+    public Collection<BlockHolder> pushedBlocks() {
         if (pushedBlocks == null) {
-            pushedBlocks = new CollectionLinkedToCollection<>(((BlockPistonExtendEvent) getEvent()).getBlocks(), o -> o.as(Block.class), BlockMapper::wrapBlock);
+            pushedBlocks = new CollectionLinkedToCollection<>(((BlockPistonExtendEvent) event()).getBlocks(), o -> o.as(Block.class), BlockMapper::wrapBlock);
         }
         return pushedBlocks;
     }

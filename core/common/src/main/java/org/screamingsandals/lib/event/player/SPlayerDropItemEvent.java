@@ -22,5 +22,5 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SPlayerDropItemEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    EntityItem getItemDrop();
+    EntityItem itemDrop();
 }

@@ -18,7 +18,7 @@ package org.screamingsandals.lib.event.entity;
 
 public interface SCreatureSpawnEvent extends SEntitySpawnEvent {
 
-    SpawnReason getSpawnReason();
+    SpawnReason spawnReason();
 
     /**
      * An enum to specify the type of spawning

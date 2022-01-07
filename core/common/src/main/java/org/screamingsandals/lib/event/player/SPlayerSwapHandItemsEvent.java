@@ -23,12 +23,12 @@ import org.screamingsandals.lib.item.Item;
 public interface SPlayerSwapHandItemsEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
     @Nullable
-    Item getMainHandItem();
+    Item mainHandItem();
 
-    void setMainHandItem(@Nullable Item mainHandItem);
+    void mainHandItem(@Nullable Item mainHandItem);
 
     @Nullable
-    Item getOffHandItem();
+    Item offHandItem();
 
-    void setOffHandItem(@Nullable Item offHandItem);
+    void offHandItem(@Nullable Item offHandItem);
 }

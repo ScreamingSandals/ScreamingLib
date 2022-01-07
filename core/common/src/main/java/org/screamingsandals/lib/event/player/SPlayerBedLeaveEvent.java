@@ -22,9 +22,9 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SPlayerBedLeaveEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    BlockHolder getBed();
+    BlockHolder bed();
 
-    boolean isBedSpawn();
+    boolean bedSpawn();
 
-    void setBedSpawn(boolean bedSpawn);
+    void bedSpawn(boolean bedSpawn);
 }

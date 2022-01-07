@@ -22,5 +22,5 @@ import org.screamingsandals.lib.world.WorldHolder;
 
 public interface SWorldLoadEvent extends SEvent, PlatformEventWrapper {
 
-    WorldHolder getWorld();
+    WorldHolder world();
 }

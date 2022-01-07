@@ -21,5 +21,5 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SEntityDamageByBlockEvent extends SEntityDamageEvent {
     @Nullable
-    BlockHolder getDamager();
+    BlockHolder damager();
 }

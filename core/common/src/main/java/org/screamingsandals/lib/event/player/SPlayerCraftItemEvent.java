@@ -27,20 +27,20 @@ public interface SPlayerCraftItemEvent extends SPlayerInventoryClickEvent {
     @Nullable
     @Deprecated
     default Container getClickedInventoryContainer() {
-        return getClickedInventory();
+        return clickedInventory();
     }
 
     // That's the same thing like getInventory()
     @Deprecated
     default Container getCraftInventory() {
-        return getInventory();
+        return inventory();
     }
 
-    Recipe getRecipe();
+    Recipe recipe();
 
     // TODO: we should create proper Recipe API
     interface Recipe extends Wrapper, RawValueHolder {
 
-        Item getResult();
+        Item result();
     }
 }

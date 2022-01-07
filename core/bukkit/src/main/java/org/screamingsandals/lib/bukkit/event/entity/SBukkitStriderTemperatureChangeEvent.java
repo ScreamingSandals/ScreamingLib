@@ -17,11 +17,14 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.StriderTemperatureChangeEvent;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SStriderTemperatureChangeEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -35,7 +38,7 @@ public class SBukkitStriderTemperatureChangeEvent implements SStriderTemperature
     private EntityLiving entity;
 
     @Override
-    public EntityLiving getEntity() {
+    public EntityLiving entity() {
         if (entity == null) {
             entity = EntityMapper.<EntityLiving>wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -43,7 +46,7 @@ public class SBukkitStriderTemperatureChangeEvent implements SStriderTemperature
     }
 
     @Override
-    public boolean isShivering() {
+    public boolean shivering() {
         return event.isShivering();
     }
 }

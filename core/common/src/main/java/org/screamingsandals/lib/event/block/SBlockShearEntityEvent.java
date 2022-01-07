@@ -23,9 +23,10 @@ import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SBlockShearEntityEvent extends SCancellableEvent, PlatformEventWrapper {
-    BlockHolder getBlock();
 
-    EntityBasic getEntity();
+    BlockHolder block();
 
-    Item getTool();
+    EntityBasic entity();
+
+    Item tool();
 }

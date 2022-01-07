@@ -24,7 +24,7 @@ import org.screamingsandals.lib.item.Item;
 public interface SPlayerItemConsumeEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
     @Nullable
-    Item getItem();
+    Item item();
 
-    void setItem(@Nullable Item item);
+    void item(@Nullable Item item);
 }

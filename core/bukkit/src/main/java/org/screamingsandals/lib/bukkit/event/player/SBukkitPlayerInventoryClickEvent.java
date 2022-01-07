@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -34,6 +36,7 @@ import org.screamingsandals.lib.utils.ClickType;
 import org.screamingsandals.lib.utils.InventoryAction;
 import org.screamingsandals.lib.utils.SlotType;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -53,7 +56,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     private SlotType slotType;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer((Player) event.getWhoClicked());
         }
@@ -62,7 +65,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
 
     @Override
     // Mutable in Bukkit API
-    public @Nullable Item getCursorItem() {
+    public @Nullable Item cursorItem() {
         if (event.getCursor() == null) {
             return null;
         }
@@ -70,7 +73,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     }
 
     @Override
-    public @Nullable Item getCurrentItem() {
+    public @Nullable Item currentItem() {
         if (event.getCurrentItem() == null) {
             return null;
         }
@@ -78,11 +81,11 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     }
 
     @Override
-    public void setCurrentItem(Item currentItem) {
+    public void currentItem(Item currentItem) {
         event.setCurrentItem(currentItem == null ? null : currentItem.as(ItemStack.class));
     }
 
-    public @Nullable Container getClickedInventory() {
+    public @Nullable Container clickedInventory() {
         if (!clickedInventoryCached) {
             if (event.getClickedInventory() != null) {
                 clickedInventory = ContainerFactory.wrapContainer(event.getClickedInventory()).orElseThrow();
@@ -101,7 +104,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     }
 
     @Override
-    public Container getInventory() {
+    public Container inventory() {
         if (inventory == null) {
             inventory = ContainerFactory.wrapContainer(event.getInventory()).orElseThrow();
         }
@@ -109,7 +112,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     }
 
     @Override
-    public InventoryAction getAction() {
+    public InventoryAction action() {
         if (action == null) {
             action = InventoryAction.convert(event.getAction().name());
         }
@@ -117,17 +120,17 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     }
 
     @Override
-    public int getHotbarButton() {
+    public int hotbarButton() {
         return event.getHotbarButton();
     }
 
     @Override
-    public int getSlot() {
+    public int slot() {
         return event.getSlot();
     }
 
     @Override
-    public SlotType getSlotType() {
+    public SlotType slotType() {
         if (slotType == null) {
             slotType = SlotType.convert(event.getSlotType().name());
         }
@@ -135,17 +138,17 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     }
 
     @Override
-    public int getRawSlot() {
+    public int rawSlot() {
         return event.getRawSlot();
     }
 
     @Override
-    public Result getResult() {
+    public Result result() {
         return Result.convert(event.getResult().name());
     }
 
     @Override
-    public void setResult(Result result) {
+    public void result(Result result) {
         event.setResult(Event.Result.valueOf(event.getResult().name()));
     }
 }

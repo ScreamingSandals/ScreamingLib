@@ -22,9 +22,9 @@ import org.screamingsandals.lib.event.SEvent;
 
 public interface SEntityUnleashEvent extends SEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    UnleashReason getReason();
+    UnleashReason reason();
 
     // TODO: holder?
     enum UnleashReason {

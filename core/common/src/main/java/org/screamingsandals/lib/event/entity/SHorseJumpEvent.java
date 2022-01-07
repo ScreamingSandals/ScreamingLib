@@ -22,10 +22,10 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SHorseJumpEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    float getPower();
+    float power();
 
     @Deprecated
-    void setPower(float power);
+    void power(float power);
 }

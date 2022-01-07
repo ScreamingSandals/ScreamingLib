@@ -20,7 +20,7 @@ import org.screamingsandals.lib.event.PlatformEventWrapper;
 
 public interface SPlayerExpChangeEvent extends SPlayerEvent, PlatformEventWrapper {
 
-    int getExp();
+    int exp();
 
-    void setExp(int exp);
+    void exp(int exp);
 }

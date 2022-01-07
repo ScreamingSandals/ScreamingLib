@@ -34,9 +34,9 @@ public class SBukkitBlockPistonRetractEvent extends SBukkitBlockPistonEvent impl
     }
 
     @Override
-    public Collection<BlockHolder> getPushedBlocks() {
+    public Collection<BlockHolder> pushedBlocks() {
         if (pushedBlocks == null) {
-            pushedBlocks = new CollectionLinkedToCollection<>(((BlockPistonRetractEvent) getEvent()).getBlocks(), o -> o.as(Block.class), BlockMapper::wrapBlock);
+            pushedBlocks = new CollectionLinkedToCollection<>(((BlockPistonRetractEvent) event()).getBlocks(), o -> o.as(Block.class), BlockMapper::wrapBlock);
         }
         return pushedBlocks;
     }

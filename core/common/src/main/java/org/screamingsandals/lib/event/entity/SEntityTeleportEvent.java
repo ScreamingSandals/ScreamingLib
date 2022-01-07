@@ -22,13 +22,13 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.world.LocationHolder;
 
 public interface SEntityTeleportEvent extends SCancellableEvent, PlatformEventWrapper {
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    LocationHolder getFrom();
+    LocationHolder from();
 
-    void setFrom(LocationHolder from);
+    void from(LocationHolder from);
 
-    LocationHolder getTo();
+    LocationHolder to();
 
-    void setTo(LocationHolder to);
+    void to(LocationHolder to);
 }

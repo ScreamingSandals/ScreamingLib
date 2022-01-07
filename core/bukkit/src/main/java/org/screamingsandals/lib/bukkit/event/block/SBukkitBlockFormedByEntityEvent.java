@@ -21,6 +21,9 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.block.SBlockFormedByEntityEvent;
 
+import lombok.experimental.Accessors;
+
+@Accessors(fluent = true)
 public class SBukkitBlockFormedByEntityEvent extends SBukkitBlockFormEvent implements SBlockFormedByEntityEvent {
     // Internal cache
     private EntityBasic producer;
@@ -30,9 +33,9 @@ public class SBukkitBlockFormedByEntityEvent extends SBukkitBlockFormEvent imple
     }
 
     @Override
-    public EntityBasic getProducer() {
+    public EntityBasic producer() {
         if (producer == null) {
-            producer = EntityMapper.wrapEntity(((EntityBlockFormEvent) getEvent()).getEntity()).orElseThrow();
+            producer = EntityMapper.wrapEntity(((EntityBlockFormEvent) event()).getEntity()).orElseThrow();
         }
         return producer;
     }

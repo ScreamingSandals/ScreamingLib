@@ -24,15 +24,15 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SBlockIgniteEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    IgniteCause getIgniteCause();
-
-    @Nullable
-    BlockHolder getIgnitingBlock();
+    IgniteCause igniteCause();
 
     @Nullable
-    EntityBasic getIgnitingEntity();
+    BlockHolder ignitingBlock();
+
+    @Nullable
+    EntityBasic ignitingEntity();
 
     // TODO: holder?
     enum IgniteCause {

@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -28,6 +30,7 @@ import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -44,7 +47,7 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     private EquipmentSlotHolder hand;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -52,7 +55,7 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     }
 
     @Override
-    public EntityBasic getWhat() {
+    public EntityBasic entity() {
         if (what == null) {
             what = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -60,7 +63,7 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     }
 
     @Override
-    public Item getItem() {
+    public Item item() {
         if (item == null) {
             item = new BukkitItem(event.getItem());
         }
@@ -68,7 +71,7 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     }
 
     @Override
-    public EquipmentSlotHolder getHand() {
+    public EquipmentSlotHolder hand() {
         if (hand == null) {
             hand = EquipmentSlotHolder.of(event.getHand());
         }

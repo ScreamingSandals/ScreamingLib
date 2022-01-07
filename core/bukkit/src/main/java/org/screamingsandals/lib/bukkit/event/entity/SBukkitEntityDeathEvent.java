@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
@@ -33,6 +35,7 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -47,7 +50,7 @@ public class SBukkitEntityDeathEvent implements SEntityDeathEvent, NoAutoCancell
     private Collection<Item> drops;
 
     @Override
-    public Collection<Item> getDrops() {
+    public Collection<Item> drops() {
         if (drops == null) {
             drops = new CollectionLinkedToCollection<>(
                     event.getDrops(),
@@ -59,7 +62,7 @@ public class SBukkitEntityDeathEvent implements SEntityDeathEvent, NoAutoCancell
     }
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -67,12 +70,12 @@ public class SBukkitEntityDeathEvent implements SEntityDeathEvent, NoAutoCancell
     }
 
     @Override
-    public int getDropExp() {
+    public int dropExp() {
         return event.getDroppedExp();
     }
 
     @Override
-    public void setDropExp(int dropExp) {
+    public void dropExp(int dropExp) {
         event.setDroppedExp(dropExp);
     }
 

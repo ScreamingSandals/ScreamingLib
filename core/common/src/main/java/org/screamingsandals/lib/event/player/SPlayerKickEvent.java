@@ -23,15 +23,15 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SPlayerKickEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    Component getLeaveMessage();
+    Component leaveMessage();
 
-    void setLeaveMessage(Component leaveMessage);
+    void leaveMessage(Component leaveMessage);
 
-    void setLeaveMessage(ComponentLike leaveMessage);
+    void leaveMessage(ComponentLike leaveMessage);
 
-    Component getKickReason();
+    Component kickReason();
 
-    void setKickReason(Component kickReason);
+    void kickReason(Component kickReason);
 
-    void setKickReason(ComponentLike kickReason);
+    void kickReason(ComponentLike kickReason);
 }

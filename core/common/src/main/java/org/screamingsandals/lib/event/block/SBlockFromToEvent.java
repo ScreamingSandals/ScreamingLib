@@ -23,9 +23,9 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SBlockFromToEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder getSourceBlock();
+    BlockHolder sourceBlock();
 
-    BlockHolder getFacedBlock();
+    BlockHolder facedBlock();
 
-    BlockFace getFace();
+    BlockFace face();
 }

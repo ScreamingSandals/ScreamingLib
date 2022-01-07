@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockMultiPlaceEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -39,7 +41,7 @@ import org.screamingsandals.lib.utils.ImmutableCollectionLinkedToCollection;
 import java.util.Collection;
 import java.util.List;
 
-
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -58,7 +60,7 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
     private Item itemInHand;
 
     @Override
-    public Collection<BlockStateHolder> getReplacedBlockStates() {
+    public Collection<BlockStateHolder> replacedBlockStates() {
         if (replacedBlockStates == null) {
             if (event instanceof BlockMultiPlaceEvent) {
                 replacedBlockStates = new ImmutableCollectionLinkedToCollection<>(
@@ -67,14 +69,14 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
                         blockState -> BlockStateMapper.wrapBlockState(blockState).orElseThrow()
                 );
             } else {
-                replacedBlockStates = List.of(getReplacedBlockState());
+                replacedBlockStates = List.of(replacedBlockState());
             }
         }
         return replacedBlockStates;
     }
 
     @Override
-    public PlayerWrapper.Hand getPlayerHand() {
+    public PlayerWrapper.Hand playerHand() {
         if (playerHand == null) {
             playerHand = PlayerMapper.wrapHand(event.getHand());
         }
@@ -82,7 +84,7 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
     }
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -90,7 +92,7 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
     }
 
     @Override
-    public BlockStateHolder getReplacedBlockState() {
+    public BlockStateHolder replacedBlockState() {
         if (replacedBlockState == null) {
             replacedBlockState = BlockStateMapper.wrapBlockState(event.getBlockReplacedState()).orElseThrow();
         }
@@ -98,7 +100,7 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
     }
 
     @Override
-    public Item getItemInHand() {
+    public Item itemInHand() {
         if (itemInHand == null) {
             itemInHand = new BukkitItem(event.getItemInHand());
         }
@@ -106,7 +108,7 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
     }
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

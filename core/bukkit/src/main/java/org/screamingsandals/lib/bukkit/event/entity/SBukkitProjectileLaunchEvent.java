@@ -31,15 +31,15 @@ public class SBukkitProjectileLaunchEvent extends SBukkitEntitySpawnEvent implem
     private ProjectileShooter shooter;
 
     @Override
-    public EntityProjectile getEntity() {
-        return (EntityProjectile) super.getEntity();
+    public EntityProjectile entity() {
+        return (EntityProjectile) super.entity();
     }
 
     @Override
     @Nullable
-    public ProjectileShooter getShooter() {
+    public ProjectileShooter shooter() {
         if (shooter == null) {
-            shooter = getEntity().getShooter();
+            shooter = entity().getShooter();
         }
         return shooter;
     }

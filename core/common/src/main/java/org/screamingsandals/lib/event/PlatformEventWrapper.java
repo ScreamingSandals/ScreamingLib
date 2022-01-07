@@ -26,11 +26,11 @@ public interface PlatformEventWrapper extends Wrapper, RawValueHolder {
     @Override
     @ApiStatus.Experimental
     default Object raw() {
-        return getEvent();
+        return event();
     }
 
     @ApiStatus.Experimental
-    Object getEvent();
+    Object event();
 
     /**
      * {@inheritDoc}
@@ -39,8 +39,8 @@ public interface PlatformEventWrapper extends Wrapper, RawValueHolder {
     @Override
     @ApiStatus.Experimental
     default <T> T as(Class<T> type) {
-        if (type.isInstance(getEvent())) {
-            return (T) getEvent();
+        if (type.isInstance(event())) {
+            return (T) event();
         }
         throw new UnsupportedOperationException("Can't unwrap wrapper to " + type.getName());
     }

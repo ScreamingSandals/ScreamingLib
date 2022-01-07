@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.block.Block;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -34,6 +36,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -49,7 +52,7 @@ public class SBukkitEntityExplodeEvent implements SEntityExplodeEvent, BukkitCan
     private Collection<BlockHolder> blocks;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -57,7 +60,7 @@ public class SBukkitEntityExplodeEvent implements SEntityExplodeEvent, BukkitCan
     }
 
     @Override
-    public LocationHolder getLocation() {
+    public LocationHolder location() {
         if (location == null) {
             location = LocationMapper.wrapLocation(event.getLocation());
         }
@@ -65,7 +68,7 @@ public class SBukkitEntityExplodeEvent implements SEntityExplodeEvent, BukkitCan
     }
 
     @Override
-    public Collection<BlockHolder> getBlocks() {
+    public Collection<BlockHolder> blocks() {
         if (blocks == null) {
             blocks = new CollectionLinkedToCollection<>(event.blockList(), o -> o.as(Block.class), BlockMapper::wrapBlock);
         }
@@ -73,12 +76,12 @@ public class SBukkitEntityExplodeEvent implements SEntityExplodeEvent, BukkitCan
     }
 
     @Override
-    public float getYield() {
+    public float yield() {
         return event.getYield();
     }
 
     @Override
-    public void setYield(float yield) {
+    public void yield(float yield) {
         event.setYield(yield);
     }
 }

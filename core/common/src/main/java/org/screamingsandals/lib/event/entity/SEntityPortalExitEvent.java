@@ -24,19 +24,19 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 public interface SEntityPortalExitEvent extends SEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    LocationHolder getFrom();
+    LocationHolder from();
 
-    void setFrom(LocationHolder location);
+    void from(LocationHolder location);
 
-    LocationHolder getTo();
+    LocationHolder to();
 
-    void setTo(LocationHolder location);
+    void to(LocationHolder location);
 
-    Vector3D getBefore();
+    Vector3D before();
 
-    Vector3D getAfter();
+    Vector3D after();
 
-    void setAfter(Vector3D after);
+    void after(Vector3D after);
 }

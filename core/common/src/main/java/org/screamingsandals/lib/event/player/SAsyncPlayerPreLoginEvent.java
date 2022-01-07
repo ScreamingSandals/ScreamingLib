@@ -18,6 +18,7 @@ package org.screamingsandals.lib.event.player;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SAsyncEvent;
 
@@ -26,27 +27,76 @@ import java.util.UUID;
 
 public interface SAsyncPlayerPreLoginEvent extends SAsyncEvent, PlatformEventWrapper {
 
-    UUID getUuid();
+    /**
+     * Gets the UUID
+     *
+     * @return {@link UUID} of the player.
+     */
+    UUID uuid();
 
-    InetAddress getAddress();
+    /**
+     * Gets the address
+     *
+     * @return {@link InetAddress} of the player.
+     */
+    InetAddress address();
 
-    String getName();
+    /**
+     * Gets the name
+     *
+     * @return name of the player
+     */
+    String name();
 
-    default void setName(String name) {
+    /**
+     * Sets the new name of the player
+     *
+     * @param name name to set
+     */
+    default void name(@NotNull String name) {
         throw new UnsupportedOperationException("Name is not changeable on this platform!");
     }
 
-    Result getResult();
+    /**
+     * Gets the result of the event
+     *
+     * @return {@link Result}
+     */
+    Result result();
 
-    void setResult(Result result);
+    /**
+     * Sets new result for this event
+     *
+     * @param result new result
+     */
+    void result(@NotNull Result result);
 
-    Component getMessage();
+    /**
+     * Gets the message that is displayed if the {@link Result} is not {@link Result#ALLOWED}.
+     *
+     * @return {@link Component}
+     */
+    Component message();
 
-    void setMessage(Component message);
+    /**
+     * Sets new message that is displayed if the {@link Result} is not {@link Result#ALLOWED}.
+     *
+     * @param message new message
+     */
+    void message(@NotNull Component message);
 
-    void setMessage(ComponentLike message);
+    /**
+     * Sets new message that is displayed if the {@link Result} is not {@link Result#ALLOWED}.
+     *
+     * @param message new message
+     */
+    void message(@NotNull ComponentLike message);
 
-    //from paper
+    /**
+     * Result of the join event.
+     * <p>
+     * NOTE: from Paper.
+     */
     enum Result {
         /**
          * The player is allowed to log in

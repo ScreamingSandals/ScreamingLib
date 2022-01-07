@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -24,6 +26,7 @@ import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerCommandPreprocessEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -34,21 +37,21 @@ public class SBukkitPlayerCommandPreprocessEvent implements SPlayerCommandPrepro
     private final PlayerCommandPreprocessEvent event;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         return new BukkitEntityPlayer(event.getPlayer());
     }
     @Override
-    public void setPlayer(PlayerWrapper player) {
+    public void player(PlayerWrapper player) {
         event.setPlayer(player.as(Player.class));
     }
 
     @Override
-    public String getCommand() {
+    public String command() {
         return event.getMessage();
     }
 
     @Override
-    public void setCommand(String command) {
+    public void command(String command) {
         event.setMessage(command);
     }
 }

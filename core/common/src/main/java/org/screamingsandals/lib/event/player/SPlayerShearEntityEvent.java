@@ -24,9 +24,9 @@ import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
 public interface SPlayerShearEntityEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    EntityBasic getWhat();
+    EntityBasic entity();
 
-    Item getItem();
+    Item item();
 
-    EquipmentSlotHolder getHand();
+    EquipmentSlotHolder hand();
 }

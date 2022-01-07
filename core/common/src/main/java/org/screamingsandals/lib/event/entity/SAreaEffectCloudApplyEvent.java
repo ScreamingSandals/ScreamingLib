@@ -23,7 +23,7 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 import java.util.Collection;
 
 public interface SAreaEffectCloudApplyEvent extends SCancellableEvent, PlatformEventWrapper {
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    Collection<EntityBasic> getAffectedEntities();
+    Collection<EntityBasic> affectedEntities();
 }

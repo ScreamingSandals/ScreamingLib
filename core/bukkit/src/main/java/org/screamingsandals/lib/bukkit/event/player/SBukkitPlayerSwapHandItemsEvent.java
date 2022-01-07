@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.event.player.SPlayerSwapHandItemsEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -40,7 +43,7 @@ public class SBukkitPlayerSwapHandItemsEvent implements SPlayerSwapHandItemsEven
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -49,23 +52,23 @@ public class SBukkitPlayerSwapHandItemsEvent implements SPlayerSwapHandItemsEven
 
     @Override
     @Nullable
-    public Item getMainHandItem() {
+    public Item mainHandItem() {
         return event.getMainHandItem() == null ? null : new BukkitItem(event.getMainHandItem());
     }
 
     @Override
-    public void setMainHandItem(@Nullable Item mainHandItem) {
+    public void mainHandItem(@Nullable Item mainHandItem) {
         event.setMainHandItem(mainHandItem == null ? null : mainHandItem.as(ItemStack.class));
     }
 
     @Override
     @Nullable
-    public Item getOffHandItem() {
+    public Item offHandItem() {
         return event.getOffHandItem() == null ? null : new BukkitItem(event.getOffHandItem());
     }
 
     @Override
-    public void setOffHandItem(@Nullable Item offHandItem) {
+    public void offHandItem(@Nullable Item offHandItem) {
         event.setOffHandItem(offHandItem == null ? null : offHandItem.as(ItemStack.class));
     }
 }

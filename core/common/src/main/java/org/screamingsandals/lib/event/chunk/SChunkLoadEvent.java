@@ -22,7 +22,7 @@ import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
 public interface SChunkLoadEvent extends SEvent, PlatformEventWrapper {
 
-    ChunkHolder getChunk();
+    ChunkHolder chunk();
 
-    boolean isNewChunk();
+    boolean newChunk();
 }

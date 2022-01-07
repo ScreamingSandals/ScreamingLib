@@ -22,10 +22,10 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SSheepDyeWoolEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
     //TODO: DyeColor holder
-    String getDyeColor();
+    String dyeColor();
 
-    void setDyeColor(String dyeColor);
+    void dyeColor(String dyeColor);
 }

@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.block.BlockState;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +34,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -48,7 +51,7 @@ public class SBukkitPlantGrowEvent implements SPlantGrowEvent, BukkitCancellable
     private boolean playerCached;
 
     @Override
-    public Collection<BlockStateHolder> getBlockStates() {
+    public Collection<BlockStateHolder> blockStates() {
         if (collection == null) {
             collection = new CollectionLinkedToCollection<>(event.getBlocks(), o -> o.as(BlockState.class), o -> BlockStateMapper.wrapBlockState(o).orElseThrow());
         }
@@ -64,7 +67,7 @@ public class SBukkitPlantGrowEvent implements SPlantGrowEvent, BukkitCancellable
     }
 
     @Override
-    public @Nullable PlayerWrapper getPlayer() {
+    public @Nullable PlayerWrapper player() {
         if (!playerCached) {
             if (event.getPlayer() != null) {
                 player = new BukkitEntityPlayer(event.getPlayer());
@@ -75,7 +78,7 @@ public class SBukkitPlantGrowEvent implements SPlantGrowEvent, BukkitCancellable
     }
 
     @Override
-    public boolean isBonemealed() {
+    public boolean boneMealed() {
         return event.isFromBonemeal();
     }
 }

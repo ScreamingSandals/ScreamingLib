@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerHarvestBlockEvent;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -31,6 +33,7 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -46,7 +49,7 @@ public class SBukkitPlayerHarvestBlockEvent implements SPlayerHarvestBlockEvent,
     private BlockHolder harvestedBlock;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -54,7 +57,7 @@ public class SBukkitPlayerHarvestBlockEvent implements SPlayerHarvestBlockEvent,
     }
 
     @Override
-    public Collection<Item> getItemsHarvested() {
+    public Collection<Item> itemsHarvested() {
         if (itemsHarvested == null) {
             itemsHarvested = new CollectionLinkedToCollection<>(
                     event.getItemsHarvested(),
@@ -66,7 +69,7 @@ public class SBukkitPlayerHarvestBlockEvent implements SPlayerHarvestBlockEvent,
     }
 
     @Override
-    public BlockHolder getHarvestedBlock() {
+    public BlockHolder harvestedBlock() {
         if (harvestedBlock == null) {
             harvestedBlock = BlockMapper.wrapBlock(event.getHarvestedBlock());
         }

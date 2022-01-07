@@ -24,19 +24,19 @@ import org.screamingsandals.lib.item.Item;
 
 public interface SEntityBreedEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    EntityBasic getMother();
+    EntityBasic mother();
 
-    EntityBasic getFather();
-
-    @Nullable
-    EntityBasic getBreeder();
+    EntityBasic father();
 
     @Nullable
-    Item getBredWith();
+    EntityBasic breeder();
 
-    int getExperience();
+    @Nullable
+    Item bredWith();
 
-    void setExperience(int experience);
+    int experience();
+
+    void experience(int experience);
 }

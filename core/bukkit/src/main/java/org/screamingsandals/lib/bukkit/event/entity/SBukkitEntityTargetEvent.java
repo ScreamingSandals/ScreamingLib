@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +27,7 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityTargetEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -39,7 +42,7 @@ public class SBukkitEntityTargetEvent implements SEntityTargetEvent, BukkitCance
     private TargetReason targetReason;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -48,7 +51,7 @@ public class SBukkitEntityTargetEvent implements SEntityTargetEvent, BukkitCance
 
     @Override
     @Nullable
-    public EntityBasic getTarget() {
+    public EntityBasic target() {
         if (event.getTarget() == null) {
             return null;
         }
@@ -57,12 +60,12 @@ public class SBukkitEntityTargetEvent implements SEntityTargetEvent, BukkitCance
     }
 
     @Override
-    public void setTarget(@Nullable EntityBasic target) {
+    public void target(@Nullable EntityBasic target) {
         event.setTarget(target == null ? null : target.as(Entity.class));
     }
 
     @Override
-    public TargetReason getTargetReason() {
+    public TargetReason targetReason() {
         if (targetReason == null) {
             targetReason = TargetReason.valueOf(event.getReason().name());
         }

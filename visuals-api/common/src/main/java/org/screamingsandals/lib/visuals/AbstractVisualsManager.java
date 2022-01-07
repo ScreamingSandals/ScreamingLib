@@ -62,12 +62,12 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
 
     @OnEvent
     public void onLeave(SPlayerLeaveEvent event) {
-        coolDownMap.remove(event.getPlayer().getUuid());
+        coolDownMap.remove(event.player().getUuid());
         if (activeVisuals.isEmpty()) {
             return;
         }
 
-        final var player = event.getPlayer();
+        final var player = event.player();
         final var iterator = activeVisuals.entrySet().iterator();
         while (iterator.hasNext()) {
             final var visual = iterator.next().getValue();
@@ -87,9 +87,9 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
             return;
         }
 
-        final var player = event.getPlayer();
-        final var newLocation = event.getNewLocation();
-        final var oldLocation = event.getCurrentLocation();
+        final var player = event.player();
+        final var newLocation = event.newLocation();
+        final var oldLocation = event.currentLocation();
 
         for (final var visual : activeVisuals.values()) {
             if (!visual.hasViewers()) {
@@ -118,8 +118,8 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
             return;
         }
 
-        final var player = event.getPlayer();
-        final var respawnLocation = event.getLocation();
+        final var player = event.player();
+        final var respawnLocation = event.location();
 
         for (final var visual : activeVisuals.values()) {
             if (!visual.hasViewers()) {
@@ -150,8 +150,8 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
             return;
         }
 
-        final var player = event.getPlayer();
-        final var from = event.getFrom();
+        final var player = event.player();
+        final var from = event.from();
 
         for (final var visual : activeVisuals.values()) {
             if (!visual.hasViewers()) {
@@ -186,15 +186,15 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
             return;
         }
 
-        final var currentLocation = event.getCurrentLocation();
-        final var newLocation = event.getNewLocation();
+        final var currentLocation = event.currentLocation();
+        final var newLocation = event.newLocation();
 
         // SPlayerWorldChangeEvent handler will handle this.
         if (!currentLocation.isWorldSame(newLocation)) {
             return;
         }
 
-        final var player = event.getPlayer();
+        final var player = event.player();
         for (final var visual : activeVisuals.values()) {
             if (!visual.hasViewers()) {
                 continue;

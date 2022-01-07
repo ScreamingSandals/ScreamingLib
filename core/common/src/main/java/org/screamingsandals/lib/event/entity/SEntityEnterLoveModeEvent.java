@@ -23,12 +23,12 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 
 public interface SEntityEnterLoveModeEvent extends SCancellableEvent, PlatformEventWrapper {
-    EntityBasic getEntity();
+    EntityBasic entity();
 
     @Nullable
-    EntityBasic getHumanEntity();
+    EntityBasic humanEntity();
 
-    int getTicksInLove();
+    int ticksInLove();
 
-    void setTicksInLove(int ticksInLove);
+    void ticksInLove(int ticksInLove);
 }

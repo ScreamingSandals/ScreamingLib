@@ -24,21 +24,21 @@ import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 
 public interface SEntityPotionEffectEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
     @Nullable
-    PotionEffectHolder getOldEffect();
+    PotionEffectHolder oldEffect();
 
     @Nullable
-    PotionEffectHolder getNewEffect();
+    PotionEffectHolder newEffect();
 
-    Cause getCause();
+    Cause cause();
 
-    Action getAction();
+    Action action();
 
-    boolean isOverride();
+    boolean override();
 
-    void setOverride(boolean override);
+    void override(boolean override);
 
     /**
      * An enum to specify the action to be performed.

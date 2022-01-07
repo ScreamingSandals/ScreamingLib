@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerItemMendEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityExperience;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.event.player.SPlayerItemMendEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -42,7 +45,7 @@ public class SBukkitPlayerItemMendEvent implements SPlayerItemMendEvent, BukkitC
     private EntityExperience experienceOrb;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -50,7 +53,7 @@ public class SBukkitPlayerItemMendEvent implements SPlayerItemMendEvent, BukkitC
     }
 
     @Override
-    public Item getItem() {
+    public Item item() {
         if (item == null) {
             item = new BukkitItem(event.getItem());
         }
@@ -58,7 +61,7 @@ public class SBukkitPlayerItemMendEvent implements SPlayerItemMendEvent, BukkitC
     }
 
     @Override
-    public EntityExperience getExperienceOrb() {
+    public EntityExperience experienceOrb() {
         if (experienceOrb == null) {
             experienceOrb = new BukkitEntityExperience(event.getExperienceOrb());
         }
@@ -66,12 +69,12 @@ public class SBukkitPlayerItemMendEvent implements SPlayerItemMendEvent, BukkitC
     }
 
     @Override
-    public int getRepairAmount() {
+    public int repairAmount() {
         return event.getRepairAmount();
     }
 
     @Override
-    public void setRepairAmount(int repairAmount) {
+    public void repairAmount(int repairAmount) {
         event.setRepairAmount(repairAmount);
     }
 }

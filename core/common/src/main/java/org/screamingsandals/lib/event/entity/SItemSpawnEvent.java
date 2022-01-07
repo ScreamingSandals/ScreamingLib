@@ -20,5 +20,5 @@ import org.screamingsandals.lib.entity.EntityItem;
 
 public interface SItemSpawnEvent extends SEntitySpawnEvent {
     @Override
-    EntityItem getEntity();
+    EntityItem entity();
 }

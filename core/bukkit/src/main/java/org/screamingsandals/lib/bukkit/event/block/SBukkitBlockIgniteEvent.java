@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -26,6 +28,7 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.block.SBlockIgniteEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -44,7 +47,7 @@ public class SBukkitBlockIgniteEvent implements SBlockIgniteEvent, BukkitCancell
     private boolean ignitingEntityConverted;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -52,7 +55,7 @@ public class SBukkitBlockIgniteEvent implements SBlockIgniteEvent, BukkitCancell
     }
 
     @Override
-    public IgniteCause getIgniteCause() {
+    public IgniteCause igniteCause() {
         if (igniteCause == null) {
             igniteCause = IgniteCause.valueOf(event.getCause().toString());
         }
@@ -60,7 +63,7 @@ public class SBukkitBlockIgniteEvent implements SBlockIgniteEvent, BukkitCancell
     }
 
     @Override
-    public @Nullable BlockHolder getIgnitingBlock() {
+    public @Nullable BlockHolder ignitingBlock() {
         if (!ignitingBlockConverted) {
             if (event.getIgnitingBlock() != null) {
                 ignitingBlock = BlockMapper.wrapBlock(event.getIgnitingBlock());
@@ -71,7 +74,7 @@ public class SBukkitBlockIgniteEvent implements SBlockIgniteEvent, BukkitCancell
     }
 
     @Override
-    public @Nullable EntityBasic getIgnitingEntity() {
+    public @Nullable EntityBasic ignitingEntity() {
         if (!ignitingEntityConverted) {
             if (event.getIgnitingEntity() != null) {
                 ignitingEntity = EntityMapper.wrapEntity(event.getIgnitingEntity()).orElseThrow();

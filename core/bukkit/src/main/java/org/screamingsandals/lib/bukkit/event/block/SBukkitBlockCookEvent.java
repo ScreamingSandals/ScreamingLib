@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.BlockCookEvent;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -26,6 +28,7 @@ import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.block.SBlockCookEvent;
 import org.screamingsandals.lib.item.Item;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -40,7 +43,7 @@ public class SBukkitBlockCookEvent implements SBlockCookEvent, BukkitCancellable
     private Item source;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -48,7 +51,7 @@ public class SBukkitBlockCookEvent implements SBlockCookEvent, BukkitCancellable
     }
 
     @Override
-    public Item getSource() {
+    public Item source() {
         if (source == null) {
             source = new BukkitItem(event.getSource());
         }
@@ -56,12 +59,12 @@ public class SBukkitBlockCookEvent implements SBlockCookEvent, BukkitCancellable
     }
 
     @Override
-    public Item getResult() {
+    public Item result() {
         return new BukkitItem(event.getResult());
     }
 
     @Override
-    public void setResult(Item item) {
+    public void result(Item item) {
         event.setResult(item.as(ItemStack.class));
     }
 }

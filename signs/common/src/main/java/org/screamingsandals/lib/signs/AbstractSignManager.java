@@ -133,18 +133,18 @@ public abstract class AbstractSignManager {
 
     @OnEvent
     public void onRightClick(SPlayerInteractEvent event) {
-        if (event.getAction() == SPlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
-                && event.getBlockClicked() != null) {
-            var state = event.getBlockClicked().getBlockState().orElseThrow();
+        if (event.action() == SPlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
+                && event.clickedBlock() != null) {
+            var state = event.clickedBlock().getBlockState().orElseThrow();
             if (state instanceof SignHolder) {
                 var location = new SignLocation(state.getLocation());
                 var sign = getSign(location);
                 if (sign.isPresent()) {
-                    if (!isAllowedToUse(event.getPlayer())) {
+                    if (!isAllowedToUse(event.player())) {
                         return;
                     }
 
-                    onClick(event.getPlayer(), sign.get());
+                    onClick(event.player(), sign.get());
                 }
             }
         }
@@ -156,8 +156,8 @@ public abstract class AbstractSignManager {
             return;
         }
 
-        var player = event.getPlayer();
-        var state = event.getBlock().getBlockState().orElseThrow();
+        var player = event.player();
+        var state = event.block().getBlockState().orElseThrow();
         if (state instanceof SignHolder) {
             var location = new SignLocation(state.getLocation());
             if (isSignRegistered(location)) {
@@ -177,14 +177,14 @@ public abstract class AbstractSignManager {
             return;
         }
 
-        var player = event.getPlayer();
+        var player = event.player();
         if (isAllowedToEdit(player) && isFirstLineValid(event.line(0))) {
-            if (registerSign(new SignLocation(event.getBlock().getLocation()), event.line(1))) {
+            if (registerSign(new SignLocation(event.block().getLocation()), event.line(1))) {
                 player.sendMessage(signCreatedMessage(player));
             } else {
                 player.sendMessage(signCannotBeCreatedMessage(player));
                 event.cancelled(true);
-                event.getBlock().breakNaturally();
+                event.block().breakNaturally();
             }
         }
     }

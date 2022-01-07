@@ -23,7 +23,7 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SEntityEnterBlockEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    BlockHolder getBlock();
+    BlockHolder block();
 }

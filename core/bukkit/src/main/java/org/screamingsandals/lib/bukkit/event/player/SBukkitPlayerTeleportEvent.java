@@ -28,15 +28,15 @@ public class SBukkitPlayerTeleportEvent extends SBukkitPlayerMoveEvent implement
     private TeleportCause teleportCause;
 
     @Override
-    public TeleportCause getCause() {
+    public TeleportCause cause() {
         if (teleportCause == null) {
-            teleportCause = TeleportCause.valueOf(getEvent().getCause().name());
+            teleportCause = TeleportCause.valueOf(event().getCause().name());
         }
         return teleportCause;
     }
 
     @Override
-    public PlayerTeleportEvent getEvent() {
-        return (PlayerTeleportEvent) super.getEvent();
+    public PlayerTeleportEvent event() {
+        return (PlayerTeleportEvent) super.event();
     }
 }

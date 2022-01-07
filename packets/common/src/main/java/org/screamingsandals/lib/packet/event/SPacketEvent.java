@@ -32,7 +32,7 @@ public class SPacketEvent implements SPlayerEvent, SCancellableAsyncEvent {
     private boolean cancelled;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         return player;
     }
 

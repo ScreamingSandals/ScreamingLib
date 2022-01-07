@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.SpongeAbsorbEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -29,6 +31,7 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -43,7 +46,7 @@ public class SBukkitSpongeAbsorbEvent implements SSpongeAbsorbEvent, BukkitCance
     private Collection<BlockStateHolder> waterBlocks;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -51,7 +54,7 @@ public class SBukkitSpongeAbsorbEvent implements SSpongeAbsorbEvent, BukkitCance
     }
 
     @Override
-    public Collection<BlockStateHolder> getWaterBlocks() {
+    public Collection<BlockStateHolder> waterBlocks() {
         if (waterBlocks == null) {
             waterBlocks = new CollectionLinkedToCollection<>(event.getBlocks(), o -> o.as(BlockState.class), o -> BlockStateMapper.wrapBlockState(o).orElseThrow());
         }

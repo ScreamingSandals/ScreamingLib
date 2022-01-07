@@ -22,7 +22,7 @@ import org.screamingsandals.lib.utils.math.Vector3D;
 
 public interface SPlayerVelocityChangeEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    Vector3D getVelocity();
+    Vector3D velocity();
 
-    void setVelocity(Vector3D velocity);
+    void velocity(Vector3D velocity);
 }

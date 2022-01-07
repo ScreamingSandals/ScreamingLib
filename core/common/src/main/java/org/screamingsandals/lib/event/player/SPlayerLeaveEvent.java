@@ -25,9 +25,9 @@ import org.screamingsandals.lib.event.SEvent;
 public interface SPlayerLeaveEvent extends SEvent, SPlayerEvent, PlatformEventWrapper {
 
     @Nullable
-    Component getLeaveMessage();
+    Component leaveMessage();
 
-    void setLeaveMessage(@Nullable Component leaveMessage);
+    void leaveMessage(@Nullable Component leaveMessage);
 
-    void setLeaveMessage(@Nullable ComponentLike leaveMessage);
+    void leaveMessage(@Nullable ComponentLike leaveMessage);
 }

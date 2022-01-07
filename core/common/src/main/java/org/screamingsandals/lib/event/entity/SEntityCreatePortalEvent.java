@@ -25,9 +25,9 @@ import org.screamingsandals.lib.block.state.BlockStateHolder;
 import java.util.Collection;
 
 public interface SEntityCreatePortalEvent extends SCancellableEvent, PlatformEventWrapper {
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    Collection<BlockStateHolder> getBlocks();
+    Collection<BlockStateHolder> blocks();
 
-    PortalType getPortalType();
+    PortalType portalType();
 }

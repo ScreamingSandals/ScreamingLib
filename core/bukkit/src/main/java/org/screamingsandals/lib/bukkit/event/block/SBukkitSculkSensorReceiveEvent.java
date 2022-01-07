@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.BlockReceiveGameEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.block.SSculkSensorReceiveEvent;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -43,7 +46,7 @@ public class SBukkitSculkSensorReceiveEvent implements SSculkSensorReceiveEvent,
     private NamespacedMappingKey underlyingEvent;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -51,7 +54,7 @@ public class SBukkitSculkSensorReceiveEvent implements SSculkSensorReceiveEvent,
     }
 
     @Override
-    public @Nullable EntityBasic getEntity() {
+    public @Nullable EntityBasic entity() {
         if (!entityConverted) {
             if (event.getEntity() != null) {
                 entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
@@ -62,7 +65,7 @@ public class SBukkitSculkSensorReceiveEvent implements SSculkSensorReceiveEvent,
     }
 
     @Override
-    public NamespacedMappingKey getUnderlyingEvent() {
+    public NamespacedMappingKey underlyingEvent() {
         if (underlyingEvent == null) {
             underlyingEvent = NamespacedMappingKey.of(event.getEvent().getKey().toString());
         }

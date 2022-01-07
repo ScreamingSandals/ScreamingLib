@@ -22,7 +22,7 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SEntityTameEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    EntityBasic getOwner();
+    EntityBasic owner();
 }

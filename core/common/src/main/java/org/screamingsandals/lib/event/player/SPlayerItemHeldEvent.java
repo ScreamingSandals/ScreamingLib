@@ -26,12 +26,12 @@ public interface SPlayerItemHeldEvent extends SCancellableEvent, SPlayerEvent, P
      *
      * @return Previous slot index
      */
-    int getPreviousSlot();
+    int previousSlot();
 
     /**
      * Gets the new held slot index
      *
      * @return New slot index
      */
-    int getNewSlot();
+    int newSlot();
 }

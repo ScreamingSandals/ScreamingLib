@@ -22,9 +22,9 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 public interface SPlayerMoveEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    LocationHolder getCurrentLocation();
+    LocationHolder currentLocation();
 
-    LocationHolder getNewLocation();
+    LocationHolder newLocation();
 
-    void setNewLocation(LocationHolder newLocation);
+    void newLocation(LocationHolder newLocation);
 }

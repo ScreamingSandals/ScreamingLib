@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.BlockShearEntityEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.block.SBlockShearEntityEvent;
 import org.screamingsandals.lib.item.Item;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -42,7 +45,7 @@ public class SBukkitBlockShearEntityEvent implements SBlockShearEntityEvent, Buk
     private Item tool;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -50,7 +53,7 @@ public class SBukkitBlockShearEntityEvent implements SBlockShearEntityEvent, Buk
     }
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -58,7 +61,7 @@ public class SBukkitBlockShearEntityEvent implements SBlockShearEntityEvent, Buk
     }
 
     @Override
-    public Item getTool() {
+    public Item tool() {
         if (tool == null) {
             tool = new BukkitItem(event.getTool());
         }

@@ -23,11 +23,11 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SEntityDamageEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    DamageCauseHolder getDamageCause();
+    DamageCauseHolder damageCause();
 
-    double getDamage();
+    double damage();
 
-    void setDamage(double damage);
+    void damage(double damage);
 }

@@ -23,10 +23,10 @@ import org.screamingsandals.lib.event.player.SPlayerCraftItemEvent;
 
 public interface SVillagerAcquireTradeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    SPlayerCraftItemEvent.Recipe getRecipe();
+    SPlayerCraftItemEvent.Recipe recipe();
 
     @Deprecated // because there's no proper Recipe API yet
-    void setRecipe(SPlayerCraftItemEvent.Recipe recipe);
+    void recipe(SPlayerCraftItemEvent.Recipe recipe);
 }

@@ -22,9 +22,9 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SBlockExperienceEvent extends SEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    int getExperience();
+    int experience();
 
-    void setExperience(int experience);
+    void experience(int experience);
 }
