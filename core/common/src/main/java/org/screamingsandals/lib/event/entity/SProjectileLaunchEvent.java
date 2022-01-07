@@ -22,7 +22,7 @@ import org.screamingsandals.lib.entity.ProjectileShooter;
 public interface SProjectileLaunchEvent extends SEntitySpawnEvent {
 
     @Override
-    EntityProjectile getEntity();
+    EntityProjectile entity();
 
-    ProjectileShooter getShooter();
+    ProjectileShooter shooter();
 }

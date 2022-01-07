@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.DyeColor;
 import org.bukkit.event.entity.SheepDyeWoolEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -24,6 +26,7 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SSheepDyeWoolEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -37,7 +40,7 @@ public class SBukkitSheepDyeWoolEvent implements SSheepDyeWoolEvent, BukkitCance
     private EntityBasic entity;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -45,12 +48,12 @@ public class SBukkitSheepDyeWoolEvent implements SSheepDyeWoolEvent, BukkitCance
     }
 
     @Override
-    public String getDyeColor() {
+    public String dyeColor() {
         return event.getColor().name();
     }
 
     @Override
-    public void setDyeColor(String dyeColor) {
+    public void dyeColor(String dyeColor) {
         event.setColor(DyeColor.valueOf(dyeColor.toUpperCase()));
     }
 }

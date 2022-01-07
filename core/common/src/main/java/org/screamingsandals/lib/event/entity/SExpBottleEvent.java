@@ -18,11 +18,11 @@ package org.screamingsandals.lib.event.entity;
 
 public interface SExpBottleEvent extends SProjectileHitEvent {
 
-    int getExp();
+    int exp();
 
-    void setExp(int exp);
+    void exp(int exp);
 
-    boolean isShowEffect();
+    boolean showEffect();
 
-    void setShowEffect(boolean showEffect);
+    void showEffect(boolean showEffect);
 }

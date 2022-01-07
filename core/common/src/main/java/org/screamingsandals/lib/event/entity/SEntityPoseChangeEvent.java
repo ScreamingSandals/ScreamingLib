@@ -22,7 +22,7 @@ import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SEvent;
 
 public interface SEntityPoseChangeEvent extends SEvent, PlatformEventWrapper {
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    EntityPoseHolder getPose();
+    EntityPoseHolder pose();
 }

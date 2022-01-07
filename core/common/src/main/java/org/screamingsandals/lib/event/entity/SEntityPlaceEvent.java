@@ -25,12 +25,12 @@ import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SEntityPlaceEvent extends SCancellableEvent, PlatformEventWrapper {
-    EntityBasic getEntity();
+    EntityBasic entity();
 
     @Nullable
-    PlayerWrapper getPlayer();
+    PlayerWrapper player();
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    BlockFace getBlockFace();
+    BlockFace blockFace();
 }

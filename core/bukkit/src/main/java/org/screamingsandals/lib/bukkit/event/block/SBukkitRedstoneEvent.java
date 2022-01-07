@@ -17,12 +17,15 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.block.SRedstoneEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -36,7 +39,7 @@ public class SBukkitRedstoneEvent implements SRedstoneEvent {
     private BlockHolder block;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -44,17 +47,17 @@ public class SBukkitRedstoneEvent implements SRedstoneEvent {
     }
 
     @Override
-    public @Range(from = 0, to = 15) int getOldCurrent() {
+    public @Range(from = 0, to = 15) int oldCurrent() {
         return event.getOldCurrent();
     }
 
     @Override
-    public @Range(from = 0, to = 15) int getNewCurrent() {
+    public @Range(from = 0, to = 15) int newCurrent() {
         return event.getNewCurrent();
     }
 
     @Override
-    public void setNewCurrent(@Range(from = 0, to = 15) int newCurrent) {
+    public void newCurrent(@Range(from = 0, to = 15) int newCurrent) {
         event.setNewCurrent(newCurrent);
     }
 }

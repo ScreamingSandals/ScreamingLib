@@ -23,13 +23,13 @@ import org.screamingsandals.lib.event.SEvent;
 
 public interface SRedstoneEvent extends SEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
     @Range(from = 0, to = 15)
-    int getOldCurrent();
+    int oldCurrent();
 
     @Range(from = 0, to = 15)
-    int getNewCurrent();
+    int newCurrent();
 
-    void setNewCurrent(@Range(from = 0, to = 15) int newCurrent);
+    void newCurrent(@Range(from = 0, to = 15) int newCurrent);
 }

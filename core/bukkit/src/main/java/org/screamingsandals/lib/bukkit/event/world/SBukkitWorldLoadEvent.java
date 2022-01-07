@@ -20,11 +20,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.world.WorldLoadEvent;
 import org.screamingsandals.lib.event.world.SWorldLoadEvent;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.WorldMapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

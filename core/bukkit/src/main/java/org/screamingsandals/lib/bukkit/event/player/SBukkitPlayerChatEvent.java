@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -30,6 +32,7 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

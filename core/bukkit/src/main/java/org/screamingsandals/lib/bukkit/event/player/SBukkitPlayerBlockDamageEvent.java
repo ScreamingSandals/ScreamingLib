@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.BlockDamageEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -30,6 +32,7 @@ import org.screamingsandals.lib.event.player.SPlayerBlockDamageEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

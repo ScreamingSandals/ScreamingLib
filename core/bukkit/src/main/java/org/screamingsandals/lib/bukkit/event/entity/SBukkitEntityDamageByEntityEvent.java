@@ -30,9 +30,9 @@ public class SBukkitEntityDamageByEntityEvent extends SBukkitEntityDamageEvent i
     private EntityBasic damager;
 
     @Override
-    public EntityBasic getDamager() {
+    public EntityBasic damager() {
         if (damager == null) {
-            damager = EntityMapper.wrapEntity(((EntityDamageByEntityEvent) getEvent()).getDamager()).orElseThrow();
+            damager = EntityMapper.wrapEntity(((EntityDamageByEntityEvent) event()).getDamager()).orElseThrow();
         }
         return damager;
     }

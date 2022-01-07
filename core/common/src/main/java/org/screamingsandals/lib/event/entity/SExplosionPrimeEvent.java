@@ -22,13 +22,13 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SExplosionPrimeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    float getRadius();
+    float radius();
 
-    void setRadius(float radius);
+    void radius(float radius);
 
-    boolean isFire();
+    boolean fire();
 
-    void setFire(boolean fire);
+    void fire(boolean fire);
 }

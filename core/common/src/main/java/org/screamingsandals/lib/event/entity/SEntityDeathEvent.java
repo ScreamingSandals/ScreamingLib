@@ -24,11 +24,11 @@ import org.screamingsandals.lib.item.Item;
 import java.util.Collection;
 
 public interface SEntityDeathEvent extends SCancellableEvent, PlatformEventWrapper {
-    Collection<Item> getDrops();
+    Collection<Item> drops();
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    int getDropExp();
+    int dropExp();
 
-    void setDropExp(int dropExp);
+    void dropExp(int dropExp);
 }

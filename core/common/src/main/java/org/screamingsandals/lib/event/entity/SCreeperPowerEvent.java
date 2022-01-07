@@ -23,12 +23,12 @@ import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SCreeperPowerEvent extends SCancellableEvent, PlatformEventWrapper {
-    EntityBasic getEntity();
+    EntityBasic entity();
 
     @Nullable
-    EntityLightning getBolt();
+    EntityLightning bolt();
 
-    PowerCause getCause();
+    PowerCause cause();
 
     /**
      * An enum to specify the cause of the change in power

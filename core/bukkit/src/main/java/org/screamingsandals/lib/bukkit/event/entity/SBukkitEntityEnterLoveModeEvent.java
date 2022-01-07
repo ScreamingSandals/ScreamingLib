@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.EntityEnterLoveModeEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityEnterLoveModeEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -44,7 +47,7 @@ public class SBukkitEntityEnterLoveModeEvent implements SEntityEnterLoveModeEven
 
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -53,7 +56,7 @@ public class SBukkitEntityEnterLoveModeEvent implements SEntityEnterLoveModeEven
 
     @Override
     @Nullable
-    public EntityBasic getHumanEntity() {
+    public EntityBasic humanEntity() {
         if (!humanEntityCached) {
             if (event.getHumanEntity() != null) {
                 humanEntity = EntityMapper.wrapEntity(event.getHumanEntity()).orElseThrow();
@@ -64,12 +67,12 @@ public class SBukkitEntityEnterLoveModeEvent implements SEntityEnterLoveModeEven
     }
 
     @Override
-    public int getTicksInLove() {
+    public int ticksInLove() {
         return event.getTicksInLove();
     }
 
     @Override
-    public void setTicksInLove(int ticksInLove) {
+    public void ticksInLove(int ticksInLove) {
         event.setTicksInLove(ticksInLove);
     }
 }

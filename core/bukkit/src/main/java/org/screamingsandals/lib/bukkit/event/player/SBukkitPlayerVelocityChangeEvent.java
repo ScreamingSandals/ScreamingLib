@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.util.Vector;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -25,6 +27,7 @@ import org.screamingsandals.lib.event.player.SPlayerVelocityChangeEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

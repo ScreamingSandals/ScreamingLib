@@ -23,7 +23,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 public interface SEntityPortalEnterEvent extends SEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    LocationHolder getLocation();
+    LocationHolder location();
 }

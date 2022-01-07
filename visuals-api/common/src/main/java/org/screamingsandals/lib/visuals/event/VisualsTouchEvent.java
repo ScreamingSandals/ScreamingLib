@@ -19,11 +19,15 @@ package org.screamingsandals.lib.visuals.event;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
+
 import org.screamingsandals.lib.event.SCancellableAsyncEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.visuals.Visual;
 
+
+@Accessors(fluent = true)
 @EqualsAndHashCode(callSuper = false)
 @RequiredArgsConstructor
 @Data

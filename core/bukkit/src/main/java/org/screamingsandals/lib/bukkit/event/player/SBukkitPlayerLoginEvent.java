@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -29,6 +30,7 @@ import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 
 import java.net.InetAddress;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

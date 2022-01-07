@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SProjectileHitEvent;
 import org.screamingsandals.lib.utils.BlockFace;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -46,7 +49,7 @@ public class SBukkitProjectileHitEvent implements SProjectileHitEvent, BukkitCan
     private boolean hitFaceCached;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -55,7 +58,7 @@ public class SBukkitProjectileHitEvent implements SProjectileHitEvent, BukkitCan
 
     @Override
     @Nullable
-    public EntityBasic getHitEntity() {
+    public EntityBasic hitEntity() {
         if (!hitEntityCached) {
             if (event.getHitEntity() != null) {
                 hitEntity = EntityMapper.wrapEntity(event.getHitEntity()).orElseThrow();
@@ -67,7 +70,7 @@ public class SBukkitProjectileHitEvent implements SProjectileHitEvent, BukkitCan
 
     @Override
     @Nullable
-    public BlockHolder getHitBlock() {
+    public BlockHolder hitBlock() {
         if (!hitBlockCached) {
             if (event.getHitBlock() != null) {
                 hitBlock = BlockMapper.wrapBlock(event.getHitBlock());
@@ -79,7 +82,7 @@ public class SBukkitProjectileHitEvent implements SProjectileHitEvent, BukkitCan
 
     @Override
     @Nullable
-    public BlockFace getHitFace() {
+    public BlockFace hitFace() {
         if (!hitFaceCached) {
             if (event.getHitBlockFace() != null) {
                 hitFace = BlockFace.valueOf(event.getHitBlockFace().name());

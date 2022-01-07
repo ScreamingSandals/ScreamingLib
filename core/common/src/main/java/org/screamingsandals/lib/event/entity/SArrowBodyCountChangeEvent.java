@@ -22,13 +22,13 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SArrowBodyCountChangeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    boolean isReset();
+    boolean reset();
 
-    int getOldAmount();
+    int oldAmount();
 
-    int getNewAmount();
+    int newAmount();
 
-    void setNewAmount(int newAmount);
+    void newAmount(int newAmount);
 }

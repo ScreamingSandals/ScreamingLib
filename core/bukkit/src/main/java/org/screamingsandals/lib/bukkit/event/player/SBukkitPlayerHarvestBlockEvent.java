@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerHarvestBlockEvent;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -31,6 +33,7 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

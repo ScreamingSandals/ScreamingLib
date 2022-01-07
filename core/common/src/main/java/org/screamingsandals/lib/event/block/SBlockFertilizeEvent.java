@@ -33,9 +33,9 @@ import java.util.Collection;
 @LimitedVersionSupport("Bukkit >= 1.13")
 public interface SBlockFertilizeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    PlayerWrapper getPlayer();
+    PlayerWrapper player();
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    Collection<BlockStateHolder> getChangedBlockStates();
+    Collection<BlockStateHolder> changedBlockStates();
 }

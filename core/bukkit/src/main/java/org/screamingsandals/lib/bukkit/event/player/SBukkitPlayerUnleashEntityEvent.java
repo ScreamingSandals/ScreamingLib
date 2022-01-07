@@ -33,7 +33,7 @@ public class SBukkitPlayerUnleashEntityEvent extends SBukkitEntityUnleashEvent i
     @Override
     public PlayerWrapper getPlayer() {
         if (player == null) {
-            player = new BukkitEntityPlayer(((PlayerUnleashEntityEvent) getEvent()).getPlayer());
+            player = new BukkitEntityPlayer(((PlayerUnleashEntityEvent) event()).getPlayer());
         }
         return player;
     }

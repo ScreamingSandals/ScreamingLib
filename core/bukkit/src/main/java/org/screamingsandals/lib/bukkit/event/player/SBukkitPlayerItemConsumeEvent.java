@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.event.player.SPlayerItemConsumeEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

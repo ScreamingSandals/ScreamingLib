@@ -19,6 +19,9 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.screamingsandals.lib.event.entity.SCreatureSpawnEvent;
 
+import lombok.experimental.Accessors;
+
+@Accessors(fluent = true)
 public class SBukkitCreatureSpawnEvent extends SBukkitEntitySpawnEvent implements SCreatureSpawnEvent {
     public SBukkitCreatureSpawnEvent(CreatureSpawnEvent event) {
         super(event);
@@ -28,9 +31,9 @@ public class SBukkitCreatureSpawnEvent extends SBukkitEntitySpawnEvent implement
     private SpawnReason spawnReason;
 
     @Override
-    public SpawnReason getSpawnReason() {
+    public SpawnReason spawnReason() {
         if (spawnReason == null) {
-            spawnReason = SpawnReason.valueOf(((CreatureSpawnEvent) getEvent()).getSpawnReason().name());
+            spawnReason = SpawnReason.valueOf(((CreatureSpawnEvent) event()).getSpawnReason().name());
         }
         return spawnReason;
     }

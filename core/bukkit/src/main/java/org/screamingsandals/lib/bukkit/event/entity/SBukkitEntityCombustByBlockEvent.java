@@ -21,6 +21,8 @@ import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.entity.SEntityCombustByBlockEvent;
 
+import lombok.experimental.Accessors;
+
 public class SBukkitEntityCombustByBlockEvent extends SBukkitEntityCombustEvent implements SEntityCombustByBlockEvent {
     public SBukkitEntityCombustByBlockEvent(EntityCombustByBlockEvent event) {
         super(event);
@@ -30,9 +32,9 @@ public class SBukkitEntityCombustByBlockEvent extends SBukkitEntityCombustEvent 
     private BlockHolder combuster;
 
     @Override
-    public BlockHolder getCombuster() {
+    public BlockHolder combuster() {
         if (combuster == null) {
-            combuster = BlockMapper.wrapBlock(((EntityCombustByBlockEvent) getEvent()).getCombuster());
+            combuster = BlockMapper.wrapBlock(((EntityCombustByBlockEvent) event()).getCombuster());
         }
         return combuster;
     }

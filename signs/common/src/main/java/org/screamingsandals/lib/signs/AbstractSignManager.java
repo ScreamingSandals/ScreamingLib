@@ -157,7 +157,7 @@ public abstract class AbstractSignManager {
         }
 
         var player = event.getPlayer();
-        var state = event.getBlock().getBlockState().orElseThrow();
+        var state = event.block().getBlockState().orElseThrow();
         if (state instanceof SignHolder) {
             var location = new SignLocation(state.getLocation());
             if (isSignRegistered(location)) {

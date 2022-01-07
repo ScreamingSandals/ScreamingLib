@@ -28,6 +28,6 @@ public class SBukkitPlayerProjectileLaunchEvent extends SBukkitProjectileLaunchE
 
     @Override
     public PlayerWrapper getPlayer() {
-        return (PlayerWrapper) getShooter();
+        return (PlayerWrapper) shooter();
     }
 }

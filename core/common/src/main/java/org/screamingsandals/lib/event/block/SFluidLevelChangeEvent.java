@@ -25,7 +25,7 @@ import org.screamingsandals.lib.block.BlockHolder;
 @LimitedVersionSupport(">= 1.13.2")
 public interface SFluidLevelChangeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    BlockTypeHolder getNewBlockData();
+    BlockTypeHolder newBlockData();
 }

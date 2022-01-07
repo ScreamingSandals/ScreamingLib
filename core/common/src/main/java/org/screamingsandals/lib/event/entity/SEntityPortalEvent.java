@@ -18,7 +18,7 @@ package org.screamingsandals.lib.event.entity;
 
 public interface SEntityPortalEvent extends SEntityTeleportEvent {
 
-    int getSearchRadius();
+    int searchRadius();
 
-    void setSearchRadius(int searchRadius);
+    void searchRadius(int searchRadius);
 }

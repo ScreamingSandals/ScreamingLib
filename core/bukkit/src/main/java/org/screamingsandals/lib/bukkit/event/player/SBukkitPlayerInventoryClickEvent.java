@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -34,6 +36,7 @@ import org.screamingsandals.lib.utils.ClickType;
 import org.screamingsandals.lib.utils.InventoryAction;
 import org.screamingsandals.lib.utils.SlotType;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

@@ -23,11 +23,11 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SBlockCookEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    Item getSource();
+    Item source();
 
-    Item getResult();
+    Item result();
 
-    void setResult(Item item);
+    void result(Item item);
 }

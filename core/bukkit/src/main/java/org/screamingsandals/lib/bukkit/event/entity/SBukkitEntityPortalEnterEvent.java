@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.event.entity.SEntityPortalEnterEvent;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -41,7 +44,7 @@ public class SBukkitEntityPortalEnterEvent implements SEntityPortalEnterEvent {
     private LocationHolder location;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -49,7 +52,7 @@ public class SBukkitEntityPortalEnterEvent implements SEntityPortalEnterEvent {
     }
 
     @Override
-    public LocationHolder getLocation() {
+    public LocationHolder location() {
         if (location == null) {
             location = LocationMapper.wrapLocation(event.getLocation());
         }

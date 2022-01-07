@@ -35,7 +35,7 @@ public class SBukkitPlayerArmorStandManipulateEvent extends SBukkitPlayerInterac
     @Override
     public Item getPlayerItem() {
         if (playerItem == null) {
-            playerItem = new BukkitItem(getEvent().getPlayerItem());
+            playerItem = new BukkitItem(event().getPlayerItem());
         }
         return playerItem;
     }
@@ -43,7 +43,7 @@ public class SBukkitPlayerArmorStandManipulateEvent extends SBukkitPlayerInterac
     @Override
     public Item getArmorStandItem() {
         if (armorStandItem == null) {
-            armorStandItem = new BukkitItem(getEvent().getArmorStandItem());
+            armorStandItem = new BukkitItem(event().getArmorStandItem());
         }
         return armorStandItem;
     }
@@ -51,13 +51,13 @@ public class SBukkitPlayerArmorStandManipulateEvent extends SBukkitPlayerInterac
     @Override
     public EquipmentSlotHolder getSlot() {
         if (slot == null) {
-            slot = EquipmentSlotHolder.of(getEvent().getSlot());
+            slot = EquipmentSlotHolder.of(event().getSlot());
         }
         return slot;
     }
 
     @Override
-    public PlayerArmorStandManipulateEvent getEvent() {
-        return (PlayerArmorStandManipulateEvent) super.getEvent();
+    public PlayerArmorStandManipulateEvent event() {
+        return (PlayerArmorStandManipulateEvent) super.event();
     }
 }

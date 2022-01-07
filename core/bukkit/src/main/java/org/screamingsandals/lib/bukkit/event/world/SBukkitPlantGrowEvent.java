@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.block.BlockState;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +34,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

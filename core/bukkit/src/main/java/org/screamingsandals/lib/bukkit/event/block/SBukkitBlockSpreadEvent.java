@@ -30,9 +30,9 @@ public class SBukkitBlockSpreadEvent extends SBukkitBlockFormEvent implements SB
     }
 
     @Override
-    public BlockHolder getSource() {
+    public BlockHolder source() {
         if (source == null) {
-            source = BlockMapper.wrapBlock(((BlockSpreadEvent) getEvent()).getSource());
+            source = BlockMapper.wrapBlock(((BlockSpreadEvent) event()).getSource());
         }
         return source;
     }

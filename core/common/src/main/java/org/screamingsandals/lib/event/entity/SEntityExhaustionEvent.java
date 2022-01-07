@@ -22,13 +22,13 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SEntityExhaustionEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    ExhaustionReason getExhaustionReason();
+    ExhaustionReason exhaustionReason();
 
-    float getExhaustion();
+    float exhaustion();
 
-    void setExhaustion(float exhaustion);
+    void exhaustion(float exhaustion);
 
     /**
      * The reason for why a PlayerExhaustionEvent takes place

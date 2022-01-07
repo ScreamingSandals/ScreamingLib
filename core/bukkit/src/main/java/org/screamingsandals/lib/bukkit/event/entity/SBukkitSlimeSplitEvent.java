@@ -17,12 +17,15 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.SlimeSplitEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SSlimeSplitEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -36,7 +39,7 @@ public class SBukkitSlimeSplitEvent implements SSlimeSplitEvent, BukkitCancellab
     private EntityBasic entity;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -44,12 +47,12 @@ public class SBukkitSlimeSplitEvent implements SSlimeSplitEvent, BukkitCancellab
     }
 
     @Override
-    public int getCount() {
+    public int count() {
         return event.getCount();
     }
 
     @Override
-    public void setCount(int count) {
+    public void count(int count) {
         event.setCount(count);
     }
 }

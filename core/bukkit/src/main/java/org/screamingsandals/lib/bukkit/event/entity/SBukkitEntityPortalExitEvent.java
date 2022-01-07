@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.Location;
 import org.bukkit.event.entity.EntityPortalExitEvent;
 import org.bukkit.util.Vector;
@@ -30,6 +32,7 @@ import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -44,7 +47,7 @@ public class SBukkitEntityPortalExitEvent implements SEntityPortalExitEvent {
     private Vector3D before;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -52,27 +55,27 @@ public class SBukkitEntityPortalExitEvent implements SEntityPortalExitEvent {
     }
 
     @Override
-    public LocationHolder getFrom() {
+    public LocationHolder from() {
         return LocationMapper.wrapLocation(event.getFrom());
     }
 
     @Override
-    public void setFrom(LocationHolder location) {
+    public void from(LocationHolder location) {
         event.setFrom(location.as(Location.class));
     }
 
     @Override
-    public LocationHolder getTo() {
+    public LocationHolder to() {
         return LocationMapper.wrapLocation(event.getTo());
     }
 
     @Override
-    public void setTo(LocationHolder location) {
+    public void to(LocationHolder location) {
         event.setTo(location.as(Location.class));
     }
 
     @Override
-    public Vector3D getBefore() {
+    public Vector3D before() {
         if (before == null) {
             before = new Vector3D(event.getBefore().getX(), event.getBefore().getY(), event.getBefore().getZ());
         }
@@ -80,12 +83,12 @@ public class SBukkitEntityPortalExitEvent implements SEntityPortalExitEvent {
     }
 
     @Override
-    public Vector3D getAfter() {
+    public Vector3D after() {
         return new Vector3D(event.getAfter().getX(), event.getAfter().getY(), event.getAfter().getZ());
     }
 
     @Override
-    public void setAfter(Vector3D after) {
+    public void after(Vector3D after) {
         event.setAfter(new Vector(after.getX(), after.getY(), after.getZ()));
     }
 }

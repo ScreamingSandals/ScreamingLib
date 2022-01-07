@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.world;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.SpongeAbsorbEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -29,6 +31,7 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

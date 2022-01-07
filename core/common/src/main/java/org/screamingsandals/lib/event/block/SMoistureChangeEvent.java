@@ -23,7 +23,7 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SMoistureChangeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    BlockStateHolder getNewBlockState();
+    BlockStateHolder newBlockState();
 }

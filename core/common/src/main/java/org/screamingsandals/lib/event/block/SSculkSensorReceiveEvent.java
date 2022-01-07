@@ -27,13 +27,13 @@ import org.screamingsandals.lib.block.BlockHolder;
 @LimitedVersionSupport(">= 1.17")
 public interface SSculkSensorReceiveEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
     @Nullable
-    EntityBasic getEntity();
+    EntityBasic entity();
 
     /**
      * TODO: Create game event mapping
      */
-    NamespacedMappingKey getUnderlyingEvent();
+    NamespacedMappingKey underlyingEvent();
 }

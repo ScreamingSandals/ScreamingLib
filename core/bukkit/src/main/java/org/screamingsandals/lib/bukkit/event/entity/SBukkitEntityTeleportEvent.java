@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.Location;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -29,7 +31,7 @@ import org.screamingsandals.lib.event.entity.SEntityTeleportEvent;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
-
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -43,7 +45,7 @@ public class SBukkitEntityTeleportEvent implements SEntityTeleportEvent, BukkitC
     private EntityBasic entity;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -51,22 +53,22 @@ public class SBukkitEntityTeleportEvent implements SEntityTeleportEvent, BukkitC
     }
 
     @Override
-    public LocationHolder getFrom() {
+    public LocationHolder from() {
         return LocationMapper.wrapLocation(event.getFrom());
     }
 
     @Override
-    public void setFrom(LocationHolder from) {
+    public void from(LocationHolder from) {
         event.setFrom(from.as(Location.class));
     }
 
     @Override
-    public LocationHolder getTo() {
+    public LocationHolder to() {
         return LocationMapper.wrapLocation(event.getTo());
     }
 
     @Override
-    public void setTo(LocationHolder to) {
+    public void to(LocationHolder to) {
         event.setFrom(to.as(Location.class));
     }
 }

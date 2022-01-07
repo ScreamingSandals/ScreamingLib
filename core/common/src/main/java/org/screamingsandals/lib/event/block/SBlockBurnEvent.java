@@ -23,8 +23,8 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SBlockBurnEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
     @Nullable
-    BlockHolder getIgnitingBlock();
+    BlockHolder ignitingBlock();
 }

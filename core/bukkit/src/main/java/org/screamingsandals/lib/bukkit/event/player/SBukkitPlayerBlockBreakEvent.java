@@ -33,24 +33,24 @@ public class SBukkitPlayerBlockBreakEvent extends SBukkitBlockExperienceEvent im
 
     @Override
     public boolean isDropItems() {
-        return getEvent().isDropItems();
+        return event().isDropItems();
     }
 
     @Override
     public void setDropItems(boolean dropItems) {
-        getEvent().setDropItems(dropItems);
+        event().setDropItems(dropItems);
     }
 
     @Override
     public PlayerWrapper getPlayer() {
         if (player == null) {
-            player = new BukkitEntityPlayer(getEvent().getPlayer());
+            player = new BukkitEntityPlayer(event().getPlayer());
         }
         return player;
     }
 
     @Override
-    public BlockBreakEvent getEvent() {
-        return (BlockBreakEvent) super.getEvent();
+    public BlockBreakEvent event() {
+        return (BlockBreakEvent) super.event();
     }
 }

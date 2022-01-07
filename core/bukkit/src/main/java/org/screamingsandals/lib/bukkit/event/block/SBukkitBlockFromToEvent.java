@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.BlockFromToEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -24,6 +26,7 @@ import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.SBlockFromToEvent;
 import org.screamingsandals.lib.utils.BlockFace;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -39,7 +42,7 @@ public class SBukkitBlockFromToEvent implements SBlockFromToEvent, BukkitCancell
     private BlockFace face;
 
     @Override
-    public BlockHolder getSourceBlock() {
+    public BlockHolder sourceBlock() {
         if (sourceBlock == null) {
             sourceBlock = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -47,7 +50,7 @@ public class SBukkitBlockFromToEvent implements SBlockFromToEvent, BukkitCancell
     }
 
     @Override
-    public BlockHolder getFacedBlock() {
+    public BlockHolder facedBlock() {
         if (facedBlock == null) {
             facedBlock = BlockMapper.wrapBlock(event.getToBlock());
         }
@@ -55,7 +58,7 @@ public class SBukkitBlockFromToEvent implements SBlockFromToEvent, BukkitCancell
     }
 
     @Override
-    public BlockFace getFace() {
+    public BlockFace face() {
         if (face == null) {
             face = BlockFace.valueOf(event.getFace().name());
         }

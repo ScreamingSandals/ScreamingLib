@@ -23,17 +23,17 @@ import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SCauldronLevelChangeEvent extends SCancellableEvent, PlatformEventWrapper {
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    @Nullable EntityBasic getEntity();
+    @Nullable EntityBasic entity();
 
-    int getOldLevel();
+    int oldLevel();
 
-    Reason getReason();
+    Reason reason();
 
-    int getNewLevel();
+    int newLevel();
 
-    void setNewLevel(int newLevel);
+    void newLevel(int newLevel);
 
     // TODO: holder?
     enum Reason {

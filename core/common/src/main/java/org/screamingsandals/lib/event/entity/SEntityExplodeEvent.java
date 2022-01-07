@@ -26,13 +26,13 @@ import java.util.Collection;
 
 public interface SEntityExplodeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    LocationHolder getLocation();
+    LocationHolder location();
 
-    Collection<BlockHolder> getBlocks();
+    Collection<BlockHolder> blocks();
 
-    float getYield();
+    float yield();
 
-    void setYield(float yield);
+    void yield(float yield);
 }

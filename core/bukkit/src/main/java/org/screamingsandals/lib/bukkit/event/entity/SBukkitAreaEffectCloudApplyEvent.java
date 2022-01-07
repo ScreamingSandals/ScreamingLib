@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -30,6 +32,7 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -44,7 +47,7 @@ public class SBukkitAreaEffectCloudApplyEvent implements SAreaEffectCloudApplyEv
     private Collection<EntityBasic> affectedEntities;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -52,7 +55,7 @@ public class SBukkitAreaEffectCloudApplyEvent implements SAreaEffectCloudApplyEv
     }
 
     @Override
-    public Collection<EntityBasic> getAffectedEntities() {
+    public Collection<EntityBasic> affectedEntities() {
         if (affectedEntities == null) {
             affectedEntities = new CollectionLinkedToCollection<>(
                     event.getAffectedEntities(),

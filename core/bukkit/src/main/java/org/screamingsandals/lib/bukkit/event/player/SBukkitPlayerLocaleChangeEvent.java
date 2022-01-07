@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.translation.Translator;
 import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -26,6 +27,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Locale;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

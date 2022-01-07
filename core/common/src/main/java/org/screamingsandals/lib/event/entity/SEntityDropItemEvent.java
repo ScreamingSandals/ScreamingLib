@@ -23,7 +23,7 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SEntityDropItemEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
-    EntityItem getDrop();
+    EntityItem drop();
 }

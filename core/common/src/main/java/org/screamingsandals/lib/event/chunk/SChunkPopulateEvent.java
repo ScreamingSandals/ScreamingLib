@@ -22,5 +22,5 @@ import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
 public interface SChunkPopulateEvent extends SEvent, PlatformEventWrapper {
 
-    ChunkHolder getChunk();
+    ChunkHolder chunk();
 }

@@ -17,11 +17,14 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.BlockExpEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockExperienceEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -35,7 +38,7 @@ public class SBukkitBlockExperienceEvent implements SBlockExperienceEvent {
     private BlockHolder block;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -43,12 +46,12 @@ public class SBukkitBlockExperienceEvent implements SBlockExperienceEvent {
     }
 
     @Override
-    public int getExperience() {
+    public int experience() {
         return event.getExpToDrop();
     }
 
     @Override
-    public void setExperience(int experience) {
+    public void experience(int experience) {
         event.setExpToDrop(experience);
     }
 }

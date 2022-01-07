@@ -17,12 +17,15 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.SLeavesDecayEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -36,7 +39,7 @@ public class SBukkitLeavesDecayEvent implements SLeavesDecayEvent, BukkitCancell
     private BlockHolder block;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }

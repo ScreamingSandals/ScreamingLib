@@ -23,7 +23,7 @@ import org.screamingsandals.lib.block.state.BlockStateHolder;
 
 public interface SBlockGrowEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    BlockStateHolder getNewBlockState();
+    BlockStateHolder newBlockState();
 }

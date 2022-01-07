@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.block.SignChangeEvent;
 import org.jetbrains.annotations.Range;
@@ -30,6 +31,7 @@ import org.screamingsandals.lib.utils.AdventureHelper;
 
 import java.util.Arrays;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

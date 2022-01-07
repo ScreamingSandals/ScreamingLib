@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -26,6 +28,7 @@ import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
 import org.screamingsandals.lib.event.player.SPlayerBedEnterEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

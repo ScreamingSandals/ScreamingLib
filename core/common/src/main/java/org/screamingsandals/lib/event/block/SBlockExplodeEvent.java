@@ -24,11 +24,11 @@ import java.util.Collection;
 
 public interface SBlockExplodeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    Collection<BlockHolder> getDestroyed();
+    Collection<BlockHolder> destroyed();
 
-    float getYield();
+    float yield();
 
-    void setYield(float yield);
+    void yield(float yield);
 }

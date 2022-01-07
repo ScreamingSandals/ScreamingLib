@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerWorldChangeEvent;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.WorldMapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

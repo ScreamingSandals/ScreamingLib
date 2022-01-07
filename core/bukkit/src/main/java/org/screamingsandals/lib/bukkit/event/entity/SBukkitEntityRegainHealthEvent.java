@@ -20,12 +20,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityRegainHealthEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -40,7 +43,7 @@ public class SBukkitEntityRegainHealthEvent implements SEntityRegainHealthEvent,
     private RegainReason reason;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -48,7 +51,7 @@ public class SBukkitEntityRegainHealthEvent implements SEntityRegainHealthEvent,
     }
 
     @Override
-    public RegainReason getRegainReason() {
+    public RegainReason remainingReason() {
         if (reason == null) {
             reason = RegainReason.valueOf(event.getRegainReason().name());
         }
@@ -56,12 +59,12 @@ public class SBukkitEntityRegainHealthEvent implements SEntityRegainHealthEvent,
     }
 
     @Override
-    public double getAmount() {
+    public double amount() {
         return event.getAmount();
     }
 
     @Override
-    public void setAmount(double amount) {
+    public void amount(double amount) {
         event.setAmount(amount);
     }
 }

@@ -22,5 +22,5 @@ import java.util.Collection;
 
 public interface SBlockPistonExtendEvent extends SBlockPistonEvent {
 
-    Collection<BlockHolder> getPushedBlocks();
+    Collection<BlockHolder> pushedBlocks();
 }

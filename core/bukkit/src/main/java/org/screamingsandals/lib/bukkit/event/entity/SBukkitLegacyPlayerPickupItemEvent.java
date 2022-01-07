@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -29,6 +31,7 @@ import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.event.player.SPlayerPickupItemEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -43,12 +46,12 @@ public class SBukkitLegacyPlayerPickupItemEvent implements SPlayerPickupItemEven
     private EntityItem item;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         return getPlayer();
     }
 
     @Override
-    public EntityItem getItem() {
+    public EntityItem item() {
         if (item == null) {
             item = new BukkitEntityItem(event.getItem());
         }
@@ -56,7 +59,7 @@ public class SBukkitLegacyPlayerPickupItemEvent implements SPlayerPickupItemEven
     }
 
     @Override
-    public int getRemaining() {
+    public int remaining() {
         return event.getRemaining();
     }
 

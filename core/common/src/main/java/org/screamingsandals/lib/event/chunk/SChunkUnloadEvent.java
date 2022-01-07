@@ -25,9 +25,9 @@ import org.screamingsandals.lib.world.chunk.ChunkHolder;
  */
 public interface SChunkUnloadEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    ChunkHolder getChunk();
+    ChunkHolder chunk();
 
-    boolean isSaveChunk();
+    boolean saveChunk();
 
-    void setSaveChunk(boolean saveChunk);
+    void saveChunk(boolean saveChunk);
 }

@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -30,6 +32,7 @@ import org.screamingsandals.lib.event.player.SPlayerMoveEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.world.LocationHolder;
 
+@Accessors(fluent = true)
 // In this file we are directly unwrapping and wrapping locations instead of using BidirectionalConvertor to save some time
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)

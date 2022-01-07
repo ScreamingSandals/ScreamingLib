@@ -25,21 +25,21 @@ import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
 public interface SEntityShootBowEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
     @Nullable
-    Item getBow();
+    Item bow();
 
     @Nullable
-    Item getConsumable();
+    Item consumable();
 
-    EntityBasic getProjectile();
+    EntityBasic projectile();
 
-    EquipmentSlotHolder getHand();
+    EquipmentSlotHolder hand();
 
-    float getForce();
+    float force();
 
-    boolean isConsumeItem();
+    boolean consumeItem();
 
-    void setConsumeItem(boolean consumeItem);
+    void consumeItem(boolean consumeItem);
 }

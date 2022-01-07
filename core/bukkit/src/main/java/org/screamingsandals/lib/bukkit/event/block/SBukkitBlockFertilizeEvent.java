@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockFertilizeEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -31,6 +33,7 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
 import java.util.Collection;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -47,7 +50,7 @@ public class SBukkitBlockFertilizeEvent implements SBlockFertilizeEvent, BukkitC
     private Collection<BlockStateHolder> changedBlockStates;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (!playerConverted) {
             if (event.getPlayer() != null) {
                 player = new BukkitEntityPlayer(event.getPlayer());
@@ -58,7 +61,7 @@ public class SBukkitBlockFertilizeEvent implements SBlockFertilizeEvent, BukkitC
     }
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -66,7 +69,7 @@ public class SBukkitBlockFertilizeEvent implements SBlockFertilizeEvent, BukkitC
     }
 
     @Override
-    public Collection<BlockStateHolder> getChangedBlockStates() {
+    public Collection<BlockStateHolder> changedBlockStates() {
         if (changedBlockStates == null) {
             changedBlockStates = new CollectionLinkedToCollection<>(event.getBlocks(), o -> o.as(BlockState.class), o -> BlockStateMapper.wrapBlockState(o).orElseThrow());
         }

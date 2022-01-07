@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.entity.Villager;
 import org.bukkit.event.entity.VillagerCareerChangeEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -24,6 +26,7 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SVillagerCareerChangeEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -38,7 +41,7 @@ public class SBukkitVillagerCareerChangeEvent implements SVillagerCareerChangeEv
     private ChangeReason reason;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -46,17 +49,17 @@ public class SBukkitVillagerCareerChangeEvent implements SVillagerCareerChangeEv
     }
 
     @Override
-    public Profession getProfession() {
+    public Profession profession() {
         return Profession.valueOf(event.getProfession().name());
     }
 
     @Override
-    public void setProfession(Profession profession) {
+    public void profession(Profession profession) {
         event.setProfession(Villager.Profession.valueOf(profession.name()));
     }
 
     @Override
-    public ChangeReason getReason() {
+    public ChangeReason changeReason() {
         if (reason == null) {
             reason = ChangeReason.valueOf(event.getReason().name());
         }

@@ -34,14 +34,14 @@ public class SBukkitPlayerCraftItemEvent extends SBukkitPlayerInventoryClickEven
     @Override
     public Recipe getRecipe() {
         if (recipe == null) {
-            recipe = new BukkitRecipe(getEvent().getRecipe());
+            recipe = new BukkitRecipe(event().getRecipe());
         }
         return recipe;
     }
 
     @Override
-    public CraftItemEvent getEvent() {
-        return (CraftItemEvent) super.getEvent();
+    public CraftItemEvent event() {
+        return (CraftItemEvent) super.event();
     }
 
     // TODO: Proper Recipe API

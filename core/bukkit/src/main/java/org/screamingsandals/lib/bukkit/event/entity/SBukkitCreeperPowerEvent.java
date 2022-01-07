@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.CreeperPowerEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -28,6 +30,7 @@ import org.screamingsandals.lib.entity.EntityLightning;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SCreeperPowerEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -45,7 +48,7 @@ public class SBukkitCreeperPowerEvent implements SCreeperPowerEvent, BukkitCance
     private PowerCause cause;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -54,7 +57,7 @@ public class SBukkitCreeperPowerEvent implements SCreeperPowerEvent, BukkitCance
 
     @Override
     @Nullable
-    public EntityLightning getBolt() {
+    public EntityLightning bolt() {
         if (!boltCached) {
             if (event.getLightning() != null) {
                 bolt = EntityMapper.<EntityLightning>wrapEntity(event.getLightning()).orElseThrow();
@@ -65,7 +68,7 @@ public class SBukkitCreeperPowerEvent implements SCreeperPowerEvent, BukkitCance
     }
 
     @Override
-    public PowerCause getCause() {
+    public PowerCause cause() {
         if (cause == null) {
             cause = PowerCause.valueOf(event.getCause().name());
         }

@@ -17,12 +17,15 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SExplosionPrimeEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -36,7 +39,7 @@ public class SBukkitExplosionPrimeEvent implements SExplosionPrimeEvent, BukkitC
     private EntityBasic entity;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -44,22 +47,22 @@ public class SBukkitExplosionPrimeEvent implements SExplosionPrimeEvent, BukkitC
     }
 
     @Override
-    public float getRadius() {
+    public float radius() {
         return event.getRadius();
     }
 
     @Override
-    public void setRadius(float radius) {
+    public void radius(float radius) {
         event.setRadius(radius);
     }
 
     @Override
-    public boolean isFire() {
+    public boolean fire() {
         return event.getFire();
     }
 
     @Override
-    public void setFire(boolean fire) {
+    public void fire(boolean fire) {
         event.setFire(fire);
     }
 }

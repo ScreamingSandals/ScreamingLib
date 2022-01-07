@@ -20,6 +20,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.event.entity.EnderDragonChangePhaseEvent;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +30,7 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEnderDragonChangePhaseEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -44,7 +47,7 @@ public class SBukkitEnderDragonChangePhaseEvent implements SEnderDragonChangePha
     private boolean currentPhaseCached;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -53,7 +56,7 @@ public class SBukkitEnderDragonChangePhaseEvent implements SEnderDragonChangePha
 
     @Override
     @Nullable
-    public Phase getCurrentPhase() {
+    public Phase currentPhase() {
         if (!currentPhaseCached) {
             if (event.getCurrentPhase() != null) {
                 currentPhase = Phase.valueOf(event.getCurrentPhase().name());
@@ -64,12 +67,12 @@ public class SBukkitEnderDragonChangePhaseEvent implements SEnderDragonChangePha
     }
 
     @Override
-    public Phase getNewPhase() {
+    public Phase newPhase() {
         return Phase.valueOf(event.getNewPhase().name());
     }
 
     @Override
-    public void setNewPhase(Phase newPhase) {
+    public void newPhase(Phase newPhase) {
         event.setNewPhase(EnderDragon.Phase.valueOf(newPhase.name()));
     }
 }

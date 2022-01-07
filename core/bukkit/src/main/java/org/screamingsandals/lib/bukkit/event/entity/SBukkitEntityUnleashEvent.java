@@ -17,11 +17,14 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityUnleashEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -36,7 +39,7 @@ public class SBukkitEntityUnleashEvent implements SEntityUnleashEvent {
     private UnleashReason reason;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -44,7 +47,7 @@ public class SBukkitEntityUnleashEvent implements SEntityUnleashEvent {
     }
 
     @Override
-    public UnleashReason getReason() {
+    public UnleashReason reason() {
         if (reason == null) {
             reason = UnleashReason.valueOf(event.getReason().name());
         }

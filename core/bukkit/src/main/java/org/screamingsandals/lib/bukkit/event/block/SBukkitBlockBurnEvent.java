@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.BlockBurnEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -24,6 +26,7 @@ import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.SBlockBurnEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -39,7 +42,7 @@ public class SBukkitBlockBurnEvent implements SBlockBurnEvent, BukkitCancellable
     private boolean ignitingBlockCached;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -47,7 +50,7 @@ public class SBukkitBlockBurnEvent implements SBlockBurnEvent, BukkitCancellable
     }
 
     @Override
-    public @Nullable BlockHolder getIgnitingBlock() {
+    public @Nullable BlockHolder ignitingBlock() {
         if (!ignitingBlockCached) {
             if (event.getIgnitingBlock() != null) {
                 ignitingBlock = BlockMapper.wrapBlock(event.getIgnitingBlock());

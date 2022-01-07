@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.block.CauldronLevelChangeEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -26,6 +28,7 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.block.SCauldronLevelChangeEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -42,7 +45,7 @@ public class SBukkitCauldronLevelChangeEvent implements SCauldronLevelChangeEven
     private Reason reason;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -51,7 +54,7 @@ public class SBukkitCauldronLevelChangeEvent implements SCauldronLevelChangeEven
 
     @Override
     @Nullable
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (!entityConverted) {
             if (event.getEntity() != null) {
                 entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
@@ -62,12 +65,12 @@ public class SBukkitCauldronLevelChangeEvent implements SCauldronLevelChangeEven
     }
 
     @Override
-    public int getOldLevel() {
+    public int oldLevel() {
         return event.getOldLevel();
     }
 
     @Override
-    public Reason getReason() {
+    public Reason reason() {
         if (reason == null) {
             reason = Reason.get(event.getReason().name());
         }
@@ -75,12 +78,12 @@ public class SBukkitCauldronLevelChangeEvent implements SCauldronLevelChangeEven
     }
 
     @Override
-    public int getNewLevel() {
+    public int newLevel() {
         return event.getNewLevel();
     }
 
     @Override
-    public void setNewLevel(int newLevel) {
+    public void newLevel(int newLevel) {
         event.setNewLevel(newLevel);
     }
 }

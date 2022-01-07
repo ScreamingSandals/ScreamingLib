@@ -20,5 +20,5 @@ import org.screamingsandals.lib.entity.EntityBasic;
 
 public interface SEntityCombustByEntityEvent extends SEntityCombustEvent {
 
-    EntityBasic getCombuster();
+    EntityBasic combuster();
 }

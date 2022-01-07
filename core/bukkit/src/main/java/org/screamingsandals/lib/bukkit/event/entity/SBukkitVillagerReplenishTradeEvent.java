@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.VillagerReplenishTradeEvent;
 import org.bukkit.inventory.MerchantRecipe;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -26,6 +28,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SVillagerReplenishTradeEvent;
 import org.screamingsandals.lib.event.player.SPlayerCraftItemEvent;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -39,7 +42,7 @@ public class SBukkitVillagerReplenishTradeEvent implements SVillagerReplenishTra
     private EntityBasic entity;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -47,22 +50,22 @@ public class SBukkitVillagerReplenishTradeEvent implements SVillagerReplenishTra
     }
 
     @Override
-    public SPlayerCraftItemEvent.Recipe getRecipe() {
+    public SPlayerCraftItemEvent.Recipe recipe() {
         return new SBukkitPlayerCraftItemEvent.BukkitRecipe(event.getRecipe());
     }
 
     @Override
-    public void setRecipe(SPlayerCraftItemEvent.Recipe recipe) {
+    public void recipe(SPlayerCraftItemEvent.Recipe recipe) {
         event.setRecipe((MerchantRecipe) recipe.raw());
     }
 
     @Override
-    public int getBonus() {
+    public int bonus() {
         return event.getBonus();
     }
 
     @Override
-    public void setBonus(int bonus) {
+    public void bonus(int bonus) {
         event.setBonus(bonus);
     }
 }

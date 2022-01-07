@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
@@ -25,6 +27,7 @@ import org.screamingsandals.lib.event.entity.SItemDespawnEvent;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -39,7 +42,7 @@ public class SBukkitItemDespawnEvent implements SItemDespawnEvent, BukkitCancell
     private LocationHolder location;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -47,7 +50,7 @@ public class SBukkitItemDespawnEvent implements SItemDespawnEvent, BukkitCancell
     }
 
     @Override
-    public LocationHolder getLocation() {
+    public LocationHolder location() {
         if (location == null) {
             location = LocationMapper.wrapLocation(event.getLocation());
         }

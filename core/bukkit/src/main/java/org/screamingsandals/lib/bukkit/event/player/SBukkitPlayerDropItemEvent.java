@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -25,6 +27,7 @@ import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.event.player.SPlayerDropItemEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

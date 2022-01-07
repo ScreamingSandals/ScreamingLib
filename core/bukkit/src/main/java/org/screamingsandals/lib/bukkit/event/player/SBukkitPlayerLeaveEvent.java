@@ -20,6 +20,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -30,6 +31,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)

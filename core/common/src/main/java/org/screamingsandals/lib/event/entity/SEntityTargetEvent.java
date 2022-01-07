@@ -23,14 +23,14 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SEntityTargetEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic getEntity();
+    EntityBasic entity();
 
     @Nullable
-    EntityBasic getTarget();
+    EntityBasic target();
 
-    void setTarget(@Nullable EntityBasic target);
+    void target(@Nullable EntityBasic target);
 
-    TargetReason getTargetReason();
+    TargetReason targetReason();
 
     /**
      * An enum to specify the reason for the targeting
