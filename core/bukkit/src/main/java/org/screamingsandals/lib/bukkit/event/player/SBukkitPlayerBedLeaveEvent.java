@@ -42,7 +42,7 @@ public class SBukkitPlayerBedLeaveEvent implements SPlayerBedLeaveEvent, BukkitC
     private BlockHolder bed;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -50,7 +50,7 @@ public class SBukkitPlayerBedLeaveEvent implements SPlayerBedLeaveEvent, BukkitC
     }
 
     @Override
-    public BlockHolder getBed() {
+    public BlockHolder bed() {
         if (bed == null) {
             bed = BlockMapper.wrapBlock(event.getBed());
         }
@@ -58,12 +58,12 @@ public class SBukkitPlayerBedLeaveEvent implements SPlayerBedLeaveEvent, BukkitC
     }
 
     @Override
-    public boolean isBedSpawn() {
+    public boolean bedSpawn() {
         return event.shouldSetSpawnLocation();
     }
 
     @Override
-    public void setBedSpawn(boolean bedSpawn) {
+    public void bedSpawn(boolean bedSpawn) {
         event.setSpawnLocation(bedSpawn);
     }
 }

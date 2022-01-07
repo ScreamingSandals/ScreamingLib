@@ -21,5 +21,5 @@ import org.screamingsandals.lib.world.WorldHolder;
 
 public interface SPlayerWorldChangeEvent extends SPlayerEvent, PlatformEventWrapper {
 
-    WorldHolder getFrom();
+    WorldHolder from();
 }

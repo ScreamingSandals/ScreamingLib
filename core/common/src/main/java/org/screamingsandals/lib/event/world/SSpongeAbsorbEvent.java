@@ -27,7 +27,7 @@ import java.util.Collection;
 @LimitedVersionSupport("Bukkit >= 1.13")
 public interface SSpongeAbsorbEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    Collection<BlockStateHolder> getWaterBlocks();
+    Collection<BlockStateHolder> waterBlocks();
 }

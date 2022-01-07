@@ -46,7 +46,7 @@ public class SBukkitPlayerUpdateSignEvent implements SPlayerUpdateSignEvent, Buk
     private BlockHolder block;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -54,7 +54,7 @@ public class SBukkitPlayerUpdateSignEvent implements SPlayerUpdateSignEvent, Buk
     }
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }

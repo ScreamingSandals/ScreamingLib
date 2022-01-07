@@ -44,7 +44,7 @@ public class SBukkitPlayerInteractEntityEvent implements SPlayerInteractEntityEv
     private EquipmentSlotHolder hand;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -52,7 +52,7 @@ public class SBukkitPlayerInteractEntityEvent implements SPlayerInteractEntityEv
     }
 
     @Override
-    public EntityBasic getClickedEntity() {
+    public EntityBasic clickedEntity() {
         if (clickedEntity == null) {
             clickedEntity = EntityMapper.wrapEntity(event.getRightClicked()).orElseThrow();
         }
@@ -60,7 +60,7 @@ public class SBukkitPlayerInteractEntityEvent implements SPlayerInteractEntityEv
     }
 
     @Override
-    public EquipmentSlotHolder getHand() {
+    public EquipmentSlotHolder hand() {
         if (hand == null) {
             hand = EquipmentSlotHolder.of(event.getHand());
         }

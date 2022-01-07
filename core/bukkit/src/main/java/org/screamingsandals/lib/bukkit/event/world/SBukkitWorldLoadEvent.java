@@ -41,7 +41,7 @@ public class SBukkitWorldLoadEvent implements SWorldLoadEvent {
     private WorldHolder world;
 
     @Override
-    public WorldHolder getWorld() {
+    public WorldHolder world() {
         if (world == null) {
             world = WorldMapper.wrapWorld(event.getWorld());
         }

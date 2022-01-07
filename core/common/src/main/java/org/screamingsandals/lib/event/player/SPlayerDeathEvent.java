@@ -24,40 +24,40 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 
 public interface SPlayerDeathEvent extends SEntityDeathEvent, SPlayerEvent {
 
-    Component getDeathMessage();
+    Component deathMessage();
 
-    void setDeathMessage(Component deathMessage);
+    void deathMessage(Component deathMessage);
 
-    void setDeathMessage(ComponentLike deathMessage);
+    void deathMessage(ComponentLike deathMessage);
 
-    boolean isKeepInventory();
+    boolean keepInventory();
 
-    void setKeepInventory(boolean keepInventory);
+    void keepInventory(boolean keepInventory);
 
-    boolean isShouldDropExperience();
+    boolean shouldDropExperience();
 
-    void setShouldDropExperience(boolean shouldDropExperience);
+    void shouldDropExperience(boolean shouldDropExperience);
 
-    boolean isKeepLevel();
+    boolean keepLevel();
 
-    void setKeepLevel(boolean keepLevel);
+    void keepLevel(boolean keepLevel);
 
-    int getNewLevel();
+    int newLevel();
 
-    void setNewLevel(int newLevel);
+    void newLevel(int newLevel);
 
-    int getNewTotalExp();
+    int newTotalExp();
 
-    void setNewTotalExp(int newTotalExp);
+    void newTotalExp(int newTotalExp);
 
     int getNewExp();
 
-    void setNewExp(int newExp);
+    void newExp(int newExp);
 
-    int getDroppedExp();
+    int droppedExp();
 
-    void setDroppedExp(int droppedExp);
+    void droppedExp(int droppedExp);
 
     @Nullable
-    PlayerWrapper getKiller();
+    PlayerWrapper killer();
 }

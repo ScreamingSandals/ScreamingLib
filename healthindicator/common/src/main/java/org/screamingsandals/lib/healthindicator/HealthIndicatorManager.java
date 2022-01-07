@@ -111,9 +111,9 @@ public class HealthIndicatorManager {
         }
 
         getActiveIndicators().forEach((key, indicator) -> {
-            if (indicator.getViewers().contains(event.getPlayer())) {
-                indicator.removeViewer(event.getPlayer());
-                indicator.removeTrackedPlayer(event.getPlayer());
+            if (indicator.getViewers().contains(event.player())) {
+                indicator.removeViewer(event.player());
+                indicator.removeTrackedPlayer(event.player());
             }
             if (!indicator.hasViewers()) {
                 removeHealthIndicator(indicator);

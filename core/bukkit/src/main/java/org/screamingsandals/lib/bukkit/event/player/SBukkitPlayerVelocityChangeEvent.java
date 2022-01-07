@@ -41,7 +41,7 @@ public class SBukkitPlayerVelocityChangeEvent implements SPlayerVelocityChangeEv
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -49,12 +49,12 @@ public class SBukkitPlayerVelocityChangeEvent implements SPlayerVelocityChangeEv
     }
 
     @Override
-    public Vector3D getVelocity() {
+    public Vector3D velocity() {
         return new Vector3D(event.getVelocity().getX(), event.getVelocity().getY(), event.getVelocity().getZ());
     }
 
     @Override
-    public void setVelocity(Vector3D velocity) {
+    public void velocity(Vector3D velocity) {
         event.setVelocity(new Vector(velocity.getX(), velocity.getY(), velocity.getZ()));
     }
 }

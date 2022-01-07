@@ -39,7 +39,7 @@ public class SBukkitPlayerToggleSprintEvent implements SPlayerToggleSprintEvent,
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -47,7 +47,7 @@ public class SBukkitPlayerToggleSprintEvent implements SPlayerToggleSprintEvent,
     }
 
     @Override
-    public boolean isSprinting() {
+    public boolean sprinting() {
         return event.isSprinting();
     }
 }

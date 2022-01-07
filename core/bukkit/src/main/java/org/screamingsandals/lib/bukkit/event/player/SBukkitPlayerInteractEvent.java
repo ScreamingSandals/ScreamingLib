@@ -55,7 +55,7 @@ public class SBukkitPlayerInteractEvent implements SPlayerInteractEvent, NoAutoC
     private boolean handCached;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -63,7 +63,7 @@ public class SBukkitPlayerInteractEvent implements SPlayerInteractEvent, NoAutoC
     }
 
     @Override
-    public @Nullable ItemView getItem() {
+    public @Nullable ItemView item() {
         if (!itemCached) {
             if (event.getItem() != null) {
                 item = new BukkitItemView(event.getItem());
@@ -74,7 +74,7 @@ public class SBukkitPlayerInteractEvent implements SPlayerInteractEvent, NoAutoC
     }
 
     @Override
-    public Action getAction() {
+    public Action action() {
         if (action == null) {
             action = Action.convert(event.getAction().name());
         }
@@ -82,7 +82,7 @@ public class SBukkitPlayerInteractEvent implements SPlayerInteractEvent, NoAutoC
     }
 
     @Override
-    public @Nullable BlockHolder getBlockClicked() {
+    public @Nullable BlockHolder clickedBlock() {
         if (!clickedBlockCached) {
             if (event.getClickedBlock() != null) {
                 clickedBlock = BlockMapper.wrapBlock(event.getClickedBlock());
@@ -93,7 +93,7 @@ public class SBukkitPlayerInteractEvent implements SPlayerInteractEvent, NoAutoC
     }
 
     @Override
-    public BlockFace getBlockFace() {
+    public BlockFace blockFace() {
         if (blockFace == null) {
             blockFace = BlockFace.valueOf(event.getBlockFace().name());
         }
@@ -101,27 +101,27 @@ public class SBukkitPlayerInteractEvent implements SPlayerInteractEvent, NoAutoC
     }
 
     @Override
-    public Result getUseClickedBlock() {
+    public Result useClickedBlock() {
         return Result.convert(event.useInteractedBlock().name());
     }
 
     @Override
-    public void setUseClickedBlock(Result useClickedBlock) {
+    public void useClickedBlock(Result useClickedBlock) {
         event.setUseInteractedBlock(Event.Result.valueOf(useClickedBlock.name()));
     }
 
     @Override
-    public Result getUseItemInHand() {
+    public Result useItemInHand() {
         return Result.convert(event.useItemInHand().name());
     }
 
     @Override
-    public void setUseItemInHand(Result useItemInHand) {
+    public void useItemInHand(Result useItemInHand) {
         event.setUseItemInHand(Event.Result.valueOf(useItemInHand.name()));
     }
 
     @Override
-    public @Nullable EquipmentSlotHolder getHand() {
+    public @Nullable EquipmentSlotHolder hand() {
         if (!handCached) {
             if (event.getHand() != null) {
                 hand = EquipmentSlotHolder.of(event.getHand());

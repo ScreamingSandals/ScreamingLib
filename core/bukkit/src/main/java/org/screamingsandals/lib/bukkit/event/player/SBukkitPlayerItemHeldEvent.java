@@ -39,7 +39,7 @@ public class SBukkitPlayerItemHeldEvent implements SPlayerItemHeldEvent, BukkitC
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -47,12 +47,12 @@ public class SBukkitPlayerItemHeldEvent implements SPlayerItemHeldEvent, BukkitC
     }
 
     @Override
-    public int getPreviousSlot() {
+    public int previousSlot() {
         return event.getPreviousSlot();
     }
 
     @Override
-    public int getNewSlot() {
+    public int newSlot() {
         return event.getNewSlot();
     }
 }

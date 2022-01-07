@@ -38,7 +38,7 @@ public class SBukkitPlayerLevelChangeEvent implements SPlayerLevelChangeEvent {
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -46,12 +46,12 @@ public class SBukkitPlayerLevelChangeEvent implements SPlayerLevelChangeEvent {
     }
 
     @Override
-    public int getOldLevel() {
+    public int oldLevel() {
         return event.getOldLevel();
     }
 
     @Override
-    public int getNewLevel() {
+    public int newLevel() {
         return event.getNewLevel();
     }
 }

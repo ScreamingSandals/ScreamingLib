@@ -39,7 +39,7 @@ public class SBukkitPlayerToggleSneakEvent implements SPlayerToggleSneakEvent, B
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -47,7 +47,7 @@ public class SBukkitPlayerToggleSneakEvent implements SPlayerToggleSneakEvent, B
     }
 
     @Override
-    public boolean isSneaking() {
+    public boolean sneaking() {
         return event.isSneaking();
     }
 }

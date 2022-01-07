@@ -25,5 +25,5 @@ public interface SPlayerEvent extends SEvent {
      * Gets the player associated with this event.
      * @return player that triggered the event
      */
-    PlayerWrapper getPlayer();
+    PlayerWrapper player();
 }

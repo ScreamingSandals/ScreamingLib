@@ -40,7 +40,7 @@ public class SBukkitPlayerAnimationEvent implements SPlayerAnimationEvent, Bukki
     private PlayerAnimationType animationType;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -48,7 +48,7 @@ public class SBukkitPlayerAnimationEvent implements SPlayerAnimationEvent, Bukki
     }
 
     @Override
-    public PlayerAnimationType getAnimationType() {
+    public PlayerAnimationType animationType() {
         if (animationType == null) {
             animationType = PlayerAnimationType.convert(event.getAnimationType().name());
         }

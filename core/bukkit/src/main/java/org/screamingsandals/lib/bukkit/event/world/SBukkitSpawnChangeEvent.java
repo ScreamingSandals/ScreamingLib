@@ -45,7 +45,7 @@ public class SBukkitSpawnChangeEvent implements SSpawnChangeEvent {
     private LocationHolder newLocation;
 
     @Override
-    public WorldHolder getWorld() {
+    public WorldHolder world() {
         if (world == null) {
             world = WorldMapper.wrapWorld(event.getWorld());
         }
@@ -53,7 +53,7 @@ public class SBukkitSpawnChangeEvent implements SSpawnChangeEvent {
     }
 
     @Override
-    public LocationHolder getOldLocation() {
+    public LocationHolder oldLocation() {
         if (oldLocation == null) {
             oldLocation = LocationMapper.wrapLocation(event.getPreviousLocation());
         }
@@ -61,7 +61,7 @@ public class SBukkitSpawnChangeEvent implements SSpawnChangeEvent {
     }
 
     @Override
-    public LocationHolder getNewLocation() {
+    public LocationHolder newLocation() {
         if (newLocation == null) {
             newLocation = LocationMapper.wrapLocation(event.getWorld().getSpawnLocation());
         }

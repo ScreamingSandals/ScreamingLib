@@ -41,7 +41,7 @@ public class SBukkitPlayerGameModeChangeEvent implements SPlayerGameModeChangeEv
     private GameModeHolder gameMode;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -49,7 +49,7 @@ public class SBukkitPlayerGameModeChangeEvent implements SPlayerGameModeChangeEv
     }
 
     @Override
-    public GameModeHolder getGameMode() {
+    public GameModeHolder gameMode() {
         if (gameMode == null) {
             gameMode = GameModeHolder.of(event.getNewGameMode());
         }

@@ -42,7 +42,7 @@ public class SBukkitPlayerDropItemEvent implements SPlayerDropItemEvent, BukkitC
     private EntityItem itemDrop;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -50,7 +50,7 @@ public class SBukkitPlayerDropItemEvent implements SPlayerDropItemEvent, BukkitC
     }
 
     @Override
-    public EntityItem getItemDrop() {
+    public EntityItem itemDrop() {
         if (itemDrop == null) {
             itemDrop = new BukkitEntityItem(event.getItemDrop());
         }

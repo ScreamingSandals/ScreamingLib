@@ -20,15 +20,15 @@ import org.screamingsandals.lib.event.PlatformEventWrapper;
 
 public interface SPlayerPortalEvent extends SPlayerTeleportEvent, PlatformEventWrapper {
 
-    int getSearchRadius();
+    int searchRadius();
 
-    void setSearchRadius(int getSearchRadius);
+    void searchRadius(int getSearchRadius);
 
-    boolean isCanCreatePortal();
+    boolean canCreatePortal();
 
-    void setCanCreatePortal(boolean canCreatePortal);
+    void canCreatePortal(boolean canCreatePortal);
 
-    int getCreationRadius();
+    int creationRadius();
 
-    void setCreationRadius(int creationRadius);
+    void creationRadius(int creationRadius);
 }

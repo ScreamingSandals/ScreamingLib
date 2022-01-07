@@ -30,32 +30,32 @@ public class SBukkitPlayerPortalEvent extends SBukkitPlayerTeleportEvent impleme
     }
 
     @Override
-    public int getSearchRadius() {
+    public int searchRadius() {
         return this.event().getSearchRadius();
     }
 
     @Override
-    public void setSearchRadius(int getSearchRadius) {
+    public void searchRadius(int getSearchRadius) {
         this.event().setSearchRadius(getSearchRadius);
     }
 
     @Override
-    public boolean isCanCreatePortal() {
+    public boolean canCreatePortal() {
         return this.event().getCanCreatePortal();
     }
 
     @Override
-    public void setCanCreatePortal(boolean canCreatePortal) {
+    public void canCreatePortal(boolean canCreatePortal) {
         this.event().setCanCreatePortal(canCreatePortal);
     }
 
     @Override
-    public int getCreationRadius() {
+    public int creationRadius() {
         return this.event().getCreationRadius();
     }
 
     @Override
-    public void setCreationRadius(int creationRadius) {
+    public void creationRadius(int creationRadius) {
         this.event().setCreationRadius(creationRadius);
     }
 }

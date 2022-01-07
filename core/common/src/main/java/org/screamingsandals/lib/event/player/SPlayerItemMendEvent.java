@@ -23,11 +23,11 @@ import org.screamingsandals.lib.item.Item;
 
 public interface SPlayerItemMendEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    Item getItem();
+    Item item();
 
-    EntityExperience getExperienceOrb();
+    EntityExperience experienceOrb();
 
-    int getRepairAmount();
+    int repairAmount();
 
-    void setRepairAmount(int repairAmount);
+    void repairAmount(int repairAmount);
 }

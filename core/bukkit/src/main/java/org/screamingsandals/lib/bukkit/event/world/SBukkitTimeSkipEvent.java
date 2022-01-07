@@ -43,7 +43,7 @@ public class SBukkitTimeSkipEvent implements STimeSkipEvent, BukkitCancellable {
     private Reason reason;
 
     @Override
-    public WorldHolder getWorld() {
+    public WorldHolder world() {
         if (world == null) {
             world = WorldMapper.wrapWorld(event.getWorld());
         }
@@ -51,7 +51,7 @@ public class SBukkitTimeSkipEvent implements STimeSkipEvent, BukkitCancellable {
     }
 
     @Override
-    public Reason getReason() {
+    public Reason reason() {
         if (reason == null) {
             reason = Reason.valueOf(event.getSkipReason().name());
         }
@@ -59,12 +59,12 @@ public class SBukkitTimeSkipEvent implements STimeSkipEvent, BukkitCancellable {
     }
 
     @Override
-    public long getSkipAmount() {
+    public long skipAmount() {
         return event.getSkipAmount();
     }
 
     @Override
-    public void setSkipAmount(long skipAmount) {
+    public void skipAmount(long skipAmount) {
         event.setSkipAmount(skipAmount);
     }
 }

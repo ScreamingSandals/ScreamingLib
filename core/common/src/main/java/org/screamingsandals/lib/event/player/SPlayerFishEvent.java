@@ -24,15 +24,15 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 public interface SPlayerFishEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
     @Nullable
-    EntityBasic getEntity();
+    EntityBasic caughtEntity();
 
-    int getExp();
+    int exp();
 
-    void setExp(int exp);
+    void exp(int exp);
 
-    State getState();
+    State state();
 
-    EntityBasic getHookEntity();
+    EntityBasic hookEntity();
 
     /**
      * An enum to specify the state of the fishing

@@ -41,71 +41,71 @@ public class SBukkitPlayerDeathEvent extends SBukkitEntityDeathEvent implements 
     private PlayerWrapper killer;
 
     @Override
-    public Component getDeathMessage() {
+    public Component deathMessage() {
         return ComponentObjectLink.processGetter(event(), "deathMessage", event()::getDeathMessage);
     }
 
     @Override
-    public void setDeathMessage(Component deathMessage) {
+    public void deathMessage(Component deathMessage) {
         ComponentObjectLink.processSetter(event(), "deathMessage", event()::setDeathMessage, deathMessage);
     }
 
     @Override
-    public void setDeathMessage(ComponentLike deathMessage) {
+    public void deathMessage(ComponentLike deathMessage) {
         if (deathMessage instanceof SenderMessage) {
-            setDeathMessage(((SenderMessage) deathMessage).asComponent(getPlayer()));
+            deathMessage(((SenderMessage) deathMessage).asComponent(player()));
         } else {
-            setDeathMessage(deathMessage != null ? deathMessage.asComponent() : null);
+            deathMessage(deathMessage != null ? deathMessage.asComponent() : null);
         }
     }
 
     @Override
-    public boolean isKeepInventory() {
+    public boolean keepInventory() {
         return event().getKeepInventory();
     }
 
     @Override
-    public void setKeepInventory(boolean keepInventory) {
+    public void keepInventory(boolean keepInventory) {
         event().setKeepInventory(keepInventory);
     }
 
     @Override
-    public boolean isShouldDropExperience() {
+    public boolean shouldDropExperience() {
         return event().shouldDropExperience();
     }
 
     @Override
-    public void setShouldDropExperience(boolean shouldDropExperience) {
+    public void shouldDropExperience(boolean shouldDropExperience) {
         event().setShouldDropExperience(shouldDropExperience);
     }
 
     @Override
-    public boolean isKeepLevel() {
+    public boolean keepLevel() {
         return event().getKeepLevel();
     }
 
     @Override
-    public void setKeepLevel(boolean keepLevel) {
+    public void keepLevel(boolean keepLevel) {
         event().setKeepLevel(keepLevel);
     }
 
     @Override
-    public int getNewLevel() {
+    public int newLevel() {
         return event().getNewLevel();
     }
 
     @Override
-    public void setNewLevel(int newLevel) {
+    public void newLevel(int newLevel) {
         event().setNewLevel(newLevel);
     }
 
     @Override
-    public int getNewTotalExp() {
+    public int newTotalExp() {
         return event().getNewTotalExp();
     }
 
     @Override
-    public void setNewTotalExp(int newTotalExp) {
+    public void newTotalExp(int newTotalExp) {
         event().setNewTotalExp(newTotalExp);
     }
 
@@ -115,23 +115,23 @@ public class SBukkitPlayerDeathEvent extends SBukkitEntityDeathEvent implements 
     }
 
     @Override
-    public void setNewExp(int newExp) {
+    public void newExp(int newExp) {
         event().setNewExp(newExp);
     }
 
     @Override
-    public int getDroppedExp() {
+    public int droppedExp() {
         return event().getDroppedExp();
     }
 
     @Override
-    public void setDroppedExp(int droppedExp) {
+    public void droppedExp(int droppedExp) {
         event().setDroppedExp(droppedExp);
     }
 
     @Override
     @Nullable
-    public PlayerWrapper getKiller() {
+    public PlayerWrapper killer() {
         if (bukkitKiller != null && killer == null) {
             killer = new BukkitEntityPlayer(bukkitKiller);
         }
@@ -139,7 +139,7 @@ public class SBukkitPlayerDeathEvent extends SBukkitEntityDeathEvent implements 
     }
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         return (PlayerWrapper) entity();
     }
 

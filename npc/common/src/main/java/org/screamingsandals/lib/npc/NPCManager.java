@@ -82,14 +82,14 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
             return;
         }
 
-        final var player = event.getPlayer();
+        final var player = event.player();
         for (final var npc : activeVisuals.values()) {
             if (!npc.isShown() || !npc.shouldLookAtPlayer()
                     || !npc.getViewers().contains(player) || !player.getLocation().isWorldSame(npc.getLocation())
                     || npc.getLocation().getDistanceSquared(player.getLocation()) > LocatableVisual.DEFAULT_VIEW_DISTANCE) {
                 continue;
             }
-            npc.lookAtLocation(event.getNewLocation(), player);
+            npc.lookAtLocation(event.newLocation(), player);
         }
     }
 

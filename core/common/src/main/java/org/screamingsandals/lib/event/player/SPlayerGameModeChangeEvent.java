@@ -22,5 +22,5 @@ import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 
 public interface SPlayerGameModeChangeEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    GameModeHolder getGameMode();
+    GameModeHolder gameMode();
 }

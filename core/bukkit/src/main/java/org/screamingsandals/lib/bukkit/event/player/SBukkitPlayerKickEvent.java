@@ -42,7 +42,7 @@ public class SBukkitPlayerKickEvent implements SPlayerKickEvent, BukkitCancellab
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -50,41 +50,41 @@ public class SBukkitPlayerKickEvent implements SPlayerKickEvent, BukkitCancellab
     }
 
     @Override
-    public Component getLeaveMessage() {
+    public Component leaveMessage() {
         return ComponentObjectLink.processGetter(event, "leaveMessage", event::getLeaveMessage);
     }
 
     @Override
-    public void setLeaveMessage(Component leaveMessage) {
+    public void leaveMessage(Component leaveMessage) {
         ComponentObjectLink.processSetter(event, "leaveMessage", event::setReason, leaveMessage);
 
     }
 
     @Override
-    public void setLeaveMessage(ComponentLike leaveMessage) {
+    public void leaveMessage(ComponentLike leaveMessage) {
         if (leaveMessage instanceof SenderMessage) {
-            setLeaveMessage(((SenderMessage) leaveMessage).asComponent(getPlayer()));
+            leaveMessage(((SenderMessage) leaveMessage).asComponent(player()));
         } else {
-            setLeaveMessage(leaveMessage.asComponent());
+            leaveMessage(leaveMessage.asComponent());
         }
     }
 
     @Override
-    public Component getKickReason() {
+    public Component kickReason() {
         return ComponentObjectLink.processGetter(event, "reason", event::getReason);
     }
 
     @Override
-    public void setKickReason(Component kickReason) {
+    public void kickReason(Component kickReason) {
         ComponentObjectLink.processSetter(event, "reason", event::setReason, kickReason);
     }
 
     @Override
-    public void setKickReason(ComponentLike kickReason) {
+    public void kickReason(ComponentLike kickReason) {
         if (kickReason instanceof SenderMessage) {
-            setKickReason(((SenderMessage) kickReason).asComponent(getPlayer()));
+            kickReason(((SenderMessage) kickReason).asComponent(player()));
         } else {
-            setKickReason(kickReason.asComponent());
+            kickReason(kickReason.asComponent());
         }
     }
 }

@@ -23,24 +23,20 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import java.util.Collection;
 
 public interface SPlayerChatEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
-    Collection<PlayerWrapper> getRecipients();
+    Collection<PlayerWrapper> recipients();
 
-    PlayerWrapper getSender();
+    PlayerWrapper sender();
 
-    String getMessage();
+    String message();
 
-    void setMessage(String message);
+    void message(String message);
 
-    String getFormat();
+    String format();
 
-    void setFormat(String format);
+    void format(String format);
 
-    /**
-     * same as {@link SPlayerChatEvent#getSender()}
-     * @return
-     */
     @Override
-    default PlayerWrapper getPlayer() {
-        return getSender();
+    default PlayerWrapper player() {
+        return sender();
     }
 }

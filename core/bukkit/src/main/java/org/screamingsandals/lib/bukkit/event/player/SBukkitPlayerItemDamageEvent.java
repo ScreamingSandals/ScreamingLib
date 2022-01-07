@@ -42,7 +42,7 @@ public class SBukkitPlayerItemDamageEvent implements SPlayerItemDamageEvent, Buk
     private Item item;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -50,7 +50,7 @@ public class SBukkitPlayerItemDamageEvent implements SPlayerItemDamageEvent, Buk
     }
 
     @Override
-    public Item getItem() {
+    public Item item() {
         if (item == null) {
             item = new BukkitItem(event.getItem());
         }
@@ -58,12 +58,12 @@ public class SBukkitPlayerItemDamageEvent implements SPlayerItemDamageEvent, Buk
     }
 
     @Override
-    public int getDamage() {
+    public int damage() {
         return event.getDamage();
     }
 
     @Override
-    public void setDamage(int damage) {
+    public void damage(int damage) {
         event.setDamage(damage);
     }
 }

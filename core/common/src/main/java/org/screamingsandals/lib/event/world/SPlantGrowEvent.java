@@ -27,12 +27,12 @@ import java.util.Collection;
 
 public interface SPlantGrowEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    Collection<BlockStateHolder> getBlockStates();
+    Collection<BlockStateHolder> blockStates();
 
     LocationHolder getLocation();
 
     @Nullable
-    PlayerWrapper getPlayer();
+    PlayerWrapper player();
 
-    boolean isBonemealed();
+    boolean boneMealed();
 }

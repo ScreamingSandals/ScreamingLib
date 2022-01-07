@@ -43,7 +43,7 @@ public class SBukkitPlayerEggThrowEvent implements SPlayerEggThrowEvent {
     private EntityBasic egg;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -51,7 +51,7 @@ public class SBukkitPlayerEggThrowEvent implements SPlayerEggThrowEvent {
     }
 
     @Override
-    public EntityBasic getEgg() {
+    public EntityBasic eggEntity() {
         if (egg == null) {
             egg = EntityMapper.wrapEntity(event.getEgg()).orElseThrow();
         }
@@ -59,32 +59,32 @@ public class SBukkitPlayerEggThrowEvent implements SPlayerEggThrowEvent {
     }
 
     @Override
-    public boolean isHatching() {
+    public boolean hatching() {
         return event.isHatching();
     }
 
     @Override
-    public void setHatching(boolean hatching) {
+    public void hatching(boolean hatching) {
         event.setHatching(hatching);
     }
 
     @Override
-    public EntityTypeHolder getHatchType() {
+    public EntityTypeHolder hatchType() {
         return EntityTypeHolder.of(event.getHatchingType());
     }
 
     @Override
-    public void setHatchType(EntityTypeHolder hatchType) {
+    public void hatchType(EntityTypeHolder hatchType) {
         event.setHatchingType(hatchType.as(EntityType.class));
     }
 
     @Override
-    public byte getNumHatches() {
+    public byte hatchesNumber() {
         return event.getNumHatches();
     }
 
     @Override
-    public void setNumHatches(byte numHatches) {
+    public void hatchesNumber(byte numHatches) {
         event.setNumHatches(numHatches);
     }
 }

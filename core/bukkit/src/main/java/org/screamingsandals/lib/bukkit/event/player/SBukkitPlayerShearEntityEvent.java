@@ -47,7 +47,7 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     private EquipmentSlotHolder hand;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -55,7 +55,7 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     }
 
     @Override
-    public EntityBasic getWhat() {
+    public EntityBasic entity() {
         if (what == null) {
             what = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -63,7 +63,7 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     }
 
     @Override
-    public Item getItem() {
+    public Item item() {
         if (item == null) {
             item = new BukkitItem(event.getItem());
         }
@@ -71,7 +71,7 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     }
 
     @Override
-    public EquipmentSlotHolder getHand() {
+    public EquipmentSlotHolder hand() {
         if (hand == null) {
             hand = EquipmentSlotHolder.of(event.getHand());
         }

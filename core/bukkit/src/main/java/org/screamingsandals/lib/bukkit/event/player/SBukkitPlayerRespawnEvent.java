@@ -41,7 +41,7 @@ public class SBukkitPlayerRespawnEvent implements SPlayerRespawnEvent {
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -49,12 +49,12 @@ public class SBukkitPlayerRespawnEvent implements SPlayerRespawnEvent {
     }
 
     @Override
-    public LocationHolder getLocation() {
+    public LocationHolder location() {
         return LocationMapper.wrapLocation(event.getRespawnLocation());
     }
 
     @Override
-    public void setLocation(LocationHolder location) {
+    public void location(LocationHolder location) {
         event.setRespawnLocation(location.as(Location.class));
     }
 }

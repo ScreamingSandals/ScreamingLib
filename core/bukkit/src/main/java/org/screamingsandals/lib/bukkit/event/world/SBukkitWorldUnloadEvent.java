@@ -42,7 +42,7 @@ public class SBukkitWorldUnloadEvent implements SWorldUnloadEvent, BukkitCancell
     private WorldHolder world;
 
     @Override
-    public WorldHolder getWorld() {
+    public WorldHolder world() {
         if (world == null) {
             world = WorldMapper.wrapWorld(event.getWorld());
         }

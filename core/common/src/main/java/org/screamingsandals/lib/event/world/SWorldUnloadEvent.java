@@ -22,5 +22,5 @@ import org.screamingsandals.lib.world.WorldHolder;
 
 public interface SWorldUnloadEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    WorldHolder getWorld();
+    WorldHolder world();
 }

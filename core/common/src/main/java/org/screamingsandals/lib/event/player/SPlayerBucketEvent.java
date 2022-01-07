@@ -26,20 +26,20 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SPlayerBucketEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    BlockHolder getBlock();
+    BlockHolder block();
 
-    BlockHolder getBlockClicked();
+    BlockHolder blockClicked();
 
-    BlockFace getBlockFace();
+    BlockFace blockFace();
 
-    ItemTypeHolder getBucket();
+    ItemTypeHolder bucket();
 
     @Nullable
-    Item getItem();
+    Item item();
 
-    void setItem(@Nullable Item item);
+    void item(@Nullable Item item);
 
-    Action getAction();
+    Action action();
 
     enum Action {
         EMPTY,

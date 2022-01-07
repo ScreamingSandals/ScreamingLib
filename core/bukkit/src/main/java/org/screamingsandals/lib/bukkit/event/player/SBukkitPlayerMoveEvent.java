@@ -51,7 +51,7 @@ public class SBukkitPlayerMoveEvent implements SPlayerMoveEvent, BukkitCancellab
     private LocationHolder newLocation;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -59,7 +59,7 @@ public class SBukkitPlayerMoveEvent implements SPlayerMoveEvent, BukkitCancellab
     }
 
     @Override
-    public LocationHolder getCurrentLocation() { // Mutable in Bukkit
+    public LocationHolder currentLocation() { // Mutable in Bukkit
         if (event.getFrom() != currentLocationBukkit) {
             currentLocationBukkit = event.getFrom();
             currentLocation = new LocationHolder(
@@ -75,7 +75,7 @@ public class SBukkitPlayerMoveEvent implements SPlayerMoveEvent, BukkitCancellab
     }
 
     @Override
-    public LocationHolder getNewLocation() {
+    public LocationHolder newLocation() {
         if (event.getTo() != newLocationBukkit) {
             newLocationBukkit = event.getTo();
             newLocation = new LocationHolder(
@@ -91,7 +91,7 @@ public class SBukkitPlayerMoveEvent implements SPlayerMoveEvent, BukkitCancellab
     }
 
     @Override
-    public void setNewLocation(LocationHolder newLocation) {
+    public void newLocation(LocationHolder newLocation) {
         event.setTo(new Location(
                 newLocation.getWorld().as(World.class), // World is BasicWrapper, so the unwrapping is faster task
                 newLocation.getX(),

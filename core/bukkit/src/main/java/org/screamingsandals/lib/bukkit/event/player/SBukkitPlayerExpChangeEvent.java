@@ -38,7 +38,7 @@ public class SBukkitPlayerExpChangeEvent implements SPlayerExpChangeEvent {
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -46,12 +46,12 @@ public class SBukkitPlayerExpChangeEvent implements SPlayerExpChangeEvent {
     }
 
     @Override
-    public int getExp() {
+    public int exp() {
         return event.getAmount();
     }
 
     @Override
-    public void setExp(int exp) {
+    public void exp(int exp) {
         event.setAmount(exp);
     }
 }

@@ -26,17 +26,17 @@ public interface SPlayerBlockDamageEvent extends SCancellableEvent, SPlayerEvent
     /**
      * Damaged Block
      */
-    BlockHolder getBlock();
+    BlockHolder block();
 
     /**
      * Item which has been used to damage this block
      */
-    Item getItemInHand();
+    Item itemInHand();
 
     /**
      * If this damage should instantly break the block or not
      */
-    boolean isInstantBreak();
+    boolean instantBreak();
 
-    void setInstantBreak(boolean instantBreak);
+    void instantBreak(boolean instantBreak);
 }

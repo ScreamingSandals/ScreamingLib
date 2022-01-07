@@ -29,7 +29,7 @@ public class SBukkitModernPlayerPickupItemEvent extends SBukkitEntityPickupItemE
     }
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         return (PlayerWrapper) entity();
     }
 }

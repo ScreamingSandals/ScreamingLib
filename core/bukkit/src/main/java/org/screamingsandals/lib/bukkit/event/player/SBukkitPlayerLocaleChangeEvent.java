@@ -42,7 +42,7 @@ public class SBukkitPlayerLocaleChangeEvent implements SPlayerLocaleChangeEvent 
     private Locale locale;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -50,7 +50,7 @@ public class SBukkitPlayerLocaleChangeEvent implements SPlayerLocaleChangeEvent 
     }
 
     @Override
-    public Locale getLocale() {
+    public Locale locale() {
         if (locale == null) {
             if (Reflect.hasMethod(event, "locale")) {
                 locale = event.locale(); // java.util.Locale is not an adventure thing so we can

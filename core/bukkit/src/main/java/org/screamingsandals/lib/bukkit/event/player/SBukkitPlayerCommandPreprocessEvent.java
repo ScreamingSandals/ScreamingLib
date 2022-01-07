@@ -37,21 +37,21 @@ public class SBukkitPlayerCommandPreprocessEvent implements SPlayerCommandPrepro
     private final PlayerCommandPreprocessEvent event;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         return new BukkitEntityPlayer(event.getPlayer());
     }
     @Override
-    public void setPlayer(PlayerWrapper player) {
+    public void player(PlayerWrapper player) {
         event.setPlayer(player.as(Player.class));
     }
 
     @Override
-    public String getCommand() {
+    public String command() {
         return event.getMessage();
     }
 
     @Override
-    public void setCommand(String command) {
+    public void command(String command) {
         event.setMessage(command);
     }
 }

@@ -24,13 +24,13 @@ import org.screamingsandals.lib.world.WorldHolder;
 @LimitedVersionSupport("Bukkit >= 1.15.1")
 public interface STimeSkipEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    WorldHolder getWorld();
+    WorldHolder world();
 
-    Reason getReason();
+    Reason reason();
 
-    long getSkipAmount();
+    long skipAmount();
 
-    void setSkipAmount(long skipAmount);
+    void skipAmount(long skipAmount);
 
     // TODO: holder?
     enum Reason {

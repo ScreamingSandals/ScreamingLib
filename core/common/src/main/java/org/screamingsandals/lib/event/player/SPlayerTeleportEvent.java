@@ -23,7 +23,7 @@ import java.util.Optional;
 
 public interface SPlayerTeleportEvent extends SPlayerMoveEvent {
 
-    TeleportCause getCause();
+    TeleportCause cause();
 
     //from bukkit
     // TODO: holder

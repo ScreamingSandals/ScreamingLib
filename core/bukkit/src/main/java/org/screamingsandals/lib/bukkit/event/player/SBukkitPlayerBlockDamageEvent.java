@@ -48,7 +48,7 @@ public class SBukkitPlayerBlockDamageEvent implements SPlayerBlockDamageEvent, B
     private Item itemInHand;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -56,7 +56,7 @@ public class SBukkitPlayerBlockDamageEvent implements SPlayerBlockDamageEvent, B
     }
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -64,7 +64,7 @@ public class SBukkitPlayerBlockDamageEvent implements SPlayerBlockDamageEvent, B
     }
 
     @Override
-    public Item getItemInHand() {
+    public Item itemInHand() {
         if (itemInHand == null) {
             itemInHand = new BukkitItem(event.getItemInHand());
         }
@@ -72,12 +72,12 @@ public class SBukkitPlayerBlockDamageEvent implements SPlayerBlockDamageEvent, B
     }
 
     @Override
-    public boolean isInstantBreak() {
+    public boolean instantBreak() {
         return event.getInstaBreak();
     }
 
     @Override
-    public void setInstantBreak(boolean instantBreak) {
+    public void instantBreak(boolean instantBreak) {
         event.setInstaBreak(instantBreak);
     }
 }

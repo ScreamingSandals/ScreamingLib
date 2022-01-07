@@ -21,9 +21,9 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 public interface SPlayerCommandPreprocessEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
-    void setPlayer(PlayerWrapper player);
+    void player(PlayerWrapper player);
 
-    String getCommand();
+    String command();
 
-    void setCommand(String command);
+    void command(String command);
 }

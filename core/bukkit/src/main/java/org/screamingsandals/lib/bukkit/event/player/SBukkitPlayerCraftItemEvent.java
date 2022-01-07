@@ -32,7 +32,7 @@ public class SBukkitPlayerCraftItemEvent extends SBukkitPlayerInventoryClickEven
     private Recipe recipe;
 
     @Override
-    public Recipe getRecipe() {
+    public Recipe recipe() {
         if (recipe == null) {
             recipe = new BukkitRecipe(event().getRecipe());
         }
@@ -52,7 +52,7 @@ public class SBukkitPlayerCraftItemEvent extends SBukkitPlayerInventoryClickEven
         }
 
         @Override
-        public Item getResult() {
+        public Item result() {
             return new BukkitItem(wrappedObject.getResult());
         }
     }

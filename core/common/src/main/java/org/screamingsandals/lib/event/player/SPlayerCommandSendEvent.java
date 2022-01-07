@@ -24,5 +24,5 @@ import java.util.Collection;
 @LimitedVersionSupport(">= 1.13")
 public interface SPlayerCommandSendEvent extends SPlayerEvent, PlatformEventWrapper {
 
-    Collection<String> getCommands();
+    Collection<String> commands();
 }

@@ -47,7 +47,7 @@ public class SBukkitLegacyPlayerPickupItemEvent implements SPlayerPickupItemEven
 
     @Override
     public EntityBasic entity() {
-        return getPlayer();
+        return player();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class SBukkitLegacyPlayerPickupItemEvent implements SPlayerPickupItemEven
     }
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

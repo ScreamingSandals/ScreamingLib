@@ -21,7 +21,7 @@ import org.screamingsandals.lib.event.block.SBlockExperienceEvent;
 
 public interface SPlayerBlockBreakEvent extends SBlockExperienceEvent, SPlayerEvent, Cancellable {
 
-    boolean isDropItems();
+    boolean dropItems();
 
-    void setDropItems(boolean dropItems);
+    void dropItems(boolean dropItems);
 }

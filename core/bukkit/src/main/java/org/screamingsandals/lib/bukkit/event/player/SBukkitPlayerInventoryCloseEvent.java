@@ -45,7 +45,7 @@ public class SBukkitPlayerInventoryCloseEvent implements SPlayerInventoryCloseEv
     private NamespacedMappingKey reason;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer((Player) event.getPlayer());
         }
@@ -53,7 +53,7 @@ public class SBukkitPlayerInventoryCloseEvent implements SPlayerInventoryCloseEv
     }
 
     @Override
-    public Container getTopInventory() {
+    public Container topInventory() {
         if (topInventory == null) {
             topInventory = ContainerFactory.wrapContainer(event.getInventory()).orElseThrow();
         }
@@ -61,7 +61,7 @@ public class SBukkitPlayerInventoryCloseEvent implements SPlayerInventoryCloseEv
     }
 
     @Override
-    public Container getBottomInventory() {
+    public Container bottomInventory() {
         if (bottomInventory == null) {
             bottomInventory = ContainerFactory.wrapContainer(event.getView().getBottomInventory()).orElseThrow();
         }
@@ -69,7 +69,7 @@ public class SBukkitPlayerInventoryCloseEvent implements SPlayerInventoryCloseEv
     }
 
     @Override
-    public NamespacedMappingKey getReason() {
+    public NamespacedMappingKey reason() {
         if (reason == null) {
             reason = NamespacedMappingKey.of(event.getReason().name());
         }

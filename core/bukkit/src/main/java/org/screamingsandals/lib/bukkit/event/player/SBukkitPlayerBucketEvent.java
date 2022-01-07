@@ -52,7 +52,7 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
     private ItemTypeHolder bucket;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -60,7 +60,7 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
     }
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -68,7 +68,7 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
     }
 
     @Override
-    public BlockHolder getBlockClicked() {
+    public BlockHolder blockClicked() {
         if (blockClicked == null) {
             blockClicked = BlockMapper.wrapBlock(event.getBlockClicked());
         }
@@ -76,7 +76,7 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
     }
 
     @Override
-    public BlockFace getBlockFace() {
+    public BlockFace blockFace() {
         if (blockFace == null) {
             blockFace = BlockFace.valueOf(event.getBlockFace().name());
         }
@@ -84,7 +84,7 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
     }
 
     @Override
-    public ItemTypeHolder getBucket() {
+    public ItemTypeHolder bucket() {
         if (bucket == null) {
             bucket = ItemTypeHolder.of(event.getBucket());
         }
@@ -93,17 +93,17 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
 
     @Override
     @Nullable
-    public Item getItem() {
+    public Item item() {
         return event.getItemStack() != null ? new BukkitItem(event.getItemStack()) : null;
     }
 
     @Override
-    public void setItem(@Nullable Item item) {
+    public void item(@Nullable Item item) {
         event.setItemStack(item == null ? null : item.as(ItemStack.class));
     }
 
     @Override
-    public Action getAction() {
+    public Action action() {
         return  event instanceof PlayerBucketFillEvent ? Action.FILL : Action.EMPTY;
     }
 }

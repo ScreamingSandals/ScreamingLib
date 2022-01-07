@@ -46,7 +46,7 @@ public class SBukkitPlayerFishEvent implements SPlayerFishEvent, BukkitCancellab
     private EntityBasic hookEntity;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -55,7 +55,7 @@ public class SBukkitPlayerFishEvent implements SPlayerFishEvent, BukkitCancellab
 
     @Override
     @Nullable
-    public EntityBasic getEntity() {
+    public EntityBasic caughtEntity() {
         if (!entityCached) {
             if (event.getCaught() != null) {
                 entity = EntityMapper.wrapEntity(event.getCaught()).orElseThrow();
@@ -66,17 +66,17 @@ public class SBukkitPlayerFishEvent implements SPlayerFishEvent, BukkitCancellab
     }
 
     @Override
-    public int getExp() {
+    public int exp() {
         return event.getExpToDrop();
     }
 
     @Override
-    public void setExp(int exp) {
+    public void exp(int exp) {
         event.setExpToDrop(exp);
     }
 
     @Override
-    public State getState() {
+    public State state() {
         if (state == null) {
             state = State.convert(event.getState().name());
         }
@@ -84,7 +84,7 @@ public class SBukkitPlayerFishEvent implements SPlayerFishEvent, BukkitCancellab
     }
 
     @Override
-    public EntityBasic getHookEntity() {
+    public EntityBasic hookEntity() {
         if (hookEntity == null) {
             hookEntity = EntityMapper.wrapEntity(event.getHook()).orElseThrow();
         }

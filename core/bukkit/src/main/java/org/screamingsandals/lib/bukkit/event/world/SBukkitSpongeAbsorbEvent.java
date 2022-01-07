@@ -46,7 +46,7 @@ public class SBukkitSpongeAbsorbEvent implements SSpongeAbsorbEvent, BukkitCance
     private Collection<BlockStateHolder> waterBlocks;
 
     @Override
-    public BlockHolder getBlock() {
+    public BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -54,7 +54,7 @@ public class SBukkitSpongeAbsorbEvent implements SSpongeAbsorbEvent, BukkitCance
     }
 
     @Override
-    public Collection<BlockStateHolder> getWaterBlocks() {
+    public Collection<BlockStateHolder> waterBlocks() {
         if (waterBlocks == null) {
             waterBlocks = new CollectionLinkedToCollection<>(event.getBlocks(), o -> o.as(BlockState.class), o -> BlockStateMapper.wrapBlockState(o).orElseThrow());
         }

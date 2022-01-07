@@ -45,7 +45,7 @@ public class SBukkitPlayerItemMendEvent implements SPlayerItemMendEvent, BukkitC
     private EntityExperience experienceOrb;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -53,7 +53,7 @@ public class SBukkitPlayerItemMendEvent implements SPlayerItemMendEvent, BukkitC
     }
 
     @Override
-    public Item getItem() {
+    public Item item() {
         if (item == null) {
             item = new BukkitItem(event.getItem());
         }
@@ -61,7 +61,7 @@ public class SBukkitPlayerItemMendEvent implements SPlayerItemMendEvent, BukkitC
     }
 
     @Override
-    public EntityExperience getExperienceOrb() {
+    public EntityExperience experienceOrb() {
         if (experienceOrb == null) {
             experienceOrb = new BukkitEntityExperience(event.getExperienceOrb());
         }
@@ -69,12 +69,12 @@ public class SBukkitPlayerItemMendEvent implements SPlayerItemMendEvent, BukkitC
     }
 
     @Override
-    public int getRepairAmount() {
+    public int repairAmount() {
         return event.getRepairAmount();
     }
 
     @Override
-    public void setRepairAmount(int repairAmount) {
+    public void repairAmount(int repairAmount) {
         event.setRepairAmount(repairAmount);
     }
 }

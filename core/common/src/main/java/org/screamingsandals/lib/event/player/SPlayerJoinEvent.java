@@ -25,9 +25,9 @@ import org.screamingsandals.lib.event.SEvent;
 public interface SPlayerJoinEvent extends SEvent, SPlayerEvent, PlatformEventWrapper {
 
     @Nullable
-    Component getJoinMessage();
+    Component joinMessage();
 
-    void setJoinMessage(@Nullable Component joinMessage);
+    void joinMessage(@Nullable Component joinMessage);
 
-    void setJoinMessage(@Nullable ComponentLike joinMessage);
+    void joinMessage(@Nullable ComponentLike joinMessage);
 }

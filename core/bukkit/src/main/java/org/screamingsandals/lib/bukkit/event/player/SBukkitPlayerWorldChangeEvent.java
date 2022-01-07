@@ -44,7 +44,7 @@ public class SBukkitPlayerWorldChangeEvent implements SPlayerWorldChangeEvent {
     private WorldHolder from;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -52,7 +52,7 @@ public class SBukkitPlayerWorldChangeEvent implements SPlayerWorldChangeEvent {
     }
 
     @Override
-    public WorldHolder getFrom() {
+    public WorldHolder from() {
         if (from == null) {
             from = WorldMapper.wrapWorld(event.getFrom());
         }

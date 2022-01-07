@@ -44,7 +44,7 @@ public class SBukkitPlayerInventoryOpenEvent implements SPlayerInventoryOpenEven
     private Container bottomInventory;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer((Player) event.getPlayer());
         }
@@ -52,7 +52,7 @@ public class SBukkitPlayerInventoryOpenEvent implements SPlayerInventoryOpenEven
     }
 
     @Override
-    public Container getTopInventory() {
+    public Container topInventory() {
         if (topInventory == null) {
             topInventory = ContainerFactory.wrapContainer(event.getInventory()).orElseThrow();
         }
@@ -60,7 +60,7 @@ public class SBukkitPlayerInventoryOpenEvent implements SPlayerInventoryOpenEven
     }
 
     @Override
-    public Container getBottomInventory() {
+    public Container bottomInventory() {
         if (bottomInventory == null) {
             bottomInventory = ContainerFactory.wrapContainer(event.getView().getBottomInventory()).orElseThrow();
         }

@@ -44,7 +44,7 @@ public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoC
     private BedEnterResult bedEnterResult;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -52,7 +52,7 @@ public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoC
     }
 
     @Override
-    public BlockHolder getBed() {
+    public BlockHolder bed() {
         if (bed == null) {
             bed = BlockMapper.wrapBlock(event.getBed());
         }
@@ -60,7 +60,7 @@ public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoC
     }
 
     @Override
-    public BedEnterResult getBedEnterResult() {
+    public BedEnterResult bedEnterResult() {
         if (bedEnterResult == null) {
             bedEnterResult = BedEnterResult.convert(event.getBedEnterResult().name());
         }
@@ -68,12 +68,12 @@ public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoC
     }
 
     @Override
-    public Result getUseBed() {
+    public Result useBed() {
         return Result.convert(event.useBed().name());
     }
 
     @Override
-    public void setUseBed(Result useBed) {
+    public void useBed(Result useBed) {
         event.setUseBed(Event.Result.valueOf(useBed.name()));
     }
 }

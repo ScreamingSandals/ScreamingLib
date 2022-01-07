@@ -43,7 +43,7 @@ public class SBukkitPlayerItemConsumeEvent implements SPlayerItemConsumeEvent, B
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -52,12 +52,12 @@ public class SBukkitPlayerItemConsumeEvent implements SPlayerItemConsumeEvent, B
 
     @Override
     @Nullable
-    public Item getItem() {
+    public Item item() {
         return event.getItem() != null ? new BukkitItem(event.getItem()) : null;
     }
 
     @Override
-    public void setItem(@Nullable Item item) {
+    public void item(@Nullable Item item) {
         event.setItem(item != null ? item.as(ItemStack.class) : null);
     }
 }

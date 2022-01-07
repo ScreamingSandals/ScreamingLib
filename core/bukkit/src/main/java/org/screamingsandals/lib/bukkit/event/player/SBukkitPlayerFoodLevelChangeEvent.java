@@ -45,7 +45,7 @@ public class SBukkitPlayerFoodLevelChangeEvent implements SPlayerFoodLevelChange
     private boolean itemCached;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer((Player) event.getEntity());
         }
@@ -53,7 +53,7 @@ public class SBukkitPlayerFoodLevelChangeEvent implements SPlayerFoodLevelChange
     }
 
     @Override
-    public @Nullable Item getItem() {
+    public @Nullable Item item() {
         if (!itemCached) {
             if (event.getItem() != null) {
                 item = new BukkitItem(event.getItem());
@@ -64,12 +64,12 @@ public class SBukkitPlayerFoodLevelChangeEvent implements SPlayerFoodLevelChange
     }
 
     @Override
-    public int getFoodLevel() {
+    public int foodLevel() {
         return event.getFoodLevel();
     }
 
     @Override
-    public void setFoodLevel(int foodLevel) {
+    public void foodLevel(int foodLevel) {
         event.setFoodLevel(foodLevel);
     }
 }
