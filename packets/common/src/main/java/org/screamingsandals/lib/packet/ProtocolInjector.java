@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.packet;
 
 import io.netty.channel.Channel;
@@ -33,9 +49,9 @@ public class ProtocolInjector {
 
     @OnPostEnable
     public void onPostEnable() {
-        EventManager.getDefaultEventManager().register(SPlayerLoginEvent.class, sPlayerLoginEvent -> addPlayer(sPlayerLoginEvent.getPlayer(), true), EventPriority.LOWEST);
-        EventManager.getDefaultEventManager().register(SPlayerJoinEvent.class, sPlayerJoinEvent -> addPlayer(sPlayerJoinEvent.getPlayer(), false), EventPriority.HIGH);
-        EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, sPlayerLeaveEvent -> removePlayer(sPlayerLeaveEvent.getPlayer()), EventPriority.HIGHEST);
+        EventManager.getDefaultEventManager().register(SPlayerLoginEvent.class, sPlayerLoginEvent -> addPlayer(sPlayerLoginEvent.player(), true), EventPriority.LOWEST);
+        EventManager.getDefaultEventManager().register(SPlayerJoinEvent.class, sPlayerJoinEvent -> addPlayer(sPlayerJoinEvent.player(), false), EventPriority.HIGH);
+        EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, sPlayerLeaveEvent -> removePlayer(sPlayerLeaveEvent.player()), EventPriority.HIGHEST);
         Server.getConnectedPlayers().forEach(player -> addPlayer(player, false));
     }
 
@@ -94,7 +110,7 @@ public class ProtocolInjector {
             final var future = EventManager.fireAsync(new SPacketEvent(player, PacketMethod.INBOUND, packet));
 
             future.thenAccept(event -> {
-                if (event.isCancelled()) {
+                if (event.cancelled()) {
                     return;
                 }
                 var modifiedPacket = event.getPacket();
@@ -111,7 +127,7 @@ public class ProtocolInjector {
             final var future = EventManager.fireAsync(new SPacketEvent(player, PacketMethod.OUTBOUND, packet));
 
             future.thenAccept(event -> {
-                if (event.isCancelled()) {
+                if (event.cancelled()) {
                     return;
                 }
                 var modifiedPacket = event.getPacket();

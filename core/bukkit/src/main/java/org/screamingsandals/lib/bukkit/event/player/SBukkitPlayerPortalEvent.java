@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.player.PlayerPortalEvent;
@@ -9,37 +25,37 @@ public class SBukkitPlayerPortalEvent extends SBukkitPlayerTeleportEvent impleme
     }
 
     @Override
-    public PlayerPortalEvent getEvent() {
-        return (PlayerPortalEvent) super.getEvent();
+    public PlayerPortalEvent event() {
+        return (PlayerPortalEvent) super.event();
     }
 
     @Override
-    public int getSearchRadius() {
-        return getEvent().getSearchRadius();
+    public int searchRadius() {
+        return this.event().getSearchRadius();
     }
 
     @Override
-    public void setSearchRadius(int getSearchRadius) {
-        getEvent().setSearchRadius(getSearchRadius);
+    public void searchRadius(int getSearchRadius) {
+        this.event().setSearchRadius(getSearchRadius);
     }
 
     @Override
-    public boolean isCanCreatePortal() {
-        return getEvent().getCanCreatePortal();
+    public boolean canCreatePortal() {
+        return this.event().getCanCreatePortal();
     }
 
     @Override
-    public void setCanCreatePortal(boolean canCreatePortal) {
-        getEvent().setCanCreatePortal(canCreatePortal);
+    public void canCreatePortal(boolean canCreatePortal) {
+        this.event().setCanCreatePortal(canCreatePortal);
     }
 
     @Override
-    public int getCreationRadius() {
-        return getEvent().getCreationRadius();
+    public int creationRadius() {
+        return this.event().getCreationRadius();
     }
 
     @Override
-    public void setCreationRadius(int creationRadius) {
-        getEvent().setCreationRadius(creationRadius);
+    public void creationRadius(int creationRadius) {
+        this.event().setCreationRadius(creationRadius);
     }
 }

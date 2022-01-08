@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.npc;
 
 import org.screamingsandals.lib.event.EventManager;
@@ -66,14 +82,14 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
             return;
         }
 
-        final var player = event.getPlayer();
+        final var player = event.player();
         for (final var npc : activeVisuals.values()) {
             if (!npc.isShown() || !npc.shouldLookAtPlayer()
                     || !npc.getViewers().contains(player) || !player.getLocation().isWorldSame(npc.getLocation())
                     || npc.getLocation().getDistanceSquared(player.getLocation()) > LocatableVisual.DEFAULT_VIEW_DISTANCE) {
                 continue;
             }
-            npc.lookAtLocation(event.getNewLocation(), player);
+            npc.lookAtLocation(event.newLocation(), player);
         }
     }
 

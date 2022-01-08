@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.player;
 
 import io.netty.channel.Channel;
@@ -19,6 +35,7 @@ import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
 
+import java.net.InetSocketAddress;
 import java.util.Optional;
 
 /**
@@ -102,6 +119,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      * @param component the display name component
      */
     void setPlayerListName(@Nullable Component component);
+
     /**
      * Sets the player's display name.
      *
@@ -222,7 +240,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
 
     /**
      * Forces an update of the player's entire inventory.
-     *
+     * <p>
      * On some platforms it can be useless.
      */
     void forceUpdateInventory();
@@ -303,20 +321,27 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     int getProtocolVersion();
 
     /**
+     * Retrieves players address.
+     *
+     * @return address
+     */
+    InetSocketAddress getAddress();
+
+    /**
      * Launches the player in its facing direction.
      *
      * @param multiply the velocity multiplier
-     * @param y the y velocity
+     * @param y        the y velocity
      */
     default void launch(double multiply, double y) {
         if (isOnline()) {
             setVelocity(getVelocity().multiply(multiply).setY(y));
 
             EventManager.getDefaultEventManager().registerOneTime(SEntityDamageEvent.class, event -> {
-                if (!(event.getEntity() instanceof PlayerWrapper) || !equals(event.getEntity()) || !event.getDamageCause().is("FALL")) {
+                if (!(event.entity() instanceof PlayerWrapper) || !equals(event.entity()) || !event.damageCause().is("FALL")) {
                     return false;
                 }
-                event.setCancelled(true);
+                event.cancelled(true);
                 return true;
             });
         }
@@ -332,10 +357,10 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
             setVelocity(velocity);
 
             EventManager.getDefaultEventManager().registerOneTime(SEntityDamageEvent.class, event -> {
-                if (!(event.getEntity() instanceof PlayerWrapper) || !equals(event.getEntity()) || !event.getDamageCause().is("FALL")) {
+                if (!(event.entity() instanceof PlayerWrapper) || !equals(event.entity()) || !event.damageCause().is("FALL")) {
                     return false;
                 }
-                event.setCancelled(true);
+                event.cancelled(true);
                 return true;
             });
         }

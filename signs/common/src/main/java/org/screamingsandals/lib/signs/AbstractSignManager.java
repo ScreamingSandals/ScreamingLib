@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.signs;
 
 import net.kyori.adventure.text.Component;
@@ -117,18 +133,18 @@ public abstract class AbstractSignManager {
 
     @OnEvent
     public void onRightClick(SPlayerInteractEvent event) {
-        if (event.getAction() == SPlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
-                && event.getBlockClicked() != null) {
-            var state = event.getBlockClicked().getBlockState().orElseThrow();
+        if (event.action() == SPlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
+                && event.clickedBlock() != null) {
+            var state = event.clickedBlock().getBlockState().orElseThrow();
             if (state instanceof SignHolder) {
                 var location = new SignLocation(state.getLocation());
                 var sign = getSign(location);
                 if (sign.isPresent()) {
-                    if (!isAllowedToUse(event.getPlayer())) {
+                    if (!isAllowedToUse(event.player())) {
                         return;
                     }
 
-                    onClick(event.getPlayer(), sign.get());
+                    onClick(event.player(), sign.get());
                 }
             }
         }
@@ -136,12 +152,12 @@ public abstract class AbstractSignManager {
 
     @OnEvent
     public void onBreak(SPlayerBlockBreakEvent event) {
-        if (event.isCancelled()) {
+        if (event.cancelled()) {
             return;
         }
 
-        var player = event.getPlayer();
-        var state = event.getBlock().getBlockState().orElseThrow();
+        var player = event.player();
+        var state = event.block().getBlockState().orElseThrow();
         if (state instanceof SignHolder) {
             var location = new SignLocation(state.getLocation());
             if (isSignRegistered(location)) {
@@ -149,7 +165,7 @@ public abstract class AbstractSignManager {
                     unregisterSign(location);
                 } else {
                     player.sendMessage(signCannotBeDestroyedMessage(player));
-                    event.setCancelled(true);
+                    event.cancelled(true);
                 }
             }
         }
@@ -157,18 +173,18 @@ public abstract class AbstractSignManager {
 
     @OnEvent
     public void onEdit(SPlayerUpdateSignEvent event) {
-        if (event.isCancelled()) {
+        if (event.cancelled()) {
             return;
         }
 
-        var player = event.getPlayer();
+        var player = event.player();
         if (isAllowedToEdit(player) && isFirstLineValid(event.line(0))) {
-            if (registerSign(new SignLocation(event.getBlock().getLocation()), event.line(1))) {
+            if (registerSign(new SignLocation(event.block().getLocation()), event.line(1))) {
                 player.sendMessage(signCreatedMessage(player));
             } else {
                 player.sendMessage(signCannotBeCreatedMessage(player));
-                event.setCancelled(true);
-                event.getBlock().breakNaturally();
+                event.cancelled(true);
+                event.block().breakNaturally();
             }
         }
     }

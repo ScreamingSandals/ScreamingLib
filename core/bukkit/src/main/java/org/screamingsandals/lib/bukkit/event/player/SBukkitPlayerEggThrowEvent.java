@@ -1,6 +1,24 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -10,6 +28,7 @@ import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.event.player.SPlayerEggThrowEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -24,7 +43,7 @@ public class SBukkitPlayerEggThrowEvent implements SPlayerEggThrowEvent {
     private EntityBasic egg;
 
     @Override
-    public PlayerWrapper getPlayer() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -32,7 +51,7 @@ public class SBukkitPlayerEggThrowEvent implements SPlayerEggThrowEvent {
     }
 
     @Override
-    public EntityBasic getEgg() {
+    public EntityBasic eggEntity() {
         if (egg == null) {
             egg = EntityMapper.wrapEntity(event.getEgg()).orElseThrow();
         }
@@ -40,32 +59,32 @@ public class SBukkitPlayerEggThrowEvent implements SPlayerEggThrowEvent {
     }
 
     @Override
-    public boolean isHatching() {
+    public boolean hatching() {
         return event.isHatching();
     }
 
     @Override
-    public void setHatching(boolean hatching) {
+    public void hatching(boolean hatching) {
         event.setHatching(hatching);
     }
 
     @Override
-    public EntityTypeHolder getHatchType() {
+    public EntityTypeHolder hatchType() {
         return EntityTypeHolder.of(event.getHatchingType());
     }
 
     @Override
-    public void setHatchType(EntityTypeHolder hatchType) {
+    public void hatchType(EntityTypeHolder hatchType) {
         event.setHatchingType(hatchType.as(EntityType.class));
     }
 
     @Override
-    public byte getNumHatches() {
+    public byte hatchesNumber() {
         return event.getNumHatches();
     }
 
     @Override
-    public void setNumHatches(byte numHatches) {
+    public void hatchesNumber(byte numHatches) {
         event.setNumHatches(numHatches);
     }
 }

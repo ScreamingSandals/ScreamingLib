@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.event.player;
 
 import net.kyori.adventure.text.Component;
@@ -8,40 +24,40 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 
 public interface SPlayerDeathEvent extends SEntityDeathEvent, SPlayerEvent {
 
-    Component getDeathMessage();
+    Component deathMessage();
 
-    void setDeathMessage(Component deathMessage);
+    void deathMessage(Component deathMessage);
 
-    void setDeathMessage(ComponentLike deathMessage);
+    void deathMessage(ComponentLike deathMessage);
 
-    boolean isKeepInventory();
+    boolean keepInventory();
 
-    void setKeepInventory(boolean keepInventory);
+    void keepInventory(boolean keepInventory);
 
-    boolean isShouldDropExperience();
+    boolean shouldDropExperience();
 
-    void setShouldDropExperience(boolean shouldDropExperience);
+    void shouldDropExperience(boolean shouldDropExperience);
 
-    boolean isKeepLevel();
+    boolean keepLevel();
 
-    void setKeepLevel(boolean keepLevel);
+    void keepLevel(boolean keepLevel);
 
-    int getNewLevel();
+    int newLevel();
 
-    void setNewLevel(int newLevel);
+    void newLevel(int newLevel);
 
-    int getNewTotalExp();
+    int newTotalExp();
 
-    void setNewTotalExp(int newTotalExp);
+    void newTotalExp(int newTotalExp);
 
     int getNewExp();
 
-    void setNewExp(int newExp);
+    void newExp(int newExp);
 
-    int getDroppedExp();
+    int droppedExp();
 
-    void setDroppedExp(int droppedExp);
+    void droppedExp(int droppedExp);
 
     @Nullable
-    PlayerWrapper getKiller();
+    PlayerWrapper killer();
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
@@ -17,25 +33,25 @@ import java.util.List;
 public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
     @Nullable
-    ItemView getItem();
+    ItemView item();
 
-    Action getAction();
-
-    @Nullable
-    BlockHolder getBlockClicked();
-
-    BlockFace getBlockFace();
-
-    Result getUseClickedBlock();
-
-    void setUseClickedBlock(Result useClickedBlock);
-
-    Result getUseItemInHand();
-
-    void setUseItemInHand(Result useItemInHand);
+    Action action();
 
     @Nullable
-    EquipmentSlotHolder getHand();
+    BlockHolder clickedBlock();
+
+    BlockFace blockFace();
+
+    Result useClickedBlock();
+
+    void useClickedBlock(Result useClickedBlock);
+
+    Result useItemInHand();
+
+    void useItemInHand(Result useItemInHand);
+
+    @Nullable
+    EquipmentSlotHolder hand();
 
     /**
      * Sets the cancellation state of this event. A canceled event will not be
@@ -48,9 +64,9 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
      * @param cancel true if you wish to cancel this event
      */
     @Override
-    default void setCancelled(boolean cancel) {
-        setUseClickedBlock(cancel ? SEvent.Result.DENY : getUseClickedBlock() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : getUseClickedBlock());
-        setUseItemInHand(cancel ? SEvent.Result.DENY : getUseItemInHand() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : getUseItemInHand());
+    default void cancelled(boolean cancel) {
+        useClickedBlock(cancel ? SEvent.Result.DENY : useClickedBlock() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : useClickedBlock());
+        useItemInHand(cancel ? SEvent.Result.DENY : useItemInHand() == SEvent.Result.DENY ? SEvent.Result.DEFAULT : useItemInHand());
     }
 
     /**
@@ -59,7 +75,7 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
      * @return boolean true if it did
      */
     default boolean hasBlock() {
-        return getBlockClicked() != null;
+        return clickedBlock() != null;
     }
 
     /**
@@ -68,7 +84,7 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
      * @return boolean true if it did
      */
     default boolean hasItem() {
-        return getItem() != null;
+        return item() != null;
     }
 
     /**
@@ -78,12 +94,12 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
      * @return Material the material of the item used
      */
     @NotNull
-    default ItemTypeHolder getMaterial() {
+    default ItemTypeHolder material() {
         if (!hasItem()) {
             return ItemTypeHolder.air();
         }
 
-        return getItem().getMaterial();
+        return item().getMaterial();
     }
 
     /**
@@ -98,8 +114,8 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
      */
     @Deprecated
     @Override
-    default boolean isCancelled() {
-        return getUseClickedBlock() == Result.DENY;
+    default boolean cancelled() {
+        return useClickedBlock() == Result.DENY;
     }
 
     // TODO: holder?

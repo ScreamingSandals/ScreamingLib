@@ -1,7 +1,24 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.event.player;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SAsyncEvent;
 
@@ -10,27 +27,76 @@ import java.util.UUID;
 
 public interface SAsyncPlayerPreLoginEvent extends SAsyncEvent, PlatformEventWrapper {
 
-    UUID getUuid();
+    /**
+     * Gets the UUID
+     *
+     * @return {@link UUID} of the player.
+     */
+    UUID uuid();
 
-    InetAddress getAddress();
+    /**
+     * Gets the address
+     *
+     * @return {@link InetAddress} of the player.
+     */
+    InetAddress address();
 
-    String getName();
+    /**
+     * Gets the name
+     *
+     * @return name of the player
+     */
+    String name();
 
-    default void setName(String name) {
+    /**
+     * Sets the new name of the player
+     *
+     * @param name name to set
+     */
+    default void name(@NotNull String name) {
         throw new UnsupportedOperationException("Name is not changeable on this platform!");
     }
 
-    Result getResult();
+    /**
+     * Gets the result of the event
+     *
+     * @return {@link Result}
+     */
+    Result result();
 
-    void setResult(Result result);
+    /**
+     * Sets new result for this event
+     *
+     * @param result new result
+     */
+    void result(@NotNull Result result);
 
-    Component getMessage();
+    /**
+     * Gets the message that is displayed if the {@link Result} is not {@link Result#ALLOWED}.
+     *
+     * @return {@link Component}
+     */
+    Component message();
 
-    void setMessage(Component message);
+    /**
+     * Sets new message that is displayed if the {@link Result} is not {@link Result#ALLOWED}.
+     *
+     * @param message new message
+     */
+    void message(@NotNull Component message);
 
-    void setMessage(ComponentLike message);
+    /**
+     * Sets new message that is displayed if the {@link Result} is not {@link Result#ALLOWED}.
+     *
+     * @param message new message
+     */
+    void message(@NotNull ComponentLike message);
 
-    //from paper
+    /**
+     * Result of the join event.
+     * <p>
+     * NOTE: from Paper.
+     */
     enum Result {
         /**
          * The player is allowed to log in
