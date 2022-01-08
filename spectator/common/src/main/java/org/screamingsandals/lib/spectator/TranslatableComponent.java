@@ -20,6 +20,10 @@ import java.util.Collection;
 import java.util.List;
 
 public interface TranslatableComponent extends Component {
+    static TranslatableComponent.Builder builder() {
+        return Spectator.getBackend().translatable();
+    }
+
     String translate();
 
     List<Component> args();

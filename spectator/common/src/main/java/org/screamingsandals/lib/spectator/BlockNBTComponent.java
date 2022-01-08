@@ -20,6 +20,10 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 @LimitedVersionSupport(">= 1.14")
 public interface BlockNBTComponent extends NBTComponent {
+    static BlockNBTComponent.Builder builder() {
+        return Spectator.getBackend().blockNBT();
+    }
+
     // TODO: real position API
     String blockPosition();
 

@@ -17,6 +17,10 @@
 package org.screamingsandals.lib.spectator;
 
 public interface SelectorComponent extends SeparableComponent {
+    static SelectorComponent.Builder builder() {
+        return Spectator.getBackend().selector();
+    }
+
     String pattern();
 
     interface Builder extends SeparableComponent.Builder<Builder, SelectorComponent> {

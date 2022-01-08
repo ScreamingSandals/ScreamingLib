@@ -20,6 +20,10 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 public interface ScoreComponent extends Component {
+    static ScoreComponent.Builder builder() {
+        return Spectator.getBackend().score();
+    }
+
     String name();
 
     String objective();

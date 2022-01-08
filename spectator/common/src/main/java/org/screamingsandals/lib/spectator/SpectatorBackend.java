@@ -21,4 +21,24 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Internal
 public interface SpectatorBackend {
     Component empty();
+
+    BlockNBTComponent.Builder blockNBT();
+
+    EntityNBTComponent.Builder entityNBT();
+
+    KeybindComponent.Builder keybind();
+
+    ScoreComponent.Builder score();
+
+    SelectorComponent.Builder selector();
+
+    StorageNBTComponent.Builder storageNBT();
+
+    TextComponent.Builder text();
+
+    TranslatableComponent.Builder translatable();
+
+    Color rgb(int red, int green, int blue);
+
+    Color named(String name);
 }

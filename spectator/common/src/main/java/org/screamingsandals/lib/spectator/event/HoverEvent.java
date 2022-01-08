@@ -17,9 +17,10 @@
 package org.screamingsandals.lib.spectator.event;
 
 import org.screamingsandals.lib.spectator.event.hover.Content;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
-public interface HoverEvent extends Wrapper {
+public interface HoverEvent extends Wrapper, RawValueHolder {
 
     Action action();
 

@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.spectator.event.hover;
+package org.screamingsandals.lib.spectator.bossbar;
 
-import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.spectator.Component;
 
-public interface Content extends Wrapper, RawValueHolder {
+import java.util.List;
+
+public interface BossBarListener {
+    void onNameChanged(BossBar bar, Component oldName, Component newName);
+
+    void onProgressChanged(BossBar bar, float oldProgress, float newProgress);
+
+    void onColorChanged(BossBar bar, BossBarColor oldColor, BossBarColor newColor);
+
+    void onDivisionChanged(BossBar bar, BossBarDivision oldDivision, BossBarDivision newDivision);
+
+    void onFlagsChanged(BossBar bar, List<BossBarFlag> oldFlags, List<BossBarFlag> newFlags);
 }

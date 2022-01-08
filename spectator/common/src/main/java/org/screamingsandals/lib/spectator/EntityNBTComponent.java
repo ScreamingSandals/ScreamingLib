@@ -20,6 +20,10 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 @LimitedVersionSupport(">= 1.14")
 public interface EntityNBTComponent extends NBTComponent {
+    static EntityNBTComponent.Builder builder() {
+        return Spectator.getBackend().entityNBT();
+    }
+
     String selector();
 
     interface Builder extends NBTComponent.Builder<Builder, EntityNBTComponent> {

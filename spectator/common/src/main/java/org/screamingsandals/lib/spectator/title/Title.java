@@ -14,28 +14,37 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.spectator.event;
+package org.screamingsandals.lib.spectator.title;
 
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
-import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
-public interface ClickEvent extends Wrapper, RawValueHolder {
+import java.time.Duration;
 
-    Action action();
+public interface Title extends Wrapper, RawValueHolder, TimesProvider {
+    Component title();
 
-    String value();
+    Component subtitle();
 
-    enum Action {
-        OPEN_URL,
-        OPEN_FILE,
-        RUN_COMMAND,
-        SUGGEST_COMMAND,
-        /**
-         * Books only
-         */
-        CHANGE_PAGE,
-        @LimitedVersionSupport(">= 1.15")
-        COPY_TO_CLIPBOARD
+    interface Builder {
+        Builder title(Component title);
+
+        Builder subtitle(Component subtitle);
+
+        Builder fadeIn(Duration fadeIn);
+
+        Builder stay(Duration stay);
+
+        Builder fadeOut(Duration fadeOut);
+
+        default Builder times(TimesProvider times) {
+            fadeIn(times.fadeIn());
+            stay(times.stay());
+            fadeOut(times.fadeOut());
+            return this;
+        }
+
+        Title build();
     }
 }

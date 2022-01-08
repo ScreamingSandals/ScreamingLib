@@ -17,8 +17,11 @@
 package org.screamingsandals.lib.adventure.spectator;
 
 import net.kyori.adventure.text.*;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.SpectatorBackend;
 
@@ -26,6 +29,64 @@ public class AdventureBackend implements SpectatorBackend {
     @Override
     public Component empty() {
         return new AdventureComponent(net.kyori.adventure.text.Component.empty());
+    }
+
+    @Override
+    public org.screamingsandals.lib.spectator.BlockNBTComponent.Builder blockNBT() {
+        return new AdventureBlockNBTComponent.AdventureBlockNBTBuilder(net.kyori.adventure.text.Component.blockNBT());
+    }
+
+    @Override
+    public org.screamingsandals.lib.spectator.EntityNBTComponent.Builder entityNBT() {
+        return new AdventureEntityNBTComponent.AdventureEntityNBTBuilder(net.kyori.adventure.text.Component.entityNBT());
+    }
+
+    @Override
+    public org.screamingsandals.lib.spectator.KeybindComponent.Builder keybind() {
+        return new AdventureKeybindComponent.AdventureKeybindBuilder(net.kyori.adventure.text.Component.keybind());
+    }
+
+    @Override
+    public org.screamingsandals.lib.spectator.ScoreComponent.Builder score() {
+        return new AdventureScoreComponent.AdventureScoreBuilder(net.kyori.adventure.text.Component.score());
+    }
+
+    @Override
+    public org.screamingsandals.lib.spectator.SelectorComponent.Builder selector() {
+        return new AdventureSelectorComponent.AdventureSelectorBuilder(net.kyori.adventure.text.Component.selector());
+    }
+
+    @Override
+    public org.screamingsandals.lib.spectator.StorageNBTComponent.Builder storageNBT() {
+        return new AdventureStorageNBTComponent.AdventureStorageNBTBuilder(net.kyori.adventure.text.Component.storageNBT());
+    }
+
+    @Override
+    public org.screamingsandals.lib.spectator.TextComponent.Builder text() {
+        return new AdventureTextComponent.AdventureTextBuilder(net.kyori.adventure.text.Component.text());
+    }
+
+    @Override
+    public org.screamingsandals.lib.spectator.TranslatableComponent.Builder translatable() {
+        return new AdventureTranslatableComponent.AdventureTranslatableBuilder(net.kyori.adventure.text.Component.translatable());
+    }
+
+    @Override
+    public Color rgb(int red, int green, int blue) {
+        return new AdventureColor(TextColor.color(red, green, blue));
+    }
+
+    @Override
+    public Color named(String name) {
+        var value = NamedTextColor.NAMES.value(name.toLowerCase());
+        if (value != null) {
+            return new AdventureColor(value);
+        }
+        var hex = TextColor.fromCSSHexString(name);
+        if (hex != null) {
+            return new AdventureColor(hex);
+        }
+        return null;
     }
 
     @Nullable

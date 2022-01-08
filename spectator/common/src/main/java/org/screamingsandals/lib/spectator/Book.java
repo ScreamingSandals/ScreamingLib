@@ -14,10 +14,29 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.spectator.event.hover;
+package org.screamingsandals.lib.spectator;
 
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
-public interface Content extends Wrapper, RawValueHolder {
+import java.util.List;
+
+public interface Book extends Wrapper, RawValueHolder {
+    Component title();
+
+    Component author();
+
+    List<Component> pages();
+
+    interface Builder {
+        Builder title(Component title);
+
+        Builder author(Component author);
+
+        Builder pages(List<Component> pages);
+
+        Builder pages(Component... pages);
+
+        Book build();
+    }
 }

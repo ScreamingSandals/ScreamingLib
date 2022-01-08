@@ -17,6 +17,10 @@
 package org.screamingsandals.lib.spectator;
 
 public interface TextComponent extends Component {
+    static TextComponent.Builder builder() {
+        return Spectator.getBackend().text();
+    }
+
     String content();
 
     interface Builder extends Component.Builder<Builder, TextComponent> {

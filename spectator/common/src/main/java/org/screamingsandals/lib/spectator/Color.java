@@ -24,4 +24,12 @@ public interface Color extends Wrapper {
     int green();
 
     int blue();
+
+    static Color rgb(int red, int green, int blue) {
+        return Spectator.getBackend().rgb(red, green, blue);
+    }
+
+    static Color named(String name) {
+        return Spectator.getBackend().named(name);
+    }
 }

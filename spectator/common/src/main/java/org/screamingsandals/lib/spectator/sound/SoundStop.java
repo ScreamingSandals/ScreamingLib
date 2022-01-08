@@ -14,10 +14,24 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.spectator.event.hover;
+package org.screamingsandals.lib.spectator.sound;
 
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
-public interface Content extends Wrapper, RawValueHolder {
+public interface SoundStop extends Wrapper, RawValueHolder {
+    NamespacedMappingKey soundKey();
+
+    @Nullable
+    SoundSource source();
+
+    interface Builder {
+        Builder soundKey(NamespacedMappingKey key);
+
+        Builder source(@Nullable SoundSource source);
+
+        SoundStop build();
+    }
 }

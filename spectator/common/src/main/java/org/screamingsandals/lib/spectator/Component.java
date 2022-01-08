@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.spectator.event.hover.Content;
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -27,10 +28,42 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import java.util.Collection;
 import java.util.List;
 
-public interface Component extends ComponentLike, Wrapper, Content {
+public interface Component extends ComponentLike, Wrapper, Content, RawValueHolder {
 
     static Component empty() {
         return Spectator.getBackend().empty();
+    }
+
+    static BlockNBTComponent.Builder blockNBT() {
+        return Spectator.getBackend().blockNBT();
+    }
+
+    static EntityNBTComponent.Builder entityNBT() {
+        return Spectator.getBackend().entityNBT();
+    }
+
+    static KeybindComponent.Builder keybind() {
+        return Spectator.getBackend().keybind();
+    }
+
+    static ScoreComponent.Builder score() {
+        return Spectator.getBackend().score();
+    }
+
+    static SelectorComponent.Builder selector() {
+        return Spectator.getBackend().selector();
+    }
+
+    static StorageNBTComponent.Builder storageNBT() {
+        return Spectator.getBackend().storageNBT();
+    }
+
+    static TextComponent.Builder text() {
+        return Spectator.getBackend().text();
+    }
+
+    static TranslatableComponent.Builder translatable() {
+        return Spectator.getBackend().translatable();
     }
 
     List<Component> children();

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.spectator.event.hover;
+package org.screamingsandals.lib.spectator.sound;
 
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
-public interface Content extends Wrapper, RawValueHolder {
+public interface SoundSource extends Wrapper, RawValueHolder {
+    String name();
 }

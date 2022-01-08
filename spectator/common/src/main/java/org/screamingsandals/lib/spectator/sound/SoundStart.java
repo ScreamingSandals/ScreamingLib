@@ -14,10 +14,30 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.spectator.event.hover;
+package org.screamingsandals.lib.spectator.sound;
 
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
-public interface Content extends Wrapper, RawValueHolder {
+public interface SoundStart extends Wrapper, RawValueHolder {
+    NamespacedMappingKey soundKey();
+
+    SoundSource source();
+
+    float volume();
+
+    float pitch();
+
+    interface Builder {
+        Builder soundKey(NamespacedMappingKey key);
+
+        Builder source(SoundSource source);
+
+        Builder volume(float volume);
+
+        Builder pitch(float pitch);
+
+        SoundStart build();
+    }
 }
