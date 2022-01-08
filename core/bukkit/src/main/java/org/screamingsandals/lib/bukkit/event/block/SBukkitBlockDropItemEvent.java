@@ -49,7 +49,7 @@ public class SBukkitBlockDropItemEvent implements SBlockDropItemEvent, BukkitCan
     private Collection<EntityItem> items;
 
     @Override
-    public PlayerWrapper players() {
+    public PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
