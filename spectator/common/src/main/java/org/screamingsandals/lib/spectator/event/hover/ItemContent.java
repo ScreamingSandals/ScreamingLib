@@ -17,9 +17,14 @@
 package org.screamingsandals.lib.spectator.event.hover;
 
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
-public interface ItemContent extends Content {
+public interface ItemContent extends Content, ItemContentLike {
+    static ItemContent.Builder builder() {
+        return Spectator.getBackend().itemContent();
+    }
+
     NamespacedMappingKey id();
 
     int count();
@@ -27,4 +32,25 @@ public interface ItemContent extends Content {
     // TODO: NBT api
     @Nullable
     String tag();
+
+    @Override
+    default ItemContent asItemContent() {
+        return this;
+    }
+
+    @Override
+    default Content asContent() {
+        return this;
+    }
+
+    interface Builder {
+        Builder id(NamespacedMappingKey id);
+
+        Builder count(int count);
+
+        // TODO: NBT api
+        Builder tag(@Nullable String tag);
+
+        ItemContent build();
+    }
 }

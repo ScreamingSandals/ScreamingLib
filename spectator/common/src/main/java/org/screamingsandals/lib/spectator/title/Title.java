@@ -17,12 +17,17 @@
 package org.screamingsandals.lib.spectator.title;
 
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.time.Duration;
 
 public interface Title extends Wrapper, RawValueHolder, TimesProvider {
+    static Title.Builder builder() {
+        return Spectator.getBackend().title();
+    }
+
     Component title();
 
     Component subtitle();

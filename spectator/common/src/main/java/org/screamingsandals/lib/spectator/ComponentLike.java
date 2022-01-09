@@ -16,6 +16,14 @@
 
 package org.screamingsandals.lib.spectator;
 
-public interface ComponentLike {
+import org.screamingsandals.lib.spectator.event.hover.Content;
+import org.screamingsandals.lib.spectator.event.hover.ContentLike;
+
+public interface ComponentLike extends ContentLike {
     Component asComponent();
+
+    @Override
+    default Content asContent() {
+        return asComponent();
+    }
 }

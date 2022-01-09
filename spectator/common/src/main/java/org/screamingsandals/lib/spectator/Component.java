@@ -99,6 +99,11 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return this;
     }
 
+    @Override
+    default Content asContent() {
+        return this;
+    }
+
     interface Builder<B extends Builder<B, C>, C extends Component> {
         B color(Color color);
 

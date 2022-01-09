@@ -19,5 +19,9 @@ package org.screamingsandals.lib.spectator.event.hover;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
-public interface Content extends Wrapper, RawValueHolder {
+public interface Content extends Wrapper, RawValueHolder, ContentLike {
+    @Override
+    default Content asContent() {
+        return this;
+    }
 }

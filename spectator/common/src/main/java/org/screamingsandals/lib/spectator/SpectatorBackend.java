@@ -17,6 +17,15 @@
 package org.screamingsandals.lib.spectator;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.screamingsandals.lib.spectator.bossbar.BossBar;
+import org.screamingsandals.lib.spectator.event.ClickEvent;
+import org.screamingsandals.lib.spectator.event.HoverEvent;
+import org.screamingsandals.lib.spectator.event.hover.EntityContent;
+import org.screamingsandals.lib.spectator.event.hover.ItemContent;
+import org.screamingsandals.lib.spectator.sound.SoundSource;
+import org.screamingsandals.lib.spectator.sound.SoundStart;
+import org.screamingsandals.lib.spectator.sound.SoundStop;
+import org.screamingsandals.lib.spectator.title.Title;
 
 @ApiStatus.Internal
 public interface SpectatorBackend {
@@ -41,4 +50,24 @@ public interface SpectatorBackend {
     Color rgb(int red, int green, int blue);
 
     Color named(String name);
+
+    BossBar.Builder bossBar();
+
+    SoundStart.Builder soundStart();
+
+    SoundStop.Builder soundStop();
+
+    SoundSource soundSource(String source);
+
+    Title.Builder title();
+
+    Book.Builder book();
+
+    ClickEvent.Builder clickEvent();
+
+    HoverEvent.Builder hoverEvent();
+
+    EntityContent.Builder entityContent();
+
+    ItemContent.Builder itemContent();
 }

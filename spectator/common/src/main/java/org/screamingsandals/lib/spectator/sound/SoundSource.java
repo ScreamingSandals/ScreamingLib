@@ -16,9 +16,14 @@
 
 package org.screamingsandals.lib.spectator.sound;
 
+import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 public interface SoundSource extends Wrapper, RawValueHolder {
+    static SoundSource soundSource(String source) {
+        return Spectator.getBackend().soundSource(source);
+    }
+
     String name();
 }

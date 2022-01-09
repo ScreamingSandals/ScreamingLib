@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.spectator.bossbar;
 
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
@@ -24,6 +25,15 @@ import java.util.Collection;
 import java.util.List;
 
 public interface BossBar extends Wrapper, RawValueHolder {
+    static BossBar.Builder builder() {
+        return Spectator.getBackend().bossBar();
+    }
+
+    static BossBar bossBar() {
+        return builder().build();
+    }
+
+
     Component title();
 
     BossBar title(Component title);

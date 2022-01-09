@@ -18,15 +18,40 @@ package org.screamingsandals.lib.spectator.event.hover;
 
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.UUID;
 
-public interface EntityContent extends Content {
+public interface EntityContent extends Content, EntityContentLike {
+    static EntityContent.Builder builder() {
+        return Spectator.getBackend().entityContent();
+    }
+
     UUID id();
 
     NamespacedMappingKey type();
 
     @Nullable
     Component name();
+
+    @Override
+    default EntityContent asEntityContent() {
+        return this;
+    }
+
+    @Override
+    default Content asContent() {
+        return this;
+    }
+
+    interface Builder {
+        Builder id(UUID id);
+
+        Builder type(NamespacedMappingKey type);
+
+        Builder name(@Nullable Component name);
+
+        EntityContent build();
+    }
 }

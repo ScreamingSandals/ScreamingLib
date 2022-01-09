@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.adventure.spectator.event.hover;
 
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
@@ -45,5 +47,37 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
             return null;
         }
         return nbt.string();
+    }
+
+    public static class AdventureItemContentBuilder implements ItemContent.Builder {
+        private static final NamespacedMappingKey INVALID_KEY = NamespacedMappingKey.of("minecraft", "air");
+
+        private NamespacedMappingKey id = INVALID_KEY; // Should be air if not present
+        private int count = 1;
+        private String tag;
+
+        @Override
+        public Builder id(NamespacedMappingKey id) {
+            this.id = id;
+            return this;
+        }
+
+        @Override
+        public Builder count(int count) {
+            this.count = count;
+            return this;
+        }
+
+        @Override
+        public Builder tag(@Nullable String tag) {
+            this.tag = tag;
+            return this;
+        }
+
+        @SuppressWarnings("PatternValidation")
+        @Override
+        public ItemContent build() {
+            return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.getNamespace(), id.getKey()), count, tag == null || tag.isEmpty() ? null : BinaryTagHolder.of(tag)));
+        }
     }
 }

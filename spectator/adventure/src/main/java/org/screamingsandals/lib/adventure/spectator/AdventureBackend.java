@@ -21,9 +21,23 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.adventure.spectator.event.AdventureClickEvent;
+import org.screamingsandals.lib.adventure.spectator.event.AdventureHoverEvent;
+import org.screamingsandals.lib.adventure.spectator.event.hover.AdventureEntityContent;
+import org.screamingsandals.lib.adventure.spectator.event.hover.AdventureItemContent;
+import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.SpectatorBackend;
+import org.screamingsandals.lib.spectator.bossbar.BossBar;
+import org.screamingsandals.lib.spectator.event.ClickEvent;
+import org.screamingsandals.lib.spectator.event.HoverEvent;
+import org.screamingsandals.lib.spectator.event.hover.EntityContent;
+import org.screamingsandals.lib.spectator.event.hover.ItemContent;
+import org.screamingsandals.lib.spectator.sound.SoundSource;
+import org.screamingsandals.lib.spectator.sound.SoundStart;
+import org.screamingsandals.lib.spectator.sound.SoundStop;
+import org.screamingsandals.lib.spectator.title.Title;
 
 public class AdventureBackend implements SpectatorBackend {
     @Override
@@ -87,6 +101,56 @@ public class AdventureBackend implements SpectatorBackend {
             return new AdventureColor(hex);
         }
         return null;
+    }
+
+    @Override
+    public BossBar.Builder bossBar() {
+        return null; // TODO
+    }
+
+    @Override
+    public SoundStart.Builder soundStart() {
+        return null; // TODO
+    }
+
+    @Override
+    public SoundStop.Builder soundStop() {
+        return null; // TODO
+    }
+
+    @Override
+    public SoundSource soundSource(String source) {
+        return null; // TODO
+    }
+
+    @Override
+    public Title.Builder title() {
+        return null; // TODO
+    }
+
+    @Override
+    public Book.Builder book() {
+        return null; // TODO
+    }
+
+    @Override
+    public ClickEvent.Builder clickEvent() {
+        return new AdventureClickEvent.AdventureClickEventBuilder();
+    }
+
+    @Override
+    public HoverEvent.Builder hoverEvent() {
+        return new AdventureHoverEvent.AdventureHoverEventBuilder();
+    }
+
+    @Override
+    public EntityContent.Builder entityContent() {
+        return new AdventureEntityContent.AdventureEntityContentBuilder();
+    }
+
+    @Override
+    public ItemContent.Builder itemContent() {
+        return new AdventureItemContent.AdventureItemContentBuilder();
     }
 
     @Nullable

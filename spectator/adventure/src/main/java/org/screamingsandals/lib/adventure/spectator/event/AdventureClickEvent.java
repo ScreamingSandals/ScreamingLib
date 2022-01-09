@@ -18,6 +18,7 @@ package org.screamingsandals.lib.adventure.spectator.event;
 
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 
 public class AdventureClickEvent extends BasicWrapper<net.kyori.adventure.text.event.ClickEvent> implements ClickEvent {
     public AdventureClickEvent(net.kyori.adventure.text.event.ClickEvent wrappedObject) {
@@ -36,5 +37,28 @@ public class AdventureClickEvent extends BasicWrapper<net.kyori.adventure.text.e
     @Override
     public String value() {
         return wrappedObject.value();
+    }
+
+    public static class AdventureClickEventBuilder implements ClickEvent.Builder {
+        private Action action = Action.OPEN_URL;
+        private String value;
+
+        @Override
+        public Builder action(Action action) {
+            this.action = action;
+            return this;
+        }
+
+        @Override
+        public Builder value(String value) {
+            this.value = value;
+            return this;
+        }
+
+        @Override
+        public ClickEvent build() {
+            Preconditions.checkArgument(value != null, "Value is not specified!");
+            return new AdventureClickEvent(net.kyori.adventure.text.event.ClickEvent.clickEvent(net.kyori.adventure.text.event.ClickEvent.Action.valueOf(action.name()), value));
+        }
     }
 }

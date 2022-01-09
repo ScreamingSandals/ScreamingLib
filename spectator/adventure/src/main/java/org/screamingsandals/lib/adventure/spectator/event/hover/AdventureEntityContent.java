@@ -16,12 +16,14 @@
 
 package org.screamingsandals.lib.adventure.spectator.event.hover;
 
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.UUID;
@@ -45,5 +47,38 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
     @Nullable
     public Component name() {
         return AdventureBackend.wrapComponent(wrappedObject.name());
+    }
+
+    public static class AdventureEntityContentBuilder implements EntityContent.Builder {
+        private static final NamespacedMappingKey INVALID_KEY = NamespacedMappingKey.of("minecraft", "pig");
+
+        private UUID id;
+        private NamespacedMappingKey type = INVALID_KEY; // Should be pig if not present
+        private Component name;
+
+        @Override
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        @Override
+        public Builder type(NamespacedMappingKey type) {
+            this.type = type;
+            return this;
+        }
+
+        @Override
+        public Builder name(@Nullable Component name) {
+            this.name = name;
+            return this;
+        }
+
+        @SuppressWarnings("PatternValidation")
+        @Override
+        public EntityContent build() {
+            Preconditions.checkArgument(id != null, "Id of the entity is not specified!");
+            return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.getNamespace(), type.getKey()), id, name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
+        }
     }
 }

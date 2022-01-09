@@ -16,11 +16,17 @@
 
 package org.screamingsandals.lib.spectator.event;
 
+import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.spectator.event.hover.Content;
+import org.screamingsandals.lib.spectator.event.hover.ContentLike;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 public interface HoverEvent extends Wrapper, RawValueHolder {
+
+    static HoverEvent.Builder builder() {
+        return Spectator.getBackend().hoverEvent();
+    }
 
     Action action();
 
@@ -31,5 +37,17 @@ public interface HoverEvent extends Wrapper, RawValueHolder {
         SHOW_ITEM,
         SHOW_ENTITY
         /* SHOW_ACHIEVEMENT no longer exist */
+    }
+
+    interface Builder {
+        Builder action(Action action);
+
+        Builder content(Content content);
+
+        default Builder content(ContentLike contentLike) {
+            return content(contentLike.asContent());
+        }
+
+        HoverEvent build();
     }
 }

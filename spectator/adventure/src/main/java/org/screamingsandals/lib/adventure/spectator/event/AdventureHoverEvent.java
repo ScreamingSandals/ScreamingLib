@@ -22,7 +22,10 @@ import org.screamingsandals.lib.adventure.spectator.event.hover.AdventureEntityC
 import org.screamingsandals.lib.adventure.spectator.event.hover.AdventureItemContent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.spectator.event.hover.Content;
+import org.screamingsandals.lib.spectator.event.hover.EntityContent;
+import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 
 import java.util.Objects;
 
@@ -50,5 +53,41 @@ public class AdventureHoverEvent extends BasicWrapper<net.kyori.adventure.text.e
             return new AdventureEntityContent((net.kyori.adventure.text.event.HoverEvent.ShowEntity) wrappedObject.value());
         }
         return org.screamingsandals.lib.spectator.Component.empty(); // what?
+    }
+
+    public static class AdventureHoverEventBuilder implements HoverEvent.Builder {
+        private Action action = Action.SHOW_TEXT;
+        private Content content;
+
+        @Override
+        public Builder action(Action action) {
+            this.action = action;
+            return this;
+        }
+
+        @Override
+        public Builder content(Content content) {
+            this.content = content;
+            return this;
+        }
+
+        @Override
+        public HoverEvent build() {
+            Preconditions.checkArgument(content != null, "Content is not specified!");
+            switch (action) {
+                case SHOW_TEXT:
+                    Preconditions.checkArgument(content instanceof org.screamingsandals.lib.spectator.Component,
+                            "Action type SHOW_TEXT requires a component to be present!");
+                    return new AdventureHoverEvent(net.kyori.adventure.text.event.HoverEvent.showText(content.as(Component.class)));
+                case SHOW_ENTITY:
+                    Preconditions.checkArgument(content instanceof EntityContent, "Action type SHOW_ENTITY requires an EntityContent to be present!");
+                    return new AdventureHoverEvent(net.kyori.adventure.text.event.HoverEvent.showEntity(content.as(net.kyori.adventure.text.event.HoverEvent.ShowEntity.class)));
+                case SHOW_ITEM:
+                    Preconditions.checkArgument(content instanceof ItemContent, "Action type SHOW_ITEM requires an ItemContent to be present!");
+                    return new AdventureHoverEvent(net.kyori.adventure.text.event.HoverEvent.showItem(content.as(net.kyori.adventure.text.event.HoverEvent.ShowItem.class)));
+                default:
+                    throw new IllegalArgumentException("Action type must be specified!");
+            }
+        }
     }
 }

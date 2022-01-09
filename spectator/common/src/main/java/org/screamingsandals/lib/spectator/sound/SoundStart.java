@@ -16,11 +16,16 @@
 
 package org.screamingsandals.lib.spectator.sound;
 
+import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 public interface SoundStart extends Wrapper, RawValueHolder {
+    static SoundStart.Builder builder() {
+        return Spectator.getBackend().soundStart();
+    }
+
     NamespacedMappingKey soundKey();
 
     SoundSource source();

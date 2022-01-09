@@ -22,6 +22,10 @@ import org.screamingsandals.lib.utils.Wrapper;
 import java.util.List;
 
 public interface Book extends Wrapper, RawValueHolder {
+    static Book.Builder builder() {
+        return Spectator.getBackend().book();
+    }
+
     Component title();
 
     Component author();

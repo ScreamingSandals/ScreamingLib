@@ -17,11 +17,16 @@
 package org.screamingsandals.lib.spectator.sound;
 
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 public interface SoundStop extends Wrapper, RawValueHolder {
+    static SoundStop.Builder builder() {
+        return Spectator.getBackend().soundStop();
+    }
+
     NamespacedMappingKey soundKey();
 
     @Nullable

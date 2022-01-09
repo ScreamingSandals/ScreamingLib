@@ -16,11 +16,16 @@
 
 package org.screamingsandals.lib.spectator.event;
 
+import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 public interface ClickEvent extends Wrapper, RawValueHolder {
+
+    static ClickEvent.Builder builder() {
+        return Spectator.getBackend().clickEvent();
+    }
 
     Action action();
 
@@ -37,5 +42,13 @@ public interface ClickEvent extends Wrapper, RawValueHolder {
         CHANGE_PAGE,
         @LimitedVersionSupport(">= 1.15")
         COPY_TO_CLIPBOARD
+    }
+
+    interface Builder {
+        Builder action(Action action);
+
+        Builder value(String value);
+
+        ClickEvent build();
     }
 }
