@@ -32,6 +32,7 @@ import org.screamingsandals.lib.packet.event.SPacketEvent;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.PacketMethod;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
@@ -45,7 +46,7 @@ import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
         PlayerMapper.class,
 })
 public class ProtocolInjector {
-    private static final String CHANNEL_NAME = "SPacketInboundOutboundChannelHandler";
+    private static final String CHANNEL_NAME = "SPacketHandler";
 
     @OnPostEnable
     public void onPostEnable() {
@@ -63,18 +64,12 @@ public class ProtocolInjector {
     public void addPlayer(PlayerWrapper player, boolean onLogin) {
         try {
             final var channel = player.getChannel();
-            if (channel == null) {
-                throw new UnsupportedOperationException("Failed to find player channel!");
-            }
+            Preconditions.checkNotNull(channel, "Failed to find player channel!");
 
             final var handler = new PacketHandler(player);
             if (channel.pipeline().get(CHANNEL_NAME) == null && channel.pipeline().get("packet_handler") != null) {
-                final Runnable task = () -> channel.pipeline().addBefore("packet_handler", CHANNEL_NAME, handler);
-                if (channel.eventLoop().inEventLoop()) {
-                    task.run();
-                } else {
-                    channel.eventLoop().submit(task);
-                }
+                channel.eventLoop()
+                        .submit(() -> channel.pipeline().addBefore("packet_handler", CHANNEL_NAME, handler));
             }
         } catch (Throwable t) {
             if (onLogin) {
@@ -88,14 +83,10 @@ public class ProtocolInjector {
 
     public void removePlayer(PlayerWrapper player) {
         try {
-            Channel ch = player.getChannel();
-            if (ch != null && ch.pipeline().get(CHANNEL_NAME) != null) {
-                final Runnable task = () -> ch.pipeline().remove(CHANNEL_NAME);
-                if (ch.eventLoop().inEventLoop()) {
-                    task.run();
-                } else {
-                    ch.eventLoop().submit(task);
-                }
+            final var channel = player.getChannel();
+            if (channel != null && channel.pipeline().get(CHANNEL_NAME) != null) {
+                channel.eventLoop()
+                        .submit(() -> channel.pipeline().remove(CHANNEL_NAME));
             }
         } catch (Throwable ignored) {
         }
