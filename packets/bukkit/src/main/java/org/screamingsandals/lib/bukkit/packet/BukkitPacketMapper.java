@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bukkit.packet;
 
+import com.viaversion.viaversion.api.Via;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +28,11 @@ import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
 import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
+
+import java.util.Optional;
 
 @Service(initAnother = {
         ServerboundInteractPacketListener.class
@@ -36,6 +40,12 @@ import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 @RequiredArgsConstructor
 public class BukkitPacketMapper extends PacketMapper {
     private final LoggerWrapper logger;
+    private boolean viaEnabled;
+
+    @OnPostEnable
+    public void onPostEnable() {
+        viaEnabled = Bukkit.getPluginManager().isPluginEnabled("ViaVersion");
+    }
 
     @Override
     public void sendPacket0(PlayerWrapper player, AbstractPacket packet) {
@@ -61,13 +71,23 @@ public class BukkitPacketMapper extends PacketMapper {
 
             var channel = player.getChannel();
             if (channel.isActive()) {
-                channel.eventLoop().execute(() -> channel
-                        .writeAndFlush(writer.getBuffer())
-                        .addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE));
+                if (viaEnabled) {
+                    channel.eventLoop()
+                            .execute(() ->
+                                    Optional.ofNullable(channel.pipeline().context(Via.getManager().getInjector().getEncoderName()))
+                                            .ifPresentOrElse(
+                                                    channelHandlerContext -> channelHandlerContext.writeAndFlush(writer.getBuffer()),
+                                                    () -> channel.writeAndFlush(writer.getBuffer())
+                                            )
+                            );
+                } else {
+                    channel.eventLoop()
+                            .execute(() -> channel.writeAndFlush(writer.getBuffer()));
+                }
             }
 
             writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(player, extraPacket));
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             Bukkit.getLogger().severe("An exception occurred serializing packet of class: " + packet.getClass().getSimpleName() + " for player: " + player.getName());
             t.printStackTrace();
         }
