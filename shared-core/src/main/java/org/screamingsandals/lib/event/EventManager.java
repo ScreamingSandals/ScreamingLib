@@ -1,8 +1,21 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.event;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -10,10 +23,9 @@ import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.executor.ExecutorProvider;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -32,8 +44,7 @@ public abstract class EventManager {
     private static ExecutorService executor;
     @Getter
     private static EventManager defaultEventManager;
-
-    private final Multimap<Class<?>, EventHandler<? extends SEvent>> handlers = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+    private final Map<Class<?>, List<EventHandler<? extends SEvent>>> handlers = new ConcurrentHashMap<>();
     @Getter
     private EventManager customManager;
 
@@ -115,20 +126,22 @@ public abstract class EventManager {
     }
 
     public <T extends SEvent> EventHandler<T> register(Class<T> event, EventHandler<T> handler) {
-        handlers.put(event, handler);
+        handlers.computeIfAbsent(event, e -> Collections.synchronizedList(new ArrayList<>())).add(handler);
         fireEvent(new HandlerRegisteredEvent(this, event, handler));
 
         return handler;
     }
 
     public <T extends SEvent> void unregister(EventHandler<T> handler) {
-        List.copyOf(handlers.entries())
-                .forEach(entry -> {
-                    if (handler == entry.getValue()) {
-                        fireEvent(new HandlerUnregisteredEvent(this, entry.getKey(), handler));
-                        handlers.remove(entry.getKey(), entry.getValue());
-                    }
-                });
+        handlers.forEach((key, value) -> {
+            if (value.contains(handler)) {
+                fireEvent(new HandlerUnregisteredEvent(this, key, handler));
+                value.remove(handler);
+                if (value.isEmpty()) {
+                    handlers.remove(key, value);
+                }
+            }
+        });
     }
 
     public <K extends SEvent> K fireEvent(@NotNull K event) {
@@ -197,7 +210,7 @@ public abstract class EventManager {
     }
 
     public void unregisterAll() {
-        List.copyOf(handlers.values()).forEach(this::unregister);
+        handlers.entrySet().stream().flatMap(entry -> entry.getValue().stream()).forEach(this::unregister);
     }
 
     public void drop() {
@@ -211,16 +224,13 @@ public abstract class EventManager {
     }
 
     public boolean isRegistered(EventHandler<?> eventHandler) {
-        return handlers.values()
-                .contains(eventHandler);
+        return handlers.entrySet().stream()
+                .anyMatch(entry -> entry.getValue().contains(eventHandler));
     }
 
     @SuppressWarnings("unchecked")
     public void cloneEventManager(EventManager originalEventManager) {
-        originalEventManager.handlers
-                .entries()
-                .forEach(entry ->
-                        register((Class<SEvent>) entry.getKey(), (EventHandler<SEvent>) entry.getValue()));
+        originalEventManager.handlers.forEach((key, value) -> value.forEach(entry1 -> register((Class<SEvent>) key, (EventHandler<SEvent>) entry1)));
     }
 
     public void destroy() {
@@ -232,10 +242,11 @@ public abstract class EventManager {
     }
 
     private <E extends SEvent> Stream<? extends EventHandler<? extends SEvent>> findEventHandlers(E event, EventPriority priority) {
-        return handlers.entries()
+        return handlers.entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().isInstance(event))
                 .map(Map.Entry::getValue)
+                .flatMap(Collection::stream)
                 .filter(eventHandler -> eventHandler.getEventPriority() == priority);
     }
 

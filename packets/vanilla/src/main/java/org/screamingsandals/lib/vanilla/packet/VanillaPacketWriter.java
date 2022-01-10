@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.vanilla.packet;
 
 import io.netty.buffer.ByteBuf;
@@ -8,9 +24,6 @@ import org.screamingsandals.lib.packet.PacketWriter;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 public abstract class VanillaPacketWriter extends PacketWriter {
-
-    private static Integer PROTOCOL = null;
-
     public VanillaPacketWriter(ByteBuf buffer) {
         super(buffer);
     }
@@ -26,24 +39,7 @@ public abstract class VanillaPacketWriter extends PacketWriter {
         // TODO: check if this works for legacy too
     }
 
-    @Override
-    public int protocol() {
-        if (PROTOCOL == null) {
-            if (SharedConstantsAccessor.getMethodGetProtocolVersion1() != null) {
-                PROTOCOL = Reflect.fastInvokeResulted(SharedConstantsAccessor.getMethodGetProtocolVersion1()).as(Integer.class);
-            } else {
-                PROTOCOL = Reflect.getFieldResulted(getMinecraftServerInstance(), MinecraftServerAccessor.getFieldStatus())
-                        .fastInvokeResulted(ServerStatusAccessor.getMethodGetVersion1())
-                        .fastInvokeResulted(ServerStatus_i_VersionAccessor.getMethodGetProtocol1())
-                        .as(Integer.class);
-            }
-        }
-        return PROTOCOL;
-    }
-
     protected abstract Object materialHolderToItem(ItemTypeHolder material);
 
     protected abstract Object blockDataToBlockState(BlockTypeHolder blockData);
-
-    protected abstract Object getMinecraftServerInstance();
 }

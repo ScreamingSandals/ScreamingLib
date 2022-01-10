@@ -1,15 +1,32 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.vanilla.packet;
 
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.packet.*;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PacketIdMapping {
     private static final Map<Class<? extends AbstractPacket>, Class<?>> PACKET_CLASS_TRANSLATE = new ConcurrentHashMap<>();
+    private static final Map<Class<? extends AbstractPacket>, Integer> ID_CACHE = new ConcurrentHashMap<>();
 
     static {
         PACKET_CLASS_TRANSLATE.put(SClientboundAddEntityPacket.class, ClientboundAddEntityPacketAccessor.getType());
@@ -50,8 +67,11 @@ public class PacketIdMapping {
     }
 
     public static Integer getPacketId(Class<? extends AbstractPacket> packetClass) {
-        if (packetClass == null) {
-            throw new UnsupportedOperationException("Cannot get packet id of null class!");
+        Preconditions.checkNotNull(packetClass, "Cannot get packet id of null class!");
+
+        final var cachedId = ID_CACHE.get(packetClass);
+        if (cachedId != null) {
+            return cachedId;
         }
 
         var vanillaClass = PACKET_CLASS_TRANSLATE.get(packetClass);
@@ -62,13 +82,15 @@ public class PacketIdMapping {
         // all our mapped packets are just client bound. server bound listener is not implemented yet
         var outgoing = PacketFlowAccessor.getFieldCLIENTBOUND();
 
+        Integer packetId;
+
         if (ConnectionProtocolAccessor.getFieldFlows() == null) {
             // up to 1.14.4
             var outgoingMap = Reflect.getFieldResulted(playProtocol, ConnectionProtocolAccessor.getFieldPackets())
                     .as(Map.class)
                     .get(outgoing);
 
-            return (Integer) Reflect.fastInvokeResulted(outgoingMap, "inverse")
+            packetId = (Integer) Reflect.fastInvokeResulted(outgoingMap, "inverse")
                     .as(Map.class)
                     .get(vanillaClass);
         } else {
@@ -77,10 +99,12 @@ public class PacketIdMapping {
                     .as(Map.class)
                     .get(outgoing);
 
-            return Reflect
+            packetId =  Reflect
                     .fastInvokeResulted(outgoingMap, ConnectionProtocol_i_PacketSetAccessor.getMethodGetId1(), vanillaClass)
                     .as(Integer.class);
-
         }
+
+        ID_CACHE.put(packetClass, packetId);
+        return packetId;
     }
 }

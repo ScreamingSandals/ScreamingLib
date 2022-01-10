@@ -1,6 +1,21 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.bukkit.utils.nms;
 
-import com.google.common.base.Preconditions;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
@@ -9,6 +24,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.nms.accessors.*;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -17,7 +33,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ClassStorage {
-
 	public static final boolean NMS_BASED_SERVER = safeGetClass("org.bukkit.craftbukkit.Main") != null;
 	public static final String NMS_VERSION = checkNMSVersion();
 
@@ -32,7 +47,15 @@ public class ClassStorage {
 		public static final Class<?> CraftPersistentDataTypeRegistry = safeGetClass("{obc}.persistence.CraftPersistentDataTypeRegistry");
 		public static final Class<?> CraftCustomTagTypeRegistry = safeGetClass("{obc}.inventory.CraftCustomTagTypeRegistry");
 		public static final Class<?> CraftSound = safeGetClass("{obc}.CraftSound");
-		public static final Class<?> CraftLegacy = safeGetClass("{obc}.legacy.CraftLegacy");
+
+		private static Class<?> CraftLegacy;
+
+		public static Class<?> UNSAFE_EVIL_GET_OUT_getCraftLegacy() {
+			if (CraftLegacy == null) {
+				CraftLegacy = safeGetClass("{obc}.legacy.CraftLegacy");
+			}
+			return CraftLegacy;
+		}
 	}
 	
 	private static String checkNMSVersion() {

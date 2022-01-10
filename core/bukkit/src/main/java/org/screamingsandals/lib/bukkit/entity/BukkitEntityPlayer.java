@@ -1,5 +1,22 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.bukkit.entity;
 
+import com.viaversion.viaversion.api.Via;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
@@ -8,12 +25,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
-import org.screamingsandals.lib.container.Openable;
 import org.screamingsandals.lib.container.PlayerContainer;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -27,7 +44,9 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
+import protocolsupport.api.ProtocolSupportAPI;
 
+import java.net.InetSocketAddress;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
@@ -291,6 +310,23 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     @Override
     public LocationHolder getCompassTarget() {
         return LocationMapper.wrapLocation(((Player) wrappedObject).getCompassTarget());
+    }
+
+    @Override
+    public InetSocketAddress getAddress() {
+        return ((Player) wrappedObject).getAddress();
+    }
+
+    @SuppressWarnings("unchecked") // Via Version
+    @Override
+    public int getProtocolVersion() {
+        if (Reflect.has("com.viaversion.viaversion.api.Via")) {
+            return Via.getAPI().getPlayerVersion(wrappedObject);
+        }
+        if (Reflect.has("protocolsupport.api.ProtocolSupportAPI")) {
+            return ProtocolSupportAPI.getProtocolVersion((Player) wrappedObject).getId();
+        }
+        return Server.getProtocolVersion();
     }
 
     @Override

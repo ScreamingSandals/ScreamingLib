@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.event.player;
 
 import org.screamingsandals.lib.entity.EntityBasic;
@@ -6,17 +22,29 @@ import org.screamingsandals.lib.event.PlatformEventWrapper;
 
 public interface SPlayerEggThrowEvent extends SPlayerEvent, PlatformEventWrapper {
 
-    EntityBasic getEgg();
+    EntityBasic eggEntity();
 
-    boolean isHatching();
+    boolean hatching();
 
-    void setHatching(boolean hatching);
+    void hatching(boolean hatching);
 
-    EntityTypeHolder getHatchType();
+    EntityTypeHolder hatchType();
 
-    void setHatchType(EntityTypeHolder hatchType);
+    void hatchType(EntityTypeHolder hatchType);
 
-    byte getNumHatches();
+    /**
+     * //from bukkit
+     * Get the number of mob hatches from the egg. By default, the number will
+     * be the number the server would've done
+     * <ul>
+     * <li>7/8 chance of being 0
+     * <li>31/256 ~= 1/8 chance to be 1
+     * <li>1/256 chance to be 4
+     * </ul>
+     *
+     * @return The number of mobs going to be hatched by the egg
+     */
+    byte hatchesNumber();
 
-    void setNumHatches(byte numHatches);
+    void hatchesNumber(byte numHatches);
 }

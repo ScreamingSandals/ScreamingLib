@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.packet;
 
 import io.netty.channel.Channel;
@@ -16,6 +32,7 @@ import org.screamingsandals.lib.packet.event.SPacketEvent;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.PacketMethod;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
@@ -29,13 +46,13 @@ import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
         PlayerMapper.class,
 })
 public class ProtocolInjector {
-    private static final String CHANNEL_NAME = "SPacketInboundOutboundChannelHandler";
+    private static final String CHANNEL_NAME = "SPacketHandler";
 
     @OnPostEnable
     public void onPostEnable() {
-        EventManager.getDefaultEventManager().register(SPlayerLoginEvent.class, sPlayerLoginEvent -> addPlayer(sPlayerLoginEvent.getPlayer(), true), EventPriority.LOWEST);
-        EventManager.getDefaultEventManager().register(SPlayerJoinEvent.class, sPlayerJoinEvent -> addPlayer(sPlayerJoinEvent.getPlayer(), false), EventPriority.HIGH);
-        EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, sPlayerLeaveEvent -> removePlayer(sPlayerLeaveEvent.getPlayer()), EventPriority.HIGHEST);
+        EventManager.getDefaultEventManager().register(SPlayerLoginEvent.class, sPlayerLoginEvent -> addPlayer(sPlayerLoginEvent.player(), true), EventPriority.LOWEST);
+        EventManager.getDefaultEventManager().register(SPlayerJoinEvent.class, sPlayerJoinEvent -> addPlayer(sPlayerJoinEvent.player(), false), EventPriority.HIGH);
+        EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, sPlayerLeaveEvent -> removePlayer(sPlayerLeaveEvent.player()), EventPriority.HIGHEST);
         Server.getConnectedPlayers().forEach(player -> addPlayer(player, false));
     }
 
@@ -47,18 +64,12 @@ public class ProtocolInjector {
     public void addPlayer(PlayerWrapper player, boolean onLogin) {
         try {
             final var channel = player.getChannel();
-            if (channel == null) {
-                throw new UnsupportedOperationException("Failed to find player channel!");
-            }
+            Preconditions.checkNotNull(channel, "Failed to find player channel!");
 
             final var handler = new PacketHandler(player);
             if (channel.pipeline().get(CHANNEL_NAME) == null && channel.pipeline().get("packet_handler") != null) {
-                final Runnable task = () -> channel.pipeline().addBefore("packet_handler", CHANNEL_NAME, handler);
-                if (channel.eventLoop().inEventLoop()) {
-                    task.run();
-                } else {
-                    channel.eventLoop().submit(task);
-                }
+                channel.eventLoop()
+                        .submit(() -> channel.pipeline().addBefore("packet_handler", CHANNEL_NAME, handler));
             }
         } catch (Throwable t) {
             if (onLogin) {
@@ -72,14 +83,10 @@ public class ProtocolInjector {
 
     public void removePlayer(PlayerWrapper player) {
         try {
-            Channel ch = player.getChannel();
-            if (ch != null && ch.pipeline().get(CHANNEL_NAME) != null) {
-                final Runnable task = () -> ch.pipeline().remove(CHANNEL_NAME);
-                if (ch.eventLoop().inEventLoop()) {
-                    task.run();
-                } else {
-                    ch.eventLoop().submit(task);
-                }
+            final var channel = player.getChannel();
+            if (channel != null && channel.pipeline().get(CHANNEL_NAME) != null) {
+                channel.eventLoop()
+                        .submit(() -> channel.pipeline().remove(CHANNEL_NAME));
             }
         } catch (Throwable ignored) {
         }
@@ -94,7 +101,7 @@ public class ProtocolInjector {
             final var future = EventManager.fireAsync(new SPacketEvent(player, PacketMethod.INBOUND, packet));
 
             future.thenAccept(event -> {
-                if (event.isCancelled()) {
+                if (event.cancelled()) {
                     return;
                 }
                 var modifiedPacket = event.getPacket();
@@ -111,7 +118,7 @@ public class ProtocolInjector {
             final var future = EventManager.fireAsync(new SPacketEvent(player, PacketMethod.OUTBOUND, packet));
 
             future.thenAccept(event -> {
-                if (event.isCancelled()) {
+                if (event.cancelled()) {
                     return;
                 }
                 var modifiedPacket = event.getPacket();

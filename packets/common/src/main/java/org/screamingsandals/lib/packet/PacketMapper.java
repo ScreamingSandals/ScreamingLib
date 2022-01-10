@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.packet;
 
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -58,16 +74,6 @@ public abstract class PacketMapper {
         return packetMapper.getId0(clazz);
     }
 
-    public static int getProtocolVersion(PlayerWrapper player) {
-        if (packetMapper == null) {
-            throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
-        }
-        if (player == null || !player.isOnline()) {
-            throw new UnsupportedOperationException("Invalid player provided!");
-        }
-        return packetMapper.getProtocolVersion0(player);
-    }
-
     public static int getArmorStandTypeId() {
         if (packetMapper == null) {
             throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
@@ -76,8 +82,6 @@ public abstract class PacketMapper {
     }
 
     public abstract int getId0(Class<? extends AbstractPacket> clazz);
-
-    public abstract int getProtocolVersion0(PlayerWrapper player);
 
     public abstract int getArmorStandTypeId0();
 }

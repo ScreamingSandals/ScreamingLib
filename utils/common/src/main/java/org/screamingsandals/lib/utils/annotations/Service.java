@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.utils.annotations;
 
 import java.lang.annotation.ElementType;
@@ -6,56 +22,63 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * The Service annotation is used to match class which can be initialized by screaming-annotation processor.
- * This class requires to have static init method. If init method is not present, constructor will be used.
+ * An annotation for automatically initializing the annotated class on plugin load.
+ * The annotation module needs to be declared as an annotation processor in your build system for services to function.
  * <p>
- * Init method or constructor can contain this arguments:
+ * Services employ a concept of "autowiring", a form of constructor/method dependency injection.
+ * You can have the annotation processor automatically inject an object into your service's constructor or a method marked with @OnPostConstruct/@On[Post]Enable/@On[Pre]Disable.
+ * <p>
+ * Above-mentioned injectable objects include:
  * <ul>
- *  <li>PluginContainer</li>
- *  <li>PluginDescription</li>
- *  <li>Platform plugin - not recommended unless this is platform-specific service</li>
- *  <li>{@link org.screamingsandals.lib.utils.Controllable}</li>
- *  <li>Service created by constructor (must be also defined in dependsOn</li>
- *  <li>{@link org.screamingsandals.lib.utils.logger.LoggerWrapper}</li>
- *  <li>If supported, than SLF4J logger</li>
- *  <li>{@link java.nio.file.Path} annotated with {@link org.screamingsandals.lib.utils.annotations.parameters.ConfigFile} or {@link org.screamingsandals.lib.utils.annotations.parameters.DataFolder}</li>
- *  <li>{@link java.io.File} annotated with {@link org.screamingsandals.lib.utils.annotations.parameters.ConfigFile} or {@link org.screamingsandals.lib.utils.annotations.parameters.DataFolder}</li>
- *  <li>Any extension of {@link org.spongepowered.configurate.loader.ConfigurationLoader} annotated with {@link org.screamingsandals.lib.utils.annotations.parameters.ConfigFile} or {@link org.screamingsandals.lib.utils.annotations.parameters.DataFolder}</li>
+ *  <li>a <strong>org.screamingsandals.lib.plugin.PluginContainer</strong> of your plugin</li>
+ *  <li>a <strong>org.screamingsandals.lib.plugin.PluginDescription</strong> of your plugin</li>
+ *  <li>the platform class of your plugin - not recommended, unless this is platform specific service</li>
+ *  <li>a {@link org.screamingsandals.lib.utils.Controllable}</li>
+ *  <li>an another service defined in {@link Service#dependsOn()}</li>
+ *  <li>a {@link org.screamingsandals.lib.utils.logger.LoggerWrapper} or a SLF4J logger, if supported</li>
+ *  <li>
+ *      a {@link java.nio.file.Path} or a {@link java.io.File} annotated with
+ *      {@link org.screamingsandals.lib.utils.annotations.parameters.ConfigFile} or {@link org.screamingsandals.lib.utils.annotations.parameters.DataFolder}
+ *  </li>
+ *  <li>
+ *      any subclass of {@link org.spongepowered.configurate.loader.ConfigurationLoader} annotated with
+ *      {@link org.screamingsandals.lib.utils.annotations.parameters.ConfigFile} or {@link org.screamingsandals.lib.utils.annotations.parameters.DataFolder}
+ *  </li>
  * </ul>
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface Service {
     /**
-     * Defines all services which are required by this service to run.
-     * These services will be automatically initialized if using screaming-annotation processor.
+     * Defines services which are required by this service to run.
+     * These services will be automatically initialized if the annotation module is declared as an annotation processor in your build system.
      *
-     * @return All dependencies
+     * @return the service dependencies
      */
     Class<?>[] dependsOn() default {};
 
     /**
-     * Defines all services which are not required by this service, but can be optionally used.
-     * These services won't be loaded automatically if they are not specified as required by another service or PluginContainer.
+     * Defines services which are not required by this service, but can be loaded optionally.
+     * These services won't be loaded automatically if they are not specified as a required dependency anywhere else.
      *
-     * @return All services, that should be loaded before this service
+     * @return the services, which should be loaded optionally
      */
     Class<?>[] loadAfter() default {};
 
     /**
-     * Defines all services which should be also initialized. Equivalent to {@link Init} (you can't use Init for services yet)
-     * These services will be automatically initialized if using screaming-annotation processor.
+     * Defines services which should also be initialized. Equivalent to {@link Init} (you can't use Init for services yet)
+     * These services will be automatically initialized if the annotation module is declared as an annotation processor in your build system.
      *
-     * @return All services, that should be initialized independently on this service
+     * @return the services, which should be initialized independently of this service
      */
     Class<?>[] initAnother() default {};
 
     /**
-     * Defines if service can't be registered to ServiceManager.
-     * If it's true and init method is not present, object won't be constructed.
-     * If class is annotated with {@link lombok.experimental.UtilityClass} this is implicitly true.
+     * Defines if this service should be registered to a <strong>org.screamingsandals.lib.plugin.ServiceManager</strong>.
+     * If set to true, an object won't be constructed.
+     * If the class is annotated with {@link lombok.experimental.UtilityClass}, this is implicitly true.
      *
-     * @return true if service can't be registered to ServiceManager
+     * @return should the service be registered to a ServiceManager?
      */
     boolean staticOnly() default false;
 }

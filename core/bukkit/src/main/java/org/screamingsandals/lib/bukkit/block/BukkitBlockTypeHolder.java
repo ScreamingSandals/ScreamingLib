@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.bukkit.block;
 
 import org.bukkit.Bukkit;
@@ -6,6 +22,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -17,6 +34,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements BlockTypeHolder {
+
+    public static boolean NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED;
+    private static final String NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED_MESSAGE = "Nag author/s of this plugin about usage of BlockTypeHolder#legacyData() or #withLegacyData() in non-legacy environment!";
 
     public BukkitBlockTypeHolder(Material type) {
         this(type.createBlockData());
@@ -36,9 +56,13 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
 
     @Override
     public byte legacyData() {
+        if (!NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED) {
+            BukkitCore.getPlugin().getLogger().warning(NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED_MESSAGE);
+            NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED = true;
+        }
         // Thanks Bukkit for not exposing this black magic :(
         try {
-            var legacy = Reflect.getMethod(ClassStorage.CB.CraftLegacy, "toLegacyData", Material.class).invokeStatic(wrappedObject.getMaterial());
+            var legacy = Reflect.getMethod(ClassStorage.CB.UNSAFE_EVIL_GET_OUT_getCraftLegacy(), "toLegacyData", Material.class).invokeStatic(wrappedObject.getMaterial());
             if (legacy instanceof MaterialData) {
                 return ((MaterialData) legacy).getData();
             }
@@ -49,6 +73,10 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
 
     @Override
     public BlockTypeHolder withLegacyData(byte legacyData) {
+        if (!NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED) {
+            BukkitCore.getPlugin().getLogger().warning(NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED_MESSAGE);
+            NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED = true;
+        }
         // Thanks Bukkit for exposing this black magic :)
         try {
             var legacy = Bukkit.getUnsafe().toLegacy(wrappedObject.getMaterial());

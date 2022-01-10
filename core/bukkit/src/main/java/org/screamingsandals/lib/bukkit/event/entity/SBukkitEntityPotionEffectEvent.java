@@ -1,9 +1,27 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.Accessors;
+
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -12,6 +30,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityPotionEffectEvent;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 
+@Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -31,7 +50,7 @@ public class SBukkitEntityPotionEffectEvent implements SEntityPotionEffectEvent,
     private Action action;
 
     @Override
-    public EntityBasic getEntity() {
+    public EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -40,7 +59,7 @@ public class SBukkitEntityPotionEffectEvent implements SEntityPotionEffectEvent,
 
     @Override
     @Nullable
-    public PotionEffectHolder getOldEffect() {
+    public PotionEffectHolder oldEffect() {
         if (!oldEffectCached) {
             if (event.getOldEffect() != null) {
                 oldEffect = PotionEffectHolder.of(event.getOldEffect());
@@ -52,7 +71,7 @@ public class SBukkitEntityPotionEffectEvent implements SEntityPotionEffectEvent,
 
     @Override
     @Nullable
-    public PotionEffectHolder getNewEffect() {
+    public PotionEffectHolder newEffect() {
         if (!newEffectCached) {
             if (event.getOldEffect() != null) {
                 newEffect = PotionEffectHolder.of(event.getNewEffect());
@@ -63,7 +82,7 @@ public class SBukkitEntityPotionEffectEvent implements SEntityPotionEffectEvent,
     }
 
     @Override
-    public Cause getCause() {
+    public Cause cause() {
         if (cause == null) {
             cause = Cause.valueOf(event.getCause().name());
         }
@@ -71,7 +90,7 @@ public class SBukkitEntityPotionEffectEvent implements SEntityPotionEffectEvent,
     }
 
     @Override
-    public Action getAction() {
+    public Action action() {
         if (action == null) {
             action = Action.valueOf(event.getAction().name());
         }
@@ -79,12 +98,12 @@ public class SBukkitEntityPotionEffectEvent implements SEntityPotionEffectEvent,
     }
 
     @Override
-    public boolean isOverride() {
+    public boolean override() {
         return event.isOverride();
     }
 
     @Override
-    public void setOverride(boolean override) {
+    public void override(boolean override) {
         event.setOverride(override);
     }
 }

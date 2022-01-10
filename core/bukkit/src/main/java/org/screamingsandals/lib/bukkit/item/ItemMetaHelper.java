@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.bukkit.item;
 
 import org.bukkit.inventory.meta.ItemMeta;
@@ -132,10 +148,14 @@ public class ItemMetaHelper {
         }
 
         var clearMethod = Reflect.getMethod(meta, "clear" + name);
-        var addMethod = Reflect.getMethodsCalled(meta, "add" + name, 1);
+        var addMethod = Reflect.getMethodsCalled(meta, "add" + name.substring(0, name.length() - 1), 1);
+        if (addMethod.isEmpty()) {
+            // Ah, addCustomEffect
+            addMethod = Reflect.getMethodsCalled(meta, "add" + name.substring(0, name.length() - 1), 2);
+        }
         if (clearMethod.isPresent() && !addMethod.isEmpty()) {
             clearMethod.invoke();
-            for (var m : setMethod) {
+            for (var m : addMethod) {
                 try {
                     if (!Collection.class.isAssignableFrom(m.getMethod().getParameterTypes()[0])) {
                         return;
@@ -182,18 +202,19 @@ public class ItemMetaHelper {
             }
         }
 
-        var clearMethod = Reflect.getMethod(meta, "clear" + name);
-        var addMethod = Reflect.getMethodsCalled(meta, "add" + name, 1);
-        if (clearMethod.isPresent() && !addMethod.isEmpty()) {
-            clearMethod.invoke();
-            for (var m : setMethod) {
+        var addMethod = Reflect.getMethodsCalled(meta, "add" + name.substring(0, name.length() - 1), 1);
+        if (addMethod.isEmpty()) {
+            // Ah, addCustomEffect
+            addMethod = Reflect.getMethodsCalled(meta, "add" + name.substring(0, name.length() - 1), 2);
+        }
+        if (!addMethod.isEmpty()) {
+            for (var m : addMethod) {
                 try {
-                    if (!Collection.class.isAssignableFrom(m.getMethod().getParameterTypes()[0])) {
-                        return;
+                    if (m.getMethod().getParameters().length == 2) {
+                        m.invoke(MetadataValuesRemapper.remapToPlatform(value, m.getMethod().getParameterTypes()[0]), true);
+                    } else {
+                        m.invoke(MetadataValuesRemapper.remapToPlatform(value, m.getMethod().getParameterTypes()[0]));
                     }
-                    var orig2 = new ArrayList<>(orig);
-                    orig2.add(MetadataValuesRemapper.remapToPlatform(value, ((Class<?>) ((ParameterizedType) m.getMethod().getParameters()[0].getParameterizedType()).getActualTypeArguments()[0])));
-                    m.invoke(orig2);
                     return;
                 } catch (Throwable ignored) {
                     // continue

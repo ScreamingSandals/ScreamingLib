@@ -1,7 +1,25 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.Version;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.WorldHolder;
@@ -17,12 +35,11 @@ import java.util.List;
 )
 public abstract class Server {
     private static Server server;
+    private static Integer PROTOCOL_VERSION = null;
 
     @ApiStatus.Internal
     public Server() {
-        if (server != null) {
-            throw new UnsupportedOperationException("Server has been already initialized!");
-        }
+        Preconditions.checkArgument(server == null, "Server has been already initialized!");
         server = this;
     }
 
@@ -32,10 +49,7 @@ public abstract class Server {
      * @return true if current thread is same as the Server thread, false otherwise
      */
     public static boolean isServerThread() {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
-        }
-        return server.isServerThread0();
+        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").isServerThread0();
     }
 
     /**
@@ -44,17 +58,11 @@ public abstract class Server {
      * @return the version string (1.17.1 for example)
      */
     public static Version getVersion() {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
-        }
-        return server.getVersion0();
+        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getVersion0();
     }
 
     public static String getServerSoftwareVersion() {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
-        }
-        return server.getServerSoftwareVersion0();
+        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getServerSoftwareVersion0();
     }
 
     /**
@@ -65,10 +73,7 @@ public abstract class Server {
      * @return is this server version matching the supplied version?
      */
     public static boolean isVersion(int major, int minor) {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
-        }
-        return server.getVersion0().isVersion(major, minor);
+        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getVersion0().isVersion(major, minor);
     }
 
     /**
@@ -80,10 +85,7 @@ public abstract class Server {
      * @return is this server version matching the supplied version?
      */
     public static boolean isVersion(int major, int minor, int patch) {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
-        }
-        return server.getVersion0().isVersion(major, minor, patch);
+        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getVersion0().isVersion(major, minor, patch);
     }
 
     /**
@@ -92,17 +94,11 @@ public abstract class Server {
      * @return list of players currently connected to the server
      */
     public static List<PlayerWrapper> getConnectedPlayers() {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
-        }
-        return server.getConnectedPlayers0();
+        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getConnectedPlayers0();
     }
 
     public static List<WorldHolder> getWorlds() {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
-        }
-        return server.getWorlds0();
+        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getWorlds0();
     }
 
     /**
@@ -111,13 +107,9 @@ public abstract class Server {
      * @param world the world
      * @return list of players currently in the world
      */
-    public static List<PlayerWrapper> getConnectedPlayersFromWorld(WorldHolder world) {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
-        }
-        if (world == null) {
-            throw new UnsupportedOperationException("Invalid world provided!");
-        }
+    public static List<PlayerWrapper> getConnectedPlayersFromWorld(@NotNull WorldHolder world) {
+        Preconditions.checkNotNull(server, "Server has not yet been initialized!");
+        Preconditions.checkNotNull(world, "Invalid world provided!");
         return server.getConnectedPlayersFromWorld0(world);
     }
 
@@ -126,30 +118,40 @@ public abstract class Server {
      *
      * @param task the runnable
      */
-    public static void runSynchronously(Runnable task) {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
-        }
-        if (task == null) {
-            throw new UnsupportedOperationException("Invalid task provided!");
-        }
+    public static void runSynchronously(@NotNull Runnable task) {
+        Preconditions.checkNotNull(server, "Server has not yet been initialized!");
+        Preconditions.checkNotNull(task, "Invalid task provided!");
         server.runSynchronously0(task);
     }
 
     @ApiStatus.Internal
     @ApiStatus.Experimental
     public static String UNSAFE_normalizeSoundKey(String s) {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
-        }
-        return server.UNSAFE_normalizeSoundKey0(s);
+        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").UNSAFE_normalizeSoundKey0(s);
     }
 
     public static void shutdown() {
-        if (server == null) {
-            throw new UnsupportedOperationException("Server has not yet been initialized!");
+        Preconditions.checkNotNull(server, "Server has not yet been initialized!").shutdown0();
+    }
+
+    public static Integer getProtocolVersion() {
+        if (PROTOCOL_VERSION == null) {
+            PROTOCOL_VERSION = Preconditions.checkNotNull(server, "Server has not yet been initialized!").getProtocolVersion0();
         }
-        server.shutdown0();
+        return PROTOCOL_VERSION;
+    }
+
+    /**
+     * <pre>
+     *  O   This is Paul.
+     * /|\  He checks the server version to decide
+     *  |   when to use legacy method or flattening method.
+     * / \  Be like Paul. Ignore this method.
+     * </pre>
+     */
+    @ApiStatus.Experimental
+    public static void UNSAFE_earlyInitializeLegacySupportAndIgnoreItsUsage() {
+        Preconditions.checkNotNull(server, "Server has not yet been initialized!").UNSAFE_earlyInitializeLegacySupportAndIgnoreItsUsage0();
     }
 
     // abstract methods for implementations
@@ -170,7 +172,13 @@ public abstract class Server {
 
     public abstract void shutdown0();
 
+    public abstract Integer getProtocolVersion0();
+
     public String UNSAFE_normalizeSoundKey0(String s) {
         return s;
+    }
+
+    @ApiStatus.OverrideOnly
+    public void UNSAFE_earlyInitializeLegacySupportAndIgnoreItsUsage0() {
     }
 }

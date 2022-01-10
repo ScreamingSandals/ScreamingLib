@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.Nullable;
@@ -10,38 +26,38 @@ import org.screamingsandals.lib.utils.*;
 public interface SPlayerInventoryClickEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
     @Nullable
-    Item getCursorItem();
+    Item cursorItem();
 
     @Nullable
-    Item getCurrentItem();
+    Item currentItem();
 
-    void setCurrentItem(Item currentItem);
+    void currentItem(Item currentItem);
 
     @Nullable
-    Container getClickedInventory();
+    Container clickedInventory();
 
     // Who tf called this method getContainer()?
     @Nullable
     @Deprecated
-    default Container getContainer() {
-        return getClickedInventory();
+    default Container container() {
+        return clickedInventory();
     }
 
     ClickType getClickType();
 
-    Container getInventory();
+    Container inventory();
 
-    InventoryAction getAction();
+    InventoryAction action();
 
-    int getHotbarButton();
+    int hotbarButton();
 
-    int getSlot();
+    int slot();
 
-    SlotType getSlotType();
+    SlotType slotType();
 
-    int getRawSlot();
+    int rawSlot();
 
-    Result getResult();
+    Result result();
 
-    void setResult(Result result);
+    void result(Result result);
 }
