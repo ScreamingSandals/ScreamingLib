@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import com.viaversion.viaversion.api.Via;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import lombok.RequiredArgsConstructor;
@@ -57,8 +58,9 @@ public class BukkitPacketMapper extends PacketMapper {
             return;
         }
 
+        final var buffer = Unpooled.buffer();
         try {
-            var writer = new CraftBukkitPacketWriter(Unpooled.buffer());
+            var writer = new CraftBukkitPacketWriter(buffer);
             writer.writeVarInt(packet.getId());
 
             int dataStartIndex = writer.getBuffer().writerIndex();
@@ -88,6 +90,7 @@ public class BukkitPacketMapper extends PacketMapper {
 
             writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(player, extraPacket));
         } catch (Throwable t) {
+            buffer.release();
             Bukkit.getLogger().severe("An exception occurred serializing packet of class: " + packet.getClass().getSimpleName() + " for player: " + player.getName());
             t.printStackTrace();
         }
