@@ -55,11 +55,16 @@ public class MinestomServer extends Server {
 
     @Override
     public void runSynchronously0(Runnable task) {
-        MinecraftServer.getSchedulerManager().buildTask(task).build().run();
+        MinecraftServer.getSchedulerManager().buildTask(task).schedule();
     }
 
     @Override
     public void shutdown0() {
         MinecraftServer.getServer().stop();
+    }
+
+    @Override
+    public Integer getProtocolVersion0() {
+        return MinecraftServer.PROTOCOL_VERSION;
     }
 }
