@@ -17,7 +17,9 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import com.viaversion.viaversion.api.Via;
+import com.viaversion.viaversion.api.protocol.packet.PacketWrapper;
 import com.viaversion.viaversion.exception.CancelEncoderException;
+import com.viaversion.viaversion.exception.CancelException;
 import io.netty.buffer.Unpooled;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -61,10 +63,10 @@ public class BukkitPacketMapper extends PacketMapper {
             var writer = new CraftBukkitPacketWriter(buffer);
             writer.writeVarInt(packet.getId());
 
-            int dataStartIndex = writer.getBuffer().writerIndex();
+            int dataStartIndex = buffer.writerIndex();
             packet.write(writer);
 
-            int dataSize = writer.getBuffer().writerIndex() - dataStartIndex;
+            int dataSize = buffer.writerIndex() - dataStartIndex;
             if (dataSize > 2097151) {
                 throw new IllegalArgumentException("Packet too big (is " + dataSize + ", should be less than 2097152): " + packet);
             }
@@ -74,12 +76,17 @@ public class BukkitPacketMapper extends PacketMapper {
                 if (viaEnabled) {
                     final var conn = Via.getAPI().getConnection(player.getUuid());
                     if (conn != null) {
-                        conn.transformClientbound(writer.getBuffer(), CancelEncoderException::generate);
+                        try {
+                            conn.transformClientbound(buffer, CancelEncoderException::generate);
+                        } catch (CancelException ignored) {
+                            // no u Via
+                        }
+                        conn.sendRawPacket(buffer);
                     } else {
-                        channel.eventLoop().execute(() -> channel.writeAndFlush(writer.getBuffer()));
+                        channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
                     }
                 } else {
-                    channel.eventLoop().execute(() -> channel.writeAndFlush(writer.getBuffer()));
+                    channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
                 }
             }
 
