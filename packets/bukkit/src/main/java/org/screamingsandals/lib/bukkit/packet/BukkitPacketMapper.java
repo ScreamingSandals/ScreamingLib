@@ -17,9 +17,7 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import com.viaversion.viaversion.api.Via;
-import com.viaversion.viaversion.api.protocol.packet.PacketWrapper;
 import com.viaversion.viaversion.exception.CancelEncoderException;
-import com.viaversion.viaversion.exception.CancelException;
 import io.netty.buffer.Unpooled;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -78,7 +76,7 @@ public class BukkitPacketMapper extends PacketMapper {
                     if (conn != null) {
                         try {
                             conn.transformClientbound(buffer, CancelEncoderException::generate);
-                        } catch (CancelException ignored) {
+                        } catch (Throwable ignored) {
                             // no u Via
                         }
                         conn.sendRawPacket(buffer);
