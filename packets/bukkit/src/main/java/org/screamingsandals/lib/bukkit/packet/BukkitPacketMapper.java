@@ -29,9 +29,10 @@ import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
 import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
+
+import java.util.Optional;
 
 @Service(initAnother = {
         ServerboundInteractPacketListener.class
@@ -39,12 +40,6 @@ import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 @RequiredArgsConstructor
 public class BukkitPacketMapper extends PacketMapper {
     private final LoggerWrapper logger;
-    private boolean viaEnabled;
-
-    @OnPostEnable
-    public void onPostEnable() {
-        viaEnabled = Bukkit.getPluginManager().isPluginEnabled("ViaVersion");
-    }
 
     @Override
     public void sendPacket0(PlayerWrapper player, AbstractPacket packet) {
@@ -71,7 +66,8 @@ public class BukkitPacketMapper extends PacketMapper {
 
             var channel = player.getChannel();
             if (channel.isActive()) {
-                if (viaEnabled) {
+                if (Bukkit.getPluginManager().isPluginEnabled("ViaVersion")) { // not rly cacheable, reloads exist, softdepend is sus
+                    // ViaVersion fixes incompatibilities with other plugins, so we just use it if it's present
                     final var conn = Via.getAPI().getConnection(player.getUuid());
                     if (conn != null) {
                         try {
@@ -83,6 +79,18 @@ public class BukkitPacketMapper extends PacketMapper {
                     } else {
                         channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
                     }
+                // TODO: ProtocolSupport
+                } else if (Bukkit.getPluginManager().isPluginEnabled("OldCombatMechanics")) {
+                    // :sad:
+                    // Just skips everything, ocm is sus
+                    channel.eventLoop()
+                            .execute(() ->
+                                    Optional.ofNullable(channel.pipeline().context("encoder"))
+                                            .ifPresentOrElse(
+                                                    channelHandlerContext -> channelHandlerContext.writeAndFlush(writer.getBuffer()),
+                                                    () -> channel.writeAndFlush(writer.getBuffer())
+                                            )
+                            );
                 } else {
                     channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
                 }
