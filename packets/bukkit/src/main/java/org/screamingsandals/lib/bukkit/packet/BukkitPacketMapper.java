@@ -32,8 +32,6 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
-import java.util.Optional;
-
 @Service(initAnother = {
         ServerboundInteractPacketListener.class
 })
@@ -83,14 +81,12 @@ public class BukkitPacketMapper extends PacketMapper {
                 } else if (Bukkit.getPluginManager().isPluginEnabled("OldCombatMechanics")) {
                     // :sad:
                     // Just skips everything, ocm is sus
-                    channel.eventLoop()
-                            .execute(() ->
-                                    Optional.ofNullable(channel.pipeline().context("encoder"))
-                                            .ifPresentOrElse(
-                                                    channelHandlerContext -> channelHandlerContext.writeAndFlush(writer.getBuffer()),
-                                                    () -> channel.writeAndFlush(writer.getBuffer())
-                                            )
-                            );
+                    final var ctx = channel.pipeline().context("encoder");
+                    if (ctx != null) {
+                        channel.eventLoop().execute(() -> ctx.writeAndFlush(buffer));
+                    } else {
+                        channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
+                    }
                 } else {
                     channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
                 }
