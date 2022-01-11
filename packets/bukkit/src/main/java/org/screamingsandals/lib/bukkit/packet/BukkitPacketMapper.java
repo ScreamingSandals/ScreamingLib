@@ -17,23 +17,21 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import com.viaversion.viaversion.api.Via;
-import io.netty.buffer.ByteBuf;
+import com.viaversion.viaversion.exception.CancelEncoderException;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFutureListener;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.screamingsandals.lib.bukkit.packet.listener.ServerboundInteractPacketListener;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.ArmorStandAccessor;
-import org.screamingsandals.lib.packet.*;
+import org.screamingsandals.lib.packet.AbstractPacket;
+import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
 import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
-
-import java.util.Optional;
 
 @Service(initAnother = {
         ServerboundInteractPacketListener.class
@@ -74,17 +72,14 @@ public class BukkitPacketMapper extends PacketMapper {
             var channel = player.getChannel();
             if (channel.isActive()) {
                 if (viaEnabled) {
-                    channel.eventLoop()
-                            .execute(() ->
-                                    Optional.ofNullable(channel.pipeline().context(Via.getManager().getInjector().getEncoderName()))
-                                            .ifPresentOrElse(
-                                                    channelHandlerContext -> channelHandlerContext.writeAndFlush(writer.getBuffer()),
-                                                    () -> channel.writeAndFlush(writer.getBuffer())
-                                            )
-                            );
+                    final var conn = Via.getAPI().getConnection(player.getUuid());
+                    if (conn != null) {
+                        conn.transformClientbound(writer.getBuffer(), CancelEncoderException::generate);
+                    } else {
+                        channel.eventLoop().execute(() -> channel.writeAndFlush(writer.getBuffer()));
+                    }
                 } else {
-                    channel.eventLoop()
-                            .execute(() -> channel.writeAndFlush(writer.getBuffer()));
+                    channel.eventLoop().execute(() -> channel.writeAndFlush(writer.getBuffer()));
                 }
             }
 
