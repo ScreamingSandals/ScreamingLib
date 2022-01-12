@@ -32,7 +32,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
-@Service(initAnother = {
+@Service(dependsOn = {
         ServerboundInteractPacketListener.class
 })
 @RequiredArgsConstructor
