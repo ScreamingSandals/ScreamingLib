@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.minestom.event;
+package org.screamingsandals.lib.minestom.world.chunk;
 
-import org.screamingsandals.lib.event.EventManager;
-import org.screamingsandals.lib.utils.Controllable;
+import net.minestom.server.instance.Chunk;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.world.chunk.ChunkHolder;
+import org.screamingsandals.lib.world.chunk.ChunkMapper;
+
+import java.util.Optional;
 
 @Service
-public class MinestomEventManager extends EventManager {
-    public MinestomEventManager(Controllable controllable) {
-        super(controllable);
-    }
-
-    public static void init(Controllable controllable) {
-        EventManager.init(() -> new MinestomEventManager(controllable));
-    }
-
+public class MinestomChunkMapper extends ChunkMapper {
     @Override
-    public boolean isServerThread() {
-        return true;
+    protected Optional<ChunkHolder> wrapChunk0(Object chunk) {
+        if (chunk instanceof Chunk) {
+            return Optional.of(new MinestomChunkHolder((Chunk) chunk));
+        }
+        return Optional.empty();
     }
 }

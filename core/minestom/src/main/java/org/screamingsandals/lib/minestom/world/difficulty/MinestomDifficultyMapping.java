@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.minestom.player.gamemode;
+package org.screamingsandals.lib.minestom.world.difficulty;
 
-import net.minestom.server.entity.GameMode;
-import org.screamingsandals.lib.player.gamemode.GameModeMapping;
+import net.minestom.server.world.Difficulty;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.world.difficulty.DifficultyMapping;
 
 import java.util.Arrays;
 
 @Service
-public class MinestomGameModeMapping extends GameModeMapping {
-    public MinestomGameModeMapping() {
-        gameModeConverter
-                .registerP2W(GameMode.class, MinestomGameModeHolder::new)
-                .registerW2P(GameMode.class, gameModeHolder -> GameMode.valueOf(gameModeHolder.platformName()));
+public class MinestomDifficultyMapping extends DifficultyMapping {
+    public MinestomDifficultyMapping() {
+        difficultyConverter
+                .registerP2W(Difficulty.class, MinestomDifficultyHolder::new);
 
-        Arrays.stream(GameMode.values()).forEach(gameMode -> {
-            var holder = new MinestomGameModeHolder(gameMode);
-            mapping.put(NamespacedMappingKey.of(gameMode.name()), holder);
+        Arrays.stream(Difficulty.values()).forEach(difficulty -> {
+            final var holder = new MinestomDifficultyHolder(difficulty);
+            mapping.put(NamespacedMappingKey.of(difficulty.name()), holder);
             values.add(holder);
         });
     }

@@ -36,6 +36,8 @@ import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
+import java.util.Objects;
+
 @Service(dependsOn = {
         ServerboundInteractPacketListener.class
 })
@@ -86,11 +88,7 @@ public class BukkitPacketMapper extends PacketMapper {
                     // :sad:
                     // Just skips everything, ocm is sus
                     final var ctx = channel.pipeline().context("encoder");
-                    if (ctx != null) {
-                        channel.eventLoop().execute(() -> ctx.writeAndFlush(buffer));
-                    } else {
-                        channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
-                    }
+                    channel.eventLoop().execute(() -> Objects.requireNonNullElse(ctx, channel).writeAndFlush(buffer));
                 } else {
                     channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
                 }

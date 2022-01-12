@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.minestom.player.gamemode;
+package org.screamingsandals.lib.minestom.world.difficulty;
 
-import net.minestom.server.entity.GameMode;
-import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import net.minestom.server.world.Difficulty;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 
-import java.util.Arrays;
-
-public class MinestomGameModeHolder extends BasicWrapper<GameMode> implements GameModeHolder {
-    protected MinestomGameModeHolder(GameMode wrappedObject) {
+public class MinestomDifficultyHolder extends BasicWrapper<Difficulty> implements DifficultyHolder {
+    protected MinestomDifficultyHolder(Difficulty wrappedObject) {
         super(wrappedObject);
     }
 
@@ -33,20 +31,15 @@ public class MinestomGameModeHolder extends BasicWrapper<GameMode> implements Ga
     }
 
     @Override
-    public int id() {
-        return wrappedObject.getId();
-    }
-
-    @Override
-    public boolean is(Object gameMode) {
-        if (gameMode instanceof GameMode || gameMode instanceof GameModeHolder) {
-            return equals(gameMode);
+    public boolean is(Object object) {
+        if (object instanceof Difficulty || object instanceof DifficultyHolder) {
+            return equals(object);
         }
-        return equals(GameModeHolder.ofOptional(gameMode).orElse(null));
+        return equals(DifficultyHolder.ofOptional(object).orElse(null));
     }
 
     @Override
-    public boolean is(Object... gameModes) {
-        return Arrays.stream(gameModes).anyMatch(this::is);
+    public boolean is(Object... objects) {
+        return false;
     }
 }

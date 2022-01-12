@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.bukkit.event.chunk;
+package org.screamingsandals.lib.minestom.event.chunk;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
+import net.minestom.server.event.instance.InstanceChunkUnloadEvent;
 import org.screamingsandals.lib.event.chunk.SChunkUnloadEvent;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 import org.screamingsandals.lib.world.chunk.ChunkMapper;
@@ -32,14 +30,15 @@ import org.screamingsandals.lib.world.chunk.ChunkMapper;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-public class SBukkitChunkUnloadEvent implements SChunkUnloadEvent, NoAutoCancellable {
+public class SMinestomChunkUnloadEvent implements SChunkUnloadEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final ChunkUnloadEvent event;
+    private final InstanceChunkUnloadEvent event;
 
     // Internal cache
     private ChunkHolder cachedChunk;
+    private boolean cancelled = false;
 
     @Override
     public ChunkHolder chunk() {
@@ -51,22 +50,26 @@ public class SBukkitChunkUnloadEvent implements SChunkUnloadEvent, NoAutoCancell
 
     @Override
     public boolean saveChunk() {
-        return event.isSaveChunk();
+        return true;
     }
 
     @Override
     public void saveChunk(boolean saveChunk) {
-        event.setSaveChunk(saveChunk);
+        // empty stub
     }
 
-    // on newer versions the event is not cancellable
+    @Override
     public boolean cancelled() {
-        return event instanceof Cancellable && ((Cancellable) event).isCancelled();
+        return cancelled;
     }
 
+    @Override
     public void cancelled(boolean cancel) {
-        if (event instanceof Cancellable) {
-            ((Cancellable) event).setCancelled(cancel);
+        if (cancel && !cancelled) {
+            event.getInstance().loadChunk(event.getChunkX(), event.getChunkZ());
+        } else if (!cancel && cancelled) {
+            event.getInstance().unloadChunk(event.getChunk());
         }
+        cancelled = cancel;
     }
 }

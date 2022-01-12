@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.bukkit.event.chunk;
+package org.screamingsandals.lib.minestom.event.chunk;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.world.ChunkUnloadEvent;
-import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
-import org.screamingsandals.lib.event.chunk.SChunkUnloadEvent;
+import net.minestom.server.event.instance.InstanceChunkLoadEvent;
+import org.screamingsandals.lib.event.chunk.SChunkLoadEvent;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 import org.screamingsandals.lib.world.chunk.ChunkMapper;
 
@@ -32,11 +30,11 @@ import org.screamingsandals.lib.world.chunk.ChunkMapper;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-public class SBukkitChunkUnloadEvent implements SChunkUnloadEvent, NoAutoCancellable {
+public class SMinestomChunkLoadEvent implements SChunkLoadEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final ChunkUnloadEvent event;
+    private final InstanceChunkLoadEvent event;
 
     // Internal cache
     private ChunkHolder cachedChunk;
@@ -50,23 +48,7 @@ public class SBukkitChunkUnloadEvent implements SChunkUnloadEvent, NoAutoCancell
     }
 
     @Override
-    public boolean saveChunk() {
-        return event.isSaveChunk();
-    }
-
-    @Override
-    public void saveChunk(boolean saveChunk) {
-        event.setSaveChunk(saveChunk);
-    }
-
-    // on newer versions the event is not cancellable
-    public boolean cancelled() {
-        return event instanceof Cancellable && ((Cancellable) event).isCancelled();
-    }
-
-    public void cancelled(boolean cancel) {
-        if (event instanceof Cancellable) {
-            ((Cancellable) event).setCancelled(cancel);
-        }
+    public boolean newChunk() {
+        return false;
     }
 }

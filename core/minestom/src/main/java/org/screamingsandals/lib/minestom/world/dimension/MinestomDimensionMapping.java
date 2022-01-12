@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.minestom.player.gamemode;
+package org.screamingsandals.lib.minestom.world.dimension;
 
-import net.minestom.server.entity.GameMode;
-import org.screamingsandals.lib.player.gamemode.GameModeMapping;
+import net.minestom.server.MinecraftServer;
+import net.minestom.server.world.DimensionType;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
-
-import java.util.Arrays;
+import org.screamingsandals.lib.world.dimension.DimensionMapping;
 
 @Service
-public class MinestomGameModeMapping extends GameModeMapping {
-    public MinestomGameModeMapping() {
-        gameModeConverter
-                .registerP2W(GameMode.class, MinestomGameModeHolder::new)
-                .registerW2P(GameMode.class, gameModeHolder -> GameMode.valueOf(gameModeHolder.platformName()));
+public class MinestomDimensionMapping extends DimensionMapping {
+    public MinestomDimensionMapping() {
+        dimensionConverter
+                .registerP2W(DimensionType.class, MinestomDimensionHolder::new);
 
-        Arrays.stream(GameMode.values()).forEach(gameMode -> {
-            var holder = new MinestomGameModeHolder(gameMode);
-            mapping.put(NamespacedMappingKey.of(gameMode.name()), holder);
+        MinecraftServer.getDimensionTypeManager().unmodifiableList().forEach(environment -> {
+            final var holder = new MinestomDimensionHolder(environment);
+            mapping.put(NamespacedMappingKey.of(environment.toString()), holder);
             values.add(holder);
         });
     }
