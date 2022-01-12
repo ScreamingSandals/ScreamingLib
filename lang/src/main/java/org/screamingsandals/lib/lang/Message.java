@@ -1319,70 +1319,140 @@ public class Message implements TitleableSenderMessage, Cloneable {
         return this;
     }
 
-    public <W extends CommandSenderWrapper> Message titleAsync(Collection<W> senders) {
-        titleTask(senders)
+    public <W extends CommandSenderWrapper> Message titleAsync(Collection<W> receivers) {
+        titleTask(receivers)
                 .async()
                 .start();
         return this;
     }
 
-    public <W extends CommandSenderWrapper> Message send(W sender) {
-        getFor(sender).forEach(sender::sendMessage);
+    /**
+     * Sends this {@link Message} to defined receiver.
+     *
+     * @param receiver chosen one to receive the message.
+     * @param <W>      type for {@link CommandSenderWrapper}.
+     * @return this message.
+     */
+    public <W extends CommandSenderWrapper> Message send(W receiver) {
+        getFor(receiver).forEach(receiver::sendMessage);
         return this;
     }
 
-    public <W extends CommandSenderWrapper> Message send(W... senders) {
-        for (var sender : senders) {
+    /**
+     * Sends this {@link Message} to all given receivers.
+     *
+     * @param receivers array of receivers
+     * @param <W>       type for {@link CommandSenderWrapper}.
+     * @return this message.
+     */
+    public <W extends CommandSenderWrapper> Message send(W... receivers) {
+        for (var sender : receivers) {
             send(sender);
         }
         return this;
     }
 
-    public <W extends CommandSenderWrapper> Message send(Collection<W> senders) {
-        senders.forEach(this::send);
+    /**
+     * Sends this {@link Message} to all given receivers.
+     *
+     * @param receivers collection of receivers
+     * @param <W>       type for {@link CommandSenderWrapper}.
+     * @return this message.
+     */
+    public <W extends CommandSenderWrapper> Message send(Collection<W> receivers) {
+        receivers.forEach(this::send);
         return this;
     }
 
-    public <W extends CommandSenderWrapper> Tasker.TaskBuilder sendTask(W sender) {
+    /**
+     * Prepares a {@link Tasker.TaskBuilder} that will send this message.
+     *
+     * @param receiver receiver that will get the message
+     * @param <W>      type for {@link CommandSenderWrapper}.
+     * @return prepared task for the sending.
+     */
+    public <W extends CommandSenderWrapper> Tasker.TaskBuilder sendTask(W receiver) {
         return Tasker
-                .build(() -> getFor(sender).forEach(sender::sendMessage));
+                .build(() -> getFor(receiver).forEach(receiver::sendMessage));
     }
 
-    public <W extends CommandSenderWrapper> Tasker.TaskBuilder sendTask(W... senders) {
+    /**
+     * Prepares a {@link Tasker.TaskBuilder} that will send this message.
+     *
+     * @param receivers array of receivers
+     * @param <W>       type for {@link CommandSenderWrapper}.
+     * @return prepared task for the sending.
+     */
+    public <W extends CommandSenderWrapper> Tasker.TaskBuilder sendTask(W... receivers) {
         return Tasker
                 .build(() -> {
-                    for (var sender : senders) {
+                    for (var sender : receivers) {
                         send(sender);
                     }
                 });
     }
 
-    public <W extends CommandSenderWrapper> Tasker.TaskBuilder sendTask(Collection<W> senders) {
+    /**
+     * Prepares a {@link Tasker.TaskBuilder} that will send this message.
+     *
+     * @param receivers collection of receivers
+     * @param <W>       type for {@link CommandSenderWrapper}.
+     * @return prepared task for the sending.
+     */
+    public <W extends CommandSenderWrapper> Tasker.TaskBuilder sendTask(Collection<W> receivers) {
         return Tasker
-                .build(() -> senders.forEach(this::send));
+                .build(() -> receivers.forEach(this::send));
     }
 
-    public <W extends CommandSenderWrapper> Message sendAsync(W sender) {
-        sendTask(sender)
+    /**
+     * Sends this message asynchronously via {@link Tasker}.
+     *
+     * @param receiver receiver
+     * @param <W>      type for {@link CommandSenderWrapper}.
+     * @return this message
+     */
+    public <W extends CommandSenderWrapper> Message sendAsync(W receiver) {
+        sendTask(receiver)
                 .async()
                 .start();
         return this;
     }
 
-    public <W extends CommandSenderWrapper> Message sendAsync(W... senders) {
-        sendTask(senders)
+    /**
+     * Sends this message asynchronously via {@link Tasker}.
+     *
+     * @param receivers array of receivers
+     * @param <W>       type for {@link CommandSenderWrapper}.
+     * @return this message
+     */
+    public <W extends CommandSenderWrapper> Message sendAsync(W... receivers) {
+        sendTask(receivers)
                 .async()
                 .start();
         return this;
     }
 
-    public <W extends CommandSenderWrapper> Message sendAsync(Collection<W> senders) {
-        sendTask(senders)
+    /**
+     * Sends this message asynchronously via {@link Tasker}.
+     *
+     * @param receivers collection of receivers
+     * @param <W>       type for {@link CommandSenderWrapper}.
+     * @return this message
+     */
+    public <W extends CommandSenderWrapper> Message sendAsync(Collection<W> receivers) {
+        sendTask(receivers)
                 .async()
                 .start();
         return this;
     }
 
+    /**
+     * Transforms this message into a component.
+     * This will process the message for given sender.
+     *
+     * @param sender sender to process this message for
+     * @return {@link Component}.
+     */
     @Override
     @NotNull
     public Component asComponent(@Nullable CommandSenderWrapper sender) {
@@ -1436,8 +1506,17 @@ public class Message implements TitleableSenderMessage, Cloneable {
         return msg;
     }
 
+    /**
+     * Policy for prefix resolving.
+     */
     public enum PrefixPolicy {
+        /**
+         * All messages will have a prefix.
+         */
         ALL_MESSAGES,
+        /**
+         * Only first message will have a prefix.
+         */
         FIRST_MESSAGE
     }
 

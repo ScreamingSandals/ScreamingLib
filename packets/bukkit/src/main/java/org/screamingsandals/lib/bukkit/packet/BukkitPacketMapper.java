@@ -17,10 +17,9 @@
 package org.screamingsandals.lib.bukkit.packet;
 
 import com.viaversion.viaversion.api.Via;
-import io.netty.buffer.ByteBuf;
+import com.viaversion.viaversion.exception.CancelEncoderException;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.screamingsandals.lib.bukkit.packet.listener.ServerboundInteractPacketListener;
@@ -33,25 +32,16 @@ import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
 import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
-import java.util.Optional;
-
-@Service(initAnother = {
+@Service(dependsOn = {
         ServerboundInteractPacketListener.class
 })
 @RequiredArgsConstructor
 public class BukkitPacketMapper extends PacketMapper {
     private final LoggerWrapper logger;
-    private boolean viaEnabled;
-
-    @OnPostEnable
-    public void onPostEnable() {
-        viaEnabled = Bukkit.getPluginManager().isPluginEnabled("ViaVersion");
-    }
 
     @Override
     public void sendPacket0(PlayerWrapper player, AbstractPacket packet) {
@@ -68,28 +58,41 @@ public class BukkitPacketMapper extends PacketMapper {
             var writer = new CraftBukkitPacketWriter(buffer);
             writer.writeVarInt(packet.getId());
 
-            int dataStartIndex = writer.getBuffer().writerIndex();
+            int dataStartIndex = buffer.writerIndex();
             packet.write(writer);
 
-            int dataSize = writer.getBuffer().writerIndex() - dataStartIndex;
+            int dataSize = buffer.writerIndex() - dataStartIndex;
             if (dataSize > 2097151) {
                 throw new IllegalArgumentException("Packet too big (is " + dataSize + ", should be less than 2097152): " + packet);
             }
 
             var channel = getChannel(player);
             if (channel.isActive()) {
-                if (viaEnabled) {
-                    channel.eventLoop()
-                            .execute(() ->
-                                    Optional.ofNullable(channel.pipeline().context(Via.getManager().getInjector().getEncoderName()))
-                                            .ifPresentOrElse(
-                                                    channelHandlerContext -> channelHandlerContext.writeAndFlush(writer.getBuffer()),
-                                                    () -> channel.writeAndFlush(writer.getBuffer())
-                                            )
-                            );
+                if (Bukkit.getPluginManager().isPluginEnabled("ViaVersion")) { // not rly cacheable, reloads exist, softdepend is sus
+                    // ViaVersion fixes incompatibilities with other plugins, so we just use it if it's present
+                    final var conn = Via.getAPI().getConnection(player.getUuid());
+                    if (conn != null) {
+                        try {
+                            conn.transformClientbound(buffer, CancelEncoderException::generate);
+                        } catch (Throwable ignored) {
+                            // no u Via
+                        }
+                        conn.sendRawPacket(buffer);
+                    } else {
+                        channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
+                    }
+                // TODO: ProtocolSupport
+                } else if (Bukkit.getPluginManager().isPluginEnabled("OldCombatMechanics")) {
+                    // :sad:
+                    // Just skips everything, ocm is sus
+                    final var ctx = channel.pipeline().context("encoder");
+                    if (ctx != null) {
+                        channel.eventLoop().execute(() -> ctx.writeAndFlush(buffer));
+                    } else {
+                        channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
+                    }
                 } else {
-                    channel.eventLoop()
-                            .execute(() -> channel.writeAndFlush(writer.getBuffer()));
+                    channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
                 }
             }
 
