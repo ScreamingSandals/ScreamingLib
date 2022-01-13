@@ -23,8 +23,10 @@ import net.kyori.adventure.audience.ForwardingAudience;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import org.screamingsandals.lib.world.dimension.DimensionHolder;
@@ -41,6 +43,17 @@ import java.util.stream.Collectors;
  * An interface representing a world.
  */
 public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, ForwardingAudience {
+    /**
+     * Creates a new {@link WorldBuilder}.
+     *
+     * @return a new builder
+     */
+    static WorldBuilder builder() {
+        return (WorldBuilder) Reflect.construct(
+                Preconditions.checkNotNull(WorldBuilder.IMPL, "WorldBuilder is not initialized yet!")
+        );
+    }
+
     /**
      * Gets the world's {@link UUID}.
      *
@@ -203,6 +216,7 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Forw
     /**
      * A gson {@link TypeAdapter} for serializing and deserializing a world holder.
      */
+    @Deprecated(forRemoval = true)
     class WorldHolderTypeAdapter extends TypeAdapter<WorldHolder> {
         @Override
         public void write(JsonWriter out, WorldHolder value) throws IOException {

@@ -27,7 +27,8 @@ import java.util.Arrays;
 public class BukkitDimensionMapping extends DimensionMapping {
     public BukkitDimensionMapping() {
         dimensionConverter
-                .registerP2W(World.Environment.class, BukkitDimensionHolder::new);
+                .registerP2W(World.Environment.class, BukkitDimensionHolder::new)
+                .registerW2P(World.Environment.class, dimensionHolder -> World.Environment.valueOf(dimensionHolder.platformName()));
 
         Arrays.stream(World.Environment.values()).forEach(environment -> {
             var holder = new BukkitDimensionHolder(environment);

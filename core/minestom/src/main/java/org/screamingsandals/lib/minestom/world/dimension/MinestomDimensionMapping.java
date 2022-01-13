@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.minestom.world.dimension;
 
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.utils.NamespaceID;
 import net.minestom.server.world.DimensionType;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -26,7 +27,8 @@ import org.screamingsandals.lib.world.dimension.DimensionMapping;
 public class MinestomDimensionMapping extends DimensionMapping {
     public MinestomDimensionMapping() {
         dimensionConverter
-                .registerP2W(DimensionType.class, MinestomDimensionHolder::new);
+                .registerP2W(DimensionType.class, MinestomDimensionHolder::new)
+                .registerW2P(DimensionType.class, dimensionHolder -> MinecraftServer.getDimensionTypeManager().getDimension(NamespaceID.from(dimensionHolder.platformName())));
 
         MinecraftServer.getDimensionTypeManager().unmodifiableList().forEach(environment -> {
             final var holder = new MinestomDimensionHolder(environment);
