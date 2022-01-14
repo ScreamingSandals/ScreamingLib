@@ -16,21 +16,35 @@
 
 package org.screamingsandals.lib.placeholders;
 
+import org.jetbrains.annotations.ApiStatus;
+import org.screamingsandals.lib.placeholders.hooks.DummyHook;
+import org.screamingsandals.lib.placeholders.hooks.Hook;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 
-import java.util.function.Supplier;
+import java.util.LinkedList;
+import java.util.List;
 
 @AbstractService
 public abstract class PlaceholderManager {
 
+    protected final List<Hook> activeHooks = new LinkedList<>();
+
     private static PlaceholderManager placeholderManager;
 
-    public static void init(Supplier<PlaceholderManager> placeholderManagerSupplier) {
+    @ApiStatus.Internal
+    public PlaceholderManager() {
         if (placeholderManager != null) {
             throw new UnsupportedOperationException("PlaceholderManager is already initialized!");
         }
-        placeholderManager = placeholderManagerSupplier.get();
+        placeholderManager = this;
+    }
+
+    @ApiStatus.Internal
+    @OnPostConstruct
+    public void postConstruct() {
+        activeHooks.add(new DummyHook());
     }
 
     public static void registerExpansion(PlaceholderExpansion expansion) {
