@@ -1,6 +1,9 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+
 plugins {
     id 'org.screamingsandals.plugin-builder' version "${SCREAMING_PLUGIN_BUILDER_VERSION}" apply false
     id 'org.screamingsandals.nms-mapper' version "${NMS_MAPPER_VERSION}" apply false
+    id 'com.github.ben-manes.versions' version '0.41.0'
 }
 
 defaultTasks 'clean', 'screamCompile'//, 'allowJavadocUpload'
@@ -13,7 +16,7 @@ allprojects {
 subprojects {
     ext.includeModule = { String module ->
         if (!project.name.endsWith('-common')) {
-            throw new UnsupportedOperationException("This method can be used only in common modules!")
+            throw new UnsupportedOperationException("This method can be used only in common modules")
         }
 
         dependencies {
@@ -71,17 +74,25 @@ subprojects {
 
     repositories {
         minecraftLibraries()
-        jitpack()
         sponge()
         velocity()
         placeholderApi()
-        paper()
-        screaming()
         // TODO: add this to ScreamingPluginBuilder
         maven {
             url = uri('https://repo.viaversion.com/')
         }
+        jitpack() // jitpack should always be on the bottom
     }
 
     sourceCompatibility = JavaVersion.VERSION_11
+}
+
+// https://github.com/ben-manes/gradle-versions-plugin
+tasks.withType(DependencyUpdatesTask) {
+    revision = "integration"
+
+    rejectVersionIf {
+        ['snapshot', 'rc', 'alpha', 'beta'].any { e -> it.candidate.version.toLowerCase().contains(e) }
+                && !it.candidate.version.matches('^\\d\\.\\d+(?:\\.\\d+)?-R\\d\\.\\d-SNAPSHOT$')
+    }
 }
