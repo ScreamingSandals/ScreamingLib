@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.bukkit.placeholders.hooks;
+package org.screamingsandals.lib.placeholders.hooks;
 
 import org.screamingsandals.lib.placeholders.PlaceholderExpansion;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
