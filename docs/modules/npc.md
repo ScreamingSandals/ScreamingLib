@@ -6,6 +6,10 @@ Module for creating multi-platform NPC entities.
 * Skins
 * Head following player
 
+!!! tip "Visuals API"
+
+    The `NPC` interface extends [LocatableVisual](visuals.md#locatablevisual), so you can use its methods to customize the NPC further.
+
 ## Usage
 Supported platforms are the same as the packets module, because this module doesn't have any platform specific code.
 
@@ -67,21 +71,20 @@ final NPC npc = NPC.of(yourLocation);
 Now let's set a nice skin for the NPC. I'll use Misat's skin in this example.
 ```java
 final PlayerWrapper misat = PlayerMapper.getPlayer("Misat11").orElseThrow(() -> new RuntimeException("No misat here lol"));
-final NPC npc = NPC.of(yourLocation)
+final NPC npc = NPC.of(yourLocation);
 NPCSkin.retrieveSkin(misat.getUuid()).thenAccept(skin -> {
     // null if an error occurred, like no internet connection
     if (skin != null) {
         npc.setSkin(skin);
     }
-})
+});
 ```
 I think that NPC's looking into your soul are not creepy at all, so let's make the NPC look at players and let's give it a name.
 ```java
 final NPC npc = ...;
-// you can totally do this in the npc builder, i chose not to, because i didn't want to copy the huge block of skin values
-npc.setShouldLookAtPlayer(true);
-// requires a List<Component> to allow for multiline names
-npc.setDisplayName(Arrays.asList(Component.text("Misat11")));
+npc.setShouldLookAtPlayer(true)
+    // requires a List<Component> to allow for multiline names
+    .setDisplayName(List.of(Component.text("Misat11")));
 ```
 And you've made yourself a fresh new NPC!
 
