@@ -35,13 +35,13 @@ public interface LocatableVisual<T> extends Visual<T> {
      *
      * @return current view distance SQUARED
      */
-    int getViewDistance();
+    int viewDistance();
 
-    T setViewDistance(int viewDistance);
+    T viewDistance(int viewDistance);
 
-    LocationHolder getLocation();
+    LocationHolder location();
 
-    T setLocation(LocationHolder location);
+    T location(LocationHolder location);
 
     /**
      * Spawns the visual to all visible Players.
@@ -51,12 +51,12 @@ public interface LocatableVisual<T> extends Visual<T> {
 
     void destroy();
 
-    boolean isCreated();
+    boolean created();
 
     /**
      *
      * @return true if this Visual has been destroyed, false otherwise
      */
-    boolean isDestroyed();
+    boolean destroyed();
 
 }

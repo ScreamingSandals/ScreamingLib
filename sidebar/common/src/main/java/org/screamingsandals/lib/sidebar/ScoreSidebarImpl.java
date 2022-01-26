@@ -44,7 +44,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     protected final List<ScoreboardTeam> teams = new LinkedList<>();
     @Getter
     protected final List<ScoreEntry> entries = new CopyOnWriteArrayList<>();
-    @Accessors(chain = true)
+    @Accessors(chain = true, fluent = true)
     @Getter
     @Setter
     protected DataContainer data;
@@ -160,7 +160,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
 
     @Override
     public ScoreSidebar show() {
-        if (isShown()) {
+        if (shown()) {
             return this;
         }
 
@@ -173,7 +173,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
 
     @Override
     public ScoreSidebar hide() {
-        if (!isShown()) {
+        if (!shown()) {
             return this;
         }
 

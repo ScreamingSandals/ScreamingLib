@@ -91,7 +91,7 @@ public class HologramManager extends AbstractVisualsManager<Hologram> {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
-        manager.addVisual(hologram.getUuid(), hologram);
+        manager.addVisual(hologram.uuid(), hologram);
     }
 
     public static void removeHologram(UUID uuid) {
@@ -102,7 +102,7 @@ public class HologramManager extends AbstractVisualsManager<Hologram> {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
-        manager.removeVisual(hologram.getUuid());
+        manager.removeVisual(hologram.uuid());
     }
 
     @Override

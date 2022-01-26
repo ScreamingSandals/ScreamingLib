@@ -44,7 +44,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Accessors(chain = true)
+@Accessors(chain = true, fluent = true)
 @Getter
 @Setter
 public class HologramImpl extends AbstractLinedVisual<Hologram> implements Hologram {
@@ -66,7 +66,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     private Item item;
     @Getter
     private ItemPosition itemPosition;
-    private long clickCoolDown;
+    private long clickCooldown;
 
     public HologramImpl(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid);
@@ -76,7 +76,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         //default values
         this.destroyed = false;
         this.created = false;
-        this.clickCoolDown = DEFAULT_CLICK_COOL_DOWN;
+        this.clickCooldown = DEFAULT_CLICK_COOL_DOWN;
         this.viewDistance = DEFAULT_VIEW_DISTANCE;
         this.rotationIncrement = DEFAULT_ROTATION_INCREMENT;
         this.data = DataContainer.get();
@@ -88,7 +88,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public Hologram setLocation(LocationHolder location) {
+    public Hologram location(LocationHolder location) {
         this.location = location;
         this.cachedLocation = location;
         return this;
@@ -122,7 +122,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
 
     @Override
     public Hologram show() {
-        if (isDestroyed()) {
+        if (destroyed()) {
             throw new UnsupportedOperationException("Cannot call Hologram#show() on destroyed holograms!");
         }
 
@@ -134,7 +134,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
 
     @Override
     public Hologram hide() {
-        if (!isShown()) {
+        if (!shown()) {
             return this;
         }
 
@@ -150,7 +150,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public Hologram setRotationTime(Pair<Integer, TaskerTime> rotatingTime) {
+    public Hologram rotationTime(Pair<Integer, TaskerTime> rotatingTime) {
         this.rotationTime = rotatingTime;
         update();
         restartRotationTask();
@@ -158,7 +158,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public Hologram setRotationMode(RotationMode mode) {
+    public Hologram rotationMode(RotationMode mode) {
         this.rotationMode = mode;
         update();
         restartRotationTask();
@@ -166,7 +166,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public Hologram setItem(Item item) {
+    public Hologram item(Item item) {
         this.item = item;
         update();
         restartRotationTask();
@@ -174,7 +174,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public Hologram setItemPosition(ItemPosition location) {
+    public Hologram itemPosition(ItemPosition location) {
         this.itemPosition = location;
         update();
         restartRotationTask();
@@ -183,7 +183,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
 
     @Override
     public void destroy() {
-        if (isDestroyed()) {
+        if (destroyed()) {
             return;
         }
 

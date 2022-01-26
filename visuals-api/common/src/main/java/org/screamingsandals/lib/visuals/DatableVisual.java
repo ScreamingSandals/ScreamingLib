@@ -20,9 +20,9 @@ import org.screamingsandals.lib.utils.data.DataContainer;
 
 public interface DatableVisual<T> extends Visual<T> {
 
-    DataContainer getData();
+    DataContainer data();
 
-    T setData(DataContainer data);
+    T data(DataContainer data);
 
     boolean hasData();
 }

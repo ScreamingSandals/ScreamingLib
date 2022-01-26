@@ -40,26 +40,26 @@ public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> exte
     }
 
     @Override
-    public int getViewDistance() {
+    public int viewDistance() {
         return viewDistance;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public T setViewDistance(int viewDistance) {
+    public T viewDistance(int viewDistance) {
         this.viewDistance = viewDistance;
         return (T) this;
     }
 
     @Override
     @NotNull
-    public LocationHolder getLocation() {
+    public LocationHolder location() {
         return location;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public T setLocation(LocationHolder location) {
+    public T location(LocationHolder location) {
         Objects.requireNonNull(location, "Location cannot be null!");
         this.location = location;
         return (T) this;
@@ -76,12 +76,12 @@ public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> exte
     }
 
     @Override
-    public boolean isCreated() {
+    public boolean created() {
         return created;
     }
 
     @Override
-    public boolean isDestroyed() {
+    public boolean destroyed() {
         return destroyed;
     }
 
