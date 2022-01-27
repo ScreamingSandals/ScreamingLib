@@ -27,6 +27,7 @@ import org.screamingsandals.lib.utils.Wrapper;
 import java.util.Collection;
 import java.util.List;
 
+// TODO: Support for AudienceComponentLike
 public interface BossBar extends Wrapper, RawValueHolder {
     @NotNull
     @Contract(value = "-> new", pure = true)

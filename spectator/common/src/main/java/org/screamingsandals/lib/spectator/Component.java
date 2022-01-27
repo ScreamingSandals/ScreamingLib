@@ -106,7 +106,7 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return this;
     }
 
-    interface Builder<B extends Builder<B, C>, C extends Component> {
+    interface Builder<B extends Builder<B, C>, C extends Component> extends ComponentLike {
         B color(Color color);
 
         B append(Component component);
@@ -155,5 +155,10 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         B clickEvent(@Nullable ClickEvent event);
 
         C build();
+
+        @Override
+        default Component asComponent() {
+            return build();
+        }
     }
 }

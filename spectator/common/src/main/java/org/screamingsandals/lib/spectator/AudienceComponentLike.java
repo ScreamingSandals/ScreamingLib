@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.utils;
+package org.screamingsandals.lib.spectator;
 
-import java.util.UUID;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.spectator.audience.Audience;
 
-public interface UniqueIdentifiable {
-
-    UUID uuid();
+public interface AudienceComponentLike extends ComponentLike {
+    /**
+     * Resolves the component for specific audience. Should not be used with {@link Audience.ForwardingMulti}.
+     *
+     * @param audience audience
+     * @return new component
+     */
+    @NotNull
+    @ApiStatus.Internal
+    Component asComponent(@Nullable Audience audience);
 }

@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.utils;
+package org.screamingsandals.lib.spectator.audience;
 
-import java.util.UUID;
-
-public interface UniqueIdentifiable {
-
-    UUID uuid();
+public enum MessageType {
+    CHAT,
+    SYSTEM
 }

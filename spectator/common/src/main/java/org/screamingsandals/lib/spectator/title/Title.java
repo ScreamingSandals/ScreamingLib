@@ -26,6 +26,7 @@ import org.screamingsandals.lib.utils.Wrapper;
 
 import java.time.Duration;
 
+// TODO: Support for AudienceComponentLike
 public interface Title extends Wrapper, RawValueHolder, TimesProvider {
     static Title title(@NotNull Component title, @NotNull Component subtitle) {
         return builder().title(title).subtitle(subtitle).build();

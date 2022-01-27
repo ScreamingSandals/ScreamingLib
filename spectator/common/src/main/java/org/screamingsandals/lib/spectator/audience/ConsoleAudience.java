@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.utils;
+package org.screamingsandals.lib.spectator.audience;
 
-import java.util.UUID;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
-public interface UniqueIdentifiable {
+public interface ConsoleAudience extends Audience {
+    interface ForwardingMulti extends ConsoleAudience, Audience.ForwardingMulti {
+        @NotNull
+        @ApiStatus.OverrideOnly
+        Iterable<ConsoleAudience> audiences();
+    }
 
-    UUID uuid();
+    interface ForwardingSingle extends ConsoleAudience, Audience.ForwardingSingle {
+        @NotNull
+        @ApiStatus.OverrideOnly
+        ConsoleAudience audience();
+    }
 }
