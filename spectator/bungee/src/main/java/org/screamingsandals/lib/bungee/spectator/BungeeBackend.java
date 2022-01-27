@@ -16,19 +16,132 @@
 
 package org.screamingsandals.lib.bungee.spectator;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.spectator.Component;
-import org.screamingsandals.lib.spectator.SpectatorBackend;
+import org.screamingsandals.lib.spectator.*;
+import org.screamingsandals.lib.spectator.event.ClickEvent;
+import org.screamingsandals.lib.spectator.event.HoverEvent;
+import org.screamingsandals.lib.spectator.event.hover.EntityContent;
+import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 
-public class BungeeBackend implements SpectatorBackend {
+public abstract class BungeeBackend implements SpectatorBackend {
     @Override
     public Component empty() {
         // We can't use NoArgsConstructor because it's too new
         return new BungeeComponent(new TextComponent(""));
+    }
+
+    @Override
+    public BlockNBTComponent.Builder blockNBT() {
+        return null; // TODO
+    }
+
+    @Override
+    public EntityNBTComponent.Builder entityNBT() {
+        return null; // TODO
+    }
+
+    @Override
+    public KeybindComponent.Builder keybind() {
+        return null; // TODO
+    }
+
+    @Override
+    public ScoreComponent.Builder score() {
+        return null; // TODO
+    }
+
+    @Override
+    public SelectorComponent.Builder selector() {
+        return null; // TODO
+    }
+
+    @Override
+    public StorageNBTComponent.Builder storageNBT() {
+        return null; // TODO
+    }
+
+    @Override
+    public org.screamingsandals.lib.spectator.TextComponent.Builder text() {
+        return null; // TODO
+    }
+
+    @Override
+    public org.screamingsandals.lib.spectator.TranslatableComponent.Builder translatable() {
+        return null; // TODO
+    }
+
+    @Override
+    public Color rgb(int red, int green, int blue) {
+        int combined = red << 16 | green << 8 | blue;
+        //noinspection ConstantConditions - stfu idea
+        if (ChatColor.ALL_CODES.contains("Xx")) {
+            return new BungeeColor(ChatColor.of(String.format("#%06X", (0xFFFFFF & combined))));
+        } else {
+            switch (combined) {
+                case 0x0000AA:
+                    return new BungeeColor(ChatColor.DARK_BLUE);
+                case 0x00AA00:
+                    return new BungeeColor(ChatColor.DARK_GREEN);
+                case 0x00AAAA:
+                    return new BungeeColor(ChatColor.DARK_AQUA);
+                case 0xAA0000:
+                    return new BungeeColor(ChatColor.DARK_RED);
+                case 0xAA00AA:
+                    return new BungeeColor(ChatColor.DARK_PURPLE);
+                case 0xFFAA00:
+                    return new BungeeColor(ChatColor.GOLD);
+                case 0xAAAAAA:
+                    return new BungeeColor(ChatColor.GRAY);
+                case 0x555555:
+                    return new BungeeColor(ChatColor.DARK_GRAY);
+                case 0x5555FF:
+                    return new BungeeColor(ChatColor.BLUE);
+                case 0x55FF55:
+                    return new BungeeColor(ChatColor.GREEN);
+                case 0x55FFFF:
+                    return new BungeeColor(ChatColor.AQUA);
+                case 0xFF5555:
+                    return new BungeeColor(ChatColor.RED);
+                case 0xFF55FF:
+                    return new BungeeColor(ChatColor.LIGHT_PURPLE);
+                case 0xFFFF55:
+                    return new BungeeColor(ChatColor.YELLOW);
+                case 0xFFFFFF:
+                    return new BungeeColor(ChatColor.WHITE);
+                default:
+                    return new BungeeColor(ChatColor.BLACK);
+            }
+        }
+    }
+
+    @Override
+    public Color named(String name) {
+        return new BungeeColor(ChatColor.of(name.toLowerCase()));
+    }
+
+    @Override
+    public ClickEvent.Builder clickEvent() {
+        return null; // TODO
+    }
+
+    @Override
+    public HoverEvent.Builder hoverEvent() {
+        return null; // TODO
+    }
+
+    @Override
+    public EntityContent.Builder entityContent() {
+        return null; // TODO
+    }
+
+    @Override
+    public ItemContent.Builder itemContent() {
+        return null; // TODO
     }
 
     @Nullable

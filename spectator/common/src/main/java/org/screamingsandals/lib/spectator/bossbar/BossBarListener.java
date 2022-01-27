@@ -16,18 +16,19 @@
 
 package org.screamingsandals.lib.spectator.bossbar;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 
 import java.util.List;
 
 public interface BossBarListener {
-    void onNameChanged(BossBar bar, Component oldName, Component newName);
+    void onTitleChanged(@NotNull BossBar bar, @NotNull Component oldTitle, @NotNull Component newTItle);
 
-    void onProgressChanged(BossBar bar, float oldProgress, float newProgress);
+    void onProgressChanged(@NotNull BossBar bar, float oldProgress, float newProgress);
 
-    void onColorChanged(BossBar bar, BossBarColor oldColor, BossBarColor newColor);
+    void onColorChanged(@NotNull BossBar bar, @NotNull BossBarColor oldColor, @NotNull BossBarColor newColor);
 
-    void onDivisionChanged(BossBar bar, BossBarDivision oldDivision, BossBarDivision newDivision);
+    void onDivisionChanged(@NotNull BossBar bar, @NotNull BossBarDivision oldDivision, @NotNull BossBarDivision newDivision);
 
-    void onFlagsChanged(BossBar bar, List<BossBarFlag> oldFlags, List<BossBarFlag> newFlags);
+    void onFlagsChanged(@NotNull BossBar bar, @NotNull List<BossBarFlag> addedFlags, @NotNull List<BossBarFlag> removedFlags);
 }

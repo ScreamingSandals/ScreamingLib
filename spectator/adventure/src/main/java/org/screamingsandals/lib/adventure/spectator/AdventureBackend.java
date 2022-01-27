@@ -22,6 +22,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.adventure.spectator.bossbar.AdventureBossBar;
 import org.screamingsandals.lib.adventure.spectator.event.AdventureClickEvent;
 import org.screamingsandals.lib.adventure.spectator.event.AdventureHoverEvent;
 import org.screamingsandals.lib.adventure.spectator.event.hover.AdventureEntityContent;
@@ -110,7 +111,7 @@ public class AdventureBackend implements SpectatorBackend {
 
     @Override
     public BossBar.Builder bossBar() {
-        return null; // TODO
+        return new AdventureBossBar.AdventureBossBarBuilder();
     }
 
     @Override
@@ -139,7 +140,7 @@ public class AdventureBackend implements SpectatorBackend {
 
     @Override
     public Book.Builder book() {
-        return null; // TODO
+        return new AdventureBook.AdventureBookBuilder();
     }
 
     @Override
