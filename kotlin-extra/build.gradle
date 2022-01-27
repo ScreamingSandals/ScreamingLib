@@ -6,4 +6,5 @@ dependencies {
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib"
 
     compileOnly project(":api-utils")
+    compileOnly project(":utils-common")
 }
