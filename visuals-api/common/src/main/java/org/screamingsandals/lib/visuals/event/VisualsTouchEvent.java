@@ -26,25 +26,13 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.visuals.Visual;
 
-
-@Accessors(fluent = true)
+@Accessors(fluent = true, chain = false)
 @EqualsAndHashCode(callSuper = false)
-@RequiredArgsConstructor
 @Data
 public class VisualsTouchEvent<T extends Visual<T>> implements SCancellableAsyncEvent {
     private final PlayerWrapper player;
     private final T visual;
     private final InteractType interactType;
     private boolean cancelled;
-
-    @Override
-    public boolean cancelled() {
-        return cancelled;
-    }
-
-    @Override
-    public void cancelled(boolean cancel) {
-        this.cancelled = cancel;
-    }
 }
 

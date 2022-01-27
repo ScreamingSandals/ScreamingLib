@@ -176,34 +176,34 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     protected void updateInfo() {
-        if (scoreboard.isShown() && scoreboard.hasViewers()) {
+        if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.UPDATE);
             packInfo(packet);
-            scoreboard.getViewers().forEach(packet::sendPacket);
+            scoreboard.viewers().forEach(packet::sendPacket);
         }
     }
 
     protected void sendAddPlayer(PlayerWrapper player) {
-        if (scoreboard.isShown() && scoreboard.hasViewers()) {
+        if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.ADD_ENTITY);
             packPlayers(packet, List.of(player));
-            scoreboard.getViewers().forEach(packet::sendPacket);
+            scoreboard.viewers().forEach(packet::sendPacket);
         }
     }
 
     protected void sendRemovePlayer(PlayerWrapper player) {
-        if (scoreboard.isShown() && scoreboard.hasViewers()) {
+        if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.REMOVE_ENTITY);
             packPlayers(packet, List.of(player));
-            scoreboard.getViewers().forEach(packet::sendPacket);
+            scoreboard.viewers().forEach(packet::sendPacket);
         }
     }
 
     @Override
     public void destroy() {
-        if (scoreboard.isShown() && scoreboard.hasViewers()) {
+        if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = constructDestructPacket();
-            scoreboard.getViewers().forEach(packet::sendPacket);
+            scoreboard.viewers().forEach(packet::sendPacket);
         }
     }
 }

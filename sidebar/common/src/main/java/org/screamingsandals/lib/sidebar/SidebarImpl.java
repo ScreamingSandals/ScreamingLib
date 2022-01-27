@@ -40,7 +40,7 @@ import java.util.stream.Stream;
 public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar {
     @Getter
     protected final List<ScoreboardTeam> teams = new LinkedList<>();
-    @Accessors(chain = true)
+    @Accessors(chain = true, fluent = true)
     @Getter
     @Setter
     protected DataContainer data;
@@ -112,7 +112,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
 
     @Override
     public Sidebar show() {
-        if (isShown()) {
+        if (shown()) {
             return this;
         }
 
@@ -125,7 +125,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
 
     @Override
     public Sidebar hide() {
-        if (!isShown()) {
+        if (!shown()) {
             return this;
         }
 
@@ -179,7 +179,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
             this.lines.put(playerWrapper.getUuid(), lines);
         }
 
-        var list = getLines()
+        var list = lines()
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getKey() >= 0 && entry.getKey() <= 15)

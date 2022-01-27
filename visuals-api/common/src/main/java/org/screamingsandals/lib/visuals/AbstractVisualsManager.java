@@ -40,7 +40,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     }
 
     public void removeVisual(T visual) {
-        removeVisual(visual.getUuid());
+        removeVisual(visual.uuid());
     }
 
     public void removeVisual(UUID uuid) {
@@ -71,7 +71,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         final var iterator = activeVisuals.entrySet().iterator();
         while (iterator.hasNext()) {
             final var visual = iterator.next().getValue();
-            if (visual.getViewers().contains(player)) {
+            if (visual.viewers().contains(player)) {
                 visual.removeViewer(player);
             }
 
@@ -96,9 +96,9 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
                 continue;
             }
 
-            final var visualLocation = visual.getLocation();
-            final var viewDistance = visual.getViewDistance();
-            if (!visual.getViewers().contains(player) || !visualLocation.isWorldSame(newLocation)) {
+            final var visualLocation = visual.location();
+            final var viewDistance = visual.viewDistance();
+            if (!visual.viewers().contains(player) || !visualLocation.isWorldSame(newLocation)) {
                 continue;
             }
 
@@ -126,9 +126,9 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
                 continue;
             }
 
-            final var viewers = visual.getViewers();
-            final var visualLocation = visual.getLocation();
-            final var viewDistance = visual.getViewDistance();
+            final var viewers = visual.viewers();
+            final var visualLocation = visual.location();
+            final var viewDistance = visual.viewDistance();
 
             if (!viewers.contains(player)) {
                 continue;
@@ -158,9 +158,9 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
                 continue;
             }
 
-            final var viewers = visual.getViewers();
-            final var visualLocation = visual.getLocation();
-            final var viewDistance = visual.getViewDistance();
+            final var viewers = visual.viewers();
+            final var visualLocation = visual.location();
+            final var viewDistance = visual.viewDistance();
 
             if (!viewers.contains(player)) {
                 continue;
@@ -200,17 +200,17 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
                 continue;
             }
 
-            final var viewers = visual.getViewers();
+            final var viewers = visual.viewers();
             if (!viewers.contains(player)) {
                 continue;
             }
 
-            final var visualLocation = visual.getLocation();
+            final var visualLocation = visual.location();
             if (!visualLocation.isWorldSame(player.getLocation())) {
                 continue;
             }
 
-            final var viewDistance = visual.getViewDistance();
+            final var viewDistance = visual.viewDistance();
 
             if (newLocation.isInRange(visualLocation, viewDistance) && currentLocation.outOfRange(visualLocation, viewDistance)) {
                 softAddViewer(visual, player, 20L);
@@ -227,11 +227,11 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
 
         for (var entry : activeVisuals.entrySet()) {
             var visual = entry.getValue();
-            if (visual.hasId(entityId) && visual.isTouchable()) {
+            if (visual.hasId(entityId) && visual.touchable()) {
                 synchronized (coolDownMap) {
                     if (coolDownMap.containsKey(player.getUuid())) {
                         final var lastClick = coolDownMap.get(player.getUuid());
-                        if (System.currentTimeMillis() - lastClick < visual.getClickCoolDown()) {
+                        if (System.currentTimeMillis() - lastClick < visual.clickCooldown()) {
                             break;
                         }
                     }

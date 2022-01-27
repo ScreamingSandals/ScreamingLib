@@ -16,6 +16,10 @@
 
 package org.screamingsandals.lib.npc;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -39,66 +43,62 @@ import org.screamingsandals.lib.world.LocationHolder;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
+@Accessors(fluent = true)
+@Getter
+@Setter
 public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     private static final GameModeHolder GAME_MODE = GameModeHolder.of("SURVIVAL");
 
-    private final int id;
-    /**
-     * hologram that displays the name of the entity
-     */
+    private final int entityId;
     private final Hologram hologram;
-    private final Component displayName;
+    private Component tabListName;
+
+    @Getter(AccessLevel.NONE)
     private final List<SClientboundPlayerInfoPacket.Property> properties;
+
     private NPCSkin skin;
-    private volatile boolean shouldLookAtPlayer;
+    private volatile boolean lookAtPlayer;
     private final List<MetadataItem> metadata;
+
+    private SClientboundSetPlayerTeamPacket.CollisionRule collisionRule;
 
     public NPCImpl(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
 
         if (!Server.isServerThread()) {
             try {
-                this.id = EntityMapper.getNewEntityIdSynchronously().get();
+                this.entityId = EntityMapper.getNewEntityIdSynchronously().get();
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         } else {
-            this.id = EntityMapper.getNewEntityId();
+            this.entityId = EntityMapper.getNewEntityId();
         }
 
-        this.displayName = AdventureHelper.toComponent("[NPC] " + uuid.toString().replace("-", "").substring(0, 10));
+        this.lookAtPlayer = false;
+        this.tabListName = AdventureHelper.toComponent("[NPC] " + uuid.toString().replace("-", "").substring(0, 10));
         this.hologram = HologramManager.hologram(location.clone().add(0.0D, 1.5D, 0.0D));
         this.metadata = new ArrayList<>();
-        metadata.add(MetadataItem.of((byte) SkinLayerValues.findLayerByVersion(), (byte) 127));
         this.properties = new ArrayList<>();
-        this.shouldLookAtPlayer = false;
+        this.collisionRule = SClientboundSetPlayerTeamPacket.CollisionRule.ALWAYS;
+        metadata.add(MetadataItem.of((byte) SkinLayerValues.findLayerByVersion(), (byte) 127));
     }
 
     @Nullable
     @Override
-    public List<TextEntry> getDisplayName() {
-        return List.copyOf(hologram.getLines().values());
+    public List<TextEntry> displayName() {
+        return List.copyOf(hologram.lines().values());
     }
 
     @Override
-    public NPCSkin getSkin() {
-        return skin;
-    }
-
-    @Override
-    public NPC setDisplayName(List<Component> name) {
+    public NPC displayName(List<Component> name) {
         hologram.setLines(name);
         return this;
     }
 
     @Override
-    public int getEntityId() {
-        return id;
-    }
-
-    @Override
-    public NPC setSkin(NPCSkin skin) {
-        if (!isShown()) {
+    public NPC skin(NPCSkin skin) {
+        if (!shown()) {
             this.skin = skin;
             properties.removeIf(property -> property.name().equals("textures"));
             if (skin == null) {
@@ -111,8 +111,8 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                 .action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
                 .data(getNPCInfoData());
 
-        getViewers().forEach(playerInfoPacket::sendPacket);
-        getViewers().forEach(getFullDestroyPacket()::sendPacket);
+        viewers().forEach(playerInfoPacket::sendPacket);
+        viewers().forEach(getFullDestroyPacket()::sendPacket);
 
         this.skin = skin;
         properties.removeIf(property -> property.name().equals("textures"));
@@ -123,62 +123,41 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
         playerInfoPacket.action(SClientboundPlayerInfoPacket.Action.ADD_PLAYER);
         playerInfoPacket.data(getNPCInfoData());
-        getViewers().forEach(playerInfoPacket::sendPacket);
-        getViewers().forEach(this::sendSpawnPackets);
+        viewers().forEach(playerInfoPacket::sendPacket);
+        viewers().forEach(this::sendSpawnPackets);
 
         Tasker.build(() -> {
             playerInfoPacket.action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER);
             playerInfoPacket.data(getNPCInfoData());
-            getViewers().forEach(playerInfoPacket::sendPacket);
+            viewers().forEach(playerInfoPacket::sendPacket);
         }).delay(6L, TaskerTime.SECONDS).start();
         return this;
     }
 
     @Override
     public void lookAtLocation(LocationHolder location, PlayerWrapper player) {
-        final var direction = getLocation().setDirection(player.getLocation().subtract(getLocation()).asVector());
+        final var direction = location().setDirection(player.getLocation().subtract(location()).asVector());
         new SClientboundMoveEntityPacket.Rot()
-                .entityId(getEntityId())
+                .entityId(entityId())
                 .yaw((byte) (direction.getYaw() * 256.0F / 360.0F))
                 .pitch((byte) (direction.getPitch() * 256.0F / 360.0F))
                 .onGround(true)
                 .sendPacket(player);
 
         new SClientboundRotateHeadPacket()
-                .entityId(getEntityId())
+                .entityId(entityId())
                 .headYaw(direction.getYaw())
                 .sendPacket(player);
     }
 
     @Override
-    public Component getName() {
-        return displayName;
-    }
-
-    @Override
-    public NPC setShouldLookAtPlayer(boolean shouldLook) {
-        this.shouldLookAtPlayer = shouldLook;
-        return this;
-    }
-
-    @Override
-    public boolean shouldLookAtPlayer() {
-        return shouldLookAtPlayer;
-    }
-
-    @Override
-    public Hologram getHologram() {
-        return hologram;
-    }
-
-    @Override
     public boolean hasId(int entityId) {
-        return id == entityId;
+        return this.entityId == entityId;
     }
 
     @Override
     public NPC update() {
-        if (isCreated()) {
+        if (created()) {
             // TODO: update
         }
         return this;
@@ -189,9 +168,11 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         if (visible) {
             return this;
         }
-        if (isDestroyed()) {
+
+        if (destroyed()) {
             throw new UnsupportedOperationException("Cannot call NPC#show() for destroyed npcs!");
         }
+
         visible = true;
         hologram.show();
         viewers.forEach(viewer -> onViewerAdded(viewer, false));
@@ -203,6 +184,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         if (!visible) {
             return this;
         }
+
         visible = false;
         hologram.hide();
         viewers.forEach(viewer -> onViewerRemoved(viewer, false));
@@ -252,9 +234,10 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
     @Override
     public void destroy() {
-        if (isDestroyed()) {
+        if (destroyed()) {
             return;
         }
+
         super.destroy();
         hide();
         viewers.clear();
@@ -269,17 +252,17 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
     private void sendSpawnPackets(PlayerWrapper player) {
         new SClientboundSetPlayerTeamPacket()
-                .teamKey(AdventureHelper.toLegacy(displayName))
+                .teamKey(AdventureHelper.toLegacy(tabListName))
                 .mode(SClientboundSetPlayerTeamPacket.Mode.CREATE)
-                .displayName(displayName)
-                .collisionRule(SClientboundSetPlayerTeamPacket.CollisionRule.ALWAYS)
+                .displayName(tabListName)
+                .collisionRule(collisionRule)
                 .tagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility.NEVER)
                 .teamColor(NamedTextColor.BLACK)
                 .teamPrefix(Component.empty())
                 .teamSuffix(Component.empty())
                 .friendlyFire(false)
                 .seeInvisible(true)
-                .entities(Collections.singletonList(AdventureHelper.toLegacy(displayName)))
+                .entities(Collections.singletonList(AdventureHelper.toLegacy(tabListName)))
                 .sendPacket(player);
 
         new SClientboundPlayerInfoPacket()
@@ -289,9 +272,9 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
         // protocol < 550: sending metadata as part of AddPlayerPacket; protocol >= 550, packet lib will split this packet into to as supposed to be
         new SClientboundAddPlayerPacket()
-                .entityId(id)
-                .uuid(getUuid())
-                .location(getLocation())
+                .entityId(entityId)
+                .uuid(uuid())
+                .location(location())
                 .metadata(metadata)
                 .sendPacket(player);
 
@@ -304,30 +287,30 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         }).delay(6L, TaskerTime.SECONDS).start();
 
         new SClientboundMoveEntityPacket.Rot()
-                .entityId(getEntityId())
-                .yaw((byte) (getLocation().getYaw() * 256.0F / 360.0F))
-                .pitch((byte) (getLocation().getPitch() * 256.0F / 360.0F))
+                .entityId(entityId())
+                .yaw((byte) (location().getYaw() * 256.0F / 360.0F))
+                .pitch((byte) (location().getPitch() * 256.0F / 360.0F))
                 .onGround(true)
                 .sendPacket(player);
 
         new SClientboundRotateHeadPacket()
-                .entityId(getEntityId())
-                .headYaw(getLocation().getYaw())
+                .entityId(entityId())
+                .headYaw(location().getYaw())
                 .sendPacket(player);
     }
 
     private SClientboundRemoveEntitiesPacket getFullDestroyPacket() {
         return new SClientboundRemoveEntitiesPacket()
-                .entityIds(new int[] { getEntityId() });
+                .entityIds(new int[] { entityId() });
     }
 
     private List<SClientboundPlayerInfoPacket.PlayerInfoData> getNPCInfoData() {
         return Collections.singletonList(new SClientboundPlayerInfoPacket.PlayerInfoData(
-                getUuid(),
-                AdventureHelper.toLegacy(displayName),
+                uuid(),
+                AdventureHelper.toLegacy(tabListName),
                 1,
                 GAME_MODE,
-                displayName,
+                tabListName,
                 List.copyOf(properties)
         ));
     }

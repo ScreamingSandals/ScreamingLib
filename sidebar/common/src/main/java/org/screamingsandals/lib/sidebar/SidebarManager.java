@@ -67,7 +67,7 @@ public class SidebarManager {
             throw new UnsupportedOperationException("SidebarManager is not initialized yet!");
         }
 
-        manager.activeSidebars.put(sidebar.getUuid(), sidebar);
+        manager.activeSidebars.put(sidebar.uuid(), sidebar);
     }
 
     public static void removeSidebar(UUID uuid) {
@@ -79,7 +79,7 @@ public class SidebarManager {
             throw new UnsupportedOperationException("SidebarManager is not initialized yet!");
         }
 
-        manager.activeSidebars.remove(scoreboard.getUuid());
+        manager.activeSidebars.remove(scoreboard.uuid());
     }
 
     public static Sidebar sidebar() {

@@ -23,6 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.placeholders.PlaceholderExpansion;
+import org.screamingsandals.lib.placeholders.hooks.Hook;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.utils.AdventureHelper;

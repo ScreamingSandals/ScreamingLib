@@ -37,12 +37,12 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
     protected abstract void update0();
 
     @Override
-    public UUID getUuid() {
+    public UUID uuid() {
         return uuid;
     }
 
     @Override
-    public Collection<PlayerWrapper> getViewers() {
+    public Collection<PlayerWrapper> viewers() {
         return List.copyOf(viewers);
     }
 
@@ -80,12 +80,12 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
     }
 
     @Override
-    public boolean isShown() {
+    public boolean shown() {
         return visible;
     }
 
     @Override
-    public boolean isVisibleToPlayer(PlayerWrapper player) {
+    public boolean visibleTo(PlayerWrapper player) {
         return viewers.contains(player);
     }
 }

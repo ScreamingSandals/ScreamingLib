@@ -24,6 +24,7 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.visuals.TouchableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.packet.SClientboundSetPlayerTeamPacket;
 
 import java.util.List;
 
@@ -46,44 +47,43 @@ public interface NPC extends TouchableVisual<NPC> {
      * Gets the display name text entries of this NPC.
      *
      * @return a list containing text entries for the NPC name, null if not set
-     * @see NPC#setDisplayName(List) for setting the display name
+     * @see NPC#displayName(List) for setting the display name
      */
     @Nullable
-    List<TextEntry> getDisplayName();
+    List<TextEntry> displayName();
 
     /**
      * Gets the skin of this NPC.
      *
      * @return the skin of this NPC
-     * @see NPC#setSkin(NPCSkin) for setting the skin of this NPC
+     * @see NPC#skin(NPCSkin) for setting the skin of this NPC
      */
-    NPCSkin getSkin();
+    NPCSkin skin();
 
     /**
      * Sets the display name text entries of this NPC.
      *
      * @param name name (multi-lined) of the NPC.
      * @return this NPC
-     * @see NPC#getDisplayName() for getting the current display name
+     * @see NPC#displayName() for getting the current display name
      */
-    NPC setDisplayName(List<Component> name);
+    NPC displayName(List<Component> name);
 
     /**
      * Gets the ID of this NPC entity.
      *
      * @return the ID of this NPC entity
      */
-    int getEntityId();
-
+    int entityId();
 
     /**
      * Sets the skin of this NPC.
      *
      * @param skin the skin
      * @return this NPC
-     * @see NPC#getSkin() for getting the current skin of this NPC
+     * @see NPC#skin() for getting the current skin of this NPC
      */
-    NPC setSkin(NPCSkin skin);
+    NPC skin(NPCSkin skin);
 
     /**
      * Makes the NPC look at the specified location in the eyes of the specified player.
@@ -97,29 +97,33 @@ public interface NPC extends TouchableVisual<NPC> {
      *
      * @return a single line name of the entity generated from the UUID
      */
-    Component getName();
+    Component tabListName();
 
     /**
      * Sets whether the line of sight of this NPC should follow a viewer.
      *
      * @param shouldLook should the NPC rotate its head towards a viewer?
      * @return this NPC
-     * @see NPC#shouldLookAtPlayer() for determining the current state
+     * @see NPC#lookAtPlayer() for determining the current state
      */
-    NPC setShouldLookAtPlayer(boolean shouldLook);
+    NPC lookAtPlayer(boolean shouldLook);
 
     /**
      * Determines if the line of sight of this NPC is following a viewer.
      *
      * @return is the NPC rotating its head towards the viewer?
-     * @see NPC#setShouldLookAtPlayer(boolean) for setting the current state
+     * @see NPC#lookAtPlayer(boolean) for setting the current state
      */
-    boolean shouldLookAtPlayer();
+    boolean lookAtPlayer();
 
     /**
      * Gets the {@link Hologram} instance that displays the name of this NPC.
      *
      * @return the hologram
      */
-    Hologram getHologram();
+    Hologram hologram();
+
+    SClientboundSetPlayerTeamPacket.CollisionRule collisionRule();
+
+    NPC collisionRule(SClientboundSetPlayerTeamPacket.CollisionRule collisionRule);
 }
