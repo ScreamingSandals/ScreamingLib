@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.spectator;
 
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.spectator.event.hover.Content;
@@ -66,6 +67,7 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return Spectator.getBackend().translatable();
     }
 
+    @Unmodifiable
     List<Component> children();
 
     @Nullable

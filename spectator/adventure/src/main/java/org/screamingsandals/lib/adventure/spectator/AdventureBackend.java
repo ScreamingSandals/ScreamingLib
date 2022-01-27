@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.adventure.spectator;
 
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -25,6 +26,10 @@ import org.screamingsandals.lib.adventure.spectator.event.AdventureClickEvent;
 import org.screamingsandals.lib.adventure.spectator.event.AdventureHoverEvent;
 import org.screamingsandals.lib.adventure.spectator.event.hover.AdventureEntityContent;
 import org.screamingsandals.lib.adventure.spectator.event.hover.AdventureItemContent;
+import org.screamingsandals.lib.adventure.spectator.sound.AdventureSoundSource;
+import org.screamingsandals.lib.adventure.spectator.sound.AdventureSoundStart;
+import org.screamingsandals.lib.adventure.spectator.sound.AdventureSoundStop;
+import org.screamingsandals.lib.adventure.spectator.title.AdventureTitle;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
@@ -110,22 +115,26 @@ public class AdventureBackend implements SpectatorBackend {
 
     @Override
     public SoundStart.Builder soundStart() {
-        return null; // TODO
+        return new AdventureSoundStart.AdventureSoundStartBuilder();
     }
 
     @Override
     public SoundStop.Builder soundStop() {
-        return null; // TODO
+        return new AdventureSoundStop.AdventureSoundStopBuilder();
     }
 
     @Override
     public SoundSource soundSource(String source) {
-        return null; // TODO
+        var soundSource = Sound.Source.NAMES.value(source);
+        if (soundSource == null) {
+            return new AdventureSoundSource(Sound.Source.NEUTRAL);
+        }
+        return new AdventureSoundSource(soundSource);
     }
 
     @Override
     public Title.Builder title() {
-        return null; // TODO
+        return new AdventureTitle.AdventureTitleBuilder();
     }
 
     @Override

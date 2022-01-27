@@ -16,18 +16,24 @@
 
 package org.screamingsandals.lib.spectator.sound;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 public interface SoundStart extends Wrapper, RawValueHolder {
+    @NotNull
+    @Contract(value = "-> new", pure = true)
     static SoundStart.Builder builder() {
         return Spectator.getBackend().soundStart();
     }
 
+    @NotNull
     NamespacedMappingKey soundKey();
 
+    @NotNull
     SoundSource source();
 
     float volume();
@@ -35,14 +41,24 @@ public interface SoundStart extends Wrapper, RawValueHolder {
     float pitch();
 
     interface Builder {
-        Builder soundKey(NamespacedMappingKey key);
+        @NotNull
+        @Contract("_ -> this")
+        Builder soundKey(@NotNull NamespacedMappingKey key);
 
-        Builder source(SoundSource source);
+        @NotNull
+        @Contract("_ -> this")
+        Builder source(@NotNull SoundSource source);
 
+        @NotNull
+        @Contract("_ -> this")
         Builder volume(float volume);
 
+        @NotNull
+        @Contract("_ -> this")
         Builder pitch(float pitch);
 
+        @NotNull
+        @Contract(value = "-> new", pure = true)
         SoundStart build();
     }
 }

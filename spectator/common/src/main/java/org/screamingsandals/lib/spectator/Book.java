@@ -16,31 +16,50 @@
 
 package org.screamingsandals.lib.spectator;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.List;
 
 public interface Book extends Wrapper, RawValueHolder {
+    @NotNull
+    @Contract(value = "-> new", pure = true)
     static Book.Builder builder() {
         return Spectator.getBackend().book();
     }
 
+    @NotNull
     Component title();
 
+    @NotNull
     Component author();
 
+    @Unmodifiable
+    @NotNull
     List<Component> pages();
 
     interface Builder {
-        Builder title(Component title);
+        @NotNull
+        @Contract("_ -> this")
+        Builder title(@NotNull Component title);
 
-        Builder author(Component author);
+        @NotNull
+        @Contract("_ -> this")
+        Builder author(@NotNull Component author);
 
-        Builder pages(List<Component> pages);
+        @NotNull
+        @Contract("_ -> this")
+        Builder pages(@NotNull List<Component> pages);
 
-        Builder pages(Component... pages);
+        @NotNull
+        @Contract("_ -> this")
+        Builder pages(@NotNull Component... pages);
 
+        @NotNull
+        @Contract(value = "-> new", pure = true)
         Book build();
     }
 }

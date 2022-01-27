@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.spectator.sound;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -23,20 +25,53 @@ import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 public interface SoundStop extends Wrapper, RawValueHolder {
+    @Contract(value = "-> new", pure = true)
+    @NotNull
+    static SoundStop all() {
+        return builder().build(); // TODO: constant
+    }
+
+    @Contract(value = "_ -> new", pure = true)
+    @NotNull
+    static SoundStop named(NamespacedMappingKey soundKey) {
+        return builder().soundKey(soundKey).build();
+    }
+
+    @Contract(value = "_ -> new", pure = true)
+    @NotNull
+    static SoundStop sourced(SoundSource source) {
+        return builder().source(source).build();
+    }
+
+    @Contract(value = "_, _ -> new", pure = true)
+    @NotNull
+    static SoundStop namedSourced(NamespacedMappingKey soundKey, SoundSource source) {
+        return builder().soundKey(soundKey).source(source).build();
+    }
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull
     static SoundStop.Builder builder() {
         return Spectator.getBackend().soundStop();
     }
 
+    @Nullable
     NamespacedMappingKey soundKey();
 
     @Nullable
     SoundSource source();
 
     interface Builder {
-        Builder soundKey(NamespacedMappingKey key);
+        @NotNull
+        @Contract("_ -> this")
+        Builder soundKey(@Nullable NamespacedMappingKey key);
 
+        @NotNull
+        @Contract("_ -> this")
         Builder source(@Nullable SoundSource source);
 
+        @NotNull
+        @Contract(value = "-> new", pure = true)
         SoundStop build();
     }
 }

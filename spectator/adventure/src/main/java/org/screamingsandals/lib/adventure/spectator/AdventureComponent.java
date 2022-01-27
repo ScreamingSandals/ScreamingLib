@@ -24,6 +24,7 @@ import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.adventure.spectator.event.AdventureClickEvent;
 import org.screamingsandals.lib.adventure.spectator.event.AdventureHoverEvent;
 import org.screamingsandals.lib.spectator.Color;
@@ -37,7 +38,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Component> implements Component {
     public AdventureComponent(net.kyori.adventure.text.Component wrappedObject) {
@@ -45,11 +45,12 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
+    @Unmodifiable
     public List<Component> children() {
         return wrappedObject.children()
                 .stream()
                 .map(AdventureBackend::wrapComponent)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override

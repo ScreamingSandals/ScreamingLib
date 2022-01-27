@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.spectator.sound;
+package org.screamingsandals.lib.adventure.spectator.sound;
 
-import org.jetbrains.annotations.Contract;
+import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.spectator.Spectator;
-import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.spectator.sound.SoundSource;
+import org.screamingsandals.lib.utils.BasicWrapper;
 
-public interface SoundSource extends Wrapper, RawValueHolder {
-    @NotNull
-    @Contract(value = "_ -> new", pure = true)
-    static SoundSource soundSource(@NotNull String source) {
-        return Spectator.getBackend().soundSource(source);
+public class AdventureSoundSource extends BasicWrapper<Sound.Source> implements SoundSource {
+    public AdventureSoundSource(Sound.Source wrappedObject) {
+        super(wrappedObject);
     }
 
+    @Override
     @NotNull
-    String name();
+    public String name() {
+        return wrappedObject.name();
+    }
 }
