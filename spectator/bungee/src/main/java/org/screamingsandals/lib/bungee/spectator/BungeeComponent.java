@@ -42,7 +42,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
             return List.of();
         }
         return extra.stream()
-                .map(BungeeBackend::wrapComponent)
+                .map(AbstractBungeeBackend::wrapComponent)
                 .collect(Collectors.toList());
     }
 

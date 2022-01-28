@@ -16,8 +16,10 @@
 
 package org.screamingsandals.lib.bungee.spectator.event;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 
 public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.ClickEvent> implements ClickEvent {
     public BungeeClickEvent(net.md_5.bungee.api.chat.ClickEvent wrappedObject) {
@@ -25,6 +27,7 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
     }
 
     @Override
+    @NotNull
     public Action action() {
         try {
             return Action.valueOf(wrappedObject.getAction().name());
@@ -34,7 +37,41 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
     }
 
     @Override
+    @NotNull
     public String value() {
         return wrappedObject.getValue();
+    }
+
+    public static class BungeeClickBuilder implements ClickEvent.Builder {
+        private Action action = Action.OPEN_URL;
+        private String value;
+
+        @Override
+        @NotNull
+        public Builder action(@NotNull Action action) {
+            this.action = action;
+            return this;
+        }
+
+        @Override
+        @NotNull
+        public Builder value(@NotNull String value) {
+            this.value = value;
+            return this;
+        }
+
+        @Override
+        @NotNull
+        public ClickEvent build() {
+            Preconditions.checkNotNull(action, "Action is not specified!");
+            Preconditions.checkNotNull(value, "Value is not specified!");
+            net.md_5.bungee.api.chat.ClickEvent.Action action;
+            try {
+                action = net.md_5.bungee.api.chat.ClickEvent.Action.valueOf(this.action.name());
+            } catch (Throwable throwable) {
+                action = net.md_5.bungee.api.chat.ClickEvent.Action.OPEN_URL;
+            }
+            return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEvent(action, value));
+        }
     }
 }

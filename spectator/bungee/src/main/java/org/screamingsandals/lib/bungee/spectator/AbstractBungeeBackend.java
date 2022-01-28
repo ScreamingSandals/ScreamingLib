@@ -22,13 +22,14 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bungee.spectator.event.BungeeClickEvent;
 import org.screamingsandals.lib.spectator.*;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 
-public abstract class BungeeBackend implements SpectatorBackend {
+public abstract class AbstractBungeeBackend implements SpectatorBackend {
     @Override
     public Component empty() {
         // We can't use NoArgsConstructor because it's too new
@@ -126,7 +127,7 @@ public abstract class BungeeBackend implements SpectatorBackend {
 
     @Override
     public ClickEvent.Builder clickEvent() {
-        return null; // TODO
+        return new BungeeClickEvent.BungeeClickBuilder();
     }
 
     @Override

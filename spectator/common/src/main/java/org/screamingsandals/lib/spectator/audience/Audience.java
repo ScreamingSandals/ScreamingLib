@@ -20,9 +20,9 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.utils.UniqueIdentifiable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface Audience {
@@ -49,7 +49,7 @@ public interface Audience {
 
     void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType);
 
-    interface ForwardingMulti extends Audience {
+    interface ForwardingToMulti extends Audience {
         @NotNull
         @ApiStatus.OverrideOnly
         Iterable<? extends Audience> audiences();
@@ -59,13 +59,24 @@ public interface Audience {
         }
     }
 
-    interface ForwardingSingle extends Audience {
+    interface ForwardingToSingle extends Audience {
         @NotNull
         @ApiStatus.OverrideOnly
         Audience audience();
 
         default void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType) {
             audience().sendMessage(source, message, messageType);
+        }
+    }
+
+    @ApiStatus.Internal
+    interface ForwardingToAdepter extends Audience {
+        @NotNull
+        @ApiStatus.OverrideOnly
+        Adapter adapter();
+
+        default void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType) {
+            adapter().sendMessage(source, message, messageType);
         }
     }
 }

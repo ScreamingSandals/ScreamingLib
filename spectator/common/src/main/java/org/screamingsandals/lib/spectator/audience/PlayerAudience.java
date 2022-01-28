@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
+import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 import org.screamingsandals.lib.spectator.bossbar.BossBar;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
@@ -85,7 +87,7 @@ public interface PlayerAudience extends Audience {
 
     void openBook(@NotNull Book book);
 
-    interface ForwardingMulti extends PlayerAudience, Audience.ForwardingMulti {
+    interface ForwardingToMulti extends PlayerAudience, Audience.ForwardingToMulti {
         @NotNull
         @ApiStatus.OverrideOnly
         Iterable<PlayerAudience> audiences();
@@ -141,7 +143,7 @@ public interface PlayerAudience extends Audience {
         }
     }
 
-     interface ForwardingSingle extends PlayerAudience, Audience.ForwardingSingle {
+     interface ForwardingToSingle extends PlayerAudience, Audience.ForwardingToSingle {
         @NotNull
         @ApiStatus.OverrideOnly
         PlayerAudience audience();
@@ -194,6 +196,64 @@ public interface PlayerAudience extends Audience {
         @Override
         default void openBook(@NotNull Book book) {
             audience().openBook(book);
+        }
+    }
+
+    @ApiStatus.Internal
+    interface ForwardingToAdapter extends PlayerAudience, Audience.ForwardingToAdepter {
+        @Override
+        @NotNull
+        @ApiStatus.OverrideOnly
+        PlayerAdapter adapter();
+
+        @Override
+        default void sendActionBar(@NotNull ComponentLike message) {
+            adapter().sendActionBar(message);
+        }
+
+        @Override
+        default void sendPlayerListHeaderFooter(@NotNull ComponentLike header, @NotNull ComponentLike footer) {
+            adapter().sendPlayerListHeaderFooter(header, footer);
+        }
+
+        @Override
+        default void showTitle(@NotNull Title title) {
+            adapter().showTitle(title);
+        }
+
+        @Override
+        default void clearTitle() {
+            adapter().clearTitle();
+        }
+
+        @Override
+        default void showBossBar(@NotNull BossBar bossBar) {
+            adapter().showBossBar(bossBar);
+        }
+
+        @Override
+        default void hideBossBar(@NotNull BossBar bossBar) {
+            adapter().hideBossBar(bossBar);
+        }
+
+        @Override
+        default void playSound(@NotNull SoundStart sound) {
+            adapter().playSound(sound);
+        }
+
+        @Override
+        default void playSound(@NotNull SoundStart sound, double x, double y, double z) {
+            adapter().playSound(sound, x, y, z);
+        }
+
+        @Override
+        default void stopSound(@NotNull SoundStop sound) {
+            adapter().stopSound(sound);
+        }
+
+        @Override
+        default void openBook(@NotNull Book book) {
+            adapter().openBook(book);
         }
     }
 }

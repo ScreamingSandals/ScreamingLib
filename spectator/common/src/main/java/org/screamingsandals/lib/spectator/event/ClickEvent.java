@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.spectator.event;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
@@ -23,12 +25,16 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 public interface ClickEvent extends Wrapper, RawValueHolder {
 
+    @NotNull
+    @Contract(value = "-> new", pure = true)
     static ClickEvent.Builder builder() {
         return Spectator.getBackend().clickEvent();
     }
 
+    @NotNull
     Action action();
 
+    @NotNull
     String value();
 
     enum Action {
@@ -45,10 +51,17 @@ public interface ClickEvent extends Wrapper, RawValueHolder {
     }
 
     interface Builder {
-        Builder action(Action action);
+        @NotNull
+        @Contract("_ -> this")
+        Builder action(@NotNull Action action);
 
-        Builder value(String value);
+        @NotNull
+        @Contract("_ -> this")
+        Builder value(@NotNull String value);
 
+
+        @NotNull
+        @Contract(value = "-> new", pure = true)
         ClickEvent build();
     }
 }

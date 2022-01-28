@@ -21,7 +21,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Entity;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.Text;
-import org.screamingsandals.lib.bungee.spectator.BungeeBackend;
+import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeEntityContent;
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeItemContent;
 import org.screamingsandals.lib.spectator.Component;
@@ -71,11 +71,11 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
                     } else if (content.size() == 1) {
                         var text = (Text) content.get(0);
                         if (text.getValue() instanceof BaseComponent[]) {
-                            return BungeeBackend.wrapComponent(new TextComponent((BaseComponent[]) text.getValue()));
+                            return AbstractBungeeBackend.wrapComponent(new TextComponent((BaseComponent[]) text.getValue()));
                         } else if (text.getValue() instanceof BaseComponent) {
-                            return BungeeBackend.wrapComponent((BaseComponent) text.getValue());
+                            return AbstractBungeeBackend.wrapComponent((BaseComponent) text.getValue());
                         } else {
-                            return BungeeBackend.wrapComponent(new TextComponent(text.getValue().toString()));
+                            return AbstractBungeeBackend.wrapComponent(new TextComponent(text.getValue().toString()));
                         }
                     } else {
                         var components = new ArrayList<BaseComponent>();
@@ -89,7 +89,7 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
                                 components.add(new TextComponent(text.getValue().toString()));
                             }
                         }
-                        return BungeeBackend.wrapComponent(new TextComponent(components.toArray(BaseComponent[]::new)));
+                        return AbstractBungeeBackend.wrapComponent(new TextComponent(components.toArray(BaseComponent[]::new)));
                     }
             }
         } catch (Throwable ignored) {
@@ -116,9 +116,9 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
                     if (values.length == 0) {
                         return Component.empty();
                     } else if (values.length == 1) {
-                        return BungeeBackend.wrapComponent(values[0]);
+                        return AbstractBungeeBackend.wrapComponent(values[0]);
                     } else {
-                        return BungeeBackend.wrapComponent(new TextComponent(values[0]));
+                        return AbstractBungeeBackend.wrapComponent(new TextComponent(values[0]));
                     }
 
             }

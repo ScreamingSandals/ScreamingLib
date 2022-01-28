@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.adventure.spectator.event;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -26,6 +27,7 @@ public class AdventureClickEvent extends BasicWrapper<net.kyori.adventure.text.e
     }
 
     @Override
+    @NotNull
     public Action action() {
         try {
             return Action.valueOf(wrappedObject.action().name());
@@ -35,6 +37,7 @@ public class AdventureClickEvent extends BasicWrapper<net.kyori.adventure.text.e
     }
 
     @Override
+    @NotNull
     public String value() {
         return wrappedObject.value();
     }
@@ -44,20 +47,24 @@ public class AdventureClickEvent extends BasicWrapper<net.kyori.adventure.text.e
         private String value;
 
         @Override
-        public Builder action(Action action) {
+        @NotNull
+        public Builder action(@NotNull Action action) {
             this.action = action;
             return this;
         }
 
         @Override
-        public Builder value(String value) {
+        @NotNull
+        public Builder value(@NotNull String value) {
             this.value = value;
             return this;
         }
 
         @Override
+        @NotNull
         public ClickEvent build() {
-            Preconditions.checkArgument(value != null, "Value is not specified!");
+            Preconditions.checkNotNull(action, "Action is not specified!");
+            Preconditions.checkNotNull(value, "Value is not specified!");
             return new AdventureClickEvent(net.kyori.adventure.text.event.ClickEvent.clickEvent(net.kyori.adventure.text.event.ClickEvent.Action.valueOf(action.name()), value));
         }
     }

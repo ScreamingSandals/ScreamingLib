@@ -18,17 +18,26 @@ package org.screamingsandals.lib.spectator.audience;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.spectator.audience.adapter.ConsoleAdapter;
 
 public interface ConsoleAudience extends Audience {
-    interface ForwardingMulti extends ConsoleAudience, Audience.ForwardingMulti {
+    interface ForwardingToMulti extends ConsoleAudience, Audience.ForwardingToMulti {
         @NotNull
         @ApiStatus.OverrideOnly
         Iterable<ConsoleAudience> audiences();
     }
 
-    interface ForwardingSingle extends ConsoleAudience, Audience.ForwardingSingle {
+    interface ForwardingToSingle extends ConsoleAudience, Audience.ForwardingToSingle {
         @NotNull
         @ApiStatus.OverrideOnly
         ConsoleAudience audience();
+    }
+
+    @ApiStatus.Internal
+    interface ForwardingToAdapter extends ConsoleAudience, Audience.ForwardingToAdepter {
+        @Override
+        @NotNull
+        @ApiStatus.OverrideOnly
+        ConsoleAdapter adapter();
     }
 }

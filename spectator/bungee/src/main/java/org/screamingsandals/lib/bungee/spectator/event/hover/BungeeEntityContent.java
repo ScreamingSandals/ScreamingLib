@@ -18,7 +18,7 @@ package org.screamingsandals.lib.bungee.spectator.event.hover;
 
 import net.md_5.bungee.api.chat.hover.content.Entity;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.bungee.spectator.BungeeBackend;
+import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -48,6 +48,6 @@ public class BungeeEntityContent extends BasicWrapper<Entity> implements EntityC
     @Override
     @Nullable
     public Component name() {
-        return BungeeBackend.wrapComponent(wrappedObject.getName());
+        return AbstractBungeeBackend.wrapComponent(wrappedObject.getName());
     }
 }

@@ -39,7 +39,7 @@ public class BungeeTranslatableContent extends BungeeComponent implements Transl
             return List.of();
         }
         return with.stream()
-                .map(BungeeBackend::wrapComponent)
+                .map(AbstractBungeeBackend::wrapComponent)
                 .collect(Collectors.toList());
     }
 }

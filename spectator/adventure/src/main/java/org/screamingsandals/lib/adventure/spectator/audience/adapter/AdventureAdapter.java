@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.adventure.spectator.audience;
+package org.screamingsandals.lib.adventure.spectator.audience.adapter;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
@@ -24,19 +26,20 @@ import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.Audience;
 import org.screamingsandals.lib.spectator.audience.MessageType;
+import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
 import java.util.UUID;
 
-public class AdventureAudience extends BasicWrapper<net.kyori.adventure.audience.Audience> implements Audience {
-    /*
-     * ScreamingLib Audience should be CommandSenderWrapper
-     */
-    private final Audience.ForwardingSingle screamingLibAudience;
+@Accessors(fluent = true)
+public class AdventureAdapter extends BasicWrapper<net.kyori.adventure.audience.Audience> implements Adapter {
+    @Nullable
+    @Getter
+    private final Audience owner;
 
-    protected AdventureAudience(net.kyori.adventure.audience.Audience wrappedObject, Audience.ForwardingSingle screamingLibAudience) {
+    public AdventureAdapter(net.kyori.adventure.audience.Audience wrappedObject, @Nullable Audience owner) {
         super(wrappedObject);
-        this.screamingLibAudience = screamingLibAudience;
+        this.owner = owner;
     }
 
     @Override
@@ -49,8 +52,8 @@ public class AdventureAudience extends BasicWrapper<net.kyori.adventure.audience
     }
 
     protected Component resolveComponent(ComponentLike message) {
-        var component = message instanceof AudienceComponentLike
-                ? ((AudienceComponentLike) message).asComponent(screamingLibAudience != null ? screamingLibAudience : this)
+        var component = message instanceof AudienceComponentLike && owner != null
+                ? ((AudienceComponentLike) message).asComponent(owner)
                 : message.asComponent();
         return component.as(Component.class);
     }

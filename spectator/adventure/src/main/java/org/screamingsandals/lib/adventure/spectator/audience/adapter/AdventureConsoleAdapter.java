@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.spectator;
+package org.screamingsandals.lib.adventure.spectator.audience.adapter;
 
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
+import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.spectator.audience.Audience;
+import org.screamingsandals.lib.spectator.audience.ConsoleAudience;
+import org.screamingsandals.lib.spectator.audience.adapter.ConsoleAdapter;
 
-public interface AudienceComponentLike extends ComponentLike {
-    /**
-     * Resolves the component for specific audience. Should not be used with {@link Audience.ForwardingToMulti}.
-     *
-     * @param audience audience
-     * @return new component
-     */
-    @NotNull
-    @ApiStatus.Internal
-    Component asComponent(@Nullable Audience audience);
+public class AdventureConsoleAdapter extends AdventureAdapter implements ConsoleAdapter {
+    public AdventureConsoleAdapter(Audience wrappedObject, @Nullable ConsoleAudience owner) {
+        super(wrappedObject, owner);
+    }
+
+    @Override
+    @Nullable
+    public ConsoleAudience owner() {
+        return (ConsoleAudience) super.owner();
+    }
 }
