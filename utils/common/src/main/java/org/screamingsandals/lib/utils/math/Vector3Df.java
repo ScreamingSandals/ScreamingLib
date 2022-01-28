@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.ProtoLocation;
 import org.screamingsandals.lib.utils.ProtoVector3D;
 import org.screamingsandals.lib.utils.ProtoVector3Df;
-import org.screamingsandals.lib.utils.ProtoWrapper;
+import com.iamceph.resulter.core.pack.ProtoWrapper;
 
 @Data
 @NoArgsConstructor

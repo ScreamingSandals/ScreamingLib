@@ -18,7 +18,6 @@ package org.screamingsandals.lib.tasker;
 
 import lombok.Getter;
 import org.screamingsandals.lib.utils.ProtoTaskerTime;
-import org.screamingsandals.lib.utils.ProtoWrapper;
 
 import java.util.concurrent.TimeUnit;
 

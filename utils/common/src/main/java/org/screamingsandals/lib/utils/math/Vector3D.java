@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.utils.math;
 
+import com.iamceph.resulter.core.pack.ProtoWrapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,6 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.ProtoLocation;
 import org.screamingsandals.lib.utils.ProtoVector3D;
-import org.screamingsandals.lib.utils.ProtoWrapper;
 
 @Data
 @NoArgsConstructor

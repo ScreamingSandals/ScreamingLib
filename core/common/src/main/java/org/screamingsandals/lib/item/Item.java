@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.item;
 
+import com.iamceph.resulter.core.pack.ProtoWrapper;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
