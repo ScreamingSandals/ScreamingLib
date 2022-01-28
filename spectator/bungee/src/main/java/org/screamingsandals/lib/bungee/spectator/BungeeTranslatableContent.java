@@ -16,9 +16,12 @@
 
 package org.screamingsandals.lib.bungee.spectator;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.TranslatableComponent;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,5 +44,34 @@ public class BungeeTranslatableContent extends BungeeComponent implements Transl
         return with.stream()
                 .map(AbstractBungeeBackend::wrapComponent)
                 .collect(Collectors.toList());
+    }
+
+    public static class BungeeTranslatableBuilder extends BungeeBuilder<
+            TranslatableComponent,
+            TranslatableComponent.Builder,
+            net.md_5.bungee.api.chat.TranslatableComponent
+            > implements TranslatableComponent.Builder {
+
+        public BungeeTranslatableBuilder(net.md_5.bungee.api.chat.TranslatableComponent component) {
+            super(component);
+        }
+
+        @Override
+        public TranslatableComponent.Builder translate(String translate) {
+            component.setTranslate(translate);
+            return self();
+        }
+
+        @Override
+        public TranslatableComponent.Builder args(Component... components) {
+            component.setWith(Arrays.stream(components).map(component1 -> component1.as(BaseComponent.class)).collect(Collectors.toUnmodifiableList()));
+            return self();
+        }
+
+        @Override
+        public TranslatableComponent.Builder args(Collection<Component> components) {
+            component.setWith(components.stream().map(component1 -> component1.as(BaseComponent.class)).collect(Collectors.toUnmodifiableList()));
+            return self();
+        }
     }
 }

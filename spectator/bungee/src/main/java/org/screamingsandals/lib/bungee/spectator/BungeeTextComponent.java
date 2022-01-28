@@ -27,4 +27,21 @@ public class BungeeTextComponent extends BungeeComponent implements TextComponen
     public String content() {
         return ((net.md_5.bungee.api.chat.TextComponent) wrappedObject).getText();
     }
+
+    public static class BungeeTextBuilder extends BungeeComponent.BungeeBuilder<
+            TextComponent,
+            TextComponent.Builder,
+            net.md_5.bungee.api.chat.TextComponent
+            > implements TextComponent.Builder {
+
+        public BungeeTextBuilder(net.md_5.bungee.api.chat.TextComponent component) {
+            super(component);
+        }
+
+        @Override
+        public TextComponent.Builder content(String content) {
+            component.setText(content);
+            return self();
+        }
+    }
 }

@@ -68,12 +68,12 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public org.screamingsandals.lib.spectator.TextComponent.Builder text() {
-        return null; // TODO
+        return new BungeeTextComponent.BungeeTextBuilder(new TextComponent(""));
     }
 
     @Override
     public org.screamingsandals.lib.spectator.TranslatableComponent.Builder translatable() {
-        return null; // TODO
+        return new BungeeTranslatableContent.BungeeTranslatableBuilder(new TranslatableComponent(""));
     }
 
     @Override

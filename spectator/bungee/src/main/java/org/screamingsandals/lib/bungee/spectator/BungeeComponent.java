@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.bungee.spectator;
 
+import lombok.Data;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeClickEvent;
@@ -27,6 +29,7 @@ import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -123,5 +126,107 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
             return null;
         }
         return new BungeeClickEvent(click);
+    }
+
+    @Data
+    public static class BungeeBuilder<C extends Component, B extends Component.Builder<B, C>, A extends BaseComponent> implements Component.Builder<B, C> {
+        protected final A component;
+
+        @Override
+        public B color(Color color) {
+            component.setColor(color.as(ChatColor.class));
+            return self();
+        }
+
+        @Override
+        public B append(Component component) {
+            this.component.addExtra(component.as(BaseComponent.class));
+            return self();
+        }
+
+        @Override
+        public B append(Component... components) {
+            for (var component : components) {
+                append(component);
+            }
+            return self();
+        }
+
+        @Override
+        public B append(Collection<Component> components) {
+            for (var component : components) {
+                append(component);
+            }
+            return self();
+        }
+
+        @Override
+        public B font(NamespacedMappingKey font) {
+            try {
+                component.setFont(font.asString());
+            } catch (Throwable ignored) {
+                // old version basically
+            }
+            return self();
+        }
+
+        @Override
+        public B bold(boolean bold) {
+            component.setBold(bold);
+            return self();
+        }
+
+        @Override
+        public B italic(boolean italic) {
+            component.setItalic(italic);
+            return self();
+        }
+
+        @Override
+        public B underlined(boolean underlined) {
+            component.setUnderlined(underlined);
+            return self();
+        }
+
+        @Override
+        public B strikethrough(boolean strikethrough) {
+            component.setStrikethrough(strikethrough);
+            return self();
+        }
+
+        @Override
+        public B obfuscated(boolean obfuscated) {
+            component.setObfuscated(obfuscated);
+            return self();
+        }
+
+        @Override
+        public B insertion(@Nullable String insertion) {
+            component.setInsertion(insertion);
+            return self();
+        }
+
+        @Override
+        public B hoverEvent(@Nullable HoverEvent event) {
+            component.setHoverEvent(event == null ? null : event.as(net.md_5.bungee.api.chat.HoverEvent.class));
+            return self();
+        }
+
+        @Override
+        public B clickEvent(@Nullable ClickEvent event) {
+            component.setClickEvent(event == null ? null : event.as(net.md_5.bungee.api.chat.ClickEvent.class));
+            return self();
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public C build() {
+            return (C) AbstractBungeeBackend.wrapComponent(component.duplicate());
+        }
+
+        @SuppressWarnings("unchecked")
+        protected B self() {
+            return (B) this;
+        }
     }
 }
