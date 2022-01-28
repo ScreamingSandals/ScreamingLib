@@ -1,10 +1,12 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id 'org.jetbrains.kotlin.jvm' version "${KOTLIN_VERSION}"
 }
 
 dependencies {
-    compileOnly "org.jetbrains.kotlin:kotlin-stdlib"
+    compileOnly 'org.jetbrains.kotlin:kotlin-stdlib:' + KOTLIN_VERSION
 
-    compileOnly project(":api-utils")
-    compileOnly project(":utils-common")
+    compileOnly project(':core-common')
+    compileOnly project(':visuals-api-common')
+    compileOnly project(':api-utils')
+    compileOnly project(':utils-common')
 }
