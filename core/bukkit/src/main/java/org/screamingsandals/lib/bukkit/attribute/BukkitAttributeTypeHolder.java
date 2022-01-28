@@ -23,7 +23,6 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 import java.util.Arrays;
 
 public class BukkitAttributeTypeHolder extends BasicWrapper<Attribute> implements AttributeTypeHolder {
-
     public BukkitAttributeTypeHolder(Attribute wrappedObject) {
         super(wrappedObject);
     }

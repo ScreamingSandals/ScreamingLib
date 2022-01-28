@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.minestom.material.attribute;
+package org.screamingsandals.lib.minestom.attribute;
 
 import net.minestom.server.attribute.Attribute;
 import net.minestom.server.attribute.AttributeInstance;
@@ -27,6 +27,7 @@ import org.screamingsandals.lib.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.minestom.slot.MinestomEquipmentSlotMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service(dependsOn = {
@@ -34,10 +35,6 @@ import java.util.Optional;
         MinestomEquipmentSlotMapping.class
 })
 public class MinestomAttributeMapping extends AttributeMapping {
-    public static void init() {
-        AttributeMapping.init(MinestomAttributeMapping::new);
-    }
-
     public MinestomAttributeMapping() {
         attributeModifierConverter
                 .registerW2P(AttributeModifier.class, holder -> new AttributeModifier(
@@ -55,12 +52,12 @@ public class MinestomAttributeMapping extends AttributeMapping {
 
         itemAttributeConverter
                 .registerP2W(ItemAttribute.class, itemAttribute -> new ItemAttributeHolder(
-                        AttributeTypeMapping.resolve(itemAttribute.getAttribute()).orElseThrow(),
-                        itemAttribute.getUuid(),
-                        itemAttribute.getInternalName(),
-                        itemAttribute.getValue(),
-                        AttributeModifierHolder.Operation.valueOf(itemAttribute.getOperation().name()),
-                        EquipmentSlotMapping.resolve(itemAttribute.getSlot()).orElse(null) // nullable
+                        AttributeTypeMapping.resolve(itemAttribute.attribute()).orElseThrow(),
+                        itemAttribute.uuid(),
+                        itemAttribute.name(),
+                        itemAttribute.amount(),
+                        AttributeModifierHolder.Operation.valueOf(itemAttribute.operation().name()),
+                        EquipmentSlotMapping.resolve(itemAttribute.slot()).orElse(null) // nullable
                 ))
                 .registerW2P(ItemAttribute.class, holder -> new ItemAttribute(
                         holder.getUuid(),
@@ -68,7 +65,7 @@ public class MinestomAttributeMapping extends AttributeMapping {
                         holder.getType().as(Attribute.class),
                         AttributeOperation.valueOf(holder.getOperation().name()),
                         holder.getAmount(),
-                        holder.getSlot() != null ? holder.getSlot().as(AttributeSlot.class) : null
+                        Objects.requireNonNull(holder.getSlot()).as(AttributeSlot.class)
                 ));
     }
 

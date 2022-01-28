@@ -47,7 +47,7 @@ public class MinestomAttributeHolder extends BasicWrapper<AttributeInstance> imp
 
     @Override
     public double getDefaultValue() {
-        return wrappedObject.getAttribute().getDefaultValue();
+        return wrappedObject.getAttribute().defaultValue();
     }
 
     @Override

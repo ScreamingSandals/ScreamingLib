@@ -143,7 +143,7 @@ operator fun EntityBasic.minusAssign(entity: EntityBasic) {
 operator fun EntityBasic.contains(entity: EntityBasic) = passengers.contains(entity)
 
 operator fun ItemTypeHolder.times(amount: Int): Item = ItemFactory.builder().type(this).amount(amount).build().orElseThrow()
-operator fun Array<String>.contains(holder: ItemTypeHolder): Boolean = contains(holder.platformName().lowercase())
+operator fun Array<String>.contains(holder: ItemTypeHolder): Boolean = holder.`is`(*this)
 operator fun Collection<String>.contains(holder: ItemTypeHolder): Boolean = contains(holder.platformName().lowercase())
 operator fun String.contains(holder: ItemTypeHolder): Boolean = equals(holder.platformName(), ignoreCase = true)
 

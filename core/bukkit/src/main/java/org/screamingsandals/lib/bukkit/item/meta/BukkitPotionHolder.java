@@ -24,7 +24,6 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 import java.util.Arrays;
 
 public class BukkitPotionHolder extends BasicWrapper<PotionData> implements PotionHolder {
-
     public BukkitPotionHolder(PotionType type) {
         this(new PotionData(type));
     }

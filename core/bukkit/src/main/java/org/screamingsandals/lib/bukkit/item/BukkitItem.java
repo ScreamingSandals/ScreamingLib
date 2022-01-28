@@ -66,8 +66,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     }
 
     @Override
-    @Nullable
-    public Component getDisplayName() {
+    public @Nullable Component getDisplayName() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null && meta.hasDisplayName()) {
             return ComponentObjectLink.processGetter(meta, "displayName", meta::getDisplayName);

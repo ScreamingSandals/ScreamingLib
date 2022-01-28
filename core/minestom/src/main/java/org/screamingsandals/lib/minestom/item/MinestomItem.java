@@ -19,6 +19,7 @@ package org.screamingsandals.lib.minestom.item;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.ItemAttributeHolder;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.Item;
@@ -28,11 +29,14 @@ import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataKey;
+import org.screamingsandals.lib.minestom.item.meta.MinestomEnchantmentHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.Pair;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MinestomItem extends BasicWrapper<ItemStack> implements Item {
     public MinestomItem(ItemStack wrappedObject) {
@@ -61,12 +65,18 @@ public class MinestomItem extends BasicWrapper<ItemStack> implements Item {
 
     @Override
     public List<ItemAttributeHolder> getAttributeModifiers() {
-        return null; // TODO
+        return wrappedObject.getMeta().getAttributes().stream()
+                .map(AttributeMapping::wrapItemAttribute)
+                .map(Optional::orElseThrow)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<EnchantmentHolder> getEnchantments() {
-        return null;
+        return wrappedObject.getMeta().getEnchantmentMap().entrySet().stream()
+                .map(entry -> Pair.of(entry.getKey(), entry.getValue()))
+                .map(MinestomEnchantmentHolder::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -81,12 +91,12 @@ public class MinestomItem extends BasicWrapper<ItemStack> implements Item {
 
     @Override
     public Integer getCustomModelData() {
-        return null;
+        return wrappedObject.getMeta().getCustomModelData();
     }
 
     @Override
     public boolean isUnbreakable() {
-        return false;
+        return wrappedObject.getMeta().isUnbreakable();
     }
 
     @Override
@@ -101,7 +111,7 @@ public class MinestomItem extends BasicWrapper<ItemStack> implements Item {
 
     @Override
     public boolean isSimilar(Item item) {
-        return false;
+        return wrappedObject.isSimilar(item.as(ItemStack.class));
     }
 
     @Override

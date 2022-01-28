@@ -25,7 +25,6 @@ import java.util.Arrays;
 
 @Service
 public class BukkitAttributeTypeMapping extends AttributeTypeMapping {
-
     public BukkitAttributeTypeMapping() {
         attributeTypeConverter
                 .registerP2W(Attribute.class, BukkitAttributeTypeHolder::new);

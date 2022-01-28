@@ -1,40 +1,24 @@
-/*
- * Copyright 2022 ScreamingSandals
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package org.screamingsandals.lib.minestom.item.meta;
 
-package org.screamingsandals.lib.bukkit.item.meta;
-
-import org.bukkit.enchantments.Enchantment;
+import net.minestom.server.item.Enchantment;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Pair;
 
 import java.util.Arrays;
 
-public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Integer>> implements EnchantmentHolder {
-    public BukkitEnchantmentHolder(Enchantment enchantment) {
-        this(Pair.of(enchantment, 1));
+public class MinestomEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Short>> implements EnchantmentHolder {
+    protected MinestomEnchantmentHolder(Enchantment enchantment) {
+        this(Pair.of(enchantment, (short) 1));
     }
 
-    public BukkitEnchantmentHolder(Pair<Enchantment, Integer> wrappedObject) {
+    public MinestomEnchantmentHolder(Pair<Enchantment, Short> wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
     public String platformName() {
-        return wrappedObject.first().getName();
+        return wrappedObject.first().name();
     }
 
     @Override
@@ -44,13 +28,13 @@ public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Inte
 
     @Override
     public EnchantmentHolder withLevel(int level) {
-        return new BukkitEnchantmentHolder(Pair.of(wrappedObject.first(), level));
+        return new MinestomEnchantmentHolder(Pair.of(wrappedObject.first(), (short) level));
     }
 
     @Override
     public boolean is(Object object) {
         if (object instanceof Enchantment) {
-            return wrappedObject.equals(Pair.of(object, 1));
+            return wrappedObject.equals(Pair.of(object, (short) 1));
         }
         if (object instanceof EnchantmentHolder) {
             return equals(object);
@@ -67,8 +51,8 @@ public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Inte
     public boolean isSameType(Object object) {
         if (object instanceof Enchantment) {
             return wrappedObject.first().equals(object);
-        } else if (object instanceof BukkitEnchantmentHolder) {
-            return ((BukkitEnchantmentHolder) object).wrappedObject.first().equals(wrappedObject.first());
+        } else if (object instanceof MinestomEnchantmentHolder) {
+            return ((MinestomEnchantmentHolder) object).wrappedObject.first().equals(wrappedObject.first());
         }
         return platformName().equals(EnchantmentHolder.ofOptional(object).map(EnchantmentHolder::platformName).orElse(null));
     }
