@@ -26,6 +26,7 @@ import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
+import org.screamingsandals.lib.utils.math.Vector3Di;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
@@ -128,6 +129,16 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
     }
 
     /**
+     * Clones the current location and increments the coordinates by the XYZ values of the supplied {@link Vector3Di}.
+     *
+     * @param vec the vector to add
+     * @return the new location
+     */
+    public LocationHolder add(Vector3Di vec) {
+        return add(vec.getX(), vec.getY(), vec.getZ());
+    }
+
+    /**
      * Clones the current location and increments the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.
      *
      * @param blockFace the block face to add
@@ -192,6 +203,16 @@ public class LocationHolder implements Wrapper, ProtoWrapper<ProtoLocation>, Ser
      * @return the new location
      */
     public LocationHolder subtract(Vector3Df vec) {
+        return subtract(vec.getX(), vec.getY(), vec.getZ());
+    }
+
+    /**
+     * Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3Di}.
+     *
+     * @param vec the vector to subtract
+     * @return the new location
+     */
+    public LocationHolder subtract(Vector3Di vec) {
         return subtract(vec.getX(), vec.getY(), vec.getZ());
     }
 
