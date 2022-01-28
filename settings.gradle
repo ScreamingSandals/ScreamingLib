@@ -34,6 +34,7 @@ include 'nms'
 include 'shared-core'
 include 'lang'
 include 'annotation'
+include 'kotlin-extra'
 
 // Main modules
 registerModule('core', 'bukkit', 'minestom') //TODO: add others (minestom, sponge)

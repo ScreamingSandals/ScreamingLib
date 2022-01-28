@@ -35,12 +35,12 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
     }
 
     @Override
-    public Map<Integer, TextEntry> getLines() {
+    public Map<Integer, TextEntry> lines() {
         return Map.copyOf(lines);
     }
 
     @Override
-    public Optional<Map.Entry<Integer, TextEntry>> getLineByIdentifier(String identifier) {
+    public Optional<Map.Entry<Integer, TextEntry>> lineByIdentifier(String identifier) {
         return lines.entrySet()
                 .stream()
                 .filter(next -> next.getValue().getIdentifier().equals(identifier))
@@ -103,7 +103,7 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
             return bottomLine(text);
         }
 
-        final var line = getLineByIdentifier(text.getIdentifier());
+        final var line = lineByIdentifier(text.getIdentifier());
         if (line.isEmpty()) {
             return bottomLine(text);
         }
@@ -192,7 +192,7 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
     @SuppressWarnings("unchecked")
     @Override
     public T removeLine(String identifier) {
-        getLineByIdentifier(identifier)
+        lineByIdentifier(identifier)
                 .ifPresent(next -> {
                     originalLinesSize = lines.size();
                     lines = VisualUtils.removeEntryAndMoveRest(lines, next.getKey());

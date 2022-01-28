@@ -28,7 +28,7 @@ public interface TouchableVisual<T> extends LocatableVisual<T> {
      *
      * @return true if this Visual is touchable
      */
-    boolean isTouchable();
+    boolean touchable();
 
     /**
      * Changes interact state for this Visual.
@@ -36,7 +36,7 @@ public interface TouchableVisual<T> extends LocatableVisual<T> {
      * @param touchable touchable state
      * @return this Visual
      */
-    T setTouchable(boolean touchable);
+    T touchable(boolean touchable);
 
     /**
      * Returns if the entity id provided belongs to this Visual. Used for detecting Player interaction.
@@ -51,11 +51,11 @@ public interface TouchableVisual<T> extends LocatableVisual<T> {
      * @param delay the amount of time (in milliseconds) the last clicked user has to wait before interacting with this Visual again
      * @return this Visual
      */
-    T setClickCoolDown(long delay);
+    T clickCooldown(long delay);
 
     /**
      *
      * @return the amount of time (in milliseconds) the last clicked user has to wait before interacting with this Visual again
      */
-    long getClickCoolDown();
+    long clickCooldown();
 }

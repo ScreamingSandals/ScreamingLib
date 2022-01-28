@@ -1,0 +1,10 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+}
+
+dependencies {
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib"
+
+    compileOnly project(":api-utils")
+    compileOnly project(":utils-common")
+}

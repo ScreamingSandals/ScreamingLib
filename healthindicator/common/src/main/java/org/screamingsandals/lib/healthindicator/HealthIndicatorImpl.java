@@ -41,7 +41,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     private final String tabListKey;
     private final ConcurrentSkipListMap<String, Integer> values = new ConcurrentSkipListMap<>();
     protected final List<PlayerWrapper> trackedPlayers = new LinkedList<>();
-    @Accessors(chain = true)
+    @Accessors(chain = true, fluent = true)
     @Getter
     @Setter
     protected DataContainer data;

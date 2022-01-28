@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.packet;
 
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -92,7 +91,7 @@ public class ProtocolInjector {
         }
     }
 
-    @RequiredArgsConstructor(staticName = "of")
+    @RequiredArgsConstructor
     private static class PacketHandler extends ChannelDuplexHandler {
         private final PlayerWrapper player;
 

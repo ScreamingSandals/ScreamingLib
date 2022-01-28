@@ -64,7 +64,7 @@ public class HealthIndicatorManager {
         if (manager == null) {
             throw new UnsupportedOperationException("HealthIndicatorManager is not initialized yet!");
         }
-        manager.activeIndicators.put(healthIndicator.getUuid(), healthIndicator);
+        manager.activeIndicators.put(healthIndicator.uuid(), healthIndicator);
     }
 
     public static void removeHealthIndicator(UUID uuid) {
@@ -75,7 +75,7 @@ public class HealthIndicatorManager {
         if (manager == null) {
             throw new UnsupportedOperationException("HealthIndicatorManager is not initialized yet!");
         }
-        manager.activeIndicators.remove(healthIndicator.getUuid());
+        manager.activeIndicators.remove(healthIndicator.uuid());
     }
 
     public static HealthIndicator healthIndicator() {
@@ -111,7 +111,7 @@ public class HealthIndicatorManager {
         }
 
         getActiveIndicators().forEach((key, indicator) -> {
-            if (indicator.getViewers().contains(event.player())) {
+            if (indicator.viewers().contains(event.player())) {
                 indicator.removeViewer(event.player());
                 indicator.removeTrackedPlayer(event.player());
             }

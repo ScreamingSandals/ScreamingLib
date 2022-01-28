@@ -32,25 +32,25 @@ public abstract class AbstractTouchableVisual<T extends TouchableVisual<T>> exte
     }
 
     @Override
-    public boolean isTouchable() {
+    public boolean touchable() {
         return touchable;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public T setTouchable(boolean touchable) {
+    public T touchable(boolean touchable) {
         this.touchable = touchable;
         return (T) this;
     }
 
     @Override
-    public long getClickCoolDown() {
+    public long clickCooldown() {
         return clickCoolDown;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public T setClickCoolDown(long delay) {
+    public T clickCooldown(long delay) {
         if (delay < 0) {
             return (T) this;
         }

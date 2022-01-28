@@ -54,7 +54,7 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
     }
 
     public static void addNPC(NPC npc) {
-        Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!").addVisual(npc.getUuid(), npc);
+        Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!").addVisual(npc.uuid(), npc);
     }
 
     public static void removeNPC(UUID uuid) {
@@ -62,7 +62,7 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
     }
 
     public static void removeNPC(NPC npc) {
-        Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!").removeVisual(npc.getUuid());
+        Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!").removeVisual(npc.uuid());
     }
 
     public static NPC npc(LocationHolder holder) {
@@ -84,9 +84,9 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
 
         final var player = event.player();
         for (final var npc : activeVisuals.values()) {
-            if (!npc.isShown() || !npc.shouldLookAtPlayer()
-                    || !npc.getViewers().contains(player) || !player.getLocation().isWorldSame(npc.getLocation())
-                    || npc.getLocation().getDistanceSquared(player.getLocation()) > LocatableVisual.DEFAULT_VIEW_DISTANCE) {
+            if (!npc.shown() || !npc.lookAtPlayer()
+                    || !npc.viewers().contains(player) || !player.getLocation().isWorldSame(npc.location())
+                    || npc.location().getDistanceSquared(player.getLocation()) > LocatableVisual.DEFAULT_VIEW_DISTANCE) {
                 continue;
             }
             npc.lookAtLocation(event.newLocation(), player);

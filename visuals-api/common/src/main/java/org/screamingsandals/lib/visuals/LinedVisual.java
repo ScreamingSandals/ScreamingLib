@@ -36,14 +36,14 @@ public interface LinedVisual<T> extends Visual<T> {
      *
      * @return currently displayed lines.
      */
-    Map<Integer, TextEntry> getLines();
+    Map<Integer, TextEntry> lines();
 
     /**
      * Tries to get a line by given identifier.
      * @param identifier where's my identity?!
      * @return this visual
      */
-    Optional<Map.Entry<Integer, TextEntry>> getLineByIdentifier(String identifier);
+    Optional<Map.Entry<Integer, TextEntry>> lineByIdentifier(String identifier);
 
     /**
      * Adds new line to this visual and moves everything else 1 line down.

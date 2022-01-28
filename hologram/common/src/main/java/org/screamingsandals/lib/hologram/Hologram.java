@@ -58,7 +58,7 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
     /**
      * @return current rotation time
      */
-    Pair<Integer, TaskerTime> getRotationTime();
+    Pair<Integer, TaskerTime> rotationTime();
 
     /**
      * The rotation time settings.
@@ -66,12 +66,12 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param rotatingTime {@link Pair} of time and unit.
      * @return this hologram
      */
-    Hologram setRotationTime(Pair<Integer, TaskerTime> rotatingTime);
+    Hologram rotationTime(Pair<Integer, TaskerTime> rotatingTime);
 
     /**
      * @return current rotation mode
      */
-    RotationMode getRotationMode();
+    RotationMode rotationMode();
 
     /**
      * The mode that the Hologram should be rotating
@@ -79,7 +79,7 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param mode rotation mode
      * @return this hologram
      */
-    Hologram setRotationMode(RotationMode mode);
+    Hologram rotationMode(RotationMode mode);
 
     /**
      * Stands for how much should this hologram rotate per one cycle
@@ -87,7 +87,7 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param toIncrement
      * @return
      */
-    Hologram setRotationIncrement(float toIncrement);
+    Hologram rotationIncrement(float toIncrement);
 
     /**
      * Changes the item to show
@@ -95,7 +95,7 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param item item to show
      * @return this hologram
      */
-    Hologram setItem(Item item);
+    Hologram item(Item item);
 
     /**
      * Position of the item shown as hologram
@@ -103,12 +103,12 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param position position of the item
      * @return this hologram
      */
-    Hologram setItemPosition(ItemPosition position);
+    Hologram itemPosition(ItemPosition position);
 
     /**
      * @return current item position
      */
-    ItemPosition getItemPosition();
+    ItemPosition itemPosition();
 
     /**
      * Represents rotation mode
