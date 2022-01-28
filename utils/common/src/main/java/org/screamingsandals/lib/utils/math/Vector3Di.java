@@ -37,10 +37,45 @@ public class Vector3Di implements Cloneable {
         return new Vector3Di(x, y, z);
     }
 
-    public Vector3Di add(float x, float y, float z) {
+    public Vector3Di invert() {
+        this.x = -x;
+        this.y = -y;
+        this.z = -z;
+        return this;
+    }
+
+    public Vector3Di add(int x, int y, int z) {
         this.x += x;
         this.y += y;
         this.z += z;
+        return this;
+    }
+
+    public Vector3Di add(Vector3Di vec) {
+        this.x += vec.x;
+        this.y += vec.y;
+        this.z += vec.z;
+        return this;
+    }
+
+    public Vector3Di subtract(int x, int y, int z) {
+        this.x -= x;
+        this.y -= y;
+        this.z -= z;
+        return this;
+    }
+
+    public Vector3Di subtract(Vector3Di vec) {
+        this.x -= vec.x;
+        this.y -= vec.y;
+        this.z -= vec.z;
+        return this;
+    }
+
+    public Vector3Di multiply(int multiply) {
+        this.x *= multiply;
+        this.y *= multiply;
+        this.z *= multiply;
         return this;
     }
 

@@ -51,10 +51,45 @@ public class Vector3Df implements Cloneable, ProtoWrapper<ProtoVector3Df> {
         return new Vector3Df(x, y, z);
     }
 
+    public Vector3Df invert() {
+        this.x = -x;
+        this.y = -y;
+        this.z = -z;
+        return this;
+    }
+
     public Vector3Df add(float x, float y, float z) {
         this.x += x;
         this.y += y;
         this.z += z;
+        return this;
+    }
+
+    public Vector3Df add(Vector3Df vec) {
+        this.x += vec.x;
+        this.y += vec.y;
+        this.z += vec.z;
+        return this;
+    }
+
+    public Vector3Df subtract(float x, float y, float z) {
+        this.x -= x;
+        this.y -= y;
+        this.z -= z;
+        return this;
+    }
+
+    public Vector3Df subtract(Vector3Df vec) {
+        this.x -= vec.x;
+        this.y -= vec.y;
+        this.z -= vec.z;
+        return this;
+    }
+
+    public Vector3Df multiply(float multiply) {
+        this.x *= multiply;
+        this.y *= multiply;
+        this.z *= multiply;
         return this;
     }
 
