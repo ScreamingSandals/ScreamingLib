@@ -29,6 +29,8 @@ import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataKey;
+import org.screamingsandals.lib.minestom.item.builder.MinestomItemBuilder;
+import org.screamingsandals.lib.minestom.item.data.MinestomItemData;
 import org.screamingsandals.lib.minestom.item.meta.MinestomEnchantmentHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Pair;
@@ -81,7 +83,7 @@ public class MinestomItem extends BasicWrapper<ItemStack> implements Item {
 
     @Override
     public ItemData getData() {
-        return null;
+        return new MinestomItemData(wrappedObject.getMeta().toNBT().toMutableCompound());
     }
 
     @Override
@@ -106,7 +108,9 @@ public class MinestomItem extends BasicWrapper<ItemStack> implements Item {
 
     @Override
     public ItemBuilder builder() {
-        return null;
+        return new MinestomItemBuilder()
+                .amount(wrappedObject.getAmount());
+        // TODO: finish method
     }
 
     @Override

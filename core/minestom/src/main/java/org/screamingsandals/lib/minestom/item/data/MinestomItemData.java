@@ -3,15 +3,13 @@ package org.screamingsandals.lib.minestom.item.data;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 import org.jglrxavpok.hephaistos.json.NBTGsonReader;
-import org.jglrxavpok.hephaistos.nbt.NBT;
-import org.jglrxavpok.hephaistos.nbt.NBTCompound;
 import org.jglrxavpok.hephaistos.nbt.mutable.MutableNBTCompound;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.utils.GsonUtils;
 import org.screamingsandals.lib.utils.Primitives;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.io.Reader;
+import java.io.StringReader;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -52,23 +50,74 @@ public class MinestomItemData implements ItemData {
         } else if (tClass == String.class) {
             nbtCompound.setString(key, (String) data);
         } else {
-            // TODO
+            nbtCompound.set(key, new NBTGsonReader(new StringReader(GsonUtils.gson().toJson(data, tClass))).readWithGuess());
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> @Nullable T get(String key, Class<T> tClass) {
-        return null;
+        if (!Primitives.isWrapperType(tClass)) {
+            tClass = Primitives.wrap(tClass); // Make sure we will always "switch" over the wrapper types
+        }
+
+        if (!nbtCompound.containsKey(key)) {
+            return null;
+        }
+
+        if (tClass == byte[].class) {
+            return (T) Objects.requireNonNull(nbtCompound.getByteArray(key)).copyArray();
+        }
+
+        if (tClass == Byte.class) {
+            return (T) nbtCompound.getAsByte(key);
+        }
+
+        if (tClass == Double.class) {
+            return (T) nbtCompound.getAsDouble(key);
+        }
+
+        if (tClass == Float.class) {
+            return (T) nbtCompound.getAsFloat(key);
+        }
+
+        if (tClass == int[].class) {
+            return (T) Objects.requireNonNull(nbtCompound.getIntArray(key)).copyArray();
+        }
+
+        if (tClass == Integer.class) {
+            return (T) nbtCompound.getAsInt(key);
+        }
+
+        if (tClass == long[].class) {
+            return (T) Objects.requireNonNull(nbtCompound.getLongArray(key)).copyArray();
+        }
+
+        if (tClass == Long.class) {
+            return (T) nbtCompound.getAsLong(key);
+        }
+
+        if (tClass == Short.class) {
+            return (T) nbtCompound.getAsShort(key);
+        }
+
+        if (tClass == String.class) {
+            return (T) nbtCompound.getString(key);
+        }
+
+        // TODO: Complex arrays and maps
+
+        return GsonUtils.gson().fromJson(nbtCompound.toSNBT(), tClass); // from json
     }
 
     @Override
     public <T> Optional<T> getOptional(String key, Class<T> tClass) {
-        return Optional.empty();
+        return Optional.ofNullable(get(key, tClass));
     }
 
     @Override
     public <T> T getOrDefault(String key, Class<T> tClass, Supplier<T> def) {
-        return null;
+        return getOptional(key, tClass).orElseGet(def);
     }
 
     @Override
