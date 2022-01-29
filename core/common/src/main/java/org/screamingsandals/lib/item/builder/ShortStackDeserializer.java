@@ -61,10 +61,10 @@ public class ShortStackDeserializer {
         if (name != null && name.startsWith("\"") && name.endsWith("\"")) {
             name = name.substring(1, name.length() - 1);
         }
-        var lore_string = matcher.group("lore");
+        var loreString = matcher.group("lore");
         var lore = new ArrayList<String>();
-        if (lore_string != null) {
-            Matcher loreMatcher = LORE_SPLIT.matcher(lore_string);
+        if (loreString != null) {
+            Matcher loreMatcher = LORE_SPLIT.matcher(loreString);
             while (loreMatcher.find()) {
                 lore.add(loreMatcher.group());
             }

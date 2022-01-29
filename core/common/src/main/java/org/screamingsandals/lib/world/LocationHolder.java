@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.world;
 
+import com.iamceph.resulter.core.pack.ProtoWrapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
