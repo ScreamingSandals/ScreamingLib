@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Controllable;
+import org.screamingsandals.lib.utils.ReceiverConsumer;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.executor.ExecutorProvider;
 
@@ -83,7 +84,7 @@ public abstract class EventManager {
         return defaultEventManager != null;
     }
 
-    public <T extends SEvent> EventHandler<T> register(Class<T> event, Consumer<T> consumer) {
+    public <T extends SEvent> EventHandler<T> register(Class<T> event, ReceiverConsumer<T> consumer) {
         return register(event, EventHandler.of(consumer));
     }
 
@@ -95,7 +96,7 @@ public abstract class EventManager {
         }));
     }
 
-    public <T extends SEvent> EventHandler<T> register(Class<T> event, Consumer<T> consumer, boolean ignoreCancelled) {
+    public <T extends SEvent> EventHandler<T> register(Class<T> event, ReceiverConsumer<T> consumer, boolean ignoreCancelled) {
         return register(event, EventHandler.of(consumer, ignoreCancelled));
     }
 
@@ -107,7 +108,7 @@ public abstract class EventManager {
         }, ignoreCancelled));
     }
 
-    public <T extends SEvent> EventHandler<T> register(Class<T> event, Consumer<T> consumer, EventPriority eventPriority) {
+    public <T extends SEvent> EventHandler<T> register(Class<T> event, ReceiverConsumer<T> consumer, EventPriority eventPriority) {
         return register(event, EventHandler.of(consumer, eventPriority));
     }
 
@@ -120,7 +121,7 @@ public abstract class EventManager {
         }, eventPriority, ignoreCancelled));
     }
 
-    public <T extends SEvent> EventHandler<T> register(Class<T> event, Consumer<T> consumer, EventPriority eventPriority,
+    public <T extends SEvent> EventHandler<T> register(Class<T> event, ReceiverConsumer<T> consumer, EventPriority eventPriority,
                                                        boolean ignoreCancelled) {
         return register(event, EventHandler.of(consumer, eventPriority, ignoreCancelled));
     }
