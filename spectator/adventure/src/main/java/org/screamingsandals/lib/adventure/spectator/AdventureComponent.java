@@ -124,6 +124,15 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
         return new AdventureClickEvent(clickEvent);
     }
 
+    @Override
+    public <T> T as(Class<T> type) {
+        try {
+            return super.as(type);
+        } catch (Throwable ignored) {
+            return AdventureBackend.getAdditionalComponentConverter().convert(this, type);
+        }
+    }
+
     @RequiredArgsConstructor
     @Data
     public static abstract class AdventureBuilder<A extends BuildableComponent<A, D>, B extends Builder<B, C>, C extends Component, D extends ComponentBuilder<A, D>> implements Builder<B, C> {

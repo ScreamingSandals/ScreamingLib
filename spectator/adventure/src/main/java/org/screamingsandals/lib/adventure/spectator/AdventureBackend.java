@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.adventure.spectator;
 
+import lombok.Getter;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -44,8 +45,12 @@ import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
 import org.screamingsandals.lib.spectator.title.Title;
+import org.screamingsandals.lib.utils.BidirectionalConverter;
 
 public class AdventureBackend implements SpectatorBackend {
+    @Getter
+    private static final BidirectionalConverter<AdventureComponent> additionalComponentConverter = BidirectionalConverter.build();
+
     @Override
     public Component empty() {
         return new AdventureComponent(net.kyori.adventure.text.Component.empty());

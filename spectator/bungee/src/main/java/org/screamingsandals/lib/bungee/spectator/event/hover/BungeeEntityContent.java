@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bungee.spectator.event.hover;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.hover.content.Entity;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
@@ -49,5 +50,38 @@ public class BungeeEntityContent extends BasicWrapper<Entity> implements EntityC
     @Nullable
     public Component name() {
         return AbstractBungeeBackend.wrapComponent(wrappedObject.getName());
+    }
+
+    public static class BungeeEntityContentBuilder implements EntityContent.Builder {
+        private UUID id;
+        private NamespacedMappingKey type;
+        private Component name;
+
+        @Override
+        public Builder id(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        @Override
+        public Builder type(NamespacedMappingKey type) {
+            this.type = type;
+            return this;
+        }
+
+        @Override
+        public Builder name(@Nullable Component name) {
+            this.name = name;
+            return this;
+        }
+
+        @Override
+        public EntityContent build() {
+            return new BungeeEntityContent(new Entity(
+                    type != null ? type.asString() : "minecraft:pig",
+                    id != null ? id.toString() : UUID.randomUUID().toString(),
+                    name != null ? name.as(BaseComponent.class) : null
+            ));
+        }
     }
 }

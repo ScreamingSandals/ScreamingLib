@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bungee.spectator.event.hover;
 
+import net.md_5.bungee.api.chat.ItemTag;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
@@ -48,5 +49,38 @@ public class BungeeItemContent extends BasicWrapper<Item> implements ItemContent
             return null;
         }
         return tag.getNbt();
+    }
+
+    public static class BungeeItemContentBuilder implements ItemContent.Builder {
+        private NamespacedMappingKey id;
+        private int count = 1;
+        private String tag;
+
+        @Override
+        public Builder id(NamespacedMappingKey id) {
+            this.id = id;
+            return this;
+        }
+
+        @Override
+        public Builder count(int count) {
+            this.count = count;
+            return this;
+        }
+
+        @Override
+        public Builder tag(@Nullable String tag) {
+            this.tag = tag;
+            return this;
+        }
+
+        @Override
+        public ItemContent build() {
+            return new BungeeItemContent(new Item(
+                    id != null ? id.asString() : "minecraft:air",
+                    count,
+                    tag != null ? ItemTag.ofNbt(tag) : null
+            ));
+        }
     }
 }

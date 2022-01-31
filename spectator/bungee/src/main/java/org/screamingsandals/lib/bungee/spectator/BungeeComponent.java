@@ -128,6 +128,15 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         return new BungeeClickEvent(click);
     }
 
+    @Override
+    public <T> T as(Class<T> type) {
+        try {
+            return super.as(type);
+        } catch (Throwable ignored) {
+            return AbstractBungeeBackend.getAdditionalComponentConverter().convert(this, type);
+        }
+    }
+
     @Data
     public static class BungeeBuilder<C extends Component, B extends Component.Builder<B, C>, A extends BaseComponent> implements Component.Builder<B, C> {
         protected final A component;

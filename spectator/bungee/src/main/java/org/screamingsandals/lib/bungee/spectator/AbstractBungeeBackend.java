@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bungee.spectator;
 
+import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -23,13 +24,20 @@ import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeClickEvent;
+import org.screamingsandals.lib.bungee.spectator.event.BungeeHoverEvent;
+import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeEntityContent;
+import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeItemContent;
 import org.screamingsandals.lib.spectator.*;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
+import org.screamingsandals.lib.utils.BidirectionalConverter;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 public abstract class AbstractBungeeBackend implements SpectatorBackend {
+    @Getter
+    private static final BidirectionalConverter<BungeeComponent> additionalComponentConverter = BidirectionalConverter.build();
     @Override
     public Component empty() {
         // We can't use NoArgsConstructor because it's too new
@@ -132,17 +140,25 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public HoverEvent.Builder hoverEvent() {
-        return null; // TODO
+        return new BungeeHoverEvent.BungeeHoverEventBuilder();
     }
 
     @Override
     public EntityContent.Builder entityContent() {
-        return null; // TODO
+        if (Reflect.has("net.md_5.bungee.api.chat.hover.content.Entity")) {
+            return new BungeeEntityContent.BungeeEntityContentBuilder();
+        } else {
+            return null; // TODO: legacy
+        }
     }
 
     @Override
     public ItemContent.Builder itemContent() {
-        return null; // TODO
+        if (Reflect.has("net.md_5.bungee.api.chat.hover.content.Item")) {
+            return new BungeeItemContent.BungeeItemContentBuilder();
+        } else {
+            return null; // TODO: legacy
+        }
     }
 
     @Nullable

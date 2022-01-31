@@ -24,12 +24,16 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeEntityContent;
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeItemContent;
+import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeLegacyEntityContent;
+import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeLegacyItemContent;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.spectator.event.hover.Content;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.HoverEvent> implements HoverEvent {
     public BungeeHoverEvent(net.md_5.bungee.api.chat.HoverEvent wrappedObject) {
@@ -98,17 +102,13 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
             switch (wrappedObject.getAction()) {
                 case SHOW_ENTITY:
                     if (values.length == 1 && values[0] instanceof TextComponent) {
-                        var value = ((TextComponent) values[0]).getText();
-                        // TODO: basically that fucker wants me to parse SNBT
-                        return null;
+                        return new BungeeLegacyItemContent(((TextComponent) values[0]).getText());
                     } else {
                         return null; // WTF??
                     }
                 case SHOW_ITEM:
                     if (values.length == 1 && values[0] instanceof TextComponent) {
-                        var value = ((TextComponent) values[0]).getText();
-                        // TODO: basically that fucker wants me to parse SNBT
-                        return null;
+                        return new BungeeLegacyEntityContent(((TextComponent) values[0]).getText());
                     } else {
                         return null; // WTF??
                     }
@@ -121,6 +121,42 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
                         return AbstractBungeeBackend.wrapComponent(new TextComponent(values[0]));
                     }
 
+            }
+        }
+    }
+
+    public static class BungeeHoverEventBuilder implements HoverEvent.Builder {
+
+        private Action action = Action.SHOW_TEXT;
+        private Content content;
+
+        @Override
+        public Builder action(Action action) {
+            this.action = action;
+            return this;
+        }
+
+        @Override
+        public Builder content(Content content) {
+            this.content = content;
+            return this;
+        }
+
+        @Override
+        public HoverEvent build() {
+            Preconditions.checkNotNull(content, "Content of HoverEvent must be specified");
+            try {
+                return new BungeeHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(
+                        net.md_5.bungee.api.chat.HoverEvent.Action.valueOf(action.name()),
+                        List.of(content.as(net.md_5.bungee.api.chat.hover.content.Content.class))
+                        ));
+            } catch (Throwable t) {
+                return new BungeeHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(
+                        net.md_5.bungee.api.chat.HoverEvent.Action.valueOf(action.name()),
+                        new BaseComponent[] {
+                                content instanceof Component ? content.as(BaseComponent.class) : new TextComponent(content.as(String.class))
+                        }
+                ));
             }
         }
     }
