@@ -34,6 +34,7 @@ include 'nms'
 include 'shared-core'
 include 'lang'
 include 'annotation'
+include 'kotlin-extra'
 registerModule('spectator', 'adventure', 'bungee')
 
 // Main modules

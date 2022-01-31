@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.utils.math;
 
+import com.iamceph.resulter.core.pack.ProtoWrapper;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,6 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.ProtoLocation;
 import org.screamingsandals.lib.utils.ProtoVector3D;
-import org.screamingsandals.lib.utils.ProtoWrapper;
 
 @Data
 @NoArgsConstructor
@@ -51,6 +51,13 @@ public class Vector3D implements Cloneable, ProtoWrapper<ProtoVector3D> {
         return this;
     }
 
+    public Vector3D add(Vector3D vec) {
+        this.x += vec.x;
+        this.y += vec.y;
+        this.z += vec.z;
+        return this;
+    }
+
     public Vector3D subtract(double x, double y, double z) {
         this.x -= x;
         this.y -= y;
@@ -59,9 +66,9 @@ public class Vector3D implements Cloneable, ProtoWrapper<ProtoVector3D> {
     }
 
     public Vector3D subtract(Vector3D vec) {
-        this.x -= vec.getX();
-        this.y -= vec.getY();
-        this.z -= vec.getZ();
+        this.x -= vec.x;
+        this.y -= vec.y;
+        this.z -= vec.z;
         return this;
     }
 
@@ -93,7 +100,6 @@ public class Vector3D implements Cloneable, ProtoWrapper<ProtoVector3D> {
         this.x *= multiply;
         this.y *= multiply;
         this.z *= multiply;
-
         return this;
     }
 
@@ -112,6 +118,13 @@ public class Vector3D implements Cloneable, ProtoWrapper<ProtoVector3D> {
     @Override
     public Vector3D clone() {
         return new Vector3D(x, y, z);
+    }
+
+    public Vector3D invert() {
+        this.x = -x;
+        this.y = -y;
+        this.z = -z;
+        return this;
     }
 
     @Override

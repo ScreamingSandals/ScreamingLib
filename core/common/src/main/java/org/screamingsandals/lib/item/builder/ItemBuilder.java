@@ -38,6 +38,7 @@ import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataConsumer;
 import org.screamingsandals.lib.metadata.MetadataKey;
 import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Collection;
@@ -84,6 +85,7 @@ public interface ItemBuilder extends MetadataConsumer {
 
     // DSL
 
+    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     default ItemBuilder type(@NotNull Object type) {
         if (type instanceof ItemTypeHolder) {
             return type((ItemTypeHolder) type);
@@ -158,6 +160,7 @@ public interface ItemBuilder extends MetadataConsumer {
         );
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     default ItemBuilder enchant(@NotNull Object enchant, int level) {
         return enchant(enchant + " " + level);
     }
@@ -172,11 +175,13 @@ public interface ItemBuilder extends MetadataConsumer {
         return this;
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     default ItemBuilder enchant(@NotNull Object enchant) {
         EnchantmentHolder.ofOptional(enchant).ifPresent(this::enchantment);
         return this;
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.POTION)
     default ItemBuilder potion(@NotNull Object potion) {
         PotionHolder.ofOptional(potion).ifPresent(potionHolder -> {
             this.setMetadata(ItemMeta.POTION_TYPE, potionHolder);
@@ -189,6 +194,7 @@ public interface ItemBuilder extends MetadataConsumer {
         return this;
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
     default ItemBuilder effect(@NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;

@@ -18,6 +18,7 @@ dependencies {
     api 'net.kyori:adventure-text-serializer-plain:' + ADVENTURE_VERSION
     api 'net.kyori:adventure-text-serializer-gson:' + ADVENTURE_VERSION
     api 'net.kyori:adventure-serializer-configurate4:' + ADVENTURE_VERSION
+    api 'com.iamceph.resulter:resulter-core:' + RESULTER_VERSION
 }
 
 sourceSets.configureEach{s->

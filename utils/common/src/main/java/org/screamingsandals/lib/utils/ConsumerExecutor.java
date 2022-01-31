@@ -38,6 +38,7 @@ public class ConsumerExecutor {
      * @param <D> type of delegate
      * @return the delegate
      */
+    @Deprecated
     public static <D> D execute(Consumer<D> consumer, D delegate) {
         setDelegate(consumer, delegate);
         consumer.accept(delegate);
@@ -52,6 +53,7 @@ public class ConsumerExecutor {
      * @param <D> type of delegate
      * @return the result of predicate
      */
+    @Deprecated
     public static <D> boolean execute(Predicate<D> predicate, D delegate) {
         setDelegate(predicate, delegate);
         return predicate.test(delegate);
@@ -66,12 +68,13 @@ public class ConsumerExecutor {
      * @param <R> type of return
      * @return instance of R, non-null safety
      */
+    @Deprecated
     public static <D,R> R execute(Function<D,R> function, D delegate) {
         setDelegate(function, delegate);
         return function.apply(delegate);
     }
 
-    private static void setDelegate(Object callback, Object delegate) {
+    public static void setDelegate(Object callback, Object delegate) {
         Reflect.asInvocationHandler(callback).ifPresent(invocationHandler -> {
             var closure = Reflect.fastInvoke(invocationHandler, "getDelegate");
             if (closure != null) {

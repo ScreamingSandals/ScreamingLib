@@ -16,11 +16,11 @@
 
 package org.screamingsandals.lib.attribute;
 
+import com.iamceph.resulter.core.pack.ProtoWrapper;
 import lombok.Data;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.ProtoItemAttribute;
-import org.screamingsandals.lib.utils.ProtoWrapper;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.UUID;

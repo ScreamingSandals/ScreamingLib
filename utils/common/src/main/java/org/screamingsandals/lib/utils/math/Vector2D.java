@@ -32,4 +32,40 @@ public class Vector2D implements Cloneable {
     public Vector2D clone() {
         return new Vector2D(x, y);
     }
+
+    public Vector2D invert() {
+        this.x = -x;
+        this.y = -y;
+        return this;
+    }
+
+    public Vector2D add(double x, double y) {
+        this.x += x;
+        this.y += y;
+        return this;
+    }
+
+    public Vector2D add(Vector2D vec) {
+        this.x += vec.x;
+        this.y += vec.y;
+        return this;
+    }
+
+    public Vector2D subtract(double x, double y) {
+        this.x -= x;
+        this.y -= y;
+        return this;
+    }
+
+    public Vector2D subtract(Vector2D vec) {
+        this.x -= vec.x;
+        this.y -= vec.y;
+        return this;
+    }
+
+    public Vector2D multiply(double multiply) {
+        this.x *= multiply;
+        this.y *= multiply;
+        return this;
+    }
 }

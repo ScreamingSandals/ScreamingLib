@@ -16,14 +16,13 @@
 
 package org.screamingsandals.lib.item;
 
-import lombok.*;
+import com.iamceph.resulter.core.pack.ProtoWrapper;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.ProtoItemType;
-import org.screamingsandals.lib.utils.ProtoWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
