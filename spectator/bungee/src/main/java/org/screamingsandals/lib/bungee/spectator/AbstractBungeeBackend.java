@@ -27,6 +27,8 @@ import org.screamingsandals.lib.bungee.spectator.event.BungeeClickEvent;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeHoverEvent;
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeEntityContent;
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeItemContent;
+import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeLegacyEntityContent;
+import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeLegacyItemContent;
 import org.screamingsandals.lib.spectator.*;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
@@ -38,10 +40,13 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 public abstract class AbstractBungeeBackend implements SpectatorBackend {
     @Getter
     private static final BidirectionalConverter<BungeeComponent> additionalComponentConverter = BidirectionalConverter.build();
+    @Getter
+    // We can't use NoArgsConstructor because it's too new
+    private static final Component empty = wrapComponent(new TextComponent(""));
+
     @Override
     public Component empty() {
-        // We can't use NoArgsConstructor because it's too new
-        return new BungeeComponent(new TextComponent(""));
+        return empty;
     }
 
     @Override
@@ -148,7 +153,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
         if (Reflect.has("net.md_5.bungee.api.chat.hover.content.Entity")) {
             return new BungeeEntityContent.BungeeEntityContentBuilder();
         } else {
-            return null; // TODO: legacy
+            return new BungeeLegacyEntityContent.BungeeLegacyEntityContentBuilder();
         }
     }
 
@@ -157,7 +162,23 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
         if (Reflect.has("net.md_5.bungee.api.chat.hover.content.Item")) {
             return new BungeeItemContent.BungeeItemContentBuilder();
         } else {
-            return null; // TODO: legacy
+            return new BungeeLegacyItemContent.BungeeLegacyItemContentBuilder();
+        }
+    }
+
+    @Override
+    public Component fromLegacy(String legacy) {
+        if (legacy == null || legacy.isEmpty()) {
+            return empty;
+        }
+        // for some reason fromLegacyText implements its own custom url handling, which is not part of the format
+        var components = TextComponent.fromLegacyText(legacy);
+        if (components.length == 0) {
+            return empty;
+        } else if (components.length == 1) {
+            return wrapComponent(components[0]);
+        } else {
+            return wrapComponent(new TextComponent(components));
         }
     }
 

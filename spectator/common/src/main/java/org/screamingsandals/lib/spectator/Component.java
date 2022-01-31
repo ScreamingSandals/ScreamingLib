@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.spectator;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
@@ -33,6 +35,12 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
     static Component empty() {
         return Spectator.getBackend().empty();
+    }
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    static Component fromLegacy(@Nullable String legacy) {
+        return Spectator.getBackend().fromLegacy(legacy);
     }
 
     static BlockNBTComponent.Builder blockNBT() {
@@ -105,6 +113,10 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     default Content asContent() {
         return this;
     }
+
+    String toLegacy();
+
+    String toPlainText();
 
     interface Builder<B extends Builder<B, C>, C extends Component> extends ComponentLike {
         B color(Color color);

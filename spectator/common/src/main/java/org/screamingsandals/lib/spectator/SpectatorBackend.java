@@ -31,6 +31,8 @@ import org.screamingsandals.lib.spectator.title.Title;
 public interface SpectatorBackend {
     Component empty();
 
+    Component fromLegacy(String legacy);
+
     BlockNBTComponent.Builder blockNBT();
 
     EntityNBTComponent.Builder entityNBT();

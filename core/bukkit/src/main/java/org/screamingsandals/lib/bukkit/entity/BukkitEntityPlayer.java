@@ -43,6 +43,7 @@ import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -367,5 +368,11 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
         } catch (UnsupportedOperationException ignored) {
             return PlayerMapper.UNSAFE_getPlayerConverter().convert(this, type);
         }
+    }
+
+    @Override
+    @NotNull
+    public PlayerAdapter adapter() {
+        return null;
     }
 }

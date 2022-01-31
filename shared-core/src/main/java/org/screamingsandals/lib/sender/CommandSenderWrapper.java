@@ -16,15 +16,14 @@
 
 package org.screamingsandals.lib.sender;
 
-import net.kyori.adventure.audience.ForwardingAudience;
-import net.kyori.adventure.title.Title;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.sender.permissions.SimplePermission;
+import org.screamingsandals.lib.spectator.audience.Audience;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.Locale;
 
-public interface CommandSenderWrapper extends Wrapper, ForwardingAudience.Single, Operator {
+public interface CommandSenderWrapper extends Wrapper, Operator, Audience.ForwardingToAdepter, net.kyori.adventure.audience.ForwardingAudience.Single {
 
     Type getType();
 
@@ -54,7 +53,7 @@ public interface CommandSenderWrapper extends Wrapper, ForwardingAudience.Single
         showTitle(title.asTitle(this));
     }
 
-    default void showTitle(TitleableSenderMessage title, Title.Times times) {
+    default void showTitle(TitleableSenderMessage title, net.kyori.adventure.title.Title.Times times) {
         showTitle(title.asTitle(this, times));
     }
 

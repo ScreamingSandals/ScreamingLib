@@ -21,6 +21,10 @@ import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.ComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.bossbar.AdventureBossBar;
@@ -47,13 +51,41 @@ import org.screamingsandals.lib.spectator.sound.SoundStop;
 import org.screamingsandals.lib.spectator.title.Title;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 
+import java.util.Objects;
+
 public class AdventureBackend implements SpectatorBackend {
     @Getter
     private static final BidirectionalConverter<AdventureComponent> additionalComponentConverter = BidirectionalConverter.build();
+    @Getter
+    private static final LegacyComponentSerializer legacyComponentSerializer = LegacyComponentSerializer.builder()
+            .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
+            .character(LegacyComponentSerializer.SECTION_CHAR)
+            .build();
+    @Getter
+    private static final ComponentSerializer<net.kyori.adventure.text.Component, TextComponent, String> plainTextComponentSerializer;
+    @Getter
+    private static final Component empty = wrapComponent(net.kyori.adventure.text.Component.empty());
+
+    static {
+        ComponentSerializer<net.kyori.adventure.text.Component, TextComponent, String> plainText;
+        try {
+            plainText = PlainTextComponentSerializer.plainText();
+        } catch (Throwable ignored) {
+            // Adventure pre-4.8.0
+            plainText = PlainComponentSerializer.plain();
+        }
+        plainTextComponentSerializer = plainText;
+    }
 
     @Override
     public Component empty() {
-        return new AdventureComponent(net.kyori.adventure.text.Component.empty());
+        return empty;
+    }
+
+    @Override
+    public Component fromLegacy(String legacy) {
+        return legacy == null || legacy.isEmpty() ? empty : wrapComponent(legacyComponentSerializer.deserialize(legacy));
     }
 
     @Override
@@ -132,10 +164,7 @@ public class AdventureBackend implements SpectatorBackend {
     @Override
     public SoundSource soundSource(String source) {
         var soundSource = Sound.Source.NAMES.value(source);
-        if (soundSource == null) {
-            return new AdventureSoundSource(Sound.Source.NEUTRAL);
-        }
-        return new AdventureSoundSource(soundSource);
+        return new AdventureSoundSource(Objects.requireNonNullElse(soundSource, Sound.Source.NEUTRAL));
     }
 
     @Override

@@ -125,6 +125,16 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
+    public String toLegacy() {
+        return AdventureBackend.getLegacyComponentSerializer().serialize(wrappedObject);
+    }
+
+    @Override
+    public String toPlainText() {
+        return AdventureBackend.getPlainTextComponentSerializer().serialize(wrappedObject);
+    }
+
+    @Override
     public <T> T as(Class<T> type) {
         try {
             return super.as(type);

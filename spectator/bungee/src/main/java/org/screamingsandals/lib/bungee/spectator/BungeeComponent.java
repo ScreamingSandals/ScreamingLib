@@ -129,6 +129,16 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
+    public String toLegacy() {
+        return wrappedObject.toLegacyText();
+    }
+
+    @Override
+    public String toPlainText() {
+        return wrappedObject.toPlainText();
+    }
+
+    @Override
     public <T> T as(Class<T> type) {
         try {
             return super.as(type);
