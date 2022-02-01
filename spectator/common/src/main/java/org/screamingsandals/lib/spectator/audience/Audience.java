@@ -70,7 +70,7 @@ public interface Audience {
     }
 
     @ApiStatus.Internal
-    interface ForwardingToAdepter extends Audience {
+    interface ForwardingToAdapter extends Audience {
         @NotNull
         @ApiStatus.OverrideOnly
         Adapter adapter();

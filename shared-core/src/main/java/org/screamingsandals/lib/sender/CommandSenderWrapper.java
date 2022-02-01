@@ -23,7 +23,7 @@ import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.Locale;
 
-public interface CommandSenderWrapper extends Wrapper, Operator, Audience.ForwardingToAdepter, net.kyori.adventure.audience.ForwardingAudience.Single {
+public interface CommandSenderWrapper extends Wrapper, Operator, Audience.ForwardingToAdapter, net.kyori.adventure.audience.ForwardingAudience.Single {
 
     Type getType();
 

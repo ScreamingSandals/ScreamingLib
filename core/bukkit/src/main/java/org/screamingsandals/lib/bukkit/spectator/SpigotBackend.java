@@ -20,7 +20,16 @@ import io.papermc.paper.text.PaperComponents;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.SoundCategory;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventureAdapter;
+import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventureConsoleAdapter;
+import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventurePlayerAdapter;
+import org.screamingsandals.lib.bukkit.spectator.audience.adapter.BukkitAdapter;
+import org.screamingsandals.lib.bukkit.spectator.audience.adapter.BukkitConsoleAdapter;
+import org.screamingsandals.lib.bukkit.spectator.audience.adapter.BukkitPlayerAdapter;
 import org.screamingsandals.lib.bukkit.spectator.bossbar.BukkitBossBar;
 import org.screamingsandals.lib.bukkit.spectator.sound.BukkitDummySoundSource;
 import org.screamingsandals.lib.bukkit.spectator.sound.BukkitSoundSource;
@@ -28,7 +37,11 @@ import org.screamingsandals.lib.bukkit.spectator.sound.BukkitSoundStart;
 import org.screamingsandals.lib.bukkit.spectator.sound.BukkitSoundStop;
 import org.screamingsandals.lib.bukkit.spectator.title.BukkitTitle;
 import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
+import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.spectator.*;
+import org.screamingsandals.lib.spectator.audience.ConsoleAudience;
+import org.screamingsandals.lib.spectator.audience.PlayerAudience;
+import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.spectator.bossbar.BossBar;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
@@ -46,7 +59,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     private AdventureBackend adventureBackend;
 
     public SpigotBackend() {
-        if (Reflect.has("net.kyori.adventure.Adventure")) {
+        if (Reflect.has("net.kyori.adventure.Adventure") && Reflect.has("io.papermc.paper.text.PaperComponents")) {
             adventureBackend = new AdventureBackend();
 
             var gson = PaperComponents.gsonSerializer();
@@ -286,5 +299,26 @@ public class SpigotBackend extends AbstractBungeeBackend {
         }
 
         return super.fromLegacy(legacy);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <A extends Adapter> A adapter(CommandSenderWrapper wrapper, CommandSender sender) {
+        if (adventureBackend != null) {
+            if (sender instanceof Player && wrapper instanceof PlayerAudience) {
+                return (A) new AdventurePlayerAdapter(sender, (PlayerAudience) wrapper);
+            } else if (sender instanceof ConsoleCommandSender && wrapper instanceof ConsoleAudience) {
+                return (A) new AdventureConsoleAdapter(sender, (ConsoleAudience) wrapper);
+            } else {
+                return (A) new AdventureAdapter(sender, wrapper);
+            }
+        }
+
+        if (sender instanceof Player && wrapper instanceof PlayerAudience) {
+            return (A) new BukkitPlayerAdapter((PlayerAudience) wrapper, (Player) sender);
+        } else if (sender instanceof ConsoleCommandSender && wrapper instanceof ConsoleAudience) {
+            return (A) new BukkitConsoleAdapter((ConsoleAudience) wrapper, (ConsoleCommandSender) sender);
+        } else {
+            return (A) new BukkitAdapter(wrapper, sender);
+        }
     }
 }

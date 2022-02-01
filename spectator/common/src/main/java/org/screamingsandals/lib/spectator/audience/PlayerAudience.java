@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
-import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 import org.screamingsandals.lib.spectator.bossbar.BossBar;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
@@ -200,7 +199,7 @@ public interface PlayerAudience extends Audience {
     }
 
     @ApiStatus.Internal
-    interface ForwardingToAdapter extends PlayerAudience, Audience.ForwardingToAdepter {
+    interface ForwardingToAdapter extends PlayerAudience, Audience.ForwardingToAdapter {
         @Override
         @NotNull
         @ApiStatus.OverrideOnly

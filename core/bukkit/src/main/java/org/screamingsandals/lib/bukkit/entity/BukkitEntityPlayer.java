@@ -373,6 +373,6 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     @Override
     @NotNull
     public PlayerAdapter adapter() {
-        return null;
+        return BukkitCore.getSpectatorBackend().adapter(this, wrappedObject);
     }
 }

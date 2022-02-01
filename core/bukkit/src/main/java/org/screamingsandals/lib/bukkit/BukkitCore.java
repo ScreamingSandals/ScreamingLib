@@ -35,6 +35,7 @@ import org.screamingsandals.lib.bukkit.event.chunk.*;
 import org.screamingsandals.lib.bukkit.event.entity.*;
 import org.screamingsandals.lib.bukkit.event.player.*;
 import org.screamingsandals.lib.bukkit.event.world.*;
+import org.screamingsandals.lib.bukkit.spectator.SpigotBackend;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.event.block.*;
@@ -54,6 +55,8 @@ import static org.screamingsandals.lib.utils.reflect.Reflect.has;
 public class BukkitCore extends Core {
     private static BukkitAudiences provider;
     @Getter
+    private static SpigotBackend spectatorBackend;
+    @Getter
     private static Plugin plugin;
 
     public BukkitCore(Plugin plugin) {
@@ -63,6 +66,7 @@ public class BukkitCore extends Core {
     @OnEnable
     public void onEnable() {
         provider = BukkitAudiences.create(plugin);
+        spectatorBackend = new SpigotBackend();
 
         // entity
         constructDefaultListener(AreaEffectCloudApplyEvent.class, SAreaEffectCloudApplyEvent.class, SBukkitAreaEffectCloudApplyEvent::new);

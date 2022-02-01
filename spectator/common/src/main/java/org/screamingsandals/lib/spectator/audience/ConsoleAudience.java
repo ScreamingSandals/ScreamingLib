@@ -34,7 +34,7 @@ public interface ConsoleAudience extends Audience {
     }
 
     @ApiStatus.Internal
-    interface ForwardingToAdapter extends ConsoleAudience, Audience.ForwardingToAdepter {
+    interface ForwardingToAdapter extends ConsoleAudience, Audience.ForwardingToAdapter {
         @Override
         @NotNull
         @ApiStatus.OverrideOnly
