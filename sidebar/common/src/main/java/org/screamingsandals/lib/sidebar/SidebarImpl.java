@@ -19,15 +19,14 @@ package org.screamingsandals.lib.sidebar;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.sender.StaticSenderMessage;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeamImpl;
-import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.utils.visual.SimpleCLTextEntry;
 import org.screamingsandals.lib.visuals.impl.AbstractLinedVisual;
@@ -201,7 +200,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
                         return Stream.of((Component) o);
                     }
                 })
-                .map(AdventureHelper::toLegacy)
+                .map(Component::toLegacy)
                 .collect(Collectors.toList());
 
         Collections.reverse(list);

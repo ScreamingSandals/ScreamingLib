@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 @UtilityClass
+@Deprecated
 public class AdventureHelper {
     @Getter
     private final static LegacyComponentSerializer LEGACY_COMPONENT_SERIALIZER;

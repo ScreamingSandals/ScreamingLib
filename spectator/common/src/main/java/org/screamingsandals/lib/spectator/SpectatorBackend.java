@@ -33,6 +33,10 @@ public interface SpectatorBackend {
 
     Component fromLegacy(String legacy);
 
+    Component fromLegacy(String legacy, char colorChar);
+
+    Component fromJson(String json);
+
     BlockNBTComponent.Builder blockNBT();
 
     EntityNBTComponent.Builder entityNBT();

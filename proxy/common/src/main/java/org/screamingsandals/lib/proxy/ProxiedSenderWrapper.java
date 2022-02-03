@@ -18,8 +18,6 @@ package org.screamingsandals.lib.proxy;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.audience.ForwardingAudience;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.permissions.Permission;
@@ -57,11 +55,6 @@ public class ProxiedSenderWrapper implements Wrapper, CommandSenderWrapper {
     @Override
     public <T> T as(Class<T> type) {
         return ProxiedPlayerMapper.convertSenderWrapper(this, type);
-    }
-
-    @Override
-    public @NotNull Audience audience() {
-        return as(Audience.class);
     }
 
     @Override

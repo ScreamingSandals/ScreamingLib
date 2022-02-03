@@ -18,10 +18,9 @@ package org.screamingsandals.lib.proxy.event;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.event.SCancellableAsyncEvent;
 import org.screamingsandals.lib.proxy.PendingConnection;
+import org.screamingsandals.lib.spectator.Component;
 
 @EqualsAndHashCode(callSuper = false)
 @Data

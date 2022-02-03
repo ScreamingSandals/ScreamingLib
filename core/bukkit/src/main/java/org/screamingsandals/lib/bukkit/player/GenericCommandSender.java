@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.bukkit.player;
 
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -51,11 +50,6 @@ public class GenericCommandSender extends BasicWrapper<CommandSender> implements
     @Override
     public String getName() {
         return wrappedObject.getName();
-    }
-
-    @Override
-    public @NotNull Audience audience() {
-        return BukkitCore.audiences().sender(wrappedObject);
     }
 
     @Override

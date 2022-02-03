@@ -21,6 +21,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeClickEvent;
@@ -196,6 +197,41 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
         }
         // for some reason fromLegacyText implements its own custom url handling, which is not part of the format
         var components = TextComponent.fromLegacyText(legacy);
+        if (components.length == 0) {
+            return empty;
+        } else if (components.length == 1) {
+            return wrapComponent(components[0]);
+        } else {
+            return wrapComponent(new TextComponent(components));
+        }
+    }
+
+    @Override
+    public Component fromLegacy(String legacy, char colorChar) {
+        if (legacy == null || legacy.isEmpty()) {
+            return empty;
+        }
+        if (colorChar == '§') {
+            return fromLegacy(legacy);
+        }
+        legacy = ChatColor.translateAlternateColorCodes(colorChar, legacy);
+        // for some reason fromLegacyText implements its own custom url handling, which is not part of the format
+        var components = TextComponent.fromLegacyText(legacy);
+        if (components.length == 0) {
+            return empty;
+        } else if (components.length == 1) {
+            return wrapComponent(components[0]);
+        } else {
+            return wrapComponent(new TextComponent(components));
+        }
+    }
+
+    @Override
+    public Component fromJson(String json) {
+        if (json == null || json.isEmpty()) {
+            return empty;
+        }
+        var components = ComponentSerializer.parse(json);
         if (components.length == 0) {
             return empty;
         } else if (components.length == 1) {

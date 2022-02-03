@@ -22,6 +22,7 @@ import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.ComponentSerializer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -63,6 +64,8 @@ public class AdventureBackend implements SpectatorBackend {
             .character(LegacyComponentSerializer.SECTION_CHAR)
             .build();
     @Getter
+    private static final GsonComponentSerializer gsonComponentSerializer = GsonComponentSerializer.gson();
+    @Getter
     private static final ComponentSerializer<net.kyori.adventure.text.Component, TextComponent, String> plainTextComponentSerializer;
     @Getter
     private static final Component empty = wrapComponent(net.kyori.adventure.text.Component.empty());
@@ -86,6 +89,31 @@ public class AdventureBackend implements SpectatorBackend {
     @Override
     public Component fromLegacy(String legacy) {
         return legacy == null || legacy.isEmpty() ? empty : wrapComponent(legacyComponentSerializer.deserialize(legacy));
+    }
+
+    @Override
+    public Component fromLegacy(String legacy, char colorCharacter) {
+        if (legacy == null || legacy.isEmpty()) {
+            return empty;
+        }
+        if (colorCharacter == '§') {
+            return fromLegacy(legacy);
+        }
+        return new AdventureComponent(
+                LegacyComponentSerializer.builder()
+                    .useUnusualXRepeatedCharacterHexFormat()
+                    .character(colorCharacter)
+                    .build()
+                    .deserialize(legacy)
+        );
+    }
+
+    @Override
+    public Component fromJson(String json) {
+        if (json == null || json.isEmpty()) {
+            return empty;
+        }
+        return new AdventureComponent(gsonComponentSerializer.deserialize(json));
     }
 
     @Override

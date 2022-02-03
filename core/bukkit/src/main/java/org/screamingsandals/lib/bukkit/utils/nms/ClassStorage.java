@@ -16,14 +16,12 @@
 
 package org.screamingsandals.lib.bukkit.utils.nms;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.nms.accessors.*;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -148,11 +146,7 @@ public class ClassStorage {
 	}
 
 	public static Object asMinecraftComponent(Component component) {
-		try {
-			return MinecraftComponentSerializer.get().serialize(component);
-		} catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
-			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), (Object) GsonComponentSerializer.gson().serialize(component));
-		}
+		return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), (Object) component.toJson());
 	}
 
 	public static Object stackAsNMS(ItemStack item) {

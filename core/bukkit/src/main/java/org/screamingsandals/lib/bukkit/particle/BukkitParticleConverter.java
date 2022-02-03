@@ -17,7 +17,6 @@
 package org.screamingsandals.lib.bukkit.particle;
 
 import lombok.experimental.UtilityClass;
-import net.kyori.adventure.util.RGBLike;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;

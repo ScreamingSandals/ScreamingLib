@@ -18,7 +18,6 @@ package org.screamingsandals.lib.placeholders.hooks;
 
 import org.screamingsandals.lib.placeholders.PlaceholderExpansion;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
-import org.screamingsandals.lib.utils.AdventureHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,8 @@ public class DummyHook implements Hook {
                 continue;
             }
 
-            final var requested = AdventureHelper.toLegacyNullableResult(expansion.get().onRequest(player, parameters));
+            var r = expansion.get().onRequest(player, parameters);
+            final var requested = r != null ? r.toLegacy() : null;
             matcher.appendReplacement(builder, requested != null ? requested : matcher.group(0));
         }
         while (matcher.find());

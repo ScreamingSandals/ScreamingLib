@@ -43,6 +43,18 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return Spectator.getBackend().fromLegacy(legacy);
     }
 
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    static Component fromLegacy(@Nullable String legacy, char colorChar) {
+        return Spectator.getBackend().fromLegacy(legacy, colorChar);
+    }
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    static Component fromJson(@Nullable String json) {
+        return Spectator.getBackend().fromJson(json);
+    }
+
     static BlockNBTComponent.Builder blockNBT() {
         return Spectator.getBackend().blockNBT();
     }
@@ -69,6 +81,10 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
     static TextComponent.Builder text() {
         return Spectator.getBackend().text();
+    }
+
+    static TextComponent text(String text) {
+        return Spectator.getBackend().text().content(text).build();
     }
 
     static TranslatableComponent.Builder translatable() {
@@ -117,6 +133,8 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     String toLegacy();
 
     String toPlainText();
+
+    String toJson();
 
     interface Builder<B extends Builder<B, C>, C extends Component> extends ComponentLike {
         B color(Color color);

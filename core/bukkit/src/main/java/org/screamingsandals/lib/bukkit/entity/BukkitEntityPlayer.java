@@ -18,7 +18,6 @@ package org.screamingsandals.lib.bukkit.entity;
 
 import com.viaversion.viaversion.api.Via;
 import io.netty.channel.Channel;
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -371,12 +370,6 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
             return ProtocolSupportAPI.getProtocolVersion((Player) wrappedObject).getId();
         }
         return Server.getProtocolVersion();
-    }
-
-    @Override
-    @NotNull
-    public Audience audience() {
-        return BukkitCore.audiences().player((Player) wrappedObject);
     }
 
     /**

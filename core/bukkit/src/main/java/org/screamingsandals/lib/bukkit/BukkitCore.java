@@ -18,7 +18,6 @@ package org.screamingsandals.lib.bukkit;
 
 import lombok.Data;
 import lombok.Getter;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.*;
@@ -43,6 +42,7 @@ import org.screamingsandals.lib.event.chunk.*;
 import org.screamingsandals.lib.event.entity.*;
 import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.event.world.*;
+import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 
@@ -53,7 +53,6 @@ import static org.screamingsandals.lib.utils.reflect.Reflect.has;
 
 @Service
 public class BukkitCore extends Core {
-    private static BukkitAudiences provider;
     @Getter
     private static SpigotBackend spectatorBackend;
     @Getter
@@ -65,8 +64,8 @@ public class BukkitCore extends Core {
 
     @OnEnable
     public void onEnable() {
-        provider = BukkitAudiences.create(plugin);
         spectatorBackend = new SpigotBackend();
+        Spectator.setBackend(spectatorBackend);
 
         // entity
         constructDefaultListener(AreaEffectCloudApplyEvent.class, SAreaEffectCloudApplyEvent.class, SBukkitAreaEffectCloudApplyEvent::new);
@@ -332,10 +331,6 @@ public class BukkitCore extends Core {
         constructDefaultListener(ChunkLoadEvent.class, SChunkLoadEvent.class, SBukkitChunkLoadEvent::new);
         constructDefaultListener(ChunkPopulateEvent.class, SChunkPopulateEvent.class, SBukkitChunkPopulateEvent::new);
         constructDefaultListener(ChunkUnloadEvent.class, SChunkUnloadEvent.class, SBukkitChunkUnloadEvent::new);
-    }
-
-    public static BukkitAudiences audiences() {
-        return provider;
     }
 
     /**

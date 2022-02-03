@@ -16,8 +16,8 @@
 
 package org.screamingsandals.lib.visuals.impl;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.visuals.LinedVisual;
 import org.screamingsandals.lib.visuals.Visual;

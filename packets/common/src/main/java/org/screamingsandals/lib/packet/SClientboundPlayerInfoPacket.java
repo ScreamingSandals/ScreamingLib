@@ -20,9 +20,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import org.screamingsandals.lib.spectator.Component;
 
 import java.util.List;
 import java.util.UUID;

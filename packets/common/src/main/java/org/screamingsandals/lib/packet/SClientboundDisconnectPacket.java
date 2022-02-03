@@ -19,7 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
+import org.screamingsandals.lib.spectator.Component;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

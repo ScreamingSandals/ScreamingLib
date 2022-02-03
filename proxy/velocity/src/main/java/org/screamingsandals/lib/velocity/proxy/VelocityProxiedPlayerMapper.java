@@ -22,6 +22,9 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventureAdapter;
+import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventurePlayerAdapter;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
@@ -29,6 +32,9 @@ import org.screamingsandals.lib.proxy.ProxiedSenderWrapper;
 import org.screamingsandals.lib.proxy.ServerWrapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.permissions.*;
+import org.screamingsandals.lib.spectator.Spectator;
+import org.screamingsandals.lib.spectator.audience.PlayerAudience;
+import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.velocity.proxy.event.ChatEventHandlerFactory;
@@ -48,6 +54,7 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     private final static String CONSOLE_NAME = "CONSOLE";
     private final Object plugin;
     private final ProxyServer proxyServer;
+    private final AdventureBackend backend;
 
     public static void init(Object plugin, ProxyServer proxyServer) {
         ProxiedPlayerMapper.init(() -> new VelocityProxiedPlayerMapper(plugin, proxyServer));
@@ -56,7 +63,9 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     public VelocityProxiedPlayerMapper(Object plugin, ProxyServer proxyServer) {
         this.plugin = plugin;
         this.proxyServer = proxyServer;
+        this.backend = new AdventureBackend();
         registerEvents();
+        Spectator.setBackend(this.backend);
 
         playerConverter
                 .registerP2W(Player.class, player -> new ProxiedPlayerWrapper(player.getUsername(), player.getUniqueId()))
@@ -168,6 +177,17 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
         return wrapper.asOptional(Player.class)
                 .map(player -> player.getPlayerSettings().getLocale())
                 .orElse(Locale.US);
+    }
+
+    @Override
+    protected Adapter adapter0(ProxiedSenderWrapper wrapper) {
+        var source = wrapper.as(CommandSource.class);
+        if (source instanceof Player && source instanceof ProxiedPlayerWrapper) {
+            return new AdventurePlayerAdapter(source, (PlayerAudience) wrapper);
+        /*} else if (source instanceof ConsoleCommandSource && TODO) {
+            return new AdventureConsoleAdapter(source, (ConsoleAudience) wrapper);*/
+        }
+        return new AdventureAdapter(source, wrapper);
     }
 
     private void registerEvents() {

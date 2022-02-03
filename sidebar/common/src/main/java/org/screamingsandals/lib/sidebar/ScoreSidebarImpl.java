@@ -20,8 +20,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.SClientboundSetDisplayObjectivePacket;
 import org.screamingsandals.lib.packet.SClientboundSetObjectivePacket;
@@ -31,7 +29,8 @@ import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.sender.StaticSenderMessage;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeamImpl;
-import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.visuals.impl.AbstractVisual;
 
@@ -317,7 +316,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
                 if (scoreEntry.getCache() != null) {
                     packets.add(destroyScore(scoreEntry.getCache()));
                 }
-                scoreEntry.setCache(crop(AdventureHelper.toLegacy(scoreEntry.getComponent())));
+                scoreEntry.setCache(crop(scoreEntry.getComponent().toLegacy()));
                 scoreEntry.setReloadCache(false);
             }
             packets.add(createScorePacket(scoreEntry.getScore(), scoreEntry.getCache()));

@@ -20,9 +20,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -33,9 +30,10 @@ import org.screamingsandals.lib.npc.skin.SkinLayerValues;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
-import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.visuals.impl.AbstractTouchableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -76,7 +74,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         }
 
         this.lookAtPlayer = false;
-        this.tabListName = AdventureHelper.toComponent("[NPC] " + uuid.toString().replace("-", "").substring(0, 10));
+        this.tabListName = Component.fromLegacy("[NPC] " + uuid.toString().replace("-", "").substring(0, 10));
         this.hologram = HologramManager.hologram(location.clone().add(0.0D, 1.5D, 0.0D));
         this.metadata = new ArrayList<>();
         this.properties = new ArrayList<>();
@@ -252,17 +250,17 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
     private void sendSpawnPackets(PlayerWrapper player) {
         new SClientboundSetPlayerTeamPacket()
-                .teamKey(AdventureHelper.toLegacy(tabListName))
+                .teamKey(tabListName.toLegacy())
                 .mode(SClientboundSetPlayerTeamPacket.Mode.CREATE)
                 .displayName(tabListName)
                 .collisionRule(collisionRule)
                 .tagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility.NEVER)
-                .teamColor(NamedTextColor.BLACK)
+                .teamColor(SClientboundSetPlayerTeamPacket.TeamColor.BLACK)
                 .teamPrefix(Component.empty())
                 .teamSuffix(Component.empty())
                 .friendlyFire(false)
                 .seeInvisible(true)
-                .entities(Collections.singletonList(AdventureHelper.toLegacy(tabListName)))
+                .entities(Collections.singletonList(tabListName.toLegacy()))
                 .sendPacket(player);
 
         new SClientboundPlayerInfoPacket()
@@ -307,7 +305,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     private List<SClientboundPlayerInfoPacket.PlayerInfoData> getNPCInfoData() {
         return Collections.singletonList(new SClientboundPlayerInfoPacket.PlayerInfoData(
                 uuid(),
-                AdventureHelper.toLegacy(tabListName),
+                tabListName.toLegacy(),
                 1,
                 GAME_MODE,
                 tabListName,

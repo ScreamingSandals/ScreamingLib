@@ -18,8 +18,9 @@ package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.translation.Translator;
 import org.bukkit.event.player.PlayerLocaleChangeEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerLocaleChangeEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -55,9 +56,25 @@ public class SBukkitPlayerLocaleChangeEvent implements SPlayerLocaleChangeEvent 
             if (Reflect.hasMethod(event, "locale")) {
                 locale = event.locale(); // java.util.Locale is not an adventure thing so we can
             } else {
-                locale = Translator.parseLocale(event.getLocale());
+                locale = parseLocale(event.getLocale());
             }
         }
         return locale;
+    }
+
+    /**
+     * From Adventure
+     */
+    private static @Nullable Locale parseLocale(final @NotNull String string) {
+        final String[] segments = string.split("_", 3); // language_country_variant
+        final int length = segments.length;
+        if (length == 1) {
+            return new Locale(string); // language
+        } else if (length == 2) {
+            return new Locale(segments[0], segments[1]); // language + country
+        } else if (length == 3) {
+            return new Locale(segments[0], segments[1], segments[2]); // language + country + variant
+        }
+        return null;
     }
 }

@@ -16,8 +16,6 @@
 
 package org.screamingsandals.lib.bukkit.utils.nms.entity;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.craftbukkit.MinecraftComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -26,7 +24,7 @@ import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.ComponentAccessor;
 import org.screamingsandals.lib.nms.accessors.EntityAccessor;
-import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -105,13 +103,9 @@ public class EntityNMS {
 	public void setCustomName(Component name) {
 		final var method = EntityAccessor.getMethodSetCustomName1();
 		if (method != null) {
-			try {
-				Reflect.fastInvoke(method, MinecraftComponentSerializer.get().serialize(name));
-			} catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
-				Reflect.fastInvoke(method, ClassStorage.asMinecraftComponent(name));
-			}
+			Reflect.fastInvoke(method, ClassStorage.asMinecraftComponent(name));
 		} else {
-			Reflect.fastInvoke(handler, EntityAccessor.getMethodFunc_96094_a1(), AdventureHelper.toLegacy(name));
+			Reflect.fastInvoke(handler, EntityAccessor.getMethodFunc_96094_a1(), name.toLegacy());
 		}
 	}
 
@@ -124,11 +118,7 @@ public class EntityNMS {
 
 		if (stored.isInstance(textComponent)) {
 			try {
-				try {
-					return MinecraftComponentSerializer.get().deserialize(textComponent);
-				} catch (Exception ignored) { // current Adventure is facing some weird bug on non-adventure native server software, let's do temporary workaround
-					return AdventureHelper.toComponent((String) Reflect.fastInvoke(textComponent, ComponentAccessor.getMethodFunc_150254_d1()));
-				}
+				return Component.fromLegacy((String) Reflect.fastInvoke(textComponent, ComponentAccessor.getMethodFunc_150254_d1()));
 			} catch (Throwable t) {
 				throw new UnsupportedOperationException("Cannot deserialize " + textComponent.toString(), t);
 			}

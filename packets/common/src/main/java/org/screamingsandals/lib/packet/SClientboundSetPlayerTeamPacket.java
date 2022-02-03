@@ -21,9 +21,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.AdventureHelper;
 
 import java.util.Collection;
@@ -41,7 +39,7 @@ public class SClientboundSetPlayerTeamPacket extends AbstractPacket {
     private boolean seeInvisible;
     private TagVisibility tagVisibility;
     private CollisionRule collisionRule;
-    private NamedTextColor teamColor; // only named colors are allowed
+    private TeamColor teamColor = TeamColor.BLACK; // only named colors are allowed
     private Component teamPrefix;
     private Component teamSuffix;
 
@@ -56,11 +54,11 @@ public class SClientboundSetPlayerTeamPacket extends AbstractPacket {
             if (writer.protocol() >= 390) {
                 writer.writeComponent(displayName);
             } else {
-                writer.writeSizedString(LegacyComponentSerializer.legacySection().serialize(displayName));
+                writer.writeSizedString(displayName.toLegacy());
             }
             if (writer.protocol() < 352) {
-                writer.writeSizedString(LegacyComponentSerializer.legacySection().serialize(teamPrefix));
-                writer.writeSizedString(LegacyComponentSerializer.legacySection().serialize(teamSuffix));
+                writer.writeSizedString(teamPrefix.toLegacy());
+                writer.writeSizedString(teamSuffix.toLegacy());
             }
             writer.writeByte((byte) ((friendlyFire ? 0x01 : 0) | (seeInvisible ? 0x02 : 0)));
             writer.writeSizedString(tagVisibility.enumName());
@@ -68,9 +66,9 @@ public class SClientboundSetPlayerTeamPacket extends AbstractPacket {
                 writer.writeSizedString(collisionRule.enumName());
             }
             if (writer.protocol() < 352) {
-                writer.writeByte((byte) (int) AdventureHelper.NAMED_TEXT_COLOR_ID_MAP.get(teamColor));
+                writer.writeByte((byte) teamColor.ordinal());
             } else {
-                writer.writeVarInt(AdventureHelper.NAMED_TEXT_COLOR_ID_MAP.get(teamColor));
+                writer.writeVarInt(teamColor.ordinal());
             }
             if (writer.protocol() >= 375) {
                 writer.writeComponent(teamPrefix);
@@ -88,7 +86,9 @@ public class SClientboundSetPlayerTeamPacket extends AbstractPacket {
         UPDATE,
         ADD_ENTITY,
         REMOVE_ENTITY
-    };
+    }
+
+    ;
 
     @RequiredArgsConstructor
     public enum TagVisibility {
@@ -110,5 +110,24 @@ public class SClientboundSetPlayerTeamPacket extends AbstractPacket {
 
         @Getter
         private final String enumName;
+    }
+
+    public enum TeamColor {
+        BLACK,
+        DARK_BLUE,
+        DARK_GREEN,
+        DARK_AQUA,
+        DARK_RED,
+        DARK_PURPLE,
+        GOLD,
+        GRAY,
+        DARK_GRAY,
+        BLUE,
+        GREEN,
+        AQUA,
+        RED,
+        LIGHT_PURPLE,
+        YELLOW,
+        WHITE
     }
 }

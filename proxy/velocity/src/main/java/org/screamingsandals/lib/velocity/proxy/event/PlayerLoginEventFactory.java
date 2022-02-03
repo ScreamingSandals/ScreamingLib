@@ -19,6 +19,7 @@ package org.screamingsandals.lib.velocity.proxy.event;
 import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
+import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.proxy.PendingConnection;
 import org.screamingsandals.lib.proxy.event.SPlayerLoginEvent;
@@ -43,7 +44,7 @@ public class PlayerLoginEventFactory extends AbstractVelocityEventHandlerFactory
     @Override
     protected void postProcess(SPlayerLoginEvent wrappedEvent, LoginEvent event) {
         if (wrappedEvent.cancelled()) {
-            event.setResult(ResultedEvent.ComponentResult.denied(wrappedEvent.getCancelMessage()));
+            event.setResult(ResultedEvent.ComponentResult.denied(wrappedEvent.getCancelMessage().as(Component.class)));
         }
     }
 }

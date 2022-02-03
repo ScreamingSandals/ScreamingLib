@@ -19,8 +19,8 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
-import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.math.Vector3Di;
 

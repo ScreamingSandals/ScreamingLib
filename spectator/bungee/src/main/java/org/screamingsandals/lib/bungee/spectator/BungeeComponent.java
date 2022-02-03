@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bungee.spectator;
 import lombok.Data;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeClickEvent;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeHoverEvent;
@@ -136,6 +137,11 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     @Override
     public String toPlainText() {
         return wrappedObject.toPlainText();
+    }
+
+    @Override
+    public String toJson() {
+        return ComponentSerializer.toString(wrappedObject);
     }
 
     @Override

@@ -16,8 +16,8 @@
 
 package org.screamingsandals.lib.utils.visual;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.AdventureHelper;
 
 /**
@@ -75,7 +75,7 @@ public interface TextEntry {
      * @return baked text entry
      */
     static TextEntry of(String identifier, String text) {
-        return SimpleTextEntry.of(identifier, AdventureHelper.toComponent(text));
+        return SimpleTextEntry.of(identifier, Component.fromLegacy(text));
     }
 
     /**
@@ -85,7 +85,7 @@ public interface TextEntry {
      * @return baked text entry with no identifier
      */
     static TextEntry of(String text) {
-        return SimpleTextEntry.of(AdventureHelper.toComponent(text));
+        return SimpleTextEntry.of(Component.fromLegacy(text));
     }
 
     /**
