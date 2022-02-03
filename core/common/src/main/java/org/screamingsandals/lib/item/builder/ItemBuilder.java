@@ -16,11 +16,6 @@
 
 package org.screamingsandals.lib.item.builder;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.util.RGBLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeMapping;
@@ -37,7 +32,9 @@ import org.screamingsandals.lib.item.meta.PotionHolder;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataConsumer;
 import org.screamingsandals.lib.metadata.MetadataKey;
-import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.spectator.Color;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
@@ -103,11 +100,11 @@ public interface ItemBuilder extends MetadataConsumer {
     }
 
     default ItemBuilder name(@Nullable String name) {
-        return displayName(name == null ? null : AdventureHelper.toComponent(name));
+        return displayName(name == null ? null : Component.fromLegacy(name));
     }
 
     default ItemBuilder localizedName(@Nullable String name) {
-        return displayName(name == null ? null : Component.translatable(name));
+        return displayName(name == null ? null : Component.translatable().translate(name).build());
     }
 
     default ItemBuilder repair(int repair) {
@@ -144,7 +141,7 @@ public interface ItemBuilder extends MetadataConsumer {
     }
 
     default ItemBuilder lore(@Nullable String lore) {
-        return lore(lore == null ? Component.empty() : AdventureHelper.toComponent(lore));
+        return lore(lore == null ? Component.empty() : Component.fromLegacy(lore));
     }
 
     default <C> ItemBuilder lore(@NotNull List<C> lore) {
@@ -153,7 +150,7 @@ public interface ItemBuilder extends MetadataConsumer {
                     if (c instanceof ComponentLike) {
                         return ((ComponentLike) c).asComponent();
                     } else {
-                        return c == null ? Component.empty() : AdventureHelper.toComponent(c.toString());
+                        return c == null ? Component.empty() : Component.fromLegacy(c.toString());
                     }
                 })
                 .collect(Collectors.toList())
@@ -221,19 +218,14 @@ public interface ItemBuilder extends MetadataConsumer {
     }
 
     default ItemBuilder color(@NotNull String color) {
-        var c = TextColor.fromCSSHexString(color);
+        var c = Color.hexOrName(color);
         if (c != null) {
             return color(c);
-        } else {
-            var c2 = NamedTextColor.NAMES.value(color.toLowerCase().trim());
-            if (c2 != null) {
-                return color(c2);
-            }
         }
         return this;
     }
 
-    default ItemBuilder color(@NotNull RGBLike color) {
+    default ItemBuilder color(@NotNull Color color) {
         if (this.supportsMetadata(ItemMeta.CUSTOM_POTION_COLOR)) {
             this.setMetadata(ItemMeta.CUSTOM_POTION_COLOR, color);
         } else {
@@ -243,7 +235,7 @@ public interface ItemBuilder extends MetadataConsumer {
     }
 
     default ItemBuilder color(int r, int g, int b) {
-        return color(TextColor.color(r, g, b));
+        return color(Color.rgb(r, g, b));
     }
 
     default ItemBuilder skullOwner(@Nullable String skullOwner) {

@@ -16,11 +16,11 @@
 
 package org.screamingsandals.lib.event.player;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.entity.SEntityDeathEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 
 public interface SPlayerDeathEvent extends SEntityDeathEvent, SPlayerEvent {
 

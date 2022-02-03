@@ -139,7 +139,19 @@ public class AdventureBackend implements SpectatorBackend {
         if (value != null) {
             return new AdventureColor(value);
         }
-        var hex = TextColor.fromCSSHexString(name);
+        return null;
+    }
+
+    @Override
+    public Color hexOrName(String hexName) {
+        var value = NamedTextColor.NAMES.value(hexName.toLowerCase());
+        if (value != null) {
+            return new AdventureColor(value);
+        }
+        if (!hexName.startsWith("#")) {
+            hexName = "#" + hexName;
+        }
+        var hex = TextColor.fromCSSHexString(hexName);
         if (hex != null) {
             return new AdventureColor(hex);
         }

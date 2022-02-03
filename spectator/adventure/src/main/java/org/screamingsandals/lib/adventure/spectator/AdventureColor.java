@@ -39,4 +39,9 @@ public class AdventureColor extends BasicWrapper<TextColor> implements Color {
     public int blue() {
         return wrappedObject.blue();
     }
+
+    @Override
+    public String toString() {
+        return wrappedObject.toString();
+    }
 }

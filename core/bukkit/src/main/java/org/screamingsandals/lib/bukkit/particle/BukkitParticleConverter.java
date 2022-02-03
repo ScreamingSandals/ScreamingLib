@@ -56,7 +56,7 @@ public class BukkitParticleConverter {
         return null;
     }
 
-    public Color getBukkitColor(RGBLike rgb) {
+    public Color getBukkitColor(org.screamingsandals.lib.spectator.Color rgb) {
         return Color.fromRGB(rgb.red(), rgb.green(), rgb.blue());
     }
 }

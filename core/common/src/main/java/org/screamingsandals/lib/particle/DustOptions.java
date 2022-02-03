@@ -18,12 +18,12 @@ package org.screamingsandals.lib.particle;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.util.RGBLike;
+import org.screamingsandals.lib.spectator.Color;
 
 @Data
 @Accessors(chain = true, fluent = true)
 public class DustOptions implements ParticleData {
-    private final RGBLike color;
+    private final Color color;
     private final float size;
 
     /**

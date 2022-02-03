@@ -19,10 +19,10 @@ package org.screamingsandals.lib.world;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.kyori.adventure.audience.ForwardingAudience;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
+import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 /**
  * An interface representing a world.
  */
-public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, ForwardingAudience {
+public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, PlayerAudience.ForwardingToMulti {
     /**
      * Gets the world's {@link UUID}.
      *

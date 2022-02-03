@@ -18,9 +18,6 @@ package org.screamingsandals.lib.bukkit.entity;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.util.RGBLike;
 import org.bukkit.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.*;
@@ -40,7 +37,7 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
-import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
@@ -599,12 +596,12 @@ public class BukkitEntityMetadataMapper {
                 value = new Vector(((Vector3Df) value).getX(), ((Vector3Df) value).getY(), ((Vector3Df) value).getZ());
             }
         } else if (bukkitMetadata.valueClass == Color.class) {
-            if (value instanceof RGBLike) {
-                value = Color.fromRGB(((RGBLike) value).red(), ((RGBLike) value).green(), ((RGBLike) value).blue());
+            if (value instanceof org.screamingsandals.lib.spectator.Color) {
+                value = Color.fromRGB(((org.screamingsandals.lib.spectator.Color) value).red(), ((org.screamingsandals.lib.spectator.Color) value).green(), ((org.screamingsandals.lib.spectator.Color) value).blue());
             }
         } else if (bukkitMetadata.valueClass == DyeColor.class) {
-            if (value instanceof RGBLike) {
-                value = DyeColor.getByColor(Color.fromRGB(((RGBLike) value).red(), ((RGBLike) value).green(), ((RGBLike) value).blue()));
+            if (value instanceof org.screamingsandals.lib.spectator.Color) {
+                value = DyeColor.getByColor(Color.fromRGB(((org.screamingsandals.lib.spectator.Color) value).red(), ((org.screamingsandals.lib.spectator.Color) value).green(), ((org.screamingsandals.lib.spectator.Color) value).blue()));
             } else if (value instanceof Number) {
                 value = DyeColor.getByWoolData(((Number) value).byteValue());
             }
@@ -612,7 +609,7 @@ public class BukkitEntityMetadataMapper {
             String finalValue = (String) value;
             value = Arrays.stream(bukkitMetadata.valueClass.getEnumConstants()).filter(o -> finalValue.equalsIgnoreCase((String) Reflect.fastInvoke(o, "name"))).findFirst().orElse(null);
         } else if (value instanceof Component) { // TODO: converting component to platform component, not just strings
-            value = AdventureHelper.toLegacyNullableResult((Component) value);
+            value = ((Component) value).toLegacy();
         }
 
         if (value != null) {
@@ -703,7 +700,7 @@ public class BukkitEntityMetadataMapper {
                 return (T) LocationMapper.wrapLocation(value);
             }
         } else if (valueClass == Component.class) {
-            return (T) AdventureHelper.toComponentNullableResult(value.toString()); // TODO: converting platform component to component, not just strings
+            return (T) (value == null ? null : Component.fromLegacy(value.toString())); // TODO: converting platform component to component, not just strings
         } else if (valueClass == String.class) {
             if (value.getClass().isEnum()) {
                 return (T) Reflect.fastInvoke(value, "name");
@@ -722,11 +719,11 @@ public class BukkitEntityMetadataMapper {
             } else if (value instanceof Vector) {
                 return (T) new Vector3Df((float) ((Vector) value).getX(), (float) ((Vector) value).getY(), (float) ((Vector) value).getZ());
             }
-        } else if (valueClass == RGBLike.class) {
+        } else if (valueClass == org.screamingsandals.lib.spectator.Color.class) {
             if (value instanceof Color) {
-                return (T) TextColor.color(((Color) value).getRed(), ((Color) value).getGreen(), ((Color) value).getBlue());
+                return (T) org.screamingsandals.lib.spectator.Color.rgb(((Color) value).getRed(), ((Color) value).getGreen(), ((Color) value).getBlue());
             } else if (value instanceof DyeColor) {
-                return (T) TextColor.color(((DyeColor) value).getColor().getRed(), ((DyeColor) value).getColor().getGreen(), ((DyeColor) value).getColor().getBlue());
+                return (T) org.screamingsandals.lib.spectator.Color.rgb(((DyeColor) value).getColor().getRed(), ((DyeColor) value).getColor().getGreen(), ((DyeColor) value).getColor().getBlue());
             }
         } else if (valueClass == Boolean.class) {
             if (value instanceof Boolean) {

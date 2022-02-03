@@ -16,8 +16,6 @@
 
 package org.screamingsandals.lib.bukkit.metadata;
 
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.util.RGBLike;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.NamespacedKey;
@@ -38,12 +36,12 @@ public class MetadataValuesRemapper {
                     PotionHolder::as
             ),
             new MetadataConverter<>(
-                    RGBLike.class,
+                    org.screamingsandals.lib.spectator.Color.class,
                     value -> {
                         if (value instanceof Color) {
-                            return TextColor.color(((Color) value).getRed(), ((Color) value).getGreen(), ((Color) value).getBlue());
+                            return org.screamingsandals.lib.spectator.Color.rgb(((Color) value).getRed(), ((Color) value).getGreen(), ((Color) value).getBlue());
                         } else if (value instanceof DyeColor) {
-                            return TextColor.color(((DyeColor) value).getColor().getRed(), ((DyeColor) value).getColor().getGreen(), ((DyeColor) value).getColor().getBlue());
+                            return org.screamingsandals.lib.spectator.Color.rgb(((DyeColor) value).getColor().getRed(), ((DyeColor) value).getColor().getGreen(), ((DyeColor) value).getColor().getBlue());
                         }
                         throw new UnsupportedOperationException("Can't remap " + value.getClass().getName() + " to RGBLike");
                     },

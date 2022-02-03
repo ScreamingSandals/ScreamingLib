@@ -23,13 +23,14 @@ import net.kyori.adventure.audience.ForwardingAudience;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.permissions.Permission;
+import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.Locale;
 
 @Data
 @RequiredArgsConstructor
-public class ProxiedSenderWrapper implements Wrapper, ForwardingAudience.Single, CommandSenderWrapper {
+public class ProxiedSenderWrapper implements Wrapper, CommandSenderWrapper {
     private final String name;
     private final Type type;
 
@@ -71,5 +72,10 @@ public class ProxiedSenderWrapper implements Wrapper, ForwardingAudience.Single,
     @Override
     public void setOp(boolean op) {
         // No OP on proxies
+    }
+
+    @Override
+    public @NotNull Adapter adapter() {
+        return null; // TODO
     }
 }

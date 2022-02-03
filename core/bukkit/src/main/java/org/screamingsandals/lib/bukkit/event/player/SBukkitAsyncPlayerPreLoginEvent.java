@@ -21,12 +21,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.event.player.SAsyncPlayerPreLoginEvent;
-import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 
 import java.net.InetAddress;
 import java.util.UUID;
@@ -68,16 +69,24 @@ public class SBukkitAsyncPlayerPreLoginEvent implements SAsyncPlayerPreLoginEven
 
     @Override
     public Component message() {
-        return ComponentObjectLink.processGetter(event, "kickMessage", event::getKickMessage);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            return AdventureBackend.wrapComponent(event.kickMessage());
+        } else {
+            return Component.fromLegacy(event.getKickMessage());
+        }
     }
 
     @Override
     public void message(@NotNull Component message) {
-        ComponentObjectLink.processSetter(event, "kickMessage", event::setKickMessage, message);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            event.kickMessage(message.as(net.kyori.adventure.text.Component.class));
+        } else {
+            event.setKickMessage(message.toLegacy());
+        }
     }
 
     @Override
     public void message(@NotNull ComponentLike message) {
-        message(message.asComponent());
+        message(message.asComponent()); // TODO: auto localize??
     }
 }

@@ -17,12 +17,12 @@
 package org.screamingsandals.lib.item;
 
 import lombok.experimental.UtilityClass;
-import net.kyori.adventure.util.RGBLike;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.item.meta.PotionHolder;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataKey;
+import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 @UtilityClass
@@ -30,7 +30,7 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 public class ItemMeta {
     // Potions
     public static final MetadataKey<PotionHolder> POTION_TYPE = MetadataKey.of("Potion", PotionHolder.class);
-    public static final MetadataKey<RGBLike> CUSTOM_POTION_COLOR = MetadataKey.of("CustomPotionColor", RGBLike.class);
+    public static final MetadataKey<Color> CUSTOM_POTION_COLOR = MetadataKey.of("CustomPotionColor", Color.class);
     public static final MetadataCollectionKey<PotionEffectHolder> CUSTOM_POTION_EFFECTS = MetadataCollectionKey.of("CustomPotionEffects", PotionEffectHolder.class);
 
     // Knowledge Book
@@ -44,7 +44,7 @@ public class ItemMeta {
     public static final MetadataKey<FireworkEffectHolder> FIREWORK_STAR_EFFECT = MetadataKey.of("Explosion", FireworkEffectHolder.class);
 
     // Leather armor
-    public static final MetadataKey<RGBLike> COLOR = MetadataKey.of("display.color", RGBLike.class);
+    public static final MetadataKey<Color> COLOR = MetadataKey.of("display.color", Color.class);
 
     // Skull Owner
     // TODO: Skull Owner is now a Compound Tag, so let's create a SkullHolder ;)

@@ -257,6 +257,15 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
+    public Color hexOrName(String hex) {
+        if (adventureBackend != null) {
+            return adventureBackend.hexOrName(hex);
+        }
+
+        return super.hexOrName(hex);
+    }
+
+    @Override
     public ClickEvent.Builder clickEvent() {
         if (adventureBackend != null) {
             return adventureBackend.clickEvent();

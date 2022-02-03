@@ -135,7 +135,30 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public Color named(String name) {
-        return new BungeeColor(ChatColor.of(name.toLowerCase()));
+        return new BungeeColor(ChatColor.valueOf(name.toUpperCase()));
+    }
+
+    @Override
+    public Color hexOrName(String hexOrName) {
+        try {
+            return new BungeeColor(ChatColor.of(hexOrName.toLowerCase()));
+        } catch (Throwable ignored) {
+        }
+        if (hexOrName.length() == 6) {
+            try {
+                return new BungeeColor(ChatColor.of("#" + hexOrName.toLowerCase()));
+            } catch (Throwable ignored) {
+            }
+        }
+        if (hexOrName.length() == 3) {
+            try {
+                return new BungeeColor(ChatColor.of("#" + hexOrName.charAt(0) + hexOrName.charAt(0)
+                        + hexOrName.charAt(1) + hexOrName.charAt(1)
+                        + hexOrName.charAt(2) + hexOrName.charAt(2)));
+            } catch (Throwable ignored) {
+            }
+        }
+        return null;
     }
 
     @Override

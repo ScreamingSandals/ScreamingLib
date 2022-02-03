@@ -1,5 +1,4 @@
 dependencies {
-    api project(':utils-adventure')
     api project(':nms')
 
     api paperlib()

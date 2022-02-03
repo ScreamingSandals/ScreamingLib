@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.item.builder;
 
 import org.screamingsandals.lib.item.ItemTypeHolder;
-import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.spectator.Component;
 import org.spongepowered.configurate.ConfigurationNode;
 
 import java.util.ArrayList;
@@ -82,8 +82,8 @@ public class ShortStackDeserializer {
         } catch (NumberFormatException ignored) {
         }
         if (name != null && !name.trim().isEmpty()) {
-            builder.displayName(AdventureHelper.toComponent(name.trim()));
+            builder.displayName(Component.fromLegacy(name.trim()));
         }
-        builder.itemLore(lore.stream().map(AdventureHelper::toComponent).collect(Collectors.toList()));
+        builder.itemLore(lore.stream().map(Component::fromLegacy).collect(Collectors.toList()));
     }
 }

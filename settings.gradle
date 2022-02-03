@@ -29,7 +29,7 @@ def registerModule(String name, String... platforms) {
 
 // Shared content
 include 'api-utils'
-registerModule('utils', 'adventure')
+registerModule('utils')
 include 'nms'
 include 'shared-core'
 include 'lang'

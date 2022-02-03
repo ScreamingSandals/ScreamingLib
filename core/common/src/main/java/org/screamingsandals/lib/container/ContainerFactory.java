@@ -16,9 +16,9 @@
 
 package org.screamingsandals.lib.container;
 
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.Optional;

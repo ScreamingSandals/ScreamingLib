@@ -156,4 +156,9 @@ public class BungeeColor extends BasicWrapper<ChatColor> implements Color {
             return 0;
         }
     }
+
+    @Override
+    public String toString() {
+        return wrappedObject.name();
+    }
 }

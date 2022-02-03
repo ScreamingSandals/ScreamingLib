@@ -16,8 +16,8 @@
 
 package org.screamingsandals.lib.firework;
 
-import net.kyori.adventure.util.RGBLike;
 import org.jetbrains.annotations.Contract;
+import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
@@ -29,19 +29,19 @@ public interface FireworkEffectHolder extends ComparableWrapper {
 
     String platformName();
 
-    List<RGBLike> colors();
+    List<Color> colors();
 
-    List<RGBLike> fadeColors();
+    List<Color> fadeColors();
 
     boolean flicker();
 
     boolean trail();
 
     @Contract(value = "_ -> new", pure = true)
-    FireworkEffectHolder withColors(List<RGBLike> colors);
+    FireworkEffectHolder withColors(List<Color> colors);
 
     @Contract(value = "_ -> new", pure = true)
-    FireworkEffectHolder withFadeColors(List<RGBLike> fadeColors);
+    FireworkEffectHolder withFadeColors(List<Color> fadeColors);
 
     @Contract(value = "_ -> new", pure = true)
     FireworkEffectHolder withFlicker(boolean flicker);
@@ -61,7 +61,7 @@ public interface FireworkEffectHolder extends ComparableWrapper {
      * Use fluent variant!
      */
     @Deprecated(forRemoval = true)
-    default List<RGBLike> getColors() {
+    default List<Color> getColors() {
         return colors();
     }
 
@@ -69,7 +69,7 @@ public interface FireworkEffectHolder extends ComparableWrapper {
      * Use fluent variant!
      */
     @Deprecated(forRemoval = true)
-    default List<RGBLike> getFadeColors() {
+    default List<Color> getFadeColors() {
         return fadeColors();
     }
 
@@ -93,7 +93,7 @@ public interface FireworkEffectHolder extends ComparableWrapper {
      * Inconsistent naming (holders use with prefix)
      */
     @Deprecated(forRemoval = true)
-    default FireworkEffectHolder colors(List<RGBLike> colors) {
+    default FireworkEffectHolder colors(List<Color> colors) {
         return withColors(colors);
     }
 
@@ -101,7 +101,7 @@ public interface FireworkEffectHolder extends ComparableWrapper {
      * Inconsistent naming (holders use with prefix)
      */
     @Deprecated(forRemoval = true)
-    default FireworkEffectHolder fadeColors(List<RGBLike> fadeColors) {
+    default FireworkEffectHolder fadeColors(List<Color> fadeColors) {
         return withFadeColors(fadeColors);
     }
 

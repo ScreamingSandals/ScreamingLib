@@ -89,7 +89,7 @@ public interface PlayerAudience extends Audience {
     interface ForwardingToMulti extends PlayerAudience, Audience.ForwardingToMulti {
         @NotNull
         @ApiStatus.OverrideOnly
-        Iterable<PlayerAudience> audiences();
+        Iterable<? extends PlayerAudience> audiences();
 
         @Override
         default void sendActionBar(@NotNull ComponentLike message) {

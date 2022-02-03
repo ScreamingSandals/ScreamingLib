@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.bukkit.world;
 
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -29,10 +28,11 @@ import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.particle.ParticleHolder;
+import org.screamingsandals.lib.spectator.audience.Audience;
+import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapper;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 import org.screamingsandals.lib.world.chunk.ChunkMapper;
@@ -188,7 +188,7 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
 
     @Override
     @NotNull
-    public Iterable<? extends Audience> audiences() {
+    public Iterable<? extends PlayerAudience> audiences() {
         return Server.getConnectedPlayersFromWorld(this);
     }
 }

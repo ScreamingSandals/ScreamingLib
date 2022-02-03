@@ -21,15 +21,16 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerJoinEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.sender.SenderMessage;
-import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
@@ -55,18 +56,27 @@ public class SBukkitPlayerJoinEvent implements SPlayerJoinEvent {
     @Override
     @Nullable
     public Component joinMessage() {
-        return ComponentObjectLink.processGetter(event, "joinMessage", event::getJoinMessage);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            return AdventureBackend.wrapComponent(event.joinMessage());
+        } else {
+            return Component.fromLegacy(event.getJoinMessage());
+        }
     }
 
     @Override
     public void joinMessage(@Nullable Component joinMessage) {
-        ComponentObjectLink.processSetter(event, "joinMessage", event::setJoinMessage, joinMessage);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            event.joinMessage(joinMessage != null ? joinMessage.as(net.kyori.adventure.text.Component.class) : null);
+        } else {
+            event.setJoinMessage(joinMessage != null ? joinMessage.toLegacy() : null);
+        }
     }
 
     @Override
     public void joinMessage(@Nullable ComponentLike joinMessage) {
-        if (joinMessage instanceof SenderMessage) {
-            joinMessage(((SenderMessage) joinMessage).asComponent(player()));
+        if (joinMessage instanceof AudienceComponentLike) {
+            // TODO: there should be another logic, because this message can be seen by more players
+            joinMessage(((AudienceComponentLike) joinMessage).asComponent(player()));
         } else {
             joinMessage(joinMessage != null ? joinMessage.asComponent() : null);
         }
