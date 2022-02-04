@@ -18,7 +18,6 @@ package org.screamingsandals.lib.utils.visual;
 
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
-import org.screamingsandals.lib.utils.AdventureHelper;
 
 /**
  * TextEntry is used to identify certain text if not simply possible.

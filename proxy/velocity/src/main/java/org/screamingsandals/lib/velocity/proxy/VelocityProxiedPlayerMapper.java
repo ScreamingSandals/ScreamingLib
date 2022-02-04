@@ -22,6 +22,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventureAdapter;
 import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventurePlayerAdapter;
@@ -35,7 +36,6 @@ import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
-import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.velocity.proxy.event.ChatEventHandlerFactory;
 import org.screamingsandals.lib.velocity.proxy.event.PlayerLeaveEventFactory;
@@ -108,7 +108,7 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
 
     @Override
     public void sendMessage0(ProxiedSenderWrapper wrapper, String message) {
-        wrapper.as(CommandSource.class).sendMessage(AdventureHelper.toComponent(message));
+        wrapper.as(CommandSource.class).sendMessage(LegacyComponentSerializer.legacySection().deserialize(message));
     }
 
     @Override

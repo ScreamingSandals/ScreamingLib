@@ -22,7 +22,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import org.screamingsandals.lib.spectator.Component;
-import org.screamingsandals.lib.utils.AdventureHelper;
 
 import java.util.Collection;
 

@@ -20,13 +20,17 @@ import lombok.Data;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeClickEvent;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeHoverEvent;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
+import org.screamingsandals.lib.spectator.event.hover.EntityContent;
+import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
@@ -51,6 +55,42 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
+    @NotNull
+    public Component withChildren(@Nullable List<Component> children) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setExtra(children == null ? null : children.stream().map(component -> component.as(BaseComponent.class).duplicate()).collect(Collectors.toList()));
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    @NotNull
+    public Component withAppendix(Component component) {
+        var duplicate = wrappedObject.duplicate();
+        wrappedObject.addExtra(component.as(BaseComponent.class).duplicate());
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    @NotNull
+    public Component withAppendix(Component... components) {
+        var duplicate = wrappedObject.duplicate();
+        for (var component : components) {
+            wrappedObject.addExtra(component.as(BaseComponent.class).duplicate());
+        }
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    @NotNull
+    public Component withAppendix(Collection<Component> components) {
+        var duplicate = wrappedObject.duplicate();
+        for (var component : components) {
+            wrappedObject.addExtra(component.as(BaseComponent.class).duplicate());
+        }
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
     @Nullable
     public Color color() {
         // TODO: should we use getColor() or getColorRaw()? idk, I just want to get the same value I'd get with adventure
@@ -59,6 +99,14 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
             return null;
         }
         return new BungeeColor(color);
+    }
+
+    @Override
+    @NotNull
+    public Component withColor(@Nullable Color color) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setColor(color == null ? null : color.as(ChatColor.class));
+        return AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
@@ -74,9 +122,30 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
+    @NotNull
+    public Component withFont(@Nullable NamespacedMappingKey font) {
+        try {
+            var duplicate = wrappedObject.duplicate();
+            duplicate.setFont(font == null ? null : font.asString());
+            return AbstractBungeeBackend.wrapComponent(duplicate);
+        } catch (Throwable ignored) {
+            // old version basically; or invalid font, thanks bungee for not checking the input
+            return this;
+        }
+    }
+
+    @Override
     public boolean bold() {
         // TODO: should we use isBold() or isBoldRaw()? idk, I just want to get the same value I'd get with adventure
         return Boolean.TRUE == wrappedObject.isBoldRaw();
+    }
+
+    @Override
+    @NotNull
+    public Component withBold(boolean bold) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setBold(bold);
+        return AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
@@ -86,9 +155,25 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
+    @NotNull
+    public Component withItalic(boolean italic) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setItalic(italic);
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
     public boolean underlined() {
         // TODO: should we use isUnderlined() or isUnderlinedRaw()? idk, I just want to get the same value I'd get with adventure
         return Boolean.TRUE == wrappedObject.isUnderlinedRaw();
+    }
+
+    @Override
+    @NotNull
+    public Component withUnderlined(boolean underlined) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setUnderlined(underlined);
+        return AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
@@ -98,15 +183,39 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
+    @NotNull
+    public Component withStrikethrough(boolean strikethrough) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setStrikethrough(strikethrough);
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
     public boolean obfuscated() {
         // TODO: should we use isObfuscated() or isObfuscatedRaw()? idk, I just want to get the same value I'd get with adventure
         return Boolean.TRUE == wrappedObject.isObfuscatedRaw();
     }
 
     @Override
+    @NotNull
+    public Component withObfuscated(boolean obfuscated) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setObfuscated(obfuscated);
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
     @Nullable
     public String insertion() {
         return wrappedObject.getInsertion();
+    }
+
+    @Override
+    @NotNull
+    public Component withObfuscated(@Nullable String insertion) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setInsertion(insertion);
+        return AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
@@ -120,6 +229,38 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
+    @NotNull
+    public Component withHoverEvent(@Nullable HoverEvent hoverEvent) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setHoverEvent(hoverEvent == null ? null : hoverEvent.as(net.md_5.bungee.api.chat.HoverEvent.class));
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    @NotNull
+    public Component withHoverEvent(@Nullable ItemContent itemContent) {
+        return withHoverEvent(itemContent == null ? null : HoverEvent.builder().action(HoverEvent.Action.SHOW_ITEM).content(itemContent).build());
+    }
+
+    @Override
+    @NotNull
+    public Component withHoverEvent(@Nullable EntityContent entityContent) {
+        return withHoverEvent(entityContent == null ? null : HoverEvent.builder().action(HoverEvent.Action.SHOW_ENTITY).content(entityContent).build());
+    }
+
+    @Override
+    @NotNull
+    public Component withHoverEvent(@Nullable Component component) {
+        return withHoverEvent(component == null ? null : HoverEvent.builder().action(HoverEvent.Action.SHOW_TEXT).content(component).build());
+    }
+
+    @Override
+    @NotNull
+    public Component withHoverEvent(@Nullable ComponentLike component) {
+        return withHoverEvent(component == null ? null : HoverEvent.builder().action(HoverEvent.Action.SHOW_TEXT).content(component).build());
+    }
+
+    @Override
     @Nullable
     public ClickEvent clickEvent() {
         var click = wrappedObject.getClickEvent();
@@ -127,6 +268,14 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
             return null;
         }
         return new BungeeClickEvent(click);
+    }
+
+    @Override
+    @NotNull
+    public Component withClickEvent(@Nullable ClickEvent clickEvent) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setClickEvent(clickEvent == null ? null : clickEvent.as(net.md_5.bungee.api.chat.ClickEvent.class));
+        return AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
@@ -165,7 +314,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
 
         @Override
         public B append(Component component) {
-            this.component.addExtra(component.as(BaseComponent.class));
+            this.component.addExtra(component.as(BaseComponent.class).duplicate());
             return self();
         }
 
@@ -234,6 +383,30 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         @Override
         public B hoverEvent(@Nullable HoverEvent event) {
             component.setHoverEvent(event == null ? null : event.as(net.md_5.bungee.api.chat.HoverEvent.class));
+            return self();
+        }
+
+        @Override
+        public B hoverEvent(@Nullable ItemContent itemContent) {
+            hoverEvent(itemContent == null ? null : HoverEvent.builder().action(HoverEvent.Action.SHOW_ITEM).content(itemContent).build());
+            return self();
+        }
+
+        @Override
+        public B hoverEvent(@Nullable EntityContent entityContent) {
+            hoverEvent(entityContent == null ? null : HoverEvent.builder().action(HoverEvent.Action.SHOW_ENTITY).content(entityContent).build());
+            return self();
+        }
+
+        @Override
+        public B hoverEvent(@Nullable ComponentLike component) {
+            hoverEvent(component == null ? null : HoverEvent.builder().action(HoverEvent.Action.SHOW_TEXT).content(component).build());
+            return self();
+        }
+
+        @Override
+        public B hoverEvent(@Nullable Component component) {
+            hoverEvent(component == null ? null : HoverEvent.builder().action(HoverEvent.Action.SHOW_TEXT).content(component).build());
             return self();
         }
 

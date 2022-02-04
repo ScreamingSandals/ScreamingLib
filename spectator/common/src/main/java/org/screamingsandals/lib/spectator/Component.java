@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.spectator.event.hover.Content;
+import org.screamingsandals.lib.spectator.event.hover.EntityContent;
+import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
@@ -94,31 +96,104 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     @Unmodifiable
     List<Component> children();
 
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withChildren(@Nullable List<Component> children);
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withAppendix(Component component);
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withAppendix(Component... components);
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withAppendix(Collection<Component> components);
+
     @Nullable
     Color color();
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withColor(@Nullable Color color);
 
     @LimitedVersionSupport(">= 1.16")
     @Nullable
     NamespacedMappingKey font();
 
+    @NotNull
+    @LimitedVersionSupport(">= 1.16")
+    @Contract(value = "_ -> new", pure = true)
+    Component withFont(@Nullable NamespacedMappingKey font);
+
     boolean bold();
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withBold(boolean bold);
 
     boolean italic();
 
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withItalic(boolean italic);
+
     boolean underlined();
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withUnderlined(boolean underlined);
 
     boolean strikethrough();
 
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withStrikethrough(boolean strikethrough);
+
     boolean obfuscated();
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withObfuscated(boolean obfuscated);
 
     @Nullable
     String insertion();
 
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withObfuscated(@Nullable String insertion);
+
     @Nullable
     HoverEvent hoverEvent();
 
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withHoverEvent(@Nullable HoverEvent hoverEvent);
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withHoverEvent(@Nullable ItemContent itemContent);
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withHoverEvent(@Nullable EntityContent entityContent);
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withHoverEvent(@Nullable Component component);
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withHoverEvent(@Nullable ComponentLike component);
+
     @Nullable
     ClickEvent clickEvent();
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withClickEvent(@Nullable ClickEvent clickEvent);
 
     @Override
     default Component asComponent() {
@@ -181,6 +256,14 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         B insertion(@Nullable String insertion);
 
         B hoverEvent(@Nullable HoverEvent event);
+
+        B hoverEvent(@Nullable ItemContent itemContent);
+
+        B hoverEvent(@Nullable EntityContent entityContent);
+
+        B hoverEvent(@Nullable ComponentLike component);
+
+        B hoverEvent(@Nullable Component component);
 
         B clickEvent(@Nullable ClickEvent event);
 

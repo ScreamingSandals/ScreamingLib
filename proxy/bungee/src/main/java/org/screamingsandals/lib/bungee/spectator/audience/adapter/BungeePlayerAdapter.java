@@ -1,6 +1,7 @@
 package org.screamingsandals.lib.bungee.spectator.audience.adapter;
 
 import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -63,12 +64,12 @@ public class BungeePlayerAdapter extends BungeeAdapter implements PlayerAdapter 
 
     @Override
     public void showTitle(@NotNull Title title) {
-        // TODO
+        title.as(net.md_5.bungee.api.Title.class).send(sender());
     }
 
     @Override
     public void clearTitle() {
-
+        ProxyServer.getInstance().createTitle().clear().send(sender());
     }
 
     @Override
