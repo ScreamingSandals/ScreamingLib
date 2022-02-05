@@ -43,13 +43,6 @@ public @interface ConfigFile {
     String old() default "";
 
     /**
-     * If the annotated field is ConfigurationLoader, should Adventure serializers be included?
-     *
-     * @return should adventure serializers be included
-     */
-    boolean adventureSerializers() default true;
-
-    /**
      * If the annotated field is ConfigurationLoader, should ScreamingLib serializers be included?
      *
      * @return should ScreamingLib serializers be included

@@ -32,6 +32,7 @@ import org.screamingsandals.lib.item.meta.PotionHolder;
 import org.screamingsandals.lib.particle.ParticleTypeHolder;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.spectator.configurate.SpectatorSerializers;
 import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import org.screamingsandals.lib.world.dimension.DimensionHolder;
 import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
@@ -41,8 +42,8 @@ import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 @UtilityClass
 public class SLibSerializers {
     @NotNull
-    public TypeSerializerCollection makeSerializers(TypeSerializerCollection.@NotNull Builder builder) {
-        return builder
+    public TypeSerializerCollection.Builder appendSerializers(TypeSerializerCollection.@NotNull Builder builder) {
+        return SpectatorSerializers.appendSerializers(builder)
                 .register(AttributeTypeHolder.class, AttributeTypeHolderSerializer.INSTANCE)
                 .register(DamageCauseHolder.class, DamageCauseHolderSerializer.INSTANCE)
                 .register(DifficultyHolder.class, DifficultyHolderSerializer.INSTANCE)
@@ -60,7 +61,10 @@ public class SLibSerializers {
                 .register(FireworkEffectHolder.class, FireworkEffectHolderSerializer.INSTANCE)
                 .register(ItemTypeHolder.class, ItemTypeHolderSerializer.INSTANCE)
                 .register(BlockTypeHolder.class, BlockTypeHolderSerializer.INSTANCE)
-                .register(EquipmentSlotHolder.class, EquipmentSlotHolderSerializer.INSTANCE)
-                .build();
+                .register(EquipmentSlotHolder.class, EquipmentSlotHolderSerializer.INSTANCE);
+    }
+    @NotNull
+    public TypeSerializerCollection makeSerializers(TypeSerializerCollection.@NotNull Builder builder) {
+        return appendSerializers(builder).build();
     }
 }

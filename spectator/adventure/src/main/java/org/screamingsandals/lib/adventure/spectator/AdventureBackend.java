@@ -69,6 +69,10 @@ public class AdventureBackend implements SpectatorBackend {
     private static final ComponentSerializer<net.kyori.adventure.text.Component, TextComponent, String> plainTextComponentSerializer;
     @Getter
     private static final Component empty = wrapComponent(net.kyori.adventure.text.Component.empty());
+    @Getter
+    private static final Component newLine = wrapComponent(net.kyori.adventure.text.Component.newline());
+    @Getter
+    private static final Component space = wrapComponent(net.kyori.adventure.text.Component.space());
 
     static {
         ComponentSerializer<net.kyori.adventure.text.Component, TextComponent, String> plainText;
@@ -84,6 +88,16 @@ public class AdventureBackend implements SpectatorBackend {
     @Override
     public Component empty() {
         return empty;
+    }
+
+    @Override
+    public Component newLine() {
+        return newLine;
+    }
+
+    @Override
+    public Component space() {
+        return space;
     }
 
     @Override
@@ -204,7 +218,7 @@ public class AdventureBackend implements SpectatorBackend {
     @Override
     public SoundSource soundSource(String source) {
         var soundSource = Sound.Source.NAMES.value(source);
-        return new AdventureSoundSource(Objects.requireNonNullElse(soundSource, Sound.Source.NEUTRAL));
+        return new AdventureSoundSource(Objects.requireNonNullElse(soundSource, Sound.Source.MASTER));
     }
 
     @Override

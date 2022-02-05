@@ -25,15 +25,10 @@ public abstract class AbstractScreamingSerializer {
 
     @Nullable
     protected Color deserializeColor(ConfigurationNode colorNode) {
-        if (colorNode.isMap()) {
-            return Color.rgb(colorNode.node("red").getInt(colorNode.node("RED").getInt()), colorNode.node("green").getInt(colorNode.node("GREEN").getInt()), colorNode.node("blue").getInt(colorNode.node("BLUE").getInt()));
-        } else {
-            var color = colorNode.getString("");
-            return Color.hexOrName(color);
+        try {
+            return colorNode.get(Color.class);
+        } catch (SerializationException ex) {
+            return Color.WHITE;
         }
-    }
-
-    protected void serializeColor(Color color, ConfigurationNode node) throws SerializationException {
-        node.set(color.toString());
     }
 }

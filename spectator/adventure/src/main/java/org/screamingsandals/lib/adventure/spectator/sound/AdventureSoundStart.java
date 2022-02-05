@@ -52,10 +52,10 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
     }
 
     public static class AdventureSoundStartBuilder implements SoundStart.Builder {
-        private static final SoundSource NEUTRAL = SoundSource.soundSource("neutral");
+        private static final SoundSource MASTER = SoundSource.soundSource("master");
 
         private NamespacedMappingKey key;
-        private SoundSource source = NEUTRAL;
+        private SoundSource source = MASTER;
         private float volume = 1;
         private float pitch = 1;
 

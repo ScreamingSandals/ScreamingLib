@@ -36,6 +36,7 @@ import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.TriState;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
@@ -131,8 +132,8 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public boolean bold() {
-        return wrappedObject.style().hasDecoration(TextDecoration.BOLD);
+    public TriState bold() {
+        return fromAdventure(wrappedObject.style().decoration(TextDecoration.BOLD));
     }
 
     @Override
@@ -142,8 +143,14 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public boolean italic() {
-        return wrappedObject.style().hasDecoration(TextDecoration.ITALIC);
+    @NotNull
+    public Component withBold(TriState bold) {
+        return AdventureBackend.wrapComponent(wrappedObject.decoration(TextDecoration.BOLD, toAdventure(bold)));
+    }
+
+    @Override
+    public TriState italic() {
+        return fromAdventure(wrappedObject.style().decoration(TextDecoration.ITALIC));
     }
 
     @Override
@@ -153,8 +160,14 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public boolean underlined() {
-        return wrappedObject.style().hasDecoration(TextDecoration.UNDERLINED);
+    @NotNull
+    public Component withItalic(TriState italic) {
+        return AdventureBackend.wrapComponent(wrappedObject.decoration(TextDecoration.ITALIC, toAdventure(italic)));
+    }
+
+    @Override
+    public TriState underlined() {
+        return fromAdventure(wrappedObject.style().decoration(TextDecoration.UNDERLINED));
     }
 
     @Override
@@ -164,8 +177,14 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public boolean strikethrough() {
-        return wrappedObject.style().hasDecoration(TextDecoration.STRIKETHROUGH);
+    @NotNull
+    public Component withUnderlined(TriState underlined) {
+        return AdventureBackend.wrapComponent(wrappedObject.decoration(TextDecoration.UNDERLINED, toAdventure(underlined)));
+    }
+
+    @Override
+    public TriState strikethrough() {
+        return fromAdventure(wrappedObject.style().decoration(TextDecoration.STRIKETHROUGH));
     }
 
     @Override
@@ -175,14 +194,26 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public boolean obfuscated() {
-        return wrappedObject.style().hasDecoration(TextDecoration.OBFUSCATED);
+    @NotNull
+    public Component withStrikethrough(TriState strikethrough) {
+        return AdventureBackend.wrapComponent(wrappedObject.decoration(TextDecoration.STRIKETHROUGH, toAdventure(strikethrough)));
+    }
+
+    @Override
+    public TriState obfuscated() {
+        return fromAdventure(wrappedObject.style().decoration(TextDecoration.OBFUSCATED));
     }
 
     @Override
     @NotNull
     public Component withObfuscated(boolean obfuscated) {
         return AdventureBackend.wrapComponent(wrappedObject.decoration(TextDecoration.OBFUSCATED, obfuscated));
+    }
+
+    @Override
+    @NotNull
+    public Component withObfuscated(TriState obfuscated) {
+        return AdventureBackend.wrapComponent(wrappedObject.decoration(TextDecoration.OBFUSCATED, toAdventure(obfuscated)));
     }
 
     @Override
@@ -193,7 +224,7 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
 
     @Override
     @NotNull
-    public Component withObfuscated(@Nullable String insertion) {
+    public Component withInsertion(@Nullable String insertion) {
         return AdventureBackend.wrapComponent(wrappedObject.insertion(insertion));
     }
 
@@ -321,8 +352,20 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
         }
 
         @Override
+        public B bold(TriState bold) {
+            builder.decoration(TextDecoration.BOLD, toAdventure(bold));
+            return self();
+        }
+
+        @Override
         public B italic(boolean italic) {
             builder.decoration(TextDecoration.ITALIC, italic);
+            return self();
+        }
+
+        @Override
+        public B italic(TriState italic) {
+            builder.decoration(TextDecoration.ITALIC, toAdventure(italic));
             return self();
         }
 
@@ -333,14 +376,32 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
         }
 
         @Override
+        public B underlined(TriState underlined) {
+            builder.decoration(TextDecoration.UNDERLINED, toAdventure(underlined));
+            return self();
+        }
+
+        @Override
         public B strikethrough(boolean strikethrough) {
             builder.decoration(TextDecoration.STRIKETHROUGH, strikethrough);
-            return null;
+            return self();
+        }
+
+        @Override
+        public B strikethrough(TriState strikethrough) {
+            builder.decoration(TextDecoration.STRIKETHROUGH, toAdventure(strikethrough));
+            return self();
         }
 
         @Override
         public B obfuscated(boolean obfuscated) {
             builder.decoration(TextDecoration.OBFUSCATED, obfuscated);
+            return self();
+        }
+
+        @Override
+        public B obfuscated(TriState obfuscated) {
+            builder.decoration(TextDecoration.OBFUSCATED, toAdventure(obfuscated));
             return self();
         }
 
@@ -392,6 +453,28 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
         @Override
         public C build() {
             return (C) AdventureBackend.wrapComponent(builder.build());
+        }
+    }
+
+    private static TriState fromAdventure(TextDecoration.State state) {
+        switch (state) {
+            case TRUE:
+                return TriState.TRUE;
+            case FALSE:
+                return TriState.FALSE;
+            default:
+                return TriState.INITIAL;
+        }
+    }
+
+    private static TextDecoration.State toAdventure(TriState state) {
+        switch (state) {
+            case TRUE:
+                return TextDecoration.State.TRUE;
+            case FALSE:
+                return TextDecoration.State.FALSE;
+            default:
+                return TextDecoration.State.NOT_SET;
         }
     }
 }

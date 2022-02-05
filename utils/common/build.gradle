@@ -11,13 +11,8 @@ dependencies {
     compileOnly 'org.slf4j:slf4j-api:' + SLF4J_VERSION
 
     api project(':api-utils')
-    api 'org.screamingsandals:adventure-platform-api:' + ADVENTURE_PLATFORM_VERSION
     api 'org.spongepowered:configurate-core:' + CONFIGURATE_VERSION
     api 'org.spongepowered:configurate-gson:' + CONFIGURATE_VERSION
-    api 'net.kyori:adventure-text-serializer-legacy:' + ADVENTURE_VERSION
-    api 'net.kyori:adventure-text-serializer-plain:' + ADVENTURE_VERSION
-    api 'net.kyori:adventure-text-serializer-gson:' + ADVENTURE_VERSION
-    api 'net.kyori:adventure-serializer-configurate4:' + ADVENTURE_VERSION
     api 'com.iamceph.resulter:resulter-core:' + RESULTER_VERSION
 }
 

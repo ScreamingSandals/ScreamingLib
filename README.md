@@ -11,14 +11,14 @@ ScreamingLib is a multiplatform library for creating Minecraft plugins.
 * [NPC](npc/README.md)
 * [Packet library for Minecraft: Java Edition](packets/README.md)
 * [Placeholders](placeholders/README.md)
-* [Cloud Command Framework support](command/README.md)
+* [Cloud Command Framework support](IdeaProjects/ScreamingLib/cloud/README.md)
 * [Scoreboards and Sidebars](sidebar/README.md)
 * [Clickable Signs](signs/README.md)
 
 ### Modules for proxy
 * [Base module](proxy/README.md)
 * [Lang](lang/README.md)
-* [Cloud Command Framework support](command/README.md)
+* [Cloud Command Framework support](IdeaProjects/ScreamingLib/cloud/README.md)
 
 ## Compiling
 

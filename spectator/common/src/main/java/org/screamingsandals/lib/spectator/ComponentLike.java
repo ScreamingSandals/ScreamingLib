@@ -19,11 +19,21 @@ package org.screamingsandals.lib.spectator;
 import org.screamingsandals.lib.spectator.event.hover.Content;
 import org.screamingsandals.lib.spectator.event.hover.ContentLike;
 
-public interface ComponentLike extends ContentLike {
+public interface ComponentLike extends ContentLike, ComponentBuilderApplicable {
     Component asComponent();
 
     @Override
     default Content asContent() {
         return asComponent();
+    }
+
+    @Override
+    default <C extends Component, B extends Component.Builder<B, C>> void apply(B builder) {
+        builder.append(this.asComponent());
+    }
+
+    @Override
+    default Component applyTo(Component component) {
+        return component.withAppendix(this.asComponent());
     }
 }

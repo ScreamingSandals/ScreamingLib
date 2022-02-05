@@ -50,5 +50,5 @@ registerModule('visuals-api', 'bukkit') //TODO: add others
 registerModule('signs', 'bukkit') //TODO: add others
 registerModule('placeholders', 'bukkit') //TODO: add others
 registerModule('packets', 'vanilla', 'bukkit') //TODO: add others
-registerModule('command', 'bukkit', /*'minestom' , 'sponge',*/ 'bungee', 'velocity')
+registerModule('cloud', 'bukkit', /*'minestom' , 'sponge',*/ 'bungee', 'velocity', 'extras')
 

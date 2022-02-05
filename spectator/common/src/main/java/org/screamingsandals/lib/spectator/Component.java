@@ -22,10 +22,10 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
-import org.screamingsandals.lib.spectator.event.hover.Content;
-import org.screamingsandals.lib.spectator.event.hover.EntityContent;
-import org.screamingsandals.lib.spectator.event.hover.ItemContent;
+import org.screamingsandals.lib.spectator.event.hover.*;
+import org.screamingsandals.lib.spectator.utils.ComponentUtils;
 import org.screamingsandals.lib.utils.RawValueHolder;
+import org.screamingsandals.lib.utils.TriState;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -37,6 +37,14 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
     static Component empty() {
         return Spectator.getBackend().empty();
+    }
+
+    static Component newLine() {
+        return Spectator.getBackend().newLine();
+    }
+
+    static Component space() {
+        return Spectator.getBackend().space();
     }
 
     @NotNull
@@ -89,6 +97,10 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return Spectator.getBackend().text().content(text).build();
     }
 
+    static TextComponent text(String text, Color color) {
+        return Spectator.getBackend().text().content(text).color(color).build();
+    }
+
     static TranslatableComponent.Builder translatable() {
         return Spectator.getBackend().translatable();
     }
@@ -116,8 +128,18 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     Color color();
 
     @NotNull
-    @Contract(value = "_ -> new", pure = true)
+    @Contract(pure = true)
     Component withColor(@Nullable Color color);
+
+
+    @NotNull
+    @Contract(pure = true)
+    default Component withColorIfAbsent(@Nullable Color color) {
+        if (color() == null) {
+            return withColor(color);
+        }
+        return this;
+    }
 
     @LimitedVersionSupport(">= 1.16")
     @Nullable
@@ -125,74 +147,106 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
     @NotNull
     @LimitedVersionSupport(">= 1.16")
-    @Contract(value = "_ -> new", pure = true)
+    @Contract(pure = true)
     Component withFont(@Nullable NamespacedMappingKey font);
 
-    boolean bold();
+    TriState bold();
 
     @NotNull
-    @Contract(value = "_ -> new", pure = true)
+    @Contract(pure = true)
     Component withBold(boolean bold);
 
-    boolean italic();
+    @NotNull
+    @Contract(pure = true)
+    Component withBold(TriState bold);
+
+    TriState italic();
 
     @NotNull
-    @Contract(value = "_ -> new", pure = true)
+    @Contract( pure = true)
     Component withItalic(boolean italic);
 
-    boolean underlined();
+    @NotNull
+    @Contract( pure = true)
+    Component withItalic(TriState italic);
+
+    TriState underlined();
 
     @NotNull
-    @Contract(value = "_ -> new", pure = true)
+    @Contract(pure = true)
     Component withUnderlined(boolean underlined);
 
-    boolean strikethrough();
+    @NotNull
+    @Contract(pure = true)
+    Component withUnderlined(TriState underlined);
+
+    TriState strikethrough();
 
     @NotNull
-    @Contract(value = "_ -> new", pure = true)
+    @Contract(pure = true)
     Component withStrikethrough(boolean strikethrough);
 
-    boolean obfuscated();
+    @NotNull
+    @Contract(pure = true)
+    Component withStrikethrough(TriState strikethrough);
+
+    TriState obfuscated();
 
     @NotNull
-    @Contract(value = "_ -> new", pure = true)
+    @Contract(pure = true)
     Component withObfuscated(boolean obfuscated);
+
+    @NotNull
+    @Contract(pure = true)
+    Component withObfuscated(TriState obfuscated);
 
     @Nullable
     String insertion();
 
     @NotNull
-    @Contract(value = "_ -> new", pure = true)
-    Component withObfuscated(@Nullable String insertion);
+    @Contract(pure = true)
+    Component withInsertion(@Nullable String insertion);
 
     @Nullable
     HoverEvent hoverEvent();
 
     @NotNull
-    @Contract(value = "_ -> new", pure = true)
+    @Contract(pure = true)
     Component withHoverEvent(@Nullable HoverEvent hoverEvent);
 
     @NotNull
-    @Contract(value = "_ -> new", pure = true)
+    @Contract(pure = true)
     Component withHoverEvent(@Nullable ItemContent itemContent);
 
     @NotNull
-    @Contract(value = "_ -> new", pure = true)
+    @Contract(pure = true)
+    default Component withHoverEvent(@Nullable ItemContentLike itemContent) {
+        return withHoverEvent(itemContent == null ? null : itemContent.asItemContent());
+    }
+
+    @NotNull
+    @Contract(pure = true)
     Component withHoverEvent(@Nullable EntityContent entityContent);
 
     @NotNull
-    @Contract(value = "_ -> new", pure = true)
+    @Contract(pure = true)
+    default Component withHoverEvent(@Nullable EntityContentLike entityContent) {
+        return withHoverEvent(entityContent == null ? null : entityContent.asEntityContent());
+    }
+
+    @NotNull
+    @Contract(pure = true)
     Component withHoverEvent(@Nullable Component component);
 
     @NotNull
-    @Contract(value = "_ -> new", pure = true)
+    @Contract(pure = true)
     Component withHoverEvent(@Nullable ComponentLike component);
 
     @Nullable
     ClickEvent clickEvent();
 
     @NotNull
-    @Contract(value = "_ -> new", pure = true)
+    @Contract(pure = true)
     Component withClickEvent(@Nullable ClickEvent clickEvent);
 
     @Override
@@ -205,6 +259,27 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return this;
     }
 
+    @NotNull
+    @Contract(pure = true)
+    default Component repeat(int repetitions) {
+        return ComponentUtils.repeat(this, repetitions, null);
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    default Component repeat(int repetitions, @Nullable Component separator) {
+        return ComponentUtils.repeat(this, repetitions, separator);
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    default Component linear(@NotNull ComponentBuilderApplicable @NotNull... applicables) {
+        var newArr = new ComponentBuilderApplicable[applicables.length + 1];
+        newArr[0] = this;
+        System.arraycopy(applicables, 0, newArr, 1, applicables.length);
+        return ComponentUtils.linear(newArr);
+    }
+
     String toLegacy();
 
     String toPlainText();
@@ -213,6 +288,10 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
     interface Builder<B extends Builder<B, C>, C extends Component> extends ComponentLike {
         B color(Color color);
+
+        default B append(String text) {
+            return append(Component.text(text));
+        }
 
         B append(Component component);
 
@@ -229,11 +308,15 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
         B bold(boolean bold);
 
+        B bold(TriState bold);
+
         default B italic() {
             return italic(true);
         }
 
         B italic(boolean italic);
+
+        B italic(TriState italic);
 
         default B underlined() {
             return underlined(true);
@@ -241,15 +324,21 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
         B underlined(boolean underlined);
 
+        B underlined(TriState underlined);
+
         default B strikethrough() {
             return strikethrough(true);
         }
 
         B strikethrough(boolean strikethrough);
 
+        B strikethrough(TriState strikethrough);
+
         default B obfuscated() {
             return obfuscated(true);
         }
+
+        B obfuscated(TriState obfuscated);
 
         B obfuscated(boolean obfuscated);
 

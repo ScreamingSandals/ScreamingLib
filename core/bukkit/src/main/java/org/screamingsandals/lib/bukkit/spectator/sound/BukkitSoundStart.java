@@ -52,7 +52,7 @@ public class BukkitSoundStart implements SoundStart {
     @Setter
     public static class BukkitSoundStartBuilder implements SoundStart.Builder {
         private NamespacedMappingKey soundKey;
-        private SoundSource source;
+        private SoundSource source = SoundSource.soundSource("master");
         private float volume = 1;
         private float pitch = 1;
 

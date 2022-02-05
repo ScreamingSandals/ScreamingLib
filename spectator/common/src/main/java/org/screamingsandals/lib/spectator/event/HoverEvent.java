@@ -16,9 +16,10 @@
 
 package org.screamingsandals.lib.spectator.event;
 
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.Spectator;
-import org.screamingsandals.lib.spectator.event.hover.Content;
-import org.screamingsandals.lib.spectator.event.hover.ContentLike;
+import org.screamingsandals.lib.spectator.event.hover.*;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
@@ -26,6 +27,30 @@ public interface HoverEvent extends Wrapper, RawValueHolder {
 
     static HoverEvent.Builder builder() {
         return Spectator.getBackend().hoverEvent();
+    }
+
+    static HoverEvent showText(Component text) {
+        return Spectator.getBackend().hoverEvent().action(Action.SHOW_TEXT).content(text).build();
+    }
+
+    static HoverEvent showText(ComponentLike text) {
+        return Spectator.getBackend().hoverEvent().action(Action.SHOW_TEXT).content(text).build();
+    }
+
+    static HoverEvent showItem(ItemContent itemContent) {
+        return Spectator.getBackend().hoverEvent().action(Action.SHOW_ITEM).content(itemContent).build();
+    }
+
+    static HoverEvent showItem(ItemContentLike itemContent) {
+        return Spectator.getBackend().hoverEvent().action(Action.SHOW_ITEM).content(itemContent).build();
+    }
+
+    static HoverEvent showEntity(EntityContent itemContent) {
+        return Spectator.getBackend().hoverEvent().action(Action.SHOW_ENTITY).content(itemContent).build();
+    }
+
+    static HoverEvent showEntity(EntityContentLike itemContent) {
+        return Spectator.getBackend().hoverEvent().action(Action.SHOW_ENTITY).content(itemContent).build();
     }
 
     Action action();

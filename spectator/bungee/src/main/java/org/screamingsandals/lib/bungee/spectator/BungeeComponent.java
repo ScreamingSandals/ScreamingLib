@@ -32,6 +32,7 @@ import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.TriState;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Collection;
@@ -135,9 +136,8 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public boolean bold() {
-        // TODO: should we use isBold() or isBoldRaw()? idk, I just want to get the same value I'd get with adventure
-        return Boolean.TRUE == wrappedObject.isBoldRaw();
+    public TriState bold() {
+        return TriState.fromBoolean(wrappedObject.isBoldRaw());
     }
 
     @Override
@@ -149,9 +149,16 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public boolean italic() {
-        // TODO: should we use isItalic() or isItalicRaw()? idk, I just want to get the same value I'd get with adventure
-        return Boolean.TRUE == wrappedObject.isItalicRaw();
+    @NotNull
+    public Component withBold(TriState bold) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setBold(bold.toBoxedBoolean());
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    public TriState italic() {
+        return TriState.fromBoolean(Boolean.TRUE == wrappedObject.isItalicRaw());
     }
 
     @Override
@@ -163,9 +170,16 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public boolean underlined() {
-        // TODO: should we use isUnderlined() or isUnderlinedRaw()? idk, I just want to get the same value I'd get with adventure
-        return Boolean.TRUE == wrappedObject.isUnderlinedRaw();
+    @NotNull
+    public Component withItalic(TriState italic) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setItalic(italic.toBoxedBoolean());
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    public TriState underlined() {
+        return TriState.fromBoolean(wrappedObject.isUnderlinedRaw());
     }
 
     @Override
@@ -177,9 +191,16 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public boolean strikethrough() {
-        // TODO: should we use isStrikethrough() or isStrikethroughRaw()? idk, I just want to get the same value I'd get with adventure
-        return Boolean.TRUE == wrappedObject.isStrikethroughRaw();
+    @NotNull
+    public Component withUnderlined(TriState underlined) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setUnderlined(underlined.toBoxedBoolean());
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    public TriState strikethrough() {
+        return TriState.fromBoolean(wrappedObject.isStrikethroughRaw());
     }
 
     @Override
@@ -191,9 +212,17 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public boolean obfuscated() {
+    @NotNull
+    public Component withStrikethrough(TriState strikethrough) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setStrikethrough(strikethrough.toBoxedBoolean());
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    public TriState obfuscated() {
         // TODO: should we use isObfuscated() or isObfuscatedRaw()? idk, I just want to get the same value I'd get with adventure
-        return Boolean.TRUE == wrappedObject.isObfuscatedRaw();
+        return TriState.fromBoolean(wrappedObject.isObfuscatedRaw());
     }
 
     @Override
@@ -205,6 +234,14 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
+    @NotNull
+    public Component withObfuscated(TriState obfuscated) {
+        var duplicate = wrappedObject.duplicate();
+        duplicate.setObfuscated(obfuscated.toBoxedBoolean());
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
     @Nullable
     public String insertion() {
         return wrappedObject.getInsertion();
@@ -212,7 +249,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
 
     @Override
     @NotNull
-    public Component withObfuscated(@Nullable String insertion) {
+    public Component withInsertion(@Nullable String insertion) {
         var duplicate = wrappedObject.duplicate();
         duplicate.setInsertion(insertion);
         return AbstractBungeeBackend.wrapComponent(duplicate);
@@ -351,8 +388,20 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         }
 
         @Override
+        public B bold(TriState bold) {
+            component.setBold(bold.toBoxedBoolean());
+            return self();
+        }
+
+        @Override
         public B italic(boolean italic) {
             component.setItalic(italic);
+            return self();
+        }
+
+        @Override
+        public B italic(TriState italic) {
+            component.setItalic(italic.toBoxedBoolean());
             return self();
         }
 
@@ -363,8 +412,26 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         }
 
         @Override
+        public B underlined(TriState underlined) {
+            component.setUnderlined(underlined.toBoxedBoolean());
+            return self();
+        }
+
+        @Override
         public B strikethrough(boolean strikethrough) {
             component.setStrikethrough(strikethrough);
+            return self();
+        }
+
+        @Override
+        public B strikethrough(TriState strikethrough) {
+            component.setStrikethrough(strikethrough.toBoxedBoolean());
+            return self();
+        }
+
+        @Override
+        public B obfuscated(TriState obfuscated) {
+            component.setObfuscated(obfuscated.toBoxedBoolean());
             return self();
         }
 

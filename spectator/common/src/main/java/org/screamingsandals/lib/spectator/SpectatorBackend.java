@@ -31,6 +31,10 @@ import org.screamingsandals.lib.spectator.title.Title;
 public interface SpectatorBackend {
     Component empty();
 
+    Component newLine();
+
+    Component space();
+
     Component fromLegacy(String legacy);
 
     Component fromLegacy(String legacy, char colorChar);

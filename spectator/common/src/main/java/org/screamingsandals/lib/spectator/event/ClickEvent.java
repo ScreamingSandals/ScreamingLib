@@ -32,6 +32,43 @@ public interface ClickEvent extends Wrapper, RawValueHolder {
     }
 
     @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    @LimitedVersionSupport(">= 1.15")
+    static ClickEvent copyToClipboard(String value) {
+        return Spectator.getBackend().clickEvent().action(Action.COPY_TO_CLIPBOARD).value(value).build();
+    }
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    static ClickEvent openUrl(String value) {
+        return Spectator.getBackend().clickEvent().action(Action.OPEN_URL).value(value).build();
+    }
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    static ClickEvent openFile(String value) {
+        return Spectator.getBackend().clickEvent().action(Action.OPEN_FILE).value(value).build();
+    }
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    static ClickEvent runCommand(String value) {
+        return Spectator.getBackend().clickEvent().action(Action.RUN_COMMAND).value(value).build();
+    }
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    static ClickEvent suggestCommand(String value) {
+        return Spectator.getBackend().clickEvent().action(Action.SUGGEST_COMMAND).value(value).build();
+    }
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    static ClickEvent changePage(String value) {
+        return Spectator.getBackend().clickEvent().action(Action.CHANGE_PAGE).value(value).build();
+    }
+
+    @NotNull
     Action action();
 
     @NotNull

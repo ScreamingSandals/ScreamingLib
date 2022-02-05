@@ -44,10 +44,22 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     @Getter
     // We can't use NoArgsConstructor because it's too new
     private static final Component empty = wrapComponent(new TextComponent(""));
+    private static final Component newLine = wrapComponent(new TextComponent("\n"));
+    private static final Component space = wrapComponent(new TextComponent(" "));
 
     @Override
     public Component empty() {
         return empty;
+    }
+
+    @Override
+    public Component newLine() {
+        return newLine;
+    }
+
+    @Override
+    public Component space() {
+        return space;
     }
 
     @Override

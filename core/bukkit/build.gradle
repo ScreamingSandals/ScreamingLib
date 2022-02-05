@@ -2,7 +2,6 @@ dependencies {
     api project(':nms')
 
     api paperlib()
-    api 'org.screamingsandals:adventure-platform-bukkit:' + ADVENTURE_PLATFORM_VERSION
     api project(':spectator-adventure')
     api project(':spectator-bungee')
 
