@@ -16,7 +16,7 @@
 
 package org.screamingsandals.lib.spectator.configurate;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -27,6 +27,8 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class SoundStartSerializer implements TypeSerializer<SoundStart> {
+    public static final SoundStartSerializer INSTANCE = new SoundStartSerializer();
+
     private static final String NAME_KEY = "name";
     private static final String SOURCE_KEY = "source";
     private static final String PITCH_KEY = "pitch";

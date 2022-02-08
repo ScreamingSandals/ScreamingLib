@@ -16,7 +16,7 @@
 
 package org.screamingsandals.lib.spectator.configurate;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Color;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -25,6 +25,8 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class ColorSerializer implements TypeSerializer<Color> {
+    public static final ColorSerializer INSTANCE = new ColorSerializer();
+
     private final String RED_KEY = "red";
     private final String RED_KEY_LEGACY_BUKKIT = "RED";
     private final String GREEN_KEY = "green";

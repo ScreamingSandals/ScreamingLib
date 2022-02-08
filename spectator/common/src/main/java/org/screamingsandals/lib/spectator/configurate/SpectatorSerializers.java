@@ -18,9 +18,14 @@ package org.screamingsandals.lib.spectator.configurate;
 
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.Color;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.event.hover.EntityContent;
+import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
+import org.screamingsandals.lib.spectator.title.Title;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
 @UtilityClass
@@ -28,9 +33,15 @@ public class SpectatorSerializers {
     @NotNull
     public TypeSerializerCollection.Builder appendSerializers(TypeSerializerCollection.@NotNull Builder builder) {
         return builder
-                .register(SoundStart.class, new SoundStartSerializer())
-                .register(SoundStop.class, new SoundStopSerializer())
-                .register(Color.class, new ColorSerializer());
+                .register(DurationSerializer.INSTANCE)
+                .register(SoundStart.class, SoundStartSerializer.INSTANCE)
+                .register(SoundStop.class, SoundStopSerializer.INSTANCE)
+                .register(Color.class, ColorSerializer.INSTANCE)
+                .register(EntityContent.class, EntityContentSerializer.INSTANCE)
+                .register(ItemContent.class, ItemContentSerializer.INSTANCE)
+                .register(Component.class, ComponentSerializer.INSTANCE)
+                .register(Title.class, TitleSerializer.INSTANCE)
+                .register(Book.class, BookSerializer.INSTANCE);
     }
 
     @NotNull

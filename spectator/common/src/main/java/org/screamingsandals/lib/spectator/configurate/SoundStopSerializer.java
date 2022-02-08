@@ -16,7 +16,7 @@
 
 package org.screamingsandals.lib.spectator.configurate;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -27,6 +27,8 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class SoundStopSerializer implements TypeSerializer<SoundStop> {
+    public static final SoundStopSerializer INSTANCE = new SoundStopSerializer();
+
     private static final String SOUND_KEY = "sound";
     private static final String SOURCE_KEY = "source";
 
