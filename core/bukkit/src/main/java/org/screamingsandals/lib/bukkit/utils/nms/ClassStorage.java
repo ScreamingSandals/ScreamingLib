@@ -146,7 +146,7 @@ public class ClassStorage {
 	}
 
 	public static Object asMinecraftComponent(Component component) {
-		return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), (Object) component.toJson());
+		return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), (Object) component.toJavaJson());
 	}
 
 	public static Object stackAsNMS(ItemStack item) {

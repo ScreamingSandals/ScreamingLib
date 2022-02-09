@@ -291,7 +291,7 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public String toJson() {
+    public String toJavaJson() {
         return AdventureBackend.getGsonComponentSerializer().serialize(wrappedObject);
     }
 

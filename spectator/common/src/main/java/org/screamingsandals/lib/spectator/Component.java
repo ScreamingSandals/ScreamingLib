@@ -61,7 +61,7 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
     @NotNull
     @Contract(value = "_ -> new", pure = true)
-    static Component fromJson(@Nullable String json) {
+    static Component fromJavaJson(@Nullable String json) {
         return Spectator.getBackend().fromJson(json);
     }
 
@@ -284,7 +284,7 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
     String toPlainText();
 
-    String toJson();
+    String toJavaJson();
 
     interface Builder<B extends Builder<B, C>, C extends Component> extends ComponentLike {
         B color(Color color);

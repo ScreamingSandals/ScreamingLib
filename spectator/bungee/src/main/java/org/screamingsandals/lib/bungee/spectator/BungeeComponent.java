@@ -326,7 +326,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public String toJson() {
+    public String toJavaJson() {
         return ComponentSerializer.toString(wrappedObject);
     }
 

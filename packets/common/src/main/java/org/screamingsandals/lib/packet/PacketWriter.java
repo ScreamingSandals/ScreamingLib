@@ -92,7 +92,7 @@ public abstract class PacketWriter extends OutputStream {
      * @param component the component to serialize
      */
     public void writeComponent(Component component) {
-        writeSizedString(component == null ? "{\"text\":\"\"}" : component.toJson());
+        writeSizedString(component == null ? "{\"text\":\"\"}" : component.toJavaJson());
     }
 
     /**

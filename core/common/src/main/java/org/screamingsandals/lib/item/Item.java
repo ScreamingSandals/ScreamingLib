@@ -177,13 +177,13 @@ public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, C
 
         final var displayName = getDisplayName();
         if (displayName != null) {
-            builder.setDisplayName(displayName.toJson());
+            builder.setDisplayName(displayName.toJavaJson());
         }
 
         final var lore = getLore();
         if (lore != null) {
             builder.addAllLore(lore.stream()
-                    .map(Component::toJson)
+                    .map(Component::toJavaJson)
                     .collect(Collectors.toList()));
         }
 

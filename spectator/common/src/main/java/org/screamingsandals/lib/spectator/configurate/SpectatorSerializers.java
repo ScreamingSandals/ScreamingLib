@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.event.ClickEvent;
+import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
@@ -39,6 +41,8 @@ public class SpectatorSerializers {
                 .register(Color.class, ColorSerializer.INSTANCE)
                 .register(EntityContent.class, EntityContentSerializer.INSTANCE)
                 .register(ItemContent.class, ItemContentSerializer.INSTANCE)
+                .register(HoverEvent.class, HoverEventSerializer.INSTANCE)
+                .register(ClickEvent.class, ClickEventSerializer.INSTANCE)
                 .register(Component.class, ComponentSerializer.INSTANCE)
                 .register(Title.class, TitleSerializer.INSTANCE)
                 .register(Book.class, BookSerializer.INSTANCE);
