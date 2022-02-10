@@ -16,14 +16,39 @@
 
 package org.screamingsandals.lib.spectator;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public interface SelectorComponent extends SeparableComponent {
+    @Contract(value = "-> new", pure = true)
+    @NotNull
     static SelectorComponent.Builder builder() {
         return Spectator.getBackend().selector();
     }
 
+    @NotNull
     String pattern();
 
+    @Contract(pure = true)
+    @NotNull
+    SelectorComponent withPattern(String pattern);
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull
+    SelectorComponent.Builder toBuilder();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Contract(pure = true)
+    @NotNull
+    SelectorComponent withSeparator(@Nullable Component separator);
+
     interface Builder extends SeparableComponent.Builder<Builder, SelectorComponent> {
-        Builder pattern(String pattern);
+        @Contract("_ -> this")
+        @NotNull
+        Builder pattern(@NotNull String pattern);
     }
 }

@@ -16,23 +16,52 @@
 
 package org.screamingsandals.lib.spectator;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Collection;
 import java.util.List;
 
 public interface TranslatableComponent extends Component {
+    @Contract(value = "-> new", pure = true)
+    @NotNull
     static TranslatableComponent.Builder builder() {
         return Spectator.getBackend().translatable();
     }
 
+    @NotNull
     String translate();
 
+    @Contract(pure = true)
+    @NotNull
+    TranslatableComponent withTranslate(@NotNull String translate);
+
+    @NotNull
     List<Component> args();
 
+    @Contract(pure = true)
+    @NotNull
+    TranslatableComponent withArgs(@NotNull Component @NotNull...components);
+
+    @Contract(pure = true)
+    @NotNull
+    TranslatableComponent withArgs(@NotNull Collection<Component> components);
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull
+    TranslatableComponent.Builder toBuilder();
+
     interface Builder extends Component.Builder<Builder, TranslatableComponent> {
-        Builder translate(String translate);
+        @Contract("_ -> this")
+        @NotNull
+        Builder translate(@NotNull String translate);
 
-        Builder args(Component...components);
+        @Contract("_ -> this")
+        @NotNull
+        Builder args(@NotNull Component @NotNull...components);
 
-        Builder args(Collection<Component> components);
+        @Contract("_ -> this")
+        @NotNull
+        Builder args(@NotNull Collection<Component> components);
     }
 }

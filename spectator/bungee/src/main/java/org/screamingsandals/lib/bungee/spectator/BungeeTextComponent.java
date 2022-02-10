@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bungee.spectator;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.TextComponent;
 
 public class BungeeTextComponent extends BungeeComponent implements TextComponent {
@@ -24,8 +25,24 @@ public class BungeeTextComponent extends BungeeComponent implements TextComponen
     }
 
     @Override
+    @NotNull
     public String content() {
         return ((net.md_5.bungee.api.chat.TextComponent) wrappedObject).getText();
+    }
+
+    @Override
+    @NotNull
+    public TextComponent withContent(@NotNull String content) {
+        var duplicate = (net.md_5.bungee.api.chat.TextComponent) wrappedObject.duplicate();
+        duplicate.setText(content);
+        return (TextComponent) AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    @NotNull
+    public TextComponent.Builder toBuilder() {
+        var duplicate = (net.md_5.bungee.api.chat.TextComponent) wrappedObject.duplicate();
+        return new BungeeTextBuilder(duplicate);
     }
 
     public static class BungeeTextBuilder extends BungeeComponent.BungeeBuilder<
@@ -39,7 +56,8 @@ public class BungeeTextComponent extends BungeeComponent implements TextComponen
         }
 
         @Override
-        public TextComponent.Builder content(String content) {
+        @NotNull
+        public TextComponent.Builder content(@NotNull String content) {
             component.setText(content);
             return self();
         }

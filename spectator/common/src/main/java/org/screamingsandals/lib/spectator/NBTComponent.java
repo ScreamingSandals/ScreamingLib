@@ -16,21 +16,47 @@
 
 package org.screamingsandals.lib.spectator;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 @LimitedVersionSupport(">= 1.14")
 public interface NBTComponent extends SeparableComponent {
+    @NotNull
     String nbtPath();
+
+    @Contract(pure = true)
+    @NotNull
+    NBTComponent withNbtPath(@NotNull String nbtPath);
 
     boolean interpret();
 
-    interface Builder<B extends Builder<B, C>, C extends NBTComponent> extends SeparableComponent.Builder<B, C> {
-        B nbtPath(String nbtPath);
+    @Contract(pure = true)
+    @NotNull
+    NBTComponent withInterpret(boolean interpret);
 
+    /**
+     * {@inheritDoc}
+     */
+    @Contract(pure = true)
+    @Override
+    @NotNull
+    NBTComponent withSeparator(@Nullable Component separator);
+
+    interface Builder<B extends Builder<B, C>, C extends NBTComponent> extends SeparableComponent.Builder<B, C> {
+        @Contract("_ -> this")
+        @NotNull
+        B nbtPath(@NotNull String nbtPath);
+
+        @Contract("-> this")
+        @NotNull
         default B interpret() {
             return interpret(true);
         }
 
+        @Contract("_ -> this")
+        @NotNull
         B interpret(boolean interpret);
     }
 }

@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.adventure.spectator;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.TextComponent;
 
 public class AdventureTextComponent extends AdventureComponent implements TextComponent {
@@ -24,8 +25,21 @@ public class AdventureTextComponent extends AdventureComponent implements TextCo
     }
 
     @Override
+    @NotNull
     public String content() {
-        return ((TextComponent) wrappedObject).content();
+        return ((net.kyori.adventure.text.TextComponent) wrappedObject).content();
+    }
+
+    @Override
+    @NotNull
+    public TextComponent withContent(@NotNull String content) {
+        return (TextComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.TextComponent) wrappedObject).content(content));
+    }
+
+    @Override
+    @NotNull
+    public TextComponent.Builder toBuilder() {
+        return new AdventureTextBuilder(((net.kyori.adventure.text.TextComponent) wrappedObject).toBuilder());
     }
 
     public static class AdventureTextBuilder extends AdventureBuilder<
@@ -40,7 +54,8 @@ public class AdventureTextComponent extends AdventureComponent implements TextCo
         }
 
         @Override
-        public TextComponent.Builder content(String content) {
+        @NotNull
+        public TextComponent.Builder content(@NotNull String content) {
             getBuilder().content(content);
             return self();
         }

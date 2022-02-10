@@ -16,18 +16,58 @@
 
 package org.screamingsandals.lib.spectator;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 @LimitedVersionSupport(">= 1.15")
 public interface StorageNBTComponent extends NBTComponent {
+    @Contract(value = "-> new", pure = true)
+    @NotNull
     static StorageNBTComponent.Builder builder() {
         return Spectator.getBackend().storageNBT();
     }
 
+    @NotNull
     NamespacedMappingKey storageKey();
 
+    @Contract(pure = true)
+    @NotNull
+    StorageNBTComponent withStorageKey(@NotNull NamespacedMappingKey storageKey);
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull
+    StorageNBTComponent.Builder toBuilder();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Contract(pure = true)
+    @Override
+    @NotNull
+    StorageNBTComponent withInterpret(boolean interpret);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Contract(pure = true)
+    @Override
+    @NotNull
+    StorageNBTComponent withNbtPath(@NotNull String nbtPath);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Contract(pure = true)
+    @Override
+    @NotNull
+    StorageNBTComponent withSeparator(@Nullable Component separator);
+
     interface Builder extends NBTComponent.Builder<Builder, StorageNBTComponent> {
-        Builder storageKey(NamespacedMappingKey storageKey);
+        @Contract("_ -> this")
+        @NotNull
+        Builder storageKey(@NotNull NamespacedMappingKey storageKey);
     }
 }

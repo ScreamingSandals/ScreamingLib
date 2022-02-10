@@ -16,9 +16,12 @@
 
 package org.screamingsandals.lib.bukkit.spectator;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.experimental.Tolerate;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.Component;
@@ -48,7 +51,39 @@ public class BukkitBook implements Book {
         return null;
     }
 
+    @Override
+    @NotNull
+    public Book withTitle(@NotNull Component title) {
+        return new BukkitBook(title, author, pages);
+    }
+
+    @Override
+    @NotNull
+    public Book withAuthor(@NotNull Component author) {
+        return new BukkitBook(title, author, pages);
+    }
+
+    @Override
+    @NotNull
+    public Book withPages(@NotNull List<Component> pages) {
+        return new BukkitBook(title, author, pages);
+    }
+
+    @Override
+    @NotNull
+    public Book withPages(@NotNull Component... pages) {
+        return new BukkitBook(title, author, Arrays.asList(pages));
+    }
+
+    @Override
+    @NotNull
+    public Book.Builder toBuilder() {
+        return new BukkitBookBuilder(title, author, pages);
+    }
+
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class BukkitBookBuilder implements Book.Builder {
         private Component title;
         private Component author;
@@ -56,13 +91,7 @@ public class BukkitBook implements Book {
 
         @Override
         @NotNull
-        public Builder pages(@NotNull List<Component> pages) {
-            this.pages = pages;
-            return this;
-        }
-
-        @Override
-        @NotNull
+        @Tolerate
         public Builder pages(@NotNull Component... pages) {
             this.pages = Arrays.asList(pages);
             return this;

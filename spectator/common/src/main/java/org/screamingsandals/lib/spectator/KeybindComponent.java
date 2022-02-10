@@ -16,17 +16,32 @@
 
 package org.screamingsandals.lib.spectator;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 @LimitedVersionSupport(">= 1.12")
 public interface KeybindComponent extends Component {
+    @Contract(value = "-> new", pure = true)
+    @NotNull
     static KeybindComponent.Builder builder() {
         return Spectator.getBackend().keybind();
     }
 
+    @NotNull
     String keybind();
 
+    @Contract(pure = true)
+    @NotNull
+    KeybindComponent withKeybind(@NotNull String keybind);
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull
+    KeybindComponent.Builder toBuilder();
+
     interface Builder extends Component.Builder<Builder, KeybindComponent> {
-        Builder keybind(String keybind);
+        @Contract("_ -> this")
+        @NotNull
+        Builder keybind(@NotNull String keybind);
     }
 }

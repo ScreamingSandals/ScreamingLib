@@ -28,22 +28,31 @@ import java.time.Duration;
 
 // TODO: Support for AudienceComponentLike
 public interface Title extends Wrapper, RawValueHolder, TimesProvider {
+    @Contract(value = "_, _ -> new", pure = true)
+    @NotNull
     static Title title(@NotNull Component title, @NotNull Component subtitle) {
         return builder().title(title).subtitle(subtitle).build();
     }
 
+    @Contract(value = "_, _, _ -> new", pure = true)
+    @NotNull
     static Title title(@NotNull Component title, @NotNull Component subtitle, @NotNull TimesProvider times) {
         return builder().title(title).subtitle(subtitle).times(times).build();
     }
 
+    @Contract(value = "_, _, _, _, _ -> new", pure = true)
+    @NotNull
     static Title title(@NotNull Component title, @NotNull Component subtitle, @Nullable Duration fadeIn, @Nullable Duration stay, @Nullable Duration fadeOut) {
         return builder().title(title).subtitle(subtitle).times(fadeIn, stay, fadeOut).build();
     }
 
+    @Contract(value = "_, _, _, _, _ -> new", pure = true)
+    @NotNull
     static Title title(@NotNull Component title, @NotNull Component subtitle, long fadeIn, long stay, long fadeOut) {
         return builder().title(title).subtitle(subtitle).times(fadeIn, stay, fadeOut).build();
     }
 
+    @Contract(value = "-> new", pure = true)
     @NotNull
     static Title.Builder builder() {
         return Spectator.getBackend().title();
@@ -52,8 +61,56 @@ public interface Title extends Wrapper, RawValueHolder, TimesProvider {
     @NotNull
     Component title();
 
+    @Contract(pure = true)
+    @NotNull
+    Title withTitle(@NotNull Component title);
+
     @NotNull
     Component subtitle();
+
+    @Contract(pure = true)
+    @NotNull
+    Title withSubtitle(@NotNull Component subtitle);
+
+    @Contract(pure = true)
+    @NotNull
+    Title withTimes(@NotNull TimesProvider times);
+
+    @Contract(pure = true)
+    @NotNull
+    Title withTimes(@Nullable Duration fadeIn, @Nullable Duration stay, @Nullable Duration fadeOut);
+
+    @Contract(pure = true)
+    @NotNull
+    Title withTimes(long fadeIn, long stay, long fadeOut);
+
+    @Contract(pure = true)
+    @NotNull
+    Title withFadeIn(@Nullable Duration fadeIn);
+
+    @Contract(pure = true)
+    @NotNull
+    Title withStay(@Nullable Duration stay);
+
+    @Contract(pure = true)
+    @NotNull
+    Title withFadeOut(@Nullable Duration fadeOut);
+
+    @Contract(pure = true)
+    @NotNull
+    Title withFadeIn(long ticks);
+
+    @Contract(pure = true)
+    @NotNull
+    Title withStay(long ticks);
+
+    @Contract(pure = true)
+    @NotNull
+    Title withFadeOut(long ticks);
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull
+    Title.Builder toBuilder();
 
     interface Builder {
         @NotNull
@@ -71,7 +128,7 @@ public interface Title extends Wrapper, RawValueHolder, TimesProvider {
         @NotNull
         @Contract("_ -> this")
         default Builder fadeIn(long ticks) {
-            return fadeIn(Duration.ofMillis(ticks * 20));
+            return fadeIn(Duration.ofMillis(ticks * 50));
         }
 
         @NotNull
@@ -81,7 +138,7 @@ public interface Title extends Wrapper, RawValueHolder, TimesProvider {
         @NotNull
         @Contract("_ -> this")
         default Builder stay(long ticks) {
-            return stay(Duration.ofMillis(ticks * 20));
+            return stay(Duration.ofMillis(ticks * 50));
         }
 
         @NotNull
@@ -91,7 +148,7 @@ public interface Title extends Wrapper, RawValueHolder, TimesProvider {
         @NotNull
         @Contract("_ -> this")
         default Builder fadeOut(long ticks) {
-            return fadeOut(Duration.ofMillis(ticks * 20));
+            return fadeOut(Duration.ofMillis(ticks * 50));
         }
 
         @NotNull

@@ -16,6 +16,9 @@
 
 package org.screamingsandals.lib.adventure.spectator;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.EntityNBTComponent;
 
 public class AdventureEntityNBTComponent extends AdventureNBTComponent<net.kyori.adventure.text.EntityNBTComponent> implements EntityNBTComponent {
@@ -24,8 +27,39 @@ public class AdventureEntityNBTComponent extends AdventureNBTComponent<net.kyori
     }
 
     @Override
+    @NotNull
     public String selector() {
         return ((net.kyori.adventure.text.EntityNBTComponent) wrappedObject).selector();
+    }
+
+    @Override
+    @NotNull
+    public EntityNBTComponent withSelector(@NotNull String selector) {
+        return (EntityNBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.EntityNBTComponent) wrappedObject).selector(selector));
+    }
+
+    @Override
+    @NotNull
+    public EntityNBTComponent.Builder toBuilder() {
+        return new AdventureEntityNBTBuilder(((net.kyori.adventure.text.EntityNBTComponent) wrappedObject).toBuilder());
+    }
+
+    @Override
+    @NotNull
+    public EntityNBTComponent withNbtPath(@NotNull String nbtPath) {
+        return (EntityNBTComponent) super.withNbtPath(nbtPath);
+    }
+
+    @Override
+    @NotNull
+    public EntityNBTComponent withInterpret(boolean interpret) {
+        return (EntityNBTComponent) super.withInterpret(interpret);
+    }
+
+    @Override
+    @NotNull
+    public EntityNBTComponent withSeparator(@Nullable Component separator) {
+        return (EntityNBTComponent) super.withSeparator(separator);
     }
 
     public static class AdventureEntityNBTBuilder extends AdventureNBTComponent.AdventureNBTBuilder<
@@ -40,7 +74,8 @@ public class AdventureEntityNBTComponent extends AdventureNBTComponent<net.kyori
         }
 
         @Override
-        public EntityNBTComponent.Builder selector(String selector) {
+        @NotNull
+        public EntityNBTComponent.Builder selector(@NotNull String selector) {
             getBuilder().selector(selector);
             return self();
         }

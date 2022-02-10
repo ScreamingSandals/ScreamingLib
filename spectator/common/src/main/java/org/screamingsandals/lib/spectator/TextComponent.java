@@ -16,14 +16,30 @@
 
 package org.screamingsandals.lib.spectator;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 public interface TextComponent extends Component {
+    @Contract(value = "-> new", pure = true)
+    @NotNull
     static TextComponent.Builder builder() {
         return Spectator.getBackend().text();
     }
 
+    @NotNull
     String content();
 
+    @Contract(pure = true)
+    @NotNull
+    TextComponent withContent(@NotNull String content);
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull
+    TextComponent.Builder toBuilder();
+
     interface Builder extends Component.Builder<Builder, TextComponent> {
-        Builder content(String content);
+        @Contract("_ -> this")
+        @NotNull
+        Builder content(@NotNull String content);
     }
 }

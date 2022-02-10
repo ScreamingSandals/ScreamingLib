@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.adventure.spectator;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.TranslatableComponent;
 
@@ -30,16 +31,55 @@ public class AdventureTranslatableComponent extends AdventureComponent implement
     }
 
     @Override
+    @NotNull
     public String translate() {
         return ((net.kyori.adventure.text.TranslatableComponent) wrappedObject).key();
     }
 
     @Override
+    @NotNull
+    public TranslatableComponent withTranslate(@NotNull String translate) {
+        return (TranslatableComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.TranslatableComponent) wrappedObject).key(translate));
+    }
+
+    @Override
+    @NotNull
     public List<Component> args() {
         return ((net.kyori.adventure.text.TranslatableComponent) wrappedObject).args()
                 .stream()
                 .map(AdventureBackend::wrapComponent)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @NotNull
+    public TranslatableComponent withArgs(@NotNull Component @NotNull... components) {
+        return (TranslatableComponent) AdventureBackend.wrapComponent(
+                ((net.kyori.adventure.text.TranslatableComponent) wrappedObject)
+                        .args(Arrays.stream(components)
+                                .map(component -> component.as(net.kyori.adventure.text.Component.class))
+                                .collect(Collectors.toList())
+                        )
+        );
+    }
+
+    @Override
+    @NotNull
+    public TranslatableComponent withArgs(@NotNull Collection<Component> components) {
+        return (TranslatableComponent) AdventureBackend.wrapComponent(
+                ((net.kyori.adventure.text.TranslatableComponent) wrappedObject)
+                        .args(components
+                                .stream()
+                                .map(component -> component.as(net.kyori.adventure.text.Component.class))
+                                .collect(Collectors.toList())
+                        )
+        );
+    }
+
+    @Override
+    @NotNull
+    public TranslatableComponent.Builder toBuilder() {
+        return new AdventureTranslatableBuilder(((net.kyori.adventure.text.TranslatableComponent) wrappedObject).toBuilder());
     }
 
     public static class AdventureTranslatableBuilder extends AdventureBuilder<
@@ -54,19 +94,22 @@ public class AdventureTranslatableComponent extends AdventureComponent implement
         }
 
         @Override
-        public TranslatableComponent.Builder translate(String translate) {
+        @NotNull
+        public TranslatableComponent.Builder translate(@NotNull String translate) {
             getBuilder().key(translate);
             return self();
         }
 
         @Override
-        public TranslatableComponent.Builder args(Component... components) {
+        @NotNull
+        public TranslatableComponent.Builder args(@NotNull Component @NotNull... components) {
             getBuilder().args(Arrays.stream(components).map(component -> component.as(net.kyori.adventure.text.Component.class)).collect(Collectors.toList()));
             return self();
         }
 
         @Override
-        public TranslatableComponent.Builder args(Collection<Component> components) {
+        @NotNull
+        public TranslatableComponent.Builder args(@NotNull Collection<Component> components) {
             getBuilder().args(components.stream().map(component -> component.as(net.kyori.adventure.text.Component.class)).collect(Collectors.toList()));
             return self();
         }

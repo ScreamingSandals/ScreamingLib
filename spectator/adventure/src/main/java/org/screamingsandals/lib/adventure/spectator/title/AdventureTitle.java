@@ -16,11 +16,14 @@
 
 package org.screamingsandals.lib.adventure.spectator.title;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import net.kyori.adventure.title.Title;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
 import java.time.Duration;
@@ -59,10 +62,116 @@ public class AdventureTitle extends BasicWrapper<Title> implements org.screaming
 
     @Override
     @NotNull
+    public org.screamingsandals.lib.spectator.title.Title withTitle(@NotNull Component title) {
+        return new AdventureTitle(Title.title(title.as(net.kyori.adventure.text.Component.class), wrappedObject.subtitle(), wrappedObject.times()));
+    }
+
+    @Override
+    @NotNull
     public Component subtitle() {
         return AdventureBackend.wrapComponent(wrappedObject.subtitle());
     }
 
+    @Override
+    @NotNull
+    public org.screamingsandals.lib.spectator.title.Title withSubtitle(@NotNull Component subtitle) {
+        return new AdventureTitle(Title.title(wrappedObject.title(), subtitle.as(net.kyori.adventure.text.Component.class), wrappedObject.times()));
+    }
+
+    @Override
+    @NotNull
+    public org.screamingsandals.lib.spectator.title.Title withTimes(@NotNull TimesProvider times) {
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(times.fadeIn(), times.stay(), times.fadeOut())));
+    }
+
+    @Override
+    @NotNull
+    public org.screamingsandals.lib.spectator.title.Title withTimes(@Nullable Duration fadeIn, @Nullable Duration stay, @Nullable Duration fadeOut) {
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
+                fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
+                stay != null ? stay : Title.DEFAULT_TIMES.stay(),
+                fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
+        )));
+    }
+
+    @Override
+    @NotNull
+    public org.screamingsandals.lib.spectator.title.Title withTimes(long fadeIn, long stay, long fadeOut) {
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
+                Duration.ofMillis(fadeIn * 50),
+                Duration.ofMillis(stay * 50),
+                Duration.ofMillis(fadeOut * 50)
+        )));
+    }
+
+    @Override
+    @NotNull
+    public org.screamingsandals.lib.spectator.title.Title withFadeIn(@Nullable Duration fadeIn) {
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
+                fadeIn != null ? fadeIn : Title.DEFAULT_TIMES.fadeIn(),
+                stay(),
+                fadeOut()
+        )));
+    }
+
+    @Override
+    @NotNull
+    public org.screamingsandals.lib.spectator.title.Title withStay(@Nullable Duration stay) {
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
+                fadeIn(),
+                stay != null ? stay : Title.DEFAULT_TIMES.stay(),
+                fadeOut()
+        )));
+    }
+
+    @Override
+    @NotNull
+    public org.screamingsandals.lib.spectator.title.Title withFadeOut(@Nullable Duration fadeOut) {
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
+                fadeIn(),
+                stay(),
+                fadeOut != null ? fadeOut : Title.DEFAULT_TIMES.fadeOut()
+        )));
+    }
+
+    @Override
+    @NotNull
+    public org.screamingsandals.lib.spectator.title.Title withFadeIn(long ticks) {
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
+                Duration.ofMillis(ticks * 50),
+                stay(),
+                fadeOut()
+        )));
+    }
+
+    @Override
+    @NotNull
+    public org.screamingsandals.lib.spectator.title.Title withStay(long ticks) {
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
+                fadeIn(),
+                Duration.ofMillis(ticks * 50),
+                fadeOut()
+        )));
+    }
+
+    @Override
+    @NotNull
+    public org.screamingsandals.lib.spectator.title.Title withFadeOut(long ticks) {
+        return new AdventureTitle(Title.title(wrappedObject.title(), wrappedObject.subtitle(), Title.Times.of(
+                fadeIn(),
+                stay(),
+                Duration.ofMillis(ticks * 50)
+        )));
+    }
+
+    @NotNull
+    @Override
+    public org.screamingsandals.lib.spectator.title.Title.Builder toBuilder() {
+        return new AdventureTitleBuilder(title(), subtitle(), fadeIn(), stay(), fadeOut());
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class AdventureTitleBuilder implements org.screamingsandals.lib.spectator.title.Title.Builder {
         private Component title = Component.empty();
         private Component subtitle = Component.empty();

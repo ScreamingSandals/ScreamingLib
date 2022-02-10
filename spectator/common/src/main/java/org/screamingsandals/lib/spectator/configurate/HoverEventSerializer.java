@@ -18,23 +18,35 @@ public class HoverEventSerializer implements TypeSerializer<HoverEvent> {
 
     private static final String ACTION_KEY = "action";
     private static final String CONTENTS_KEY = "contents";
+    private static final String VALUE_KEY = "value";
 
     @Override
     public HoverEvent deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {
             var action = HoverEvent.Action.valueOf(node.node(ACTION_KEY).getString("show_text").toUpperCase());
-            var contents = node.node(CONTENTS_KEY);
-            // TODO: legacy "value"
             Content content;
-            switch (action) {
-                case SHOW_ITEM:
-                    content = contents.get(ItemContent.class);
-                    break;
-                case SHOW_ENTITY:
-                    content = contents.get(EntityContent.class);
-                    break;
-                default:
-                    content = contents.get(Component.class);
+            if (node.hasChild(VALUE_KEY)) {
+                var value = node.node(VALUE_KEY);
+                switch (action) {
+                    case SHOW_ITEM:
+                        // TODO
+                    case SHOW_ENTITY:
+                        // TODO
+                    default:
+                        content = value.get(Component.class);
+                }
+            } else {
+                var contents = node.node(CONTENTS_KEY);
+                switch (action) {
+                    case SHOW_ITEM:
+                        content = contents.get(ItemContent.class);
+                        break;
+                    case SHOW_ENTITY:
+                        content = contents.get(EntityContent.class);
+                        break;
+                    default:
+                        content = contents.get(Component.class);
+                }
             }
             Preconditions.checkNotNull(content);
             return HoverEvent.builder()

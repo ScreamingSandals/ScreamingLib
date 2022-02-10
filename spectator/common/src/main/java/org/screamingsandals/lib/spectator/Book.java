@@ -35,12 +35,32 @@ public interface Book extends Wrapper, RawValueHolder {
     @NotNull
     Component title();
 
+    @Contract(pure = true)
+    @NotNull
+    Book withTitle(@NotNull Component title);
+
     @NotNull
     Component author();
+
+    @Contract(pure = true)
+    @NotNull
+    Book withAuthor(@NotNull Component author);
 
     @Unmodifiable
     @NotNull
     List<Component> pages();
+
+    @Contract(pure = true)
+    @NotNull
+    Book withPages(@NotNull List<Component> pages);
+
+    @Contract(pure = true)
+    @NotNull
+    Book withPages(@NotNull Component... pages);
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull
+    Book.Builder toBuilder();
 
     interface Builder {
         @NotNull

@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bungee.spectator;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.TranslatableComponent;
 
@@ -31,11 +32,21 @@ public class BungeeTranslatableContent extends BungeeComponent implements Transl
     }
 
     @Override
+    @NotNull
     public String translate() {
         return ((net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject).getTranslate();
     }
 
     @Override
+    @NotNull
+    public TranslatableComponent withTranslate(@NotNull String translate) {
+        var duplicate = (net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject.duplicate();
+        duplicate.setTranslate(translate);
+        return (TranslatableComponent) AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    @NotNull
     public List<Component> args() {
         var with = ((net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject).getWith();
         if (with == null || with.isEmpty()) {
@@ -44,6 +55,29 @@ public class BungeeTranslatableContent extends BungeeComponent implements Transl
         return with.stream()
                 .map(AbstractBungeeBackend::wrapComponent)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @NotNull
+    public TranslatableComponent withArgs(@NotNull Component @NotNull... components) {
+        var duplicate = (net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject.duplicate();
+        duplicate.setWith(Arrays.stream(components).map(component1 -> component1.as(BaseComponent.class).duplicate()).collect(Collectors.toUnmodifiableList()));
+        return (TranslatableComponent) AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    @NotNull
+    public TranslatableComponent withArgs(@NotNull Collection<Component> components) {
+        var duplicate = (net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject.duplicate();
+        duplicate.setWith(components.stream().map(component1 -> component1.as(BaseComponent.class).duplicate()).collect(Collectors.toUnmodifiableList()));
+        return (TranslatableComponent) AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    @NotNull
+    public TranslatableComponent.Builder toBuilder() {
+        var duplicate = (net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject.duplicate();
+        return new BungeeTranslatableBuilder(duplicate);
     }
 
     public static class BungeeTranslatableBuilder extends BungeeBuilder<
@@ -57,20 +91,23 @@ public class BungeeTranslatableContent extends BungeeComponent implements Transl
         }
 
         @Override
-        public TranslatableComponent.Builder translate(String translate) {
+        @NotNull
+        public TranslatableComponent.Builder translate(@NotNull String translate) {
             component.setTranslate(translate);
             return self();
         }
 
         @Override
-        public TranslatableComponent.Builder args(Component... components) {
-            component.setWith(Arrays.stream(components).map(component1 -> component1.as(BaseComponent.class)).collect(Collectors.toUnmodifiableList()));
+        @NotNull
+        public TranslatableComponent.Builder args(@NotNull Component @NotNull... components) {
+            component.setWith(Arrays.stream(components).map(component1 -> component1.as(BaseComponent.class).duplicate()).collect(Collectors.toUnmodifiableList()));
             return self();
         }
 
         @Override
-        public TranslatableComponent.Builder args(Collection<Component> components) {
-            component.setWith(components.stream().map(component1 -> component1.as(BaseComponent.class)).collect(Collectors.toUnmodifiableList()));
+        @NotNull
+        public TranslatableComponent.Builder args(@NotNull Collection<Component> components) {
+            component.setWith(components.stream().map(component1 -> component1.as(BaseComponent.class).duplicate()).collect(Collectors.toUnmodifiableList()));
             return self();
         }
     }

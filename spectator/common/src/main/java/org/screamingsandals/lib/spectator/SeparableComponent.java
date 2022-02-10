@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.spectator;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
@@ -24,8 +26,14 @@ public interface SeparableComponent extends Component {
     @Nullable
     Component separator();
 
+    @Contract(pure = true)
+    @NotNull
+    SeparableComponent withSeparator(@Nullable Component separator);
+
     interface Builder<B extends Builder<B, C>, C extends SeparableComponent> extends Component.Builder<B, C> {
         @LimitedVersionSupport(">= 1.17")
+        @Contract("_ -> this")
+        @NotNull
         B separator(@Nullable Component separator);
     }
 }

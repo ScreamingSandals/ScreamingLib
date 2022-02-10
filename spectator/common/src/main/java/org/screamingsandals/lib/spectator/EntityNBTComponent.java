@@ -16,17 +16,57 @@
 
 package org.screamingsandals.lib.spectator;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 @LimitedVersionSupport(">= 1.14")
 public interface EntityNBTComponent extends NBTComponent {
+    @Contract(value = "-> new", pure = true)
+    @NotNull
     static EntityNBTComponent.Builder builder() {
         return Spectator.getBackend().entityNBT();
     }
 
+    @NotNull
     String selector();
 
+    @Contract(pure = true)
+    @NotNull
+    EntityNBTComponent withSelector(@NotNull String selector);
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull
+    EntityNBTComponent.Builder toBuilder();
+
+    /**
+     * {@inheritDoc}
+     */
+    @Contract(pure = true)
+    @Override
+    @NotNull
+    EntityNBTComponent withNbtPath(@NotNull String nbtPath);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Contract(pure = true)
+    @Override
+    @NotNull
+    EntityNBTComponent withSeparator(@Nullable Component separator);
+
+    /**
+     * {@inheritDoc}
+     */
+    @Contract(pure = true)
+    @Override
+    @NotNull
+    EntityNBTComponent withInterpret(boolean interpret);
+
     interface Builder extends NBTComponent.Builder<Builder, EntityNBTComponent> {
-        Builder selector(String selector);
+        @Contract("_ -> this")
+        @NotNull
+        Builder selector(@NotNull String selector);
     }
 }

@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.spectator.title;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
@@ -30,8 +31,9 @@ public interface TimesProvider {
     @NotNull
     Duration fadeOut();
 
+    @Contract(value = "_,_,_ -> new", pure = true)
     @NotNull
-    static TimesProvider times(Duration fadeIn, Duration stay, Duration fadeOut) {
+    static TimesProvider times(@NotNull Duration fadeIn, @NotNull Duration stay, @NotNull Duration fadeOut) {
         return new TimesProvider() {
             @Override
             @NotNull

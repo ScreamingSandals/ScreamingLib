@@ -5,7 +5,9 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.*;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.TriState;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.ConfigurationOptions;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -17,7 +19,12 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class ComponentSerializer implements TypeSerializer<Component> {
 
-    public static final ComponentSerializer INSTANCE = new ComponentSerializer(null);
+    public static final ComponentSerializer INSTANCE = new ComponentSerializer(s -> {
+        if (s.matches(".*§[0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx].*")) {
+            return Component.fromLegacy(s);
+        }
+        return Component.text(s);
+    });
 
     // Text
     private static final String TEXT_KEY = "text";
@@ -95,15 +102,121 @@ public class ComponentSerializer implements TypeSerializer<Component> {
                 return Component.text(str);
             }
 
-            Component.Builder<?,?> builder;
+            Component.Builder<?,?> builder = null;
             if (node.hasChild(TEXT_KEY)) {
                 builder = Component.text().content(node.node(TEXT_KEY).getString());
             } else if (node.hasChild(TRANSLATE_KEY)) {
+                builder = Component.translatable().translate(node.node(TRANSLATE_KEY).getString());
 
+                if (node.hasChild(WITH_KEY)) {
+                    var withNode = node.node(WITH_KEY);
+                    if (withNode.isList()) {
+                        ((TranslatableComponent.Builder) builder).args(withNode.getList(Component.class));
+                    } else {
+                        /* This is not valid in the official format, but it's probably just one component */
+                        ((TranslatableComponent.Builder) builder).args(withNode.get(Component.class));
+                    }
+                }
+            } else if (node.hasChild(SCORE_KEY)) {
+                var scoreNode = node.node(SCORE_KEY);
+                var nameNode = scoreNode.node(SCORE_NAME_KEY);
+                var objectiveNode = scoreNode.node(SCORE_OBJECTIVE_KEY);
+                Preconditions.checkArgument(!nameNode.virtual() && !objectiveNode.virtual(), "A score component requires a name and objective");
+                var b = Component.score()
+                        .name(nameNode.getString())
+                        .objective(objectiveNode.getString());
+                if (scoreNode.hasChild(SCORE_VALUE_KEY)) {
+                    //noinspection deprecation
+                    b.value(scoreNode.node(SCORE_VALUE_KEY).getString());
+                }
+                builder = b;
+            } else if (node.hasChild(SELECTOR_KEY)) {
+                builder = Component.selector().pattern(node.node(SELECTOR_KEY).getString());
+            } else if (node.hasChild(KEYBIND_KEY)) {
+                builder = Component.keybind().keybind(node.node(KEYBIND_KEY).getString());
+            } else if (node.hasChild(NBT_KEY)) {
+                var nbt = node.node(NBT_KEY).getString();
+                var interpret = node.node(INTERPRET_KEY).getBoolean();
+                if (node.hasChild(BLOCK_KEY)) {
+                    builder = Component.blockNBT()
+                            .nbtPath(nbt)
+                            .interpret(interpret)
+                            .blockPosition(node.node(BLOCK_KEY).getString());
+                } else if (node.hasChild(ENTITY_KEY)) {
+                    builder = Component.entityNBT()
+                            .nbtPath(nbt)
+                            .interpret(interpret)
+                            .selector(node.node(ENTITY_KEY).getString());
+                } else if (node.hasChild(STORAGE_KEY)) {
+                    builder = Component.storageNBT()
+                            .nbtPath(nbt)
+                            .interpret(interpret)
+                            .storageKey(NamespacedMappingKey.of(node.node(STORAGE_KEY).getString()));
+                }
             }
-            // TODO
 
-            return null;
+            if (builder == null) {
+                builder = Component.text();
+            }
+
+            if (node.hasChild(EXTRA_KEY)) {
+                var extraNode = node.node(EXTRA_KEY);
+                if (extraNode.isList()) {
+                    var extra = extraNode.childrenList();
+                    for (var ex : extra) {
+                        builder.append(ex.get(Component.class));
+                    }
+                } else {
+                    /* This is not valid in the official format, but it's probably just one component */
+                    builder.append(extraNode.get(Component.class));
+                }
+            }
+
+            if (builder instanceof SeparableComponent.Builder && node.hasChild(SEPARATOR_KEY)) {
+                ((SeparableComponent.Builder<?,?>) builder).separator(node.node(SEPARATOR_KEY).get(Component.class));
+            }
+
+            if (node.hasChild(FONT_KEY)) {
+                builder.font(NamespacedMappingKey.of(node.node(FONT_KEY).getString()));
+            }
+
+            if (node.hasChild(COLOR_KEY)) {
+                builder.color(node.node(COLOR_KEY).get(Color.class));
+            }
+
+            if (node.hasChild(BOLD_KEY)) {
+                builder.bold(node.node(BOLD_KEY).getBoolean());
+            }
+
+            if (node.hasChild(ITALIC_KEY)) {
+                builder.italic(node.node(ITALIC_KEY).getBoolean());
+            }
+
+            if (node.hasChild(UNDERLINED_KEY)) {
+                builder.underlined(node.node(UNDERLINED_KEY).getBoolean());
+            }
+
+            if (node.hasChild(STRIKETHROUGH_KEY)) {
+                builder.strikethrough(node.node(STRIKETHROUGH_KEY).getBoolean());
+            }
+
+            if (node.hasChild(OBFUSCATED_KEY)) {
+                builder.obfuscated(node.node(OBFUSCATED_KEY).getBoolean());
+            }
+
+            if (node.hasChild(INSERTION_KEY)) {
+                builder.insertion(node.node(INSERTION_KEY).getString());
+            }
+
+            if (node.hasChild(CLICK_EVENT_KEY)) {
+                builder.clickEvent(node.node(CLICK_EVENT_KEY).get(ClickEvent.class));
+            }
+
+            if (node.hasChild(HOVER_EVENT_KEY)) {
+                builder.hoverEvent(node.node(HOVER_EVENT_KEY).get(HoverEvent.class));
+            }
+
+            return builder.build();
         } catch (Throwable throwable) {
             throw new SerializationException(throwable);
         }
