@@ -39,10 +39,11 @@ final class ComponentHelper {
 
     @NotNull
     public static Component highlight(final @NotNull Component component, final @NotNull Color highlightColor) {
-        return component.replaceText(config -> {
+        return component; // TODO
+        /*return component.replaceText(config -> {
             config.match(SPECIAL_CHARACTERS_PATTERN);
             config.replacement(match -> match.color(highlightColor));
-        });
+        });*/
     }
 
     public static int length(final @NotNull Component component) {

@@ -106,7 +106,6 @@ public final class MinecraftHelp<C> {
      * @param commandManager command manager
      * @param <C>            sender type extending {@link Audience}
      * @return new MinecraftHelp instance
-     * @since 1.5.0
      */
     public static <C extends Audience> MinecraftHelp<C> createNative(
             final @NotNull String commandPrefix,
@@ -187,7 +186,6 @@ public final class MinecraftHelp<C> {
      * The default filter will return true for all commands.
      *
      * @param commandPredicate Predicate to filter commands by
-     * @since 1.4.0
      */
     public void commandFilter(final @NotNull Predicate<Command<C>> commandPredicate) {
         this.commandFilter = commandPredicate;
@@ -199,7 +197,6 @@ public final class MinecraftHelp<C> {
      * The default decorator simply calls {@link Component#text(String)}
      *
      * @param decorator description decorator
-     * @since 1.4.0
      */
     public void descriptionDecorator(final @NotNull Function<@NotNull String, @NotNull Component> decorator) {
         this.descriptionDecorator = decorator;
@@ -238,7 +235,6 @@ public final class MinecraftHelp<C> {
      * registered through {@link #setMessageProvider(BiFunction)}
      *
      * @param messageProvider The message provider to use
-     * @since 1.4.0
      */
     public void messageProvider(final @NotNull MessageProvider<C> messageProvider) {
         this.messageProvider = messageProvider;
@@ -679,14 +675,14 @@ public final class MinecraftHelp<C> {
                         String.valueOf(maxPages)
                 )
                         .withColor(this.colors.text)
-                        .replaceText(config -> {
+                        /*.replaceText(config -> {
                             config.matchLiteral("<page>");
                             config.replacement(String.valueOf(attemptedPage));
                         })
                         .replaceText(config -> {
                             config.matchLiteral("<max_pages>");
                             config.replacement(String.valueOf(maxPages));
-                        })
+                        })*/ // TODO
         );
     }
 

@@ -21,6 +21,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Entity;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeEntityContent;
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeItemContent;
@@ -41,6 +42,7 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
     }
 
     @Override
+    @NotNull
     public Action action() {
         try {
             return Action.valueOf(wrappedObject.getAction().name());
@@ -50,6 +52,7 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
     }
 
     @Override
+    @NotNull
     public Content content() {
         try {
             // new api
@@ -125,24 +128,36 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
         }
     }
 
+    @Override
+    public <T> T as(Class<T> type) {
+        try {
+            return super.as(type);
+        } catch (Throwable ignored) {
+            return AbstractBungeeBackend.getAdditionalHoverEventConverter().convert(this, type);
+        }
+    }
+
     public static class BungeeHoverEventBuilder implements HoverEvent.Builder {
 
         private Action action = Action.SHOW_TEXT;
         private Content content;
 
         @Override
-        public Builder action(Action action) {
+        @NotNull
+        public Builder action(@NotNull Action action) {
             this.action = action;
             return this;
         }
 
         @Override
-        public Builder content(Content content) {
+        @NotNull
+        public Builder content(@NotNull Content content) {
             this.content = content;
             return this;
         }
 
         @Override
+        @NotNull
         public HoverEvent build() {
             Preconditions.checkNotNull(content, "Content of HoverEvent must be specified");
             try {

@@ -33,12 +33,32 @@ public interface SoundStart extends Wrapper, RawValueHolder {
     @NotNull
     NamespacedMappingKey soundKey();
 
+    @Contract(pure = true)
+    @NotNull
+    SoundStart withSoundKey(@NotNull NamespacedMappingKey soundKey);
+
     @NotNull
     SoundSource source();
 
+    @Contract(pure = true)
+    @NotNull
+    SoundStart withSource(@NotNull SoundSource source);
+
     float volume();
 
+    @Contract(pure = true)
+    @NotNull
+    SoundStart withVolume(float volume);
+
     float pitch();
+
+    @Contract(pure = true)
+    @NotNull
+    SoundStart withPitch(float pitch);
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull
+    SoundStart.Builder toBuilder();
 
     interface Builder {
         @NotNull

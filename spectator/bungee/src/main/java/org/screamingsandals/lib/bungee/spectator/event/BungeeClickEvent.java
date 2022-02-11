@@ -16,7 +16,12 @@
 
 package org.screamingsandals.lib.bungee.spectator.event;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -38,27 +43,50 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
 
     @Override
     @NotNull
+    public ClickEvent withAction(@NotNull Action action) {
+        net.md_5.bungee.api.chat.ClickEvent.Action bungeeAction;
+        try {
+            bungeeAction = net.md_5.bungee.api.chat.ClickEvent.Action.valueOf(action.name());
+        } catch (Throwable throwable) {
+            bungeeAction = net.md_5.bungee.api.chat.ClickEvent.Action.OPEN_URL;
+        }
+        return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEvent(bungeeAction, wrappedObject.getValue()));
+    }
+
+    @Override
+    @NotNull
     public String value() {
         return wrappedObject.getValue();
     }
 
+    @Override
+    @NotNull
+    public ClickEvent withValue(@NotNull String value) {
+        return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEvent(wrappedObject.getAction(), value));
+    }
+
+    @Override
+    @NotNull
+    public ClickEvent.Builder toBuilder() {
+        return new BungeeClickBuilder(action(), value());
+    }
+
+    @Override
+    public <T> T as(Class<T> type) {
+        try {
+            return super.as(type);
+        } catch (Throwable ignored) {
+            return AbstractBungeeBackend.getAdditionalClickEventConverter().convert(this, type);
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(fluent = true, chain = true)
+    @Setter
     public static class BungeeClickBuilder implements ClickEvent.Builder {
         private Action action = Action.OPEN_URL;
         private String value;
-
-        @Override
-        @NotNull
-        public Builder action(@NotNull Action action) {
-            this.action = action;
-            return this;
-        }
-
-        @Override
-        @NotNull
-        public Builder value(@NotNull String value) {
-            this.value = value;
-            return this;
-        }
 
         @Override
         @NotNull

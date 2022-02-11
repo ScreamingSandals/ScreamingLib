@@ -42,6 +42,18 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     @Getter
     private static final BidirectionalConverter<BungeeComponent> additionalComponentConverter = BidirectionalConverter.build();
     @Getter
+    private static final BidirectionalConverter<BungeeClickEvent> additionalClickEventConverter = BidirectionalConverter.build();
+    @Getter
+    private static final BidirectionalConverter<BungeeHoverEvent> additionalHoverEventConverter = BidirectionalConverter.build();
+    @Getter
+    // not needed for legacy because we can never have native Adventure alongside with pre-1.16 Bungee component api
+    private static final BidirectionalConverter<BungeeEntityContent> additionalEntityContentConverter = BidirectionalConverter.build();
+    @Getter
+    // not needed for legacy because we can never have native Adventure alongside with pre-1.16 Bungee component api
+    private static final BidirectionalConverter<BungeeItemContent> additionalItemContentConverter = BidirectionalConverter.build();
+    @Getter
+    private static final BidirectionalConverter<BungeeColor> additionalColorConverter = BidirectionalConverter.build();
+    @Getter
     // We can't use NoArgsConstructor because it's too new
     private static final Component empty = wrapComponent(new TextComponent(""));
     private static final Component newLine = wrapComponent(new TextComponent("\n"));

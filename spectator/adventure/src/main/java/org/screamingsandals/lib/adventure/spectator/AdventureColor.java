@@ -44,4 +44,13 @@ public class AdventureColor extends BasicWrapper<TextColor> implements Color {
     public String toString() {
         return wrappedObject.toString();
     }
+
+    @Override
+    public <T> T as(Class<T> type) {
+        try {
+            return super.as(type);
+        } catch (Throwable ignored) {
+            return AdventureBackend.getAdditionalColorConverter().convert(this, type);
+        }
+    }
 }

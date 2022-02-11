@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.adventure.spectator.event;
 
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.adventure.spectator.event.hover.AdventureEntityContent;
 import org.screamingsandals.lib.adventure.spectator.event.hover.AdventureItemContent;
@@ -35,6 +36,7 @@ public class AdventureHoverEvent extends BasicWrapper<net.kyori.adventure.text.e
     }
 
     @Override
+    @NotNull
     public Action action() {
         try {
             return Action.valueOf(Objects.requireNonNull(net.kyori.adventure.text.event.HoverEvent.Action.NAMES.key(wrappedObject.action())).toUpperCase());
@@ -44,6 +46,7 @@ public class AdventureHoverEvent extends BasicWrapper<net.kyori.adventure.text.e
     }
 
     @Override
+    @NotNull
     public Content content() {
         if (wrappedObject.action().type() == Component.class) {
             return AdventureBackend.wrapComponent((Component) wrappedObject.value());
@@ -55,23 +58,35 @@ public class AdventureHoverEvent extends BasicWrapper<net.kyori.adventure.text.e
         return org.screamingsandals.lib.spectator.Component.empty(); // what?
     }
 
+    @Override
+    public <T> T as(Class<T> type) {
+        try {
+            return super.as(type);
+        } catch (Throwable ignored) {
+            return AdventureBackend.getAdditionalHoverEventConverter().convert(this, type);
+        }
+    }
+
     public static class AdventureHoverEventBuilder implements HoverEvent.Builder {
         private Action action = Action.SHOW_TEXT;
         private Content content;
 
         @Override
-        public Builder action(Action action) {
+        @NotNull
+        public Builder action(@NotNull Action action) {
             this.action = action;
             return this;
         }
 
         @Override
-        public Builder content(Content content) {
+        @NotNull
+        public Builder content(@NotNull Content content) {
             this.content = content;
             return this;
         }
 
         @Override
+        @NotNull
         public HoverEvent build() {
             Preconditions.checkArgument(content != null, "Content is not specified!");
             switch (action) {

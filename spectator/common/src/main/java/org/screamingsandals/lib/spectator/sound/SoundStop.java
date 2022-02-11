@@ -61,6 +61,18 @@ public interface SoundStop extends Wrapper, RawValueHolder {
     @Nullable
     SoundSource source();
 
+    @Contract(pure = true)
+    @NotNull
+    SoundStop withSoundKey(@Nullable NamespacedMappingKey soundKey);
+
+    @Contract(pure = true)
+    @NotNull
+    SoundStop withSource(@Nullable SoundSource source);
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull
+    SoundStop.Builder toBuilder();
+
     interface Builder {
         @NotNull
         @Contract("_ -> this")

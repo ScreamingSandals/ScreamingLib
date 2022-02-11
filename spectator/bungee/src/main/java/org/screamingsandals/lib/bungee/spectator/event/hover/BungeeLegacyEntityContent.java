@@ -16,8 +16,13 @@
 
 package org.screamingsandals.lib.bungee.spectator.event.hover;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
@@ -33,44 +38,62 @@ public class BungeeLegacyEntityContent extends BasicWrapper<String> implements E
 
     // TODO: parse snbt
     @Override
+    @NotNull
     public UUID id() {
         return null; // TODO
     }
 
     @Override
+    @NotNull
+    public EntityContent withId(@NotNull UUID id) {
+        return this; // TODO
+    }
+
+    @Override
+    @NotNull
     public NamespacedMappingKey type() {
         return null; // TODO
     }
 
     @Override
-    public @Nullable Component name() {
+    @NotNull
+    public EntityContent withType(@NotNull NamespacedMappingKey type) {
+        return this; // TODO
+    }
+
+    @Override
+    @Nullable
+    public Component name() {
         return null; // TODO
     }
 
+    @Override
+    @NotNull
+    public EntityContent withType(@Nullable Component name) {
+        return this; // TODO
+    }
+
+    @Override
+    @NotNull
+    public EntityContent.Builder toBuilder() {
+        return new BungeeLegacyEntityContentBuilder(
+                id(),
+                type(),
+                name()
+        );
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(fluent = true, chain = true)
+    @Setter
     public static class BungeeLegacyEntityContentBuilder implements EntityContent.Builder {
         private UUID id;
         private NamespacedMappingKey type;
         private Component name;
 
         @Override
-        public Builder id(UUID id) {
-            this.id = id;
-            return this;
-        }
-
-        @Override
-        public Builder type(NamespacedMappingKey type) {
-            this.type = type;
-            return this;
-        }
-
-        @Override
-        public Builder name(@Nullable Component name) {
-            this.name = name;
-            return this;
-        }
-
-        @Override
+        @NotNull
         public EntityContent build() {
             return new BungeeLegacyEntityContent(
                     "{id: \"" + (id != null ? id.toString() : UUID.randomUUID().toString()) + "\"" +

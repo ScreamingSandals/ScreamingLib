@@ -16,6 +16,11 @@
 
 package org.screamingsandals.lib.bungee.spectator.event.hover;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -28,8 +33,15 @@ public class BungeeLegacyItemContent extends BasicWrapper<String> implements Ite
 
     // TODO: parse snbt
     @Override
+    @NotNull
     public NamespacedMappingKey id() {
         return null; // TODO
+    }
+
+    @Override
+    @NotNull
+    public ItemContent withId(@NotNull NamespacedMappingKey id) {
+        return this; // TODO
     }
 
     @Override
@@ -38,34 +50,40 @@ public class BungeeLegacyItemContent extends BasicWrapper<String> implements Ite
     }
 
     @Override
-    public @Nullable String tag() {
+    @NotNull
+    public ItemContent withCount(int count) {
+        return this; // TODO
+    }
+
+    @Override
+    @Nullable
+    public String tag() {
         return wrappedObject; // TODO
     }
 
+    @Override
+    @NotNull
+    public ItemContent withTag(@Nullable String tag) {
+        return this; // TODO
+    }
+
+    @Override
+    @NotNull
+    public ItemContent.Builder toBuilder() {
+        return new BungeeLegacyItemContentBuilder(id(), count(), tag());
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(fluent = true, chain = true)
+    @Setter
     public static class BungeeLegacyItemContentBuilder implements ItemContent.Builder {
         private NamespacedMappingKey id;
         private int count = 1;
         private String tag;
 
         @Override
-        public Builder id(NamespacedMappingKey id) {
-            this.id = id;
-            return this;
-        }
-
-        @Override
-        public Builder count(int count) {
-            this.count = count;
-            return this;
-        }
-
-        @Override
-        public Builder tag(@Nullable String tag) {
-            this.tag = tag;
-            return this;
-        }
-
-        @Override
+        @NotNull
         public ItemContent build() {
             return new BungeeLegacyItemContent(
                     "{id: " + (id == null ? "minecraft:air" : id.asString()) + ", Count: " + count + "b"

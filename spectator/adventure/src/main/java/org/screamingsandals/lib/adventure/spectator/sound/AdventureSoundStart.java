@@ -16,6 +16,10 @@
 
 package org.screamingsandals.lib.adventure.spectator.sound;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
@@ -35,10 +39,23 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
         return NamespacedMappingKey.of(wrappedObject.name().namespace(), wrappedObject.name().value());
     }
 
+    @SuppressWarnings("PatternValidation")
+    @Override
+    @NotNull
+    public SoundStart withSoundKey(@NotNull NamespacedMappingKey soundKey) {
+        return new AdventureSoundStart(Sound.sound(Key.key(soundKey.namespace(), soundKey.value()), wrappedObject.source(), wrappedObject.volume(), wrappedObject.pitch()));
+    }
+
     @Override
     @NotNull
     public SoundSource source() {
         return new AdventureSoundSource(wrappedObject.source());
+    }
+
+    @Override
+    @NotNull
+    public SoundStart withSource(@NotNull SoundSource source) {
+        return new AdventureSoundStart(Sound.sound(wrappedObject.name(), source.as(Sound.Source.class), wrappedObject.volume(), wrappedObject.pitch()));
     }
 
     @Override
@@ -47,50 +64,50 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
     }
 
     @Override
+    @NotNull
+    public SoundStart withVolume(float volume) {
+        return new AdventureSoundStart(Sound.sound(wrappedObject.name(), wrappedObject.source(), volume, wrappedObject.pitch()));
+    }
+
+    @Override
     public float pitch() {
         return wrappedObject.pitch();
     }
 
+    @Override
+    @NotNull
+    public SoundStart withPitch(float pitch) {
+        return new AdventureSoundStart(Sound.sound(wrappedObject.name(), wrappedObject.source(), wrappedObject.volume(), pitch));
+    }
+
+    @Override
+    @NotNull
+    public SoundStart.Builder toBuilder() {
+        return new AdventureSoundStartBuilder(
+                soundKey(),
+                source(),
+                volume(),
+                pitch()
+        );
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(fluent = true, chain = true)
+    @Setter
     public static class AdventureSoundStartBuilder implements SoundStart.Builder {
         private static final SoundSource MASTER = SoundSource.soundSource("master");
 
-        private NamespacedMappingKey key;
+        private NamespacedMappingKey soundKey;
         private SoundSource source = MASTER;
         private float volume = 1;
         private float pitch = 1;
 
-        @Override
-        @NotNull
-        public Builder soundKey(@NotNull NamespacedMappingKey key) {
-            this.key = key;
-            return this;
-        }
-
-        @Override
-        @NotNull
-        public Builder source(@NotNull SoundSource source) {
-            this.source = source;
-            return this;
-        }
-
-        @Override
-        @NotNull
-        public Builder volume(float volume) {
-            this.volume = volume;
-            return this;
-        }
-
-        @Override
-        @NotNull
-        public Builder pitch(float pitch) {
-            this.pitch = pitch;
-            return this;
-        }
-
+        @SuppressWarnings("PatternValidation")
         @Override
         @NotNull
         public SoundStart build() {
-            return new AdventureSoundStart(Sound.sound(Key.key(key.namespace(), key.value()), source.as(Sound.Source.class), volume, pitch));
+            return new AdventureSoundStart(Sound.sound(Key.key(soundKey.namespace(), soundKey.value()), source.as(Sound.Source.class), volume, pitch));
         }
     }
 }

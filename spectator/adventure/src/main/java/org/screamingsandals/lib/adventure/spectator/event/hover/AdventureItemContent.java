@@ -16,10 +16,16 @@
 
 package org.screamingsandals.lib.adventure.spectator.event.hover;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.event.HoverEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -30,13 +36,27 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
     }
 
     @Override
+    @NotNull
     public NamespacedMappingKey id() {
         return NamespacedMappingKey.of(wrappedObject.item().asString());
+    }
+
+    @SuppressWarnings("PatternValidation")
+    @Override
+    @NotNull
+    public ItemContent withId(@NotNull NamespacedMappingKey id) {
+        return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.getNamespace(), id.getKey()), wrappedObject.count(), wrappedObject.nbt()));
     }
 
     @Override
     public int count() {
         return wrappedObject.count();
+    }
+
+    @Override
+    @NotNull
+    public ItemContent withCount(int count) {
+        return new AdventureItemContent(HoverEvent.ShowItem.of(wrappedObject.item(), count, wrappedObject.nbt()));
     }
 
     @Override
@@ -49,6 +69,31 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
         return nbt.string();
     }
 
+    @Override
+    @NotNull
+    public ItemContent withTag(@Nullable String tag) {
+        return new AdventureItemContent(HoverEvent.ShowItem.of(wrappedObject.item(), wrappedObject.count(), tag == null || tag.isEmpty() ? null : BinaryTagHolder.of(tag)));
+    }
+
+    @Override
+    @NotNull
+    public ItemContent.Builder toBuilder() {
+        return new AdventureItemContentBuilder(id(), count(), tag());
+    }
+
+    @Override
+    public <T> T as(Class<T> type) {
+        try {
+            return super.as(type);
+        } catch (Throwable ignored) {
+            return AdventureBackend.getAdditionalItemContentConverter().convert(this, type);
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(fluent = true, chain = true)
+    @Setter
     public static class AdventureItemContentBuilder implements ItemContent.Builder {
         private static final NamespacedMappingKey INVALID_KEY = NamespacedMappingKey.of("minecraft", "air");
 
@@ -56,26 +101,9 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
         private int count = 1;
         private String tag;
 
-        @Override
-        public Builder id(NamespacedMappingKey id) {
-            this.id = id;
-            return this;
-        }
-
-        @Override
-        public Builder count(int count) {
-            this.count = count;
-            return this;
-        }
-
-        @Override
-        public Builder tag(@Nullable String tag) {
-            this.tag = tag;
-            return this;
-        }
-
         @SuppressWarnings("PatternValidation")
         @Override
+        @NotNull
         public ItemContent build() {
             return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.getNamespace(), id.getKey()), count, tag == null || tag.isEmpty() ? null : BinaryTagHolder.of(tag)));
         }

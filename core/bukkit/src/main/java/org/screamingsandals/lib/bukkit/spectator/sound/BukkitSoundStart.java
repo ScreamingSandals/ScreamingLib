@@ -16,7 +16,9 @@
 
 package org.screamingsandals.lib.bukkit.spectator.sound;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
@@ -49,6 +51,38 @@ public class BukkitSoundStart implements SoundStart {
         return null;
     }
 
+    @Override
+    @NotNull
+    public SoundStart withSoundKey(@NotNull NamespacedMappingKey soundKey) {
+        return new BukkitSoundStart(soundKey, source, volume, pitch);
+    }
+
+    @Override
+    @NotNull
+    public SoundStart withSource(@NotNull SoundSource source) {
+        return new BukkitSoundStart(soundKey, source, volume, pitch);
+    }
+
+    @Override
+    @NotNull
+    public SoundStart withVolume(float volume) {
+        return new BukkitSoundStart(soundKey, source, volume, pitch);
+    }
+
+    @Override
+    @NotNull
+    public SoundStart withPitch(float pitch) {
+        return new BukkitSoundStart(soundKey, source, volume, pitch);
+    }
+
+    @Override
+    @NotNull
+    public SoundStart.Builder toBuilder() {
+        return new BukkitSoundStartBuilder(soundKey, source, volume, pitch);
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Setter
     public static class BukkitSoundStartBuilder implements SoundStart.Builder {
         private NamespacedMappingKey soundKey;

@@ -25,54 +25,66 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 public interface ClickEvent extends Wrapper, RawValueHolder {
 
-    @NotNull
     @Contract(value = "-> new", pure = true)
+    @NotNull
     static ClickEvent.Builder builder() {
         return Spectator.getBackend().clickEvent();
     }
 
-    @NotNull
-    @Contract(value = "_ -> new", pure = true)
     @LimitedVersionSupport(">= 1.15")
-    static ClickEvent copyToClipboard(String value) {
+    @Contract(value = "_ -> new", pure = true)
+    @NotNull
+    static ClickEvent copyToClipboard(@NotNull String value) {
         return Spectator.getBackend().clickEvent().action(Action.COPY_TO_CLIPBOARD).value(value).build();
     }
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    static ClickEvent openUrl(String value) {
+    @NotNull
+    static ClickEvent openUrl(@NotNull String value) {
         return Spectator.getBackend().clickEvent().action(Action.OPEN_URL).value(value).build();
     }
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    static ClickEvent openFile(String value) {
+    @NotNull
+    static ClickEvent openFile(@NotNull String value) {
         return Spectator.getBackend().clickEvent().action(Action.OPEN_FILE).value(value).build();
     }
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    static ClickEvent runCommand(String value) {
+    @NotNull
+    static ClickEvent runCommand(@NotNull String value) {
         return Spectator.getBackend().clickEvent().action(Action.RUN_COMMAND).value(value).build();
     }
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    static ClickEvent suggestCommand(String value) {
+    @NotNull
+    static ClickEvent suggestCommand(@NotNull String value) {
         return Spectator.getBackend().clickEvent().action(Action.SUGGEST_COMMAND).value(value).build();
     }
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    static ClickEvent changePage(String value) {
+    @NotNull
+    static ClickEvent changePage(@NotNull String value) {
         return Spectator.getBackend().clickEvent().action(Action.CHANGE_PAGE).value(value).build();
     }
 
     @NotNull
     Action action();
 
+    @Contract(pure = true)
+    @NotNull
+    ClickEvent withAction(@NotNull Action action);
+
     @NotNull
     String value();
+
+    @Contract(pure = true)
+    @NotNull
+    ClickEvent withValue(@NotNull String value);
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull
+    ClickEvent.Builder toBuilder();
 
     enum Action {
         OPEN_URL,
@@ -88,17 +100,16 @@ public interface ClickEvent extends Wrapper, RawValueHolder {
     }
 
     interface Builder {
-        @NotNull
         @Contract("_ -> this")
+        @NotNull
         Builder action(@NotNull Action action);
 
-        @NotNull
         @Contract("_ -> this")
+        @NotNull
         Builder value(@NotNull String value);
 
-
-        @NotNull
         @Contract(value = "-> new", pure = true)
+        @NotNull
         ClickEvent build();
     }
 }

@@ -17,7 +17,15 @@
 package org.screamingsandals.lib.bukkit.spectator;
 
 import io.papermc.paper.text.PaperComponents;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.nbt.api.BinaryTagHolder;
+import net.kyori.adventure.text.format.TextColor;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ItemTag;
+import net.md_5.bungee.api.chat.hover.content.Content;
+import net.md_5.bungee.api.chat.hover.content.Entity;
+import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.SoundCategory;
 import org.bukkit.command.CommandSender;
@@ -83,11 +91,94 @@ public class SpigotBackend extends AbstractBungeeBackend {
                             }
                     );
 
+            AdventureBackend.getAdditionalColorConverter()
+                    .registerW2P(ChatColor.class, adventureColor -> ChatColor.of(adventureColor.toString()));
+
+            AdventureBackend.getAdditionalClickEventConverter()
+                    .registerW2P(net.md_5.bungee.api.chat.ClickEvent.class, adventureClickEvent -> {
+                        net.md_5.bungee.api.chat.ClickEvent.Action bungeeAction;
+                        try {
+                            bungeeAction = net.md_5.bungee.api.chat.ClickEvent.Action.valueOf(adventureClickEvent.action().name());
+                        } catch (Throwable throwable) {
+                            bungeeAction = net.md_5.bungee.api.chat.ClickEvent.Action.OPEN_URL;
+                        }
+                        return new net.md_5.bungee.api.chat.ClickEvent(bungeeAction, adventureClickEvent.value());
+                    });
+
+            AdventureBackend.getAdditionalHoverEventConverter()
+                    .registerW2P(net.md_5.bungee.api.chat.HoverEvent.class, adventureHoverEvent ->
+                            new net.md_5.bungee.api.chat.HoverEvent(
+                                    net.md_5.bungee.api.chat.HoverEvent.Action.valueOf(adventureHoverEvent.action().name()),
+                                    adventureHoverEvent.content().as(Content.class)
+                            )
+                    );
+
+            AdventureBackend.getAdditionalItemContentConverter()
+                    .registerW2P(Item.class, adventureItemContent -> {
+                        var nbt = adventureItemContent.tag();
+                        return new Item(adventureItemContent.id().asString(), adventureItemContent.count(), nbt != null ? ItemTag.ofNbt(nbt) : null);
+                    });
+
+            AdventureBackend.getAdditionalEntityContentConverter()
+                    .registerW2P(Entity.class, adventureEntityContent -> {
+                        var name = adventureEntityContent.name();
+                        return new Entity(adventureEntityContent.type().asString(), adventureEntityContent.id().toString(), name != null ? name.as(BaseComponent.class) : null);
+                    });
+
             AbstractBungeeBackend.getAdditionalComponentConverter()
                     .registerW2P(
                             net.kyori.adventure.text.Component.class,
                             component -> gson.deserialize(ComponentSerializer.toString(component.as(BaseComponent.class)))
                     );
+
+            AbstractBungeeBackend.getAdditionalColorConverter()
+                    .registerW2P(TextColor.class, bungeeColor -> TextColor.color(bungeeColor.red(), bungeeColor.green(), bungeeColor.blue()));
+
+            AbstractBungeeBackend.getAdditionalClickEventConverter()
+                    .registerW2P(net.kyori.adventure.text.event.ClickEvent.class, bungeeClickEvent ->
+                            net.kyori.adventure.text.event.ClickEvent.clickEvent(
+                                    net.kyori.adventure.text.event.ClickEvent.Action.valueOf(bungeeClickEvent.action().name()),
+                                    bungeeClickEvent.value()
+                            )
+                    );
+
+            AbstractBungeeBackend.getAdditionalHoverEventConverter()
+                    .registerW2P(net.kyori.adventure.text.event.HoverEvent.class, bungeeHoverEvent -> {
+                        switch (bungeeHoverEvent.action()) {
+                            case SHOW_ENTITY:
+                                return net.kyori.adventure.text.event.HoverEvent.showEntity(bungeeHoverEvent.content().as(net.kyori.adventure.text.event.HoverEvent.ShowEntity.class));
+                            case SHOW_ITEM:
+                                return net.kyori.adventure.text.event.HoverEvent.showItem(bungeeHoverEvent.content().as(net.kyori.adventure.text.event.HoverEvent.ShowItem.class));
+                            default:
+                                return net.kyori.adventure.text.event.HoverEvent.showText(bungeeHoverEvent.content().as(net.kyori.adventure.text.Component.class));
+                        }
+                    });
+
+            AbstractBungeeBackend.getAdditionalItemContentConverter()
+                    .registerW2P(net.kyori.adventure.text.event.HoverEvent.ShowItem.class, bungeeItemContent -> {;
+                        //noinspection PatternValidation
+                        var id = bungeeItemContent.id();
+                        var tag = bungeeItemContent.tag();
+                        //noinspection PatternValidation
+                        return net.kyori.adventure.text.event.HoverEvent.ShowItem.of(
+                                Key.key(id.namespace(), id.value()),
+                                bungeeItemContent.count(),
+                                tag != null ? BinaryTagHolder.of(tag) : null
+                        ) ;
+                    });
+
+            AbstractBungeeBackend.getAdditionalEntityContentConverter()
+                    .registerW2P(net.kyori.adventure.text.event.HoverEvent.ShowEntity.class, bungeeEntityContent -> {
+                        //noinspection PatternValidation
+                        var type = bungeeEntityContent.type();
+                        var name = bungeeEntityContent.name();
+                        //noinspection PatternValidation
+                        return net.kyori.adventure.text.event.HoverEvent.ShowEntity.of(
+                               Key.key(type.namespace(), type.value()),
+                               bungeeEntityContent.id(),
+                               name != null ? name.as(net.kyori.adventure.text.Component.class) : null
+                        );
+                    });
         }
     }
 

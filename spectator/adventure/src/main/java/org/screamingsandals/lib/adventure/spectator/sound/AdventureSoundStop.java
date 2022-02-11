@@ -16,6 +16,10 @@
 
 package org.screamingsandals.lib.adventure.spectator.sound;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.sound.SoundStop;
@@ -47,44 +51,56 @@ public class AdventureSoundStop extends BasicWrapper<SoundStop> implements org.s
         return source == null ? null : new AdventureSoundSource(source);
     }
 
+    @Override
+    @NotNull
+    public org.screamingsandals.lib.spectator.sound.SoundStop withSoundKey(@Nullable NamespacedMappingKey soundKey) {
+        return toBuilder().soundKey(soundKey).build();
+    }
+
+    @Override
+    @NotNull
+    public org.screamingsandals.lib.spectator.sound.SoundStop withSource(@Nullable SoundSource source) {
+        return toBuilder().source(source).build();
+    }
+
+    @NotNull
+    @Override
+    public org.screamingsandals.lib.spectator.sound.SoundStop.Builder toBuilder() {
+        return new AdventureSoundStopBuilder(
+                soundKey(),
+                source()
+        );
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(fluent = true, chain = true)
+    @Setter
     public static class AdventureSoundStopBuilder implements org.screamingsandals.lib.spectator.sound.SoundStop.Builder {
 
         @Nullable
-        private NamespacedMappingKey key;
+        private NamespacedMappingKey soundKey;
 
         @Nullable
         private SoundSource source;
 
-        @Override
-        @NotNull
-        public Builder soundKey(@Nullable NamespacedMappingKey key) {
-            this.key = key;
-            return this;
-        }
-
-        @Override
-        @NotNull
-        public Builder source(@Nullable SoundSource source) {
-            this.source = source;
-            return this;
-        }
-
+        @SuppressWarnings("PatternValidation")
         @Override
         @NotNull
         public org.screamingsandals.lib.spectator.sound.SoundStop build() {
-            if (key == null && source == null) {
+            if (soundKey == null && source == null) {
                 return new AdventureSoundStop(SoundStop.all());
             } else if (source == null) {
                 return new AdventureSoundStop(SoundStop.named(
-                        Key.key(key.namespace(), key.value())
+                        Key.key(soundKey.namespace(), soundKey.value())
                 ));
-            } else if (key == null) {
+            } else if (soundKey == null) {
                 return new AdventureSoundStop(SoundStop.source(
                         source.as(Sound.Source.class)
                 ));
             } else {
                 return new AdventureSoundStop(SoundStop.namedOnSource(
-                       Key.key(this.key.namespace(), this.key.value()),
+                       Key.key(this.soundKey.namespace(), this.soundKey.value()),
                        source.as(Sound.Source.class)
                 ));
             }

@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.spectator.event.hover;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.Spectator;
@@ -24,34 +26,64 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import java.util.UUID;
 
 public interface EntityContent extends Content, EntityContentLike {
+    @Contract(value = "-> new", pure = true)
+    @NotNull
     static EntityContent.Builder builder() {
         return Spectator.getBackend().entityContent();
     }
 
+    @NotNull
     UUID id();
 
+    @Contract(pure = true)
+    @NotNull
+    EntityContent withId(@NotNull UUID id);
+
+    @NotNull
     NamespacedMappingKey type();
+
+    @Contract(pure = true)
+    @NotNull
+    EntityContent withType(@NotNull NamespacedMappingKey type);
 
     @Nullable
     Component name();
 
+    @Contract(pure = true)
+    @NotNull
+    EntityContent withType(@Nullable Component name);
+
+    @Contract(value = "-> new", pure = true)
+    @NotNull
+    EntityContent.Builder toBuilder();
+
     @Override
+    @NotNull
     default EntityContent asEntityContent() {
         return this;
     }
 
     @Override
+    @NotNull
     default Content asContent() {
         return this;
     }
 
     interface Builder {
-        Builder id(UUID id);
+        @Contract("_ -> this")
+        @NotNull
+        Builder id(@NotNull UUID id);
 
-        Builder type(NamespacedMappingKey type);
+        @Contract("_ -> this")
+        @NotNull
+        Builder type(@NotNull NamespacedMappingKey type);
 
+        @Contract("_ -> this")
+        @NotNull
         Builder name(@Nullable Component name);
 
+        @Contract(value = "-> new", pure = true)
+        @NotNull
         EntityContent build();
     }
 }

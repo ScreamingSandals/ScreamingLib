@@ -37,8 +37,6 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * An argument description implementation that uses Adventure components.
- *
- * @since 1.4.0
  */
 public final class RichDescription implements ArgumentDescription {
     private static final RichDescription EMPTY = new RichDescription(Component.empty());

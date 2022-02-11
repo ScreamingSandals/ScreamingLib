@@ -30,8 +30,6 @@ import org.screamingsandals.lib.spectator.Component;
 
 /**
  * Extra command metadata for providing rich text.
- *
- * @since 1.4.0
  */
 @UtilityClass
 public final class MinecraftExtrasMetaKeys {

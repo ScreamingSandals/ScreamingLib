@@ -16,10 +16,14 @@
 
 package org.screamingsandals.lib.spectator.event.hover;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface ItemContentLike extends ContentLike {
+    @NotNull
     ItemContent asItemContent();
 
     @Override
+    @NotNull
     default Content asContent() {
         return asItemContent();
     }

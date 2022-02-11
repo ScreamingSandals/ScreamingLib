@@ -16,8 +16,13 @@
 
 package org.screamingsandals.lib.bungee.spectator.event.hover;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.hover.content.Entity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.spectator.Component;
@@ -33,11 +38,19 @@ public class BungeeEntityContent extends BasicWrapper<Entity> implements EntityC
     }
 
     @Override
+    @NotNull
     public UUID id() {
         return UUID.fromString(wrappedObject.getId());
     }
 
     @Override
+    @NotNull
+    public EntityContent withId(@NotNull UUID id) {
+        return new BungeeEntityContent(new Entity(wrappedObject.getType(), id.toString(), wrappedObject.getName()));
+    }
+
+    @Override
+    @NotNull
     public NamespacedMappingKey type() {
         var type = wrappedObject.getType();
         if (type == null) {
@@ -47,35 +60,53 @@ public class BungeeEntityContent extends BasicWrapper<Entity> implements EntityC
     }
 
     @Override
+    @NotNull
+    public EntityContent withType(@NotNull NamespacedMappingKey type) {
+        return new BungeeEntityContent(new Entity(type.asString(), wrappedObject.getId(), wrappedObject.getName()));
+    }
+
+    @Override
     @Nullable
     public Component name() {
         return AbstractBungeeBackend.wrapComponent(wrappedObject.getName());
     }
 
+    @Override
+    @NotNull
+    public EntityContent withType(@Nullable Component name) {
+        return new BungeeEntityContent(new Entity(wrappedObject.getType(), wrappedObject.getId(), name == null ? null : name.as(BaseComponent.class)));
+    }
+
+    @Override
+    @NotNull
+    public EntityContent.Builder toBuilder() {
+        return new BungeeEntityContentBuilder(
+                id(),
+                type(),
+                name()
+        );
+    }
+
+    @Override
+    public <T> T as(Class<T> type) {
+        try {
+            return super.as(type);
+        } catch (Throwable ignored) {
+            return AbstractBungeeBackend.getAdditionalEntityContentConverter().convert(this, type);
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(fluent = true, chain = true)
+    @Setter
     public static class BungeeEntityContentBuilder implements EntityContent.Builder {
         private UUID id;
         private NamespacedMappingKey type;
         private Component name;
 
         @Override
-        public Builder id(UUID id) {
-            this.id = id;
-            return this;
-        }
-
-        @Override
-        public Builder type(NamespacedMappingKey type) {
-            this.type = type;
-            return this;
-        }
-
-        @Override
-        public Builder name(@Nullable Component name) {
-            this.name = name;
-            return this;
-        }
-
-        @Override
+        @NotNull
         public EntityContent build() {
             return new BungeeEntityContent(new Entity(
                     type != null ? type.asString() : "minecraft:pig",

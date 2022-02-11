@@ -16,8 +16,13 @@
 
 package org.screamingsandals.lib.adventure.spectator.event.hover;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.event.HoverEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.spectator.Component;
@@ -34,13 +39,28 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
     }
 
     @Override
+    @NotNull
     public UUID id() {
         return wrappedObject.id();
     }
 
     @Override
+    @NotNull
+    public EntityContent withId(@NotNull UUID id) {
+        return new AdventureEntityContent(HoverEvent.ShowEntity.of(wrappedObject.type(), id, wrappedObject.name()));
+    }
+
+    @Override
+    @NotNull
     public NamespacedMappingKey type() {
         return NamespacedMappingKey.of(wrappedObject.type().asString());
+    }
+
+    @SuppressWarnings("PatternValidation")
+    @Override
+    @NotNull
+    public EntityContent withType(@NotNull NamespacedMappingKey type) {
+        return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.getNamespace(), type.getKey()), wrappedObject.id(), wrappedObject.name()));
     }
 
     @Override
@@ -49,6 +69,35 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
         return AdventureBackend.wrapComponent(wrappedObject.name());
     }
 
+    @Override
+    @NotNull
+    public EntityContent withType(@Nullable Component name) {
+        return new AdventureEntityContent(HoverEvent.ShowEntity.of(wrappedObject.type(), wrappedObject.id(), name == null ? null : name.as(net.kyori.adventure.text.Component.class)));
+    }
+
+    @Override
+    @NotNull
+    public EntityContent.Builder toBuilder() {
+        return new AdventureEntityContentBuilder(
+                id(),
+                type(),
+                name()
+        );
+    }
+
+    @Override
+    public <T> T as(Class<T> type) {
+        try {
+            return super.as(type);
+        } catch (Throwable ignored) {
+            return AdventureBackend.getAdditionalEntityContentConverter().convert(this, type);
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Accessors(fluent = true, chain = true)
+    @Setter
     public static class AdventureEntityContentBuilder implements EntityContent.Builder {
         private static final NamespacedMappingKey INVALID_KEY = NamespacedMappingKey.of("minecraft", "pig");
 
@@ -56,26 +105,9 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
         private NamespacedMappingKey type = INVALID_KEY; // Should be pig if not present
         private Component name;
 
-        @Override
-        public Builder id(UUID id) {
-            this.id = id;
-            return this;
-        }
-
-        @Override
-        public Builder type(NamespacedMappingKey type) {
-            this.type = type;
-            return this;
-        }
-
-        @Override
-        public Builder name(@Nullable Component name) {
-            this.name = name;
-            return this;
-        }
-
         @SuppressWarnings("PatternValidation")
         @Override
+        @NotNull
         public EntityContent build() {
             Preconditions.checkArgument(id != null, "Id of the entity is not specified!");
             return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.getNamespace(), type.getKey()), id, name == null ? null : name.as(net.kyori.adventure.text.Component.class)));

@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.spectator.event;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.Spectator;
@@ -25,36 +27,52 @@ import org.screamingsandals.lib.utils.Wrapper;
 
 public interface HoverEvent extends Wrapper, RawValueHolder {
 
+    @Contract(value = "-> new", pure = true)
+    @NotNull
     static HoverEvent.Builder builder() {
         return Spectator.getBackend().hoverEvent();
     }
 
-    static HoverEvent showText(Component text) {
+    @Contract(value = "_ -> new", pure = true)
+    @NotNull
+    static HoverEvent showText(@NotNull Component text) {
         return Spectator.getBackend().hoverEvent().action(Action.SHOW_TEXT).content(text).build();
     }
 
-    static HoverEvent showText(ComponentLike text) {
+    @Contract(value = "_ -> new", pure = true)
+    @NotNull
+    static HoverEvent showText(@NotNull ComponentLike text) {
         return Spectator.getBackend().hoverEvent().action(Action.SHOW_TEXT).content(text).build();
     }
 
-    static HoverEvent showItem(ItemContent itemContent) {
+    @Contract(value = "_ -> new", pure = true)
+    @NotNull
+    static HoverEvent showItem(@NotNull ItemContent itemContent) {
         return Spectator.getBackend().hoverEvent().action(Action.SHOW_ITEM).content(itemContent).build();
     }
 
-    static HoverEvent showItem(ItemContentLike itemContent) {
+    @Contract(value = "_ -> new", pure = true)
+    @NotNull
+    static HoverEvent showItem(@NotNull ItemContentLike itemContent) {
         return Spectator.getBackend().hoverEvent().action(Action.SHOW_ITEM).content(itemContent).build();
     }
 
-    static HoverEvent showEntity(EntityContent itemContent) {
+    @Contract(value = "_ -> new", pure = true)
+    @NotNull
+    static HoverEvent showEntity(@NotNull EntityContent itemContent) {
         return Spectator.getBackend().hoverEvent().action(Action.SHOW_ENTITY).content(itemContent).build();
     }
 
-    static HoverEvent showEntity(EntityContentLike itemContent) {
+    @Contract(value = "_ -> new", pure = true)
+    @NotNull
+    static HoverEvent showEntity(@NotNull EntityContentLike itemContent) {
         return Spectator.getBackend().hoverEvent().action(Action.SHOW_ENTITY).content(itemContent).build();
     }
 
+    @NotNull
     Action action();
 
+    @NotNull
     Content content();
 
     enum Action {
@@ -65,14 +83,22 @@ public interface HoverEvent extends Wrapper, RawValueHolder {
     }
 
     interface Builder {
-        Builder action(Action action);
+        @Contract("_ -> this")
+        @NotNull
+        Builder action(@NotNull Action action);
 
-        Builder content(Content content);
+        @Contract("_ -> this")
+        @NotNull
+        Builder content(@NotNull Content content);
 
-        default Builder content(ContentLike contentLike) {
+        @Contract("_ -> this")
+        @NotNull
+        default Builder content(@NotNull ContentLike contentLike) {
             return content(contentLike.asContent());
         }
 
+        @Contract(value = "-> new", pure = true)
+        @NotNull
         HoverEvent build();
     }
 }

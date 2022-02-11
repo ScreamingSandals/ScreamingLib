@@ -58,6 +58,18 @@ public class AdventureBackend implements SpectatorBackend {
     @Getter
     private static final BidirectionalConverter<AdventureComponent> additionalComponentConverter = BidirectionalConverter.build();
     @Getter
+    private static final BidirectionalConverter<AdventureClickEvent> additionalClickEventConverter = BidirectionalConverter.build();
+    @Getter
+    private static final BidirectionalConverter<AdventureHoverEvent> additionalHoverEventConverter = BidirectionalConverter.build();
+    @Getter
+    // not needed for legacy because we can never have native Adventure alongside with pre-1.16 Bungee component api
+    private static final BidirectionalConverter<AdventureEntityContent> additionalEntityContentConverter = BidirectionalConverter.build();
+    @Getter
+    // not needed for legacy because we can never have native Adventure alongside with pre-1.16 Bungee component api
+    private static final BidirectionalConverter<AdventureItemContent> additionalItemContentConverter = BidirectionalConverter.build();
+    @Getter
+    private static final BidirectionalConverter<AdventureColor> additionalColorConverter = BidirectionalConverter.build();
+    @Getter
     private static final LegacyComponentSerializer legacyComponentSerializer = LegacyComponentSerializer.builder()
             .hexColors()
             .useUnusualXRepeatedCharacterHexFormat()

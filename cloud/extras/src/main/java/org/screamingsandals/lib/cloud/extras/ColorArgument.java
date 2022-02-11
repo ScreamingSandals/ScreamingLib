@@ -47,7 +47,6 @@ import org.screamingsandals.lib.spectator.Color;
  * Accepts names, Legacy Minecraft {@literal &} color codes, and Hex Codes (#RRGGBB or RRGGBB)
  *
  * @param <C> Command sender type
- * @since 1.1.0
  */
 public final class ColorArgument<C> extends CommandArgument<C, Color> {
 
