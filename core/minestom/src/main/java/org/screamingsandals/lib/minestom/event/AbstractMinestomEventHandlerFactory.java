@@ -54,7 +54,7 @@ public abstract class AbstractMinestomEventHandlerFactory<T extends Event, SE ex
                 }
 
                 if (wrapped instanceof Cancellable && event instanceof CancellableEvent) {
-                    ((Cancellable) wrapped).setCancelled(((CancellableEvent) event).isCancelled());
+                    ((Cancellable) wrapped).cancelled(((CancellableEvent) event).isCancelled());
                 }
 
                 try {
@@ -64,7 +64,7 @@ public abstract class AbstractMinestomEventHandlerFactory<T extends Event, SE ex
                 }
 
                 if (wrapped instanceof Cancellable && event instanceof CancellableEvent) {
-                    ((CancellableEvent) event).setCancelled(((Cancellable) wrapped).isCancelled());
+                    ((CancellableEvent) event).setCancelled(((Cancellable) wrapped).cancelled());
                 }
             };
             plugin.getEventNode().addListener(

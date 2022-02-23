@@ -39,7 +39,7 @@ public interface Cancellable {
      * @return true if the event was cancelled
      */
     @ApiStatus.ScheduledForRemoval
-    @Deprecated
+    @Deprecated(forRemoval = true)
     default boolean isCancelled() {
         return cancelled();
     }
@@ -50,7 +50,7 @@ public interface Cancellable {
      * @param cancel to cancel
      */
     @ApiStatus.ScheduledForRemoval
-    @Deprecated
+    @Deprecated(forRemoval = true)
     default void setCancelled(boolean cancel) {
         cancelled(cancel);
     }
