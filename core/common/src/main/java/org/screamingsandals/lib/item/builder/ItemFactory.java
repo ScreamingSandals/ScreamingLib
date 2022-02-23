@@ -23,13 +23,12 @@ import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.item.*;
+import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.meta.*;
-import org.screamingsandals.lib.utils.AdventureHelper;
-import org.screamingsandals.lib.utils.BidirectionalConverter;
-import org.screamingsandals.lib.utils.ConfigurateUtils;
-import org.screamingsandals.lib.utils.ConsumerExecutor;
+import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -39,7 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -277,17 +275,19 @@ public abstract class ItemFactory {
         return factory.asView0(item);
     }
 
+    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     public static Optional<Item> build(Object stack) {
         return readStack(stack);
     }
 
-    public static Optional<Item> build(Consumer<ItemBuilder> builderConsumer) {
+    public static Optional<Item> build(ReceiverConsumer<ItemBuilder> builderConsumer) {
         var builder = builder();
-        ConsumerExecutor.execute(builderConsumer, builder);
+        builderConsumer.accept(builder);
         return builder.build();
     }
 
-    public static Optional<Item> build(Object stack, Consumer<ItemBuilder> builderConsumer) {
+    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
+    public static Optional<Item> build(Object stack, ReceiverConsumer<ItemBuilder> builderConsumer) {
         var item = readStack(stack);
         if (item.isEmpty()) {
             return Optional.empty();
@@ -295,7 +295,7 @@ public abstract class ItemFactory {
 
         if (builderConsumer != null) {
             var builder = item.get().builder();
-            ConsumerExecutor.execute(builderConsumer, builder);
+            builderConsumer.accept(builder);
             return builder.build();
         }
         return item;

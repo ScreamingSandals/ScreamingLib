@@ -20,6 +20,8 @@ import net.kyori.adventure.text.Component
 import org.jetbrains.annotations.ApiStatus
 import org.screamingsandals.lib.container.Container
 import org.screamingsandals.lib.entity.EntityBasic
+import org.screamingsandals.lib.event.EventManager
+import org.screamingsandals.lib.event.SEvent
 import org.screamingsandals.lib.item.Item
 import org.screamingsandals.lib.item.ItemTypeHolder
 import org.screamingsandals.lib.item.builder.ItemFactory
@@ -35,6 +37,7 @@ import org.screamingsandals.lib.visuals.LinedVisual
 import org.screamingsandals.lib.visuals.Visual
 import org.screamingsandals.lib.world.LocationHolder
 import org.screamingsandals.lib.world.WorldHolder
+import java.util.concurrent.CompletableFuture
 import kotlin.reflect.KClass
 
 infix fun <T : Any> Wrapper.unwrap(type: KClass<T>): T = `as`(type.java)
@@ -45,6 +48,12 @@ fun ComparableWrapper.compare(vararg type: Any): Boolean = `is`(type)
 infix fun EntityBasic.tp(loc: LocationHolder) {
     teleport(loc)
 }
+
+fun <K: SEvent> K.fire(): K = EventManager.fire(this)
+infix fun <K: SEvent> K.fire(manager: EventManager): K = manager.fireEvent(this)
+
+fun <K: SEvent> K.fireAsync(): CompletableFuture<K> = EventManager.fireAsync(this)
+infix fun <K: SEvent> K.fireAsync(manager: EventManager): CompletableFuture<K> = manager.fireEventAsync(this)
 
 operator fun Vector2D.unaryMinus(): Vector2D = clone().invert()
 operator fun Vector2D.plus(vec: Vector2D): Vector2D = clone().add(vec)
