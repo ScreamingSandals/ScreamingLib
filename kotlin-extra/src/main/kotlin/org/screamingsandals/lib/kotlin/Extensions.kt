@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component
 import org.jetbrains.annotations.ApiStatus
 import org.screamingsandals.lib.container.Container
 import org.screamingsandals.lib.entity.EntityBasic
+import org.screamingsandals.lib.event.Cancellable
 import org.screamingsandals.lib.event.EventManager
 import org.screamingsandals.lib.event.SEvent
 import org.screamingsandals.lib.item.Item
@@ -27,11 +28,11 @@ infix fun ComparableWrapper.compare(type: Any): Boolean = this.`is`(type)
 @ApiStatus.Experimental
 fun ComparableWrapper.compare(vararg type: Any): Boolean = this.`is`(type)
 
-fun <K: SEvent> K.fire(): K = EventManager.fire(this)
-infix fun <K: SEvent> K.fire(manager: EventManager): K = manager.fireEvent(this)
+fun <K : SEvent> K.fire(): K = EventManager.fire(this)
+infix fun <K : SEvent> K.fire(manager: EventManager): K = manager.fireEvent(this)
 
-fun <K: SEvent> K.fireAsync(): CompletableFuture<K> = EventManager.fireAsync(this)
-infix fun <K: SEvent> K.fireAsync(manager: EventManager): CompletableFuture<K> = manager.fireEventAsync(this)
+fun <K : SEvent> K.fireAsync(): CompletableFuture<K> = EventManager.fireAsync(this)
+infix fun <K : SEvent> K.fireAsync(manager: EventManager): CompletableFuture<K> = manager.fireEventAsync(this)
 
 operator fun Vector2D.unaryMinus(): Vector2D = this.clone().invert()
 operator fun Vector2D.plus(vec: Vector2D): Vector2D = this.clone().add(vec)
@@ -64,14 +65,18 @@ operator fun Container.minusAssign(item: Item) {
     this.removeItem(item)
 }
 
-operator fun <T : Any> Visual<T>.plusAssign(viewer: PlayerWrapper) {
+operator fun Visual<*>.plusAssign(viewer: PlayerWrapper) {
     this.addViewer(viewer)
 }
-operator fun <T : Any> Visual<T>.minusAssign(viewer: PlayerWrapper) {
+operator fun Visual<*>.minusAssign(viewer: PlayerWrapper) {
     this.removeViewer(viewer)
 }
-operator fun <T : Any> Visual<T>.contains(viewer: PlayerWrapper) = this.visibleTo(viewer)
+operator fun Visual<*>.contains(viewer: PlayerWrapper) = this.visibleTo(viewer)
 
-operator fun <T : Visual<T>> LinedVisual<T>.plusAssign(line: Component) {
+operator fun LinedVisual<*>.plusAssign(line: Component) {
     this.newLine(this.lines().size, line)
 }
+
+var Cancellable.cancelled: Boolean
+    get() = cancelled()
+    set(value) = cancelled(value)
