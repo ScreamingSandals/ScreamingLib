@@ -266,7 +266,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                 .entities(Collections.singletonList(AdventureHelper.toLegacy(tabListName)))
                 .sendPacket(player);
 
-                new SClientboundSetPlayerTeamPacket()
+        new SClientboundSetPlayerTeamPacket()
                 .teamKey(AdventureHelper.toLegacy(tabListName))
                 .mode(SClientboundSetPlayerTeamPacket.Mode.CREATE)
                 .displayName(Component.empty())
