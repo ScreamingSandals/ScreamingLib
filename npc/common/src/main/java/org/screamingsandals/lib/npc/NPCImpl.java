@@ -33,13 +33,17 @@ import org.screamingsandals.lib.npc.skin.SkinLayerValues;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import org.screamingsandals.lib.plugin.PluginManager;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.visuals.impl.AbstractTouchableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -60,8 +64,24 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     private volatile boolean lookAtPlayer;
     private final List<MetadataItem> metadata;
 
+    
     private SClientboundSetPlayerTeamPacket.CollisionRule collisionRule;
-
+    private static boolean IS_BUNGEECORD_ENABLED;
+    static {
+        File spigotYmlFile = new File("spigot.yml");
+        IS_BUNGEECORD_ENABLED = false;
+        if (PluginManager.getPlatformType() == PlatformType.BUKKIT && spigotYmlFile.isFile()) {
+            try (Scanner scanner = new Scanner(spigotYmlFile)) {
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine().toLowerCase();
+                    if (line.indexOf("bungeecord") > 0 && line.indexOf("true") > 0)
+                        IS_BUNGEECORD_ENABLED = true;
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public NPCImpl(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
 
@@ -252,19 +272,20 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
     private void sendSpawnPackets(PlayerWrapper player) {
 
-        new SClientboundSetPlayerTeamPacket()
-                .teamKey(AdventureHelper.toLegacy(tabListName))
-                .mode(SClientboundSetPlayerTeamPacket.Mode.REMOVE)
-                .displayName(tabListName)
-                .collisionRule(collisionRule)
-                .tagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility.NEVER)
-                .teamColor(NamedTextColor.BLACK)
-                .teamPrefix(Component.empty())
-                .teamSuffix(Component.empty())
-                .friendlyFire(false)
-                .seeInvisible(true)
-                .entities(Collections.singletonList(AdventureHelper.toLegacy(tabListName)))
-                .sendPacket(player);
+        if(IS_BUNGEECORD_ENABLED)
+            new SClientboundSetPlayerTeamPacket()
+                    .teamKey(AdventureHelper.toLegacy(tabListName))
+                    .mode(SClientboundSetPlayerTeamPacket.Mode.REMOVE)
+                    .displayName(tabListName)
+                    .collisionRule(collisionRule)
+                    .tagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility.NEVER)
+                    .teamColor(NamedTextColor.BLACK)
+                    .teamPrefix(Component.empty())
+                    .teamSuffix(Component.empty())
+                    .friendlyFire(false)
+                    .seeInvisible(true)
+                    .entities(Collections.singletonList(AdventureHelper.toLegacy(tabListName)))
+                    .sendPacket(player);
 
         new SClientboundSetPlayerTeamPacket()
                 .teamKey(AdventureHelper.toLegacy(tabListName))
