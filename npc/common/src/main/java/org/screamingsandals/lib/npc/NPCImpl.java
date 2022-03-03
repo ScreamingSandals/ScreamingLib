@@ -71,7 +71,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     static {
         File spigotYmlFile = new File("spigot.yml");
         IS_BUNGEECORD_ENABLED = false;
-        java.util.regex.Pattern pattern = Pattern.compile("bungeecord: ?(y|Y|yes|Yes|YES|true|True|TRUE|on|On|ON)");
+        java.util.regex.Pattern pattern = Pattern.compile("bungeecord: ?(y|yes|true|on)",Pattern.CASE_INSENSITIVE);
 
         if (PluginManager.getPlatformType() == PlatformType.BUKKIT && spigotYmlFile.isFile()) {
             try (Scanner scanner = new Scanner(spigotYmlFile)) {
