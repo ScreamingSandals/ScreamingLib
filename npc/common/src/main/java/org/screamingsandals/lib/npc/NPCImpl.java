@@ -251,7 +251,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     }
 
     private void sendSpawnPackets(PlayerWrapper player) {
-        if(NPCManager.isBungeecordEnabled())
+        if (NPCManager.isBungeecordEnabled()) {
             new SClientboundSetPlayerTeamPacket()
                     .teamKey(AdventureHelper.toLegacy(tabListName))
                     .mode(SClientboundSetPlayerTeamPacket.Mode.REMOVE)
@@ -265,6 +265,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                     .seeInvisible(true)
                     .entities(Collections.singletonList(AdventureHelper.toLegacy(tabListName)))
                     .sendPacket(player);
+        }
 
         new SClientboundSetPlayerTeamPacket()
                 .teamKey(AdventureHelper.toLegacy(tabListName))

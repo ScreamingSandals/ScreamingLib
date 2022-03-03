@@ -42,14 +42,13 @@ import java.util.regex.Pattern;
 @Service
 public class NPCManager extends AbstractVisualsManager<NPC> {
     private static NPCManager manager = null;
-    private static boolean IS_BUNGEECORD_ENABLED;
+    private static boolean IS_BUNGEECORD_ENABLED = false;
 
     public NPCManager(Path dataFolder) {
         Preconditions.checkArgument(manager == null, "NPCManager has already been initialized!");
         manager = this;
 
         File spigotYmlFile = dataFolder.getParent().resolveSibling("spigot.yml").toFile();
-        IS_BUNGEECORD_ENABLED = false;
         Pattern pattern = Pattern.compile("bungeecord: ?(?:y|yes|true|on)", Pattern.CASE_INSENSITIVE);
 
         if (PluginManager.getPlatformType() == PlatformType.BUKKIT && spigotYmlFile.isFile()) {
@@ -57,8 +56,9 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine().toLowerCase();
 
-                    if (pattern.matcher(line).matches())
+                    if (pattern.matcher(line).find()) {
                         IS_BUNGEECORD_ENABLED = true;
+                    }
                 }
             } catch (FileNotFoundException e) {
                 //Will never happen, we checked spigotYmlFile.isFile()
