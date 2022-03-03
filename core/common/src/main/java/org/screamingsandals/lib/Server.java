@@ -21,6 +21,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
+import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.world.WorldHolder;
 
@@ -134,6 +135,10 @@ public abstract class Server {
         Preconditions.checkNotNull(server, "Server has not yet been initialized!").shutdown0();
     }
 
+    public static ProxyType getProxyType() {
+        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getProxyType0();
+    }
+
     public static Integer getProtocolVersion() {
         if (PROTOCOL_VERSION == null) {
             PROTOCOL_VERSION = Preconditions.checkNotNull(server, "Server has not yet been initialized!").getProtocolVersion0();
@@ -181,6 +186,8 @@ public abstract class Server {
     public abstract List<ChannelFuture> getConnections0();
 
     public abstract void shutdown0();
+
+    public abstract ProxyType getProxyType0();
 
     public abstract Integer getProtocolVersion0();
 
