@@ -21,25 +21,59 @@ import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.SPlayerMoveEvent;
 import org.screamingsandals.lib.npc.event.NPCInteractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.plugin.PluginManager;
 import org.screamingsandals.lib.utils.InteractType;
+import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.visuals.AbstractVisualsManager;
 import org.screamingsandals.lib.visuals.LocatableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Service
 public class NPCManager extends AbstractVisualsManager<NPC> {
     private static NPCManager manager = null;
+    private static boolean IS_BUNGEECORD_ENABLED;
 
-    public NPCManager() {
+    public NPCManager(Path dataFolder) {
         Preconditions.checkArgument(manager == null, "NPCManager has already been initialized!");
         manager = this;
-    }
 
+        File spigotYmlFile = dataFolder.getParent().resolveSibling("spigot.yml").toFile();
+        IS_BUNGEECORD_ENABLED = false;
+        Pattern pattern = Pattern.compile("bungeecord: ?(?:y|yes|true|on)", Pattern.CASE_INSENSITIVE);
+
+        if (PluginManager.getPlatformType() == PlatformType.BUKKIT && spigotYmlFile.isFile()) {
+            try (Scanner scanner = new Scanner(spigotYmlFile)) {
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine().toLowerCase();
+
+                    if (pattern.matcher(line).matches())
+                        IS_BUNGEECORD_ENABLED = true;
+                }
+            } catch (FileNotFoundException e) {
+                //Will never happen, we checked spigotYmlFile.isFile()
+            }
+        }
+    }
+    
+    
+        
+    
+
+    public static boolean isBungeecordEnabled() {
+        return IS_BUNGEECORD_ENABLED;
+    }
+    
     public static boolean isInitialized() {
         return manager != null;
     }
