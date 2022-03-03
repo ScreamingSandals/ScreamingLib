@@ -46,6 +46,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Pattern;
 
 @Accessors(fluent = true)
 @Getter
@@ -70,11 +71,14 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     static {
         File spigotYmlFile = new File("spigot.yml");
         IS_BUNGEECORD_ENABLED = false;
+        java.util.regex.Pattern pattern = Pattern.compile("bungeecord: ?(y|Y|yes|Yes|YES|true|True|TRUE|on|On|ON)");
+
         if (PluginManager.getPlatformType() == PlatformType.BUKKIT && spigotYmlFile.isFile()) {
             try (Scanner scanner = new Scanner(spigotYmlFile)) {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine().toLowerCase();
-                    if (line.indexOf("bungeecord") > 0 && line.indexOf("true") > 0)
+
+                    if (pattern.matcher(line).matches())
                         IS_BUNGEECORD_ENABLED = true;
                 }
             } catch (FileNotFoundException e) {
