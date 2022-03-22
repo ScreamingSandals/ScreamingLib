@@ -16,13 +16,13 @@ theme:
     # - navigation.tabs
   palette:
     - scheme: slate
-      primary: cyan
+      primary: teal
       media: "(prefers-color-scheme: dark)"
       toggle:
         icon: material/toggle-switch
         name: Switch to light mode
     - scheme: default
-      primary: cyan
+      primary: teal
       media: "(prefers-color-scheme: light)"
       toggle:
         icon: material/toggle-switch-off-outline
@@ -68,4 +68,3 @@ nav:
     - Packets: modules/packets.md
     - Visuals: modules/visuals.md
     - Sidebar: modules/sidebar.md
-  - NMSMapper: nmsmapper.md
