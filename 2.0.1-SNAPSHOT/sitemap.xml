@@ -2,42 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>http://localhost:8000/2.0.1-SNAPSHOT/</loc>
-         <lastmod>2022-01-18</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>http://localhost:8000/2.0.1-SNAPSHOT/nmsmapper/</loc>
-         <lastmod>2022-01-18</lastmod>
+         <lastmod>2022-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://localhost:8000/2.0.1-SNAPSHOT/modules/command/</loc>
-         <lastmod>2022-01-18</lastmod>
+         <lastmod>2022-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://localhost:8000/2.0.1-SNAPSHOT/modules/core/</loc>
-         <lastmod>2022-01-18</lastmod>
+         <lastmod>2022-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://localhost:8000/2.0.1-SNAPSHOT/modules/npc/</loc>
-         <lastmod>2022-01-18</lastmod>
+         <lastmod>2022-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://localhost:8000/2.0.1-SNAPSHOT/modules/packets/</loc>
-         <lastmod>2022-01-18</lastmod>
+         <lastmod>2022-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://localhost:8000/2.0.1-SNAPSHOT/modules/sidebar/</loc>
-         <lastmod>2022-01-18</lastmod>
+         <lastmod>2022-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>http://localhost:8000/2.0.1-SNAPSHOT/modules/visuals/</loc>
-         <lastmod>2022-01-18</lastmod>
+         <lastmod>2022-03-22</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
