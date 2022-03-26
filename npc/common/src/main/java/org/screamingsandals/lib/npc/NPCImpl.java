@@ -34,6 +34,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
+import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.visuals.impl.AbstractTouchableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -46,6 +47,7 @@ import java.util.concurrent.ExecutionException;
 @Setter
 public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     private static final GameModeHolder GAME_MODE = GameModeHolder.of("SURVIVAL");
+    private static final boolean IS_BUNGEE = Server.getProxyType() == ProxyType.BUNGEE;
 
     private final int entityId;
     private final Hologram hologram;
@@ -249,10 +251,27 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     }
 
     private void sendSpawnPackets(PlayerWrapper player) {
+        // sends a team deregister packet to work around bungeecord bugs
+        if (IS_BUNGEE) {
+            new SClientboundSetPlayerTeamPacket()
+                    .teamKey(tabListName.toLegacy())
+                    .mode(SClientboundSetPlayerTeamPacket.Mode.REMOVE)
+                    .displayName(tabListName)
+                    .collisionRule(collisionRule)
+                    .tagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility.NEVER)
+                    .teamColor(SClientboundSetPlayerTeamPacket.TeamColor.BLACK)
+                    .teamPrefix(Component.empty())
+                    .teamSuffix(Component.empty())
+                    .friendlyFire(false)
+                    .seeInvisible(true)
+                    .entities(Collections.singletonList(tabListName.toLegacy()))
+                    .sendPacket(player);
+        }
+
         new SClientboundSetPlayerTeamPacket()
                 .teamKey(tabListName.toLegacy())
                 .mode(SClientboundSetPlayerTeamPacket.Mode.CREATE)
-                .displayName(tabListName)
+                .displayName(IS_BUNGEE ? Component.empty() : tabListName)
                 .collisionRule(collisionRule)
                 .tagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility.NEVER)
                 .teamColor(SClientboundSetPlayerTeamPacket.TeamColor.BLACK)

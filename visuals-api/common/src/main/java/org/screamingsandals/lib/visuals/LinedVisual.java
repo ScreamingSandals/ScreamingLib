@@ -40,6 +40,7 @@ public interface LinedVisual<T> extends Visual<T> {
 
     /**
      * Tries to get a line by given identifier.
+     *
      * @param identifier where's my identity?!
      * @return this visual
      */
@@ -138,6 +139,7 @@ public interface LinedVisual<T> extends Visual<T> {
 
     /**
      * Replaces all lines.
+     *
      * @param lines new lines :)
      * @return this visual
      */
@@ -145,6 +147,7 @@ public interface LinedVisual<T> extends Visual<T> {
 
     /**
      * Replaces all lines.
+     *
      * @param lines new lines :)
      * @return this visual
      */
