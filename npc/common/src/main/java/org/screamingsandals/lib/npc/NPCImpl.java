@@ -267,6 +267,22 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     }
 
     private void sendSpawnPackets(PlayerWrapper player) {
+        if (IS_BUNGEE) {
+            new SClientboundSetPlayerTeamPacket()
+                    .teamKey(AdventureHelper.toLegacy(tabListName))
+                    .mode(SClientboundSetPlayerTeamPacket.Mode.REMOVE)
+                    .displayName(tabListName)
+                    .collisionRule(collisionRule)
+                    .tagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility.NEVER)
+                    .teamColor(NamedTextColor.BLACK)
+                    .teamPrefix(Component.empty())
+                    .teamSuffix(Component.empty())
+                    .friendlyFire(false)
+                    .seeInvisible(true)
+                    .entities(Collections.singletonList(AdventureHelper.toLegacy(tabListName)))
+                    .sendPacket(player);
+        }
+
         new SClientboundSetPlayerTeamPacket()
                 .teamKey(AdventureHelper.toLegacy(tabListName))
                 .mode(SClientboundSetPlayerTeamPacket.Mode.CREATE)
