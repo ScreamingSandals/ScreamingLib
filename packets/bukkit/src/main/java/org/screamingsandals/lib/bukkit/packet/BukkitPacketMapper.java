@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.packet;
 
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.exception.CancelEncoderException;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -32,6 +33,9 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
+import java.util.Collection;
+import java.util.List;
+
 @Service(dependsOn = {
         ServerboundInteractPacketListener.class
 })
@@ -40,14 +44,8 @@ public class BukkitPacketMapper extends PacketMapper {
     private final LoggerWrapper logger;
 
     @Override
-    public void sendPacket0(PlayerWrapper player, AbstractPacket packet) {
-        Preconditions.checkNotNull(packet, "Cannot send null packet to player!");
-        Preconditions.checkNotNull(player, "Cannot send packet to null player!");
-
-        if (!player.isOnline()) {
-            logger.trace("Player: {} is offline, ignoring packet: {}", player.getName(), packet.getClass().getSimpleName());
-            return;
-        }
+    public void sendPacket0(Collection<PlayerWrapper> players, AbstractPacket packet) {
+        Preconditions.checkNotNull(packet, "Packet cannot be null!, skipping packet...");
 
         final var buffer = Unpooled.buffer();
         try {
@@ -62,42 +60,18 @@ public class BukkitPacketMapper extends PacketMapper {
                 throw new IllegalArgumentException("Packet too big (is " + dataSize + ", should be less than 2097152): " + packet);
             }
 
-            var channel = player.getChannel();
-            if (channel.isActive()) {
-                if (Bukkit.getPluginManager().isPluginEnabled("ViaVersion")) { // not rly cacheable, reloads exist, softdepend is sus
-                    // ViaVersion fixes incompatibilities with other plugins, so we just use it if it's present
-                    final var conn = Via.getAPI().getConnection(player.getUuid());
-                    if (conn != null) {
-                        try {
-                            conn.transformClientbound(buffer, CancelEncoderException::generate);
-                        } catch (Throwable ignored) {
-                            // no u Via
-                        }
-                        conn.sendRawPacket(buffer);
-                    } else {
-                        channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
-                    }
-                // TODO: ProtocolSupport
-                } else if (Bukkit.getPluginManager().isPluginEnabled("OldCombatMechanics")) {
-                    // :sad:
-                    // Just skips everything, ocm is sus
-                    final var ctx = channel.pipeline().context("encoder");
-                    if (ctx != null) {
-                        channel.eventLoop().execute(() -> ctx.writeAndFlush(buffer));
-                    } else {
-                        channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
-                    }
-                } else {
-                    channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
-                }
-            }
-
-            writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(player, extraPacket));
+            players.forEach(player -> sendRawPacket(player, buffer));
+            writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(players, extraPacket));
         } catch (Throwable t) {
             buffer.release();
-            Bukkit.getLogger().severe("An exception occurred serializing packet of class: " + packet.getClass().getSimpleName() + " for player: " + player.getName());
+            Bukkit.getLogger().severe("An exception occurred serializing packet of class: " + packet.getClass().getSimpleName());
             t.printStackTrace();
         }
+    }
+
+    @Override
+    public void sendPacket0(PlayerWrapper player, AbstractPacket packet) {
+        sendPacket0(List.of(player), packet);
     }
 
     @Override
@@ -108,5 +82,38 @@ public class BukkitPacketMapper extends PacketMapper {
     @Override
     public int getArmorStandTypeId0() {
         return ClassStorage.getEntityTypeId("armor_stand", ArmorStandAccessor.getType());
+    }
+
+    // TODO: Optimize: usage of write() instead and flushing manually at the end for multiple writes, also expose this method later on
+    protected void sendRawPacket(PlayerWrapper player, ByteBuf buffer) {
+        var channel = player.getChannel();
+        if (channel.isActive()) {
+            if (Bukkit.getPluginManager().isPluginEnabled("ViaVersion")) { // not rly cacheable, reloads exist, softdepend is sus
+                // ViaVersion fixes incompatibilities with other plugins, so we just use it if it's present
+                final var conn = Via.getAPI().getConnection(player.getUuid());
+                if (conn != null) {
+                    try {
+                        conn.transformClientbound(buffer, CancelEncoderException::generate);
+                    } catch (Throwable ignored) {
+                        // no u Via
+                    }
+                    conn.sendRawPacket(buffer);
+                } else {
+                    channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
+                }
+                // TODO: ProtocolSupport
+            } else if (Bukkit.getPluginManager().isPluginEnabled("OldCombatMechanics")) {
+                // :sad:
+                // Just skips everything, ocm is sus
+                final var ctx = channel.pipeline().context("encoder");
+                if (ctx != null) {
+                    channel.eventLoop().execute(() -> ctx.writeAndFlush(buffer));
+                } else {
+                    channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
+                }
+            } else {
+                channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
+            }
+        }
     }
 }

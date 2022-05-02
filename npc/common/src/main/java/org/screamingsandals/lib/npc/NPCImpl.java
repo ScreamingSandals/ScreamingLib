@@ -113,8 +113,8 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                 .action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
                 .data(getNPCInfoData());
 
-        viewers().forEach(playerInfoPacket::sendPacket);
-        viewers().forEach(getFullDestroyPacket()::sendPacket);
+        playerInfoPacket.sendPacket(viewers);
+        getFullDestroyPacket().sendPacket(viewers);
 
         this.skin = skin;
         properties.removeIf(property -> property.name().equals("textures"));
@@ -125,14 +125,10 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
         playerInfoPacket.action(SClientboundPlayerInfoPacket.Action.ADD_PLAYER);
         playerInfoPacket.data(getNPCInfoData());
-        viewers().forEach(playerInfoPacket::sendPacket);
-        viewers().forEach(this::sendSpawnPackets);
 
-        Tasker.build(() -> {
-            playerInfoPacket.action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER);
-            playerInfoPacket.data(getNPCInfoData());
-            viewers().forEach(playerInfoPacket::sendPacket);
-        }).delay(6L, TaskerTime.SECONDS).start();
+        playerInfoPacket.sendPacket(viewers);
+        getSpawnPackets().forEach(packet -> packet.sendPacket(viewers));
+        scheduleTabHide(viewers);
         return this;
     }
 
@@ -212,7 +208,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         }
 
         hologram.addViewer(player);
-        sendSpawnPackets(player);
+        getSpawnPackets().forEach(packet -> packet.sendPacket(player));
     }
 
     @Override
@@ -266,9 +262,11 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
     }
 
-    private void sendSpawnPackets(PlayerWrapper player) {
+    private List<AbstractPacket> getSpawnPackets() {
+        final List<AbstractPacket> spawnPackets = new ArrayList<>();
+
         if (IS_BUNGEE) {
-            new SClientboundSetPlayerTeamPacket()
+           final var p1 = new SClientboundSetPlayerTeamPacket()
                     .teamKey(AdventureHelper.toLegacy(tabListName))
                     .mode(SClientboundSetPlayerTeamPacket.Mode.REMOVE)
                     .displayName(tabListName)
@@ -279,11 +277,12 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                     .teamSuffix(Component.empty())
                     .friendlyFire(false)
                     .seeInvisible(true)
-                    .entities(Collections.singletonList(AdventureHelper.toLegacy(tabListName)))
-                    .sendPacket(player);
+                    .entities(Collections.singletonList(AdventureHelper.toLegacy(tabListName)));
+
+           spawnPackets.add(p1);
         }
 
-        new SClientboundSetPlayerTeamPacket()
+        final var p2 = new SClientboundSetPlayerTeamPacket()
                 .teamKey(AdventureHelper.toLegacy(tabListName))
                 .mode(SClientboundSetPlayerTeamPacket.Mode.CREATE)
                 .displayName(IS_BUNGEE ? Component.empty() : tabListName)
@@ -294,41 +293,54 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                 .teamSuffix(Component.empty())
                 .friendlyFire(false)
                 .seeInvisible(true)
-                .entities(Collections.singletonList(AdventureHelper.toLegacy(tabListName)))
-                .sendPacket(player);
+                .entities(Collections.singletonList(AdventureHelper.toLegacy(tabListName)));
 
-        new SClientboundPlayerInfoPacket()
+        spawnPackets.add(p2);
+
+        final var p3 = new SClientboundPlayerInfoPacket()
                 .action(SClientboundPlayerInfoPacket.Action.ADD_PLAYER)
-                .data(getNPCInfoData())
-                .sendPacket(player);
+                .data(getNPCInfoData());
+
+        spawnPackets.add(p3);
 
         // protocol < 550: sending metadata as part of AddPlayerPacket; protocol >= 550, packet lib will split this packet into to as supposed to be
-        new SClientboundAddPlayerPacket()
+        final var p4 = new SClientboundAddPlayerPacket()
                 .entityId(entityId)
                 .uuid(uuid())
                 .location(location())
-                .metadata(metadata)
-                .sendPacket(player);
+                .metadata(metadata);
 
+        spawnPackets.add(p4);
+
+        final var p5 = new SClientboundMoveEntityPacket.Rot()
+                .entityId(entityId())
+                .yaw((byte) (location().getYaw() * 256.0F / 360.0F))
+                .pitch((byte) (location().getPitch() * 256.0F / 360.0F))
+                .onGround(true);
+
+        spawnPackets.add(p5);
+
+        final var p6 = new SClientboundRotateHeadPacket()
+                .entityId(entityId())
+                .headYaw(location().getYaw());
+
+        spawnPackets.add(p6);
+
+        return spawnPackets;
+    }
+
+    private void scheduleTabHide(Collection<PlayerWrapper> viewers) {
         Tasker.build(() -> {
             //remove npc from TabList
             new SClientboundPlayerInfoPacket()
                     .action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
                     .data(getNPCInfoData())
-                    .sendPacket(player);
+                    .sendPacket(viewers);
         }).delay(6L, TaskerTime.SECONDS).start();
+    }
 
-        new SClientboundMoveEntityPacket.Rot()
-                .entityId(entityId())
-                .yaw((byte) (location().getYaw() * 256.0F / 360.0F))
-                .pitch((byte) (location().getPitch() * 256.0F / 360.0F))
-                .onGround(true)
-                .sendPacket(player);
-
-        new SClientboundRotateHeadPacket()
-                .entityId(entityId())
-                .headYaw(location().getYaw())
-                .sendPacket(player);
+    private void scheduleTabHide(PlayerWrapper viewer) {
+        scheduleTabHide(List.of(viewer));
     }
 
     private SClientboundRemoveEntitiesPacket getFullDestroyPacket() {

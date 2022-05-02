@@ -281,7 +281,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
         teams.add(team);
         if (visible && !viewers.isEmpty()) {
             var packet = team.constructCreatePacket();
-            viewers.forEach(packet::sendPacket);
+            packet.sendPacket(viewers);
         }
         return team;
     }
@@ -324,7 +324,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
         });
 
         if (visible) {
-            viewers.forEach(viewer -> packets.forEach(packet -> packet.sendPacket(viewer)));
+            packets.forEach(packet -> packet.sendPacket(viewers));
         }
 
         if (!(this.title instanceof StaticSenderMessage)) {
