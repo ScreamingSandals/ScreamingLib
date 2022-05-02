@@ -60,12 +60,14 @@ public class BukkitPacketMapper extends PacketMapper {
                 throw new IllegalArgumentException("Packet too big (is " + dataSize + ", should be less than 2097152): " + packet);
             }
 
-            players.forEach(player -> sendRawPacket(player, buffer));
+            players.forEach(player -> sendRawPacket(player, buffer.retain()));
             writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(players, extraPacket));
         } catch (Throwable t) {
             buffer.release();
             Bukkit.getLogger().severe("An exception occurred serializing packet of class: " + packet.getClass().getSimpleName());
             t.printStackTrace();
+        } finally {
+            buffer.release();
         }
     }
 
