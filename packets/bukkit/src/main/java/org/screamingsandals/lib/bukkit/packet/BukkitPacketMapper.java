@@ -90,7 +90,7 @@ public class BukkitPacketMapper extends PacketMapper {
     protected void sendRawPacket(PlayerWrapper player, ByteBuf buffer) {
         var channel = player.getChannel();
         if (channel.isActive()) {
-            if (Bukkit.getPluginManager().isPluginEnabled("ViaVersion")) { // not rly cacheable, reloads exist, softdepend is sus
+            if (Bukkit.getPluginManager().isPluginEnabled("ViaVersion")) { // not rly cacheable, reloads exist, soft-depend is sus
                 // ViaVersion fixes incompatibilities with other plugins, so we just use it if it's present
                 final var conn = Via.getAPI().getConnection(player.getUuid());
                 if (conn != null) {
