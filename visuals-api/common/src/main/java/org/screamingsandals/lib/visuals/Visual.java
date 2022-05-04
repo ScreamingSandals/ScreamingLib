@@ -67,9 +67,24 @@ public interface Visual<T> {
 
     void destroy();
 
+
+    /**
+     *
+     * @return true if this Visual has been destroyed, false otherwise
+     */
+    boolean destroyed();
+
     boolean visibleTo(PlayerWrapper player);
 
     void onViewerAdded(PlayerWrapper viewer, boolean checkDistance);
 
     void onViewerRemoved(PlayerWrapper viewer, boolean checkDistance);
+
+    default void onViewerAdded(PlayerWrapper viewer) {
+        onViewerAdded(viewer, false);
+    }
+
+    default void onViewerRemoved(PlayerWrapper viewer) {
+        onViewerRemoved(viewer, false);
+    }
 }
