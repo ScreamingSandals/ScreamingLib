@@ -30,11 +30,8 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
 
     public AbstractVisual(UUID uuid) {
         this.uuid = uuid;
-        this.visible = false;
         this.viewers = new CopyOnWriteArrayList<>();
     }
-
-    protected abstract void update0();
 
     @Override
     public UUID uuid() {

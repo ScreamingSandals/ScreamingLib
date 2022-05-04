@@ -153,7 +153,42 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     @Override
     public ScoreSidebar update() {
         if (ready) {
-            update0();
+            var list = entries
+                    .stream()
+                    .sorted(Comparator.comparingInt(ScoreEntry::getScore).reversed())
+                    .limit(15)
+                    .collect(Collectors.toList());
+
+            var packets = new ArrayList<AbstractPacket>();
+
+            lines.stream()
+                    .filter(scoreEntry -> !list.contains(scoreEntry))
+                    .forEach(scoreEntry -> {
+                        lines.remove(scoreEntry);
+                        packets.add(destroyScore(scoreEntry.getCache()));
+                    });
+
+            list.forEach(scoreEntry -> {
+                if (!lines.contains(scoreEntry)) {
+                    lines.add(scoreEntry);
+                }
+                if (scoreEntry.getCache() == null || scoreEntry.isReloadCache()) {
+                    if (scoreEntry.getCache() != null) {
+                        packets.add(destroyScore(scoreEntry.getCache()));
+                    }
+                    scoreEntry.setCache(crop(AdventureHelper.toLegacy(scoreEntry.getComponent())));
+                    scoreEntry.setReloadCache(false);
+                }
+                packets.add(createScorePacket(scoreEntry.getScore(), scoreEntry.getCache()));
+            });
+
+            if (visible) {
+                packets.forEach(packet -> packet.sendPacket(viewers));
+            }
+
+            if (!(this.title instanceof StaticSenderMessage)) {
+                updateTitle0();
+            }
         }
         return this;
     }
@@ -289,46 +324,6 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     protected void updateTitle0() {
         if (visible && !viewers.isEmpty()) {
             viewers.forEach(p -> getUpdateObjectivePacket(p).sendPacket(p));
-        }
-    }
-
-    @Override
-    protected void update0() {
-        var list = entries
-                .stream()
-                .sorted(Comparator.comparingInt(ScoreEntry::getScore).reversed())
-                .limit(15)
-                .collect(Collectors.toList());
-
-        var packets = new ArrayList<AbstractPacket>();
-
-        lines.stream()
-                .filter(scoreEntry -> !list.contains(scoreEntry))
-                .forEach(scoreEntry -> {
-                    lines.remove(scoreEntry);
-                    packets.add(destroyScore(scoreEntry.getCache()));
-                });
-
-        list.forEach(scoreEntry -> {
-            if (!lines.contains(scoreEntry)) {
-                lines.add(scoreEntry);
-            }
-            if (scoreEntry.getCache() == null || scoreEntry.isReloadCache()) {
-                if (scoreEntry.getCache() != null) {
-                    packets.add(destroyScore(scoreEntry.getCache()));
-                }
-                scoreEntry.setCache(crop(AdventureHelper.toLegacy(scoreEntry.getComponent())));
-                scoreEntry.setReloadCache(false);
-            }
-            packets.add(createScorePacket(scoreEntry.getScore(), scoreEntry.getCache()));
-        });
-
-        if (visible) {
-            packets.forEach(packet -> packet.sendPacket(viewers));
-        }
-
-        if (!(this.title instanceof StaticSenderMessage)) {
-            updateTitle0();
         }
     }
 

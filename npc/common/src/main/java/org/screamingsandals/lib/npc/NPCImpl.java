@@ -67,17 +67,12 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     public NPCImpl(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
 
-        if (!Server.isServerThread()) {
-            try {
-                this.entityId = EntityMapper.getNewEntityIdSynchronously().get();
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            this.entityId = EntityMapper.getNewEntityId();
+        try {
+            this.entityId = EntityMapper.getNewEntityIdSynchronously().get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
 
-        this.lookAtPlayer = false;
         this.tabListName = AdventureHelper.toComponent("[NPC] " + uuid.toString().replace("-", "").substring(0, 10));
         this.hologram = HologramManager.hologram(location.clone().add(0.0D, 1.5D, 0.0D));
         this.metadata = new ArrayList<>();
@@ -109,6 +104,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
             properties.add(new SClientboundPlayerInfoPacket.Property("textures", skin.getValue(), skin.getSignature()));
             return this;
         }
+
         final var playerInfoPacket = new SClientboundPlayerInfoPacket()
                 .action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
                 .data(getNPCInfoData());
@@ -217,8 +213,10 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         if (!player.isOnline()) {
             return;
         }
+
         hologram.removeViewer(player);
         getFullDestroyPacket().sendPacket(player);
+
         new SClientboundPlayerInfoPacket()
                 .action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
                 .data(getNPCInfoData())
@@ -256,11 +254,6 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         viewers.clear();
         hologram.destroy();
         NPCManager.removeNPC(this);
-    }
-
-    @Override
-    protected void update0() {
-
     }
 
     private List<AbstractPacket> getSpawnPackets() {

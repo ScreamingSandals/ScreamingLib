@@ -105,7 +105,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     @Override
     public Sidebar update() {
         if (ready) {
-            update0();
+            List.copyOf(viewers).forEach(this::updateForPlayer);
         }
         return this;
     }
@@ -164,11 +164,6 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
             );
             getDestroyObjectivePacket().sendPacket(player);
         }
-    }
-
-    @Override
-    protected void update0() {
-        List.copyOf(viewers).forEach(this::updateForPlayer);
     }
 
     @SuppressWarnings("unchecked")

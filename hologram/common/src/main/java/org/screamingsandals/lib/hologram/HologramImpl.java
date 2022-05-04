@@ -115,7 +115,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     @Override
     public Hologram update() {
         if (visible) {
-            update0();
+            updateEntities();
         }
         return this;
     }
@@ -445,10 +445,5 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     private void restartRotationTask() {
         cancelRotationTask();
         startRotationTask();
-    }
-
-    @Override
-    protected void update0() {
-        updateEntities();
     }
 }

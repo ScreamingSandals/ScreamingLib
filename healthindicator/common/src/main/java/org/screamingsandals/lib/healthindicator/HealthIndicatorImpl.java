@@ -110,7 +110,36 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     @Override
     public HealthIndicator update() {
         if (ready) {
-            update0();
+            var packets = new ArrayList<AbstractPacket>();
+
+            var trackedPlayers = List.copyOf(this.trackedPlayers);
+
+            List.copyOf(values.keySet()).stream().filter(s -> trackedPlayers.stream().noneMatch(p -> p.getName().equals(s))).forEach(s -> {
+                values.remove(s);
+                packets.add(getDestroyScorePacket(s).objectiveKey(underNameTagKey));
+                if (healthInTabList) {
+                    packets.add(getDestroyScorePacket(s).objectiveKey(tabListKey));
+                }
+            });
+
+            trackedPlayers.forEach(playerWrapper -> {
+                if (!playerWrapper.isOnline()) {
+                    removeViewer(playerWrapper);
+                    return;
+                }
+
+                var health = (int) Math.round(playerWrapper.as(EntityHuman.class).getHealth());
+                var key = playerWrapper.getName();
+                if (!values.containsKey(key) || values.get(key) != health) {
+                    values.put(key, health);
+                    packets.add(createScorePacket(key, health).objectiveKey(underNameTagKey));
+                    if (healthInTabList) {
+                        packets.add(createScorePacket(key, health).objectiveKey(tabListKey));
+                    }
+                }
+            });
+
+            packets.forEach(packet -> packet.sendPacket(viewers));
         } else {
             viewers.forEach(viewer -> onViewerRemoved(viewer, false));
         }
@@ -215,42 +244,6 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
             getDestroyObjectivePacket()
                     .objectiveKey(tabListKey)
                     .sendPacket(player);
-        }
-    }
-
-    @Override
-    protected void update0() {
-        if (visible) {
-            var packets = new ArrayList<AbstractPacket>();
-
-            var trackedPlayers = List.copyOf(this.trackedPlayers);
-
-            List.copyOf(values.keySet()).stream().filter(s -> trackedPlayers.stream().noneMatch(p -> p.getName().equals(s))).forEach(s -> {
-                values.remove(s);
-                packets.add(getDestroyScorePacket(s).objectiveKey(underNameTagKey));
-                if (healthInTabList) {
-                    packets.add(getDestroyScorePacket(s).objectiveKey(tabListKey));
-                }
-            });
-
-            trackedPlayers.forEach(playerWrapper -> {
-                if (!playerWrapper.isOnline()) {
-                    removeViewer(playerWrapper);
-                    return;
-                }
-
-                var health = (int) Math.round(playerWrapper.as(EntityHuman.class).getHealth());
-                var key = playerWrapper.getName();
-                if (!values.containsKey(key) || values.get(key) != health) {
-                    values.put(key, health);
-                    packets.add(createScorePacket(key, health).objectiveKey(underNameTagKey));
-                    if (healthInTabList) {
-                        packets.add(createScorePacket(key, health).objectiveKey(tabListKey));
-                    }
-                }
-            });
-
-            packets.forEach(packet -> packet.sendPacket(viewers));
         }
     }
 
