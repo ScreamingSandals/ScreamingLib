@@ -46,7 +46,7 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T addViewer(PlayerWrapper viewer) {
-        if (!viewers.contains(viewer)) {
+        if (viewer.isOnline() && !viewers.contains(viewer)) {
             viewers.add(viewer);
             onViewerAdded(viewer, true);
         }
@@ -56,7 +56,7 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T removeViewer(PlayerWrapper viewer) {
-        if (viewers.contains(viewer)) {
+        if (viewer.isOnline() && viewers.contains(viewer)) {
             viewers.remove(viewer);
             onViewerRemoved(viewer, false);
         }
