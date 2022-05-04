@@ -40,6 +40,7 @@ import org.screamingsandals.lib.tasker.task.TaskerTask;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.visual.TextEntry;
+import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.visuals.impl.AbstractTouchableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
 
@@ -67,6 +68,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     private final List<MetadataItem> metadata;
     private SClientboundSetPlayerTeamPacket.CollisionRule collisionRule;
     private final Map<UUID, TaskerTask> hiderTask;
+    private double hologramElevation;
 
     public NPCImpl(UUID uuid, LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
@@ -77,13 +79,21 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
             throw new RuntimeException(e);
         }
 
+        this.hologramElevation = 1.5D;
         this.tabListName = AdventureHelper.toComponent("[NPC] " + uuid.toString().replace("-", "").substring(0, 10));
-        this.hologram = HologramManager.hologram(location.clone().add(0.0D, 1.5D, 0.0D));
+        this.hologram = HologramManager.hologram(location.add(0.0D, hologramElevation, 0.0D));
         this.metadata = new ArrayList<>();
         this.properties = new ArrayList<>();
         this.hiderTask = new ConcurrentHashMap<>();
         this.collisionRule = SClientboundSetPlayerTeamPacket.CollisionRule.ALWAYS;
         metadata.add(MetadataItem.of((byte) SkinLayerValues.findLayerByVersion(), (byte) 127));
+    }
+
+    @Override
+    public NPC hologramElevation(double hologramElevation) {
+        this.hologramElevation = hologramElevation;
+        update(UpdateStrategy.POSITION);
+        return this;
     }
 
     @Override
@@ -159,9 +169,21 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     }
 
     @Override
-    public NPC update() {
-        if (created()) {
-            // TODO: update
+    public NPC update(UpdateStrategy strategy) {
+        if (shown()) {
+            switch (strategy) {
+                case POSITION:
+                    hologram.location(location().add(0.0D, 1.5D, 0.0D));
+                    hologram.update(UpdateStrategy.POSITION);
+                    new SClientboundTeleportEntityPacket()
+                            .location(location())
+                            .entityId(entityId)
+                            .onGround(true);
+                    break;
+                case ALL:
+                    viewers.forEach(this::onViewerRemoved);
+                    viewers.forEach(this::onViewerAdded);
+            }
         }
         return this;
     }
@@ -171,11 +193,6 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         if (visible) {
             return this;
         }
-
-        if (destroyed()) {
-            throw new UnsupportedOperationException("Cannot call NPC#show() for destroyed npcs!");
-        }
-
         visible = true;
         hologram.show();
         viewers.forEach(this::onViewerAdded);
@@ -187,11 +204,19 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         if (!visible) {
             return this;
         }
-
         visible = false;
         hologram.hide();
         viewers.forEach(this::onViewerRemoved);
         return this;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        hologram.destroy();
+        viewers.forEach(this::cancelTabHide);
+        viewers.clear();
+        NPCManager.removeNPC(this);
     }
 
     @Override
@@ -205,27 +230,6 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         hologram.title(title);
         return null;
     }
-
-    @Override
-    public NPC spawn() {
-        show();
-        return this;
-    }
-
-    @Override
-    public void destroy() {
-        if (destroyed()) {
-            return;
-        }
-
-        super.destroy();
-        hide();
-        viewers.clear();
-        hologram.destroy();
-        viewers.forEach(this::cancelTabHide);
-        NPCManager.removeNPC(this);
-    }
-
     private void cancelTabHide(PlayerWrapper viewer) {
         hiderTask.computeIfPresent(viewer.getUuid(), (uuid, task) -> {
             if (task.getState() == TaskState.RUNNING
@@ -276,7 +280,8 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                         .entityId(entityId())
                         .yaw((byte) (location().getYaw() * 256.0F / 360.0F))
                         .pitch((byte) (location().getPitch() * 256.0F / 360.0F))
-                        .onGround(true));
+                        .onGround(true)
+        );
 
         spawnPackets.add(
                 new SClientboundRotateHeadPacket()

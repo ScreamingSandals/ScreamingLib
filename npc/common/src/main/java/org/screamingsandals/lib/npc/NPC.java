@@ -123,6 +123,14 @@ public interface NPC extends TouchableVisual<NPC> {
      */
     Hologram hologram();
 
+    /**
+     * Determines the level of elevation of the hologram that displays the name-tag of the NPC above its head.
+     *
+     * @param hologramElevation amount of elevation in block size approximation, example 1 -> height of 1 block
+     * @return the hologram
+     */
+    NPC hologramElevation(double hologramElevation);
+
     SClientboundSetPlayerTeamPacket.CollisionRule collisionRule();
 
     NPC collisionRule(SClientboundSetPlayerTeamPacket.CollisionRule collisionRule);

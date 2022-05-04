@@ -27,6 +27,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.visuals.AbstractVisualsManager;
 import org.screamingsandals.lib.visuals.LocatableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -58,11 +59,11 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
     }
 
     public static void removeNPC(UUID uuid) {
-        getNPC(uuid).ifPresent(NPCManager::removeNPC);
+        Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!").removeVisual(uuid);
     }
 
     public static void removeNPC(NPC npc) {
-        Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!").removeVisual(npc.uuid());
+        removeNPC(npc.uuid());
     }
 
     public static NPC npc(LocationHolder holder) {

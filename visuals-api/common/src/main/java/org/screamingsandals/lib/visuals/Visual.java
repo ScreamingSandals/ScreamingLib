@@ -40,7 +40,11 @@ public interface Visual<T> {
      */
     Collection<PlayerWrapper> viewers();
 
-    T update();
+    default T update() {
+        return update(UpdateStrategy.ALL);
+    }
+
+    T update(UpdateStrategy strategy);
 
     T show();
 
@@ -66,7 +70,6 @@ public interface Visual<T> {
     boolean shown();
 
     void destroy();
-
 
     /**
      *

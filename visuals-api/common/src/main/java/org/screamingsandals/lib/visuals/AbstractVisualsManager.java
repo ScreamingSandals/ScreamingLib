@@ -27,12 +27,12 @@ import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
-    protected final Map<UUID, T> activeVisuals = new ConcurrentHashMap<>();
+    protected final Map<UUID, T> activeVisuals = new HashMap<>();
     private final Map<UUID, Long> coolDownMap = new HashMap<>();
 
     public void addVisual(UUID uuid, T visual) {
@@ -53,9 +53,10 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
 
     @OnPreDisable
     public void destroy() {
-        getActiveVisuals()
-                .values()
-                .forEach(Visual::destroy);
+        // we need a copy of it since Visual#destroy() internally calls AbstractVisualsManager.removeVisual() ...
+        // Don't want to face an CME.
+        final var visualCopy = List.copyOf(getActiveVisuals().values());
+        visualCopy.forEach(Visual::destroy);
         activeVisuals.clear();
         coolDownMap.clear();
     }

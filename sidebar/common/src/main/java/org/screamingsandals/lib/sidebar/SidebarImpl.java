@@ -37,14 +37,17 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Accessors(chain = true, fluent = true)
 public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar {
+    @Accessors
     @Getter
     protected final List<ScoreboardTeam> teams = new LinkedList<>();
-    @Accessors(chain = true, fluent = true)
     @Getter
     @Setter
     protected DataContainer data;
     protected boolean ready;
+    @Getter
+    protected boolean destroyed;
     protected SenderMessage title = SenderMessage.empty();
     private final String objectiveKey;
     private final ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, String>> lines = new ConcurrentSkipListMap<>();
@@ -201,9 +204,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
 
         Collections.reverse(list);
 
-        for (var i = 0; i < list.size(); i++) {
-            list.set(i, makeUnique(list.get(i), list));
-        }
+        list.replaceAll(toUnique -> makeUnique(toUnique, list));
 
         var packets = new ArrayList<AbstractPacket>();
 
@@ -227,7 +228,6 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
         }
 
         forRemoval.forEach(lines::remove);
-
         packets.forEach(packet -> packet.sendPacket(playerWrapper));
     }
 

@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.visuals.impl;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.visuals.Visual;
 import java.util.Collection;
@@ -27,6 +29,9 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
     protected final List<PlayerWrapper> viewers;
     protected final UUID uuid;
     protected volatile boolean visible;
+    @Accessors(chain = true, fluent = true)
+    @Getter
+    protected volatile boolean destroyed;
 
     public AbstractVisual(UUID uuid) {
         this.uuid = uuid;
