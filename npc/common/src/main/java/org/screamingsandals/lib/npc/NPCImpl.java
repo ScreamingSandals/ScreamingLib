@@ -209,6 +209,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
         hologram.addViewer(player);
         getSpawnPackets().forEach(packet -> packet.sendPacket(player));
+        scheduleTabHide(player);
     }
 
     @Override
