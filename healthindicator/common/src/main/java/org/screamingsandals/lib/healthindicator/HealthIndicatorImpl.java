@@ -31,6 +31,7 @@ import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
 import org.screamingsandals.lib.utils.data.DataContainer;
+import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.visuals.impl.AbstractVisual;
 
 import java.util.*;
@@ -108,7 +109,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     }
 
     @Override
-    public HealthIndicator update() {
+    public HealthIndicator update(UpdateStrategy strategy) {
         if (ready) {
             var packets = new ArrayList<AbstractPacket>();
 
@@ -183,7 +184,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
             task.cancel();
         }
 
-        task = Tasker.build(this::update)
+        task = Tasker.build(() -> update())
                 .async()
                 .repeat(time, unit)
                 .start();

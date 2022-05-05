@@ -36,6 +36,7 @@ import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.visual.SimpleCLTextEntry;
+import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.visuals.impl.AbstractLinedVisual;
 import org.screamingsandals.lib.world.LocationHolder;
 import java.util.*;
@@ -113,7 +114,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public Hologram update() {
+    public Hologram update(UpdateStrategy strategy) {
         if (visible) {
             updateEntities();
         }

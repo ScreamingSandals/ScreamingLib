@@ -30,6 +30,7 @@ import org.screamingsandals.lib.sidebar.team.ScoreboardTeamImpl;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.utils.visual.SimpleCLTextEntry;
+import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.visuals.impl.AbstractLinedVisual;
 
 import java.util.*;
@@ -106,7 +107,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     }
 
     @Override
-    public Sidebar update() {
+    public Sidebar update(UpdateStrategy strategy) {
         if (ready) {
             List.copyOf(viewers).forEach(this::updateForPlayer);
         }

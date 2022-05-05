@@ -33,6 +33,7 @@ import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeamImpl;
 import org.screamingsandals.lib.utils.AdventureHelper;
 import org.screamingsandals.lib.utils.data.DataContainer;
+import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.visuals.impl.AbstractVisual;
 
 import java.util.*;
@@ -151,7 +152,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     }
 
     @Override
-    public ScoreSidebar update() {
+    public ScoreSidebar update(UpdateStrategy strategy) {
         if (ready) {
             var list = entries
                     .stream()
