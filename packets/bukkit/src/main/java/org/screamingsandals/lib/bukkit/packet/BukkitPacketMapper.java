@@ -60,7 +60,7 @@ public class BukkitPacketMapper extends PacketMapper {
                 throw new IllegalArgumentException("Packet too big (is " + dataSize + ", should be less than 2097152): " + packet);
             }
 
-            players.forEach(player -> sendRawPacket(player, buffer.retain()));
+            players.forEach(player -> sendRawPacket(player, buffer.copy()));
             writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(players, extraPacket));
         } catch (Throwable t) {
             buffer.release();
