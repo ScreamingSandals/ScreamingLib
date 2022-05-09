@@ -32,7 +32,6 @@ import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -63,7 +62,6 @@ public class BukkitPacketMapper extends PacketMapper {
             players.forEach(player -> sendRawPacket(player, buffer.copy()));
             writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(players, extraPacket));
         } catch (Throwable t) {
-            buffer.release();
             Bukkit.getLogger().severe("An exception occurred serializing packet of class: " + packet.getClass().getSimpleName());
             t.printStackTrace();
         } finally {
@@ -90,6 +88,7 @@ public class BukkitPacketMapper extends PacketMapper {
     protected void sendRawPacket(PlayerWrapper player, ByteBuf buffer) {
         var channel = player.getChannel();
         if (channel.isActive()) {
+            final var ctx = channel.pipeline().context("encoder");
             if (Bukkit.getPluginManager().isPluginEnabled("ViaVersion")) { // not rly cacheable, reloads exist, soft-depend is sus
                 // ViaVersion fixes incompatibilities with other plugins, so we just use it if it's present
                 final var conn = Via.getAPI().getConnection(player.getUuid());
@@ -99,22 +98,23 @@ public class BukkitPacketMapper extends PacketMapper {
                     } catch (Throwable ignored) {
                         // no u Via
                     }
-                    conn.sendRawPacket(buffer);
-                } else {
-                    channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
                 }
+
                 // TODO: ProtocolSupport
-            } else if (Bukkit.getPluginManager().isPluginEnabled("OldCombatMechanics")) {
-                // :sad:
-                // Just skips everything, ocm is sus
-                final var ctx = channel.pipeline().context("encoder");
+            }
+
+            final Runnable task = () -> {
                 if (ctx != null) {
-                    channel.eventLoop().execute(() -> ctx.writeAndFlush(buffer));
+                    ctx.writeAndFlush(buffer);
                 } else {
-                    channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
+                    channel.writeAndFlush(buffer);
                 }
+            };
+
+            if (channel.eventLoop().inEventLoop()) {
+                task.run();
             } else {
-                channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
+                channel.eventLoop().submit(task);
             }
         }
     }

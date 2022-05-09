@@ -162,7 +162,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
 
     @Override
     public void onViewerRemoved(PlayerWrapper player, boolean checkDistance) {
-        if (visible && player.isOnline()) {
+        if (visible) {
             teams.forEach(scoreboardTeam ->
                     ((ScoreboardTeamImpl) scoreboardTeam).constructDestructPacket().sendPacket(player)
             );

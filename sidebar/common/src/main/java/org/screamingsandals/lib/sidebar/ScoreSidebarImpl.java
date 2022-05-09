@@ -229,7 +229,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
 
     @Override
     public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
-        if (visible) {
+        if (visible && player.isOnline()) {
             getCreateObjectivePacket(player).sendPacket(player);
             allScores().forEach(packet -> packet.sendPacket(player));
             getDisplayObjectivePacket().sendPacket(player);

@@ -121,18 +121,22 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
     @Override
     public void onViewerAdded(PlayerWrapper viewer, boolean checkDistance) {
-        hologram.addViewer(viewer);
-        createSpawnPackets().forEach(packet -> packet.sendPacket(viewer));
-        scheduleTabHide(viewer);
+        if (viewer.isOnline()) {
+            hologram.addViewer(viewer);
+            createSpawnPackets().forEach(packet -> packet.sendPacket(viewer));
+            scheduleTabHide(viewer);
+        }
     }
 
     @Override
     public void onViewerRemoved(PlayerWrapper viewer, boolean checkDistance) {
-        hologram.removeViewer(viewer);
-        createPlayerTeamPacket(SClientboundSetPlayerTeamPacket.Mode.REMOVE).sendPacket(viewer);
-        createPlayerInfoPacket(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER).sendPacket(viewer);
-        removeEntityPacket().sendPacket(viewer);
-        cancelTabHide(viewer);
+        if (viewer.isOnline()) {
+            hologram.removeViewer(viewer);
+            createPlayerTeamPacket(SClientboundSetPlayerTeamPacket.Mode.REMOVE).sendPacket(viewer);
+            createPlayerInfoPacket(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER).sendPacket(viewer);
+            removeEntityPacket().sendPacket(viewer);
+            cancelTabHide(viewer);
+        }
     }
 
     @Override
