@@ -30,20 +30,16 @@ import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
-import java.util.Collection;
-import java.util.List;
 
 @Service(dependsOn = {
         ServerboundInteractPacketListener.class
 })
 @RequiredArgsConstructor
 public class BukkitPacketMapper extends PacketMapper {
-    private final LoggerWrapper logger;
 
     @Override
-    public void sendPacket0(Collection<PlayerWrapper> players, AbstractPacket packet) {
+    public void sendPacket0(PlayerWrapper player, AbstractPacket packet) {
         Preconditions.checkNotNull(packet, "Packet cannot be null!, skipping packet...");
 
         final var buffer = Unpooled.buffer();
@@ -59,19 +55,12 @@ public class BukkitPacketMapper extends PacketMapper {
                 throw new IllegalArgumentException("Packet too big (is " + dataSize + ", should be less than 2097152): " + packet);
             }
 
-            players.forEach(player -> sendRawPacket(player, buffer.copy()));
-            writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(players, extraPacket));
+            sendRawPacket(player, buffer);
+            writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(player, extraPacket));
         } catch (Throwable t) {
             Bukkit.getLogger().severe("An exception occurred serializing packet of class: " + packet.getClass().getSimpleName());
             t.printStackTrace();
-        } finally {
-            buffer.release();
         }
-    }
-
-    @Override
-    public void sendPacket0(PlayerWrapper player, AbstractPacket packet) {
-        sendPacket0(List.of(player), packet);
     }
 
     @Override
