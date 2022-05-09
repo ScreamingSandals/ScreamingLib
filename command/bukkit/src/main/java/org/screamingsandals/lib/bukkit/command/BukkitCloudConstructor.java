@@ -23,7 +23,6 @@ import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.bukkit.player.BukkitPlayerMapper;
 import org.screamingsandals.lib.command.CloudConstructor;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
-import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.function.Function;
@@ -34,7 +33,7 @@ import java.util.function.Function;
 public class BukkitCloudConstructor extends CloudConstructor {
     private final Plugin plugin;
 
-    public static void init(Plugin plugin, Controllable controllable) {
+    public static void init(Plugin plugin) {
         CloudConstructor.init(() -> new BukkitCloudConstructor(plugin));
     }
 
