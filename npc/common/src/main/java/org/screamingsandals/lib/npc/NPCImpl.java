@@ -182,7 +182,8 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                     new SClientboundTeleportEntityPacket()
                             .location(location())
                             .entityId(entityId)
-                            .onGround(true);
+                            .onGround(true)
+                            .sendPacket(viewers());
                     break;
                 case ALL:
                     viewers.forEach(this::onViewerRemoved);
