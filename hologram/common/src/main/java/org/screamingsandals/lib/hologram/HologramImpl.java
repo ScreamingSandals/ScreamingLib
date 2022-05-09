@@ -58,7 +58,6 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     private LocationHolder location;
     private int viewDistance;
     private boolean touchable;
-    private boolean destroyed;
     private boolean created;
     private DataContainer data;
     private float rotationIncrement;
@@ -75,8 +74,6 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         this.touchable = touchable;
 
         //default values
-        this.destroyed = false;
-        this.created = false;
         this.clickCooldown = DEFAULT_CLICK_COOL_DOWN;
         this.viewDistance = DEFAULT_VIEW_DISTANCE;
         this.rotationIncrement = DEFAULT_ROTATION_INCREMENT;

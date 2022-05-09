@@ -121,7 +121,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
     @Override
     public void onViewerAdded(PlayerWrapper viewer, boolean checkDistance) {
-        if (viewer.isOnline()) {
+        if (shown() && viewer.isOnline()) {
             hologram.addViewer(viewer);
             createSpawnPackets().forEach(packet -> packet.sendPacket(viewer));
             scheduleTabHide(viewer);
