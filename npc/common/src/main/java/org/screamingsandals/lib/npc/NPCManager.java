@@ -19,6 +19,7 @@ package org.screamingsandals.lib.npc;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.SPlayerMoveEvent;
+import org.screamingsandals.lib.hologram.HologramManager;
 import org.screamingsandals.lib.npc.event.NPCInteractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.InteractType;
@@ -32,7 +33,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
+@Service(dependsOn = {
+        HologramManager.class
+})
 public class NPCManager extends AbstractVisualsManager<NPC> {
     private static NPCManager manager = null;
 
