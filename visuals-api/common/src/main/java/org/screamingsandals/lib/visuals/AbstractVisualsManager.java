@@ -69,15 +69,10 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         }
 
         final var player = event.player();
-        final var iterator = activeVisuals.entrySet().iterator();
-        while (iterator.hasNext()) {
-            final var visual = iterator.next().getValue();
+        for (var entry : activeVisuals.entrySet()) {
+            final var visual = entry.getValue();
             if (visual.viewers().contains(player)) {
                 visual.removeViewer(player);
-            }
-
-            if (!visual.hasViewers()) {
-                iterator.remove();
             }
         }
     }
