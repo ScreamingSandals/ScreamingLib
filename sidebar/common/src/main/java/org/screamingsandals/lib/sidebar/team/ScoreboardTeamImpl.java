@@ -178,7 +178,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
         if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.UPDATE);
             packInfo(packet);
-            scoreboard.viewers().forEach(packet::sendPacket);
+            packet.sendPacket(scoreboard.viewers());
         }
     }
 
@@ -186,7 +186,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
         if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.ADD_ENTITY);
             packPlayers(packet, List.of(player));
-            scoreboard.viewers().forEach(packet::sendPacket);
+            packet.sendPacket(scoreboard.viewers());
         }
     }
 
@@ -194,7 +194,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
         if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.REMOVE_ENTITY);
             packPlayers(packet, List.of(player));
-            scoreboard.viewers().forEach(packet::sendPacket);
+            packet.sendPacket(scoreboard.viewers());
         }
     }
 
@@ -202,7 +202,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     public void destroy() {
         if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = constructDestructPacket();
-            scoreboard.viewers().forEach(packet::sendPacket);
+            packet.sendPacket(scoreboard.viewers());
         }
     }
 }

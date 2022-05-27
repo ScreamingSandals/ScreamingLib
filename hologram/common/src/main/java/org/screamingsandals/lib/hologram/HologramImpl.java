@@ -36,6 +36,7 @@ import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.visual.SimpleCLTextEntry;
+import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.visuals.impl.AbstractLinedVisual;
 import org.screamingsandals.lib.world.LocationHolder;
 import java.util.*;
@@ -57,7 +58,6 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     private LocationHolder location;
     private int viewDistance;
     private boolean touchable;
-    private boolean destroyed;
     private boolean created;
     private DataContainer data;
     private float rotationIncrement;
@@ -74,8 +74,6 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         this.touchable = touchable;
 
         //default values
-        this.destroyed = false;
-        this.created = false;
         this.clickCooldown = DEFAULT_CLICK_COOL_DOWN;
         this.viewDistance = DEFAULT_VIEW_DISTANCE;
         this.rotationIncrement = DEFAULT_ROTATION_INCREMENT;
@@ -113,9 +111,9 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public Hologram update() {
+    public Hologram update(UpdateStrategy strategy) {
         if (visible) {
-            update0();
+            updateEntities();
         }
         return this;
     }
@@ -445,10 +443,5 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     private void restartRotationTask() {
         cancelRotationTask();
         startRotationTask();
-    }
-
-    @Override
-    protected void update0() {
-        updateEntities();
     }
 }

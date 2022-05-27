@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.packet;
 
 import org.screamingsandals.lib.player.PlayerWrapper;
+
 import java.util.Collection;
 
 /**
@@ -49,7 +50,7 @@ public abstract class AbstractPacket {
      * @param players the players to send the packet to
      */
     public void sendPacket(Collection<PlayerWrapper> players) {
-        players.forEach(this::sendPacket);
+        PacketMapper.sendPacket(players, this);
     }
 
     /**

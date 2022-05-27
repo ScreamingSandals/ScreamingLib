@@ -18,12 +18,14 @@ package org.screamingsandals.lib.visuals.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.visuals.LocatableVisual;
+import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.world.LocationHolder;
+
 import java.util.Objects;
 import java.util.UUID;
 
+@SuppressWarnings("unchecked") // this is just java being dum
 public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> extends AbstractVisual<T> implements LocatableVisual<T> {
-    private volatile boolean destroyed;
     private volatile int viewDistance;
     private volatile LocationHolder location;
     private volatile boolean created;
@@ -31,12 +33,13 @@ public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> exte
     public AbstractLocatableVisual(UUID uuid, LocationHolder location) {
         super(uuid);
         Objects.requireNonNull(location, "Location cannot be null!");
-
-        // default values
         this.viewDistance = LocatableVisual.DEFAULT_VIEW_DISTANCE;
-        this.destroyed = false;
-        this.created = false;
         this.location = location;
+    }
+
+    @Override
+    public boolean created() {
+        return created;
     }
 
     @Override
@@ -44,7 +47,6 @@ public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> exte
         return viewDistance;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T viewDistance(int viewDistance) {
         this.viewDistance = viewDistance;
@@ -57,39 +59,30 @@ public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> exte
         return location;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T location(LocationHolder location) {
         Objects.requireNonNull(location, "Location cannot be null!");
         this.location = location;
+        update(UpdateStrategy.POSITION);
         return (T) this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T spawn() {
         if (created) {
             throw new UnsupportedOperationException("Visual: " + uuid.toString() + " is already spawned!");
         }
+        show();
         created = true;
         return (T) this;
     }
 
     @Override
-    public boolean created() {
-        return created;
-    }
-
-    @Override
-    public boolean destroyed() {
-        return destroyed;
-    }
-
-    @Override
     public void destroy() {
         if (destroyed) {
-            return;
+            throw new UnsupportedOperationException("Visual: " + uuid.toString() + " is already destroyed!");
         }
+        hide();
         destroyed = true;
     }
 }

@@ -32,6 +32,7 @@ import org.screamingsandals.lib.sidebar.team.ScoreboardTeamImpl;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.data.DataContainer;
+import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.visuals.impl.AbstractVisual;
 
 import java.util.*;
@@ -150,9 +151,44 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     }
 
     @Override
-    public ScoreSidebar update() {
+    public ScoreSidebar update(UpdateStrategy strategy) {
         if (ready) {
-            update0();
+            var list = entries
+                    .stream()
+                    .sorted(Comparator.comparingInt(ScoreEntry::getScore).reversed())
+                    .limit(15)
+                    .collect(Collectors.toList());
+
+            var packets = new ArrayList<AbstractPacket>();
+
+            lines.stream()
+                    .filter(scoreEntry -> !list.contains(scoreEntry))
+                    .forEach(scoreEntry -> {
+                        lines.remove(scoreEntry);
+                        packets.add(destroyScore(scoreEntry.getCache()));
+                    });
+
+            list.forEach(scoreEntry -> {
+                if (!lines.contains(scoreEntry)) {
+                    lines.add(scoreEntry);
+                }
+                if (scoreEntry.getCache() == null || scoreEntry.isReloadCache()) {
+                    if (scoreEntry.getCache() != null) {
+                        packets.add(destroyScore(scoreEntry.getCache()));
+                    }
+                    scoreEntry.setCache(crop(scoreEntry.getComponent().toLegacy()));
+                    scoreEntry.setReloadCache(false);
+                }
+                packets.add(createScorePacket(scoreEntry.getScore(), scoreEntry.getCache()));
+            });
+
+            if (visible) {
+                packets.forEach(packet -> packet.sendPacket(viewers));
+            }
+
+            if (!(this.title instanceof StaticSenderMessage)) {
+                updateTitle0();
+            }
         }
         return this;
     }
@@ -192,7 +228,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
 
     @Override
     public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
-        if (visible) {
+        if (visible && player.isOnline()) {
             getCreateObjectivePacket(player).sendPacket(player);
             allScores().forEach(packet -> packet.sendPacket(player));
             getDisplayObjectivePacket().sendPacket(player);
@@ -280,7 +316,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
         teams.add(team);
         if (visible && !viewers.isEmpty()) {
             var packet = team.constructCreatePacket();
-            viewers.forEach(packet::sendPacket);
+            packet.sendPacket(viewers);
         }
         return team;
     }
@@ -288,46 +324,6 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     protected void updateTitle0() {
         if (visible && !viewers.isEmpty()) {
             viewers.forEach(p -> getUpdateObjectivePacket(p).sendPacket(p));
-        }
-    }
-
-    @Override
-    protected void update0() {
-        var list = entries
-                .stream()
-                .sorted(Comparator.comparingInt(ScoreEntry::getScore).reversed())
-                .limit(15)
-                .collect(Collectors.toList());
-
-        var packets = new ArrayList<AbstractPacket>();
-
-        lines.stream()
-                .filter(scoreEntry -> !list.contains(scoreEntry))
-                .forEach(scoreEntry -> {
-                    lines.remove(scoreEntry);
-                    packets.add(destroyScore(scoreEntry.getCache()));
-                });
-
-        list.forEach(scoreEntry -> {
-            if (!lines.contains(scoreEntry)) {
-                lines.add(scoreEntry);
-            }
-            if (scoreEntry.getCache() == null || scoreEntry.isReloadCache()) {
-                if (scoreEntry.getCache() != null) {
-                    packets.add(destroyScore(scoreEntry.getCache()));
-                }
-                scoreEntry.setCache(crop(scoreEntry.getComponent().toLegacy()));
-                scoreEntry.setReloadCache(false);
-            }
-            packets.add(createScorePacket(scoreEntry.getScore(), scoreEntry.getCache()));
-        });
-
-        if (visible) {
-            viewers.forEach(viewer -> packets.forEach(packet -> packet.sendPacket(viewer)));
-        }
-
-        if (!(this.title instanceof StaticSenderMessage)) {
-            updateTitle0();
         }
     }
 

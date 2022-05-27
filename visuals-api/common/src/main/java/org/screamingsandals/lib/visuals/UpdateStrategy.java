@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.kotlin
+package org.screamingsandals.lib.visuals;
 
-import org.screamingsandals.lib.event.Cancellable
-
-interface SCancellableKt : Cancellable {
-    var cancelled: Boolean
-
-    override fun cancelled(): Boolean = cancelled
-    override fun cancelled(cancel: Boolean) {
-        this.cancelled = cancel
-    }
+public enum UpdateStrategy {
+    ALL,
+    POSITION
 }

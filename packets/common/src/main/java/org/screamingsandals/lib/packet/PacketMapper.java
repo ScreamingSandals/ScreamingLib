@@ -20,6 +20,8 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 
+import java.util.Collection;
+
 /**
  *  Represents the PacketMapper instance which is useful for sending {@link AbstractPacket} to Player connections.
  */
@@ -66,6 +68,20 @@ public abstract class PacketMapper {
      * @param packet the packet instance to send the player
      */
     public abstract void sendPacket0(PlayerWrapper player, AbstractPacket packet);
+
+
+    /**
+     * Sends the packet to the clients of all the players that are connected with.
+     *
+     * @param players the players to send the packet to
+     * @param packet the packet instance to send the players
+     */
+    public static void sendPacket(Collection<PlayerWrapper> players, AbstractPacket packet) {
+        if (packetMapper == null) {
+            throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
+        }
+        players.forEach(player -> packetMapper.sendPacket0(player, packet));
+    }
 
     public static int getId(Class<? extends AbstractPacket> clazz) {
         if (packetMapper == null) {

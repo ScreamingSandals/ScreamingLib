@@ -49,14 +49,6 @@ public interface LocatableVisual<T> extends Visual<T> {
      */
     T spawn();
 
-    void destroy();
-
     boolean created();
-
-    /**
-     *
-     * @return true if this Visual has been destroyed, false otherwise
-     */
-    boolean destroyed();
 
 }
