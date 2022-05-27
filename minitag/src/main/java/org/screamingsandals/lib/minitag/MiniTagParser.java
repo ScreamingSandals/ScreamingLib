@@ -177,7 +177,7 @@ public class MiniTagParser {
                     builder.append(c);
                 }
             } else {
-                if (c == tagOpeningSymbol && i != chars.length - 1 && chars[i + 1] != tagClosingSymbol) {
+                if (c == tagOpeningSymbol && i != chars.length - 1 && chars[i + 1] != tagClosingSymbol && chars[i + 1] != tagOpeningSymbol) {
                     var text = builder.toString();
                     if (!text.isEmpty()) {
                         cursor.node.putChildren(new TextNode(builder.toString()));

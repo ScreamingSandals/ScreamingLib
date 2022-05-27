@@ -53,4 +53,19 @@ public class MiniTagParserTest {
 
         assertEquals(expected, result);
     }
+
+    @Test
+    public void testInvalidTags() {
+        var parser = MiniTagParser.builder()
+                .build();
+
+        var result = parser.parse("<<<tag>>>>  <>");
+
+        var expected = new RootNode();
+        expected.putChildren(new TextNode("<<"));
+        expected.putChildren(new TagNode("tag", null));
+        expected.putChildren(new TextNode(">>>  <>"));
+
+        assertEquals(expected, result);
+    }
 }
