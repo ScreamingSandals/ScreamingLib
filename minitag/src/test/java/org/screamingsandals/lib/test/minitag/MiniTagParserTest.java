@@ -9,6 +9,7 @@ import org.screamingsandals.lib.minitag.tags.TagType;
 import org.screamingsandals.lib.minitag.tags.TransformedTag;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,6 +34,22 @@ public class MiniTagParserTest {
         yellow.putChildren(red);
 
         expected.putChildren(new TextNode("Not Colored"));
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testRegex() {
+        var parser = MiniTagParser.builder()
+                .registerTag(Pattern.compile("#([\\dA-Fa-f]{6}|[\\dA-Fa-f]{3})"), new TransformedTag(TagType.PAIR, node -> new TagNode("color", List.of(node.getTag()))))
+                .build();
+
+        var result = parser.parse("<#7755EE>Colored text");
+
+        var expected = new RootNode();
+        var color = new TagNode("color", List.of("#7755EE"));
+        color.putChildren(new TextNode("Colored text"));
+        expected.putChildren(color);
 
         assertEquals(expected, result);
     }

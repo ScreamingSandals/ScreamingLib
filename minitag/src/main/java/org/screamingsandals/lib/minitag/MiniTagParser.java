@@ -16,6 +16,7 @@ import org.screamingsandals.lib.minitag.tags.TagType;
 import org.screamingsandals.lib.minitag.tags.TransformedTag;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 @Accessors(fluent = true, chain = true)
 @RequiredArgsConstructor
@@ -46,6 +47,7 @@ public class MiniTagParser {
     private final char argumentSeparator;
     private final List<Character> quotes;
     private final Map<String, RegisteredTag> registeredTags;
+    private final Map<Pattern, RegisteredTag> registeredRegexTags;
 
     public static void main(String[] args) {
         var parser = MiniTagParser.builder()
@@ -158,6 +160,9 @@ public class MiniTagParser {
                         cursor.node.putChildren(tagNode);
                         if (!single) {
                             var register = registeredTags.get(tagNode.getTag());
+                            if (register == null && !registeredRegexTags.isEmpty()) {
+                                register = registeredRegexTags.entrySet().stream().filter(e -> e.getKey().matcher(tagNode.getTag()).matches()).map(Map.Entry::getValue).findFirst().orElse(null);
+                            }
                             var tagType = register != null ? register.tagType() : unknownTagType;
                             if (tagType == TagType.PAIR) {
                                 cursor = new NodeCursor(cursor, tagNode);
@@ -294,6 +299,12 @@ public class MiniTagParser {
             var registeredTag = registeredTags.get(((TagNode) node).getTag());
             if (registeredTag instanceof TransformedTag) {
                 node = (T) ((TransformedTag) registeredTag).transformer().transform((TagNode) node);
+            } else {
+                var finalNode = (TagNode) node;
+                var registeredRegexTag = registeredRegexTags.entrySet().stream().filter(e -> e.getKey().matcher(finalNode.getTag()).matches()).map(Map.Entry::getValue).findFirst();
+                if (registeredRegexTag.isPresent() && registeredRegexTag.get() instanceof TransformedTag) {
+                    node = (T) ((TransformedTag) registeredRegexTag.get()).transformer().transform((TagNode) node);
+                }
             }
         }
 
@@ -333,6 +344,7 @@ public class MiniTagParser {
         private char argumentSeparator = ARGUMENT_SEPARATOR;
         private List<Character> quotes = List.of(QUOTE, ALTERNATE_QUOTE);
         private final Map<String, RegisteredTag> registeredTags = new HashMap<>();
+        private final Map<Pattern, RegisteredTag> registeredRegexTags = new HashMap<>();
 
         @NotNull
         public Builder preTag(boolean enablePreTag) {
@@ -360,8 +372,20 @@ public class MiniTagParser {
         }
 
         @NotNull
+        public Builder registerTag(Pattern tag, RegisteredTag registeredTag) {
+            registeredRegexTags.put(tag, registeredTag);
+            return this;
+        }
+
+        @NotNull
         public Builder registerTag(String tag, TagType type) {
             registeredTags.put(tag, new StandardTag(type));
+            return this;
+        }
+
+        @NotNull
+        public Builder registerTag(Pattern tag, TagType type) {
+            registeredRegexTags.put(tag, new StandardTag(type));
             return this;
         }
 
@@ -369,7 +393,11 @@ public class MiniTagParser {
         public Builder registerTag(String tag, RegisteredTag registeredTag, String... aliases) {
             registeredTags.put(tag, registeredTag);
             for (var alias : aliases) {
-                registeredTags.put(alias, new TransformedTag(registeredTag.tagType(), node -> new TagNode(tag, node.getArgs())));
+                if (registeredTag instanceof TransformedTag) {
+                    registeredTags.put(alias, new TransformedTag(registeredTag.tagType(), node -> ((TransformedTag) registeredTag).transformer().transform(new TagNode(tag, node.getArgs()))));
+                } else {
+                    registeredTags.put(alias, new TransformedTag(registeredTag.tagType(), node -> new TagNode(tag, node.getArgs())));
+                }
             }
             return this;
         }
@@ -396,7 +424,8 @@ public class MiniTagParser {
                     endingTagSymbol,
                     argumentSeparator,
                     quotes,
-                    Map.copyOf(registeredTags)
+                    Map.copyOf(registeredTags),
+                    Map.copyOf(registeredRegexTags)
             );
         }
     }
