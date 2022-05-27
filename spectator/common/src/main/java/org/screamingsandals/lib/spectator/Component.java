@@ -97,6 +97,38 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return Spectator.getBackend().text().content(text).build();
     }
 
+    static TextComponent text(byte value) {
+        return Spectator.getBackend().text().content(value).build();
+    }
+
+    static TextComponent text(short value) {
+        return Spectator.getBackend().text().content(value).build();
+    }
+
+    static TextComponent text(int value) {
+        return Spectator.getBackend().text().content(value).build();
+    }
+
+    static TextComponent text(long value) {
+        return Spectator.getBackend().text().content(value).build();
+    }
+
+    static TextComponent text(float value) {
+        return Spectator.getBackend().text().content(value).build();
+    }
+
+    static TextComponent text(double value) {
+        return Spectator.getBackend().text().content(value).build();
+    }
+
+    static TextComponent text(boolean value) {
+        return Spectator.getBackend().text().content(value).build();
+    }
+
+    static TextComponent text(char value) {
+        return Spectator.getBackend().text().content(value).build();
+    }
+
     static TextComponent text(String text, Color color) {
         return Spectator.getBackend().text().content(text).color(color).build();
     }
@@ -346,9 +378,21 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
         B hoverEvent(@Nullable HoverEvent event);
 
+        default B hoverEvent(@Nullable HoverEvent.Builder event) {
+            return hoverEvent(event != null ? event.build() : null);
+        }
+
         B hoverEvent(@Nullable ItemContent itemContent);
 
+        default B hoverEvent(@Nullable ItemContent.Builder itemContent) {
+            return hoverEvent(itemContent != null ? itemContent.build() : null);
+        }
+
         B hoverEvent(@Nullable EntityContent entityContent);
+
+        default B hoverEvent(@Nullable EntityContent.Builder entityContent) {
+            return hoverEvent(entityContent != null ? entityContent.build() : null);
+        }
 
         B hoverEvent(@Nullable ComponentLike component);
 

@@ -41,5 +41,45 @@ public interface TextComponent extends Component {
         @Contract("_ -> this")
         @NotNull
         Builder content(@NotNull String content);
+        @Contract("_ -> this")
+        @NotNull
+        default Builder content(byte value) {
+            return content(String.valueOf(value));
+        }
+        @Contract("_ -> this")
+        @NotNull
+        default Builder content(short value) {
+            return content(String.valueOf(value));
+        }
+        @Contract("_ -> this")
+        @NotNull
+        default Builder content(int value) {
+            return content(String.valueOf(value));
+        }
+        @Contract("_ -> this")
+        @NotNull
+        default Builder content(long value) {
+            return content(String.valueOf(value));
+        }
+        @Contract("_ -> this")
+        @NotNull
+        default Builder content(float value) {
+            return content(String.valueOf(value));
+        }
+        @Contract("_ -> this")
+        @NotNull
+        default Builder content(double value) {
+            return content(String.valueOf(value));
+        }
+        @Contract("_ -> this")
+        @NotNull
+        default Builder content(boolean value) {
+            return content(String.valueOf(value));
+        }
+        @Contract("_ -> this")
+        @NotNull
+        default Builder content(char value) {
+            return content(String.valueOf(value));
+        }
     }
 }

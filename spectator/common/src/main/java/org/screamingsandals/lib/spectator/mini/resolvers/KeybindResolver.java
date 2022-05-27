@@ -14,27 +14,22 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.spectator.mini.transformers;
+package org.screamingsandals.lib.spectator.mini.resolvers;
 
-import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
-import org.screamingsandals.lib.minitag.tags.TransformedTag;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
-import java.util.ArrayList;
-import java.util.List;
+public class KeybindResolver implements ComponentBuilderResolver {
 
-@Data
-public class TagToAttributeTransformer implements TransformedTag.Transformer {
-    private final String tag;
-
+    @SuppressWarnings("unchecked")
     @Override
-    public TagNode transform(TagNode node) {
-        if (node.getArgs() != null) {
-            var attributes = new ArrayList<>(node.getArgs());
-            attributes.add(0, node.getTag());
-            return new TagNode(tag, List.copyOf(attributes));
-        } else {
-            return new TagNode(tag, List.of(node.getTag()));
+    public <B extends Component.Builder<B, C>, C extends Component> B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag) {
+        if (tag.getArgs().isEmpty()) {
+            return null; // invalid
         }
+
+        return (B) Component.keybind().keybind(tag.getArgs().get(0));
     }
 }

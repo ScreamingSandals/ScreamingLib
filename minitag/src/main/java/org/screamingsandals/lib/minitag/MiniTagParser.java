@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 ScreamingSandals
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.screamingsandals.lib.minitag;
 
 import lombok.Data;
@@ -48,17 +64,6 @@ public class MiniTagParser {
     private final List<Character> quotes;
     private final Map<String, RegisteredTag> registeredTags;
     private final Map<Pattern, RegisteredTag> registeredRegexTags;
-
-    public static void main(String[] args) {
-        var parser = MiniTagParser.builder()
-                .preTag(true)
-                .escapeInvalidEndings(false)
-                .strictClosing(false)
-                .registerTag("red", new TransformedTag(TagType.PAIR, node -> new TagNode("color", List.of(node.getTag()))))
-                .build();
-        var result = parser.parse("Text <red><hover:show_text:\"<green>cum\">bruh</red> <> my cum \n<reset><yellow/>Cum  on <blue>me!!");
-        System.out.println(result);
-    }
 
     public RootNode parse(String tag) {
 
@@ -207,7 +212,7 @@ public class MiniTagParser {
 
     private TagNode readTag(String tag) {
         if (!tag.contains(":")) {
-            return new TagNode(tag, null);
+            return new TagNode(tag, List.of());
         } else {
             var chars = tag.toCharArray();
 
@@ -217,8 +222,7 @@ public class MiniTagParser {
             var arguments = new ArrayList<String>();
             var builder = new StringBuilder();
 
-            for (int i = 0; i < chars.length; i++) {
-                var c = chars[i];
+            for (char c : chars) {
                 if (escaped) {
                     builder.append(c);
                     escaped = false;

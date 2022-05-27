@@ -14,26 +14,20 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.minitag.nodes;
+package org.screamingsandals.lib.spectator.mini.resolvers;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.minitag.nodes.TagNode;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
-@Getter
-@EqualsAndHashCode(callSuper = true)
-@RequiredArgsConstructor
-public class TextNode extends Node {
-    private final String text;
-
+public class InsertionResolver implements StylingResolver {
     @Override
-    public String toString() {
-        return '\"' + text + '\"';
-    }
+    public <B extends Component.Builder<B, C>, C extends Component> void resolve(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag) {
+        if (tag.getArgs().isEmpty()) {
+            return;
+        }
 
-    @Override
-    public void putChildren(@NotNull Node node) {
-        throw new UnsupportedOperationException("Can't add children to text!");
+        builder.insertion(tag.getArgs().get(0));
     }
 }
