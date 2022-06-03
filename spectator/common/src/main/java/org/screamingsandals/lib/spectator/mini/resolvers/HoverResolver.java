@@ -22,6 +22,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
+import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.UUID;
@@ -29,13 +30,13 @@ import java.util.UUID;
 public class HoverResolver implements StylingResolver {
 
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> void resolve(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag) {
+    public <B extends Component.Builder<B, C>, C extends Component> void resolve(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag, Placeholder... placeholders) {
         if (tag.getArgs().isEmpty()) {
             return;
         }
 
         if (tag.getArgs().size() == 1) {
-            builder.hoverEvent(parser.parse(tag.getArgs().get(0))); // TODO: Preserve placeholders
+            builder.hoverEvent(parser.parse(tag.getArgs().get(0), placeholders));
             return;
         }
 
@@ -63,13 +64,13 @@ public class HoverResolver implements StylingResolver {
                     entity.type(NamespacedMappingKey.of(tag.getArgs().get(1)));
                     entity.id(UUID.fromString(tag.getArgs().get(2)));
                     if (tag.getArgs().size() > 3) {
-                        entity.name(parser.parse(tag.getArgs().get(0))); // TODO: Preserve placeholders
+                        entity.name(parser.parse(tag.getArgs().get(0), placeholders));
                     }
                     builder.hoverEvent(entity);
                 }
                 break;
             default:
-                builder.hoverEvent(parser.parse(tag.getArgs().get(0))); // TODO: Preserve placeholders
+                builder.hoverEvent(parser.parse(tag.getArgs().get(0), placeholders));
         }
 
     }

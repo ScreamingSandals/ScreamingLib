@@ -22,13 +22,21 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 
-public class InsertionResolver implements StylingResolver {
+public class SelectorResolver implements ComponentBuilderResolver {
+
+    @SuppressWarnings("unchecked")
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> void resolve(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag, Placeholder... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag, Placeholder... placeholders) {
         if (tag.getArgs().isEmpty()) {
-            return;
+            return null; // invalid
         }
 
-        builder.insertion(tag.getArgs().get(0));
+        if (tag.getArgs().size() == 1) {
+            return (B) Component.selector().pattern(tag.getArgs().get(0));
+        }
+
+        return (B) Component.selector()
+                .pattern(tag.getArgs().get(0))
+                .separator(parser.parse(tag.getArgs().get(1), placeholders));
     }
 }

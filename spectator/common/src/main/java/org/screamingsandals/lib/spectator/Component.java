@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.spectator.event.hover.*;
+import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
+import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 import org.screamingsandals.lib.spectator.utils.ComponentUtils;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.TriState;
@@ -63,6 +65,18 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     @Contract(value = "_ -> new", pure = true)
     static Component fromJavaJson(@Nullable String json) {
         return Spectator.getBackend().fromJson(json);
+    }
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    static Component fromMiniMessage(@NotNull String miniMessage) {
+        return MiniMessageParser.INSTANCE.parse(miniMessage);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    static Component fromMiniMessage(@NotNull String miniMessage, @NotNull Placeholder...placeholders) {
+        return MiniMessageParser.INSTANCE.parse(miniMessage, placeholders);
     }
 
     static BlockNBTComponent.Builder blockNBT() {
@@ -118,6 +132,10 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     }
 
     static TextComponent text(double value) {
+        return Spectator.getBackend().text().content(value).build();
+    }
+
+    static TextComponent text(Number value) {
         return Spectator.getBackend().text().content(value).build();
     }
 

@@ -20,7 +20,8 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
+import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 
 public interface ComponentBuilderResolver {
-    <B extends Component.Builder<B,C>, C extends Component> B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag);
+    <B extends Component.Builder<B,C>, C extends Component> B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag, Placeholder... placeholders);
 }

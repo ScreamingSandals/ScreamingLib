@@ -21,6 +21,7 @@ import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.TranslatableComponent;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
+import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,7 @@ public class TranslatableResolver implements ComponentBuilderResolver {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag) {
+    public <B extends Component.Builder<B, C>, C extends Component> B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag, Placeholder... placeholders) {
         if (tag.getArgs().isEmpty()) {
             return null; // invalid
         }
@@ -44,7 +45,7 @@ public class TranslatableResolver implements ComponentBuilderResolver {
             if (builder == null) {
                 builder = Component.translatable().translate(arg);
             } else {
-                args.add(parser.parse(arg)); // TODO: Preserve placeholders
+                args.add(parser.parse(arg, placeholders));
             }
         }
         //noinspection ConstantConditions

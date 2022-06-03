@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.spectator.mini.resolvers;
+package org.screamingsandals.lib.spectator.mini.placeholders;
 
-import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.minitag.nodes.TagNode;
+import lombok.Data;
+import org.intellij.lang.annotations.Pattern;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
-import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 
-public class InsertionResolver implements StylingResolver {
+import java.util.List;
+
+@Data
+public class CharPlaceholder implements Placeholder {
+    @Pattern("[a-z\\d_-]+")
+    private final String name;
+    private final char value;
+
+    @SuppressWarnings("unchecked")
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> void resolve(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag, Placeholder... placeholders) {
-        if (tag.getArgs().isEmpty()) {
-            return;
-        }
-
-        builder.insertion(tag.getArgs().get(0));
+    public <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
+        return (B) Component.text().content(value);
     }
 }

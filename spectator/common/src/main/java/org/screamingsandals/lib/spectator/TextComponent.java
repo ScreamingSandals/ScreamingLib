@@ -73,6 +73,11 @@ public interface TextComponent extends Component {
         }
         @Contract("_ -> this")
         @NotNull
+        default Builder content(Number value) {
+            return content(String.valueOf(value));
+        }
+        @Contract("_ -> this")
+        @NotNull
         default Builder content(boolean value) {
             return content(String.valueOf(value));
         }
