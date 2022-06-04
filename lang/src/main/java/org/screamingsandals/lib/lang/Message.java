@@ -17,7 +17,6 @@
 package org.screamingsandals.lib.lang;
 
 import lombok.Data;
-import net.kyori.adventure.text.JoinConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.placeholders.PlaceholderManager;

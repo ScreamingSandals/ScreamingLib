@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.player;
 
 import lombok.experimental.Delegate;
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 import org.screamingsandals.lib.utils.Wrapper;
 
 public class ExtendablePlayerWrapper implements PlayerWrapper {
@@ -28,6 +30,12 @@ public class ExtendablePlayerWrapper implements PlayerWrapper {
             throw new UnsupportedOperationException("ExtendablePlayerWrapper can't wrap another ExtendablePlayerWrapper!");
         }
         this.wrappedObject = wrappedObject;
+    }
+
+    @Override
+    @NotNull
+    public PlayerAdapter adapter() {
+        return wrappedObject.adapter();
     }
 
     /**

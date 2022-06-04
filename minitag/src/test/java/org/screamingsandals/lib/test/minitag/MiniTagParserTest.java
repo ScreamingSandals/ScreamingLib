@@ -79,7 +79,7 @@ public class MiniTagParserTest {
 
         var expected = new RootNode();
         expected.putChildren(new TextNode("<<"));
-        expected.putChildren(new TagNode("tag", null));
+        expected.putChildren(new TagNode("tag", List.of()));
         expected.putChildren(new TextNode(">>>  <>"));
 
         assertEquals(expected, result);

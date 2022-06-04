@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.kotlin
 
-import net.kyori.adventure.text.Component
 import org.jetbrains.annotations.ApiStatus
 import org.screamingsandals.lib.container.Container
 import org.screamingsandals.lib.entity.EntityBasic
@@ -25,6 +24,7 @@ import org.screamingsandals.lib.event.EventManager
 import org.screamingsandals.lib.event.SEvent
 import org.screamingsandals.lib.item.Item
 import org.screamingsandals.lib.player.PlayerWrapper
+import org.screamingsandals.lib.spectator.Component
 import org.screamingsandals.lib.utils.ComparableWrapper
 import org.screamingsandals.lib.utils.Wrapper
 import org.screamingsandals.lib.utils.math.Vector2D

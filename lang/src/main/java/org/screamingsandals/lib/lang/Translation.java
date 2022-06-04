@@ -17,9 +17,9 @@
 package org.screamingsandals.lib.lang;
 
 import lombok.Data;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
-import net.kyori.adventure.text.format.NamedTextColor;
+import org.screamingsandals.lib.spectator.Color;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,11 +37,11 @@ public final class Translation implements Messageable {
     }
 
     public static Translation of(String... keys) {
-        return of(Arrays.asList(keys), Component.text(String.join(".", keys)).color(NamedTextColor.RED));
+        return of(Arrays.asList(keys), Component.text().content(String.join(".", keys)).color(Color.RED).build());
     }
 
     public static Translation of(Collection<String> keys) {
-        return of(keys, Component.text(String.join(".", keys)).color(NamedTextColor.RED));
+        return of(keys, Component.text().content(String.join(".", keys)).color(Color.RED).build());
     }
 
     public static Translation of(Collection<String> keys, Component fallback) {
@@ -63,7 +63,7 @@ public final class Translation implements Messageable {
         final var copied = new LinkedList<>(this.keys);
         copied.addAll(keys);
 
-        return of(copied, Component.text(String.join(".", keys)).color(NamedTextColor.RED));
+        return of(copied, Component.text().content(String.join(".", keys)).color(Color.RED).build());
     }
 
     public Translation join(Collection<String> keys, Component fallback) {

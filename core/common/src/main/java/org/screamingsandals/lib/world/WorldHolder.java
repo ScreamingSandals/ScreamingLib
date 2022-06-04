@@ -16,9 +16,6 @@
 
 package org.screamingsandals.lib.world;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
@@ -199,29 +196,4 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Play
      * @return the highest non-empty Y coordinate
      */
     int getHighestYAt(int x, int z);
-
-    /**
-     * A gson {@link TypeAdapter} for serializing and deserializing a world holder.
-     */
-    class WorldHolderTypeAdapter extends TypeAdapter<WorldHolder> {
-        @Override
-        public void write(JsonWriter out, WorldHolder value) throws IOException {
-            out.beginObject();
-            out.name("uuid");
-            out.value(value.getUuid().toString());
-            out.endObject();
-        }
-
-        @Override
-        public WorldHolder read(JsonReader in) throws IOException {
-            in.beginObject();
-            final var name = in.nextName();
-            if (name.equals("uuid")) {
-                final var toReturn = WorldMapper.getWorld(UUID.fromString(in.nextString())).orElseThrow();
-                in.endObject();
-                return toReturn;
-            }
-            throw new IOException("Name is not 'uuid'");
-        }
-    }
 }
