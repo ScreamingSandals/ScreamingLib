@@ -32,6 +32,7 @@ import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -153,6 +154,25 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
     static TranslatableComponent.Builder translatable() {
         return Spectator.getBackend().translatable();
+    }
+
+    @NotNull
+    static Component join(@NotNull Component separator, @NotNull Collection<@NotNull Component> components) {
+        return join(separator, components.toArray(Component[]::new));
+    }
+
+    @NotNull
+    static Component join(@NotNull Component separator, @NotNull Component @NotNull ... components) {
+        var finalComponents = new ArrayList<Component>();
+
+        for (var comp : components) {
+            if (!finalComponents.isEmpty()) {
+                finalComponents.add(separator);
+            }
+            finalComponents.add(comp);
+        }
+
+        return Component.text().append(finalComponents).build();
     }
 
     @Unmodifiable

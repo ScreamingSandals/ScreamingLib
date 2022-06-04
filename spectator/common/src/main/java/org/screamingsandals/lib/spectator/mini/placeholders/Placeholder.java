@@ -18,17 +18,24 @@ package org.screamingsandals.lib.spectator.mini.placeholders;
 
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
+import org.screamingsandals.lib.spectator.mini.resolvers.ComponentBuilderResolver;
 
 import java.time.temporal.TemporalAccessor;
 import java.util.List;
 
-public interface Placeholder {
+public interface Placeholder extends ComponentBuilderResolver {
 
     @Pattern("[a-z\\d_-]+")
     String getName();
     <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders);
+
+    @Override
+    default <B extends Component.Builder<B, C>, C extends Component> B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag, Placeholder... placeholders) {
+        return getResult(parser, tag.getArgs(), placeholders);
+    }
 
     @NotNull
     static Placeholder component(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Component component) {

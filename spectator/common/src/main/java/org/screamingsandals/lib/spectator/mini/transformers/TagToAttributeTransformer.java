@@ -29,7 +29,7 @@ public class TagToAttributeTransformer implements TransformedTag.Transformer {
 
     @Override
     public TagNode transform(TagNode node) {
-        if (node.getArgs() != null) {
+        if (!node.getArgs().isEmpty()) {
             var attributes = new ArrayList<>(node.getArgs());
             attributes.add(0, node.getTag());
             return new TagNode(tag, List.copyOf(attributes));

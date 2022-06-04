@@ -16,9 +16,13 @@
 
 package org.screamingsandals.lib.spectator.mini;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.MiniTagParser;
 import org.screamingsandals.lib.minitag.nodes.Node;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
@@ -32,90 +36,24 @@ import org.screamingsandals.lib.spectator.mini.transformers.NegatedDecorationTra
 import org.screamingsandals.lib.spectator.mini.transformers.TagToAttributeTransformer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Data
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MiniMessageParser {
 
-    public static final MiniMessageParser INSTANCE = new MiniMessageParser();
+    public static final MiniMessageParser INSTANCE = MiniMessageParser.builder()
+            .defaultStylingTags()
+            .defaultComponentTags()
+            .resetTag(true)
+            .build();
     private final MiniTagParser parser;
-    private final Map<String, ComponentBuilderResolver> componentTagResolvers = new HashMap<>();
-    private final Map<String, StylingResolver> componentStylingResolvers = new HashMap<>();
+    private final Map<String, ComponentBuilderResolver> componentTagResolvers;
+    private final Map<String, StylingResolver> componentStylingResolvers;
 
-    public MiniMessageParser(@NotNull MiniTagParser.Builder builder) {
-        // TODO: some builder, this is fucking mess
-        var colorTransformedTag = new TransformedTag(TagType.PAIR, new TagToAttributeTransformer("color"));
-        var negatedDecorationTag = new TransformedTag(TagType.PAIR, new NegatedDecorationTransformer());
-
-        componentTagResolvers.put("selector", new SelectorResolver());
-        componentTagResolvers.put("lang", new TranslatableResolver());
-        componentTagResolvers.put("key", new KeybindResolver());
-
-        componentStylingResolvers.put("bold", new BoldResolver());
-        componentStylingResolvers.put("click", new ClickResolver());
-        componentStylingResolvers.put("color", new ColorResolver());
-        componentStylingResolvers.put("font", new FontResolver());
-        componentStylingResolvers.put("hover", new HoverResolver());
-        componentStylingResolvers.put("insertion", new InsertionResolver());
-        componentStylingResolvers.put("italic", new ItalicResolver());
-        componentStylingResolvers.put("obfuscated", new ObfuscatedResolver());
-        componentStylingResolvers.put("strikethrough", new StrikethroughResolver());
-        componentStylingResolvers.put("underlined", new UnderlinedResolver());
-
-        this.parser = builder
-                .resetTag(true)
-
-                .registerTag("color", TagType.PAIR, "colour", "c")
-                .registerTag("black", colorTransformedTag)
-                .registerTag("dark_blue", colorTransformedTag)
-                .registerTag("dark_green", colorTransformedTag)
-                .registerTag("dark_aqua", colorTransformedTag)
-                .registerTag("dark_red", colorTransformedTag)
-                .registerTag("dark_purple", colorTransformedTag)
-                .registerTag("gold", colorTransformedTag)
-                .registerTag("gray", colorTransformedTag, "grey")
-                .registerTag("dark_gray", colorTransformedTag, "dark_grey")
-                .registerTag("blue", colorTransformedTag)
-                .registerTag("green", colorTransformedTag)
-                .registerTag("aqua", colorTransformedTag)
-                .registerTag("red", colorTransformedTag)
-                .registerTag("light_purple", colorTransformedTag)
-                .registerTag("yellow", colorTransformedTag)
-                .registerTag("white", colorTransformedTag)
-                .registerTag(Pattern.compile("#([\\dA-Fa-f]{6}|[\\dA-Fa-f]{3})"), colorTransformedTag)
-
-                .registerTag("bold", TagType.PAIR, "b")
-                .registerTag("italic", TagType.PAIR, "i", "em")
-                .registerTag("underlined", TagType.PAIR, "u")
-                .registerTag("strikethrough", TagType.PAIR, "st")
-                .registerTag("obfuscated", TagType.PAIR, "obf")
-
-                .registerTag("!bold", negatedDecorationTag, "!b")
-                .registerTag("!italic", negatedDecorationTag, "!i", "!em")
-                .registerTag("!underlined", negatedDecorationTag, "!u")
-                .registerTag("!strikethrough", negatedDecorationTag, "!st")
-                .registerTag("!obfuscated", negatedDecorationTag, "!obf")
-
-                .registerTag("click", TagType.PAIR)
-                .registerTag("hover", TagType.PAIR)
-                .registerTag("key", TagType.SINGLE)
-                .registerTag("lang", TagType.SINGLE, "tr", "translate")
-                .registerTag("selector", TagType.SINGLE, "sel")
-                .registerTag("insertion", TagType.PAIR)
-                //.registerTag("rainbow", TagType.PAIR)
-                //.registerTag("gradient", TagType.PAIR)
-                //.registerTag("transition", TagType.PAIR)
-                .registerTag("font", TagType.PAIR)
-                .registerTag("newline", TagType.SINGLE, "br")
-
-                .build();
-    }
-
-    public MiniMessageParser() {
-        this(MiniTagParser.builder());
-    }
     @NotNull
     public Component parse(@NotNull String str, @NotNull Placeholder... placeholders) {
         if (str.isEmpty()) {
@@ -216,6 +154,228 @@ public class MiniMessageParser {
             }
         } else {
             throw new IllegalArgumentException("Unknown node type!");
+        }
+    }
+
+    @NotNull
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private final MiniTagParser.Builder miniTagParserBuilder = MiniTagParser.builder();
+        private final Map<String, ComponentBuilderResolver> componentTagResolvers = new HashMap<>();
+        private final Map<String, StylingResolver> componentStylingResolvers = new HashMap<>();
+
+        @NotNull
+        @Contract("_ -> this")
+        public Builder strictClosing(boolean strictClosing) {
+            miniTagParserBuilder.strictClosing(strictClosing);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_ -> this")
+        public Builder escapeInvalidEndings(boolean escapeInvalidEndings) {
+            miniTagParserBuilder.escapeInvalidEndings(escapeInvalidEndings);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_ -> this")
+        public Builder preTag(@Nullable String preTag) {
+            miniTagParserBuilder.preTag(preTag);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_ -> this")
+        public Builder preTag(boolean enablePreTag) {
+            miniTagParserBuilder.preTag(enablePreTag);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_ -> this")
+        public Builder resetTag(@Nullable String resetTag) {
+            miniTagParserBuilder.resetTag(resetTag);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_ -> this")
+        public Builder resetTag(boolean enableResetTag) {
+            miniTagParserBuilder.resetTag(enableResetTag);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_ -> this")
+        public Builder escapeSymbol(char escapeSymbol) {
+            miniTagParserBuilder.escapeSymbol(escapeSymbol);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_ -> this")
+        public Builder tagOpeningSymbol(char tagOpeningSymbol) {
+            miniTagParserBuilder.tagOpeningSymbol(tagOpeningSymbol);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_ -> this")
+        public Builder tagClosingSymbol(char tagClosingSymbol) {
+            miniTagParserBuilder.tagClosingSymbol(tagClosingSymbol);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_ -> this")
+        public Builder endingTagSymbol(char endingTagSymbol) {
+            miniTagParserBuilder.endingTagSymbol(endingTagSymbol);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_ -> this")
+        public Builder argumentSeparator(char argumentSeparator) {
+            miniTagParserBuilder.argumentSeparator(argumentSeparator);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_ -> this")
+        public Builder quotes(List<Character> quotes) {
+            miniTagParserBuilder.quotes(quotes);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_ -> this")
+        public Builder quotes(Character... quotes) {
+            miniTagParserBuilder.quotes(quotes);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_, _, _ -> this")
+        public Builder registerStylingTag(String name, StylingResolver resolver, String... aliases) {
+            miniTagParserBuilder.registerTag(name, TagType.PAIR, aliases);
+            componentStylingResolvers.put(name, resolver);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_, _, _ -> this")
+        public Builder registerComponentTag(String name, ComponentBuilderResolver resolver, String... aliases) {
+            miniTagParserBuilder.registerTag(name, TagType.SINGLE, aliases);
+            componentTagResolvers.put(name, resolver);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_, _ -> this")
+        public Builder registerPlaceholder(Placeholder placeholder, String... aliases) {
+            registerComponentTag(placeholder.getName(), placeholder, aliases);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_, _, _ -> this")
+        public Builder putStylingAlias(String name, TransformedTag.Transformer transformer, String... aliases) {
+            miniTagParserBuilder.registerTag(name, new TransformedTag(TagType.PAIR, transformer), aliases);
+            return this;
+        }
+
+        @NotNull
+        @Contract("-_, _ > this")
+        public Builder putStylingAlias(Pattern pattern, TransformedTag.Transformer transformer) {
+            miniTagParserBuilder.registerTag(pattern, new TransformedTag(TagType.PAIR, transformer));
+            return this;
+        }
+
+        @NotNull
+        @Contract("_, _, _ -> this")
+        public Builder putComponentAlias(String name, TransformedTag.Transformer transformer, String... aliases) {
+            miniTagParserBuilder.registerTag(name, new TransformedTag(TagType.SINGLE, transformer), aliases);
+            return this;
+        }
+
+        @NotNull
+        @Contract("_, _ -> this")
+        public Builder putComponentAlias(Pattern pattern, TransformedTag.Transformer transformer) {
+            miniTagParserBuilder.registerTag(pattern, new TransformedTag(TagType.SINGLE, transformer));
+            return this;
+        }
+
+        @NotNull
+        @Contract("-> this")
+        public Builder defaultStylingTags() {
+            // colors
+            registerStylingTag("color", new ColorResolver(), "colour", "c");
+
+            var colorTransformer = new TagToAttributeTransformer("color");
+            putStylingAlias("black", colorTransformer);
+            putStylingAlias("dark_blue", colorTransformer);
+            putStylingAlias("dark_green", colorTransformer);
+            putStylingAlias("dark_aqua", colorTransformer);
+            putStylingAlias("dark_red", colorTransformer);
+            putStylingAlias("dark_purple", colorTransformer);
+            putStylingAlias("gold", colorTransformer);
+            putStylingAlias("gray", colorTransformer, "grey");
+            putStylingAlias("dark_gray", colorTransformer, "dark_grey");
+            putStylingAlias("blue", colorTransformer);
+            putStylingAlias("green", colorTransformer);
+            putStylingAlias("aqua", colorTransformer);
+            putStylingAlias("red", colorTransformer);
+            putStylingAlias("light_purple", colorTransformer);
+            putStylingAlias("yellow", colorTransformer);
+            putStylingAlias("white", colorTransformer);
+            putStylingAlias(Pattern.compile("#([\\dA-Fa-f]{6}|[\\dA-Fa-f]{3})"), colorTransformer);
+
+            // decorations
+            registerStylingTag("bold", new BoldResolver(), "b");
+            registerStylingTag("italic", new ItalicResolver(), "i", "em");
+            registerStylingTag("underlined", new UnderlinedResolver(), "u");
+            registerStylingTag("strikethrough", new StrikethroughResolver(), "st");
+            registerStylingTag("obfuscated", new ObfuscatedResolver(), "obf");
+
+            var negatedDecorationTransformer =  new NegatedDecorationTransformer();
+            putStylingAlias("!bold", negatedDecorationTransformer, "!b");
+            putStylingAlias("!italic", negatedDecorationTransformer, "!i", "!em");
+            putStylingAlias("!underlined", negatedDecorationTransformer, "!u");
+            putStylingAlias("!strikethrough", negatedDecorationTransformer, "!st");
+            putStylingAlias("!obfuscated", negatedDecorationTransformer, "!obf");
+
+            // misc
+
+            registerStylingTag("click", new ClickResolver());
+            registerStylingTag("hover", new HoverResolver());
+            registerStylingTag("insertion", new InsertionResolver());
+            //registerStylingTag("rainbow", new RainbowResolver()); // TODO
+            //registerStylingTag("gradient", new GradientResolver()); // TODO
+            //registerStylingTag("transition", new TransitionResolver()); // TODO
+            registerStylingTag("font", new FontResolver());
+
+            return this;
+        }
+
+        @NotNull
+        @Contract("-> this")
+        public Builder defaultComponentTags() {
+            registerComponentTag("selector", new SelectorResolver(), "sel");
+            registerComponentTag("lang", new TranslatableResolver(), "tr", "translate");
+            registerComponentTag("key", new KeybindResolver());
+            registerComponentTag("legacy", new LegacyResolver()); // for internal reasons
+            registerPlaceholder(Placeholder.component("newline", Component.newLine()), "br");
+            return this;
+        }
+
+        @NotNull
+        @Contract(value = "-> new", pure = true)
+        public MiniMessageParser build() {
+            return new MiniMessageParser(miniTagParserBuilder.build(), Map.copyOf(componentTagResolvers), Map.copyOf(componentStylingResolvers));
         }
     }
 }

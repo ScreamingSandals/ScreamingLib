@@ -18,6 +18,7 @@ package org.screamingsandals.lib.minitag;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.Tolerate;
 import org.jetbrains.annotations.NotNull;
@@ -332,7 +333,7 @@ public class MiniTagParser {
         private final Node node;
     }
 
-    @Data
+    @Setter
     public static class Builder {
         private boolean strictClosing = true;
         private boolean escapeInvalidEndings = false;
@@ -351,12 +352,14 @@ public class MiniTagParser {
         private final Map<Pattern, RegisteredTag> registeredRegexTags = new HashMap<>();
 
         @NotNull
+        @Tolerate
         public Builder preTag(boolean enablePreTag) {
             preTag = enablePreTag ? PRE_TAG : null;
             return this;
         }
 
         @NotNull
+        @Tolerate
         public Builder resetTag(boolean enableResetTag) {
             resetTag = enableResetTag ? RESET_TAG : null;
             return this;

@@ -17,20 +17,20 @@
 package org.screamingsandals.lib.lang;
 
 import lombok.Data;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.JoinConfiguration;
-import net.kyori.adventure.text.minimessage.Template;
-import net.kyori.adventure.text.minimessage.template.TemplateResolver;
-import net.kyori.adventure.title.Title;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.placeholders.PlaceholderManager;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.sender.TitleableSenderMessage;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.audience.PlayerAudience;
+import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
+import org.screamingsandals.lib.spectator.title.TimesProvider;
+import org.screamingsandals.lib.spectator.title.Title;
 import org.screamingsandals.lib.tasker.Tasker;
-import org.screamingsandals.lib.utils.AdventureHelper;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -54,7 +54,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
     @NotNull
     private Component prefix;
     @Nullable
-    private Title.Times times;
+    private TimesProvider times;
     private PrefixPolicy prefixPolicy = PrefixPolicy.ALL_MESSAGES;
     private PrefixResolving prefixResolving = PrefixResolving.DEFAULT;
 
@@ -878,10 +878,10 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       Component which will replace the placeholder
      * @return self
      */
-    public @NotNull Message earlyPlaceholder(@NotNull String placeholder, @NotNull Component value) {
-        earlyPlaceholders.put(placeholder, Lang.MINIMESSAGE.serialize(value));
+    /*public @NotNull Message earlyPlaceholder(@NotNull String placeholder, @NotNull Component value) {
+        earlyPlaceholders.put(placeholder, value));
         return this;
-    }
+    }*/
 
     /**
      * This method works only with Messages using MiniMessage format.
@@ -1102,12 +1102,12 @@ public class Message implements TitleableSenderMessage, Cloneable {
     }
 
     /**
-     * Sets the {@link Title.Times} for this message.
+     * Sets the {@link TimesProvider} for this message.
      *
      * @param times times to set
      * @return self
      */
-    public @NotNull Message times(Title.Times times) {
+    public @NotNull Message times(TimesProvider times) {
         this.times = times;
         return this;
     }
@@ -1149,7 +1149,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
                                         );
 
                                         if (translation.getType() == Messageable.Type.ADVENTURE) {
-                                            output.append(Lang.MINIMESSAGE.serialize(AdventureHelper.toComponent(result)));
+                                            output.append("<legacy:'" + result.replace("'", "\\'") + "'>");
                                         } else {
                                             output.append(result);
                                         }
@@ -1183,14 +1183,14 @@ public class Message implements TitleableSenderMessage, Cloneable {
                                         s = output.toString();
                                     }
 
-                                    final var resolvedTemplates = TemplateResolver
-                                            .templates(placeholders
+                                    @SuppressWarnings("PatternValidation")
+                                    final var resolvedTemplates = placeholders
                                                     .entrySet()
                                                     .stream()
-                                                    .map(entry -> Template.template(entry.getKey(), entry.getValue().apply(sender)))
-                                                    .collect(Collectors.toList()));
+                                                    .map(entry -> Placeholder.component(entry.getKey(), entry.getValue().apply(sender)))
+                                                    .toArray(Placeholder[]::new);
 
-                                    return Lang.MINIMESSAGE.deserialize(s, resolvedTemplates);
+                                    return Lang.MINIMESSAGE.parse(s, resolvedTemplates);
                                 } else {
                                     // Black magic again
                                     // SKIP THIS.
@@ -1201,7 +1201,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
                                     while (matcher.find()) {
                                         output.append(s, lastIndex, matcher.start());
                                         if (placeholders.containsKey(matcher.group(1))) {
-                                            output.append(AdventureHelper.toLegacy(placeholders.get(matcher.group(1)).apply(sender)));
+                                            output.append(placeholders.get(matcher.group(1)).apply(sender).toLegacy());
                                         } else {
                                             output.append("%").append(matcher.group(1)).append("%");
                                         }
@@ -1211,7 +1211,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
                                     if (lastIndex < s.length()) {
                                         output.append(s, lastIndex, s.length());
                                     }
-                                    return AdventureHelper.toComponent(output.toString());
+                                    return Component.fromLegacy(output.toString());
                                 }
                             })
                             .map(component -> {
@@ -1245,7 +1245,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @return component
      */
     public @NotNull Component getForJoined(CommandSenderWrapper sender) {
-        return Component.join(JoinConfiguration.separator(Component.newline()), getFor(sender));
+        return Component.join(Component.newLine(), getFor(sender));
     }
 
     /**
@@ -1266,11 +1266,13 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @return component
      */
     public Component getForAnyoneJoined() {
-        return Component.join(JoinConfiguration.separator(Component.newline()), getForAnyone());
+        return Component.join(Component.newLine(), getForAnyone());
     }
 
     public <W extends CommandSenderWrapper> Message title(W sender) {
-        sender.showTitle(asTitle(sender));
+        if (sender instanceof PlayerAudience) {
+            ((PlayerAudience) sender).showTitle(asTitle(sender));
+        }
         return this;
     }
 
@@ -1288,7 +1290,11 @@ public class Message implements TitleableSenderMessage, Cloneable {
 
     public <W extends CommandSenderWrapper> Tasker.TaskBuilder titleTask(W sender) {
         return Tasker
-                .build(() -> sender.showTitle(asTitle(sender)));
+                .build(() -> {
+                    if (sender instanceof PlayerAudience) {
+                        ((PlayerAudience) sender).showTitle(asTitle(sender));
+                    }
+                });
     }
 
     public <W extends CommandSenderWrapper> Tasker.TaskBuilder titleTask(W... senders) {
@@ -1473,7 +1479,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
 
     @Override
     @NotNull
-    public Title asTitle(@Nullable CommandSenderWrapper sender, @Nullable Title.Times times) {
+    public Title asTitle(@Nullable CommandSenderWrapper sender, @Nullable TimesProvider times) {
         var messages = getFor(sender);
         return Title.title(messages.size() >= 1 ? messages.get(0) : Component.empty(), messages.size() >= 2 ? messages.get(1) : Component.empty(), times);
     }
@@ -1486,7 +1492,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
 
     @Override
     @NotNull
-    public Title asTitle(@Nullable Title.Times times) {
+    public Title asTitle(@Nullable TimesProvider times) {
         return asTitle(null, times);
     }
 

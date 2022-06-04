@@ -18,11 +18,11 @@ package org.screamingsandals.lib.lang;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.lang.container.TranslationContainer;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
 /**
  * Access point for default values.
@@ -30,7 +30,7 @@ import org.screamingsandals.lib.sender.CommandSenderWrapper;
 public class Lang {
     /* Package Private, we want this customizable */
     @Getter
-    static MiniMessage MINIMESSAGE = MiniMessage.miniMessage();
+    static MiniMessageParser MINIMESSAGE = MiniMessageParser.INSTANCE;
 
     @Getter
     private static LangService defaultService;
@@ -52,7 +52,7 @@ public class Lang {
         return defaultService.getFor(sender);
     }
 
-    public static void withParser(@NotNull MiniMessage miniMessage) {
+    public static void withParser(@NotNull MiniMessageParser miniMessage) {
         Lang.MINIMESSAGE = miniMessage;
     }
 }

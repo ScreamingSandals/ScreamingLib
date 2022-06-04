@@ -25,7 +25,7 @@ import java.util.List;
 public class NegatedDecorationTransformer implements TransformedTag.Transformer {
     @Override
     public TagNode transform(TagNode node) {
-        if (node.getArgs() != null) {
+        if (!node.getArgs().isEmpty()) {
             var attributes = new ArrayList<>(node.getArgs());
             attributes.add(0, "false");
             return new TagNode(node.getTag().substring(1), List.copyOf(attributes));
