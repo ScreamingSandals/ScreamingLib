@@ -66,7 +66,8 @@ public class BukkitPacketMapper extends PacketMapper {
 
     @Override
     public int getId0(Class<? extends AbstractPacket> clazz) {
-        return PacketIdMapping.getPacketId(clazz);
+        var id = PacketIdMapping.getPacketId(clazz);
+        return id == null ? -1 : id; // peacefully return some number, it will be ignored later
     }
 
     @Override
