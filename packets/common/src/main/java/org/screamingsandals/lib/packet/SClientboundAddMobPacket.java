@@ -49,6 +49,7 @@ public class SClientboundAddMobPacket extends AbstractPacket {
             packet.location(location);
             packet.velocity(velocity);
             packet.typeId(typeId);
+            packet.headYaw(headYaw);
             writer.append(packet);
             var metadataPacket = new SClientboundSetEntityDataPacket();
             metadataPacket.entityId(entityId);
