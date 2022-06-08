@@ -57,6 +57,7 @@ public class SClientboundPlayerInfoPacket extends AbstractPacket {
                     if (playerInfoData.displayName() != null) {
                         writer.writeComponent(playerInfoData.displayName());
                     }
+                    writer.writeBoolean(false);
                     break;
                 }
                 case UPDATE_GAME_MODE: {
