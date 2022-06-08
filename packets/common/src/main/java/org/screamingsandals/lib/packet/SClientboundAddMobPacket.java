@@ -40,6 +40,23 @@ public class SClientboundAddMobPacket extends AbstractPacket {
 
     @Override
     public void write(PacketWriter writer) {
+        if (writer.protocol() >= 759) {
+            // 1.19: Switch to ClientboundAddEntityPacket
+            writer.setCancelled(true);
+            var packet = new SClientboundAddEntityPacket();
+            packet.entityId(entityId);
+            packet.uuid(uuid);
+            packet.location(location);
+            packet.velocity(velocity);
+            packet.typeId(typeId);
+            packet.headYaw(headYaw);
+            writer.append(packet);
+            var metadataPacket = new SClientboundSetEntityDataPacket();
+            metadataPacket.entityId(entityId);
+            metadataPacket.metadata().addAll(metadata);
+            writer.append(metadataPacket);
+        }
+
         writer.writeVarInt(entityId);
         if (writer.protocol() >= 49) {
             writer.writeUuid(uuid);

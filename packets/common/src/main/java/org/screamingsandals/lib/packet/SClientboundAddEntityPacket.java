@@ -16,8 +16,7 @@
 
 package org.screamingsandals.lib.packet;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -34,6 +33,16 @@ public class SClientboundAddEntityPacket extends AbstractPacket {
     private Vector3D velocity;
     private int typeId;
     private int data;
+    private byte headYaw;
+
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private boolean headYawSet;
+
+    public void headYaw(byte headYaw) {
+        this.headYaw = headYaw;
+        this.headYawSet = true;
+    }
 
     @Override
     public void write(PacketWriter writer) {
@@ -52,7 +61,12 @@ public class SClientboundAddEntityPacket extends AbstractPacket {
             writer.writeFixedPointVector(location);
         }
         writer.writeByteRotation(location);
-        writer.writeInt(data);
+        if (writer.protocol() >= 759) {
+            writer.writeByte(headYawSet ? headYaw : (byte) (location.getYaw() * 256 / 360));
+            writer.writeVarInt(data);
+        } else {
+            writer.writeInt(data);
+        }
         if (data != 0 || writer.protocol() >= 49) {
             writer.writeMotion(velocity);
         }
