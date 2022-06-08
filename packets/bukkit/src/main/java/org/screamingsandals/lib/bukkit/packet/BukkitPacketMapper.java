@@ -49,13 +49,14 @@ public class BukkitPacketMapper extends PacketMapper {
 
             int dataStartIndex = buffer.writerIndex();
             packet.write(writer);
+            if (!writer.isCancelled()) {
+                int dataSize = buffer.writerIndex() - dataStartIndex;
+                if (dataSize > 2097151) {
+                    throw new IllegalArgumentException("Packet too big (is " + dataSize + ", should be less than 2097152): " + packet);
+                }
 
-            int dataSize = buffer.writerIndex() - dataStartIndex;
-            if (dataSize > 2097151) {
-                throw new IllegalArgumentException("Packet too big (is " + dataSize + ", should be less than 2097152): " + packet);
+                sendRawPacket(player, buffer);
             }
-
-            sendRawPacket(player, buffer);
             writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(player, extraPacket));
         } catch (Throwable t) {
             Bukkit.getLogger().severe("An exception occurred serializing packet of class: " + packet.getClass().getSimpleName());

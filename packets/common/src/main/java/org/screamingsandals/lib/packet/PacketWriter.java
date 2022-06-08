@@ -87,6 +87,8 @@ public abstract class PacketWriter extends OutputStream {
      */
     private final List<AbstractPacket> appendedPackets = new ArrayList<>();
 
+    private boolean cancelled = false;
+
     /**
      * Serializes a component to the buffer as a sized string.
      *
