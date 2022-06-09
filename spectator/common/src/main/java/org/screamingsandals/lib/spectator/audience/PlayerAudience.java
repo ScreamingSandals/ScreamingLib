@@ -198,7 +198,7 @@ public interface PlayerAudience extends Audience {
         }
     }
 
-    @ApiStatus.Internal
+    @ApiStatus.NonExtendable // don't extend it guys
     interface ForwardingToAdapter extends PlayerAudience, Audience.ForwardingToAdapter {
         @Override
         @NotNull

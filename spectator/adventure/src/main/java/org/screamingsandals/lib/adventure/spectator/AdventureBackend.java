@@ -213,6 +213,11 @@ public class AdventureBackend implements SpectatorBackend {
     }
 
     @Override
+    public Color nearestNamedTo(Color color) {
+        return new AdventureColor(NamedTextColor.nearestTo(color != null ? color.as(TextColor.class) : NamedTextColor.WHITE));
+    }
+
+    @Override
     public BossBar.Builder bossBar() {
         return new AdventureBossBar.AdventureBossBarBuilder();
     }

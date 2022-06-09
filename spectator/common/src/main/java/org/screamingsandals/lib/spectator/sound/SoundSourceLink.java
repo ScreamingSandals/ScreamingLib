@@ -14,51 +14,48 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.spectator;
+package org.screamingsandals.lib.spectator.sound;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
 @ApiStatus.Internal
-class ColorLink implements Color {
+class SoundSourceLink implements SoundSource {
     private final String name;
-    private Color cache;
+    private SoundSource cache;
 
-    private Color obtainColor() {
+    private SoundSource obtainSource() {
         if (cache == null) {
-            cache = Color.named(name);
+            cache = SoundSource.soundSource(name);
         }
         return cache;
     }
 
     @Override
-    public int red() {
-        return obtainColor().red();
+    @NotNull
+    public String name() {
+        return obtainSource().name();
     }
 
     @Override
-    public int green() {
-        return obtainColor().green();
-    }
-
-    @Override
-    public int blue() {
-        return obtainColor().blue();
+    public Object raw() {
+        return obtainSource().raw();
     }
 
     @Override
     public <T> T as(Class<T> type) {
-        return obtainColor().as(type);
+        return obtainSource().as(type);
     }
 
     @Override
     public boolean equals(Object obj) {
-        return obtainColor().equals(obj);
+        return obtainSource().equals(obj);
     }
 
     @Override
     public int hashCode() {
-        return obtainColor().hashCode();
+        return obtainSource().hashCode();
     }
 }

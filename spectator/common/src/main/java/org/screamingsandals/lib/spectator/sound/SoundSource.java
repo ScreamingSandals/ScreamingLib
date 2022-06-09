@@ -23,6 +23,17 @@ import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 public interface SoundSource extends Wrapper, RawValueHolder {
+    SoundSource MASTER = new SoundSourceLink("master");
+    SoundSource MUSIC = new SoundSourceLink("music");
+    SoundSource RECORD = new SoundSourceLink("record");
+    SoundSource WEATHER = new SoundSourceLink("weather");
+    SoundSource BLOCK = new SoundSourceLink("block");
+    SoundSource HOSTILE = new SoundSourceLink("hostile");
+    SoundSource NEUTRAL = new SoundSourceLink("neutral");
+    SoundSource PLAYER = new SoundSourceLink("player");
+    SoundSource AMBIENT = new SoundSourceLink("ambient");
+    SoundSource VOICE = new SoundSourceLink("voice");
+
     @NotNull
     @Contract(value = "_ -> new", pure = true)
     static SoundSource soundSource(@NotNull String source) {

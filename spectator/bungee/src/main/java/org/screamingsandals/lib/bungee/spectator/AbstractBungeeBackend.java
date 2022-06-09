@@ -23,7 +23,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeClickEvent;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeHoverEvent;
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeEntityContent;
@@ -37,6 +39,8 @@ import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.reflect.Reflect;
+
+import static java.util.Objects.requireNonNull;
 
 public abstract class AbstractBungeeBackend implements SpectatorBackend {
     @Getter
@@ -184,6 +188,70 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
             }
         }
         return null;
+    }
+
+    public Color nearestNamedTo(Color color) {
+        if (color == null) {
+            return Color.WHITE;
+        }
+
+        var matchedDistance = Float.MAX_VALUE;
+        var match = Color.WHITE;
+        for (var potential : Color.NAMED_VALUES.values()) {
+            final float distance = distance(rgbToHsvArray(color.red(), color.green(), color.blue()), rgbToHsvArray(potential.red(), potential.green(), potential.blue()));
+            if (distance < matchedDistance) {
+                match = potential;
+                matchedDistance = distance;
+            }
+            if (distance == 0) {
+                break;
+            }
+        }
+        return match;
+    }
+
+    // definitely not stolen from adventure
+    private float[] rgbToHsvArray(int red, int green, int blue) {
+        var r = red / 255.0f;
+        var g = green / 255.0f;
+        var b = blue / 255.0f;
+
+        var min = Math.min(r, Math.min(g, b));
+        var max = Math.max(r, Math.max(g, b));
+        var delta = max - min;
+
+        float s;
+        if (max != 0) {
+            s = delta / max;
+        } else {
+            s = 0;
+        }
+        if (s == 0) {
+            return new float[] {0, s, max};
+        }
+
+        float h;
+        if (r == max) {
+            h = (g - b) / delta;
+        } else if (g == max) {
+            h = 2 + (b - r) / delta;
+        } else {
+            h = 4 + (r - g) / delta;
+        }
+        h *= 60;
+        if (h < 0) {
+            h += 360;
+        }
+
+        return new float[] {h / 360.0f, s, max};
+    }
+
+    // definitely not stolen from adventure
+    private static float distance(float[] self, float[] other) {
+        final float hueDistance = 3 * Math.min(Math.abs(self[0] - other[0]), 1f - Math.abs(self[0] - other[0]));
+        final float saturationDiff = self[1] - other[1];
+        final float valueDiff = self[2] - other[2];
+        return hueDistance * hueDistance + saturationDiff * saturationDiff + valueDiff * valueDiff;
     }
 
     @Override

@@ -73,10 +73,26 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
 
     @Override
     @NotNull
+    public Component withAppendix(ComponentLike component) {
+        return withAppendix(component.asComponent());
+    }
+
+    @Override
+    @NotNull
     public Component withAppendix(Component... components) {
         var duplicate = wrappedObject.duplicate();
         for (var component : components) {
             wrappedObject.addExtra(component.as(BaseComponent.class).duplicate());
+        }
+        return AbstractBungeeBackend.wrapComponent(duplicate);
+    }
+
+    @Override
+    @NotNull
+    public Component withAppendix(ComponentLike... components) {
+        var duplicate = wrappedObject.duplicate();
+        for (var component : components) {
+            wrappedObject.addExtra(component.asComponent().as(BaseComponent.class).duplicate());
         }
         return AbstractBungeeBackend.wrapComponent(duplicate);
     }
@@ -356,7 +372,21 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         }
 
         @Override
+        public B append(ComponentLike component) {
+            this.component.addExtra(component.asComponent().as(BaseComponent.class).duplicate());
+            return self();
+        }
+
+        @Override
         public B append(Component... components) {
+            for (var component : components) {
+                append(component);
+            }
+            return self();
+        }
+
+        @Override
+        public B append(ComponentLike... components) {
             for (var component : components) {
                 append(component);
             }

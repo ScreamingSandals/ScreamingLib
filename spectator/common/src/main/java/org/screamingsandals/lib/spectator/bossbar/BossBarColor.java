@@ -16,12 +16,23 @@
 
 package org.screamingsandals.lib.spectator.bossbar;
 
-public enum BossBarColor {
+import org.screamingsandals.lib.utils.Wrapper;
+
+public enum BossBarColor implements Wrapper {
     PINK,
     BLUE,
     RED,
     GREEN,
     YELLOW,
     PURPLE,
-    WHITE
+    WHITE;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T as(Class<T> type) {
+        if (type == String.class) {
+            return (T) name();
+        }
+        throw new UnsupportedOperationException("Can't unwrap to anything else than String!");
+    }
 }

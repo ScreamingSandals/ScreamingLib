@@ -152,6 +152,42 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return Spectator.getBackend().text().content(text).color(color).build();
     }
 
+    static TextComponent text(byte value, Color color) {
+        return Spectator.getBackend().text().content(value).color(color).build();
+    }
+
+    static TextComponent text(short value, Color color) {
+        return Spectator.getBackend().text().content(value).color(color).build();
+    }
+
+    static TextComponent text(int value, Color color) {
+        return Spectator.getBackend().text().content(value).color(color).build();
+    }
+
+    static TextComponent text(long value, Color color) {
+        return Spectator.getBackend().text().content(value).color(color).build();
+    }
+
+    static TextComponent text(float value, Color color) {
+        return Spectator.getBackend().text().content(value).color(color).build();
+    }
+
+    static TextComponent text(double value, Color color) {
+        return Spectator.getBackend().text().content(value).color(color).build();
+    }
+
+    static TextComponent text(Number value, Color color) {
+        return Spectator.getBackend().text().content(value).color(color).build();
+    }
+
+    static TextComponent text(boolean value, Color color) {
+        return Spectator.getBackend().text().content(value).color(color).build();
+    }
+
+    static TextComponent text(char value, Color color) {
+        return Spectator.getBackend().text().content(value).color(color).build();
+    }
+
     static TranslatableComponent.Builder translatable() {
         return Spectator.getBackend().translatable();
     }
@@ -188,7 +224,15 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
     @NotNull
     @Contract(value = "_ -> new", pure = true)
+    Component withAppendix(ComponentLike component);
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
     Component withAppendix(Component... components);
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    Component withAppendix(ComponentLike... component);
 
     @NotNull
     @Contract(value = "_ -> new", pure = true)
@@ -365,7 +409,11 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
         B append(Component component);
 
+        B append(ComponentLike component);
+
         B append(Component... components);
+
+        B append(ComponentLike... components);
 
         B append(Collection<Component> components);
 

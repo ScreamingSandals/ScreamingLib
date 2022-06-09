@@ -33,7 +33,7 @@ public interface ConsoleAudience extends Audience {
         ConsoleAudience audience();
     }
 
-    @ApiStatus.Internal
+    @ApiStatus.NonExtendable // don't extend it guys
     interface ForwardingToAdapter extends ConsoleAudience, Audience.ForwardingToAdapter {
         @Override
         @NotNull

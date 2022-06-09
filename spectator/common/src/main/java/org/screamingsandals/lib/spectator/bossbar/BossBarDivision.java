@@ -16,10 +16,21 @@
 
 package org.screamingsandals.lib.spectator.bossbar;
 
-public enum BossBarDivision {
+import org.screamingsandals.lib.utils.Wrapper;
+
+public enum BossBarDivision implements Wrapper {
     NO_DIVISION,
     NOTCHED_6,
     NOTCHED_10,
     NOTCHED_12,
-    NOTCHED_20
+    NOTCHED_20;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T as(Class<T> type) {
+        if (type == String.class) {
+            return (T) name();
+        }
+        throw new UnsupportedOperationException("Can't unwrap to anything else than String!");
+    }
 }

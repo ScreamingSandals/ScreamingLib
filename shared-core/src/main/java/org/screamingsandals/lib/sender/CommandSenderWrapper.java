@@ -28,15 +28,6 @@ public interface CommandSenderWrapper extends Wrapper, Operator, Audience.Forwar
     Type getType();
 
     void sendMessage(String message);
-/*
-
-    default void showTitle(TitleableSenderMessage title) {
-        showTitle(title.asTitle(this));
-    }
-
-    default void showTitle(TitleableSenderMessage title, net.kyori.adventure.title.Title.Times times) {
-        showTitle(title.asTitle(this, times));
-    }*/
 
     default boolean hasPermission(String permission) {
         return hasPermission(SimplePermission.of(permission));

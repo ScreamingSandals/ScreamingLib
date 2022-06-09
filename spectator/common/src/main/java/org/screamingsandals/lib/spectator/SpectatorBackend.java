@@ -63,6 +63,8 @@ public interface SpectatorBackend {
 
     Color hexOrName(String hex);
 
+    Color nearestNamedTo(Color color);
+
     BossBar.Builder bossBar();
 
     SoundStart.Builder soundStart();

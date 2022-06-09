@@ -25,6 +25,7 @@ public interface Color extends Wrapper, ComponentBuilderApplicable {
     Color DARK_BLUE = new ColorLink("DARK_BLUE");
     Color DARK_GREEN = new ColorLink("DARK_GREEN");;
     Color DARK_AQUA = new ColorLink("DARK_AQUA");
+    Color DARK_RED = new ColorLink("DARK_RED");
     Color DARK_PURPLE = new ColorLink("DARK_PURPLE");
     Color GOLD = new ColorLink("GOLD");
     Color GRAY = new ColorLink("GRAY");
@@ -42,6 +43,7 @@ public interface Color extends Wrapper, ComponentBuilderApplicable {
             Map.entry("dark_blue", DARK_BLUE),
             Map.entry("dark_green", DARK_GREEN),
             Map.entry("dark_aqua", DARK_AQUA),
+            Map.entry("dark_red", DARK_RED),
             Map.entry("dark_purple", DARK_PURPLE),
             Map.entry("gold", GOLD),
             Map.entry("gray", GRAY),
@@ -73,6 +75,10 @@ public interface Color extends Wrapper, ComponentBuilderApplicable {
 
     static Color hexOrName(String hex) {
         return Spectator.getBackend().hexOrName(hex);
+    }
+
+    static Color nearestNamedTo(Color color) {
+        return Spectator.getBackend().nearestNamedTo(color);
     }
 
     @Override

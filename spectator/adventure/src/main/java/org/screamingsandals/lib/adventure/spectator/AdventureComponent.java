@@ -74,6 +74,12 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
 
     @Override
     @NotNull
+    public Component withAppendix(ComponentLike component) {
+        return withAppendix(component.asComponent());
+    }
+
+    @Override
+    @NotNull
     public Component withAppendix(Component... components) {
         if (components == null || components.length == 0) {
             return this;
@@ -81,6 +87,19 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
         var returnC = wrappedObject;
         for (var child : components) {
             returnC = returnC.append(child.as(net.kyori.adventure.text.Component.class));
+        }
+        return AdventureBackend.wrapComponent(returnC);
+    }
+
+    @Override
+    @NotNull
+    public Component withAppendix(ComponentLike... components) {
+        if (components == null || components.length == 0) {
+            return this;
+        }
+        var returnC = wrappedObject;
+        for (var child : components) {
+            returnC = returnC.append(child.asComponent().as(net.kyori.adventure.text.Component.class));
         }
         return AdventureBackend.wrapComponent(returnC);
     }
@@ -327,8 +346,20 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
         }
 
         @Override
+        public B append(ComponentLike component) {
+            builder.append(component.asComponent().as(net.kyori.adventure.text.Component.class));
+            return self();
+        }
+
+        @Override
         public B append(Component... components) {
             builder.append(Arrays.stream(components).map(component -> component.as(net.kyori.adventure.text.Component.class)).collect(Collectors.toList()));
+            return self();
+        }
+
+        @Override
+        public B append(ComponentLike... components) {
+            builder.append(Arrays.stream(components).map(component -> component.asComponent().as(net.kyori.adventure.text.Component.class)).collect(Collectors.toList()));
             return self();
         }
 

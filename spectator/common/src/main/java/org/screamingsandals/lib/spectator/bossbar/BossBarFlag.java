@@ -16,8 +16,19 @@
 
 package org.screamingsandals.lib.spectator.bossbar;
 
-public enum BossBarFlag {
+import org.screamingsandals.lib.utils.Wrapper;
+
+public enum BossBarFlag implements Wrapper {
     DARKEN_SCREEN,
     PLAY_BOSS_MUSIC,
-    CREATE_WORLD_FOG
+    CREATE_WORLD_FOG;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T as(Class<T> type) {
+        if (type == String.class) {
+            return (T) name();
+        }
+        throw new UnsupportedOperationException("Can't unwrap to anything else than String!");
+    }
 }
