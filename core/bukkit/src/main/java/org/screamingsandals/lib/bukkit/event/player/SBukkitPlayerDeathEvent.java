@@ -42,25 +42,28 @@ public class SBukkitPlayerDeathEvent extends SBukkitEntityDeathEvent implements 
     private PlayerWrapper killer;
 
     @Override
+    @Nullable
     public Component deathMessage() {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
-            return AdventureBackend.wrapComponent(event().deathMessage());
+            var dm = event().deathMessage();
+            return dm != null ? AdventureBackend.wrapComponent(dm) : null;
         } else {
-            return Component.fromLegacy(event().getDeathMessage());
+            var m = event().getDeathMessage();
+            return m != null ? Component.fromLegacy(m) : null;
         }
     }
 
     @Override
-    public void deathMessage(Component deathMessage) {
+    public void deathMessage(@Nullable Component deathMessage) {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
-            event().deathMessage(deathMessage.as(net.kyori.adventure.text.Component.class));
+            event().deathMessage(deathMessage != null ? deathMessage.as(net.kyori.adventure.text.Component.class) : null);
         } else {
-            event().setDeathMessage(deathMessage.toLegacy());
+            event().setDeathMessage(deathMessage != null ? deathMessage.toLegacy() : null);
         }
     }
 
     @Override
-    public void deathMessage(ComponentLike deathMessage) {
+    public void deathMessage(@Nullable ComponentLike deathMessage) {
         if (deathMessage instanceof AudienceComponentLike) {
             // TODO: there should be another logic, because this message can be seen by more players
             deathMessage(((AudienceComponentLike) deathMessage).asComponent(player()));

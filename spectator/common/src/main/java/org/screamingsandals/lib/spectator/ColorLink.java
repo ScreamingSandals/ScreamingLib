@@ -61,4 +61,9 @@ class ColorLink implements Color {
     public int hashCode() {
         return obtainColor().hashCode();
     }
+
+    @Override
+    public String toString() {
+        return obtainColor().toString();
+    }
 }

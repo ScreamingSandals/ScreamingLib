@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.adventure.spectator.bossbar;
 
 import net.kyori.adventure.bossbar.BossBar;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.bossbar.BossBarColor;
 import org.screamingsandals.lib.spectator.bossbar.BossBarDivision;
 import org.screamingsandals.lib.spectator.bossbar.BossBarFlag;
@@ -55,14 +56,14 @@ public class BossBarUtils {
         }
     }
 
-    public static List<BossBarFlag> convertFlags(Set<BossBar.Flag> flags) {
-        return flags.stream()
+    public static List<BossBarFlag> convertFlags(@Nullable Set<BossBar.Flag> flags) {
+        return flags == null ? List.of() : flags.stream()
                 .map(flag -> BossBarFlag.valueOf(flag.name()))
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    public static Set<BossBar.Flag> convertFlags(Collection<BossBarFlag> flags) {
-        return flags.stream()
+    public static Set<BossBar.Flag> convertFlags(@Nullable Collection<BossBarFlag> flags) {
+        return flags == null ? Set.of() : flags.stream()
                 .map(bossBarFlag -> net.kyori.adventure.bossbar.BossBar.Flag.valueOf(bossBarFlag.name()))
                 .collect(Collectors.toUnmodifiableSet());
     }

@@ -60,13 +60,12 @@ public class BukkitCore extends Core {
 
     public BukkitCore(Plugin plugin) {
         BukkitCore.plugin = plugin;
+        spectatorBackend = new SpigotBackend();
+        Spectator.setBackend(spectatorBackend);
     }
 
     @OnEnable
     public void onEnable() {
-        spectatorBackend = new SpigotBackend();
-        Spectator.setBackend(spectatorBackend);
-
         // entity
         constructDefaultListener(AreaEffectCloudApplyEvent.class, SAreaEffectCloudApplyEvent.class, SBukkitAreaEffectCloudApplyEvent::new);
         if (has("org.bukkit.event.entity.ArrowBodyCountChangeEvent")) {

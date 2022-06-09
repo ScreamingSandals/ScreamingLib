@@ -24,11 +24,12 @@ import org.screamingsandals.lib.spectator.ComponentLike;
 
 public interface SPlayerDeathEvent extends SEntityDeathEvent, SPlayerEvent {
 
+    @Nullable
     Component deathMessage();
 
-    void deathMessage(Component deathMessage);
+    void deathMessage(@Nullable Component deathMessage);
 
-    void deathMessage(ComponentLike deathMessage);
+    void deathMessage(@Nullable ComponentLike deathMessage);
 
     boolean keepInventory();
 

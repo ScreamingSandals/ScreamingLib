@@ -58,4 +58,9 @@ class SoundSourceLink implements SoundSource {
     public int hashCode() {
         return obtainSource().hashCode();
     }
+
+    @Override
+    public String toString() {
+        return obtainSource().toString();
+    }
 }
