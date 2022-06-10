@@ -55,6 +55,60 @@ public class MiniTagParserTest {
     }
 
     @Test
+    public void testSerializeTag() {
+        var parser = MiniTagParser.builder()
+                .strictClosing(false)
+                .registerTag("yellow", new TransformedTag(TagType.PAIR, node -> new TagNode("color", List.of(node.getTag()))))
+                .registerTag("red", new TransformedTag(TagType.PAIR, node -> new TagNode("color", List.of(node.getTag()))))
+                .build();
+
+        var rootNode = new RootNode();
+
+        var yellow = new TagNode("color", List.of("yellow"));
+        yellow.putChildren(new TextNode("Something "));
+        rootNode.putChildren(yellow);
+
+        var red = new TagNode("color", List.of("red"));
+        red.putChildren(new TextNode("Red"));
+        yellow.putChildren(red);
+
+        rootNode.putChildren(new TextNode("Not Colored"));
+
+        var result = parser.serialize(rootNode);
+
+        var expected = "<color:yellow>Something <color:red>Red<reset>Not Colored";
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testSerializeTagStrict() {
+        var parser = MiniTagParser.builder()
+                .strictClosing(true)
+                .registerTag("yellow", new TransformedTag(TagType.PAIR, node -> new TagNode("color", List.of(node.getTag()))))
+                .registerTag("red", new TransformedTag(TagType.PAIR, node -> new TagNode("color", List.of(node.getTag()))))
+                .build();
+
+        var rootNode = new RootNode();
+
+        var yellow = new TagNode("color", List.of("yellow"));
+        yellow.putChildren(new TextNode("Something "));
+        rootNode.putChildren(yellow);
+
+        var red = new TagNode("color", List.of("red"));
+        red.putChildren(new TextNode("Red"));
+        yellow.putChildren(red);
+
+        rootNode.putChildren(new TextNode("Not Colored"));
+
+        var result = parser.serialize(rootNode);
+
+        var expected = "<color:yellow>Something <color:red>Red</color></color>Not Colored";
+
+        assertEquals(expected, result);
+    }
+
+    @Test
     public void testRegex() {
         var parser = MiniTagParser.builder()
                 .registerTag(Pattern.compile("#([\\dA-Fa-f]{6}|[\\dA-Fa-f]{3})"), new TransformedTag(TagType.PAIR, node -> new TagNode("color", List.of(node.getTag()))))

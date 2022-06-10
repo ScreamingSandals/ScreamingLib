@@ -211,6 +211,77 @@ public class MiniTagParser {
         return transformAliases(root);
     }
 
+    public RootNode newRoot() {
+        return new RootNode();
+    }
+
+    public String serialize(RootNode root) {
+        var builder = new StringBuilder();
+        serializeChildren(builder, root.children(), true);
+        return builder.toString();
+    }
+
+    private List<TagNode> serializeChildren(StringBuilder builder, List<Node> children, boolean top) {
+        var stillOpenedTags = new ArrayList<TagNode>();
+        for (var child : children) {
+            if (!stillOpenedTags.isEmpty()) {
+                // we probably don't have strict closing
+                if (top && resetTag != null) {
+                    builder.append(tagOpeningSymbol).append(resetTag).append(tagClosingSymbol);
+                } else {
+                    // TODO: close only top level tag/the last tag (need to check if arguments are required or not
+                    for (var tag : stillOpenedTags) {
+                        builder.append(tagOpeningSymbol).append(endingTagSymbol).append(tag.getTag()).append(tagClosingSymbol);
+                    }
+                }
+                stillOpenedTags.clear();
+            }
+
+            if (child instanceof TextNode) {
+                for (var c : ((TextNode) child).getText().toCharArray()) {
+                    if (c == tagOpeningSymbol) {
+                        builder.append(escapeSymbol);
+                    }
+                    builder.append(c);
+                }
+            } else if (child instanceof TagNode) {
+                builder.append(tagOpeningSymbol).append(((TagNode) child).getTag());
+                for (var arg : ((TagNode) child).getArgs()) {
+                    builder.append(argumentSeparator);
+                    if (arg.indexOf(tagOpeningSymbol) != -1 || arg.indexOf(tagClosingSymbol) != -1 || arg.indexOf(argumentSeparator) != -1 || arg.indexOf(endingTagSymbol) != -1 || quotes.stream().anyMatch(c -> arg.indexOf(c) != -1)) {
+                        var usedQuote = quotes.get(0);
+                        builder.append(usedQuote);
+                        for (var c : arg.toCharArray()) {
+                            if (c == usedQuote) {
+                                builder.append(escapeSymbol);
+                            }
+                            builder.append(c);
+                        }
+                        builder.append(usedQuote);
+                    } else {
+                        builder.append(arg);
+                    }
+                }
+                if (!child.hasChildren()) {
+                    builder.append(endingTagSymbol);
+                }
+                builder.append(tagClosingSymbol);
+                if (child.hasChildren()) {
+                    var stillOpenedTagsChild = serializeChildren(builder, child.children(), false);
+                    if (strictClosing) {
+                        builder.append(tagOpeningSymbol).append(endingTagSymbol).append(((TagNode) child).getTag()).append(tagClosingSymbol);
+                    } else {
+                        stillOpenedTags.addAll(stillOpenedTagsChild);
+                        stillOpenedTags.add((TagNode) child);
+                    }
+                }
+            } else {
+                throw new IllegalArgumentException("Invalid node type: " + child.getClass().getName());
+            }
+        }
+        return stillOpenedTags;
+    }
+
     private TagNode readTag(String tag) {
         if (!tag.contains(":")) {
             return new TagNode(tag, List.of());
