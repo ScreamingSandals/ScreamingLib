@@ -367,6 +367,7 @@ public class MiniMessageParser {
             registerComponentTag("selector", new SelectorResolver(), "sel");
             registerComponentTag("lang", new TranslatableResolver(), "tr", "translate");
             registerComponentTag("key", new KeybindResolver());
+            registerComponentTag("score", new ScoreResolver());
             registerComponentTag("legacy", new LegacyResolver()); // for internal reasons
             registerPlaceholder(Placeholder.component("newline", Component.newLine()), "br");
             return this;

@@ -19,6 +19,8 @@ package org.screamingsandals.lib.spectator.audience;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.spectator.Color;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.utils.UniqueIdentifiable;
@@ -45,6 +47,18 @@ public interface Audience {
 
     default void sendMessage(@Nullable UUID source, @NotNull ComponentLike message) {
         sendMessage(source, message, MessageType.CHAT);
+    }
+
+    default void sendRichMessage(@NotNull String message) {
+        sendMessage(Component.fromMiniMessage(message));
+    }
+
+    default void sendPlainMessage(@NotNull String message) {
+        sendMessage(Component.text(message));
+    }
+
+    default void sendPlainMessage(@NotNull String message, @NotNull Color color) {
+        sendMessage(Component.text(message, color));
     }
 
     void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType);

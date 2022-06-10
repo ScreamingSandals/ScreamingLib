@@ -19,6 +19,7 @@ package org.screamingsandals.lib.spectator.audience;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Book;
+import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
@@ -30,15 +31,67 @@ import org.screamingsandals.lib.spectator.title.Title;
 public interface PlayerAudience extends Audience {
     void sendActionBar(@NotNull ComponentLike message);
 
+    default void sendRichActionBar(@NotNull String message) {
+        sendActionBar(Component.fromMiniMessage(message));
+    }
+
+    default void sendPlainActionBar(@NotNull String message) {
+        sendActionBar(Component.text(message));
+    }
+
+    default void sendPlainActionBar(@NotNull String message, @NotNull Color color) {
+        sendActionBar(Component.text(message, color));
+    }
+
     default void sendPlayerListHeader(@NotNull ComponentLike header) {
         sendPlayerListHeaderFooter(header, Component.empty());
+    }
+
+    default void sendRichPlayerListHeader(@NotNull String header) {
+        sendPlayerListHeaderFooter(Component.fromMiniMessage(header), Component.empty());
+    }
+
+    default void sendPlainPlayerListHeader(@NotNull String header) {
+        sendPlayerListHeaderFooter(Component.text(header), Component.empty());
+    }
+
+    default void sendPlainPlayerListHeader(@NotNull String header, @NotNull Color color) {
+        sendPlayerListHeaderFooter(Component.text(header, color), Component.empty());
     }
 
     default void sendPlayerListFooter(@NotNull ComponentLike footer) {
         sendPlayerListHeaderFooter(Component.empty(), footer);
     }
 
+    default void sendRichPlayerListFooter(@NotNull String footer) {
+        sendPlayerListHeaderFooter(Component.empty(), Component.fromMiniMessage(footer));
+    }
+
+    default void sendPlainPlayerListFooter(@NotNull String footer) {
+        sendPlayerListHeaderFooter(Component.empty(), Component.text(footer));
+    }
+
+    default void sendPlainPlayerListFooter(@NotNull String footer, @NotNull Color color) {
+        sendPlayerListHeaderFooter(Component.empty(), Component.text(footer, color));
+    }
+
     void sendPlayerListHeaderFooter(@NotNull ComponentLike header, @NotNull ComponentLike footer);
+
+    default void sendRichPlayerListHeaderFooter(@NotNull String header, @NotNull String footer) {
+        sendPlayerListHeaderFooter(Component.fromMiniMessage(header), Component.fromMiniMessage(footer));
+    }
+
+    default void sendPlainPlayerListHeaderFooter(@NotNull String header, @NotNull String footer) {
+        sendPlayerListHeaderFooter(Component.text(header), Component.text(footer));
+    }
+
+    default void sendPlainPlayerListHeaderFooter(@NotNull String header, @NotNull String footer, @NotNull Color color) {
+        sendPlayerListHeaderFooter(Component.text(header, color), Component.text(footer, color));
+    }
+
+    default void sendPlainPlayerListHeaderFooter(@NotNull String header, @NotNull Color headerColor, @NotNull String footer, @NotNull Color footerColor) {
+        sendPlayerListHeaderFooter(Component.text(header, headerColor), Component.text(footer, footerColor));
+    }
 
     default void showTitle(@NotNull Title.Builder title) {
         showTitle(title.build());
