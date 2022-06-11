@@ -47,7 +47,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
     private static final Pattern EARLY_MINI_MESSAGE_PLACEHOLDERS = Pattern.compile("[<]([^>]+)[>]");
 
     private final List<Messageable> translations = new LinkedList<>();
-    private final Map<String, Function<CommandSenderWrapper, Component>> placeholders = new HashMap<>();
+    private final Map<String, Function<CommandSenderWrapper, Component>> placeholders = new HashMap<>(); // TODO: use spectator's placeholders
     private final Map<String, String> earlyPlaceholders = new HashMap<>();
     private final LangService langService;
     @NotNull
@@ -390,6 +390,274 @@ public class Message implements TitleableSenderMessage, Cloneable {
      */
     public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull Supplier<List<String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message)), service, prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull String message) {
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull String... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), Lang.getDefaultService(), Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix  custom prefix to use
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull String message) {
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix  custom prefix to use
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull ComponentLike prefix, @NotNull String message) {
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull String... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), Lang.getDefaultService(), prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(ComponentLike prefix, String... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), Lang.getDefaultService(), prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull ComponentLike prefix, @NotNull List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull String message) {
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), service, Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull String... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), service, Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), service, Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull String message) {
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), service, prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull String message) {
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), service, prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull String... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), service, prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull String... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), service, prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), service, prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), service, prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix  custom prefix to use
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix  custom prefix to use
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull ComponentLike prefix, @NotNull Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), service, Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), service, prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), service, prefix.asComponent());
     }
 
     /**
@@ -1060,6 +1328,17 @@ public class Message implements TitleableSenderMessage, Cloneable {
     /**
      * Joins given plain text into this message.
      *
+     * @param messages message to join
+     * @return self
+     */
+    public @NotNull Message joinPlainText(String... messages) {
+        this.translations.add(StringMessageable.of(messages));
+        return this;
+    }
+
+    /**
+     * Joins given plain text into this message.
+     *
      * @param messages messages to join
      * @return self
      */
@@ -1076,6 +1355,50 @@ public class Message implements TitleableSenderMessage, Cloneable {
      */
     public @NotNull Message joinPlainText(Supplier<List<String>> messages) {
         this.translations.add(SupplierStringMessageable.of(messages));
+        return this;
+    }
+
+    /**
+     * Joins given MiniMessage-formated text into this message.
+     *
+     * @param message message to join
+     * @return self
+     */
+    public @NotNull Message joinRichText(String message) {
+        this.translations.add(StringMessageable.of(message, Messageable.Type.ADVENTURE));
+        return this;
+    }
+
+    /**
+     * Joins given MiniMessage-formated text into this message.
+     *
+     * @param messages message to join
+     * @return self
+     */
+    public @NotNull Message joinRichText(String... messages) {
+        this.translations.add(StringMessageable.of(Messageable.Type.ADVENTURE, messages));
+        return this;
+    }
+
+    /**
+     * Joins given MiniMessage-formated text into this message.
+     *
+     * @param messages messages to join
+     * @return self
+     */
+    public @NotNull Message joinRichText(List<String> messages) {
+        this.translations.add(StringMessageable.of(messages, Messageable.Type.ADVENTURE));
+        return this;
+    }
+
+    /**
+     * Joins given MiniMessage-formated text into this message.
+     *
+     * @param messages messages to join
+     * @return self
+     */
+    public @NotNull Message joinRichText(Supplier<List<String>> messages) {
+        this.translations.add(SupplierStringMessageable.of(messages, Messageable.Type.ADVENTURE));
         return this;
     }
 

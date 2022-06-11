@@ -223,7 +223,8 @@ public class MiniTagParser {
 
     private List<TagNode> serializeChildren(StringBuilder builder, List<Node> children, boolean top) {
         var stillOpenedTags = new ArrayList<TagNode>();
-        for (var child : children) {
+        for (var a = 0; a < children.size(); a++) {
+            var child = children.get(a);
             if (!stillOpenedTags.isEmpty()) {
                 // we probably don't have strict closing
                 if (top && resetTag != null) {
@@ -303,7 +304,7 @@ public class MiniTagParser {
                         builder.append(arg);
                     }
                 }
-                if (!child.hasChildren()) {
+                if (!child.hasChildren() && (strictClosing || !top || (a + 1) != children.size())) { // don't ask me what is this
                     builder.append(endingTagSymbol);
                 }
                 builder.append(tagClosingSymbol);

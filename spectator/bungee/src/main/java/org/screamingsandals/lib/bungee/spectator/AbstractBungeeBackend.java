@@ -23,9 +23,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeClickEvent;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeHoverEvent;
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeEntityContent;
@@ -39,8 +37,6 @@ import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-
-import static java.util.Objects.requireNonNull;
 
 public abstract class AbstractBungeeBackend implements SpectatorBackend {
     @Getter
@@ -62,6 +58,9 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     private static final Component empty = wrapComponent(new TextComponent(""));
     private static final Component newLine = wrapComponent(new TextComponent("\n"));
     private static final Component space = wrapComponent(new TextComponent(" "));
+    private static final boolean keybindSupported = Reflect.has("net.md_5.bungee.api.chat.KeybindComponent");
+    private static final boolean scoreSupported = Reflect.has("net.md_5.bungee.api.chat.ScoreComponent");
+    private static final boolean selectorSupported = Reflect.has("net.md_5.bungee.api.chat.SelectorComponent");
 
     @Override
     public Component empty() {
@@ -90,17 +89,29 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public KeybindComponent.Builder keybind() {
-        return null; // TODO
+        if (keybindSupported) {
+            return new BungeeKeybindComponent.BungeeKeybindBuilder(new net.md_5.bungee.api.chat.KeybindComponent(""));
+        } else {
+            return null; // not supported on this version
+        }
     }
 
     @Override
     public ScoreComponent.Builder score() {
-        return null; // TODO
+        if (scoreSupported) {
+            return new BungeeScoreComponent.BungeeScoreBuilder(new net.md_5.bungee.api.chat.ScoreComponent("", ""));
+        } else {
+            return null; // TODO :sad:
+        }
     }
 
     @Override
     public SelectorComponent.Builder selector() {
-        return null; // TODO
+        if (selectorSupported) {
+            return new BungeeSelectorComponent.BungeeSelectorBuilder(new net.md_5.bungee.api.chat.SelectorComponent(""));
+        } else {
+            return null; // TODO :cry:
+        }
     }
 
     @Override
@@ -340,14 +351,26 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
             return null;
         }
 
-        // TODO:
+        // TODO: NBTComponent doesn't exist for some reason
 
-        // NBTComponent doesn't exist for some reason
+        // TODO: ScoreComponent added in a3b44aa612c629955195b4697641de1b1665a587 (Feb 2018 (1.12), but existed in MC 1.8+), SelectorComponent added in the same commit
+        if (scoreSupported) {
+            if (component instanceof net.md_5.bungee.api.chat.ScoreComponent) {
+                return new BungeeScoreComponent((net.md_5.bungee.api.chat.ScoreComponent) component);
+            }
+        }
+        if (selectorSupported) {
+            if (component instanceof net.md_5.bungee.api.chat.SelectorComponent) {
+                return new BungeeSelectorComponent((net.md_5.bungee.api.chat.SelectorComponent) component);
+            }
+        }
 
-        // ScoreComponent added in a3b44aa612c629955195b4697641de1b1665a587 (Feb 2018 (1.12), but existed in MC 1.8+)
-        // SelectorComponent added in the same commit
-
-        // KeybindComponent added in fbc5f514e28dbfc3f85cb936ad95b1a979086ab6 (1.12 released on June, this is from Nov of the same year)
+        // TODO: KeybindComponent added in fbc5f514e28dbfc3f85cb936ad95b1a979086ab6 (1.12 released on June, this is from Nov of the same year)
+        if (keybindSupported) {
+            if (component instanceof net.md_5.bungee.api.chat.KeybindComponent) {
+                return new BungeeKeybindComponent((net.md_5.bungee.api.chat.KeybindComponent) component);
+            }
+        }
 
         if (component instanceof TranslatableComponent) {
             return new BungeeTranslatableContent((TranslatableComponent) component);

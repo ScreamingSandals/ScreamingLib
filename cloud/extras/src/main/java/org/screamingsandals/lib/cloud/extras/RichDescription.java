@@ -52,7 +52,7 @@ import org.screamingsandals.lib.spectator.ComponentLike;
 import static java.util.Objects.requireNonNull;
 
 /**
- * An argument description implementation that uses Adventure components.
+ * An argument description implementation that uses Spectator components.
  */
 public final class RichDescription implements ArgumentDescription {
     private static final RichDescription EMPTY = new RichDescription(Component.empty());

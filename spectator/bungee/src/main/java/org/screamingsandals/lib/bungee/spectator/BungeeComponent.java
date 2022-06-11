@@ -110,7 +110,6 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     @Override
     @Nullable
     public Color color() {
-        // TODO: should we use getColor() or getColorRaw()? idk, I just want to get the same value I'd get with adventure
         var color = wrappedObject.getColorRaw();
         if (color == null) {
             return null;
@@ -130,7 +129,6 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     @Nullable
     public NamespacedMappingKey font() {
         try {
-            // TODO: should we use getFont() or getFontRaw()? idk, I just want to get the same value I'd get with adventure
             return NamespacedMappingKey.of(wrappedObject.getFontRaw());
         } catch (Throwable ignored) {
             // old version basically; or invalid font, thanks bungee for not checking the input

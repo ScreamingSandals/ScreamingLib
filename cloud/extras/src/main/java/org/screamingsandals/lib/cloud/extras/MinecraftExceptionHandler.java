@@ -78,13 +78,13 @@ public final class MinecraftExceptionHandler<C> {
             e -> Component.text()
                     .content("Invalid command syntax. Correct command syntax is: ")
                     .color(Color.RED)
-                    .append(//ComponentHelper.highlight(
+                    .append(ComponentHelper.highlight(
                             Component.text()
                                     .content(String.format("/%s", ((InvalidSyntaxException) e).getCorrectSyntax()))
                                     .color(Color.GRAY)
-                                    .build()
-                            //),
-                            //Color.WHITE
+                                    .build(),
+                            Color.WHITE
+                            )
                     )
                     .build();
     /**

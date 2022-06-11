@@ -27,6 +27,7 @@ import org.screamingsandals.lib.spectator.event.hover.*;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 import org.screamingsandals.lib.spectator.utils.ComponentUtils;
+import org.screamingsandals.lib.spectator.utils.SimpleTextReplacement;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.TriState;
 import org.screamingsandals.lib.utils.Wrapper;
@@ -36,6 +37,9 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
 
 public interface Component extends ComponentLike, Wrapper, Content, RawValueHolder {
 
@@ -363,6 +367,30 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     @NotNull
     @Contract(pure = true)
     Component withClickEvent(@Nullable ClickEvent clickEvent);
+
+    @NotNull
+    @Contract(pure = true)
+    default Component replaceText(@NotNull Pattern pattern, @NotNull String replacement) {
+        return SimpleTextReplacement.builder().matchPattern(pattern).replacement(matchResult -> replacement).build().replace(this);
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    default Component replaceText(@NotNull Pattern pattern, @NotNull Function<@NotNull MatchResult, @Nullable String> replacement) {
+        return SimpleTextReplacement.builder().matchPattern(pattern).replacement(replacement).build().replace(this);
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    default Component replaceText(@NotNull String literal, @NotNull String replacement) {
+        return SimpleTextReplacement.builder().matchPattern(Pattern.compile(literal, Pattern.LITERAL)).replacement(matchResult -> replacement).build().replace(this);
+    }
+
+    @NotNull
+    @Contract(pure = true)
+    default Component replaceText(@NotNull String literal, @NotNull Function<@NotNull MatchResult, @Nullable String> replacement) {
+        return SimpleTextReplacement.builder().matchPattern(Pattern.compile(literal, Pattern.LITERAL)).replacement(replacement).build().replace(this);
+    }
 
     @Override
     default Component asComponent() {

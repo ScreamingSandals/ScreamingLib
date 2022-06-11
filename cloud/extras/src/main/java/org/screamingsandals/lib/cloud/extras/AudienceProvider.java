@@ -45,7 +45,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.audience.Audience;
 
 /**
- * Function that maps the command sender type to an adventure {@link Audience}
+ * Function that maps the command sender type to an spectator {@link Audience}
  *
  * @param <C> Command sender type
  */

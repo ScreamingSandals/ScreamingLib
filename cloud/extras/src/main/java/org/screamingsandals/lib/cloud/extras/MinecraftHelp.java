@@ -691,14 +691,8 @@ public final class MinecraftHelp<C> {
                         String.valueOf(maxPages)
                 )
                         .withColor(this.colors.text)
-                        /*.replaceText(config -> {
-                            config.matchLiteral("<page>");
-                            config.replacement(String.valueOf(attemptedPage));
-                        })
-                        .replaceText(config -> {
-                            config.matchLiteral("<max_pages>");
-                            config.replacement(String.valueOf(maxPages));
-                        })*/ // TODO
+                        .replaceText("<page>", String.valueOf(attemptedPage))
+                        .replaceText("<max_pages>", String.valueOf(maxPages))
         );
     }
 
