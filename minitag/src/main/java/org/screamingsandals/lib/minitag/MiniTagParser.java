@@ -229,9 +229,50 @@ public class MiniTagParser {
                 if (top && resetTag != null) {
                     builder.append(tagOpeningSymbol).append(resetTag).append(tagClosingSymbol);
                 } else {
-                    // TODO: close only top level tag/the last tag (need to check if arguments are required or not
-                    for (var tag : stillOpenedTags) {
-                        builder.append(tagOpeningSymbol).append(endingTagSymbol).append(tag.getTag()).append(tagClosingSymbol);
+                    var lastTag = stillOpenedTags.get(stillOpenedTags.size() - 1);
+                    if (stillOpenedTags.size() == 1) {
+                        builder.append(tagOpeningSymbol).append(endingTagSymbol).append(lastTag.getTag()).append(tagClosingSymbol);
+                    } else {
+                        var sameName = false;
+                        var sameArgs = false;
+                        for (var i = 0; i < stillOpenedTags.size() - 1; i++) {
+                            var tag = stillOpenedTags.get(i);
+                            if (tag.getTag().equals(lastTag.getTag())) {
+                                sameName = true;
+
+                                if (tag.getArgs().equals(lastTag.getArgs())) {
+                                    sameArgs = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (sameArgs) { // gave up, just close everything
+                            for (var tag : stillOpenedTags) {
+                                builder.append(tagOpeningSymbol).append(endingTagSymbol).append(tag.getTag()).append(tagClosingSymbol);
+                            }
+                        } else if (sameName) {
+                            builder.append(tagOpeningSymbol).append(endingTagSymbol).append(lastTag.getTag());
+                            for (var arg : lastTag.getArgs()) {
+                                builder.append(argumentSeparator);
+                                if (arg.indexOf(tagOpeningSymbol) != -1 || arg.indexOf(tagClosingSymbol) != -1 || arg.indexOf(argumentSeparator) != -1 || arg.indexOf(endingTagSymbol) != -1 || quotes.stream().anyMatch(c -> arg.indexOf(c) != -1)) {
+                                    var usedQuote = quotes.get(0);
+                                    builder.append(usedQuote);
+                                    for (var c : arg.toCharArray()) {
+                                        if (c == usedQuote) {
+                                            builder.append(escapeSymbol);
+                                        }
+                                        builder.append(c);
+                                    }
+                                    builder.append(usedQuote);
+                                } else {
+                                    builder.append(arg);
+                                }
+                            }
+                            builder.append(tagClosingSymbol);
+                        } else {
+                            builder.append(tagOpeningSymbol).append(endingTagSymbol).append(lastTag.getTag()).append(tagClosingSymbol);
+                        }
                     }
                 }
                 stillOpenedTags.clear();

@@ -58,8 +58,6 @@ public class MiniTagParserTest {
     public void testSerializeTag() {
         var parser = MiniTagParser.builder()
                 .strictClosing(false)
-                .registerTag("yellow", new TransformedTag(TagType.PAIR, node -> new TagNode("color", List.of(node.getTag()))))
-                .registerTag("red", new TransformedTag(TagType.PAIR, node -> new TagNode("color", List.of(node.getTag()))))
                 .build();
 
         var rootNode = new RootNode();
@@ -82,11 +80,67 @@ public class MiniTagParserTest {
     }
 
     @Test
+    public void testSerializeTag2() {
+        var parser = MiniTagParser.builder()
+                .strictClosing(false)
+                .build();
+
+        var rootNode = new RootNode();
+
+        var yellow = new TagNode("color", List.of("yellow"));
+        yellow.putChildren(new TextNode("Something "));
+        rootNode.putChildren(yellow);
+
+        var red = new TagNode("color", List.of("red"));
+        red.putChildren(new TextNode("Red"));
+        yellow.putChildren(red);
+
+        var blue = new TagNode("color", List.of("blue"));
+        blue.putChildren(new TextNode("ok"));
+        red.putChildren(blue);
+
+        yellow.putChildren(new TextNode("Yellow again"));
+
+        var result = parser.serialize(rootNode);
+
+        var expected = "<color:yellow>Something <color:red>Red<color:blue>ok</color:red>Yellow again";
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testSerializeTag3() {
+        var parser = MiniTagParser.builder()
+                .strictClosing(false)
+                .build();
+
+        var rootNode = new RootNode();
+
+        var yellow = new TagNode("color", List.of("yellow"));
+        yellow.putChildren(new TextNode("Something "));
+        rootNode.putChildren(yellow);
+
+        var red = new TagNode("color", List.of("red"));
+        red.putChildren(new TextNode("Red"));
+        yellow.putChildren(red);
+
+        var blue = new TagNode("color", List.of("red"));
+        blue.putChildren(new TextNode("red in red"));
+        red.putChildren(blue);
+
+        yellow.putChildren(new TextNode("Yellow again"));
+
+        var result = parser.serialize(rootNode);
+
+        var expected = "<color:yellow>Something <color:red>Red<color:red>red in red</color></color>Yellow again";
+
+        assertEquals(expected, result);
+    }
+
+    @Test
     public void testSerializeTagStrict() {
         var parser = MiniTagParser.builder()
                 .strictClosing(true)
-                .registerTag("yellow", new TransformedTag(TagType.PAIR, node -> new TagNode("color", List.of(node.getTag()))))
-                .registerTag("red", new TransformedTag(TagType.PAIR, node -> new TagNode("color", List.of(node.getTag()))))
                 .build();
 
         var rootNode = new RootNode();
