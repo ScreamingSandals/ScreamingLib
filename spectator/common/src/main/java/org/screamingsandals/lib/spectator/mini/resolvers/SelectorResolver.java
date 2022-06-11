@@ -17,10 +17,14 @@
 package org.screamingsandals.lib.spectator.mini.resolvers;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.SelectorComponent;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
+
+import java.util.ArrayList;
 
 public class SelectorResolver implements ComponentBuilderResolver {
 
@@ -38,5 +42,20 @@ public class SelectorResolver implements ComponentBuilderResolver {
         return (B) Component.selector()
                 .pattern(tag.getArgs().get(0))
                 .separator(parser.parse(tag.getArgs().get(1), placeholders));
+    }
+
+    @Override
+    @Nullable
+    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+        if (component instanceof SelectorComponent) {
+            var args = new ArrayList<String>();
+            args.add(((SelectorComponent) component).pattern());
+            var separator = ((SelectorComponent) component).separator();
+            if (separator != null) {
+                args.add(parser.serialize(separator));
+            }
+            return new TagNode(tagName, args);
+        }
+        return null;
     }
 }

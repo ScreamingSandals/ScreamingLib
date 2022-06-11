@@ -17,10 +17,13 @@
 package org.screamingsandals.lib.spectator.mini.resolvers;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
+
+import java.util.List;
 
 public class InsertionResolver implements StylingResolver {
     @Override
@@ -30,5 +33,15 @@ public class InsertionResolver implements StylingResolver {
         }
 
         builder.insertion(tag.getArgs().get(0));
+    }
+
+    @Override
+    @Nullable
+    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+        var insertion = component.insertion();
+        if (insertion != null) {
+            return new TagNode(tagName, List.of(insertion));
+        }
+        return null;
     }
 }

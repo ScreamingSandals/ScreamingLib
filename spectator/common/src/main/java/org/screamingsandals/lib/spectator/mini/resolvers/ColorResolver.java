@@ -17,11 +17,14 @@
 package org.screamingsandals.lib.spectator.mini.resolvers;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
+
+import java.util.List;
 
 public class ColorResolver implements StylingResolver {
     @Override
@@ -31,5 +34,14 @@ public class ColorResolver implements StylingResolver {
         }
 
         builder.color(Color.hexOrName(tag.getArgs().get(0)));
+    }
+
+    @Override
+    @Nullable
+    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+        if (component.color() != null) {
+            return new TagNode(tagName, List.of(component.color().toString()));
+        }
+        return null;
     }
 }

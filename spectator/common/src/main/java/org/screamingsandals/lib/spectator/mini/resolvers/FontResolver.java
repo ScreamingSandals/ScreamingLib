@@ -17,11 +17,14 @@
 package org.screamingsandals.lib.spectator.mini.resolvers;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+
+import java.util.List;
 
 public class FontResolver implements StylingResolver {
     @Override
@@ -31,5 +34,14 @@ public class FontResolver implements StylingResolver {
         }
 
         builder.font(NamespacedMappingKey.of(tag.getArgs().get(0)));
+    }
+
+    @Override
+    @Nullable
+    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+        if (component.font() != null) {
+            return new TagNode(tagName, List.of(component.font().asString()));
+        }
+        return null;
     }
 }

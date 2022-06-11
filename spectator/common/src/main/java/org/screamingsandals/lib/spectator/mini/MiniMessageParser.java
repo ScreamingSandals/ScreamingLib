@@ -25,11 +25,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.MiniTagParser;
 import org.screamingsandals.lib.minitag.nodes.Node;
+import org.screamingsandals.lib.minitag.nodes.RootNode;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.minitag.nodes.TextNode;
 import org.screamingsandals.lib.minitag.tags.TagType;
 import org.screamingsandals.lib.minitag.tags.TransformedTag;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.TextComponent;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 import org.screamingsandals.lib.spectator.mini.resolvers.*;
 import org.screamingsandals.lib.spectator.mini.transformers.NegatedDecorationTransformer;
@@ -38,6 +40,7 @@ import org.screamingsandals.lib.spectator.mini.transformers.TagToAttributeTransf
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -154,6 +157,43 @@ public class MiniMessageParser {
             }
         } else {
             throw new IllegalArgumentException("Unknown node type!");
+        }
+    }
+
+    @NotNull
+    public String serialize(@NotNull Component component) {
+        var root = new RootNode();
+        visitComponent(root, component);
+        return parser.serialize(root);
+    }
+
+    private void visitComponent(@NotNull Node parent, @NotNull Component component) {
+        TagNode tag = null;
+        for (var resolver : componentStylingResolvers.entrySet()) {
+            var t = resolver.getValue().serialize(this, resolver.getKey(), component);
+            if (t != null) {
+                Objects.requireNonNullElse(tag, parent).putChildren(t);
+                tag = t;
+            }
+        }
+        var serialized = false;
+        for (var resolver : componentTagResolvers.entrySet()) {
+            var t = resolver.getValue().serialize(this, resolver.getKey(), component);
+            if (t != null) {
+                Objects.requireNonNullElse(tag, parent).putChildren(t);
+                serialized = true;
+                break;
+            }
+        }
+        if (!serialized && component instanceof TextComponent) {
+            var content = ((TextComponent) component).content();
+            if (!content.isEmpty()) {
+                var text = new TextNode(content);
+                Objects.requireNonNullElse(tag, parent).putChildren(text);
+            }
+        }
+        for (var child : component.children()) {
+            visitComponent(Objects.requireNonNullElse(tag, parent), child);
         }
     }
 
@@ -368,7 +408,6 @@ public class MiniMessageParser {
             registerComponentTag("lang", new TranslatableResolver(), "tr", "translate");
             registerComponentTag("key", new KeybindResolver());
             registerComponentTag("score", new ScoreResolver());
-            registerComponentTag("legacy", new LegacyResolver()); // for internal reasons
             registerPlaceholder(Placeholder.component("newline", Component.newLine()), "br");
             return this;
         }

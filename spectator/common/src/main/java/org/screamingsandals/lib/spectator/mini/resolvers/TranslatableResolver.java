@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.spectator.mini.resolvers;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.TranslatableComponent;
@@ -24,6 +25,7 @@ import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TranslatableResolver implements ComponentBuilderResolver {
 
@@ -52,5 +54,19 @@ public class TranslatableResolver implements ComponentBuilderResolver {
         builder.args(args);
 
         return (B) builder;
+    }
+
+    @Override
+    @Nullable
+    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+        if (component instanceof TranslatableComponent) {
+            var args = new ArrayList<String>();
+            args.add(((TranslatableComponent) component).translate());
+            for (var arg : ((TranslatableComponent) component).args()) {
+                args.add(parser.serialize(arg));
+            }
+            return new TagNode(tagName, args);
+        }
+        return null;
     }
 }

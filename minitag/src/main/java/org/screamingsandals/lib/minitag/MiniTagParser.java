@@ -255,11 +255,11 @@ public class MiniTagParser {
                             builder.append(tagOpeningSymbol).append(endingTagSymbol).append(lastTag.getTag());
                             for (var arg : lastTag.getArgs()) {
                                 builder.append(argumentSeparator);
-                                if (arg.indexOf(tagOpeningSymbol) != -1 || arg.indexOf(tagClosingSymbol) != -1 || arg.indexOf(argumentSeparator) != -1 || arg.indexOf(endingTagSymbol) != -1 || quotes.stream().anyMatch(c -> arg.indexOf(c) != -1)) {
+                                if (arg.indexOf(tagOpeningSymbol) != -1 || arg.indexOf(tagClosingSymbol) != -1 || arg.indexOf(escapeSymbol) != -1 || arg.indexOf(argumentSeparator) != -1 || arg.indexOf(endingTagSymbol) != -1 || quotes.stream().anyMatch(c -> arg.indexOf(c) != -1)) {
                                     var usedQuote = quotes.get(0);
                                     builder.append(usedQuote);
                                     for (var c : arg.toCharArray()) {
-                                        if (c == usedQuote) {
+                                        if (c == usedQuote || c == escapeSymbol) {
                                             builder.append(escapeSymbol);
                                         }
                                         builder.append(c);
@@ -289,11 +289,11 @@ public class MiniTagParser {
                 builder.append(tagOpeningSymbol).append(((TagNode) child).getTag());
                 for (var arg : ((TagNode) child).getArgs()) {
                     builder.append(argumentSeparator);
-                    if (arg.indexOf(tagOpeningSymbol) != -1 || arg.indexOf(tagClosingSymbol) != -1 || arg.indexOf(argumentSeparator) != -1 || arg.indexOf(endingTagSymbol) != -1 || quotes.stream().anyMatch(c -> arg.indexOf(c) != -1)) {
+                    if (arg.indexOf(tagOpeningSymbol) != -1 || arg.indexOf(tagClosingSymbol) != -1 || arg.indexOf(escapeSymbol) != -1 || arg.indexOf(argumentSeparator) != -1 || arg.indexOf(endingTagSymbol) != -1 || quotes.stream().anyMatch(c -> arg.indexOf(c) != -1)) {
                         var usedQuote = quotes.get(0);
                         builder.append(usedQuote);
                         for (var c : arg.toCharArray()) {
-                            if (c == usedQuote) {
+                            if (c == usedQuote || c == escapeSymbol) {
                                 builder.append(escapeSymbol);
                             }
                             builder.append(c);

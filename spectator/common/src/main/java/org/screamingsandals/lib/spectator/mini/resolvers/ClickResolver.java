@@ -17,11 +17,14 @@
 package org.screamingsandals.lib.spectator.mini.resolvers;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
+
+import java.util.List;
 
 public class ClickResolver implements StylingResolver {
     @Override
@@ -35,5 +38,15 @@ public class ClickResolver implements StylingResolver {
                 .value(tag.getArgs().get(1))
                 .build()
         );
+    }
+
+    @Override
+    @Nullable
+    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+        var click = component.clickEvent();
+        if (click != null) {
+            return new TagNode(tagName, List.of(click.action().name().toLowerCase(), click.value()));
+        }
+        return null;
     }
 }

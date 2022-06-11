@@ -877,10 +877,11 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       Component which will replace the placeholder
      * @return self
      */
-    /*public @NotNull Message earlyPlaceholder(@NotNull String placeholder, @NotNull Component value) {
-        earlyPlaceholders.put(placeholder, value));
+    @Deprecated
+    public @NotNull Message earlyPlaceholder(@NotNull String placeholder, @NotNull Component value) {
+        earlyPlaceholders.put(placeholder, Lang.MINIMESSAGE.serialize(value));
         return this;
-    }*/
+    }
 
     /**
      * This method works only with Messages using MiniMessage format.
@@ -891,6 +892,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       String which will replace the placeholder. It must be in MiniMessage format
      * @return self
      */
+    @Deprecated
     public @NotNull Message earlyPlaceholder(@NotNull String placeholder, @NotNull String value) {
         earlyPlaceholders.put(placeholder, value);
         return this;
@@ -1148,7 +1150,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
                                         );
 
                                         if (translation.getType() == Messageable.Type.ADVENTURE) {
-                                            output.append("<legacy:'" + result.replace("'", "\\'") + "'>");
+                                            output.append(Lang.MINIMESSAGE.serialize(Component.fromLegacy(result)));
                                         } else {
                                             output.append(result);
                                         }

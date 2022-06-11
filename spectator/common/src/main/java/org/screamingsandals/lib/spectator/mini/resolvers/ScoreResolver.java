@@ -17,10 +17,14 @@
 package org.screamingsandals.lib.spectator.mini.resolvers;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ScoreComponent;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
+
+import java.util.ArrayList;
 
 public class ScoreResolver implements ComponentBuilderResolver {
 
@@ -40,5 +44,20 @@ public class ScoreResolver implements ComponentBuilderResolver {
                 .name(tag.getArgs().get(0))
                 .objective(tag.getArgs().get(1))
                 .value(tag.getArgs().get(2));
+    }
+
+    @Override
+    @Nullable
+    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+        if (component instanceof ScoreComponent) {
+            var args = new ArrayList<String>();
+            args.add(((ScoreComponent) component).name());
+            args.add(((ScoreComponent) component).objective());
+            if (((ScoreComponent) component).value() != null) {
+                args.add(((ScoreComponent) component).value());
+            }
+            return new TagNode(tagName, args);
+        }
+        return null;
     }
 }

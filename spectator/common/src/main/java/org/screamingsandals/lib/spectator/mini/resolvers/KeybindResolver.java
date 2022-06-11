@@ -17,10 +17,14 @@
 package org.screamingsandals.lib.spectator.mini.resolvers;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.KeybindComponent;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
+
+import java.util.List;
 
 public class KeybindResolver implements ComponentBuilderResolver {
 
@@ -32,5 +36,14 @@ public class KeybindResolver implements ComponentBuilderResolver {
         }
 
         return (B) Component.keybind().keybind(tag.getArgs().get(0));
+    }
+
+    @Override
+    @Nullable
+    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+        if (component instanceof KeybindComponent) {
+            return new TagNode(tagName, List.of(((KeybindComponent) component).keybind()));
+        }
+        return null;
     }
 }

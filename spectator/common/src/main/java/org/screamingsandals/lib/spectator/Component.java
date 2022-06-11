@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.spectator;
 
+import com.google.errorprone.annotations.Immutable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

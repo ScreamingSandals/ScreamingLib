@@ -17,11 +17,15 @@
 package org.screamingsandals.lib.spectator.mini.resolvers;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
+import org.screamingsandals.lib.utils.TriState;
+
+import java.util.List;
 
 public class BoldResolver implements StylingResolver {
     @Override
@@ -31,6 +35,16 @@ public class BoldResolver implements StylingResolver {
         } else {
             builder.bold(Boolean.parseBoolean(tag.getArgs().get(0)));
         }
+    }
 
+    @Override
+    @Nullable
+    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+        if (component.bold() == TriState.TRUE) {
+            return new TagNode(tagName, List.of());
+        } else if (component.bold() == TriState.FALSE) {
+            return new TagNode(tagName, List.of("false"));
+        }
+        return null;
     }
 }

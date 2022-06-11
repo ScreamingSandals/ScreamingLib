@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.spectator.mini.resolvers;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
@@ -25,6 +26,8 @@ import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class HoverResolver implements StylingResolver {
@@ -64,14 +67,54 @@ public class HoverResolver implements StylingResolver {
                     entity.type(NamespacedMappingKey.of(tag.getArgs().get(1)));
                     entity.id(UUID.fromString(tag.getArgs().get(2)));
                     if (tag.getArgs().size() > 3) {
-                        entity.name(parser.parse(tag.getArgs().get(0), placeholders));
+                        entity.name(parser.parse(tag.getArgs().get(3), placeholders));
                     }
                     builder.hoverEvent(entity);
                 }
                 break;
             default:
-                builder.hoverEvent(parser.parse(tag.getArgs().get(0), placeholders));
+                builder.hoverEvent(parser.parse(tag.getArgs().get(1), placeholders));
         }
 
+    }
+
+    @Override
+    @Nullable
+    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+        var hover = component.hoverEvent();
+        if (hover != null) {
+            switch (hover.action()) {
+                case SHOW_ITEM: {
+                    var args = new ArrayList<String>();
+                    args.add("show_item");
+                    var item = (ItemContent) hover.content();
+                    args.add(item.id().asString());
+                    var count = item.count();
+                    var tag = item.tag();
+                    if (count != 1 || tag != null) {
+                        args.add(String.valueOf(count));
+                        if (tag != null) {
+                            args.add(tag);
+                        }
+                    }
+                    return new TagNode(tagName, args);
+                }
+                case SHOW_ENTITY: {
+                    var args = new ArrayList<String>();
+                    args.add("show_entity");
+                    var entity = (EntityContent) hover.content();
+                    args.add(entity.type().asString());
+                    args.add(entity.id().toString());
+                    var name = entity.name();
+                    if (name != null) {
+                        args.add(parser.serialize(name));
+                    }
+                    return new TagNode(tagName, args);
+                }
+                default:
+                    return new TagNode(tagName, List.of("show_text", parser.serialize((Component) hover.content())));
+            }
+        }
+        return null;
     }
 }
