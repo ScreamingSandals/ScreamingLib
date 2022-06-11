@@ -30,6 +30,8 @@ public interface Placeholder extends ComponentBuilderResolver {
 
     @Pattern("[a-z\\d_-]+")
     String getName();
+
+    @NotNull
     <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders);
 
     @Override

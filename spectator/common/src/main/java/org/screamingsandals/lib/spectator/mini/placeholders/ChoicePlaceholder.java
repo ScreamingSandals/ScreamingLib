@@ -18,6 +18,7 @@ package org.screamingsandals.lib.spectator.mini.placeholders;
 
 import lombok.Data;
 import org.intellij.lang.annotations.Pattern;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
@@ -35,6 +36,7 @@ public class ChoicePlaceholder implements Placeholder {
 
     @SuppressWarnings("unchecked")
     @Override
+    @NotNull
     public <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
         if (arguments.size() == 1) {
             try {

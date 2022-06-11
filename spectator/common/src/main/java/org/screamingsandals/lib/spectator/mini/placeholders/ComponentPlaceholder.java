@@ -18,6 +18,7 @@ package org.screamingsandals.lib.spectator.mini.placeholders;
 
 import lombok.Data;
 import org.intellij.lang.annotations.Pattern;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.*;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
@@ -31,7 +32,12 @@ public class ComponentPlaceholder implements Placeholder {
 
     @SuppressWarnings("unchecked")
     @Override
+    @NotNull
     public <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
+        if (value == null) {
+            return (B) Component.text();
+        }
+
         if (value instanceof TextComponent) {
             return (B) ((TextComponent) value).toBuilder();
         } else if (value instanceof TranslatableComponent) {
@@ -50,6 +56,7 @@ public class ComponentPlaceholder implements Placeholder {
             return (B) ((StorageNBTComponent) value).toBuilder();
         }
 
+        // How did we get here?
         return (B) Component.text().append(value);
     }
 }

@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.placeholders.PlaceholderManager;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
+import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.sender.TitleableSenderMessage;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -1093,7 +1094,12 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @return this message
      */
     public @NotNull Message placeholder(@NotNull String placeholder, @NotNull ComponentLike component) {
-        return placeholder(placeholder, component.asComponent());
+        return placeholder(placeholder, sender -> {
+            if (component instanceof SenderMessage) {
+                return ((SenderMessage) component).asComponent(sender);
+            }
+            return component.asComponent();
+        });
     }
 
     /**

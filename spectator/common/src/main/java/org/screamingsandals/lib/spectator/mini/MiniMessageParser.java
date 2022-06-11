@@ -109,7 +109,11 @@ public class MiniMessageParser {
                 if (node.hasChildren()) {
                     throw new IllegalArgumentException("Tags defining non-text components can't be pair tags!");
                 }
-                return componentTagResolvers.get(((TagNode) node).getTag().toLowerCase()).resolve(this, (TagNode) node, placeholders);
+                B comp = componentTagResolvers.get(((TagNode) node).getTag().toLowerCase()).resolve(this, (TagNode) node, placeholders);
+                if (comp != null) {
+                    return comp;
+                }
+                // if null, fall into placeholders
             } else if (componentStylingResolvers.containsKey(((TagNode) node).getTag().toLowerCase())) {
                 var res = componentStylingResolvers.get(((TagNode) node).getTag().toLowerCase());
 
@@ -131,7 +135,9 @@ public class MiniMessageParser {
                     res.resolve(this, component, (TagNode) node);
                     return component;
                 }
-            } else if (node.hasChildren()) {
+                // return
+            }
+            if (node.hasChildren()) {
                 // wtf?
                 var resolved = node.children();
                 if (resolved.size() == 1) {
@@ -147,14 +153,14 @@ public class MiniMessageParser {
                         return p.getResult(this, ((TagNode) node).getArgs(), placeholders);
                     }
                 }
-                return (B) Component.text()
-                        .content(parser.tagOpeningSymbol()
-                                + ((TagNode) node).getTag()
-                                + (!((TagNode) node).getArgs().isEmpty() ? ":" : "")
-                                + String.join(":", ((TagNode) node).getArgs())
-                                + parser.tagClosingSymbol()
-                        );
             }
+            return (B) Component.text()
+                    .content(parser.tagOpeningSymbol()
+                            + ((TagNode) node).getTag()
+                            + (!((TagNode) node).getArgs().isEmpty() ? ":" : "")
+                            + String.join(":", ((TagNode) node).getArgs())
+                            + parser.tagClosingSymbol()
+                    );
         } else {
             throw new IllegalArgumentException("Unknown node type!");
         }

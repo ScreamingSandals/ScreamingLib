@@ -66,4 +66,9 @@ class ColorLink implements Color {
     public String toString() {
         return obtainColor().toString();
     }
+
+    @Override
+    public Object raw() {
+        return obtainColor().raw();
+    }
 }

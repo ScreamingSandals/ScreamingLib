@@ -16,11 +16,12 @@
 
 package org.screamingsandals.lib.spectator;
 
+import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.Map;
 
-public interface Color extends Wrapper, ComponentBuilderApplicable {
+public interface Color extends Wrapper, ComponentBuilderApplicable, RawValueHolder {
     Color BLACK = new ColorLink("BLACK");
     Color DARK_BLUE = new ColorLink("DARK_BLUE");
     Color DARK_GREEN = new ColorLink("DARK_GREEN");;
