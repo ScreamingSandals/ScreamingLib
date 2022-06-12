@@ -246,9 +246,9 @@ public class ComponentSerializer implements TypeSerializer<Component> {
         }
 
         if (obj instanceof TextComponent) {
-            node.set(TEXT_KEY).set(((TextComponent) obj).content());
+            node.node(TEXT_KEY).set(((TextComponent) obj).content());
         } else if (obj instanceof TranslatableComponent) {
-            node.set(TRANSLATE_KEY).set(((TranslatableComponent) obj).translate());
+            node.node(TRANSLATE_KEY).set(((TranslatableComponent) obj).translate());
             var args = ((TranslatableComponent) obj).args();
             if (!args.isEmpty()) {
                 var withNode = node.node(WITH_KEY);

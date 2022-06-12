@@ -51,7 +51,7 @@ public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
             return;
         }
 
-        node.node(ACTION_KEY).node(obj.action().name().toLowerCase());
-        node.node(VALUE_KEY).node(obj.value());
+        node.node(ACTION_KEY).set(obj.action().name().toLowerCase());
+        node.node(VALUE_KEY).set(obj.value());
     }
 }
