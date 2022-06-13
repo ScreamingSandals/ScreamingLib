@@ -19,6 +19,7 @@ package org.screamingsandals.lib.npc;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.SPlayerMoveEvent;
+import org.screamingsandals.lib.hologram.HologramManager;
 import org.screamingsandals.lib.npc.event.NPCInteractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.InteractType;
@@ -27,11 +28,14 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.visuals.AbstractVisualsManager;
 import org.screamingsandals.lib.visuals.LocatableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
+@Service(dependsOn = {
+        HologramManager.class
+})
 public class NPCManager extends AbstractVisualsManager<NPC> {
     private static NPCManager manager = null;
 
@@ -58,11 +62,11 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
     }
 
     public static void removeNPC(UUID uuid) {
-        getNPC(uuid).ifPresent(NPCManager::removeNPC);
+        Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!").removeVisual(uuid);
     }
 
     public static void removeNPC(NPC npc) {
-        Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!").removeVisual(npc.uuid());
+        removeNPC(npc.uuid());
     }
 
     public static NPC npc(LocationHolder holder) {

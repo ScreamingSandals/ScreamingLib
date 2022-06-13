@@ -18,15 +18,16 @@ package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SAsyncPlayerPreLoginEvent;
 import org.screamingsandals.lib.event.player.SPlayerLoginEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.sender.SenderMessage;
-import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 
 import java.net.InetAddress;
 
@@ -73,18 +74,26 @@ public class SBukkitPlayerLoginEvent implements SPlayerLoginEvent {
 
     @Override
     public Component message() {
-        return ComponentObjectLink.processGetter(event, "kickMessage", event::getKickMessage);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            return AdventureBackend.wrapComponent(event.kickMessage());
+        } else {
+            return Component.fromLegacy(event.getKickMessage());
+        }
     }
 
     @Override
-    public void message(Component message) {
-        ComponentObjectLink.processSetter(event, "kickMessage", event::setKickMessage, message);
+    public void message(Component kickMessage) {
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            event.kickMessage(kickMessage.as(net.kyori.adventure.text.Component.class));
+        } else {
+            event.setKickMessage(kickMessage.toLegacy());
+        }
     }
 
     @Override
     public void message(ComponentLike message) {
-        if (message instanceof SenderMessage) {
-            message(((SenderMessage) message).asComponent(player()));
+        if (message instanceof AudienceComponentLike) {
+            message(((AudienceComponentLike) message).asComponent(player()));
         } else {
             message(message.asComponent());
         }

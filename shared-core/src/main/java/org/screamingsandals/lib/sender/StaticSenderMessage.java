@@ -17,9 +17,9 @@
 package org.screamingsandals.lib.sender;
 
 import lombok.Data;
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.spectator.Component;
 
 import java.util.List;
 

@@ -16,8 +16,6 @@
 
 package org.screamingsandals.lib.player;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
@@ -29,6 +27,11 @@ import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.entity.SEntityDamageEvent;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import org.screamingsandals.lib.sender.TitleableSenderMessage;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.audience.PlayerAudience;
+import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -40,7 +43,15 @@ import java.util.Optional;
 /**
  * A player representation.
  */
-public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, EntityHuman {
+public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, EntityHuman, PlayerAudience.ForwardingToAdapter {
+    default void showTitle(TitleableSenderMessage title) {
+        showTitle(title.asTitle(this));
+    }
+
+    default void showTitle(TitleableSenderMessage title, TimesProvider times) {
+        showTitle(title.asTitle(this, times));
+    }
+
     /**
      * Checks if the player is sprinting.
      *
@@ -195,9 +206,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @param message the kick message
      */
-    default void kick(ComponentLike message) {
-        kick(message.asComponent());
-    }
+    void kick(ComponentLike message);
 
     /**
      * Gets the player's current gamemode.

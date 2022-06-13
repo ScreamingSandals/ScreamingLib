@@ -27,6 +27,7 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.Version;
+import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.WorldHolder;
@@ -109,6 +110,21 @@ public class BukkitServer extends Server {
     @Override
     public void shutdown0() {
         Bukkit.shutdown();
+    }
+
+    @Override
+    public ProxyType getProxyType0() {
+        // Bukkit#spigot() exists in 1.9.4, verified with https://helpch.at/docs/1.9.4/org/bukkit/Bukkit.html#spigot()
+        // Server.Spigot#getPaperConfig() exists in 1.9.4, verified with https://github.com/PaperMC/Paper/blob/ver/1.9.4/Spigot-Server-Patches/0005-Timings-v2.patch#L995
+        // Server.Spigot#getConfig() exists in 1.9.4 and resolves to org.spigotmc.SpigotConfig#config in 1.9.4 and latest
+        // verified with https://github.com/PaperMC/Paper/blob/ver/1.9.4/Spigot-Server-Patches/0005-Timings-v2.patch#L991
+        // and https://github.com/PaperMC/Paper/blob/master/patches/server/0010-Timings-v2.patch#L1727
+        if (Reflect.hasMethod(org.bukkit.Server.Spigot.class, "getPaperConfig")) {
+            if (Bukkit.spigot().getPaperConfig().getBoolean("settings.velocity-support.enabled", false)) {
+                return ProxyType.VELOCITY;
+            }
+        }
+        return Bukkit.spigot().getConfig().getBoolean("settings.bungeecord",false) ? ProxyType.BUNGEE : ProxyType.NONE;
     }
 
     @Override

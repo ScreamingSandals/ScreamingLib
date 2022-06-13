@@ -21,15 +21,16 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.sender.SenderMessage;
-import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
@@ -53,20 +54,29 @@ public class SBukkitPlayerLeaveEvent implements SPlayerLeaveEvent {
     }
 
     @Override
-    @Nullable
     public Component leaveMessage() {
-        return ComponentObjectLink.processGetter(event, "quitMessage", event::getQuitMessage);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            return AdventureBackend.wrapComponent(event.quitMessage());
+        } else {
+            return Component.fromLegacy(event.getQuitMessage());
+        }
     }
 
     @Override
-    public void leaveMessage(@Nullable Component leaveMessage) {
-        ComponentObjectLink.processSetter(event, "quitMessage", event::setQuitMessage, leaveMessage);
+    public void leaveMessage(Component leaveMessage) {
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            event.quitMessage(leaveMessage.as(net.kyori.adventure.text.Component.class));
+        } else {
+            event.setQuitMessage(leaveMessage.toLegacy());
+        }
+
     }
 
     @Override
     public void leaveMessage(@Nullable ComponentLike leaveMessage) {
-        if (leaveMessage instanceof SenderMessage) {
-            leaveMessage(((SenderMessage) leaveMessage).asComponent(player()));
+        if (leaveMessage instanceof AudienceComponentLike) {
+            // TODO: there should be another logic, because this message can be seen by more players
+            leaveMessage(((AudienceComponentLike) leaveMessage).asComponent(player()));
         } else {
             leaveMessage(leaveMessage != null ? leaveMessage.asComponent() : null);
         }

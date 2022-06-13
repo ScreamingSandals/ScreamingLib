@@ -17,20 +17,21 @@
 package org.screamingsandals.lib.bukkit.entity;
 
 import io.papermc.lib.PaperLib;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.util.RGBLike;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.spectator.Color;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -224,13 +225,21 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
 
     @Override
     public void setCustomName(Component name) {
-        ComponentObjectLink.processSetter(wrappedObject, "customName", wrappedObject::setCustomName, name);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            wrappedObject.customName(name == null ? null : name.as(net.kyori.adventure.text.Component.class));
+        } else {
+            wrappedObject.setCustomName(name == null ? null : name.toLegacy());
+        }
     }
 
     @Override
     @Nullable
     public Component getCustomName() {
-        return ComponentObjectLink.processGetter(wrappedObject, "customName", wrappedObject::getCustomName);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            return AdventureBackend.wrapComponent(wrappedObject.customName());
+        } else {
+            return Component.fromLegacy(wrappedObject.getCustomName());
+        }
     }
 
     @Override
@@ -343,8 +352,8 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public RGBLike getColorMetadata(String metadata) {
-        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, RGBLike.class);
+    public Color getColorMetadata(String metadata) {
+        return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Color.class);
     }
 
     @Override

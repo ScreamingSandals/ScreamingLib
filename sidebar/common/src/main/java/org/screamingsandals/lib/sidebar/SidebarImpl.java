@@ -19,17 +19,17 @@ package org.screamingsandals.lib.sidebar;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.sender.StaticSenderMessage;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeamImpl;
-import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.utils.visual.SimpleCLTextEntry;
+import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.visuals.impl.AbstractLinedVisual;
 
 import java.util.*;
@@ -37,14 +37,17 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Accessors(chain = true, fluent = true)
 public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar {
+    @Accessors
     @Getter
     protected final List<ScoreboardTeam> teams = new LinkedList<>();
-    @Accessors(chain = true, fluent = true)
     @Getter
     @Setter
     protected DataContainer data;
     protected boolean ready;
+    @Getter
+    protected boolean destroyed;
     protected SenderMessage title = SenderMessage.empty();
     private final String objectiveKey;
     private final ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, String>> lines = new ConcurrentSkipListMap<>();
@@ -103,9 +106,9 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     }
 
     @Override
-    public Sidebar update() {
+    public Sidebar update(UpdateStrategy strategy) {
         if (ready) {
-            update0();
+            List.copyOf(viewers).forEach(this::updateForPlayer);
         }
         return this;
     }
@@ -158,17 +161,12 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
 
     @Override
     public void onViewerRemoved(PlayerWrapper player, boolean checkDistance) {
-        if (visible && player.isOnline()) {
+        if (visible) {
             teams.forEach(scoreboardTeam ->
                     ((ScoreboardTeamImpl) scoreboardTeam).constructDestructPacket().sendPacket(player)
             );
             getDestroyObjectivePacket().sendPacket(player);
         }
-    }
-
-    @Override
-    protected void update0() {
-        List.copyOf(viewers).forEach(this::updateForPlayer);
     }
 
     @SuppressWarnings("unchecked")
@@ -201,14 +199,12 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
                         return Stream.of((Component) o);
                     }
                 })
-                .map(AdventureHelper::toLegacy)
+                .map(Component::toLegacy)
                 .collect(Collectors.toList());
 
         Collections.reverse(list);
 
-        for (var i = 0; i < list.size(); i++) {
-            list.set(i, makeUnique(list.get(i), list));
-        }
+        list.replaceAll(toUnique -> makeUnique(toUnique, list));
 
         var packets = new ArrayList<AbstractPacket>();
 
@@ -232,7 +228,6 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
         }
 
         forRemoval.forEach(lines::remove);
-
         packets.forEach(packet -> packet.sendPacket(playerWrapper));
     }
 

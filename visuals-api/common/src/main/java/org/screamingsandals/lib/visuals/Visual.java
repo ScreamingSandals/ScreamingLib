@@ -16,9 +16,9 @@
 
 package org.screamingsandals.lib.visuals;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -40,7 +40,11 @@ public interface Visual<T> {
      */
     Collection<PlayerWrapper> viewers();
 
-    T update();
+    default T update() {
+        return update(UpdateStrategy.ALL);
+    }
+
+    T update(UpdateStrategy strategy);
 
     T show();
 
@@ -67,9 +71,23 @@ public interface Visual<T> {
 
     void destroy();
 
+    /**
+     *
+     * @return true if this Visual has been destroyed, false otherwise
+     */
+    boolean destroyed();
+
     boolean visibleTo(PlayerWrapper player);
 
     void onViewerAdded(PlayerWrapper viewer, boolean checkDistance);
 
     void onViewerRemoved(PlayerWrapper viewer, boolean checkDistance);
+
+    default void onViewerAdded(PlayerWrapper viewer) {
+        onViewerAdded(viewer, false);
+    }
+
+    default void onViewerRemoved(PlayerWrapper viewer) {
+        onViewerRemoved(viewer, false);
+    }
 }

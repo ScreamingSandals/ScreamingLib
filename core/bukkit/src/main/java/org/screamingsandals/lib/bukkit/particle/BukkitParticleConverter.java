@@ -17,7 +17,6 @@
 package org.screamingsandals.lib.bukkit.particle;
 
 import lombok.experimental.UtilityClass;
-import net.kyori.adventure.util.RGBLike;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
@@ -56,7 +55,7 @@ public class BukkitParticleConverter {
         return null;
     }
 
-    public Color getBukkitColor(RGBLike rgb) {
+    public Color getBukkitColor(org.screamingsandals.lib.spectator.Color rgb) {
         return Color.fromRGB(rgb.red(), rgb.green(), rgb.blue());
     }
 }

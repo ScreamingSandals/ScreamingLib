@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.packet;
 
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.exception.CancelEncoderException;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
@@ -32,28 +33,18 @@ import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.logger.LoggerWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
-
-import java.util.Objects;
 
 @Service(dependsOn = {
         ServerboundInteractPacketListener.class
 })
 @RequiredArgsConstructor
 public class BukkitPacketMapper extends PacketMapper {
-    private final LoggerWrapper logger;
 
     @Override
     public void sendPacket0(PlayerWrapper player, AbstractPacket packet) {
-        Preconditions.checkNotNull(packet, "Cannot send null packet to player!");
-        Preconditions.checkNotNull(player, "Cannot send packet to null player!");
-
-        if (!player.isOnline()) {
-            logger.trace("Player: {} is offline, ignoring packet: {}", player.getName(), packet.getClass().getSimpleName());
-            return;
-        }
+        Preconditions.checkNotNull(packet, "Packet cannot be null!, skipping packet...");
 
         final var buffer = Unpooled.buffer();
         try {
@@ -62,54 +53,65 @@ public class BukkitPacketMapper extends PacketMapper {
 
             int dataStartIndex = buffer.writerIndex();
             packet.write(writer);
-
-            int dataSize = buffer.writerIndex() - dataStartIndex;
-            if (dataSize > 2097151) {
-                throw new IllegalArgumentException("Packet too big (is " + dataSize + ", should be less than 2097152): " + packet);
-            }
-
-            var channel = getChannel(player);
-            if (channel.isActive()) {
-                if (Bukkit.getPluginManager().isPluginEnabled("ViaVersion")) { // not rly cacheable, reloads exist, softdepend is sus
-                    // ViaVersion fixes incompatibilities with other plugins, so we just use it if it's present
-                    final var conn = Via.getAPI().getConnection(player.getUuid());
-                    if (conn != null) {
-                        try {
-                            conn.transformClientbound(buffer, CancelEncoderException::generate);
-                        } catch (Throwable ignored) {
-                            // no u Via
-                        }
-                        conn.sendRawPacket(buffer);
-                    } else {
-                        channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
-                    }
-                // TODO: ProtocolSupport
-                } else if (Bukkit.getPluginManager().isPluginEnabled("OldCombatMechanics")) {
-                    // :sad:
-                    // Just skips everything, ocm is sus
-                    final var ctx = channel.pipeline().context("encoder");
-                    channel.eventLoop().execute(() -> Objects.requireNonNullElse(ctx, channel).writeAndFlush(buffer));
-                } else {
-                    channel.eventLoop().execute(() -> channel.writeAndFlush(buffer));
+            if (!writer.isCancelled()) {
+                int dataSize = buffer.writerIndex() - dataStartIndex;
+                if (dataSize > 2097151) {
+                    throw new IllegalArgumentException("Packet too big (is " + dataSize + ", should be less than 2097152): " + packet);
                 }
-            }
 
+                sendRawPacket(player, buffer);
+            }
             writer.getAppendedPackets().forEach(extraPacket -> sendPacket0(player, extraPacket));
         } catch (Throwable t) {
-            buffer.release();
-            Bukkit.getLogger().severe("An exception occurred serializing packet of class: " + packet.getClass().getSimpleName() + " for player: " + player.getName());
+            Bukkit.getLogger().severe("An exception occurred serializing packet of class: " + packet.getClass().getSimpleName());
             t.printStackTrace();
         }
     }
 
     @Override
     public int getId0(Class<? extends AbstractPacket> clazz) {
-        return PacketIdMapping.getPacketId(clazz);
+        var id = PacketIdMapping.getPacketId(clazz);
+        return id == null ? -1 : id; // peacefully return some number, it will be ignored later
     }
 
     @Override
     public int getArmorStandTypeId0() {
         return ClassStorage.getEntityTypeId("armor_stand", ArmorStandAccessor.getType());
+    }
+
+    // TODO: Optimize: usage of write() instead and flushing manually at the end for multiple writes, also expose this method later on
+    protected void sendRawPacket(PlayerWrapper player, ByteBuf buffer) {
+        var channel = getChannel(player);
+        if (channel.isActive()) {
+            final var ctx = channel.pipeline().context("encoder");
+            if (Bukkit.getPluginManager().isPluginEnabled("ViaVersion")) { // not rly cacheable, reloads exist, soft-depend is sus
+                // ViaVersion fixes incompatibilities with other plugins, so we just use it if it's present
+                final var conn = Via.getAPI().getConnection(player.getUuid());
+                if (conn != null) {
+                    try {
+                        conn.transformClientbound(buffer, CancelEncoderException::generate);
+                    } catch (Throwable ignored) {
+                        // no u Via
+                    }
+                }
+
+                // TODO: ProtocolSupport
+            }
+
+            final Runnable task = () -> {
+                if (ctx != null) {
+                    ctx.writeAndFlush(buffer);
+                } else {
+                    channel.writeAndFlush(buffer);
+                }
+            };
+
+            if (channel.eventLoop().inEventLoop()) {
+                task.run();
+            } else {
+                channel.eventLoop().submit(task);
+            }
+        }
     }
 
     public Channel getChannel(PlayerWrapper player) {

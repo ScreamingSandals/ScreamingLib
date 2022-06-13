@@ -18,15 +18,16 @@ package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.event.player.PlayerKickEvent;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerKickEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.sender.SenderMessage;
-import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
@@ -51,19 +52,28 @@ public class SBukkitPlayerKickEvent implements SPlayerKickEvent, BukkitCancellab
 
     @Override
     public Component leaveMessage() {
-        return ComponentObjectLink.processGetter(event, "leaveMessage", event::getLeaveMessage);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            return AdventureBackend.wrapComponent(event.leaveMessage());
+        } else {
+            return Component.fromLegacy(event.getLeaveMessage());
+        }
     }
 
     @Override
     public void leaveMessage(Component leaveMessage) {
-        ComponentObjectLink.processSetter(event, "leaveMessage", event::setReason, leaveMessage);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            event.leaveMessage(leaveMessage.as(net.kyori.adventure.text.Component.class));
+        } else {
+            event.setLeaveMessage(leaveMessage.toLegacy());
+        }
 
     }
 
     @Override
     public void leaveMessage(ComponentLike leaveMessage) {
-        if (leaveMessage instanceof SenderMessage) {
-            leaveMessage(((SenderMessage) leaveMessage).asComponent(player()));
+        if (leaveMessage instanceof AudienceComponentLike) {
+            // TODO: there should be another logic, because this message can be seen by more players
+            leaveMessage(((AudienceComponentLike) leaveMessage).asComponent(player()));
         } else {
             leaveMessage(leaveMessage.asComponent());
         }
@@ -71,18 +81,26 @@ public class SBukkitPlayerKickEvent implements SPlayerKickEvent, BukkitCancellab
 
     @Override
     public Component kickReason() {
-        return ComponentObjectLink.processGetter(event, "reason", event::getReason);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            return AdventureBackend.wrapComponent(event.reason());
+        } else {
+            return Component.fromLegacy(event.getReason());
+        }
     }
 
     @Override
     public void kickReason(Component kickReason) {
-        ComponentObjectLink.processSetter(event, "reason", event::setReason, kickReason);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            event.reason(kickReason.as(net.kyori.adventure.text.Component.class));
+        } else {
+            event.setReason(kickReason.toLegacy());
+        }
     }
 
     @Override
     public void kickReason(ComponentLike kickReason) {
-        if (kickReason instanceof SenderMessage) {
-            kickReason(((SenderMessage) kickReason).asComponent(player()));
+        if (kickReason instanceof AudienceComponentLike) {
+            kickReason(((AudienceComponentLike) kickReason).asComponent(player()));
         } else {
             kickReason(kickReason.asComponent());
         }

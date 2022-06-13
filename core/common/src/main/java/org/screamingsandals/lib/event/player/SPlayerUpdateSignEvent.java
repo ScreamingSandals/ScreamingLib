@@ -16,12 +16,12 @@
 
 package org.screamingsandals.lib.event.player;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 
 public interface SPlayerUpdateSignEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 

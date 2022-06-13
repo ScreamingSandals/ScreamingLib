@@ -16,8 +16,6 @@
 
 package org.screamingsandals.lib.item.builder;
 
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
@@ -25,6 +23,8 @@ import org.screamingsandals.lib.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.item.*;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.meta.*;
+import org.screamingsandals.lib.spectator.Color;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
@@ -81,7 +81,7 @@ public abstract class ItemFactory {
 
         var displayName = node.node("display-name");
         if (!displayName.empty()) {
-            builder.displayName(AdventureHelper.toComponent(Objects.requireNonNull(displayName.getString())));
+            builder.displayName(Component.fromLegacy(displayName.getString()));
         }
         var locName = node.node("loc-name");
         if (!locName.empty()) {
@@ -204,14 +204,9 @@ public abstract class ItemFactory {
 
         var color = node.node("color");
         if (!color.empty()) {
-            var c = TextColor.fromCSSHexString(color.getString(""));
+            var c = Color.hexOrName(color.getString(""));
             if (c != null) {
                 builder.color(c);
-            } else {
-                var c2 = NamedTextColor.NAMES.value(color.getString("").trim().toLowerCase());
-                if (c2 != null) {
-                    builder.color(c2);
-                }
             }
         }
 

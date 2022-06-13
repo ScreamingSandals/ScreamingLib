@@ -39,6 +39,14 @@ public class StringMessageable implements Messageable {
         return of(messages, Type.LEGACY);
     }
 
+    public static StringMessageable of(String message, Type type) {
+        return of(List.of(message), type);
+    }
+
+    public static StringMessageable of(Type type, String... messages) {
+        return of(List.of(messages), type);
+    }
+
     @Override
     public boolean needsTranslation() {
         return false;

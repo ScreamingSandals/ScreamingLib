@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.visuals.impl;
 
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.visuals.Visual;
 import java.util.Collection;
@@ -27,14 +29,14 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
     protected final List<PlayerWrapper> viewers;
     protected final UUID uuid;
     protected volatile boolean visible;
+    @Accessors(chain = true, fluent = true)
+    @Getter
+    protected volatile boolean destroyed;
 
     public AbstractVisual(UUID uuid) {
         this.uuid = uuid;
-        this.visible = false;
         this.viewers = new CopyOnWriteArrayList<>();
     }
-
-    protected abstract void update0();
 
     @Override
     public UUID uuid() {
@@ -49,7 +51,7 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T addViewer(PlayerWrapper viewer) {
-        if (!viewers.contains(viewer)) {
+        if (viewer.isOnline() && !viewers.contains(viewer)) {
             viewers.add(viewer);
             onViewerAdded(viewer, true);
         }
@@ -59,7 +61,7 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
     @SuppressWarnings("unchecked")
     @Override
     public T removeViewer(PlayerWrapper viewer) {
-        if (viewers.contains(viewer)) {
+        if (viewer.isOnline() && viewers.contains(viewer)) {
             viewers.remove(viewer);
             onViewerRemoved(viewer, false);
         }

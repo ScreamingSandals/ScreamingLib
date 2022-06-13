@@ -24,6 +24,9 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.screamingsandals.lib.bungee.proxy.listener.ChatEventListener;
+import org.screamingsandals.lib.bungee.spectator.BungeeBackend;
+import org.screamingsandals.lib.bungee.spectator.audience.adapter.BungeeAdapter;
+import org.screamingsandals.lib.bungee.spectator.audience.adapter.BungeePlayerAdapter;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
@@ -31,6 +34,9 @@ import org.screamingsandals.lib.proxy.ProxiedSenderWrapper;
 import org.screamingsandals.lib.proxy.ServerWrapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.permissions.*;
+import org.screamingsandals.lib.spectator.Spectator;
+import org.screamingsandals.lib.spectator.audience.PlayerAudience;
+import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.List;
@@ -49,6 +55,7 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     public BungeeProxiedPlayerMapper(Plugin plugin) {
+        Spectator.setBackend(new BungeeBackend());
         plugin.getProxy().getPluginManager().registerListener(plugin, new ChatEventListener());
 
         playerConverter
@@ -148,5 +155,16 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
         return wrapper.asOptional(ProxiedPlayer.class)
                 .map(ProxiedPlayer::getLocale)
                 .orElse(Locale.US);
+    }
+
+    @Override
+    protected Adapter adapter0(ProxiedSenderWrapper wrapper) {
+        var source = wrapper.as(CommandSender.class);
+        if (source instanceof ProxiedPlayer && source instanceof ProxiedPlayerWrapper) {
+            return new BungeePlayerAdapter((ProxiedPlayer) source, (PlayerAudience) wrapper);
+        /*} else if (source instanceof ConsoleCommandSource && TODO) {
+            return new BungeeConsoleAudience(source, (ConsoleAudience) wrapper);*/
+        }
+        return new BungeeAdapter(source, wrapper);
     }
 }

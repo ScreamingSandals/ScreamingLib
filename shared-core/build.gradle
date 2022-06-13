@@ -3,4 +3,5 @@ dependencies {
     compileOnly group: 'com.google.protobuf', name: 'protobuf-java', version: PROTOBUF_VERSION
 
     api project(':utils-common')
+    api project(':spectator-common')
 }

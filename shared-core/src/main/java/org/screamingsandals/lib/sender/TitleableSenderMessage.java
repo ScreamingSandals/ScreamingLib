@@ -16,19 +16,20 @@
 
 package org.screamingsandals.lib.sender;
 
-import net.kyori.adventure.title.Title;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.spectator.title.TimesProvider;
+import org.screamingsandals.lib.spectator.title.Title;
 
 public interface TitleableSenderMessage extends SenderMessage {
     @NotNull
-    Title asTitle(@Nullable CommandSenderWrapper wrapper, @Nullable Title.Times times);
+    Title asTitle(@Nullable CommandSenderWrapper wrapper, @Nullable TimesProvider times);
 
     @NotNull
     Title asTitle(@Nullable CommandSenderWrapper wrapper);
 
     @NotNull
-    Title asTitle(@Nullable Title.Times times);
+    Title asTitle(@Nullable TimesProvider times);
 
     @NotNull
     Title asTitle();

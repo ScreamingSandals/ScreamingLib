@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.bukkit.player;
 
-import net.kyori.adventure.audience.Audience;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -24,6 +23,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.player.SenderWrapper;
+import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
 public class BukkitCommandSender extends BasicWrapper<CommandSender> implements SenderWrapper {
@@ -52,11 +52,6 @@ public class BukkitCommandSender extends BasicWrapper<CommandSender> implements 
     }
 
     @Override
-    public @NotNull Audience audience() {
-        return BukkitCore.audiences().sender(wrappedObject);
-    }
-
-    @Override
     public boolean isOp() {
         return wrappedObject.isOp();
     }
@@ -69,5 +64,11 @@ public class BukkitCommandSender extends BasicWrapper<CommandSender> implements 
     @Override
     public void tryToDispatchCommand(String command) {
         Bukkit.dispatchCommand(wrappedObject, command);
+    }
+
+    @Override
+    @NotNull
+    public Adapter adapter() {
+        return BukkitCore.getSpectatorBackend().adapter(this, wrappedObject);
     }
 }

@@ -18,6 +18,7 @@ package org.screamingsandals.lib.configurate;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
+import org.screamingsandals.lib.spectator.Color;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
@@ -100,10 +101,10 @@ public class FireworkEffectHolderSerializer extends AbstractScreamingSerializer 
         node.node(FLICKER_KEY).set(obj.flicker());
         node.node(TRAIL_KEY).set(obj.trail());
         for (var color : obj.colors()) {
-            serializeColor(color, node.node(COLORS_KEY).appendListNode());
+            node.node(COLORS_KEY).appendListNode().set(Color.class, color);
         }
         for (var color : obj.fadeColors()) {
-            serializeColor(color, node.node(FADE_COLORS_KEY).appendListNode());
+            node.node(FADE_COLORS_KEY).appendListNode().set(Color.class, color);
         }
     }
 }

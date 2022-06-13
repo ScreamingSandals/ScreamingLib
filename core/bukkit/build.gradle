@@ -1,9 +1,9 @@
 dependencies {
-    api project(':utils-adventure')
     api project(':nms')
 
     api paperlib()
-    api 'org.screamingsandals:adventure-platform-bukkit:' + ADVENTURE_PLATFORM_VERSION
+    api project(':spectator-adventure')
+    api project(':spectator-bungee')
 
     compileOnly paper(PAPER_VERSION)
     compileOnly 'io.netty:netty-all:' + NETTY_VERSION

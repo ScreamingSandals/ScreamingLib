@@ -16,15 +16,26 @@
 
 package org.screamingsandals.lib.sender;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.audience.Audience;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 
 import java.util.List;
 
-public interface SenderMessage extends ComponentLike {
+public interface SenderMessage extends AudienceComponentLike {
+    @Override
+    @NotNull
+    default Component asComponent(@Nullable Audience audience) {
+        if (audience instanceof CommandSenderWrapper) {
+            return asComponent((CommandSenderWrapper) audience);
+        }
+        return asComponent(null);
+    }
+
     @NotNull
     Component asComponent(@Nullable CommandSenderWrapper wrapper);
 

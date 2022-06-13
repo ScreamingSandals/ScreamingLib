@@ -29,12 +29,14 @@ def registerModule(String name, String... platforms) {
 
 // Shared content
 include 'api-utils'
-registerModule('utils', 'adventure')
+registerModule('utils')
 include 'nms'
+include 'minitag'
 include 'shared-core'
 include 'lang'
 include 'annotation'
 include 'kotlin-extra'
+registerModule('spectator', 'adventure', 'bungee')
 
 // Main modules
 registerModule('core', 'bukkit', 'minestom') //TODO: add others (minestom, sponge)
@@ -49,5 +51,5 @@ registerModule('visuals-api', 'bukkit') //TODO: add others
 registerModule('signs', 'bukkit') //TODO: add others
 registerModule('placeholders', 'bukkit') //TODO: add others
 registerModule('packets', 'vanilla', 'bukkit') //TODO: add others
-registerModule('command', 'bukkit', /*'minestom' , 'sponge',*/ 'bungee', 'velocity')
+registerModule('cloud', 'bukkit', /*'minestom' , 'sponge',*/ 'bungee', 'velocity', 'extras')
 

@@ -26,7 +26,6 @@ import org.screamingsandals.lib.placeholders.PlaceholderExpansion;
 import org.screamingsandals.lib.placeholders.hooks.Hook;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
-import org.screamingsandals.lib.utils.AdventureHelper;
 
 @RequiredArgsConstructor
 public class PlaceholderAPIHook implements Hook {
@@ -67,7 +66,8 @@ public class PlaceholderAPIHook implements Hook {
 
         @Override
         public String onRequest(OfflinePlayer player, @NotNull String params) {
-            return AdventureHelper.toLegacyNullableResult(placeholderExpansion.onRequest(PlayerMapper.wrapOfflinePlayer(player), params));
+            var result = placeholderExpansion.onRequest(PlayerMapper.wrapOfflinePlayer(player), params);
+            return result != null ? result.toLegacy() : null;
         }
 
         @Override

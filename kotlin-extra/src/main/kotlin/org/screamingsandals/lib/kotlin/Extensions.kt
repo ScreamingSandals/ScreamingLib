@@ -16,16 +16,17 @@
 
 package org.screamingsandals.lib.kotlin
 
-import net.kyori.adventure.text.Component
 import org.jetbrains.annotations.ApiStatus
 import org.screamingsandals.lib.container.Container
 import org.screamingsandals.lib.entity.EntityBasic
+import org.screamingsandals.lib.event.Cancellable
 import org.screamingsandals.lib.event.EventManager
 import org.screamingsandals.lib.event.SEvent
 import org.screamingsandals.lib.item.Item
 import org.screamingsandals.lib.item.ItemTypeHolder
 import org.screamingsandals.lib.item.builder.ItemFactory
 import org.screamingsandals.lib.player.PlayerWrapper
+import org.screamingsandals.lib.spectator.Component
 import org.screamingsandals.lib.utils.ComparableWrapper
 import org.screamingsandals.lib.utils.Wrapper
 import org.screamingsandals.lib.utils.math.Vector2D
@@ -49,11 +50,11 @@ infix fun EntityBasic.tp(loc: LocationHolder) {
     teleport(loc)
 }
 
-fun <K: SEvent> K.fire(): K = EventManager.fire(this)
-infix fun <K: SEvent> K.fire(manager: EventManager): K = manager.fireEvent(this)
+fun <K : SEvent> K.fire(): K = EventManager.fire(this)
+infix fun <K : SEvent> K.fire(manager: EventManager): K = manager.fireEvent(this)
 
-fun <K: SEvent> K.fireAsync(): CompletableFuture<K> = EventManager.fireAsync(this)
-infix fun <K: SEvent> K.fireAsync(manager: EventManager): CompletableFuture<K> = manager.fireEventAsync(this)
+fun <K : SEvent> K.fireAsync(): CompletableFuture<K> = EventManager.fireAsync(this)
+infix fun <K : SEvent> K.fireAsync(manager: EventManager): CompletableFuture<K> = manager.fireEventAsync(this)
 
 operator fun Vector2D.unaryMinus(): Vector2D = clone().invert()
 operator fun Vector2D.plus(vec: Vector2D): Vector2D = clone().add(vec)
@@ -118,28 +119,28 @@ operator fun Container.set(slot: Int, item: Item) = setItem(slot, item)
 operator fun Container.set(slot: Int, type: String) = setItem(slot, ItemFactory.builder().type(type).build().orElseThrow())
 operator fun Container.contains(type: String) = contains(ItemTypeHolder.of(type))
 
-operator fun <T : Any> Visual<T>.plusAssign(viewer: PlayerWrapper) {
+operator fun Visual<*>.plusAssign(viewer: PlayerWrapper) {
     addViewer(viewer)
 }
-operator fun <T : Any> Visual<T>.plusAssign(viewers: Collection<PlayerWrapper>) {
+operator fun Visual<*>.plusAssign(viewers: Collection<PlayerWrapper>) {
     viewers.forEach { addViewer(it) }
 }
-operator fun <T : Any> Visual<T>.minusAssign(viewer: PlayerWrapper) {
+operator fun Visual<*>.minusAssign(viewer: PlayerWrapper) {
     removeViewer(viewer)
 }
-operator fun <T : Any> Visual<T>.minusAssign(viewers: Collection<PlayerWrapper>) {
+operator fun Visual<*>.minusAssign(viewers: Collection<PlayerWrapper>) {
     viewers.forEach { removeViewer(it) }
 }
-operator fun <T : Any> Visual<T>.contains(viewer: PlayerWrapper) = visibleTo(viewer)
+operator fun Visual<*>.contains(viewer: PlayerWrapper) = visibleTo(viewer)
 
-operator fun <T : Visual<T>> LinedVisual<T>.plusAssign(line: Component) {
+operator fun LinedVisual<*>.plusAssign(line: Component) {
     newLine(lines().size, line)
 }
-operator fun <T : Visual<T>> LinedVisual<T>.get(line: Int): TextEntry? = lines()[line]
-operator fun <T : Visual<T>> LinedVisual<T>.set(line: Int, entry: TextEntry) {
+operator fun LinedVisual<*>.get(line: Int): TextEntry? = lines()[line]
+operator fun LinedVisual<*>.set(line: Int, entry: TextEntry) {
     newLine(line, entry)
 }
-operator fun <T : Visual<T>> LinedVisual<T>.set(line: Int, text: Component) {
+operator fun LinedVisual<*>.set(line: Int, text: Component) {
     newLine(line, text)
 }
 
@@ -159,3 +160,7 @@ operator fun String.contains(holder: ItemTypeHolder): Boolean = equals(holder.pl
 operator fun Item.times(amount: Int): Item = withAmount(amount)
 operator fun Item.inc(): Item = withAmount(amount + 1)
 operator fun Item.dec(): Item = withAmount(amount - 1)
+
+var Cancellable.cancelled: Boolean
+    get() = cancelled()
+    set(value) = cancelled(value)

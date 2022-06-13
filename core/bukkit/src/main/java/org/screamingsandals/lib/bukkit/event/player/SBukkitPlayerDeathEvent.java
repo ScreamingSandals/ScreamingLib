@@ -16,17 +16,18 @@
 
 package org.screamingsandals.lib.bukkit.event.player;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.entity.SBukkitEntityDeathEvent;
 import org.screamingsandals.lib.event.player.SPlayerDeathEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.sender.SenderMessage;
-import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 
 public class SBukkitPlayerDeathEvent extends SBukkitEntityDeathEvent implements SPlayerDeathEvent {
     public SBukkitPlayerDeathEvent(PlayerDeathEvent event) {
@@ -41,19 +42,31 @@ public class SBukkitPlayerDeathEvent extends SBukkitEntityDeathEvent implements 
     private PlayerWrapper killer;
 
     @Override
+    @Nullable
     public Component deathMessage() {
-        return ComponentObjectLink.processGetter(event(), "deathMessage", event()::getDeathMessage);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            var dm = event().deathMessage();
+            return dm != null ? AdventureBackend.wrapComponent(dm) : null;
+        } else {
+            var m = event().getDeathMessage();
+            return m != null ? Component.fromLegacy(m) : null;
+        }
     }
 
     @Override
-    public void deathMessage(Component deathMessage) {
-        ComponentObjectLink.processSetter(event(), "deathMessage", event()::setDeathMessage, deathMessage);
+    public void deathMessage(@Nullable Component deathMessage) {
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            event().deathMessage(deathMessage != null ? deathMessage.as(net.kyori.adventure.text.Component.class) : null);
+        } else {
+            event().setDeathMessage(deathMessage != null ? deathMessage.toLegacy() : null);
+        }
     }
 
     @Override
-    public void deathMessage(ComponentLike deathMessage) {
-        if (deathMessage instanceof SenderMessage) {
-            deathMessage(((SenderMessage) deathMessage).asComponent(player()));
+    public void deathMessage(@Nullable ComponentLike deathMessage) {
+        if (deathMessage instanceof AudienceComponentLike) {
+            // TODO: there should be another logic, because this message can be seen by more players
+            deathMessage(((AudienceComponentLike) deathMessage).asComponent(player()));
         } else {
             deathMessage(deathMessage != null ? deathMessage.asComponent() : null);
         }

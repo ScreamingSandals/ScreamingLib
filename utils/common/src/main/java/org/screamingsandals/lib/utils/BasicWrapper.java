@@ -56,8 +56,8 @@ public class BasicWrapper<O> implements Wrapper, RawValueHolder {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof BasicWrapper) {
-            obj = ((BasicWrapper<?>) obj).raw();
+        if (obj instanceof RawValueHolder) {
+            obj = ((RawValueHolder) obj).raw();
         }
         return Objects.equals(wrappedObject, obj);
     }

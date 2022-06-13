@@ -18,14 +18,13 @@ package org.screamingsandals.lib.sidebar.team;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.packet.SClientboundSetPlayerTeamPacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sidebar.TeamedSidebar;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +36,7 @@ import java.util.stream.Collectors;
 public class ScoreboardTeamImpl implements ScoreboardTeam {
     protected final TeamedSidebar<?> scoreboard;
     protected final String identifier;
-    protected NamedTextColor color = NamedTextColor.WHITE;
+    protected SClientboundSetPlayerTeamPacket.TeamColor color = SClientboundSetPlayerTeamPacket.TeamColor.WHITE;
     protected Component displayName = Component.empty();
     protected Component teamPrefix = Component.empty();
     protected Component teamSuffix = Component.empty();
@@ -60,7 +59,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public ScoreboardTeam color(NamedTextColor color) {
+    public ScoreboardTeam color(SClientboundSetPlayerTeamPacket.TeamColor color) {
         this.color = color;
         updateInfo();
         return this;
@@ -139,7 +138,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public @NotNull Iterable<? extends Audience> audiences() {
+    public @NotNull Iterable<? extends PlayerAudience> audiences() {
         return players();
     }
 
@@ -179,7 +178,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
         if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.UPDATE);
             packInfo(packet);
-            scoreboard.viewers().forEach(packet::sendPacket);
+            packet.sendPacket(scoreboard.viewers());
         }
     }
 
@@ -187,7 +186,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
         if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.ADD_ENTITY);
             packPlayers(packet, List.of(player));
-            scoreboard.viewers().forEach(packet::sendPacket);
+            packet.sendPacket(scoreboard.viewers());
         }
     }
 
@@ -195,7 +194,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
         if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.REMOVE_ENTITY);
             packPlayers(packet, List.of(player));
-            scoreboard.viewers().forEach(packet::sendPacket);
+            packet.sendPacket(scoreboard.viewers());
         }
     }
 
@@ -203,7 +202,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     public void destroy() {
         if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = constructDestructPacket();
-            scoreboard.viewers().forEach(packet::sendPacket);
+            packet.sendPacket(scoreboard.viewers());
         }
     }
 }

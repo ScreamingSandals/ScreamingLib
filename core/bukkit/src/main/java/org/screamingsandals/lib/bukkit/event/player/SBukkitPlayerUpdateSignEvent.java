@@ -18,7 +18,6 @@ package org.screamingsandals.lib.bukkit.event.player;
 
 import lombok.*;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
 import org.bukkit.event.block.SignChangeEvent;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -27,7 +26,7 @@ import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerUpdateSignEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.spectator.Component;
 
 import java.util.Arrays;
 
@@ -64,7 +63,7 @@ public class SBukkitPlayerUpdateSignEvent implements SPlayerUpdateSignEvent, Buk
     // TODO: IMPLEMENT PLATFORM ADVENTURE
     @Override
     public Component[] lines() {
-        return Arrays.stream(event.getLines()).map(AdventureHelper::toComponent).toArray(Component[]::new);
+        return Arrays.stream(event.getLines()).map(Component::fromLegacy).toArray(Component[]::new);
     }
 
     @Override
@@ -74,6 +73,6 @@ public class SBukkitPlayerUpdateSignEvent implements SPlayerUpdateSignEvent, Buk
 
     @Override
     public void line(@Range(from = 0, to = 3) int index, Component component) {
-        event.setLine(index, AdventureHelper.toLegacy(component));
+        event.setLine(index, component.toLegacy());
     }
 }

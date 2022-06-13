@@ -16,12 +16,12 @@
 
 package org.screamingsandals.lib.signs;
 
-import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.SPlayerInteractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.event.player.SPlayerBlockBreakEvent;
 import org.screamingsandals.lib.event.player.SPlayerUpdateSignEvent;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;

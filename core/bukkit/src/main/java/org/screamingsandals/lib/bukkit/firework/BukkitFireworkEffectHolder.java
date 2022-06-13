@@ -16,8 +16,6 @@
 
 package org.screamingsandals.lib.bukkit.firework;
 
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.util.RGBLike;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
@@ -42,18 +40,18 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public List<RGBLike> colors() {
+    public List<org.screamingsandals.lib.spectator.Color> colors() {
         return wrappedObject.getColors()
                 .stream()
-                .map(color -> TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))
+                .map(color -> org.screamingsandals.lib.spectator.Color.rgb(color.getRed(), color.getGreen(), color.getBlue()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<RGBLike> fadeColors() {
+    public List<org.screamingsandals.lib.spectator.Color> fadeColors() {
         return wrappedObject.getFadeColors()
                 .stream()
-                .map(color -> TextColor.color(color.getRed(), color.getGreen(), color.getBlue()))
+                .map(color -> org.screamingsandals.lib.spectator.Color.rgb(color.getRed(), color.getGreen(), color.getBlue()))
                 .collect(Collectors.toList());
     }
 
@@ -68,7 +66,7 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public FireworkEffectHolder withColors(List<RGBLike> colors) {
+    public FireworkEffectHolder withColors(List<org.screamingsandals.lib.spectator.Color> colors) {
         /* Dear Bukkit API, I hate your inconsistency so much */
         return new BukkitFireworkEffectHolder(
                 FireworkEffect.builder()
@@ -82,7 +80,7 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public FireworkEffectHolder withFadeColors(List<RGBLike> fadeColors) {
+    public FireworkEffectHolder withFadeColors(List<org.screamingsandals.lib.spectator.Color> fadeColors) {
         /* Dear Bukkit API, I hate your inconsistency so much */
         return new BukkitFireworkEffectHolder(
                 FireworkEffect.builder()

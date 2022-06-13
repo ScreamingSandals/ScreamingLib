@@ -19,6 +19,7 @@ package org.screamingsandals.lib.proxy;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.permissions.Permission;
+import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
@@ -184,6 +185,15 @@ public abstract class ProxiedPlayerMapper {
     }
 
     public abstract Locale getLocale0(ProxiedSenderWrapper wrapper);
+
+    public static Adapter adapter(ProxiedSenderWrapper wrapper) {
+        if (proxiedPlayerMapper == null) {
+            throw new UnsupportedOperationException("ProxiedPlayerMapper isn't initialized yet.");
+        }
+        return proxiedPlayerMapper.adapter0(wrapper);
+    }
+
+    protected abstract Adapter adapter0(ProxiedSenderWrapper wrapper);
 
     public static boolean isInitialized() {
         return proxiedPlayerMapper != null;

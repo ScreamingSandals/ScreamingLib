@@ -17,11 +17,15 @@
 package org.screamingsandals.lib.proxy;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.spectator.audience.PlayerAudience;
+import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
+import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 
 import java.util.UUID;
 
 @Getter
-public class ProxiedPlayerWrapper extends ProxiedSenderWrapper {
+public class ProxiedPlayerWrapper extends ProxiedSenderWrapper implements PlayerAudience.ForwardingToAdapter {
     private final UUID uuid;
 
     public ProxiedPlayerWrapper(String name, UUID uuid) {
@@ -55,5 +59,11 @@ public class ProxiedPlayerWrapper extends ProxiedSenderWrapper {
     @Override
     public int hashCode() {
         return uuid.hashCode();
+    }
+
+    @Override
+    @NotNull
+    public PlayerAdapter adapter() {
+        return (PlayerAdapter) super.adapter();
     }
 }

@@ -19,14 +19,13 @@ package org.screamingsandals.lib.packet.entity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.sender.SenderMessage;
-import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 import java.util.*;
@@ -48,7 +47,7 @@ public class FakeEntity {
     @Getter
     @Setter
     @Nullable
-    private SenderMessage customNameSenderMessage;
+    private AudienceComponentLike customNameSenderMessage;
     @Setter
     private boolean isOnGround;
 
@@ -78,7 +77,7 @@ public class FakeEntity {
         if (Server.isVersion(1, 13)) {
             put(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), name));
         } else {
-            var str = AdventureHelper.toLegacy(name);
+            var str = name.toLegacy();
             if (str.length() > 256) {
                 str = str.substring(0, 256);
             }
@@ -158,7 +157,7 @@ public class FakeEntity {
             if (Server.isVersion(1, 13)) {
                 return getSpawnPackets(List.of(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), customNameSenderMessage.asComponent(viewer))));
             } else {
-                var str = AdventureHelper.toLegacy(customNameSenderMessage.asComponent(viewer));
+                var str = customNameSenderMessage.asComponent(viewer).toLegacy();
                 if (str.length() > 256) {
                     str = str.substring(0, 256);
                 }
@@ -202,7 +201,7 @@ public class FakeEntity {
             if (Server.isVersion(1, 13)) {
                 return getMetadataPacket(List.of(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), customNameSenderMessage.asComponent(viewer))));
             } else {
-                var str = AdventureHelper.toLegacy(customNameSenderMessage.asComponent(viewer));
+                var str = customNameSenderMessage.asComponent(viewer).toLegacy();
                 if (str.length() > 256) {
                     str = str.substring(0, 256);
                 }

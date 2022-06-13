@@ -16,8 +16,6 @@
 
 package org.screamingsandals.lib.event;
 
-import org.jetbrains.annotations.ApiStatus;
-
 public interface Cancellable {
     /**
      * Indicates if the event was cancelled
@@ -32,26 +30,4 @@ public interface Cancellable {
      * @param cancel to cancel
      */
     void cancelled(boolean cancel);
-
-    /**
-     * Indicates if the event was cancelled
-     *
-     * @return true if the event was cancelled
-     */
-    @ApiStatus.ScheduledForRemoval
-    @Deprecated(forRemoval = true)
-    default boolean isCancelled() {
-        return cancelled();
-    }
-
-    /**
-     * Sets new state
-     *
-     * @param cancel to cancel
-     */
-    @ApiStatus.ScheduledForRemoval
-    @Deprecated(forRemoval = true)
-    default void setCancelled(boolean cancel) {
-        cancelled(cancel);
-    }
 }

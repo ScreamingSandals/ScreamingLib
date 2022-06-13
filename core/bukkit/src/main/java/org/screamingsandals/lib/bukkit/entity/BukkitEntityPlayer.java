@@ -17,15 +17,13 @@
 package org.screamingsandals.lib.bukkit.entity;
 
 import com.viaversion.viaversion.api.Via;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
@@ -39,7 +37,10 @@ import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
-import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
@@ -107,13 +108,21 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     @Nullable
     public Component getPlayerListName() {
         var bukkitPlayer = (Player) wrappedObject;
-        return ComponentObjectLink.processGetter(bukkitPlayer, "playerListName", bukkitPlayer::getPlayerListName);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            return AdventureBackend.wrapComponent(bukkitPlayer.playerListName());
+        } else {
+            return Component.fromLegacy(bukkitPlayer.getPlayerListName());
+        }
     }
 
     public
     @Override void setPlayerListName(@Nullable Component component) {
         var bukkitPlayer = (Player) wrappedObject;
-        ComponentObjectLink.processSetter(bukkitPlayer, "playerListName", bukkitPlayer::setPlayerListName, component);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            bukkitPlayer.playerListName(component == null ? null : component.as(net.kyori.adventure.text.Component.class));
+        } else {
+            bukkitPlayer.setPlayerListName(component == null ? null : component.toLegacy());
+        }
     }
 
     @Override
@@ -125,13 +134,21 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     @NotNull
     public Component getDisplayName() {
         var bukkitPlayer = (Player) wrappedObject;
-        return ComponentObjectLink.processGetter(bukkitPlayer, "displayName", bukkitPlayer::getDisplayName);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            return AdventureBackend.wrapComponent(bukkitPlayer.displayName());
+        } else {
+            return Component.fromLegacy(bukkitPlayer.getDisplayName());
+        }
     }
 
     @Override
     public void setDisplayName(@Nullable Component component) {
         var bukkitPlayer = (Player) wrappedObject;
-        ComponentObjectLink.processSetter(bukkitPlayer, "displayName", bukkitPlayer::setDisplayName, component);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            bukkitPlayer.displayName(component == null ? null : component.as(net.kyori.adventure.text.Component.class));
+        } else {
+            bukkitPlayer.setDisplayName(component == null ? null : component.toLegacy());
+        }
     }
 
     @Override
@@ -196,7 +213,16 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     @Override
     public void kick(Component message) {
         var bukkitPlayer = ((Player) wrappedObject);
-        ComponentObjectLink.processSetter(bukkitPlayer, "kick", bukkitPlayer::kickPlayer, message);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            bukkitPlayer.kick(message == null ? null : message.as(net.kyori.adventure.text.Component.class));
+        } else {
+            bukkitPlayer.kickPlayer(message == null ? null : message.toLegacy());
+        }
+    }
+
+    @Override
+    public void kick(ComponentLike message) {
+        kick(message instanceof AudienceComponentLike ? ((AudienceComponentLike) message).asComponent(this) : message.asComponent());
     }
 
     @Override
@@ -329,12 +355,6 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
         return Server.getProtocolVersion();
     }
 
-    @Override
-    @NotNull
-    public Audience audience() {
-        return BukkitCore.audiences().player((Player) wrappedObject);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -345,5 +365,11 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
         } catch (UnsupportedOperationException ignored) {
             return PlayerMapper.UNSAFE_getPlayerConverter().convert(this, type);
         }
+    }
+
+    @Override
+    @NotNull
+    public PlayerAdapter adapter() {
+        return BukkitCore.getSpectatorBackend().adapter(this, wrappedObject);
     }
 }

@@ -20,6 +20,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.BlockProjectileSource;
 import org.bukkit.projectiles.ProjectileSource;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.EntityProjectile;
@@ -31,6 +32,7 @@ public class BukkitEntityProjectile extends BukkitEntityBasic implements EntityP
     }
 
     @Override
+    @Nullable
     public ProjectileShooter getShooter() {
         var source = ((Projectile) wrappedObject).getShooter();
         if (source instanceof Entity) {
@@ -42,8 +44,8 @@ public class BukkitEntityProjectile extends BukkitEntityBasic implements EntityP
     }
 
     @Override
-    public void setShooter(ProjectileShooter shooter) {
-        ((Projectile) wrappedObject).setShooter(shooter.as(ProjectileSource.class));
+    public void setShooter(@Nullable ProjectileShooter shooter) {
+        ((Projectile) wrappedObject).setShooter(shooter != null ? shooter.as(ProjectileSource.class) : null);
     }
 
     @Override

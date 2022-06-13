@@ -16,17 +16,15 @@
 
 package org.screamingsandals.lib.bukkit.container;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.PlayerInventory;
+import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
-import org.screamingsandals.lib.utils.AdventureHelper;
-import org.screamingsandals.lib.utils.adventure.AdventureUtils;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.Optional;
@@ -54,14 +52,11 @@ public class BukkitContainerFactory extends ContainerFactory {
 
     @Override
     public <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type, Component name) {
-        var container = AdventureUtils
-                .get(Bukkit.getServer(), "createInventory", InventoryHolder.class, InventoryType.class, Component.class)
-                .ifPresentOrElseGet(classMethod ->
-                                classMethod
-                                        .invokeInstanceResulted(Bukkit.getServer(), null, type.as(InventoryType.class), name)
-                                        .as(Inventory.class),
-                        () -> Bukkit.createInventory(null, type.as(InventoryType.class), AdventureHelper.toLegacy(name)));
-        return wrapContainer0(container);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            return wrapContainer0(Bukkit.createInventory(null, type.as(InventoryType.class), name.as(net.kyori.adventure.text.Component.class)));
+        } else {
+            return wrapContainer0(Bukkit.createInventory(null, type.as(InventoryType.class), name.toLegacy()));
+        }
     }
 
     @Override
@@ -71,13 +66,10 @@ public class BukkitContainerFactory extends ContainerFactory {
 
     @Override
     public <C extends Container> Optional<C> createContainer0(int size, Component name) {
-        var container = AdventureUtils
-                .get(Bukkit.getServer(), "createInventory", InventoryHolder.class, int.class, Component.class)
-                .ifPresentOrElseGet(classMethod ->
-                                classMethod
-                                        .invokeInstanceResulted(Bukkit.getServer(), null, size, name)
-                                        .as(Inventory.class),
-                        () -> Bukkit.createInventory(null, size, AdventureHelper.toLegacy(name)));
-        return wrapContainer0(container);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            return wrapContainer0(Bukkit.createInventory(null, size, name.as(net.kyori.adventure.text.Component.class)));
+        } else {
+            return wrapContainer0(Bukkit.createInventory(null, size, name.toLegacy()));
+        }
     }
 }

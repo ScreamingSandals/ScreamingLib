@@ -16,11 +16,11 @@
 
 package org.screamingsandals.lib.npc;
 
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.npc.skin.NPCSkin;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.visuals.TouchableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -122,6 +122,14 @@ public interface NPC extends TouchableVisual<NPC> {
      * @return the hologram
      */
     Hologram hologram();
+
+    /**
+     * Determines the level of elevation of the hologram that displays the name-tag of the NPC above its head.
+     *
+     * @param hologramElevation amount of elevation in block size approximation, example 1 -> height of 1 block
+     * @return the hologram
+     */
+    NPC hologramElevation(double hologramElevation);
 
     SClientboundSetPlayerTeamPacket.CollisionRule collisionRule();
 

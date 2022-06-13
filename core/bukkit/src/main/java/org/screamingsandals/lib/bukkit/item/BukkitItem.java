@@ -16,12 +16,12 @@
 
 package org.screamingsandals.lib.bukkit.item;
 
-import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.ItemAttributeHolder;
 import org.screamingsandals.lib.bukkit.BukkitCore;
@@ -40,11 +40,8 @@ import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataKey;
 import org.screamingsandals.lib.nms.accessors.CompoundTagAccessor;
-import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.adventure.AdventureUtils;
-import org.screamingsandals.lib.utils.adventure.ComponentObjectLink;
-import org.screamingsandals.lib.utils.adventure.ComponentUtils;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.*;
@@ -69,7 +66,11 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     public @Nullable Component getDisplayName() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null && meta.hasDisplayName()) {
-            return ComponentObjectLink.processGetter(meta, "displayName", meta::getDisplayName);
+            if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+                return AdventureBackend.wrapComponent(meta.displayName());
+            } else {
+                return Component.fromLegacy(meta.getDisplayName());
+            }
         }
         return null;
     }
@@ -79,21 +80,17 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     public List<Component> getLore() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null && meta.hasLore()) {
-            var list = new ArrayList<Component>();
-            AdventureUtils
-                    .get(meta, "lore")
-                    .ifPresentOrElse(classMethod ->
-                                    classMethod.invokeInstanceResulted(meta)
-                                            .as(List.class)
-                                            .stream()
-                                            .map(ComponentUtils::componentFromPlatform)
-                                            .forEach(o -> list.add((Component) o)),
-                            () -> Objects.requireNonNull(meta.getLore())
-                                    .stream()
-                                    .map(AdventureHelper::toComponent)
-                                    .forEach(list::add)
-                    );
-            return List.copyOf(list); // immutable
+            if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+                return Objects.requireNonNullElseGet(meta.lore(), List::<net.kyori.adventure.text.Component>of)
+                        .stream()
+                        .map(AdventureBackend::wrapComponent)
+                        .collect(Collectors.toUnmodifiableList());
+            } else {
+                return Objects.requireNonNullElseGet(meta.getLore(), List::<String>of)
+                        .stream()
+                        .map(Component::fromLegacy)
+                        .collect(Collectors.toUnmodifiableList());
+            }
         }
         return List.of();
     }

@@ -19,8 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.screamingsandals.lib.spectator.Component;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -40,7 +39,7 @@ public class SClientboundSetObjectivePacket extends AbstractPacket {
             if (writer.protocol() >= 390) {
                 writer.writeComponent(title);
             } else {
-                writer.writeSizedString(LegacyComponentSerializer.legacySection().serialize(title));
+                writer.writeSizedString(title.toLegacy());
             }
             if (writer.protocol() >= 349) {
                 writer.writeVarInt(criteriaType.ordinal());

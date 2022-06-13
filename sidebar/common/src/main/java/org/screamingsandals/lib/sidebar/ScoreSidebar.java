@@ -16,7 +16,7 @@
 
 package org.screamingsandals.lib.sidebar;
 
-import net.kyori.adventure.text.Component;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.visuals.DatableVisual;
 
 public interface ScoreSidebar extends DatableVisual<ScoreSidebar>, TeamedSidebar<ScoreSidebar> {

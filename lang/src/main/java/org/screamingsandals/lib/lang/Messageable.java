@@ -16,8 +16,8 @@
 
 package org.screamingsandals.lib.lang;
 
-import net.kyori.adventure.text.Component;
 import org.screamingsandals.lib.lang.container.TranslationContainer;
+import org.screamingsandals.lib.spectator.Component;
 
 import java.util.List;
 

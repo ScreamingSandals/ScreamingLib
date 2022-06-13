@@ -16,14 +16,11 @@
 
 package org.screamingsandals.lib.world;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
-import net.kyori.adventure.audience.ForwardingAudience;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.utils.Preconditions;
+import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -42,7 +39,7 @@ import java.util.stream.Collectors;
 /**
  * An interface representing a world.
  */
-public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, ForwardingAudience {
+public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, PlayerAudience.ForwardingToMulti {
     /**
      * Creates a new {@link WorldBuilder}.
      *
@@ -212,30 +209,4 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Forw
      * @return the highest non-empty Y coordinate
      */
     int getHighestYAt(int x, int z);
-
-    /**
-     * A gson {@link TypeAdapter} for serializing and deserializing a world holder.
-     */
-    @Deprecated(forRemoval = true)
-    class WorldHolderTypeAdapter extends TypeAdapter<WorldHolder> {
-        @Override
-        public void write(JsonWriter out, WorldHolder value) throws IOException {
-            out.beginObject();
-            out.name("uuid");
-            out.value(value.getUuid().toString());
-            out.endObject();
-        }
-
-        @Override
-        public WorldHolder read(JsonReader in) throws IOException {
-            in.beginObject();
-            final var name = in.nextName();
-            if (name.equals("uuid")) {
-                final var toReturn = WorldMapper.getWorld(UUID.fromString(in.nextString())).orElseThrow();
-                in.endObject();
-                return toReturn;
-            }
-            throw new IOException("Name is not 'uuid'");
-        }
-    }
 }

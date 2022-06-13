@@ -17,20 +17,20 @@
 package org.screamingsandals.lib.lang;
 
 import lombok.Data;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
-import net.kyori.adventure.text.JoinConfiguration;
-import net.kyori.adventure.text.minimessage.Template;
-import net.kyori.adventure.text.minimessage.template.TemplateResolver;
-import net.kyori.adventure.title.Title;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.placeholders.PlaceholderManager;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
+import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.sender.TitleableSenderMessage;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.audience.PlayerAudience;
+import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
+import org.screamingsandals.lib.spectator.title.TimesProvider;
+import org.screamingsandals.lib.spectator.title.Title;
 import org.screamingsandals.lib.tasker.Tasker;
-import org.screamingsandals.lib.utils.AdventureHelper;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -48,13 +48,13 @@ public class Message implements TitleableSenderMessage, Cloneable {
     private static final Pattern EARLY_MINI_MESSAGE_PLACEHOLDERS = Pattern.compile("[<]([^>]+)[>]");
 
     private final List<Messageable> translations = new LinkedList<>();
-    private final Map<String, Function<CommandSenderWrapper, Component>> placeholders = new HashMap<>();
+    private final Map<String, Function<CommandSenderWrapper, Component>> placeholders = new HashMap<>(); // TODO: use spectator's placeholders
     private final Map<String, String> earlyPlaceholders = new HashMap<>();
     private final LangService langService;
     @NotNull
     private Component prefix;
     @Nullable
-    private Title.Times times;
+    private TimesProvider times;
     private PrefixPolicy prefixPolicy = PrefixPolicy.ALL_MESSAGES;
     private PrefixResolving prefixResolving = PrefixResolving.DEFAULT;
 
@@ -391,6 +391,274 @@ public class Message implements TitleableSenderMessage, Cloneable {
      */
     public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull Supplier<List<String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message)), service, prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull String message) {
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull String... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), Lang.getDefaultService(), Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix  custom prefix to use
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull String message) {
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix  custom prefix to use
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull ComponentLike prefix, @NotNull String message) {
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull String... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), Lang.getDefaultService(), prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(ComponentLike prefix, String... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), Lang.getDefaultService(), prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull ComponentLike prefix, @NotNull List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull String message) {
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), service, Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull String... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), service, Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), service, Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull String message) {
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), service, prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param message input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull String message) {
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), service, prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull String... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), service, prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull String... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), service, prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), service, prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service  custom {@link LangService} to use.
+     * @param prefix   custom prefix to use
+     * @param messages input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull List<String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), service, prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix  custom prefix to use
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param prefix  custom prefix to use
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull ComponentLike prefix, @NotNull Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix.asComponent());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), service, Component.empty());
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), service, prefix);
+    }
+
+    /**
+     * Creates new {@link Message} from a text using MiniMessage format.
+     *
+     * @param service custom {@link LangService} to use.
+     * @param prefix  custom prefix to use
+     * @param message supplier of input text
+     * @return new message.
+     */
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull Supplier<List<String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), service, prefix.asComponent());
     }
 
     /**
@@ -826,7 +1094,12 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @return this message
      */
     public @NotNull Message placeholder(@NotNull String placeholder, @NotNull ComponentLike component) {
-        return placeholder(placeholder, component.asComponent());
+        return placeholder(placeholder, sender -> {
+            if (component instanceof SenderMessage) {
+                return ((SenderMessage) component).asComponent(sender);
+            }
+            return component.asComponent();
+        });
     }
 
     /**
@@ -878,6 +1151,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       Component which will replace the placeholder
      * @return self
      */
+    @Deprecated
     public @NotNull Message earlyPlaceholder(@NotNull String placeholder, @NotNull Component value) {
         earlyPlaceholders.put(placeholder, Lang.MINIMESSAGE.serialize(value));
         return this;
@@ -892,6 +1166,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       String which will replace the placeholder. It must be in MiniMessage format
      * @return self
      */
+    @Deprecated
     public @NotNull Message earlyPlaceholder(@NotNull String placeholder, @NotNull String value) {
         earlyPlaceholders.put(placeholder, value);
         return this;
@@ -1059,6 +1334,17 @@ public class Message implements TitleableSenderMessage, Cloneable {
     /**
      * Joins given plain text into this message.
      *
+     * @param messages message to join
+     * @return self
+     */
+    public @NotNull Message joinPlainText(String... messages) {
+        this.translations.add(StringMessageable.of(messages));
+        return this;
+    }
+
+    /**
+     * Joins given plain text into this message.
+     *
      * @param messages messages to join
      * @return self
      */
@@ -1075,6 +1361,50 @@ public class Message implements TitleableSenderMessage, Cloneable {
      */
     public @NotNull Message joinPlainText(Supplier<List<String>> messages) {
         this.translations.add(SupplierStringMessageable.of(messages));
+        return this;
+    }
+
+    /**
+     * Joins given MiniMessage-formated text into this message.
+     *
+     * @param message message to join
+     * @return self
+     */
+    public @NotNull Message joinRichText(String message) {
+        this.translations.add(StringMessageable.of(message, Messageable.Type.ADVENTURE));
+        return this;
+    }
+
+    /**
+     * Joins given MiniMessage-formated text into this message.
+     *
+     * @param messages message to join
+     * @return self
+     */
+    public @NotNull Message joinRichText(String... messages) {
+        this.translations.add(StringMessageable.of(Messageable.Type.ADVENTURE, messages));
+        return this;
+    }
+
+    /**
+     * Joins given MiniMessage-formated text into this message.
+     *
+     * @param messages messages to join
+     * @return self
+     */
+    public @NotNull Message joinRichText(List<String> messages) {
+        this.translations.add(StringMessageable.of(messages, Messageable.Type.ADVENTURE));
+        return this;
+    }
+
+    /**
+     * Joins given MiniMessage-formated text into this message.
+     *
+     * @param messages messages to join
+     * @return self
+     */
+    public @NotNull Message joinRichText(Supplier<List<String>> messages) {
+        this.translations.add(SupplierStringMessageable.of(messages, Messageable.Type.ADVENTURE));
         return this;
     }
 
@@ -1102,12 +1432,12 @@ public class Message implements TitleableSenderMessage, Cloneable {
     }
 
     /**
-     * Sets the {@link Title.Times} for this message.
+     * Sets the {@link TimesProvider} for this message.
      *
      * @param times times to set
      * @return self
      */
-    public @NotNull Message times(Title.Times times) {
+    public @NotNull Message times(TimesProvider times) {
         this.times = times;
         return this;
     }
@@ -1149,7 +1479,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
                                         );
 
                                         if (translation.getType() == Messageable.Type.ADVENTURE) {
-                                            output.append(Lang.MINIMESSAGE.serialize(AdventureHelper.toComponent(result)));
+                                            output.append(Lang.MINIMESSAGE.serialize(Component.fromLegacy(result)));
                                         } else {
                                             output.append(result);
                                         }
@@ -1183,14 +1513,14 @@ public class Message implements TitleableSenderMessage, Cloneable {
                                         s = output.toString();
                                     }
 
-                                    final var resolvedTemplates = TemplateResolver
-                                            .templates(placeholders
+                                    @SuppressWarnings("PatternValidation")
+                                    final var resolvedTemplates = placeholders
                                                     .entrySet()
                                                     .stream()
-                                                    .map(entry -> Template.template(entry.getKey(), entry.getValue().apply(sender)))
-                                                    .collect(Collectors.toList()));
+                                                    .map(entry -> Placeholder.component(entry.getKey(), entry.getValue().apply(sender)))
+                                                    .toArray(Placeholder[]::new);
 
-                                    return Lang.MINIMESSAGE.deserialize(s, resolvedTemplates);
+                                    return Lang.MINIMESSAGE.parse(s, resolvedTemplates);
                                 } else {
                                     // Black magic again
                                     // SKIP THIS.
@@ -1201,7 +1531,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
                                     while (matcher.find()) {
                                         output.append(s, lastIndex, matcher.start());
                                         if (placeholders.containsKey(matcher.group(1))) {
-                                            output.append(AdventureHelper.toLegacy(placeholders.get(matcher.group(1)).apply(sender)));
+                                            output.append(placeholders.get(matcher.group(1)).apply(sender).toLegacy());
                                         } else {
                                             output.append("%").append(matcher.group(1)).append("%");
                                         }
@@ -1211,7 +1541,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
                                     if (lastIndex < s.length()) {
                                         output.append(s, lastIndex, s.length());
                                     }
-                                    return AdventureHelper.toComponent(output.toString());
+                                    return Component.fromLegacy(output.toString());
                                 }
                             })
                             .map(component -> {
@@ -1245,7 +1575,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @return component
      */
     public @NotNull Component getForJoined(CommandSenderWrapper sender) {
-        return Component.join(JoinConfiguration.separator(Component.newline()), getFor(sender));
+        return Component.join(Component.newLine(), getFor(sender));
     }
 
     /**
@@ -1266,11 +1596,13 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @return component
      */
     public Component getForAnyoneJoined() {
-        return Component.join(JoinConfiguration.separator(Component.newline()), getForAnyone());
+        return Component.join(Component.newLine(), getForAnyone());
     }
 
     public <W extends CommandSenderWrapper> Message title(W sender) {
-        sender.showTitle(asTitle(sender));
+        if (sender instanceof PlayerAudience) {
+            ((PlayerAudience) sender).showTitle(asTitle(sender));
+        }
         return this;
     }
 
@@ -1288,7 +1620,11 @@ public class Message implements TitleableSenderMessage, Cloneable {
 
     public <W extends CommandSenderWrapper> Tasker.TaskBuilder titleTask(W sender) {
         return Tasker
-                .build(() -> sender.showTitle(asTitle(sender)));
+                .build(() -> {
+                    if (sender instanceof PlayerAudience) {
+                        ((PlayerAudience) sender).showTitle(asTitle(sender));
+                    }
+                });
     }
 
     public <W extends CommandSenderWrapper> Tasker.TaskBuilder titleTask(W... senders) {
@@ -1473,7 +1809,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
 
     @Override
     @NotNull
-    public Title asTitle(@Nullable CommandSenderWrapper sender, @Nullable Title.Times times) {
+    public Title asTitle(@Nullable CommandSenderWrapper sender, @Nullable TimesProvider times) {
         var messages = getFor(sender);
         return Title.title(messages.size() >= 1 ? messages.get(0) : Component.empty(), messages.size() >= 2 ? messages.get(1) : Component.empty(), times);
     }
@@ -1486,7 +1822,7 @@ public class Message implements TitleableSenderMessage, Cloneable {
 
     @Override
     @NotNull
-    public Title asTitle(@Nullable Title.Times times) {
+    public Title asTitle(@Nullable TimesProvider times) {
         return asTitle(null, times);
     }
 

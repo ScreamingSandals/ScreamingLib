@@ -16,10 +16,10 @@
 
 package org.screamingsandals.lib.container.type;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;

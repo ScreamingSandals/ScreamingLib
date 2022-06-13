@@ -17,7 +17,6 @@
 package org.screamingsandals.lib.item;
 
 import com.iamceph.resulter.core.pack.ProtoWrapper;
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +26,7 @@ import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.metadata.MetadataProvider;
 import org.screamingsandals.lib.particle.ParticleData;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
@@ -177,13 +177,13 @@ public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, C
 
         final var displayName = getDisplayName();
         if (displayName != null) {
-            builder.setDisplayName(AdventureHelper.toJson(displayName));
+            builder.setDisplayName(displayName.toJavaJson());
         }
 
         final var lore = getLore();
         if (lore != null) {
             builder.addAllLore(lore.stream()
-                    .map(AdventureHelper::toJson)
+                    .map(Component::toJavaJson)
                     .collect(Collectors.toList()));
         }
 

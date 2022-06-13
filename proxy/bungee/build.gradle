@@ -1,3 +1,5 @@
 dependencies {
     compileOnly waterfall(WATERFALL_VERSION)
+
+    api project(':spectator-bungee')
 }
