@@ -114,7 +114,7 @@ public class BukkitPacketMapper extends PacketMapper {
         }
     }
 
-    public Channel getChannel(PlayerWrapper player) {
+    public static Channel getChannel(PlayerWrapper player) {
         return (Channel) Reflect.getFieldResulted(ClassStorage.getHandle(player.raw()), ServerPlayerAccessor.getFieldConnection())
                 .getFieldResulted(ServerGamePacketListenerImplAccessor.getFieldConnection())
                 .getFieldResulted(ConnectionAccessor.getFieldChannel())

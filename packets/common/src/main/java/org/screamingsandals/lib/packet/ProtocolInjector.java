@@ -16,10 +16,12 @@
 
 package org.screamingsandals.lib.packet;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.EventPriority;
@@ -37,6 +39,8 @@ import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 
+import java.lang.reflect.Method;
+
 @Service(dependsOn = {
         EventManager.class
 })
@@ -46,6 +50,17 @@ import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 })
 public class ProtocolInjector {
     private static final String CHANNEL_NAME = "SPacketHandler";
+
+    // TODO: remove this when packets module is rearranged
+    private static final Method GET_CHANNEL_METHOD;
+    static {
+        try {
+            GET_CHANNEL_METHOD = Class.forName("org.screamingsandals.lib.bukkit.packet.BukkitPacketMapper")
+                    .getDeclaredMethod("getChannel", PlayerWrapper.class);
+        } catch (NoSuchMethodException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @OnPostEnable
     public void onPostEnable() {
@@ -62,7 +77,7 @@ public class ProtocolInjector {
 
     public void addPlayer(PlayerWrapper player, boolean onLogin) {
         try {
-            final var channel = player.getChannel();
+            final var channel = getChannel(player);
             Preconditions.checkNotNull(channel, "Failed to find player channel!");
 
             final var handler = new PacketHandler(player);
@@ -82,13 +97,19 @@ public class ProtocolInjector {
 
     public void removePlayer(PlayerWrapper player) {
         try {
-            final var channel = player.getChannel();
+            final var channel = getChannel(player);
             if (channel != null && channel.pipeline().get(CHANNEL_NAME) != null) {
                 channel.eventLoop()
                         .submit(() -> channel.pipeline().remove(CHANNEL_NAME));
             }
         } catch (Throwable ignored) {
         }
+    }
+
+    // TODO: remove this when packets module is rearranged
+    @SneakyThrows
+    private Channel getChannel(PlayerWrapper player) {
+        return (Channel) GET_CHANNEL_METHOD.invoke(null, player);
     }
 
     @RequiredArgsConstructor

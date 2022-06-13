@@ -74,6 +74,7 @@ subprojects {
 
     repositories {
         minecraftLibraries()
+        paper()
         sponge()
         velocity()
         placeholderApi()

@@ -16,18 +16,18 @@
 
 package org.screamingsandals.lib.minestom.entity;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.util.RGBLike;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.fluid.Fluid;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
-import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.spectator.Color;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
@@ -69,12 +69,12 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
 
     @Override
     public double getHeight() {
-        return wrappedObject.getBoundingBox().getHeight();
+        return wrappedObject.getBoundingBox().height();
     }
 
     @Override
     public double getWidth() {
-        return wrappedObject.getBoundingBox().getWidth();
+        return wrappedObject.getBoundingBox().width();
     }
 
     @Override
@@ -225,17 +225,17 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
 
     @Override
     public void setCustomName(String name) {
-        wrappedObject.setCustomName(AdventureHelper.toComponent(name));
+        wrappedObject.setCustomName(AdventureBackend.getLegacyComponentSerializer().deserialize(name));
     }
 
     @Override
     public void setCustomName(Component name) {
-        wrappedObject.setCustomName(name);
+        wrappedObject.setCustomName(name.as(net.kyori.adventure.text.Component.class));
     }
 
     @Override
     public @Nullable Component getCustomName() {
-        return wrappedObject.getCustomName();
+        return AdventureBackend.wrapComponent(wrappedObject.getCustomName());
     }
 
     @Override
@@ -344,7 +344,7 @@ public class MinestomEntityBasic extends BasicWrapper<Entity> implements EntityB
     }
 
     @Override
-    public RGBLike getColorMetadata(String metadata) {
+    public Color getColorMetadata(String metadata) {
         return null;
     }
 

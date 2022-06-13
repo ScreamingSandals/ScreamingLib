@@ -16,9 +16,6 @@
 
 package org.screamingsandals.lib.minestom.entity;
 
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
@@ -33,7 +30,9 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
-import org.screamingsandals.lib.utils.AdventureHelper;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.audience.Audience;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
 
@@ -251,11 +250,6 @@ public class MinestomEntityPlayer extends MinestomEntityHuman implements PlayerW
     @Override
     public void setSpectatorTarget(@Nullable EntityBasic entity) {
 
-    }
-
-    @Override
-    public @NotNull Audience audience() {
-        return wrappedObject.getViewersAsAudience();
     }
 
     @Override

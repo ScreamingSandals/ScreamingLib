@@ -16,12 +16,11 @@
 
 package org.screamingsandals.lib.minestom.tasker;
 
-import com.google.common.base.Preconditions;
+import org.screamingsandals.lib.utils.Preconditions;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.extensions.Extension;
 import net.minestom.server.timer.SchedulerManager;
 import net.minestom.server.timer.Task;
-import net.minestom.server.timer.TaskStatus;
 import net.minestom.server.utils.time.TimeUnit;
 import org.screamingsandals.lib.tasker.TaskBuilderImpl;
 import org.screamingsandals.lib.tasker.Tasker;
@@ -62,7 +61,7 @@ public class MinestomTaskInitializer extends AbstractTaskInitializer {
             return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(runnable).schedule(), builder.getStopEvent());
         }
 
-        final var timeUnit = Preconditions.checkNotNull(builder.getTimeUnit(), "TimeUnit cannot be null!");
+        final TaskerTime timeUnit = Preconditions.checkNotNull(builder.getTimeUnit(), "TimeUnit cannot be null!");
         if (builder.getDelay() > 0 && builder.getRepeat() <= 0) {
             return AbstractTaskerTask.of(builder.getTaskId(), scheduler.buildTask(runnable)
                     .delay(builder.getDelay(), convert(timeUnit))
@@ -82,7 +81,7 @@ public class MinestomTaskInitializer extends AbstractTaskInitializer {
     @Override
     public TaskState getState(TaskerTask taskerTask) {
         final Task task = taskerTask.getTaskObject();
-        return convert(task.getStatus());
+        return convert(task);
     }
 
     @Override
@@ -104,16 +103,13 @@ public class MinestomTaskInitializer extends AbstractTaskInitializer {
         }
     }
 
-    private TaskState convert(TaskStatus status) {
-        switch (status) {
-            case FINISHED:
-                return TaskState.FINISHED;
-            case CANCELLED:
-                return TaskState.CANCELLED;
-            case SCHEDULED:
-                return TaskState.SCHEDULED;
-            default:
-                return TaskState.RUNNING;
+    private TaskState convert(Task task) {
+        if (task.isAlive()) {
+            return TaskState.RUNNING;
         }
+        if (task.isParked()) {
+            return TaskState.SCHEDULED;
+        }
+        return TaskState.FINISHED;
     }
 }
