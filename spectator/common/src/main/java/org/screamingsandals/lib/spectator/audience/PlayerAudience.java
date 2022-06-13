@@ -146,52 +146,52 @@ public interface PlayerAudience extends Audience {
 
         @Override
         default void sendActionBar(@NotNull ComponentLike message) {
-            audiences().forEach(audience -> sendActionBar(message));
+            audiences().forEach(audience -> audience.sendActionBar(message));
         }
 
         @Override
         default void sendPlayerListHeaderFooter(@NotNull ComponentLike header, @NotNull ComponentLike footer) {
-            audiences().forEach(audience -> sendPlayerListHeaderFooter(header, footer));
+            audiences().forEach(audience -> audience.sendPlayerListHeaderFooter(header, footer));
         }
 
         @Override
         default void showTitle(@NotNull Title title) {
-            audiences().forEach(audience -> showTitle(title));
+            audiences().forEach(audience -> audience.showTitle(title));
         }
 
         @Override
         default void clearTitle() {
-            audiences().forEach(audience -> clearTitle());
+            audiences().forEach(PlayerAudience::clearTitle);
         }
 
         @Override
         default void showBossBar(@NotNull BossBar bossBar) {
-            audiences().forEach(audience -> showBossBar(bossBar));
+            audiences().forEach(audience -> audience.showBossBar(bossBar));
         }
 
         @Override
         default void hideBossBar(@NotNull BossBar bossBar) {
-            audiences().forEach(audience -> hideBossBar(bossBar));
+            audiences().forEach(audience -> audience.hideBossBar(bossBar));
         }
 
         @Override
         default void playSound(@NotNull SoundStart sound) {
-            audiences().forEach(audience -> playSound(sound));
+            audiences().forEach(audience -> audience.playSound(sound));
         }
 
         @Override
         default void playSound(@NotNull SoundStart sound, double x, double y, double z) {
-            audiences().forEach(audience -> playSound(sound, x, y, z));
+            audiences().forEach(audience -> audience.playSound(sound, x, y, z));
         }
 
         @Override
         default void stopSound(@NotNull SoundStop sound) {
-            audiences().forEach(audience -> stopSound(sound));
+            audiences().forEach(audience -> audience.stopSound(sound));
         }
 
         @Override
         default void openBook(@NotNull Book book) {
-            audiences().forEach(audience -> openBook(book));
+            audiences().forEach(audience -> audience.openBook(book));
         }
     }
 

@@ -69,7 +69,7 @@ public interface Audience {
         Iterable<? extends Audience> audiences();
 
         default void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType) {
-            audiences().forEach(audience -> sendMessage(source, message, messageType));
+            audiences().forEach(audience -> audience.sendMessage(source, message, messageType));
         }
     }
 
