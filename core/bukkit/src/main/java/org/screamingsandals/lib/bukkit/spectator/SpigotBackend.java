@@ -258,6 +258,24 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
+    public Component newLine() {
+        if (adventureBackend != null) {
+            return adventureBackend.newLine();
+        }
+
+        return super.newLine();
+    }
+
+    @Override
+    public Component space() {
+        if (adventureBackend != null) {
+            return adventureBackend.space();
+        }
+
+        return super.space();
+    }
+
+    @Override
     public BlockNBTComponent.Builder blockNBT() {
         if (adventureBackend != null) {
             return adventureBackend.blockNBT();
@@ -357,6 +375,15 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
+    public Color nearestNamedTo(Color color) {
+        if (adventureBackend != null) {
+            return adventureBackend.nearestNamedTo(color);
+        }
+
+        return super.nearestNamedTo(color);
+    }
+
+    @Override
     public ClickEvent.Builder clickEvent() {
         if (adventureBackend != null) {
             return adventureBackend.clickEvent();
@@ -399,6 +426,24 @@ public class SpigotBackend extends AbstractBungeeBackend {
         }
 
         return super.fromLegacy(legacy);
+    }
+
+    @Override
+    public Component fromLegacy(String legacy, char colorChar) {
+        if (adventureBackend != null) {
+            return adventureBackend.fromLegacy(legacy, colorChar);
+        }
+
+        return super.fromLegacy(legacy, colorChar);
+    }
+
+    @Override
+    public Component fromJson(String json) {
+        if (adventureBackend != null) {
+            return adventureBackend.fromJson(json);
+        }
+
+        return super.fromJson(json);
     }
 
     @SuppressWarnings("unchecked")
