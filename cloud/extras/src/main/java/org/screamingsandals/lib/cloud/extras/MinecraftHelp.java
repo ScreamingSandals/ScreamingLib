@@ -48,7 +48,7 @@ import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.CommandArgument;
 
 import java.util.*;
-import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -56,8 +56,11 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.Audience;
 
 import static org.screamingsandals.lib.spectator.Component.text;
@@ -103,12 +106,10 @@ public final class MinecraftHelp<C> {
     private final AudienceProvider<C> audienceProvider;
     private final CommandManager<C> commandManager;
     private final String commandPrefix;
-    private final Map<String, String> messageMap = new HashMap<>();
+    private final Map<String, ComponentLike> messageMap = new HashMap<>();
 
-    private Predicate<Command<C>> commandFilter = c -> true;
-    private BiFunction<C, String, String> stringMessageProvider = (sender, key) -> this.messageMap.get(key);
-    private MessageProvider<C> messageProvider =
-            (sender, key, args) -> text(this.stringMessageProvider.apply(sender, key));
+    private BiPredicate<Command<C>, C> commandFilter = (c, s) -> true;
+    private MessageProvider<C> messageProvider = basicMessageProvider(this);
     private Function<String, Component> descriptionDecorator = Component::text;
     private HelpColors colors = DEFAULT_HELP_COLORS;
     private int headerFooterLength = DEFAULT_HEADER_FOOTER_LENGTH;
@@ -134,6 +135,20 @@ public final class MinecraftHelp<C> {
         );
     }
 
+    public static <C extends CommandSenderWrapper> MessageProvider<C> commandSenderWrapperMessageProvider(MinecraftHelp<C> minecraftHelp) {
+        return (sender, key, args) -> {
+            var cl = minecraftHelp.messageMap.get(key);
+            if (cl instanceof SenderMessage) {
+                return ((SenderMessage) cl).asComponent(sender);
+            }
+            return cl.asComponent();
+        };
+    }
+
+    public static <C> MessageProvider<C> basicMessageProvider(MinecraftHelp<C> minecraftHelp) {
+        return (sender, key, args) -> minecraftHelp.messageMap.get(key).asComponent();
+    }
+
     /**
      * Construct a new Minecraft help instance.
      *
@@ -151,19 +166,19 @@ public final class MinecraftHelp<C> {
         this.commandManager = commandManager;
 
         /* Default Messages */
-        this.messageMap.put(MESSAGE_HELP_TITLE, "Help");
-        this.messageMap.put(MESSAGE_COMMAND, "Command");
-        this.messageMap.put(MESSAGE_DESCRIPTION, "Description");
-        this.messageMap.put(MESSAGE_NO_DESCRIPTION, "No description");
-        this.messageMap.put(MESSAGE_ARGUMENTS, "Arguments");
-        this.messageMap.put(MESSAGE_OPTIONAL, "Optional");
-        this.messageMap.put(MESSAGE_SHOWING_RESULTS_FOR_QUERY, "Showing search results for query");
-        this.messageMap.put(MESSAGE_NO_RESULTS_FOR_QUERY, "No results for query");
-        this.messageMap.put(MESSAGE_AVAILABLE_COMMANDS, "Available Commands");
-        this.messageMap.put(MESSAGE_CLICK_TO_SHOW_HELP, "Click to show help for this command");
-        this.messageMap.put(MESSAGE_PAGE_OUT_OF_RANGE, "Error: Page <page> is not in range. Must be in range [1, <max_pages>]");
-        this.messageMap.put(MESSAGE_CLICK_FOR_NEXT_PAGE, "Click for next page");
-        this.messageMap.put(MESSAGE_CLICK_FOR_PREVIOUS_PAGE, "Click for previous page");
+        setMessage(MESSAGE_HELP_TITLE, "Help");
+        setMessage(MESSAGE_COMMAND, "Command");
+        setMessage(MESSAGE_DESCRIPTION, "Description");
+        setMessage(MESSAGE_NO_DESCRIPTION, "No description");
+        setMessage(MESSAGE_ARGUMENTS, "Arguments");
+        setMessage(MESSAGE_OPTIONAL, "Optional");
+        setMessage(MESSAGE_SHOWING_RESULTS_FOR_QUERY, "Showing search results for query");
+        setMessage(MESSAGE_NO_RESULTS_FOR_QUERY, "No results for query");
+        setMessage(MESSAGE_AVAILABLE_COMMANDS, "Available Commands");
+        setMessage(MESSAGE_CLICK_TO_SHOW_HELP, "Click to show help for this command");
+        setMessage(MESSAGE_PAGE_OUT_OF_RANGE, "Error: Page <page> is not in range. Must be in range [1, <max_pages>]");
+        setMessage(MESSAGE_CLICK_FOR_NEXT_PAGE, "Click for next page");
+        setMessage(MESSAGE_CLICK_FOR_PREVIOUS_PAGE, "Click for previous page");
     }
 
     /**
@@ -203,8 +218,25 @@ public final class MinecraftHelp<C> {
      *
      * @param commandPredicate Predicate to filter commands by
      */
-    public void commandFilter(final @NotNull Predicate<Command<C>> commandPredicate) {
+    @NotNull
+    public MinecraftHelp<C> commandFilter(final @NotNull Predicate<Command<C>> commandPredicate) {
+        this.commandFilter = (c, s) -> commandPredicate.test(c);
+        return this;
+    }
+
+    /**
+     * Sets a filter for what commands are visible inside the help menu.
+     * When the {@link Predicate} tests {@code true}, then the command
+     * is included in the listings.
+     * <p>
+     * The default filter will return true for all commands.
+     *
+     * @param commandPredicate Predicate to filter commands by
+     */
+    @NotNull
+    public MinecraftHelp<C> commandFilter(final @NotNull BiPredicate<Command<C>, C> commandPredicate) {
         this.commandFilter = commandPredicate;
+        return this;
     }
 
     /**
@@ -214,8 +246,10 @@ public final class MinecraftHelp<C> {
      *
      * @param decorator description decorator
      */
-    public void descriptionDecorator(final @NotNull Function<@NotNull String, @NotNull Component> decorator) {
+    @NotNull
+    public MinecraftHelp<C> descriptionDecorator(final @NotNull Function<@NotNull String, @NotNull Component> decorator) {
         this.descriptionDecorator = decorator;
+        return this;
     }
 
     /**
@@ -224,11 +258,28 @@ public final class MinecraftHelp<C> {
      * @param key   Message key. These are constants in {@link MinecraftHelp}
      * @param value The text for the message
      */
-    public void setMessage(
+    @NotNull
+    public MinecraftHelp<C> setMessage(
             final @NotNull String key,
             final @NotNull String value
     ) {
+        this.messageMap.put(key, text(value));
+        return this;
+    }
+
+    /**
+     * Configure a message
+     *
+     * @param key   Message key. These are constants in {@link MinecraftHelp}
+     * @param value The component for the message
+     */
+    @NotNull
+    public MinecraftHelp<C> setMessage(
+            final @NotNull String key,
+            final @NotNull ComponentLike value
+    ) {
         this.messageMap.put(key, value);
+        return this;
     }
 
     /**
@@ -238,22 +289,21 @@ public final class MinecraftHelp<C> {
      *
      * @param messageProvider The message provider to use
      */
-    public void setMessageProvider(final @NotNull BiFunction<C, String, String> messageProvider) {
-        this.stringMessageProvider = messageProvider;
-    }
-
-    /**
-     * Set a custom message provider function to be used for getting messages from keys.
-     * <p>
-     * The keys are constants in {@link MinecraftHelp}.
-     * <p>
-     * This version of the method which takes a {@link MessageProvider} will have priority over a message provider
-     * registered through {@link #setMessageProvider(BiFunction)}
-     *
-     * @param messageProvider The message provider to use
-     */
-    public void messageProvider(final @NotNull MessageProvider<C> messageProvider) {
+    public MinecraftHelp<C> messageProvider(final @NotNull MessageProvider<C> messageProvider) {
         this.messageProvider = messageProvider;
+        return this;
+    }
+
+    /**
+     * Set a custom message provider function to be used for getting messages from keys.
+     * <p>
+     * The keys are constants in {@link MinecraftHelp}.
+     *
+     * @param messageProviderFunction Function that will construct message provider
+     */
+    public MinecraftHelp<C> messageProvider(final @NotNull Function<MinecraftHelp<C> , MessageProvider<C>> messageProviderFunction) {
+        this.messageProvider = messageProviderFunction.apply(this);
+        return this;
     }
 
     /**
@@ -261,8 +311,10 @@ public final class MinecraftHelp<C> {
      *
      * @param colors The new {@link HelpColors} to use
      */
-    public void setHelpColors(final @NotNull HelpColors colors) {
+    @NotNull
+    public MinecraftHelp<C> setHelpColors(final @NotNull HelpColors colors) {
         this.colors = colors;
+        return this;
     }
 
     /**
@@ -281,8 +333,10 @@ public final class MinecraftHelp<C> {
      *
      * @param headerFooterLength The new length
      */
-    public void setHeaderFooterLength(final int headerFooterLength) {
+    @NotNull
+    public MinecraftHelp<C> setHeaderFooterLength(final int headerFooterLength) {
         this.headerFooterLength = headerFooterLength;
+        return this;
     }
 
     /**
@@ -292,8 +346,10 @@ public final class MinecraftHelp<C> {
      *
      * @param maxResultsPerPage The new value
      */
-    public void setMaxResultsPerPage(final int maxResultsPerPage) {
+    @NotNull
+    public MinecraftHelp<C> setMaxResultsPerPage(final int maxResultsPerPage) {
         this.maxResultsPerPage = maxResultsPerPage;
+        return this;
     }
 
     /**
@@ -322,7 +378,7 @@ public final class MinecraftHelp<C> {
                 recipient,
                 query,
                 page,
-                this.commandManager.getCommandHelpHandler(this.commandFilter).queryHelp(recipient, query)
+                this.commandManager.getCommandHelpHandler(c -> this.commandFilter.test(c, recipient)).queryHelp(recipient, query)
         );
     }
 
@@ -652,9 +708,9 @@ public final class MinecraftHelp<C> {
                 .append(this.messageProvider.provide(sender, MESSAGE_HELP_TITLE).withColor(this.colors.highlight))
                 .append(space())
                 .append(text("(", this.colors.alternateHighlight))
-                .append(text(Character.toString(currentPage), this.colors.text))
+                .append(text(currentPage, this.colors.text))
                 .append(text("/", this.colors.alternateHighlight))
-                .append(text(Character.toString(pages), this.colors.text))
+                .append(text(pages, this.colors.text))
                 .append(text(")", this.colors.alternateHighlight))
                 .append(space())
                 .build()

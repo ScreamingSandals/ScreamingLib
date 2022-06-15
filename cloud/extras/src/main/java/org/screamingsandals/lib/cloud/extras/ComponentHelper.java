@@ -67,10 +67,10 @@ final class ComponentHelper {
         if (component instanceof TextComponent) {
             length += ((TextComponent) component).content().length();
         }
-        /*final Component translated = GlobalTranslator.render(component, Locale.getDefault());
-        for (final Component child : translated.children()) {
+        /*final Component translated = GlobalTranslator.render(component, Locale.getDefault());*/
+        for (final var child : component.children()) {
             length += length(child);
-        }*/
+        }
         return length;
     }
 
