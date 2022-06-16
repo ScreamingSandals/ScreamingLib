@@ -49,12 +49,22 @@ public class BukkitEntityProjectile extends BukkitEntityBasic implements EntityP
     }
 
     @Override
+    @Deprecated // deprecated for removal in the latest Paper
     public boolean doesBounce() {
-        return ((Projectile) wrappedObject).doesBounce();
+        try {
+            return ((Projectile) wrappedObject).doesBounce();
+        } catch (Throwable ignored) {
+            return false; // fix for future removal
+        }
     }
 
     @Override
+    @Deprecated // deprecated for removal in the latest Paper
     public void setBounce(boolean bounce) {
-        ((Projectile) wrappedObject).setBounce(bounce);
+        try {
+            ((Projectile) wrappedObject).setBounce(bounce);
+        } catch (Throwable ignored) {
+            // fix for future removal
+        }
     }
 }

@@ -56,8 +56,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
-import org.screamingsandals.lib.sender.SenderMessage;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -135,11 +134,11 @@ public final class MinecraftHelp<C> {
         );
     }
 
-    public static <C extends CommandSenderWrapper> MessageProvider<C> commandSenderWrapperMessageProvider(MinecraftHelp<C> minecraftHelp) {
+    public static <C extends Audience> MessageProvider<C> audienceMessageProvider(MinecraftHelp<C> minecraftHelp) {
         return (sender, key, args) -> {
             var cl = minecraftHelp.messageMap.get(key);
-            if (cl instanceof SenderMessage) {
-                return ((SenderMessage) cl).asComponent(sender);
+            if (cl instanceof AudienceComponentLike) {
+                return ((AudienceComponentLike) cl).asComponent(sender);
             }
             return cl.asComponent();
         };

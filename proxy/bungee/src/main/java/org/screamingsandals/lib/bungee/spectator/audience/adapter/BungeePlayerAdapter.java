@@ -25,12 +25,14 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.TitleableAudienceComponentLike;
 import org.screamingsandals.lib.spectator.audience.MessageType;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 import org.screamingsandals.lib.spectator.bossbar.BossBar;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
+import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.spectator.title.Title;
 
 import java.util.UUID;
@@ -81,6 +83,11 @@ public class BungeePlayerAdapter extends BungeeAdapter implements PlayerAdapter 
     @Override
     public void showTitle(@NotNull Title title) {
         title.as(net.md_5.bungee.api.Title.class).send(sender());
+    }
+
+    @Override
+    public void showTitle(@NotNull TitleableAudienceComponentLike title, @Nullable TimesProvider times) {
+        showTitle(title.asTitle(owner(), times));
     }
 
     @Override

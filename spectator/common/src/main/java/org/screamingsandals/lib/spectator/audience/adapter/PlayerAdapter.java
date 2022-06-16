@@ -18,12 +18,15 @@ package org.screamingsandals.lib.spectator.audience.adapter;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.TitleableAudienceComponentLike;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.bossbar.BossBar;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
+import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.spectator.title.Title;
 
 @ApiStatus.Internal
@@ -36,6 +39,8 @@ public interface PlayerAdapter extends Adapter {
     void sendPlayerListHeaderFooter(@NotNull ComponentLike header, @NotNull ComponentLike footer);
 
     void showTitle(@NotNull Title title);
+
+    void showTitle(@NotNull TitleableAudienceComponentLike title, @Nullable TimesProvider times);
 
     void clearTitle();
 

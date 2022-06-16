@@ -23,10 +23,13 @@ import lombok.experimental.Accessors;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+
+import java.util.OptionalLong;
 
 public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundStart {
     public AdventureSoundStart(Sound wrappedObject) {
@@ -81,13 +84,28 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
     }
 
     @Override
+    @Nullable
+    public Long seed() {
+        // TODO: 1.19: Implement seed when Adventure 4.12.0 is out
+        return null;
+    }
+
+    @Override
+    @NotNull
+    public SoundStart withSeed(@Nullable Long seed) {
+        // TODO: 1.19: Implement seed when Adventure 4.12.0 is out
+        return this;
+    }
+
+    @Override
     @NotNull
     public SoundStart.Builder toBuilder() {
         return new AdventureSoundStartBuilder(
                 soundKey(),
                 source(),
                 volume(),
-                pitch()
+                pitch(),
+                seed()
         );
     }
 
@@ -102,11 +120,13 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
         private SoundSource source = MASTER;
         private float volume = 1;
         private float pitch = 1;
+        private Long seed = null;
 
         @SuppressWarnings("PatternValidation")
         @Override
         @NotNull
         public SoundStart build() {
+            // TODO: 1.19: Implement seed when Adventure 4.12.0 is out
             return new AdventureSoundStart(Sound.sound(Key.key(soundKey.namespace(), soundKey.value()), source.as(Sound.Source.class), volume, pitch));
         }
     }

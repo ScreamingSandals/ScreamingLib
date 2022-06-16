@@ -22,17 +22,28 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
+import java.text.ChoiceFormat;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Data
-public class MiniPlaceholder implements Placeholder {
+public class LazyChoicePlaceholder implements Placeholder {
     @Pattern("[a-z\\d_-]+")
     private final String name;
-    private final String value;
+    private final Supplier<Number> supplier;
 
+    @SuppressWarnings("unchecked")
     @Override
     @NotNull
     public <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
-        return parser.parseIntoBuilder(value, placeholders);
+        var value = supplier.get();
+
+        if (arguments.size() == 1) {
+            try {
+                return parser.parseIntoBuilder(new ChoiceFormat(arguments.get(0)).format(value), placeholders);
+            } catch (Throwable ignored) {}
+        }
+
+        return (B) Component.text().content(value);
     }
 }

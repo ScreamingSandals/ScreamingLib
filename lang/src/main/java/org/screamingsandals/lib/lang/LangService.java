@@ -19,6 +19,7 @@ package org.screamingsandals.lib.lang;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.lang.container.TranslationContainer;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.spectator.Component;
@@ -106,5 +107,20 @@ public abstract class LangService {
      */
     protected @NotNull Locale resolveLocale(@NotNull CommandSenderWrapper sender) {
         return sender.getLocale();
+    }
+
+    /**
+     * MessagePlaceholder is the placeholder for including another translated messages inside messages constructed by {@link Message}.
+     * <p>
+     * Don't be confused with \<lang>, that is placeholder for including translates from resource pack or vanilla translate.
+     * <p>
+     * Message placeholder is only supported with MiniMessage format!
+     * Other placeholders are automatically propagated.
+     *
+     * @return the message placeholder name or null
+     */
+    @Nullable
+    public String getMessagePlaceholderName() {
+        return null;
     }
 }

@@ -18,14 +18,13 @@ package org.screamingsandals.lib.spectator.audience;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.spectator.Book;
-import org.screamingsandals.lib.spectator.Color;
-import org.screamingsandals.lib.spectator.Component;
-import org.screamingsandals.lib.spectator.ComponentLike;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.spectator.*;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 import org.screamingsandals.lib.spectator.bossbar.BossBar;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
+import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.spectator.title.Title;
 
 public interface PlayerAudience extends Audience {
@@ -97,6 +96,12 @@ public interface PlayerAudience extends Audience {
         showTitle(title.build());
     }
 
+    default void showTitle(@NotNull TitleableAudienceComponentLike title) {
+        showTitle(title, null);
+    }
+
+    void showTitle(@NotNull TitleableAudienceComponentLike title, @Nullable TimesProvider times);
+
     void showTitle(@NotNull Title title);
 
     void clearTitle();
@@ -160,6 +165,11 @@ public interface PlayerAudience extends Audience {
         }
 
         @Override
+        default void showTitle(@NotNull TitleableAudienceComponentLike title, @Nullable TimesProvider times) {
+            audiences().forEach(audience -> audience.showTitle(title, times));
+        }
+
+        @Override
         default void clearTitle() {
             audiences().forEach(PlayerAudience::clearTitle);
         }
@@ -215,7 +225,12 @@ public interface PlayerAudience extends Audience {
             audience().showTitle(title);
         }
 
-        @Override
+         @Override
+        default void showTitle(@NotNull TitleableAudienceComponentLike title, @Nullable TimesProvider times) {
+            audience().showTitle(title, times);
+         }
+
+         @Override
         default void clearTitle() {
             audience().clearTitle();
         }
@@ -271,6 +286,11 @@ public interface PlayerAudience extends Audience {
         @Override
         default void showTitle(@NotNull Title title) {
             adapter().showTitle(title);
+        }
+
+        @Override
+        default void showTitle(@NotNull TitleableAudienceComponentLike title, @Nullable TimesProvider times) {
+            adapter().showTitle(title, times);
         }
 
         @Override

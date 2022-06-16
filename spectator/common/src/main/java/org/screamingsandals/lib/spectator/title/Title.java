@@ -36,7 +36,7 @@ public interface Title extends Wrapper, RawValueHolder, TimesProvider {
 
     @Contract(value = "_, _, _ -> new", pure = true)
     @NotNull
-    static Title title(@NotNull Component title, @NotNull Component subtitle, @NotNull TimesProvider times) {
+    static Title title(@NotNull Component title, @NotNull Component subtitle, @Nullable TimesProvider times) {
         return builder().title(title).subtitle(subtitle).times(times).build();
     }
 
@@ -153,10 +153,16 @@ public interface Title extends Wrapper, RawValueHolder, TimesProvider {
 
         @NotNull
         @Contract("_ -> this")
-        default Builder times(@NotNull TimesProvider times) {
-            fadeIn(times.fadeIn());
-            stay(times.stay());
-            fadeOut(times.fadeOut());
+        default Builder times(@Nullable TimesProvider times) {
+            if (times != null) {
+                fadeIn(times.fadeIn());
+                stay(times.stay());
+                fadeOut(times.fadeOut());
+            } else {
+                fadeIn(null);
+                stay(null);
+                fadeOut(null);
+            }
             return this;
         }
 

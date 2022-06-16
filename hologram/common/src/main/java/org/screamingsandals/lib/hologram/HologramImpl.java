@@ -26,8 +26,8 @@ import org.screamingsandals.lib.packet.SClientboundRemoveEntitiesPacket;
 import org.screamingsandals.lib.packet.SClientboundSetEntityDataPacket;
 import org.screamingsandals.lib.packet.SClientboundSetEquipmentPacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.sender.SenderMessage;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.tasker.task.TaskState;
@@ -249,7 +249,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
                 try {
                     if (entitiesOnLines.containsKey(key)) {
                         final var entityOnLine = entitiesOnLines.get(key);
-                        var isSenderMessage = value instanceof SimpleCLTextEntry && ((SimpleCLTextEntry) value).getComponentLike() instanceof SenderMessage;
+                        var isSenderMessage = value instanceof SimpleCLTextEntry && ((SimpleCLTextEntry) value).getComponentLike() instanceof AudienceComponentLike;
                         if (originalLinesSize == lines.size()) {
                             if (isSenderMessage) {
                                 if (entityOnLine.getCustomNameSenderMessage() != null && entityOnLine.getCustomNameSenderMessage().equals(((SimpleCLTextEntry) value).getComponentLike())) {
@@ -261,7 +261,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
                         }
 
                         entityOnLine.setCustomName(value.getText());
-                        entityOnLine.setCustomNameSenderMessage(isSenderMessage ? (SenderMessage) ((SimpleCLTextEntry) value).getComponentLike() : null);
+                        entityOnLine.setCustomNameSenderMessage(isSenderMessage ? (AudienceComponentLike) ((SimpleCLTextEntry) value).getComponentLike() : null);
                         packets.add(p -> List.of(entityOnLine.getMetadataPacket(p)));
                         entityOnLine.setLocation(cachedLocation.clone().add(0, (lines.size() - key) * .25, 0));
                         packets.add(p -> List.of(entityOnLine.getTeleportPacket()));
@@ -269,8 +269,8 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
                         final var newLocation = cachedLocation.clone().add(0, (lines.size() - key) * .25, 0);
                         final var entity = new HologramPiece(newLocation);
                         entity.setCustomName(value.getText());
-                        if (value instanceof SimpleCLTextEntry && ((SimpleCLTextEntry) value).getComponentLike() instanceof SenderMessage) {
-                            entity.setCustomNameSenderMessage((SenderMessage) ((SimpleCLTextEntry) value).getComponentLike());
+                        if (value instanceof SimpleCLTextEntry && ((SimpleCLTextEntry) value).getComponentLike() instanceof AudienceComponentLike) {
+                            entity.setCustomNameSenderMessage((AudienceComponentLike) ((SimpleCLTextEntry) value).getComponentLike());
                         }
                         entity.setCustomNameVisible(true);
                         entity.setInvisible(true);

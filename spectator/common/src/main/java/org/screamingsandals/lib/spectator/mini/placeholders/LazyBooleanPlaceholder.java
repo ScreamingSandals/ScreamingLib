@@ -23,16 +23,29 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 @Data
-public class MiniPlaceholder implements Placeholder {
+public class LazyBooleanPlaceholder implements Placeholder {
     @Pattern("[a-z\\d_-]+")
     private final String name;
-    private final String value;
+    private final BooleanSupplier supplier;
 
+    // addition: custom strings for true/false
+    @SuppressWarnings("unchecked")
     @Override
     @NotNull
     public <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
-        return parser.parseIntoBuilder(value, placeholders);
+        var value = supplier.getAsBoolean();
+
+        if (arguments.size() == 2) {
+            if (value) {
+                return parser.parseIntoBuilder(arguments.get(0), placeholders);
+            } else {
+                return parser.parseIntoBuilder(arguments.get(1), placeholders);
+            }
+        }
+
+        return (B) Component.text().content(value);
     }
 }

@@ -17,39 +17,50 @@
 package org.screamingsandals.lib.lang;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.placeholders.PlaceholderManager;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
-import org.screamingsandals.lib.sender.SenderMessage;
-import org.screamingsandals.lib.sender.TitleableSenderMessage;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.TitleableAudienceComponentLike;
+import org.screamingsandals.lib.spectator.audience.Audience;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.spectator.title.Title;
 import org.screamingsandals.lib.tasker.Tasker;
+import org.screamingsandals.lib.utils.visual.TextEntry;
 
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Translated message.
  */
 @Data
-public class Message implements TitleableSenderMessage, Cloneable {
+public class Message implements TitleableAudienceComponentLike, Cloneable {
     private static final Pattern LEGACY_PLACEHOLDERS = Pattern.compile("[%]([^%]+)[%]");
     private static final Pattern EARLY_MINI_MESSAGE_PLACEHOLDERS = Pattern.compile("[<]([^>]+)[>]");
 
     private final List<Messageable> translations = new LinkedList<>();
-    private final Map<String, Function<CommandSenderWrapper, Component>> placeholders = new HashMap<>(); // TODO: use spectator's placeholders
+    private final List<Function<CommandSenderWrapper, Placeholder>> placeholders = new ArrayList<>();
     private final Map<String, String> earlyPlaceholders = new HashMap<>();
+    @Accessors(chain = true)
+    @Setter(onMethod_ = @ApiStatus.Internal)
+    @Getter(onMethod_ = @ApiStatus.Internal)
+    private Placeholder @Nullable [] rawPlaceholders;
     private final LangService langService;
     @NotNull
     private Component prefix;
@@ -57,6 +68,8 @@ public class Message implements TitleableSenderMessage, Cloneable {
     private TimesProvider times;
     private PrefixPolicy prefixPolicy = PrefixPolicy.ALL_MESSAGES;
     private PrefixResolving prefixResolving = PrefixResolving.DEFAULT;
+    @Accessors(chain = true, fluent = true)
+    private LinkPolicy linkPolicy = LinkPolicy.ONLY_NON_TRANSLATIONS;
 
     public <M extends Messageable> Message(Collection<M> translations, LangService langService, @NotNull Component prefix) {
         this.translations.addAll(translations);
@@ -944,8 +957,8 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       placeholder value
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, byte value) {
-        return placeholder(placeholder, Component.text(value));
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, byte value) {
+        return placeholder(Placeholder.number(placeholder, value));
     }
 
     /**
@@ -956,8 +969,8 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       placeholder value
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, short value) {
-        return placeholder(placeholder, Component.text(value));
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, short value) {
+        return placeholder(Placeholder.number(placeholder, value));
     }
 
     /**
@@ -968,8 +981,8 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       placeholder value
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, int value) {
-        return placeholder(placeholder, Component.text(value));
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, int value) {
+        return placeholder(Placeholder.number(placeholder, value));
     }
 
     /**
@@ -980,8 +993,8 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       placeholder value
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, long value) {
-        return placeholder(placeholder, Component.text(value));
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull IntSupplier value) {
+        return placeholder(Placeholder.lazyNumber(placeholder, value));
     }
 
     /**
@@ -992,8 +1005,8 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       placeholder value
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, char value) {
-        return placeholder(placeholder, Component.text(value));
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, long value) {
+        return placeholder(Placeholder.number(placeholder, value));
     }
 
     /**
@@ -1004,8 +1017,8 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       placeholder value
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, boolean value) {
-        return placeholder(placeholder, Component.text(value));
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull LongSupplier value) {
+        return placeholder(Placeholder.lazyNumber(placeholder, value));
     }
 
     /**
@@ -1016,8 +1029,8 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       placeholder value
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, double value) {
-        return placeholder(placeholder, Component.text(value));
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, char value) {
+        return placeholder(Placeholder.character(placeholder, value));
     }
 
     /**
@@ -1028,8 +1041,56 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       placeholder value
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, float value) {
-        return placeholder(placeholder, Component.text(value));
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, boolean value) {
+        return placeholder(Placeholder.bool(placeholder, value));
+    }
+
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull BooleanSupplier value) {
+        return placeholder(Placeholder.lazyBool(placeholder, value));
+    }
+
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, double value) {
+        return placeholder(Placeholder.number(placeholder, value));
+    }
+
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, DoubleSupplier value) {
+        return placeholder(Placeholder.lazyNumber(placeholder, value));
+    }
+
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, float value) {
+        return placeholder(Placeholder.number(placeholder, value));
     }
 
     /**
@@ -1041,9 +1102,9 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param round       how many decimal points should the number have
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, double value, int round) {
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, double value, int round) {
         double pow = Math.pow(10, round);
-        return placeholder(placeholder, Component.text(Math.round(value * pow) / pow));
+        return placeholder(Placeholder.number(placeholder, (double) Math.round(value * pow) / pow));
     }
 
     /**
@@ -1055,9 +1116,33 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param round       how many decimal points should the number have
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, float value, int round) {
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, float value, int round) {
         double pow = Math.pow(10, round);
-        return placeholder(placeholder, Component.text(Math.round(value * pow) / pow));
+        return placeholder(Placeholder.number(placeholder, (double) Math.round(value * pow) / pow));
+    }
+
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param accessor placeholder value
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, TemporalAccessor accessor) {
+        return placeholder(Placeholder.dateTime(placeholder, accessor));
+    }
+
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder key
+     * @param value       placeholder value in the MiniMessage format
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull String value) {
+        return placeholder(Placeholder.parsed(placeholder, value));
     }
 
     /**
@@ -1068,8 +1153,8 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param value       placeholder value
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, @NotNull String value) {
-        return placeholder(placeholder, Lang.MINIMESSAGE.parse(value));
+    public @NotNull Message placeholderRaw(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull String value) {
+        return placeholder(Placeholder.unparsed(placeholder, value));
     }
 
     /**
@@ -1080,9 +1165,8 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param component   placeholder value
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, @NotNull Component component) {
-        placeholders.put(placeholder, sender -> component);
-        return this;
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull Component component) {
+        return placeholder(Placeholder.component(placeholder, component));
     }
 
     /**
@@ -1093,10 +1177,10 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param component   placeholder value
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, @NotNull ComponentLike component) {
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull ComponentLike component) {
         return placeholder(placeholder, sender -> {
-            if (component instanceof SenderMessage) {
-                return ((SenderMessage) component).asComponent(sender);
+            if (component instanceof AudienceComponentLike) {
+                return ((AudienceComponentLike) component).asComponent(sender);
             }
             return component.asComponent();
         });
@@ -1110,10 +1194,8 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param translation placeholder value, resolved from {@link Translation}
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, @NotNull Translation translation) {
-        var msg = of(translation);
-        placeholders.put(placeholder, msg::getForJoined);
-        return this;
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull Translation translation) {
+        return placeholder(placeholder, of(translation));
     }
 
     /**
@@ -1124,9 +1206,8 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param message     placeholder value, resolved from {@link Message}
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, @NotNull Message message) {
-        placeholders.put(placeholder, message::getForJoined);
-        return this;
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull Message message) {
+        return placeholder(placeholder, message::getForJoined);
     }
 
     /**
@@ -1137,8 +1218,32 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * @param componentFunction function that returns a {@link Component} as the placeholder value.
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull String placeholder, @NotNull Function<CommandSenderWrapper, Component> componentFunction) {
-        placeholders.put(placeholder, componentFunction);
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull Function<CommandSenderWrapper, Component> componentFunction) {
+        placeholders.add(sender -> Placeholder.lazyComponent(placeholder, () -> componentFunction.apply(sender)));
+        return this;
+    }
+
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholderFunction function that returns a {@link Placeholder} for the specific {@link CommandSenderWrapper}.
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull Function<CommandSenderWrapper, Placeholder> placeholderFunction) {
+        placeholders.add(placeholderFunction);
+        return this;
+    }
+
+    /**
+     * Registers new placeholder.
+     * Used for replacing placeholders before constructing the message.
+     *
+     * @param placeholder placeholder for Spectator
+     * @return this message
+     */
+    public @NotNull Message placeholder(@NotNull Placeholder placeholder) {
+        placeholders.add(sender -> placeholder);
         return this;
     }
 
@@ -1463,6 +1568,19 @@ public class Message implements TitleableSenderMessage, Cloneable {
                             .translateIfNeeded(container)
                             .stream()
                             .map(s -> {
+                                if (langService.getMessagePlaceholderName() != null && (linkPolicy == LinkPolicy.ALL || (linkPolicy == LinkPolicy.ONLY_NON_TRANSLATIONS && (translation instanceof StringMessageable || translation instanceof SupplierStringMessageable)))) {
+                                    var trim = s.trim();
+                                    if (trim.startsWith("@") && !trim.contains(" ") && !trim.contains("<") && !trim.contains(">") && !trim.contains(":")) {
+                                        // this is a link
+                                        trim = trim.substring(1);
+                                        return Translation.of(trim.split("(?<!\\\\)\\.")).translateIfNeeded(container);
+                                    }
+                                }
+
+                                return List.of(s);
+                            })
+                            .flatMap(Collection::stream)
+                            .map(s -> {
                                 if (PlaceholderManager.isInitialized()) {
                                     // Skip this code block to avoid impact of black magic on your mind
                                     //FOR REAL.
@@ -1513,14 +1631,20 @@ public class Message implements TitleableSenderMessage, Cloneable {
                                         s = output.toString();
                                     }
 
-                                    @SuppressWarnings("PatternValidation")
-                                    final var resolvedTemplates = placeholders
-                                                    .entrySet()
+                                    var resolvedTemplates = placeholders
                                                     .stream()
-                                                    .map(entry -> Placeholder.component(entry.getKey(), entry.getValue().apply(sender)))
-                                                    .toArray(Placeholder[]::new);
+                                                    .map(entry -> entry.apply(sender));
+                                    var messagePlaceholder = langService.getMessagePlaceholderName();
+                                    if (messagePlaceholder != null) {
+                                        resolvedTemplates = Stream.concat(resolvedTemplates, Stream.of(
+                                            new MessagePlaceholder(messagePlaceholder, langService, sender)
+                                        ));
+                                    }
+                                    if (rawPlaceholders != null) {
+                                        resolvedTemplates = Stream.concat(resolvedTemplates, Stream.of(rawPlaceholders));
+                                    }
 
-                                    return Lang.MINIMESSAGE.parse(s, resolvedTemplates);
+                                    return Lang.MINIMESSAGE.parse(s, resolvedTemplates.toArray(Placeholder[]::new));
                                 } else {
                                     // Black magic again
                                     // SKIP THIS.
@@ -1528,10 +1652,14 @@ public class Message implements TitleableSenderMessage, Cloneable {
 
                                     var lastIndex = 0;
                                     var output = new StringBuilder();
+                                    var resolved = placeholders.stream()
+                                                    .map(f -> f.apply(sender))
+                                                    .map(e -> Map.entry(e.getName(), e))
+                                                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
                                     while (matcher.find()) {
                                         output.append(s, lastIndex, matcher.start());
-                                        if (placeholders.containsKey(matcher.group(1))) {
-                                            output.append(placeholders.get(matcher.group(1)).apply(sender).toLegacy());
+                                        if (resolved.containsKey(matcher.group(1))) {
+                                            output.append(resolved.get(matcher.group(1)).getResult(Lang.MINIMESSAGE, List.of(), resolved.values().toArray(Placeholder[]::new)).build().toLegacy());
                                         } else {
                                             output.append("%").append(matcher.group(1)).append("%");
                                         }
@@ -1786,19 +1914,19 @@ public class Message implements TitleableSenderMessage, Cloneable {
      * Transforms this message into a component.
      * This will process the message for given sender.
      *
-     * @param sender sender to process this message for
+     * @param audience sender to process this message for
      * @return {@link Component}.
      */
     @Override
     @NotNull
-    public Component asComponent(@Nullable CommandSenderWrapper sender) {
-        return getForJoined(sender);
+    public Component asComponent(@Nullable Audience audience) {
+        return getForJoined(audience instanceof CommandSenderWrapper ? (CommandSenderWrapper) audience : null);
     }
 
     @Override
     @NotNull
-    public List<Component> asComponentList(@Nullable CommandSenderWrapper wrapper) {
-        return getFor(wrapper);
+    public List<Component> asComponentList(@Nullable Audience audience) {
+        return getFor(audience instanceof CommandSenderWrapper ? (CommandSenderWrapper) audience : null);
     }
 
     @Override
@@ -1809,14 +1937,14 @@ public class Message implements TitleableSenderMessage, Cloneable {
 
     @Override
     @NotNull
-    public Title asTitle(@Nullable CommandSenderWrapper sender, @Nullable TimesProvider times) {
-        var messages = getFor(sender);
+    public Title asTitle(@Nullable Audience sender, @Nullable TimesProvider times) {
+        var messages = getFor(sender instanceof CommandSenderWrapper ? (CommandSenderWrapper) sender : null);
         return Title.title(messages.size() >= 1 ? messages.get(0) : Component.empty(), messages.size() >= 2 ? messages.get(1) : Component.empty(), times);
     }
 
     @Override
     @NotNull
-    public Title asTitle(@Nullable CommandSenderWrapper sender) {
+    public Title asTitle(@Nullable Audience sender) {
         return asTitle(sender, times);
     }
 
@@ -1832,13 +1960,26 @@ public class Message implements TitleableSenderMessage, Cloneable {
         return asTitle(null, times);
     }
 
+    @NotNull
+    public TextEntry asTextEntry(@Nullable CommandSenderWrapper wrapper) {
+        return TextEntry.of(asComponent(wrapper));
+    }
+
+    @NotNull
+    public TextEntry asTextEntry(@NotNull String identifier, @Nullable CommandSenderWrapper wrapper) {
+        return TextEntry.of(identifier, asComponent(wrapper));
+    }
+
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public Message clone() {
         var msg = new Message(translations, langService, prefix);
         msg.times = times;
-        msg.placeholders.putAll(placeholders);
+        msg.earlyPlaceholders.putAll(earlyPlaceholders);
+        msg.placeholders.addAll(placeholders);
+        msg.rawPlaceholders = rawPlaceholders;
         msg.prefixPolicy = prefixPolicy;
+        msg.prefixResolving = prefixResolving;
         return msg;
     }
 
@@ -1859,5 +2000,11 @@ public class Message implements TitleableSenderMessage, Cloneable {
     public enum PrefixResolving {
         DEFAULT,
         PER_PLAYER
+    }
+
+    public enum LinkPolicy {
+        NO,
+        ONLY_NON_TRANSLATIONS,
+        ALL
     }
 }

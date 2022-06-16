@@ -70,6 +70,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
         if (Reflect.has("net.kyori.adventure.Adventure") && Reflect.has("io.papermc.paper.text.PaperComponents")) {
             adventureBackend = new AdventureBackend();
 
+            // TODO: Fix for upcoming paper versions
             var gson = PaperComponents.gsonSerializer();
 
             AdventureBackend.getAdditionalComponentConverter()
@@ -159,11 +160,20 @@ public class SpigotBackend extends AbstractBungeeBackend {
                         //noinspection PatternValidation
                         var id = bungeeItemContent.id();
                         var tag = bungeeItemContent.tag();
+                        BinaryTagHolder value = null;
+                        if (tag != null) {
+                            try {
+                                value = BinaryTagHolder.binaryTagHolder(tag);
+                            } catch (Throwable ignored) {
+                                // Old Adventure
+                                value = BinaryTagHolder.of(tag);
+                            }
+                        }
                         //noinspection PatternValidation
                         return net.kyori.adventure.text.event.HoverEvent.ShowItem.of(
                                 Key.key(id.namespace(), id.value()),
                                 bungeeItemContent.count(),
-                                tag != null ? BinaryTagHolder.of(tag) : null
+                                value
                         ) ;
                     });
 

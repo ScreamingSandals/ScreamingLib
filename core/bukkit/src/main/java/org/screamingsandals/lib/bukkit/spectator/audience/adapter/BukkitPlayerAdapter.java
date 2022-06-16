@@ -26,12 +26,14 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.TitleableAudienceComponentLike;
 import org.screamingsandals.lib.spectator.audience.MessageType;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 import org.screamingsandals.lib.spectator.bossbar.BossBar;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
+import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.spectator.title.Title;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -111,6 +113,11 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
     }
 
     @Override
+    public void showTitle(@NotNull TitleableAudienceComponentLike title, @Nullable TimesProvider times) {
+        showTitle(title.asTitle(owner(), times));
+    }
+
+    @Override
     public void clearTitle() {
         commandSender().resetTitle();
     }
@@ -132,6 +139,7 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
     @Override
     public void playSound(@NotNull SoundStart sound) {
         try {
+            // TODO: 1.19: add seed if implemented by Spigot API
             commandSender().playSound(commandSender().getLocation(), sound.soundKey().asString(), sound.source().as(SoundCategory.class), sound.volume(), sound.pitch());
         } catch (Throwable ignored) {
             commandSender().playSound(commandSender().getLocation(), sound.soundKey().asString(), sound.volume(), sound.pitch());
@@ -142,6 +150,7 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
     public void playSound(@NotNull SoundStart sound, double x, double y, double z) {
         var location = new Location(commandSender().getWorld(), x, y, z); // I'm not sure if these locations are absolute or relative
         try {
+            // TODO: 1.19: add seed if implemented by Spigot API
             commandSender().playSound(location, sound.soundKey().asString(), sound.source().as(SoundCategory.class), sound.volume(), sound.pitch());
         } catch (Throwable ignored) {
             commandSender().playSound(location, sound.soundKey().asString(), sound.volume(), sound.pitch());

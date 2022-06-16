@@ -14,31 +14,26 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.sender;
+package org.screamingsandals.lib.spectator.mini.placeholders;
 
 import lombok.Data;
+import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @Data
-public class StaticSenderMessage implements SenderMessage {
-    private final Component component;
+public class LazyMiniPlaceholder implements Placeholder {
+    @Pattern("[a-z\\d_-]+")
+    private final String name;
+    private final Supplier<String> supplier;
 
     @Override
-    public @NotNull Component asComponent(@Nullable CommandSenderWrapper wrapper) {
-        return component;
-    }
-
-    @Override
-    public @NotNull List<Component> asComponentList(@Nullable CommandSenderWrapper wrapper) {
-        return List.of(component);
-    }
-
-    @Override
-    public @NotNull Component asComponent() {
-        return component;
+    @NotNull
+    public <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
+        return parser.parseIntoBuilder(supplier.get(), placeholders);
     }
 }

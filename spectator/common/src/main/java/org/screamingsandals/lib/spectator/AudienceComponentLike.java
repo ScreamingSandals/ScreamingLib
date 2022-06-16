@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.audience.Audience;
 
+import java.util.List;
+
 public interface AudienceComponentLike extends ComponentLike {
     /**
      * Resolves the component for specific audience. Should not be used with {@link Audience.ForwardingToMulti}.
@@ -31,4 +33,31 @@ public interface AudienceComponentLike extends ComponentLike {
     @NotNull
     @ApiStatus.Internal
     Component asComponent(@Nullable Audience audience);
+
+    /**
+     * Resolves the component for specific audience. Should not be used with {@link Audience.ForwardingToMulti}.
+     *
+     * @param audience audience
+     * @return new components in list
+     */
+    @NotNull
+    @ApiStatus.Internal
+    default List<Component> asComponentList(@Nullable Audience audience) {
+        return List.of(asComponent(audience));
+    }
+
+    static AudienceComponentLike empty() {
+        return new StaticAudienceComponentLike(Component.empty());
+    }
+
+    static AudienceComponentLike of(Component component) {
+        return new StaticAudienceComponentLike(component);
+    }
+
+    static AudienceComponentLike of(ComponentLike component) {
+        if (component instanceof AudienceComponentLike) {
+            return (AudienceComponentLike) component;
+        }
+        return new StaticAudienceComponentLike(component.asComponent());
+    }
 }

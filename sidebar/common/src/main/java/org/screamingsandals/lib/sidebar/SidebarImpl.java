@@ -21,12 +21,12 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.sender.SenderMessage;
-import org.screamingsandals.lib.sender.StaticSenderMessage;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeamImpl;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.StaticAudienceComponentLike;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.utils.visual.SimpleCLTextEntry;
 import org.screamingsandals.lib.visuals.UpdateStrategy;
@@ -48,7 +48,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     protected boolean ready;
     @Getter
     protected boolean destroyed;
-    protected SenderMessage title = SenderMessage.empty();
+    protected AudienceComponentLike title = AudienceComponentLike.empty();
     private final String objectiveKey;
     private final ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, String>> lines = new ConcurrentSkipListMap<>();
 
@@ -91,15 +91,15 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
 
     @Override
     public Sidebar title(Component title) {
-        return title(SenderMessage.of(title));
+        return title(AudienceComponentLike.of(title));
     }
 
     @Override
     public Sidebar title(ComponentLike title) {
-        if (title instanceof SenderMessage) {
-            this.title = (SenderMessage) title;
+        if (title instanceof AudienceComponentLike) {
+            this.title = (AudienceComponentLike) title;
         } else {
-            this.title = SenderMessage.of(title);
+            this.title = AudienceComponentLike.of(title);
         }
         updateTitle0();
         return this;
@@ -186,8 +186,8 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
                 .map(textEntry -> {
                     if (textEntry instanceof SimpleCLTextEntry) {
                         var like = ((SimpleCLTextEntry) textEntry).getComponentLike();
-                        if (like instanceof SenderMessage) {
-                            return ((SenderMessage) like).asComponentList(playerWrapper);
+                        if (like instanceof AudienceComponentLike) {
+                            return ((AudienceComponentLike) like).asComponentList(playerWrapper);
                         }
                     }
                     return textEntry.getText();
@@ -208,7 +208,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
 
         var packets = new ArrayList<AbstractPacket>();
 
-        if (!(this.title instanceof StaticSenderMessage)) {
+        if (!(this.title instanceof StaticAudienceComponentLike)) {
             packets.add(getUpdateObjectivePacket(playerWrapper));
         }
 

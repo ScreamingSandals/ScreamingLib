@@ -14,31 +14,27 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.lang;
+package org.screamingsandals.lib.spectator.mini.placeholders;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import org.intellij.lang.annotations.Pattern;
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 @Data
-@RequiredArgsConstructor(staticName = "of")
-public final class SupplierStringMessageable implements Messageable {
-    private final Supplier<List<String>> supplier;
-    private final Type type;
+public class LazyStringPlaceholder implements Placeholder {
+    @Pattern("[a-z\\d_-]+")
+    private final String name;
+    private final Supplier<String> supplier;
 
-    public static SupplierStringMessageable of(Supplier<List<String>> message) {
-        return of(message, Type.LEGACY);
-    }
-
+    @SuppressWarnings("unchecked")
     @Override
-    public List<String> getKeys() {
-        return supplier.get();
-    }
-
-    @Override
-    public boolean needsTranslation() {
-        return false;
+    @NotNull
+    public <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
+        return (B) Component.text().content(supplier.get());
     }
 }

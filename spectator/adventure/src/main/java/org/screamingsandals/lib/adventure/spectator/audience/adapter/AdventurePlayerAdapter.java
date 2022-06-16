@@ -22,11 +22,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.TitleableAudienceComponentLike;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 import org.screamingsandals.lib.spectator.bossbar.BossBar;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
+import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.spectator.title.Title;
 
 public class AdventurePlayerAdapter extends AdventureAdapter implements PlayerAdapter {
@@ -57,6 +59,11 @@ public class AdventurePlayerAdapter extends AdventureAdapter implements PlayerAd
     @Override
     public void showTitle(@NotNull Title title) {
         wrappedObject.showTitle(title.as(net.kyori.adventure.title.Title.class));
+    }
+
+    @Override
+    public void showTitle(@NotNull TitleableAudienceComponentLike title, @Nullable TimesProvider times) {
+        showTitle(title.asTitle(owner(), times));
     }
 
     @Override

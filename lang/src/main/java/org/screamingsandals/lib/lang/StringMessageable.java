@@ -23,7 +23,7 @@ import java.util.List;
 
 @Data
 @RequiredArgsConstructor(staticName = "of")
-public class StringMessageable implements Messageable {
+public final class StringMessageable implements Messageable {
     private final List<String> keys;
     private final Type type;
 

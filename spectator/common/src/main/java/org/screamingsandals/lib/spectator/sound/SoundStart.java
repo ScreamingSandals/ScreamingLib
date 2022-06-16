@@ -18,9 +18,11 @@ package org.screamingsandals.lib.spectator.sound;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 public interface SoundStart extends Wrapper, RawValueHolder {
@@ -67,6 +69,15 @@ public interface SoundStart extends Wrapper, RawValueHolder {
     @NotNull
     SoundStart withPitch(float pitch);
 
+    @LimitedVersionSupport(">= 1.19")
+    @Nullable
+    Long seed();
+
+    @Contract(pure = true)
+    @NotNull
+    @LimitedVersionSupport(">= 1.19")
+    SoundStart withSeed(@Nullable Long seed);
+
     @Contract(value = "-> new", pure = true)
     @NotNull
     SoundStart.Builder toBuilder();
@@ -87,6 +98,11 @@ public interface SoundStart extends Wrapper, RawValueHolder {
         @NotNull
         @Contract("_ -> this")
         Builder pitch(float pitch);
+
+        @NotNull
+        @Contract("_ -> this")
+        @LimitedVersionSupport(">= 1.19")
+        Builder seed(@Nullable Long seed);
 
         @NotNull
         @Contract(value = "-> new", pure = true)

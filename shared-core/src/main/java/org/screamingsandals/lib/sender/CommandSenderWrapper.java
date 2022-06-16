@@ -27,6 +27,7 @@ public interface CommandSenderWrapper extends Wrapper, Operator, Audience.Forwar
 
     Type getType();
 
+    @Deprecated // legacy message ew
     void sendMessage(String message);
 
     default boolean hasPermission(String permission) {

@@ -25,6 +25,7 @@ import org.screamingsandals.lib.spectator.mini.resolvers.ComponentBuilderResolve
 
 import java.time.temporal.TemporalAccessor;
 import java.util.List;
+import java.util.function.*;
 
 public interface Placeholder extends ComponentBuilderResolver {
 
@@ -45,8 +46,18 @@ public interface Placeholder extends ComponentBuilderResolver {
     }
 
     @NotNull
+    static Placeholder lazyComponent(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Component> component) {
+        return new LazyComponentPlaceholder(name, component);
+    }
+
+    @NotNull
     static Placeholder unparsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull String value) {
         return new StringPlaceholder(name, value);
+    }
+
+    @NotNull
+    static Placeholder lazyUnparsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull String> value) {
+        return new LazyStringPlaceholder(name, value);
     }
 
     @NotNull
@@ -55,8 +66,33 @@ public interface Placeholder extends ComponentBuilderResolver {
     }
 
     @NotNull
-    static Placeholder number(@Pattern("[a-z\\d_-]+") @NotNull String name, Number value) {
+    static Placeholder lazyParsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull String> value) {
+        return new LazyMiniPlaceholder(name, value);
+    }
+
+    @NotNull
+    static Placeholder number(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Number value) {
         return new NumberPlaceholder(name, value);
+    }
+
+    @NotNull
+    static Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Number> value) {
+        return new LazyNumberPlaceholder(name, value);
+    }
+
+    @NotNull
+    static Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull IntSupplier value) {
+        return new LazyNumberPlaceholder(name, value::getAsInt);
+    }
+
+    @NotNull
+    static Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull LongSupplier value) {
+        return new LazyNumberPlaceholder(name, value::getAsLong);
+    }
+
+    @NotNull
+    static Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull DoubleSupplier value) {
+        return new LazyNumberPlaceholder(name, value::getAsDouble);
     }
 
     @NotNull
@@ -65,18 +101,38 @@ public interface Placeholder extends ComponentBuilderResolver {
     }
 
     @NotNull
+    static Placeholder lazyBool(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull BooleanSupplier value) {
+        return new LazyBooleanPlaceholder(name, value);
+    }
+
+    @NotNull
     static Placeholder character(@Pattern("[a-z\\d_-]+") @NotNull String name, char value) {
         return new CharPlaceholder(name, value);
     }
 
     @NotNull
-    static Placeholder dateTime(@Pattern("[a-z\\d_-]+") @NotNull String name, TemporalAccessor value) {
+    static Placeholder lazyCharacter(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Character> value) {
+        return new LazyCharPlaceholder(name, value);
+    }
+
+    @NotNull
+    static Placeholder dateTime(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull TemporalAccessor value) {
         return new DateTimePlaceholder(name, value);
     }
 
     @NotNull
-    static Placeholder choice(@Pattern("[a-z\\d_-]+") @NotNull String name, Number value) {
-        return new NumberPlaceholder(name, value);
+    static Placeholder lazyDateTime(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull TemporalAccessor> value) {
+        return new LazyDateTimePlaceholder(name, value);
+    }
+
+    @NotNull
+    static Placeholder choice(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Number value) {
+        return new ChoicePlaceholder(name, value);
+    }
+
+    @NotNull
+    static Placeholder lazyChoice(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Number> value) {
+        return new LazyChoicePlaceholder(name, value);
     }
 
 }

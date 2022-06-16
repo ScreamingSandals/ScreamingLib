@@ -29,9 +29,9 @@ import java.util.List;
 @Data
 public final class Translation implements Messageable {
     private final List<String> keys = new LinkedList<>();
-    private final Component fallback;
+    private final ComponentLike fallback;
 
-    private Translation(Collection<String> keys, Component fallback) {
+    private Translation(Collection<String> keys, ComponentLike fallback) {
         this.keys.addAll(keys);
         this.fallback = fallback;
     }
@@ -44,12 +44,12 @@ public final class Translation implements Messageable {
         return of(keys, Component.text().content(String.join(".", keys)).color(Color.RED).build());
     }
 
-    public static Translation of(Collection<String> keys, Component fallback) {
+    public static Translation of(Collection<String> keys, ComponentLike fallback) {
         return new Translation(keys, fallback);
     }
 
-    public static Translation of(Collection<String> keys, ComponentLike fallback) {
-        return new Translation(keys, fallback.asComponent());
+    public static Translation of(ComponentLike fallback, String... keys) {
+        return of(Arrays.asList(keys), fallback);
     }
 
     public Translation join(String... key) {
@@ -88,5 +88,9 @@ public final class Translation implements Messageable {
     @Override
     public Type getType() {
         return Type.ADVENTURE;
+    }
+
+    public Component getFallback() {
+        return fallback.asComponent();
     }
 }

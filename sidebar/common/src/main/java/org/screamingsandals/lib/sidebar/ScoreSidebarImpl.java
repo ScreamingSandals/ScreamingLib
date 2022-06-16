@@ -25,12 +25,12 @@ import org.screamingsandals.lib.packet.SClientboundSetDisplayObjectivePacket;
 import org.screamingsandals.lib.packet.SClientboundSetObjectivePacket;
 import org.screamingsandals.lib.packet.SClientboundSetScorePacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.sender.SenderMessage;
-import org.screamingsandals.lib.sender.StaticSenderMessage;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeamImpl;
+import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
+import org.screamingsandals.lib.spectator.StaticAudienceComponentLike;
 import org.screamingsandals.lib.utils.data.DataContainer;
 import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.visuals.impl.AbstractVisual;
@@ -49,7 +49,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     @Setter
     protected DataContainer data;
     protected boolean ready;
-    protected SenderMessage title = SenderMessage.empty();
+    protected AudienceComponentLike title = AudienceComponentLike.empty();
     private final String objectiveKey;
     private final List<ScoreEntry> lines = new CopyOnWriteArrayList<>();
 
@@ -92,15 +92,15 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
 
     @Override
     public ScoreSidebar title(Component title) {
-        return title(SenderMessage.of(title));
+        return title(AudienceComponentLike.of(title));
     }
 
     @Override
     public ScoreSidebar title(ComponentLike title) {
-        if (title instanceof SenderMessage) {
-            this.title = (SenderMessage) title;
+        if (title instanceof AudienceComponentLike) {
+            this.title = (AudienceComponentLike) title;
         } else {
-            this.title = SenderMessage.of(title);
+            this.title = AudienceComponentLike.of(title);
         }
         updateTitle0();
         return this;
@@ -186,7 +186,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
                 packets.forEach(packet -> packet.sendPacket(viewers));
             }
 
-            if (!(this.title instanceof StaticSenderMessage)) {
+            if (!(this.title instanceof StaticAudienceComponentLike)) {
                 updateTitle0();
             }
         }
