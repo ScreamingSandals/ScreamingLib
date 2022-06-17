@@ -680,12 +680,7 @@ public final class MinecraftHelp<C> {
             final @NotNull C sender,
             final @NotNull Component title
     ) {
-        final int sideLength = (this.headerFooterLength - ComponentHelper.length(title)) / 2;
-        return text()
-                .append(this.line(sideLength))
-                .append(title)
-                .append(this.line(sideLength))
-                .build();
+        return ComponentHelper.header(title, this.headerFooterLength, this.colors.primary);
     }
 
     private @NotNull Component basicHeader(final @NotNull C sender) {
@@ -718,17 +713,17 @@ public final class MinecraftHelp<C> {
 
     @NotNull
     private Component line(final int length) {
-        return text().content("-").color(this.colors.primary).strikethrough().build().repeat(length);
+        return ComponentHelper.line(length, this.colors.primary);
     }
 
     @NotNull
     private Component branch() {
-        return text("├─", this.colors.accent);
+        return ComponentHelper.branch(this.colors.accent);
     }
 
     @NotNull
     private Component lastBranch() {
-        return text("└─", this.colors.accent);
+        return ComponentHelper.lastBranch(this.colors.accent);
     }
 
     @NotNull

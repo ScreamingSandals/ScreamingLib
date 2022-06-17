@@ -47,6 +47,9 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.TextComponent;
+import org.screamingsandals.lib.spectator.audience.Audience;
+
+import static org.screamingsandals.lib.spectator.Component.text;
 
 @UtilityClass
 final class ComponentHelper {
@@ -72,6 +75,31 @@ final class ComponentHelper {
             length += length(child);
         }
         return length;
+    }
+
+    @NotNull
+    public static Component line(int length, Color color) {
+        return text().content("-").color(color).strikethrough().build().repeat(length);
+    }
+
+    @NotNull
+    public static Component branch(Color color) {
+        return text("├─", color);
+    }
+
+    @NotNull
+    public static Component lastBranch(Color color) {
+        return text("└─", color);
+    }
+
+    @NotNull
+    public static Component header(@NotNull Component title, int headerFooterLength, Color color) {
+        final int sideLength = (headerFooterLength - ComponentHelper.length(title)) / 2;
+        return text()
+                .append(line(sideLength, color))
+                .append(title)
+                .append(line(sideLength, color))
+                .build();
     }
 
 }

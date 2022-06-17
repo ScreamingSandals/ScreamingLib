@@ -345,6 +345,11 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
+    public boolean hasStyling() {
+        return wrappedObject.hasFormatting();
+    }
+
+    @Override
     public <T> T as(Class<T> type) {
         try {
             return super.as(type);
@@ -509,6 +514,11 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         public B clickEvent(@Nullable ClickEvent event) {
             component.setClickEvent(event == null ? null : event.as(net.md_5.bungee.api.chat.ClickEvent.class));
             return self();
+        }
+
+        @Override
+        public boolean hasStyling() {
+            return component.hasFormatting();
         }
 
         @SuppressWarnings("unchecked")

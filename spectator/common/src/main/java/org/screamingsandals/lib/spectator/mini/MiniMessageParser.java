@@ -121,8 +121,14 @@ public class MiniMessageParser {
                     var resolved = node.children();
                     if (resolved.size() == 1) {
                         var child = (B) resolveChildren(resolved.get(0), placeholders);
-                        res.resolve(this, child, (TagNode) node, placeholders);
-                        return child;
+                        if (child.hasStyling()) {
+                            var component = (B) Component.text();
+                            res.resolve(this, component, (TagNode) node, placeholders);
+                            return component.append(child);
+                        } else {
+                            res.resolve(this, child, (TagNode) node, placeholders);
+                            return child;
+                        }
                     } else {
                         var component = (B) Component.text();
                         res.resolve(this, component, (TagNode) node, placeholders);

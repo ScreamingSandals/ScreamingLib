@@ -429,6 +429,8 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
     String toJavaJson();
 
+    boolean hasStyling();
+
     interface Builder<B extends Builder<B, C>, C extends Component> extends ComponentLike {
         B color(Color color);
 
@@ -514,6 +516,8 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         B hoverEvent(@Nullable Component component);
 
         B clickEvent(@Nullable ClickEvent event);
+
+        boolean hasStyling();
 
         C build();
 

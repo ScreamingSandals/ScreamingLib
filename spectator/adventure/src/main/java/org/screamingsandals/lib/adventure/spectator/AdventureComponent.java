@@ -38,6 +38,7 @@ import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.TriState;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -315,6 +316,11 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
+    public boolean hasStyling() {
+        return wrappedObject.hasStyling();
+    }
+
+    @Override
     public <T> T as(Class<T> type) {
         try {
             return super.as(type);
@@ -478,6 +484,12 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
         public B clickEvent(@Nullable ClickEvent event) {
             builder.clickEvent(event == null ? null : event.as(net.kyori.adventure.text.event.ClickEvent.class));
             return self();
+        }
+
+        @Override
+        public boolean hasStyling() {
+            var result = Reflect.fastInvoke(builder, "hasStyle");
+            return result instanceof Boolean && (Boolean) result; // Sorry Adventure, I had to
         }
 
         @SuppressWarnings("unchecked")
