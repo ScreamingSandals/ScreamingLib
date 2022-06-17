@@ -48,7 +48,7 @@ import java.util.function.BiFunction;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 
-final class Pagination<T> {
+public final class Pagination<T> {
 
     private final BiFunction<Integer, Integer, List<Component>> headerRenderer;
     private final BiFunction<T, Boolean, Component> rowRenderer;

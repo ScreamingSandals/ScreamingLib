@@ -52,7 +52,7 @@ import org.screamingsandals.lib.spectator.audience.Audience;
 import static org.screamingsandals.lib.spectator.Component.text;
 
 @UtilityClass
-final class ComponentHelper {
+public final class ComponentHelper {
 
     public static final Pattern SPECIAL_CHARACTERS_PATTERN = Pattern.compile("[^\\s\\w\\-]");
 
