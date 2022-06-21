@@ -132,10 +132,9 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     @Override
     public Color rgb(int red, int green, int blue) {
         int combined = red << 16 | green << 8 | blue;
-        //noinspection ConstantConditions - stfu idea
-        if (ChatColor.ALL_CODES.contains("Xx")) {
+        try {
             return new BungeeColor(ChatColor.of(String.format("#%06X", (0xFFFFFF & combined))));
-        } else {
+        } catch (Throwable ignored) {
             switch (combined) {
                 case 0x0000AA:
                     return new BungeeColor(ChatColor.DARK_BLUE);
@@ -168,7 +167,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
                 case 0xFFFFFF:
                     return new BungeeColor(ChatColor.WHITE);
                 default:
-                    return new BungeeColor(ChatColor.BLACK);
+                    return nearestNamedTo(red, green, blue);
             }
         }
     }
@@ -198,7 +197,10 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
             } catch (Throwable ignored) {
             }
         }
-        return null;
+        try {
+            return new BungeeColor(ChatColor.valueOf(hexOrName.toUpperCase()));
+        } catch (Throwable ignored) {}
+        return new BungeeColor(ChatColor.WHITE); // never returns null!!!
     }
 
     public Color nearestNamedTo(Color color) {
@@ -206,10 +208,14 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
             return Color.WHITE;
         }
 
+        return nearestNamedTo(color.red(), color.green(), color.blue());
+    }
+
+    private Color nearestNamedTo(int red, int green, int blue) {
         var matchedDistance = Float.MAX_VALUE;
         var match = Color.WHITE;
         for (var potential : Color.NAMED_VALUES.values()) {
-            final float distance = distance(rgbToHsvArray(color.red(), color.green(), color.blue()), rgbToHsvArray(potential.red(), potential.green(), potential.blue()));
+            final float distance = distance(rgbToHsvArray(red, green, blue), rgbToHsvArray(potential.red(), potential.green(), potential.blue()));
             if (distance < matchedDistance) {
                 match = potential;
                 matchedDistance = distance;

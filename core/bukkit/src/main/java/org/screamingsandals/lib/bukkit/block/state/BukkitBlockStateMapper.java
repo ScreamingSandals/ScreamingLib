@@ -25,6 +25,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Optional;
 
@@ -32,18 +33,25 @@ import java.util.Optional;
         BukkitBlockMapper.class
 })
 public class BukkitBlockStateMapper extends BlockStateMapper {
+    public static final boolean HAS_TILE_STATE = Reflect.has("org.bukkit.block.TileState");
 
     @SuppressWarnings("unchecked")
     @Override
     protected <T extends BlockStateHolder> Optional<T> wrapBlockState0(Object blockState) {
         // ORDER IS IMPORTANT
 
-        if (blockState instanceof Sign) {
-            return Optional.of((T) new SignBlockStateHolder((Sign) blockState));
-        }
+        if (HAS_TILE_STATE) {
+            if (blockState instanceof Sign) {
+                return Optional.of((T) new SignBlockStateHolder((Sign) blockState));
+            }
 
-        if (blockState instanceof TileState) {
-            return Optional.of((T) new TileBlockStateHolder((TileState) blockState));
+            if (blockState instanceof TileState) {
+                return Optional.of((T) new TileBlockStateHolder((TileState) blockState));
+            }
+        } else {
+            if (blockState instanceof Sign) {
+                return Optional.of((T) new LegacySignBlockStateHolder((Sign) blockState));
+            }
         }
 
         if (blockState instanceof BlockState) {

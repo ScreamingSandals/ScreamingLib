@@ -19,8 +19,10 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
+import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SVehicleCreateEvent;
@@ -29,7 +31,7 @@ import org.screamingsandals.lib.event.entity.SVehicleCreateEvent;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-public class SBukkitVehicleCreateEvent implements SVehicleCreateEvent, BukkitCancellable {
+public class SBukkitVehicleCreateEvent implements SVehicleCreateEvent, NoAutoCancellable {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
@@ -44,5 +46,22 @@ public class SBukkitVehicleCreateEvent implements SVehicleCreateEvent, BukkitCan
             entity = EntityMapper.wrapEntity(event.getVehicle()).orElseThrow();
         }
         return entity;
+    }
+
+    @Override
+    public boolean cancelled() {
+        //noinspection ConstantConditions - older versions of Bukkit API
+        if (event instanceof Cancellable) {
+            return event.isCancelled();
+        }
+        return false;
+    }
+
+    @Override
+    public void cancelled(boolean cancel) {
+        //noinspection ConstantConditions - older versions of Bukkit API
+        if (event instanceof Cancellable) {
+            event.setCancelled(true);
+        }
     }
 }
