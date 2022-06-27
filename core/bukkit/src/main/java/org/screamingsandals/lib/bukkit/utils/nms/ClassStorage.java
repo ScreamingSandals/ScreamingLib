@@ -145,8 +145,27 @@ public class ClassStorage {
 		return null;
 	}
 
+	/**
+	 * Unlike packets module, this method just send packet created by NMS itself (used by Spectator so packets module is not required by core)
+	 */
+	public static boolean sendNMSConstructedPacket(Player player, Object packet) {
+		if (!PacketAccessor.getType().isInstance(packet)) {
+			return false;
+		}
+		Object connection = getPlayerConnection(player);
+		if (connection != null) {
+			Reflect.fastInvoke(connection, ServerGamePacketListenerImplAccessor.getMethodSend1(), packet);
+			return true;
+		}
+		return false;
+	}
+
 	public static Object asMinecraftComponent(Component component) {
-		return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), (Object) component.toJavaJson());
+		if (Component_i_SerializerAccessor.getMethodM_130701_1() != null) { // 1.16.1+
+			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), (Object) component.toJavaJson());
+		} else {
+			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodFunc_150699_a1(), (Object) component.toJavaJson());
+		}
 	}
 
 	public static Object stackAsNMS(ItemStack item) {
@@ -179,7 +198,7 @@ public class ClassStorage {
 				return Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_191308_b()).fastInvokeResulted(MappedRegistryAccessor.getMethodFunc_148757_b1(), clazz).asOptional(Integer.class).orElse(0);
 			}
 
-			// 1.9.4 - 1.10.2
+			// 1.8.8 - 1.10.2
 			return (int) Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_75624_e()).as(Map.class).get(clazz);
 		}
 	}

@@ -47,7 +47,6 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.TextComponent;
-import org.screamingsandals.lib.spectator.audience.Audience;
 
 import static org.screamingsandals.lib.spectator.Component.text;
 

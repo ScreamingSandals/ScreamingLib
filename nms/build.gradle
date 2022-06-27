@@ -11,95 +11,109 @@ nmsGen {
     sourceSet = "src/generated/java"
     cleanOnRebuild = true
 
-    var ChatComponent = reqClass('net.minecraft.network.chat.Component')
-        .reqMethod('searge:func_150254_d') // get legacy string
+    reqClass('net.minecraft.network.chat.Component') {
+        reqMethod('searge:func_150254_d') // get legacy string
+    }
 
-    reqClass('net.minecraft.world.entity.EntityType')
-        .reqMethod('byString', String) // 1.14+
-        .reqMethod('searge:func_200713_a', String) // 1.13.X
-        .reqField('searge:field_191308_b') // 1.11 - 1.12.2
-        .reqField('searge:field_75624_e') // <= 1.10.2
+    reqClass('net.minecraft.world.entity.EntityType') {
+        reqMethod('byString', String) // 1.14+
+        reqMethod('searge:func_200713_a', String) // 1.13.X
+        reqField('searge:field_191308_b') // 1.11 - 1.12.2
+        reqField('searge:field_75624_e') // <= 1.10.2
+    }
 
-    reqClass('net.minecraft.core.Registry')
-        .reqField('ENTITY_TYPE')
-        .reqMethod('getId', Object)
+    reqClass('net.minecraft.core.Registry') {
+        reqField('ENTITY_TYPE')
+        reqMethod('getId', Object)
+    }
 
-    reqClass('net.minecraft.core.MappedRegistry')
-        .reqMethod('searge:func_148757_b', Object)
+    reqClass('net.minecraft.core.MappedRegistry') {
+        reqMethod('searge:func_148757_b', Object)
+    }
 
-    reqClass('net.minecraft.world.entity.Entity')
-        .reqMethod('getEntityData') // DataWatcher
-        .reqMethod('getCommandSenderWorld') // world
-        .reqMethod('getX')
-        .reqMethod('getY')
-        .reqMethod('getZ')
-        .reqMethod('getYRot')
-        .reqMethod('getXRot')
-        .reqMethod('getType')
-        .reqMethod('getId')
-        .reqMethod('setNoGravity', boolean)
-        .reqMethod('isNoGravity')
-        .reqMethod('setOnGround', boolean)
-        .reqMethod('isOnGround')
-        .reqMethod('getUUID')
-        .reqMethod('setCustomNameVisible', boolean)
-        .reqMethod('isCustomNameVisible')
-        .reqMethod('setInvisible', boolean)
-        .reqMethod('isInvisible')
-        .reqMethod('getDeltaMovement')
-        .reqMethod('searge:func_96094_a', String) // setCustomName
-        .reqMethod('setCustomName', ChatComponent)
-        .reqMethod('absMoveTo', double, double, double, float, float)
-        .reqMethod('getCustomName')
-        .reqField('searge:field_70159_w') // velocity x
-        .reqField('searge:field_70181_x') // velocity y
-        .reqField('searge:field_70179_y') // velocity z
-        .reqField('searge:field_70152_a')
-        .reqField('onGround')
-        .reqField('id')
-        .reqField('ENTITY_COUNTER')
-        .reqField('searge:field_70177_z') // yaw
-        .reqField('searge:field_70125_A') // pitch
-        .reqField('searge:field_70165_t') // locX
-        .reqField('searge:field_70163_u') // locY
-        .reqField('searge:field_70161_v') // locZ
-        .reqField('searge:field_70170_p') // world
+    reqClass('net.minecraft.world.entity.Entity') {
+        reqMethod('getEntityData') // DataWatcher
+        reqMethod('getCommandSenderWorld') // world
+        reqMethod('getX')
+        reqMethod('getY')
+        reqMethod('getZ')
+        reqMethod('getYRot')
+        reqMethod('getXRot')
+        reqMethod('getType')
+        reqMethod('getId')
+        reqMethod('setNoGravity', boolean)
+        reqMethod('isNoGravity')
+        reqMethod('setOnGround', boolean)
+        reqMethod('isOnGround')
+        reqMethod('getUUID')
+        reqMethod('setCustomNameVisible', boolean)
+        reqMethod('isCustomNameVisible')
+        reqMethod('setInvisible', boolean)
+        reqMethod('isInvisible')
+        reqMethod('getDeltaMovement')
+        reqMethod('searge:func_96094_a', String) // setCustomName
+        reqMethod('setCustomName', '@Component')
+        reqMethod('absMoveTo', double, double, double, float, float)
+        reqMethod('getCustomName')
+        reqField('searge:field_70159_w') // velocity x
+        reqField('searge:field_70181_x') // velocity y
+        reqField('searge:field_70179_y') // velocity z
+        reqField('searge:field_70152_a')
+        reqField('onGround')
+        reqField('id')
+        reqField('ENTITY_COUNTER')
+        reqField('searge:field_70177_z') // yaw
+        reqField('searge:field_70125_A') // pitch
+        reqField('searge:field_70165_t') // locX
+        reqField('searge:field_70163_u') // locY
+        reqField('searge:field_70161_v') // locZ
+        reqField('searge:field_70170_p') // world
+    }
 
-    reqClass('net.minecraft.network.chat.Component$Serializer')
-        .reqMethod('searge:m_130701_', String)
+    reqClass('net.minecraft.network.chat.Component$Serializer') {
+        reqMethod('searge:func_150699_a', String) // up to 1.15.2
+        reqMethod('searge:m_130701_', String) // 1.16.1+
+    }
 
-    reqClass('net.minecraft.core.Rotations')
-        .reqConstructor(float, float, float)
-        .reqMethod('getX')
-        .reqMethod('getY')
-        .reqMethod('getZ')
+    reqClass('net.minecraft.core.Rotations') {
+        reqConstructor(float, float, float)
+        reqMethod('getX')
+        reqMethod('getY')
+        reqMethod('getZ')
+    }
 
-    var PathfinderGoal = reqClass('net.minecraft.world.entity.ai.goal.Goal')
+    reqClass('net.minecraft.world.entity.ai.goal.Goal')
 
-    reqClass('net.minecraft.world.entity.ai.goal.GoalSelector')
-        .reqConstructor(Supplier)
+    reqClass('net.minecraft.world.entity.ai.goal.GoalSelector') {
+        reqConstructor(Supplier)
+    }
 
-    var Level = reqClass('net.minecraft.world.level.Level')
-        .reqMethod('getProfilerSupplier')
-        .reqMethod('getProfiler')
-        .reqField('searge:field_72984_F')
+    reqClass('net.minecraft.world.level.Level') {
+        reqMethod('getProfilerSupplier')
+        reqMethod('getProfiler')
+        reqField('searge:field_72984_F')
+    }
 
-    reqClass('net.minecraft.world.entity.decoration.ArmorStand')
-        .reqField('DATA_CLIENT_FLAGS')
-        .reqField('DATA_HEAD_POSE')
-        .reqConstructor(Level, double, double, double)
-        .reqMethod('setSmall', boolean)
-        .reqMethod('isSmall')
-        .reqMethod('isShowArms')
-        .reqMethod('setShowArms', boolean)
-        .reqMethod('setNoBasePlate', boolean)
-        .reqMethod('isNoBasePlate')
-        .reqMethod('setMarker', boolean)
-        .reqMethod('isMarker')
+    reqClass('net.minecraft.world.entity.decoration.ArmorStand') {
+        reqField('DATA_CLIENT_FLAGS')
+        reqField('DATA_HEAD_POSE')
+        reqConstructor('@Level', double, double, double)
+        reqMethod('setSmall', boolean)
+        reqMethod('isSmall')
+        reqMethod('isShowArms')
+        reqMethod('setShowArms', boolean)
+        reqMethod('setNoBasePlate', boolean)
+        reqMethod('isNoBasePlate')
+        reqMethod('setMarker', boolean)
+        reqMethod('isMarker')
+    }
 
-    reqClass('net.minecraft.server.level.ServerPlayer')
-            .reqField('connection')
-            .reqField('latency')
+    reqClass('net.minecraft.server.level.ServerPlayer') {
+        reqField('connection')
+        reqField('latency')
+    }
+
+    reqClass('net.minecraft.network.protocol.Packet')
 
     reqClass('net.minecraft.network.protocol.game.ClientboundAnimatePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket')
@@ -111,10 +125,12 @@ nmsGen {
     reqClass('net.minecraft.network.protocol.game.ClientboundSetCameraPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetEntityLinkPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket')
-    reqClass('net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket')
-        .reqField('entityId')
-    reqClass('net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket')
-        .reqField('entity')
+    reqClass('net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket') {
+        reqField('entityId')
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket') {
+        reqField('entity')
+    }
     reqClass('net.minecraft.network.protocol.game.ClientboundRotateHeadPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundMoveEntityPacket$Rot')
@@ -142,142 +158,196 @@ nmsGen {
     reqClass('net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket$Parameters')
 
+    /* SPECTATOR start - Spigot implementation (no-legacy text) */
+    // Titles <= 1.16.5
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetTitlesPacket$Type') {
+        reqEnumField('TITLE')
+        reqEnumField('SUBTITLE')
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetTitlesPacket') {
+        reqConstructor(int, int, int)
+        reqConstructor('@ClientboundSetTitlesPacket$Type', '@Component')
+    }
+    // Titles >= 1.17
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket') {
+        reqConstructor('@Component')
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket') {
+        reqConstructor('@Component')
+    }
+    reqClass('net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket') {
+        reqConstructor(int, int, int)
+    }
+    /* SPECTATOR end */
+
     reqClass('net.minecraft.network.syncher.EntityDataSerializers')
-    reqClass('net.minecraft.network.syncher.EntityDataAccessor')
-        .reqMethod('getId')
+    reqClass('net.minecraft.network.syncher.EntityDataAccessor') {
+        reqMethod('getId')
+    }
 
     reqClass('net.minecraft.world.level.GameType')
 
-    reqClass('net.minecraft.network.protocol.game.ServerboundInteractPacket')
-        .reqField('entityId')
-        .reqField('action')
-        .reqField('ATTACK_ACTION')
+    reqClass('net.minecraft.network.protocol.game.ServerboundInteractPacket') {
+        reqField('entityId')
+        reqField('action')
+        reqField('ATTACK_ACTION')
+    }
 
-    reqClass('net.minecraft.network.protocol.game.ServerboundInteractPacket$ActionType')
-        .reqField('ATTACK')
+    reqClass('net.minecraft.network.protocol.game.ServerboundInteractPacket$ActionType') {
+        reqField('ATTACK')
+    }
 
     reqClass('net.minecraft.network.syncher.EntityDataSerializers')
 
-    var Item = reqClass('net.minecraft.world.item.Item')
-    Item.reqMethod('getId', Item)
+    reqClass('net.minecraft.world.item.Item') {
+        reqMethod('getId', '@Item')
+    }
 
     // new way of getting protocol
-    reqClass('net.minecraft.SharedConstants')
-        .reqMethod('getProtocolVersion')
+    reqClass('net.minecraft.SharedConstants') {
+        reqMethod('getProtocolVersion')
+    }
 
-    reqClass('net.minecraft.server.MinecraftServer')
-        .reqField('status')
-        .reqField('connection')
+    reqClass('net.minecraft.server.MinecraftServer') {
+        reqField('status')
+        reqField('connection')
+    }
 
-    reqClass('net.minecraft.server.network.ServerConnectionListener')
-        .reqField('channels')
-        .reqField('connections')
+    reqClass('net.minecraft.server.network.ServerConnectionListener') {
+        reqField('channels')
+        reqField('connections')
+    }
 
     // old way of getting protocol
-    reqClass('net.minecraft.network.protocol.status.ServerStatus')
-        .reqMethod('getVersion')
+    reqClass('net.minecraft.network.protocol.status.ServerStatus') {
+        reqMethod('getVersion')
+    }
 
-    reqClass('net.minecraft.network.protocol.status.ServerStatus$Version')
-        .reqMethod('getProtocol')
+    reqClass('net.minecraft.network.protocol.status.ServerStatus$Version') {
+        reqMethod('getProtocol')
+    }
 
-    var BlockState = reqClass('net.minecraft.world.level.block.state.BlockState')
+    reqClass('net.minecraft.world.level.block.state.BlockState')
 
-    reqClass('net.minecraft.world.level.block.Block')
-        .reqMethod('getId', BlockState)
-        .reqMethod('spigot:fromLegacyData', int)
+    reqClass('net.minecraft.world.level.block.Block') {
+        reqMethod('getId', '@BlockState')
+        reqMethod('spigot:fromLegacyData', int)
+    }
 
-    reqClass('net.minecraft.network.protocol.PacketFlow')
-        .reqEnumField('SERVERBOUND')
-        .reqEnumField('CLIENTBOUND')
+    reqClass('net.minecraft.network.protocol.PacketFlow') {
+        reqEnumField('SERVERBOUND')
+        reqEnumField('CLIENTBOUND')
+    }
 
-    reqClass('net.minecraft.network.ConnectionProtocol')
-        .reqEnumField('HANDSHAKING')
-        .reqEnumField('PLAY')
-        .reqEnumField('STATUS')
-        .reqEnumField('LOGIN')
-        .reqField('flows') // new
-        .reqField('mojang:packets:1.14.4') // old
+    reqClass('net.minecraft.network.ConnectionProtocol') {
+        reqEnumField('HANDSHAKING')
+        reqEnumField('PLAY')
+        reqEnumField('STATUS')
+        reqEnumField('LOGIN')
+        reqField('flows') // new
+        reqField('mojang:packets:1.14.4') // old
+    }
 
-    reqClass('net.minecraft.network.ConnectionProtocol$PacketSet')
-        .reqMethod('getId', Class)
+    reqClass('net.minecraft.network.ConnectionProtocol$PacketSet') {
+        reqMethod('getId', Class)
+    }
 
-    reqClass('net.minecraft.server.network.ServerGamePacketListenerImpl')
-        .reqField('connection')
+    reqClass('net.minecraft.server.network.ServerGamePacketListenerImpl') {
+        reqField('connection')
+        reqMethod('send', '@Packet')
+    }
 
-    reqClass('net.minecraft.network.Connection')
-        .reqField('channel')
+    reqClass('net.minecraft.network.Connection') {
+        reqField('channel')
+    }
 
-    reqClass('net.minecraft.core.Direction')
-        .reqMethod('fromYRot', double)
+    reqClass('net.minecraft.core.Direction') {
+        reqMethod('fromYRot', double)
+    }
 
-    var Tag = reqClass('net.minecraft.nbt.Tag')
-        .reqMethod('getAsString')
+    reqClass('net.minecraft.nbt.Tag') {
+        reqMethod('getAsString')
+    }
 
-    reqClass('net.minecraft.nbt.ByteArrayTag')
-        .reqConstructor(byte[])
-        .reqMethod('getAsByteArray')
+    reqClass('net.minecraft.nbt.ByteArrayTag') {
+        reqConstructor(byte[])
+        reqMethod('getAsByteArray')
+    }
 
-    reqClass('net.minecraft.nbt.ByteTag')
-        .reqConstructor(byte)
-        .reqMethod('getAsByte')
-        .reqMethod('valueOf', byte)
+    reqClass('net.minecraft.nbt.ByteTag') {
+        reqConstructor(byte)
+        reqMethod('getAsByte')
+        reqMethod('valueOf', byte)
+    }
 
-    var CompoundTag = reqClass('net.minecraft.nbt.CompoundTag')
-        .reqConstructor()
-        .reqMethod('getAllKeys')
-        .reqMethod('get', String)
-        .reqMethod('put', String, Tag)
+    reqClass('net.minecraft.nbt.CompoundTag') {
+        reqConstructor()
+        reqMethod('getAllKeys')
+        reqMethod('get', String)
+        reqMethod('put', String, '@Tag')
+    }
 
-    reqClass('net.minecraft.network.FriendlyByteBuf')
-        .reqMethod('writeNbt', CompoundTag)
+    reqClass('net.minecraft.network.FriendlyByteBuf') {
+        reqMethod('writeNbt', '@CompoundTag')
+    }
 
-    reqClass('net.minecraft.nbt.DoubleTag')
-        .reqConstructor(double)
-        .reqMethod('getAsDouble')
-        .reqMethod('valueOf', double)
+    reqClass('net.minecraft.nbt.DoubleTag') {
+        reqConstructor(double)
+        reqMethod('getAsDouble')
+        reqMethod('valueOf', double)
+    }
 
-    reqClass('net.minecraft.nbt.FloatTag')
-        .reqConstructor(float)
-        .reqMethod('getAsFloat')
-        .reqMethod('valueOf', float)
+    reqClass('net.minecraft.nbt.FloatTag') {
+        reqConstructor(float)
+        reqMethod('getAsFloat')
+        reqMethod('valueOf', float)
+    }
 
-    reqClass('net.minecraft.nbt.IntArrayTag')
-        .reqConstructor(int[])
-        .reqMethod('getAsIntArray')
+    reqClass('net.minecraft.nbt.IntArrayTag') {
+        reqConstructor(int[])
+        reqMethod('getAsIntArray')
+    }
 
-    reqClass('net.minecraft.nbt.IntTag')
-        .reqConstructor(int)
-        .reqMethod('getAsInt')
-        .reqMethod('valueOf', int)
+    reqClass('net.minecraft.nbt.IntTag') {
+        reqConstructor(int)
+        reqMethod('getAsInt')
+        reqMethod('valueOf', int)
+    }
 
     // ListTag
 
-    reqClass('net.minecraft.nbt.LongArrayTag')
-        .reqConstructor(long[])
-        .reqMethod('getAsLongArray')
+    reqClass('net.minecraft.nbt.LongArrayTag') {
+        reqConstructor(long[])
+        reqMethod('getAsLongArray')
+    }
 
-    reqClass('net.minecraft.nbt.LongTag')
-        .reqConstructor(long)
-        .reqMethod('getAsLong')
-        .reqMethod('valueOf', long)
+    reqClass('net.minecraft.nbt.LongTag') {
+        reqConstructor(long)
+        reqMethod('getAsLong')
+        reqMethod('valueOf', long)
+    }
 
-    reqClass('net.minecraft.nbt.ShortTag')
-        .reqConstructor(short)
-        .reqMethod('getAsShort')
-        .reqMethod('valueOf', short)
+    reqClass('net.minecraft.nbt.ShortTag') {
+        reqConstructor(short)
+        reqMethod('getAsShort')
+        reqMethod('valueOf', short)
+    }
 
-    reqClass('net.minecraft.nbt.StringTag')
-        .reqConstructor(String)
-        .reqMethod('valueOf', String)
+    reqClass('net.minecraft.nbt.StringTag') {
+        reqConstructor(String)
+        reqMethod('valueOf', String)
+    }
 
 
-    reqClass('net.minecraft.world.item.ItemStack')
-        .reqMethod('copy')
-        .reqMethod('getTag')
+    reqClass('net.minecraft.world.item.ItemStack') {
+        reqMethod('copy')
+        reqMethod('getTag')
+    }
 
-    reqClass('net.minecraft.network.protocol.handshake.ClientIntentionPacket')
-        .reqField('protocolVersion')
-        .reqField('intention')
+    reqClass('net.minecraft.network.protocol.handshake.ClientIntentionPacket') {
+        reqField('protocolVersion')
+        reqField('intention')
+    }
 }
 
 tasks.getByName('compileJava').dependsOn('generateNmsComponents')

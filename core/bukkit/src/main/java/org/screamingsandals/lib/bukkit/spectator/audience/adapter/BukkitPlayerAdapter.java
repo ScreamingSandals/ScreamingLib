@@ -23,6 +23,8 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
+import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -100,16 +102,41 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
             );
             return;
         }
-        // TODO: try NMS here
+        try {
+            var t = ClassStorage.asMinecraftComponent(title.title());
+            var s = ClassStorage.asMinecraftComponent(title.subtitle());
+            if (ClientboundSetTitlesAnimationPacketAccessor.getType() != null) {
+                // 1.17+
+                var times = Reflect.construct(ClientboundSetTitlesAnimationPacketAccessor.getConstructor0(), title.fadeIn(), title.stay(), title.fadeOut());
+                ClassStorage.sendNMSConstructedPacket(commandSender(), times);
+
+                var titleP = Reflect.construct(ClientboundSetTitleTextPacketAccessor.getConstructor0(), t);
+                ClassStorage.sendNMSConstructedPacket(commandSender(), titleP);
+
+                var subtitleP = Reflect.construct(ClientboundSetSubtitleTextPacketAccessor.getConstructor0(), s);
+                ClassStorage.sendNMSConstructedPacket(commandSender(), subtitleP);
+                return;
+            } else if (ClientboundSetTitlesPacketAccessor.getType() != null) {
+                // 1.8.8 - 1.16.5
+                var times = Reflect.construct(ClientboundSetTitlesPacketAccessor.getConstructor0(), title.fadeIn(), title.stay(), title.fadeOut());
+                ClassStorage.sendNMSConstructedPacket(commandSender(), times);
+
+                var titleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.getConstructor1(), ClientboundSetTitlesPacket_i_TypeAccessor.getFieldTITLE(), t);
+                ClassStorage.sendNMSConstructedPacket(commandSender(), titleP);
+
+                var subtitleP = Reflect.construct(ClientboundSetTitlesPacketAccessor.getConstructor1(), ClientboundSetTitlesPacket_i_TypeAccessor.getFieldSUBTITLE(), s);
+                ClassStorage.sendNMSConstructedPacket(commandSender(), subtitleP);
+                return;
+            }
+        } catch (Throwable ignored) {
+        }
+        // Hello Glowstone ;)
         try {
             commandSender().sendTitle(title.title().toLegacy(), title.subtitle().toLegacy(), (int) (title.fadeIn().toMillis() / 50), (int) (title.stay().toMillis() / 50), (int) (title.fadeOut().toMillis() / 50));
             return;
         } catch (Throwable ignored) {
         }
-        try {
-            commandSender().sendTitle(title.title().toLegacy(), title.subtitle().toLegacy());
-        } catch (Throwable ignored) {
-        }
+        commandSender().sendTitle(title.title().toLegacy(), title.subtitle().toLegacy());
     }
 
     @Override

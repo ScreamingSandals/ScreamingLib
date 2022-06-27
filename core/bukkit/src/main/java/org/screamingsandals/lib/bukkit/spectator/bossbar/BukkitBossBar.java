@@ -173,7 +173,7 @@ public class BukkitBossBar extends BasicWrapper<BossBar> implements org.screamin
     public static class BukkitBossBarBuilder implements org.screamingsandals.lib.spectator.bossbar.BossBar.Builder {
         private Component title = Component.empty();
         private float progress = 0;
-        private BossBarColor color = BossBarColor.PURPLE;
+        private BossBarColor color = BossBarColor.PINK;
         private BossBarDivision division = BossBarDivision.NO_DIVISION;
         private Collection<BossBarFlag> flags;
         private final List<BossBarListener> listeners = new ArrayList<>();

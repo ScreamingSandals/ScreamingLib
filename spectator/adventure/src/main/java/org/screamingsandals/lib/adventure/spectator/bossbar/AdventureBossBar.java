@@ -122,7 +122,7 @@ public class AdventureBossBar extends BasicWrapper<net.kyori.adventure.bossbar.B
         private Component title = Component.empty();
         private float progress;
         @NotNull
-        private BossBarColor color = BossBarColor.PURPLE;
+        private BossBarColor color = BossBarColor.PINK;
         @NotNull
         private BossBarDivision division = BossBarDivision.NO_DIVISION;
         @NotNull
