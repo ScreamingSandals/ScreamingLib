@@ -50,6 +50,7 @@ registerModule('hologram', 'bukkit') //TODO: add others
 registerModule('visuals-api', 'bukkit') //TODO: add others
 registerModule('signs', 'bukkit') //TODO: add others
 registerModule('placeholders', 'bukkit') //TODO: add others
+registerModule('economy', 'bukkit')
 registerModule('packets', 'vanilla', 'bukkit') //TODO: add others
 registerModule('cloud', 'bukkit', /*'minestom' , 'sponge',*/ 'bungee', 'velocity', 'extras')
 

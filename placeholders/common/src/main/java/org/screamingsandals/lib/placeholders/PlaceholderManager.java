@@ -21,6 +21,7 @@ import org.screamingsandals.lib.placeholders.hooks.DummyHook;
 import org.screamingsandals.lib.placeholders.hooks.Hook;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 
 import java.util.LinkedList;
@@ -39,12 +40,6 @@ public abstract class PlaceholderManager {
             throw new UnsupportedOperationException("PlaceholderManager is already initialized!");
         }
         placeholderManager = this;
-    }
-
-    @ApiStatus.Internal
-    @OnPostConstruct
-    public void postConstruct() {
-        activeHooks.add(new DummyHook());
     }
 
     public static void registerExpansion(PlaceholderExpansion expansion) {

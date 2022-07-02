@@ -73,7 +73,6 @@ subprojects {
         minecraftLibraries()
         jitpack()
         sponge()
-        velocity()
         placeholderApi()
         paper()
         screaming()

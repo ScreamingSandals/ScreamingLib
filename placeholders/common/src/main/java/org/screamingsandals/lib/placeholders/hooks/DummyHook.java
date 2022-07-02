@@ -21,10 +21,8 @@ import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
-public class DummyHook implements Hook {
-    private static final Pattern pattern = Pattern.compile("%((?<identifier>[a-zA-Z0-9]+)_)(?<parameters>[^%]+)%");
+public class DummyHook extends AbstractPAPILikePlaceholder {
     private final List<PlaceholderExpansion> expansions = new ArrayList<>();
 
     @Override
@@ -34,32 +32,19 @@ public class DummyHook implements Hook {
         }
     }
 
-    // definitely not from:
-    // https://github.com/PlaceholderAPI/PlaceholderAPI/blob/ce18d3b597b690d77a2cc485a9674b5096cdf14d/src/main/java/me/clip/placeholderapi/replacer/RegexReplacer.java
     @Override
-    public String resolveString(MultiPlatformOfflinePlayer player, String message) {
-        final var matcher = pattern.matcher(message);
-        if (!matcher.find()) {
-            return message;
+    protected boolean has(String identifier) {
+        return expansions.stream().anyMatch(placeholderExpansion -> placeholderExpansion.getIdentifier().equals(identifier));
+    }
+
+    @Override
+    protected String resolve(MultiPlatformOfflinePlayer player, String identifier, String parameters) {
+        final var expansion = expansions.stream().filter(placeholderExpansion -> placeholderExpansion.getIdentifier().equals(identifier)).findFirst();
+        if (expansion.isEmpty()) {
+            return null;
         }
 
-        final StringBuffer builder = new StringBuffer();
-
-        do {
-            final String identifier = matcher.group("identifier");
-            final String parameters = matcher.group("parameters");
-
-            final var expansion = expansions.stream().filter(placeholderExpansion -> placeholderExpansion.getIdentifier().equals(identifier)).findFirst();
-            if (expansion.isEmpty()) {
-                continue;
-            }
-
-            var r = expansion.get().onRequest(player, parameters);
-            final var requested = r != null ? r.toLegacy() : null;
-            matcher.appendReplacement(builder, requested != null ? requested : matcher.group(0));
-        }
-        while (matcher.find());
-
-        return matcher.appendTail(builder).toString();
+        var r = expansion.get().onRequest(player, parameters);
+        return r != null ? r.toLegacy() : null;
     }
 }

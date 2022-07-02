@@ -16,29 +16,51 @@
 
 package org.screamingsandals.lib.bukkit.placeholders;
 
+import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.bukkit.placeholders.hooks.PlaceholderAPIHook;
+import org.screamingsandals.lib.bukkit.placeholders.hooks.VaultHook;
 import org.screamingsandals.lib.bukkit.player.BukkitPlayerMapper;
 import org.screamingsandals.lib.placeholders.PlaceholderExpansion;
 import org.screamingsandals.lib.placeholders.PlaceholderManager;
+import org.screamingsandals.lib.placeholders.hooks.DummyHook;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
+import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 
 @Service(dependsOn = {
         BukkitPlayerMapper.class
 })
 public class BukkitPlaceholderManager extends PlaceholderManager {
 
-    public BukkitPlaceholderManager(Plugin plugin, Controllable controllable) {
-        controllable
-                .enable(() -> {
-                    if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                        activeHooks.add(new PlaceholderAPIHook(plugin));
-                    }
-                })
-                .disable(activeHooks::clear);
+    @ApiStatus.Internal
+    @OnEnable
+    public void onEnable(Plugin plugin) {
+        activeHooks.add(new DummyHook());
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            activeHooks.add(new PlaceholderAPIHook(plugin));
+        }
+        if (Bukkit.getPluginManager().isPluginEnabled("Vault")) {
+            var chatProvider = Bukkit.getServer().getServicesManager().getRegistration(Chat.class);
+            Chat vaultChat;
+            if (chatProvider != null) {
+                vaultChat = chatProvider.getProvider();
+            } else {
+                vaultChat = Bukkit.getServer().getServicesManager().load(Chat.class);
+            }
+            if (vaultChat != null) {
+                activeHooks.add(new VaultHook(vaultChat));
+            }
+        }
+    }
+
+    @OnDisable
+    public void onDisable() {
+        activeHooks.clear();
     }
 
     @Override
