@@ -94,6 +94,22 @@ public abstract class EconomyManager {
         return economyManager.depositPlayer0(player, worldName, amount);
     }
 
+    @NotNull
+    public static String getCurrencyNamePlural() {
+        if (economyManager == null) {
+            throw new UnsupportedOperationException("EconomyManager is not initialized yet!");
+        }
+        return economyManager.getCurrencyPluralName0();
+    }
+
+    @NotNull
+    public static String getCurrencyNameSingular() {
+        if (economyManager == null) {
+            throw new UnsupportedOperationException("EconomyManager is not initialized yet!");
+        }
+        return economyManager.getCurrencyPluralName0();
+    }
+
     protected abstract boolean isAvailable0();
 
     protected abstract double getBalance0(@NotNull MultiPlatformOfflinePlayer player);
@@ -115,4 +131,10 @@ public abstract class EconomyManager {
 
     @NotNull
     protected abstract TransactionResult depositPlayer0(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount);
+
+    @NotNull
+    protected abstract String getCurrencyPluralName0();
+
+    @NotNull
+    protected abstract String getCurrencyNameSingular0();
 }

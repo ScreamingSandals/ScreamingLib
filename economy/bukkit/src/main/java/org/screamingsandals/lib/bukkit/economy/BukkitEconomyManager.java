@@ -113,6 +113,24 @@ public class BukkitEconomyManager extends EconomyManager {
         return MISSING_PLUGIN_FAILURE;
     }
 
+    @Override
+    @NotNull
+    protected String getCurrencyPluralName0() {
+        if (vaultEcon != null) {
+            return vaultEcon.currencyNamePlural();
+        }
+        return "coins";
+    }
+
+    @Override
+    @NotNull
+    protected String getCurrencyNameSingular0() {
+        if (vaultEcon != null) {
+            return vaultEcon.currencyNameSingular();
+        }
+        return "coin";
+    }
+
     @NotNull
     private TransactionResult convert(EconomyResponse response) {
         if (response == null) {
