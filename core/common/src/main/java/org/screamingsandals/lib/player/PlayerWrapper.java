@@ -309,6 +309,23 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     void setSpectatorTarget(@Nullable EntityBasic entity);
 
     /**
+     * Hides a player from this player.
+     *
+     * @param player the player who will not be visible by this player
+     */
+    void hidePlayer(PlayerWrapper player);
+
+    /**
+     * Allows this player to see a player that was previously hidden.
+     * <p>
+     * If another plugin had hidden the player too, then the player will
+     * remain hidden until the other plugin calls this method too.
+     *
+     * @param player the player who will be visible by this player
+     */
+    void showPlayer(PlayerWrapper player);
+
+    /**
      * Gets the player's {@link Channel}.
      *
      * @return the player connection

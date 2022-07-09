@@ -343,6 +343,24 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
+    public void hidePlayer(PlayerWrapper player) {
+        try {
+            ((Player) wrappedObject).hidePlayer(BukkitCore.getPlugin(), player.as(Player.class));
+        } catch (Throwable ignored) {
+            ((Player) wrappedObject).hidePlayer(player.as(Player.class));
+        }
+    }
+
+    @Override
+    public void showPlayer(PlayerWrapper player) {
+        try {
+            ((Player) wrappedObject).showPlayer(BukkitCore.getPlugin(), player.as(Player.class));
+        } catch (Throwable ignored) {
+            ((Player) wrappedObject).showPlayer(player.as(Player.class));
+        }
+    }
+
+    @Override
     public LocationHolder getCompassTarget() {
         return LocationMapper.wrapLocation(((Player) wrappedObject).getCompassTarget());
     }
