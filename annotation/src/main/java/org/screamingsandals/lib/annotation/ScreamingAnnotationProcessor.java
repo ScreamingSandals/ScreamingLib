@@ -28,12 +28,11 @@ import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 @SupportedAnnotationTypes({
@@ -78,7 +77,9 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
             if (pluginContainer != null) {
                 var lookForPluginAndSaveFullClassNameTo = processingEnv.getOptions().get("lookForPluginAndSaveFullClassNameTo");
                 if (lookForPluginAndSaveFullClassNameTo != null) {
-                    Files.writeString(Path.of(lookForPluginAndSaveFullClassNameTo), pluginContainer.getQualifiedName().toString());
+                    var path = Path.of(lookForPluginAndSaveFullClassNameTo);
+                    Files.createDirectories(path);
+                    Files.writeString(path, pluginContainer.getQualifiedName().toString(), StandardOpenOption.CREATE);
                     return true;
                 }
                 var platformInitiators = new HashMap<PlatformType, List<ServiceContainer>>();
