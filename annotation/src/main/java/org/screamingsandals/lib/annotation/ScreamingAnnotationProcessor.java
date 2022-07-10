@@ -46,6 +46,15 @@ import java.util.*;
 public class ScreamingAnnotationProcessor extends AbstractProcessor {
     private TypeElement pluginContainer;
 
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+        var usePluginClassFrom = processingEnv.getOptions().get("usePluginClassFrom");
+        if (usePluginClassFrom != null) {
+            processPlugin();
+        }
+    }
+
     @SneakyThrows
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnv) {
@@ -67,86 +76,92 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
         }
 
         if (roundEnv.processingOver()) {
-            if (usePluginClassFrom != null) {
-                var pluginClassName = Files.readString(Path.of(usePluginClassFrom));
-                pluginContainer = processingEnv.getElementUtils().getTypeElement(pluginClassName);
-                if (pluginContainer == null) {
-                    throw new RuntimeException("Can't find plugin class " + pluginClassName);
-                }
-            }
-            if (pluginContainer != null) {
-                var lookForPluginAndSaveFullClassNameTo = processingEnv.getOptions().get("lookForPluginAndSaveFullClassNameTo");
-                if (lookForPluginAndSaveFullClassNameTo != null) {
-                    var path = Path.of(lookForPluginAndSaveFullClassNameTo);
-                    Files.createDirectories(path.getParent());
-                    Files.writeString(path, pluginContainer.getQualifiedName().toString(), StandardOpenOption.CREATE);
-                    return true;
-                }
-                var platformInitiators = new HashMap<PlatformType, List<ServiceContainer>>();
-
-                var platformManager = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.plugin.PluginManager");
-                var platformManagers = MiscUtils.getAllSpecificPlatformImplementations(
-                        processingEnv,
-                        platformManager,
-                        Arrays.asList(PlatformType.values().clone()),
-                        false);
-                platformManagers.forEach((platformType, typeElement) -> {
-                    platformInitiators.put(platformType, new ArrayList<>() {
-                        {
-                            add(typeElement);
-                        }
-                    });
-                    if (platformType.isServer()) {
-                        var core = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.Core");
-                        platformInitiators.get(platformType).add(
-                                MiscUtils.getAllSpecificPlatformImplementations(
-                                        processingEnv,
-                                        core,
-                                        List.of(platformType),
-                                        true
-                                ).get(platformType)
-                        );
-                    }
-                    if (platformType.isProxy()) {
-                        var proxy = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.proxy.ProxyCore");
-                        platformInitiators.get(platformType).add(
-                                MiscUtils.getAllSpecificPlatformImplementations(
-                                        processingEnv,
-                                        proxy,
-                                        List.of(platformType),
-                                        true
-                                ).get(platformType)
-                        );
-                    }
-                });
-
-                var supportedPlatforms = List.copyOf(platformManagers.keySet());
-
-                Arrays.stream(pluginContainer.getAnnotationsByType(Init.class)).forEach(init ->
-                    processInitAnnotation(supportedPlatforms, platformInitiators, init)
-                );
-
-                if (platformInitiators.containsKey(PlatformType.BUKKIT)) {
-                    new BukkitMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.BUKKIT));
-                }
-                if (platformInitiators.containsKey(PlatformType.MINESTOM)) {
-                    new MinestomMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.MINESTOM));
-                }
-                if (platformInitiators.containsKey(PlatformType.SPONGE)) {
-                    new SpongeMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.SPONGE));
-                }
-                //if (platformInitiators.containsKey(PlatformType.FABRIC)) { }
-                //if (platformInitiators.containsKey(PlatformType.FORGE)) { }
-                if (platformInitiators.containsKey(PlatformType.BUNGEE)) {
-                    new BungeeMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.BUNGEE));
-                }
-                if (platformInitiators.containsKey(PlatformType.VELOCITY)) {
-                    new VelocityMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.VELOCITY));
-                }
-                //if (platformInitiators.containsKey(PlatformType.NUKKIT)) { }
-            }
+            processPlugin();
         }
         return true;
+    }
+
+    @SneakyThrows
+    private void processPlugin() {
+        var usePluginClassFrom = processingEnv.getOptions().get("usePluginClassFrom");
+        if (usePluginClassFrom != null) {
+            var pluginClassName = Files.readString(Path.of(usePluginClassFrom));
+            pluginContainer = processingEnv.getElementUtils().getTypeElement(pluginClassName);
+            if (pluginContainer == null) {
+                throw new RuntimeException("Can't find plugin class " + pluginClassName);
+            }
+        }
+        if (pluginContainer != null) {
+            var lookForPluginAndSaveFullClassNameTo = processingEnv.getOptions().get("lookForPluginAndSaveFullClassNameTo");
+            if (lookForPluginAndSaveFullClassNameTo != null) {
+                var path = Path.of(lookForPluginAndSaveFullClassNameTo);
+                Files.createDirectories(path.getParent());
+                Files.writeString(path, pluginContainer.getQualifiedName().toString(), StandardOpenOption.CREATE);
+                return;
+            }
+            var platformInitiators = new HashMap<PlatformType, List<ServiceContainer>>();
+
+            var platformManager = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.plugin.PluginManager");
+            var platformManagers = MiscUtils.getAllSpecificPlatformImplementations(
+                    processingEnv,
+                    platformManager,
+                    Arrays.asList(PlatformType.values().clone()),
+                    false);
+            platformManagers.forEach((platformType, typeElement) -> {
+                platformInitiators.put(platformType, new ArrayList<>() {
+                    {
+                        add(typeElement);
+                    }
+                });
+                if (platformType.isServer()) {
+                    var core = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.Core");
+                    platformInitiators.get(platformType).add(
+                            MiscUtils.getAllSpecificPlatformImplementations(
+                                    processingEnv,
+                                    core,
+                                    List.of(platformType),
+                                    true
+                            ).get(platformType)
+                    );
+                }
+                if (platformType.isProxy()) {
+                    var proxy = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.proxy.ProxyCore");
+                    platformInitiators.get(platformType).add(
+                            MiscUtils.getAllSpecificPlatformImplementations(
+                                    processingEnv,
+                                    proxy,
+                                    List.of(platformType),
+                                    true
+                            ).get(platformType)
+                    );
+                }
+            });
+
+            var supportedPlatforms = List.copyOf(platformManagers.keySet());
+
+            Arrays.stream(pluginContainer.getAnnotationsByType(Init.class)).forEach(init ->
+                    processInitAnnotation(supportedPlatforms, platformInitiators, init)
+            );
+
+            if (platformInitiators.containsKey(PlatformType.BUKKIT)) {
+                new BukkitMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.BUKKIT));
+            }
+            if (platformInitiators.containsKey(PlatformType.MINESTOM)) {
+                new MinestomMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.MINESTOM));
+            }
+            if (platformInitiators.containsKey(PlatformType.SPONGE)) {
+                new SpongeMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.SPONGE));
+            }
+            //if (platformInitiators.containsKey(PlatformType.FABRIC)) { }
+            //if (platformInitiators.containsKey(PlatformType.FORGE)) { }
+            if (platformInitiators.containsKey(PlatformType.BUNGEE)) {
+                new BungeeMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.BUNGEE));
+            }
+            if (platformInitiators.containsKey(PlatformType.VELOCITY)) {
+                new VelocityMainClassGenerator().generate(processingEnv, pluginContainer, platformInitiators.get(PlatformType.VELOCITY));
+            }
+            //if (platformInitiators.containsKey(PlatformType.NUKKIT)) { }
+        }
     }
 
     private void processInitAnnotation(List<PlatformType> supportedPlatforms, HashMap<PlatformType, List<ServiceContainer>> platformInitiators, Init init) {

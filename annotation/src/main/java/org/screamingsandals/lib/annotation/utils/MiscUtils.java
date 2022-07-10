@@ -161,7 +161,11 @@ public class MiscUtils {
                         typeElement,
                         forwardedAnnotation != null ? originalTypeElement : null,
                         typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
-                        service.staticOnly() || (LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null),
+                        service.staticOnly() || (LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null)
+                                || (typeElement.getKind() == ElementKind.CLASS && typeElement.getEnclosedElements().stream()
+                                .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR)
+                                .allMatch(element -> element.getModifiers().contains(Modifier.PRIVATE))
+                                && typeElement.getEnclosedElements().stream().noneMatch(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString()))),
                         typeElement.getAnnotation(InternalCoreService.class) != null
                 );
                 container.getDependencies().addAll(getSafelyTypeElements(environment, service));
@@ -225,6 +229,10 @@ public class MiscUtils {
                         resolvedElement.getAnnotation(InternalEarlyInitialization.class) != null || typeElement.getAnnotation(InternalEarlyInitialization.class) != null,
                         (resolvedElementService != null && resolvedElementService.staticOnly()) || (LOMBOK_UTILITY_CLASS != null && typeElement.getAnnotation(LOMBOK_UTILITY_CLASS) != null),
                         resolvedElement.getAnnotation(InternalCoreService.class) != null || typeElement.getAnnotation(InternalCoreService.class) != null
+                                || (typeElement.getKind() == ElementKind.CLASS && typeElement.getEnclosedElements().stream()
+                                .filter(element -> element.getKind() == ElementKind.CONSTRUCTOR)
+                                .allMatch(element -> element.getModifiers().contains(Modifier.PRIVATE))
+                                && typeElement.getEnclosedElements().stream().noneMatch(element -> element.getKind() == ElementKind.METHOD && "init".equals(element.getSimpleName().toString())))
                 );
                 if (resolvedElementService != null) {
                     container.getDependencies().addAll(getSafelyTypeElements(environment, resolvedElement.getAnnotation(Service.class)));

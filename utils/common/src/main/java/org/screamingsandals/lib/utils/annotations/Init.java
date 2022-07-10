@@ -21,7 +21,7 @@ import org.screamingsandals.lib.utils.PlatformType;
 
 import java.lang.annotation.*;
 
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target({
         ElementType.TYPE,
         ElementType.PACKAGE
@@ -49,7 +49,7 @@ public @interface Init {
      */
     String[] packages() default {};
 
-    @Retention(RetentionPolicy.SOURCE)
+    @Retention(RetentionPolicy.CLASS)
     @Target(ElementType.TYPE)
     @ApiStatus.Internal
     @interface List {

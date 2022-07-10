@@ -26,7 +26,7 @@ import java.lang.annotation.*;
  * The class annotated with this annotation must extend <strong>org.screamingsandals.lib.plugin.PluginContainer</strong>.
  * This annotation is repeatable.
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 @Repeatable(PluginDependencies.List.class)
 public @interface PluginDependencies {
@@ -58,7 +58,7 @@ public @interface PluginDependencies {
      */
     String[] loadBefore() default {};
 
-    @Retention(RetentionPolicy.SOURCE)
+    @Retention(RetentionPolicy.CLASS)
     @Target(ElementType.TYPE)
     @ApiStatus.Internal
     @interface List {

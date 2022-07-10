@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * An annotation specifying the main plugin class.
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface Plugin {
     /**
