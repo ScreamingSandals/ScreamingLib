@@ -78,7 +78,7 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
                 var lookForPluginAndSaveFullClassNameTo = processingEnv.getOptions().get("lookForPluginAndSaveFullClassNameTo");
                 if (lookForPluginAndSaveFullClassNameTo != null) {
                     var path = Path.of(lookForPluginAndSaveFullClassNameTo);
-                    Files.createDirectories(path);
+                    Files.createDirectories(path.getParent());
                     Files.writeString(path, pluginContainer.getQualifiedName().toString(), StandardOpenOption.CREATE);
                     return true;
                 }
