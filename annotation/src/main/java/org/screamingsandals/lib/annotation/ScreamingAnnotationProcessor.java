@@ -28,12 +28,20 @@ import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 @SupportedAnnotationTypes({
         "org.screamingsandals.lib.utils.annotations.Plugin"
+})
+@SupportedOptions({
+        "lookForPluginAndSaveFullClassNameTo",
+        "usePluginClassFrom"
 })
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
 public class ScreamingAnnotationProcessor extends AbstractProcessor {
@@ -42,22 +50,37 @@ public class ScreamingAnnotationProcessor extends AbstractProcessor {
     @SneakyThrows
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnv) {
-        var elements = roundEnv.getElementsAnnotatedWith(Plugin.class);
-        if (!elements.isEmpty()) {
-            if (pluginContainer != null || elements.size() > 1) {
-                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "@Plugin can be used only once");
-                throw new RuntimeException("@Plugin can be used only once");
+        var usePluginClassFrom = processingEnv.getOptions().get("usePluginClassFrom");
+        if (usePluginClassFrom == null) {
+            var elements = roundEnv.getElementsAnnotatedWith(Plugin.class);
+            if (!elements.isEmpty()) {
+                if (pluginContainer != null || elements.size() > 1) {
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "@Plugin can be used only once");
+                    throw new RuntimeException("@Plugin can be used only once");
+                }
+                var element = elements.iterator().next(); // why it's not list
+                if (element.getKind() != ElementKind.CLASS || element.getModifiers().contains(Modifier.ABSTRACT)) {
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "@Plugin can be applied only too non-abstract class");
+                    throw new RuntimeException("@Plugin can be applied only too non-abstract class");
+                }
+                pluginContainer = (TypeElement) element;
             }
-            var element = elements.iterator().next(); // why it's not list
-            if (element.getKind() != ElementKind.CLASS || element.getModifiers().contains(Modifier.ABSTRACT)) {
-                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "@Plugin can be applied only too non-abstract class");
-                throw new RuntimeException("@Plugin can be applied only too non-abstract class");
-            }
-            pluginContainer = (TypeElement) element;
         }
 
         if (roundEnv.processingOver()) {
+            if (usePluginClassFrom != null) {
+                var pluginClassName = Files.readString(Path.of(usePluginClassFrom));
+                pluginContainer = processingEnv.getElementUtils().getTypeElement(pluginClassName);
+                if (pluginContainer == null) {
+                    throw new RuntimeException("Can't find plugin class " + pluginClassName);
+                }
+            }
             if (pluginContainer != null) {
+                var lookForPluginAndSaveFullClassNameTo = processingEnv.getOptions().get("lookForPluginAndSaveFullClassNameTo");
+                if (lookForPluginAndSaveFullClassNameTo != null) {
+                    Files.writeString(Path.of(lookForPluginAndSaveFullClassNameTo), pluginContainer.getQualifiedName().toString());
+                    return true;
+                }
                 var platformInitiators = new HashMap<PlatformType, List<ServiceContainer>>();
 
                 var platformManager = processingEnv.getElementUtils().getTypeElement("org.screamingsandals.lib.plugin.PluginManager");
