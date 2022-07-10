@@ -343,6 +343,16 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
+    public int getTotalExperience() {
+        return ((Player) wrappedObject).getTotalExperience();
+    }
+
+    @Override
+    public void setTotalExperience(int exp) {
+        ((Player) wrappedObject).setTotalExperience(exp);
+    }
+
+    @Override
     public void hidePlayer(PlayerWrapper player) {
         try {
             ((Player) wrappedObject).hidePlayer(BukkitCore.getPlugin(), player.as(Player.class));

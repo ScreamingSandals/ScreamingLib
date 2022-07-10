@@ -309,6 +309,26 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
     void setSpectatorTarget(@Nullable EntityBasic entity);
 
     /**
+     * Gets the players total experience points.
+     * <br>
+     * This refers to the total amount of experience the player has collected
+     * over time.
+     *
+     * @return Current total experience points
+     */
+    int getTotalExperience();
+
+    /**
+     * Sets the players current experience points.
+     * <br>
+     * This refers to the total amount of experience the player has collected
+     * over time.
+     *
+     * @param exp New total experience points
+     */
+    void setTotalExperience(int exp);
+
+    /**
      * Hides a player from this player.
      *
      * @param player the player who will not be visible by this player
