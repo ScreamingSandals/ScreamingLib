@@ -46,6 +46,9 @@ public @interface CustomAutocompletion {
         WEATHER,
         PARTICLE_TYPE,
         SOUND,
-        SOUND_SOURCE
+        SOUND_SOURCE,
+        BLOCK_TYPE_TAG,
+        ITEM_TYPE_TAG,
+        ENTITY_TYPE_TAG
     }
 }

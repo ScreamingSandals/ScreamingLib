@@ -17,7 +17,9 @@
 package org.screamingsandals.lib.block;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -30,7 +32,7 @@ import java.util.*;
  * Use {@link org.screamingsandals.lib.item.ItemTypeHolder} for item materials.
  */
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface BlockTypeHolder extends ComparableWrapper, ParticleData {
+public interface BlockTypeHolder extends ComparableWrapper, ParticleData, TaggableHolder {
 
     String platformName();
 
@@ -106,6 +108,10 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData {
     boolean isOccluding();
 
     boolean hasGravity();
+
+    @Override
+    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK_TYPE_TAG)
+    boolean hasTag(@NotNull Object tag);
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     boolean isSameType(Object object);

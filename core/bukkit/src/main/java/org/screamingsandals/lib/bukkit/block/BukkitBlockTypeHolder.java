@@ -16,15 +16,20 @@
 
 package org.screamingsandals.lib.bukkit.block;
 
+import com.destroystokyo.paper.MaterialTags;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Arrays;
@@ -195,6 +200,21 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     @Override
     public boolean hasGravity() {
         return wrappedObject.getMaterial().hasGravity();
+    }
+
+    @Override
+    public boolean hasTag(@NotNull Object tag) {
+        NamespacedMappingKey key;
+        if (tag instanceof NamespacedMappingKey) {
+            key = (NamespacedMappingKey) tag;
+        } else {
+            key = NamespacedMappingKey.of(tag.toString());
+        }
+        var bukkitTag = Bukkit.getTag(Tag.REGISTRY_BLOCKS, new NamespacedKey(key.namespace(), key.value()), Material.class);
+        if (bukkitTag != null) {
+            return bukkitTag.isTagged(wrappedObject.getMaterial());
+        }
+        return false;
     }
 
     @Override

@@ -79,6 +79,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
 
     @Override
     protected BlockTypeHolder normalize(BlockTypeHolder abnormal) {
+        // TODO: is normalizing still needed?
         try {
             if (Version.isVersion(1, 13)) {
                 var cache = defaultFlatteningBlockDataCache.get(abnormal.platformName());

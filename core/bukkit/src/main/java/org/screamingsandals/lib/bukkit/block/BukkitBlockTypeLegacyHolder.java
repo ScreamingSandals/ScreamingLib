@@ -18,9 +18,11 @@ package org.screamingsandals.lib.bukkit.block;
 
 import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -128,6 +130,22 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     @Override
     public boolean hasGravity() {
         return wrappedObject.getItemType().hasGravity();
+    }
+
+    @Override
+    public boolean hasTag(@NotNull Object tag) {
+        NamespacedMappingKey key;
+        if (tag instanceof NamespacedMappingKey) {
+            key = (NamespacedMappingKey) tag;
+        } else {
+            key = NamespacedMappingKey.of(tag.toString());
+        }
+        if (!key.namespace().equals("minecraft")) {
+            return false;
+        }
+        var value = key.value();
+        // TODO: compare
+        return false;
     }
 
     @Override
