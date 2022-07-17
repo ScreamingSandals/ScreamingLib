@@ -210,11 +210,17 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
         } else {
             key = NamespacedMappingKey.of(tag.toString());
         }
+        // native tags
         var bukkitTag = Bukkit.getTag(Tag.REGISTRY_BLOCKS, new NamespacedKey(key.namespace(), key.value()), Material.class);
         if (bukkitTag != null) {
             return bukkitTag.isTagged(wrappedObject.getMaterial());
         }
-        return false;
+        // backported tags
+        if (!key.namespace().equals("minecraft")) {
+            return false;
+        }
+        var value = key.value();
+        return BukkitBlockTypeMapper.hasTagInBackPorts(wrappedObject.getMaterial(), value);
     }
 
     @Override

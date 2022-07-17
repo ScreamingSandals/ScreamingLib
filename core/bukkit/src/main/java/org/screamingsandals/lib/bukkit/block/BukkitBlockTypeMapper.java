@@ -21,6 +21,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.block.BlockTypeMapper;
+import org.screamingsandals.lib.bukkit.block.tags.BukkitLegacyTagResolution;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -28,12 +29,14 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class BukkitBlockTypeMapper extends BlockTypeMapper {
     private final Map<String, Map<String, String>> defaultFlatteningBlockDataCache = new HashMap<>();
+    private static final Map<Material, List<String>> tagBackPorts = new HashMap<>();
 
     public BukkitBlockTypeMapper() {
         if (Version.isVersion(1, 13)) {
@@ -59,6 +62,10 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                         var holder = new BukkitBlockTypeLegacyHolder(material);
                         mapping.put(NamespacedMappingKey.of(material.name()), holder);
                         values.add(holder);
+                        var backPorts = BukkitLegacyTagResolution.constructTags(material);
+                        if (!backPorts.isEmpty()) {
+                            tagBackPorts.put(material, backPorts);
+                        }
                     });
         }
     }
@@ -114,5 +121,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
         return !Version.isVersion(1, 13);
     }
 
-
+    public static boolean hasTagInBackPorts(Material material, String tag) {
+        return tagBackPorts.containsKey(material) && tagBackPorts.get(material).contains(tag);
+    }
 }

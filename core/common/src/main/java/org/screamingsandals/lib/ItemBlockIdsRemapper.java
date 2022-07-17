@@ -249,12 +249,12 @@ public abstract class ItemBlockIdsRemapper {
         f2l("JUNGLE_LOG", "LOG", 17, 3);
         f2lBlock("OAK_LOG", Map.of("axis", "x"), "LOG", 17, 4);
         f2lBlock("SPRUCE_LOG", Map.of("axis", "x"), "LOG", 17, 5);
-        f2lBlock("SPRUCE_LOG", Map.of("axis", "x"), "LOG", 17, 6);
-        f2lBlock("SPRUCE_LOG", Map.of("axis", "x"), "LOG", 17, 7);
+        f2lBlock("BIRCH_LOG", Map.of("axis", "x"), "LOG", 17, 6);
+        f2lBlock("JUNGLE_LOG", Map.of("axis", "x"), "LOG", 17, 7);
         f2lBlock("OAK_LOG", Map.of("axis", "z"), "LOG", 17, 8);
         f2lBlock("SPRUCE_LOG", Map.of("axis", "z"), "LOG", 17, 9);
-        f2lBlock("SPRUCE_LOG", Map.of("axis", "z"), "LOG", 17, 10);
-        f2lBlock("SPRUCE_LOG", Map.of("axis", "z"), "LOG", 17, 11);
+        f2lBlock("BIRCH_LOG", Map.of("axis", "z"), "LOG", 17, 10);
+        f2lBlock("JUNGLE_LOG", Map.of("axis", "z"), "LOG", 17, 11);
 
         // is this correct?
         f2l("OAK_WOOD", "LOG", 17, 12);
@@ -1374,13 +1374,13 @@ public abstract class ItemBlockIdsRemapper {
         mapAlias("JUNGLE_SIGN", "SIGN");
         mapAlias("SPRUCE_SIGN", "SIGN");
         mapAlias("ACACIA_SIGN", "SIGN");
-        mapAlias("OAK_WALL_SIGN", "SIGN");
-        mapAlias("BIRCH_WALL_SIGN", "SIGN");
-        mapAlias("BIRCH_WALL_SIGN", "SIGN");
-        mapAlias("DARK_OAK_WALL_SIGN", "SIGN");
-        mapAlias("JUNGLE_WALL_SIGN", "SIGN");
-        mapAlias("SPRUCE_WALL_SIGN", "SIGN");
-        mapAlias("ACACIA_WALL_SIGN", "SIGN");
+        mapAlias("OAK_WALL_SIGN", "WALL_SIGN");
+        mapAlias("BIRCH_WALL_SIGN", "WALL_SIGN");
+        mapAlias("BIRCH_WALL_SIGN", "WALL_SIGN");
+        mapAlias("DARK_OAK_WALL_SIGN", "WALL_SIGN");
+        mapAlias("JUNGLE_WALL_SIGN", "WALL_SIGN");
+        mapAlias("SPRUCE_WALL_SIGN", "WALL_SIGN");
+        mapAlias("ACACIA_WALL_SIGN", "WALL_SIGN");
         mapAlias("DIRT_PATH", "GRASS_PATH");
         mapAlias("WATER_CAULDRON", "CAULDRON");
     }

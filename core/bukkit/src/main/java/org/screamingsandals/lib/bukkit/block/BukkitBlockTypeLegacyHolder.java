@@ -144,8 +144,7 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
             return false;
         }
         var value = key.value();
-        // TODO: compare
-        return false;
+        return BukkitBlockTypeMapper.hasTagInBackPorts(wrappedObject.getItemType(), value);
     }
 
     @Override

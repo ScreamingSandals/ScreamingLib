@@ -6,25 +6,28 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+// because we support legacy only on bukkit and this doesn't affect flattening versions, we don't need it in common module
 public class BukkitLegacyTagResolution {
     @NotNull
-    private static List<String> constructTags(@NotNull Material material) {
+    public static List<String> constructTags(@NotNull Material material) {
         var list = new ArrayList<String>();
         /* tags related to features released after 1.12.2 are not backported
          unless the tag contains older block and can be useful in older versions or for better compatibility (beds, *_ores, etc.) */
 
         // this list is based on the MinecraftWiki page: https://minecraft.fandom.com/wiki/Tag
         switch (material.name()) {
-            // mineable/axe
-            // mineable/hoe
-            // mineable/pickaxe
-            // mineable/shovel
-            // acacia_logs
+            // TODO: mineable/axe
+            // TODO: mineable/hoe
+            // TODO: mineable/pickaxe
+            // TODO: mineable/shovel
+            // TODO: acacia_logs
             // animals_spawnable_on
             case "GRASS":
                 list.add("animals_spawnable_on");
                 list.add("dirt"); // also part of dirt
                 list.add("rabbits_spawnable_on"); // also part of rabbits_spawnable_on
+                list.add("valid_spawn"); // also part of valid_spawn
+                list.add("wolves_spawnable_on"); // also part of wolves_spawnable_on
                 break;
 
             // anvil
@@ -35,6 +38,7 @@ public class BukkitLegacyTagResolution {
             case "STANDING_BANNER":
             case "WALL_BANNER":
                 list.add("banners");
+                list.add("wall_post_override"); // also part of wall_post_override
                 break;
             // base_stone_nether
             case "NETHERRACK":
@@ -58,7 +62,7 @@ public class BukkitLegacyTagResolution {
             case "BED_BLOCK":
                 list.add("beds");
                 break;
-            // birch_logs
+            // TODO: birch_logs
             // buttons (includes wooden_buttons)
             case "STONE_BUTTON":
                 list.add("buttons");
@@ -81,8 +85,8 @@ public class BukkitLegacyTagResolution {
                 list.add("coal_ores");
                 break;
             // completes_find_tree_tutorial (includes logs, leaves)
-            // crops
-            // dark_oak_logs
+            // TODO: crops
+            // TODO: dark_oak_logs
             // dead_bush_may_place_on (includes sand, terracotta and dirt)
             // diamond_ores
             case "DIAMOND_ORE":
@@ -91,18 +95,19 @@ public class BukkitLegacyTagResolution {
             // dirt
             case "DIRT":
                 list.add("dirt");
+                list.add("dead_bush_may_place_on");
                 break;
             // doors (includes wooden_doors)
             case "IRON_DOOR_BLOCK":
                 list.add("doors");
                 break;
-            // dragon_immune
-            // dragon_transparent
+            // TODO: dragon_immune
+            // TODO: dragon_transparent
             // emerald_ores
             case "EMERALD_ORE":
                 list.add("emerald_ores");
                 break;
-            // enderman_holdable (include only blocks that Endermen can hold in legacy versions)
+            // TODO: enderman_holdable (include only blocks that Endermen can hold in legacy versions)
             // fall_damage_resetting (includes climbable)
             case "WEB":
                 list.add("fall_damage_resetting");
@@ -159,12 +164,14 @@ public class BukkitLegacyTagResolution {
             case "SNOW":
                 list.add("inside_step_sound_blocks");
                 list.add("rabbits_spawnable_on"); // also part of rabbits_spawnable_on
+                list.add("snow"); // also part of snow
+                list.add("wolves_spawnable_on"); // also part of wolves_spawnable_on
                 break;
             // iron_ores
             case "IRON_ORE":
                 list.add("iron_ores");
                 break;
-            // jungle_logs
+            // TODO: jungle_logs
             // lapis_ores
             case "LAPIS_ORE":
                 list.add("lapis_ore");
@@ -182,6 +189,7 @@ public class BukkitLegacyTagResolution {
             case "LOG_2":
                 list.add("logs");
                 list.add("parrots_spawnable_on"); // also part of parrots_spawnable_on
+                list.add("overworld_natural_logs"); // also part of overworld_natural_logs // TODO: exclude woods (log[12-15], log2[12-13]
                 break;
             // mooshrooms_spawnable_on
             case "MYCEL":
@@ -194,7 +202,7 @@ public class BukkitLegacyTagResolution {
             // TODO: needs_iron_tool
             // TODO: needs_stone_tool
             // TODO: add log:0 to oak_logs
-            // TODO: add log:[0-3] and log2:[0-1] to overworld_natural_logs
+            // overworld_natural_logs
             // parrots_spawnable_on (includes leaves and logs)
             // planks
             case "WOOD":
@@ -224,6 +232,7 @@ public class BukkitLegacyTagResolution {
             case "SAND":
                 list.add("sand");
                 list.add("rabbits_spawnable_on"); // also part of rabbits_spawnable_on // TODO: exclude red_sand (sand:1)
+                list.add("dead_bush_may_place_on"); // also part of dead_bush_may_place_on
                 break;
             // saplings
             case "SAPLING":
@@ -265,30 +274,82 @@ public class BukkitLegacyTagResolution {
                 list.add("flowers"); // also part of flowers
                 break;
             // snow
-            // spruce_logs
-            // stairs
+            case "SNOW_BLOCK":
+                list.add("snow");
+                list.add("wolves_spawnable_on"); // also part of wolves_spawnable_on
+                break;
+            // TODO: add log:1,5,9 to spruce_logs
+            // stairs (includes wooden_stairs)
+            case "COBBLESTONE_STAIRS":
+            case "BRICK_STAIRS":
+            case "SMOOTH_STAIRS":
+            case "NETHER_BRICK_STAIRS":
+            case "SANDSTONE_STAIRS":
+            case "QUARTZ_STAIRS":
+            case "RED_SANDSTONE_STAIRS":
+            case "PURPUR_STAIRS":
+                list.add("stairs");
+                break;
             // standing_signs
             case "SIGN_POST":
                 list.add("standing_signs");
                 list.add("signs"); // also part of signs
+                list.add("wall_post_override"); // also part of wall_post_override
                 break;
             // stone_bricks
+            case "SMOOTH_BRICK":
+                list.add("stone_bricks");
+                break;
             // stone_pressure_plates
+            case "STONE_PLATE":
+                list.add("stone_pressure_plates");
+                list.add("pressure_plates"); // also part of pressure_plates
+                list.add("wall_post_override"); // also part of wall_post_override
+                break;
             // tall_flowers
+            case "DOUBLE_PLANT": // TODO: exclude double_plant:2 and double_plant:3
+                list.add("tall_flowers");
+                list.add("flowers"); // also part of flowers
+                break;
             // terracotta
+            case "HARD_CLAY":
+            case "STAINED_CLAY":
+                list.add("terracotta");
+                list.add("dead_bush_may_place_on"); // also part of dead_bush_may_place_on
+                break;
             // trapdoors (includes wooden_trapdoors)
+            case "IRON_TRAPDOOR":
+                list.add("trapdoors");
+                break;
             // valid_spawn
             // walls
+            case "COBBLE_WALL":
+                list.add("walls");
+                break;
             // wall_post_override
+            case "TORCH":
+            case "REDSTONE_TORCH_OFF":
+            case "REDSTONE_TORCH_ON":
+            case "TRIPWIRE":
+                list.add("wall_post_override");
+                break;
             // wall_signs
             case "WALL_SIGN":
                 list.add("wall_signs");
                 list.add("signs"); // also part of signs
+                list.add("wall_post_override"); // also part of wall_post_override
                 break;
             // wart_blocks
-            // wither_immune
+            case "NETHER_WART_BLOCK":
+                list.add("wart_blocks");
+                break;
+            // TODO: wither_immune
             // wolves_spawnable_on
             // wooden_buttons
+            case "WOOD_BUTTON":
+                list.add("wooden_buttons");
+                list.add("buttons"); // also part of buttons
+                break;
             // wooden_doors
             case "WOODEN_DOOR":
             case "SPRUCE_DOOR":
@@ -310,6 +371,10 @@ public class BukkitLegacyTagResolution {
                 list.add("fences"); // also part of fences
                 break;
             // wooden_pressure_plates
+            case "WOOD_PLATE":
+                list.add("wooden_pressure_plates");
+                list.add("pressure_plates"); // also part of pressure_plates
+                break;
             // wooden_slabs
             case "WOOD_DOUBLE_STEP":
             case "WOOD_STEP":
@@ -317,9 +382,29 @@ public class BukkitLegacyTagResolution {
                 list.add("slabs"); // also part of slabs
                 break;
             // wooden_stairs
+            case "WOOD_STAIRS":
+            case "SPRUCE_WOOD_STAIRS":
+            case "BIRCH_WOOD_STAIRS":
+            case "JUNGLE_WOOD_STAIRS":
+            case "ACACIA_STAIRS":
+            case "DARK_OAK_STAIRS":
+                list.add("wooden_stairs");
+                list.add("stairs"); // also part of stairs
+                break;
             // wooden_trapdoors
+            case "TRAP_DOOR":
+                list.add("wooden_trapdoors");
+                list.add("trapdoors"); // also part of trapdoors
+                break;
             // wool_carpets (old name carpets)
+            case "CARPET":
+                list.add("wool_carpets");
+                list.add("carpets");
+                break;
             // wool
+            case "WOOL":
+                list.add("wool");
+                break;
         }
         return list;
     }
