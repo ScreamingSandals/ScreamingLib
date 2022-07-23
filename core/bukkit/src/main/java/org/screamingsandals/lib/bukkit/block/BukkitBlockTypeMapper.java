@@ -16,21 +16,26 @@
 
 package org.screamingsandals.lib.bukkit.block;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.block.BlockTypeMapper;
+import org.screamingsandals.lib.block.tags.ModernBlockTagBackPorts;
 import org.screamingsandals.lib.bukkit.block.tags.BukkitLegacyTagResolution;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,6 +55,16 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                         var holder = new BukkitBlockTypeHolder(material);
                         mapping.put(NamespacedMappingKey.of(material.name()), holder);
                         values.add(holder);
+                        var backPorts = ModernBlockTagBackPorts.getPortedTags(holder, s -> {
+                            var bukkitTag = Bukkit.getTag(Tag.REGISTRY_BLOCKS, new NamespacedKey("minecraft", s.toLowerCase()), Material.class);
+                            if (bukkitTag != null) {
+                                return bukkitTag.isTagged(material);
+                            }
+                            return false;
+                        });
+                        if (backPorts != null && !backPorts.isEmpty()) {
+                            tagBackPorts.put(material, backPorts);
+                        }
                     });
         } else {
             blockTypeConverter
