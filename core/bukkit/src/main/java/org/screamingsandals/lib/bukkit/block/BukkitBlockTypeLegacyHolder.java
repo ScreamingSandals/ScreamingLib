@@ -156,6 +156,10 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
             // TODO: This is complicated because we have variants, however as legacy versions are no longer in dev, we can just hardcode them here
             return wrappedObject.getItemType() == ((MaterialData) object).getItemType();
         }
+        if (object instanceof BukkitBlockTypeLegacyHolder) {
+            // TODO: This is complicated because we have variants, however as legacy versions are no longer in dev, we can just hardcode them here
+            return wrappedObject.getItemType() == ((BukkitBlockTypeLegacyHolder) object).wrappedObject.getItemType();
+        }
         return BlockTypeHolder.ofOptional(object).map(h -> h.platformName().equals(platformName())).orElse(false);
     }
 
@@ -168,6 +172,15 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     public boolean is(Object object) {
         if (object instanceof MaterialData || object instanceof BukkitBlockTypeLegacyHolder) {
             return equals(object);
+        }
+        if (object instanceof String) {
+            var str = (String) object;
+            if (str.startsWith("#")) {
+                // seems like a tag
+                return hasTag(str.substring(1));
+            } else if (str.endsWith("[*]")) {
+                return isSameType(str.substring(0, str.length() - 3));
+            }
         }
         return equals(BlockTypeHolder.ofOptional(object).orElse(null));
     }

@@ -119,6 +119,16 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData, Taggab
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     boolean isSameType(Object... objects);
 
+    /**
+     * This method accept any object that represents block type, or:
+     * <br>
+     * tags if prefixed with #
+     * <br>
+     * the type without the exact state if suffixed by [*] (alternative to {@link #isSameType(Object)}
+     *
+     * @param object object that represents block type
+     * @return true if this block is the same as the object
+     */
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     @Override
     boolean is(Object object);

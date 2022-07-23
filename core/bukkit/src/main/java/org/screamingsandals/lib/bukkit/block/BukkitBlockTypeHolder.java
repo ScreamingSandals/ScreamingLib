@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.bukkit.block;
 
-import com.destroystokyo.paper.MaterialTags;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -246,6 +245,15 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     public boolean is(Object object) {
         if (object instanceof BlockData || object instanceof BukkitBlockTypeHolder) {
             return equals(object);
+        }
+        if (object instanceof String) {
+            var str = (String) object;
+            if (str.startsWith("#")) {
+                // seems like a tag
+                return hasTag(str.substring(1));
+            } else if (str.endsWith("[*]")) {
+                return isSameType(str.substring(0, str.length() - 3));
+            }
         }
         return equals(BlockTypeHolder.ofOptional(object).orElse(null));
     }
