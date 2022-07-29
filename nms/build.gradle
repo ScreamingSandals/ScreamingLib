@@ -10,6 +10,7 @@ nmsGen {
     basePackage = "org.screamingsandals.lib.nms.accessors"
     sourceSet = "src/generated/java"
     cleanOnRebuild = true
+    minMinecraftVersion = "1.8.8"
 
     reqClass('net.minecraft.network.chat.Component') {
         reqMethod('searge:func_150254_d') // get legacy string
