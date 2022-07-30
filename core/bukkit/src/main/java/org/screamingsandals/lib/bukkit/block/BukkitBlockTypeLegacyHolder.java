@@ -71,7 +71,12 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
 
     @Override
     public BlockTypeHolder withFlatteningData(Map<String, String> flatteningData) {
-        return new BukkitBlockTypeLegacyHolder(wrappedObject); // TODO: some sort of conversion
+        var materialData = wrappedObject;
+        // TODO: strip all block data like axis for having consistent behaviour between legacy and flattening versions (but don't strip block variants!!)
+        for (var e : flatteningData.entrySet()) {
+            materialData = LegacyMaterialDataToFlatteningConverter.set(materialData, e.getKey(), e.getValue());
+        }
+        return new BukkitBlockTypeLegacyHolder(materialData);
     }
 
     @Override
