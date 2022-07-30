@@ -21,6 +21,7 @@ import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.bukkit.block.converter.LegacyMaterialDataToFlatteningConverter;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
@@ -63,7 +64,8 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     }
 
     @Override
-    public @Unmodifiable Map<String, String> flatteningData() {
+    @Unmodifiable
+    public Map<String, String> flatteningData() {
         return Map.of(); // TODO: some sort of conversion
     }
 
@@ -74,17 +76,17 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
 
     @Override
     public BlockTypeHolder with(String attribute, String value) {
-        return new BukkitBlockTypeLegacyHolder(wrappedObject); // TODO: some sort of conversion
+        return new BukkitBlockTypeLegacyHolder(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, value));
     }
 
     @Override
     public BlockTypeHolder with(String attribute, int value) {
-        return new BukkitBlockTypeLegacyHolder(wrappedObject); // TODO: some sort of conversion
+        return new BukkitBlockTypeLegacyHolder(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, String.valueOf(value)));
     }
 
     @Override
     public BlockTypeHolder with(String attribute, boolean value) {
-        return new BukkitBlockTypeLegacyHolder(wrappedObject); // TODO: some sort of conversion
+        return new BukkitBlockTypeLegacyHolder(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, String.valueOf(value)));
     }
 
     @Override

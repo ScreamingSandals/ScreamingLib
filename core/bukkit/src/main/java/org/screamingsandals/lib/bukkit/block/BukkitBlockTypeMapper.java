@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class BukkitBlockTypeMapper extends BlockTypeMapper {
-    private final Map<String, Map<String, String>> defaultFlatteningBlockDataCache = new HashMap<>();
     private static final Map<Material, List<String>> tagBackPorts = new HashMap<>();
 
     public BukkitBlockTypeMapper() {
@@ -97,38 +96,6 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                     .collect(Collectors.toMap(next -> next[0], next1 -> next1[1]));
         }
         return Map.of();
-    }
-
-    @Override
-    protected BlockTypeHolder normalize(BlockTypeHolder abnormal) {
-        // TODO: is normalizing still needed?
-        try {
-            if (Version.isVersion(1, 13)) {
-                var cache = defaultFlatteningBlockDataCache.get(abnormal.platformName());
-                if (cache == null) {
-                    cache = getDataFromString(abnormal.as(Material.class).createBlockData().getAsString());
-                    defaultFlatteningBlockDataCache.put(abnormal.platformName(), cache);
-                }
-                if (cache.isEmpty()) {
-                    return abnormal;
-                }
-                var flatteningData = abnormal.flatteningData();
-                if (flatteningData != null && !flatteningData.isEmpty()) {
-                    var clone = new HashMap<>(flatteningData);
-                    cache.forEach((s, s2) -> {
-                        if (!clone.containsKey(s)) {
-                            clone.put(s, s2);
-                        }
-                    });
-                    return abnormal.withFlatteningData(clone);
-                }
-                return abnormal.withFlatteningData(cache);
-            } else {
-                // non-flattening versions don't have flattening data
-                return abnormal.withFlatteningData(null);
-            }
-        } catch (Exception ignored) {}
-        return abnormal;
     }
 
     @Override

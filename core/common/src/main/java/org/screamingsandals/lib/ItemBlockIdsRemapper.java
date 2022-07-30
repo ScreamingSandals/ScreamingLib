@@ -697,7 +697,6 @@ public abstract class ItemBlockIdsRemapper {
         f2l("DRAGON_EGG", 122);
         f2l("REDSTONE_LAMP", 123, "REDSTONE_LAMP_OFF");
         f2lBlock("REDSTONE_LAMP", Map.of("lit", "true"), "LIT_REDSTONE_LAMP", 124, 0, "REDSTONE_LAMP_ON");
-        //f2lBlock("", "WOOD_DOUBLE_STEP", 125, 0); // TODO: block state
 
         f2l("OAK_SLAB", "WOODEN_SLAB", 126, 0, "WOOD_STEP");
         f2lBlock("OAK_SLAB", Map.of("type", "top"), "WOODEN_SLAB", 126, 8, "WOOD_STEP");
