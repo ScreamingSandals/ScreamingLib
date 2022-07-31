@@ -20,12 +20,15 @@ import org.bukkit.Material;
 import org.bukkit.NetherWartsState;
 import org.bukkit.block.BlockFace;
 import org.bukkit.material.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 
 @SuppressWarnings("deprecation")
 public class LegacyMaterialDataToFlatteningConverter {
     // TODO: consider not using o.b.m and remove all duplicates (but is it worth? no one will touch this code in the future)
-    public static MaterialData set(MaterialData materialData, String key, String value) {
+    @NotNull
+    public static MaterialData set(@NotNull MaterialData materialData, @NotNull String key, @NotNull String value) {
         materialData = materialData.clone();
         var materialName = materialData.getItemType().name();
         try {
@@ -114,11 +117,13 @@ public class LegacyMaterialDataToFlatteningConverter {
                     materialData.setData(age);
                 }
             } else if (materialData instanceof NetherWarts) {
-                var age = Byte.parseByte(value);
-                if (age < 0 || age > 3) {
-                    age = 0;
+                if ("age".equalsIgnoreCase(key)) {
+                    var age = Byte.parseByte(value);
+                    if (age < 0 || age > 3) {
+                        age = 0;
+                    }
+                    ((NetherWarts) materialData).setState(NetherWartsState.values()[age]);
                 }
-                ((NetherWarts) materialData).setState(NetherWartsState.values()[age]);
             } else if ("BREWING_STAND".equals(materialName)) {
                 switch (key.toLowerCase()) {
                     case "has_bottle_0":
@@ -984,19 +989,19 @@ public class LegacyMaterialDataToFlatteningConverter {
                                 ((Rails) materialData).setDirection(BlockFace.EAST, false);
                                 break;
                             case "north_east":
-                                ((Rails) materialData).setDirection(BlockFace.NORTH_EAST, false);
+                                ((Rails) materialData).setDirection(BlockFace.SOUTH_WEST, false); // Bukkit API inverts it for some reason
                                 break;
                             case "north_south":
                                 ((Rails) materialData).setDirection(BlockFace.NORTH, false);
                                 break;
                             case "north_west":
-                                ((Rails) materialData).setDirection(BlockFace.NORTH_WEST, false);
+                                ((Rails) materialData).setDirection(BlockFace.SOUTH_EAST, false); // Bukkit API inverts it for some reason
                                 break;
                             case "south_east":
-                                ((Rails) materialData).setDirection(BlockFace.SOUTH_EAST, false);
+                                ((Rails) materialData).setDirection(BlockFace.NORTH_WEST, false); // Bukkit API inverts it for some reason
                                 break;
                             case "south_west":
-                                ((Rails) materialData).setDirection(BlockFace.SOUTH_WEST, false);
+                                ((Rails) materialData).setDirection(BlockFace.NORTH_EAST, false); // Bukkit API inverts it for some reason
                                 break;
                             case "ascending_east":
                                 ((Rails) materialData).setDirection(BlockFace.EAST, true);
@@ -1134,8 +1139,8 @@ public class LegacyMaterialDataToFlatteningConverter {
                                     ((RedstoneTorch) materialData).setFacingDirection(BlockFace.WEST);
                                     break;
                             }
-                            break;
                         }
+                        break;
                 }
             } else if ("SAPLING".equals(materialName)) { // o.b.m.Sapling is too new
                 if ("stage".equalsIgnoreCase(key)) {
@@ -1147,28 +1152,28 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 }
             } else if (materialName.endsWith("_SHULKER_BOX")) {
-              if ("facing".equalsIgnoreCase(key)) {
-                  switch (value.toLowerCase()) {
-                      case "down":
-                          materialData.setData((byte) 0x0);
-                          break;
-                      case "up":
-                          materialData.setData((byte) 0x1);
-                          break;
-                      case "east":
-                          materialData.setData((byte) 0x5);
-                          break;
-                      case "west":
-                          materialData.setData((byte) 0x4);
-                          break;
-                      case "north":
-                          materialData.setData((byte) 0x2);
-                          break;
-                      case "south":
-                          materialData.setData((byte) 0x3);
-                          break;
-                  }
-              }
+                if ("facing".equalsIgnoreCase(key)) {
+                    switch (value.toLowerCase()) {
+                        case "down":
+                            materialData.setData((byte) 0x0);
+                            break;
+                        case "up":
+                            materialData.setData((byte) 0x1);
+                            break;
+                        case "east":
+                            materialData.setData((byte) 0x5);
+                            break;
+                        case "west":
+                            materialData.setData((byte) 0x4);
+                            break;
+                        case "north":
+                            materialData.setData((byte) 0x2);
+                            break;
+                        case "south":
+                            materialData.setData((byte) 0x3);
+                            break;
+                    }
+                }
             } else if (materialData instanceof Sign) {
                 if (((Sign) materialData).isWallSign()) {
                     if ("facing".equalsIgnoreCase(key)) {
@@ -1197,17 +1202,17 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 }
             } else if ("STEP".equals(materialName) // the o.b.m implementation is a bit retarded and not completed
-                            || "WOOD_STEP".equals(materialName)
-                            || "STONE_SLAB2".equals(materialName)
-                            || "PURPUR_SLAB".equals(materialName)
+                    || "WOOD_STEP".equals(materialName)
+                    || "STONE_SLAB2".equals(materialName)
+                    || "PURPUR_SLAB".equals(materialName)
             ) {
                 if ("type".equalsIgnoreCase(key)) {
                     switch (value.toLowerCase()) {
                         case "bottom":
-                            materialData.setData((byte) (materialData.getData() | 0x8));
+                            materialData.setData((byte) (materialData.getData() & ~0x8));
                             break;
                         case "top":
-                            materialData.setData((byte) (materialData.getData() & ~0x8));
+                            materialData.setData((byte) (materialData.getData() | 0x8));
                             break;
                         case "double":
                             switch (materialName) {
@@ -1460,5 +1465,778 @@ public class LegacyMaterialDataToFlatteningConverter {
         }
 
         return materialData;
+    }
+
+    @Nullable
+    public static String get(@NotNull MaterialData materialData, @NotNull String key) {
+        try {
+            var materialName = materialData.getItemType().name();
+
+            if (key.equalsIgnoreCase("waterlogged")) {
+                // Waterlogging was added in 1.13, but let's return false for 1.13 waterloggable block in older versions too
+                switch (materialName) {
+                    case "CHEST":
+                    case "TRAPPED_CHEST":
+                    case "WOOD_STAIRS":
+                    case "COBBLESTONE_STAIRS":
+                    case "BRICK_STAIRS":
+                    case "SMOOTH_STAIRS":
+                    case "SANDSTONE_STAIRS":
+                    case "QUARTZ_STAIRS":
+                    case "ACACIA_STAIRS":
+                    case "DARK_OAK_STAIRS":
+                    case "SPRUCE_WOOD_STAIRS":
+                    case "BIRCH_WOOD_STAIRS":
+                    case "JUNGLE_WOOD_STAIRS":
+                    case "RED_SANDSTONE_STAIRS":
+                    case "PURPUR_STAIRS":
+                    case "NETHER_BRICK_STAIRS":
+                    case "STEP":
+                    case "WOOD_STEP":
+                    case "STONE_SLAB2":
+                    case "PURPUR_SLAB":
+                    case "DOUBLE_STEP":
+                    case "WOOD_DOUBLE_STEP":
+                    case "DOUBLE_STONE_SLAB2":
+                    case "PURPUR_DOUBLE_SLAB":
+                    case "FENCE":
+                    case "IRON_FENCE":
+                    case "NETHER_FENCE":
+                    case "SPRUCE_FENCE":
+                    case "BIRCH_FENCE":
+                    case "JUNGLE_FENCE":
+                    case "DARK_OAK_FENCE":
+                    case "ACACIA_FENCE":
+                    case "COBBLE_WALL":
+                    case "STAINED_GLASS_PANE":
+                    case "THIN_GLASS":
+                    case "ENDER_CHEST":
+                    case "IRON_TRAPDOOR":
+                    case "TRAP_DOOR":
+                    case "LADDER":
+                    case "SIGN_POST":
+                    case "WALL_SIGN":
+                        return "false";
+                    default:
+                        return null; // not waterloggable
+                }
+            }
+
+            // Only features present in 1.13 should be backported if possible
+            if ("ANVIL".equals(materialName)) {
+                if (key.equalsIgnoreCase("facing")) {
+                    var value = materialData.getData() & 0x3;
+                    switch (value) {
+                        case 0x0:
+                            return "west";
+                        case 0x1:
+                            return "north";
+                        case 0x2:
+                            return "east";
+                        case 0x3:
+                            return "south";
+                    }
+                }
+            } else if (materialData instanceof Banner) {
+                if (((Banner) materialData).isWallBanner()) {
+                    if (key.equalsIgnoreCase("facing")) {
+                        return ((Banner) materialData).getFacing().name().toLowerCase();
+                    }
+                } else {
+                    if (key.equalsIgnoreCase("rotation")) {
+                        return String.valueOf(materialData.getData());
+                    }
+                }
+            } else if (materialData instanceof Bed) {
+                switch (key.toLowerCase()) {
+                    case "facing":
+                        return ((Bed) materialData).getFacing().name().toLowerCase();
+                    case "part":
+                        return ((Bed) materialData).isHeadOfBed() ? "head" : "foot";
+                    case "occupied":
+                        return "false"; // Does not exist in legacy
+                }
+            } else if (materialData instanceof Crops
+                    || materialData instanceof NetherWarts
+                    || "CACTUS".equals(materialName)
+                    || "SUGAR_CANE_BLOCK".equals(materialName)
+                    || "CHORUS_FLOWER".equalsIgnoreCase(materialName)
+                    || "FROSTED_ICE".equals(materialName)
+                    || "MELON_STEM".equals(materialName)
+                    || "PUMPKIN_STEM".equals(materialName)
+            ) {
+                if ("age".equalsIgnoreCase(key)) {
+                    return String.valueOf(materialData.getData());
+                }
+            } else if ("FIRE".equals(materialName)) {
+                switch (key.toLowerCase()) {
+                    case "age":
+                        return String.valueOf(materialData.getData());
+                    case "east":
+                    case "north":
+                    case "south":
+                    case "up":
+                    case "west":
+                        return "true"; // we can't tell based on the data we have, but let's assume fire is everywhere :haha:
+                }
+            } else if ("BREWING_STAND".equals(materialName)) {
+                switch (key.toLowerCase()) {
+                    case "has_bottle_0":
+                        return (materialData.getData() & 0x1) == 0x1 ? "true" : "false";
+                    case "has_bottle_1":
+                        return (materialData.getData() & 0x2) == 0x2 ? "true" : "false";
+                    case "has_bottle_2":
+                        return (materialData.getData() & 0x4) == 0x4 ? "true" : "false";
+                }
+            } else if (materialData instanceof Button) {
+                switch (key.toLowerCase()) {
+                    case "powered":
+                        return String.valueOf(((Button) materialData).isPowered());
+                    case "facing":
+                        if (((Button) materialData).getFacing() != BlockFace.UP && ((Button) materialData).getFacing() != BlockFace.DOWN) { // only works when on side in legacy
+                            return ((Button) materialData).getFacing().name().toLowerCase();
+                        }
+                        return "north";
+                    case "face":
+                        if (((Button) materialData).getFacing() == BlockFace.UP) {
+                            return "floor";
+                        } else if (((Button) materialData).getFacing() == BlockFace.DOWN) {
+                            return "ceiling";
+                        } else {
+                            return "wall";
+                        }
+                }
+            } else if (materialData instanceof Cake) {
+                if ("bites".equalsIgnoreCase(key)) {
+                    return String.valueOf(materialData.getData());
+                }
+            } else if (materialData instanceof Cauldron) {
+                if ("level".equalsIgnoreCase(key)) {
+                    return String.valueOf(materialData.getData());
+                }
+            } else if (materialData instanceof DirectionalContainer) {
+                if (materialData instanceof Chest || materialData instanceof EnderChest) {
+                    switch (key.toLowerCase()) {
+                        case "facing":
+                            return ((DirectionalContainer) materialData).getFacing().name().toLowerCase();
+                        case "type":
+                            return "single"; // Can't determine in legacy without knowing if there's any chest
+                    }
+                } else if (materialData instanceof Dispenser) { // according to Bukkit API, Dropper is also Dispenser
+                    switch (key.toLowerCase()) {
+                        case "facing":
+                            return ((Dispenser) materialData).getFacing().name().toLowerCase();
+                        case "triggered":
+                            return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
+                    }
+                } else if (materialData instanceof Furnace) {
+                    switch (key.toLowerCase()) {
+                        case "facing":
+                            return ((Furnace) materialData).getFacing().name().toLowerCase();
+                        case "lit":
+                            return "BURNING_FURNACE".equals(materialName) ? "true" : "false";
+                    }
+                }
+            } else if (materialData instanceof CocoaPlant) {
+                switch (key.toLowerCase()) {
+                    case "age":
+                        return String.valueOf(((CocoaPlant) materialData).getSize().ordinal());
+                    case "facing":
+                        return ((CocoaPlant) materialData).getAttachedFace().name().toLowerCase();
+                }
+            } else if (materialData instanceof Command) {
+                if (Server.isVersion(1, 9)) {
+                    switch (key.toLowerCase()) {
+                        case "conditional":
+                            return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
+                        case "facing":
+                            switch (materialData.getData() & 0x7) {
+                                default:
+                                case 0x0:
+                                    return "down";
+                                case 0x1:
+                                    return "up";
+                                case 0x2:
+                                    return "north";
+                                case 0x3:
+                                    return "south";
+                                case 0x4:
+                                    return "west";
+                                case 0x5:
+                                    return "east";
+                            }
+                    }
+                } else {
+                    switch (key.toLowerCase()) {
+                        case "conditional":
+                            return "false";
+                        case "facing":
+                            return "north";
+                    }
+                }
+            } else if ("DAYLIGHT_DETECTOR".equals(materialName) || "DAYLIGHT_DETECTOR_INVERTED".equals(materialName)) {
+                switch (key.toLowerCase()) {
+                    case "inverted":
+                        return "DAYLIGHT_DETECTOR_INVERTED".equals(materialName) ? "true" : "false";
+                    case "power":
+                        return String.valueOf(materialData.getData());
+                }
+            } else if (materialData instanceof Door) {
+                if (((Door) materialData).isTopHalf()) {
+                    switch (key.toLowerCase()) {
+                        case "half":
+                            return "upper";
+                        case "powered":
+                            return (materialData.getData() & 0x2) == 0x2 ? "true" : "false";
+                        case "hinge":
+                            return ((Door) materialData).getHinge() ? "right" : "left";
+                        case "facing":
+                            return "north"; // we can't get that from upper half
+                        case "open":
+                            return "false"; // we can't get that from upper half
+                    }
+                } else {
+                    switch (key.toLowerCase()) {
+                        case "half":
+                            return "lower";
+                        case "open":
+                            return ((Door) materialData).isOpen() ? "true" : "false";
+                        case "facing":
+                            return ((Door) materialData).getFacing().name().toLowerCase();
+                        case "hinge":
+                            return "left"; // we can't get that from lower half
+                        case "powered":
+                            return "false"; // we can't get that from lower half
+                    }
+                }
+            } else if ("ENDER_PORTAL_FRAME".equals(materialName)) {
+                switch (key.toLowerCase()) {
+                    case "eye":
+                        return (materialData.getData() & 0x4) == 0x4 ? "true" : "false";
+                    case "facing":
+                        switch (materialData.getData() & 0x3) {
+                            default:
+                            case 0x0:
+                                return "south";
+                            case 0x1:
+                                return "west";
+                            case 0x2:
+                                return "north";
+                            case 0x3:
+                                return "east";
+                        }
+                }
+            } else if ("END_ROD".equals(materialName)) {
+                if ("facing".equalsIgnoreCase(key)) {
+                    switch (materialData.getData()) {
+                        default:
+                        case 0x0:
+                            return "down";
+                        case 0x1:
+                            return "up";
+                        case 0x2:
+                            return "north";
+                        case 0x3:
+                            return "south";
+                        case 0x4:
+                            return "west";
+                        case 0x5:
+                            return "east";
+                    }
+                }
+            } else if (materialName.equals("SOIL")) {
+                if ("moisture".equalsIgnoreCase(key)) {
+                    return String.valueOf(materialData.getData());
+                }
+            }
+            // skipping fence as fence didn't have any values in legacy, everything was computed client-side
+            else if (materialData instanceof Gate) {
+                switch (key.toLowerCase()) {
+                    case "facing":
+                        // implementation in Gate is a bit sus and does not correspond with wiki
+                        switch (materialData.getData() & 0x3) {
+                            default:
+                            case 0x0:
+                                return "south";
+                            case 0x1:
+                                return "west";
+                            case 0x2:
+                                return "north";
+                            case 0x3:
+                                return "east";
+                        }
+                    case "open":
+                        return ((Gate) materialData).isOpen() ? "true" : "false";
+                    case "in_wall":
+                        return "false"; // computed in legacy
+                    case "powered":
+                        return "false"; // does not exist in legacy
+                }
+            } else if ("DOUBLE_PLANT".equals(materialName)) {
+                if ("half".equalsIgnoreCase(key)) {
+                    return (materialData.getData() & 0x8) == 0x8 ? "upper" : "lower";
+                }
+            } else if (materialName.endsWith("GLAZED_TERRACOTTA")) {
+                switch (materialData.getData()) {
+                    default:
+                    case 0x0:
+                        return "south";
+                    case 0x1:
+                        return "west";
+                    case 0x2:
+                        return "north";
+                    case 0x3:
+                        return "east";
+                }
+            }
+            // skipping Grass block, mycelium & podzol: no snowy property in legacy
+            else if ("HOPPER".equalsIgnoreCase(materialName)) { // can't use o.b.m.Hopper due to compatibility with 1.8.8
+                switch (key.toLowerCase()) {
+                    case "enabled":
+                        return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
+                    case "facing":
+                        switch (materialData.getData() & 0x7) {
+                            default:
+                            case 0x0:
+                                return "down";
+                            case 0x2:
+                                return "north";
+                            case 0x3:
+                                return "south";
+                            case 0x4:
+                                return "west";
+                            case 0x5:
+                                return "east";
+                        }
+                }
+            }
+            // skipping iron bars as iron bars didn't have any values in legacy, everything was computed client-side
+            else if (materialData instanceof Pumpkin) {
+                if ("facing".equalsIgnoreCase(key)) {
+                    if (materialData.getData() == 0x3) { // getFacing() returns wrong facing for 0x3
+                        return "west";
+                    }
+                    return ((Pumpkin) materialData).getFacing().name().toLowerCase();
+                }
+            } else if ("JUKEBOX".equals(materialName)) {
+                if ("has_record".equalsIgnoreCase(key)) {
+                    return materialData.getData() == 0x1 ? "true" : "false";
+                }
+            } else if (materialData instanceof Ladder) {
+                if ("facing".equalsIgnoreCase(key)) {
+                    return ((Ladder) materialData).getAttachedFace().name().toLowerCase();
+                }
+            } else if ("WATER".equals(materialName) || "STATIONARY_WATER".equals(materialName) || "LAVA".equals(materialName) || "STATIONARY_LAVA".equals(materialName)) {
+                if ("level".equalsIgnoreCase(key)) {
+                    return String.valueOf(materialData.getData());
+                }
+            } else if ("LEAVES".equals(materialName) || "LEAVES_2".equals(materialName)) { // o.b.m.Leaves can't be used because implementation in 1.8.8 was broken
+                switch (key.toLowerCase()) {
+                    case "persistent":
+                        return (materialData.getData() & 0x4) == 0x4 ? "true" : "false";
+                    case "distance":
+                        return (materialData.getData() & 0x4) == 0x4 ? "1" : "6"; // I have no idea what to return and if check decay can be used for some guessing or not
+                }
+            } else if (materialData instanceof Lever) {
+                switch (key.toLowerCase()) {
+                    case "face":
+                        switch (((Lever) materialData).getAttachedFace()) {
+                            case UP:
+                                return "ceiling";
+                            case DOWN:
+                                return "floor";
+                            default:
+                                return "wall";
+                        }
+                    case "facing":
+                        switch (((Lever) materialData).getAttachedFace()) {
+                            case UP:
+                                return (materialData.getData() & 0x7) == 0x5 ? "east" : "south";
+                            case DOWN:
+                                return (materialData.getData() & 0x7) == 0x0 ? "east" : "south";
+                            default:
+                                return ((Lever) materialData).getAttachedFace().name().toLowerCase();
+                        }
+                    case "powered":
+                        return ((Lever) materialData).isPowered() ? "true" : "false";
+                }
+            } else if (materialData instanceof Tree) {
+                if ("axis".equalsIgnoreCase(key)) {
+                    if (((Tree) materialData).getDirection() != BlockFace.SELF) { // can't rotate wood/bark in legacy
+                        switch (((Tree) materialData).getDirection()) {
+                            case WEST:
+                                return "x";
+                            default:
+                            case UP:
+                                return "y";
+                            case NORTH:
+                                return "z";
+                        }
+                    }
+                }
+            } else if (materialData instanceof Skull) {
+                if (((Skull) materialData).getFacing() == BlockFace.SELF) {
+                    // TODO: Rotation of mob head is stored inside Tile instead of Block Data in legacy
+                } else {
+                    if ("facing".equalsIgnoreCase(key)) {
+                        switch (materialData.getData()) { // implementation was broken in some versions
+                            default:
+                            case 0x2:
+                                return "north";
+                            case 0x3:
+                                return "south";
+                            case 0x4:
+                                return "west";
+                            case 0x5:
+                                return "east";
+                        }
+                    }
+                }
+            } else if (materialData instanceof Mushroom) {
+                switch (key.toLowerCase()) {
+                    case "east":
+                        return ((Mushroom) materialData).isFacePainted(BlockFace.EAST) ? "true" : "false";
+                    case "down":
+                        return ((Mushroom) materialData).isFacePainted(BlockFace.DOWN) ? "true" : "false";
+                    case "north":
+                        return ((Mushroom) materialData).isFacePainted(BlockFace.NORTH) ? "true" : "false";
+                    case "south":
+                        return ((Mushroom) materialData).isFacePainted(BlockFace.SOUTH) ? "true" : "false";
+                    case "up":
+                        return ((Mushroom) materialData).isFacePainted(BlockFace.UP) ? "true" : "false";
+                    case "west":
+                        return ((Mushroom) materialData).isFacePainted(BlockFace.WEST) ? "true" : "false";
+                }
+            } else if ("PORTAL".equals(materialName)) {
+                if ("axis".equalsIgnoreCase(key)) {
+                    return materialData.getData() == 0x1 ? "x" : "z";
+                }
+            }
+            // skipping note block as note block didn't have any values in legacy, everything was computed
+            else if ("OBSERVER".equals(materialName)) {
+                switch (key.toLowerCase()) {
+                    case "facing":
+                        switch (materialData.getData() & 0x7) {
+                            default:
+                            case 0x0:
+                                return "down";
+                            case 0x1:
+                                return "up";
+                            case 0x2:
+                                return "north";
+                            case 0x3:
+                                return "south";
+                            case 0x4:
+                                return "west";
+                            case 0x5:
+                                return "east";
+                        }
+                    case "powered":
+                        return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
+                }
+            } else if (materialData instanceof PistonBaseMaterial) {
+                switch (key.toLowerCase()) {
+                    case "extended":
+                        return ((PistonBaseMaterial) materialData).isPowered() ? "true" : "false";
+                    case "facing":
+                        return ((PistonBaseMaterial) materialData).getFacing().name().toLowerCase();
+                }
+            } else if (materialData instanceof PistonExtensionMaterial) {
+                switch (key.toLowerCase()) {
+                    case "type":
+                        return ((PistonExtensionMaterial) materialData).isSticky() ? "sticky" : "normal";
+                    case "facing":
+                        return ((PistonExtensionMaterial) materialData).getFacing().name().toLowerCase();
+                    case "short":
+                        return "false"; // not in legacy
+                }
+            } else if (materialData instanceof PressurePlate) {
+                if ("powered".equalsIgnoreCase(key)) {
+                    return materialData.getData() == 0x1 ? "true" : "false";
+                }
+            } else if ("IRON_PLATE".equals(materialName) || "GOLD_PLATE".equals(materialName)) {
+                if ("power".equalsIgnoreCase(key)) {
+                    return String.valueOf(materialData.getData());
+                }
+            } else if ("QUARTZ_BLOCK".equals(materialName)) {
+                if (materialData.getData() >= 0x2 && "axis".equalsIgnoreCase(key)) { // is pillar
+                    switch (materialData.getData()) {
+                        case 0x3:
+                            return "x";
+                        case 0x2:
+                            return "y";
+                        case 0x4:
+                            return "z";
+                    }
+                }
+            } else if ("PURPUR_PILLAR".equals(materialName) || "BONE_BLOCK".equals(materialName) || "HAY_BLOCK".equals(materialName)) {
+                if ("axis".equalsIgnoreCase(key)) {
+                    switch (materialData.getData()) {
+                        case 0x4:
+                            return "x";
+                        case 0x0:
+                            return "y";
+                        case 0x8:
+                            return "z";
+                    }
+                }
+            } else if (materialData instanceof Rails) {
+                if (materialData instanceof ExtendedRails) {
+                    switch (key.toLowerCase()) {
+                        case "powered":
+                            return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
+                        case "shape":
+                            if (((ExtendedRails) materialData).isOnSlope()) {
+                                switch (((ExtendedRails) materialData).getDirection()) {
+                                    default:
+                                    case NORTH:
+                                        return "ascending_north";
+                                    case EAST:
+                                        return "ascending_east";
+                                    case SOUTH:
+                                        return "ascending_south";
+                                    case WEST:
+                                        return "ascending_west";
+                                }
+                            } else {
+                                switch (((ExtendedRails) materialData).getDirection()) {
+                                    default:
+                                    case SOUTH:
+                                        return "north_south";
+                                    case EAST:
+                                        return "north_east";
+                                }
+                            }
+                    }
+                } else {
+                    if ("shape".equalsIgnoreCase(key)) {
+                        if (((Rails) materialData).isOnSlope()) {
+                            switch (((Rails) materialData).getDirection()) {
+                                default:
+                                case NORTH:
+                                    return "ascending_north";
+                                case EAST:
+                                    return "ascending_east";
+                                case SOUTH:
+                                    return "ascending_south";
+                                case WEST:
+                                    return "ascending_west";
+                            }
+                        } else {
+                            switch (((Rails) materialData).getDirection()) {
+                                default:
+                                case SOUTH:
+                                    return "north_south";
+                                case EAST:
+                                    return "north_east";
+                                case NORTH_EAST:
+                                    return "south_west"; // Bukkit API inverts it for some reason
+                                case NORTH_WEST:
+                                    return "south_east"; // Bukkit API inverts it for some reason
+                                case SOUTH_EAST:
+                                    return "north_west"; // Bukkit API inverts it for some reason
+                                case SOUTH_WEST:
+                                    return "north_east"; // Bukkit API inverts it for some reason
+                            }
+                        }
+                    }
+                }
+            } else if ("REDSTONE_COMPARATOR_OFF".equals(materialName) || "REDSTONE_COMPARATOR_ON".equals(materialName)) { // o.b.m.Comparator is too new
+                switch (key.toLowerCase()) {
+                    case "facing":
+                        switch (materialData.getData() & 0x3) {
+                            default:
+                            case 0x0:
+                                return "south";
+                            case 0x1:
+                                return "north";
+                            case 0x2:
+                                return "east";
+                            case 0x3:
+                                return "west";
+                        }
+                    case "mode":
+                        return (materialData.getData() & 0x4) == 0x4 ? "subtract" : "compare";
+                    case "powered":
+                        return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
+                }
+            } else if (materialData instanceof RedstoneWire) {
+                switch (key.toLowerCase()) {
+                    case "power":
+                        return String.valueOf(materialData.getData());
+                    case "east":
+                    case "north":
+                    case "south":
+                    case "west":
+                        return "side"; // computed in legacy
+                }
+            } else if ("REDSTONE_LAMP_OFF".equals(materialName) || "REDSTONE_ORE".equals(materialName)) {
+                if ("lit".equalsIgnoreCase(key)) {
+                    return "false";
+                }
+            } else if ("REDSTONE_LAMP_ON".equals(materialName) || "GLOWING_REDSTONE_ORE".equals(materialName)) {
+                if ("lit".equalsIgnoreCase(key)) {
+                    return "true";
+                }
+            } else if (materialData instanceof Diode) { // repeater
+                switch (key.toLowerCase()) {
+                    case "delay":
+                        return String.valueOf(((Diode) materialData).getDelay());
+                    case "facing":
+                        return ((Diode) materialData).getFacing().name().toLowerCase();
+                    case "powered":
+                        return "DIODE_BLOCK_ON".equals(materialName) ? "true" : "false";
+                    case "locked":
+                        return "false"; // not in legacy
+                }
+            } else if (materialData instanceof RedstoneTorch) {
+                switch (key.toLowerCase()) {
+                    case "lit":
+                        return "REDSTONE_TORCH_ON".equals(materialName) ? "true" : "false";
+                    case "facing":
+                        if (((RedstoneTorch) materialData).getAttachedFace() != BlockFace.DOWN) {
+                            return ((RedstoneTorch) materialData).getFacing().name().toLowerCase();
+                        }
+                        break;
+                }
+            } else if ("SAPLING".equals(materialName)) {
+                if ("stage".equalsIgnoreCase(key)) {
+                    return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
+                }
+            } else if (materialName.endsWith("_SHULKER_BOX")) {
+                if ("facing".equalsIgnoreCase(key)) {
+                    switch (materialData.getData()) {
+                        default:
+                        case 0x0:
+                            return "down";
+                        case 0x1:
+                            return "up";
+                        case 0x2:
+                            return "north";
+                        case 0x3:
+                            return "south";
+                        case 0x4:
+                            return "west";
+                        case 0x5:
+                            return "east";
+                    }
+                }
+            } else if (materialData instanceof Sign) {
+                if (((Sign) materialData).isWallSign()) {
+                    if ("facing".equalsIgnoreCase(key)) {
+                        return ((Sign) materialData).getFacing().name().toLowerCase();
+                    }
+                } else {
+                    if ("rotation".equalsIgnoreCase(key)) {
+                        return String.valueOf(materialData.getData());
+                    }
+                }
+            } else if ("STEP".equals(materialName) // the o.b.m implementation is a bit retarded and not completed
+                    || "WOOD_STEP".equals(materialName)
+                    || "STONE_SLAB2".equals(materialName)
+                    || "PURPUR_SLAB".equals(materialName)
+            ) {
+                if ("type".equalsIgnoreCase(key)) {
+                    return (materialData.getData() & 0x8) == 0x8 ? "top" : "bottom";
+                }
+            } else if ("DOUBLE_STEP".equals(materialName)
+                    || "WOOD_DOUBLE_STEP".equals(materialName)
+                    || "DOUBLE_STONE_SLAB2".equals(materialName)
+                    || "PURPUR_DOUBLE_SLAB".equals(materialName)
+            ) {
+                if ("type".equalsIgnoreCase(key)) {
+                    return "double";
+                }
+            } else if ("SNOW".equals(materialName)) {
+                if ("layers".equalsIgnoreCase(key)) {
+                    return String.valueOf(materialData.getData());
+                }
+            } else if (materialData instanceof Stairs) {
+                switch (key.toLowerCase()) {
+                    case "facing":
+                        return ((Stairs) materialData).getFacing().name().toLowerCase();
+                    case "half":
+                        return ((Stairs) materialData).isInverted() ? "top" : "bottom";
+                    case "shape":
+                        return "straight"; // computed in legacy
+                }
+            } else if ("STRUCTURE_BLOCK".equals(materialName)) {
+                if ("mode".equalsIgnoreCase(key)) {
+                    switch (materialData.getData()) {
+                        default:
+                        case 0x0:
+                            return "data";
+                        case 0x1:
+                            return "save";
+                        case 0x2:
+                            return "load";
+                        case 0x3:
+                            return "corner";
+                    }
+                }
+            } else if ("TNT".equals(materialName)) {
+                if ("unstable".equalsIgnoreCase(key)) {
+                    return materialData.getData() == 0x1 ? "true" : "false";
+                }
+            } else if (materialData instanceof Torch) {
+                if ("facing".equalsIgnoreCase(key)) {
+                    // flattening split floor and wall torches, so we should behave the same and not set the facing if this is not a wall torch
+                    if (((Torch) materialData).getAttachedFace() != BlockFace.DOWN) {
+                        return ((Torch) materialData).getFacing().name().toLowerCase();
+                    }
+                }
+            } else if (materialData instanceof TrapDoor) {
+                switch (key.toLowerCase()) {
+                    case "facing":
+                        return ((TrapDoor) materialData).getFacing().name().toLowerCase();
+                    case "half":
+                        return ((TrapDoor) materialData).isInverted() ? "top" : "bottom";
+                    case "open":
+                        return ((TrapDoor) materialData).isOpen() ? "true" : "false";
+                    case "powered":
+                        return "false"; // not in legacy
+                }
+            } else if (materialData instanceof Tripwire) {
+                switch (key.toLowerCase()) {
+                    case "attached":
+                        return ((Tripwire) materialData).isActivated() ? "true" : "false";
+                    case "disarmed":
+                        return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
+                    case "powered":
+                        return ((Tripwire) materialData).isObjectTriggering() ? "true" : "false";
+                    case "east":
+                    case "north":
+                    case "south":
+                    case "west":
+                        return "true"; // computed in legacy
+                }
+            } else if (materialData instanceof TripwireHook) {
+                switch (key.toLowerCase()) {
+                    case "attached":
+                        return ((TripwireHook) materialData).isConnected() ? "true" : "false";
+                    case "facing":
+                        return ((TripwireHook) materialData).getFacing().name().toLowerCase();
+                    case "powered":
+                        return ((TripwireHook) materialData).isActivated() ? "true" : "false";
+                }
+            } else if (materialData instanceof Vine) {
+                switch (key.toLowerCase()) {
+                    case "east":
+                        return ((Vine) materialData).isOnFace(BlockFace.EAST) ? "true" : "false";
+                    case "north":
+                        return ((Vine) materialData).isOnFace(BlockFace.NORTH) ? "true" : "false";
+                    case "south":
+                        return ((Vine) materialData).isOnFace(BlockFace.SOUTH) ? "true" : "false";
+                    case "west":
+                        return ((Vine) materialData).isOnFace(BlockFace.WEST) ? "true" : "false";
+                    case "up":
+                        return "true"; // computed
+                }
+            }
+            // skipping walls as walls didn't have any values in legacy, everything was computed client-side
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        return null;
     }
 }

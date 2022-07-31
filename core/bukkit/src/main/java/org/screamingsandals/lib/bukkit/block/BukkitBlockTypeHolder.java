@@ -76,6 +76,7 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
+    @NotNull
     public BlockTypeHolder withLegacyData(byte legacyData) {
         if (!NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED) {
             BukkitCore.getPlugin().getLogger().warning(NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED_MESSAGE);
@@ -94,7 +95,8 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
 
     @Override
     @Unmodifiable
-    public Map<String, String> flatteningData() {
+    @NotNull
+    public Map<@NotNull String, @NotNull String> flatteningData() {
         var data = wrappedObject.getAsString();
         if (data.contains("[") && data.contains("]")) {
             final var values = data.substring(data.indexOf("[") + 1, data.lastIndexOf("]"));
@@ -109,7 +111,8 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    public BlockTypeHolder withFlatteningData(Map<String, String> data) {
+    @NotNull
+    public BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> data) {
         final var builder = new StringBuilder();
         if (data != null && !data.isEmpty()) {
             builder.append('[');
@@ -124,7 +127,8 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    public BlockTypeHolder with(String attribute, String value) {
+    @NotNull
+    public BlockTypeHolder with(@NotNull String attribute, @NotNull String value) {
         return withFlatteningData(new HashMap<>(flatteningData()) {
             {
                 put(attribute, value);
@@ -133,7 +137,8 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    public BlockTypeHolder with(String attribute, int value) {
+    @NotNull
+    public BlockTypeHolder with(@NotNull String attribute, int value) {
         return withFlatteningData(new HashMap<>(flatteningData()) {
             {
                 put(attribute, String.valueOf(value));
@@ -142,7 +147,8 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    public BlockTypeHolder with(String attribute, boolean value) {
+    @NotNull
+    public BlockTypeHolder with(@NotNull String attribute, boolean value) {
         return withFlatteningData(new HashMap<>(flatteningData()) {
             {
                 put(attribute, String.valueOf(value));
@@ -151,12 +157,14 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    public Optional<String> get(String attribute) {
+    @NotNull
+    public Optional<String> get(@NotNull String attribute) {
         return Optional.ofNullable(flatteningData().get(attribute));
     }
 
     @Override
-    public Optional<Integer> getInt(String attribute) {
+    @NotNull
+    public Optional<Integer> getInt(@NotNull String attribute) {
         return Optional.ofNullable(flatteningData().get(attribute)).flatMap(s -> {
             try {
                 return Optional.of(Integer.valueOf(s));
@@ -167,7 +175,8 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    public Optional<Boolean> getBoolean(String attribute) {
+    @NotNull
+    public Optional<Boolean> getBoolean(@NotNull String attribute) {
         return Optional.ofNullable(flatteningData().get(attribute)).map(Boolean::parseBoolean);
     }
 

@@ -57,6 +57,7 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     }
 
     @Override
+    @NotNull
     public BlockTypeHolder withLegacyData(byte legacyData) {
         var clone = wrappedObject.clone();
         clone.setData(legacyData);
@@ -65,12 +66,14 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
 
     @Override
     @Unmodifiable
-    public Map<String, String> flatteningData() {
+    @NotNull
+    public Map<@NotNull String, @NotNull String> flatteningData() {
         return Map.of(); // TODO: some sort of conversion
     }
 
     @Override
-    public BlockTypeHolder withFlatteningData(Map<String, String> flatteningData) {
+    @NotNull
+    public BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> flatteningData) {
         var materialData = wrappedObject;
         // TODO: strip all block data like axis for having consistent behaviour between legacy and flattening versions (but don't strip block variants!!)
         for (var e : flatteningData.entrySet()) {
@@ -80,33 +83,45 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     }
 
     @Override
-    public BlockTypeHolder with(String attribute, String value) {
+    @NotNull
+    public BlockTypeHolder with(@NotNull String attribute, @NotNull String value) {
         return new BukkitBlockTypeLegacyHolder(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, value));
     }
 
     @Override
-    public BlockTypeHolder with(String attribute, int value) {
+    @NotNull
+    public BlockTypeHolder with(@NotNull String attribute, int value) {
         return new BukkitBlockTypeLegacyHolder(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, String.valueOf(value)));
     }
 
     @Override
-    public BlockTypeHolder with(String attribute, boolean value) {
+    @NotNull
+    public BlockTypeHolder with(@NotNull String attribute, boolean value) {
         return new BukkitBlockTypeLegacyHolder(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, String.valueOf(value)));
     }
 
     @Override
-    public Optional<String> get(String attribute) {
-        return Optional.empty(); // TODO: some sort of conversion
+    @NotNull
+    public Optional<String> get(@NotNull String attribute) {
+        return Optional.ofNullable(LegacyMaterialDataToFlatteningConverter.get(wrappedObject, attribute));
     }
 
     @Override
-    public Optional<Integer> getInt(String attribute) {
-        return Optional.empty(); // TODO: some sort of conversion
+    @NotNull
+    public Optional<Integer> getInt(@NotNull String attribute) {
+        return Optional.ofNullable(LegacyMaterialDataToFlatteningConverter.get(wrappedObject, attribute)).flatMap(s -> {
+            try {
+                return Optional.of(Integer.valueOf(s));
+            } catch (Throwable ignored) {
+                return Optional.empty();
+            }
+        });
     }
 
     @Override
-    public Optional<Boolean> getBoolean(String attribute) {
-        return Optional.empty(); // TODO: some sort of conversion
+    @NotNull
+    public Optional<Boolean> getBoolean(@NotNull String attribute) {
+        return Optional.ofNullable(LegacyMaterialDataToFlatteningConverter.get(wrappedObject, attribute)).map(Boolean::parseBoolean);
     }
 
     @Override

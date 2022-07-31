@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.block;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -41,57 +42,50 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData, Taggab
 
     @Deprecated
     @Contract(value = "_ -> new", pure = true)
+    @NotNull
     BlockTypeHolder withLegacyData(byte legacyData);
 
     /**
      * NOTE: This method does not work in legacy environments yet!
      */
     @Unmodifiable
+    @NotNull
     Map<String, String> flatteningData();
 
     /**
-     * NOTE: This method does not work in legacy environments yet!
+     * NOTE: Experimental because it may have different behaviour then expected
      */
     @Contract(value = "_ -> new", pure = true)
-    BlockTypeHolder withFlatteningData(Map<String, String> flatteningData);
+    @NotNull
+    @ApiStatus.Experimental
+    BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> flatteningData);
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
     @Contract(value = "_, _ -> new", pure = true)
-    BlockTypeHolder with(String attribute, String value);
+    @NotNull
+    BlockTypeHolder with(@NotNull String attribute, @NotNull String value);
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
     @Contract(value = "_, _ -> new", pure = true)
-    BlockTypeHolder with(String attribute, int value);
+    @NotNull
+    BlockTypeHolder with(@NotNull String attribute, int value);
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
     @Contract(value = "_, _ -> new", pure = true)
-    BlockTypeHolder with(String attribute, boolean value);
+    @NotNull
+    BlockTypeHolder with(@NotNull String attribute, boolean value);
 
     @Contract(value = "_ -> new", pure = true)
-    default BlockTypeHolder colorize(String color) {
+    @NotNull
+    default BlockTypeHolder colorize(@NotNull String color) {
         return BlockTypeMapper.colorize(this, color);
     }
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
-    Optional<String> get(String attribute);
+    @NotNull
+    Optional<String> get(@NotNull String attribute);
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
-    Optional<Integer> getInt(String attribute);
+    @NotNull
+    Optional<Integer> getInt(@NotNull String attribute);
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
-    Optional<Boolean> getBoolean(String attribute);
+    @NotNull
+    Optional<Boolean> getBoolean(@NotNull String attribute);
 
     default boolean isAir() {
         return isSameType(air(), "minecraft:cave_air", "minecraft:void_air");
