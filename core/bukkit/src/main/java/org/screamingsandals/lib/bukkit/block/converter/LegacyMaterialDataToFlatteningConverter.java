@@ -24,6 +24,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @SuppressWarnings("deprecation")
 public class LegacyMaterialDataToFlatteningConverter {
     // TODO: consider not using o.b.m and remove all duplicates (but is it worth? no one will touch this code in the future)
@@ -1777,16 +1781,18 @@ public class LegacyMaterialDataToFlatteningConverter {
                     return (materialData.getData() & 0x8) == 0x8 ? "upper" : "lower";
                 }
             } else if (materialName.endsWith("GLAZED_TERRACOTTA")) {
-                switch (materialData.getData()) {
-                    default:
-                    case 0x0:
-                        return "south";
-                    case 0x1:
-                        return "west";
-                    case 0x2:
-                        return "north";
-                    case 0x3:
-                        return "east";
+                if ("facing".equalsIgnoreCase(key)) {
+                    switch (materialData.getData()) {
+                        default:
+                        case 0x0:
+                            return "south";
+                        case 0x1:
+                            return "west";
+                        case 0x2:
+                            return "north";
+                        case 0x3:
+                            return "east";
+                    }
                 }
             }
             // skipping Grass block, mycelium & podzol: no snowy property in legacy
@@ -2238,5 +2244,70 @@ public class LegacyMaterialDataToFlatteningConverter {
             throwable.printStackTrace();
         }
         return null;
+    }
+
+    @NotNull
+    public static Map<@NotNull String, @NotNull String> get(@NotNull MaterialData materialData) {
+        // TODO: actually implement it in some normal way instead of this
+        var possibleKeys = List.of(
+                "waterlogged",
+                "facing",
+                "rotation",
+                "part",
+                "occupied",
+                "age",
+                "east",
+                "north",
+                "south",
+                "up",
+                "west",
+                "down",
+                "has_bottle_0",
+                "has_bottle_1",
+                "has_bottle_2",
+                "powered",
+                "face",
+                "bites",
+                "level",
+                "type",
+                "triggered",
+                "lit",
+                "conditional",
+                "inverted",
+                "power",
+                "half",
+                "hinge",
+                "open",
+                "eye",
+                "moisture",
+                "in_wall",
+                "enabled",
+                "has_record",
+                "persistent",
+                "distance",
+                "axis",
+                "extended",
+                "short",
+                "shape",
+                "mode",
+                "delay",
+                "locked",
+                "stage",
+                "layers",
+                "unstable",
+                "attached",
+                "disarmed"
+        );
+
+        var map = new HashMap<String, String>();
+
+        for (var possible : possibleKeys) {
+            var resolve = get(materialData, possible);
+            if (resolve != null) {
+                map.put(possible, resolve);
+            }
+        }
+
+        return Map.copyOf(map);
     }
 }

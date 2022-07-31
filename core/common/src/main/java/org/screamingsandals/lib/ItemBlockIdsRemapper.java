@@ -79,19 +79,13 @@ public abstract class ItemBlockIdsRemapper {
 
         The reason why the order is important is due to often renaming of java flattening names
         */
-        if (platform == Platform.JAVA_FLATTENING) {
-            flatteningMapping();
-        }
 
-        if (platform.name().startsWith("JAVA")) {
+        if (platform == Platform.JAVA_LEGACY) {
             flatteningLegacyMappingJava();
-
-            if (platform != Platform.JAVA_FLATTENING) {
-                flatteningMapping();
-            }
-
-            javaAutoColorable();
         }
+
+        flatteningMapping();
+        javaAutoColorable();
     }
 
     private void javaAutoColorable() {

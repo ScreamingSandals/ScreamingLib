@@ -68,7 +68,7 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     @Unmodifiable
     @NotNull
     public Map<@NotNull String, @NotNull String> flatteningData() {
-        return Map.of(); // TODO: some sort of conversion
+        return LegacyMaterialDataToFlatteningConverter.get(wrappedObject);
     }
 
     @Override
