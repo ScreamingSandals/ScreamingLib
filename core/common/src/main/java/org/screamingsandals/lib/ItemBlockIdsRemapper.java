@@ -172,6 +172,7 @@ public abstract class ItemBlockIdsRemapper {
     }
 
 
+    // TODO: move everything related to legacy to bukkit module as bukkit is the only platform that is going to have legacy version support
     private void flatteningLegacyMappingJava() {
         // Legacy remapping
 
@@ -787,8 +788,8 @@ public abstract class ItemBlockIdsRemapper {
         f2lBlock("SKELETON_WALL_SKULL", Map.of("facing", "west"), "SKULL", 144, 4); // TODO: Tile entity
         f2lBlock("SKELETON_WALL_SKULL", Map.of("facing", "east"), "SKULL", 144, 5); // TODO: Tile entity
         f2l("ANVIL", 145);
-        f2l("CHIPPED_ANVIL", "ANVIL", 145, 1);
-        f2l("DAMAGED_ANVIL", "ANVIL", 145, 2);
+        f2l("CHIPPED_ANVIL", "ANVIL", 145, 1); // TODO: different data for block and item
+        f2l("DAMAGED_ANVIL", "ANVIL", 145, 2); // TODO: different data for block and item
         f2lItem("TRAPPED_CHEST", 146);
         f2lBlock("TRAPPED_CHEST", "TRAPPED_CHEST", 146, 2); // north, default value
         f2lBlock("TRAPPED_CHEST", Map.of("facing", "south"), 146, 3);
@@ -867,7 +868,7 @@ public abstract class ItemBlockIdsRemapper {
 
         f2l("PRISMARINE", 168);
         f2l("PRISMARINE_BRICKS", "PRISMARINE", 168, 1);
-        f2l("DARK_PRISMARINE", "PRISMARINE", 168, 1);
+        f2l("DARK_PRISMARINE", "PRISMARINE", 168, 2);
 
         f2l("SEA_LANTERN", 169);
         f2l("HAY_BLOCK", 170);

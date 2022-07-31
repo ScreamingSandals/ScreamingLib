@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.item;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeLegacyHolder;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Pair;
@@ -65,7 +66,7 @@ public class BukkitItemTypeLegacyHolder extends BasicWrapper<Pair<Material, Shor
         if (!wrappedObject.first().isBlock()) {
             return Optional.empty();
         }
-        return Optional.of(BlockTypeHolder.of(wrappedObject.first()).withLegacyData(wrappedObject.second().byteValue()));
+        return Optional.of(new BukkitBlockTypeLegacyHolder(wrappedObject.first(), wrappedObject.second().byteValue()));
     }
 
     @Override
