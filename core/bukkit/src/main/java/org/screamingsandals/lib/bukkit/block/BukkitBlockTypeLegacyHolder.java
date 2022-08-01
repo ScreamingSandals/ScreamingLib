@@ -74,8 +74,98 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     @Override
     @NotNull
     public BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> flatteningData) {
-        var materialData = wrappedObject;
-        // TODO: strip all block data like axis for having consistent behaviour between legacy and flattening versions (but don't strip block variants!!)
+        var materialName = wrappedObject.getItemType().name();
+        byte baseData = 0;
+
+        // Code below makes sure the comparison behaves the same on legacy as on flattening
+
+        // Materials (lit/unlit > default lit state, double slab > slab, retarded invalid comparator > valid comparator)
+        switch (materialName) {
+            case "BURNING_FURNACE":
+                materialName = "FURNACE";
+                break;
+            case "DIODE_BLOCK_ON":
+                materialName = "DIODE_BLOCK_OFF";
+                break;
+            case "REDSTONE_COMPARATOR_ON":
+                materialName = "REDSTONE_COMPARATOR_OFF";
+                break;
+            case "DAYLIGHT_DETECTOR_INVERTED":
+                materialName = "DAYLIGHT_DETECTOR";
+                break;
+            case "REDSTONE_TORCH_OFF":
+                materialName = "REDSTONE_TORCH_ON";
+                break;
+            case "REDSTONE_LAMP_ON":
+                materialName = "REDSTONE_LAMP_OFF";
+                break;
+            case "DOUBLE_STEP":
+                materialName = "STEP";
+                break;
+            case "WOOD_DOUBLE_STEP":
+                materialName = "WOOD_STEP";
+                break;
+            case "DOUBLE_STONE_SLAB2":
+                materialName = "STONE_SLAB2";
+                break;
+            case "PURPUR_DOUBLE_SLAB":
+                materialName = "PURPUR_SLAB";
+                break;
+        }
+
+        // State data (persist variant)
+        switch (materialName) {
+            case "LOG":
+            case "LOG_2":
+            case "LEAVES":
+            case "LEAVES_2": // wood type
+                baseData = (byte) (wrappedObject.getData() & 0x3); // 0x2 and 0x1 bits (together 0x3) are used for wood type
+                break;
+            case "SAPLING": // sapling type
+            case "STEP":
+            case "WOOD_STEP":
+            case "STONE_SLAB2":
+            case "PURPUR_SLAB": // slab material
+            case "DOUBLE_PLANT": // different tall flowers
+                baseData = (byte) (wrappedObject.getData() & 0x7); // only 0x8 bit is used for state data, the rest is variant
+                break;
+            case "SAND": // sand and red_sand
+            case "LONG_GRASS": // tall_grass and fern
+            case "RED_ROSE": // different small flowers
+            case "WOOL":
+            case "STAINED_CLAY":
+            case "STAINED_GLASS":
+            case "STAINED_GLASS_PANE":
+            case "CARPET":
+            case "CONCRETE":
+            case "CONCRETE_POWDER": // color
+            case "SMOOTH_BRICK": // different stone bricks
+            case "MONSTER_EGGS": // infested blocks
+            case "PRISMARINE": // different prismarine blocks
+            case "SPONGE": // sponge and wet_sponge
+            case "COBBLE_WALL": // cobblestone_wall and mossy_cobblestone_wall
+            case "WOOD": // planks
+            case "DIRT": // dirt, coarse_dirt, podzol
+                baseData = wrappedObject.getData(); // all bits are used for variant
+                break;
+            case "TORCH":
+            case "REDSTONE_TORCH_ON":
+                baseData = (byte) ((wrappedObject.getData() == 0x5) ? 0x5 : 0x0); // torches and wall torches
+                break;
+            case "SKULL": // TODO: tile entity data (in flattening split by mob type)
+                baseData = (byte) ((wrappedObject.getData() == 0x1) ? 0x1 : 0x0); // wall head and floor head
+                break;
+            case "QUARTZ_BLOCK":
+                baseData = wrappedObject.getData() > 0x1 ? (byte) 0x2 : wrappedObject.getData(); // > 0x1 is pillar, 0x0 and 0x1 are another blocks
+                break;
+            case "ANVIL":
+                baseData = (byte) (wrappedObject.getData() & 0xC); // 0x1 and 0x2 are used for additional state data, 0x8 and 0x4 (together 0xC) are used for variant
+                break;
+            //case "FLOWER_POT": // TODO: tile entity data (in flattening split by flower type)
+            //case "BED_BLOCK": // TODO: tile entity data (in flattening split by color)
+        }
+
+        var materialData = Material.valueOf(materialName).getNewData(baseData);
         for (var e : flatteningData.entrySet()) {
             materialData = LegacyMaterialDataToFlatteningConverter.set(materialData, e.getKey(), e.getValue());
         }
@@ -297,8 +387,12 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
             case "WOOD": // planks
             case "DIRT": // dirt, coarse_dirt, podzol
                 return material.getData() == wrappedObject.getData(); // all bits are used for variant
+            case "TORCH":
+            case "REDSTONE_TORCH_ON":
+            case "REDSTONE_TORCH_OFF":
+                return (material.getData() == 0x5 && wrappedObject.getData() == 0x5) || (material.getData() != 0x5 && wrappedObject.getData() != 0x5); // torches and wall torches
             case "SKULL": // TODO: tile entity data (in flattening split by mob type)
-                return (material.getData() == 0x5 && wrappedObject.getData() == 0x5) || (material.getData() != 0x5 && wrappedObject.getData() != 0x5); // <mob_type>_head and wall_<mob_type>_head
+                return (material.getData() == 0x1 && wrappedObject.getData() == 0x1) || (material.getData() != 0x1 && wrappedObject.getData() != 0x1); // <mob_type>_head and wall_<mob_type>_head
             case "QUARTZ_BLOCK":
                 return (material.getData() > 0x1 && wrappedObject.getData() > 0x1) || material.getData() == wrappedObject.getData(); // > 0x1 is pillar, 0x0 and 0x1 are another blocks
             case "ANVIL":

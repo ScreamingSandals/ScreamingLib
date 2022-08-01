@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.block;
 
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -45,19 +44,12 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData, Taggab
     @NotNull
     BlockTypeHolder withLegacyData(byte legacyData);
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
     @Unmodifiable
     @NotNull
     Map<String, String> flatteningData();
 
-    /**
-     * NOTE: Experimental because it may have different behaviour then expected
-     */
     @Contract(value = "_ -> new", pure = true)
     @NotNull
-    @ApiStatus.Experimental
     BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> flatteningData);
 
     @Contract(value = "_, _ -> new", pure = true)

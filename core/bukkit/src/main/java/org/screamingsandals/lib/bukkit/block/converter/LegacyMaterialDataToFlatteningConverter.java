@@ -1464,6 +1464,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             }
             // skipping walls as walls didn't have any values in legacy, everything was computed client-side
+            // TODO: Note block (tile entity)
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
@@ -2240,6 +2241,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             }
             // skipping walls as walls didn't have any values in legacy, everything was computed client-side
+            // TODO: Note block (tile entity)
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }

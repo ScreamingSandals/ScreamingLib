@@ -16,7 +16,9 @@
 
 package org.screamingsandals.lib.bukkit.entity.type;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -29,10 +31,25 @@ public class BukkitEntityTypeMapping extends EntityTypeMapping {
         entityTypeConverter
                 .registerP2W(EntityType.class, BukkitEntityTypeHolder::new);
 
-        Arrays.stream(EntityType.values()).forEach(entityType -> {
-            var holder = new BukkitEntityTypeHolder(entityType);
-            mapping.put(NamespacedMappingKey.of(entityType.name()), holder);
-            values.add(holder);
-        });
+        if (Server.isVersion(1, 14)) {
+            Arrays.stream(EntityType.values()).forEach(entityType -> {
+                var holder = new BukkitEntityTypeHolder(entityType);
+                var namespaced = entityType.getKey();
+                /* In case this is a hybrid server and it actually works correctly (unlike Mohist), we should not assume everything is in minecraft namespace */
+                mapping.put(NamespacedMappingKey.of(namespaced.getNamespace(), namespaced.getKey()), holder);
+                if (NamespacedKey.MINECRAFT.equals(namespaced.namespace()) && !entityType.name().equalsIgnoreCase(namespaced.getKey())) {
+                    // Bukkit API is sus
+                    mapping.put(NamespacedMappingKey.of(entityType.name()), holder);
+                }
+                values.add(holder);
+            });
+        } else {
+            Arrays.stream(EntityType.values()).forEach(entityType -> {
+                var holder = new BukkitEntityTypeHolder(entityType);
+                /* In legacy and 1.13 bukkit api we are not able to determine the namespace */
+                mapping.put(NamespacedMappingKey.of(entityType.name()), holder);
+                values.add(holder);
+            });
+        }
     }
 }

@@ -22,18 +22,13 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.block.tags.ModernBlockTagBackPorts;
 import org.screamingsandals.lib.bukkit.block.tags.BukkitLegacyTagResolution;
-import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
-import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,7 +38,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
     private static final Map<Material, List<String>> tagBackPorts = new HashMap<>();
 
     public BukkitBlockTypeMapper() {
-        if (Version.isVersion(1, 13)) {
+        if (Server.isVersion(1, 13)) {
             blockTypeConverter
                     .registerP2W(Material.class, BukkitBlockTypeHolder::new)
                     .registerP2W(BlockData.class, BukkitBlockTypeHolder::new);
@@ -52,17 +47,22 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                     .filter(t -> !t.name().startsWith("LEGACY") && t.isBlock())
                     .forEach(material -> {
                         var holder = new BukkitBlockTypeHolder(material);
-                        mapping.put(NamespacedMappingKey.of(material.name()), holder);
+                        var namespaced = material.getKey();
+                        /* In case this is a hybrid server and it actually works correctly (unlike Mohist), we should not assume everything is in minecraft namespace */
+                        mapping.put(NamespacedMappingKey.of(namespaced.getNamespace(), namespaced.getKey()), holder);
                         values.add(holder);
-                        var backPorts = ModernBlockTagBackPorts.getPortedTags(holder, s -> {
-                            var bukkitTag = Bukkit.getTag(Tag.REGISTRY_BLOCKS, new NamespacedKey("minecraft", s.toLowerCase()), Material.class);
-                            if (bukkitTag != null) {
-                                return bukkitTag.isTagged(material);
+                        /* we are probably not able to backport non-minecraft block tags (probably except mineable/* and similar, but we are not able to backport them yet */
+                        if (NamespacedKey.MINECRAFT.equals(namespaced.namespace())) {
+                            var backPorts = ModernBlockTagBackPorts.getPortedTags(holder, s -> {
+                                var bukkitTag = Bukkit.getTag(Tag.REGISTRY_BLOCKS, new NamespacedKey("minecraft", s.toLowerCase()), Material.class);
+                                if (bukkitTag != null) {
+                                    return bukkitTag.isTagged(material);
+                                }
+                                return false;
+                            });
+                            if (backPorts != null && !backPorts.isEmpty()) {
+                                tagBackPorts.put(material, backPorts);
                             }
-                            return false;
-                        });
-                        if (backPorts != null && !backPorts.isEmpty()) {
-                            tagBackPorts.put(material, backPorts);
                         }
                     });
         } else {
@@ -74,6 +74,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                     .filter(Material::isBlock)
                     .forEach(material -> {
                         var holder = new BukkitBlockTypeLegacyHolder(material);
+                        /* In legacy we are not able to determine the namespace :( but hybrid servers require java 8 for 1.12.2 and less, so we can't run on them anyway */
                         mapping.put(NamespacedMappingKey.of(material.name()), holder);
                         values.add(holder);
                         var backPorts = BukkitLegacyTagResolution.constructTags(material);
@@ -100,7 +101,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
 
     @Override
     protected boolean isLegacy() {
-        return !Version.isVersion(1, 13);
+        return !Server.isVersion(1, 13);
     }
 
     public static boolean hasTagInBackPorts(Material material, String tag) {
