@@ -21,9 +21,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.tags.TagPortHelper;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 

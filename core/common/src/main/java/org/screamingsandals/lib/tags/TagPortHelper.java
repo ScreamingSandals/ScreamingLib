@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.block.tags;
+package org.screamingsandals.lib.tags;
 
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
