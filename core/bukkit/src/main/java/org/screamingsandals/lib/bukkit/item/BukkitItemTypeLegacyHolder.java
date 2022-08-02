@@ -18,11 +18,13 @@ package org.screamingsandals.lib.bukkit.item;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeLegacyHolder;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Pair;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -70,12 +72,34 @@ public class BukkitItemTypeLegacyHolder extends BasicWrapper<Pair<Material, Shor
     }
 
     @Override
+    public boolean hasTag(@NotNull Object tag) {
+        NamespacedMappingKey key;
+        if (tag instanceof NamespacedMappingKey) {
+            key = (NamespacedMappingKey) tag;
+        } else {
+            key = NamespacedMappingKey.of(tag.toString());
+        }
+        if (!key.namespace().equals("minecraft")) {
+            return false;
+        }
+        var value = key.value();
+        return BukkitItemTypeMapper.hasTagInBackPorts(wrappedObject.first(), value);
+    }
+
+    @Override
     public boolean is(Object object) {
         if (object instanceof Material && wrappedObject.second() == 0) {
             return wrappedObject.first().equals(object);
         }
         if (object instanceof ItemTypeHolder) {
             return equals(object);
+        }
+        if (object instanceof String) {
+            var str = (String) object;
+            if (str.startsWith("#")) {
+                // seems like a tag
+                return hasTag(str.substring(1));
+            }
         }
         return equals(ItemTypeHolder.ofOptional(object).orElse(null));
     }

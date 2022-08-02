@@ -16,17 +16,26 @@
 
 package org.screamingsandals.lib.bukkit.item;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.item.ItemTypeMapper;
+import org.screamingsandals.lib.item.tags.ModernItemTagsBackPorts;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class BukkitItemTypeMapper extends ItemTypeMapper {
+    private static final Map<Material, List<String>> tagBackPorts = new HashMap<>();
+
     public BukkitItemTypeMapper() {
         if (Server.isVersion(1, 13)) {
             itemTypeConverter
@@ -43,6 +52,19 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
                         /* In case this is a hybrid server and it actually works correctly (unlike Mohist), we should not assume everything is in minecraft namespace */
                         mapping.put(NamespacedMappingKey.of(namespaced.getNamespace(), namespaced.getKey()), holder);
                         values.add(holder);
+                        /* we are probably not able to backport non-minecraft block tags (probably except mineable/* and similar, but we are not able to backport them yet */
+                        if (NamespacedKey.MINECRAFT.equals(namespaced.namespace())) {
+                            var backPorts = ModernItemTagsBackPorts.getPortedTags(holder, s -> {
+                                var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ITEMS, new NamespacedKey("minecraft", s.toLowerCase()), Material.class);
+                                if (bukkitTag != null) {
+                                    return bukkitTag.isTagged(material);
+                                }
+                                return false;
+                            });
+                            if (backPorts != null && !backPorts.isEmpty()) {
+                                tagBackPorts.put(material, backPorts);
+                            }
+                        }
                     });
         } else {
             itemTypeConverter
@@ -55,7 +77,12 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
                         /* In legacy we are not able to determine the namespace :( but hybrid servers require java 8 for 1.12.2 and less, so we can't run on them anyway */
                         mapping.put(NamespacedMappingKey.of(material.name()), holder);
                         values.add(holder);
+                        // TODO: backports
                     });
         }
+    }
+
+    public static boolean hasTagInBackPorts(Material material, String tag) {
+        return tagBackPorts.containsKey(material) && tagBackPorts.get(material).contains(tag);
     }
 }

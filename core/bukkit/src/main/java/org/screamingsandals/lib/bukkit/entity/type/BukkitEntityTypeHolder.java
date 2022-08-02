@@ -84,6 +84,13 @@ public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements 
         if (entityType instanceof EntityType || entityType instanceof EntityTypeHolder) {
             return equals(entityType);
         }
+        if (entityType instanceof String) {
+            var str = (String) entityType;
+            if (str.startsWith("#")) {
+                // seems like a tag
+                return hasTag(str.substring(1));
+            }
+        }
         return equals(EntityTypeHolder.ofOptional(entityType).orElse(null));
     }
 
