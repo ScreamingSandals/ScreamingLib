@@ -51,7 +51,7 @@ public class BukkitEntityTypeMapping extends EntityTypeMapping {
                     mapping.put(NamespacedMappingKey.of(entityType.name()), holder);
                 }
                 values.add(holder);
-                /* we are probably not able to backport non-minecraft block tags (probably except mineable/* and similar, but we are not able to backport them yet */
+                /* we are probably not able to backport non-minecraft entity tags */
                 if (NamespacedKey.MINECRAFT.equals(namespaced.namespace())) {
                     var backPorts = EntityTypeTagBackPorts.getPortedTags(holder, s -> {
                         if (Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null) {
@@ -78,9 +78,19 @@ public class BukkitEntityTypeMapping extends EntityTypeMapping {
                 /* In legacy and 1.13 bukkit api we are not able to determine the namespace */
                 mapping.put(NamespacedMappingKey.of(entityType.name()), holder);
                 values.add(holder);
+            });
+        }
+    }
+
+    @Override
+    public void aliasMapping() {
+        super.aliasMapping();
+        // Tags in older versions should be resolved after all aliases are mapped because the backporting code uses flattening names which may not be used yet
+        if (!Server.isVersion(1, 14)) {
+            values.forEach(holder -> {
                 var backPorts = EntityTypeTagBackPorts.getPortedTags(holder, s -> false, false);
                 if (backPorts != null && !backPorts.isEmpty()) {
-                    tagBackPorts.put(entityType, backPorts);
+                    tagBackPorts.put(holder.as(EntityType.class), backPorts);
                 }
             });
         }
