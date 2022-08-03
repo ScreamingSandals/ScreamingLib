@@ -69,7 +69,8 @@ public class ModernBlockTagBackPorts {
                     "orange_tulip",
                     "white_tulip",
                     "pink_tulip",
-                    "oxeye_daisy")) {
+                    "oxeye_daisy"
+            )) {
                 helper.port("small_flowers");
             }
             if (blockType.is(
@@ -88,7 +89,8 @@ public class ModernBlockTagBackPorts {
                     "pink_bed",
                     "purple_bed",
                     "white_bed",
-                    "yellow_bed")) {
+                    "yellow_bed"
+            )) {
                 helper.port("beds");
             }
             if (blockType.is(
@@ -97,8 +99,11 @@ public class ModernBlockTagBackPorts {
                     "dark_oak_fence",
                     "spruce_fence",
                     "birch_fence",
-                    "jungle_fence",
-                    "nether_brick_fence")) {
+                    "jungle_fence"
+            )) {
+                helper.port("wooden_fences");
+            }
+            if (helper.hasTag("wooden_fences") || blockType.is("nether_brick_fence")) {
                 helper.port("fences");
             }
             if (blockType.is(
@@ -114,7 +119,8 @@ public class ModernBlockTagBackPorts {
                     "moving_piston",
                     "obsidian",
                     "end_stone",
-                    "iron_bars")) {
+                    "iron_bars"
+            )) {
                 helper.port("dragon_immune");
             }
             if (blockType.is(
@@ -130,6 +136,9 @@ public class ModernBlockTagBackPorts {
                     "moving_piston"
             )) {
                 helper.port("wither_immune");
+            }
+            if (blockType.is("cobblestone_wall", "mossy_cobblestone_wall")) {
+                helper.port("walls");
             }
         }
 
