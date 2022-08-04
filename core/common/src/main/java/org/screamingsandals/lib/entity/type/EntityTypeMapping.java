@@ -81,6 +81,9 @@ public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHol
 
     @OnPostConstruct
     public void aliasMapping() {
+        // Newer flattening <-> Older flattening
+        mapAlias("ZOMBIFIED_PIGLIN", "ZOMBIE_PIGMAN");
+
         // Flattening <-> Bukkit
         mapAlias("ITEM", "DROPPED_ITEM");
         mapAlias("LEASH_KNOT", "LEASH_HITCH");
@@ -116,38 +119,26 @@ public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHol
         // post-1.11 resource-location name <-> pre-1.11 non-resource-location name
         mapAlias("AREA_EFFECT_CLOUD", "AreaEffectCloud");
         mapAlias("ARMOR_STAND", "ArmorStand");
-        mapAlias("BREWING_STAND", "Cauldron"); // ehm, what? // TODO: remove if it causes collision
         mapAlias("CAVE_SPIDER", "CaveSpider");
         mapAlias("CHEST_MINECART", "MinecartChest");
-        mapAlias("COMMAND_BLOCK", "Control");
         mapAlias("COMMANDBLOCK_MINECART", "MinecartCommandBlock");
-        mapAlias("DAYLIGHT_DETECTOR", "DLDetector");
-        mapAlias("DISPENSER", "Trap");
         mapAlias("DRAGON_FIREBALL", "DragonFireball");
         mapAlias("EGG", "ThrownEgg");
-        mapAlias("ENCHANTING_TABLE", "EnchantTable");
-        mapAlias("END_GATEWAY", "EndGateway");
-        mapAlias("END_PORTAL", "AirPortal");
-        mapAlias("ENDER_CHEST", "EnderChest");
         mapAlias("ENDER_CRYSTAL", "EnderCrystal");
         mapAlias("ENDER_DRAGON", "EnderDragon");
         mapAlias("ENDER_PEARL", "ThrownEnderpearl");
         mapAlias("EYE_OF_ENDER_SIGNAL", "EyeOfEnderSignal");
         mapAlias("FALLING_BLOCK", "FallingSand");
         mapAlias("FIREWORKS_ROCKET", "FireworksRocketEntity");
-        mapAlias("FLOWER_POT", "FlowerPot");
         mapAlias("FURNACE_MINECART", "MinecartFurnace");
         mapAlias("HOPPER_MINECART", "MinecartHopper");
         mapAlias("HORSE", "EntityHorse");
         mapAlias("ITEM_FRAME", "ItemFrame");
-        mapAlias("JUKEBOX", "RecordPlayer");
         mapAlias("LEASH_KNOT", "LeashKnot");
         mapAlias("LIGHTNING_BOLT", "LightningBolt");
         mapAlias("MAGMA_CUBE", "LavaSlime");
         mapAlias("MINECART", "MinecartRideable");
-        mapAlias("MOB_SPAWNER", "MobSpawner");
         mapAlias("MOOSHROOM", "MushroomCow");
-        mapAlias("NOTEBLOCK", "Music");
         mapAlias("OCELOT", "Ozelot");
         mapAlias("POLAR_BEAR", "PolarBear");
         mapAlias("SHULKER_BULLET", "ShulkerBullet");
@@ -155,7 +146,6 @@ public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHol
         mapAlias("SPECTRAL_ARROW", "SpectralArrow");
         mapAlias("POTION", "ThrownPotion");
         mapAlias("SPAWNER_MINECART", "MinecartSpawner");
-        mapAlias("STRUCTURE_BLOCK", "Structure");
         mapAlias("TNT", "PrimedTnt");
         mapAlias("TNT_MINECART", "MinecartTNT");
         mapAlias("VILLAGER_GOLEM", "VillagerGolem");
