@@ -1128,7 +1128,8 @@ public abstract class ItemBlockIdsRemapper {
         f2lItem("GOLDEN_APPLE", 322);
         f2lItem("ENCHANTED_GOLDEN_APPLE", "GOLDEN_APPLE", 322, 1);
         f2lItem("OAK_SIGN", "SIGN", 323);
-        f2lItem("OAK_DOOR", "WOODEN_DOOR", 324, "WOOD_DOOR");
+        // despite WOOD_DOOR being bukkit name, it has to be applied in this order otherwise it may cause issues
+        f2lItem("OAK_DOOR", "WOOD_DOOR", 324, "WOODEN_DOOR");
         f2lItem("BUCKET", 325);
         f2lItem("WATER_BUCKET", 326);
         f2lItem("LAVA_BUCKET", 327);

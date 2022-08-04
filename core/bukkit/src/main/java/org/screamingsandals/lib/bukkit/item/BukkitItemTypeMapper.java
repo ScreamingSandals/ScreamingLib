@@ -22,6 +22,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.bukkit.item.tags.BukkitLegacyItemTagResolution;
 import org.screamingsandals.lib.item.ItemTypeMapper;
 import org.screamingsandals.lib.item.tags.ModernItemTagsBackPorts;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -74,7 +75,10 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
                         /* In legacy we are not able to determine the namespace :( but hybrid servers require java 8 for 1.12.2 and less, so we can't run on them anyway */
                         mapping.put(NamespacedMappingKey.of(material.name()), holder);
                         values.add(holder);
-                        // TODO: backports
+                        var backPorts = BukkitLegacyItemTagResolution.constructTags(material);
+                        if (!backPorts.isEmpty()) {
+                            tagBackPorts.put(material, backPorts);
+                        }
                     });
         }
     }

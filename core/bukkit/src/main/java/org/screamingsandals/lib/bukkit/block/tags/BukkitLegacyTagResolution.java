@@ -36,7 +36,21 @@ public class BukkitLegacyTagResolution {
             // TODO: mineable/hoe
             // TODO: mineable/pickaxe
             // TODO: mineable/shovel
+
+            // TODO: needs_diamond_tool
+            // TODO: needs_iron_tool
+            // TODO: needs_stone_tool
+
             // TODO: acacia_logs
+            // TODO: spruce_logs
+            // TODO: birch_logs
+            // TODO: dark_oak_logs
+            // TODO: jungle_logs
+            // TODO: to oak_logs
+
+            // TODO: add dirt:3 to mushroom_grow_block
+            // TODO: enderman_holdable (include only blocks that Endermen can hold in legacy versions)
+
             // animals_spawnable_on
             case "GRASS":
                 list.add("animals_spawnable_on");
@@ -78,7 +92,6 @@ public class BukkitLegacyTagResolution {
             case "BED_BLOCK":
                 list.add("beds");
                 break;
-            // TODO: birch_logs
             // buttons (includes wooden_buttons)
             case "STONE_BUTTON":
                 list.add("buttons");
@@ -101,8 +114,15 @@ public class BukkitLegacyTagResolution {
                 list.add("coal_ores");
                 break;
             // completes_find_tree_tutorial (includes logs, leaves)
-            // TODO: crops
-            // TODO: dark_oak_logs
+            // crops
+            case "BEETROOT_BLOCK":
+            case "CARROT":
+            case "POTATO":
+            case "CROPS":
+            case "MELON_STEM":
+            case "PUMPKIN_STEM":
+                list.add("crops");
+                break;
             // dead_bush_may_place_on (includes sand, terracotta and dirt)
             // diamond_ores
             case "DIAMOND_ORE":
@@ -117,13 +137,26 @@ public class BukkitLegacyTagResolution {
             case "IRON_DOOR_BLOCK":
                 list.add("doors");
                 break;
-            // TODO: dragon_immune
-            // TODO: dragon_transparent
+            // dragon_immune
+            // wither_immune
+            case "BARRIER":
+            case "ENDER_PORTAL_FRAME":
+            case "COMMAND":
+            case "COMMAND_REPEATING":
+            case "COMMAND_CHAIN":
+            case "STRUCTURE_BLOCK":
+            case "PISTON_MOVING_PIECE":
+                list.add("wither_immune");
+            case "OBSIDIAN":
+            case "ENDER_STONE":
+            case "IRON_FENCE":
+                list.add("dragon_immune");
+                break;
+            // dragon_transparent
             // emerald_ores
             case "EMERALD_ORE":
                 list.add("emerald_ores");
                 break;
-            // TODO: enderman_holdable (include only blocks that Endermen can hold in legacy versions)
             // fall_damage_resetting (includes climbable)
             case "WEB":
                 list.add("fall_damage_resetting");
@@ -144,6 +177,8 @@ public class BukkitLegacyTagResolution {
             // fire
             case "FIRE":
                 list.add("fire");
+                list.add("dragon_transparent"); // also part of dragon_transparent
+                list.add("wither_immune"); // also part of wither_immune
                 break;
             // flower_pots
             case "FLOWER_POT":
@@ -167,6 +202,8 @@ public class BukkitLegacyTagResolution {
                 break;
             // infiniburn_end (includes infiniburn_overworld)
             case "BEDROCK":
+                list.add("dragon_immune"); // also part of dragon_immune
+                list.add("wither_immune"); // also part of wither_immune
                 list.add("infiniburn_end");
                 break;
             // infiniburn_nether (includes infiniburn_overworld)
@@ -187,7 +224,6 @@ public class BukkitLegacyTagResolution {
             case "IRON_ORE":
                 list.add("iron_ores");
                 break;
-            // TODO: jungle_logs
             // lapis_ores
             case "LAPIS_ORE":
                 list.add("lapis_ore");
@@ -204,6 +240,7 @@ public class BukkitLegacyTagResolution {
             case "LOG":
             case "LOG_2":
                 list.add("logs");
+                list.add("completes_find_tree_tutorial"); // also part of completes_find_tree_tutorial
                 list.add("parrots_spawnable_on"); // also part of parrots_spawnable_on
                 list.add("overworld_natural_logs"); // also part of overworld_natural_logs // TODO: exclude woods (log[12-15], log2[12-13]
                 break;
@@ -213,11 +250,6 @@ public class BukkitLegacyTagResolution {
                 list.add("dirt"); // also part of dirt
                 list.add("mushroom_grow_block"); // also part of mushroom_grow_block
                 break;
-            // TODO: add dirt:3 to mushroom_grow_block
-            // TODO: needs_diamond_tool
-            // TODO: needs_iron_tool
-            // TODO: needs_stone_tool
-            // TODO: add log:0 to oak_logs
             // overworld_natural_logs
             // parrots_spawnable_on (includes leaves and logs)
             // planks
@@ -225,9 +257,11 @@ public class BukkitLegacyTagResolution {
                 list.add("planks");
                 break;
             // portals
-            case "PORTAL":
             case "ENDER_PORTAL":
             case "END_GATEWAY":
+                list.add("dragon_immune"); // also part of dragon_immune
+                list.add("wither_immune"); // also part of wither_immune
+            case "PORTAL":
                 list.add("portals");
                 break;
             // pressure_plates (includes wooden_pressure_plates adn stone_pressure_plates)
@@ -294,7 +328,6 @@ public class BukkitLegacyTagResolution {
                 list.add("snow");
                 list.add("wolves_spawnable_on"); // also part of wolves_spawnable_on
                 break;
-            // TODO: add log:1,5,9 to spruce_logs
             // stairs (includes wooden_stairs)
             case "COBBLESTONE_STAIRS":
             case "BRICK_STAIRS":
@@ -358,8 +391,8 @@ public class BukkitLegacyTagResolution {
             // wart_blocks
             case "NETHER_WART_BLOCK":
                 list.add("wart_blocks");
+                list.add("completes_find_tree_tutorial"); // also part of completes_find_tree_tutorial
                 break;
-            // TODO: wither_immune
             // wolves_spawnable_on
             // wooden_buttons
             case "WOOD_BUTTON":
