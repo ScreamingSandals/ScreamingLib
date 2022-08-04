@@ -20,6 +20,8 @@ import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 
+import java.util.Locale;
+
 public interface SPlayerBedEnterEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
     BlockHolder bed();
@@ -78,7 +80,7 @@ public interface SPlayerBedEnterEvent extends SCancellableEvent, SPlayerEvent, P
 
         public static BedEnterResult convert(String cause) {
             try {
-                return BedEnterResult.valueOf(cause.toUpperCase());
+                return BedEnterResult.valueOf(cause.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException ex) {
                 return BedEnterResult.OK;
             }

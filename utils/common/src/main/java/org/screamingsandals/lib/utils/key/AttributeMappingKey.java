@@ -18,6 +18,7 @@ package org.screamingsandals.lib.utils.key;
 
 import org.screamingsandals.lib.utils.StringUtils;
 
+import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -37,12 +38,12 @@ public class AttributeMappingKey extends NamespacedMappingKey {
             return Optional.empty();
         }
 
-        var namespace = matcher.group("namespace") != null ? matcher.group("namespace").toLowerCase() : "minecraft";
+        var namespace = matcher.group("namespace") != null ? matcher.group("namespace").toLowerCase(Locale.ROOT) : "minecraft";
         var attributeGroup = matcher.group("attributeGroup");
         var key = matcher.group("key").replaceAll(" ", "_");
         if (attributeGroup == null) {
             // Bukkit -> Vanilla Attribute
-            if (key.toLowerCase().startsWith("generic_") || key.toLowerCase().startsWith("horse_") || key.toLowerCase().startsWith("zombie_")) {
+            if (key.toLowerCase(Locale.ROOT).startsWith("generic_") || key.toLowerCase(Locale.ROOT).startsWith("horse_") || key.toLowerCase(Locale.ROOT).startsWith("zombie_")) {
                 var split1 = key.split("_", 2);
                 attributeGroup = split1[0];
                 key = split1[1];
@@ -55,9 +56,9 @@ public class AttributeMappingKey extends NamespacedMappingKey {
             // Camel to snake
             key = StringUtils.Case.LOWER_CAMEL.toSnake(key);
         }
-        key = key.toLowerCase();
+        key = key.toLowerCase(Locale.ROOT);
 
-        return ofAttributeOptional(namespace, attributeGroup.toLowerCase() + "." + key);
+        return ofAttributeOptional(namespace, attributeGroup.toLowerCase(Locale.ROOT) + "." + key);
     }
 
     public static AttributeMappingKey of(String combinedString) {

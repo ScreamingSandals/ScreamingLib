@@ -45,10 +45,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.*;
 
 public class BukkitEntityMetadataMapper {
@@ -558,14 +555,14 @@ public class BukkitEntityMetadataMapper {
     }
 
     public static boolean has(Entity entity, String metadata) {
-        final var finalMetadata = metadata.toLowerCase();
+        final var finalMetadata = metadata.toLowerCase(Locale.ROOT);
         return METADATA.entrySet().stream()
                 .anyMatch(classMapEntry -> classMapEntry.getKey().isInstance(entity) && classMapEntry.getValue().containsKey(finalMetadata));
     }
 
     @SuppressWarnings("unchecked")
     public static void set(Entity entity, String metadata, Object value) {
-        final var finalMetadata = metadata.toLowerCase();
+        final var finalMetadata = metadata.toLowerCase(Locale.ROOT);
         var bukkitMetadata = METADATA.entrySet().stream()
                 .filter(classMapEntry -> classMapEntry.getKey().isInstance(entity) && classMapEntry.getValue().containsKey(finalMetadata))
                 .map(classMapEntry -> classMapEntry.getValue().get(finalMetadata))
@@ -673,7 +670,7 @@ public class BukkitEntityMetadataMapper {
 
     @SuppressWarnings("unchecked")
     public static <T> T get(Entity entity, String metadata, Class<T> valueClass) {
-        final var finalMetadata = metadata.toLowerCase();
+        final var finalMetadata = metadata.toLowerCase(Locale.ROOT);
         var bukkitMetadata = METADATA.entrySet().stream()
                 .filter(classMapEntry -> classMapEntry.getKey().isInstance(entity) && classMapEntry.getValue().containsKey(finalMetadata))
                 .map(classMapEntry -> classMapEntry.getValue().get(finalMetadata))
@@ -804,7 +801,7 @@ public class BukkitEntityMetadataMapper {
         }
 
         public <V> Builder<E> map(@NotNull String name, @NotNull Class<V> valueClass, @NotNull Function<E, V> getter, @Nullable BiConsumer<E, V> setter) {
-            metadataMap.put(name.toLowerCase(), new BukkitMetadata<>(valueClass, getter, setter));
+            metadataMap.put(name.toLowerCase(Locale.ROOT), new BukkitMetadata<>(valueClass, getter, setter));
             if (!registered) {
                 METADATA.put(clazz, (Map) metadataMap);
                 registered = true;
@@ -814,9 +811,9 @@ public class BukkitEntityMetadataMapper {
 
         public <V> Builder<E> map(@NotNull String name, @Nullable String alternativeName, @NotNull Class<V> valueClass, @NotNull Function<E, V> getter, @Nullable BiConsumer<E, V> setter) {
             var d = new BukkitMetadata<>(valueClass, getter, setter);
-            metadataMap.put(name.toLowerCase(), d);
+            metadataMap.put(name.toLowerCase(Locale.ROOT), d);
             if (alternativeName != null) {
-                metadataMap.put(alternativeName.toLowerCase(), d);
+                metadataMap.put(alternativeName.toLowerCase(Locale.ROOT), d);
             }
             if (!registered) {
                 METADATA.put(clazz, (Map) metadataMap);

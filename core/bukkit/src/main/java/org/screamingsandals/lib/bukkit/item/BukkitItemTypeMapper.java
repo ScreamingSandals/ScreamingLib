@@ -27,10 +27,7 @@ import org.screamingsandals.lib.item.tags.ModernItemTagsBackPorts;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BukkitItemTypeMapper extends ItemTypeMapper {
@@ -55,7 +52,7 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
                         /* we are probably not able to backport non-minecraft block tags (probably except mineable/* and similar, but we are not able to backport them yet */
                         if (NamespacedKey.MINECRAFT.equals(namespaced.namespace())) {
                             var backPorts = ModernItemTagsBackPorts.getPortedTags(holder, s -> {
-                                var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ITEMS, new NamespacedKey("minecraft", s.toLowerCase()), Material.class);
+                                var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ITEMS, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), Material.class);
                                 if (bukkitTag != null) {
                                     return bukkitTag.isTagged(material);
                                 }

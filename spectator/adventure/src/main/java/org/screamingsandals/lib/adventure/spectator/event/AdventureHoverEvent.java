@@ -28,6 +28,7 @@ import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class AdventureHoverEvent extends BasicWrapper<net.kyori.adventure.text.event.HoverEvent<?>> implements HoverEvent {
@@ -39,7 +40,7 @@ public class AdventureHoverEvent extends BasicWrapper<net.kyori.adventure.text.e
     @NotNull
     public Action action() {
         try {
-            return Action.valueOf(Objects.requireNonNull(net.kyori.adventure.text.event.HoverEvent.Action.NAMES.key(wrappedObject.action())).toUpperCase());
+            return Action.valueOf(Objects.requireNonNull(net.kyori.adventure.text.event.HoverEvent.Action.NAMES.key(wrappedObject.action())).toUpperCase(Locale.ROOT));
         } catch (Throwable ignored) {
             return Action.SHOW_TEXT; // HOW??
         }

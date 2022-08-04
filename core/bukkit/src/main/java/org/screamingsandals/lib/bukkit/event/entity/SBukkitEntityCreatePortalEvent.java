@@ -34,6 +34,7 @@ import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 import org.screamingsandals.lib.utils.PortalType;
 
 import java.util.Collection;
+import java.util.Locale;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
@@ -73,7 +74,7 @@ public class SBukkitEntityCreatePortalEvent implements SEntityCreatePortalEvent,
     @Override
     public PortalType portalType() {
         if (portalType == null) {
-            portalType = PortalType.valueOf(event.getPortalType().name().toUpperCase());
+            portalType = PortalType.valueOf(event.getPortalType().name().toUpperCase(Locale.ROOT));
         }
         return portalType;
     }

@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Data
@@ -42,7 +43,7 @@ public abstract class Node {
     @Override
     public String toString() {
         var add = toStringAdditional();
-        return this.getClass().getSimpleName().toLowerCase().replace("node", "") + (add != null ? " (" + add + ")" : "") + " {\n" +
+        return this.getClass().getSimpleName().toLowerCase(Locale.ROOT).replace("node", "") + (add != null ? " (" + add + ")" : "") + " {\n" +
                 children.stream().map(Node::toString).map(s -> s.replaceAll("(?m)^", "  ")).collect(Collectors.joining(",\n"))
                 + "\n}";
     }

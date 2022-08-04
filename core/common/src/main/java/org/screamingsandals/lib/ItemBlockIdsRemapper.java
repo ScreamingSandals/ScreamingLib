@@ -139,8 +139,8 @@ public abstract class ItemBlockIdsRemapper {
 
         if (!list.isEmpty()) { // if list is empty, we don't have this material
             colorableBlocks.put(list::contains, s -> {
-                if (COLORS.contains(s.toUpperCase())) {
-                    return BlockTypeHolder.ofOptional(s.toUpperCase() + "_" + baseName);
+                if (COLORS.contains(s.toUpperCase(Locale.ROOT))) {
+                    return BlockTypeHolder.ofOptional(s.toUpperCase(Locale.ROOT) + "_" + baseName);
                 }
                 return Optional.empty();
             });
@@ -163,8 +163,8 @@ public abstract class ItemBlockIdsRemapper {
 
         if (!list.isEmpty()) { // if list is empty, we don't have this material
             colorableItems.put(list::contains, s -> {
-                if (COLORS.contains(s.toUpperCase())) {
-                    return ItemTypeHolder.ofOptional(s.toUpperCase() + "_" + baseName);
+                if (COLORS.contains(s.toUpperCase(Locale.ROOT))) {
+                    return ItemTypeHolder.ofOptional(s.toUpperCase(Locale.ROOT) + "_" + baseName);
                 }
                 return Optional.empty();
             });
@@ -427,7 +427,7 @@ public abstract class ItemBlockIdsRemapper {
                 .maskedBoolean("half", 0x4, "top", "bottom")
                 .build();
         f2l("OAK_STAIRS", "WOOD_STAIRS", 53);
-        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase().endsWith("_STAIRS"), stairs);
+        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase(Locale.ROOT).endsWith("_STAIRS"), stairs);
         f2lItem("CHEST", 54);
         f2lBlock("CHEST", "CHEST", 54, 2); // north, default value
         f2lBlock("CHEST", Map.of("facing", "south"), 54, 3);
@@ -471,7 +471,7 @@ public abstract class ItemBlockIdsRemapper {
                 .build();
         f2lBlock("OAK_DOOR", "WOODEN_DOOR", 64);
         // TODO: this is retarded block
-        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase().endsWith("_DOOR"), lowerDoor);
+        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase(Locale.ROOT).endsWith("_DOOR"), lowerDoor);
         f2lItem("LADDER", 65);
         f2lBlock("LADDER", "LADDER", 65, 2); // north
         f2lBlock("LADDER", Map.of("facing", "south"), 65, 3);
@@ -541,7 +541,7 @@ public abstract class ItemBlockIdsRemapper {
                 .maskedBoolean("powered", 0x8)
                 .build();
         f2l("STONE_BUTTON", 77);
-        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase().endsWith("_BUTTON"), button);
+        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase(Locale.ROOT).endsWith("_BUTTON"), button);
         f2l("SNOW", 78, "SNOW_LAYER"); // name snow collision with legacy snow_block namespace
         for (int i = 1; i <= 7; i++) {
             f2lBlock("SNOW", Map.of("layers", String.valueOf(i + 1)), 78, i, "SNOW_LAYER");
@@ -607,7 +607,7 @@ public abstract class ItemBlockIdsRemapper {
                 .maskedBoolean("open", 0x4)
                 .maskedBoolean("half", 0x8, "top", "bottom")
                 .build();
-        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase().replace("_", "").endsWith("TRAPDOOR"), trapdoor);
+        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase(Locale.ROOT).replace("_", "").endsWith("TRAPDOOR"), trapdoor);
         f2l("OAK_TRAPDOOR", "TRAPDOOR", 96, "TRAP_DOOR");
 
         // TODO: UNRESOLVABLE COLLISION: can't add official minecraft mapping MONSTER_EGG, colliding with bukkit mapping of spawn eggs which is lower in code
@@ -651,7 +651,7 @@ public abstract class ItemBlockIdsRemapper {
                 ), "north")
                 .maskedBoolean("open", 0x4)
                 .build();
-        blockTypeMapper.getBlockDataTranslators().put(k -> k.value().toUpperCase().endsWith("FENCE_GATE"), gate);
+        blockTypeMapper.getBlockDataTranslators().put(k -> k.value().toUpperCase(Locale.ROOT).endsWith("FENCE_GATE"), gate);
         f2l("OAK_FENCE_GATE", "FENCE_GATE", 107);
         f2l("BRICK_STAIRS", 108);
         f2l("STONE_BRICK_STAIRS", 109, "SMOOTH_STAIRS");

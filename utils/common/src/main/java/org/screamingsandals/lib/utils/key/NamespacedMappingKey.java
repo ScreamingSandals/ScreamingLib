@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -43,8 +44,8 @@ public class NamespacedMappingKey implements MappingKey, ComparableWrapper {
             return Optional.empty();
         }
 
-        var namespace = matcher.group("namespace") != null ? matcher.group("namespace").toLowerCase() : "minecraft";
-        var key = matcher.group("key").replaceAll(" ", "_").toLowerCase();
+        var namespace = matcher.group("namespace") != null ? matcher.group("namespace").toLowerCase(Locale.ROOT) : "minecraft";
+        var key = matcher.group("key").replaceAll(" ", "_").toLowerCase(Locale.ROOT);
 
         return ofOptional(namespace, key);
     }

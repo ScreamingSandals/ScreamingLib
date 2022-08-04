@@ -37,6 +37,7 @@ import org.screamingsandals.lib.world.WorldMapper;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -163,9 +164,9 @@ public class BukkitServer extends Server {
 
     @Override
     public String UNSAFE_normalizeSoundKey0(String s) {
-        if (UNSAFE_SOUND_CACHE.containsKey(s.toUpperCase())) {
+        if (UNSAFE_SOUND_CACHE.containsKey(s.toUpperCase(Locale.ROOT))) {
             // TODO: map legacy <-> flattening conversion
-            return UNSAFE_SOUND_CACHE.get(s.toUpperCase());
+            return UNSAFE_SOUND_CACHE.get(s.toUpperCase(Locale.ROOT));
         }
         return super.UNSAFE_normalizeSoundKey0(s);
     }

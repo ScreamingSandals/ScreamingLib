@@ -26,6 +26,7 @@ import org.screamingsandals.lib.Server;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @SuppressWarnings("deprecation")
@@ -39,7 +40,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             if ("ANVIL".equals(materialName)) {
                 // We want to reset only the lower two bits, the upper two bits are used for damage
                 if (key.equalsIgnoreCase("facing")) {
-                    switch (value.toLowerCase()) {
+                    switch (value.toLowerCase(Locale.ROOT)) {
                         case "east":
                             materialData.setData((byte) ((materialData.getData() & 0b1100) | 0b0010));
                             break;
@@ -57,7 +58,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             } else if (materialData instanceof Banner) {
                 if (((Banner) materialData).isWallBanner()) {
                     if (key.equalsIgnoreCase("facing")) {
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 ((Banner) materialData).setFacingDirection(BlockFace.EAST);
                                 break;
@@ -80,9 +81,9 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 }
             } else if (materialData instanceof Bed) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "facing":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 ((Bed) materialData).setFacingDirection(BlockFace.EAST);
                                 break;
@@ -129,7 +130,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     ((NetherWarts) materialData).setState(NetherWartsState.values()[age]);
                 }
             } else if ("BREWING_STAND".equals(materialName)) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "has_bottle_0":
                         if (Boolean.parseBoolean(value)) {
                             materialData.setData((byte) (materialData.getData() | 0x1));
@@ -153,13 +154,13 @@ public class LegacyMaterialDataToFlatteningConverter {
                         break;
                 }
             } else if (materialData instanceof Button) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "powered":
                         ((Button) materialData).setPowered(Boolean.parseBoolean(value));
                         break;
                     case "facing":
                         if (((Button) materialData).getFacing() != BlockFace.UP && ((Button) materialData).getFacing() != BlockFace.DOWN) { // only works when on side in legacy
-                            switch (value.toLowerCase()) {
+                            switch (value.toLowerCase(Locale.ROOT)) {
                                 case "east":
                                     ((Button) materialData).setFacingDirection(BlockFace.EAST);
                                     break;
@@ -176,7 +177,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         }
                         break;
                     case "face":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "wall":
                                 if (((Button) materialData).getFacing() == BlockFace.UP || ((Button) materialData).getFacing() == BlockFace.DOWN) {
                                     ((Button) materialData).setFacingDirection(BlockFace.NORTH);
@@ -218,7 +219,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             } else if (materialData instanceof DirectionalContainer) {
                 if (materialData instanceof Chest || materialData instanceof EnderChest) {
                     if ("facing".equalsIgnoreCase(key)) {
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 ((DirectionalContainer) materialData).setFacingDirection(BlockFace.EAST);
                                 break;
@@ -234,10 +235,10 @@ public class LegacyMaterialDataToFlatteningConverter {
                         }
                     } // other parameters does not exist in legacy
                 } else if (materialData instanceof Dispenser) { // according to Bukkit API, Dropper is also Dispenser
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "facing":
                             // setFacing is not properly implemented (other properties are removed when used)
-                            switch (value.toLowerCase()) {
+                            switch (value.toLowerCase(Locale.ROOT)) {
                                 case "down":
                                     materialData.setData((byte) (materialData.getData() & 0x8));
                                     break;
@@ -268,9 +269,9 @@ public class LegacyMaterialDataToFlatteningConverter {
                             break;
                     }
                 } else if (materialData instanceof Furnace) {
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "facing":
-                            switch (value.toLowerCase()) {
+                            switch (value.toLowerCase(Locale.ROOT)) {
                                 case "east":
                                     ((Furnace) materialData).setFacingDirection(BlockFace.EAST);
                                     break;
@@ -304,7 +305,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     materialData.setData(age);
                 }
             } else if (materialData instanceof CocoaPlant) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "age":
                         var age = Byte.parseByte(value);
                         if (age < 0 || age > 2) {
@@ -314,7 +315,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         break;
                     case "facing":
                         // Bukkit api inverts the face, and we don't want it to do
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 ((CocoaPlant) materialData).setFacingDirection(BlockFace.WEST);
                                 break;
@@ -332,12 +333,12 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if (materialData instanceof Command) {
                 if (Server.isVersion(1, 9)) {
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "conditional":
                             materialData.setData((byte) (Boolean.parseBoolean(value) ? (materialData.getData() | 0x8) : (materialData.getData()) & ~0x8));
                             break;
                         case "facing":
-                            switch (value.toLowerCase()) {
+                            switch (value.toLowerCase(Locale.ROOT)) {
                                 case "down":
                                     materialData.setData((byte) (materialData.getData() & 0x8));
                                     break;
@@ -361,7 +362,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 } // 1.8 only had "powered"
             } else if ("DAYLIGHT_DETECTOR".equals(materialName) || "DAYLIGHT_DETECTOR_INVERTED".equals(materialName)) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "inverted":
                         var bool = Boolean.parseBoolean(value);
                         if (bool) {
@@ -381,7 +382,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             } else if (materialData instanceof Door) {
                 // That guy who created legacy doors was surely on some drugs
                 if (((Door) materialData).isTopHalf()) {
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "half":
                             if ("lower".equalsIgnoreCase(value)) {
                                 // all data are basically invalid because each half stores different information, so we have to reset it first
@@ -406,7 +407,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                             break;
                     }
                 } else {
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "half":
                             if ("upper".equalsIgnoreCase(value)) {
                                 // all data are basically invalid because each half stores different information, so we have to reset it first
@@ -418,7 +419,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                             ((Door) materialData).setOpen(Boolean.parseBoolean(value));
                             break;
                         case "facing":
-                            switch (value.toLowerCase()) {
+                            switch (value.toLowerCase(Locale.ROOT)) {
                                 case "east":
                                     ((Door) materialData).setFacingDirection(BlockFace.EAST);
                                     break;
@@ -436,7 +437,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 }
             } else if ("ENDER_PORTAL_FRAME".equals(materialName)) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "eye":
                         var bool = Boolean.parseBoolean(value);
                         if (bool) {
@@ -446,7 +447,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         }
                         break;
                     case "facing":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 materialData.setData((byte) ((materialData.getData() & 0x4) | 0x3));
                                 break;
@@ -464,7 +465,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if ("END_ROD".equals(materialName)) {
                 if ("facing".equalsIgnoreCase(key)) {
-                    switch (value.toLowerCase()) {
+                    switch (value.toLowerCase(Locale.ROOT)) {
                         case "up":
                             materialData.setData((byte) 0x1);
                             break;
@@ -496,10 +497,10 @@ public class LegacyMaterialDataToFlatteningConverter {
             }
             // skipping fence as fence didn't have any values in legacy, everything was computed client-side
             else if (materialData instanceof Gate) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "facing":
                         // implementation in Gate is a bit sus and does not correspond with wiki
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 materialData.setData((byte) ((materialData.getData() & 0x4) | 0x3));
                                 break;
@@ -546,7 +547,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             // skipping glass panes as glass pane didn't have any values (except color) in legacy, everything was computed client-side
             else if (materialName.endsWith("GLAZED_TERRACOTTA")) {
                 if ("facing".equalsIgnoreCase(key)) {
-                    switch (value.toLowerCase()) {
+                    switch (value.toLowerCase(Locale.ROOT)) {
                         case "east":
                             materialData.setData((byte) 0x3);
                             break;
@@ -564,7 +565,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             }
             // skipping Grass block, mycelium & podzol: no snowy property in legacy
             else if ("HOPPER".equalsIgnoreCase(materialName)) { // can't use o.b.m.Hopper due to compatibility with 1.8.8
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "enabled":
                         var bool = Boolean.parseBoolean(value);
                         if (bool) {
@@ -574,7 +575,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         }
                         break;
                     case "facing":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "down":
                                 materialData.setData((byte) ((materialData.getData() & 0x8)));
                                 break;
@@ -597,7 +598,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             // skipping iron bars as iron bars didn't have any values in legacy, everything was computed client-side
             else if (materialData instanceof Pumpkin) {
                 if ("facing".equalsIgnoreCase(key)) {
-                    switch (value.toLowerCase()) {
+                    switch (value.toLowerCase(Locale.ROOT)) {
                         case "east":
                             ((Pumpkin) materialData).setFacingDirection(BlockFace.EAST);
                             break;
@@ -623,7 +624,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if (materialData instanceof Ladder) {
                 if ("facing".equalsIgnoreCase(key)) {
-                    switch (value.toLowerCase()) {
+                    switch (value.toLowerCase(Locale.ROOT)) {
                         case "east":
                             ((Ladder) materialData).setFacingDirection(BlockFace.EAST);
                             break;
@@ -656,9 +657,9 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 } // distance does not exist in legacy, however check decay does
             } else if (materialData instanceof Lever) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "face":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "ceiling":
                                 if (((Lever) materialData).getAttachedFace() != BlockFace.UP) {
                                     var oldData = materialData.getData();
@@ -692,7 +693,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         }
                         break;
                     case "facing":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 ((Lever) materialData).setFacingDirection(BlockFace.EAST);
                                 break;
@@ -714,7 +715,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             } else if (materialData instanceof Tree) {
                 if ("axis".equalsIgnoreCase(key)) {
                     if (((Tree) materialData).getDirection() != BlockFace.SELF) { // can't rotate wood/bark in legacy
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "x":
                                 ((Tree) materialData).setDirection(BlockFace.EAST);
                                 break;
@@ -740,7 +741,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     // TODO: Rotation of mob head is stored inside Tile instead of Block Data in legacy
                 } else {
                     if ("facing".equalsIgnoreCase(key)) {
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 materialData.setData((byte) 0x5); // implementation was broken in some versions
                                 break;
@@ -757,7 +758,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 }
             } else if (materialData instanceof Mushroom && materialData.getData() != 10 && materialData.getData() != 15) { // ignore stems to not do something unexpected
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "east": {
                         var bool = Boolean.parseBoolean(value);
                         var isPainted = ((Mushroom) materialData).isFacePainted(BlockFace.EAST);
@@ -820,9 +821,9 @@ public class LegacyMaterialDataToFlatteningConverter {
             else if ("OBSERVER".equals(materialName)) {
                 /* can't do instanceof o.b.m.Observer because Observer is not present in 1.8, 1.9 and 1.10.
                 Also o.b.m.Observer has been added in 1.11.2 while Observer itself has been added in 1.11.0, so we can't use it */
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "facing":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "down":
                                 materialData.setData((byte) (materialData.getData() & 0x8));
                                 break;
@@ -853,12 +854,12 @@ public class LegacyMaterialDataToFlatteningConverter {
                         break;
                 }
             } else if (materialData instanceof PistonBaseMaterial) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "extended":
                         ((PistonBaseMaterial) materialData).setPowered(Boolean.parseBoolean(value));
                         break;
                     case "facing":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "down":
                                 ((PistonBaseMaterial) materialData).setFacingDirection(BlockFace.DOWN);
                                 break;
@@ -881,7 +882,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         break;
                 }
             } else if (materialData instanceof PistonExtensionMaterial) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "type":
                         if ("normal".equalsIgnoreCase(value)) {
                             ((PistonExtensionMaterial) materialData).setSticky(false);
@@ -890,7 +891,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         }
                         break;
                     case "facing":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "down":
                                 ((PistonExtensionMaterial) materialData).setFacingDirection(BlockFace.DOWN);
                                 break;
@@ -926,7 +927,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if ("QUARTZ_BLOCK".equals(materialName)) {
                 if (materialData.getData() >= 0x2 && "axis".equalsIgnoreCase(key)) { // is pillar
-                    switch (value.toLowerCase()) {
+                    switch (value.toLowerCase(Locale.ROOT)) {
                         case "x":
                             materialData.setData((byte) 0x3);
                             break;
@@ -940,7 +941,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if ("PURPUR_PILLAR".equals(materialName) || "BONE_BLOCK".equals(materialName) || "HAY_BLOCK".equals(materialName)) {
                 if ("axis".equalsIgnoreCase(key)) {
-                    switch (value.toLowerCase()) {
+                    switch (value.toLowerCase(Locale.ROOT)) {
                         case "x":
                             materialData.setData((byte) 0x4);
                             break;
@@ -954,7 +955,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if (materialData instanceof Rails) {
                 if (materialData instanceof ExtendedRails) {
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "powered":
                             var bool = Boolean.parseBoolean(value);
                             if (bool) {
@@ -964,7 +965,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                             }
                             break;
                         case "shape":
-                            switch (value.toLowerCase()) {
+                            switch (value.toLowerCase(Locale.ROOT)) {
                                 case "east_west":
                                     ((Rails) materialData).setDirection(BlockFace.EAST, false);
                                     break;
@@ -988,7 +989,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 } else {
                     if ("shape".equalsIgnoreCase(key)) {
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east_west":
                                 ((Rails) materialData).setDirection(BlockFace.EAST, false);
                                 break;
@@ -1023,9 +1024,9 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 }
             } else if ("REDSTONE_COMPARATOR_OFF".equals(materialName) || "REDSTONE_COMPARATOR_ON".equals(materialName)) { // o.b.m.Comparator is too new
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "facing":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 materialData.setData((byte) ((materialData.getData() & 0xC) | 0x2));
                                 break;
@@ -1083,7 +1084,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 }
             } else if (materialData instanceof Diode) { // repeater
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "delay":
                         var delay = Byte.parseByte(value);
                         if (delay < 1 || delay > 4) {
@@ -1092,7 +1093,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         ((Diode) materialData).setDelay(delay);
                         break;
                     case "facing":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 ((Diode) materialData).setFacingDirection(BlockFace.EAST);
                                 break;
@@ -1117,7 +1118,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         break;
                 } // locked does not exist in legacy
             } else if (materialData instanceof RedstoneTorch) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "lit":
                         var bool = Boolean.parseBoolean(value);
                         if (bool && "REDSTONE_TORCH_OFF".equals(materialName)) {
@@ -1129,7 +1130,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     case "facing":
                         // flattening split floor and wall torches, so we should behave the same and not set the facing if this is not a wall torch
                         if (((RedstoneTorch) materialData).getAttachedFace() != BlockFace.DOWN) {
-                            switch (value.toLowerCase()) {
+                            switch (value.toLowerCase(Locale.ROOT)) {
                                 case "east":
                                     ((RedstoneTorch) materialData).setFacingDirection(BlockFace.EAST);
                                     break;
@@ -1157,7 +1158,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if (materialName.endsWith("_SHULKER_BOX")) {
                 if ("facing".equalsIgnoreCase(key)) {
-                    switch (value.toLowerCase()) {
+                    switch (value.toLowerCase(Locale.ROOT)) {
                         case "down":
                             materialData.setData((byte) 0x0);
                             break;
@@ -1181,7 +1182,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             } else if (materialData instanceof Sign) {
                 if (((Sign) materialData).isWallSign()) {
                     if ("facing".equalsIgnoreCase(key)) {
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 ((Sign) materialData).setFacingDirection(BlockFace.EAST);
                                 break;
@@ -1211,7 +1212,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     || "PURPUR_SLAB".equals(materialName)
             ) {
                 if ("type".equalsIgnoreCase(key)) {
-                    switch (value.toLowerCase()) {
+                    switch (value.toLowerCase(Locale.ROOT)) {
                         case "bottom":
                             materialData.setData((byte) (materialData.getData() & ~0x8));
                             break;
@@ -1242,7 +1243,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     || "PURPUR_DOUBLE_SLAB".equals(materialName)
             ) {
                 if ("type".equalsIgnoreCase(key)) {
-                    switch (value.toLowerCase()) {
+                    switch (value.toLowerCase(Locale.ROOT)) {
                         case "bottom":
                             switch (materialName) {
                                 case "DOUBLE_STEP":
@@ -1287,9 +1288,9 @@ public class LegacyMaterialDataToFlatteningConverter {
                     materialData.setData(layer);
                 }
             } else if (materialData instanceof Stairs) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "facing":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "north":
                                 ((Stairs) materialData).setFacingDirection(BlockFace.NORTH);
                                 break;
@@ -1315,7 +1316,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if ("STRUCTURE_BLOCK".equals(materialName)) {
                 if ("mode".equalsIgnoreCase(key)) {
-                    switch (value.toLowerCase()) {
+                    switch (value.toLowerCase(Locale.ROOT)) {
                         case "corner":
                             materialData.setData((byte) 0x3);
                             break;
@@ -1343,7 +1344,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                 if ("facing".equalsIgnoreCase(key)) {
                     // flattening split floor and wall torches, so we should behave the same and not set the facing if this is not a wall torch
                     if (((Torch) materialData).getAttachedFace() != BlockFace.DOWN) {
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 ((Torch) materialData).setFacingDirection(BlockFace.EAST);
                                 break;
@@ -1360,9 +1361,9 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 }
             } else if (materialData instanceof TrapDoor) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "facing":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 ((TrapDoor) materialData).setFacingDirection(BlockFace.EAST);
                                 break;
@@ -1389,7 +1390,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         break;
                 }
             } else if (materialData instanceof Tripwire) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "attached":
                         ((Tripwire) materialData).setActivated(Boolean.parseBoolean(value));
                         break;
@@ -1406,12 +1407,12 @@ public class LegacyMaterialDataToFlatteningConverter {
                         break;
                 } // directions did not exist in legacy, everything was computed
             } else if (materialData instanceof TripwireHook) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "attached":
                         ((TripwireHook) materialData).setConnected(Boolean.parseBoolean(value));
                         break;
                     case "facing":
-                        switch (value.toLowerCase()) {
+                        switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 ((TripwireHook) materialData).setFacingDirection(BlockFace.EAST);
                                 break;
@@ -1431,7 +1432,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         break;
                 }
             } else if (materialData instanceof Vine) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "east":
                         if (Boolean.parseBoolean(value)) {
                             ((Vine) materialData).putOnFace(BlockFace.EAST);
@@ -1545,7 +1546,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             } else if (materialData instanceof Banner) {
                 if (((Banner) materialData).isWallBanner()) {
                     if (key.equalsIgnoreCase("facing")) {
-                        return ((Banner) materialData).getFacing().name().toLowerCase();
+                        return ((Banner) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                     }
                 } else {
                     if (key.equalsIgnoreCase("rotation")) {
@@ -1553,9 +1554,9 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 }
             } else if (materialData instanceof Bed) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "facing":
-                        return ((Bed) materialData).getFacing().name().toLowerCase();
+                        return ((Bed) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                     case "part":
                         return ((Bed) materialData).isHeadOfBed() ? "head" : "foot";
                     case "occupied":
@@ -1574,7 +1575,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     return String.valueOf(materialData.getData());
                 }
             } else if ("FIRE".equals(materialName)) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "age":
                         return String.valueOf(materialData.getData());
                     case "east":
@@ -1585,7 +1586,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         return "true"; // we can't tell based on the data we have, but let's assume fire is everywhere :haha:
                 }
             } else if ("BREWING_STAND".equals(materialName)) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "has_bottle_0":
                         return (materialData.getData() & 0x1) == 0x1 ? "true" : "false";
                     case "has_bottle_1":
@@ -1594,12 +1595,12 @@ public class LegacyMaterialDataToFlatteningConverter {
                         return (materialData.getData() & 0x4) == 0x4 ? "true" : "false";
                 }
             } else if (materialData instanceof Button) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "powered":
                         return String.valueOf(((Button) materialData).isPowered());
                     case "facing":
                         if (((Button) materialData).getFacing() != BlockFace.UP && ((Button) materialData).getFacing() != BlockFace.DOWN) { // only works when on side in legacy
-                            return ((Button) materialData).getFacing().name().toLowerCase();
+                            return ((Button) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                         }
                         return "north";
                     case "face":
@@ -1621,37 +1622,37 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if (materialData instanceof DirectionalContainer) {
                 if (materialData instanceof Chest || materialData instanceof EnderChest) {
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "facing":
-                            return ((DirectionalContainer) materialData).getFacing().name().toLowerCase();
+                            return ((DirectionalContainer) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                         case "type":
                             return "single"; // Can't determine in legacy without knowing if there's any chest
                     }
                 } else if (materialData instanceof Dispenser) { // according to Bukkit API, Dropper is also Dispenser
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "facing":
-                            return ((Dispenser) materialData).getFacing().name().toLowerCase();
+                            return ((Dispenser) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                         case "triggered":
                             return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
                     }
                 } else if (materialData instanceof Furnace) {
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "facing":
-                            return ((Furnace) materialData).getFacing().name().toLowerCase();
+                            return ((Furnace) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                         case "lit":
                             return "BURNING_FURNACE".equals(materialName) ? "true" : "false";
                     }
                 }
             } else if (materialData instanceof CocoaPlant) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "age":
                         return String.valueOf(((CocoaPlant) materialData).getSize().ordinal());
                     case "facing":
-                        return ((CocoaPlant) materialData).getAttachedFace().name().toLowerCase();
+                        return ((CocoaPlant) materialData).getAttachedFace().name().toLowerCase(Locale.ROOT);
                 }
             } else if (materialData instanceof Command) {
                 if (Server.isVersion(1, 9)) {
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "conditional":
                             return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
                         case "facing":
@@ -1672,7 +1673,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                             }
                     }
                 } else {
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "conditional":
                             return "false";
                         case "facing":
@@ -1680,7 +1681,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 }
             } else if ("DAYLIGHT_DETECTOR".equals(materialName) || "DAYLIGHT_DETECTOR_INVERTED".equals(materialName)) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "inverted":
                         return "DAYLIGHT_DETECTOR_INVERTED".equals(materialName) ? "true" : "false";
                     case "power":
@@ -1688,7 +1689,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if (materialData instanceof Door) {
                 if (((Door) materialData).isTopHalf()) {
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "half":
                             return "upper";
                         case "powered":
@@ -1701,13 +1702,13 @@ public class LegacyMaterialDataToFlatteningConverter {
                             return "false"; // we can't get that from upper half
                     }
                 } else {
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "half":
                             return "lower";
                         case "open":
                             return ((Door) materialData).isOpen() ? "true" : "false";
                         case "facing":
-                            return ((Door) materialData).getFacing().name().toLowerCase();
+                            return ((Door) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                         case "hinge":
                             return "left"; // we can't get that from lower half
                         case "powered":
@@ -1715,7 +1716,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 }
             } else if ("ENDER_PORTAL_FRAME".equals(materialName)) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "eye":
                         return (materialData.getData() & 0x4) == 0x4 ? "true" : "false";
                     case "facing":
@@ -1756,7 +1757,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             }
             // skipping fence as fence didn't have any values in legacy, everything was computed client-side
             else if (materialData instanceof Gate) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "facing":
                         // implementation in Gate is a bit sus and does not correspond with wiki
                         switch (materialData.getData() & 0x3) {
@@ -1798,7 +1799,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             }
             // skipping Grass block, mycelium & podzol: no snowy property in legacy
             else if ("HOPPER".equalsIgnoreCase(materialName)) { // can't use o.b.m.Hopper due to compatibility with 1.8.8
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "enabled":
                         return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
                     case "facing":
@@ -1823,7 +1824,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     if (materialData.getData() == 0x3) { // getFacing() returns wrong facing for 0x3
                         return "west";
                     }
-                    return ((Pumpkin) materialData).getFacing().name().toLowerCase();
+                    return ((Pumpkin) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                 }
             } else if ("JUKEBOX".equals(materialName)) {
                 if ("has_record".equalsIgnoreCase(key)) {
@@ -1831,21 +1832,21 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if (materialData instanceof Ladder) {
                 if ("facing".equalsIgnoreCase(key)) {
-                    return ((Ladder) materialData).getAttachedFace().name().toLowerCase();
+                    return ((Ladder) materialData).getAttachedFace().name().toLowerCase(Locale.ROOT);
                 }
             } else if ("WATER".equals(materialName) || "STATIONARY_WATER".equals(materialName) || "LAVA".equals(materialName) || "STATIONARY_LAVA".equals(materialName)) {
                 if ("level".equalsIgnoreCase(key)) {
                     return String.valueOf(materialData.getData());
                 }
             } else if ("LEAVES".equals(materialName) || "LEAVES_2".equals(materialName)) { // o.b.m.Leaves can't be used because implementation in 1.8.8 was broken
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "persistent":
                         return (materialData.getData() & 0x4) == 0x4 ? "true" : "false";
                     case "distance":
                         return (materialData.getData() & 0x4) == 0x4 ? "1" : "6"; // I have no idea what to return and if check decay can be used for some guessing or not
                 }
             } else if (materialData instanceof Lever) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "face":
                         switch (((Lever) materialData).getAttachedFace()) {
                             case UP:
@@ -1862,7 +1863,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                             case DOWN:
                                 return (materialData.getData() & 0x7) == 0x0 ? "east" : "south";
                             default:
-                                return ((Lever) materialData).getAttachedFace().name().toLowerCase();
+                                return ((Lever) materialData).getAttachedFace().name().toLowerCase(Locale.ROOT);
                         }
                     case "powered":
                         return ((Lever) materialData).isPowered() ? "true" : "false";
@@ -1900,7 +1901,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 }
             } else if (materialData instanceof Mushroom) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "east":
                         return ((Mushroom) materialData).isFacePainted(BlockFace.EAST) ? "true" : "false";
                     case "down":
@@ -1921,7 +1922,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             }
             // skipping note block as note block didn't have any values in legacy, everything was computed
             else if ("OBSERVER".equals(materialName)) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "facing":
                         switch (materialData.getData() & 0x7) {
                             default:
@@ -1942,18 +1943,18 @@ public class LegacyMaterialDataToFlatteningConverter {
                         return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
                 }
             } else if (materialData instanceof PistonBaseMaterial) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "extended":
                         return ((PistonBaseMaterial) materialData).isPowered() ? "true" : "false";
                     case "facing":
-                        return ((PistonBaseMaterial) materialData).getFacing().name().toLowerCase();
+                        return ((PistonBaseMaterial) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                 }
             } else if (materialData instanceof PistonExtensionMaterial) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "type":
                         return ((PistonExtensionMaterial) materialData).isSticky() ? "sticky" : "normal";
                     case "facing":
-                        return ((PistonExtensionMaterial) materialData).getFacing().name().toLowerCase();
+                        return ((PistonExtensionMaterial) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                     case "short":
                         return "false"; // not in legacy
                 }
@@ -1989,7 +1990,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if (materialData instanceof Rails) {
                 if (materialData instanceof ExtendedRails) {
-                    switch (key.toLowerCase()) {
+                    switch (key.toLowerCase(Locale.ROOT)) {
                         case "powered":
                             return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
                         case "shape":
@@ -2049,7 +2050,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                     }
                 }
             } else if ("REDSTONE_COMPARATOR_OFF".equals(materialName) || "REDSTONE_COMPARATOR_ON".equals(materialName)) { // o.b.m.Comparator is too new
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "facing":
                         switch (materialData.getData() & 0x3) {
                             default:
@@ -2068,7 +2069,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         return (materialData.getData() & 0x8) == 0x8 ? "true" : "false";
                 }
             } else if (materialData instanceof RedstoneWire) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "power":
                         return String.valueOf(materialData.getData());
                     case "east":
@@ -2086,23 +2087,23 @@ public class LegacyMaterialDataToFlatteningConverter {
                     return "true";
                 }
             } else if (materialData instanceof Diode) { // repeater
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "delay":
                         return String.valueOf(((Diode) materialData).getDelay());
                     case "facing":
-                        return ((Diode) materialData).getFacing().name().toLowerCase();
+                        return ((Diode) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                     case "powered":
                         return "DIODE_BLOCK_ON".equals(materialName) ? "true" : "false";
                     case "locked":
                         return "false"; // not in legacy
                 }
             } else if (materialData instanceof RedstoneTorch) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "lit":
                         return "REDSTONE_TORCH_ON".equals(materialName) ? "true" : "false";
                     case "facing":
                         if (((RedstoneTorch) materialData).getAttachedFace() != BlockFace.DOWN) {
-                            return ((RedstoneTorch) materialData).getFacing().name().toLowerCase();
+                            return ((RedstoneTorch) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                         }
                         break;
                 }
@@ -2131,7 +2132,7 @@ public class LegacyMaterialDataToFlatteningConverter {
             } else if (materialData instanceof Sign) {
                 if (((Sign) materialData).isWallSign()) {
                     if ("facing".equalsIgnoreCase(key)) {
-                        return ((Sign) materialData).getFacing().name().toLowerCase();
+                        return ((Sign) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                     }
                 } else {
                     if ("rotation".equalsIgnoreCase(key)) {
@@ -2159,9 +2160,9 @@ public class LegacyMaterialDataToFlatteningConverter {
                     return String.valueOf(materialData.getData());
                 }
             } else if (materialData instanceof Stairs) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "facing":
-                        return ((Stairs) materialData).getFacing().name().toLowerCase();
+                        return ((Stairs) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                     case "half":
                         return ((Stairs) materialData).isInverted() ? "top" : "bottom";
                     case "shape":
@@ -2189,13 +2190,13 @@ public class LegacyMaterialDataToFlatteningConverter {
                 if ("facing".equalsIgnoreCase(key)) {
                     // flattening split floor and wall torches, so we should behave the same and not set the facing if this is not a wall torch
                     if (((Torch) materialData).getAttachedFace() != BlockFace.DOWN) {
-                        return ((Torch) materialData).getFacing().name().toLowerCase();
+                        return ((Torch) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                     }
                 }
             } else if (materialData instanceof TrapDoor) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "facing":
-                        return ((TrapDoor) materialData).getFacing().name().toLowerCase();
+                        return ((TrapDoor) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                     case "half":
                         return ((TrapDoor) materialData).isInverted() ? "top" : "bottom";
                     case "open":
@@ -2204,7 +2205,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         return "false"; // not in legacy
                 }
             } else if (materialData instanceof Tripwire) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "attached":
                         return ((Tripwire) materialData).isActivated() ? "true" : "false";
                     case "disarmed":
@@ -2218,16 +2219,16 @@ public class LegacyMaterialDataToFlatteningConverter {
                         return "true"; // computed in legacy
                 }
             } else if (materialData instanceof TripwireHook) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "attached":
                         return ((TripwireHook) materialData).isConnected() ? "true" : "false";
                     case "facing":
-                        return ((TripwireHook) materialData).getFacing().name().toLowerCase();
+                        return ((TripwireHook) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                     case "powered":
                         return ((TripwireHook) materialData).isActivated() ? "true" : "false";
                 }
             } else if (materialData instanceof Vine) {
-                switch (key.toLowerCase()) {
+                switch (key.toLowerCase(Locale.ROOT)) {
                     case "east":
                         return ((Vine) materialData).isOnFace(BlockFace.EAST) ? "true" : "false";
                     case "north":

@@ -28,6 +28,7 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 public class HoverResolver implements StylingResolver {
@@ -43,7 +44,7 @@ public class HoverResolver implements StylingResolver {
             return;
         }
 
-        switch (tag.getArgs().get(0).toLowerCase()) {
+        switch (tag.getArgs().get(0).toLowerCase(Locale.ROOT)) {
             case "show_item":
             case "item":
                 var item = ItemContent.builder();

@@ -28,6 +28,7 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
+import java.util.Locale;
 
 public class HoverEventSerializer implements TypeSerializer<HoverEvent> {
     public static final HoverEventSerializer INSTANCE = new HoverEventSerializer();
@@ -39,7 +40,7 @@ public class HoverEventSerializer implements TypeSerializer<HoverEvent> {
     @Override
     public HoverEvent deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {
-            var action = HoverEvent.Action.valueOf(node.node(ACTION_KEY).getString("show_text").toUpperCase());
+            var action = HoverEvent.Action.valueOf(node.node(ACTION_KEY).getString("show_text").toUpperCase(Locale.ROOT));
             Content content;
             if (node.hasChild(VALUE_KEY)) {
                 var value = node.node(VALUE_KEY);
@@ -81,7 +82,7 @@ public class HoverEventSerializer implements TypeSerializer<HoverEvent> {
             return;
         }
 
-        node.node(ACTION_KEY).set(obj.action().name().toLowerCase()); // lower case to match vanilla keys
+        node.node(ACTION_KEY).set(obj.action().name().toLowerCase(Locale.ROOT)); // lower case to match vanilla keys
         switch (obj.action()) {
             case SHOW_ITEM:
                 node.node(CONTENTS_KEY).set(ItemContent.class, (ItemContent) obj.content());

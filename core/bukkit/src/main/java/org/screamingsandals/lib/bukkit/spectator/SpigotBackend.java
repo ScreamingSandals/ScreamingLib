@@ -46,6 +46,8 @@ import org.screamingsandals.lib.spectator.sound.SoundStop;
 import org.screamingsandals.lib.spectator.title.Title;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
+import java.util.Locale;
+
 
 // I don't think we have to implement backend for raw CraftBukkit without md_5's retarded library, who uses raw CraftBukkit in 2022 anyways
 public class SpigotBackend extends AbstractBungeeBackend {
@@ -99,7 +101,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
         }
 
         try {
-            return new BukkitSoundSource(SoundCategory.valueOf(source.toUpperCase()));
+            return new BukkitSoundSource(SoundCategory.valueOf(source.toUpperCase(Locale.ROOT)));
         } catch (Throwable t) {
             return new BukkitSoundSource(SoundCategory.NEUTRAL);
         }

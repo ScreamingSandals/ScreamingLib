@@ -27,10 +27,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BukkitEntityTypeMapping extends EntityTypeMapping {
@@ -55,12 +52,12 @@ public class BukkitEntityTypeMapping extends EntityTypeMapping {
                 if (NamespacedKey.MINECRAFT.equals(namespaced.namespace())) {
                     var backPorts = EntityTypeTagBackPorts.getPortedTags(holder, s -> {
                         if (Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null) {
-                            var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey("minecraft", s.toLowerCase()), EntityType.class);
+                            var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), EntityType.class);
                             if (bukkitTag != null) {
                                 return bukkitTag.isTagged(entityType);
                             }
                         } else if (Reflect.getField(Tag.class, "REGISTRY_ENTITIES") != null) { // Paper implemented them earlier in 1.16.5
-                            var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ENTITIES, new NamespacedKey("minecraft", s.toLowerCase()), EntityType.class);
+                            var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ENTITIES, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), EntityType.class);
                             if (bukkitTag != null) {
                                 return bukkitTag.isTagged(entityType);
                             }

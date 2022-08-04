@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.utils;
 
+import java.util.Locale;
+
 public enum ClickType {
 
     /**
@@ -132,7 +134,7 @@ public enum ClickType {
 
     public static ClickType convert(String type) {
         try {
-            return ClickType.valueOf(type.toUpperCase());
+            return ClickType.valueOf(type.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException ex) {
             return ClickType.LEFT;
         }

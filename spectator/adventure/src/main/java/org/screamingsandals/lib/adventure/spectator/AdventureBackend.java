@@ -52,6 +52,7 @@ import org.screamingsandals.lib.spectator.sound.SoundStop;
 import org.screamingsandals.lib.spectator.title.Title;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class AdventureBackend implements SpectatorBackend {
@@ -189,7 +190,7 @@ public class AdventureBackend implements SpectatorBackend {
 
     @Override
     public Color named(String name) {
-        var value = NamedTextColor.NAMES.value(name.toLowerCase());
+        var value = NamedTextColor.NAMES.value(name.toLowerCase(Locale.ROOT));
         if (value != null) {
             return new AdventureColor(value);
         }
@@ -198,7 +199,7 @@ public class AdventureBackend implements SpectatorBackend {
 
     @Override
     public Color hexOrName(String hexName) {
-        var value = NamedTextColor.NAMES.value(hexName.toLowerCase());
+        var value = NamedTextColor.NAMES.value(hexName.toLowerCase(Locale.ROOT));
         if (value != null) {
             return new AdventureColor(value);
         }

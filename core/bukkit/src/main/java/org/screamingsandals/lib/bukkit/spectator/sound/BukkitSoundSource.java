@@ -21,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
+import java.util.Locale;
+
 public class BukkitSoundSource extends BasicWrapper<SoundCategory> implements SoundSource {
     public BukkitSoundSource(SoundCategory wrappedObject) {
         super(wrappedObject);
@@ -29,6 +31,6 @@ public class BukkitSoundSource extends BasicWrapper<SoundCategory> implements So
     @Override
     @NotNull
     public String name() {
-        return wrappedObject.name().toLowerCase();
+        return wrappedObject.name().toLowerCase(Locale.ROOT);
     }
 }
