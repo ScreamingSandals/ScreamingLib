@@ -46,10 +46,9 @@ public class BukkitLegacyTagResolution {
             // TODO: birch_logs
             // TODO: dark_oak_logs
             // TODO: jungle_logs
-            // TODO: to oak_logs
+            // TODO: oak_logs
 
             // TODO: add dirt:3 to mushroom_grow_block
-            // TODO: enderman_holdable (include only blocks that Endermen can hold in legacy versions)
 
             // animals_spawnable_on
             case "GRASS":
@@ -58,8 +57,8 @@ public class BukkitLegacyTagResolution {
                 list.add("rabbits_spawnable_on"); // also part of rabbits_spawnable_on
                 list.add("valid_spawn"); // also part of valid_spawn
                 list.add("wolves_spawnable_on"); // also part of wolves_spawnable_on
+                list.add("enderman_holdable"); // also part of enderman_holdable
                 break;
-
             // anvil
             case "ANVIL":
                 list.add("anvil");
@@ -76,6 +75,7 @@ public class BukkitLegacyTagResolution {
                 list.add("infiniburn_overworld"); // also part of infiniburn_overworld
                 list.add("infiniburn_end"); // also part of infiniburn_end
                 list.add("infiniburn_nether"); // also part of infiniburn_nether
+                list.add("enderman_holdable"); // also part of enderman_holdable
                 break;
             // base_stone_overworld
             case "STONE":
@@ -132,6 +132,7 @@ public class BukkitLegacyTagResolution {
             case "DIRT":
                 list.add("dirt");
                 list.add("dead_bush_may_place_on");
+                list.add("enderman_holdable"); // also part of enderman_holdable
                 break;
             // doors (includes wooden_doors)
             case "IRON_DOOR_BLOCK":
@@ -156,6 +157,17 @@ public class BukkitLegacyTagResolution {
             // emerald_ores
             case "EMERALD_ORE":
                 list.add("emerald_ores");
+                break;
+            // enderman_holdable
+            case "CACTUS":
+            case "CLAY":
+            case "GRAVEL":
+            case "MELON_BLOCK":
+            case "PUMPKIN":
+            case "BROWN_MUSHROOM":
+            case "RED_MUSHROOM":
+            case "TNT":
+                list.add("enderman_holdable");
                 break;
             // fall_damage_resetting (includes climbable)
             case "WEB":
@@ -249,6 +261,7 @@ public class BukkitLegacyTagResolution {
                 list.add("mooshrooms_spawnable_on");
                 list.add("dirt"); // also part of dirt
                 list.add("mushroom_grow_block"); // also part of mushroom_grow_block
+                list.add("enderman_holdable"); // also part of enderman_holdable
                 break;
             // overworld_natural_logs
             // parrots_spawnable_on (includes leaves and logs)
@@ -283,6 +296,7 @@ public class BukkitLegacyTagResolution {
                 list.add("sand");
                 list.add("rabbits_spawnable_on"); // also part of rabbits_spawnable_on // TODO: exclude red_sand (sand:1)
                 list.add("dead_bush_may_place_on"); // also part of dead_bush_may_place_on
+                list.add("enderman_holdable"); // also part of enderman_holdable
                 break;
             // saplings
             case "SAPLING":
@@ -322,6 +336,7 @@ public class BukkitLegacyTagResolution {
             case "RED_FLOWER":
                 list.add("small_flowers");
                 list.add("flowers"); // also part of flowers
+                list.add("enderman_holdable"); // also part of enderman_holdable
                 break;
             // snow
             case "SNOW_BLOCK":
