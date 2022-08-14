@@ -40,16 +40,22 @@ public class BukkitEntityTypeMapping extends EntityTypeMapping {
         if (Server.isVersion(1, 14)) {
             Arrays.stream(EntityType.values()).forEach(entityType -> {
                 var holder = new BukkitEntityTypeHolder(entityType);
-                var namespaced = entityType.getKey();
                 /* In case this is a hybrid server and it actually works correctly (unlike Mohist), we should not assume everything is in minecraft namespace */
-                mapping.put(NamespacedMappingKey.of(namespaced.getNamespace(), namespaced.getKey()), holder);
-                if (NamespacedKey.MINECRAFT.equals(namespaced.namespace()) && !entityType.name().equalsIgnoreCase(namespaced.getKey())) {
-                    // Bukkit API is sus
+                NamespacedKey namespaced = null;
+                try {
+                    namespaced = entityType.getKey();
+
+                    mapping.put(NamespacedMappingKey.of(namespaced.getNamespace(), namespaced.getKey()), holder);
+                    if (NamespacedKey.MINECRAFT.equals(namespaced.namespace()) && !entityType.name().equalsIgnoreCase(namespaced.getKey())) {
+                        // Bukkit API is sus
+                        mapping.put(NamespacedMappingKey.of(entityType.name()), holder);
+                    }
+                } catch (IllegalArgumentException ignored) { // excuse me Bukkit, wtf?
                     mapping.put(NamespacedMappingKey.of(entityType.name()), holder);
                 }
                 values.add(holder);
                 /* we are probably not able to backport non-minecraft entity tags */
-                if (NamespacedKey.MINECRAFT.equals(namespaced.namespace())) {
+                if (namespaced != null && NamespacedKey.MINECRAFT.equals(namespaced.namespace())) {
                     var backPorts = EntityTypeTagBackPorts.getPortedTags(holder, s -> {
                         if (Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null) {
                             var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), EntityType.class);
