@@ -305,17 +305,23 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
 
     @Override
     public void sendParticle(ParticleHolder particle, LocationHolder location) {
-        ((Player) wrappedObject).spawnParticle(
-                particle.particleType().as(Particle.class),
-                location.as(Location.class),
-                particle.count(),
-                particle.offset().getX(),
-                particle.offset().getY(),
-                particle.offset().getZ(),
-                particle.particleData(),
-                particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null
-                // hey bukkit api, where's the last argument?
-        );
+        try {
+            // 1.9.+
+            ((Player) wrappedObject).spawnParticle(
+                    particle.particleType().as(Particle.class),
+                    location.as(Location.class),
+                    particle.count(),
+                    particle.offset().getX(),
+                    particle.offset().getY(),
+                    particle.offset().getZ(),
+                    particle.particleData(),
+                    particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null
+                    // hey bukkit api, where's the last argument?
+            );
+        } catch (Throwable ignored) {
+            // 1.8.8
+            // TODO: implement for 1.8.8
+        }
     }
 
     @Override

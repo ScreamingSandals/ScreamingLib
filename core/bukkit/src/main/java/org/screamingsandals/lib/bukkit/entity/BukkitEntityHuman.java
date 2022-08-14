@@ -31,32 +31,65 @@ public class BukkitEntityHuman extends BukkitEntityLiving implements EntityHuman
 
     @Override
     public float getSaturation() {
-        return ((HumanEntity) wrappedObject).getSaturation();
+        try {
+            // 1.16.5+
+            return ((HumanEntity) wrappedObject).getSaturation();
+        } catch (Throwable ignored) {
+            // TODO: backport missing api <= 1.16.4
+            return 0;
+        }
     }
 
     @Override
     public void setSaturation(float saturation) {
-        ((HumanEntity) wrappedObject).setSaturation(saturation);
+        try {
+            // 1.16.5+
+            ((HumanEntity) wrappedObject).setSaturation(saturation);
+        } catch (Throwable ignored) {
+            // TODO: backport missing api <= 1.16.4
+        }
     }
 
     @Override
     public float getExhaustion() {
-        return ((HumanEntity) wrappedObject).getExhaustion();
+        try {
+            // 1.16.5+
+            return ((HumanEntity) wrappedObject).getExhaustion();
+        } catch (Throwable ignored) {
+            // TODO: backport missing api <= 1.16.4
+            return 0;
+        }
     }
 
     @Override
     public void setExhaustion(float exhaustion) {
-        ((HumanEntity) wrappedObject).setExhaustion(exhaustion);
+        try {
+            // 1.16.5+
+            ((HumanEntity) wrappedObject).setExhaustion(exhaustion);
+        } catch (Throwable ignored) {
+            // TODO: backport missing api <= 1.16.4
+        }
     }
 
     @Override
     public int getFoodLevel() {
-        return ((HumanEntity) wrappedObject).getFoodLevel();
+        try {
+            // 1.16.5+
+            return ((HumanEntity) wrappedObject).getFoodLevel();
+        } catch (Throwable ignored) {
+            // TODO: backport missing api <= 1.16.4
+            return 0;
+        }
     }
 
     @Override
     public void setFoodLevel(int foodLevel) {
-        ((HumanEntity) wrappedObject).setFoodLevel(foodLevel);
+        try {
+            // 1.16.5+
+            ((HumanEntity) wrappedObject).setFoodLevel(foodLevel);
+        } catch (Throwable ignored) {
+            // TODO: backport missing api <= 1.16.4
+        }
     }
 
     @Override
