@@ -16,11 +16,11 @@
 
 package org.screamingsandals.lib.bukkit.entity.type;
 
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.entity.EntityType;
 import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.entity.type.EntityTypeTagBackPorts;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -58,15 +58,9 @@ public class BukkitEntityTypeMapping extends EntityTypeMapping {
                 if (namespaced != null && NamespacedKey.MINECRAFT.equals(namespaced.namespace())) {
                     var backPorts = EntityTypeTagBackPorts.getPortedTags(holder, s -> {
                         if (Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null) {
-                            var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), EntityType.class);
-                            if (bukkitTag != null) {
-                                return bukkitTag.isTagged(entityType);
-                            }
+                            return KeyedUtils.isTagged(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), EntityType.class, entityType);
                         } else if (Reflect.getField(Tag.class, "REGISTRY_ENTITIES") != null) { // Paper implemented them earlier in 1.16.5
-                            var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ENTITIES, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), EntityType.class);
-                            if (bukkitTag != null) {
-                                return bukkitTag.isTagged(entityType);
-                            }
+                            return KeyedUtils.isTagged(Tag.REGISTRY_ENTITIES, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), EntityType.class, entityType);
                         } // TODO: else bypass using NMS on CB-like servers
                         return false;
                     }, Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null || Reflect.getField(Tag.class, "REGISTRY_ENTITIES") != null);

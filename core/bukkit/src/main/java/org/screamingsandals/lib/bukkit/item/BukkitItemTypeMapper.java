@@ -16,13 +16,13 @@
 
 package org.screamingsandals.lib.bukkit.item;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.item.tags.BukkitLegacyItemTagResolution;
+import org.screamingsandals.lib.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.item.ItemTypeMapper;
 import org.screamingsandals.lib.item.tags.ModernItemTagsBackPorts;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -52,13 +52,9 @@ public class BukkitItemTypeMapper extends ItemTypeMapper {
                         values.add(holder);
                         /* we are probably not able to backport non-minecraft block tags (probably except mineable/* and similar, but we are not able to backport them yet */
                         if (NamespacedKey.MINECRAFT.equals(namespaced.namespace())) {
-                            var backPorts = ModernItemTagsBackPorts.getPortedTags(holder, s -> {
-                                var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ITEMS, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), Material.class);
-                                if (bukkitTag != null) {
-                                    return bukkitTag.isTagged(material);
-                                }
-                                return false;
-                            });
+                            var backPorts = ModernItemTagsBackPorts.getPortedTags(holder, s ->
+                                    KeyedUtils.isTagged(Tag.REGISTRY_ITEMS, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), Material.class, material)
+                            );
                             if (backPorts != null && !backPorts.isEmpty()) {
                                 tagBackPorts.put(material, backPorts);
                             }

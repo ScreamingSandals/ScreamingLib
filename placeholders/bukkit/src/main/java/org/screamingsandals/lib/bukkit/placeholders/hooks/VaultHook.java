@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.placeholders.hooks;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -27,6 +28,7 @@ import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 // Vault placeholders support when PlaceholderAPI is not installed
 // TODO: add remaining Vault placeholders: https://github.com/PlaceholderAPI/Vault-Expansion
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class VaultHook extends AbstractPAPILikePlaceholder {
     private final Chat chat;
 

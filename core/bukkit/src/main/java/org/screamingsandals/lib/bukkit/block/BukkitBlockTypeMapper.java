@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.bukkit.block;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
@@ -26,6 +25,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.block.tags.ModernBlockTagBackPorts;
 import org.screamingsandals.lib.bukkit.block.tags.BukkitLegacyTagResolution;
+import org.screamingsandals.lib.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -53,13 +53,9 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                         values.add(holder);
                         /* we are probably not able to backport non-minecraft block tags (probably except mineable/* and similar, but we are not able to backport them yet */
                         if (NamespacedKey.MINECRAFT.equals(namespaced.namespace())) {
-                            var backPorts = ModernBlockTagBackPorts.getPortedTags(holder, s -> {
-                                var bukkitTag = Bukkit.getTag(Tag.REGISTRY_BLOCKS, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), Material.class);
-                                if (bukkitTag != null) {
-                                    return bukkitTag.isTagged(material);
-                                }
-                                return false;
-                            });
+                            var backPorts = ModernBlockTagBackPorts.getPortedTags(holder, s ->
+                                KeyedUtils.isTagged(Tag.REGISTRY_BLOCKS, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), Material.class, material)
+                            );
                             if (backPorts != null && !backPorts.isEmpty()) {
                                 tagBackPorts.put(material, backPorts);
                             }
