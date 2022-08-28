@@ -17,26 +17,28 @@
 package org.screamingsandals.lib.bukkit.block;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
-import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeMapper;
-import org.screamingsandals.lib.bukkit.utils.nms.Version;
+import org.screamingsandals.lib.block.tags.ModernBlockTagBackPorts;
+import org.screamingsandals.lib.bukkit.block.tags.BukkitLegacyTagResolution;
+import org.screamingsandals.lib.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class BukkitBlockTypeMapper extends BlockTypeMapper {
-    private final Map<String, Map<String, String>> defaultFlatteningBlockDataCache = new HashMap<>();
+    private static final Map<Material, List<String>> tagBackPorts = new HashMap<>();
 
     public BukkitBlockTypeMapper() {
-        if (Version.isVersion(1, 13)) {
+        if (Server.isVersion(1, 13)) {
             blockTypeConverter
                     .registerP2W(Material.class, BukkitBlockTypeHolder::new)
                     .registerP2W(BlockData.class, BukkitBlockTypeHolder::new);
@@ -45,8 +47,19 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                     .filter(t -> !t.name().startsWith("LEGACY") && t.isBlock())
                     .forEach(material -> {
                         var holder = new BukkitBlockTypeHolder(material);
-                        mapping.put(NamespacedMappingKey.of(material.name()), holder);
+                        var namespaced = material.getKey();
+                        /* In case this is a hybrid server and it actually works correctly (unlike Mohist), we should not assume everything is in minecraft namespace */
+                        mapping.put(NamespacedMappingKey.of(namespaced.getNamespace(), namespaced.getKey()), holder);
                         values.add(holder);
+                        /* we are probably not able to backport non-minecraft block tags (probably except mineable/* and similar, but we are not able to backport them yet */
+                        if (NamespacedKey.MINECRAFT.equals(namespaced.namespace())) {
+                            var backPorts = ModernBlockTagBackPorts.getPortedTags(holder, s ->
+                                KeyedUtils.isTagged(Tag.REGISTRY_BLOCKS, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), Material.class, material)
+                            );
+                            if (backPorts != null && !backPorts.isEmpty()) {
+                                tagBackPorts.put(material, backPorts);
+                            }
+                        }
                     });
         } else {
             blockTypeConverter
@@ -57,8 +70,13 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                     .filter(Material::isBlock)
                     .forEach(material -> {
                         var holder = new BukkitBlockTypeLegacyHolder(material);
+                        /* In legacy we are not able to determine the namespace :( but hybrid servers require java 8 for 1.12.2 and less, so we can't run on them anyway */
                         mapping.put(NamespacedMappingKey.of(material.name()), holder);
                         values.add(holder);
+                        var backPorts = BukkitLegacyTagResolution.constructTags(material);
+                        if (!backPorts.isEmpty()) {
+                            tagBackPorts.put(material, backPorts);
+                        }
                     });
         }
     }
@@ -78,40 +96,11 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
     }
 
     @Override
-    protected BlockTypeHolder normalize(BlockTypeHolder abnormal) {
-        try {
-            if (Version.isVersion(1, 13)) {
-                var cache = defaultFlatteningBlockDataCache.get(abnormal.platformName());
-                if (cache == null) {
-                    cache = getDataFromString(abnormal.as(Material.class).createBlockData().getAsString());
-                    defaultFlatteningBlockDataCache.put(abnormal.platformName(), cache);
-                }
-                if (cache.isEmpty()) {
-                    return abnormal;
-                }
-                var flatteningData = abnormal.flatteningData();
-                if (flatteningData != null && !flatteningData.isEmpty()) {
-                    var clone = new HashMap<>(flatteningData);
-                    cache.forEach((s, s2) -> {
-                        if (!clone.containsKey(s)) {
-                            clone.put(s, s2);
-                        }
-                    });
-                    return abnormal.withFlatteningData(clone);
-                }
-                return abnormal.withFlatteningData(cache);
-            } else {
-                // non-flattening versions don't have flattening data
-                return abnormal.withFlatteningData(null);
-            }
-        } catch (Exception ignored) {}
-        return abnormal;
-    }
-
-    @Override
     protected boolean isLegacy() {
-        return !Version.isVersion(1, 13);
+        return !Server.isVersion(1, 13);
     }
 
-
+    public static boolean hasTagInBackPorts(Material material, String tag) {
+        return tagBackPorts.containsKey(material) && tagBackPorts.get(material).contains(tag);
+    }
 }

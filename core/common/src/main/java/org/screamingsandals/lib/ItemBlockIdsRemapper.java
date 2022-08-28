@@ -79,19 +79,13 @@ public abstract class ItemBlockIdsRemapper {
 
         The reason why the order is important is due to often renaming of java flattening names
         */
-        if (platform == Platform.JAVA_FLATTENING) {
-            flatteningMapping();
-        }
 
-        if (platform.name().startsWith("JAVA")) {
+        if (platform == Platform.JAVA_LEGACY) {
             flatteningLegacyMappingJava();
-
-            if (platform != Platform.JAVA_FLATTENING) {
-                flatteningMapping();
-            }
-
-            javaAutoColorable();
         }
+
+        flatteningMapping();
+        javaAutoColorable();
     }
 
     private void javaAutoColorable() {
@@ -145,8 +139,8 @@ public abstract class ItemBlockIdsRemapper {
 
         if (!list.isEmpty()) { // if list is empty, we don't have this material
             colorableBlocks.put(list::contains, s -> {
-                if (COLORS.contains(s.toUpperCase())) {
-                    return BlockTypeHolder.ofOptional(s.toUpperCase() + "_" + baseName);
+                if (COLORS.contains(s.toUpperCase(Locale.ROOT))) {
+                    return BlockTypeHolder.ofOptional(s.toUpperCase(Locale.ROOT) + "_" + baseName);
                 }
                 return Optional.empty();
             });
@@ -169,8 +163,8 @@ public abstract class ItemBlockIdsRemapper {
 
         if (!list.isEmpty()) { // if list is empty, we don't have this material
             colorableItems.put(list::contains, s -> {
-                if (COLORS.contains(s.toUpperCase())) {
-                    return ItemTypeHolder.ofOptional(s.toUpperCase() + "_" + baseName);
+                if (COLORS.contains(s.toUpperCase(Locale.ROOT))) {
+                    return ItemTypeHolder.ofOptional(s.toUpperCase(Locale.ROOT) + "_" + baseName);
                 }
                 return Optional.empty();
             });
@@ -178,6 +172,7 @@ public abstract class ItemBlockIdsRemapper {
     }
 
 
+    // TODO: move everything related to legacy to bukkit module as bukkit is the only platform that is going to have legacy version support
     private void flatteningLegacyMappingJava() {
         // Legacy remapping
 
@@ -249,12 +244,12 @@ public abstract class ItemBlockIdsRemapper {
         f2l("JUNGLE_LOG", "LOG", 17, 3);
         f2lBlock("OAK_LOG", Map.of("axis", "x"), "LOG", 17, 4);
         f2lBlock("SPRUCE_LOG", Map.of("axis", "x"), "LOG", 17, 5);
-        f2lBlock("SPRUCE_LOG", Map.of("axis", "x"), "LOG", 17, 6);
-        f2lBlock("SPRUCE_LOG", Map.of("axis", "x"), "LOG", 17, 7);
+        f2lBlock("BIRCH_LOG", Map.of("axis", "x"), "LOG", 17, 6);
+        f2lBlock("JUNGLE_LOG", Map.of("axis", "x"), "LOG", 17, 7);
         f2lBlock("OAK_LOG", Map.of("axis", "z"), "LOG", 17, 8);
         f2lBlock("SPRUCE_LOG", Map.of("axis", "z"), "LOG", 17, 9);
-        f2lBlock("SPRUCE_LOG", Map.of("axis", "z"), "LOG", 17, 10);
-        f2lBlock("SPRUCE_LOG", Map.of("axis", "z"), "LOG", 17, 11);
+        f2lBlock("BIRCH_LOG", Map.of("axis", "z"), "LOG", 17, 10);
+        f2lBlock("JUNGLE_LOG", Map.of("axis", "z"), "LOG", 17, 11);
 
         // is this correct?
         f2l("OAK_WOOD", "LOG", 17, 12);
@@ -432,7 +427,7 @@ public abstract class ItemBlockIdsRemapper {
                 .maskedBoolean("half", 0x4, "top", "bottom")
                 .build();
         f2l("OAK_STAIRS", "WOOD_STAIRS", 53);
-        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase().endsWith("_STAIRS"), stairs);
+        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase(Locale.ROOT).endsWith("_STAIRS"), stairs);
         f2lItem("CHEST", 54);
         f2lBlock("CHEST", "CHEST", 54, 2); // north, default value
         f2lBlock("CHEST", Map.of("facing", "south"), 54, 3);
@@ -476,7 +471,7 @@ public abstract class ItemBlockIdsRemapper {
                 .build();
         f2lBlock("OAK_DOOR", "WOODEN_DOOR", 64);
         // TODO: this is retarded block
-        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase().endsWith("_DOOR"), lowerDoor);
+        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase(Locale.ROOT).endsWith("_DOOR"), lowerDoor);
         f2lItem("LADDER", 65);
         f2lBlock("LADDER", "LADDER", 65, 2); // north
         f2lBlock("LADDER", Map.of("facing", "south"), 65, 3);
@@ -546,7 +541,7 @@ public abstract class ItemBlockIdsRemapper {
                 .maskedBoolean("powered", 0x8)
                 .build();
         f2l("STONE_BUTTON", 77);
-        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase().endsWith("_BUTTON"), button);
+        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase(Locale.ROOT).endsWith("_BUTTON"), button);
         f2l("SNOW", 78, "SNOW_LAYER"); // name snow collision with legacy snow_block namespace
         for (int i = 1; i <= 7; i++) {
             f2lBlock("SNOW", Map.of("layers", String.valueOf(i + 1)), 78, i, "SNOW_LAYER");
@@ -612,7 +607,7 @@ public abstract class ItemBlockIdsRemapper {
                 .maskedBoolean("open", 0x4)
                 .maskedBoolean("half", 0x8, "top", "bottom")
                 .build();
-        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase().replace("_", "").endsWith("TRAPDOOR"), trapdoor);
+        blockTypeMapper.getBlockDataTranslators().put(namespacedMappingKey -> namespacedMappingKey.getKey().toUpperCase(Locale.ROOT).replace("_", "").endsWith("TRAPDOOR"), trapdoor);
         f2l("OAK_TRAPDOOR", "TRAPDOOR", 96, "TRAP_DOOR");
 
         // TODO: UNRESOLVABLE COLLISION: can't add official minecraft mapping MONSTER_EGG, colliding with bukkit mapping of spawn eggs which is lower in code
@@ -656,7 +651,7 @@ public abstract class ItemBlockIdsRemapper {
                 ), "north")
                 .maskedBoolean("open", 0x4)
                 .build();
-        blockTypeMapper.getBlockDataTranslators().put(k -> k.value().toUpperCase().endsWith("FENCE_GATE"), gate);
+        blockTypeMapper.getBlockDataTranslators().put(k -> k.value().toUpperCase(Locale.ROOT).endsWith("FENCE_GATE"), gate);
         f2l("OAK_FENCE_GATE", "FENCE_GATE", 107);
         f2l("BRICK_STAIRS", 108);
         f2l("STONE_BRICK_STAIRS", 109, "SMOOTH_STAIRS");
@@ -697,7 +692,6 @@ public abstract class ItemBlockIdsRemapper {
         f2l("DRAGON_EGG", 122);
         f2l("REDSTONE_LAMP", 123, "REDSTONE_LAMP_OFF");
         f2lBlock("REDSTONE_LAMP", Map.of("lit", "true"), "LIT_REDSTONE_LAMP", 124, 0, "REDSTONE_LAMP_ON");
-        //f2lBlock("", "WOOD_DOUBLE_STEP", 125, 0); // TODO: block state
 
         f2l("OAK_SLAB", "WOODEN_SLAB", 126, 0, "WOOD_STEP");
         f2lBlock("OAK_SLAB", Map.of("type", "top"), "WOODEN_SLAB", 126, 8, "WOOD_STEP");
@@ -794,8 +788,8 @@ public abstract class ItemBlockIdsRemapper {
         f2lBlock("SKELETON_WALL_SKULL", Map.of("facing", "west"), "SKULL", 144, 4); // TODO: Tile entity
         f2lBlock("SKELETON_WALL_SKULL", Map.of("facing", "east"), "SKULL", 144, 5); // TODO: Tile entity
         f2l("ANVIL", 145);
-        f2l("CHIPPED_ANVIL", "ANVIL", 145, 1);
-        f2l("DAMAGED_ANVIL", "ANVIL", 145, 2);
+        f2l("CHIPPED_ANVIL", "ANVIL", 145, 1); // TODO: different data for block and item
+        f2l("DAMAGED_ANVIL", "ANVIL", 145, 2); // TODO: different data for block and item
         f2lItem("TRAPPED_CHEST", 146);
         f2lBlock("TRAPPED_CHEST", "TRAPPED_CHEST", 146, 2); // north, default value
         f2lBlock("TRAPPED_CHEST", Map.of("facing", "south"), 146, 3);
@@ -874,7 +868,7 @@ public abstract class ItemBlockIdsRemapper {
 
         f2l("PRISMARINE", 168);
         f2l("PRISMARINE_BRICKS", "PRISMARINE", 168, 1);
-        f2l("DARK_PRISMARINE", "PRISMARINE", 168, 1);
+        f2l("DARK_PRISMARINE", "PRISMARINE", 168, 2);
 
         f2l("SEA_LANTERN", 169);
         f2l("HAY_BLOCK", 170);
@@ -1134,7 +1128,8 @@ public abstract class ItemBlockIdsRemapper {
         f2lItem("GOLDEN_APPLE", 322);
         f2lItem("ENCHANTED_GOLDEN_APPLE", "GOLDEN_APPLE", 322, 1);
         f2lItem("OAK_SIGN", "SIGN", 323);
-        f2lItem("OAK_DOOR", "WOODEN_DOOR", 324, "WOOD_DOOR");
+        // despite WOOD_DOOR being bukkit name, it has to be applied in this order otherwise it may cause issues
+        f2lItem("OAK_DOOR", "WOOD_DOOR", 324, "WOODEN_DOOR");
         f2lItem("BUCKET", 325);
         f2lItem("WATER_BUCKET", 326);
         f2lItem("LAVA_BUCKET", 327);
@@ -1374,13 +1369,13 @@ public abstract class ItemBlockIdsRemapper {
         mapAlias("JUNGLE_SIGN", "SIGN");
         mapAlias("SPRUCE_SIGN", "SIGN");
         mapAlias("ACACIA_SIGN", "SIGN");
-        mapAlias("OAK_WALL_SIGN", "SIGN");
-        mapAlias("BIRCH_WALL_SIGN", "SIGN");
-        mapAlias("BIRCH_WALL_SIGN", "SIGN");
-        mapAlias("DARK_OAK_WALL_SIGN", "SIGN");
-        mapAlias("JUNGLE_WALL_SIGN", "SIGN");
-        mapAlias("SPRUCE_WALL_SIGN", "SIGN");
-        mapAlias("ACACIA_WALL_SIGN", "SIGN");
+        mapAlias("OAK_WALL_SIGN", "WALL_SIGN");
+        mapAlias("BIRCH_WALL_SIGN", "WALL_SIGN");
+        mapAlias("BIRCH_WALL_SIGN", "WALL_SIGN");
+        mapAlias("DARK_OAK_WALL_SIGN", "WALL_SIGN");
+        mapAlias("JUNGLE_WALL_SIGN", "WALL_SIGN");
+        mapAlias("SPRUCE_WALL_SIGN", "WALL_SIGN");
+        mapAlias("ACACIA_WALL_SIGN", "WALL_SIGN");
         mapAlias("DIRT_PATH", "GRASS_PATH");
         mapAlias("WATER_CAULDRON", "CAULDRON");
     }

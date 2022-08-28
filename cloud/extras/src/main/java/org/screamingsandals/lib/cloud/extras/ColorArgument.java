@@ -168,7 +168,7 @@ public final class ColorArgument<C> extends CommandArgument<C, Color> {
                 ));
             }
             if (LEGACY_PREDICATE.matcher(input).matches()) {
-                final char code = input.substring(1).toLowerCase().charAt(0);
+                final char code = input.substring(1).toLowerCase(Locale.ROOT).charAt(0);
                 for (final Pair<Character, Color> pair : COLORS) {
                     if (pair.getFirst() == code) {
                         inputQueue.remove();

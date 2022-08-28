@@ -1,8 +1,8 @@
 dependencies {
     api project(':core-bukkit')
 
-    compileOnly paper(PAPER_VERSION)
+    compileOnly libs.paper
 
-    compileOnly placeholderapi(PLACEHOLDERAPI_VERSION)
-    compileOnly vault(VAULT_VERSION)
+    compileOnly libs.placeholderapi
+    compileOnly libs.vault
 }

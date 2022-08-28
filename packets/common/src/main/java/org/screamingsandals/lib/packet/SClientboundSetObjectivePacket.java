@@ -21,6 +21,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.screamingsandals.lib.spectator.Component;
 
+import java.util.Locale;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true, fluent = true)
@@ -44,7 +46,7 @@ public class SClientboundSetObjectivePacket extends AbstractPacket {
             if (writer.protocol() >= 349) {
                 writer.writeVarInt(criteriaType.ordinal());
             } else {
-                writer.writeSizedString(criteriaType.name().toLowerCase());
+                writer.writeSizedString(criteriaType.name().toLowerCase(Locale.ROOT));
             }
         }
     }

@@ -1,5 +1,5 @@
 dependencies {
     api project(':shared-core')
     api project(':placeholders-common')
-    api 'org.spongepowered:configurate-core:' + CONFIGURATE_VERSION
+    api libs.configurate.core
 }

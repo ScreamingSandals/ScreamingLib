@@ -1,5 +1,5 @@
 dependencies {
     api project(':nms')
 
-    compileOnly 'io.netty:netty-all:' + NETTY_VERSION
+    compileOnly libs.netty
 }

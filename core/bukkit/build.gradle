@@ -1,12 +1,14 @@
 dependencies {
     api project(':nms')
 
-    api paperlib()
+    api project(':paperlib'), {
+        targetConfiguration = 'shadow'
+    }
     api project(':spectator-adventure')
     api project(':spectator-bungee')
 
-    compileOnly paper(PAPER_VERSION)
-    compileOnly 'io.netty:netty-all:' + NETTY_VERSION
-    compileOnly 'com.viaversion:viaversion-api:' + VIA_VERSION_VERSION
-    compileOnly 'com.github.ProtocolSupport:ProtocolSupport:' + PROTOCOL_SUPPORT_VERSION
+    compileOnly libs.paper
+    compileOnly libs.netty
+    compileOnly libs.viaversion
+    compileOnly libs.protocolsupport
 }

@@ -31,6 +31,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class VelocityMainClassGenerator extends MainClassGenerator {
     @Override
@@ -150,7 +151,7 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
 
         var node = loader.createNode();
         node.node("main").set(((PackageElement) pluginContainer.getEnclosingElement()).getQualifiedName().toString() + "." + pluginContainer.getSimpleName() + "_VelocityImpl");
-        node.node("id").set(pluginAnnotation.id().toLowerCase());
+        node.node("id").set(pluginAnnotation.id().toLowerCase(Locale.ROOT));
         node.node("name").set(pluginAnnotation.name());
         node.node("version").set(pluginAnnotation.version());
         if (!pluginAnnotation.description().isBlank()) {

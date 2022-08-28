@@ -1,4 +1,4 @@
 dependencies {
-    compileOnly paper(PAPER_VERSION)
-    compileOnly vault(VAULT_VERSION)
+    compileOnly libs.paper
+    compileOnly libs.vault
 }

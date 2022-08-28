@@ -16,11 +16,13 @@
 
 package org.screamingsandals.lib.utils;
 
+import java.util.Locale;
+
 public class RomanToDecimal {
     public static int romanToDecimal(String romanNumber) {
         var decimal = 0;
         var lastNumber = 0;
-        var romanNumeral = romanNumber.toUpperCase();
+        var romanNumeral = romanNumber.toUpperCase(Locale.ROOT);
         for (int x = romanNumeral.length() - 1; x >= 0 ; x--) {
             char convertToDecimal = romanNumeral.charAt(x);
 

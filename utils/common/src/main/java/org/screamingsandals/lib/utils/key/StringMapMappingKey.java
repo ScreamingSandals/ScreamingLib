@@ -20,6 +20,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -51,6 +52,6 @@ public class StringMapMappingKey implements MappingKey {
     @Override
     @NotNull
     public String toString() {
-        return '[' + str.entrySet().stream().map(e -> e.getKey().toLowerCase() + "=" + e.getValue().toLowerCase()).collect(Collectors.joining(",")) + ']';
+        return '[' + str.entrySet().stream().map(e -> e.getKey().toLowerCase(Locale.ROOT) + "=" + e.getValue().toLowerCase(Locale.ROOT)).collect(Collectors.joining(",")) + ']';
     }
 }

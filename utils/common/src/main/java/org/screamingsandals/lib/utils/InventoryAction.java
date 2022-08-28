@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.utils;
 
+import java.util.Locale;
+
 public enum InventoryAction {
 
     /**
@@ -112,7 +114,7 @@ public enum InventoryAction {
 
     public static InventoryAction convert(String action) {
         try {
-            return InventoryAction.valueOf(action.toUpperCase());
+            return InventoryAction.valueOf(action.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException ex) {
             return InventoryAction.NOTHING;
         }

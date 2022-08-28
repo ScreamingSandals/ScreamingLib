@@ -16,14 +16,19 @@
 
 package org.screamingsandals.lib.bukkit.item;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeHolder;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -71,9 +76,37 @@ public class BukkitItemTypeHolder extends BasicWrapper<Material> implements Item
     }
 
     @Override
+    public boolean hasTag(@NotNull Object tag) {
+        NamespacedMappingKey key;
+        if (tag instanceof NamespacedMappingKey) {
+            key = (NamespacedMappingKey) tag;
+        } else {
+            key = NamespacedMappingKey.of(tag.toString());
+        }
+        // native tags
+        var bukkitTag = Bukkit.getTag(Tag.REGISTRY_ITEMS, new NamespacedKey(key.namespace(), key.value()), Material.class);
+        if (bukkitTag != null) {
+            return bukkitTag.isTagged(wrappedObject);
+        }
+        // backported tags
+        if (!key.namespace().equals("minecraft")) {
+            return false;
+        }
+        var value = key.value();
+        return BukkitItemTypeMapper.hasTagInBackPorts(wrappedObject, value);
+    }
+
+    @Override
     public boolean is(Object object) {
         if (object instanceof Material || object instanceof ItemTypeHolder) {
             return equals(object);
+        }
+        if (object instanceof String) {
+            var str = (String) object;
+            if (str.startsWith("#")) {
+                // seems like a tag
+                return hasTag(str.substring(1));
+            }
         }
         return equals(ItemTypeHolder.ofOptional(object).orElse(null));
     }

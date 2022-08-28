@@ -45,10 +45,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.*;
 
 public class BukkitEntityMetadataMapper {
@@ -56,6 +53,7 @@ public class BukkitEntityMetadataMapper {
     private static final Map<Class<? extends Entity>, Map<String, BukkitMetadata<?, ?>>> METADATA = new HashMap<>();
 
     // TODO: it would be better to generate this static initializer or maybe find a better way then manually doing this shit (because of fucking modded servers)
+    // sometimes compiler optimizations cause this too not work on some versions, so that's why you may sometimes find reflection where it does not make any sense :)
     static {
         var breedableExist = Reflect.has("org.bukkit.entity.Breedable");
         var steerableExist = Reflect.has("org.bukkit.entity.Steerable");
@@ -103,8 +101,10 @@ public class BukkitEntityMetadataMapper {
                 .map("left_leg_pose", "data_left_leg_pose", EulerAngle.class, ArmorStand::getLeftLegPose, ArmorStand::setLeftLegPose)
                 .map("right_leg_pose", "data_right_leg_pose", EulerAngle.class, ArmorStand::getRightLegPose, ArmorStand::setRightLegPose);
 
-        Builder.begin(Arrow.class)
-                .map("effect_color", "id_effect_color", Color.class, Arrow::getColor, Arrow::setColor);
+        if (Reflect.hasMethod(Arrow.class, "getColor")) {
+            Builder.begin(Arrow.class)
+                    .map("effect_color", "id_effect_color", Color.class, Arrow::getColor, Arrow::setColor);
+        }
 
         if (Reflect.has("org.bukkit.entity.Axolotl")) {
             Builder.begin(Axolotl.class)
@@ -177,7 +177,7 @@ public class BukkitEntityMetadataMapper {
 
         // TODO: Eye of Ender (EnderSignal)
 
-        if (!spellcasterExist) {
+        if (!spellcasterExist && Reflect.has("org.bukkit.entity.Evoker")) {
             Builder.begin(Evoker.class)
                     .map("spell", Evoker.Spell.class, Evoker::getCurrentSpell, Evoker::setCurrentSpell);
         }
@@ -241,8 +241,10 @@ public class BukkitEntityMetadataMapper {
                     .map("screaming", "data_is_screaming_goat", Boolean.class, Goat::isScreaming, Goat::setScreaming);
         }
 
-        Builder.begin(Guardian.class)
-                .map("has_laser", Boolean.class, Guardian::hasLaser, Guardian::setLaser);
+        if (Reflect.hasMethod(Guardian.class, "hasLaser")) {
+            Builder.begin(Guardian.class)
+                    .map("has_laser", Boolean.class, Guardian::hasLaser, Guardian::setLaser);
+        }
 
         if (Reflect.has("org.bukkit.entity.Hoglin")) {
             Builder.begin(Hoglin.class)
@@ -258,11 +260,11 @@ public class BukkitEntityMetadataMapper {
                 .map("color", Horse.Color.class, Horse::getColor, Horse::setColor)
                 .map("style", Horse.Style.class, Horse::getStyle, Horse::setStyle)
                 .whenNot(1, 11, b -> b
-                        .map("variant", Horse.Variant.class, Horse::getVariant, Horse::setVariant)
+                        .map("variant", Horse.Variant.class, h -> (Horse.Variant) Reflect.fastInvoke(h, "getVariant"), (h, v) -> Reflect.getMethod(h, "setVariant", Horse.Variant.class).invoke(v))
                         .map("is_carrying_chest", Boolean.class, Horse::isCarryingChest, Horse::setCarryingChest)
-                        .map("domestication", Integer.class, Horse::getDomestication, Horse::setDomestication)
-                        .map("max_domestication", Integer.class, Horse::getMaxDomestication, Horse::setMaxDomestication)
-                        .map("jump_strength", Double.class, Horse::getJumpStrength, Horse::setJumpStrength)
+                        .map("domestication", Integer.class, h -> (int) Reflect.fastInvoke(h, "getDomestication"), (h, i) -> Reflect.getMethod(h, "setDomestication", int.class).invoke(i))
+                        .map("max_domestication", Integer.class, h -> (int) Reflect.fastInvoke(h, "getMaxDomestication"), (h, i) -> Reflect.getMethod(h, "setMaxDomestication", int.class).invoke(i))
+                        .map("jump_strength", Double.class, h -> (double) Reflect.fastInvoke(h, "getJumpStrength"), (h, d) -> Reflect.getMethod(h, "setJumpStrength", double.class).invoke(d))
                 );
 
         if (Reflect.has("org.bukkit.entity.Husk")) {
@@ -352,7 +354,7 @@ public class BukkitEntityMetadataMapper {
 
         if (!steerableExist) {
             Builder.begin(Pig.class)
-                    .map("has_saddle", Boolean.class, Pig::hasSaddle, Pig::setSaddle);
+                    .map("has_saddle", Boolean.class, p -> (boolean) Reflect.fastInvoke(p, "hasSaddle"), (p, b) -> Reflect.getMethod(p, "setSaddle", boolean.class).invoke(b));
         }
 
         if (Reflect.has("org.bukkit.entity.Piglin")) {
@@ -362,10 +364,10 @@ public class BukkitEntityMetadataMapper {
                             .map("is_baby", "data_baby_id", Boolean.class, Piglin::isBaby, Piglin::setBaby)
                     )
                     .whenNot(1, 16, 2, b -> b
-                        .map("is_immune_to_zombification", Boolean.class, Piglin::isImmuneToZombification, Piglin::setImmuneToZombification)
+                        .map("is_immune_to_zombification", Boolean.class, p -> (boolean) Reflect.fastInvoke(p, "isImmuneToZombification"), (p, bb) -> Reflect.getMethod(p, "setImmuneToZombification", boolean.class).invoke(bb))
                         .when(Reflect.hasMethod(Piglin.class, "isConverting"), b2 -> b2
-                                .map("is_converting", Boolean.class, Piglin::isConverting, null)
-                                .map("conversion_time", Integer.class, Piglin::getConversionTime, Piglin::setConversionTime)
+                                .map("is_converting", Boolean.class, p -> (boolean) Reflect.fastInvoke(p, "isConverting"), null)
+                                .map("conversion_time", Integer.class, p -> (int) Reflect.fastInvoke(p, "getConversionTime"), (p, t) -> Reflect.getMethod(p, "setConversionTime", int.class).invoke(t))
                         )
                     );
         }
@@ -428,7 +430,7 @@ public class BukkitEntityMetadataMapper {
 
         Builder.begin(Skeleton.class)
                 .whenNot(1, 11, b -> b
-                        .map("skeleton_type", Skeleton.SkeletonType.class, Skeleton::getSkeletonType, Skeleton::setSkeletonType)
+                        .map("skeleton_type", Skeleton.SkeletonType.class, s -> (Skeleton.SkeletonType) Reflect.fastInvoke(s, "getSkeletonType"), (s, t) -> Reflect.getMethod(s, "setSkeletonType", Skeleton.SkeletonType.class).invoke(t))
                 )
                 .when(Reflect.hasMethod(Skeleton.class, "isConverting"), b -> b
                         .map("is_converting", Boolean.class, Skeleton::isConverting, null)
@@ -558,14 +560,14 @@ public class BukkitEntityMetadataMapper {
     }
 
     public static boolean has(Entity entity, String metadata) {
-        final var finalMetadata = metadata.toLowerCase();
+        final var finalMetadata = metadata.toLowerCase(Locale.ROOT);
         return METADATA.entrySet().stream()
                 .anyMatch(classMapEntry -> classMapEntry.getKey().isInstance(entity) && classMapEntry.getValue().containsKey(finalMetadata));
     }
 
     @SuppressWarnings("unchecked")
     public static void set(Entity entity, String metadata, Object value) {
-        final var finalMetadata = metadata.toLowerCase();
+        final var finalMetadata = metadata.toLowerCase(Locale.ROOT);
         var bukkitMetadata = METADATA.entrySet().stream()
                 .filter(classMapEntry -> classMapEntry.getKey().isInstance(entity) && classMapEntry.getValue().containsKey(finalMetadata))
                 .map(classMapEntry -> classMapEntry.getValue().get(finalMetadata))
@@ -673,7 +675,7 @@ public class BukkitEntityMetadataMapper {
 
     @SuppressWarnings("unchecked")
     public static <T> T get(Entity entity, String metadata, Class<T> valueClass) {
-        final var finalMetadata = metadata.toLowerCase();
+        final var finalMetadata = metadata.toLowerCase(Locale.ROOT);
         var bukkitMetadata = METADATA.entrySet().stream()
                 .filter(classMapEntry -> classMapEntry.getKey().isInstance(entity) && classMapEntry.getValue().containsKey(finalMetadata))
                 .map(classMapEntry -> classMapEntry.getValue().get(finalMetadata))
@@ -804,7 +806,7 @@ public class BukkitEntityMetadataMapper {
         }
 
         public <V> Builder<E> map(@NotNull String name, @NotNull Class<V> valueClass, @NotNull Function<E, V> getter, @Nullable BiConsumer<E, V> setter) {
-            metadataMap.put(name.toLowerCase(), new BukkitMetadata<>(valueClass, getter, setter));
+            metadataMap.put(name.toLowerCase(Locale.ROOT), new BukkitMetadata<>(valueClass, getter, setter));
             if (!registered) {
                 METADATA.put(clazz, (Map) metadataMap);
                 registered = true;
@@ -814,9 +816,9 @@ public class BukkitEntityMetadataMapper {
 
         public <V> Builder<E> map(@NotNull String name, @Nullable String alternativeName, @NotNull Class<V> valueClass, @NotNull Function<E, V> getter, @Nullable BiConsumer<E, V> setter) {
             var d = new BukkitMetadata<>(valueClass, getter, setter);
-            metadataMap.put(name.toLowerCase(), d);
+            metadataMap.put(name.toLowerCase(Locale.ROOT), d);
             if (alternativeName != null) {
-                metadataMap.put(alternativeName.toLowerCase(), d);
+                metadataMap.put(alternativeName.toLowerCase(Locale.ROOT), d);
             }
             if (!registered) {
                 METADATA.put(clazz, (Map) metadataMap);

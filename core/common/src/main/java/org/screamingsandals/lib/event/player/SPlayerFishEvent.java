@@ -21,6 +21,8 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
+import java.util.Locale;
+
 public interface SPlayerFishEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
     @Nullable
@@ -77,7 +79,7 @@ public interface SPlayerFishEvent extends SCancellableEvent, SPlayerEvent, Platf
 
         public static State convert(String state) {
             try {
-                return State.valueOf(state.toUpperCase());
+                return State.valueOf(state.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException ex) {
                 return State.FISHING;
             }

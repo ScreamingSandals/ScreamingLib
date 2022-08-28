@@ -26,6 +26,8 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SSheepDyeWoolEvent;
 
+import java.util.Locale;
+
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -54,6 +56,6 @@ public class SBukkitSheepDyeWoolEvent implements SSheepDyeWoolEvent, BukkitCance
 
     @Override
     public void dyeColor(String dyeColor) {
-        event.setColor(DyeColor.valueOf(dyeColor.toUpperCase()));
+        event.setColor(DyeColor.valueOf(dyeColor.toUpperCase(Locale.ROOT)));
     }
 }

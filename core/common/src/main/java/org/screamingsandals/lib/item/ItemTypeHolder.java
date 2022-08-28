@@ -19,6 +19,8 @@ package org.screamingsandals.lib.item;
 import com.iamceph.resulter.core.pack.ProtoWrapper;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
@@ -31,7 +33,7 @@ import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 @Accessors(fluent = true)
-public interface ItemTypeHolder extends ComparableWrapper, ProtoWrapper<ProtoItemType>, ParticleData {
+public interface ItemTypeHolder extends ComparableWrapper, ProtoWrapper<ProtoItemType>, ParticleData, TaggableHolder {
     String platformName();
 
     /**
@@ -78,6 +80,10 @@ public interface ItemTypeHolder extends ComparableWrapper, ProtoWrapper<ProtoIte
     }
 
     Optional<BlockTypeHolder> block();
+
+    @CustomAutocompletion(CustomAutocompletion.Type.ITEM_TYPE_TAG)
+    @Override
+    boolean hasTag(@NotNull Object tag);
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Override

@@ -23,6 +23,7 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
+import java.util.Locale;
 
 public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
     public static final ClickEventSerializer INSTANCE = new ClickEventSerializer();
@@ -33,7 +34,7 @@ public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
     @Override
     public ClickEvent deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {
-            var action = ClickEvent.Action.valueOf(node.node(ACTION_KEY).getString("open_url").toUpperCase());
+            var action = ClickEvent.Action.valueOf(node.node(ACTION_KEY).getString("open_url").toUpperCase(Locale.ROOT));
             var value = node.node(VALUE_KEY).getString("");
             return ClickEvent.builder()
                     .action(action)
@@ -51,7 +52,7 @@ public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
             return;
         }
 
-        node.node(ACTION_KEY).set(obj.action().name().toLowerCase());
+        node.node(ACTION_KEY).set(obj.action().name().toLowerCase(Locale.ROOT));
         node.node(VALUE_KEY).set(obj.value());
     }
 }

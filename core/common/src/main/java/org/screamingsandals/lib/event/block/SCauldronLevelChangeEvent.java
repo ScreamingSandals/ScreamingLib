@@ -22,6 +22,8 @@ import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
+import java.util.Locale;
+
 public interface SCauldronLevelChangeEvent extends SCancellableEvent, PlatformEventWrapper {
 
     BlockHolder block();
@@ -52,7 +54,7 @@ public interface SCauldronLevelChangeEvent extends SCancellableEvent, PlatformEv
 
         public static Reason get(String name) {
             try {
-                return valueOf(name.toUpperCase());
+                return valueOf(name.toUpperCase(Locale.ROOT));
             } catch (Throwable ignored) {
                 return UNKNOWN;
             }

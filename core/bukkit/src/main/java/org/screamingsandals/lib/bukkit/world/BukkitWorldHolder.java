@@ -148,17 +148,37 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
 
     @Override
     public void sendParticle(ParticleHolder particle, LocationHolder location) {
-        wrappedObject.spawnParticle(
-                particle.particleType().as(Particle.class),
-                location.as(Location.class),
-                particle.count(),
-                particle.offset().getX(),
-                particle.offset().getY(),
-                particle.offset().getZ(),
-                particle.particleData(),
-                particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null,
-                particle.longDistance()
-        );
+        try {
+            // 1.13.1 +
+            wrappedObject.spawnParticle(
+                    particle.particleType().as(Particle.class),
+                    location.as(Location.class),
+                    particle.count(),
+                    particle.offset().getX(),
+                    particle.offset().getY(),
+                    particle.offset().getZ(),
+                    particle.particleData(),
+                    particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null,
+                    particle.longDistance()
+            );
+        } catch (Throwable ignored) {
+            try {
+                // 1.9.+
+                wrappedObject.spawnParticle(
+                        particle.particleType().as(Particle.class),
+                        location.as(Location.class),
+                        particle.count(),
+                        particle.offset().getX(),
+                        particle.offset().getY(),
+                        particle.offset().getZ(),
+                        particle.particleData(),
+                        particle.specialData() != null ? BukkitParticleConverter.convertParticleData(particle.specialData()) : null
+                );
+            } catch (Throwable ignored2) {
+                // 1.8.8
+                // TODO: implement for 1.8.8
+            }
+        }
     }
 
     @Override

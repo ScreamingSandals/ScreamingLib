@@ -38,6 +38,8 @@ import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
+import java.util.Locale;
+
 public abstract class AbstractBungeeBackend implements SpectatorBackend {
     @Getter
     private static final BidirectionalConverter<BungeeComponent> additionalComponentConverter = BidirectionalConverter.build();
@@ -174,18 +176,18 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public Color named(String name) {
-        return new BungeeColor(ChatColor.valueOf(name.toUpperCase()));
+        return new BungeeColor(ChatColor.valueOf(name.toUpperCase(Locale.ROOT)));
     }
 
     @Override
     public Color hexOrName(String hexOrName) {
         try {
-            return new BungeeColor(ChatColor.of(hexOrName.toLowerCase()));
+            return new BungeeColor(ChatColor.of(hexOrName.toLowerCase(Locale.ROOT)));
         } catch (Throwable ignored) {
         }
         if (hexOrName.length() == 6) {
             try {
-                return new BungeeColor(ChatColor.of("#" + hexOrName.toLowerCase()));
+                return new BungeeColor(ChatColor.of("#" + hexOrName.toLowerCase(Locale.ROOT)));
             } catch (Throwable ignored) {
             }
         }
@@ -198,7 +200,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
             }
         }
         try {
-            return new BungeeColor(ChatColor.valueOf(hexOrName.toUpperCase()));
+            return new BungeeColor(ChatColor.valueOf(hexOrName.toUpperCase(Locale.ROOT)));
         } catch (Throwable ignored) {}
         return new BungeeColor(ChatColor.WHITE); // never returns null!!!
     }

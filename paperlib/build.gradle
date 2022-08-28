@@ -1,0 +1,11 @@
+// This library is shaded and relocated here because it is currently required internally by core-bukkit.
+
+enableShadowPlugin()
+
+dependencies {
+    api libs.paperlib
+}
+
+shadowJar {
+    relocate 'io.papermc.lib', 'org.screamingsandals.lib.ext.paperlib'
+}

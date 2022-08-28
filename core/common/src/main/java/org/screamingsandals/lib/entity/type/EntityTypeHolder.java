@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.entity.type;
 
+import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -26,7 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder {
+public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder, TaggableHolder {
 
     /**
      * Use fluent variant!
@@ -39,6 +41,10 @@ public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder {
     String platformName();
 
     boolean isAlive();
+
+    @Override
+    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE_TAG)
+    boolean hasTag(@NotNull Object tag);
 
     /**
      * Compares the entity type and the object

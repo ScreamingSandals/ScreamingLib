@@ -1,6 +1,6 @@
 dependencies {
-    compileOnly 'net.kyori:adventure-api:' + ADVENTURE_VERSION
-    compileOnly 'net.kyori:adventure-text-serializer-gson:' + ADVENTURE_VERSION
-    compileOnly 'net.kyori:adventure-text-serializer-legacy:' + ADVENTURE_VERSION
-    compileOnly 'net.kyori:adventure-text-serializer-plain:' + ADVENTURE_VERSION
+    compileOnly libs.adventure.api
+    compileOnly libs.adventure.gson
+    compileOnly libs.adventure.legacy
+    compileOnly libs.adventure.plain
 }

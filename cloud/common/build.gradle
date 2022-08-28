@@ -1,4 +1,4 @@
 dependencies {
     api project(':shared-core')
-    api cloud(CLOUD_VERSION)
+    api libs.cloud.common
 }

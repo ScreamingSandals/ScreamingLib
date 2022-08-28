@@ -25,6 +25,7 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
+import java.util.Locale;
 
 public class SoundStartSerializer implements TypeSerializer<SoundStart> {
     public static final SoundStartSerializer INSTANCE = new SoundStartSerializer();
@@ -39,7 +40,7 @@ public class SoundStartSerializer implements TypeSerializer<SoundStart> {
         try {
             if (node.isMap()) {
                 final var name = NamespacedMappingKey.of(node.node(NAME_KEY).getString());
-                final var source = SoundSource.soundSource(node.node(SOURCE_KEY).getString("master").toLowerCase());
+                final var source = SoundSource.soundSource(node.node(SOURCE_KEY).getString("master").toLowerCase(Locale.ROOT));
                 final var pitch = node.node(PITCH_KEY).getFloat(1f);
                 final var volume = node.node(VOLUME_KEY).getFloat(1f);
 

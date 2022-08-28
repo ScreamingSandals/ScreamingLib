@@ -17,7 +17,9 @@
 package org.screamingsandals.lib.block;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -30,7 +32,7 @@ import java.util.*;
  * Use {@link org.screamingsandals.lib.item.ItemTypeHolder} for item materials.
  */
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface BlockTypeHolder extends ComparableWrapper, ParticleData {
+public interface BlockTypeHolder extends ComparableWrapper, ParticleData, TaggableHolder {
 
     String platformName();
 
@@ -39,57 +41,43 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData {
 
     @Deprecated
     @Contract(value = "_ -> new", pure = true)
+    @NotNull
     BlockTypeHolder withLegacyData(byte legacyData);
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
     @Unmodifiable
+    @NotNull
     Map<String, String> flatteningData();
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
     @Contract(value = "_ -> new", pure = true)
-    BlockTypeHolder withFlatteningData(Map<String, String> flatteningData);
+    @NotNull
+    BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> flatteningData);
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
     @Contract(value = "_, _ -> new", pure = true)
-    BlockTypeHolder with(String attribute, String value);
+    @NotNull
+    BlockTypeHolder with(@NotNull String attribute, @NotNull String value);
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
     @Contract(value = "_, _ -> new", pure = true)
-    BlockTypeHolder with(String attribute, int value);
+    @NotNull
+    BlockTypeHolder with(@NotNull String attribute, int value);
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
     @Contract(value = "_, _ -> new", pure = true)
-    BlockTypeHolder with(String attribute, boolean value);
+    @NotNull
+    BlockTypeHolder with(@NotNull String attribute, boolean value);
 
     @Contract(value = "_ -> new", pure = true)
-    default BlockTypeHolder colorize(String color) {
+    @NotNull
+    default BlockTypeHolder colorize(@NotNull String color) {
         return BlockTypeMapper.colorize(this, color);
     }
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
-    Optional<String> get(String attribute);
+    @NotNull
+    Optional<String> get(@NotNull String attribute);
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
-    Optional<Integer> getInt(String attribute);
+    @NotNull
+    Optional<Integer> getInt(@NotNull String attribute);
 
-    /**
-     * NOTE: This method does not work in legacy environments yet!
-     */
-    Optional<Boolean> getBoolean(String attribute);
+    @NotNull
+    Optional<Boolean> getBoolean(@NotNull String attribute);
 
     default boolean isAir() {
         return isSameType(air(), "minecraft:cave_air", "minecraft:void_air");
@@ -107,12 +95,26 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData {
 
     boolean hasGravity();
 
+    @Override
+    @CustomAutocompletion(CustomAutocompletion.Type.BLOCK_TYPE_TAG)
+    boolean hasTag(@NotNull Object tag);
+
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     boolean isSameType(Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     boolean isSameType(Object... objects);
 
+    /**
+     * This method accept any object that represents block type, or:
+     * <br>
+     * tags if prefixed with #
+     * <br>
+     * the type without the exact state if suffixed by [*] (alternative to {@link #isSameType(Object)}
+     *
+     * @param object object that represents block type
+     * @return true if this block is the same as the object
+     */
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     @Override
     boolean is(Object object);

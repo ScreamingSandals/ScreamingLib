@@ -16,7 +16,7 @@
 
 package org.screamingsandals.lib.bukkit.entity;
 
-import io.papermc.lib.PaperLib;
+import org.screamingsandals.lib.ext.paperlib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.InventoryHolder;

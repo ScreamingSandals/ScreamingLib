@@ -210,8 +210,8 @@ public class MiscUtils {
 
         platformTypes.forEach(platformType -> {
             var resolvedClassName = rule
-                    .replaceAll("\\{platform}", platformType.name().toLowerCase())
-                    .replaceAll("\\{Platform}", platformType.name().substring(0, 1).toUpperCase() + platformType.name().substring(1).toLowerCase());
+                    .replaceAll("\\{platform}", platformType.name().toLowerCase(Locale.ROOT))
+                    .replaceAll("\\{Platform}", platformType.name().substring(0, 1).toUpperCase(Locale.ROOT) + platformType.name().substring(1).toLowerCase(Locale.ROOT));
 
             var resolvedElement = environment.getElementUtils().getTypeElement(resolvedClassName);
             if (resolvedElement == null && strict) {

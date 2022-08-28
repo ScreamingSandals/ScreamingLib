@@ -18,13 +18,17 @@ package org.screamingsandals.lib.bukkit.block;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Arrays;
@@ -72,6 +76,7 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
+    @NotNull
     public BlockTypeHolder withLegacyData(byte legacyData) {
         if (!NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED) {
             BukkitCore.getPlugin().getLogger().warning(NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED_MESSAGE);
@@ -90,7 +95,8 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
 
     @Override
     @Unmodifiable
-    public Map<String, String> flatteningData() {
+    @NotNull
+    public Map<@NotNull String, @NotNull String> flatteningData() {
         var data = wrappedObject.getAsString();
         if (data.contains("[") && data.contains("]")) {
             final var values = data.substring(data.indexOf("[") + 1, data.lastIndexOf("]"));
@@ -105,7 +111,8 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    public BlockTypeHolder withFlatteningData(Map<String, String> data) {
+    @NotNull
+    public BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> data) {
         final var builder = new StringBuilder();
         if (data != null && !data.isEmpty()) {
             builder.append('[');
@@ -120,7 +127,8 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    public BlockTypeHolder with(String attribute, String value) {
+    @NotNull
+    public BlockTypeHolder with(@NotNull String attribute, @NotNull String value) {
         return withFlatteningData(new HashMap<>(flatteningData()) {
             {
                 put(attribute, value);
@@ -129,7 +137,8 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    public BlockTypeHolder with(String attribute, int value) {
+    @NotNull
+    public BlockTypeHolder with(@NotNull String attribute, int value) {
         return withFlatteningData(new HashMap<>(flatteningData()) {
             {
                 put(attribute, String.valueOf(value));
@@ -138,7 +147,8 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    public BlockTypeHolder with(String attribute, boolean value) {
+    @NotNull
+    public BlockTypeHolder with(@NotNull String attribute, boolean value) {
         return withFlatteningData(new HashMap<>(flatteningData()) {
             {
                 put(attribute, String.valueOf(value));
@@ -147,12 +157,14 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    public Optional<String> get(String attribute) {
+    @NotNull
+    public Optional<String> get(@NotNull String attribute) {
         return Optional.ofNullable(flatteningData().get(attribute));
     }
 
     @Override
-    public Optional<Integer> getInt(String attribute) {
+    @NotNull
+    public Optional<Integer> getInt(@NotNull String attribute) {
         return Optional.ofNullable(flatteningData().get(attribute)).flatMap(s -> {
             try {
                 return Optional.of(Integer.valueOf(s));
@@ -163,7 +175,8 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    public Optional<Boolean> getBoolean(String attribute) {
+    @NotNull
+    public Optional<Boolean> getBoolean(@NotNull String attribute) {
         return Optional.ofNullable(flatteningData().get(attribute)).map(Boolean::parseBoolean);
     }
 
@@ -198,6 +211,27 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
+    public boolean hasTag(@NotNull Object tag) {
+        NamespacedMappingKey key;
+        if (tag instanceof NamespacedMappingKey) {
+            key = (NamespacedMappingKey) tag;
+        } else {
+            key = NamespacedMappingKey.of(tag.toString());
+        }
+        // native tags
+        var bukkitTag = Bukkit.getTag(Tag.REGISTRY_BLOCKS, new NamespacedKey(key.namespace(), key.value()), Material.class);
+        if (bukkitTag != null) {
+            return bukkitTag.isTagged(wrappedObject.getMaterial());
+        }
+        // backported tags
+        if (!key.namespace().equals("minecraft")) {
+            return false;
+        }
+        var value = key.value();
+        return BukkitBlockTypeMapper.hasTagInBackPorts(wrappedObject.getMaterial(), value);
+    }
+
+    @Override
     public boolean isSameType(Object object) {
         if (object instanceof Material) {
             return wrappedObject.getMaterial() == object;
@@ -220,6 +254,15 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     public boolean is(Object object) {
         if (object instanceof BlockData || object instanceof BukkitBlockTypeHolder) {
             return equals(object);
+        }
+        if (object instanceof String) {
+            var str = (String) object;
+            if (str.startsWith("#")) {
+                // seems like a tag
+                return hasTag(str.substring(1));
+            } else if (str.endsWith("[*]")) {
+                return isSameType(str.substring(0, str.length() - 3));
+            }
         }
         return equals(BlockTypeHolder.ofOptional(object).orElse(null));
     }

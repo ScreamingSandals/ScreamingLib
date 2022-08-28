@@ -37,10 +37,7 @@ import org.screamingsandals.lib.spectator.mini.resolvers.*;
 import org.screamingsandals.lib.spectator.mini.transformers.NegatedDecorationTransformer;
 import org.screamingsandals.lib.spectator.mini.transformers.TagToAttributeTransformer;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -105,17 +102,17 @@ public class MiniMessageParser {
         if (node instanceof TextNode) {
             return (B) Component.text().content(((TextNode) node).getText());
         } else if (node instanceof TagNode) {
-            if (componentTagResolvers.containsKey(((TagNode) node).getTag().toLowerCase())) {
+            if (componentTagResolvers.containsKey(((TagNode) node).getTag().toLowerCase(Locale.ROOT))) {
                 if (node.hasChildren()) {
                     throw new IllegalArgumentException("Tags defining non-text components can't be pair tags!");
                 }
-                B comp = componentTagResolvers.get(((TagNode) node).getTag().toLowerCase()).resolve(this, (TagNode) node, placeholders);
+                B comp = componentTagResolvers.get(((TagNode) node).getTag().toLowerCase(Locale.ROOT)).resolve(this, (TagNode) node, placeholders);
                 if (comp != null) {
                     return comp;
                 }
                 // if null, fall into placeholders
-            } else if (componentStylingResolvers.containsKey(((TagNode) node).getTag().toLowerCase())) {
-                var res = componentStylingResolvers.get(((TagNode) node).getTag().toLowerCase());
+            } else if (componentStylingResolvers.containsKey(((TagNode) node).getTag().toLowerCase(Locale.ROOT))) {
+                var res = componentStylingResolvers.get(((TagNode) node).getTag().toLowerCase(Locale.ROOT));
 
                 if (node.hasChildren()) {
                     var resolved = node.children();

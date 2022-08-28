@@ -20,6 +20,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -38,8 +39,8 @@ public class SpecialSoundKey extends NamespacedMappingKey {
             return Optional.empty();
         }
 
-        var namespace = matcher.group("namespace") != null ? matcher.group("namespace").toLowerCase() : "minecraft";
-        var key = matcher.group("key").replaceAll(" ", "_").toLowerCase();
+        var namespace = matcher.group("namespace") != null ? matcher.group("namespace").toLowerCase(Locale.ROOT) : "minecraft";
+        var key = matcher.group("key").replaceAll(" ", "_").toLowerCase(Locale.ROOT);
 
         return keyOptional(namespace, key);
     }

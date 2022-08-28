@@ -93,7 +93,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
                         } catch (NumberFormatException ignored) {
                             // blockState don't have to be number
                             if (blockState.startsWith("[") && blockState.endsWith("]")) {
-                                var map = blockTypeMapper.getDataFromString(blockState.toLowerCase());
+                                var map = blockTypeMapper.getDataFromString(blockState.toLowerCase(Locale.ROOT));
                                 if (map.containsKey("legacy_data") && map.size() == 1) {
                                     try {
                                         data = Integer.parseInt(map.get("legacy_data"));
@@ -119,6 +119,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
                             flatteningData = null;
                             data = newData.intValue();
                         }
+                        // TODO: attempt to convert it using BlockTypeHolder#withFlatteningData if there's no converter defined in ItemBlockIdsRemapper
                     } else if (data != null && !blockTypeMapper.isLegacy()) {
                         final var finalData = data;
                         var newData = blockTypeMapper.blockDataTranslators.entrySet()
@@ -138,22 +139,22 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
                         var namespacedDurability = ComplexMappingKey.of(namespaced, NumericMappingKey.of(data));
 
                         if (blockTypeMapper.mapping.containsKey(namespacedDurability)) {
-                            return Optional.of(blockTypeMapper.normalize(blockTypeMapper.mapping.get(namespacedDurability)));
+                            return Optional.of(blockTypeMapper.mapping.get(namespacedDurability));
                         } else if (blockTypeMapper.mapping.containsKey(namespaced)) {
                             var holder = blockTypeMapper.mapping.get(namespaced);
-                            return Optional.of(blockTypeMapper.normalize(holder.withLegacyData(data.byteValue())));
+                            return Optional.of(holder.withLegacyData(data.byteValue()));
                         }
                     } else if (flatteningData != null) {
                         var namespacedFlattening = ComplexMappingKey.of(namespaced, StringMapMappingKey.of(flatteningData));
 
                         if (blockTypeMapper.mapping.containsKey(namespacedFlattening)) {
-                            return Optional.of(blockTypeMapper.normalize(blockTypeMapper.mapping.get(namespacedFlattening)));
+                            return Optional.of(blockTypeMapper.mapping.get(namespacedFlattening));
                         } else if (blockTypeMapper.mapping.containsKey(namespaced)) {
                             var holder = blockTypeMapper.mapping.get(namespaced);
-                            return Optional.of(blockTypeMapper.normalize(holder.withFlatteningData(flatteningData)));
+                            return Optional.of(holder.withFlatteningData(flatteningData));
                         }
                     } else if (blockTypeMapper.mapping.containsKey(namespaced)) {
-                        return Optional.of(blockTypeMapper.normalize(blockTypeMapper.mapping.get(namespaced)));
+                        return Optional.of(blockTypeMapper.mapping.get(namespaced));
                     }
                 } else if (matcher.group("id") != null) {
                     try {
@@ -168,10 +169,10 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
                         var key = NumericMappingKey.of(id);
 
                         if (blockTypeMapper.mapping.containsKey(keyWithData)) {
-                            return Optional.of(blockTypeMapper.normalize(blockTypeMapper.mapping.get(keyWithData)));
+                            return Optional.of(blockTypeMapper.mapping.get(keyWithData));
                         } else if (blockTypeMapper.mapping.containsKey(key)) {
                             var holder = blockTypeMapper.mapping.get(key);
-                            return Optional.of(blockTypeMapper.normalize(holder.withLegacyData((byte) data)));
+                            return Optional.of(holder.withLegacyData((byte) data));
                         }
                     } catch (NumberFormatException ignored) {
                     }
@@ -219,8 +220,6 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
     }
 
     protected abstract Map<String, String> getDataFromString(String data);
-
-    protected abstract BlockTypeHolder normalize(BlockTypeHolder abnormal);
 
     protected abstract boolean isLegacy();
 }

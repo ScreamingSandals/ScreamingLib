@@ -39,7 +39,7 @@ import java.util.stream.Stream;
 
 @Accessors(chain = true, fluent = true)
 public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar {
-    @Accessors
+    @Accessors(fluent = false)
     @Getter
     protected final List<ScoreboardTeam> teams = new LinkedList<>();
     @Getter

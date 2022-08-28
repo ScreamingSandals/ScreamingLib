@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -45,6 +46,6 @@ public enum HideFlags {
     }
 
     public static HideFlags convert(String name) {
-        return VALUES.getOrDefault(name.toUpperCase(), MISC);
+        return VALUES.getOrDefault(name.toUpperCase(Locale.ROOT), MISC);
     }
 }

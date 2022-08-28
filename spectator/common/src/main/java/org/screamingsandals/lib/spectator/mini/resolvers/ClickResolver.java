@@ -25,6 +25,7 @@ import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ClickResolver implements StylingResolver {
     @Override
@@ -34,7 +35,7 @@ public class ClickResolver implements StylingResolver {
         }
 
         builder.clickEvent(ClickEvent.builder()
-                .action(ClickEvent.Action.valueOf(tag.getArgs().get(0).toUpperCase()))
+                .action(ClickEvent.Action.valueOf(tag.getArgs().get(0).toUpperCase(Locale.ROOT)))
                 .value(tag.getArgs().get(1))
                 .build()
         );
@@ -45,7 +46,7 @@ public class ClickResolver implements StylingResolver {
     public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         var click = component.clickEvent();
         if (click != null) {
-            return new TagNode(tagName, List.of(click.action().name().toLowerCase(), click.value()));
+            return new TagNode(tagName, List.of(click.action().name().toLowerCase(Locale.ROOT), click.value()));
         }
         return null;
     }

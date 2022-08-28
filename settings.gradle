@@ -28,6 +28,7 @@ def registerModule(String name, String... platforms) {
 }
 
 // Shared content
+include 'paperlib'
 include 'api-utils'
 registerModule('utils')
 include 'nms'

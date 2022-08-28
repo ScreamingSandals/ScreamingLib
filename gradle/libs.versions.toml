@@ -1,0 +1,91 @@
+[versions]
+# platforms
+paper = "1.19.2-R0.1-SNAPSHOT"
+sponge = "8.1.3"
+minestom = "master-SNAPSHOT"
+waterfall = "1.19-R0.1-SNAPSHOT"
+velocity = "3.1.1"
+adventure = "4.11.0"
+
+# paperlib (shaded)
+paperlib = "1.0.7"
+
+# annotation (implementation)
+javapoet = "1.13.0"
+
+# kotlin-extra (compileOnly)
+kotlin = "1.6.10"
+
+# all modules (compileOnly)
+gson = "2.9.0"
+slf4j = "1.7.32"
+protobuf = "3.19.2"
+netty = "4.1.72.Final"
+
+# 3rd party plugins/mods (compileOnly)
+placeholderapi = "2.11.1"
+viaversion = "4.4.2"
+vault = "1.7"
+protocolsupport = "3d24efeda6"
+
+# all modules (api)
+configurate = "4.1.2"
+resulter = "1.1.4"
+
+# cloud-* (api)
+cloud = "1.6.2"
+# TODO: custom port of cloud for Minestom, this one is very old
+cloud-minestom = "58e8fd76f3"
+
+# Junit
+junit = "5.8.2"
+
+# plugins
+screaming-plugin-builder = "1.0.79"
+nms-mapper = "1.3.0"
+
+[libraries]
+paperlib = { group = "io.papermc", name = "paperlib", version.ref = "paperlib" }
+javapoet = { group = "com.squareup", name = "javapoet", version.ref = "javapoet" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+configurate-core = { group = "org.spongepowered", name = "configurate-core", version.ref = "configurate" }
+configurate-yaml = { group = "org.spongepowered", name = "configurate-yaml", version.ref = "configurate" }
+configurate-gson = { group = "org.spongepowered", name = "configurate-gson", version.ref = "configurate" }
+resulter = { group = "com.iamceph.resulter", name = "resulter-core", version.ref = "resulter" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
+protobuf = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
+netty = { group = "io.netty", name = "netty-all", version.ref = "netty" }
+placeholderapi = { group = "me.clip", name = "placeholderapi", version.ref = "placeholderapi" }
+viaversion = { group = "com.viaversion", name = "viaversion-api", version.ref = "viaversion" }
+vault = { group = "com.github.MilkBowl", name = "VaultAPI", version.ref = "vault" }
+protocolsupport = { group = "com.github.ProtocolSupport", name = "ProtocolSupport", version.ref = "protocolsupport" }
+
+# platforms
+paper = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
+sponge = { group = "org.spongepowered", name = "spongeapi", version.ref = "sponge" }
+minestom = { group = "com.github.Minestom", name = "Minestom", version.ref = "minestom" }
+waterfall = { group = "io.github.waterfallmc", name = "waterfall-api", version.ref = "waterfall" }
+waterfall-chat = { group = "io.github.waterfallmc", name = "waterfall-chat", version.ref = "waterfall" }
+velocity = { group = "com.velocitypowered", name = "velocity-api", version.ref = "velocity" }
+adventure-api = { group = "net.kyori", name = "adventure-api", version.ref = "adventure" }
+adventure-gson = { group = "net.kyori", name = "adventure-text-serializer-gson", version.ref = "adventure" }
+adventure-legacy = { group = "net.kyori", name = "adventure-text-serializer-legacy", version.ref = "adventure" }
+adventure-plain = { group = "net.kyori", name = "adventure-text-serializer-plain", version.ref = "adventure" }
+
+# cloud-*
+cloud-common = { group = "cloud.commandframework", name = "cloud-core", version.ref = "cloud" }
+cloud-paper = { group = "cloud.commandframework", name = "cloud-paper", version.ref = "cloud" }
+cloud-bungee = { group = "cloud.commandframework", name = "cloud-bungee", version.ref = "cloud" }
+cloud-velocity = { group = "cloud.commandframework", name = "cloud-velocity", version.ref = "cloud" }
+# TODO: custom port of cloud for Minestom, this one is very old
+cloud-minestom = { group = "com.github.OpenMinigameServer", name = "cloud-minestom", version.ref = "cloud-minestom" }
+
+# test
+junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
+junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit" }
+
+[plugins]
+screaming-plugin-builder = { id = "org.screamingsandals.plugin-builder", version.ref = "screaming-plugin-builder" }
+nms-mapper = { id = "org.screamingsandals.nms-mapper", version.ref = "nms-mapper" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
