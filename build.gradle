@@ -1,14 +1,9 @@
 plugins {
-    id 'org.screamingsandals.plugin-builder' version "${SCREAMING_PLUGIN_BUILDER_VERSION}" apply false
-    id 'org.screamingsandals.nms-mapper' version "${NMS_MAPPER_VERSION}" apply false
+    alias libs.plugins.screaming.plugin.builder apply false
+    alias libs.plugins.nms.mapper apply false
 }
 
 defaultTasks 'clean', 'screamCompile'//, 'allowJavadocUpload'
-
-allprojects {
-    group = 'org.screamingsandals.lib'
-    version = SCREAMING_LIB_VERSION
-}
 
 subprojects {
     ext.includeModule = { String module ->

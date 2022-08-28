@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly paper(PAPER_VERSION)
+    compileOnly libs.paper
     api project(':core-bukkit')
-    api cloudPaper(CLOUD_VERSION)
+    api libs.cloud.paper
 }

@@ -16,7 +16,7 @@
 
 package org.screamingsandals.lib.bukkit.block;
 
-import io.papermc.lib.PaperLib;
+import org.screamingsandals.lib.ext.paperlib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

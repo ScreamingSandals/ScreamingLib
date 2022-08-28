@@ -1,9 +1,9 @@
 dependencies {
     //proto
-    compileOnly group: 'com.google.protobuf', name: 'protobuf-java', version: PROTOBUF_VERSION
-    compileOnly 'io.netty:netty-all:' + NETTY_VERSION
+    compileOnly libs.protobuf
+    compileOnly libs.netty
 
     api project(':utils-common')
     api project(':shared-core')
-    api 'org.spongepowered:configurate-core:' + CONFIGURATE_VERSION
+    api libs.configurate.core
 }

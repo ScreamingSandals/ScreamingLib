@@ -1,5 +1,5 @@
 dependencies {
-    compileOnly paper(PAPER_VERSION)
-    compileOnly 'io.netty:netty-all:' + NETTY_VERSION
-    compileOnly 'com.viaversion:viaversion-api:' + VIA_VERSION_VERSION
+    compileOnly libs.paper
+    compileOnly libs.netty
+    compileOnly libs.viaversion
 }

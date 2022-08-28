@@ -1,6 +1,6 @@
 dependencies {
-    compileOnly 'org.slf4j:slf4j-api:' + SLF4J_VERSION
-    compileOnly group: 'com.google.protobuf', name: 'protobuf-java', version: PROTOBUF_VERSION
+    compileOnly libs.slf4j
+    compileOnly libs.protobuf
 
     api project(':utils-common')
     api project(':spectator-common')

@@ -6,15 +6,15 @@ apply plugin: "com.google.protobuf"
 
 dependencies {
     //proto
-    compileOnly group: 'com.google.protobuf', name: 'protobuf-java', version: PROTOBUF_VERSION
+    compileOnly libs.protobuf
 
-    compileOnly 'com.google.code.gson:gson:' + GSON_VERSION
-    compileOnly 'org.slf4j:slf4j-api:' + SLF4J_VERSION
+    compileOnly libs.gson
+    compileOnly libs.slf4j
 
     api project(':api-utils')
-    api 'org.spongepowered:configurate-core:' + CONFIGURATE_VERSION
-    api 'org.spongepowered:configurate-gson:' + CONFIGURATE_VERSION
-    api 'com.iamceph.resulter:resulter-core:' + RESULTER_VERSION
+    api libs.configurate.core
+    api libs.configurate.gson
+    api libs.resulter
 }
 
 sourceSets.configureEach{s->
@@ -35,7 +35,7 @@ sourceSets.configureEach{s->
 
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:${PROTOBUF_VERSION}"
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobuf.get()}"
     }
     generateProtoTasks {
         all()
