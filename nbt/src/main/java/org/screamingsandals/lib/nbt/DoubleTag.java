@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(fluent = true)
-public class DoubleTag implements Tag, NumericTag {
+public final class DoubleTag implements Tag, NumericTag {
     private final double value;
 
     @Override

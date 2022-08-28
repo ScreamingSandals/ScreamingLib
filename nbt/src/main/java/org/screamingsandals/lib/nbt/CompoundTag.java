@@ -7,13 +7,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 @Data
 @Accessors(fluent = true)
-public class CompoundTag implements Tag {
+public final class CompoundTag implements Tag {
     @NotNull
     private final Map<@NotNull String, @NotNull Tag> value;
 
@@ -37,6 +38,110 @@ public class CompoundTag implements Tag {
     public CompoundTag with(@NotNull String name, @NotNull Tag tag) {
         var clone = new HashMap<>(value);
         clone.put(name, tag);
+        return new CompoundTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    public CompoundTag with(@NotNull String name, boolean value) {
+        var clone = new HashMap<>(this.value);
+        clone.put(name, new BooleanTag(value));
+        return new CompoundTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    public CompoundTag with(@NotNull String name, byte @NotNull [] value) {
+        var clone = new HashMap<>(this.value);
+        clone.put(name, new ByteArrayTag(value));
+        return new CompoundTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    public CompoundTag with(@NotNull String name, byte value) {
+        var clone = new HashMap<>(this.value);
+        clone.put(name, new ByteTag(value));
+        return new CompoundTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    public CompoundTag with(@NotNull String name, @NotNull Map<@NotNull String, @NotNull Tag> value) {
+        var clone = new HashMap<>(this.value);
+        clone.put(name, new CompoundTag(value));
+        return new CompoundTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    public CompoundTag with(@NotNull String name, double value) {
+        var clone = new HashMap<>(this.value);
+        clone.put(name, new DoubleTag(value));
+        return new CompoundTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    public CompoundTag with(@NotNull String name, float value) {
+        var clone = new HashMap<>(this.value);
+        clone.put(name, new FloatTag(value));
+        return new CompoundTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    public CompoundTag with(@NotNull String name, int @NotNull [] value) {
+        var clone = new HashMap<>(this.value);
+        clone.put(name, new IntArrayTag(value));
+        return new CompoundTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    public CompoundTag with(@NotNull String name, int value) {
+        var clone = new HashMap<>(this.value);
+        clone.put(name, new IntTag(value));
+        return new CompoundTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    public CompoundTag with(@NotNull String name, @NotNull List<@NotNull Tag> value) {
+        var clone = new HashMap<>(this.value);
+        clone.put(name, new ListTag(value));
+        return new CompoundTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    public CompoundTag with(@NotNull String name, long @NotNull [] value) {
+        var clone = new HashMap<>(this.value);
+        clone.put(name, new LongArrayTag(value));
+        return new CompoundTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    public CompoundTag with(@NotNull String name, long value) {
+        var clone = new HashMap<>(this.value);
+        clone.put(name, new LongTag(value));
+        return new CompoundTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    public CompoundTag with(@NotNull String name, short value) {
+        var clone = new HashMap<>(this.value);
+        clone.put(name, new ShortTag(value));
+        return new CompoundTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_, _ -> new", pure = true)
+    public CompoundTag with(@NotNull String name, @NotNull String value) {
+        var clone = new HashMap<>(this.value);
+        clone.put(name, new StringTag(value));
         return new CompoundTag(clone);
     }
 

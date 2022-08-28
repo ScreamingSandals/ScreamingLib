@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(fluent = true)
-public class BooleanTag implements Tag, NumericTag {
+public final class BooleanTag implements Tag, NumericTag {
     private final boolean value;
 
     @Override

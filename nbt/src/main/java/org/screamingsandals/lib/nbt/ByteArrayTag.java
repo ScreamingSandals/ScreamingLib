@@ -6,6 +6,6 @@ import org.jetbrains.annotations.NotNull;
 
 @Data
 @Accessors(fluent = true)
-public class ByteArrayTag implements Tag {
+public final class ByteArrayTag implements Tag {
     private final byte @NotNull [] value;
 }

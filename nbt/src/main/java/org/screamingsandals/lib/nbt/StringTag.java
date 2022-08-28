@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Data
 @Accessors(fluent = true)
-public class StringTag implements Tag {
+public final class StringTag implements Tag {
     @NotNull
     private final String value;
 }

@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(fluent = true)
-public class FloatTag implements Tag, NumericTag {
+public final class FloatTag implements Tag, NumericTag {
     private final float value;
 
     @Override

@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 @Data
 @Accessors(fluent = true)
-public class ListTag implements Tag, Iterable<Tag> {
+public final class ListTag implements Tag, Iterable<Tag> {
     @NotNull
     private final List<@NotNull Tag> tags;
 
@@ -25,6 +25,15 @@ public class ListTag implements Tag, Iterable<Tag> {
     @NotNull
     @Contract(value = "_ -> new", pure = true)
     public ListTag with(@NotNull Tag tag) {
+        if (!tags.isEmpty()) {
+            var firstTag = tags.get(0);
+            if (!firstTag.getClass().isInstance(tag)
+                    && (!(firstTag instanceof ByteTag) || !(tag instanceof BooleanTag))
+                    && (!(firstTag instanceof BooleanTag) || !(tag instanceof ByteTag))
+            ) {
+                throw new IllegalArgumentException("This is list of " + firstTag.getClass().getSimpleName() + ", got " + tag.getClass().getSimpleName());
+            }
+        }
         var clone = new ArrayList<>(tags);
         clone.add(tag);
         return new ListTag(clone);

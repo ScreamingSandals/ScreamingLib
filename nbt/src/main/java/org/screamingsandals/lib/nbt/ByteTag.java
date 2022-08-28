@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(fluent = true)
-public class ByteTag implements Tag, NumericTag {
+public final class ByteTag implements Tag, NumericTag {
     private final byte value;
 
     @Override
