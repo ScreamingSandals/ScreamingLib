@@ -22,6 +22,9 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(fluent = true)
 public final class BooleanTag implements Tag, NumericTag {
+    public static final BooleanTag TRUE = new BooleanTag(true);
+    public static final BooleanTag FALSE = new BooleanTag(false);
+
     private final boolean value;
 
     @Override

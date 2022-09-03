@@ -20,8 +20,15 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
 @Data
 @Accessors(fluent = true)
 public final class ByteArrayTag implements Tag {
     private final byte @NotNull [] value;
+
+    @NotNull
+    public String toString() {
+        return "ByteArrayTag(value=" + Arrays.toString(value) + ")";
+    }
 }

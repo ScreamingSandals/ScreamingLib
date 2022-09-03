@@ -20,8 +20,15 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
 @Data
 @Accessors(fluent = true)
 public final class IntArrayTag implements Tag {
     private final int @NotNull [] value;
+
+    @NotNull
+    public String toString() {
+        return "IntArrayTag(value=" + Arrays.toString(value) + ")";
+    }
 }
