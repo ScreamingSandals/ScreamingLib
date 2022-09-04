@@ -220,7 +220,7 @@ public class TagSerializer implements TypeSerializer<Tag> {
                 node.node(childEntry.getKey()).set(Tag.class, childEntry.getValue());
             }
         } else if (obj instanceof DoubleTag) {
-            node.set(((DoubleTag) obj).value());
+            node.set(((DoubleTag) obj).value() + "d");
         } else if (obj instanceof FloatTag) {
             node.set(((FloatTag) obj).value() + "f");
         } else if (obj instanceof IntArrayTag) {
