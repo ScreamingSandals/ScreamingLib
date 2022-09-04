@@ -73,6 +73,15 @@ public final class ListTag implements Tag, Iterable<Tag> {
     }
 
     @NotNull
+    public Tag get(int index) {
+        return tags.get(index);
+    }
+
+    public int size() {
+        return tags.size();
+    }
+
+    @NotNull
     @Override
     public Iterator<@NotNull Tag> iterator() {
         return new Iterator<>() {

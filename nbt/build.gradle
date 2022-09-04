@@ -1,5 +1,8 @@
 dependencies {
+    compileOnly libs.configurate.core // not required
+
     testImplementation libs.junit.jupiter.api
+    testImplementation libs.configurate.core
     testRuntimeOnly libs.junit.jupiter.engine
 }
 

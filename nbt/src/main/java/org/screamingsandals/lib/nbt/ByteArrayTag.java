@@ -20,15 +20,52 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Data
 @Accessors(fluent = true)
-public final class ByteArrayTag implements Tag {
+public final class ByteArrayTag implements Tag, Iterable<Byte> {
     private final byte @NotNull [] value;
 
     @NotNull
     public String toString() {
         return "ByteArrayTag(value=" + Arrays.toString(value) + ")";
+    }
+
+    public byte get(int index) {
+        return value[index];
+    }
+
+    public int size() {
+        return value.length;
+    }
+
+    @NotNull
+    @Override
+    public Iterator<@NotNull Byte> iterator() {
+        return new Iterator<>() {
+            private int cursor = 0;
+
+            @Override
+            public boolean hasNext() {
+                return cursor != value.length;
+            }
+
+            @Override
+            @NotNull
+            public Byte next() {
+                return value[cursor++];
+            }
+        };
+    }
+
+    @NotNull
+    public Stream<@NotNull Byte> stream() {
+        var byteList = new ArrayList<Byte>();
+        for (var val : value) {
+            byteList.add(val);
+        }
+        return byteList.stream();
     }
 }

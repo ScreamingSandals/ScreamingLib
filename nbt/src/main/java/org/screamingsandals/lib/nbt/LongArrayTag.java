@@ -21,14 +21,59 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.PrimitiveIterator;
+import java.util.Spliterator;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 @Data
 @Accessors(fluent = true)
-public final class LongArrayTag implements Tag {
+public final class LongArrayTag implements Tag, Iterable<Long> {
     private final long @NotNull [] value;
 
     @NotNull
     public String toString() {
         return "LongArrayTag(value=" + Arrays.toString(value) + ")";
+    }
+
+    public long get(int index) {
+        return value[index];
+    }
+
+    public int size() {
+        return value.length;
+    }
+
+    public PrimitiveIterator.@NotNull OfLong iterator() {
+        return new PrimitiveIterator.OfLong() {
+            private int cursor = 0;
+
+            @Override
+            public boolean hasNext() {
+                return cursor != value.length;
+            }
+
+            @Override
+            public long nextLong() {
+                return value[cursor++];
+            }
+        };
+    }
+
+    public Spliterator.@NotNull OfLong spliterator() {
+        return Arrays.spliterator(value);
+    }
+
+    public void forEachLong(@NotNull LongConsumer consumer) {
+        for (var l : value) {
+            consumer.accept(l);
+        }
+    }
+
+    @NotNull
+    public LongStream stream() {
+        return LongStream.of(value);
     }
 }
