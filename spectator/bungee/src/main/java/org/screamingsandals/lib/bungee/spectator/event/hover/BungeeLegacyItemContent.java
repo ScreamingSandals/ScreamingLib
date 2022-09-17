@@ -22,55 +22,99 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
+import org.screamingsandals.lib.nbt.CompoundTag;
+import org.screamingsandals.lib.nbt.NumericTag;
+import org.screamingsandals.lib.nbt.StringTag;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
-public class BungeeLegacyItemContent extends BasicWrapper<String> implements ItemContent {
-    public BungeeLegacyItemContent(String snbt) {
-        super(snbt);
+import java.util.Map;
+
+public class BungeeLegacyItemContent extends BasicWrapper<CompoundTag> implements ItemContent {
+
+    public BungeeLegacyItemContent(@NotNull String snbt) {
+        this(readTag(snbt));
     }
 
-    // TODO: parse snbt
-    @Override
-    @NotNull
-    public NamespacedMappingKey id() {
-        return null; // TODO
+    public BungeeLegacyItemContent(@NotNull CompoundTag tag) {
+        super(tag);
+    }
+
+    private static @NotNull CompoundTag readTag(@NotNull String snbt) {
+        var tag = AbstractBungeeBackend.getSnbtSerializer().deserialize(snbt);
+        if (tag instanceof CompoundTag) {
+            return (CompoundTag) tag;
+        }
+        return new CompoundTag(Map.of());
     }
 
     @Override
-    @NotNull
-    public ItemContent withId(@NotNull NamespacedMappingKey id) {
-        return this; // TODO
+    public @NotNull NamespacedMappingKey id() {
+        if (wrappedObject != null) {
+            var idTag = wrappedObject.tag("id");
+            if (idTag instanceof StringTag) {
+                return NamespacedMappingKey.of(((StringTag) idTag).value());
+            }
+        }
+        return NamespacedMappingKey.of("minecraft", "air");
+    }
+
+    @Override
+    public @NotNull ItemContent withId(@NotNull NamespacedMappingKey id) {
+        return new BungeeLegacyItemContent(wrappedObject.with("id", id.asString()));
     }
 
     @Override
     public int count() {
-        return 0; // TODO
+        if (wrappedObject != null) {
+            var countTag = wrappedObject.tag("Count");
+            if (countTag instanceof NumericTag) {
+                return ((NumericTag) countTag).intValue();
+            }
+        }
+        return 1;
     }
 
     @Override
     @NotNull
     public ItemContent withCount(int count) {
-        return this; // TODO
+        return new BungeeLegacyItemContent(wrappedObject.with("Count", (byte) count));
     }
 
     @Override
-    @Nullable
-    public String tag() {
-        return wrappedObject; // TODO
+    public @Nullable CompoundTag tag() {
+        if (wrappedObject != null) {
+            var tag = wrappedObject.tag("tag");
+            if (tag instanceof CompoundTag) {
+                return (CompoundTag) tag;
+            }
+        }
+        return null;
     }
 
     @Override
-    @NotNull
-    public ItemContent withTag(@Nullable String tag) {
-        return this; // TODO
+    public @NotNull ItemContent withTag(@Nullable CompoundTag tag) {
+        if (tag == null) {
+            return new BungeeLegacyItemContent(wrappedObject.without("tag"));
+        } else {
+            return new BungeeLegacyItemContent(wrappedObject.with("tag", tag));
+        }
     }
 
     @Override
-    @NotNull
-    public ItemContent.Builder toBuilder() {
+    public ItemContent.@NotNull Builder toBuilder() {
         return new BungeeLegacyItemContentBuilder(id(), count(), tag());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T as(Class<T> type) {
+        if (type == String.class) {
+            return (T) AbstractBungeeBackend.getSnbtSerializer().serialize(wrappedObject);
+        }
+        return super.as(type);
     }
 
     @NoArgsConstructor
@@ -78,18 +122,20 @@ public class BungeeLegacyItemContent extends BasicWrapper<String> implements Ite
     @Accessors(fluent = true, chain = true)
     @Setter
     public static class BungeeLegacyItemContentBuilder implements ItemContent.Builder {
-        private NamespacedMappingKey id;
+        private @Nullable NamespacedMappingKey id;
         private int count = 1;
-        private String tag;
+        private @Nullable CompoundTag tag;
 
         @Override
         @NotNull
         public ItemContent build() {
-            return new BungeeLegacyItemContent(
-                    "{id: " + (id == null ? "minecraft:air" : id.asString()) + ", Count: " + count + "b"
-                            + (tag != null && !tag.isEmpty() ? ", tag: " + tag : "")
-                            + "}" // I hope this is correct
-            );
+            var compoundTag = CompoundTag.EMPTY
+                    .with("id", id == null ? "minecraft:air" : id.asString())
+                    .with("Count", (byte) count);
+            if (tag != null) {
+                compoundTag = compoundTag.with("tag", tag);
+            }
+            return new BungeeLegacyItemContent(compoundTag);
         }
     }
 }

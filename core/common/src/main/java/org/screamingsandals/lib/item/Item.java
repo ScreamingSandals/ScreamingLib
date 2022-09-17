@@ -25,10 +25,15 @@ import org.screamingsandals.lib.item.builder.ItemBuilder;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.metadata.MetadataProvider;
+import org.screamingsandals.lib.nbt.CompoundTag;
+import org.screamingsandals.lib.nbt.CompoundTagHolder;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.spectator.Component;
+import org.screamingsandals.lib.spectator.event.hover.ItemContent;
+import org.screamingsandals.lib.spectator.event.hover.ItemContentLike;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,38 +41,37 @@ import java.util.stream.Collectors;
 /**
  * Represents an immutable Item.
  */
-public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, MetadataProvider, ProtoWrapper<ProtoItem> {
-    ItemTypeHolder getType();
+public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, CompoundTagHolder, ItemContentLike, MetadataProvider, ProtoWrapper<ProtoItem> {
+    @NotNull ItemTypeHolder getType();
 
-    default ItemTypeHolder getMaterial() { // alternative getter (old name)
+    default @NotNull ItemTypeHolder getMaterial() { // alternative getter (old name)
         return getType();
     }
 
     int getAmount();
 
-    @Nullable
-    Component getDisplayName();
+    @Nullable Component getDisplayName();
 
-    List<Component> getLore();
+    @NotNull List<@NotNull Component> getLore();
 
-    List<ItemAttributeHolder> getAttributeModifiers();
+    @NotNull List<@NotNull ItemAttributeHolder> getAttributeModifiers();
 
-    default List<ItemAttributeHolder> getItemAttributes() { // alternative getter (old name)
+    default @NotNull List<@NotNull ItemAttributeHolder> getItemAttributes() { // alternative getter (old name)
         return getAttributeModifiers();
     }
 
-    List<EnchantmentHolder> getEnchantments();
+    @NotNull List<@NotNull EnchantmentHolder> getEnchantments();
 
     ItemData getData();
 
-    List<HideFlags> getHideFlags();
+    @NotNull List<@NotNull HideFlags> getHideFlags();
 
     @Deprecated
-    default List<String> getItemFlags() {
+    default @NotNull List<@NotNull String> getItemFlags() {
         return getHideFlags().stream().map(HideFlags::getBukkitName).collect(Collectors.toList());
     }
 
-    Integer getCustomModelData();
+    @Nullable Integer getCustomModelData();
 
     boolean isUnbreakable();
 
@@ -77,7 +81,7 @@ public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, C
         return getRepairCost();
     }
 
-    ItemBuilder builder();
+    @NotNull ItemBuilder builder();
 
     default boolean isAir() {
         return getType().isAir();
@@ -85,89 +89,104 @@ public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, C
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Override
-    default boolean is(Object... objects) {
+    default boolean is(@NotNull Object @NotNull... objects) {
         return getType().is(objects);
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Override
-    default boolean is(Object object) {
+    default boolean is(@NotNull Object object) {
         return getType().is(object);
     }
 
-    boolean isSimilar(Item item);
+    boolean isSimilar(@NotNull Item item);
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withType(@NotNull ItemTypeHolder type) {
+    default @NotNull Item withType(@NotNull ItemTypeHolder type) {
         return builder().type(type).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withAmount(int amount) {
+    default @NotNull Item withAmount(int amount) {
         return builder().amount(amount).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withDisplayName(@Nullable Component displayName) {
+    default @NotNull Item withDisplayName(@Nullable Component displayName) {
         return builder().displayName(displayName).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withItemLore(@Nullable List<@NotNull Component> lore) {
+    default @NotNull Item withItemLore(@Nullable List<@NotNull Component> lore) {
         return builder().itemLore(lore).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withAttributeModifiers(@Nullable List<@NotNull ItemAttributeHolder> modifiers) {
+    default @NotNull Item withAttributeModifiers(@Nullable List<@NotNull ItemAttributeHolder> modifiers) {
         return builder().attributeModifiers(modifiers).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withAttributeModifier(@NotNull ItemAttributeHolder modifier) {
+    default @NotNull Item withAttributeModifier(@NotNull ItemAttributeHolder modifier) {
         return builder().attributeModifier(modifier).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withData(@NotNull ItemData data) {
+    default @NotNull Item withData(@NotNull ItemData data) {
         return builder().data(data).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withHideFlags(@Nullable List<@NotNull HideFlags> flags) {
+    default @NotNull Item withHideFlags(@Nullable List<@NotNull HideFlags> flags) {
         return builder().hideFlags(flags).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withHideFlag(@NotNull HideFlags flag) {
+    default @NotNull Item withHideFlag(@NotNull HideFlags flag) {
         return builder().hideFlag(flag).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withEnchantments(@Nullable List<@NotNull EnchantmentHolder> enchantments) {
+    default @NotNull Item withEnchantments(@Nullable List<@NotNull EnchantmentHolder> enchantments) {
         return builder().enchantments(enchantments).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withEnchantment(@NotNull EnchantmentHolder enchantment) {
+    default @NotNull Item withEnchantment(@NotNull EnchantmentHolder enchantment) {
         return builder().enchantment(enchantment).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withCustomModelData(@Nullable Integer customModelData) {
+    default @NotNull Item withCustomModelData(@Nullable Integer customModelData) {
         return builder().customModelData(customModelData).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withUnbreakable(boolean unbreakable) {
+    default @NotNull Item withUnbreakable(boolean unbreakable) {
         return builder().unbreakable(unbreakable).build().orElseThrow();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    default Item withRepairCost(int repairCost) {
+    default @NotNull Item withRepairCost(int repairCost) {
         return builder().repairCost(repairCost).build().orElseThrow();
     }
 
-    Item clone();
+    @Contract(value = "_ -> new", pure = true)
+    default @NotNull Item withTag(@NotNull CompoundTag tag) {
+        return builder().tag(tag).build().orElseThrow();
+    }
+
+    @NotNull Item clone();
+
+    @Override
+    default @NotNull ItemContent asItemContent() {
+        var tag = getTag();
+        return ItemContent.builder()
+                .id(NamespacedMappingKey.of(getMaterial().platformName())) // TODO: implement namespaced holders and get the actual namespaced key
+                .count(getAmount())
+                .tag(tag.isEmpty() ? null : tag)
+                .build();
+    }
 
     @Override
     default ProtoItem asProto() {
@@ -197,7 +216,7 @@ public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, C
                 .addAllHideFlags(getHideFlags().stream()
                         .map(Enum::name)
                         .collect(Collectors.toList()))
-                .setCustomModelData(getCustomModelData())
+                .setCustomModelData(getCustomModelData() == null ? 0 : getCustomModelData())
                 .setUnbreakable(isUnbreakable())
                 .setRepairCost(getRepairCost());
 

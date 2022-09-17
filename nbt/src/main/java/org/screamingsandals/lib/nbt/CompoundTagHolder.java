@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.spectator.event.hover;
+package org.screamingsandals.lib.nbt;
 
 import org.jetbrains.annotations.NotNull;
 
-public interface ItemContentLike extends ContentLike {
-    @NotNull ItemContent asItemContent();
-
-    @Override
-    default @NotNull Content asContent() {
-        return asItemContent();
-    }
+public interface CompoundTagHolder {
+    @NotNull CompoundTag getTag();
 }

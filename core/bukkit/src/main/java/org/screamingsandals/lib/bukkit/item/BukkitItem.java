@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.Repairable;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.attribute.AttributeMapping;
@@ -30,6 +31,8 @@ import org.screamingsandals.lib.bukkit.item.builder.BukkitItemBuilder;
 import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.bukkit.item.data.CraftBukkitItemData;
+import org.screamingsandals.lib.bukkit.nbt.NBTVanillaSerializer;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
@@ -39,7 +42,9 @@ import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataKey;
+import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.nms.accessors.CompoundTagAccessor;
+import org.screamingsandals.lib.nms.accessors.ItemStackAccessor;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -53,7 +58,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     }
 
     @Override
-    public ItemTypeHolder getType() {
+    public @NotNull ItemTypeHolder getType() {
         return ItemTypeHolder.of(wrappedObject.getType());
     }
 
@@ -63,8 +68,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     }
 
     @Override
-    @Nullable
-    public Component getDisplayName() {
+    public @Nullable Component getDisplayName() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null && meta.hasDisplayName()) {
             if (BukkitCore.getSpectatorBackend().hasAdventure()) {
@@ -76,9 +80,8 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public List<Component> getLore() {
+    public @NotNull List<@NotNull Component> getLore() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null && meta.hasLore()) {
             if (BukkitCore.getSpectatorBackend().hasAdventure()) {
@@ -97,7 +100,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     }
 
     @Override
-    public List<ItemAttributeHolder> getAttributeModifiers() {
+    public @NotNull List<@NotNull ItemAttributeHolder> getAttributeModifiers() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
             // TODO: find solution: missing Bukkit API for older versions
@@ -117,7 +120,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     }
 
     @Override
-    public List<EnchantmentHolder> getEnchantments() {
+    public @NotNull List<@NotNull EnchantmentHolder> getEnchantments() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
             var list = new ArrayList<EnchantmentHolder>();
@@ -165,7 +168,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     }
 
     @Override
-    public List<HideFlags> getHideFlags() {
+    public @NotNull List<@NotNull HideFlags> getHideFlags() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
             return meta.getItemFlags().stream().map(ItemFlag::name).map(HideFlags::convert).collect(Collectors.toList());
@@ -174,7 +177,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     }
 
     @Override
-    public Integer getCustomModelData() {
+    public @Nullable Integer getCustomModelData() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
             try {
@@ -213,18 +216,18 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     }
 
     @Override
-    public ItemBuilder builder() {
+    public @NotNull ItemBuilder builder() {
         return new BukkitItemBuilder(wrappedObject.clone());
     }
 
     @Override
-    public boolean isSimilar(Item item) {
+    public boolean isSimilar(@NotNull Item item) {
         return wrappedObject.isSimilar(item.as(ItemStack.class));
     }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
-    public Item clone() {
+    public @NotNull Item clone() {
         return new BukkitItem(wrappedObject.clone());
     }
 
@@ -285,5 +288,18 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
         } catch (Throwable ignored) {
             return ItemFactory.convertItem(this, type);
         }
+    }
+
+    @Override
+    public @NotNull CompoundTag getTag() {
+        final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(wrappedObject), ItemStackAccessor.getMethodCopy1());
+        final var nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.getMethodGetTag1());
+
+        var tag = NBTVanillaSerializer.deserialize(nbtTag);
+        if (tag instanceof CompoundTag) {
+            return (CompoundTag) tag;
+        }
+
+        return CompoundTag.EMPTY;
     }
 }

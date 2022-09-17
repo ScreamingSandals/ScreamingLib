@@ -23,9 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.PrimitiveIterator;
 import java.util.Spliterator;
-import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
-import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 @Data

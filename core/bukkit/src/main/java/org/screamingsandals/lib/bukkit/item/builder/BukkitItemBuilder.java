@@ -38,6 +38,8 @@ import org.screamingsandals.lib.bukkit.item.ItemMetaHelper;
 import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataCustomTags;
 import org.screamingsandals.lib.bukkit.item.data.BukkitItemDataPersistentContainer;
 import org.screamingsandals.lib.bukkit.item.data.CraftBukkitItemData;
+import org.screamingsandals.lib.bukkit.nbt.NBTVanillaSerializer;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
@@ -46,7 +48,9 @@ import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataKey;
+import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.nms.accessors.CompoundTagAccessor;
+import org.screamingsandals.lib.nms.accessors.ItemStackAccessor;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -59,7 +63,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     private ItemStack item;
 
     @Override
-    public ItemBuilder type(@NotNull ItemTypeHolder type) {
+    public @NotNull ItemBuilder type(@NotNull ItemTypeHolder type) {
         if (item == null) {
             item = new ItemStack(Material.AIR);
         }
@@ -72,7 +76,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder durability(int durability) {
+    public @NotNull ItemBuilder durability(int durability) {
         return durability((short) durability);
     }
 
@@ -90,7 +94,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder amount(int amount) {
+    public @NotNull ItemBuilder amount(int amount) {
         if (item == null) {
             return this;
         }
@@ -99,7 +103,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder displayName(@Nullable Component displayName) {
+    public @NotNull ItemBuilder displayName(@Nullable Component displayName) {
         if (item == null) {
             return this;
         }
@@ -116,7 +120,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder itemLore(@Nullable List<@NotNull Component> lore) {
+    public @NotNull ItemBuilder itemLore(@Nullable List<@NotNull Component> lore) {
         if (item == null) {
             return this;
         }
@@ -145,7 +149,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder attributeModifiers(@Nullable List<@NotNull ItemAttributeHolder> modifiers) {
+    public @NotNull ItemBuilder attributeModifiers(@Nullable List<@NotNull ItemAttributeHolder> modifiers) {
         if (item == null) {
             return this;
         }
@@ -166,7 +170,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder attributeModifier(@NotNull ItemAttributeHolder modifier) {
+    public @NotNull ItemBuilder attributeModifier(@NotNull ItemAttributeHolder modifier) {
         if (item == null) {
             return this;
         }
@@ -183,7 +187,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder data(@NotNull ItemData data) {
+    public @NotNull ItemBuilder data(@NotNull ItemData data) {
         if (item == null) {
             return this;
         }
@@ -224,7 +228,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder hideFlags(@Nullable List<@NotNull HideFlags> flags) {
+    public @NotNull ItemBuilder hideFlags(@Nullable List<@NotNull HideFlags> flags) {
         if (item == null) {
             return this;
         }
@@ -243,7 +247,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder hideFlag(@NotNull HideFlags flag) {
+    public @NotNull ItemBuilder hideFlag(@NotNull HideFlags flag) {
         if (item == null) {
             return this;
         }
@@ -259,7 +263,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder enchantments(@Nullable List<@NotNull EnchantmentHolder> enchantments) {
+    public @NotNull ItemBuilder enchantments(@Nullable List<@NotNull EnchantmentHolder> enchantments) {
         if (item == null) {
             return this;
         }
@@ -281,7 +285,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder enchantment(@NotNull EnchantmentHolder enchantment) {
+    public @NotNull ItemBuilder enchantment(@NotNull EnchantmentHolder enchantment) {
         if (item == null) {
             return this;
         }
@@ -298,7 +302,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder customModelData(@Nullable Integer data) {
+    public @NotNull ItemBuilder customModelData(@Nullable Integer data) {
         if (item == null) {
             return this;
         }
@@ -313,7 +317,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder unbreakable(boolean unbreakable) {
+    public @NotNull ItemBuilder unbreakable(boolean unbreakable) {
         if (item == null) {
             return this;
         }
@@ -334,7 +338,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder repairCost(int repairCost) {
+    public @NotNull ItemBuilder repairCost(int repairCost) {
         if (item == null) {
             return this;
         }
@@ -346,7 +350,20 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public Optional<Item> build() {
+    public @NotNull ItemBuilder tag(@NotNull CompoundTag tag) {
+        if (item == null) {
+            item = new ItemStack(Material.AIR); // shouldn't we throw error instead?
+        }
+
+        if (!ClassStorage.CB.CraftItemStack.isInstance(item)) {
+            item = ClassStorage.asCBStack(item);
+        }
+        Reflect.fastInvoke(ClassStorage.getHandle(item), ItemStackAccessor.getMethodSetTag1(), NBTVanillaSerializer.serialize(tag));
+        return this;
+    }
+
+    @Override
+    public @NotNull Optional<Item> build() {
         if (item != null) {
             return Optional.of(new BukkitItem(item.clone()));
         } else {
@@ -356,7 +373,7 @@ public class BukkitItemBuilder implements ItemBuilder {
 
     @SuppressWarnings("unchecked")
     @Override
-    public ItemBuilder platformMeta(Object meta) {
+    public @NotNull ItemBuilder platformMeta(Object meta) {
         if (item == null) {
             return this;
         }
@@ -375,7 +392,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public ItemBuilder lore(@NotNull Component component) {
+    public @NotNull ItemBuilder lore(@NotNull Component component) {
         if (item != null) {
             var meta = item.getItemMeta();
             if (meta != null) {
@@ -417,7 +434,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public <T> ItemBuilder setMetadata(MetadataKey<T> key, T value) {
+    public <T> @NotNull ItemBuilder setMetadata(MetadataKey<T> key, T value) {
         if (item != null) {
             var meta = item.getItemMeta();
             if (meta != null) {
@@ -429,7 +446,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public <T> ItemBuilder setMetadata(MetadataCollectionKey<T> key, Collection<T> value) {
+    public <T> @NotNull ItemBuilder setMetadata(MetadataCollectionKey<T> key, Collection<T> value) {
         if (item != null) {
             var meta = item.getItemMeta();
             if (meta != null) {
@@ -441,7 +458,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public <T> ItemBuilder addToListMetadata(MetadataCollectionKey<T> key, T value) {
+    public <T> @NotNull ItemBuilder addToListMetadata(MetadataCollectionKey<T> key, T value) {
         if (item != null) {
             var meta = item.getItemMeta();
             if (meta != null) {

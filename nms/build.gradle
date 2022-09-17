@@ -284,7 +284,7 @@ nmsGen {
         reqConstructor()
         reqMethod('getAllKeys')
         reqMethod('get', String)
-        reqMethod('put', String, '@Tag')
+        reqMethod(chain('put', 'searge:func_74782_a:1.13.2'), String, '@Tag')
     }
 
     reqClass('net.minecraft.network.FriendlyByteBuf') {
@@ -294,13 +294,13 @@ nmsGen {
     reqClass('net.minecraft.nbt.DoubleTag') {
         reqConstructor(double)
         reqMethod('getAsDouble')
-        reqMethod('valueOf', double)
+        reqMethod('valueOf', double) // 1.15+
     }
 
     reqClass('net.minecraft.nbt.FloatTag') {
         reqConstructor(float)
         reqMethod('getAsFloat')
-        reqMethod('valueOf', float)
+        reqMethod('valueOf', float) // 1.15+
     }
 
     reqClass('net.minecraft.nbt.IntArrayTag') {
@@ -311,37 +311,44 @@ nmsGen {
     reqClass('net.minecraft.nbt.IntTag') {
         reqConstructor(int)
         reqMethod('getAsInt')
-        reqMethod('valueOf', int)
+        reqMethod('valueOf', int) // 1.15+
     }
 
-    // ListTag
+    reqClass('net.minecraft.nbt.ListTag') {
+        reqConstructor()
+        reqMethod('size')
+        reqMethod(chain('get', 'searge:func_179238_g:1.12.2'), int)
+        reqMethod(chain('spigot:add:1.13.2', 'spigot:add:1.12.2'), '@Tag') // <= 1.13.2
+    }
 
-    reqClass('net.minecraft.nbt.LongArrayTag') {
+    reqClass('net.minecraft.nbt.LongArrayTag') { // 1.12+
         reqConstructor(long[])
-        reqMethod('getAsLongArray')
+        reqMethod('getAsLongArray') // 1.13+
+        reqField('searge:field_193587_b:1.12') // 1.12.x
     }
 
     reqClass('net.minecraft.nbt.LongTag') {
         reqConstructor(long)
         reqMethod('getAsLong')
-        reqMethod('valueOf', long)
+        reqMethod('valueOf', long) // 1.15+
     }
 
     reqClass('net.minecraft.nbt.ShortTag') {
         reqConstructor(short)
         reqMethod('getAsShort')
-        reqMethod('valueOf', short)
+        reqMethod('valueOf', short) // 1.15+
     }
 
     reqClass('net.minecraft.nbt.StringTag') {
         reqConstructor(String)
-        reqMethod('valueOf', String)
+        reqMethod('valueOf', String) // 1.15+
     }
 
 
     reqClass('net.minecraft.world.item.ItemStack') {
         reqMethod('copy')
         reqMethod('getTag')
+        reqMethod('setTag', '@CompoundTag')
     }
 
     reqClass('net.minecraft.network.protocol.handshake.ClientIntentionPacket') {

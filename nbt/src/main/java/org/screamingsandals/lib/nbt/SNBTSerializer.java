@@ -33,8 +33,7 @@ public class SNBTSerializer {
     @Builder.Default
     private final boolean convertBooleanTagsToByteTags = false;
 
-    @NotNull
-    public String serialize(@NotNull Tag tag) {
+    public @NotNull String serialize(@NotNull Tag tag) {
         if (tag instanceof BooleanTag) {
             if (convertBooleanTagsToByteTags) {
                 return ((BooleanTag) tag).value() ? "1b" : "0b";
@@ -138,15 +137,13 @@ public class SNBTSerializer {
         throw new IllegalArgumentException("Unknown tag " + tag);
     }
 
-    @NotNull
-    public Tag deserialize(@NotNull String input) {
+    public @NotNull Tag deserialize(@NotNull String input) {
         var chars = input.toCharArray();
         var i = new AtomicInteger(0);
         return deserialize(chars, i);
     }
 
-    @NotNull
-    private Tag deserialize(char @NotNull [] chars, @NotNull AtomicInteger i) {
+    private @NotNull Tag deserialize(char @NotNull [] chars, @NotNull AtomicInteger i) {
         skipWhitespaces(chars, i);
         var c = chars[i.get()];
         if (c == '{') {
@@ -352,13 +349,11 @@ public class SNBTSerializer {
         }
     }
 
-    @NotNull
-    private StringTag readUntil(char @NotNull [] chars, @NotNull AtomicInteger i, char c) {
+    private @NotNull StringTag readUntil(char @NotNull [] chars, @NotNull AtomicInteger i, char c) {
         return new StringTag(readStringUntil(chars, i, c));
     }
 
-    @NotNull
-    private String readStringUntil(char @NotNull [] chars, @NotNull AtomicInteger i, char c) {
+    private @NotNull String readStringUntil(char @NotNull [] chars, @NotNull AtomicInteger i, char c) {
         var builder = new StringBuilder();
         var escaped = false;
         for (; i.get() < chars.length; i.incrementAndGet()) {
@@ -378,8 +373,7 @@ public class SNBTSerializer {
         throw new IllegalArgumentException("String not properly ended!");
     }
 
-    @NotNull
-    private String readUntilControlSymbol(char @NotNull [] chars, @NotNull AtomicInteger i) {
+    private @NotNull String readUntilControlSymbol(char @NotNull [] chars, @NotNull AtomicInteger i) {
         var builder = new StringBuilder();
         var escaped = false;
         for (; i.get() < chars.length; i.incrementAndGet()) {

@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.adventure.spectator;
 
 import lombok.Getter;
+import net.kyori.adventure.Adventure;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -27,6 +28,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.bossbar.AdventureBossBar;
 import org.screamingsandals.lib.adventure.spectator.event.AdventureClickEvent;
@@ -37,6 +39,7 @@ import org.screamingsandals.lib.adventure.spectator.sound.AdventureSoundSource;
 import org.screamingsandals.lib.adventure.spectator.sound.AdventureSoundStart;
 import org.screamingsandals.lib.adventure.spectator.sound.AdventureSoundStop;
 import org.screamingsandals.lib.adventure.spectator.title.AdventureTitle;
+import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
@@ -57,35 +60,40 @@ import java.util.Objects;
 
 public class AdventureBackend implements SpectatorBackend {
     @Getter
-    private static final BidirectionalConverter<AdventureComponent> additionalComponentConverter = BidirectionalConverter.build();
+    private static final @NotNull BidirectionalConverter<AdventureComponent> additionalComponentConverter = BidirectionalConverter.build();
     @Getter
-    private static final BidirectionalConverter<AdventureClickEvent> additionalClickEventConverter = BidirectionalConverter.build();
+    private static final @NotNull BidirectionalConverter<AdventureClickEvent> additionalClickEventConverter = BidirectionalConverter.build();
     @Getter
-    private static final BidirectionalConverter<AdventureHoverEvent> additionalHoverEventConverter = BidirectionalConverter.build();
-    @Getter
-    // not needed for legacy because we can never have native Adventure alongside with pre-1.16 Bungee component api
-    private static final BidirectionalConverter<AdventureEntityContent> additionalEntityContentConverter = BidirectionalConverter.build();
+    private static final @NotNull BidirectionalConverter<AdventureHoverEvent> additionalHoverEventConverter = BidirectionalConverter.build();
     @Getter
     // not needed for legacy because we can never have native Adventure alongside with pre-1.16 Bungee component api
-    private static final BidirectionalConverter<AdventureItemContent> additionalItemContentConverter = BidirectionalConverter.build();
+    private static final @NotNull BidirectionalConverter<AdventureEntityContent> additionalEntityContentConverter = BidirectionalConverter.build();
     @Getter
-    private static final BidirectionalConverter<AdventureColor> additionalColorConverter = BidirectionalConverter.build();
+    // not needed for legacy because we can never have native Adventure alongside with pre-1.16 Bungee component api
+    private static final @NotNull BidirectionalConverter<AdventureItemContent> additionalItemContentConverter = BidirectionalConverter.build();
     @Getter
-    private static final LegacyComponentSerializer legacyComponentSerializer = LegacyComponentSerializer.builder()
+    private static final @NotNull BidirectionalConverter<AdventureColor> additionalColorConverter = BidirectionalConverter.build();
+    @Getter
+    private static final @NotNull LegacyComponentSerializer legacyComponentSerializer = LegacyComponentSerializer.builder()
             .hexColors()
             .useUnusualXRepeatedCharacterHexFormat()
             .character(LegacyComponentSerializer.SECTION_CHAR)
             .build();
     @Getter
-    private static final GsonComponentSerializer gsonComponentSerializer = GsonComponentSerializer.gson();
+    private static final @NotNull GsonComponentSerializer gsonComponentSerializer = GsonComponentSerializer.gson();
     @Getter
-    private static final ComponentSerializer<net.kyori.adventure.text.Component, TextComponent, String> plainTextComponentSerializer;
+    private static final @NotNull ComponentSerializer<net.kyori.adventure.text.Component, TextComponent, String> plainTextComponentSerializer;
     @Getter
-    private static final Component empty = wrapComponent(net.kyori.adventure.text.Component.empty());
+    private static final @NotNull Component empty = wrapComponent(net.kyori.adventure.text.Component.empty());
     @Getter
-    private static final Component newLine = wrapComponent(net.kyori.adventure.text.Component.newline());
+    private static final @NotNull Component newLine = wrapComponent(net.kyori.adventure.text.Component.newline());
     @Getter
-    private static final Component space = wrapComponent(net.kyori.adventure.text.Component.space());
+    private static final @NotNull Component space = wrapComponent(net.kyori.adventure.text.Component.space());
+    @Getter
+    protected static @NotNull SNBTSerializer snbtSerializer = SNBTSerializer.builder()
+            .convertBooleanTagsToByteTags(true)
+            .shouldSaveLongArraysDirectly(false)
+            .build();
 
     static {
         ComponentSerializer<net.kyori.adventure.text.Component, TextComponent, String> plainText;

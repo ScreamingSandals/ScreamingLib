@@ -23,6 +23,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeClickEvent;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeHoverEvent;
@@ -30,6 +31,7 @@ import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeEntityContent
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeItemContent;
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeLegacyEntityContent;
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeLegacyItemContent;
+import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.spectator.*;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
@@ -42,24 +44,29 @@ import java.util.Locale;
 
 public abstract class AbstractBungeeBackend implements SpectatorBackend {
     @Getter
-    private static final BidirectionalConverter<BungeeComponent> additionalComponentConverter = BidirectionalConverter.build();
+    private static final @NotNull BidirectionalConverter<BungeeComponent> additionalComponentConverter = BidirectionalConverter.build();
     @Getter
-    private static final BidirectionalConverter<BungeeClickEvent> additionalClickEventConverter = BidirectionalConverter.build();
+    private static final @NotNull BidirectionalConverter<BungeeClickEvent> additionalClickEventConverter = BidirectionalConverter.build();
     @Getter
-    private static final BidirectionalConverter<BungeeHoverEvent> additionalHoverEventConverter = BidirectionalConverter.build();
-    @Getter
-    // not needed for legacy because we can never have native Adventure alongside with pre-1.16 Bungee component api
-    private static final BidirectionalConverter<BungeeEntityContent> additionalEntityContentConverter = BidirectionalConverter.build();
+    private static final @NotNull BidirectionalConverter<BungeeHoverEvent> additionalHoverEventConverter = BidirectionalConverter.build();
     @Getter
     // not needed for legacy because we can never have native Adventure alongside with pre-1.16 Bungee component api
-    private static final BidirectionalConverter<BungeeItemContent> additionalItemContentConverter = BidirectionalConverter.build();
+    private static final @NotNull BidirectionalConverter<BungeeEntityContent> additionalEntityContentConverter = BidirectionalConverter.build();
     @Getter
-    private static final BidirectionalConverter<BungeeColor> additionalColorConverter = BidirectionalConverter.build();
+    // not needed for legacy because we can never have native Adventure alongside with pre-1.16 Bungee component api
+    private static final @NotNull BidirectionalConverter<BungeeItemContent> additionalItemContentConverter = BidirectionalConverter.build();
+    @Getter
+    private static final @NotNull BidirectionalConverter<BungeeColor> additionalColorConverter = BidirectionalConverter.build();
     @Getter
     // We can't use NoArgsConstructor because it's too new
-    private static final Component empty = wrapComponent(new TextComponent(""));
-    private static final Component newLine = wrapComponent(new TextComponent("\n"));
-    private static final Component space = wrapComponent(new TextComponent(" "));
+    private static final @NotNull Component empty = wrapComponent(new TextComponent(""));
+    private static final @NotNull Component newLine = wrapComponent(new TextComponent("\n"));
+    private static final @NotNull Component space = wrapComponent(new TextComponent(" "));
+    @Getter
+    protected static @NotNull SNBTSerializer snbtSerializer = SNBTSerializer.builder()
+            .convertBooleanTagsToByteTags(true)
+            .shouldSaveLongArraysDirectly(false)
+            .build();
     private static final boolean keybindSupported = Reflect.has("net.md_5.bungee.api.chat.KeybindComponent");
     private static final boolean scoreSupported = Reflect.has("net.md_5.bungee.api.chat.ScoreComponent");
     private static final boolean selectorSupported = Reflect.has("net.md_5.bungee.api.chat.SelectorComponent");

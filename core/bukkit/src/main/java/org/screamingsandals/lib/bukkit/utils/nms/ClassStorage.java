@@ -173,6 +173,11 @@ public class ClassStorage {
 		return Reflect.getMethod(CB.CraftItemStack, "asNMSCopy", ItemStack.class).invokeStatic(item);
 	}
 
+	public static ItemStack asCBStack(ItemStack item) {
+		Preconditions.checkNotNull(item, "Item is null!");
+		return (ItemStack) Reflect.getMethod(CB.CraftItemStack, "asCraftCopy", ItemStack.class).invokeStatic(item);
+	}
+
 	public static Object getDataWatcher(Object handler) {
 		Preconditions.checkNotNull(handler, "Handler is null!");
 		return Reflect.fastInvoke(handler, EntityAccessor.getMethodGetEntityData1());
