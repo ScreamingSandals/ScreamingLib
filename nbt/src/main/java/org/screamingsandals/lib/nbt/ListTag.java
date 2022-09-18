@@ -29,20 +29,25 @@ import java.util.stream.Stream;
 
 @Data
 @Accessors(fluent = true)
-public final class ListTag implements Tag, Iterable<Tag> {
+public final class ListTag implements CollectionTag, Iterable<Tag> {
     @NotNull
     private final List<@NotNull Tag> tags;
 
     public ListTag(@NotNull List<@NotNull Tag> tags) {
+        this.tags = new ArrayList<@NotNull Tag>();
         Class<?> determinedType = null;
         for (var t : tags) {
             if (determinedType == null) {
                determinedType = t.getClass();
-            } else if (!determinedType.isInstance(t) && (determinedType != ByteTag.class || !(t instanceof BooleanTag)) && (determinedType != BooleanTag.class || !(t instanceof ByteTag))) {
-                throw new IllegalArgumentException("This is a list of " + determinedType.getSimpleName() + ", got " + t.getClass().getSimpleName());
+            } else if (!determinedType.isInstance(t)) {
+                if (tags.get(0) instanceof NumericTag && t instanceof NumericTag && ((NumericTag) tags.get(0)).canHoldDataOfTag((NumericTag) t)) {
+                    t = ((NumericTag) tags.get(0)).convert((NumericTag) t);
+                } else {
+                    throw new IllegalArgumentException("This is a list of " + determinedType.getSimpleName() + ", got " + t.getClass().getSimpleName());
+                }
             }
+            this.tags.add(t);
         }
-        this.tags = tags;
     }
 
     @NotNull
@@ -55,8 +60,12 @@ public final class ListTag implements Tag, Iterable<Tag> {
     public ListTag with(@NotNull Tag tag) {
         if (!tags.isEmpty()) {
             var firstTag = tags.get(0);
-            if (!firstTag.getClass().isInstance(tag) && (!(firstTag instanceof ByteTag) || !(tag instanceof BooleanTag)) && (!(firstTag instanceof BooleanTag) || !(tag instanceof ByteTag))) {
-                throw new IllegalArgumentException("This is a list of " + firstTag.getClass().getSimpleName() + ", got " + tag.getClass().getSimpleName());
+            if (!firstTag.getClass().isInstance(tag)) {
+                if (firstTag instanceof NumericTag && tag instanceof NumericTag && ((NumericTag) firstTag).canHoldDataOfTag((NumericTag) tag)) {
+                    tag = ((NumericTag) firstTag).convert((NumericTag) tag);
+                } else {
+                    throw new IllegalArgumentException("This is a list of " + firstTag.getClass().getSimpleName() + ", got " + tag.getClass().getSimpleName());
+                }
             }
         }
         var clone = new ArrayList<>(tags);
@@ -77,6 +86,11 @@ public final class ListTag implements Tag, Iterable<Tag> {
         return tags.get(index);
     }
 
+    @Override
+    public @NotNull Tag getAsTag(int index) {
+        return get(index);
+    }
+
     public int size() {
         return tags.size();
     }
@@ -85,7 +99,7 @@ public final class ListTag implements Tag, Iterable<Tag> {
     @Override
     public Iterator<@NotNull Tag> iterator() {
         return new Iterator<>() {
-            private int cursor = 0;
+            private int cursor;
 
             @Override
             public boolean hasNext() {

@@ -138,7 +138,7 @@ class SpigotBackendAdventureExtension {
                 });
 
         AbstractBungeeBackend.getAdditionalItemContentConverter()
-                .registerW2P(net.kyori.adventure.text.event.HoverEvent.ShowItem.class, bungeeItemContent -> {;
+                .registerW2P(net.kyori.adventure.text.event.HoverEvent.ShowItem.class, bungeeItemContent -> {
                     //noinspection PatternValidation
                     var id = bungeeItemContent.id();
                     var tag = bungeeItemContent.tag();

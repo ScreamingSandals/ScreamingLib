@@ -47,7 +47,7 @@ public class NBTSerializer {
     private byte getId(@NotNull Tag tag) {
         if (tag instanceof ByteArrayTag) {
             return 7;
-        } else if (tag instanceof BooleanTag || tag instanceof ByteTag) {
+        } else if (tag instanceof ByteTag) {
             return 1;
         } else if (tag instanceof CompoundTag) {
             return 10;
@@ -84,9 +84,7 @@ public class NBTSerializer {
     }
 
     private void write(@NotNull Tag tag, @NotNull DataOutput output) throws IOException {
-        if (tag instanceof BooleanTag) {
-            output.writeByte(((BooleanTag) tag).byteValue());
-        } else if (tag instanceof ByteArrayTag) {
+        if (tag instanceof ByteArrayTag) {
             var bytes = ((ByteArrayTag) tag).value();
             output.writeInt(bytes.length);
             output.write(bytes);

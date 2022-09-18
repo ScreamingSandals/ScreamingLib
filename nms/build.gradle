@@ -347,6 +347,7 @@ nmsGen {
 
     reqClass('net.minecraft.world.item.ItemStack') {
         reqMethod('copy')
+        reqMethod('save', '@CompoundTag')
         reqMethod('getTag')
         reqMethod('setTag', '@CompoundTag')
     }

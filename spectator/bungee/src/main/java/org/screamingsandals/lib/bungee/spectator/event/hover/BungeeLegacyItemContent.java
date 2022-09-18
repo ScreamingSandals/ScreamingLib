@@ -30,8 +30,6 @@ import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
-import java.util.Map;
-
 public class BungeeLegacyItemContent extends BasicWrapper<CompoundTag> implements ItemContent {
 
     public BungeeLegacyItemContent(@NotNull String snbt) {
@@ -47,7 +45,7 @@ public class BungeeLegacyItemContent extends BasicWrapper<CompoundTag> implement
         if (tag instanceof CompoundTag) {
             return (CompoundTag) tag;
         }
-        return new CompoundTag(Map.of());
+        return CompoundTag.EMPTY;
     }
 
     @Override

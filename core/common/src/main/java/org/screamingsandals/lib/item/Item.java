@@ -25,8 +25,7 @@ import org.screamingsandals.lib.item.builder.ItemBuilder;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.metadata.MetadataProvider;
-import org.screamingsandals.lib.nbt.CompoundTag;
-import org.screamingsandals.lib.nbt.CompoundTagHolder;
+import org.screamingsandals.lib.nbt.*;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
@@ -41,7 +40,7 @@ import java.util.stream.Collectors;
 /**
  * Represents an immutable Item.
  */
-public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, CompoundTagHolder, ItemContentLike, MetadataProvider, ProtoWrapper<ProtoItem> {
+public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, CompoundTagHolder, CompoundTagLike, CompoundTagTreeInspector, ItemContentLike, MetadataProvider, ProtoWrapper<ProtoItem> {
     @NotNull ItemTypeHolder getType();
 
     default @NotNull ItemTypeHolder getMaterial() { // alternative getter (old name)
@@ -174,6 +173,11 @@ public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, C
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withTag(@NotNull CompoundTag tag) {
         return builder().tag(tag).build().orElseThrow();
+    }
+
+    @Override
+    default @Nullable Tag findTag(@NotNull String @NotNull ... tagKeys) {
+        return getTag().findTag(tagKeys);
     }
 
     @NotNull Item clone();

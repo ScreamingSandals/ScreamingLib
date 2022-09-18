@@ -49,7 +49,7 @@ public class SNBTSerializerTest {
 
         var actual = serializer.serialize(compound);
 
-        var expected = "{lotsOfBytes:[B;1b,2b,3b,4b,5b,6b,7b,8b,9b,10b],aCollection:[\"Bruh??????????\",\"Not \\\"bruh\\\"\"],veryLongArray:[1L,2L,3L,4L,5L,6L,7L,8L,9L,10L],lotsOfInts:[I;1,2,3,4,5,6,7,8,9,10],\"invalid name\":\"Hello world!\",short:69s,\"isItTrue?\":true,abcdEfg123:12b,nested:{exampleDouble:3.14d,exampleFloat:3.14f},regularInt:654654,long:420L}";
+        var expected = "{lotsOfBytes:[B;1b,2b,3b,4b,5b,6b,7b,8b,9b,10b],aCollection:[\"Bruh??????????\",\"Not \\\"bruh\\\"\"],veryLongArray:[1L,2L,3L,4L,5L,6L,7L,8L,9L,10L],lotsOfInts:[I;1,2,3,4,5,6,7,8,9,10],\"invalid name\":\"Hello world!\",short:69s,\"isItTrue?\":1b,abcdEfg123:12b,nested:{exampleDouble:3.14d,exampleFloat:3.14f},regularInt:654654,long:420L}";
         assertEquals(expected, actual);
     }
 
@@ -75,7 +75,7 @@ public class SNBTSerializerTest {
 
         var actual = serializer.serialize(compound);
 
-        var expected = "{lotsOfBytes:[B;1b,2b,3b,4b,5b,6b,7b,8b,9b,10b],aCollection:[\"Bruh??????????\",\"Not \\\"bruh\\\"\"],veryLongArray:[L;1L,2L,3L,4L,5L,6L,7L,8L,9L,10L],lotsOfInts:[I;1,2,3,4,5,6,7,8,9,10],\"invalid name\":\"Hello world!\",short:69s,\"isItTrue?\":true,abcdEfg123:12b,nested:{exampleDouble:3.14d,exampleFloat:3.14f},regularInt:654654,long:420L}";
+        var expected = "{lotsOfBytes:[B;1b,2b,3b,4b,5b,6b,7b,8b,9b,10b],aCollection:[\"Bruh??????????\",\"Not \\\"bruh\\\"\"],veryLongArray:[L;1L,2L,3L,4L,5L,6L,7L,8L,9L,10L],lotsOfInts:[I;1,2,3,4,5,6,7,8,9,10],\"invalid name\":\"Hello world!\",short:69s,\"isItTrue?\":1b,abcdEfg123:12b,nested:{exampleDouble:3.14d,exampleFloat:3.14f},regularInt:654654,long:420L}";
         assertEquals(expected, actual);
     }
 

@@ -412,6 +412,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
+    @Deprecated
     public boolean supportsMetadata(MetadataKey<?> key) {
         if (item != null) {
             var meta = item.getItemMeta();
@@ -423,6 +424,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
+    @Deprecated
     public boolean supportsMetadata(MetadataCollectionKey<?> key) {
         if (item != null) {
             var meta = item.getItemMeta();
@@ -434,6 +436,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
+    @Deprecated
     public <T> @NotNull ItemBuilder setMetadata(MetadataKey<T> key, T value) {
         if (item != null) {
             var meta = item.getItemMeta();
@@ -446,6 +449,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
+    @Deprecated
     public <T> @NotNull ItemBuilder setMetadata(MetadataCollectionKey<T> key, Collection<T> value) {
         if (item != null) {
             var meta = item.getItemMeta();
@@ -458,6 +462,7 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
+    @Deprecated
     public <T> @NotNull ItemBuilder addToListMetadata(MetadataCollectionKey<T> key, T value) {
         if (item != null) {
             var meta = item.getItemMeta();

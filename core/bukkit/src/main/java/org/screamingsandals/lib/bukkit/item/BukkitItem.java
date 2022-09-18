@@ -36,6 +36,7 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.HideFlags;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
+import org.screamingsandals.lib.item.ItemView;
 import org.screamingsandals.lib.item.builder.ItemBuilder;
 import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.item.data.ItemData;
@@ -53,7 +54,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
-    public BukkitItem(ItemStack wrappedObject) {
+    private @Nullable CompoundTag tagCache;
+
+    public BukkitItem(@NotNull ItemStack wrappedObject) {
         super(wrappedObject);
     }
 
@@ -231,6 +234,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
         return new BukkitItem(wrappedObject.clone());
     }
 
+    @Deprecated
     @Override
     public boolean supportsMetadata(MetadataKey<?> key) {
         var meta = wrappedObject.getItemMeta();
@@ -240,6 +244,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
         return false;
     }
 
+    @Deprecated
     @Override
     public boolean supportsMetadata(MetadataCollectionKey<?> key) {
         var meta = wrappedObject.getItemMeta();
@@ -249,6 +254,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
         return false;
     }
 
+    @Deprecated
     @Override
     @Nullable
     public <T> T getMetadata(MetadataKey<T> key) {
@@ -259,6 +265,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
         return null;
     }
 
+    @Deprecated
     @Override
     public <T> Optional<T> getMetadataOptional(MetadataKey<T> key) {
         var meta = wrappedObject.getItemMeta();
@@ -268,6 +275,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
         return Optional.empty();
     }
 
+    @Deprecated
     @Override
     @Nullable
     public <T> Collection<T> getMetadata(MetadataCollectionKey<T> key) {
@@ -292,10 +300,35 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
 
     @Override
     public @NotNull CompoundTag getTag() {
+        var isMutable = this instanceof ItemView; // ItemView is a mutable item, don't cache if the item can randomly change
+        if (!isMutable && tagCache != null) {
+            return tagCache;
+        }
+
         final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(wrappedObject), ItemStackAccessor.getMethodCopy1());
         final var nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.getMethodGetTag1());
 
         var tag = NBTVanillaSerializer.deserialize(nbtTag);
+        if (tag instanceof CompoundTag) {
+            if (!isMutable) {
+                tagCache = (CompoundTag) tag;
+            }
+            return (CompoundTag) tag;
+        }
+
+        return CompoundTag.EMPTY;
+    }
+
+    @Override
+    public @NotNull CompoundTag asCompoundTag() {
+        if (isAir()) {
+            return CompoundTag.EMPTY;
+        }
+
+        final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(wrappedObject), ItemStackAccessor.getMethodCopy1());
+        final var compound = Reflect.fastInvoke(nmsStack, ItemStackAccessor.getMethodSave1(), Reflect.construct(CompoundTagAccessor.getConstructor0()));
+
+        var tag = NBTVanillaSerializer.deserialize(compound);
         if (tag instanceof CompoundTag) {
             return (CompoundTag) tag;
         }

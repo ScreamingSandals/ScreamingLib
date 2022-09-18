@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.utils;
+package org.screamingsandals.lib.nbt;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
-/**
- *
- * @param <R> replacement type
- */
-public interface Replaceable<R> {
-    void replace(@Nullable R replaceable);
+public interface CollectionTag extends Tag {
+    @NotNull Tag getAsTag(int index);
+
+    int size();
 }

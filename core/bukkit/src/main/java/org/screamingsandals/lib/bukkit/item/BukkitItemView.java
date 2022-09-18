@@ -18,18 +18,20 @@ package org.screamingsandals.lib.bukkit.item;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.BukkitItemBlockIdsRemapper;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemView;
 import org.screamingsandals.lib.utils.Platform;
 
 public class BukkitItemView extends BukkitItem implements ItemView {
-    public BukkitItemView(ItemStack stack) {
+    public BukkitItemView(@NotNull ItemStack stack) {
         super(stack);
     }
 
     @Override
-    public void replace(Item replaceable) {
+    public void replace(@Nullable Item replaceable) {
         if (replaceable == null) {
             wrappedObject.setType(Material.AIR);
             return;

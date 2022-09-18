@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Optional;
 
+@Deprecated
 public interface MetadataProvider {
 
     /**
@@ -29,6 +30,7 @@ public interface MetadataProvider {
      * @param key metadata that should the provider support
      * @return true if the metadata is supported; false if the metadata is not supported or this information is unknown
      */
+    @Deprecated
     boolean supportsMetadata(MetadataKey<?> key);
 
     /**
@@ -37,17 +39,22 @@ public interface MetadataProvider {
      * @param key metadata that should the provider support
      * @return true if the metadata is supported; false if the metadata is not supported or this information is unknown
      */
+    @Deprecated
     boolean supportsMetadata(MetadataCollectionKey<?> key);
 
+    @Deprecated
     @Nullable
     <T> T getMetadata(MetadataKey<T> key);
 
+    @Deprecated
     <T> Optional<T> getMetadataOptional(MetadataKey<T> key);
 
+    @Deprecated
     default <T> T getMetadataOrElse(MetadataKey<T> key, T orElse) {
         return getMetadataOptional(key).orElse(orElse);
     }
 
+    @Deprecated
     @Nullable
     <T> Collection<T> getMetadata(MetadataCollectionKey<T> key);
 }

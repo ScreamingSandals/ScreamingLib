@@ -30,17 +30,9 @@ import java.util.stream.LongStream;
 public class SNBTSerializer {
     @Builder.Default
     private final boolean shouldSaveLongArraysDirectly = false; // not present before 1.12
-    @Builder.Default
-    private final boolean convertBooleanTagsToByteTags = false;
 
     public @NotNull String serialize(@NotNull Tag tag) {
-        if (tag instanceof BooleanTag) {
-            if (convertBooleanTagsToByteTags) {
-                return ((BooleanTag) tag).value() ? "1b" : "0b";
-            } else {
-                return ((BooleanTag) tag).value() ? "true" : "false";
-            }
-        } else if (tag instanceof ByteArrayTag) {
+        if (tag instanceof ByteArrayTag) {
             var builder = new StringBuilder();
             builder.append("[B;");
             var first = true;
@@ -301,17 +293,9 @@ public class SNBTSerializer {
         } else {
             var value = readUntilControlSymbol(chars, i);
             if ("true".equalsIgnoreCase(value)) {
-                if (convertBooleanTagsToByteTags) {
-                    return new ByteTag((byte) 1);
-                } else {
-                    return BooleanTag.TRUE;
-                }
+                return ByteTag.TRUE;
             } else if ("false".equalsIgnoreCase(value)) {
-                if (convertBooleanTagsToByteTags) {
-                    return new ByteTag((byte) 0);
-                } else {
-                    return BooleanTag.FALSE;
-                }
+                return ByteTag.FALSE;
             }
             try {
                 var lastChar = value.charAt(value.length() - 1);

@@ -18,6 +18,7 @@ package org.screamingsandals.lib.nbt;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 @Accessors(fluent = true)
@@ -57,5 +58,15 @@ public final class IntTag implements Tag, NumericTag {
     @Override
     public boolean booleanValue() {
         return value != 0;
+    }
+
+    @Override
+    public boolean canHoldDataOfTag(@NotNull NumericTag tag) {
+        return tag instanceof ByteTag || tag instanceof ShortTag || tag instanceof IntTag;
+    }
+
+    @Override
+    public @NotNull NumericTag convert(@NotNull NumericTag tag) {
+        return new IntTag(tag.intValue());
     }
 }

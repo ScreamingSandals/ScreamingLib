@@ -32,13 +32,13 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 public class TagSerializer implements TypeSerializer<Tag> {
-    public static final TagSerializer INSTANCE = new TagSerializer();
+    public static final @NotNull TagSerializer INSTANCE = new TagSerializer();
 
-    private static final String SPECIAL_TYPE_KEY = "_==";
-    private static final String SPECIAL_TYPE_VALUES_KEY = "values";
-    private static final String BYTE_ARRAY_VALUE = "NBTByteArray";
-    private static final String INT_ARRAY_VALUE = "NBTIntArray";
-    private static final String LONG_ARRAY_VALUE = "NBTLongArray";
+    private static final @NotNull String SPECIAL_TYPE_KEY = "_==";
+    private static final @NotNull String SPECIAL_TYPE_VALUES_KEY = "values";
+    private static final @NotNull String BYTE_ARRAY_VALUE = "NBTByteArray";
+    private static final @NotNull String INT_ARRAY_VALUE = "NBTIntArray";
+    private static final @NotNull String LONG_ARRAY_VALUE = "NBTLongArray";
 
     @Override
     public @NotNull Tag deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
@@ -159,9 +159,9 @@ public class TagSerializer implements TypeSerializer<Tag> {
 
                 var string = node.getString("");
                 if ("true".equalsIgnoreCase(string)) {
-                    return BooleanTag.TRUE;
+                    return ByteTag.TRUE;
                 } else if ("false".equalsIgnoreCase(string)) {
-                    return BooleanTag.FALSE;
+                    return ByteTag.FALSE;
                 } else if (string.endsWith("b") || string.endsWith("B")) {
                     try {
                         return new ByteTag(Byte.parseByte(string.substring(0, string.length() - 1)));
@@ -204,9 +204,7 @@ public class TagSerializer implements TypeSerializer<Tag> {
     @Override
     public void serialize(@NotNull Type type, @Nullable Tag obj, @NotNull ConfigurationNode node) throws SerializationException {
         node.set(null); // clear node
-        if (obj instanceof BooleanTag) {
-            node.set(((BooleanTag) obj).value());
-        } else if (obj instanceof ByteArrayTag) {
+        if (obj instanceof ByteArrayTag) {
             node.node(SPECIAL_TYPE_KEY).set(BYTE_ARRAY_VALUE);
             var baseNode = node.node(SPECIAL_TYPE_VALUES_KEY);
             for (var byteVal : (ByteArrayTag) obj) {

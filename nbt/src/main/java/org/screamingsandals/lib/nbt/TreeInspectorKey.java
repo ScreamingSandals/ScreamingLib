@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.utils;
+package org.screamingsandals.lib.nbt;
 
-import org.jetbrains.annotations.Nullable;
+import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
-/**
- *
- * @param <R> replacement type
- */
-public interface Replaceable<R> {
-    void replace(@Nullable R replaceable);
+@Data
+public class TreeInspectorKey<T extends Tag> {
+    private final @NotNull Class<T> tagClass;
+    private final @NotNull String @NotNull [] tagKeys;
+
+    public static @NotNull <T extends Tag> TreeInspectorKey<T> of(@NotNull Class<T> tagClass, @NotNull String @NotNull... tagKeys) {
+        return new TreeInspectorKey<>(tagClass, tagKeys);
+    }
 }

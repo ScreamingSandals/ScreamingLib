@@ -18,6 +18,7 @@ package org.screamingsandals.lib.metadata;
 
 import java.util.Collection;
 
+@Deprecated
 public interface MetadataConsumer {
 
     /**
@@ -26,6 +27,7 @@ public interface MetadataConsumer {
      * @param key metadata that should the provider support
      * @return true if the metadata is supported; false if the metadata is not supported or this information is unknown
      */
+    @Deprecated
     boolean supportsMetadata(MetadataKey<?> key);
 
     /**
@@ -34,11 +36,15 @@ public interface MetadataConsumer {
      * @param key metadata that should the provider support
      * @return true if the metadata is supported; false if the metadata is not supported or this information is unknown
      */
+    @Deprecated
     boolean supportsMetadata(MetadataCollectionKey<?> key);
 
+    @Deprecated
     <T> MetadataConsumer setMetadata(MetadataKey<T> key, T value);
 
+    @Deprecated
     <T> MetadataConsumer setMetadata(MetadataCollectionKey<T> key, Collection<T> value);
 
+    @Deprecated
     <T> MetadataConsumer addToListMetadata(MetadataCollectionKey<T> key, T value);
 }

@@ -28,7 +28,7 @@ import java.util.stream.LongStream;
 
 @Data
 @Accessors(fluent = true)
-public final class LongArrayTag implements Tag, Iterable<Long> {
+public final class LongArrayTag implements CollectionTag, Iterable<Long> {
     private final long @NotNull [] value;
 
     @NotNull
@@ -40,13 +40,18 @@ public final class LongArrayTag implements Tag, Iterable<Long> {
         return value[index];
     }
 
+    @Override
+    public @NotNull Tag getAsTag(int index) {
+        return new LongTag(value[index]);
+    }
+
     public int size() {
         return value.length;
     }
 
     public PrimitiveIterator.@NotNull OfLong iterator() {
         return new PrimitiveIterator.OfLong() {
-            private int cursor = 0;
+            private int cursor;
 
             @Override
             public boolean hasNext() {

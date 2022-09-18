@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 @Data
 @Accessors(fluent = true)
-public final class ByteArrayTag implements Tag, Iterable<Byte> {
+public final class ByteArrayTag implements CollectionTag, Iterable<Byte> {
     private final byte @NotNull [] value;
 
     @NotNull
@@ -37,6 +37,11 @@ public final class ByteArrayTag implements Tag, Iterable<Byte> {
         return value[index];
     }
 
+    @Override
+    public @NotNull Tag getAsTag(int index) {
+        return new ByteTag(value[index]);
+    }
+
     public int size() {
         return value.length;
     }
@@ -45,7 +50,7 @@ public final class ByteArrayTag implements Tag, Iterable<Byte> {
     @Override
     public Iterator<@NotNull Byte> iterator() {
         return new Iterator<>() {
-            private int cursor = 0;
+            private int cursor;
 
             @Override
             public boolean hasNext() {

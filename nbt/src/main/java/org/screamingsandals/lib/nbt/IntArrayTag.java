@@ -28,7 +28,7 @@ import java.util.stream.IntStream;
 
 @Data
 @Accessors(fluent = true)
-public final class IntArrayTag implements Tag, Iterable<Integer> {
+public final class IntArrayTag implements CollectionTag, Iterable<Integer> {
     private final int @NotNull [] value;
 
     @NotNull
@@ -40,13 +40,18 @@ public final class IntArrayTag implements Tag, Iterable<Integer> {
         return value[index];
     }
 
+    @Override
+    public @NotNull Tag getAsTag(int index) {
+        return new IntTag(value[index]);
+    }
+
     public int size() {
         return value.length;
     }
 
     public PrimitiveIterator.@NotNull OfInt iterator() {
         return new PrimitiveIterator.OfInt() {
-            private int cursor = 0;
+            private int cursor;
 
             @Override
             public boolean hasNext() {

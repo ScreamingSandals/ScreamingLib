@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 
 @Data
 @Accessors(fluent = true)
-public final class CompoundTag implements Tag {
+public final class CompoundTag implements Tag, CompoundTagTreeInspector {
     public static final @NotNull CompoundTag EMPTY = new CompoundTag(Map.of());
 
     private final @NotNull Map<@NotNull String, @NotNull Tag> value;
@@ -58,7 +58,7 @@ public final class CompoundTag implements Tag {
     @Contract(value = "_, _ -> new", pure = true)
     public @NotNull CompoundTag with(@NotNull String name, boolean value) {
         var clone = new HashMap<>(this.value);
-        clone.put(name, new BooleanTag(value));
+        clone.put(name, value ? ByteTag.TRUE : ByteTag.FALSE);
         return new CompoundTag(clone);
     }
 
@@ -169,5 +169,40 @@ public final class CompoundTag implements Tag {
 
     public int size() {
         return value.size();
+    }
+
+    @Override
+    public @Nullable Tag findTag(@NotNull String @NotNull ... tagKeys) {
+        if (tagKeys.length == 0) {
+            return null;
+        }
+        if (tagKeys.length == 1) {
+            return tag(tagKeys[0]);
+        }
+        @Nullable Tag currentTag = this;
+        for (var key : tagKeys) {
+            if (currentTag instanceof CompoundTag) {
+                currentTag = ((CompoundTag) currentTag).tag(key);
+            } else if (currentTag instanceof CollectionTag) {
+                try {
+                    if (key.startsWith("[")) {
+                        key = key.substring(1);
+                    }
+                    if (key.endsWith("]")) {
+                        key = key.substring(0, key.length() - 1);
+                    }
+                    var number = Integer.parseInt(key);
+                    if (number < ((CollectionTag) currentTag).size()) {
+                        currentTag = ((CollectionTag) currentTag).getAsTag(number);
+                    } else {
+                        currentTag = null;
+                    }
+                } catch (Throwable ignored) {
+                }
+            } else {
+                return null;
+            }
+        }
+        return currentTag;
     }
 }

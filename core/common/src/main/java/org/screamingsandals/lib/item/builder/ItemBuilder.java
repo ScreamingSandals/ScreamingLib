@@ -322,13 +322,16 @@ public interface ItemBuilder extends MetadataConsumer {
 
     @Override
     @Contract("_,_ -> this")
+    @Deprecated
     <T> @NotNull ItemBuilder setMetadata(MetadataKey<T> key, T value);
 
     @Override
     @Contract("_,_ -> this")
+    @Deprecated
     <T> @NotNull ItemBuilder setMetadata(MetadataCollectionKey<T> key, Collection<T> value);
 
     @Override
     @Contract("_,_ -> this")
+    @Deprecated
     <T> @NotNull ItemBuilder addToListMetadata(MetadataCollectionKey<T> key, T value);
 }

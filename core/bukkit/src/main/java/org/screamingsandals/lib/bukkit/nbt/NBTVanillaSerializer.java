@@ -76,7 +76,7 @@ public class NBTVanillaSerializer {
     }
 
     public static @NotNull Object serialize(@NotNull Tag tag) {
-        if (tag instanceof BooleanTag || tag instanceof ByteTag) {
+        if (tag instanceof ByteTag) {
             return Reflect.construct(ByteTagAccessor.getConstructor0(), ((NumericTag) tag).byteValue());
         } else if (tag instanceof ShortTag) {
             return Reflect.construct(ShortTagAccessor.getConstructor0(), ((NumericTag) tag).shortValue());

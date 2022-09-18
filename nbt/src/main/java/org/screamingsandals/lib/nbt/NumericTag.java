@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.nbt;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface NumericTag extends Tag {
     int intValue();
 
@@ -30,4 +32,8 @@ public interface NumericTag extends Tag {
     short shortValue();
 
     boolean booleanValue();
+
+    boolean canHoldDataOfTag(@NotNull NumericTag tag);
+
+    @NotNull NumericTag convert(@NotNull NumericTag tag);
 }
