@@ -30,6 +30,8 @@ import java.util.stream.Stream;
 @Data
 @Accessors(fluent = true)
 public final class ListTag implements CollectionTag, Iterable<Tag> {
+    public static final @NotNull ListTag EMPTY = new ListTag(List.of());
+
     @NotNull
     private final List<@NotNull Tag> tags;
 
@@ -74,10 +76,36 @@ public final class ListTag implements CollectionTag, Iterable<Tag> {
     }
 
     @NotNull
+    @Contract(value = "_,_ -> new", pure = true)
+    public ListTag withAt(int index, @NotNull Tag tag) {
+        if (!tags.isEmpty()) {
+            var firstTag = tags.get(0);
+            if (!firstTag.getClass().isInstance(tag)) {
+                if (firstTag instanceof NumericTag && tag instanceof NumericTag && ((NumericTag) firstTag).canHoldDataOfTag((NumericTag) tag)) {
+                    tag = ((NumericTag) firstTag).convert((NumericTag) tag);
+                } else {
+                    throw new IllegalArgumentException("This is a list of " + firstTag.getClass().getSimpleName() + ", got " + tag.getClass().getSimpleName());
+                }
+            }
+        }
+        var clone = new ArrayList<>(tags);
+        clone.set(index, tag);
+        return new ListTag(clone);
+    }
+
+    @NotNull
     @Contract(value = "_ -> new", pure = true)
     public ListTag without(@NotNull Tag tag) {
         var clone = new ArrayList<>(tags);
         clone.remove(tag);
+        return new ListTag(clone);
+    }
+
+    @NotNull
+    @Contract(value = "_ -> new", pure = true)
+    public ListTag without(int index) {
+        var clone = new ArrayList<>(tags);
+        clone.remove(index);
         return new ListTag(clone);
     }
 

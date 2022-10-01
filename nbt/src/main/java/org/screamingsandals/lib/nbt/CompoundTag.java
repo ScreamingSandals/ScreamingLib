@@ -22,15 +22,13 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 @Data
 @Accessors(fluent = true)
-public final class CompoundTag implements Tag, CompoundTagTreeInspector {
+public final class CompoundTag implements Tag, CompoundTagTreeInspector, CompoundTagModifier {
     public static final @NotNull CompoundTag EMPTY = new CompoundTag(Map.of());
 
     private final @NotNull Map<@NotNull String, @NotNull Tag> value;
@@ -204,5 +202,270 @@ public final class CompoundTag implements Tag, CompoundTagTreeInspector {
             }
         }
         return currentTag;
+    }
+
+    // TODO: test code below
+    @Override
+    public @NotNull CompoundTag with(@NotNull Tag tag, @NotNull String @NotNull ... tagKeys) {
+        if (tagKeys.length == 0) {
+            return this;
+        }
+        if (tagKeys.length == 1) {
+            return with(tagKeys[0], tag);
+        }
+        return (CompoundTag) withInternal(this, tagKeys, 0, tag);
+    }
+
+    @Override
+    public @NotNull <T extends Tag> CompoundTag with(@NotNull TreeInspectorKey<T> treeKey, @NotNull T tag) {
+        var tagKeys = treeKey.getTagKeys();
+        if (tagKeys.length == 0) {
+            return this;
+        }
+        if (tagKeys.length == 1) {
+            return with(tagKeys[0], tag);
+        }
+        return (CompoundTag) withInternal(this, tagKeys, 0, tag);
+    }
+
+    private @NotNull Tag withInternal(@NotNull Tag tag, @NotNull String @NotNull[] tagKeys, int index, @NotNull Tag value) {
+        if (index >= tagKeys.length) {
+            return tag;
+        }
+
+        var relativeSize = tagKeys.length - index;
+        if (tag instanceof CompoundTag) {
+            if (relativeSize == 1) {
+                return ((CompoundTag) tag).with(tagKeys[index], value);
+            } else {
+                var innerTag = ((CompoundTag) tag).tag(tagKeys[index]);
+                if (innerTag != null) {
+                    if (innerTag instanceof CompoundTag || innerTag instanceof ListTag) {
+                        return ((CompoundTag) tag).with(tagKeys[index], withInternal(innerTag, tagKeys, index + 1, value));
+                    }
+                    return tag;
+                } else {
+                    // look at the next key
+                    var useList = false;
+                    var key = tagKeys[index + 1];
+                    if ("[]".equals(key)) {
+                        useList = true;
+                    } else {
+                        try {
+                            if (key.startsWith("[")) {
+                                key = key.substring(1);
+                            }
+                            if (key.endsWith("]")) {
+                                key = key.substring(0, key.length() - 1);
+                            }
+                            Integer.parseInt(key);
+                            useList = true;
+                        } catch (Throwable ignored) {
+                        }
+                    }
+
+                    if (useList) {
+                        return ((CompoundTag) tag).with(tagKeys[index], withInternal(ListTag.EMPTY, tagKeys, index + 1, value));
+                    } else {
+                        return ((CompoundTag) tag).with(tagKeys[index], withInternal(CompoundTag.EMPTY, tagKeys, index + 1, value));
+                    }
+                }
+            }
+        } else if (tag instanceof ListTag) {
+            if (relativeSize == 1) {
+                var key = tagKeys[index];
+                if ("[]".equals(key)) {
+                    return ((ListTag) tag).with(value);
+                } else {
+                    try {
+                        if (key.startsWith("[")) {
+                            key = key.substring(1);
+                        }
+                        if (key.endsWith("]")) {
+                            key = key.substring(0, key.length() - 1);
+                        }
+                        var number = Integer.parseInt(key);
+                        if (number < ((ListTag) tag).size()) {
+                            return ((ListTag) tag).withAt(number, value);
+                        }
+                    } catch (Throwable ignored) {
+                    }
+                    return tag;
+                }
+            } else {
+                Tag innerTag = null;
+                int numericIndex = -1;
+                var thisKey = tagKeys[index];
+                if (!"[]".equals(thisKey)) {
+                    try {
+                        if (thisKey.startsWith("[")) {
+                            thisKey = thisKey.substring(1);
+                        }
+                        if (thisKey.endsWith("]")) {
+                            thisKey = thisKey.substring(0, thisKey.length() - 1);
+                        }
+                        numericIndex = Integer.parseInt(thisKey);
+                        if (numericIndex < ((ListTag) tag).size()) {
+                            innerTag = ((ListTag) tag).getAsTag(index);
+                        } else {
+                            return tag;
+                        }
+                    } catch (Throwable ignored) {
+                        return tag;
+                    }
+                }
+
+                if (innerTag != null) {
+                    if (innerTag instanceof CompoundTag || innerTag instanceof ListTag) {
+                        if (numericIndex == -1) {
+                            return ((ListTag) tag).with(withInternal(innerTag, tagKeys, index + 1, value));
+                        } else {
+                            return ((ListTag) tag).withAt(numericIndex, withInternal(innerTag, tagKeys, index + 1, value));
+                        }
+                    }
+                    return tag;
+                } else {
+                    // look at the next key
+                    var useList = false;
+                    var key = tagKeys[index + 1];
+                    if ("[]".equals(key)) {
+                        useList = true;
+                    } else {
+                        try {
+                            if (key.startsWith("[")) {
+                                key = key.substring(1);
+                            }
+                            if (key.endsWith("]")) {
+                                key = key.substring(0, key.length() - 1);
+                            }
+                            Integer.parseInt(key);
+                            useList = true;
+                        } catch (Throwable ignored) {
+                        }
+                    }
+
+                    if (useList) {
+                        return ((ListTag) tag).with(withInternal(ListTag.EMPTY, tagKeys, index + 1, value));
+                    } else {
+                        return ((ListTag) tag).with(withInternal(CompoundTag.EMPTY, tagKeys, index + 1, value));
+                    }
+                }
+            }
+        } else {
+            return tag; // wtf?
+        }
+    }
+
+    @Override
+    public @NotNull CompoundTag without(@NotNull String @NotNull ... tagKeys) {
+        if (tagKeys.length == 0) {
+            return this;
+        }
+        if (tagKeys.length == 1) {
+            return without(tagKeys[0]);
+        }
+        @NotNull List<Map.@NotNull Entry<@NotNull String, @NotNull Tag>> parents = new ArrayList<>();
+        @Nullable Tag currentTag = this;
+        for (var key : tagKeys) {
+            if (currentTag instanceof CompoundTag) {
+                parents.add(Map.entry(key, currentTag));
+                currentTag = ((CompoundTag) currentTag).tag(key);
+            } else if (currentTag instanceof ListTag) {
+                try {
+                    if (key.startsWith("[")) {
+                        key = key.substring(1);
+                    }
+                    if (key.endsWith("]")) {
+                        key = key.substring(0, key.length() - 1);
+                    }
+                    var number = Integer.parseInt(key);
+                    if (number < ((ListTag) currentTag).size()) {
+                        parents.add(Map.entry(key, currentTag));
+                        currentTag = ((ListTag) currentTag).getAsTag(number);
+                    } else {
+                        currentTag = null;
+                    }
+                } catch (Throwable ignored) {
+                }
+            } else {
+                return this; // nothing to remove
+            }
+        }
+        if (currentTag != null) {
+            Collections.reverse(parents);
+            Tag latestChild = currentTag;
+            for (var parent : parents) {
+                if (parent.getValue() instanceof CompoundTag) {
+                    latestChild = ((CompoundTag) parent.getValue()).with(parent.getKey(), latestChild);
+                } else if (parent.getValue() instanceof ListTag) {
+                    try {
+                        var number = Integer.parseInt(parent.getKey());
+                        latestChild = ((ListTag) parent.getValue()).without(number);
+                    } catch (Throwable ignored) {
+                    }
+                }
+            }
+            return (CompoundTag) latestChild;
+        }
+        return this;
+    }
+
+    @Override
+    public @NotNull <T extends Tag> CompoundTag without(@NotNull TreeInspectorKey<T> treeKey) {
+        var tagKeys = treeKey.getTagKeys();
+        if (tagKeys.length == 0) {
+            return this;
+        }
+        if (tagKeys.length == 1) {
+            if (treeKey.getTagClass().isInstance(value.get(tagKeys[0]))) {
+                return without(tagKeys[0]);
+            } else {
+                return this;
+            }
+        }
+        @NotNull List<Map.@NotNull Entry<@NotNull String, @NotNull Tag>> parents = new ArrayList<>();
+        @Nullable Tag currentTag = this;
+        for (var key : tagKeys) {
+            if (currentTag instanceof CompoundTag) {
+                parents.add(Map.entry(key, currentTag));
+                currentTag = ((CompoundTag) currentTag).tag(key);
+            } else if (currentTag instanceof ListTag) {
+                try {
+                    if (key.startsWith("[")) {
+                        key = key.substring(1);
+                    }
+                    if (key.endsWith("]")) {
+                        key = key.substring(0, key.length() - 1);
+                    }
+                    var number = Integer.parseInt(key);
+                    if (number < ((ListTag) currentTag).size()) {
+                        parents.add(Map.entry(key, currentTag));
+                        currentTag = ((ListTag) currentTag).getAsTag(number);
+                    } else {
+                        currentTag = null;
+                    }
+                } catch (Throwable ignored) {
+                }
+            } else {
+                return this; // nothing to remove
+            }
+        }
+        if (currentTag != null && treeKey.getTagClass().isInstance(currentTag)) {
+            Collections.reverse(parents);
+            Tag latestChild = currentTag;
+            for (var parent : parents) {
+                if (parent.getValue() instanceof CompoundTag) {
+                    latestChild = ((CompoundTag) parent.getValue()).with(parent.getKey(), latestChild);
+                } else if (parent.getValue() instanceof ListTag) {
+                    try {
+                        var number = Integer.parseInt(parent.getKey());
+                        latestChild = ((ListTag) parent.getValue()).without(number);
+                    } catch (Throwable ignored) {
+                    }
+                }
+            }
+            return (CompoundTag) latestChild;
+        }
+        return this;
     }
 }

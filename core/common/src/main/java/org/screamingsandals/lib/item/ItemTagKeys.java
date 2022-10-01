@@ -18,6 +18,7 @@ package org.screamingsandals.lib.item;
 
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.nbt.*;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
@@ -46,19 +47,25 @@ public class ItemTagKeys {
     // BLOCK TAGS
     public static final @NotNull TreeInspectorKey<ListTag> CAN_PLACE_ON = TreeInspectorKey.of(ListTag.class, "CanPlaceOn");
     public static final @NotNull TreeInspectorKey<CompoundTag> BLOCK_ENTITY_TAG = TreeInspectorKey.of(CompoundTag.class, "BlockEntityTag");
+    @LimitedVersionSupport(">= 1.14")
     public static final @NotNull TreeInspectorKey<CompoundTag> BLOCK_STATE_TAG = TreeInspectorKey.of(CompoundTag.class, "BlockStateTag");
 
     // DISPLAY TAGS
     public static final @NotNull TreeInspectorKey<IntTag> DISPLAY_COLOR = TreeInspectorKey.of(IntTag.class, "display", "color");
     public static final @NotNull TreeInspectorKey<StringTag> DISPLAY_NAME = TreeInspectorKey.of(StringTag.class, "display", "Name");
+    @LimitedVersionSupport("<= 1.12.2")
+    public static final @NotNull TreeInspectorKey<StringTag> DISPLAY_LOC_NAME = TreeInspectorKey.of(StringTag.class, "display", "LocName");
     public static final @NotNull TreeInspectorKey<ListTag> DISPLAY_LORE = TreeInspectorKey.of(ListTag.class, "display", "lore");
     public static final @NotNull TreeInspectorKey<IntTag> HIDE_FLAGS = TreeInspectorKey.of(IntTag.class, "HideFlags");
 
     // ENCHANTMENTS
-    @LimitedVersionSupport("< 1.13")
-    public static final @NotNull TreeInspectorKey<CompoundTag> ENCH = TreeInspectorKey.of(CompoundTag.class, "ench");
-    @LimitedVersionSupport(">= 1.13")
-    public static final @NotNull TreeInspectorKey<CompoundTag> ENCHANTMENTS = TreeInspectorKey.of(CompoundTag.class, "Enchantments");
+    public static final @NotNull TreeInspectorKey<CompoundTag> ENCHANTMENTS = TreeInspectorKey.of(CompoundTag.class, () -> {
+        if (Server.isVersion(1, 13)) {
+            return new String[] {"Enchantments"};
+        } else {
+            return new String[] {"ench"};
+        }
+    });
     @UtilityClass
     public static class Enchantments {
         // tags in each enchantment
@@ -92,13 +99,13 @@ public class ItemTagKeys {
     // BOOK AND QUILLS has only pages (this tag is also part of written books)
 
     // WRITTEN BOOKS
-    // TODO: filtered_pages
-    // TODO: filtered_title
+    public static final @NotNull TreeInspectorKey<CompoundTag> FILTERED_PAGES = TreeInspectorKey.of(CompoundTag.class, "filtered_pages");
+    public static final @NotNull TreeInspectorKey<StringTag> FILTERED_TITLE = TreeInspectorKey.of(StringTag.class, "filtered_title");
     public static final @NotNull TreeInspectorKey<ByteTag> RESOLVED = TreeInspectorKey.of(ByteTag.class, "resolved");
     public static final @NotNull TreeInspectorKey<IntTag> GENERATION = TreeInspectorKey.of(IntTag.class, "generation");
     public static final @NotNull TreeInspectorKey<StringTag> AUTHOR = TreeInspectorKey.of(StringTag.class, "author");
     public static final @NotNull TreeInspectorKey<StringTag> TITLE = TreeInspectorKey.of(StringTag.class, "title");
-    public static final @NotNull TreeInspectorKey<StringTag> PAGES = TreeInspectorKey.of(StringTag.class, "pages");
+    public static final @NotNull TreeInspectorKey<ListTag> PAGES = TreeInspectorKey.of(ListTag.class, "pages");
 
     // BUNDLE
     public static final @NotNull TreeInspectorKey<ListTag> ITEMS = TreeInspectorKey.of(ListTag.class, "Items");
@@ -119,7 +126,14 @@ public class ItemTagKeys {
 
     // FIREWORK ROCKETS
     public static final @NotNull TreeInspectorKey<ListTag> FIREWORKS_EXPLOSIONS = TreeInspectorKey.of(ListTag.class, "Fireworks", "Explosions");
-    // TODO: Explosions tags
+    @UtilityClass
+    public static class Explosion {
+        public static final @NotNull TreeInspectorKey<IntArrayTag> COLORS = TreeInspectorKey.of(IntArrayTag.class, "Colors");
+        public static final @NotNull TreeInspectorKey<IntArrayTag> FADE_COLORS = TreeInspectorKey.of(IntArrayTag.class, "FadeColors");
+        public static final @NotNull TreeInspectorKey<ByteTag> FLICKER = TreeInspectorKey.of(ByteTag.class, "Flicker");
+        public static final @NotNull TreeInspectorKey<ByteTag> TRAIL = TreeInspectorKey.of(ByteTag.class, "Trail");
+        public static final @NotNull TreeInspectorKey<ByteTag> TYPE = TreeInspectorKey.of(ByteTag.class, "Type");
+    }
     public static final @NotNull TreeInspectorKey<ListTag> FIREWORKS_FLIGHT = TreeInspectorKey.of(ListTag.class, "Fireworks", "Flight");
 
     // FIREWORK STAR
@@ -160,4 +174,6 @@ public class ItemTagKeys {
         public static final @NotNull TreeInspectorKey<ByteTag> EFFECT_ID = TreeInspectorKey.of(ByteTag.class, "EffectId");
         public static final @NotNull TreeInspectorKey<IntTag> EFFECT_DURATION = TreeInspectorKey.of(IntTag.class, "EffectDuration");
     }
+
+    public static final @NotNull TreeInspectorKey<CompoundTag> PUBLIC_BUKKIT_VALUES = TreeInspectorKey.of(CompoundTag.class, "PublicBukkitValues");
 }
