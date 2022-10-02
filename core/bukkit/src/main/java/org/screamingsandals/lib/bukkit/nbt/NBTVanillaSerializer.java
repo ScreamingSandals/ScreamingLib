@@ -30,7 +30,7 @@ import java.util.Objects;
 // TODO: move to core-vanilla when work on sponge-impl starts
 public class NBTVanillaSerializer {
     public static @NotNull Tag deserialize(@NotNull Object nmsTag) {
-        Preconditions.checkArgument(TagAccessor.getType().isInstance(nmsTag), "nmsTag must be of type " + TagAccessor.getType().getName());
+        Preconditions.checkArgument(TagAccessor.getType().isInstance(nmsTag), "nmsTag must be of type " + TagAccessor.getType().getName() + ", got " + nmsTag);
 
         if (ByteTagAccessor.getType().isInstance(nmsTag)) {
             return new ByteTag((byte) Reflect.fastInvoke(nmsTag, ByteTagAccessor.getMethodGetAsByte1()));
@@ -54,10 +54,15 @@ public class NBTVanillaSerializer {
             return new CompoundTag(map);
         } else if (ListTagAccessor.getType().isInstance(nmsTag)) {
             var list = new ArrayList<Tag>();
+            var isJavaUtilList = nmsTag instanceof List;
             var size = (int) Reflect.fastInvoke(nmsTag, ListTagAccessor.getMethodSize1());
             for (var i = 0; i < size; i++) {
-                var entry = Reflect.fastInvoke(nmsTag, ListTagAccessor.getMethodGet1(), i);
-                list.add(deserialize(entry));
+                if (isJavaUtilList) {
+                    list.add(deserialize(((List<?>) nmsTag).get(i)));
+                } else {
+                    var entry = Reflect.fastInvoke(nmsTag, ListTagAccessor.getMethodGet1(), i);
+                    list.add(deserialize(entry));
+                }
             }
             return new ListTag(list);
         } else if (ByteArrayTagAccessor.getType().isInstance(nmsTag)) {

@@ -310,8 +310,12 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
             return tagCache;
         }
 
-        final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(wrappedObject), ItemStackAccessor.getMethodCopy1());
+        final var nmsStack = ClassStorage.stackAsNMS(wrappedObject);
         final var nbtTag = Reflect.fastInvoke(nmsStack, ItemStackAccessor.getMethodGetTag1());
+
+        if (nbtTag == null) {
+            return CompoundTag.EMPTY;
+        }
 
         var tag = NBTVanillaSerializer.deserialize(nbtTag);
         if (tag instanceof CompoundTag) {
