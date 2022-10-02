@@ -49,9 +49,11 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
 
     private static final @NotNull SNBTSerializer internalSNBTSerializer = SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build();
     private static final @NotNull String TYPE_KEY = "type";
+    private static final @NotNull String ID_KEY = "id"; // type alternative
     private static final @NotNull String META_KEY = "meta";
     private static final @NotNull String TAG_KEY = "tag";
     private static final @NotNull String AMOUNT_KEY = "amount";
+    private static final @NotNull String COUNT_KEY = "count"; // amount alternative
     private static final @NotNull String DAMAGE_KEY = "damage";
     private static final @NotNull String DURABILITY_KEY = "durability";
     private static final @NotNull String DISPLAY_NAME_KEY = "display-name";
@@ -85,6 +87,10 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
 
             var type = node.node(TYPE_KEY);
 
+            if (type.empty()) {
+                type = node.node(ID_KEY);
+            }
+
             ShortStackDeserializer.deserializeShortStack(builder, type.getString());
 
             var tag = node.node(TAG_KEY);
@@ -112,6 +118,11 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
             var amount = node.node(AMOUNT_KEY);
             if (!amount.empty()) {
                 builder.amount(amount.getInt(1));
+            } else {
+                var count = node.node(COUNT_KEY);
+                if (!count.empty()) {
+                    builder.amount(count.getInt(1));
+                }
             }
 
             var damage = node.node(DAMAGE_KEY);

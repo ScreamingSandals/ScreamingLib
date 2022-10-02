@@ -104,7 +104,7 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
         @Override
         @NotNull
         public ItemContent build() {
-            return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.getNamespace(), id.getKey()), count, tag == null ? null : BinaryTagHolder.of(AdventureBackend.getSnbtSerializer().serialize(tag)));
+            return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.getNamespace(), id.getKey()), count, tag == null ? null : BinaryTagHolder.of(AdventureBackend.getSnbtSerializer().serialize(tag))));
         }
     }
 }

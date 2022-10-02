@@ -58,7 +58,6 @@ public class SpigotBackend extends AbstractBungeeBackend {
     public SpigotBackend() {
         if (Version.isVersion(1, 12)) {
             snbtSerializer = SNBTSerializer.builder()
-                    .convertBooleanTagsToByteTags(true)
                     .shouldSaveLongArraysDirectly(true)
                     .build();
         }

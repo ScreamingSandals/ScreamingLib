@@ -358,7 +358,7 @@ public class BukkitItemBuilder implements ItemBuilder {
         if (!ClassStorage.CB.CraftItemStack.isInstance(item)) {
             item = ClassStorage.asCBStack(item);
         }
-        Reflect.fastInvoke(ClassStorage.getHandle(item), ItemStackAccessor.getMethodSetTag1(), NBTVanillaSerializer.serialize(tag));
+        Reflect.fastInvoke(ClassStorage.getHandleOfItemStack(item), ItemStackAccessor.getMethodSetTag1(), NBTVanillaSerializer.serialize(tag));
         return this;
     }
 

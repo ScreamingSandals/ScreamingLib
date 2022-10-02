@@ -91,7 +91,6 @@ public class AdventureBackend implements SpectatorBackend {
     private static final @NotNull Component space = wrapComponent(net.kyori.adventure.text.Component.space());
     @Getter
     protected static @NotNull SNBTSerializer snbtSerializer = SNBTSerializer.builder()
-            .convertBooleanTagsToByteTags(true)
             .shouldSaveLongArraysDirectly(false)
             .build();
 

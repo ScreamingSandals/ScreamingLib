@@ -340,4 +340,9 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
 
         return CompoundTag.EMPTY;
     }
+
+    @Override
+    public String toString() {
+        return wrappedObject.toString();
+    }
 }

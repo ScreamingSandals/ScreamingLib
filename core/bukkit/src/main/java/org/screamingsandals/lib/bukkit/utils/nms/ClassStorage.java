@@ -80,6 +80,10 @@ public class ClassStorage {
 	public static Object getHandle(Object obj) {
 		return Reflect.getMethod(obj, "getHandle").invoke();
 	}
+
+	public static Object getHandleOfItemStack(Object obj) {
+		return Reflect.getField(obj, "handle");
+	}
 	
 	public static Object getPlayerConnection(Player player) {
 		return Reflect

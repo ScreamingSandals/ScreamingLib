@@ -64,7 +64,6 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     private static final @NotNull Component space = wrapComponent(new TextComponent(" "));
     @Getter
     protected static @NotNull SNBTSerializer snbtSerializer = SNBTSerializer.builder()
-            .convertBooleanTagsToByteTags(true)
             .shouldSaveLongArraysDirectly(false)
             .build();
     private static final boolean keybindSupported = Reflect.has("net.md_5.bungee.api.chat.KeybindComponent");

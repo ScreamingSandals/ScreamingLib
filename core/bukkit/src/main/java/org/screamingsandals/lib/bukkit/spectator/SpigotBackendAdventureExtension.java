@@ -99,7 +99,7 @@ class SpigotBackendAdventureExtension {
         AdventureBackend.getAdditionalItemContentConverter()
                 .registerW2P(Item.class, adventureItemContent -> {
                     var nbt = adventureItemContent.tag();
-                    return new Item(adventureItemContent.id().asString(), adventureItemContent.count(), nbt != null ? ItemTag.ofNbt(nbt) : null);
+                    return new Item(adventureItemContent.id().asString(), adventureItemContent.count(), nbt != null ? ItemTag.ofNbt(snbtSerializerLocal.serialize(nbt)) : null);
                 });
 
         AdventureBackend.getAdditionalEntityContentConverter()
