@@ -16,10 +16,13 @@
 
 package org.screamingsandals.lib.bukkit.item;
 
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.Repairable;
+import org.bukkit.persistence.PersistentDataAdapterContext;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
@@ -142,13 +145,13 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     }
 
     @Override
-    public ItemData getData() {
+    public @NotNull ItemData getData() {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
             if (Reflect.hasMethod(meta, "getPersistentDataContainer")) { // 1.14+
-                return new BukkitItemDataPersistentContainer(BukkitCore.getPlugin(), meta.getPersistentDataContainer());
+                return new BukkitItemDataPersistentContainer(meta.getPersistentDataContainer());
             } else if (Reflect.hasMethod(meta, "getCustomTagContainer")) { // 1.13.2
-                return new BukkitItemDataCustomTags(BukkitCore.getPlugin(), meta.getCustomTagContainer());
+                return new BukkitItemDataCustomTags(meta.getCustomTagContainer());
             } else {
                 var unhandled = (Map<String, Object>) Reflect.getField(meta, "unhandledTags");
                 if (unhandled.containsKey("PublicBukkitValues")) {
@@ -166,8 +169,10 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
                     return new CraftBukkitItemData(new HashMap<>());
                 }
             }
+        } else {
+            // TODO: create blank instances of PDC for 1.14+
+            return new CraftBukkitItemData(new HashMap<>());
         }
-        return null;
     }
 
     @Override

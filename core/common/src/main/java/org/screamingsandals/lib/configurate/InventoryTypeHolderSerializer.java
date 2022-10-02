@@ -16,7 +16,8 @@
 
 package org.screamingsandals.lib.configurate;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -25,10 +26,10 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class InventoryTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<InventoryTypeHolder> {
-    public static final InventoryTypeHolderSerializer INSTANCE = new InventoryTypeHolderSerializer();
+    public static final @NotNull InventoryTypeHolderSerializer INSTANCE = new InventoryTypeHolderSerializer();
 
     @Override
-    public InventoryTypeHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull InventoryTypeHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             return InventoryTypeHolder.of(node.getString());
         } catch (Throwable t) {
@@ -37,7 +38,7 @@ public class InventoryTypeHolderSerializer extends AbstractScreamingSerializer i
     }
 
     @Override
-    public void serialize(Type type, @Nullable InventoryTypeHolder obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable InventoryTypeHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
         node.set(obj == null ? null : obj.platformName());
     }
 }

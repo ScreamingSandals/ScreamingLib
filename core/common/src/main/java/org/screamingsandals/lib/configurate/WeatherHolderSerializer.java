@@ -16,7 +16,8 @@
 
 package org.screamingsandals.lib.configurate;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -26,10 +27,10 @@ import java.lang.reflect.Type;
 
 public class WeatherHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<WeatherHolder> {
 
-    public static final WeatherHolderSerializer INSTANCE = new WeatherHolderSerializer();
+    public static final @NotNull WeatherHolderSerializer INSTANCE = new WeatherHolderSerializer();
 
     @Override
-    public WeatherHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull WeatherHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             return WeatherHolder.of(node.getString());
         } catch (Throwable t) {
@@ -38,7 +39,7 @@ public class WeatherHolderSerializer extends AbstractScreamingSerializer impleme
     }
 
     @Override
-    public void serialize(Type type, @Nullable WeatherHolder obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable WeatherHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
         node.set(obj == null ? null : obj.platformName());
     }
 }

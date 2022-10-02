@@ -22,190 +22,189 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.utils.GsonUtils;
 import org.screamingsandals.lib.utils.Primitives;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class BukkitItemDataPersistentContainer implements ItemData {
-    private static final List<Class<?>> BASE_TAGS = List.of(Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, String.class, int[].class, byte[].class, long[].class);
+    private static final @NotNull List<Class<?>> BASE_TAGS = List.of(Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, String.class, int[].class, byte[].class, long[].class);
 
-    private final Plugin plugin;
     @Getter
-    private final PersistentDataContainer dataContainer;
+    private final @NotNull PersistentDataContainer dataContainer;
 
-    public static boolean isWrapperType(Class<?> clazz) {
+    public static boolean isWrapperType(@NotNull Class<?> clazz) {
         return BASE_TAGS.contains(clazz);
     }
 
     @Override
-    public Set<String> getKeys() {
+    public @NotNull Set<@NotNull NamespacedMappingKey> getKeys() {
         return dataContainer.getKeys()
                 .stream()
-                .map(NamespacedKey::getKey)
+                .map(k -> NamespacedMappingKey.of(k.getNamespace(), k.getKey()))
                 .collect(Collectors.toSet());
     }
 
     @Override
-    public <T> void set(String key, T data, Class<T> tClass) {
+    public <T> void set(@NotNull String key, @NotNull T data, @NotNull Class<T> tClass) {
+        set(NamespacedMappingKey.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), data, tClass);
+    }
+
+    @Override
+    public <T> void set(@NotNull NamespacedMappingKey key, @NotNull T data, @NotNull Class<T> tClass) {
         if (!Primitives.isWrapperType(tClass)) {
             tClass = Primitives.wrap(tClass); //Make sure we will always "switch" over the wrapper types
         }
 
-        final var container = this.dataContainer;
-        final var namespacedKey = new NamespacedKey(plugin, key);
+        final var namespacedKey = new NamespacedKey(key.namespace(), key.value());
         if (isWrapperType(tClass)) {
             if (data instanceof String) {
                 final var s = (String) data;
-                container.set(namespacedKey, PersistentDataType.STRING, s);
+                dataContainer.set(namespacedKey, PersistentDataType.STRING, s);
                 return;
             }
 
             if (data instanceof Byte) {
                 final var s = (Byte) data;
-                container.set(namespacedKey, PersistentDataType.BYTE, s);
+                dataContainer.set(namespacedKey, PersistentDataType.BYTE, s);
                 return;
             }
 
             if (data instanceof Short) {
                 final var s = (Short) data;
-                container.set(namespacedKey, PersistentDataType.SHORT, s);
+                dataContainer.set(namespacedKey, PersistentDataType.SHORT, s);
                 return;
             }
 
             if (data instanceof Integer) {
                 final var s = (Integer) data;
-                container.set(namespacedKey, PersistentDataType.INTEGER, s);
+                dataContainer.set(namespacedKey, PersistentDataType.INTEGER, s);
                 return;
             }
 
             if (data instanceof Long) {
                 final var s = (Long) data;
-                container.set(namespacedKey, PersistentDataType.LONG, s);
+                dataContainer.set(namespacedKey, PersistentDataType.LONG, s);
                 return;
             }
 
             if (data instanceof Float) {
                 final var s = (Float) data;
-                container.set(namespacedKey, PersistentDataType.FLOAT, s);
+                dataContainer.set(namespacedKey, PersistentDataType.FLOAT, s);
                 return;
             }
 
             if (data instanceof Double) {
                 final var s = (Double) data;
-                container.set(namespacedKey, PersistentDataType.DOUBLE, s);
+                dataContainer.set(namespacedKey, PersistentDataType.DOUBLE, s);
                 return;
             }
 
             if (data instanceof byte[]) {
                 final var s = (byte[]) data;
-                container.set(namespacedKey, PersistentDataType.BYTE_ARRAY, s);
+                dataContainer.set(namespacedKey, PersistentDataType.BYTE_ARRAY, s);
                 return;
             }
 
             if (data instanceof int[]) {
                 final var s = (int[]) data;
-                container.set(namespacedKey, PersistentDataType.INTEGER_ARRAY, s);
+                dataContainer.set(namespacedKey, PersistentDataType.INTEGER_ARRAY, s);
                 return;
             }
 
             if (data instanceof long[]) {
                 final var s = (long[]) data;
-                container.set(namespacedKey, PersistentDataType.LONG_ARRAY, s);
+                dataContainer.set(namespacedKey, PersistentDataType.LONG_ARRAY, s);
                 return;
             }
 
             throw new UnsupportedOperationException("This stuff is not supported!");
         }
 
-        container.set(namespacedKey, new JsonPersistentDataType<>(tClass), data);
+        dataContainer.set(namespacedKey, new JsonPersistentDataType<>(tClass), data);
     }
 
     @Override
-    @Nullable
+    public <T> @Nullable T get(@NotNull String key, @NotNull Class<T> tClass) {
+        return get(NamespacedMappingKey.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), tClass);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
-    public <T> T get(String key, Class<T> tClass) {
+    public <T> @Nullable T get(@NotNull NamespacedMappingKey key, @NotNull Class<T> tClass) {
         if (!Primitives.isWrapperType(tClass)) {
             tClass = Primitives.wrap(tClass); //Make sure we will always "switch" over the wrapper types
         }
 
-        final var container = dataContainer;
-        final var namespacedKey = new NamespacedKey(plugin, key);
+        final var namespacedKey = new NamespacedKey(key.namespace(), key.value());
         if (isWrapperType(tClass)) {
             if (String.class.isAssignableFrom(tClass)) {
-                return (T) container.get(namespacedKey, PersistentDataType.STRING);
+                return (T) dataContainer.get(namespacedKey, PersistentDataType.STRING);
             }
 
             if (Byte.class.isAssignableFrom(tClass)) {
-                return (T) container.get(namespacedKey, PersistentDataType.BYTE);
+                return (T) dataContainer.get(namespacedKey, PersistentDataType.BYTE);
             }
 
             if (Short.class.isAssignableFrom(tClass)) {
-                return (T) container.get(namespacedKey, PersistentDataType.SHORT);
+                return (T) dataContainer.get(namespacedKey, PersistentDataType.SHORT);
             }
 
             if (Integer.class.isAssignableFrom(tClass)) {
-                return (T) container.get(namespacedKey, PersistentDataType.INTEGER);
+                return (T) dataContainer.get(namespacedKey, PersistentDataType.INTEGER);
             }
 
             if (Long.class.isAssignableFrom(tClass)) {
-                return (T) container.get(namespacedKey, PersistentDataType.LONG);
+                return (T) dataContainer.get(namespacedKey, PersistentDataType.LONG);
             }
 
             if (Float.class.isAssignableFrom(tClass)) {
-                return (T) container.get(namespacedKey, PersistentDataType.FLOAT);
+                return (T) dataContainer.get(namespacedKey, PersistentDataType.FLOAT);
             }
 
             if (Double.class.isAssignableFrom(tClass)) {
-                return (T) container.get(namespacedKey, PersistentDataType.DOUBLE);
+                return (T) dataContainer.get(namespacedKey, PersistentDataType.DOUBLE);
             }
 
             if (byte[].class.isAssignableFrom(tClass)) {
-                return (T) container.get(namespacedKey, PersistentDataType.BYTE_ARRAY);
+                return (T) dataContainer.get(namespacedKey, PersistentDataType.BYTE_ARRAY);
             }
 
             if (int[].class.isAssignableFrom(tClass)) {
-                return (T) container.get(namespacedKey, PersistentDataType.INTEGER_ARRAY);
+                return (T) dataContainer.get(namespacedKey, PersistentDataType.INTEGER_ARRAY);
             }
 
             if (long[].class.isAssignableFrom(tClass)) {
-                return (T) container.get(namespacedKey, PersistentDataType.LONG_ARRAY);
+                return (T) dataContainer.get(namespacedKey, PersistentDataType.LONG_ARRAY);
             }
 
             throw new UnsupportedOperationException("This stuff is not supported!");
         }
 
-        return container.get(namespacedKey, new JsonPersistentDataType<>(tClass));
+        return dataContainer.get(namespacedKey, new JsonPersistentDataType<>(tClass));
     }
 
     @Override
-    public <T> Optional<T> getOptional(String key, Class<T> tClass) {
-        return Optional.ofNullable(get(key, tClass));
-    }
-
-    @Override
-    public <T> T getOrDefault(String key, Class<T> tClass, Supplier<T> def) {
-        return getOptional(key, tClass).orElse(def.get());
-    }
-
-    @Override
-    public boolean contains(String key) {
-        final var namespacedKey = dataContainer.getKeys()
+    public boolean contains(@NotNull String key) {
+        return dataContainer.getKeys()
                 .stream()
-                .filter(next -> next.getNamespace().equalsIgnoreCase(plugin.getName().toLowerCase(Locale.ROOT)))
-                .filter(next -> next.getKey().equalsIgnoreCase(key))
-                .findAny();
-        return namespacedKey.isPresent();
+                .anyMatch(next -> next.getNamespace().equalsIgnoreCase(BukkitCore.getPlugin().getName()) && next.getKey().equalsIgnoreCase(key));
+    }
+
+    @Override
+    public boolean contains(@NotNull NamespacedMappingKey key) {
+        return dataContainer.getKeys()
+                .stream()
+                .anyMatch(next -> next.getNamespace().equalsIgnoreCase(key.getNamespace()) && next.getKey().equalsIgnoreCase(key.getKey()));
     }
 
     @Override
@@ -214,9 +213,9 @@ public class BukkitItemDataPersistentContainer implements ItemData {
     }
 
     public static class JsonPersistentDataType<T> implements PersistentDataType<String, T> {
-        private final Class<T> tClass;
+        private final @NotNull Class<T> tClass;
 
-        public JsonPersistentDataType(Class<T> tClass) {
+        public JsonPersistentDataType(@NotNull Class<T> tClass) {
             this.tClass = tClass;
         }
 

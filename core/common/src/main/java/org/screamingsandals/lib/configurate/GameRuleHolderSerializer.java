@@ -16,7 +16,8 @@
 
 package org.screamingsandals.lib.configurate;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -25,10 +26,10 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class GameRuleHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<GameRuleHolder> {
-    public static final GameRuleHolderSerializer INSTANCE = new GameRuleHolderSerializer();
+    public static final @NotNull GameRuleHolderSerializer INSTANCE = new GameRuleHolderSerializer();
 
     @Override
-    public GameRuleHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull GameRuleHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             return GameRuleHolder.of(node.getString());
         } catch (Throwable t) {
@@ -37,7 +38,7 @@ public class GameRuleHolderSerializer extends AbstractScreamingSerializer implem
     }
 
     @Override
-    public void serialize(Type type, @Nullable GameRuleHolder obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable GameRuleHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
         node.set(obj == null ? null : obj.platformName());
     }
 }

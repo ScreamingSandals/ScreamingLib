@@ -18,67 +18,80 @@ package org.screamingsandals.lib.bukkit.item.data;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.utils.GsonUtils;
 import org.screamingsandals.lib.utils.Primitives;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
+import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CraftBukkitItemData implements ItemData {
     @Getter
-    private final Map<String, Object> keyNBTMap;
+    private final @NotNull Map<String, Object> keyNBTMap;
 
     @Override
-    public Set<String> getKeys() {
-        return keyNBTMap.keySet();
+    public @NotNull Set<@NotNull NamespacedMappingKey> getKeys() {
+        return keyNBTMap.keySet().stream().map(NamespacedMappingKey::of).collect(Collectors.toSet());
     }
 
     @Override
-    public <T> void set(String key, T data, Class<T> tClass) {
+    public <T> void set(@NotNull String key, @NotNull T data, @NotNull Class<T> tClass) {
+        set(NamespacedMappingKey.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), data, tClass);
+    }
+
+    @Override
+    public <T> void set(@NotNull NamespacedMappingKey key, @NotNull T data, @NotNull Class<T> tClass) {
         if (!Primitives.isWrapperType(tClass)) {
             tClass = Primitives.wrap(tClass); //Make sure we will always "switch" over the wrapper types
         }
 
         if (tClass == byte[].class) {
-            keyNBTMap.put(key, Reflect.construct(ByteArrayTagAccessor.getConstructor0(), data));
+            keyNBTMap.put(key.asString(), Reflect.construct(ByteArrayTagAccessor.getConstructor0(), data));
         } else if (tClass == Byte.class) {
-            keyNBTMap.put(key, ByteTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(ByteTagAccessor.getMethodValueOf1(), data) : Reflect.construct(ByteTagAccessor.getConstructor0(), data));
+            keyNBTMap.put(key.asString(), ByteTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(ByteTagAccessor.getMethodValueOf1(), data) : Reflect.construct(ByteTagAccessor.getConstructor0(), data));
         } else if (tClass == Double.class) {
-            keyNBTMap.put(key, DoubleTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(DoubleTagAccessor.getMethodValueOf1(), data) : Reflect.construct(DoubleTagAccessor.getConstructor0(), data));
+            keyNBTMap.put(key.asString(), DoubleTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(DoubleTagAccessor.getMethodValueOf1(), data) : Reflect.construct(DoubleTagAccessor.getConstructor0(), data));
         } else if (tClass == Float.class) {
-            keyNBTMap.put(key, FloatTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(FloatTagAccessor.getMethodValueOf1(), data) : Reflect.construct(FloatTagAccessor.getConstructor0(), data));
+            keyNBTMap.put(key.asString(), FloatTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(FloatTagAccessor.getMethodValueOf1(), data) : Reflect.construct(FloatTagAccessor.getConstructor0(), data));
         } else if (tClass == int[].class) {
-            keyNBTMap.put(key, Reflect.construct(IntArrayTagAccessor.getConstructor0(), data));
+            keyNBTMap.put(key.asString(), Reflect.construct(IntArrayTagAccessor.getConstructor0(), data));
         } else if (tClass == Integer.class) {
-            keyNBTMap.put(key, IntTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(IntTagAccessor.getMethodValueOf1(), data) : Reflect.construct(IntTagAccessor.getConstructor0(), data));
+            keyNBTMap.put(key.asString(), IntTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(IntTagAccessor.getMethodValueOf1(), data) : Reflect.construct(IntTagAccessor.getConstructor0(), data));
         } else if (tClass == long[].class) {
-            keyNBTMap.put(key, Reflect.construct(LongArrayTagAccessor.getConstructor0(), data));
+            keyNBTMap.put(key.asString(), Reflect.construct(LongArrayTagAccessor.getConstructor0(), data));
         } else if (tClass == Long.class) {
-            keyNBTMap.put(key, LongTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(LongTagAccessor.getMethodValueOf1(), data) : Reflect.construct(LongTagAccessor.getConstructor0(), data));
+            keyNBTMap.put(key.asString(), LongTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(LongTagAccessor.getMethodValueOf1(), data) : Reflect.construct(LongTagAccessor.getConstructor0(), data));
         } else if (tClass == Short.class) {
-            keyNBTMap.put(key, ShortTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(ShortTagAccessor.getMethodValueOf1(), data) : Reflect.construct(ShortTagAccessor.getConstructor0(), data));
+            keyNBTMap.put(key.asString(), ShortTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(ShortTagAccessor.getMethodValueOf1(), data) : Reflect.construct(ShortTagAccessor.getConstructor0(), data));
         } else if (tClass == String.class) {
-            keyNBTMap.put(key, StringTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(StringTagAccessor.getMethodValueOf1(), data) : Reflect.construct(StringTagAccessor.getConstructor0(), data));
+            keyNBTMap.put(key.asString(), StringTagAccessor.getMethodValueOf1() != null ? Reflect.fastInvoke(StringTagAccessor.getMethodValueOf1(), data) : Reflect.construct(StringTagAccessor.getConstructor0(), data));
         } else {
-            keyNBTMap.put(key, GsonUtils.gson().toJson(data)); // to json
+            keyNBTMap.put(key.asString(), GsonUtils.gson().toJson(data)); // to json
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public <T> @Nullable T get(String key, Class<T> tClass) {
+    public <T> @Nullable T get(@NotNull String key, @NotNull Class<T> tClass) {
+        return get(NamespacedMappingKey.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), tClass);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> @Nullable T get(@NotNull NamespacedMappingKey key, @NotNull Class<T> tClass) {
         if (!Primitives.isWrapperType(tClass)) {
             tClass = Primitives.wrap(tClass); //Make sure we will always "switch" over the wrapper types
         }
 
-        var nbt = keyNBTMap.get(key);
+        var nbt = keyNBTMap.get(key.asString());
         if (nbt == null) {
             return null;
         }
@@ -129,19 +142,15 @@ public class CraftBukkitItemData implements ItemData {
     }
 
     @Override
-    public <T> Optional<T> getOptional(String key, Class<T> tClass) {
-        return Optional.ofNullable(get(key, tClass));
+    public boolean contains(@NotNull String key) {
+        return keyNBTMap.containsKey(NamespacedMappingKey.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)).asString());
     }
 
     @Override
-    public <T> T getOrDefault(String key, Class<T> tClass, Supplier<T> def) {
-        return getOptional(key, tClass).orElseGet(def);
+    public boolean contains(@NotNull NamespacedMappingKey key) {
+        return keyNBTMap.containsKey(key.asString());
     }
 
-    @Override
-    public boolean contains(String key) {
-        return keyNBTMap.containsKey(key);
-    }
 
     @Override
     public boolean isEmpty() {

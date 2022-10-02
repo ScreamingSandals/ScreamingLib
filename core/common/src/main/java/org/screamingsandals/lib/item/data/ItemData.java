@@ -16,28 +16,37 @@
 
 package org.screamingsandals.lib.item.data;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
 public interface ItemData {
-    @Deprecated
-    ItemData EMPTY = new EmptyItemData();
+    @NotNull Set<@NotNull NamespacedMappingKey> getKeys();
 
-    Set<String> getKeys();
+    <T> void set(@NotNull String key, @NotNull T data, @NotNull Class<T> tClass);
 
-    <T> void set(String key, T data, Class<T> tClass);
+    <T> void set(@NotNull NamespacedMappingKey key, @NotNull T data, @NotNull Class<T> tClass);
 
-    @Nullable
-    <T> T get(String key, Class<T> tClass);
+    <T> @Nullable T get(@NotNull String key, @NotNull Class<T> tClass);
 
-    <T> Optional<T> getOptional(String key, Class<T> tClass);
+    <T> @Nullable T get(@NotNull NamespacedMappingKey key, @NotNull Class<T> tClass);
 
-    <T> T getOrDefault(String key, Class<T> tClass, Supplier<T> def);
+    default <T> @NotNull T getOrDefault(@NotNull String key, @NotNull Class<T> tClass, @NotNull Supplier<@NotNull T> def) {
+        var value = get(key, tClass);
+        return value != null ? value : def.get();
+    }
 
-    boolean contains(String key);
+    default <T> @NotNull T getOrDefault(@NotNull String key, @NotNull Class<T> tClass, @NotNull T def) {
+        var value = get(key, tClass);
+        return value != null ? value : def;
+    }
+
+    boolean contains(@NotNull String key);
+
+    boolean contains(@NotNull NamespacedMappingKey key);
 
     boolean isEmpty();
 }

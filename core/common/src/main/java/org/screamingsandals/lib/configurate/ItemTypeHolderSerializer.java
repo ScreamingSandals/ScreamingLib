@@ -16,7 +16,8 @@
 
 package org.screamingsandals.lib.configurate;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -25,10 +26,10 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class ItemTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<ItemTypeHolder> {
-    public static final ItemTypeHolderSerializer INSTANCE = new ItemTypeHolderSerializer();
+    public static final @NotNull ItemTypeHolderSerializer INSTANCE = new ItemTypeHolderSerializer();
 
     @Override
-    public ItemTypeHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull ItemTypeHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             return ItemTypeHolder.of(node.getString());
         } catch (Throwable t) {
@@ -37,7 +38,7 @@ public class ItemTypeHolderSerializer extends AbstractScreamingSerializer implem
     }
 
     @Override
-    public void serialize(Type type, @Nullable ItemTypeHolder obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable ItemTypeHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

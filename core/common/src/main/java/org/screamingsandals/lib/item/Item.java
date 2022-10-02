@@ -61,7 +61,7 @@ public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, C
 
     @NotNull List<@NotNull EnchantmentHolder> getEnchantments();
 
-    ItemData getData();
+    @NotNull ItemData getData();
 
     @NotNull List<@NotNull HideFlags> getHideFlags();
 
