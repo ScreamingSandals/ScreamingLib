@@ -1,6 +1,4 @@
 dependencies {
-    //proto
-    compileOnly libs.protobuf
     compileOnly libs.netty
 
     api project(':utils-common')

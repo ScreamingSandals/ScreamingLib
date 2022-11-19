@@ -113,12 +113,29 @@ nmsGen {
         reqField('latency')
     }
 
+    reqClass('net.minecraft.resources.ResourceLocation') {
+        reqConstructor(String)
+    }
+
+    reqClass('net.minecraft.world.InteractionHand') {
+        reqEnumField('MAIN_HAND')
+        reqEnumField('OFF_HAND')
+    }
+
+    var FriendlyByteBuf = reqClass('net.minecraft.network.FriendlyByteBuf') {
+        reqConstructor('io.netty.buffer.ByteBuf')
+    }
+
     reqClass('net.minecraft.network.protocol.Packet')
 
     reqClass('net.minecraft.network.protocol.game.ClientboundAnimatePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundBlockEventPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket') {
+        reqConstructor(String, '@FriendlyByteBuf') // pre-1.13
+        reqConstructor('@ResourceLocation', '@FriendlyByteBuf') // 1.13+
+    }
     reqClass('net.minecraft.network.protocol.game.ClientboundContainerClosePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket')
@@ -146,8 +163,16 @@ nmsGen {
     reqClass('net.minecraft.network.protocol.game.ClientboundKeepAlivePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundDisconnectPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundAddPlayerPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundOpenBookPacket') {
+        reqConstructor()
+    }
     reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket')
-    reqClass('net.minecraft.network.protocol.game.ClientboundTabListPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundTabListPacket') {
+        reqConstructor()
+        reqConstructor('@Component', '@Component')
+        reqField('header')
+        reqField('footer')
+    }
     reqClass('net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket')
     reqClass('net.minecraft.network.protocol.game.ClientboundSetObjectivePacket')
@@ -287,9 +312,7 @@ nmsGen {
         reqMethod(chain('put', 'searge:func_74782_a:1.13.2'), String, '@Tag')
     }
 
-    reqClass('net.minecraft.network.FriendlyByteBuf') {
-        reqMethod('writeNbt', '@CompoundTag')
-    }
+    FriendlyByteBuf.reqMethod('writeNbt', '@CompoundTag')
 
     reqClass('net.minecraft.nbt.DoubleTag') {
         reqConstructor(double)

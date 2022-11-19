@@ -45,9 +45,7 @@ public class SignLocation implements Wrapper {
     @Override
     public <T> T as(Class<T> type) {
         if (type == LocationHolder.class) {
-            var holder = new LocationHolder(x, y, z);
-            holder.setWorld(WorldMapper.getWorld(world).orElseThrow());
-            return (T) holder;
+            return (T) new LocationHolder(x, y, z, 0, 0, WorldMapper.getWorld(world).orElseThrow());
         }
         throw new UnsupportedOperationException("Unsupported type!");
     }

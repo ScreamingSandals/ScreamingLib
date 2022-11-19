@@ -19,7 +19,6 @@ kotlin = "1.6.10"
 # all modules (compileOnly)
 gson = "2.9.0"
 slf4j = "1.7.32"
-protobuf = "3.19.2"
 netty = "4.1.72.Final"
 
 # 3rd party plugins/mods (compileOnly)
@@ -30,7 +29,6 @@ protocolsupport = "3d24efeda6"
 
 # all modules (api)
 configurate = "4.1.2"
-resulter = "1.1.4"
 
 # cloud-* (api)
 cloud = "1.6.2"
@@ -51,10 +49,8 @@ kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", versio
 configurate-core = { group = "org.spongepowered", name = "configurate-core", version.ref = "configurate" }
 configurate-yaml = { group = "org.spongepowered", name = "configurate-yaml", version.ref = "configurate" }
 configurate-gson = { group = "org.spongepowered", name = "configurate-gson", version.ref = "configurate" }
-resulter = { group = "com.iamceph.resulter", name = "resulter-core", version.ref = "resulter" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
-protobuf = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
 netty = { group = "io.netty", name = "netty-all", version.ref = "netty" }
 placeholderapi = { group = "me.clip", name = "placeholderapi", version.ref = "placeholderapi" }
 viaversion = { group = "com.viaversion", name = "viaversion-api", version.ref = "viaversion" }

@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -164,11 +165,15 @@ public class ClassStorage {
 		return false;
 	}
 
-	public static Object asMinecraftComponent(Component component) {
+	public static @NotNull Object asMinecraftComponent(@NotNull Component component) {
+		return asMinecraftComponent(component.toJavaJson());
+	}
+
+	public static @NotNull Object asMinecraftComponent(@NotNull String javaJson) {
 		if (Component_i_SerializerAccessor.getMethodM_130701_1() != null) { // 1.16.1+
-			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), (Object) component.toJavaJson());
+			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodM_130701_1(), (Object) javaJson);
 		} else {
-			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodFunc_150699_a1(), (Object) component.toJavaJson());
+			return Reflect.fastInvoke(Component_i_SerializerAccessor.getMethodFunc_150699_a1(), (Object) javaJson);
 		}
 	}
 

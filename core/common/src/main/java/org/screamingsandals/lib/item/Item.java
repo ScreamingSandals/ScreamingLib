@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.item;
 
-import com.iamceph.resulter.core.pack.ProtoWrapper;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +39,7 @@ import java.util.stream.Collectors;
 /**
  * Represents an immutable Item.
  */
-public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, CompoundTagHolder, CompoundTagLike, CompoundTagTreeInspector, ItemContentLike, MetadataProvider, ProtoWrapper<ProtoItem> {
+public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, Cloneable, CompoundTagHolder, CompoundTagLike, CompoundTagTreeInspector, ItemContentLike, MetadataProvider {
     @NotNull ItemTypeHolder getType();
 
     default @NotNull ItemTypeHolder getMaterial() { // alternative getter (old name)
@@ -190,40 +189,5 @@ public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, C
                 .count(getAmount())
                 .tag(tag.isEmpty() ? null : tag)
                 .build();
-    }
-
-    @Override
-    default ProtoItem asProto() {
-        final var builder = ProtoItem.newBuilder();
-        builder.setType(getType().asProto())
-                .setAmount(getAmount());
-
-        final var displayName = getDisplayName();
-        if (displayName != null) {
-            builder.setDisplayName(displayName.toJavaJson());
-        }
-
-        final var lore = getLore();
-        if (lore != null) {
-            builder.addAllLore(lore.stream()
-                    .map(Component::toJavaJson)
-                    .collect(Collectors.toList()));
-        }
-
-        builder.addAllAttributeModifiers(getAttributeModifiers()
-                        .stream()
-                        .map(ProtoWrapper::asProto)
-                        .collect(Collectors.toList()))
-                .addAllEnchantments(getEnchantments().stream()
-                        .map(ProtoWrapper::asProto)
-                        .collect(Collectors.toList()))
-                .addAllHideFlags(getHideFlags().stream()
-                        .map(Enum::name)
-                        .collect(Collectors.toList()))
-                .setCustomModelData(getCustomModelData() == null ? 0 : getCustomModelData())
-                .setUnbreakable(isUnbreakable())
-                .setRepairCost(getRepairCost());
-
-        return builder.build();
     }
 }

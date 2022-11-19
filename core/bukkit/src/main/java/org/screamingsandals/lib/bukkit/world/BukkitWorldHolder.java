@@ -28,7 +28,6 @@ import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.particle.ParticleHolder;
-import org.screamingsandals.lib.spectator.audience.Audience;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;

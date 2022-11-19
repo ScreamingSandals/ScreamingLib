@@ -16,17 +16,15 @@
 
 package org.screamingsandals.lib.item.meta;
 
-import com.iamceph.resulter.core.pack.ProtoWrapper;
 import org.jetbrains.annotations.Contract;
 import org.screamingsandals.lib.utils.ComparableWrapper;
-import org.screamingsandals.lib.utils.ProtoEnchantment;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface EnchantmentHolder extends ComparableWrapper, ProtoWrapper<ProtoEnchantment> {
+public interface EnchantmentHolder extends ComparableWrapper {
 
     String platformName();
 
@@ -106,13 +104,5 @@ public interface EnchantmentHolder extends ComparableWrapper, ProtoWrapper<Proto
 
     static List<EnchantmentHolder> all() {
         return EnchantmentMapping.getValues();
-    }
-
-    @Override
-    default ProtoEnchantment asProto() {
-        return ProtoEnchantment.newBuilder()
-                .setPlatformName(platformName())
-                .setLevel(level())
-                .build();
     }
 }

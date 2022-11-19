@@ -98,8 +98,9 @@ public interface CompoundTagModifier {
         return with(new ListTag(value), tagKeys);
     }
 
-    default @NotNull CompoundTag with(@NotNull TreeInspectorKey<ListTag> key, @NotNull List<@NotNull Tag> value) {
-        return with(key, new ListTag(value));
+    default @NotNull CompoundTag with(@NotNull TreeInspectorKey<ListTag> key, @NotNull List<? extends @NotNull Tag> value) {
+        //noinspection unchecked
+        return with(key, new ListTag((List<Tag>) value));
     }
 
     default @NotNull CompoundTag with(long @NotNull [] value, @NotNull String @NotNull... tagKeys) {

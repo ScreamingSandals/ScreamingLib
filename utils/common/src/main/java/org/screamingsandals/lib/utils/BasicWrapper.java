@@ -64,6 +64,6 @@ public class BasicWrapper<O> implements Wrapper, RawValueHolder {
 
     @Override
     public int hashCode() {
-        return Objects.hash(wrappedObject);
+        return Objects.hashCode(wrappedObject);
     }
 }

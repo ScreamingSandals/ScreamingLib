@@ -16,17 +16,15 @@
 
 package org.screamingsandals.lib.attribute;
 
-import com.iamceph.resulter.core.pack.ProtoWrapper;
 import lombok.Data;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
-import org.screamingsandals.lib.utils.ProtoItemAttribute;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.UUID;
 
 @Data
-public class ItemAttributeHolder implements Wrapper, ProtoWrapper<ProtoItemAttribute> {
+public class ItemAttributeHolder implements Wrapper {
     private final AttributeTypeHolder type;
     private final UUID uuid;
     private final String name;
@@ -41,20 +39,5 @@ public class ItemAttributeHolder implements Wrapper, ProtoWrapper<ProtoItemAttri
     @Override
     public <T> T as(Class<T> type) {
         return AttributeMapping.convertItemAttributeHolder(this, type);
-    }
-
-    @Override
-    public ProtoItemAttribute asProto() {
-        final var builder = ProtoItemAttribute.newBuilder()
-                .setType(type.platformName())
-                .setUuid(uuid.toString())
-                .setName(name)
-                .setAmount(amount)
-                .setOperation(operation.name());
-        if (slot != null && slot.platformName() != null) {
-            builder.setSlot(slot.platformName());
-        }
-
-        return builder.build();
     }
 }

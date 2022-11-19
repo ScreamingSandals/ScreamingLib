@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.item;
 
-import com.iamceph.resulter.core.pack.ProtoWrapper;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +23,6 @@ import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
-import org.screamingsandals.lib.utils.ProtoItemType;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
@@ -33,7 +31,7 @@ import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 @Accessors(fluent = true)
-public interface ItemTypeHolder extends ComparableWrapper, ProtoWrapper<ProtoItemType>, ParticleData, TaggableHolder {
+public interface ItemTypeHolder extends ComparableWrapper, ParticleData, TaggableHolder {
     String platformName();
 
     /**
@@ -112,13 +110,5 @@ public interface ItemTypeHolder extends ComparableWrapper, ProtoWrapper<ProtoIte
 
     static List<ItemTypeHolder> all() {
         return ItemTypeMapper.getValues();
-    }
-
-    @Override
-    default ProtoItemType asProto() {
-        return ProtoItemType.newBuilder()
-                .setPlatformName(platformName())
-                .setDurability(durability())
-                .build();
     }
 }
