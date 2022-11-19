@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.configurate;
 
+import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeMapping;
@@ -34,6 +35,7 @@ import org.screamingsandals.lib.nbt.configurate.TagSerializer;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.ConfigurateUtils;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -44,6 +46,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class ItemSerializer extends AbstractScreamingSerializer implements TypeSerializer<Item> {
     public static final @NotNull ItemSerializer INSTANCE = new ItemSerializer();
 
@@ -235,11 +238,10 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
                 if (attributes.isList()) {
                     attributes.childrenList().stream()
                             .map(AttributeMapping::wrapItemAttribute)
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
+                            .filter(Objects::nonNull)
                             .forEach(builder::attributeModifier);
                 } else {
-                    AttributeMapping.wrapItemAttribute(attributes).ifPresent(builder::attributeModifier);
+                    AttributeMapping.wrapItemAttribute(attributes).ifNotNull(builder::attributeModifier);
                 }
             }
 

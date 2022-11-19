@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockMultiPlaceEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -37,6 +38,7 @@ import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ImmutableCollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Collection;
 import java.util.List;
@@ -45,6 +47,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -66,7 +69,7 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
                 replacedBlockStates = new ImmutableCollectionLinkedToCollection<>(
                         ((BlockMultiPlaceEvent) event).getReplacedBlockStates(),
                         blockStateHolder -> blockStateHolder.as(BlockState.class),
-                        blockState -> BlockStateMapper.wrapBlockState(blockState).orElseThrow()
+                        blockState -> BlockStateMapper.<BlockStateHolder>wrapBlockState(blockState).orElseThrow()
                 );
             } else {
                 replacedBlockStates = List.of(replacedBlockState());
@@ -94,7 +97,7 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
     @Override
     public BlockStateHolder replacedBlockState() {
         if (replacedBlockState == null) {
-            replacedBlockState = BlockStateMapper.wrapBlockState(event.getBlockReplacedState()).orElseThrow();
+            replacedBlockState = BlockStateMapper.<BlockStateHolder>wrapBlockState(event.getBlockReplacedState()).orElseThrow();
         }
         return replacedBlockState;
     }

@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.attribute.AttributeHolder;
@@ -31,7 +32,7 @@ import java.util.Optional;
 
 public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
-    Optional<AttributeHolder> getAttribute(AttributeTypeHolder attributeType);
+    @Nullable AttributeHolder getAttribute(@NotNull AttributeTypeHolder attributeType);
 
     double getEyeHeight();
 
@@ -41,7 +42,7 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
     BlockHolder getTargetBlock(Collection<BlockTypeHolder> transparent, int maxDistance);
 
-    Optional<BlockHolder> getTargetBlock(int maxDistance);
+    @Nullable BlockHolder getTargetBlock(int maxDistance);
 
     int getRemainingAir();
 

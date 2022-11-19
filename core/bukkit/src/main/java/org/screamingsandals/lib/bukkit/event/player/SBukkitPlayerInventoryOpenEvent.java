@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.event.player;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -27,11 +28,13 @@ import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.event.player.SPlayerInventoryOpenEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitPlayerInventoryOpenEvent implements SPlayerInventoryOpenEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -54,7 +57,7 @@ public class SBukkitPlayerInventoryOpenEvent implements SPlayerInventoryOpenEven
     @Override
     public Container topInventory() {
         if (topInventory == null) {
-            topInventory = ContainerFactory.wrapContainer(event.getInventory()).orElseThrow();
+            topInventory = ContainerFactory.<Container>wrapContainer(event.getInventory()).orElseThrow();
         }
         return topInventory;
     }
@@ -62,7 +65,7 @@ public class SBukkitPlayerInventoryOpenEvent implements SPlayerInventoryOpenEven
     @Override
     public Container bottomInventory() {
         if (bottomInventory == null) {
-            bottomInventory = ContainerFactory.wrapContainer(event.getView().getBottomInventory()).orElseThrow();
+            bottomInventory = ContainerFactory.<Container>wrapContainer(event.getView().getBottomInventory()).orElseThrow();
         }
         return bottomInventory;
     }

@@ -18,10 +18,14 @@ package org.screamingsandals.lib.block;
 
 import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.ItemBlockIdsRemapper;
 import org.screamingsandals.lib.configurate.BlockTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Pair;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
@@ -66,12 +70,13 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     @OfMethodAlternative(value = BlockTypeHolder.class, methodName = "ofOptional")
-    public static Optional<BlockTypeHolder> resolve(Object materialObject) {
+    @Contract("null -> null")
+    public static @Nullable BlockTypeHolder resolve(@Nullable Object materialObject) {
         if (blockTypeMapper == null) {
             throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
         }
         if (materialObject == null) {
-            return Optional.empty();
+            return null;
         }
 
         return blockTypeMapper.blockTypeConverter.convertOptional(materialObject).or(() -> {
@@ -179,7 +184,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
                 }
             }
             return Optional.empty();
-        });
+        }).orElse(null);
     }
 
     @OfMethodAlternative(value = BlockTypeHolder.class, methodName = "all")
@@ -203,9 +208,10 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
     }
 
     @OfMethodAlternative(value = BlockTypeHolder.class, methodName = "air")
-    public static BlockTypeHolder getCachedAir() {
+    public static @NotNull BlockTypeHolder getCachedAir() {
         if (cachedAir == null) {
-            cachedAir = resolve("minecraft:air").orElseThrow();
+            cachedAir = resolve("minecraft:air");
+            Preconditions.checkNotNull(cachedAir, "Could not find block type: minecraft:air");
         }
         return cachedAir;
     }

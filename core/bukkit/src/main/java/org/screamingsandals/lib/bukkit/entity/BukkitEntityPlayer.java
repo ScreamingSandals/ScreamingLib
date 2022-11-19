@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.entity;
 
 import com.viaversion.viaversion.api.Via;
 import io.netty.channel.Channel;
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -45,6 +46,7 @@ import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
@@ -57,6 +59,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapper {
     public BukkitEntityPlayer(Player wrappedObject) {
         super(wrappedObject);
@@ -195,17 +198,17 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public Container getEnderChest() {
-        return ContainerFactory.wrapContainer(((Player) wrappedObject).getEnderChest()).orElseThrow();
+    public @NotNull Container getEnderChest() {
+        return ContainerFactory.<Container>wrapContainer(((Player) wrappedObject).getEnderChest()).orElseThrow();
     }
 
     @Override
-    public PlayerContainer getPlayerInventory() {
+    public @NotNull PlayerContainer getPlayerInventory() {
         return ContainerFactory.<PlayerContainer>wrapContainer(((Player) wrappedObject).getInventory()).orElseThrow();
     }
 
     @Override
-    public Optional<Container> getOpenedInventory() {
+    public @Nullable Container getOpenedInventory() {
         return ContainerFactory.wrapContainer(((Player) wrappedObject).getOpenInventory().getTopInventory());
     }
 

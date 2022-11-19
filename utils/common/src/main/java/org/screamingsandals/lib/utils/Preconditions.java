@@ -37,18 +37,34 @@ public class Preconditions {
         }
     }
 
-    @Contract("null -> fail")
-    public <T> T checkNotNull(@Nullable T reference) {
+    @Contract("null -> fail; _ -> param1")
+    public <T> @NotNull T checkNotNull(@Nullable T reference) {
         if (reference == null) {
             throw new NullPointerException();
         }
         return reference;
     }
 
-    @Contract("null, _ -> fail")
-    public <T> T checkNotNull(@Nullable T reference, @NotNull Object errorMessage) {
+    @Contract("null, _ -> fail; _, _ -> param1")
+    public <T> @NotNull T checkNotNull(@Nullable T reference, @NotNull Object errorMessage) {
         if (reference == null) {
             throw new NullPointerException(String.valueOf(errorMessage));
+        }
+        return reference;
+    }
+
+    @Contract("null -> fail; _ -> param1")
+    public <T> T checkNotNullIllegal(@Nullable T reference) {
+        if (reference == null) {
+            throw new IllegalArgumentException("Argument is null");
+        }
+        return reference;
+    }
+
+    @Contract("null, _ -> fail; _, _ -> param1")
+    public <T> T checkNotNullIllegal(@Nullable T reference, @NotNull Object errorMessage) {
+        if (reference == null) {
+            throw new IllegalArgumentException(String.valueOf(errorMessage));
         }
         return reference;
     }

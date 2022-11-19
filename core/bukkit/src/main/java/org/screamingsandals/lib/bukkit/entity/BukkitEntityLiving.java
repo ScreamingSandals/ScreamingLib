@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.entity;
 
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -57,7 +58,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     }
 
     @Override
-    public Optional<AttributeHolder> getAttribute(AttributeTypeHolder attributeType) {
+    public @Nullable AttributeHolder getAttribute(@NotNull AttributeTypeHolder attributeType) {
         return AttributeMapping.wrapAttribute(((LivingEntity) wrappedObject).getAttribute(attributeType.as(Attribute.class)));
     }
 
@@ -86,7 +87,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     }
 
     @Override
-    public Optional<BlockHolder> getTargetBlock(int maxDistance) {
+    public @Nullable BlockHolder getTargetBlock(int maxDistance) {
         return BlockMapper.resolve(((LivingEntity) wrappedObject)
                 .getTargetBlockExact(maxDistance));
     }

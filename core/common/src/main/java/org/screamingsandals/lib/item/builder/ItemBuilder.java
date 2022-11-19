@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 public interface ItemBuilder extends MetadataConsumer {
     @Contract("_ -> this")
     @NotNull ItemBuilder type(@NotNull ItemTypeHolder type);
@@ -226,7 +225,10 @@ public interface ItemBuilder extends MetadataConsumer {
 
     @Contract("_ -> this")
     default @NotNull ItemBuilder attribute(@NotNull Object itemAttribute) {
-        AttributeMapping.wrapItemAttribute(itemAttribute).ifPresent(this::attributeModifier);
+        var attribute = AttributeMapping.wrapItemAttribute(itemAttribute);
+        if (attribute != null) {
+            this.attributeModifier(attribute);
+        }
         return this;
     }
 

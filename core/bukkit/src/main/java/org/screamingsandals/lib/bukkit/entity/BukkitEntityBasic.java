@@ -391,9 +391,9 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public Optional<Container> getInventory() {
+    public @Nullable Container getInventory() {
         if (!(wrappedObject instanceof InventoryHolder)) {
-            return Optional.empty();
+            return null;
         }
         return ContainerFactory.wrapContainer(((InventoryHolder) wrappedObject).getInventory());
     }

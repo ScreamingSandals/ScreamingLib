@@ -16,40 +16,38 @@
 
 package org.screamingsandals.lib.attribute;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface AttributeTypeHolder extends ComparableWrapper, RawValueHolder {
 
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
-
     String platformName();
 
     @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
-    static AttributeTypeHolder of(Object attributeType) {
-        return ofOptional(attributeType).orElseThrow();
+    static @NotNull AttributeTypeHolder of(@NotNull Object attributeType) {
+        var result = ofNullable(attributeType);
+        Preconditions.checkNotNullIllegal(result, "Could not find attribute type: " + attributeType);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
-    static Optional<AttributeTypeHolder> ofOptional(Object attributeType) {
+    @Contract("null -> null")
+    static @Nullable AttributeTypeHolder ofNullable(@Nullable Object attributeType) {
         if (attributeType instanceof AttributeTypeHolder) {
-            return Optional.of((AttributeTypeHolder) attributeType);
+            return (AttributeTypeHolder) attributeType;
         }
         return AttributeTypeMapping.resolve(attributeType);
     }
 
-    static List<AttributeTypeHolder> all() {
+    static @NotNull List<@NotNull AttributeTypeHolder> all() {
         return AttributeTypeMapping.getValues();
     }
 

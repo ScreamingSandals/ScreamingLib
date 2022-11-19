@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.event.player;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -35,11 +36,13 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ClickType;
 import org.screamingsandals.lib.utils.InventoryAction;
 import org.screamingsandals.lib.utils.SlotType;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -88,7 +91,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     public @Nullable Container clickedInventory() {
         if (!clickedInventoryCached) {
             if (event.getClickedInventory() != null) {
-                clickedInventory = ContainerFactory.wrapContainer(event.getClickedInventory()).orElseThrow();
+                clickedInventory = ContainerFactory.<Container>wrapContainer(event.getClickedInventory()).orElseThrow();
             }
             clickedInventoryCached = true;
         }
@@ -106,7 +109,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     @Override
     public Container inventory() {
         if (inventory == null) {
-            inventory = ContainerFactory.wrapContainer(event.getInventory()).orElseThrow();
+            inventory = ContainerFactory.<Container>wrapContainer(event.getInventory()).orElseThrow();
         }
         return inventory;
     }

@@ -5,4 +5,11 @@ dependencies {
     api project(':api-utils')
     api libs.configurate.core
     api libs.configurate.gson
+
+    testImplementation libs.junit.jupiter.api
+    testRuntimeOnly libs.junit.jupiter.engine
+}
+
+test {
+    useJUnitPlatform()
 }

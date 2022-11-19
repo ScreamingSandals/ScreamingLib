@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.event.block;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.block.MoistureChangeEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -26,11 +27,13 @@ import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.SMoistureChangeEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitMoistureChangeEvent implements SMoistureChangeEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -52,7 +55,7 @@ public class SBukkitMoistureChangeEvent implements SMoistureChangeEvent, BukkitC
     @Override
     public BlockStateHolder newBlockState() {
         if (newBlockState == null) {
-            newBlockState = BlockStateMapper.wrapBlockState(event.getNewState()).orElseThrow();
+            newBlockState = BlockStateMapper.<BlockStateHolder>wrapBlockState(event.getNewState()).orElseThrow();
         }
         return newBlockState;
     }

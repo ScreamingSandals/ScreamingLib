@@ -16,13 +16,11 @@
 
 package org.screamingsandals.lib.bukkit.item;
 
-import org.bukkit.Bukkit;
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.Repairable;
-import org.bukkit.persistence.PersistentDataAdapterContext;
-import org.bukkit.persistence.PersistentDataContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
@@ -51,11 +49,13 @@ import org.screamingsandals.lib.nms.accessors.CompoundTagAccessor;
 import org.screamingsandals.lib.nms.accessors.ItemStackAccessor;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     private @Nullable CompoundTag tagCache;
 
@@ -116,7 +116,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
                     meta.getAttributeModifiers()
                             .forEach((attribute, attributeModifier) ->
                                     AttributeMapping.wrapItemAttribute(new BukkitItemAttribute(attribute, attributeModifier))
-                                            .ifPresent(list::add)
+                                            .ifNotNull(list::add)
                             );
                     return list;
                 }

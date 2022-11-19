@@ -17,11 +17,11 @@
 package org.screamingsandals.lib.container;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
-
-import java.util.Optional;
 
 @AbstractService
 public abstract class ContainerFactory {
@@ -37,48 +37,51 @@ public abstract class ContainerFactory {
         factory = this;
     }
 
-    public static <C extends Container> Optional<C> wrapContainer(Object container) {
+    @Contract("null -> null")
+    public static <C extends Container> @Nullable C wrapContainer(@Nullable Object container) {
         if (factory == null) {
             throw new UnsupportedOperationException("ContainerFactory is not initialized yet.");
         }
         return factory.wrapContainer0(container);
     }
 
-    public abstract <C extends Container> Optional<C> wrapContainer0(Object container);
+    public abstract <C extends Container> @Nullable C wrapContainer0(@Nullable Object container);
 
-    public static <C extends Container> Optional<C> createContainer(InventoryTypeHolder type) {
+    @Contract("null -> null")
+    public static <C extends Container> @Nullable C createContainer(@Nullable InventoryTypeHolder type) {
         if (factory == null) {
             throw new UnsupportedOperationException("ContainerFactory is not initialized yet.");
         }
         return factory.createContainer0(type);
     }
 
-    public static <C extends Container> Optional<C> createContainer(InventoryTypeHolder type, Component name) {
+    @Contract("null, _ -> null")
+    public static <C extends Container> @Nullable C createContainer(@Nullable InventoryTypeHolder type, @Nullable Component name) {
         if (factory == null) {
             throw new UnsupportedOperationException("ContainerFactory is not initialized yet.");
         }
         return factory.createContainer0(type, name);
     }
 
-    public static <C extends Container> Optional<C> createContainer(int size) {
+    public static <C extends Container> @Nullable C createContainer(int size) {
         if (factory == null) {
             throw new UnsupportedOperationException("ContainerFactory is not initialized yet.");
         }
         return factory.createContainer0(size);
     }
 
-    public static <C extends Container> Optional<C> createContainer(int size, Component name) {
+    public static <C extends Container> @Nullable C createContainer(int size, @Nullable Component name) {
         if (factory == null) {
             throw new UnsupportedOperationException("ContainerFactory is not initialized yet.");
         }
         return factory.createContainer0(size, name);
     }
 
-    public abstract <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type);
+    public abstract <C extends Container> @Nullable C createContainer0(@Nullable InventoryTypeHolder type);
 
-    public abstract <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type, Component name);
+    public abstract <C extends Container> @Nullable C createContainer0(@Nullable InventoryTypeHolder type, @Nullable Component name);
 
-    public abstract <C extends Container> Optional<C> createContainer0(int size);
+    public abstract <C extends Container> @Nullable C createContainer0(int size);
 
-    public abstract <C extends Container> Optional<C> createContainer0(int size, Component name);
+    public abstract <C extends Container> @Nullable C createContainer0(int size, @Nullable Component name);
 }

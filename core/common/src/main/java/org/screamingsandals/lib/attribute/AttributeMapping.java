@@ -16,11 +16,15 @@
 
 package org.screamingsandals.lib.attribute;
 
+import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -33,6 +37,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @SuppressWarnings("AlternativeMethodAvailable")
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 @AbstractService
 @ServiceDependencies(dependsOn = {
         AttributeTypeMapping.class,
@@ -69,18 +74,18 @@ public abstract class AttributeMapping {
 
         var typeOpt = AttributeTypeMapping.resolve(type.raw());
 
-        if (typeOpt.isEmpty()) {
+        if (typeOpt == null) {
             return null;
         }
 
         try {
             return new ItemAttributeHolder(
-                    typeOpt.get(),
+                    typeOpt,
                     uuid.get(UUID.class, (Supplier<UUID>) UUID::randomUUID),
                     name.getString(""),
                     amount.getDouble(),
                     operation.get(AttributeModifierHolder.Operation.class),
-                    EquipmentSlotMapping.resolve(slot.raw()).orElse(null) // nullable
+                    EquipmentSlotMapping.resolve(slot.raw()).toNullable()
             );
         } catch (SerializationException e) {
             e.printStackTrace();
@@ -120,27 +125,30 @@ public abstract class AttributeMapping {
         attributeMapping = this;
     }
 
-    public static Optional<AttributeHolder> wrapAttribute(Object attribute) {
+    @Contract("null -> null")
+    public static @Nullable AttributeHolder wrapAttribute(@Nullable Object attribute) {
         if (attributeMapping == null) {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }
         return attributeMapping.wrapAttribute0(attribute);
     }
 
-    protected abstract Optional<AttributeHolder> wrapAttribute0(Object attribute);
+    protected abstract @Nullable AttributeHolder wrapAttribute0(@Nullable Object attribute);
 
-    public static Optional<AttributeModifierHolder> wrapAttributeModifier(Object attributeModifier) {
+    @Contract("null -> null")
+    public static @Nullable AttributeModifierHolder wrapAttributeModifier(@Nullable Object attributeModifier) {
         if (attributeMapping == null) {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }
-        return attributeMapping.attributeModifierConverter.convertOptional(attributeModifier);
+        return attributeMapping.attributeModifierConverter.convertOptional(attributeModifier).toNullable();
     }
 
-    public static Optional<ItemAttributeHolder> wrapItemAttribute(Object attribute) {
+    @Contract("null -> null")
+    public static @Nullable ItemAttributeHolder wrapItemAttribute(@Nullable Object attribute) {
         if (attributeMapping == null) {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }
-        return attributeMapping.itemAttributeConverter.convertOptional(attribute);
+        return attributeMapping.itemAttributeConverter.convertOptional(attribute).toNullable();
     }
 
     public static <T> T convertItemAttributeHolder(ItemAttributeHolder holder, Class<T> newType) {
@@ -155,5 +163,21 @@ public abstract class AttributeMapping {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }
         return attributeMapping.attributeModifierConverter.convert(holder, newType);
+    }
+
+    public static void main(String[] args) {
+        try {
+            Optional.ofNullable(null).orElseThrow();
+        } catch (Exception ex) {
+            System.out.println("thrown 1");
+            ex.printStackTrace();
+        }
+
+        try {
+            ((Object) null).orElseThrow();
+        } catch (Exception ex2) {
+            System.out.println("thrown 2");
+            ex2.printStackTrace();
+        }
     }
 }

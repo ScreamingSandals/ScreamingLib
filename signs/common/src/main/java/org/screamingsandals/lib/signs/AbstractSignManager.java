@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.signs;
 
+import lombok.experimental.ExtensionMethod;
+import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.SPlayerInteractEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -26,6 +28,7 @@ import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 import org.screamingsandals.lib.block.state.SignHolder;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.loader.ConfigurationLoader;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -37,6 +40,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ServiceDependencies
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public abstract class AbstractSignManager {
     private final List<ClickableSign> signs = new LinkedList<>();
     private boolean modified;
@@ -135,7 +139,7 @@ public abstract class AbstractSignManager {
     public void onRightClick(SPlayerInteractEvent event) {
         if (event.action() == SPlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
                 && event.clickedBlock() != null) {
-            var state = event.clickedBlock().getBlockState().orElseThrow();
+            var state = event.clickedBlock().<BlockStateHolder>getBlockState().orElseThrow();
             if (state instanceof SignHolder) {
                 var location = new SignLocation(state.getLocation());
                 var sign = getSign(location);
@@ -157,7 +161,7 @@ public abstract class AbstractSignManager {
         }
 
         var player = event.player();
-        var state = event.block().getBlockState().orElseThrow();
+        var state = event.block().<BlockStateHolder>getBlockState().orElseThrow();
         if (state instanceof SignHolder) {
             var location = new SignLocation(state.getLocation());
             if (isSignRegistered(location)) {

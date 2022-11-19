@@ -25,7 +25,6 @@ import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * An interface representing an inventory.
@@ -35,9 +34,9 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
      * Gets the item at the specified slot in this inventory.
      *
      * @param index the inventory slot index
-     * @return the item, empty if there is no item
+     * @return the item, null if there is no item
      */
-    Optional<Item> getItem(int index);
+    @Nullable Item getItem(int index);
 
     /**
      * Sets an item at the specified slot index in this inventory.

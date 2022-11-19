@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bukkit.block;
 
+import lombok.experimental.ExtensionMethod;
 import org.screamingsandals.lib.ext.paperlib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,6 +25,7 @@ import org.bukkit.block.data.BlockData;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -31,6 +33,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
 @Service
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitBlockMapper extends BlockMapper {
 
     public BukkitBlockMapper() {
@@ -43,10 +46,8 @@ public class BukkitBlockMapper extends BlockMapper {
                         return new BlockHolder(instanced, BlockTypeHolder.of(block.getBlockData()));
                     }
                 })
-                .registerP2W(Block.class, block ->
-                        resolve(block.getLocation()).orElseThrow())
-                .registerP2W(LocationHolder.class, location ->
-                        resolve(location.as(Location.class)).orElseThrow())
+                .registerP2W(Block.class, block -> resolve(block.getLocation()).orElseThrow())
+                .registerP2W(LocationHolder.class, location -> resolve(location.as(Location.class)).orElseThrow())
                 .registerW2P(Block.class, holder -> {
                     final var location = holder.getLocation().as(Location.class);
                     return location.getBlock();

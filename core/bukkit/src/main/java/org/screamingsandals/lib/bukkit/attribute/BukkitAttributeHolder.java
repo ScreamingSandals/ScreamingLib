@@ -22,7 +22,7 @@ import org.screamingsandals.lib.attribute.*;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class BukkitAttributeHolder extends BasicWrapper<AttributeInstance> implements AttributeHolder {
@@ -60,7 +60,7 @@ public class BukkitAttributeHolder extends BasicWrapper<AttributeInstance> imple
     public List<AttributeModifierHolder> getModifiers() {
         return wrappedObject.getModifiers().stream()
                 .map(AttributeMapping::wrapAttributeModifier)
-                .map(Optional::orElseThrow)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

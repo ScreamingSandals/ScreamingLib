@@ -20,11 +20,10 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlot;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.*;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.annotations.Service;
-
-import java.util.Optional;
 
 @Service
 public class BukkitAttributeMapping extends AttributeMapping {
@@ -92,10 +91,10 @@ public class BukkitAttributeMapping extends AttributeMapping {
     }
 
     @Override
-    protected Optional<AttributeHolder> wrapAttribute0(Object attribute) {
+    protected @Nullable AttributeHolder wrapAttribute0(@Nullable Object attribute) {
         if (attribute instanceof AttributeInstance) {
-            return Optional.of(new BukkitAttributeHolder((AttributeInstance) attribute));
+            return new BukkitAttributeHolder((AttributeInstance) attribute);
         }
-        return Optional.empty();
+        return null;
     }
 }

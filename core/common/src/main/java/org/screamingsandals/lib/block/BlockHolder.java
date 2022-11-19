@@ -18,12 +18,11 @@ package org.screamingsandals.lib.block;
 
 import lombok.Data;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
-
-import java.util.Optional;
 
 /**
  * A class representing a block at a specific location.
@@ -91,7 +90,7 @@ public class BlockHolder implements Wrapper {
      *
      * @return the block state, empty if there is none
      */
-    public <T extends BlockStateHolder> Optional<T> getBlockState() {
+    public <T extends BlockStateHolder> @Nullable T getBlockState() {
         return BlockStateMapper.getBlockStateFromBlock(this);
     }
 

@@ -38,7 +38,7 @@ public class BukkitAttributeTypeHolder extends BasicWrapper<Attribute> implement
         if (object instanceof Attribute || object instanceof AttributeTypeHolder) {
             return equals(object);
         }
-        return equals(AttributeTypeHolder.ofOptional(object).orElse(null));
+        return equals(AttributeTypeHolder.ofNullable(object));
     }
 
     @Override

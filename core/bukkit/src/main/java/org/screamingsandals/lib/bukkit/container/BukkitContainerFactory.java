@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.PlayerInventory;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
@@ -27,31 +28,38 @@ import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.annotations.Service;
 
-import java.util.Optional;
-
 @Service
 public class BukkitContainerFactory extends ContainerFactory {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <C extends Container> Optional<C> wrapContainer0(Object container) {
+    public <C extends Container> @Nullable C wrapContainer0(Object container) {
         if (container instanceof PlayerInventory) {
-            return (Optional<C>) Optional.of(new BukkitPlayerContainer((PlayerInventory) container));
+            return (C) new BukkitPlayerContainer((PlayerInventory) container);
         }
 
         if (container instanceof Inventory) {
-            return (Optional<C>) Optional.of(new BukkitContainer((Inventory) container));
+            return (C) new BukkitContainer((Inventory) container);
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override
-    public <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type) {
+    public <C extends Container> @Nullable C createContainer0(@Nullable InventoryTypeHolder type) {
+        if (type == null) {
+            return null;
+        }
         return wrapContainer0(Bukkit.createInventory(null, type.as(InventoryType.class)));
     }
 
     @Override
-    public <C extends Container> Optional<C> createContainer0(InventoryTypeHolder type, Component name) {
+    public <C extends Container> @Nullable C createContainer0(@Nullable InventoryTypeHolder type, @Nullable Component name) {
+        if (type == null) {
+            return null;
+        }
+        if (name == null) {
+            return wrapContainer0(type);
+        }
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             return wrapContainer0(Bukkit.createInventory(null, type.as(InventoryType.class), name.as(net.kyori.adventure.text.Component.class)));
         } else {
@@ -60,12 +68,15 @@ public class BukkitContainerFactory extends ContainerFactory {
     }
 
     @Override
-    public <C extends Container> Optional<C> createContainer0(int size) {
+    public <C extends Container> @Nullable C createContainer0(int size) {
         return wrapContainer0(Bukkit.createInventory(null, size));
     }
 
     @Override
-    public <C extends Container> Optional<C> createContainer0(int size, Component name) {
+    public <C extends Container> @Nullable C createContainer0(int size, @Nullable Component name) {
+        if (name == null) {
+            return wrapContainer0(size);
+        }
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             return wrapContainer0(Bukkit.createInventory(null, size, name.as(net.kyori.adventure.text.Component.class)));
         } else {

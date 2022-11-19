@@ -18,6 +18,7 @@ package org.screamingsandals.lib;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.ExtensionMethod;
 import org.screamingsandals.lib.block.BlockDataTranslatorBuilder;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.block.BlockTypeMapper;
@@ -26,6 +27,7 @@ import org.screamingsandals.lib.item.ItemTypeMapper;
 import org.screamingsandals.lib.utils.Platform;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.key.*;
 
 import java.util.*;
@@ -35,6 +37,7 @@ import java.util.function.Predicate;
 /**
  * Class responsible for remapping item and block id's.
  */
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
         replaceRule = "{basePackage}.{platform}.{Platform}{className}"
@@ -125,13 +128,13 @@ public abstract class ItemBlockIdsRemapper {
 
     private void makeColorableBlock(String baseName, String notColoredName) {
         var list = new ArrayList<BlockTypeHolder>();
-        COLORS.forEach(s -> BlockTypeHolder.ofOptional(s + "_" + baseName).ifPresent(materialHolder -> {
+        COLORS.forEach(s -> BlockTypeHolder.ofNullable(s + "_" + baseName).ifNotNull(materialHolder -> {
             if (!list.contains(materialHolder)) {
                 list.add(materialHolder);
             }
         }));
 
-        BlockTypeHolder.ofOptional(notColoredName).ifPresent(materialHolder -> {
+        BlockTypeHolder.ofNullable(notColoredName).ifNotNull(materialHolder -> {
             if (!list.contains(materialHolder)) {
                 list.add(materialHolder);
             }
@@ -140,7 +143,7 @@ public abstract class ItemBlockIdsRemapper {
         if (!list.isEmpty()) { // if list is empty, we don't have this material
             colorableBlocks.put(list::contains, s -> {
                 if (COLORS.contains(s.toUpperCase(Locale.ROOT))) {
-                    return BlockTypeHolder.ofOptional(s.toUpperCase(Locale.ROOT) + "_" + baseName);
+                    return Optional.ofNullable(BlockTypeHolder.ofNullable(s.toUpperCase(Locale.ROOT) + "_" + baseName));
                 }
                 return Optional.empty();
             });

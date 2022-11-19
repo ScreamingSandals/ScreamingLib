@@ -18,10 +18,12 @@ package org.screamingsandals.lib.block;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.*;
@@ -70,14 +72,11 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData, Taggab
         return BlockTypeMapper.colorize(this, color);
     }
 
-    @NotNull
-    Optional<String> get(@NotNull String attribute);
+    @Nullable String get(@NotNull String attribute);
 
-    @NotNull
-    Optional<Integer> getInt(@NotNull String attribute);
+    @Nullable Integer getInt(@NotNull String attribute);
 
-    @NotNull
-    Optional<Boolean> getBoolean(@NotNull String attribute);
+    @Nullable Boolean getBoolean(@NotNull String attribute);
 
     default boolean isAir() {
         return isSameType(air(), "minecraft:cave_air", "minecraft:void_air");
@@ -124,14 +123,17 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData, Taggab
     boolean is(Object... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
-    static BlockTypeHolder of(Object type) {
-        return ofOptional(type).orElseThrow();
+    static @NotNull BlockTypeHolder of(@NotNull Object type) {
+        var result = ofNullable(type);
+        Preconditions.checkNotNullIllegal(result, "Could not find block type: " + type);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
-    static Optional<BlockTypeHolder> ofOptional(Object type) {
+    @Contract("null -> null")
+    static @Nullable BlockTypeHolder ofNullable(@Nullable Object type) {
         if (type instanceof BlockTypeHolder) {
-            return Optional.of((BlockTypeHolder) type);
+            return (BlockTypeHolder) type;
         }
         return BlockTypeMapper.resolve(type);
     }

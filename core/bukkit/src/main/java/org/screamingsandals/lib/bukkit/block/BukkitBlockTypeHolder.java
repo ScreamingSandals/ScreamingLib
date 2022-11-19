@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bukkit.block;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -23,20 +24,22 @@ import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements BlockTypeHolder {
 
     public static boolean NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED;
@@ -114,7 +117,7 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     @NotNull
     public BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> data) {
         final var builder = new StringBuilder();
-        if (data != null && !data.isEmpty()) {
+        if (!data.isEmpty()) {
             builder.append('[');
             builder.append(data
                     .entrySet()
@@ -157,27 +160,24 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    @NotNull
-    public Optional<String> get(@NotNull String attribute) {
-        return Optional.ofNullable(flatteningData().get(attribute));
+    public @Nullable String get(@NotNull String attribute) {
+        return flatteningData().get(attribute);
     }
 
     @Override
-    @NotNull
-    public Optional<Integer> getInt(@NotNull String attribute) {
-        return Optional.ofNullable(flatteningData().get(attribute)).flatMap(s -> {
+    public @Nullable Integer getInt(@NotNull String attribute) {
+        return flatteningData().get(attribute).mapOrNull(s -> {
             try {
-                return Optional.of(Integer.valueOf(s));
+                return Integer.valueOf(s);
             } catch (Throwable ignored) {
-                return Optional.empty();
             }
+            return null;
         });
     }
 
     @Override
-    @NotNull
-    public Optional<Boolean> getBoolean(@NotNull String attribute) {
-        return Optional.ofNullable(flatteningData().get(attribute)).map(Boolean::parseBoolean);
+    public @Nullable Boolean getBoolean(@NotNull String attribute) {
+        return flatteningData().get(attribute).mapOrNull(Boolean::parseBoolean);
     }
 
     @Override
@@ -242,7 +242,11 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
         if (object instanceof BlockData) {
             return wrappedObject.getMaterial() == ((BlockData) object).getMaterial();
         }
-        return BlockTypeHolder.ofOptional(object).map(h -> h.platformName().equals(platformName())).orElse(false);
+        var blockType = BlockTypeHolder.ofNullable(object);
+        if (blockType == null) {
+            return false;
+        }
+        return blockType.platformName().equals(platformName());
     }
 
     @Override
@@ -264,7 +268,7 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
                 return isSameType(str.substring(0, str.length() - 3));
             }
         }
-        return equals(BlockTypeHolder.ofOptional(object).orElse(null));
+        return equals(BlockTypeHolder.ofNullable(object));
     }
 
     @Override

@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.event.world;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +30,7 @@ import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.world.SPlantGrowEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
@@ -38,6 +40,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitPlantGrowEvent implements SPlantGrowEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -53,7 +56,7 @@ public class SBukkitPlantGrowEvent implements SPlantGrowEvent, BukkitCancellable
     @Override
     public Collection<BlockStateHolder> blockStates() {
         if (collection == null) {
-            collection = new CollectionLinkedToCollection<>(event.getBlocks(), o -> o.as(BlockState.class), o -> BlockStateMapper.wrapBlockState(o).orElseThrow());
+            collection = new CollectionLinkedToCollection<>(event.getBlocks(), o -> o.as(BlockState.class), o -> BlockStateMapper.<BlockStateHolder>wrapBlockState(o).orElseThrow());
         }
         return collection;
     }

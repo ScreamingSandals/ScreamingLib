@@ -16,19 +16,22 @@
 
 package org.screamingsandals.lib.bukkit.block;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.block.converter.LegacyMaterialDataToFlatteningConverter;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Optional;
 
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> implements BlockTypeHolder {
 
     public BukkitBlockTypeLegacyHolder(Material material) {
@@ -191,27 +194,24 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     }
 
     @Override
-    @NotNull
-    public Optional<String> get(@NotNull String attribute) {
-        return Optional.ofNullable(LegacyMaterialDataToFlatteningConverter.get(wrappedObject, attribute));
+    public @Nullable String get(@NotNull String attribute) {
+        return LegacyMaterialDataToFlatteningConverter.get(wrappedObject, attribute);
     }
 
     @Override
-    @NotNull
-    public Optional<Integer> getInt(@NotNull String attribute) {
-        return Optional.ofNullable(LegacyMaterialDataToFlatteningConverter.get(wrappedObject, attribute)).flatMap(s -> {
+    public @Nullable Integer getInt(@NotNull String attribute) {
+        return LegacyMaterialDataToFlatteningConverter.get(wrappedObject, attribute).mapOrNull(s -> {
             try {
-                return Optional.of(Integer.valueOf(s));
+                return Integer.valueOf(s);
             } catch (Throwable ignored) {
-                return Optional.empty();
             }
+            return null;
         });
     }
 
     @Override
-    @NotNull
-    public Optional<Boolean> getBoolean(@NotNull String attribute) {
-        return Optional.ofNullable(LegacyMaterialDataToFlatteningConverter.get(wrappedObject, attribute)).map(Boolean::parseBoolean);
+    public @Nullable Boolean getBoolean(@NotNull String attribute) {
+        return LegacyMaterialDataToFlatteningConverter.get(wrappedObject, attribute).mapOrNull(Boolean::parseBoolean);
     }
 
     @Override
@@ -271,11 +271,11 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
         } else if (object instanceof BukkitBlockTypeLegacyHolder) {
             material = ((BukkitBlockTypeLegacyHolder) object).wrappedObject;
         } else {
-            var block = BlockTypeHolder.ofOptional(object);
-            if (block.isEmpty()) {
+            var block = BlockTypeHolder.ofNullable(object);
+            if (block == null) {
                 return false;
             }
-            material = ((BukkitBlockTypeLegacyHolder) block.get()).wrappedObject;
+            material = ((BukkitBlockTypeLegacyHolder) block).wrappedObject;
         }
         var materialName = material.getItemType().name();
         var ourMaterialName = wrappedObject.getItemType().name();
@@ -423,7 +423,7 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
                 return isSameType(str.substring(0, str.length() - 3));
             }
         }
-        return equals(BlockTypeHolder.ofOptional(object).orElse(null));
+        return equals(BlockTypeHolder.ofNullable(object));
     }
 
     @Override

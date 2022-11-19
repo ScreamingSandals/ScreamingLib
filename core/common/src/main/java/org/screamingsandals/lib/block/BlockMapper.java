@@ -17,14 +17,14 @@
 package org.screamingsandals.lib.block;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
-
-import java.util.Optional;
 
 @AbstractService
 @ServiceDependencies(dependsOn = {
@@ -43,8 +43,9 @@ public abstract class BlockMapper {
         mapping = this;
     }
 
-    public static Optional<BlockHolder> resolve(Object obj) {
-        return Preconditions.checkNotNull(mapping, "BlockMapper is not initialized yet!").converter.convertOptional(obj);
+    @Contract("null -> null")
+    public static @Nullable BlockHolder resolve(@Nullable Object obj) {
+        return Preconditions.checkNotNull(mapping, "BlockMapper is not initialized yet!").converter.convertOptional(obj).orElse(null);
     }
 
     public static <T> BlockHolder wrapBlock(T block) {

@@ -156,21 +156,21 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @return the player's ender chest
      */
-    Container getEnderChest();
+    @NotNull Container getEnderChest();
 
     /**
      * Gets the player's inventory container.
      *
      * @return the player's inventory
      */
-    PlayerContainer getPlayerInventory();
+    @NotNull PlayerContainer getPlayerInventory();
 
     /**
      * Gets the inventory that this player has currently opened.
      *
      * @return the inventory the player has currently opened, empty if the player doesn't have an inventory opened
      */
-    Optional<Container> getOpenedInventory();
+    @Nullable Container getOpenedInventory();
 
     /**
      * Opens the supplied inventory container for this player.

@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.attribute;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.AttributeTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -57,13 +59,14 @@ public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeT
 
     @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
     @OfMethodAlternative(value = AttributeTypeHolder.class, methodName = "ofOptional")
-    public static Optional<AttributeTypeHolder> resolve(Object attributeType) {
+    @Contract("null -> null")
+    public static @Nullable AttributeTypeHolder resolve(@Nullable Object attributeType) {
         if (attributeTypeMapping == null) {
             throw new UnsupportedOperationException("AttributeTypeMapping is not initialized yet.");
         }
 
         if (attributeType == null) {
-            return Optional.empty();
+            return null;
         }
 
         return attributeTypeMapping.attributeTypeConverter.convertOptional(attributeType).or(() -> {
@@ -74,7 +77,7 @@ public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeT
             }
 
             return Optional.empty();
-        });
+        }).orElse(null);
     }
 
     @OfMethodAlternative(value = AttributeTypeHolder.class, methodName = "all")

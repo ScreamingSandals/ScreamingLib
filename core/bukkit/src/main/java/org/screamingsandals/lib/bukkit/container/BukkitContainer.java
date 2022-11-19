@@ -33,7 +33,6 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BukkitContainer extends BasicWrapper<Inventory> implements Container {
@@ -42,9 +41,9 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public Optional<Item> getItem(int index) {
+    public @Nullable Item getItem(int index) {
         var item = wrappedObject.getItem(index);
-        return item == null ? Optional.empty() : Optional.of(new BukkitItem(wrappedObject.getItem(index)));
+        return item == null ? null : new BukkitItem(item);
     }
 
     @Override

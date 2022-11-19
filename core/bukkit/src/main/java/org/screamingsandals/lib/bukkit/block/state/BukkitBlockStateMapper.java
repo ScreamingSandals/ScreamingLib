@@ -20,14 +20,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.block.TileState;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.block.BukkitBlockMapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-
-import java.util.Optional;
 
 @Service(dependsOn = {
         BukkitBlockMapper.class
@@ -37,32 +36,32 @@ public class BukkitBlockStateMapper extends BlockStateMapper {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected <T extends BlockStateHolder> Optional<T> wrapBlockState0(Object blockState) {
+    protected <T extends BlockStateHolder> @Nullable T wrapBlockState0(@Nullable Object blockState) {
         // ORDER IS IMPORTANT
 
         if (HAS_TILE_STATE) {
             if (blockState instanceof Sign) {
-                return Optional.of((T) new SignBlockStateHolder((Sign) blockState));
+                return (T) new SignBlockStateHolder((Sign) blockState);
             }
 
             if (blockState instanceof TileState) {
-                return Optional.of((T) new TileBlockStateHolder((TileState) blockState));
+                return (T) new TileBlockStateHolder((TileState) blockState);
             }
         } else {
             if (blockState instanceof Sign) {
-                return Optional.of((T) new LegacySignBlockStateHolder((Sign) blockState));
+                return (T) new LegacySignBlockStateHolder((Sign) blockState);
             }
         }
 
         if (blockState instanceof BlockState) {
-            return Optional.of((T) new GenericBlockStateHolder((BlockState) blockState));
+            return (T) new GenericBlockStateHolder((BlockState) blockState);
         }
 
-        return Optional.empty();
+        return null;
     }
 
     @Override
-    protected <T extends BlockStateHolder> Optional<T> getBlockStateFromBlock0(BlockHolder blockHolder) {
-        return wrapBlockState0(blockHolder.as(Block.class).getState());
+    protected <T extends BlockStateHolder> @Nullable T getBlockStateFromBlock0(@Nullable BlockHolder blockHolder) {
+        return blockHolder == null ? null : wrapBlockState0(blockHolder.as(Block.class).getState());
     }
 }
