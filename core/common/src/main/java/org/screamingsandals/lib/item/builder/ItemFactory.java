@@ -16,7 +16,9 @@
 
 package org.screamingsandals.lib.item.builder;
 
+import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.ItemSerializer;
@@ -26,16 +28,19 @@ import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
@@ -77,7 +82,7 @@ public abstract class ItemFactory {
         factory = this;
     }
 
-    public static ItemBuilder builder() {
+    public static @NotNull ItemBuilder builder() {
         if (factory == null) {
             throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
         }
@@ -92,59 +97,59 @@ public abstract class ItemFactory {
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
-    public static Optional<Item> build(Object stack) {
+    @Contract("null -> null")
+    public static @Nullable Item build(@Nullable Object stack) {
         return readStack(stack);
     }
 
-    public static Optional<Item> build(ReceiverConsumer<ItemBuilder> builderConsumer) {
+    public static @Nullable Item build(@NotNull ReceiverConsumer<@NotNull ItemBuilder> builderConsumer) {
         var builder = builder();
         builderConsumer.accept(builder);
         return builder.build();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
-    public static Optional<Item> build(Object stack, ReceiverConsumer<ItemBuilder> builderConsumer) {
+    @Contract("null,_ -> null")
+    public static @Nullable Item build(@Nullable Object stack, @Nullable ReceiverConsumer<@NotNull ItemBuilder> builderConsumer) {
         var item = readStack(stack);
-        if (item.isEmpty()) {
-            return Optional.empty();
+        if (item == null) {
+            return null;
         }
 
         if (builderConsumer != null) {
-            var builder = item.get().builder();
+            var builder = item.builder();
             builderConsumer.accept(builder);
             return builder.build();
         }
         return item;
     }
 
-    public static Optional<Item> readStack(Object stackObject) {
-        var it = factory.itemConverter.convertOptional(stackObject);
-        if (it.isPresent()) {
-            return it;
-        }
-        return readShortStack(builder(), stackObject);
+    @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
+    public static @Nullable Item readStack(@Nullable Object stackObject) {
+        return factory.itemConverter.convertOptional(stackObject).orElseGet(() -> readShortStack(builder(), stackObject));
     }
 
-    public static Optional<Item> readShortStack(Item item, Object shortStackObject) {
+    public static @Nullable Item readShortStack(@NotNull Item item, @Nullable Object shortStackObject) {
         var builder = item.builder();
         ShortStackDeserializer.deserializeShortStack(builder, shortStackObject);
         return builder.build();
     }
 
-    public static Optional<Item> readShortStack(ItemBuilder builder, Object shortStackObject) {
+    public static @Nullable Item readShortStack(ItemBuilder builder, Object shortStackObject) {
         ShortStackDeserializer.deserializeShortStack(builder, shortStackObject);
         return builder.build();
     }
 
-    public static List<Item> buildAll(List<Object> objects) {
-        return objects.stream().map(o -> build(o).orElse(ItemFactory.getAir())).collect(Collectors.toList());
+    public static @NotNull List<@NotNull Item> buildAll(@NotNull List<@Nullable Object> objects) {
+        return objects.stream().map(o -> build(o).orElse(ItemFactory.getAir())).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     private static Item cachedAir;
 
-    public static Item getAir() {
+    public static @NotNull Item getAir() {
         if (cachedAir == null) {
-            cachedAir = build("AIR").orElseThrow();
+            cachedAir = build("AIR");
+            Preconditions.checkNotNullIllegal(cachedAir, "Could not find item: " + cachedAir);
         }
         return cachedAir.clone();
     }

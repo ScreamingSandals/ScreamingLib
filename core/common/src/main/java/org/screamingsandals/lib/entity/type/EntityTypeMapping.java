@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.entity.type;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.EntityTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -29,7 +32,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
@@ -58,21 +60,22 @@ public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHol
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
-    @OfMethodAlternative(value = EntityTypeHolder.class, methodName = "ofOptional")
-    public static Optional<EntityTypeHolder> resolve(Object entity) {
+    @OfMethodAlternative(value = EntityTypeHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable EntityTypeHolder resolve(@Nullable Object entity) {
         if (entityTypeMapping == null) {
             throw new UnsupportedOperationException("EntityTypeMapping is not initialized yet.");
         }
 
         if (entity == null) {
-            return Optional.empty();
+            return null;
         }
 
-        return entityTypeMapping.entityTypeConverter.convertOptional(entity).or(() -> entityTypeMapping.resolveFromMapping(entity));
+        return entityTypeMapping.entityTypeConverter.convertOptional(entity).or(() -> entityTypeMapping.resolveFromMapping(entity)).orElse(null);
     }
 
     @OfMethodAlternative(value = EntityTypeHolder.class, methodName = "all")
-    public static List<EntityTypeHolder> getValues() {
+    public static @NotNull List<@NotNull EntityTypeHolder> getValues() {
         if (entityTypeMapping == null) {
             throw new UnsupportedOperationException("EntityTypeMapping is not initialized yet.");
         }

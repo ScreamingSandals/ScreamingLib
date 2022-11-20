@@ -144,7 +144,11 @@ public abstract class EntityMapper {
         if (entityType instanceof EntityTypeHolder) {
             return spawn((EntityTypeHolder) entityType, locationHolder);
         } else {
-            return EntityTypeMapping.resolve(entityType).map(entityTypeHolder -> spawn(entityTypeHolder, locationHolder)).orElse(null);
+            var type = EntityTypeMapping.resolve(entityType);
+            if (type != null) {
+                return spawn(type, locationHolder);
+            }
+            return null;
         }
     }
 

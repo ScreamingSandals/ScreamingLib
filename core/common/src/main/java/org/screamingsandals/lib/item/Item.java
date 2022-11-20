@@ -31,6 +31,7 @@ import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContentLike;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.List;
@@ -101,77 +102,77 @@ public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, C
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withType(@NotNull ItemTypeHolder type) {
-        return builder().type(type).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().type(type).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withAmount(int amount) {
-        return builder().amount(amount).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().amount(amount).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withDisplayName(@Nullable Component displayName) {
-        return builder().displayName(displayName).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().displayName(displayName).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withItemLore(@Nullable List<@NotNull Component> lore) {
-        return builder().itemLore(lore).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().itemLore(lore).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withAttributeModifiers(@Nullable List<@NotNull ItemAttributeHolder> modifiers) {
-        return builder().attributeModifiers(modifiers).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().attributeModifiers(modifiers).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withAttributeModifier(@NotNull ItemAttributeHolder modifier) {
-        return builder().attributeModifier(modifier).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().attributeModifier(modifier).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withData(@NotNull ItemData data) {
-        return builder().data(data).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().data(data).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withHideFlags(@Nullable List<@NotNull HideFlags> flags) {
-        return builder().hideFlags(flags).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().hideFlags(flags).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withHideFlag(@NotNull HideFlags flag) {
-        return builder().hideFlag(flag).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().hideFlag(flag).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withEnchantments(@Nullable List<@NotNull EnchantmentHolder> enchantments) {
-        return builder().enchantments(enchantments).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().enchantments(enchantments).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withEnchantment(@NotNull EnchantmentHolder enchantment) {
-        return builder().enchantment(enchantment).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().enchantment(enchantment).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withCustomModelData(@Nullable Integer customModelData) {
-        return builder().customModelData(customModelData).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().customModelData(customModelData).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withUnbreakable(boolean unbreakable) {
-        return builder().unbreakable(unbreakable).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().unbreakable(unbreakable).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withRepairCost(int repairCost) {
-        return builder().repairCost(repairCost).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().repairCost(repairCost).build());
     }
 
     @Contract(value = "_ -> new", pure = true)
     default @NotNull Item withTag(@NotNull CompoundTag tag) {
-        return builder().tag(tag).build().orElseThrow();
+        return NullableExtension.orElseThrow(builder().tag(tag).build());
     }
 
     @Override

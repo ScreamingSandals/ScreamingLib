@@ -16,17 +16,18 @@
 
 package org.screamingsandals.lib.entity.type;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder, TaggableHolder {
@@ -70,14 +71,17 @@ public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder, Tag
     @Nullable EntityBasic spawn(@NotNull LocationHolder location);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
-    static EntityTypeHolder of(Object entityType) {
-        return ofOptional(entityType).orElseThrow();
+    static @NotNull EntityTypeHolder of(@NotNull Object entityType) {
+        var result = ofNullable(entityType);
+        Preconditions.checkNotNullIllegal(result, "Could not find entity type: " + entityType);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
-    static Optional<EntityTypeHolder> ofOptional(Object entityType) {
+    @Contract("null -> null")
+    static @Nullable EntityTypeHolder ofNullable(@Nullable Object entityType) {
         if (entityType instanceof EntityTypeHolder) {
-            return Optional.of((EntityTypeHolder) entityType);
+            return (EntityTypeHolder) entityType;
         }
         return EntityTypeMapping.resolve(entityType);
     }

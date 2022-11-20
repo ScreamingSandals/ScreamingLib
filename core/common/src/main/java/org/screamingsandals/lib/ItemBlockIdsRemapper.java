@@ -152,13 +152,13 @@ public abstract class ItemBlockIdsRemapper {
 
     private void makeColorableItem(String baseName, String notColoredName) {
         List<ItemTypeHolder> list = new ArrayList<>();
-        COLORS.forEach(s -> ItemTypeHolder.ofOptional(s + "_" + baseName).ifPresent(materialHolder -> {
+        COLORS.forEach(s -> ItemTypeHolder.ofNullable(s + "_" + baseName).ifNotNull(materialHolder -> {
             if (!list.contains(materialHolder)) {
                 list.add(materialHolder);
             }
         }));
 
-        ItemTypeHolder.ofOptional(notColoredName).ifPresent(materialHolder -> {
+        ItemTypeHolder.ofNullable(notColoredName).ifNotNull(materialHolder -> {
             if (!list.contains(materialHolder)) {
                 list.add(materialHolder);
             }
@@ -167,7 +167,7 @@ public abstract class ItemBlockIdsRemapper {
         if (!list.isEmpty()) { // if list is empty, we don't have this material
             colorableItems.put(list::contains, s -> {
                 if (COLORS.contains(s.toUpperCase(Locale.ROOT))) {
-                    return ItemTypeHolder.ofOptional(s.toUpperCase(Locale.ROOT) + "_" + baseName);
+                    return ItemTypeHolder.ofNullable(s.toUpperCase(Locale.ROOT) + "_" + baseName).toOptional();
                 }
                 return Optional.empty();
             });

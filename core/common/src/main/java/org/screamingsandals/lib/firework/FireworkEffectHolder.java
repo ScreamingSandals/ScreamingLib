@@ -17,12 +17,14 @@
 package org.screamingsandals.lib.firework;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface FireworkEffectHolder extends ComparableWrapper {
@@ -130,19 +132,22 @@ public interface FireworkEffectHolder extends ComparableWrapper {
     boolean is(Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
-    static FireworkEffectHolder of(Object effect) {
-        return ofOptional(effect).orElseThrow();
+    static @NotNull FireworkEffectHolder of(@NotNull Object effect) {
+        var result = ofNullable(effect);
+        Preconditions.checkNotNullIllegal(result, "Could not find firework effect: " + effect);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
-    static Optional<FireworkEffectHolder> ofOptional(Object effect) {
+    @Contract("null -> null")
+    static @Nullable FireworkEffectHolder ofNullable(@Nullable Object effect) {
         if (effect instanceof FireworkEffectHolder) {
-            return Optional.of((FireworkEffectHolder) effect);
+            return (FireworkEffectHolder) effect;
         }
         return FireworkEffectMapping.resolve(effect);
     }
 
-    static List<FireworkEffectHolder> all() {
+    static @NotNull List<@NotNull FireworkEffectHolder> all() {
         return FireworkEffectMapping.getValues();
     }
 }

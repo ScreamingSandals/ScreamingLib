@@ -38,7 +38,7 @@ public class BukkitEntityPoseHolder extends BasicWrapper<Pose> implements Entity
         if (object instanceof Pose || object instanceof EntityPoseHolder) {
             return equals(object);
         }
-        return equals(EntityPoseHolder.ofOptional(object).orElse(null));
+        return equals(EntityPoseHolder.ofNullable(object));
     }
 
     @Override

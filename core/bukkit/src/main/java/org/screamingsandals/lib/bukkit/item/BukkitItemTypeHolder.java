@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeHolder;
 import org.screamingsandals.lib.item.ItemTypeHolder;
@@ -61,18 +62,18 @@ public class BukkitItemTypeHolder extends BasicWrapper<Material> implements Item
     }
 
     @Override
-    public ItemTypeHolder withForcedDurability(short durability) {
+    public @NotNull ItemTypeHolder withForcedDurability(short durability) {
         var holder = new BukkitItemTypeHolder(wrappedObject);
         holder.forcedDurability = durability;
         return holder;
     }
 
     @Override
-    public Optional<BlockTypeHolder> block() {
+    public @Nullable BlockTypeHolder block() {
         if (!wrappedObject.isBlock()) {
-            return Optional.empty();
+            return null;
         }
-        return Optional.of(new BukkitBlockTypeHolder(wrappedObject));
+        return new BukkitBlockTypeHolder(wrappedObject);
     }
 
     @Override
@@ -108,7 +109,7 @@ public class BukkitItemTypeHolder extends BasicWrapper<Material> implements Item
                 return hasTag(str.substring(1));
             }
         }
-        return equals(ItemTypeHolder.ofOptional(object).orElse(null));
+        return equals(ItemTypeHolder.ofNullable(object));
     }
 
     @Override

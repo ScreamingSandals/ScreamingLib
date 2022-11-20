@@ -363,12 +363,8 @@ public class BukkitItemBuilder implements ItemBuilder {
     }
 
     @Override
-    public @NotNull Optional<Item> build() {
-        if (item != null) {
-            return Optional.of(new BukkitItem(item.clone()));
-        } else {
-            return Optional.empty();
-        }
+    public @Nullable Item build() {
+        return item != null ? new BukkitItem(item.clone()) : null;
     }
 
     @SuppressWarnings("unchecked")

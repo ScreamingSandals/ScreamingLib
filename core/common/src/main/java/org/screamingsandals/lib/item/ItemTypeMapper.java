@@ -17,9 +17,13 @@
 package org.screamingsandals.lib.item;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.ItemBlockIdsRemapper;
 import org.screamingsandals.lib.configurate.ItemTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
@@ -66,13 +70,14 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
-    @OfMethodAlternative(value = ItemTypeHolder.class, methodName = "ofOptional")
-    public static Optional<ItemTypeHolder> resolve(Object materialObject) {
+    @OfMethodAlternative(value = ItemTypeHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable ItemTypeHolder resolve(@Nullable Object materialObject) {
         if (itemTypeMapper == null) {
             throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
         }
         if (materialObject == null) {
-            return Optional.empty();
+            return null;
         }
 
         return itemTypeMapper.itemTypeConverter.convertOptional(materialObject).or(() -> {
@@ -126,11 +131,11 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
                 }
             }
             return Optional.empty();
-        });
+        }).orElse(null);
     }
 
     @OfMethodAlternative(value = ItemTypeHolder.class, methodName = "all")
-    public static List<ItemTypeHolder> getValues() {
+    public static @NotNull List<@NotNull ItemTypeHolder> getValues() {
         if (itemTypeMapper == null) {
             throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
         }
@@ -161,7 +166,8 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
     @OfMethodAlternative(value = ItemTypeHolder.class, methodName = "air")
     public static ItemTypeHolder getCachedAir() {
         if (cachedAir == null) {
-            cachedAir = resolve("minecraft:air").orElseThrow();
+            cachedAir = resolve("minecraft:air");
+            Preconditions.checkNotNullIllegal(cachedAir, "Could not find item type: minecraft:air");
         }
         return cachedAir;
     }

@@ -32,7 +32,6 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements EntityTypeHolder {
 
@@ -86,7 +85,7 @@ public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements 
                 return hasTag(str.substring(1));
             }
         }
-        return equals(EntityTypeHolder.ofOptional(entityType).orElse(null));
+        return equals(EntityTypeHolder.ofNullable(entityType));
     }
 
     @Override

@@ -38,7 +38,7 @@ public class BukkitDamageCauseHolder extends BasicWrapper<EntityDamageEvent.Dama
         if (damageCause instanceof EntityDamageEvent.DamageCause || damageCause instanceof DamageCauseHolder) {
             return equals(damageCause);
         }
-        return equals(DamageCauseHolder.ofOptional(damageCause).orElse(null));
+        return equals(DamageCauseHolder.ofNullable(damageCause));
     }
 
     @Override

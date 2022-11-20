@@ -19,28 +19,21 @@ package org.screamingsandals.lib.item;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.particle.ParticleData;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 @Accessors(fluent = true)
 public interface ItemTypeHolder extends ComparableWrapper, ParticleData, TaggableHolder {
     String platformName();
-
-    /**
-     * Use renamed form
-     */
-    @Deprecated(forRemoval = true)
-    default short durability() {
-        return forcedDurability();
-    }
 
     @Deprecated
     @LimitedVersionSupport("<= 1.12.2")
@@ -52,18 +45,10 @@ public interface ItemTypeHolder extends ComparableWrapper, ParticleData, Taggabl
 
     int maxStackSize();
 
-    /**
-     * Use renamed form
-     */
-    @Deprecated(forRemoval = true)
-    default ItemTypeHolder withDurability(short durability) {
-        return withForcedDurability(durability);
-    }
-
     @Deprecated
     @LimitedVersionSupport("<= 1.12.2")
     @Contract(value = "_ -> new", pure = true)
-    ItemTypeHolder withForcedDurability(short durability);
+    @NotNull ItemTypeHolder withForcedDurability(short durability);
 
     /**
      * Use fluent variant!!
@@ -73,11 +58,11 @@ public interface ItemTypeHolder extends ComparableWrapper, ParticleData, Taggabl
         return maxStackSize();
     }
 
-    default ItemTypeHolder colorize(String color) {
+    default @NotNull ItemTypeHolder colorize(@NotNull String color) {
         return ItemTypeMapper.colorize(this, color);
     }
 
-    Optional<BlockTypeHolder> block();
+    @Nullable BlockTypeHolder block();
 
     @CustomAutocompletion(CustomAutocompletion.Type.ITEM_TYPE_TAG)
     @Override
@@ -92,23 +77,26 @@ public interface ItemTypeHolder extends ComparableWrapper, ParticleData, Taggabl
     boolean is(Object... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
-    static ItemTypeHolder of(Object type) {
-        return ofOptional(type).orElseThrow();
+    static @NotNull ItemTypeHolder of(@NotNull Object type) {
+        var result = ofNullable(type);
+        Preconditions.checkNotNullIllegal(result, "Could not find item type: " + type);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
-    static Optional<ItemTypeHolder> ofOptional(Object type) {
+    @Contract("null -> null")
+    static @Nullable ItemTypeHolder ofNullable(@Nullable Object type) {
         if (type instanceof ItemTypeHolder) {
-            return Optional.of((ItemTypeHolder) type);
+            return (ItemTypeHolder) type;
         }
         return ItemTypeMapper.resolve(type);
     }
 
-    static ItemTypeHolder air() {
+    static @NotNull ItemTypeHolder air() {
         return ItemTypeMapper.getCachedAir();
     }
 
-    static List<ItemTypeHolder> all() {
+    static @NotNull List<@NotNull ItemTypeHolder> all() {
         return ItemTypeMapper.getValues();
     }
 }

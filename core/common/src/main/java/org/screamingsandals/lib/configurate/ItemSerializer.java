@@ -272,11 +272,10 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
                 if (fireworkEffects.isList()) {
                     builder.fireworkEffect(fireworkEffects.childrenList().stream()
                             .map(FireworkEffectMapping::resolve)
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
+                            .filter(Objects::nonNull)
                             .collect(Collectors.toList()));
                 } else {
-                    FireworkEffectHolder.ofOptional(fireworkEffects).ifPresent(builder::fireworkEffect);
+                    FireworkEffectHolder.ofNullable(fireworkEffects).ifNotNull(builder::fireworkEffect);
                 }
             }
 

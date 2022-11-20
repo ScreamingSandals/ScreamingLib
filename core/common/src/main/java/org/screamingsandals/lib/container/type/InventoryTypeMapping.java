@@ -19,6 +19,7 @@ package org.screamingsandals.lib.container.type;
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.InventoryTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
@@ -61,7 +62,7 @@ public abstract class InventoryTypeMapping extends AbstractTypeMapper<InventoryT
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    @OfMethodAlternative(value = InventoryTypeHolder.class, methodName = "ofOptional")
+    @OfMethodAlternative(value = InventoryTypeHolder.class, methodName = "ofNullable")
     @Contract("null -> null")
     public static @Nullable InventoryTypeHolder resolve(@Nullable Object entity) {
         if (inventoryTypeMapping == null) {
@@ -76,7 +77,7 @@ public abstract class InventoryTypeMapping extends AbstractTypeMapper<InventoryT
     }
 
     @OfMethodAlternative(value = InventoryTypeHolder.class, methodName = "all")
-    public static List<InventoryTypeHolder> getValues() {
+    public static @NotNull List<@NotNull InventoryTypeHolder> getValues() {
         if (inventoryTypeMapping == null) {
             throw new UnsupportedOperationException("InventoryTypeMapping is not initialized yet.");
         }

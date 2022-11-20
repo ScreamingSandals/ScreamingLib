@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.player.SPlayerTeleportEvent;
 
 public class SBukkitPlayerTeleportEvent extends SBukkitPlayerMoveEvent implements SPlayerTeleportEvent {
@@ -28,7 +29,7 @@ public class SBukkitPlayerTeleportEvent extends SBukkitPlayerMoveEvent implement
     private TeleportCause teleportCause;
 
     @Override
-    public TeleportCause cause() {
+    public @NotNull TeleportCause cause() {
         if (teleportCause == null) {
             teleportCause = TeleportCause.valueOf(event().getCause().name());
         }

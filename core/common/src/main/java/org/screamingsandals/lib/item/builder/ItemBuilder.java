@@ -38,12 +38,12 @@ import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 public interface ItemBuilder extends MetadataConsumer {
     @Contract("_ -> this")
@@ -94,8 +94,8 @@ public interface ItemBuilder extends MetadataConsumer {
     @Contract("_ -> this")
     @NotNull ItemBuilder tag(@NotNull CompoundTag tag);
 
-    @Contract(value = "-> new", pure = true)
-    @NotNull Optional<Item> build();
+    @Contract(pure = true)
+    @Nullable Item build();
 
     @Deprecated
     @Contract("_ -> this")
@@ -295,13 +295,13 @@ public interface ItemBuilder extends MetadataConsumer {
     default @NotNull ItemBuilder fireworkEffect(@NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;
-            list.forEach(effect1 -> FireworkEffectHolder.ofOptional(effect1).ifPresent(fireworkEffectHolder -> {
+            list.forEach(effect1 -> NullableExtension.ifNotNull(FireworkEffectHolder.ofNullable(effect1), fireworkEffectHolder -> {
                 this.addToListMetadata(ItemMeta.FIREWORK_EFFECTS, fireworkEffectHolder);
             }));
             return this;
         }
 
-        FireworkEffectHolder.ofOptional(effect).ifPresent(fireworkEffectHolder -> {
+        NullableExtension.ifNotNull(FireworkEffectHolder.ofNullable(effect), fireworkEffectHolder -> {
             if (this.supportsMetadata(ItemMeta.FIREWORK_EFFECTS)) {
                 this.addToListMetadata(ItemMeta.FIREWORK_EFFECTS, fireworkEffectHolder);
             } else {

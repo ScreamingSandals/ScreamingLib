@@ -34,9 +34,9 @@ public class ShortStackDeserializer {
             shortStackObject = ((ConfigurationNode) shortStackObject).getString();
         }
         if (!(shortStackObject instanceof String)) {
-            var opt = ItemTypeHolder.ofOptional(shortStackObject);
-            if (opt.isPresent()) {
-                builder.type(opt.get());
+            var opt = ItemTypeHolder.ofNullable(shortStackObject);
+            if (opt != null) {
+                builder.type(opt);
                 return;
             }
         }
@@ -70,11 +70,11 @@ public class ShortStackDeserializer {
             }
         }
 
-        var materialHolder = ItemTypeHolder.ofOptional(material);
-        if (materialHolder.isEmpty()) {
+        var materialHolder = ItemTypeHolder.ofNullable(material);
+        if (materialHolder == null) {
             return;
         }
-        builder.type(materialHolder.get());
+        builder.type(materialHolder);
         try {
             if (amount != null && !amount.trim().isEmpty()) {
                 builder.amount(Integer.parseInt(amount.trim()));

@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.container.type;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
@@ -84,21 +86,22 @@ public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
     boolean is(Object... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    static InventoryTypeHolder of(Object inventoryType) {
+    static @NotNull InventoryTypeHolder of(@NotNull Object inventoryType) {
         var result = ofNullable(inventoryType);
-        Preconditions.checkNotNullIllegal("Could not find inventory type: " + inventoryType);
+        Preconditions.checkNotNullIllegal(result, "Could not find inventory type: " + inventoryType);
         return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    static @Nullable InventoryTypeHolder ofNullable(Object inventoryType) {
+    @Contract("null -> null")
+    static @Nullable InventoryTypeHolder ofNullable(@Nullable Object inventoryType) {
         if (inventoryType instanceof InventoryTypeHolder) {
             return (InventoryTypeHolder) inventoryType;
         }
         return InventoryTypeMapping.resolve(inventoryType);
     }
 
-    static List<InventoryTypeHolder> all() {
+    static @NotNull List<@NotNull InventoryTypeHolder> all() {
         return InventoryTypeMapping.getValues();
     }
 }

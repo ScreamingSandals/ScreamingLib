@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.firework;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.FireworkEffectHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -70,20 +73,21 @@ public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkE
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
-    @OfMethodAlternative(value = FireworkEffectHolder.class, methodName = "ofOptional")
-    public static Optional<FireworkEffectHolder> resolve(Object fireworkEffectObject) {
+    @OfMethodAlternative(value = FireworkEffectHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable FireworkEffectHolder resolve(@Nullable Object fireworkEffectObject) {
         if (fireworkEffectMapping == null) {
             throw new UnsupportedOperationException("FireworkEffectMapping is not initialized yet.");
         }
         if (fireworkEffectObject == null) {
-            return Optional.empty();
+            return null;
         }
 
-        return fireworkEffectMapping.fireworkEffectConverter.convertOptional(fireworkEffectObject).or(() -> fireworkEffectMapping.resolveFromMapping(fireworkEffectObject));
+        return fireworkEffectMapping.fireworkEffectConverter.convertOptional(fireworkEffectObject).or(() -> fireworkEffectMapping.resolveFromMapping(fireworkEffectObject)).orElse(null);
     }
 
     @OfMethodAlternative(value = FireworkEffectHolder.class, methodName = "all")
-    public static List<FireworkEffectHolder> getValues() {
+    public static @NotNull List<@NotNull FireworkEffectHolder> getValues() {
         if (fireworkEffectMapping == null) {
             throw new UnsupportedOperationException("FireworkEffectMapping is not initialized yet.");
         }

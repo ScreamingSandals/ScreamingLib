@@ -264,8 +264,7 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
                         .with(ItemTagKeys.PAGES, pages)
                         .with(ItemTagKeys.RESOLVED, (byte) 1)
                 )
-                .build()
-                .orElse(null);
+                .build();
 
         if (item == null) {
             return;

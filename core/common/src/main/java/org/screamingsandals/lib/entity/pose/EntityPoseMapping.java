@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.entity.pose;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.EntityPoseHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -28,7 +31,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
@@ -56,21 +58,22 @@ public abstract class EntityPoseMapping extends AbstractTypeMapper<EntityPoseHol
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_POSE)
-    @OfMethodAlternative(value = EntityPoseHolder.class, methodName = "ofOptional")
-    public static Optional<EntityPoseHolder> resolve(Object entityPose) {
+    @OfMethodAlternative(value = EntityPoseHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable EntityPoseHolder resolve(@Nullable Object entityPose) {
         if (entityPoseMapping == null) {
             throw new UnsupportedOperationException("EntityPoseMapping is not initialized yet.");
         }
 
         if (entityPose == null) {
-            return Optional.empty();
+            return null;
         }
 
-        return entityPoseMapping.entityPoseConverter.convertOptional(entityPose).or(() -> entityPoseMapping.resolveFromMapping(entityPose));
+        return entityPoseMapping.entityPoseConverter.convertOptional(entityPose).or(() -> entityPoseMapping.resolveFromMapping(entityPose)).orElse(null);
     }
 
     @OfMethodAlternative(value = EntityPoseHolder.class, methodName = "all")
-    public static List<EntityPoseHolder> getValues() {
+    public static @NotNull List<@NotNull EntityPoseHolder> getValues() {
         if (entityPoseMapping == null) {
             throw new UnsupportedOperationException("EntityPoseMapping is not initialized yet.");
         }

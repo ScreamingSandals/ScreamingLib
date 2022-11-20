@@ -16,14 +16,11 @@
 
 package org.screamingsandals.lib.event.player;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 public interface SPlayerTeleportEvent extends SPlayerMoveEvent {
 
-    TeleportCause cause();
+    @NotNull TeleportCause cause();
 
     //from bukkit
     // TODO: holder
@@ -68,13 +65,5 @@ public interface SPlayerTeleportEvent extends SPlayerMoveEvent {
          * this enum
          */
         UNKNOWN;
-
-        public static final List<TeleportCause> VALUES = Arrays.asList(values());
-
-        public static Optional<TeleportCause> getByName(String name) {
-            return VALUES.stream()
-                    .filter(next -> next.name().equals(name.toUpperCase(Locale.ROOT)))
-                    .findFirst();
-        }
     }
 }

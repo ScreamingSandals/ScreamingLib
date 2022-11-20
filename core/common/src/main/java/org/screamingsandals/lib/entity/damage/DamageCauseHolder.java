@@ -16,12 +16,15 @@
 
 package org.screamingsandals.lib.entity.damage;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface DamageCauseHolder extends ComparableWrapper, RawValueHolder {
@@ -45,19 +48,22 @@ public interface DamageCauseHolder extends ComparableWrapper, RawValueHolder {
     boolean is(Object... damageCauses);
 
     @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
-    static DamageCauseHolder of(Object damageCause) {
-        return ofOptional(damageCause).orElseThrow();
+    static @NotNull DamageCauseHolder of(@NotNull Object damageCause) {
+        var result = ofNullable(damageCause);
+        Preconditions.checkNotNullIllegal(result, "Could not find damage cause: " + damageCause);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
-    static Optional<DamageCauseHolder> ofOptional(Object damageCause) {
+    @Contract("null -> null")
+    static @Nullable DamageCauseHolder ofNullable(@Nullable Object damageCause) {
         if (damageCause instanceof DamageCauseHolder) {
-            return Optional.of((DamageCauseHolder) damageCause);
+            return (DamageCauseHolder) damageCause;
         }
         return DamageCauseMapping.resolve(damageCause);
     }
 
-    static List<DamageCauseHolder> all() {
+    static @NotNull List<@NotNull DamageCauseHolder> all() {
         return DamageCauseMapping.getValues();
     }
 }

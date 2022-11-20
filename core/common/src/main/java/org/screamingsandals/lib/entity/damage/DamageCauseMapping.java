@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.entity.damage;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.DamageCauseHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -28,7 +31,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
@@ -56,21 +58,22 @@ public abstract class DamageCauseMapping extends AbstractTypeMapper<DamageCauseH
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
-    @OfMethodAlternative(value = DamageCauseHolder.class, methodName = "ofOptional")
-    public static Optional<DamageCauseHolder> resolve(Object damageCause) {
+    @OfMethodAlternative(value = DamageCauseHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable DamageCauseHolder resolve(@Nullable Object damageCause) {
         if (damageCauseMapping == null) {
             throw new UnsupportedOperationException("DamageCauseMapping is not initialized yet.");
         }
 
         if (damageCause == null) {
-            return Optional.empty();
+            return null;
         }
 
-        return damageCauseMapping.damageCauseConverter.convertOptional(damageCause).or(() -> damageCauseMapping.resolveFromMapping(damageCause));
+        return damageCauseMapping.damageCauseConverter.convertOptional(damageCause).or(() -> damageCauseMapping.resolveFromMapping(damageCause)).orElse(null);
     }
 
     @OfMethodAlternative(value = DamageCauseHolder.class, methodName = "all")
-    public static List<DamageCauseHolder> getValues() {
+    public static @NotNull List<@NotNull DamageCauseHolder> getValues() {
         if (damageCauseMapping == null) {
             throw new UnsupportedOperationException("DamageCauseMapping is not initialized yet.");
         }

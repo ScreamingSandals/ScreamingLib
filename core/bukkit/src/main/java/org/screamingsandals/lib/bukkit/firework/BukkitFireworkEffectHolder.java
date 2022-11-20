@@ -130,7 +130,7 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
         if (object instanceof FireworkEffect || object instanceof FireworkEffectHolder) {
             return equals(object);
         }
-        return equals(FireworkEffectHolder.ofOptional(object).orElse(null));
+        return equals(FireworkEffectHolder.ofNullable(object));
     }
 
     @Override

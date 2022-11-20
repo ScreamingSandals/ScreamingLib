@@ -27,7 +27,11 @@ public interface ProjectileShooter extends Wrapper {
         if (projectileType instanceof EntityTypeHolder) {
             return launchProjectile(projectileType);
         } else {
-            return EntityTypeHolder.ofOptional(projectileType).map(this::launchProjectile).orElse(null);
+            var projectile = EntityTypeHolder.ofNullable(projectileType);
+            if (projectile != null) {
+                return this.launchProjectile(projectile);
+            }
+            return null;
         }
     }
 
@@ -37,7 +41,11 @@ public interface ProjectileShooter extends Wrapper {
         if (projectileType instanceof EntityTypeHolder) {
             return launchProjectile(projectileType, velocity);
         } else {
-            return EntityTypeHolder.ofOptional(projectileType).map(entityTypeHolder -> launchProjectile(entityTypeHolder, velocity)).orElse(null);
+            var projectile = EntityTypeHolder.ofNullable(projectileType);
+            if (projectile != null) {
+                return this.launchProjectile(projectile, velocity);
+            }
+            return null;
         }
     }
 
