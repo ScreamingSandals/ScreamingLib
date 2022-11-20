@@ -129,7 +129,7 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
     }
 
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         try {
             return super.as(type);
         } catch (Throwable ignored) {

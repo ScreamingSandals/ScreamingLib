@@ -18,6 +18,7 @@ package org.screamingsandals.lib.particle;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Color;
 
 @Data
@@ -31,7 +32,7 @@ public class DustTransition implements ParticleData {
      * {@inheritDoc}
      */
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         throw new UnsupportedOperationException("Not supported.");
     }
 }

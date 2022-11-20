@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
@@ -25,17 +26,15 @@ import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
 public interface SEntityShootBowEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic entity();
+    @NotNull EntityBasic entity();
 
-    @Nullable
-    Item bow();
+    @Nullable Item bow();
 
-    @Nullable
-    Item consumable();
+    @Nullable Item consumable();
 
-    EntityBasic projectile();
+    @NotNull EntityBasic projectile();
 
-    EquipmentSlotHolder hand();
+    @NotNull EquipmentSlotHolder hand();
 
     float force();
 

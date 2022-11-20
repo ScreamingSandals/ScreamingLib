@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bungee.spectator;
 
 import net.md_5.bungee.api.ChatColor;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -163,7 +164,7 @@ public class BungeeColor extends BasicWrapper<ChatColor> implements Color {
     }
 
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         try {
             return super.as(type);
         } catch (Throwable ignored) {

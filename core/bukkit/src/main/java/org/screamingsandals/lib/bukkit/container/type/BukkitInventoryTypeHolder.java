@@ -43,7 +43,7 @@ public class BukkitInventoryTypeHolder extends BasicWrapper<InventoryType> imple
         if (object instanceof InventoryType || object instanceof InventoryTypeHolder) {
             return equals(object);
         }
-        return equals(InventoryTypeHolder.ofOptional(object).orElse(null));
+        return equals(InventoryTypeHolder.ofNullable(object));
     }
 
     @Override

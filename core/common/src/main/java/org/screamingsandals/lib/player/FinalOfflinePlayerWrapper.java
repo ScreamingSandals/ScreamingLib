@@ -18,6 +18,7 @@ package org.screamingsandals.lib.player;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -37,7 +38,7 @@ public class FinalOfflinePlayerWrapper implements OfflinePlayerWrapper {
      * {@inheritDoc}
      */
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         return PlayerMapper.convertOfflinePlayer(this, type);
     }
 }

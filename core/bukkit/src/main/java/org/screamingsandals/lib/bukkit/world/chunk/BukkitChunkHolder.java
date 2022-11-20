@@ -28,6 +28,7 @@ import org.screamingsandals.lib.world.WorldMapper;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 public class BukkitChunkHolder extends BasicWrapper<Chunk> implements ChunkHolder {
@@ -59,8 +60,7 @@ public class BukkitChunkHolder extends BasicWrapper<Chunk> implements ChunkHolde
     public EntityBasic[] getEntities() {
         return Arrays.stream(wrappedObject.getEntities())
                 .map(EntityMapper::wrapEntity)
-                .filter(Optional::isPresent)
-                .map(Optional::orElseThrow)
+                .filter(Objects::nonNull)
                 .toArray(EntityBasic[]::new);
     }
 

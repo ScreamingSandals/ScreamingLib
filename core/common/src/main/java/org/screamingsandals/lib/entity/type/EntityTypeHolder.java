@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.entity.type;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.utils.ComparableWrapper;
@@ -66,7 +67,7 @@ public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder, Tag
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
     boolean is(Object... entityTypes);
 
-    <T extends EntityBasic> Optional<T> spawn(LocationHolder location);
+    @Nullable EntityBasic spawn(@NotNull LocationHolder location);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
     static EntityTypeHolder of(Object entityType) {

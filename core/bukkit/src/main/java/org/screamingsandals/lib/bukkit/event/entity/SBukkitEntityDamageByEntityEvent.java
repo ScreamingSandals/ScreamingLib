@@ -16,11 +16,15 @@
 
 package org.screamingsandals.lib.bukkit.event.entity;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityDamageByEntityEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitEntityDamageByEntityEvent extends SBukkitEntityDamageEvent implements SEntityDamageByEntityEvent {
     public SBukkitEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
         super(event);
@@ -30,7 +34,7 @@ public class SBukkitEntityDamageByEntityEvent extends SBukkitEntityDamageEvent i
     private EntityBasic damager;
 
     @Override
-    public EntityBasic damager() {
+    public @NotNull EntityBasic damager() {
         if (damager == null) {
             damager = EntityMapper.wrapEntity(((EntityDamageByEntityEvent) event()).getDamager()).orElseThrow();
         }

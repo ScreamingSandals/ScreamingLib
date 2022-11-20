@@ -19,6 +19,7 @@ package org.screamingsandals.lib.signs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.WorldMapper;
@@ -43,7 +44,7 @@ public class SignLocation implements Wrapper {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type == LocationHolder.class) {
             return (T) new LocationHolder(x, y, z, 0, 0, WorldMapper.getWorld(world).orElseThrow());
         }

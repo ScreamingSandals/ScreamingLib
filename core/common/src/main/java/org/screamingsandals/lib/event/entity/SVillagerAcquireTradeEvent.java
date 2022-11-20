@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
@@ -23,10 +24,10 @@ import org.screamingsandals.lib.event.player.SPlayerCraftItemEvent;
 
 public interface SVillagerAcquireTradeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic entity();
+    @NotNull EntityBasic entity();
 
-    SPlayerCraftItemEvent.Recipe recipe();
+    SPlayerCraftItemEvent.@NotNull Recipe recipe();
 
     @Deprecated // because there's no proper Recipe API yet
-    void recipe(SPlayerCraftItemEvent.Recipe recipe);
+    void recipe(SPlayerCraftItemEvent.@NotNull Recipe recipe);
 }

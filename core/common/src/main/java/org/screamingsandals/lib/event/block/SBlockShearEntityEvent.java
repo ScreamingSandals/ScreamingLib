@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.block;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
@@ -24,9 +25,9 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SBlockShearEntityEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder block();
+    @NotNull BlockHolder block();
 
-    EntityBasic entity();
+    @NotNull EntityBasic entity();
 
-    Item tool();
+    @NotNull Item tool();
 }

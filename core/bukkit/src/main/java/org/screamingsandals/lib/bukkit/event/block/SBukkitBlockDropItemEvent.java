@@ -24,10 +24,10 @@ import org.bukkit.entity.Item;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
+import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityItem;
-import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.block.SBlockDropItemEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
@@ -70,7 +70,7 @@ public class SBukkitBlockDropItemEvent implements SBlockDropItemEvent, BukkitCan
     @Override
     public Collection<EntityItem> items() {
         if (items == null) {
-            items = new CollectionLinkedToCollection<>(event.getItems(), entityItem -> entityItem.as(Item.class), item -> EntityMapper.<EntityItem>wrapEntity(item).orElseThrow());
+            items = new CollectionLinkedToCollection<>(event.getItems(), entityItem -> entityItem.as(Item.class), BukkitEntityItem::new);
         }
         return items;
     }

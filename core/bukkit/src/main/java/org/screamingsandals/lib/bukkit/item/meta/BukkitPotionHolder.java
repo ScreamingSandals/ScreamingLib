@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.item.meta;
 
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.item.meta.PotionHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -58,7 +59,7 @@ public class BukkitPotionHolder extends BasicWrapper<PotionData> implements Poti
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type == PotionType.class) {
             return (T) wrappedObject.getType();
         }

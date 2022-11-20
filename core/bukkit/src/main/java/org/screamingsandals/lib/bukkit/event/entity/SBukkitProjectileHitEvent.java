@@ -19,7 +19,9 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -28,11 +30,13 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SProjectileHitEvent;
 import org.screamingsandals.lib.utils.BlockFace;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitProjectileHitEvent implements SProjectileHitEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -49,7 +53,7 @@ public class SBukkitProjectileHitEvent implements SProjectileHitEvent, BukkitCan
     private boolean hitFaceCached;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -57,8 +61,7 @@ public class SBukkitProjectileHitEvent implements SProjectileHitEvent, BukkitCan
     }
 
     @Override
-    @Nullable
-    public EntityBasic hitEntity() {
+    public @Nullable EntityBasic hitEntity() {
         if (!hitEntityCached) {
             if (event.getHitEntity() != null) {
                 hitEntity = EntityMapper.wrapEntity(event.getHitEntity()).orElseThrow();
@@ -69,8 +72,7 @@ public class SBukkitProjectileHitEvent implements SProjectileHitEvent, BukkitCan
     }
 
     @Override
-    @Nullable
-    public BlockHolder hitBlock() {
+    public @Nullable BlockHolder hitBlock() {
         if (!hitBlockCached) {
             if (event.getHitBlock() != null) {
                 hitBlock = BlockMapper.wrapBlock(event.getHitBlock());
@@ -81,8 +83,7 @@ public class SBukkitProjectileHitEvent implements SProjectileHitEvent, BukkitCan
     }
 
     @Override
-    @Nullable
-    public BlockFace hitFace() {
+    public @Nullable BlockFace hitFace() {
         if (!hitFaceCached) {
             if (event.getHitBlockFace() != null) {
                 hitFace = BlockFace.valueOf(event.getHitBlockFace().name());

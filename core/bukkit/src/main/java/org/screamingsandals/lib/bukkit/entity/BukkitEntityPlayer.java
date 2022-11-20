@@ -338,10 +338,10 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public Optional<EntityBasic> getSpectatorTarget() {
+    public @Nullable EntityBasic getSpectatorTarget() {
         var target = ((Player) wrappedObject).getSpectatorTarget();
         if (target == null) {
-            return Optional.empty();
+            return null;
         }
         return EntityMapper.wrapEntity(target);
     }
@@ -413,7 +413,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
      * {@inheritDoc}
      */
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         try {
             return super.as(type);
         } catch (UnsupportedOperationException ignored) {

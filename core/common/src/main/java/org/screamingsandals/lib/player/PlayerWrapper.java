@@ -299,7 +299,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @return the spectator target, empty if there is no target
      */
-    Optional<EntityBasic> getSpectatorTarget();
+    @Nullable EntityBasic getSpectatorTarget();
 
     /**
      * Sets the spectator target for this player.
@@ -425,7 +425,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
          * {@inheritDoc}
          */
         @Override
-        public <T> T as(Class<T> type) {
+        public <T> @NotNull T as(@NotNull Class<T> type) {
             return PlayerMapper.convertHand(this, type);
         }
     }

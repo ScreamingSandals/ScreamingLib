@@ -45,7 +45,7 @@ class SoundSourceLink implements SoundSource {
     }
 
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         return obtainSource().as(type);
     }
 

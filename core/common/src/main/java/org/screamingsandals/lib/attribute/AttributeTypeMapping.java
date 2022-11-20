@@ -58,7 +58,7 @@ public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeT
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
-    @OfMethodAlternative(value = AttributeTypeHolder.class, methodName = "ofOptional")
+    @OfMethodAlternative(value = AttributeTypeHolder.class, methodName = "ofNullable")
     @Contract("null -> null")
     public static @Nullable AttributeTypeHolder resolve(@Nullable Object attributeType) {
         if (attributeTypeMapping == null) {

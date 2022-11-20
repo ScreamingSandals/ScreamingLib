@@ -69,7 +69,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
-    @OfMethodAlternative(value = BlockTypeHolder.class, methodName = "ofOptional")
+    @OfMethodAlternative(value = BlockTypeHolder.class, methodName = "ofNullable")
     @Contract("null -> null")
     public static @Nullable BlockTypeHolder resolve(@Nullable Object materialObject) {
         if (blockTypeMapper == null) {

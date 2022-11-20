@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.block;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
@@ -24,15 +25,13 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SBlockIgniteEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder block();
+    @NotNull BlockHolder block();
 
-    IgniteCause igniteCause();
+    @NotNull IgniteCause igniteCause();
 
-    @Nullable
-    BlockHolder ignitingBlock();
+    @Nullable BlockHolder ignitingBlock();
 
-    @Nullable
-    EntityBasic ignitingEntity();
+    @Nullable EntityBasic ignitingEntity();
 
     // TODO: holder?
     enum IgniteCause {

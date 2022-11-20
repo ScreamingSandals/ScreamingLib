@@ -41,6 +41,7 @@ import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -98,8 +99,7 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
     public List<EntityBasic> getEntities() {
         return wrappedObject.getEntities().stream()
                 .map(EntityMapper::wrapEntity)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

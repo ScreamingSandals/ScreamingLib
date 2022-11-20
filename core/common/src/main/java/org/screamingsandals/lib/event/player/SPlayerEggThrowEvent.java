@@ -16,21 +16,22 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 
 public interface SPlayerEggThrowEvent extends SPlayerEvent, PlatformEventWrapper {
 
-    EntityBasic eggEntity();
+    @NotNull EntityBasic eggEntity();
 
     boolean hatching();
 
     void hatching(boolean hatching);
 
-    EntityTypeHolder hatchType();
+    @NotNull EntityTypeHolder hatchType();
 
-    void hatchType(EntityTypeHolder hatchType);
+    void hatchType(@NotNull EntityTypeHolder hatchType);
 
     /**
      * //from bukkit

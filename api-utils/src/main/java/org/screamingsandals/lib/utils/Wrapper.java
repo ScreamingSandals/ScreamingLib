@@ -16,6 +16,9 @@
 
 package org.screamingsandals.lib.utils;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Optional;
 
 /**
@@ -28,8 +31,9 @@ public interface Wrapper {
      * @param type the class to convert the wrapped object to
      * @param <T> the type to cast the class object of the wrapped object to
      * @return this wrapped object cast to represent a subclass of the specified class object.
+     * @throws RuntimeException if it is unknown how to convert the wrapper to the specific type
      */
-    <T> T as(Class<T> type);
+    <T> @NotNull T as(@NotNull Class<T> type);
 
     /**
      * Converts the wrapped object to represent a subclass of the specified class object.
@@ -39,11 +43,27 @@ public interface Wrapper {
      * @param <T> the type to cast the class object of the wrapped object to
      * @return this wrapped object cast to represent a subclass of the specified class object.
      */
-    default <T> Optional<T> asOptional(Class<T> type) {
+    default <T> @NotNull Optional<T> asOptional(@NotNull Class<T> type) {
         try {
-            return Optional.ofNullable(as(type));
+            return Optional.of(as(type));
         } catch (Exception ignored) {
             return Optional.empty();
+        }
+    }
+
+    /**
+     * Converts the wrapped object to represent a subclass of the specified class object.
+     * Returns {@link Optional#empty()} if failed to do so.
+     *
+     * @param type the class to convert the wrapped object to
+     * @param <T> the type to cast the class object of the wrapped object to
+     * @return this wrapped object cast to represent a subclass of the specified class object.
+     */
+    default <T> @Nullable T asNullable(Class<T> type) {
+        try {
+            return as(type);
+        } catch (Exception ignored) {
+            return null;
         }
     }
 }

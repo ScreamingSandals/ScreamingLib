@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.utils.logger;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Pair;
 
 import java.util.Optional;
@@ -160,7 +161,7 @@ public class DualLoggerWrapper extends Pair<LoggerWrapper, LoggerWrapper> implem
      * {@inheritDoc}
      */
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         try {
             return getFirst().as(type);
         } catch (Throwable throwable) {

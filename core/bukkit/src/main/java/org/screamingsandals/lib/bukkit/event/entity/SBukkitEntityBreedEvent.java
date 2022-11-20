@@ -22,7 +22,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityBreedEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
@@ -30,11 +32,13 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityBreedEvent;
 import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitEntityBreedEvent implements SEntityBreedEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -53,7 +57,7 @@ public class SBukkitEntityBreedEvent implements SEntityBreedEvent, BukkitCancell
     private boolean bredWithCached;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -61,7 +65,7 @@ public class SBukkitEntityBreedEvent implements SEntityBreedEvent, BukkitCancell
     }
 
     @Override
-    public EntityBasic mother() {
+    public @NotNull EntityBasic mother() {
         if (mother == null) {
             mother = EntityMapper.wrapEntity(event.getMother()).orElseThrow();
         }
@@ -69,7 +73,7 @@ public class SBukkitEntityBreedEvent implements SEntityBreedEvent, BukkitCancell
     }
 
     @Override
-    public EntityBasic father() {
+    public @NotNull EntityBasic father() {
         if (father == null) {
             father = EntityMapper.wrapEntity(event.getFather()).orElseThrow();
         }
@@ -77,8 +81,7 @@ public class SBukkitEntityBreedEvent implements SEntityBreedEvent, BukkitCancell
     }
 
     @Override
-    @Nullable
-    public EntityBasic breeder() {
+    public @Nullable EntityBasic breeder() {
         if (!breederCached) {
             if (event.getBreeder() != null) {
                 breeder = EntityMapper.wrapEntity(event.getBreeder()).orElseThrow();
@@ -89,8 +92,7 @@ public class SBukkitEntityBreedEvent implements SEntityBreedEvent, BukkitCancell
     }
 
     @Override
-    @Nullable
-    public Item bredWith() {
+    public @Nullable Item bredWith() {
         if (!bredWithCached) {
             if (event.getBredWith() != null) {
                 bredWith = new BukkitItem(event.getBredWith());

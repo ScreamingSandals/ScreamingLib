@@ -16,14 +16,18 @@
 
 package org.screamingsandals.lib.bukkit.event.block;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.block.EntityBlockFormEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.block.SBlockFormedByEntityEvent;
 
 import lombok.experimental.Accessors;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitBlockFormedByEntityEvent extends SBukkitBlockFormEvent implements SBlockFormedByEntityEvent {
     // Internal cache
     private EntityBasic producer;
@@ -33,7 +37,7 @@ public class SBukkitBlockFormedByEntityEvent extends SBukkitBlockFormEvent imple
     }
 
     @Override
-    public EntityBasic producer() {
+    public @NotNull EntityBasic producer() {
         if (producer == null) {
             producer = EntityMapper.wrapEntity(((EntityBlockFormEvent) event()).getEntity()).orElseThrow();
         }

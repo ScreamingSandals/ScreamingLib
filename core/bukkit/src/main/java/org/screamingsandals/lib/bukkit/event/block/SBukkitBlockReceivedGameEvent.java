@@ -19,21 +19,25 @@ package org.screamingsandals.lib.bukkit.event.block;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.block.BlockReceiveGameEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
-import org.screamingsandals.lib.event.block.SSculkSensorReceiveEvent;
+import org.screamingsandals.lib.event.block.SBlockReceivedGameEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-public class SBukkitSculkSensorReceiveEvent implements SSculkSensorReceiveEvent, BukkitCancellable {
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+public class SBukkitBlockReceivedGameEvent implements SBlockReceivedGameEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
@@ -46,7 +50,7 @@ public class SBukkitSculkSensorReceiveEvent implements SSculkSensorReceiveEvent,
     private NamespacedMappingKey underlyingEvent;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -65,7 +69,7 @@ public class SBukkitSculkSensorReceiveEvent implements SSculkSensorReceiveEvent,
     }
 
     @Override
-    public NamespacedMappingKey underlyingEvent() {
+    public @NotNull NamespacedMappingKey underlyingEvent() {
         if (underlyingEvent == null) {
             underlyingEvent = NamespacedMappingKey.of(event.getEvent().getKey().toString());
         }

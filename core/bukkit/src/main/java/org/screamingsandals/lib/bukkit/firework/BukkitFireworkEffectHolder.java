@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.firework;
 
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -139,7 +140,7 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type == FireworkEffect.Type.class) {
             return (T) wrappedObject.getType();
         }

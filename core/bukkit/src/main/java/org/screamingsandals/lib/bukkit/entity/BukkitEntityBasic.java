@@ -38,7 +38,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -158,8 +158,7 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
         return wrappedObject.getPassengers()
                 .stream()
                 .map(EntityMapper::wrapEntity)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -229,7 +228,7 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
 
     @Override
     public EntityBasic getVehicle() {
-        return EntityMapper.wrapEntity(wrappedObject.getVehicle()).orElseThrow();
+        return EntityMapper.wrapEntity(wrappedObject.getVehicle());
     }
 
     @Override

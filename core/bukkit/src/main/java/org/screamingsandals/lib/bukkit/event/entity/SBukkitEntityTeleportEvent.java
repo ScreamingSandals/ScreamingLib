@@ -22,12 +22,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.Location;
 import org.bukkit.event.entity.EntityTeleportEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityTeleportEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
@@ -35,6 +38,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitEntityTeleportEvent implements SEntityTeleportEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -45,7 +49,7 @@ public class SBukkitEntityTeleportEvent implements SEntityTeleportEvent, BukkitC
     private EntityBasic entity;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -53,22 +57,22 @@ public class SBukkitEntityTeleportEvent implements SEntityTeleportEvent, BukkitC
     }
 
     @Override
-    public LocationHolder from() {
+    public @NotNull LocationHolder from() {
         return LocationMapper.wrapLocation(event.getFrom());
     }
 
     @Override
-    public void from(LocationHolder from) {
+    public void from(@NotNull LocationHolder from) {
         event.setFrom(from.as(Location.class));
     }
 
     @Override
-    public LocationHolder to() {
+    public @NotNull LocationHolder to() {
         return LocationMapper.wrapLocation(event.getTo());
     }
 
     @Override
-    public void to(LocationHolder to) {
+    public void to(@NotNull LocationHolder to) {
         event.setFrom(to.as(Location.class));
     }
 }

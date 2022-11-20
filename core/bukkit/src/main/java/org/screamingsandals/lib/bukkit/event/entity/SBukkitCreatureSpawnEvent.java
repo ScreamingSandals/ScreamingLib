@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.entity.SCreatureSpawnEvent;
 
 import lombok.experimental.Accessors;
@@ -31,7 +32,7 @@ public class SBukkitCreatureSpawnEvent extends SBukkitEntitySpawnEvent implement
     private SpawnReason spawnReason;
 
     @Override
-    public SpawnReason spawnReason() {
+    public @NotNull SpawnReason spawnReason() {
         if (spawnReason == null) {
             spawnReason = SpawnReason.valueOf(((CreatureSpawnEvent) event()).getSpawnReason().name());
         }

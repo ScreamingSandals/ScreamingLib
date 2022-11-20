@@ -81,7 +81,7 @@ public class SBukkitBlockDispenseEvent implements SBlockDispenseEvent, BukkitCan
     public @Nullable EntityLiving receiver() {
         if (!receiverCached) {
             if (event instanceof BlockDispenseArmorEvent) {
-                receiver = EntityMapper.<EntityLiving>wrapEntity(((BlockDispenseArmorEvent) event).getTargetEntity()).orElseThrow();
+                receiver = EntityMapper.wrapEntityLiving(((BlockDispenseArmorEvent) event).getTargetEntity());
             }
             receiverCached = true;
         }

@@ -22,16 +22,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityCombustEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityCombustEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitEntityCombustEvent implements SEntityCombustEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -42,7 +46,7 @@ public class SBukkitEntityCombustEvent implements SEntityCombustEvent, BukkitCan
     private EntityBasic entity;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }

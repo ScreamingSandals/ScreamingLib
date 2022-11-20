@@ -16,19 +16,20 @@
 
 package org.screamingsandals.lib.event.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.world.LocationHolder;
 
 public interface SEntityTeleportEvent extends SCancellableEvent, PlatformEventWrapper {
-    EntityBasic entity();
+    @NotNull EntityBasic entity();
 
-    LocationHolder from();
+    @NotNull LocationHolder from();
 
-    void from(LocationHolder from);
+    void from(@NotNull LocationHolder from);
 
-    LocationHolder to();
+    @NotNull LocationHolder to();
 
-    void to(LocationHolder to);
+    void to(@NotNull LocationHolder to);
 }

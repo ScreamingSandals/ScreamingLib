@@ -108,7 +108,7 @@ public class BungeeLegacyItemContent extends BasicWrapper<CompoundTag> implement
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type == String.class) {
             return (T) AbstractBungeeBackend.getSnbtSerializer().serialize(wrappedObject);
         }

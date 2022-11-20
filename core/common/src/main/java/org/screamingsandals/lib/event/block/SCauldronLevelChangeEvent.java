@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.block;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -26,13 +27,13 @@ import java.util.Locale;
 
 public interface SCauldronLevelChangeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder block();
+    @NotNull BlockHolder block();
 
     @Nullable EntityBasic entity();
 
     int oldLevel();
 
-    Reason reason();
+    @NotNull Reason reason();
 
     int newLevel();
 
@@ -52,7 +53,7 @@ public interface SCauldronLevelChangeEvent extends SCancellableEvent, PlatformEv
         SHULKER_WASH,
         UNKNOWN;
 
-        public static Reason get(String name) {
+        public static @NotNull Reason get(@NotNull String name) {
             try {
                 return valueOf(name.toUpperCase(Locale.ROOT));
             } catch (Throwable ignored) {

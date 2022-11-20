@@ -16,15 +16,16 @@
 
 package org.screamingsandals.lib.event.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SEntityExhaustionEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic entity();
+    @NotNull EntityBasic entity();
 
-    ExhaustionReason exhaustionReason();
+    @NotNull ExhaustionReason exhaustionReason();
 
     float exhaustion();
 

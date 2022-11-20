@@ -29,7 +29,7 @@ public class BukkitDummySoundSource implements SoundSource {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type.isInstance(this)) {
             return (T) this;
         }

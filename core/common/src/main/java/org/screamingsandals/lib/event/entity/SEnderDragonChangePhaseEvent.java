@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
@@ -23,14 +24,13 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SEnderDragonChangePhaseEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic entity();
+    @NotNull EntityBasic entity();
 
-    @Nullable
-    Phase currentPhase();
+    @Nullable Phase currentPhase();
 
-    Phase newPhase();
+    @NotNull Phase newPhase();
 
-    void newPhase(Phase newPhase);
+    void newPhase(@NotNull Phase newPhase);
 
     /**
      * Represents a phase or action that an Ender Dragon can perform.

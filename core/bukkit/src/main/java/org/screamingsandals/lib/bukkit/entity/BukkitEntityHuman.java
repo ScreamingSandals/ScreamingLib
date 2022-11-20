@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.entity;
 
 import org.bukkit.entity.HumanEntity;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityHuman;
 
 public class BukkitEntityHuman extends BukkitEntityLiving implements EntityHuman {
@@ -93,7 +94,7 @@ public class BukkitEntityHuman extends BukkitEntityLiving implements EntityHuman
     }
 
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         return super.as(type);
     }
 }

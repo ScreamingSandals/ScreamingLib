@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
@@ -24,17 +25,15 @@ import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 
 public interface SEntityPotionEffectEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic entity();
+    @NotNull EntityBasic entity();
 
-    @Nullable
-    PotionEffectHolder oldEffect();
+    @Nullable PotionEffectHolder oldEffect();
 
-    @Nullable
-    PotionEffectHolder newEffect();
+    @Nullable PotionEffectHolder newEffect();
 
-    Cause cause();
+    @NotNull Cause cause();
 
-    Action action();
+    @NotNull Action action();
 
     boolean override();
 

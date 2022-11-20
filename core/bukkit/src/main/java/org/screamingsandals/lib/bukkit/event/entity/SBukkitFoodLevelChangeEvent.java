@@ -19,7 +19,9 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
@@ -27,11 +29,13 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SFoodLevelChangeEvent;
 import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitFoodLevelChangeEvent implements SFoodLevelChangeEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -44,7 +48,7 @@ public class SBukkitFoodLevelChangeEvent implements SFoodLevelChangeEvent, Bukki
     private boolean itemCached;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -62,8 +66,7 @@ public class SBukkitFoodLevelChangeEvent implements SFoodLevelChangeEvent, Bukki
     }
 
     @Override
-    @Nullable
-    public Item item() {
+    public @Nullable Item item() {
         if (!itemCached) {
             if (event.getItem() != null) {
                 item = new BukkitItem(event.getItem());

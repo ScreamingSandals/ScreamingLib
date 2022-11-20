@@ -16,9 +16,11 @@
 
 package org.screamingsandals.lib.event.entity;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface SCreatureSpawnEvent extends SEntitySpawnEvent {
 
-    SpawnReason spawnReason();
+    @NotNull SpawnReason spawnReason();
 
     /**
      * An enum to specify the type of spawning

@@ -22,10 +22,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityPortalEnterEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
@@ -33,6 +36,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitEntityPortalEnterEvent implements SEntityPortalEnterEvent {
     @Getter
     @EqualsAndHashCode.Include
@@ -44,7 +48,7 @@ public class SBukkitEntityPortalEnterEvent implements SEntityPortalEnterEvent {
     private LocationHolder location;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -52,7 +56,7 @@ public class SBukkitEntityPortalEnterEvent implements SEntityPortalEnterEvent {
     }
 
     @Override
-    public LocationHolder location() {
+    public @NotNull LocationHolder location() {
         if (location == null) {
             location = LocationMapper.wrapLocation(event.getLocation());
         }

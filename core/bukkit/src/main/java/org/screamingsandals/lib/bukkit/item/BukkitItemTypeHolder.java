@@ -118,7 +118,7 @@ public class BukkitItemTypeHolder extends BasicWrapper<Material> implements Item
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type == ItemStack.class) {
             ItemStack stack = new ItemStack(wrappedObject);
             if (forcedDurability != 0) {

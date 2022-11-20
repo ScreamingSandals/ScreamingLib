@@ -22,18 +22,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.event.entity.EnderDragonChangePhaseEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEnderDragonChangePhaseEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitEnderDragonChangePhaseEvent implements SEnderDragonChangePhaseEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -47,7 +51,7 @@ public class SBukkitEnderDragonChangePhaseEvent implements SEnderDragonChangePha
     private boolean currentPhaseCached;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -55,8 +59,7 @@ public class SBukkitEnderDragonChangePhaseEvent implements SEnderDragonChangePha
     }
 
     @Override
-    @Nullable
-    public Phase currentPhase() {
+    public @Nullable Phase currentPhase() {
         if (!currentPhaseCached) {
             if (event.getCurrentPhase() != null) {
                 currentPhase = Phase.valueOf(event.getCurrentPhase().name());
@@ -67,12 +70,12 @@ public class SBukkitEnderDragonChangePhaseEvent implements SEnderDragonChangePha
     }
 
     @Override
-    public Phase newPhase() {
+    public @NotNull Phase newPhase() {
         return Phase.valueOf(event.getNewPhase().name());
     }
 
     @Override
-    public void newPhase(Phase newPhase) {
+    public void newPhase(@NotNull Phase newPhase) {
         event.setNewPhase(EnderDragon.Phase.valueOf(newPhase.name()));
     }
 }

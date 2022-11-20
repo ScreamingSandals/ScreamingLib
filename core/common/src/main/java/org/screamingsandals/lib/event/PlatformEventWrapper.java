@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.event;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
@@ -38,7 +40,7 @@ public interface PlatformEventWrapper extends Wrapper, RawValueHolder {
     @SuppressWarnings("unchecked")
     @Override
     @ApiStatus.Experimental
-    default <T> T as(Class<T> type) {
+    default <T> @NotNull T as(@NotNull Class<T> type) {
         if (type.isInstance(event())) {
             return (T) event();
         }
@@ -47,7 +49,13 @@ public interface PlatformEventWrapper extends Wrapper, RawValueHolder {
 
     @Override
     @ApiStatus.Experimental
-    default <T> Optional<T> asOptional(Class<T> type) {
+    default <T> @NotNull Optional<T> asOptional(@NotNull Class<T> type) {
         return Wrapper.super.asOptional(type);
+    }
+
+    @Override
+    @ApiStatus.Experimental
+    default <T> @Nullable T asNullable(Class<T> type) {
+        return Wrapper.super.asNullable(type);
     }
 }

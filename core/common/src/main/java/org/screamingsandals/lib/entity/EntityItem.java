@@ -16,10 +16,11 @@
 
 package org.screamingsandals.lib.entity;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.world.LocationHolder;
 
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public interface EntityItem extends EntityBasic {
@@ -52,7 +53,7 @@ public interface EntityItem extends EntityBasic {
 
     long getSpawnTime();
 
-    static Optional<EntityItem> dropItem(Item item, LocationHolder location) {
+    static @Nullable EntityItem dropItem(@NotNull Item item, @NotNull LocationHolder location) {
         return EntityMapper.dropItem(item, location);
     }
 }

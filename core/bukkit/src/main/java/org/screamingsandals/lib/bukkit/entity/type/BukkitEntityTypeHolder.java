@@ -20,6 +20,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.entity.EntityBasic;
@@ -94,7 +95,7 @@ public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements 
     }
 
     @Override
-    public <T extends EntityBasic> Optional<T> spawn(LocationHolder location) {
+    public @Nullable EntityBasic spawn(@NotNull LocationHolder location) {
         return EntityMapper.spawn(this, location);
     }
 }

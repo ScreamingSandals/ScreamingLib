@@ -19,16 +19,20 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.FireworkExplodeEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityFirework;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SFireworkExplodeEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitFireworkExplodeEvent implements SFireworkExplodeEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -39,9 +43,9 @@ public class SBukkitFireworkExplodeEvent implements SFireworkExplodeEvent, Bukki
     private EntityFirework entity;
 
     @Override
-    public EntityFirework entity() {
+    public @NotNull EntityFirework entity() {
         if (entity == null) {
-            entity = EntityMapper.<EntityFirework>wrapEntity(event.getEntity()).orElseThrow();
+            entity = EntityMapper.wrapEntityFirework(event.getEntity()).orElseThrow();
         }
         return entity;
     }

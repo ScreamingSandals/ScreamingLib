@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.attribute;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.UUID;
@@ -32,7 +33,7 @@ public class AttributeModifierHolder implements Wrapper {
      * {@inheritDoc}
      */
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         return AttributeMapping.convertAttributeModifierHolder(this, type);
     }
 

@@ -19,12 +19,15 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.DyeColor;
 import org.bukkit.event.entity.SheepDyeWoolEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SSheepDyeWoolEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Locale;
 
@@ -32,6 +35,7 @@ import java.util.Locale;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitSheepDyeWoolEvent implements SSheepDyeWoolEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -42,7 +46,7 @@ public class SBukkitSheepDyeWoolEvent implements SSheepDyeWoolEvent, BukkitCance
     private EntityBasic entity;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -50,12 +54,12 @@ public class SBukkitSheepDyeWoolEvent implements SSheepDyeWoolEvent, BukkitCance
     }
 
     @Override
-    public String dyeColor() {
+    public @NotNull String dyeColor() {
         return event.getColor().name();
     }
 
     @Override
-    public void dyeColor(String dyeColor) {
+    public void dyeColor(@NotNull String dyeColor) {
         event.setColor(DyeColor.valueOf(dyeColor.toUpperCase(Locale.ROOT)));
     }
 }

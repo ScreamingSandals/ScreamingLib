@@ -22,16 +22,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityPoseChangeEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
 import org.screamingsandals.lib.event.entity.SEntityPoseChangeEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitEntityPoseChangeEvent implements SEntityPoseChangeEvent {
     @Getter
     @EqualsAndHashCode.Include
@@ -43,7 +47,7 @@ public class SBukkitEntityPoseChangeEvent implements SEntityPoseChangeEvent {
     private EntityPoseHolder pose;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -51,7 +55,7 @@ public class SBukkitEntityPoseChangeEvent implements SEntityPoseChangeEvent {
     }
 
     @Override
-    public EntityPoseHolder pose() {
+    public @NotNull EntityPoseHolder pose() {
         if (pose == null) {
             pose = EntityPoseHolder.of(event.getPose());
         }

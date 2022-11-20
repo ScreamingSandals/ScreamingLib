@@ -220,7 +220,7 @@ public class LocationHolder implements Wrapper, Serializable {
      * {@inheritDoc}
      */
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         return LocationMapper.convert(this, type);
     }
 

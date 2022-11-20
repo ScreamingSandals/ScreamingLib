@@ -18,6 +18,7 @@ package org.screamingsandals.lib.utils;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -44,7 +45,7 @@ public class BasicWrapper<O> implements Wrapper, RawValueHolder {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type.isInstance(wrappedObject)) {
             return (T) wrappedObject;
         }

@@ -88,7 +88,7 @@ public class BungeeEntityContent extends BasicWrapper<Entity> implements EntityC
     }
 
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         try {
             return super.as(type);
         } catch (Throwable ignored) {

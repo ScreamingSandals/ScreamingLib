@@ -18,6 +18,7 @@ package org.screamingsandals.lib.block;
 
 import lombok.Data;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -114,7 +115,7 @@ public class BlockHolder implements Wrapper {
      * {@inheritDoc}
      */
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         return BlockMapper.convert(this, type);
     }
 }

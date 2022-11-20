@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
@@ -23,14 +24,13 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SEntityTargetEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic entity();
+    @NotNull EntityBasic entity();
 
-    @Nullable
-    EntityBasic target();
+    @Nullable EntityBasic target();
 
     void target(@Nullable EntityBasic target);
 
-    TargetReason targetReason();
+    @NotNull TargetReason targetReason();
 
     /**
      * An enum to specify the reason for the targeting

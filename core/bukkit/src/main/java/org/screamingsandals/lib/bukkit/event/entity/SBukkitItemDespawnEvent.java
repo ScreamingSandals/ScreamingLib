@@ -19,11 +19,14 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.ItemDespawnEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SItemDespawnEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
@@ -31,6 +34,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitItemDespawnEvent implements SItemDespawnEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -42,7 +46,7 @@ public class SBukkitItemDespawnEvent implements SItemDespawnEvent, BukkitCancell
     private LocationHolder location;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -50,7 +54,7 @@ public class SBukkitItemDespawnEvent implements SItemDespawnEvent, BukkitCancell
     }
 
     @Override
-    public LocationHolder location() {
+    public @NotNull LocationHolder location() {
         if (location == null) {
             location = LocationMapper.wrapLocation(event.getLocation());
         }

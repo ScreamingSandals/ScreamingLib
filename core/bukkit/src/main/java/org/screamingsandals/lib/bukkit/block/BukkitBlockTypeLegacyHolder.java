@@ -433,7 +433,7 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type == Material.class) {
             return (T) wrappedObject.getItemType();
         }

@@ -81,7 +81,7 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
     }
 
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         try {
             return super.as(type);
         } catch (Throwable ignored) {

@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.item.meta;
 
 import org.bukkit.enchantments.Enchantment;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Pair;
@@ -81,7 +82,7 @@ public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Inte
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type == Enchantment.class) {
             return (T) wrappedObject.first();
         }

@@ -22,8 +22,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.Block;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -31,6 +33,7 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityExplodeEvent;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
@@ -40,6 +43,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitEntityExplodeEvent implements SEntityExplodeEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -52,7 +56,7 @@ public class SBukkitEntityExplodeEvent implements SEntityExplodeEvent, BukkitCan
     private Collection<BlockHolder> blocks;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -60,7 +64,7 @@ public class SBukkitEntityExplodeEvent implements SEntityExplodeEvent, BukkitCan
     }
 
     @Override
-    public LocationHolder location() {
+    public @NotNull LocationHolder location() {
         if (location == null) {
             location = LocationMapper.wrapLocation(event.getLocation());
         }
@@ -68,7 +72,7 @@ public class SBukkitEntityExplodeEvent implements SEntityExplodeEvent, BukkitCan
     }
 
     @Override
-    public Collection<BlockHolder> blocks() {
+    public @NotNull Collection<@NotNull BlockHolder> blocks() {
         if (blocks == null) {
             blocks = new CollectionLinkedToCollection<>(event.blockList(), o -> o.as(Block.class), BlockMapper::wrapBlock);
         }

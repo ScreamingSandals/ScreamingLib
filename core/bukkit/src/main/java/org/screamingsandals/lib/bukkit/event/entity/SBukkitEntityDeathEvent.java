@@ -22,9 +22,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.EntityBasic;
@@ -32,6 +34,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityDeathEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Collection;
 
@@ -39,6 +42,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitEntityDeathEvent implements SEntityDeathEvent, NoAutoCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -50,7 +54,7 @@ public class SBukkitEntityDeathEvent implements SEntityDeathEvent, NoAutoCancell
     private Collection<Item> drops;
 
     @Override
-    public Collection<Item> drops() {
+    public @NotNull Collection<@NotNull Item> drops() {
         if (drops == null) {
             drops = new CollectionLinkedToCollection<>(
                     event.getDrops(),
@@ -62,7 +66,7 @@ public class SBukkitEntityDeathEvent implements SEntityDeathEvent, NoAutoCancell
     }
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }

@@ -36,7 +36,7 @@ public class BukkitEntityProjectile extends BukkitEntityBasic implements EntityP
     public ProjectileShooter getShooter() {
         var source = ((Projectile) wrappedObject).getShooter();
         if (source instanceof Entity) {
-            return EntityMapper.<EntityLiving>wrapEntity(source).orElseThrow();
+            return EntityMapper.wrapEntityLiving(source);
         } else if (source instanceof BlockProjectileSource) {
             return new BukkitBlockProjectileSource((BlockProjectileSource) source);
         }

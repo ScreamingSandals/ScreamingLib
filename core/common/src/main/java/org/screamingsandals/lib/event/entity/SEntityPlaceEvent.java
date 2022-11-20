@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
@@ -25,12 +26,11 @@ import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SEntityPlaceEvent extends SCancellableEvent, PlatformEventWrapper {
-    EntityBasic entity();
+    @NotNull EntityBasic entity();
 
-    @Nullable
-    PlayerWrapper player();
+    @Nullable PlayerWrapper player();
 
-    BlockHolder block();
+    @NotNull BlockHolder block();
 
-    BlockFace blockFace();
+    @NotNull BlockFace blockFace();
 }

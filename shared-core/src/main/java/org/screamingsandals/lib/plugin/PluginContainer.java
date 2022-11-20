@@ -94,7 +94,7 @@ public abstract class PluginContainer implements Wrapper {
      * {@inheritDoc}
      */
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         return getPluginDescription().as(type);
     }
 

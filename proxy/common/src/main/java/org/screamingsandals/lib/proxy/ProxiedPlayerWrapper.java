@@ -41,7 +41,7 @@ public class ProxiedPlayerWrapper extends ProxiedSenderWrapper implements Player
         ProxiedPlayerMapper.switchServer(this, server);
     }
 
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         return ProxiedPlayerMapper.convertPlayerWrapper(this, type);
     }
 

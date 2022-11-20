@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.block;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
@@ -25,15 +26,14 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.block.BlockHolder;
 
 @LimitedVersionSupport(">= 1.17")
-public interface SSculkSensorReceiveEvent extends SCancellableEvent, PlatformEventWrapper {
+public interface SBlockReceivedGameEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder block();
+    @NotNull BlockHolder block();
 
-    @Nullable
-    EntityBasic entity();
+    @Nullable EntityBasic entity();
 
     /**
      * TODO: Create game event mapping
      */
-    NamespacedMappingKey underlyingEvent();
+    @NotNull NamespacedMappingKey underlyingEvent();
 }

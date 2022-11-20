@@ -18,6 +18,7 @@ package org.screamingsandals.lib.spectator;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 @RequiredArgsConstructor
 @ApiStatus.Internal
@@ -48,7 +49,7 @@ class ColorLink implements Color {
     }
 
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         return obtainColor().as(type);
     }
 

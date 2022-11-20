@@ -43,7 +43,7 @@ public class ExtendablePlayerWrapper implements PlayerWrapper {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type.isInstance(wrappedObject)) {
             return (T) wrappedObject;
         }

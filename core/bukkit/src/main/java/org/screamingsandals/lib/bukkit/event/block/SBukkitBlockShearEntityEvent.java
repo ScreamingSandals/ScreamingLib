@@ -19,7 +19,9 @@ package org.screamingsandals.lib.bukkit.event.block;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.block.BlockShearEntityEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -28,11 +30,13 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.block.SBlockShearEntityEvent;
 import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitBlockShearEntityEvent implements SBlockShearEntityEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -45,7 +49,7 @@ public class SBukkitBlockShearEntityEvent implements SBlockShearEntityEvent, Buk
     private Item tool;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -53,7 +57,7 @@ public class SBukkitBlockShearEntityEvent implements SBlockShearEntityEvent, Buk
     }
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -61,7 +65,7 @@ public class SBukkitBlockShearEntityEvent implements SBlockShearEntityEvent, Buk
     }
 
     @Override
-    public Item tool() {
+    public @NotNull Item tool() {
         if (tool == null) {
             tool = new BukkitItem(event.getTool());
         }

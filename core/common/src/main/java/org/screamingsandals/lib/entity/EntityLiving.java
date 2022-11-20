@@ -28,7 +28,6 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
@@ -72,7 +71,7 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
     void setNoDamageTicks(int ticks);
 
-    Optional<EntityLiving> getHumanKiller(); // change later to EntityHuman
+    @Nullable EntityHuman getHumanKiller();
 
     boolean addPotionEffect(PotionEffectHolder effect);
 
@@ -95,7 +94,7 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
     boolean isLeashed();
 
-    Optional<EntityBasic> getLeashHolder();
+    @Nullable EntityBasic getLeashHolder();
 
     boolean setLeashHolder(EntityBasic holder);
 
@@ -178,7 +177,7 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
      *
      * @return the player's target (the living entity the player is looking at)
      */
-    default Optional<EntityLiving> getTarget() {
+    default @Nullable EntityLiving getTarget() {
         return getTarget(3);
     }
 
@@ -188,15 +187,15 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
      * @param radius the max distance that the target can be detected from
      * @return the player's target (the living entity the player is looking at)
      */
-    default Optional<EntityLiving> getTarget(int radius) {
+    default @Nullable EntityLiving getTarget(int radius) {
         for (EntityLiving e : getLocation().getNearbyEntitiesByClass(EntityLiving.class, radius)) {
             final LocationHolder eye = getEyeLocation();
             final double dot = e.getLocation().asVector().subtract(eye.asVector()).normalize().dot(eye.getFacingDirection());
             if (dot > 0.99D) {
-                return Optional.of(e);
+                return e;
             }
         }
-        return Optional.empty();
+        return null;
     }
 
 

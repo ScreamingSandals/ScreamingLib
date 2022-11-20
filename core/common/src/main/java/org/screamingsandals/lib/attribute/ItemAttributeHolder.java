@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.attribute;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.Wrapper;
@@ -37,7 +38,7 @@ public class ItemAttributeHolder implements Wrapper {
      * {@inheritDoc}
      */
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         return AttributeMapping.convertItemAttributeHolder(this, type);
     }
 }

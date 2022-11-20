@@ -18,6 +18,7 @@ package org.screamingsandals.lib.proxy;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.net.InetSocketAddress;
@@ -46,7 +47,7 @@ public class ServerWrapper implements Wrapper {
         return ProxiedPlayerMapper.getPlayers(this);
     }
 
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         return ProxiedPlayerMapper.convertServerWrapper(this, type);
     }
 }

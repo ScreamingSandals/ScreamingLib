@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
@@ -26,11 +27,11 @@ import java.util.Collection;
 
 public interface SEntityExplodeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    EntityBasic entity();
+    @NotNull EntityBasic entity();
 
-    LocationHolder location();
+    @NotNull LocationHolder location();
 
-    Collection<BlockHolder> blocks();
+    @NotNull Collection<@NotNull BlockHolder> blocks();
 
     float yield();
 

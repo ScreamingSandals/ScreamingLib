@@ -19,7 +19,9 @@ package org.screamingsandals.lib.bukkit.event.player;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -27,11 +29,13 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.player.SPlayerFishEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitPlayerFishEvent implements SPlayerFishEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -46,7 +50,7 @@ public class SBukkitPlayerFishEvent implements SPlayerFishEvent, BukkitCancellab
     private EntityBasic hookEntity;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -54,8 +58,7 @@ public class SBukkitPlayerFishEvent implements SPlayerFishEvent, BukkitCancellab
     }
 
     @Override
-    @Nullable
-    public EntityBasic caughtEntity() {
+    public @Nullable EntityBasic caughtEntity() {
         if (!entityCached) {
             if (event.getCaught() != null) {
                 entity = EntityMapper.wrapEntity(event.getCaught()).orElseThrow();
@@ -76,7 +79,7 @@ public class SBukkitPlayerFishEvent implements SPlayerFishEvent, BukkitCancellab
     }
 
     @Override
-    public State state() {
+    public @NotNull State state() {
         if (state == null) {
             state = State.convert(event.getState().name());
         }
@@ -84,7 +87,7 @@ public class SBukkitPlayerFishEvent implements SPlayerFishEvent, BukkitCancellab
     }
 
     @Override
-    public EntityBasic hookEntity() {
+    public @NotNull EntityBasic hookEntity() {
         if (hookEntity == null) {
             hookEntity = EntityMapper.wrapEntity(event.getHook()).orElseThrow();
         }

@@ -19,16 +19,20 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityTameEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityTameEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitEntityTameEvent implements SEntityTameEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -40,7 +44,7 @@ public class SBukkitEntityTameEvent implements SEntityTameEvent, BukkitCancellab
     private EntityBasic owner;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -48,7 +52,7 @@ public class SBukkitEntityTameEvent implements SEntityTameEvent, BukkitCancellab
     }
 
     @Override
-    public EntityBasic owner() {
+    public @NotNull EntityBasic owner() {
         if (owner == null) {
             owner = EntityMapper.wrapEntity(event.getOwner()).orElseThrow();
         }

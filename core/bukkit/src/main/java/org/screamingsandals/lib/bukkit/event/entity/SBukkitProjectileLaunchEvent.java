@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityProjectile;
 import org.screamingsandals.lib.entity.ProjectileShooter;
@@ -31,13 +32,12 @@ public class SBukkitProjectileLaunchEvent extends SBukkitEntitySpawnEvent implem
     private ProjectileShooter shooter;
 
     @Override
-    public EntityProjectile entity() {
+    public @NotNull EntityProjectile entity() {
         return (EntityProjectile) super.entity();
     }
 
     @Override
-    @Nullable
-    public ProjectileShooter shooter() {
+    public @Nullable ProjectileShooter shooter() {
         if (shooter == null) {
             shooter = entity().getShooter();
         }

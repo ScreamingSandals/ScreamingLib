@@ -20,6 +20,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.BlockProjectileSource;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.BlockProjectileShooter;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.EntityProjectile;
@@ -29,8 +31,6 @@ import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 
-import java.util.Optional;
-
 public class BukkitBlockProjectileSource extends BasicWrapper<BlockProjectileSource> implements BlockProjectileShooter {
     public BukkitBlockProjectileSource(BlockProjectileSource wrappedObject) {
         super(wrappedObject);
@@ -38,14 +38,22 @@ public class BukkitBlockProjectileSource extends BasicWrapper<BlockProjectileSou
 
     @SuppressWarnings({"ConstantConditions", "unchecked"})
     @Override
-    public Optional<EntityProjectile> launchProjectile(EntityTypeHolder projectileType) {
-        return EntityMapper.wrapEntity(wrappedObject.launchProjectile((Class<Projectile>) projectileType.as(EntityType.class).getEntityClass()));
+    public @Nullable EntityProjectile launchProjectile(@NotNull EntityTypeHolder projectileType) {
+        var projectileBukkit = projectileType.as(EntityType.class).getEntityClass();
+        if (!Projectile.class.isAssignableFrom(projectileBukkit)) {
+            return null;
+        }
+        return EntityMapper.wrapEntityProjectile(wrappedObject.launchProjectile((Class<Projectile>) projectileBukkit));
     }
 
     @SuppressWarnings({"ConstantConditions", "unchecked"})
     @Override
-    public Optional<EntityProjectile> launchProjectile(EntityTypeHolder projectileType, Vector3D velocity) {
-        return EntityMapper.wrapEntity(wrappedObject.launchProjectile((Class<Projectile>) projectileType.as(EntityType.class).getEntityClass(), new Vector(velocity.getX(), velocity.getY(), velocity.getZ())));
+    public @Nullable EntityProjectile launchProjectile(@NotNull EntityTypeHolder projectileType, @NotNull Vector3D velocity) {
+        var projectileBukkit = projectileType.as(EntityType.class).getEntityClass();
+        if (!Projectile.class.isAssignableFrom(projectileBukkit)) {
+            return null;
+        }
+        return EntityMapper.wrapEntityProjectile(wrappedObject.launchProjectile((Class<Projectile>) projectileBukkit, new Vector(velocity.getX(), velocity.getY(), velocity.getZ())));
     }
 
     @Override

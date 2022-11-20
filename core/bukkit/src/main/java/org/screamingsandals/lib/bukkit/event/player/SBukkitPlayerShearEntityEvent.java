@@ -19,7 +19,9 @@ package org.screamingsandals.lib.bukkit.event.player;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
@@ -29,11 +31,13 @@ import org.screamingsandals.lib.event.player.SPlayerShearEntityEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -47,7 +51,7 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     private EquipmentSlotHolder hand;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -55,7 +59,7 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     }
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (what == null) {
             what = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -63,7 +67,7 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     }
 
     @Override
-    public Item item() {
+    public @NotNull Item item() {
         if (item == null) {
             item = new BukkitItem(event.getItem());
         }
@@ -71,7 +75,7 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     }
 
     @Override
-    public EquipmentSlotHolder hand() {
+    public @NotNull EquipmentSlotHolder hand() {
         if (hand == null) {
             hand = EquipmentSlotHolder.of(event.getHand());
         }

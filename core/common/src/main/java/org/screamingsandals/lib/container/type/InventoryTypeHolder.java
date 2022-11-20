@@ -16,16 +16,17 @@
 
 package org.screamingsandals.lib.container.type;
 
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
@@ -50,15 +51,15 @@ public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
         return size();
     }
 
-    default <C extends Container> Optional<C> createContainer(ComponentLike name) {
+    default <C extends Container> @Nullable C createContainer(ComponentLike name) {
         return createContainer(name.asComponent());
     }
 
-    default <C extends Container> Optional<C> createContainer(Component name) {
+    default <C extends Container> @Nullable C createContainer(Component name) {
         return ContainerFactory.createContainer(this, name);
     }
 
-    default <C extends Container> Optional<C> createContainer() {
+    default <C extends Container> @Nullable C createContainer() {
         return ContainerFactory.createContainer(this);
     }
 
@@ -84,13 +85,15 @@ public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
 
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
     static InventoryTypeHolder of(Object inventoryType) {
-        return ofOptional(inventoryType).orElseThrow();
+        var result = ofNullable(inventoryType);
+        Preconditions.checkNotNullIllegal("Could not find inventory type: " + inventoryType);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    static Optional<InventoryTypeHolder> ofOptional(Object inventoryType) {
+    static @Nullable InventoryTypeHolder ofNullable(Object inventoryType) {
         if (inventoryType instanceof InventoryTypeHolder) {
-            return Optional.of((InventoryTypeHolder) inventoryType);
+            return (InventoryTypeHolder) inventoryType;
         }
         return InventoryTypeMapping.resolve(inventoryType);
     }

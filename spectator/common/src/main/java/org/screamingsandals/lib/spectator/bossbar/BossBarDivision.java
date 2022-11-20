@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.spectator.bossbar;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Wrapper;
 
 public enum BossBarDivision implements Wrapper {
@@ -27,7 +28,7 @@ public enum BossBarDivision implements Wrapper {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type == String.class) {
             return (T) name();
         }

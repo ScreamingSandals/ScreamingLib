@@ -53,7 +53,7 @@ public class ProxiedSenderWrapper implements Wrapper, CommandSenderWrapper {
 
 
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         return ProxiedPlayerMapper.convertSenderWrapper(this, type);
     }
 

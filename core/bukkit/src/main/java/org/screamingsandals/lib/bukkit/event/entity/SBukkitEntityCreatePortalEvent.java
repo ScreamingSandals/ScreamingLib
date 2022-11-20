@@ -25,6 +25,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.entity.EntityCreatePortalEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -55,7 +56,7 @@ public class SBukkitEntityCreatePortalEvent implements SEntityCreatePortalEvent,
     private PortalType portalType;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -63,7 +64,7 @@ public class SBukkitEntityCreatePortalEvent implements SEntityCreatePortalEvent,
     }
 
     @Override
-    public Collection<BlockStateHolder> blocks() {
+    public @NotNull Collection<@NotNull BlockStateHolder> blocks() {
         if (blocks == null) {
             blocks = new CollectionLinkedToCollection<>(
                     event.getBlocks(),
@@ -75,7 +76,7 @@ public class SBukkitEntityCreatePortalEvent implements SEntityCreatePortalEvent,
     }
 
     @Override
-    public PortalType portalType() {
+    public @NotNull PortalType portalType() {
         if (portalType == null) {
             portalType = PortalType.valueOf(event.getPortalType().name().toUpperCase(Locale.ROOT));
         }

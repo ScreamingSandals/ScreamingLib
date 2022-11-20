@@ -19,19 +19,23 @@ package org.screamingsandals.lib.bukkit.event.player;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.player.PlayerEggThrowEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.event.player.SPlayerEggThrowEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitPlayerEggThrowEvent implements SPlayerEggThrowEvent {
     @Getter
     @EqualsAndHashCode.Include
@@ -43,7 +47,7 @@ public class SBukkitPlayerEggThrowEvent implements SPlayerEggThrowEvent {
     private EntityBasic egg;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -51,7 +55,7 @@ public class SBukkitPlayerEggThrowEvent implements SPlayerEggThrowEvent {
     }
 
     @Override
-    public EntityBasic eggEntity() {
+    public @NotNull EntityBasic eggEntity() {
         if (egg == null) {
             egg = EntityMapper.wrapEntity(event.getEgg()).orElseThrow();
         }
@@ -69,12 +73,12 @@ public class SBukkitPlayerEggThrowEvent implements SPlayerEggThrowEvent {
     }
 
     @Override
-    public EntityTypeHolder hatchType() {
+    public @NotNull EntityTypeHolder hatchType() {
         return EntityTypeHolder.of(event.getHatchingType());
     }
 
     @Override
-    public void hatchType(EntityTypeHolder hatchType) {
+    public void hatchType(@NotNull EntityTypeHolder hatchType) {
         event.setHatchingType(hatchType.as(EntityType.class));
     }
 

@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import org.bukkit.event.entity.ItemSpawnEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.event.entity.SItemSpawnEvent;
 
@@ -26,7 +27,7 @@ public class SBukkitItemSpawnEvent extends SBukkitEntitySpawnEvent implements SI
     }
 
     @Override
-    public EntityItem entity() {
+    public @NotNull EntityItem entity() {
         return (EntityItem) super.entity();
     }
 }

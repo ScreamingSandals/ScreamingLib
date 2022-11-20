@@ -111,7 +111,7 @@ public class BukkitItemTypeLegacyHolder extends BasicWrapper<Pair<Material, Shor
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         if (type == Material.class) { // the wrapped type is Pair, so we will help the BasicWrapper a little with unwrapping Material
             return (T) wrappedObject.first();
         } else if (type == ItemStack.class) {

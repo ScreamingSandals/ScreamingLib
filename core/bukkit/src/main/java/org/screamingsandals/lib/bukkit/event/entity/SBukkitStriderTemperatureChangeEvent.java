@@ -19,15 +19,19 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.StriderTemperatureChangeEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SStriderTemperatureChangeEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitStriderTemperatureChangeEvent implements SStriderTemperatureChangeEvent {
     @Getter
     @EqualsAndHashCode.Include
@@ -38,9 +42,9 @@ public class SBukkitStriderTemperatureChangeEvent implements SStriderTemperature
     private EntityLiving entity;
 
     @Override
-    public EntityLiving entity() {
+    public @NotNull EntityLiving entity() {
         if (entity == null) {
-            entity = EntityMapper.<EntityLiving>wrapEntity(event.getEntity()).orElseThrow();
+            entity = EntityMapper.wrapEntityLiving(event.getEntity()).orElseThrow();
         }
         return entity;
     }

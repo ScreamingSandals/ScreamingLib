@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.entity;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.*;
@@ -39,6 +40,7 @@ import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -48,6 +50,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 import java.util.*;
 import java.util.function.*;
 
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitEntityMetadataMapper {
 
     private static final Map<Class<? extends Entity>, Map<String, BukkitMetadata<?, ?>>> METADATA = new HashMap<>();
@@ -609,7 +612,7 @@ public class BukkitEntityMetadataMapper {
             }
         } else if (bukkitMetadata.valueClass.isEnum() && value instanceof String) {
             String finalValue = (String) value;
-            value = Arrays.stream(bukkitMetadata.valueClass.getEnumConstants()).filter(o -> finalValue.equalsIgnoreCase((String) Reflect.fastInvoke(o, "name"))).findFirst().orElse(null);
+            value = Arrays.stream(bukkitMetadata.valueClass.getEnumConstants()).filter(o -> finalValue.equalsIgnoreCase((String) Reflect.fastInvoke(o, "name"))).findFirst().toNullable();
         } else if (value instanceof Component) { // TODO: converting component to platform component, not just strings
             value = ((Component) value).toLegacy();
         }

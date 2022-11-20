@@ -16,14 +16,14 @@
 
 package org.screamingsandals.lib.entity;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.world.LocationHolder;
-
-import java.util.Optional;
 
 public interface EntityLightning extends EntityBasic {
     boolean isEffect();
 
-    static Optional<EntityLightning> strike(LocationHolder locationHolder) {
+    static @Nullable EntityLightning strike(@NotNull LocationHolder locationHolder) {
         return EntityMapper.strikeLightning(locationHolder);
     }
 }

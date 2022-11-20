@@ -19,7 +19,9 @@ package org.screamingsandals.lib.bukkit.event.block;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.block.BlockIgniteEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -27,11 +29,13 @@ import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.block.SBlockIgniteEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitBlockIgniteEvent implements SBlockIgniteEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -47,7 +51,7 @@ public class SBukkitBlockIgniteEvent implements SBlockIgniteEvent, BukkitCancell
     private boolean ignitingEntityConverted;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -55,7 +59,7 @@ public class SBukkitBlockIgniteEvent implements SBlockIgniteEvent, BukkitCancell
     }
 
     @Override
-    public IgniteCause igniteCause() {
+    public @NotNull IgniteCause igniteCause() {
         if (igniteCause == null) {
             igniteCause = IgniteCause.valueOf(event.getCause().toString());
         }

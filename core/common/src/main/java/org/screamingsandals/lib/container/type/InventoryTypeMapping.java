@@ -16,20 +16,24 @@
 
 package org.screamingsandals.lib.container.type;
 
+import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.InventoryTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
@@ -58,16 +62,17 @@ public abstract class InventoryTypeMapping extends AbstractTypeMapper<InventoryT
 
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
     @OfMethodAlternative(value = InventoryTypeHolder.class, methodName = "ofOptional")
-    public static Optional<InventoryTypeHolder> resolve(Object entity) {
+    @Contract("null -> null")
+    public static @Nullable InventoryTypeHolder resolve(@Nullable Object entity) {
         if (inventoryTypeMapping == null) {
             throw new UnsupportedOperationException("InventoryTypeMapping is not initialized yet.");
         }
 
         if (entity == null) {
-            return Optional.empty();
+            return null;
         }
 
-        return inventoryTypeMapping.inventoryTypeConverter.convertOptional(entity).or(() -> inventoryTypeMapping.resolveFromMapping(entity));
+        return inventoryTypeMapping.inventoryTypeConverter.convertOptional(entity).or(() -> inventoryTypeMapping.resolveFromMapping(entity)).toNullable();
     }
 
     @OfMethodAlternative(value = InventoryTypeHolder.class, methodName = "all")

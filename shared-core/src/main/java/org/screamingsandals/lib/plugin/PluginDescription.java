@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.plugin;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.nio.file.Path;
@@ -48,7 +49,7 @@ public class PluginDescription implements Wrapper {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T as(Class<T> type) {
+    public <T> @NotNull T as(@NotNull Class<T> type) {
         var instance = PluginManager.getPlatformClass(this.pluginKey);
         if (instance.isPresent() && type.isInstance(instance.get())) {
             return (T) instance.get();

@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.entity;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
@@ -27,7 +30,6 @@ import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @AbstractService
@@ -48,52 +50,126 @@ public abstract class EntityMapper {
         mapper = this;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends EntityBasic> Optional<T> wrapEntity(Object entity) {
+    @Contract("null -> null")
+    public static @Nullable EntityBasic wrapEntity(@Nullable Object entity) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
+        if (entity == null) {
+            return null;
+        }
         if (entity instanceof EntityBasic) {
-            return Optional.of((T) entity);
+            return (EntityBasic) entity;
         }
         return mapper.wrapEntity0(entity);
     }
 
-    public static <T extends EntityBasic> Optional<T> spawn(Object entityType, LocationHolder locationHolder) {
+    @Contract("null -> null")
+    public static @Nullable EntityExperience wrapEntityExperience(@Nullable Object entity) {
+        var entityExperience = wrapEntity(entity);
+        if (entityExperience instanceof EntityExperience) {
+            return (EntityExperience) entityExperience;
+        }
+        return null;
+    }
+
+    @Contract("null -> null")
+    public static @Nullable EntityFirework wrapEntityFirework(@Nullable Object entity) {
+        var entityFirework = wrapEntity(entity);
+        if (entityFirework instanceof EntityFirework) {
+            return (EntityFirework) entityFirework;
+        }
+        return null;
+    }
+
+    @Contract("null -> null")
+    public static @Nullable EntityHuman wrapEntityHuman(@Nullable Object entity) {
+        var entityHuman = wrapEntity(entity);
+        if (entityHuman instanceof EntityHuman) {
+            return (EntityHuman) entityHuman;
+        }
+        return null;
+    }
+
+    @Contract("null -> null")
+    public static @Nullable EntityItem wrapEntityItem(@Nullable Object entity) {
+        var entityItem = wrapEntity(entity);
+        if (entityItem instanceof EntityItem) {
+            return (EntityItem) entityItem;
+        }
+        return null;
+    }
+
+    @Contract("null -> null")
+    public static @Nullable EntityLightning wrapEntityLightning(@Nullable Object entity) {
+        var entityLightning = wrapEntity(entity);
+        if (entityLightning instanceof EntityLightning) {
+            return (EntityLightning) entityLightning;
+        }
+        return null;
+    }
+
+    @Contract("null -> null")
+    public static @Nullable EntityLiving wrapEntityLiving(@Nullable Object entity) {
+        var entityLiving = wrapEntity(entity);
+        if (entityLiving instanceof EntityLiving) {
+            return (EntityLiving) entityLiving;
+        }
+        return null;
+    }
+
+    @Contract("null -> null")
+    public static @Nullable EntityPathfindingMob wrapEntityPathfindingMob(@Nullable Object entity) {
+        var entityPathfindingMob = wrapEntity(entity);
+        if (entityPathfindingMob instanceof EntityPathfindingMob) {
+            return (EntityPathfindingMob) entityPathfindingMob;
+        }
+        return null;
+    }
+
+    @Contract("null -> null")
+    public static @Nullable EntityProjectile wrapEntityProjectile(@Nullable Object entity) {
+        var entityProjectile = wrapEntity(entity);
+        if (entityProjectile instanceof EntityProjectile) {
+            return (EntityProjectile) entityProjectile;
+        }
+        return null;
+    }
+
+    @Contract("null,_ -> null")
+    public static @Nullable EntityBasic spawn(@Nullable Object entityType, @NotNull LocationHolder locationHolder) {
+        if (entityType == null) {
+            return null;
+        }
         if (entityType instanceof EntityTypeHolder) {
             return spawn((EntityTypeHolder) entityType, locationHolder);
         } else {
-            var type = EntityTypeMapping.resolve(entityType);
-            if (type.isPresent()) {
-                return spawn(type.get(), locationHolder);
-            } else {
-                return Optional.empty();
-            }
+            return EntityTypeMapping.resolve(entityType).map(entityTypeHolder -> spawn(entityTypeHolder, locationHolder)).orElse(null);
         }
     }
 
-    public static <T extends EntityBasic> Optional<T> spawn(EntityTypeHolder entityType, LocationHolder locationHolder) {
+    public static @Nullable EntityBasic spawn(@NotNull EntityTypeHolder entityType, @NotNull LocationHolder locationHolder) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
         return mapper.spawn0(entityType, locationHolder);
     }
 
-    public static Optional<EntityItem> dropItem(Item item, LocationHolder locationHolder) {
+    public static @Nullable EntityItem dropItem(@NotNull Item item, @NotNull LocationHolder locationHolder) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
         return mapper.dropItem0(item, locationHolder);
     }
 
-    public static Optional<EntityExperience> dropExperience(int experience, LocationHolder locationHolder) {
+    public static @Nullable EntityExperience dropExperience(int experience, @NotNull LocationHolder locationHolder) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
         return mapper.dropExperience0(experience, locationHolder);
     }
 
-    public static Optional<EntityLightning> strikeLightning(LocationHolder locationHolder) {
+    public static @Nullable EntityLightning strikeLightning(@NotNull LocationHolder locationHolder) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
@@ -110,24 +186,24 @@ public abstract class EntityMapper {
         return mapper.getNewEntityId0();
     }
 
-    public static CompletableFuture<Integer> getNewEntityIdSynchronously() {
+    public static @NotNull CompletableFuture<@NotNull Integer> getNewEntityIdSynchronously() {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
         return mapper.getNewEntityIdSynchronously0();
     }
 
-    protected abstract <T extends EntityBasic> Optional<T> wrapEntity0(Object entity);
+    protected abstract @Nullable EntityBasic wrapEntity0(@NotNull Object entity);
 
-    public abstract <T extends EntityBasic>  Optional<T> spawn0(EntityTypeHolder entityType, LocationHolder locationHolder);
+    public abstract @Nullable EntityBasic spawn0(@NotNull EntityTypeHolder entityType, @NotNull LocationHolder locationHolder);
 
-    public abstract Optional<EntityItem> dropItem0(Item item, LocationHolder locationHolder);
+    public abstract @Nullable EntityItem dropItem0(@NotNull Item item, @NotNull LocationHolder locationHolder);
 
-    public abstract Optional<EntityExperience> dropExperience0(int experience, LocationHolder locationHolder);
+    public abstract @Nullable EntityExperience dropExperience0(int experience, @NotNull LocationHolder locationHolder);
 
-    public abstract Optional<EntityLightning> strikeLightning0(LocationHolder locationHolder);
+    public abstract @Nullable EntityLightning strikeLightning0(@NotNull LocationHolder locationHolder);
 
     public abstract int getNewEntityId0();
 
-    public abstract CompletableFuture<Integer> getNewEntityIdSynchronously0();
+    public abstract @NotNull CompletableFuture<@NotNull Integer> getNewEntityIdSynchronously0();
 }

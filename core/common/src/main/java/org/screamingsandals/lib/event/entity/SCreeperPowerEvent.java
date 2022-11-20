@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityLightning;
@@ -23,12 +24,11 @@ import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
 public interface SCreeperPowerEvent extends SCancellableEvent, PlatformEventWrapper {
-    EntityBasic entity();
+    @NotNull EntityBasic entity();
 
-    @Nullable
-    EntityLightning bolt();
+    @Nullable EntityLightning bolt();
 
-    PowerCause cause();
+    @NotNull PowerCause cause();
 
     /**
      * An enum to specify the cause of the change in power

@@ -30,10 +30,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
-import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.entity.EntityLiving;
-import org.screamingsandals.lib.entity.EntityMapper;
-import org.screamingsandals.lib.entity.EntityProjectile;
+import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.attribute.AttributeHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
@@ -49,7 +46,6 @@ import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLiving {
@@ -163,15 +159,8 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     }
 
     @Override
-    public Optional<EntityLiving> getHumanKiller() {
-        var player = ((LivingEntity) wrappedObject).getKiller();
-        var entity = EntityMapper.wrapEntity(player).orElse(null);
-
-        if (entity instanceof EntityLiving) {
-            return Optional.of((EntityLiving) entity);
-        }
-
-        return Optional.empty();
+    public @Nullable EntityHuman getHumanKiller() {
+        return EntityMapper.wrapEntityHuman(((LivingEntity) wrappedObject).getKiller());
     }
 
     @Override
@@ -231,11 +220,11 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     }
 
     @Override
-    public Optional<EntityBasic> getLeashHolder() {
+    public @Nullable EntityBasic getLeashHolder() {
         if (isLeashed()) {
             return EntityMapper.wrapEntity(((LivingEntity) wrappedObject).getLeashHolder());
         }
-        return Optional.empty();
+        return null;
     }
 
     @Override
@@ -505,13 +494,21 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
 
     @SuppressWarnings({"ConstantConditions", "unchecked"})
     @Override
-    public Optional<EntityProjectile> launchProjectile(EntityTypeHolder projectileType) {
-        return EntityMapper.wrapEntity(((LivingEntity) wrappedObject).launchProjectile((Class<Projectile>) projectileType.as(EntityType.class).getEntityClass()));
+    public @Nullable EntityProjectile launchProjectile(@NotNull EntityTypeHolder projectileType) {
+        var projectileBukkit = projectileType.as(EntityType.class).getEntityClass();
+        if (!Projectile.class.isAssignableFrom(projectileBukkit)) {
+            return null;
+        }
+        return EntityMapper.wrapEntityProjectile(((LivingEntity) wrappedObject).launchProjectile((Class<Projectile>) projectileBukkit));
     }
 
     @SuppressWarnings({"ConstantConditions", "unchecked"})
     @Override
-    public Optional<EntityProjectile> launchProjectile(EntityTypeHolder projectileType, Vector3D velocity) {
-        return EntityMapper.wrapEntity(((LivingEntity) wrappedObject).launchProjectile((Class<Projectile>) projectileType.as(EntityType.class).getEntityClass(), new Vector(velocity.getX(), velocity.getY(), velocity.getZ())));
+    public @Nullable EntityProjectile launchProjectile(@NotNull EntityTypeHolder projectileType, @NotNull Vector3D velocity) {
+        var projectileBukkit = projectileType.as(EntityType.class).getEntityClass();
+        if (!Projectile.class.isAssignableFrom(projectileBukkit)) {
+            return null;
+        }
+        return EntityMapper.wrapEntityProjectile(((LivingEntity) wrappedObject).launchProjectile((Class<Projectile>) projectileBukkit, new Vector(velocity.getX(), velocity.getY(), velocity.getZ())));
     }
 }

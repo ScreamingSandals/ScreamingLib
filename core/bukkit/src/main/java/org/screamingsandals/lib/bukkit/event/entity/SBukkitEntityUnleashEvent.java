@@ -19,15 +19,19 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityUnleashEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityUnleashEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitEntityUnleashEvent implements SEntityUnleashEvent {
     @Getter
     @EqualsAndHashCode.Include
@@ -39,7 +43,7 @@ public class SBukkitEntityUnleashEvent implements SEntityUnleashEvent {
     private UnleashReason reason;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -47,7 +51,7 @@ public class SBukkitEntityUnleashEvent implements SEntityUnleashEvent {
     }
 
     @Override
-    public UnleashReason reason() {
+    public @NotNull UnleashReason reason() {
         if (reason == null) {
             reason = UnleashReason.valueOf(event.getReason().name());
         }

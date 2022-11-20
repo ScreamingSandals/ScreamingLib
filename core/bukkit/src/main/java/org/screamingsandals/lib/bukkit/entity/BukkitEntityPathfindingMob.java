@@ -50,7 +50,7 @@ public class BukkitEntityPathfindingMob extends BukkitEntityLiving implements En
     }
 
     @Override
-    public Optional<EntityLiving> getCurrentTarget() {
+    public @Nullable EntityLiving getCurrentTarget() {
         LivingEntity living;
         if (BukkitEntityMapper.HAS_MOB_INTERFACE) {
             living = ((Mob) wrappedObject).getTarget();
@@ -59,6 +59,6 @@ public class BukkitEntityPathfindingMob extends BukkitEntityLiving implements En
         } else {
             living = ((Creature) wrappedObject).getTarget();
         }
-        return EntityMapper.wrapEntity(living);
+        return EntityMapper.wrapEntityLiving(living);
     }
 }

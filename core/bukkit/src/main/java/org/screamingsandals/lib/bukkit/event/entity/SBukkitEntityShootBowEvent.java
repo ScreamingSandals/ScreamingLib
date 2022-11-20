@@ -19,7 +19,9 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityShootBowEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
@@ -28,11 +30,13 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityShootBowEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SBukkitEntityShootBowEvent implements SEntityShootBowEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -48,7 +52,7 @@ public class SBukkitEntityShootBowEvent implements SEntityShootBowEvent, BukkitC
     private EquipmentSlotHolder hand;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         if (entity == null) {
             entity = EntityMapper.wrapEntity(event.getEntity()).orElseThrow();
         }
@@ -56,8 +60,7 @@ public class SBukkitEntityShootBowEvent implements SEntityShootBowEvent, BukkitC
     }
 
     @Override
-    @Nullable
-    public Item bow() {
+    public @Nullable Item bow() {
         if (!bowCached) {
             if (event.getBow() != null) {
                 bow = new BukkitItem(event.getBow());
@@ -68,10 +71,9 @@ public class SBukkitEntityShootBowEvent implements SEntityShootBowEvent, BukkitC
     }
 
     @Override
-    @Nullable
-    public Item consumable() {
+    public @Nullable Item consumable() {
         if (!consumableCached) {
-            if (event.getBow() != null) {
+            if (event.getConsumable() != null) {
                 consumable = new BukkitItem(event.getConsumable());
             }
             consumableCached = true;
@@ -80,12 +82,12 @@ public class SBukkitEntityShootBowEvent implements SEntityShootBowEvent, BukkitC
     }
 
     @Override
-    public EntityBasic projectile() {
+    public @NotNull EntityBasic projectile() {
         return EntityMapper.wrapEntity(event.getProjectile()).orElseThrow(); // Mutable in Bukkit
     }
 
     @Override
-    public EquipmentSlotHolder hand() {
+    public @NotNull EquipmentSlotHolder hand() {
         if (hand == null) {
             hand = EquipmentSlotHolder.of(event.getHand());
         }

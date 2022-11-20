@@ -313,7 +313,7 @@ public class BukkitCore extends Core {
             constructDefaultListener(SpongeAbsorbEvent.class, SSpongeAbsorbEvent.class, SBukkitSpongeAbsorbEvent::new);
         }
         if (has("org.bukkit.event.block.BlockReceiveGameEvent")) {
-            constructDefaultListener(BlockReceiveGameEvent.class, SSculkSensorReceiveEvent.class, SBukkitSculkSensorReceiveEvent::new);
+            constructDefaultListener(BlockReceiveGameEvent.class, SBlockReceivedGameEvent.class, SBukkitBlockReceivedGameEvent::new);
         }
 
         // world

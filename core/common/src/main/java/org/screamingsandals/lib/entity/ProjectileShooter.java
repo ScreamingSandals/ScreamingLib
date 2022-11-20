@@ -16,30 +16,30 @@
 
 package org.screamingsandals.lib.entity;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
-import java.util.Optional;
-
 public interface ProjectileShooter extends Wrapper {
-    default Optional<EntityProjectile> launchProjectile(Object projectileType) {
+    default @Nullable EntityProjectile launchProjectile(@NotNull Object projectileType) {
         if (projectileType instanceof EntityTypeHolder) {
             return launchProjectile(projectileType);
         } else {
-            return EntityTypeHolder.ofOptional(projectileType).flatMap(this::launchProjectile);
+            return EntityTypeHolder.ofOptional(projectileType).map(this::launchProjectile).orElse(null);
         }
     }
 
-    Optional<EntityProjectile> launchProjectile(EntityTypeHolder projectileType);
+    @Nullable EntityProjectile launchProjectile(@NotNull EntityTypeHolder projectileType);
 
-    default Optional<EntityProjectile> launchProjectile(Object projectileType, Vector3D velocity) {
+    default @Nullable EntityProjectile launchProjectile(@NotNull Object projectileType, @NotNull Vector3D velocity) {
         if (projectileType instanceof EntityTypeHolder) {
             return launchProjectile(projectileType, velocity);
         } else {
-            return EntityTypeHolder.ofOptional(projectileType).flatMap(entityTypeHolder -> launchProjectile(entityTypeHolder, velocity));
+            return EntityTypeHolder.ofOptional(projectileType).map(entityTypeHolder -> launchProjectile(entityTypeHolder, velocity)).orElse(null);
         }
     }
 
-    Optional<EntityProjectile> launchProjectile(EntityTypeHolder projectileType, Vector3D velocity);
+    @Nullable EntityProjectile launchProjectile(@NotNull EntityTypeHolder projectileType, @NotNull Vector3D velocity);
 }

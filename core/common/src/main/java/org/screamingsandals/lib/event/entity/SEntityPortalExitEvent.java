@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SEvent;
@@ -24,19 +25,19 @@ import org.screamingsandals.lib.world.LocationHolder;
 
 public interface SEntityPortalExitEvent extends SEvent, PlatformEventWrapper {
 
-    EntityBasic entity();
+    @NotNull EntityBasic entity();
 
-    LocationHolder from();
+    @NotNull LocationHolder from();
 
-    void from(LocationHolder location);
+    void from(@NotNull LocationHolder location);
 
-    LocationHolder to();
+    @NotNull LocationHolder to();
 
-    void to(LocationHolder location);
+    void to(@NotNull LocationHolder location);
 
-    Vector3D before();
+    @NotNull Vector3D before();
 
-    Vector3D after();
+    @NotNull Vector3D after();
 
-    void after(Vector3D after);
+    void after(@NotNull Vector3D after);
 }
