@@ -17,11 +17,13 @@
 package org.screamingsandals.lib.item.meta;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface EnchantmentHolder extends ComparableWrapper {
@@ -31,7 +33,7 @@ public interface EnchantmentHolder extends ComparableWrapper {
     int level();
 
     @Contract(value = "_ -> new", pure = true)
-    EnchantmentHolder withLevel(int level);
+    @NotNull EnchantmentHolder withLevel(int level);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     @Override
@@ -47,62 +49,23 @@ public interface EnchantmentHolder extends ComparableWrapper {
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     boolean isSameType(Object... objects);
 
-    /**
-     * Inconsistent naming (should be isSameType like in other holders)
-     */
-    @Deprecated(forRemoval = true)
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    default boolean isType(Object object) {
-        return isSameType(object);
-    }
-
-    /**
-     * Inconsistent naming (should be isSameType like in other holders)
-     */
-    @Deprecated(forRemoval = true)
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    default boolean isType(Object... objects) {
-        return isSameType(objects);
-    }
-
-    /**
-     * Use fluent variant
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
-
-    /**
-     * Use fluent variant
-     */
-    @Deprecated(forRemoval = true)
-    default int getLevel() {
-        return level();
-    }
-
-    /**
-     * Inconsistent naming
-     */
-    @Deprecated(forRemoval = true)
-    default EnchantmentHolder newLevel(int level) {
-        return withLevel(level);
+    static @NotNull EnchantmentHolder of(@NotNull Object enchantment) {
+        var result = ofNullable(enchantment);
+        Preconditions.checkNotNullIllegal(result, "Could not find enchantment: " + enchantment);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    static EnchantmentHolder of(Object enchantment) {
-        return ofOptional(enchantment).orElseThrow();
-    }
-
-    @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    static Optional<EnchantmentHolder> ofOptional(Object enchantment) {
+    @Contract("null -> null")
+    static @Nullable EnchantmentHolder ofNullable(@Nullable Object enchantment) {
         if (enchantment instanceof EnchantmentHolder) {
-            return Optional.of((EnchantmentHolder) enchantment);
+            return (EnchantmentHolder) enchantment;
         }
         return EnchantmentMapping.resolve(enchantment);
     }
 
-    static List<EnchantmentHolder> all() {
+    static @NotNull List<@NotNull EnchantmentHolder> all() {
         return EnchantmentMapping.getValues();
     }
 }

@@ -190,23 +190,21 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
                 if (enchants.isMap()) {
                     enchants.childrenMap().entrySet().stream()
                             .map(EnchantmentMapping::resolve)
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
+                            .filter(Objects::nonNull)
                             .forEach(builder::enchantment);
                 } else if (enchants.isList()) {
                     try {
                         //noinspection ConstantConditions
                         enchants.getList(Object.class).stream()
                                 .map(EnchantmentMapping::resolve)
-                                .filter(Optional::isPresent)
-                                .map(Optional::get)
+                                .filter(Objects::nonNull)
                                 .forEach(builder::enchantment);
                     } catch (SerializationException e) {
                         e.printStackTrace();
                     }
                 } else {
                     try {
-                        EnchantmentHolder.ofOptional(enchants.get(Object.class)).ifPresent(builder::enchantment);
+                        EnchantmentHolder.ofNullable(enchants.get(Object.class)).ifNotNull(builder::enchantment);
                     } catch (SerializationException e) {
                         e.printStackTrace();
                     }
@@ -215,7 +213,7 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
             var potionType = node.node(POTION_TYPE_KEY);
             if (!potionType.empty()) {
                 try {
-                    PotionHolder.ofOptional(potionType.get(Object.class)).ifPresent(builder::potion);
+                    PotionHolder.ofNullable(potionType.get(Object.class)).ifNotNull(builder::potion);
                 } catch (SerializationException e) {
                     e.printStackTrace();
                 }
@@ -225,11 +223,10 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
                 if (potionEffects.isList()) {
                     builder.effect(potionEffects.childrenList().stream()
                             .map(PotionEffectMapping::resolve)
-                            .filter(Optional::isPresent)
-                            .map(Optional::get)
+                            .filter(Objects::nonNull)
                             .collect(Collectors.toList()));
                 } else {
-                    PotionEffectHolder.ofOptional(potionEffects).ifPresent(builder::effect);
+                    PotionEffectHolder.ofNullable(potionEffects).ifNotNull(builder::effect);
                 }
             }
 

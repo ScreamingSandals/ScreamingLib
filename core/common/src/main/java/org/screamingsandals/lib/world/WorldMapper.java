@@ -16,17 +16,22 @@
 
 package org.screamingsandals.lib.world;
 
+import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
  * Class responsible for converting platform worlds to wrappers.
  */
 @AbstractService
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public abstract class WorldMapper {
     protected BidirectionalConverter<WorldHolder> converter = BidirectionalConverter.<WorldHolder>build()
             .registerP2W(WorldHolder.class, e -> e);
@@ -50,11 +55,12 @@ public abstract class WorldMapper {
      * @param obj the platform world
      * @return the world wrapper
      */
-    public static Optional<WorldHolder> resolve(Object obj) {
+    @Contract("null -> null")
+    public static @Nullable WorldHolder resolve(@Nullable Object obj) {
         if (mapping == null) {
             throw new UnsupportedOperationException("WorldMapper is not initialized yet.");
         }
-        return mapping.converter.convertOptional(obj);
+        return mapping.converter.convertOptional(obj).toNullable();
     }
 
     /**
@@ -65,7 +71,7 @@ public abstract class WorldMapper {
      * @return the world wrapper
      * @throws java.util.NoSuchElementException when the world could not be mapped
      */
-    public static <T> WorldHolder wrapWorld(T input) {
+    public static <T> @NotNull WorldHolder wrapWorld(@NotNull T input) {
         return resolve(input).orElseThrow();
     }
 
@@ -92,9 +98,13 @@ public abstract class WorldMapper {
      * @param uuid the world uuid
      * @return the world, can be empty
      */
-    public static Optional<WorldHolder> getWorld(UUID uuid) {
+    @Contract("null -> null")
+    public static @Nullable WorldHolder getWorld(@Nullable UUID uuid) {
         if (mapping == null) {
             throw new UnsupportedOperationException("WorldMapper is not initialized yet.");
+        }
+        if (uuid == null) {
+            return null;
         }
         return mapping.getWorld0(uuid);
     }
@@ -105,16 +115,20 @@ public abstract class WorldMapper {
      * @param name the world name
      * @return the world, can be empty
      */
-    public static Optional<WorldHolder> getWorld(String name) {
+    @Contract("null -> null")
+    public static @Nullable WorldHolder getWorld(@Nullable String name) {
         if (mapping == null) {
             throw new UnsupportedOperationException("WorldMapper is not initialized yet.");
+        }
+        if (name == null) {
+            return null;
         }
         return mapping.getWorld0(name);
     }
 
     // abstract methods for implementations
 
-    protected abstract Optional<WorldHolder> getWorld0(UUID uuid);
+    protected abstract @Nullable WorldHolder getWorld0(@NotNull UUID uuid);
 
-    protected abstract Optional<WorldHolder> getWorld0(String name);
+    protected abstract @Nullable WorldHolder getWorld0(@NotNull String name);
 }

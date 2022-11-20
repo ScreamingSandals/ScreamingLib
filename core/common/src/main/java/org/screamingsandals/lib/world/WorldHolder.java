@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.world;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
@@ -27,10 +29,8 @@ import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import org.screamingsandals.lib.world.dimension.DimensionHolder;
 import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -85,17 +85,17 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Play
      *
      * @param x the chunk X coordinate
      * @param z the chunk Y coordinate
-     * @return the chunk holder, can be empty
+     * @return the chunk holder, can be null
      */
-    Optional<ChunkHolder> getChunkAt(int x, int z);
+    @Nullable ChunkHolder getChunkAt(int x, int z);
 
     /**
      * Gets the world's chunk at the supplied {@link LocationHolder}.
      *
      * @param location the chunk location holder
-     * @return the chunk holder, can be empty
+     * @return the chunk holder, can be null
      */
-    Optional<ChunkHolder> getChunkAt(LocationHolder location);
+    @Nullable ChunkHolder getChunkAt(@NotNull LocationHolder location);
 
     /**
      * Gets the list of entities in this world.

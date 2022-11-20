@@ -37,7 +37,7 @@ public class BukkitEquipmentSlotHolder extends BasicWrapper<EquipmentSlot> imple
         if (object instanceof EquipmentSlot || object instanceof EquipmentSlotHolder) {
             return equals(object);
         }
-        return equals(EquipmentSlotHolder.ofOptional(object).orElse(null));
+        return equals(EquipmentSlotHolder.ofNullable(object));
     }
 
     @Override

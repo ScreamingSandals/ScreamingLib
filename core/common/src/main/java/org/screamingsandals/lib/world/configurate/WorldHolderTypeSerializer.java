@@ -16,7 +16,9 @@
 
 package org.screamingsandals.lib.world.configurate;
 
+import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.WorldMapper;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -26,6 +28,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 import java.util.UUID;
 
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class WorldHolderTypeSerializer implements TypeSerializer<WorldHolder> {
     private final String UUID_FIELD = "uuid";
 

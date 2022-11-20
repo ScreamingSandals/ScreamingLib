@@ -16,35 +16,22 @@
 
 package org.screamingsandals.lib.player.gamemode;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface GameModeHolder extends ComparableWrapper, RawValueHolder {
 
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
-
     String platformName();
 
     int id();
-
-    /**
-     * Use the fluent form!
-     */
-    @Deprecated(forRemoval = true)
-    default int getId() {
-        return id();
-    }
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
@@ -55,19 +42,22 @@ public interface GameModeHolder extends ComparableWrapper, RawValueHolder {
     boolean is(Object... gameModes);
 
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
-    static GameModeHolder of(Object gameMode) {
-        return ofOptional(gameMode).orElseThrow();
+    static @NotNull GameModeHolder of(@NotNull Object gameMode) {
+        var result = ofNullable(gameMode);
+        Preconditions.checkNotNullIllegal(result, "Could not find game mode: " + gameMode);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
-    static Optional<GameModeHolder> ofOptional(Object gameMode) {
+    @Contract("null -> null")
+    static @Nullable GameModeHolder ofNullable(@Nullable Object gameMode) {
         if (gameMode instanceof GameModeHolder) {
-            return Optional.of((GameModeHolder) gameMode);
+            return (GameModeHolder) gameMode;
         }
         return GameModeMapping.resolve(gameMode);
     }
 
-    static List<GameModeHolder> all() {
+    static @NotNull List<@NotNull GameModeHolder> all() {
         return GameModeMapping.getValues();
     }
 }

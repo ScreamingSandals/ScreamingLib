@@ -16,40 +16,38 @@
 
 package org.screamingsandals.lib.slot;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface EquipmentSlotHolder extends ComparableWrapper, RawValueHolder {
 
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
-
     String platformName();
 
     @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
-    static EquipmentSlotHolder of(Object slot) {
-        return ofOptional(slot).orElseThrow();
+    static @NotNull EquipmentSlotHolder of(@NotNull Object slot) {
+        var result = ofNullable(slot);
+        Preconditions.checkNotNullIllegal(result, "Could not find equipment slot: " + slot);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
-    static Optional<EquipmentSlotHolder> ofOptional(Object slot) {
+    @Contract("null -> null")
+    static @Nullable EquipmentSlotHolder ofNullable(@Nullable Object slot) {
         if (slot instanceof EquipmentSlotHolder) {
-            return Optional.of((EquipmentSlotHolder) slot);
+            return (EquipmentSlotHolder) slot;
         }
         return EquipmentSlotMapping.resolve(slot);
     }
 
-    static List<EquipmentSlotHolder> all() {
+    static @NotNull List<@NotNull EquipmentSlotHolder> all() {
         return EquipmentSlotMapping.getValues();
     }
 

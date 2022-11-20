@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.particle;
 
 import org.bukkit.Particle;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.particle.*;
@@ -35,7 +36,7 @@ public class BukkitParticleTypeHolder extends BasicWrapper<Particle> implements 
     }
 
     @Override
-    public Class<? extends ParticleData> expectedDataClass() {
+    public @Nullable Class<? extends ParticleData> expectedDataClass() {
         var dataType = wrappedObject.getDataType();
         if (dataType != Void.class) {
             switch (dataType.getSimpleName()) {
@@ -58,7 +59,7 @@ public class BukkitParticleTypeHolder extends BasicWrapper<Particle> implements 
         if (object instanceof Particle || object instanceof ParticleTypeHolder) {
             return equals(object);
         }
-        return equals(ParticleTypeHolder.ofOptional(object).orElse(null));
+        return equals(ParticleTypeHolder.ofNullable(object));
     }
 
     @Override

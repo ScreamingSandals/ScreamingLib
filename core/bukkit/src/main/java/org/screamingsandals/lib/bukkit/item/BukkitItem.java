@@ -132,11 +132,11 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
             var list = new ArrayList<EnchantmentHolder>();
             if (meta instanceof EnchantmentStorageMeta) {
                 ((EnchantmentStorageMeta) meta).getStoredEnchants().entrySet().forEach(entry ->
-                        EnchantmentHolder.ofOptional(entry).ifPresent(list::add)
+                        EnchantmentHolder.ofNullable(entry).ifNotNull(list::add)
                 );
             } else {
                 meta.getEnchants().entrySet().forEach(entry ->
-                        EnchantmentHolder.ofOptional(entry).ifPresent(list::add)
+                        EnchantmentHolder.ofNullable(entry).ifNotNull(list::add)
                 );
             }
             return list;

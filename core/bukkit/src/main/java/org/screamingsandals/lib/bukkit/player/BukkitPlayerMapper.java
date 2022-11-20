@@ -20,6 +20,8 @@ import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
@@ -86,7 +88,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public Optional<LocationHolder> getBedLocation0(OfflinePlayerWrapper playerWrapper) {
+    public @Nullable LocationHolder getBedLocation0(@NotNull OfflinePlayerWrapper playerWrapper) {
         return LocationMapper.resolve(playerWrapper.as(OfflinePlayer.class).getBedSpawnLocation());
     }
 

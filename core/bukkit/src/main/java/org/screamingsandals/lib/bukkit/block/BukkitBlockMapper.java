@@ -39,7 +39,7 @@ public class BukkitBlockMapper extends BlockMapper {
     public BukkitBlockMapper() {
         converter.registerP2W(Location.class, location -> {
                     final var block = location.getBlock();
-                    final var instanced = LocationMapper.resolve(block.getLocation()).orElseThrow(); // normalize to block location
+                    final var instanced = LocationMapper.wrapLocation(block.getLocation());
                     if (!Version.isVersion(1,13)) {
                         return new BlockHolder(instanced, BlockTypeHolder.of(block.getState().getData()));
                     } else {

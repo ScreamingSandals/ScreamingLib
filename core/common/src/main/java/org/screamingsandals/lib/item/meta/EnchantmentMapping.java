@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.item.meta;
 
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.EnchantmentHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;
@@ -45,8 +48,8 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
     protected BidirectionalConverter<EnchantmentHolder> enchantmentConverter = BidirectionalConverter.<EnchantmentHolder>build()
             .registerP2W(EnchantmentHolder.class, e -> e)
             .registerP2W(Map.Entry.class, entry -> {
-                Optional<EnchantmentHolder> holder = resolve(entry.getKey());
-                if (holder.isPresent()) {
+                EnchantmentHolder holder = resolve(entry.getKey());
+                if (holder != null) {
                     int level;
                     if (entry.getValue() instanceof Number) {
                         level = ((Number) entry.getValue()).intValue();
@@ -63,7 +66,7 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
                             level = RomanToDecimal.romanToDecimal(entry.getValue().toString());
                         }
                     }
-                    return holder.get().withLevel(level);
+                    return holder.withLevel(level);
                 }
                 return null;
             })
@@ -77,13 +80,14 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
             });
 
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
-    @OfMethodAlternative(value = EnchantmentHolder.class, methodName = "ofOptional")
-    public static Optional<EnchantmentHolder> resolve(Object enchantmentObject) {
+    @OfMethodAlternative(value = EnchantmentHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable EnchantmentHolder resolve(@Nullable Object enchantmentObject) {
         if (enchantmentMapping == null) {
             throw new UnsupportedOperationException("Enchantment mapping is not initialized yet.");
         }
         if (enchantmentObject == null) {
-            return Optional.empty();
+            return null;
         }
 
         return enchantmentMapping.enchantmentConverter.convertOptional(enchantmentObject).or(() -> {
@@ -113,11 +117,11 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
             }
 
             return Optional.empty();
-        });
+        }).orElse(null);
     }
 
     @OfMethodAlternative(value = EnchantmentHolder.class, methodName = "all")
-    public static List<EnchantmentHolder> getValues() {
+    public static @NotNull List<@NotNull EnchantmentHolder> getValues() {
         if (enchantmentMapping == null) {
             throw new UnsupportedOperationException("EnchantmentMapping is not initialized yet.");
         }

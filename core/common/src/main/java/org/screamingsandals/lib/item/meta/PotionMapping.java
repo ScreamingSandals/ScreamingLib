@@ -16,6 +16,9 @@
 
 package org.screamingsandals.lib.item.meta;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.PotionHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -28,7 +31,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
 public abstract class PotionMapping extends AbstractTypeMapper<PotionHolder> {
@@ -73,20 +75,21 @@ public abstract class PotionMapping extends AbstractTypeMapper<PotionHolder> {
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION)
-    @OfMethodAlternative(value = PotionHolder.class, methodName = "ofOptional")
-    public static Optional<PotionHolder> resolve(Object potionObject) {
+    @OfMethodAlternative(value = PotionHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable PotionHolder resolve(@Nullable Object potionObject) {
         if (potionMapping == null) {
             throw new UnsupportedOperationException("Potion mapping is not initialized yet.");
         }
         if (potionObject == null) {
-            return Optional.empty();
+            return null;
         }
 
-        return potionMapping.potionConverter.convertOptional(potionObject).or(() -> potionMapping.resolveFromMapping(potionObject));
+        return potionMapping.potionConverter.convertOptional(potionObject).or(() -> potionMapping.resolveFromMapping(potionObject)).orElse(null);
     }
 
     @OfMethodAlternative(value = PotionHolder.class, methodName = "all")
-    public static List<PotionHolder> getValues() {
+    public static @NotNull List<@NotNull PotionHolder> getValues() {
         if (potionMapping == null) {
             throw new UnsupportedOperationException("PotionMapping is not initialized yet.");
         }

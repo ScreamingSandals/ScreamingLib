@@ -19,8 +19,10 @@ package org.screamingsandals.lib.signs;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.WorldMapper;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -29,6 +31,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @ConfigSerializable
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class SignLocation implements Wrapper {
     private String world;
     private double x;

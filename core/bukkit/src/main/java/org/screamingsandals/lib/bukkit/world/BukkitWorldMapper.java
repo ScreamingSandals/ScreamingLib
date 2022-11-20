@@ -18,6 +18,8 @@ package org.screamingsandals.lib.bukkit.world;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.WorldMapper;
@@ -33,16 +35,24 @@ public class BukkitWorldMapper extends WorldMapper {
     }
 
     @Override
-    protected Optional<WorldHolder> getWorld0(UUID uuid) {
-        return Optional.ofNullable(Bukkit.getWorld(uuid)).map(BukkitWorldHolder::new);
+    protected @Nullable WorldHolder getWorld0(@NotNull UUID uuid) {
+        var world = Bukkit.getWorld(uuid);
+        if (world == null) {
+            return null;
+        }
+        return new BukkitWorldHolder(world);
     }
 
     @Override
-    protected Optional<WorldHolder> getWorld0(String name) {
+    protected @Nullable WorldHolder getWorld0(@NotNull String name) {
         try {
             return getWorld0(UUID.fromString(name));
         } catch (IllegalArgumentException ignored) {
         }
-        return Optional.ofNullable(Bukkit.getWorld(name)).map(BukkitWorldHolder::new);
+        var world = Bukkit.getWorld(name);
+        if (world == null) {
+            return null;
+        }
+        return new BukkitWorldHolder(world);
     }
 }

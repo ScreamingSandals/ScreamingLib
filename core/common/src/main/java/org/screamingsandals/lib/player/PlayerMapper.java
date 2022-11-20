@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.player;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.Permission;
@@ -112,7 +114,7 @@ public abstract class PlayerMapper {
         return playerMapper.offlinePlayerConverter.convert(player, type);
     }
 
-    public static Optional<LocationHolder> getBedLocation(OfflinePlayerWrapper wrapper) {
+    public static @Nullable LocationHolder getBedLocation(@NotNull OfflinePlayerWrapper wrapper) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
@@ -257,7 +259,7 @@ public abstract class PlayerMapper {
 
     public abstract SenderWrapper getConsoleSender0();
 
-    public abstract Optional<LocationHolder> getBedLocation0(OfflinePlayerWrapper playerWrapper);
+    public abstract @Nullable LocationHolder getBedLocation0(@NotNull OfflinePlayerWrapper playerWrapper);
 
     public abstract boolean hasPermission0(CommandSenderWrapper wrapper, Permission permission);
 

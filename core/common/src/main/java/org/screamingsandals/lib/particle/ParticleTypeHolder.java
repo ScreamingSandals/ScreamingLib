@@ -16,29 +16,22 @@
 
 package org.screamingsandals.lib.particle;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface ParticleTypeHolder extends ComparableWrapper, RawValueHolder {
 
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
-
     String platformName();
 
-    @Nullable
-    Class<? extends ParticleData> expectedDataClass();
+    @Nullable Class<? extends ParticleData> expectedDataClass();
 
     /**
      * {@inheritDoc}
@@ -53,18 +46,21 @@ public interface ParticleTypeHolder extends ComparableWrapper, RawValueHolder {
 
     @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
     static ParticleTypeHolder of(Object particle) {
-        return ofOptional(particle).orElseThrow();
+        var result = ofNullable(particle);
+        Preconditions.checkNotNullIllegal(result, "Could not find particle type: " + particle);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    static Optional<ParticleTypeHolder> ofOptional(Object particle) {
+    @Contract("null -> null")
+    static @Nullable ParticleTypeHolder ofNullable(@Nullable Object particle) {
         if (particle instanceof ParticleTypeHolder) {
-            return Optional.of((ParticleTypeHolder) particle);
+            return (ParticleTypeHolder) particle;
         }
         return ParticleTypeMapping.resolve(particle);
     }
 
-    static List<ParticleTypeHolder> all() {
+    static @NotNull List<@NotNull ParticleTypeHolder> all() {
         return ParticleTypeMapping.getValues();
     }
 }

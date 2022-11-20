@@ -37,7 +37,6 @@ import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
 
 import java.net.InetSocketAddress;
-import java.util.Optional;
 
 /**
  * A player representation.
@@ -252,7 +251,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @return the weather for this player
      */
-    Optional<WeatherHolder> getPlayerWeather();
+    @Nullable WeatherHolder getPlayerWeather();
 
     /**
      * Sets the weather for this player.

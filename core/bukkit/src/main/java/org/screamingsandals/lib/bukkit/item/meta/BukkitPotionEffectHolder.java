@@ -16,13 +16,17 @@
 
 package org.screamingsandals.lib.bukkit.item.meta;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Arrays;
 
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> implements PotionEffectHolder {
 
     public BukkitPotionEffectHolder(PotionEffectType type) {
@@ -68,7 +72,7 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
     }
 
     @Override
-    public PotionEffectHolder withDuration(int duration) {
+    public @NotNull PotionEffectHolder withDuration(int duration) {
         try {
             return new BukkitPotionEffectHolder(
                     new PotionEffect(
@@ -94,7 +98,7 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
     }
 
     @Override
-    public PotionEffectHolder withAmplifier(int amplifier) {
+    public @NotNull PotionEffectHolder withAmplifier(int amplifier) {
         try {
             return new BukkitPotionEffectHolder(
                     new PotionEffect(
@@ -120,7 +124,7 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
     }
 
     @Override
-    public PotionEffectHolder withAmbient(boolean ambient) {
+    public @NotNull PotionEffectHolder withAmbient(boolean ambient) {
         try {
             return new BukkitPotionEffectHolder(
                     new PotionEffect(
@@ -146,7 +150,7 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
     }
 
     @Override
-    public PotionEffectHolder withParticles(boolean particles) {
+    public @NotNull PotionEffectHolder withParticles(boolean particles) {
         try {
             return new BukkitPotionEffectHolder(
                     new PotionEffect(
@@ -172,7 +176,7 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
     }
 
     @Override
-    public PotionEffectHolder withIcon(boolean icon) {
+    public @NotNull PotionEffectHolder withIcon(boolean icon) {
         try {
             return new BukkitPotionEffectHolder(
                     new PotionEffect(
@@ -194,7 +198,7 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
         if (object instanceof PotionEffect || object instanceof PotionEffectHolder) {
             return equals(object);
         }
-        return equals(PotionEffectHolder.ofOptional(object).orElse(null));
+        return equals(PotionEffectHolder.ofNullable(object));
     }
 
     @Override
@@ -211,7 +215,7 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
         } else if (object instanceof PotionEffectType) {
             return object.equals(wrappedObject.getType());
         }
-        return platformName().equals(PotionEffectHolder.ofOptional(object).map(PotionEffectHolder::platformName).orElse(null));
+        return platformName().equals(PotionEffectHolder.ofNullable(object).mapOrNull(PotionEffectHolder::platformName));
     }
 
     @Override

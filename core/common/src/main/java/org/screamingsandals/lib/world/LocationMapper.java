@@ -16,18 +16,22 @@
 
 package org.screamingsandals.lib.world;
 
+import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
-
-import java.util.Optional;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 /**
  * Class responsible for converting platform locations to wrappers.
  */
 @AbstractService
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public abstract class LocationMapper {
     protected BidirectionalConverter<LocationHolder> converter = BidirectionalConverter.<LocationHolder>build()
             .registerP2W(LocationHolder.class, e -> e)
@@ -52,11 +56,12 @@ public abstract class LocationMapper {
      * @param obj the platform location
      * @return the location wrapper
      */
-    public static Optional<LocationHolder> resolve(Object obj) {
+    @Contract("null -> null")
+    public static @Nullable LocationHolder resolve(@Nullable Object obj) {
         if (mapping == null) {
             throw new UnsupportedOperationException("LocationMapper is not initialized yet.");
         }
-        return mapping.converter.convertOptional(obj);
+        return mapping.converter.convertOptional(obj).toNullable();
     }
 
     /**
@@ -67,7 +72,7 @@ public abstract class LocationMapper {
      * @return the location wrapper
      * @throws java.util.NoSuchElementException when the location could not be mapped
      */
-    public static <T> LocationHolder wrapLocation(T input) {
+    public static <T> @NotNull LocationHolder wrapLocation(@NotNull T input) {
         return resolve(input).orElseThrow();
     }
 

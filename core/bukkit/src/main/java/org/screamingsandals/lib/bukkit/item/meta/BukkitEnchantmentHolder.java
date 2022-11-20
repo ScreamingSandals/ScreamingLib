@@ -16,14 +16,17 @@
 
 package org.screamingsandals.lib.bukkit.item.meta;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Pair;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Arrays;
 
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Integer>> implements EnchantmentHolder {
 
     public BukkitEnchantmentHolder(Enchantment enchantment) {
@@ -45,7 +48,7 @@ public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Inte
     }
 
     @Override
-    public EnchantmentHolder withLevel(int level) {
+    public @NotNull EnchantmentHolder withLevel(int level) {
         return new BukkitEnchantmentHolder(Pair.of(wrappedObject.first(), level));
     }
 
@@ -57,7 +60,7 @@ public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Inte
         if (object instanceof EnchantmentHolder) {
             return equals(object);
         }
-        return equals(EnchantmentHolder.ofOptional(object).orElse(null));
+        return equals(EnchantmentHolder.ofNullable(object));
     }
 
     @Override
@@ -72,7 +75,7 @@ public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Inte
         } else if (object instanceof BukkitEnchantmentHolder) {
             return ((BukkitEnchantmentHolder) object).wrappedObject.first().equals(wrappedObject.first());
         }
-        return platformName().equals(EnchantmentHolder.ofOptional(object).map(EnchantmentHolder::platformName).orElse(null));
+        return platformName().equals(EnchantmentHolder.ofNullable(object).mapOrNull(EnchantmentHolder::platformName));
     }
 
     @Override

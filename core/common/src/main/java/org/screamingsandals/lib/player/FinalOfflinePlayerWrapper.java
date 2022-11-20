@@ -19,8 +19,8 @@ package org.screamingsandals.lib.player;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Data
@@ -30,8 +30,8 @@ public class FinalOfflinePlayerWrapper implements OfflinePlayerWrapper {
     private final String name;
 
     @Override
-    public Optional<String> getLastName() {
-        return Optional.ofNullable(name);
+    public @Nullable String getLastName() {
+        return name;
     }
 
     /**

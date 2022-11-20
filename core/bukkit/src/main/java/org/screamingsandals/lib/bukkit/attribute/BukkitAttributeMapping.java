@@ -75,7 +75,7 @@ public class BukkitAttributeMapping extends AttributeMapping {
                                 bukkitItemAttribute.getAttributeModifier().getName(),
                                 bukkitItemAttribute.getAttributeModifier().getAmount(),
                                 AttributeModifierHolder.Operation.values()[bukkitItemAttribute.getAttributeModifier().getOperation().ordinal()],
-                                EquipmentSlotHolder.ofOptional(bukkitItemAttribute.getAttributeModifier().getOperation()).orElse(null) // nullable
+                                EquipmentSlotHolder.ofNullable(bukkitItemAttribute.getAttributeModifier().getOperation())
                         );
                     } catch (Throwable throwable) {
                         return new ItemAttributeHolder(

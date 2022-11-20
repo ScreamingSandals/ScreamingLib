@@ -49,7 +49,7 @@ public class BukkitPotionHolder extends BasicWrapper<PotionData> implements Poti
         if (object instanceof PotionData || object instanceof PotionHolder) {
             return equals(object);
         }
-        return equals(PotionHolder.ofOptional(object).orElse(null));
+        return equals(PotionHolder.ofNullable(object));
     }
 
     @Override

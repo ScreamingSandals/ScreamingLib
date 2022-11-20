@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bukkit.entity;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +39,7 @@ import org.screamingsandals.lib.attribute.AttributeTypeHolder;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectMapping;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -48,6 +50,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLiving {
     public BukkitEntityLiving(LivingEntity wrappedObject) {
         super(wrappedObject);

@@ -21,6 +21,7 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -42,7 +43,6 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -86,12 +86,12 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
     }
 
     @Override
-    public Optional<ChunkHolder> getChunkAt(int x, int z) {
+    public @Nullable ChunkHolder getChunkAt(int x, int z) {
         return ChunkMapper.wrapChunk(wrappedObject.getChunkAt(x, z));
     }
 
     @Override
-    public Optional<ChunkHolder> getChunkAt(LocationHolder location) {
+    public @Nullable ChunkHolder getChunkAt(@NotNull LocationHolder location) {
         return ChunkMapper.wrapChunk(wrappedObject.getChunkAt(location.as(Location.class)));
     }
 

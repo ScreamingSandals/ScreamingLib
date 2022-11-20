@@ -56,7 +56,6 @@ import protocolsupport.api.ProtocolSupportAPI;
 import java.net.InetSocketAddress;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
@@ -273,13 +272,13 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public Optional<String> getLastName() {
-        return Optional.ofNullable(getName());
+    public @Nullable String getLastName() {
+        return getName();
     }
 
     @Override
-    public Optional<WeatherHolder> getPlayerWeather() {
-        return WeatherHolder.ofOptional(((Player) wrappedObject).getPlayerWeather());
+    public @Nullable WeatherHolder getPlayerWeather() {
+        return WeatherHolder.ofOptional(((Player) wrappedObject).getPlayerWeather()).toNullable();
     }
 
     @Override

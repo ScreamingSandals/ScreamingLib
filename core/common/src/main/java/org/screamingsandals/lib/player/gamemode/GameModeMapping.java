@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.player.gamemode;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.GameModeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -28,7 +31,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
@@ -56,21 +58,22 @@ public abstract class GameModeMapping extends AbstractTypeMapper<GameModeHolder>
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
-    @OfMethodAlternative(value = GameModeHolder.class, methodName = "ofOptional")
-    public static Optional<GameModeHolder> resolve(Object gameMode) {
+    @OfMethodAlternative(value = GameModeHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable GameModeHolder resolve(@Nullable Object gameMode) {
         if (gameModeMapping == null) {
             throw new UnsupportedOperationException("GameModeMapping is not initialized yet.");
         }
 
         if (gameMode == null) {
-            return Optional.empty();
+            return null;
         }
 
-        return gameModeMapping.gameModeConverter.convertOptional(gameMode).or(() -> gameModeMapping.resolveFromMapping(gameMode));
+        return gameModeMapping.gameModeConverter.convertOptional(gameMode).or(() -> gameModeMapping.resolveFromMapping(gameMode)).orElse(null);
     }
 
     @OfMethodAlternative(value = GameModeHolder.class, methodName = "all")
-    public static List<GameModeHolder> getValues() {
+    public static @NotNull List<@NotNull GameModeHolder> getValues() {
         if (gameModeMapping == null) {
             throw new UnsupportedOperationException("GameModeMapping is not initialized yet.");
         }

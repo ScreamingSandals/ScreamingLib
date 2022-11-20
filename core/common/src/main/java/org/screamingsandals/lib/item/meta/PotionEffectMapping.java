@@ -16,6 +16,9 @@
 
 package org.screamingsandals.lib.item.meta;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.PotionEffectHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.RomanToDecimal;
@@ -35,7 +38,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
 @SuppressWarnings("AlternativeMethodAvailable")
@@ -65,13 +67,14 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
             });
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
-    @OfMethodAlternative(value = PotionEffectHolder.class, methodName = "ofOptional")
-    public static Optional<PotionEffectHolder> resolve(Object potionEffectObject) {
+    @OfMethodAlternative(value = PotionEffectHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable PotionEffectHolder resolve(@Nullable Object potionEffectObject) {
         if (potionEffectMapping == null) {
             throw new UnsupportedOperationException("PotionEffect mapping is not initialized yet.");
         }
         if (potionEffectObject == null) {
-            return Optional.empty();
+            return null;
         }
 
         return potionEffectMapping.potionEffectConverter.convertOptional(potionEffectObject).or(() -> {
@@ -83,7 +86,7 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
 
                 MappingKey mappingKey;
                 try {
-                    var id = Integer.valueOf(matcher.group("namespaced"));
+                    var id = Integer.parseInt(matcher.group("namespaced"));
                     mappingKey = NumericMappingKey.of(id);
                 } catch (Throwable ignored) {
                     mappingKey = NamespacedMappingKey.of(matcher.group("namespaced"));
@@ -107,11 +110,11 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
             }
 
             return Optional.empty();
-        });
+        }).orElse(null);
     }
 
     @OfMethodAlternative(value = PotionEffectHolder.class, methodName = "all")
-    public static List<PotionEffectHolder> getValues() {
+    public static @NotNull List<@NotNull PotionEffectHolder> getValues() {
         if (potionEffectMapping == null) {
             throw new UnsupportedOperationException("PotionEffectMapping is not initialized yet.");
         }

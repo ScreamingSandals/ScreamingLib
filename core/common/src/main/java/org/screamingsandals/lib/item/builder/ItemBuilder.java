@@ -210,14 +210,17 @@ public interface ItemBuilder extends MetadataConsumer {
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     @Contract("_ -> this")
     default @NotNull ItemBuilder enchant(@NotNull Object enchant) {
-        EnchantmentHolder.ofOptional(enchant).ifPresent(this::enchantment);
+        var enchantment = EnchantmentHolder.ofNullable(enchant);
+        if (enchantment != null) {
+            this.enchantment(enchantment);
+        }
         return this;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION)
     @Contract("_ -> this")
     default @NotNull ItemBuilder potion(@NotNull Object potion) {
-        PotionHolder.ofOptional(potion).ifPresent(potionHolder -> {
+        NullableExtension.ifNotNull(PotionHolder.ofNullable(potion), potionHolder -> {
             this.setMetadata(ItemMeta.POTION_TYPE, potionHolder);
         });
         return this;
@@ -237,13 +240,13 @@ public interface ItemBuilder extends MetadataConsumer {
     default @NotNull ItemBuilder effect(@NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;
-            list.forEach(effect1 -> PotionEffectHolder.ofOptional(effect1).ifPresent(potionEffectHolder -> {
+            list.forEach(effect1 -> NullableExtension.ifNotNull(PotionEffectHolder.ofNullable(effect1), potionEffectHolder -> {
                 this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder);
             }));
             return this;
         }
 
-        PotionEffectHolder.ofOptional(effect).ifPresent(potionEffectHolder -> {
+        NullableExtension.ifNotNull(PotionEffectHolder.ofNullable(effect), potionEffectHolder -> {
             this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder);
         });
         return this;

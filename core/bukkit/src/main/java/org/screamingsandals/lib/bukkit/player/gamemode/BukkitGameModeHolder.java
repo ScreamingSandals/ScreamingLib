@@ -42,7 +42,7 @@ public class BukkitGameModeHolder extends BasicWrapper<GameMode> implements Game
         if (gameMode instanceof GameMode || gameMode instanceof GameModeHolder) {
             return equals(gameMode);
         }
-        return equals(GameModeHolder.ofOptional(gameMode).orElse(null));
+        return equals(GameModeHolder.ofNullable(gameMode));
     }
 
     @Override

@@ -17,9 +17,9 @@
 package org.screamingsandals.lib.world.chunk;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
-
-import java.util.Optional;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
@@ -37,15 +37,16 @@ public abstract class ChunkMapper {
         chunkMapper = this;
     }
 
-    public static Optional<ChunkHolder> wrapChunk(Object chunk) {
+    @Contract("null -> null")
+    public static @Nullable ChunkHolder wrapChunk(@Nullable Object chunk) {
         if (chunkMapper == null) {
             throw new UnsupportedOperationException("ChunkMapper is not initialized yet.");
         }
         if (chunk instanceof ChunkHolder) {
-            return Optional.of((ChunkHolder) chunk);
+            return (ChunkHolder) chunk;
         }
         return chunkMapper.wrapChunk0(chunk);
     }
 
-    protected abstract Optional<ChunkHolder> wrapChunk0(Object chunk);
+    protected abstract @Nullable ChunkHolder wrapChunk0(@Nullable Object chunk);
 }

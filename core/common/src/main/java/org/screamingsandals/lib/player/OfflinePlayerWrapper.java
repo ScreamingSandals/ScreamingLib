@@ -16,10 +16,9 @@
 
 package org.screamingsandals.lib.player;
 
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.world.LocationHolder;
-
-import java.util.Optional;
 
 /**
  * A representation of an offline player.
@@ -30,7 +29,7 @@ public interface OfflinePlayerWrapper extends MultiPlatformOfflinePlayer {
      *
      * @return the location, can be empty if the player does not have a bed
      */
-    default Optional<LocationHolder> getBedLocation() {
+    default @Nullable LocationHolder getBedLocation() {
         return PlayerMapper.getBedLocation(this);
     }
 

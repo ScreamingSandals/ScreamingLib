@@ -31,7 +31,6 @@ import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -85,7 +84,7 @@ public abstract class AttributeMapping {
                     name.getString(""),
                     amount.getDouble(),
                     operation.get(AttributeModifierHolder.Operation.class),
-                    EquipmentSlotMapping.resolve(slot.raw()).toNullable()
+                    EquipmentSlotMapping.resolve(slot.raw())
             );
         } catch (SerializationException e) {
             e.printStackTrace();
@@ -163,21 +162,5 @@ public abstract class AttributeMapping {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }
         return attributeMapping.attributeModifierConverter.convert(holder, newType);
-    }
-
-    public static void main(String[] args) {
-        try {
-            Optional.ofNullable(null).orElseThrow();
-        } catch (Exception ex) {
-            System.out.println("thrown 1");
-            ex.printStackTrace();
-        }
-
-        try {
-            ((Object) null).orElseThrow();
-        } catch (Exception ex2) {
-            System.out.println("thrown 2");
-            ex2.printStackTrace();
-        }
     }
 }

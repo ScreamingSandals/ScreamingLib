@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.slot;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.EquipmentSlotHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -29,7 +32,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @AbstractService
 public abstract class EquipmentSlotMapping extends AbstractTypeMapper<EquipmentSlotHolder> {
@@ -56,21 +58,22 @@ public abstract class EquipmentSlotMapping extends AbstractTypeMapper<EquipmentS
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
-    @OfMethodAlternative(value = EquipmentSlotHolder.class, methodName = "ofOptional")
-    public static Optional<EquipmentSlotHolder> resolve(Object slot) {
+    @OfMethodAlternative(value = EquipmentSlotHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable EquipmentSlotHolder resolve(@Nullable Object slot) {
         if (equipmentSlotMapping == null) {
             throw new UnsupportedOperationException("EquipmentSlotMapping is not initialized yet.");
         }
 
         if (slot == null) {
-            return Optional.empty();
+            return null;
         }
 
-        return equipmentSlotMapping.equipmentSlotConverter.convertOptional(slot).or(() -> equipmentSlotMapping.resolveFromMapping(slot));
+        return equipmentSlotMapping.equipmentSlotConverter.convertOptional(slot).or(() -> equipmentSlotMapping.resolveFromMapping(slot)).orElse(null);
     }
 
     @OfMethodAlternative(value = EquipmentSlotHolder.class, methodName = "all")
-    public static List<EquipmentSlotHolder> getValues() {
+    public static @NotNull List<@NotNull EquipmentSlotHolder> getValues() {
         if (equipmentSlotMapping == null) {
             throw new UnsupportedOperationException("EquipmentSlotMapping is not initialized yet.");
         }

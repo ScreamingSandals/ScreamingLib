@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.particle;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.ParticleTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -29,7 +32,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @AbstractService
 public abstract class ParticleTypeMapping extends AbstractTypeMapper<ParticleTypeHolder> {
@@ -95,21 +97,22 @@ public abstract class ParticleTypeMapping extends AbstractTypeMapper<ParticleTyp
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    @OfMethodAlternative(value = ParticleTypeHolder.class, methodName = "ofOptional")
-    public static Optional<ParticleTypeHolder> resolve(Object particle) {
+    @OfMethodAlternative(value = ParticleTypeHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable ParticleTypeHolder resolve(@Nullable Object particle) {
         if (particleTypeMapping == null) {
             throw new UnsupportedOperationException("ParticleTypeMapping is not initialized yet.");
         }
 
         if (particle == null) {
-            return Optional.empty();
+            return null;
         }
 
-        return particleTypeMapping.particleTypeConverter.convertOptional(particle).or(() -> particleTypeMapping.resolveFromMapping(particle));
+        return particleTypeMapping.particleTypeConverter.convertOptional(particle).or(() -> particleTypeMapping.resolveFromMapping(particle)).orElse(null);
     }
 
     @OfMethodAlternative(value = ParticleTypeHolder.class, methodName = "all")
-    public static List<ParticleTypeHolder> getValues() {
+    public static @NotNull List<@NotNull ParticleTypeHolder> getValues() {
         if (particleTypeMapping == null) {
             throw new UnsupportedOperationException("ParticleTypeMapping is not initialized yet.");
         }

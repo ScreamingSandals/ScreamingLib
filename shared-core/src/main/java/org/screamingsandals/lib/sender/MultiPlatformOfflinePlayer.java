@@ -16,9 +16,9 @@
 
 package org.screamingsandals.lib.sender;
 
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Wrapper;
 
-import java.util.Optional;
 import java.util.UUID;
 
 public interface MultiPlatformOfflinePlayer extends Operator, Wrapper {
@@ -29,7 +29,7 @@ public interface MultiPlatformOfflinePlayer extends Operator, Wrapper {
      *
      * @return the player's last name
      */
-    Optional<String> getLastName();
+    @Nullable String getLastName();
 
     /**
      * Gets the first played time.
