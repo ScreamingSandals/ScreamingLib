@@ -166,7 +166,9 @@ nmsGen {
     reqClass('net.minecraft.network.protocol.game.ClientboundOpenBookPacket') {
         reqConstructor()
     }
-    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket')
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket') // < 1.19.2
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket') // 1.19.3+
+    reqClass('net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket') // 1.19.3+
     reqClass('net.minecraft.network.protocol.game.ClientboundTabListPacket') {
         reqConstructor()
         reqConstructor('@Component', '@Component')

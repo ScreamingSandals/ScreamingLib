@@ -45,7 +45,9 @@ public class PacketIdMapping {
         putTranslateSafely(SClientboundMoveEntityPacket.Pos.class, ClientboundMoveEntityPacket_i_PosAccessor.getType());
         putTranslateSafely(SClientboundMoveEntityPacket.PosRot.class, ClientboundMoveEntityPacket_i_PosRotAccessor.getType());
         putTranslateSafely(SClientboundPlayerAbilitiesPacket.class, ClientboundPlayerAbilitiesPacketAccessor.getType());
-        putTranslateSafely(SClientboundPlayerInfoPacket.class, ClientboundPlayerInfoPacketAccessor.getType());
+        putTranslateSafely(SClientboundPlayerInfoPacket.class, ClientboundPlayerInfoPacketAccessor.getType()); // < 1.19.2
+        putTranslateSafely(SClientboundPlayerInfoPacket.class, ClientboundPlayerInfoUpdatePacketAccessor.getType()); // 1.19.3+
+        putTranslateSafely(SClientboundPlayerInfoPacket.PlayerInfoRemovePacket1_19_3.class, ClientboundPlayerInfoRemovePacketAccessor.getType()); // 1.19.3+
         putTranslateSafely(SClientboundRemoveEntitiesPacket.class, ClientboundRemoveEntitiesPacketAccessor.getType());
         putTranslateSafely(SClientboundRemoveMobEffectPacket.class, ClientboundRemoveMobEffectPacketAccessor.getType());
         putTranslateSafely(SClientboundRotateHeadPacket.class, ClientboundRotateHeadPacketAccessor.getType());

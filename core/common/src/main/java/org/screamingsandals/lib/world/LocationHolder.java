@@ -16,10 +16,7 @@
 
 package org.screamingsandals.lib.world;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -44,6 +41,7 @@ import java.util.stream.Collectors;
 @ConfigSerializable
 @Builder(toBuilder = true)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
+@With
 public class LocationHolder implements Wrapper, Serializable {
     /**
      * The X coordinate of this location.

@@ -462,6 +462,30 @@ public class ModernBlockTagBackPorts {
                 helper.port("polar_bears_spawnable_on_in_frozen_ocean");
             }
         }
+
+        if (!Server.isVersion(1, 19, 3)) {
+            if (blockType.is("end_portal", "end_gateway")) {
+                helper.port("invalid_spawn_inside");
+            }
+            if (helper.hasTag("signs")) {
+                helper.port("all_signs");
+            }
+            if (
+                    helper.hasTag("wool_carpets")
+                        || blockType.is(
+                                    "crimson_roots",
+                            "glow_lichen",
+                            "lily_pad",
+                            "moss_carpet",
+                            "nether_sprouts",
+                            "small_amethyst_bud",
+                            "warped_roots"
+                    )
+            ) {
+                helper.port("inside_step_sound_blocks");
+            }
+        } // TODO: port non_flammable_wood to post 1.19.3 servers?
+
         return helper.getPorts();
     }
 }

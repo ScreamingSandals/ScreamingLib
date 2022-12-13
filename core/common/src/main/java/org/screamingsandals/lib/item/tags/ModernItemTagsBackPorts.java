@@ -260,6 +260,32 @@ public class ModernItemTagsBackPorts {
             }
         }
 
+        if (!Server.isVersion(1, 19, 3)) {
+            if (itemType.is("flint_and_steel", "fire_charge")) {
+                helper.port("creeper_igniters");
+            }
+            if (itemType.is("book", "written_book", "enchanted_book", "writable_book")) {
+                helper.port("bookshelf_books");
+            }
+            if (itemType.is(
+                    "acacia_fence_gate",
+                    "birch_fence_gate",
+                    "dark_oak_fence_gate",
+                    "jungle_fence_gate",
+                    "oak_fence_gate",
+                    "spruce_fence_gate",
+                    "crimson_fence_gate",
+                    "warped_fence_gate",
+                    "mangrove_fence_gate"
+            )) {
+                helper.port("fence_gates");
+            }
+        } else {
+            if (itemType.is("acacia_log", "birch_log", "oak_log", "jungle_log", "spruce_log", "dark_oak_log")) {
+                helper.port("overworld_natural_logs");
+            }
+        }
+
         return helper.getPorts();
     }
 }

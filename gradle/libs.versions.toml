@@ -23,7 +23,7 @@ netty = "4.1.72.Final"
 
 # 3rd party plugins/mods (compileOnly)
 placeholderapi = "2.11.1"
-viaversion = "4.4.2"
+viaversion = "4.5.1"
 vault = "1.7"
 protocolsupport = "3d24efeda6"
 
