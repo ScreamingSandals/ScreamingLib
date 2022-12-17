@@ -32,8 +32,6 @@ import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
-import java.util.Objects;
-
 @Service(dependsOn = {
         ServerboundInteractPacketListener.class
 })
@@ -101,7 +99,13 @@ public class BukkitPacketMapper extends PacketMapper {
             }
 
             var finalCtx = ctx;
-            final Runnable task = () -> Objects.requireNonNullElse(finalCtx, channel).writeAndFlush(buffer);
+            final Runnable task = () -> {
+                if (finalCtx != null) {
+                    finalCtx.writeAndFlush(buffer);
+                } else {
+                    channel.writeAndFlush(buffer);
+                }
+            };
 
             if (channel.eventLoop().inEventLoop()) {
                 task.run();

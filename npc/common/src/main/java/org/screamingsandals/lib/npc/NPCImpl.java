@@ -124,7 +124,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         if (shown() && viewer.isOnline()) {
             hologram.addViewer(viewer);
             createSpawnPackets().forEach(packet -> packet.sendPacket(viewer));
-            if (!Server.isVersion(1, 19, 3)) {
+            if (!Server.isVersion(1, 19, 3) || viewer.getProtocolVersion() < 761) {
                 scheduleTabHide(viewer);
             }
         }

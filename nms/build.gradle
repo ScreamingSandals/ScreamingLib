@@ -23,8 +23,12 @@ nmsGen {
     }
 
     reqClass('net.minecraft.core.Registry') {
-        reqField('ENTITY_TYPE')
+        reqField('ENTITY_TYPE') // <= 1.19.2
         reqMethod('getId', Object)
+    }
+
+    reqClass('net.minecraft.core.registries.BuiltInRegistries') {
+        reqField('ENTITY_TYPE')
     }
 
     reqClass('net.minecraft.core.MappedRegistry') {

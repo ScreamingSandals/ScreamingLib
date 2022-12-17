@@ -1,11 +1,11 @@
 [versions]
 # platforms
-paper = "1.19.2-R0.1-SNAPSHOT"
+paper = "1.19.3-R0.1-SNAPSHOT"
 sponge = "8.1.3"
 minestom = "master-SNAPSHOT"
 waterfall = "1.19-R0.1-SNAPSHOT"
 velocity = "3.1.1"
-adventure = "4.11.0"
+adventure = "4.12.0"
 
 # paperlib (shaded)
 paperlib = "1.0.7"

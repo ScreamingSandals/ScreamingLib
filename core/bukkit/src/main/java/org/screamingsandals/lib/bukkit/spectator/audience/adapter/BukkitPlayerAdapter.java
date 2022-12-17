@@ -27,8 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
-import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.ItemMeta;
 import org.screamingsandals.lib.item.ItemTagKeys;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.builder.ItemFactory;
@@ -36,7 +34,6 @@ import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.nbt.StringTag;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.spectator.*;
-import org.screamingsandals.lib.spectator.audience.MessageType;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 import org.screamingsandals.lib.spectator.bossbar.BossBar;
@@ -47,7 +44,6 @@ import org.screamingsandals.lib.spectator.title.Title;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter {
     public BukkitPlayerAdapter(PlayerAudience owner, Player commandSender) {
@@ -65,13 +61,9 @@ public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter 
     }
 
     @Override
-    public void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType) {
+    public void sendMessage(@NotNull ComponentLike message) {
         var comp = message instanceof AudienceComponentLike ? ((AudienceComponentLike) message).asComponent(owner()) : message.asComponent();
-        if (source != null && Reflect.hasMethod(commandSender().spigot(), "sendMessage", ChatMessageType.class, UUID.class, BaseComponent.class)) {
-            commandSender().spigot().sendMessage(messageType == MessageType.SYSTEM ? ChatMessageType.SYSTEM : ChatMessageType.CHAT, source, comp.as(BaseComponent.class));
-        } else {
-            commandSender().spigot().sendMessage(messageType == MessageType.SYSTEM ? ChatMessageType.SYSTEM : ChatMessageType.CHAT, comp.as(BaseComponent.class));
-        }
+        commandSender().spigot().sendMessage(comp.as(BaseComponent.class));
     }
 
     @Override
