@@ -20,12 +20,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.spectator.Component;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -36,7 +38,24 @@ public class SClientboundPlayerInfoPacket extends AbstractPacket {
 
     @Override
     public void write(PacketWriter writer) {
-        writer.writeVarInt(action.ordinal());
+        if (writer.protocol() >= 761) {
+            if (action == Action.REMOVE_PLAYER) {
+                writer.setCancelled(true);
+                writer.append(new PlayerInfoRemovePacket1_19_3(data.stream().map(PlayerInfoData::uuid).collect(Collectors.toUnmodifiableList())));
+                return;
+            }
+
+            var set = new BitSet(6);
+            if (Objects.requireNonNull(action) == Action.ADD_PLAYER) {
+                set.set(0, 6);
+            } else {
+                var actionOrdinal = action.ordinal();
+                set.set(actionOrdinal == 1 ? actionOrdinal + 1 : actionOrdinal + 2);
+            }
+            writer.writeBytes(Arrays.copyOf(set.toByteArray(), 1));
+        } else {
+            writer.writeVarInt(action.ordinal());
+        }
         writer.writeSizedCollection(data, playerInfoData -> {
             writer.writeUuid(playerInfoData.uuid());
             switch (action) {
@@ -51,13 +70,19 @@ public class SClientboundPlayerInfoPacket extends AbstractPacket {
                             writer.writeSizedString(property.signature());
                         }
                     });
+                    if (writer.protocol() >= 761) {
+                        writer.writeBoolean(false);
+                    }
                     writer.writeVarInt(playerInfoData.gameMode().id());
+                    if (writer.protocol() >= 761) {
+                        writer.writeBoolean(playerInfoData.listed());
+                    }
                     writer.writeVarInt(playerInfoData.latency());
                     writer.writeBoolean(playerInfoData.displayName() != null);
                     if (playerInfoData.displayName() != null) {
                         writer.writeComponent(playerInfoData.displayName());
                     }
-                    if (writer.protocol() >= 759) {
+                    if (writer.protocol() == 759 || writer.protocol() == 760) {
                         writer.writeBoolean(false);
                     }
                     break;
@@ -97,6 +122,7 @@ public class SClientboundPlayerInfoPacket extends AbstractPacket {
         private final GameModeHolder gameMode;
         private final Component displayName;
         private final List<Property> properties;
+        private final boolean listed;
     }
 
     @Data
@@ -113,6 +139,17 @@ public class SClientboundPlayerInfoPacket extends AbstractPacket {
 
         public boolean hasSignature() {
             return signature != null;
+        }
+    }
+
+    @ApiStatus.Internal
+    @RequiredArgsConstructor
+    public static class PlayerInfoRemovePacket1_19_3 extends AbstractPacket {
+        private final @NotNull List<@NotNull UUID> uuids;
+
+        @Override
+        public void write(@NotNull PacketWriter writer) {
+            writer.writeSizedCollection(uuids, writer::writeUuid);
         }
     }
 }

@@ -21,15 +21,11 @@ import lombok.experimental.Accessors;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.Audience;
-import org.screamingsandals.lib.spectator.audience.MessageType;
 import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-
-import java.util.UUID;
 
 @Data
 @Accessors(fluent = true)
@@ -38,14 +34,10 @@ public class BukkitAdapter implements Adapter {
     private final CommandSender commandSender;
 
     @Override
-    public void sendMessage(@Nullable UUID source, @NotNull ComponentLike message, @NotNull MessageType messageType) {
+    public void sendMessage(@NotNull ComponentLike message) {
         var comp = message instanceof AudienceComponentLike ? ((AudienceComponentLike) message).asComponent(owner) : message.asComponent();
         if (Reflect.hasMethod(owner, "spigot")) {
-            if (source != null && Reflect.hasMethod(commandSender.spigot(), "sendMessage", UUID.class, BaseComponent.class)) {
-                commandSender.spigot().sendMessage(source, comp.as(BaseComponent.class));
-            } else {
-                commandSender.spigot().sendMessage(comp.as(BaseComponent.class));
-            }
+            commandSender.spigot().sendMessage(comp.as(BaseComponent.class));
         } else {
             commandSender.sendMessage(comp.toLegacy());
         }

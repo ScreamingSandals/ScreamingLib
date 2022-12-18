@@ -16,10 +16,7 @@
 
 package org.screamingsandals.lib.world;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -46,6 +43,7 @@ import java.util.stream.Collectors;
 @ConfigSerializable
 @Builder(toBuilder = true)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
+@With
 @ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class LocationHolder implements Wrapper, Serializable {
     /**

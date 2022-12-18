@@ -107,4 +107,9 @@ public class Vector3Df implements Cloneable {
 
         return this;
     }
+
+    public @NotNull Vector3D toVector3D() {
+        return new Vector3D(this.x, this.y, this.z);
+    }
 }
+

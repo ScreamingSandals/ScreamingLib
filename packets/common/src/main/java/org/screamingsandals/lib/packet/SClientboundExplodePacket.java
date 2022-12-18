@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.LocationHolder;
 
@@ -35,7 +36,11 @@ public class SClientboundExplodePacket extends AbstractPacket {
 
     @Override
     public void write(PacketWriter writer) {
-        writer.writeVector(location);
+        if (writer.protocol() >= 761) {
+            writer.writeVector(location.toVector3D());
+        } else {
+            writer.writeVector(location);
+        }
         writer.writeFloat(strength);
         writer.writeSizedCollection(blockLocations, locationHolder -> writer.writeByteOffset(location, locationHolder.asVectorf()));
         writer.writeVector(knockBackVelocity);

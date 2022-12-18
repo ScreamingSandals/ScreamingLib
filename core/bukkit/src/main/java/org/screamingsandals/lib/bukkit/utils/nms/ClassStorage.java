@@ -193,27 +193,36 @@ public class ClassStorage {
 	}
 
 	public static int getEntityTypeId(String key, Class<?> clazz) {
-		var registry = Reflect.getFieldResulted(RegistryAccessor.getFieldENTITY_TYPE());
-
-		if (registry.isPresent()) {
-			// 1.14+
+		var registry1_19_3 = Reflect.getFieldResulted(BuiltInRegistriesAccessor.getFieldENTITY_TYPE());
+		if (registry1_19_3.isPresent()) {
+			// 1.19.3+
 			var optional = Reflect.fastInvoke(EntityTypeAccessor.getMethodByString1(), (Object) key);
 
-			if (optional instanceof Optional) {
-				return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
-			}
-
-			// 1.13.X
-			var nullable = Reflect.fastInvoke(EntityTypeAccessor.getMethodFunc_200713_a1(), (Object) key);
-			return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), nullable).asOptional(Integer.class).orElse(0);
+			return registry1_19_3.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
 		} else {
-			// 1.11 - 1.12.2
-			if (EntityTypeAccessor.getFieldField_191308_b() != null) {
-				return Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_191308_b()).fastInvokeResulted(MappedRegistryAccessor.getMethodFunc_148757_b1(), clazz).asOptional(Integer.class).orElse(0);
-			}
+			// <= 1.19.2
+			var registry = Reflect.getFieldResulted(RegistryAccessor.getFieldENTITY_TYPE());
 
-			// 1.8.8 - 1.10.2
-			return (int) Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_75624_e()).as(Map.class).get(clazz);
+			if (registry.isPresent()) {
+				// 1.14+
+				var optional = Reflect.fastInvoke(EntityTypeAccessor.getMethodByString1(), (Object) key);
+
+				if (optional instanceof Optional) {
+					return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), ((Optional<?>) optional).orElse(null)).asOptional(Integer.class).orElse(0);
+				}
+
+				// 1.13.X
+				var nullable = Reflect.fastInvoke(EntityTypeAccessor.getMethodFunc_200713_a1(), (Object) key);
+				return registry.fastInvokeResulted(RegistryAccessor.getMethodGetId1(), nullable).asOptional(Integer.class).orElse(0);
+			} else {
+				// 1.11 - 1.12.2
+				if (EntityTypeAccessor.getFieldField_191308_b() != null) {
+					return Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_191308_b()).fastInvokeResulted(MappedRegistryAccessor.getMethodFunc_148757_b1(), clazz).asOptional(Integer.class).orElse(0);
+				}
+
+				// 1.8.8 - 1.10.2
+				return (int) Reflect.getFieldResulted(EntityTypeAccessor.getFieldField_75624_e()).as(Map.class).get(clazz);
+			}
 		}
 	}
 }
