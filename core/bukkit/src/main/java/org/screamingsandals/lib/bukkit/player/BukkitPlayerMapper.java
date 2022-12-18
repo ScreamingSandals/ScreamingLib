@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bukkit.player;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -28,18 +29,20 @@ import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.annotations.Service;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.world.LocationHolder;
 import org.screamingsandals.lib.world.LocationMapper;
 import java.util.*;
 
 @Service
+@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitPlayerMapper extends PlayerMapper {
     public BukkitPlayerMapper() {
         offlinePlayerConverter
                 .registerP2W(OfflinePlayer.class, offlinePlayer -> new FinalOfflinePlayerWrapper(offlinePlayer.getUniqueId(), offlinePlayer.getName()))
                 .registerP2W(PlayerWrapper.class, playerWrapper -> new FinalOfflinePlayerWrapper(playerWrapper.getUuid(), playerWrapper.getName()))
                 .registerW2P(OfflinePlayer.class, offlinePlayerWrapper -> Bukkit.getOfflinePlayer(offlinePlayerWrapper.getUuid()))
-                .registerW2P(PlayerWrapper.class, offlinePlayerWrapper -> getPlayer0(offlinePlayerWrapper.getUuid()).orElse(null));
+                .registerW2P(PlayerWrapper.class, offlinePlayerWrapper -> getPlayer0(offlinePlayerWrapper.getUuid()));
 
         handConverter
                 .registerW2P(EquipmentSlot.class, wrapper -> {
@@ -57,17 +60,17 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public Optional<PlayerWrapper> getPlayer0(String name) {
-        return Optional.ofNullable(Bukkit.getPlayer(name)).map(BukkitEntityPlayer::new);
+    public @Nullable PlayerWrapper getPlayer0(@NotNull String name) {
+        return Bukkit.getPlayer(name).mapOrNull(BukkitEntityPlayer::new);
     }
 
     @Override
-    public Optional<PlayerWrapper> getPlayer0(UUID uuid) {
-        return Optional.ofNullable(Bukkit.getPlayer(uuid)).map(BukkitEntityPlayer::new);
+    public @Nullable PlayerWrapper getPlayer0(@NotNull UUID uuid) {
+        return Bukkit.getPlayer(uuid).mapOrNull(BukkitEntityPlayer::new);
     }
 
     @Override
-    protected <T> CommandSenderWrapper wrapSender0(T sender) {
+    protected <T> @NotNull CommandSenderWrapper wrapSender0(@NotNull T sender) {
         if (sender instanceof CommandSenderWrapper) {
             return (CommandSenderWrapper) sender;
         } else if (sender instanceof OfflinePlayerWrapper) {
@@ -83,7 +86,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public SenderWrapper getConsoleSender0() {
+    public @NotNull SenderWrapper getConsoleSender0() {
         return new GenericCommandSender(Bukkit.getConsoleSender());
     }
 
@@ -163,7 +166,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public OfflinePlayerWrapper getOfflinePlayer0(UUID uuid) {
+    public @NotNull OfflinePlayerWrapper getOfflinePlayer0(@NotNull UUID uuid) {
         var offPlayer = Bukkit.getOfflinePlayer(uuid);
         if (offPlayer instanceof Player) {
             return new BukkitEntityPlayer((Player) offPlayer);
@@ -172,16 +175,16 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public Optional<OfflinePlayerWrapper> getOfflinePlayer0(String name) {
+    public @Nullable OfflinePlayerWrapper getOfflinePlayer0(@NotNull String name) {
         var offPlayer = Bukkit.getOfflinePlayer(name);
         if (offPlayer instanceof Player) {
-            return Optional.of(new BukkitEntityPlayer((Player) offPlayer));
+            return new BukkitEntityPlayer((Player) offPlayer);
         }
-        return offlinePlayerConverter.convertOptional(offPlayer);
+        return offlinePlayerConverter.convertOptional(offPlayer).toNullable();
     }
 
     @Override
-    public Optional<PlayerWrapper> getPlayerExact0(String name) {
-        return Optional.ofNullable(Bukkit.getPlayerExact(name)).map(BukkitEntityPlayer::new);
+    public @Nullable PlayerWrapper getPlayerExact0(@NotNull String name) {
+        return Bukkit.getPlayerExact(name).mapOrNull(BukkitEntityPlayer::new);
     }
 }

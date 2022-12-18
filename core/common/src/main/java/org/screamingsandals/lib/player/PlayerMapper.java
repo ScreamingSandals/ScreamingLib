@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.player;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
@@ -31,9 +32,9 @@ import java.util.*;
 
 @AbstractService
 public abstract class PlayerMapper {
-    protected final BidirectionalConverter<OfflinePlayerWrapper> offlinePlayerConverter = BidirectionalConverter.build();
-    protected final BidirectionalConverter<PlayerWrapper> specialPlayerConverter = BidirectionalConverter.build();
-    protected final BidirectionalConverter<PlayerWrapper.Hand> handConverter = BidirectionalConverter.build();
+    protected final @NotNull BidirectionalConverter<OfflinePlayerWrapper> offlinePlayerConverter = BidirectionalConverter.build();
+    protected final @NotNull BidirectionalConverter<PlayerWrapper> specialPlayerConverter = BidirectionalConverter.build();
+    protected final @NotNull BidirectionalConverter<PlayerWrapper.Hand> handConverter = BidirectionalConverter.build();
     private static PlayerMapper playerMapper;
 
     @ApiStatus.Internal
@@ -54,7 +55,7 @@ public abstract class PlayerMapper {
                 .registerP2W(PlayerWrapper.Hand.class, e -> e);
     }
 
-    public static <T> PlayerWrapper wrapPlayer(T player) {
+    public static <T> @NotNull PlayerWrapper wrapPlayer(@NotNull T player) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
@@ -76,28 +77,28 @@ public abstract class PlayerMapper {
         return playerMapper.offlinePlayerConverter.convert(player);
     }
 
-    public static <T> CommandSenderWrapper wrapSender(T sender) {
+    public static <T> @NotNull CommandSenderWrapper wrapSender(@NotNull T sender) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.wrapSender0(sender);
     }
 
-    public static <T> PlayerWrapper.Hand wrapHand(T hand) {
+    public static <T> PlayerWrapper.@NotNull Hand wrapHand(@NotNull T hand) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         return playerMapper.handConverter.convert(hand);
     }
 
-    public static <T> Optional<PlayerWrapper.Hand> resolveHand(T hand) {
+    public static <T> PlayerWrapper.@Nullable Hand resolveHand(@Nullable T hand) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
         if (hand == null) {
-            return Optional.empty();
+            return null;
         }
-        return playerMapper.handConverter.convertOptional(hand);
+        return playerMapper.handConverter.convertNullable(hand);
     }
 
     public static <T> T convertHand(PlayerWrapper.Hand hand, Class<T> type) {
@@ -121,32 +122,44 @@ public abstract class PlayerMapper {
         return playerMapper.getBedLocation0(wrapper);
     }
 
-    public static Optional<PlayerWrapper> getPlayer(String name) {
+    @Contract("null -> null")
+    public static @Nullable PlayerWrapper getPlayer(@Nullable String name) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        if (name == null) {
+            return null;
         }
         return playerMapper.getPlayer0(name);
     }
 
-    public abstract Optional<PlayerWrapper> getPlayer0(String name);
+    public abstract @Nullable PlayerWrapper getPlayer0(@NotNull String name);
 
-    public static Optional<PlayerWrapper> getPlayer(UUID uuid) {
+    @Contract("null -> null")
+    public static @Nullable PlayerWrapper getPlayer(@Nullable UUID uuid) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        if (uuid == null) {
+            return null;
         }
         return playerMapper.getPlayer0(uuid);
     }
 
-    public abstract Optional<PlayerWrapper> getPlayer0(UUID uuid);
+    public abstract @Nullable PlayerWrapper getPlayer0(@NotNull UUID uuid);
 
-    public static Optional<PlayerWrapper> getPlayerExact(String name) {
+    @Contract("null -> null")
+    public static @Nullable PlayerWrapper getPlayerExact(@Nullable String name) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        if (name == null) {
+            return null;
         }
         return playerMapper.getPlayerExact0(name);
     }
 
-    public static SenderWrapper getConsoleSender() {
+    public static @NotNull SenderWrapper getConsoleSender() {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
@@ -223,7 +236,7 @@ public abstract class PlayerMapper {
         playerMapper.setWhitelisted0(wrapper, whitelisted);
     }
 
-    public static OfflinePlayerWrapper getOfflinePlayer(UUID uuid) {
+    public static @NotNull OfflinePlayerWrapper getOfflinePlayer(@NotNull UUID uuid) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
@@ -234,18 +247,22 @@ public abstract class PlayerMapper {
      * This method may involve a blocking web request to get the UUID for the given name.
      *
      * @param name Name of the player
-     * @return the offline player or empty optional if not found
+     * @return the offline player or null if not found
      * @deprecated see {@link PlayerMapper#getOfflinePlayer(UUID)}
      */
     @Deprecated
-    public static Optional<OfflinePlayerWrapper> getOfflinePlayer(String name) {
+    @Contract("null -> null")
+    public static @Nullable OfflinePlayerWrapper getOfflinePlayer(@Nullable String name) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
+        }
+        if (name == null) {
+            return null;
         }
         return playerMapper.getOfflinePlayer0(name);
     }
 
-    public static BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
+    public static @NotNull BidirectionalConverter<PlayerWrapper> UNSAFE_getPlayerConverter() {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
         }
@@ -255,9 +272,9 @@ public abstract class PlayerMapper {
 
     // abstract methods for implementations
 
-    protected abstract <T> CommandSenderWrapper wrapSender0(T sender);
+    protected abstract <T> @NotNull CommandSenderWrapper wrapSender0(@NotNull T sender);
 
-    public abstract SenderWrapper getConsoleSender0();
+    public abstract @NotNull SenderWrapper getConsoleSender0();
 
     public abstract @Nullable LocationHolder getBedLocation0(@NotNull OfflinePlayerWrapper playerWrapper);
 
@@ -281,9 +298,9 @@ public abstract class PlayerMapper {
 
     public abstract void setWhitelisted0(OfflinePlayerWrapper playerWrapper, boolean whitelisted);
 
-    public abstract OfflinePlayerWrapper getOfflinePlayer0(UUID uuid);
+    public abstract @NotNull OfflinePlayerWrapper getOfflinePlayer0(@NotNull UUID uuid);
 
-    public abstract Optional<OfflinePlayerWrapper> getOfflinePlayer0(String name);
+    public abstract @Nullable OfflinePlayerWrapper getOfflinePlayer0(@NotNull String name);
 
-    public abstract Optional<PlayerWrapper> getPlayerExact0(String name);
+    public abstract @Nullable PlayerWrapper getPlayerExact0(@NotNull String name);
 }

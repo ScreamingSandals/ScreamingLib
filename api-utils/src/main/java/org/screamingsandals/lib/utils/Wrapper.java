@@ -53,13 +53,13 @@ public interface Wrapper {
 
     /**
      * Converts the wrapped object to represent a subclass of the specified class object.
-     * Returns {@link Optional#empty()} if failed to do so.
+     * Returns {@code null} if failed to do so.
      *
      * @param type the class to convert the wrapped object to
      * @param <T> the type to cast the class object of the wrapped object to
      * @return this wrapped object cast to represent a subclass of the specified class object.
      */
-    default <T> @Nullable T asNullable(Class<T> type) {
+    default <T> @Nullable T asNullable(@NotNull Class<T> type) {
         try {
             return as(type);
         } catch (Exception ignored) {

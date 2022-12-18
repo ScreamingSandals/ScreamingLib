@@ -45,7 +45,7 @@ public abstract class BlockMapper {
 
     @Contract("null -> null")
     public static @Nullable BlockHolder resolve(@Nullable Object obj) {
-        return Preconditions.checkNotNull(mapping, "BlockMapper is not initialized yet!").converter.convertOptional(obj).orElse(null);
+        return Preconditions.checkNotNull(mapping, "BlockMapper is not initialized yet!").converter.convertNullable(obj);
     }
 
     public static <T> BlockHolder wrapBlock(T block) {

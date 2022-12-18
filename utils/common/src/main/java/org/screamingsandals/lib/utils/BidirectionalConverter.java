@@ -75,6 +75,10 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
                 .findFirst();
     }
 
+    public <P> @Nullable SpecificWrapper convertNullable(@Nullable P object) {
+        return convertOptional(object).orElse(null);
+    }
+
     @NotNull
     public <P> P convert(@NotNull SpecificWrapper object, @NotNull Class<P> newType) {
         return convertOptional(object, newType).orElseThrow(() ->

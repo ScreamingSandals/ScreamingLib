@@ -22,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.PluginMessageListenerRegistration;
 import org.screamingsandals.lib.CustomPayload;
+import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -59,7 +60,7 @@ public class BukkitCustomPayload extends CustomPayload {
     protected Registration registerIncomingChannel0(String channel, BiConsumer<PlayerWrapper, byte[]> listener) {
         return new BukkitRegistration(Bukkit.getMessenger().registerIncomingPluginChannel(plugin, channel, (channel1, player, message) -> {
             if (channel1.equals(channel)) {
-                listener.accept(PlayerMapper.wrapPlayer(player), message);
+                listener.accept(new BukkitEntityPlayer(player), message);
             }
         }));
     }

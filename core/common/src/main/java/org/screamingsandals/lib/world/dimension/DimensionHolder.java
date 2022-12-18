@@ -16,23 +16,18 @@
 
 package org.screamingsandals.lib.world.dimension;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface DimensionHolder extends ComparableWrapper, RawValueHolder {
-
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
 
     String platformName();
 
@@ -45,19 +40,22 @@ public interface DimensionHolder extends ComparableWrapper, RawValueHolder {
     boolean is(Object... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.DIMENSION)
-     static DimensionHolder of(Object dimension) {
-        return ofOptional(dimension).orElseThrow();
+    static @NotNull DimensionHolder of(@NotNull Object dimension) {
+        var result = ofNullable(dimension);
+        Preconditions.checkNotNullIllegal(result, "Could not find dimension: " + dimension);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.DIMENSION)
-     static Optional<DimensionHolder> ofOptional(Object dimension) {
+    @Contract("null -> null")
+    static @Nullable DimensionHolder ofNullable(@Nullable Object dimension) {
         if (dimension instanceof DimensionHolder) {
-            return Optional.of((DimensionHolder) dimension);
+            return (DimensionHolder) dimension;
         }
         return DimensionMapping.resolve(dimension);
     }
 
-     static List<DimensionHolder> all() {
+    static @NotNull List<@NotNull DimensionHolder> all() {
         return DimensionMapping.getValues();
     }
 }

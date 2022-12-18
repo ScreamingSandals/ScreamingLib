@@ -55,7 +55,7 @@ public interface PlatformEventWrapper extends Wrapper, RawValueHolder {
 
     @Override
     @ApiStatus.Experimental
-    default <T> @Nullable T asNullable(Class<T> type) {
+    default <T> @Nullable T asNullable(@NotNull Class<T> type) {
         return Wrapper.super.asNullable(type);
     }
 }

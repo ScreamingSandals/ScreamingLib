@@ -23,8 +23,4 @@ public interface EntityProjectile extends EntityBasic {
     ProjectileShooter getShooter();
 
     void setShooter(@Nullable ProjectileShooter shooter);
-
-    boolean doesBounce();
-
-    void setBounce(boolean bounce);
 }

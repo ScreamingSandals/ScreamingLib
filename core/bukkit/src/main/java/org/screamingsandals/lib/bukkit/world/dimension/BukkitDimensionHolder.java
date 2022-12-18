@@ -38,7 +38,7 @@ public class BukkitDimensionHolder extends BasicWrapper<World.Environment> imple
         if (object instanceof World.Environment || object instanceof DimensionHolder) {
             return equals(object);
         }
-        return equals(DimensionHolder.ofOptional(object).orElse(null));
+        return equals(DimensionHolder.ofNullable(object));
     }
 
     @Override

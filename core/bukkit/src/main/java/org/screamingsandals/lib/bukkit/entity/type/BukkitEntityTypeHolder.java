@@ -66,7 +66,7 @@ public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements 
             } // TODO: else bypass using NMS on CB-like servers
         }
         // backported tags
-        if (!key.namespace().equals("minecraft")) {
+        if (!"minecraft".equals(key.namespace())) {
             return false;
         }
         var value = key.value();

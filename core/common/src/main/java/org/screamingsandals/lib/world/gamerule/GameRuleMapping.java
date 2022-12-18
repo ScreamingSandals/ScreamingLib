@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.world.gamerule;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.GameRuleHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -29,7 +32,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
@@ -55,19 +57,20 @@ public abstract class GameRuleMapping extends AbstractTypeMapper<GameRuleHolder>
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_RULE)
-    @OfMethodAlternative(value = GameRuleHolder.class, methodName = "ofOptional")
-    public static Optional<GameRuleHolder> resolve(Object gameRule) {
+    @OfMethodAlternative(value = GameRuleHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable GameRuleHolder resolve(@Nullable Object gameRule) {
         Preconditions.checkNotNull(gameRuleMapping, "GameRuleMapping is not initialized yet!");
 
         if (gameRule == null) {
-            return Optional.empty();
+            return null;
         }
 
-        return gameRuleMapping.gameRuleConverter.convertOptional(gameRule).or(() -> gameRuleMapping.resolveFromMapping(gameRule));
+        return gameRuleMapping.gameRuleConverter.convertOptional(gameRule).or(() -> gameRuleMapping.resolveFromMapping(gameRule)).orElse(null);
     }
 
     @OfMethodAlternative(value = GameRuleHolder.class, methodName = "all")
-    public static List<GameRuleHolder> getValues() {
+    public static @NotNull List<@NotNull GameRuleHolder> getValues() {
         Preconditions.checkNotNull(gameRuleMapping, "GameRuleMapping is not initialized yet!");
         return Collections.unmodifiableList(gameRuleMapping.values);
     }

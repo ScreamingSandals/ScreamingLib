@@ -24,6 +24,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 
@@ -41,7 +42,7 @@ public class PaperScreamingCloudManager extends PaperCommandManager<CommandSende
         super(owningPlugin, commandCoordinator,
                 sender -> {
                     if (sender instanceof Player) {
-                        return PlayerMapper.wrapPlayer(sender);
+                        return new BukkitEntityPlayer((Player) sender);
                     }
                     return PlayerMapper.wrapSender(sender);
                 }, sender -> {

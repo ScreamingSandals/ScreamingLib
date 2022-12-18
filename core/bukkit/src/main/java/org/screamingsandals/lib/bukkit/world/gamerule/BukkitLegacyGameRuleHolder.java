@@ -36,7 +36,7 @@ public class BukkitLegacyGameRuleHolder extends BasicWrapper<String> implements 
         if (object instanceof GameRuleHolder) {
             return equals(object);
         }
-        return equals(GameRuleHolder.ofOptional(object).orElse(null));
+        return equals(GameRuleHolder.ofNullable(object));
     }
 
     @Override

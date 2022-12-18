@@ -61,7 +61,7 @@ public abstract class LocationMapper {
         if (mapping == null) {
             throw new UnsupportedOperationException("LocationMapper is not initialized yet.");
         }
-        return mapping.converter.convertOptional(obj).toNullable();
+        return mapping.converter.convertNullable(obj);
     }
 
     /**

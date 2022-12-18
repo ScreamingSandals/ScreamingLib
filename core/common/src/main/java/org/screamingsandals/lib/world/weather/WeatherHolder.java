@@ -16,23 +16,18 @@
 
 package org.screamingsandals.lib.world.weather;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface WeatherHolder extends ComparableWrapper, RawValueHolder {
-
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
 
     String platformName();
 
@@ -45,19 +40,22 @@ public interface WeatherHolder extends ComparableWrapper, RawValueHolder {
     boolean is(Object... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.WEATHER)
-    static WeatherHolder of(Object weather) {
-        return ofOptional(weather).orElseThrow();
+    static @NotNull WeatherHolder of(@NotNull Object weather) {
+        var result = ofNullable(weather);
+        Preconditions.checkNotNullIllegal(result, "Could not find weather: " + weather);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.WEATHER)
-    static Optional<WeatherHolder> ofOptional(Object weather) {
+    @Contract("null -> null")
+    static @Nullable WeatherHolder ofNullable(@Nullable Object weather) {
         if (weather instanceof WeatherHolder) {
-            return Optional.of((WeatherHolder) weather);
+            return (WeatherHolder) weather;
         }
         return WeatherMapping.resolve(weather);
     }
 
-    static List<WeatherHolder> all() {
+    static @NotNull List<@NotNull WeatherHolder> all() {
         return WeatherMapping.getValues();
     }
 }

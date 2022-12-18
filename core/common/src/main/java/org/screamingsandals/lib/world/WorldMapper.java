@@ -60,7 +60,7 @@ public abstract class WorldMapper {
         if (mapping == null) {
             throw new UnsupportedOperationException("WorldMapper is not initialized yet.");
         }
-        return mapping.converter.convertOptional(obj).toNullable();
+        return mapping.converter.convertNullable(obj);
     }
 
     /**

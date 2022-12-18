@@ -38,7 +38,7 @@ public class BukkitGameRuleHolder extends BasicWrapper<GameRule<?>> implements G
         if (object instanceof GameRule || object instanceof GameRuleHolder) {
             return equals(object);
         }
-        return equals(GameRuleHolder.ofOptional(object).orElse(null));
+        return equals(GameRuleHolder.ofNullable(object));
     }
 
     @Override

@@ -16,24 +16,19 @@
 
 package org.screamingsandals.lib.world.gamerule;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface GameRuleHolder extends ComparableWrapper {
 
     String platformName();
-
-    /**
-     * Use fluent form!!!
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_RULE)
@@ -44,19 +39,22 @@ public interface GameRuleHolder extends ComparableWrapper {
     boolean is(Object... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_RULE)
-    static GameRuleHolder of(Object gameRule) {
-        return ofOptional(gameRule).orElseThrow();
+    static @NotNull GameRuleHolder of(@NotNull Object gameRule) {
+        var result = ofNullable(gameRule);
+        Preconditions.checkNotNullIllegal(result, "Could not find game rule: " + gameRule);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_RULE)
-    static Optional<GameRuleHolder> ofOptional(Object gameRule) {
+    @Contract("null -> null")
+    static @Nullable GameRuleHolder ofNullable(@Nullable Object gameRule) {
         if (gameRule instanceof GameRuleHolder) {
-            return Optional.of((GameRuleHolder) gameRule);
+            return (GameRuleHolder) gameRule;
         }
         return GameRuleMapping.resolve(gameRule);
     }
 
-    static List<GameRuleHolder> all() {
+    static @NotNull List<@NotNull GameRuleHolder> all() {
         return GameRuleMapping.getValues();
     }
 }

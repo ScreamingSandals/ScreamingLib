@@ -278,7 +278,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
 
     @Override
     public @Nullable WeatherHolder getPlayerWeather() {
-        return WeatherHolder.ofOptional(((Player) wrappedObject).getPlayerWeather()).toNullable();
+        return WeatherHolder.ofNullable(((Player) wrappedObject).getPlayerWeather());
     }
 
     @Override

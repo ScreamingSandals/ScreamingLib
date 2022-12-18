@@ -37,7 +37,7 @@ public class BukkitDifficultyHolder extends BasicWrapper<Difficulty> implements 
         if (object instanceof DifficultyHolder || object instanceof Difficulty) {
             return equals(object);
         }
-        return equals(DifficultyHolder.ofOptional(object).orElse(null));
+        return equals(DifficultyHolder.ofNullable(object));
     }
 
     @Override

@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.world.weather;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.WeatherHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -29,7 +32,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
@@ -55,19 +57,20 @@ public abstract class WeatherMapping extends AbstractTypeMapper<WeatherHolder> {
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.WEATHER)
-    @OfMethodAlternative(value = WeatherHolder.class, methodName = "ofOptional")
-    public static Optional<WeatherHolder> resolve(Object weather) {
+    @OfMethodAlternative(value = WeatherHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable WeatherHolder resolve(@Nullable Object weather) {
         Preconditions.checkNotNull(weatherMapping, "WeatherMapping is not initialized yet!");
 
         if (weather == null) {
-            return Optional.empty();
+            return null;
         }
 
-        return weatherMapping.weatherConverter.convertOptional(weather).or(() -> weatherMapping.resolveFromMapping(weather));
+        return weatherMapping.weatherConverter.convertOptional(weather).or(() -> weatherMapping.resolveFromMapping(weather)).orElse(null);
     }
 
     @OfMethodAlternative(value = WeatherHolder.class, methodName = "all")
-    public static List<WeatherHolder> getValues() {
+    public static @NotNull List<@NotNull WeatherHolder> getValues() {
         Preconditions.checkNotNull(weatherMapping, "WeatherMapping is not initialized yet!");
         return Collections.unmodifiableList(weatherMapping.values);
     }

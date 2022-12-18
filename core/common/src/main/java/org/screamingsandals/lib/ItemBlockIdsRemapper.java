@@ -691,7 +691,7 @@ public abstract class ItemBlockIdsRemapper {
                 .maskedBoolean("eye", 0x4)
                 .build();
         blockTypeMapper.getBlockDataTranslators().put(k -> k.is("END_PORTAL_FRAME", "ENDER_PORTAL_FRAME"), enderPortal);
-        f2l("END_STONE_BRICKS", "END_BRICKS", 121, "ENDER_STONE");
+        f2l("END_STONE", 121, "ENDER_STONE");
         f2l("DRAGON_EGG", 122);
         f2l("REDSTONE_LAMP", 123, "REDSTONE_LAMP_OFF");
         f2lBlock("REDSTONE_LAMP", Map.of("lit", "true"), "LIT_REDSTONE_LAMP", 124, 0, "REDSTONE_LAMP_ON");
@@ -939,7 +939,7 @@ public abstract class ItemBlockIdsRemapper {
         f2lBlock("PURPUR_SLAB", Map.of("type", "top"), "PURPUR_SLAB", 182, 8);
         f2lBlock("PURPUR_SLAB", Map.of("type", "double"), "PURPUR_DOUBLE_SLAB", 204, 0);
 
-        f2l("END_BRICKS", 206);
+        f2l("END_STONE_BRICKS", "END_BRICKS", 206);
         f2lBlock("BEETROOTS", 207, "BEETROOTS");
         for (int i = 0; i <= 3; i++) {
             f2lBlock("BEETROOTS", Map.of("age", String.valueOf(i)), 207, i, "BEETROOTS");

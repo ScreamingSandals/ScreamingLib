@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.world.dimension;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.DimensionHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -28,7 +31,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
@@ -56,21 +58,22 @@ public abstract class DimensionMapping extends AbstractTypeMapper<DimensionHolde
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.DIMENSION)
-    @OfMethodAlternative(value = DimensionHolder.class, methodName = "ofOptional")
-    public static Optional<DimensionHolder> resolve(Object dimension) {
+    @OfMethodAlternative(value = DimensionHolder.class, methodName = "ofNullable")
+    @Contract("null -> null")
+    public static @Nullable DimensionHolder resolve(@Nullable Object dimension) {
         if (dimensionMapping == null) {
             throw new UnsupportedOperationException("DimensionMapping is not initialized yet.");
         }
 
         if (dimension == null) {
-            return Optional.empty();
+            return null;
         }
 
-        return dimensionMapping.dimensionConverter.convertOptional(dimension).or(() -> dimensionMapping.resolveFromMapping(dimension));
+        return dimensionMapping.dimensionConverter.convertOptional(dimension).or(() -> dimensionMapping.resolveFromMapping(dimension)).orElse(null);
     }
 
     @OfMethodAlternative(value = DimensionHolder.class, methodName = "all")
-    public static List<DimensionHolder> getValues() {
+    public static @NotNull List<@NotNull DimensionHolder> getValues() {
         if (dimensionMapping == null) {
             throw new UnsupportedOperationException("DimensionMapping is not initialized yet.");
         }

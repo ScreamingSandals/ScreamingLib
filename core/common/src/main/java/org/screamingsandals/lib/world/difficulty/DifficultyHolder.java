@@ -16,23 +16,18 @@
 
 package org.screamingsandals.lib.world.difficulty;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface DifficultyHolder extends ComparableWrapper, RawValueHolder {
-
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
 
     String platformName();
 
@@ -43,19 +38,22 @@ public interface DifficultyHolder extends ComparableWrapper, RawValueHolder {
     boolean is(Object... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.DIFFICULTY)
-    static DifficultyHolder of(Object difficulty) {
-        return ofOptional(difficulty).orElseThrow();
+    static @NotNull DifficultyHolder of(@NotNull Object difficulty) {
+        var result = ofNullable(difficulty);
+        Preconditions.checkNotNullIllegal(result, "Could not find difficulty: " + difficulty);
+        return result;
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.DIFFICULTY)
-    static Optional<DifficultyHolder> ofOptional(Object difficulty) {
+    @Contract("null -> null")
+    static @Nullable DifficultyHolder ofNullable(@Nullable Object difficulty) {
         if (difficulty instanceof DifficultyHolder) {
-            return Optional.of((DifficultyHolder) difficulty);
+            return (DifficultyHolder) difficulty;
         }
         return DifficultyMapping.resolve(difficulty);
     }
 
-    static List<DifficultyHolder> all() {
+    static @NotNull List<@NotNull DifficultyHolder> all() {
         return DifficultyMapping.getValues();
     }
 }

@@ -19,6 +19,7 @@ package org.screamingsandals.lib.utils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -30,13 +31,13 @@ import java.util.Objects;
  */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class BasicWrapper<O> implements Wrapper, RawValueHolder {
-    protected transient final O wrappedObject;
+    protected transient final @NotNull O wrappedObject;
 
-    public static <O> BasicWrapper<O> wrap(O wrappedObject) {
+    public static <O> @NotNull BasicWrapper<O> wrap(@NotNull O wrappedObject) {
         return new BasicWrapper<>(wrappedObject);
     }
 
-    public Object raw() {
+    public @NotNull Object raw() {
         return wrappedObject;
     }
 
@@ -56,7 +57,7 @@ public class BasicWrapper<O> implements Wrapper, RawValueHolder {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (obj instanceof RawValueHolder) {
             obj = ((RawValueHolder) obj).raw();
         }
@@ -66,5 +67,10 @@ public class BasicWrapper<O> implements Wrapper, RawValueHolder {
     @Override
     public int hashCode() {
         return Objects.hashCode(wrappedObject);
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "(" + wrappedObject.toString() + ")";
     }
 }

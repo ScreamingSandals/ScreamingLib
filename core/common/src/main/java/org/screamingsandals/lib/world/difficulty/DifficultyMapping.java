@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.world.difficulty;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.DifficultyHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -28,7 +31,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
@@ -56,21 +58,22 @@ public abstract class DifficultyMapping extends AbstractTypeMapper<DifficultyHol
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.DIFFICULTY)
-    @OfMethodAlternative(value = DifficultyHolder.class, methodName = "ofOptional")
-    public static Optional<DifficultyHolder> resolve(Object difficulty) {
+    @OfMethodAlternative(value = DifficultyHolder.class, methodName = "ofNullable")
+    @Contract(value = "null -> null")
+    public static @Nullable DifficultyHolder resolve(Object difficulty) {
         if (difficultyMapping == null) {
             throw new UnsupportedOperationException("DifficultyMapping is not initialized yet.");
         }
 
         if (difficulty == null) {
-            return Optional.empty();
+            return null;
         }
 
-        return difficultyMapping.difficultyConverter.convertOptional(difficulty).or(() -> difficultyMapping.resolveFromMapping(difficulty));
+        return difficultyMapping.difficultyConverter.convertOptional(difficulty).or(() -> difficultyMapping.resolveFromMapping(difficulty)).orElse(null);
     }
 
     @OfMethodAlternative(value = DifficultyHolder.class, methodName = "all")
-    public static List<DifficultyHolder> getValues() {
+    public static @NotNull List<@NotNull DifficultyHolder> getValues() {
         if (difficultyMapping == null) {
             throw new UnsupportedOperationException("DifficultyMapping is not initialized yet.");
         }

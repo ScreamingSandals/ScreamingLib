@@ -24,6 +24,7 @@ import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeHolder;
+import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.nms.accessors.*;
@@ -98,7 +99,7 @@ public class BukkitServer extends Server {
     public List<PlayerWrapper> getConnectedPlayers0() {
         return Bukkit.getOnlinePlayers()
                 .stream()
-                .map(PlayerMapper::wrapPlayer)
+                .map(BukkitEntityPlayer::new)
                 .collect(Collectors.toList());
     }
 
@@ -106,7 +107,7 @@ public class BukkitServer extends Server {
     public List<PlayerWrapper> getConnectedPlayersFromWorld0(WorldHolder holder) {
         return holder.as(World.class).getPlayers()
                 .stream()
-                .map(PlayerMapper::wrapPlayer)
+                .map(BukkitEntityPlayer::new)
                 .collect(Collectors.toList());
     }
 

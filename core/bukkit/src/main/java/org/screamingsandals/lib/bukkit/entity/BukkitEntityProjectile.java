@@ -21,7 +21,6 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.BlockProjectileSource;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.EntityProjectile;
 import org.screamingsandals.lib.entity.ProjectileShooter;
@@ -46,25 +45,5 @@ public class BukkitEntityProjectile extends BukkitEntityBasic implements EntityP
     @Override
     public void setShooter(@Nullable ProjectileShooter shooter) {
         ((Projectile) wrappedObject).setShooter(shooter != null ? shooter.as(ProjectileSource.class) : null);
-    }
-
-    @Override
-    @Deprecated // deprecated for removal in the latest Paper
-    public boolean doesBounce() {
-        try {
-            return ((Projectile) wrappedObject).doesBounce();
-        } catch (Throwable ignored) {
-            return false; // fix for future removal
-        }
-    }
-
-    @Override
-    @Deprecated // deprecated for removal in the latest Paper
-    public void setBounce(boolean bounce) {
-        try {
-            ((Projectile) wrappedObject).setBounce(bounce);
-        } catch (Throwable ignored) {
-            // fix for future removal
-        }
     }
 }
