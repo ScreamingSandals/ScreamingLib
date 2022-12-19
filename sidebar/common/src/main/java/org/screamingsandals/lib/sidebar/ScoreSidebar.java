@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.sidebar;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.visuals.DatableVisual;
 
@@ -25,13 +27,17 @@ public interface ScoreSidebar extends DatableVisual<ScoreSidebar>, TeamedSidebar
      *
      * @return created Scoreboard
      */
-    static ScoreSidebar of() {
+    @Contract(value = "-> new", pure = true)
+    static @NotNull ScoreSidebar of() {
         return SidebarManager.scoreboard();
     }
 
-    ScoreSidebar entity(String identifier, Component displayName);
+    @Contract("_, _ -> this")
+    @NotNull ScoreSidebar entity(@NotNull String identifier, @NotNull Component displayName);
 
-    ScoreSidebar score(String identifier, int score);
+    @Contract("_, _ -> this")
+    @NotNull ScoreSidebar score(@NotNull String identifier, int score);
 
-    ScoreSidebar removeEntity(String identifier);
+    @Contract("_ -> this")
+    @NotNull ScoreSidebar removeEntity(@NotNull String identifier);
 }

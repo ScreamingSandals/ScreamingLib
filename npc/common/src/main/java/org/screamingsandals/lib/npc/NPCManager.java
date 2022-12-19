@@ -16,6 +16,9 @@
 
 package org.screamingsandals.lib.npc;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.SPlayerMoveEvent;
@@ -30,14 +33,13 @@ import org.screamingsandals.lib.visuals.LocatableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service(dependsOn = {
         HologramManager.class
 })
 public class NPCManager extends AbstractVisualsManager<NPC> {
-    private static NPCManager manager = null;
+    private static @Nullable NPCManager manager;
 
     public NPCManager() {
         Preconditions.checkArgument(manager == null, "NPCManager has already been initialized!");
@@ -48,32 +50,35 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
         return manager != null;
     }
 
-    public static Map<UUID, NPC> getActiveNPCS() {
+    public static @NotNull Map<@NotNull UUID, @NotNull NPC> getActiveNPCS() {
         return Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!").getActiveVisuals();
     }
 
-    public static Optional<NPC> getNPC(UUID uuid) {
+    @Contract("null -> null")
+    public static @Nullable NPC getNPC(@Nullable UUID uuid) {
         Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!");
-        return Optional.ofNullable(getActiveNPCS().get(uuid));
+        return getActiveNPCS().get(uuid);
     }
 
-    public static void addNPC(NPC npc) {
+    public static void addNPC(@NotNull NPC npc) {
         Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!").addVisual(npc.uuid(), npc);
     }
 
-    public static void removeNPC(UUID uuid) {
-        Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!").removeVisual(uuid);
+    public static void removeNPC(@Nullable UUID uuid) {
+        if (uuid != null) {
+            Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!").removeVisual(uuid);
+        }
     }
 
-    public static void removeNPC(NPC npc) {
+    public static void removeNPC(@NotNull NPC npc) {
         removeNPC(npc.uuid());
     }
 
-    public static NPC npc(LocationHolder holder) {
+    public static @NotNull NPC npc(@NotNull LocationHolder holder) {
         return npc(UUID.randomUUID(), holder, true);
     }
 
-    public static NPC npc(UUID uuid, LocationHolder holder, boolean touchable) {
+    public static @NotNull NPC npc(@NotNull UUID uuid, @NotNull LocationHolder holder, boolean touchable) {
         Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!");
         final var npc = new NPCImpl(uuid, holder, touchable);
         addNPC(npc);
@@ -81,7 +86,7 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
     }
 
     @OnEvent
-    public void onPlayerMove(SPlayerMoveEvent event) {
+    public void onPlayerMove(@NotNull SPlayerMoveEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
         }
@@ -98,7 +103,7 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
     }
 
     @Override
-    public void fireVisualTouchEvent(PlayerWrapper sender, NPC visual, InteractType interactType) {
+    public void fireVisualTouchEvent(@NotNull PlayerWrapper sender, @NotNull NPC visual, @NotNull InteractType interactType) {
         EventManager.fireAsync(new NPCInteractEvent(sender, visual, interactType));
     }
 }

@@ -16,13 +16,15 @@
 
 package org.screamingsandals.lib.visuals;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -36,7 +38,7 @@ public interface LinedVisual<T> extends Visual<T> {
      *
      * @return currently displayed lines.
      */
-    Map<Integer, TextEntry> lines();
+    @NotNull Map<@NotNull Integer, @NotNull TextEntry> lines();
 
     /**
      * Tries to get a line by given identifier.
@@ -44,7 +46,7 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param identifier where's my identity?!
      * @return this visual
      */
-    Optional<Map.Entry<Integer, TextEntry>> lineByIdentifier(String identifier);
+    @Nullable Map.Entry<Integer, TextEntry> lineByIdentifier(@NotNull String identifier);
 
     /**
      * Adds new line to this visual and moves everything else 1 line down.
@@ -52,7 +54,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text text to add
      * @return this visual
      */
-    T firstLine(Component text);
+    @Contract("_ -> this")
+    @NotNull T firstLine(@NotNull Component text);
 
     /**
      * Adds new line to this visual and moves everything else 1 line down.
@@ -60,7 +63,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text text to add
      * @return this visual
      */
-    T firstLine(ComponentLike text);
+    @Contract("_ -> this")
+    @NotNull T firstLine(@NotNull ComponentLike text);
 
     /**
      * Adds new line to this visual and moves everything else 1 line down.
@@ -68,7 +72,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text text to add
      * @return this visual
      */
-    T firstLine(TextEntry text);
+    @Contract("_ -> this")
+    @NotNull T firstLine(@NotNull TextEntry text);
 
     /**
      * Adds new line to the bottom of this visual.
@@ -76,7 +81,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text text to add
      * @return this visual
      */
-    T bottomLine(Component text);
+    @Contract("_ -> this")
+    @NotNull T bottomLine(@NotNull Component text);
 
     /**
      * Adds new line to the bottom of this visual.
@@ -84,7 +90,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text text to add
      * @return this visual
      */
-    T bottomLine(ComponentLike text);
+    @Contract("_ -> this")
+    @NotNull T bottomLine(@NotNull ComponentLike text);
 
     /**
      * Adds new line to the bottom of this visual.
@@ -92,7 +99,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text text to add
      * @return this visual
      */
-    T bottomLine(TextEntry text);
+    @Contract("_ -> this")
+    @NotNull T bottomLine(@NotNull TextEntry text);
 
     /**
      * Replaces a line that has {@link TextEntry#getIdentifier()} on it.
@@ -100,7 +108,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text text to replace
      * @return this visual
      */
-    T replaceLine(TextEntry text);
+    @Contract("_ -> this")
+    @NotNull T replaceLine(@NotNull TextEntry text);
 
     /**
      * Replaces a line.
@@ -109,7 +118,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text  text to replace
      * @return this visual
      */
-    T replaceLine(Integer where, Component text);
+    @Contract("_, _ -> this")
+    @NotNull T replaceLine(@NotNull Integer where, @NotNull Component text);
 
     /**
      * Replaces a line.
@@ -118,7 +128,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text  text to replace
      * @return this visual
      */
-    T replaceLine(Integer where, ComponentLike text);
+    @Contract("_, _ -> this")
+    @NotNull T replaceLine(@NotNull Integer where, @NotNull ComponentLike text);
 
     /**
      * Replaces a line.
@@ -127,7 +138,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text  text to replace
      * @return this visual
      */
-    T replaceLine(Integer where, TextEntry text);
+    @Contract("_, _ -> this")
+    @NotNull T replaceLine(@NotNull Integer where, @NotNull TextEntry text);
 
     /**
      * Replaces all lines.
@@ -135,7 +147,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param lines new lines :)
      * @return this visual
      */
-    T setLines(Map<Integer, TextEntry> lines);
+    @Contract("_ -> this")
+    @NotNull T setLines(@NotNull Map<@NotNull Integer, @NotNull TextEntry> lines);
 
     /**
      * Replaces all lines.
@@ -143,15 +156,19 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param lines new lines :)
      * @return this visual
      */
-    T setLines(List<Component> lines);
+    @Contract("_ -> this")
+    @NotNull T setLines(@NotNull List<@NotNull Component> lines);
 
     /**
      * Replaces all lines.
      *
      * @param lines new lines :)
      * @return this visual
+     * @deprecated Set does not have to preserve order. Use {@link #setLines(List)} instead.
      */
-    T setLines(Set<TextEntry> lines);
+    @Deprecated
+    @Contract("_ -> this")
+    @NotNull T setLines(@NotNull Set<@NotNull TextEntry> lines);
 
     /**
      * Creates a new line and moves everything bellow if anything is already on that line.
@@ -160,7 +177,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text  text to add
      * @return this visual
      */
-    T newLine(Integer where, Component text);
+    @Contract("_, _ -> this")
+    @NotNull T newLine(@NotNull Integer where, @NotNull Component text);
 
     /**
      * Creates a new line and moves everything bellow if anything is already on that line.
@@ -169,7 +187,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text  text to add
      * @return this visual
      */
-    T newLine(Integer where, ComponentLike text);
+    @Contract("_, _ -> this")
+    @NotNull T newLine(@NotNull Integer where, @NotNull ComponentLike text);
 
     /**
      * Creates a new line and moves everything bellow if anything is already on that line.
@@ -178,7 +197,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param text  text to add
      * @return this visual
      */
-    T newLine(Integer where, TextEntry text);
+    @Contract("_, _ -> this")
+    @NotNull T newLine(@NotNull Integer where, @NotNull TextEntry text);
 
     /**
      * Removes line on given location.
@@ -186,7 +206,8 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param where where to remove
      * @return this visual
      */
-    T removeLine(Integer where);
+    @Contract("_ -> this")
+    @NotNull T removeLine(@NotNull Integer where);
 
     /**
      * Removes line by given identifier.
@@ -194,5 +215,6 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param identifier identifier to remove
      * @return this visual
      */
-    T removeLine(String identifier);
+    @Contract("_ -> this")
+    @NotNull T removeLine(@NotNull String identifier);
 }

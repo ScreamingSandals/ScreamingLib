@@ -20,6 +20,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -120,7 +122,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
 
     @Override
-    public void onViewerAdded(PlayerWrapper viewer, boolean checkDistance) {
+    public void onViewerAdded(@NotNull PlayerWrapper viewer, boolean checkDistance) {
         if (shown() && viewer.isOnline()) {
             hologram.addViewer(viewer);
             createSpawnPackets().forEach(packet -> packet.sendPacket(viewer));
@@ -131,7 +133,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     }
 
     @Override
-    public void onViewerRemoved(PlayerWrapper viewer, boolean checkDistance) {
+    public void onViewerRemoved(@NotNull PlayerWrapper viewer, boolean checkDistance) {
         if (viewer.isOnline()) {
             hologram.removeViewer(viewer);
             createPlayerTeamPacket(SClientboundSetPlayerTeamPacket.Mode.REMOVE).sendPacket(viewer);
@@ -174,8 +176,9 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         return this.entityId == entityId;
     }
 
+    @Contract("_ -> this")
     @Override
-    public NPC update(UpdateStrategy strategy) {
+    public @NotNull NPC update(@NotNull UpdateStrategy strategy) {
         if (shown()) {
             switch (strategy) {
                 case POSITION:
@@ -195,8 +198,9 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         return this;
     }
 
+    @Contract("-> this")
     @Override
-    public NPC show() {
+    public @NotNull NPC show() {
         if (visible) {
             return this;
         }
@@ -206,8 +210,9 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         return this;
     }
 
+    @Contract("-> this")
     @Override
-    public NPC hide() {
+    public @NotNull NPC hide() {
         if (!visible) {
             return this;
         }
@@ -226,14 +231,16 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         NPCManager.removeNPC(this);
     }
 
+    @Contract("_ -> this")
     @Override
-    public NPC title(Component title) {
+    public @NotNull NPC title(@NotNull Component title) {
         hologram.title(title);
         return this;
     }
 
+    @Contract("_ -> this")
     @Override
-    public NPC title(ComponentLike title) {
+    public @NotNull NPC title(@NotNull ComponentLike title) {
         hologram.title(title);
         return null;
     }

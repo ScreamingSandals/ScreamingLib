@@ -18,7 +18,9 @@ package org.screamingsandals.lib.lang;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.lang.container.TranslationContainer;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.spectator.Component;
@@ -27,25 +29,27 @@ import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 /**
  * Access point for default values.
  */
+@UtilityClass
 public class Lang {
     /* Package Private, we want this customizable */
+    @SuppressWarnings("PackageVisibleField")
     @Getter
-    static MiniMessageParser MINIMESSAGE = MiniMessageParser.INSTANCE;
+    static @NotNull MiniMessageParser MINIMESSAGE = MiniMessageParser.INSTANCE;
 
     @Getter
-    private static LangService defaultService;
+    private static @Nullable LangService defaultService;
     @Getter
     @Setter
-    private static Component defaultPrefix = Component.empty();
+    private static @NotNull Component defaultPrefix = Component.empty();
 
-    public static void initDefault(LangService defaultService) {
+    public static void initDefault(@NotNull LangService defaultService) {
         if (Lang.defaultService != null) {
             throw new UnsupportedOperationException("Already initialized");
         }
         Lang.defaultService = defaultService;
     }
 
-    public static TranslationContainer getFor(CommandSenderWrapper sender) {
+    public static @NotNull TranslationContainer getFor(@NotNull CommandSenderWrapper sender) {
         if (defaultService == null) {
             throw new UnsupportedOperationException("Not initialized yet");
         }

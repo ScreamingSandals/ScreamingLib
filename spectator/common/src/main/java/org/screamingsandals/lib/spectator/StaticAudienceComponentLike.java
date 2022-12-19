@@ -34,7 +34,7 @@ public final class StaticAudienceComponentLike implements AudienceComponentLike 
     }
 
     @Override
-    public Component asComponent() {
+    public @NotNull Component asComponent() {
         return component;
     }
 }

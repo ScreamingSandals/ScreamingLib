@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.healthindicator;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -39,11 +41,13 @@ public interface HealthIndicator extends DatableVisual<HealthIndicator> {
 
     HealthIndicator removeTrackedPlayer(PlayerWrapper player);
 
-    default HealthIndicator title(Component component) {
+    @Contract("_ -> this")
+    default @NotNull HealthIndicator title(@NotNull Component component) {
         return symbol(component);
     }
 
-    default HealthIndicator title(ComponentLike component) {
+    @Contract("_ -> this")
+    default @NotNull HealthIndicator title(@NotNull ComponentLike component) {
         return symbol(component);
     }
 }

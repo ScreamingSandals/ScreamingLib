@@ -139,7 +139,7 @@ public abstract class AttributeMapping {
         if (attributeMapping == null) {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }
-        return attributeMapping.attributeModifierConverter.convertOptional(attributeModifier).toNullable();
+        return attributeMapping.attributeModifierConverter.convertNullable(attributeModifier);
     }
 
     @Contract("null -> null")
@@ -147,7 +147,7 @@ public abstract class AttributeMapping {
         if (attributeMapping == null) {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }
-        return attributeMapping.itemAttributeConverter.convertOptional(attribute).toNullable();
+        return attributeMapping.itemAttributeConverter.convertNullable(attribute);
     }
 
     public static <T> T convertItemAttributeHolder(ItemAttributeHolder holder, Class<T> newType) {

@@ -16,14 +16,16 @@
 
 package org.screamingsandals.lib.spectator;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.event.hover.Content;
 import org.screamingsandals.lib.spectator.event.hover.ContentLike;
 
+@FunctionalInterface
 public interface ComponentLike extends ContentLike, ComponentBuilderApplicable {
-    Component asComponent();
+    @NotNull Component asComponent();
 
     @Override
-    default Content asContent() {
+    default @NotNull Content asContent() {
         return asComponent();
     }
 

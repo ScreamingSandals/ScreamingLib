@@ -18,6 +18,8 @@ package org.screamingsandals.lib.visuals.impl;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.visuals.Visual;
 import java.util.Collection;
@@ -26,31 +28,32 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
-    protected final List<PlayerWrapper> viewers;
-    protected final UUID uuid;
+    protected final @NotNull List<@NotNull PlayerWrapper> viewers;
+    protected final @NotNull UUID uuid;
     protected volatile boolean visible;
     @Accessors(chain = true, fluent = true)
     @Getter
     protected volatile boolean destroyed;
 
-    public AbstractVisual(UUID uuid) {
+    public AbstractVisual(@NotNull UUID uuid) {
         this.uuid = uuid;
         this.viewers = new CopyOnWriteArrayList<>();
     }
 
     @Override
-    public UUID uuid() {
+    public @NotNull UUID uuid() {
         return uuid;
     }
 
     @Override
-    public Collection<PlayerWrapper> viewers() {
+    public @NotNull Collection<@NotNull PlayerWrapper> viewers() {
         return List.copyOf(viewers);
     }
 
+    @Contract("_ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public T addViewer(PlayerWrapper viewer) {
+    public @NotNull T addViewer(@NotNull PlayerWrapper viewer) {
         if (viewer.isOnline() && !viewers.contains(viewer)) {
             viewers.add(viewer);
             onViewerAdded(viewer, true);
@@ -58,9 +61,10 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
         return (T) this;
     }
 
+    @Contract("_ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public T removeViewer(PlayerWrapper viewer) {
+    public @NotNull T removeViewer(@NotNull PlayerWrapper viewer) {
         if (viewers.contains(viewer)) {
             viewers.remove(viewer);
             if (viewer.isOnline()) {
@@ -70,9 +74,10 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
         return (T) this;
     }
 
+    @Contract("-> this")
     @SuppressWarnings("unchecked")
     @Override
-    public T clearViewers() {
+    public @NotNull T clearViewers() {
         hide();
         viewers.clear();
         return (T) this;
@@ -89,7 +94,7 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
     }
 
     @Override
-    public boolean visibleTo(PlayerWrapper player) {
+    public boolean visibleTo(@NotNull PlayerWrapper player) {
         return viewers.contains(player);
     }
 }

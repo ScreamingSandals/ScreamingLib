@@ -16,6 +16,10 @@
 
 package org.screamingsandals.lib.sidebar;
 
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.packet.PacketMapper;
 import org.screamingsandals.lib.utils.Controllable;
@@ -24,7 +28,6 @@ import org.screamingsandals.lib.visuals.Visual;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service(dependsOn = {
@@ -32,11 +35,11 @@ import java.util.UUID;
         PacketMapper.class
 })
 public class SidebarManager {
-    private static SidebarManager manager;
-    protected final Map<UUID, TeamedSidebar<?>> activeSidebars = new HashMap<>();
+    private static @Nullable SidebarManager manager;
+    protected final @NotNull Map<@NotNull UUID, @NotNull TeamedSidebar<?>> activeSidebars = new HashMap<>();
 
-    @Deprecated // internal use only
-    public SidebarManager(Controllable controllable) {
+    @ApiStatus.Internal
+    public SidebarManager(@NotNull Controllable controllable) {
         if (manager != null) {
             throw new UnsupportedOperationException("SidebarManager is already initialized!");
         }
@@ -45,7 +48,7 @@ public class SidebarManager {
         controllable.disable(this::destroy);
     }
 
-    public static Map<UUID, TeamedSidebar<?>> getActiveSidebars() {
+    public static @NotNull Map<@NotNull UUID, @NotNull TeamedSidebar<?>> getActiveSidebars() {
         if (manager == null) {
             throw new UnsupportedOperationException("SidebarManager is not initialized yet!");
         }
@@ -54,15 +57,16 @@ public class SidebarManager {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends TeamedSidebar<T>> Optional<TeamedSidebar<T>> getSidebar(UUID uuid) {
+    @Contract("null -> null")
+    public static <T extends TeamedSidebar<T>> @Nullable TeamedSidebar<T> getSidebar(@Nullable UUID uuid) {
         if (manager == null) {
             throw new UnsupportedOperationException("SidebarManager is not initialized yet!");
         }
 
-        return Optional.ofNullable((TeamedSidebar<T>) manager.activeSidebars.get(uuid));
+        return (TeamedSidebar<T>) manager.activeSidebars.get(uuid);
     }
 
-    public static void addSidebar(TeamedSidebar<?> sidebar) {
+    public static void addSidebar(@NotNull TeamedSidebar<?> sidebar) {
         if (manager == null) {
             throw new UnsupportedOperationException("SidebarManager is not initialized yet!");
         }
@@ -70,11 +74,14 @@ public class SidebarManager {
         manager.activeSidebars.put(sidebar.uuid(), sidebar);
     }
 
-    public static void removeSidebar(UUID uuid) {
-        getSidebar(uuid).ifPresent(SidebarManager::removeSidebar);
+    public static void removeSidebar(@Nullable UUID uuid) {
+        var sidebar = getSidebar(uuid);
+        if (sidebar != null) {
+            removeSidebar(sidebar);
+        }
     }
 
-    public static void removeSidebar(TeamedSidebar<?> scoreboard) {
+    public static void removeSidebar(@NotNull TeamedSidebar<?> scoreboard) {
         if (manager == null) {
             throw new UnsupportedOperationException("SidebarManager is not initialized yet!");
         }
@@ -82,46 +89,38 @@ public class SidebarManager {
         manager.activeSidebars.remove(scoreboard.uuid());
     }
 
-    public static Sidebar sidebar() {
+    public static @NotNull Sidebar sidebar() {
         return sidebar(UUID.randomUUID());
     }
 
-    public static ScoreSidebar scoreboard() {
+    public static @NotNull ScoreSidebar scoreboard() {
         return scoreboard(UUID.randomUUID());
     }
 
-    public static Sidebar sidebar(UUID uuid) {
+    public static @NotNull Sidebar sidebar(@NotNull UUID uuid) {
         if (manager == null) {
             throw new UnsupportedOperationException("SidebarManager is not initialized yet!");
         }
 
-        final var scoreboard = manager.sidebar0(uuid);
+        final var scoreboard = new SidebarImpl(uuid);
         addSidebar(scoreboard);
         return scoreboard;
     }
 
-    public static ScoreSidebar scoreboard(UUID uuid) {
+    public static @NotNull ScoreSidebar scoreboard(@NotNull UUID uuid) {
         if (manager == null) {
             throw new UnsupportedOperationException("SidebarManager is not initialized yet!");
         }
 
-        final var scoreboard = manager.scoreSidebar0(uuid);
+        final var scoreboard = new ScoreSidebarImpl(uuid);
         addSidebar(scoreboard);
         return scoreboard;
-    }
-
-    protected Sidebar sidebar0(UUID uuid) {
-        return new SidebarImpl(uuid);
-    }
-
-    protected ScoreSidebar scoreSidebar0(UUID uuid) {
-        return new ScoreSidebarImpl(uuid);
     }
 
     protected void destroy() {
         Map.copyOf(getActiveSidebars())
                 .values()
                 .forEach(Visual::destroy);
-        manager.activeSidebars.clear();
+        activeSidebars.clear();
     }
 }

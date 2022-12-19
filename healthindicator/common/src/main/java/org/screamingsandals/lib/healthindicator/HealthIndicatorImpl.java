@@ -19,6 +19,8 @@ package org.screamingsandals.lib.healthindicator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.SClientboundSetDisplayObjectivePacket;
@@ -108,8 +110,9 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
         return !data.isEmpty();
     }
 
+    @Contract("_ -> this")
     @Override
-    public HealthIndicator update(UpdateStrategy strategy) {
+    public @NotNull HealthIndicator update(@NotNull UpdateStrategy strategy) {
         if (ready) {
             var packets = new ArrayList<AbstractPacket>();
 
@@ -147,8 +150,9 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
         return this;
     }
 
+    @Contract("-> this")
     @Override
-    public HealthIndicator show() {
+    public @NotNull HealthIndicator show() {
         ready = true;
         visible = true;
         viewers.forEach(a -> onViewerAdded(a, false));
@@ -156,8 +160,9 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
         return this;
     }
 
+    @Contract("-> this")
     @Override
-    public HealthIndicator hide() {
+    public @NotNull HealthIndicator hide() {
         visible = false;
         ready = false;
         update();
@@ -207,7 +212,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     }
 
     @Override
-    public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
+    public void onViewerAdded(@NotNull PlayerWrapper player, boolean checkDistance) {
         if (visible) {
             getCreateObjectivePacket()
                     .objectiveKey(underNameTagKey)
@@ -236,7 +241,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     }
 
     @Override
-    public void onViewerRemoved(PlayerWrapper player, boolean checkDistance) {
+    public void onViewerRemoved(@NotNull PlayerWrapper player, boolean checkDistance) {
         getDestroyObjectivePacket()
                 .objectiveKey(underNameTagKey)
                 .sendPacket(player);

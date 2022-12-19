@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.visuals;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.world.LocationHolder;
 
 /**
@@ -37,17 +39,20 @@ public interface LocatableVisual<T> extends Visual<T> {
      */
     int viewDistance();
 
-    T viewDistance(int viewDistance);
+    @Contract("_ -> this")
+    @NotNull T viewDistance(int viewDistance);
 
-    LocationHolder location();
+    @NotNull LocationHolder location();
 
-    T location(LocationHolder location);
+    @Contract("_ -> this")
+    @NotNull T location(@NotNull LocationHolder location);
 
     /**
      * Spawns the visual to all visible Players.
      * @return this visual
      */
-    T spawn();
+    @Contract("-> this")
+    @NotNull T spawn();
 
     boolean created();
 

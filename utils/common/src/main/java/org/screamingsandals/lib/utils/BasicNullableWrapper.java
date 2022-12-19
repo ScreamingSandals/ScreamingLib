@@ -26,18 +26,18 @@ import java.util.Objects;
 /**
  * Basic Wrapper is class used for directly wrapping objects without using Mapping classes and Bidirectional Converters.
  *
- * @see BasicWrapper#wrap(Object)
+ * @see BasicNullableWrapper#wrap(Object)
  * @param <O> type of wrapped object
  */
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class BasicWrapper<O> implements Wrapper, RawValueHolder {
-    protected final transient @NotNull O wrappedObject;
+public class BasicNullableWrapper<O> implements Wrapper {
+    protected final transient @Nullable O wrappedObject;
 
-    public static <O> @NotNull BasicWrapper<O> wrap(@NotNull O wrappedObject) {
-        return new BasicWrapper<>(wrappedObject);
+    public static <O> @NotNull BasicNullableWrapper<O> wrap(@Nullable O wrappedObject) {
+        return new BasicNullableWrapper<>(wrappedObject);
     }
 
-    public @NotNull Object raw() {
+    public @Nullable Object raw() {
         return wrappedObject;
     }
 
@@ -61,7 +61,7 @@ public class BasicWrapper<O> implements Wrapper, RawValueHolder {
         if (obj instanceof RawValueHolder) {
             obj = ((RawValueHolder) obj).raw();
         }
-        return wrappedObject.equals(obj);
+        return Objects.equals(wrappedObject, obj);
     }
 
     @Override
@@ -69,8 +69,20 @@ public class BasicWrapper<O> implements Wrapper, RawValueHolder {
         return Objects.hashCode(wrappedObject);
     }
 
+    public boolean isPresent() {
+        return wrappedObject != null;
+    }
+
+    public boolean isEmpty() {
+        return wrappedObject == null;
+    }
+
     @Override
     public @NotNull String toString() {
-        return this.getClass().getSimpleName() + "(" + wrappedObject + ")";
+        if (wrappedObject == null) {
+            return this.getClass().getSimpleName() + "(null)";
+        } else {
+            return this.getClass().getSimpleName() + "(" + wrappedObject + ")";
+        }
     }
 }

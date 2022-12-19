@@ -16,33 +16,28 @@
 
 package org.screamingsandals.lib.hologram;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.hologram.event.HologramTouchEvent;
-import org.screamingsandals.lib.item.builder.ItemFactory;
 import org.screamingsandals.lib.packet.PacketMapper;
-import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.visuals.AbstractVisualsManager;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapper;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service(dependsOn = {
-        EventManager.class,
-        PlayerMapper.class,
-        LocationMapper.class,
-        Tasker.class,
-        ItemFactory.class,
+        Core.class,
         PacketMapper.class
 })
 public class HologramManager extends AbstractVisualsManager<Hologram> {
-    private static HologramManager manager = null;
+    private static @Nullable HologramManager manager;
 
     public HologramManager() {
         if (manager != null) {
@@ -51,19 +46,19 @@ public class HologramManager extends AbstractVisualsManager<Hologram> {
         manager = this;
     }
 
-    public static Hologram hologram(LocationHolder holder) {
+    public static @NotNull Hologram hologram(@NotNull LocationHolder holder) {
         return hologram(UUID.randomUUID(), holder, false);
     }
 
-    public static Hologram hologram(LocationHolder holder, boolean touchable) {
+    public static @NotNull Hologram hologram(@NotNull LocationHolder holder, boolean touchable) {
         return hologram(UUID.randomUUID(), holder, touchable);
     }
 
-    public static Hologram hologram(UUID uuid, LocationHolder holder) {
+    public static @NotNull Hologram hologram(@NotNull UUID uuid, @NotNull LocationHolder holder) {
         return hologram(uuid, holder, false);
     }
 
-    public static Hologram hologram(UUID uuid, LocationHolder holder, boolean touchable) {
+    public static @NotNull Hologram hologram(@NotNull UUID uuid, @NotNull LocationHolder holder, boolean touchable) {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
@@ -73,32 +68,36 @@ public class HologramManager extends AbstractVisualsManager<Hologram> {
         return hologram;
     }
 
-    public static Map<UUID, Hologram> getActiveHolograms() {
+    public static @NotNull Map<@NotNull UUID, @NotNull Hologram> getActiveHolograms() {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
         return manager.getActiveVisuals();
     }
 
-    public static Optional<Hologram> getHologram(UUID uuid) {
+    @Contract("null -> null")
+    public static @Nullable Hologram getHologram(@Nullable UUID uuid) {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
-        return Optional.ofNullable(getActiveHolograms().get(uuid));
+        return getActiveHolograms().get(uuid);
     }
 
-    public static void addHologram(Hologram hologram) {
+    public static void addHologram(@NotNull Hologram hologram) {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
         manager.addVisual(hologram.uuid(), hologram);
     }
 
-    public static void removeHologram(UUID uuid) {
-        getHologram(uuid).ifPresent(HologramManager::removeHologram);
+    public static void removeHologram(@Nullable UUID uuid) {
+        var hologram = getHologram(uuid);
+        if (hologram != null) {
+            removeHologram(hologram);
+        }
     }
 
-    public static void removeHologram(Hologram hologram) {
+    public static void removeHologram(@NotNull Hologram hologram) {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
@@ -106,7 +105,7 @@ public class HologramManager extends AbstractVisualsManager<Hologram> {
     }
 
     @Override
-    public void fireVisualTouchEvent(PlayerWrapper sender, Hologram visual, InteractType interactType) {
+    public void fireVisualTouchEvent(@NotNull PlayerWrapper sender, @NotNull Hologram visual, @NotNull InteractType interactType) {
         EventManager.fireAsync(new HologramTouchEvent(sender, visual, interactType));
     }
 }

@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.event;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,7 +30,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.METHOD)
 public @interface OnEvent {
-    EventPriority priority() default EventPriority.NORMAL;
+    @NotNull EventPriority priority() default EventPriority.NORMAL;
 
     boolean ignoreCancelled() default false;
 }

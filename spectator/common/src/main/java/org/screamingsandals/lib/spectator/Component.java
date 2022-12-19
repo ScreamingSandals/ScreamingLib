@@ -393,12 +393,12 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     }
 
     @Override
-    default Component asComponent() {
+    default @NotNull Component asComponent() {
         return this;
     }
 
     @Override
-    default Content asContent() {
+    default @NotNull Content asContent() {
         return this;
     }
 
@@ -522,7 +522,7 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         C build();
 
         @Override
-        default Component asComponent() {
+        default @NotNull Component asComponent() {
             return build();
         }
     }

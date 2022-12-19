@@ -20,6 +20,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.SClientboundRemoveEntitiesPacket;
@@ -86,14 +88,15 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public Hologram location(LocationHolder location) {
+    public @NotNull Hologram location(@NotNull LocationHolder location) {
         this.location = location;
         this.cachedLocation = location;
         return this;
     }
 
+    @Contract("-> this")
     @Override
-    public Hologram spawn() {
+    public @NotNull Hologram spawn() {
         if (created) {
             throw new UnsupportedOperationException("Hologram has already been spawned!");
         }
@@ -110,16 +113,18 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
                 .anyMatch(entity -> entity.getId() == entityId);
     }
 
+    @Contract("_ -> this")
     @Override
-    public Hologram update(UpdateStrategy strategy) {
+    public @NotNull Hologram update(@NotNull UpdateStrategy strategy) {
         if (visible) {
             updateEntities();
         }
         return this;
     }
 
+    @Contract("-> this")
     @Override
-    public Hologram show() {
+    public @NotNull Hologram show() {
         if (destroyed()) {
             throw new UnsupportedOperationException("Cannot call Hologram#show() on destroyed holograms!");
         }
@@ -130,8 +135,9 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         return this;
     }
 
+    @Contract("-> this")
     @Override
-    public Hologram hide() {
+    public @NotNull Hologram hide() {
         if (!shown()) {
             return this;
         }
@@ -196,7 +202,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public void onViewerAdded(PlayerWrapper viewer, boolean checkDistance) {
+    public void onViewerAdded(@NotNull PlayerWrapper viewer, boolean checkDistance) {
         if (!viewer.isOnline()) {
             return;
         }
@@ -208,7 +214,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public void onViewerRemoved(PlayerWrapper viewer, boolean checkDistance) {
+    public void onViewerRemoved(@NotNull PlayerWrapper viewer, boolean checkDistance) {
         if (!viewer.isOnline()) {
             return;
         }

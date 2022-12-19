@@ -20,6 +20,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.SClientboundSetDisplayObjectivePacket;
 import org.screamingsandals.lib.packet.SClientboundSetObjectivePacket;
@@ -41,19 +44,19 @@ import java.util.stream.Collectors;
 
 public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements ScoreSidebar {
     @Getter
-    protected final List<ScoreboardTeam> teams = new LinkedList<>();
+    protected final @NotNull List<@NotNull ScoreboardTeam> teams = new LinkedList<>();
     @Getter
-    protected final List<ScoreEntry> entries = new CopyOnWriteArrayList<>();
+    protected final @NotNull List<@NotNull ScoreEntry> entries = new CopyOnWriteArrayList<>();
     @Accessors(chain = true, fluent = true)
     @Getter
     @Setter
-    protected DataContainer data;
+    protected @Nullable DataContainer data;
     protected boolean ready;
-    protected AudienceComponentLike title = AudienceComponentLike.empty();
-    private final String objectiveKey;
-    private final List<ScoreEntry> lines = new CopyOnWriteArrayList<>();
+    protected @NotNull AudienceComponentLike title = AudienceComponentLike.empty();
+    private final @NotNull String objectiveKey;
+    private final @NotNull List<@NotNull ScoreEntry> lines = new CopyOnWriteArrayList<>();
 
-    public ScoreSidebarImpl(UUID uuid) {
+    public ScoreSidebarImpl(@NotNull UUID uuid) {
         super(uuid);
         this.objectiveKey =
                 new Random().ints(48, 123)
@@ -64,18 +67,23 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     }
 
     @Override
-    public Optional<ScoreboardTeam> getTeam(String identifier) {
-        return teams.stream().filter(scoreboardTeam -> identifier.equals(scoreboardTeam.identifier())).findFirst();
+    public @Nullable ScoreboardTeam getTeam(@NotNull String identifier) {
+        return teams.stream().filter(scoreboardTeam -> identifier.equals(scoreboardTeam.identifier())).findFirst().orElse(null);
     }
 
+    @Contract("_ -> this")
     @Override
-    public ScoreSidebar removeTeam(String identifier) {
-        getTeam(identifier).ifPresent(this::removeTeam);
+    public @NotNull ScoreSidebar removeTeam(@NotNull String identifier) {
+        var team = getTeam(identifier);
+        if (team != null) {
+            this.removeTeam(team);
+        }
         return this;
     }
 
+    @Contract("_ -> this")
     @Override
-    public ScoreSidebar removeTeam(ScoreboardTeam scoreboardTeam) {
+    public @NotNull ScoreSidebar removeTeam(@NotNull ScoreboardTeam scoreboardTeam) {
         scoreboardTeam.destroy();
         teams.remove(scoreboardTeam);
         return this;
@@ -90,13 +98,15 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
         return !data.isEmpty();
     }
 
+    @Contract("_ -> this")
     @Override
-    public ScoreSidebar title(Component title) {
+    public @NotNull ScoreSidebar title(@NotNull Component title) {
         return title(AudienceComponentLike.of(title));
     }
 
+    @Contract("_ -> this")
     @Override
-    public ScoreSidebar title(ComponentLike title) {
+    public @NotNull ScoreSidebar title(@NotNull ComponentLike title) {
         if (title instanceof AudienceComponentLike) {
             this.title = (AudienceComponentLike) title;
         } else {
@@ -107,7 +117,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     }
 
     @Override
-    public ScoreSidebar entity(String identifier, Component displayName) {
+    public @NotNull ScoreSidebar entity(@NotNull String identifier, @NotNull Component displayName) {
         entries.stream()
                 .filter(entryA -> entryA.getIdentifier().equals(identifier))
                 .findFirst()
@@ -118,16 +128,14 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
                         update();
                     }
                 }, () -> {
-                    var scoreEntry = new ScoreEntry(identifier);
-                    scoreEntry.setComponent(displayName);
-                    entries.add(scoreEntry);
+                    entries.add(new ScoreEntry(identifier, displayName));
                     update();
                 });
         return this;
     }
 
     @Override
-    public ScoreSidebar score(String identifier, int score) {
+    public @NotNull ScoreSidebar score(@NotNull String identifier, int score) {
         entries.stream()
                 .filter(entryA -> entryA.getIdentifier().equals(identifier))
                 .findFirst()
@@ -139,7 +147,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     }
 
     @Override
-    public ScoreSidebar removeEntity(String identifier) {
+    public @NotNull ScoreSidebar removeEntity(@NotNull String identifier) {
         entries.stream()
                 .filter(entryA -> entryA.getIdentifier().equals(identifier))
                 .findFirst()
@@ -150,8 +158,9 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
         return this;
     }
 
+    @Contract("_ -> this")
     @Override
-    public ScoreSidebar update(UpdateStrategy strategy) {
+    public @NotNull ScoreSidebar update(@NotNull UpdateStrategy strategy) {
         if (ready) {
             var list = entries
                     .stream()
@@ -193,8 +202,9 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
         return this;
     }
 
+    @Contract("-> this")
     @Override
-    public ScoreSidebar show() {
+    public @NotNull ScoreSidebar show() {
         if (shown()) {
             return this;
         }
@@ -206,8 +216,9 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
         return this;
     }
 
+    @Contract("-> this")
     @Override
-    public ScoreSidebar hide() {
+    public @NotNull ScoreSidebar hide() {
         if (!shown()) {
             return this;
         }
@@ -227,7 +238,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     }
 
     @Override
-    public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
+    public void onViewerAdded(@NotNull PlayerWrapper player, boolean checkDistance) {
         if (visible && player.isOnline()) {
             getCreateObjectivePacket(player).sendPacket(player);
             allScores().forEach(packet -> packet.sendPacket(player));
@@ -239,7 +250,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     }
 
     @Override
-    public void onViewerRemoved(PlayerWrapper player, boolean checkDistance) {
+    public void onViewerRemoved(@NotNull PlayerWrapper player, boolean checkDistance) {
         if (visible && player.isOnline()) {
             teams.forEach(scoreboardTeam ->
                     ((ScoreboardTeamImpl) scoreboardTeam).constructDestructPacket().sendPacket(player)
@@ -250,38 +261,38 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
 
     // INTERNAL METHODS
 
-    private SClientboundSetObjectivePacket getCreateObjectivePacket(PlayerWrapper player) {
+    private @NotNull SClientboundSetObjectivePacket getCreateObjectivePacket(@NotNull PlayerWrapper player) {
         var packet = notFinalObjectivePacket(player);
         packet.mode(SClientboundSetObjectivePacket.Mode.CREATE);
         return packet;
     }
 
-    private SClientboundSetObjectivePacket getUpdateObjectivePacket(PlayerWrapper player) {
+    private @NotNull SClientboundSetObjectivePacket getUpdateObjectivePacket(@NotNull PlayerWrapper player) {
         var packet = notFinalObjectivePacket(player);
         packet.mode(SClientboundSetObjectivePacket.Mode.UPDATE);
         return packet;
     }
 
-    private SClientboundSetObjectivePacket notFinalObjectivePacket(PlayerWrapper player) {
+    private @NotNull SClientboundSetObjectivePacket notFinalObjectivePacket(@NotNull PlayerWrapper player) {
         return new SClientboundSetObjectivePacket()
                 .objectiveKey(objectiveKey)
                 .title(title.asComponent(player))
                 .criteriaType(SClientboundSetObjectivePacket.Type.INTEGER);
     }
 
-    private SClientboundSetObjectivePacket getDestroyObjectivePacket() {
+    private @NotNull SClientboundSetObjectivePacket getDestroyObjectivePacket() {
         return new SClientboundSetObjectivePacket()
                 .objectiveKey(objectiveKey)
                 .mode(SClientboundSetObjectivePacket.Mode.DESTROY);
     }
 
-    private SClientboundSetDisplayObjectivePacket getDisplayObjectivePacket() {
+    private @NotNull SClientboundSetDisplayObjectivePacket getDisplayObjectivePacket() {
         return new SClientboundSetDisplayObjectivePacket()
                 .slot(SClientboundSetDisplayObjectivePacket.DisplaySlot.SIDEBAR)
                 .objectiveKey(objectiveKey);
     }
 
-    private SClientboundSetScorePacket createScorePacket(int i, String value) {
+    private @NotNull SClientboundSetScorePacket createScorePacket(int i, @NotNull String value) {
         return new SClientboundSetScorePacket()
                 .entityName(value)
                 .objectiveKey(objectiveKey)
@@ -289,21 +300,21 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
                 .action(SClientboundSetScorePacket.ScoreboardAction.CHANGE);
     }
 
-    private SClientboundSetScorePacket destroyScore(String value) {
+    private @NotNull SClientboundSetScorePacket destroyScore(@NotNull String value) {
         return new SClientboundSetScorePacket()
                 .entityName(value)
                 .objectiveKey(objectiveKey)
                 .action(SClientboundSetScorePacket.ScoreboardAction.REMOVE);
     }
 
-    private List<SClientboundSetScorePacket> allScores() {
+    private @NotNull List<@NotNull SClientboundSetScorePacket> allScores() {
         return lines
                 .stream()
                 .map(entry -> createScorePacket(entry.getScore(), entry.getCache()))
                 .collect(Collectors.toList());
     }
 
-    public String crop(String baseLine) {
+    public @NotNull String crop(@NotNull String baseLine) {
         if (baseLine.length() > 40) {
             return baseLine.substring(0, 40);
         }
@@ -311,7 +322,7 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
     }
 
     @Override
-    public ScoreboardTeam team(String identifier) {
+    public @NotNull ScoreboardTeam team(@NotNull String identifier) {
         var team = new ScoreboardTeamImpl(this, identifier);
         teams.add(team);
         if (visible && !viewers.isEmpty()) {
@@ -329,10 +340,10 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
 
     @Data
     public static class ScoreEntry {
-        private final String identifier;
-        private Component component;
+        private final @NotNull String identifier;
+        private @NotNull Component component;
         private int score;
-        private String cache;
+        private @Nullable String cache;
         private boolean reloadCache;
     }
 }

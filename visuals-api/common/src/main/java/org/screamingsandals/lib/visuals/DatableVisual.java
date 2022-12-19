@@ -16,13 +16,17 @@
 
 package org.screamingsandals.lib.visuals;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.data.DataContainer;
 
 public interface DatableVisual<T> extends Visual<T> {
 
-    DataContainer data();
+    @Nullable DataContainer data();
 
-    T data(DataContainer data);
+    @Contract("_ -> this")
+    @NotNull T data(@Nullable DataContainer data);
 
     boolean hasData();
 }

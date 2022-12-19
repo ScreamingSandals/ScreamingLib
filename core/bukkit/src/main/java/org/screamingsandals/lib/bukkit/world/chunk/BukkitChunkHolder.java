@@ -29,7 +29,6 @@ import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 
 public class BukkitChunkHolder extends BasicWrapper<Chunk> implements ChunkHolder {
     public BukkitChunkHolder(Chunk wrappedObject) {

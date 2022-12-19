@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.spectator.utils;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -39,7 +40,7 @@ public interface ComponentMessageThrowable extends ComponentLike {
     Component componentMessage();
 
     @Override
-    default Component asComponent() {
+    default @NotNull Component asComponent() {
         var msg = componentMessage();
         return msg == null ? Component.empty() : msg;
     }

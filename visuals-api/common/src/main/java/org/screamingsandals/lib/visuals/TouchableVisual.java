@@ -16,6 +16,9 @@
 
 package org.screamingsandals.lib.visuals;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 public interface TouchableVisual<T> extends LocatableVisual<T> {
 
     /**
@@ -36,7 +39,8 @@ public interface TouchableVisual<T> extends LocatableVisual<T> {
      * @param touchable touchable state
      * @return this Visual
      */
-    T touchable(boolean touchable);
+    @Contract("_ -> this")
+    @NotNull T touchable(boolean touchable);
 
     /**
      * Returns if the entity id provided belongs to this Visual. Used for detecting Player interaction.
@@ -51,7 +55,8 @@ public interface TouchableVisual<T> extends LocatableVisual<T> {
      * @param delay the amount of time (in milliseconds) the last clicked user has to wait before interacting with this Visual again
      * @return this Visual
      */
-    T clickCooldown(long delay);
+    @Contract("_ -> this")
+    @NotNull T clickCooldown(long delay);
 
     /**
      *

@@ -16,6 +16,9 @@
 
 package org.screamingsandals.lib.visuals.impl;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.visual.TextEntry;
@@ -27,7 +30,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractVisual<T> implements LinedVisual<T> {
-    protected ConcurrentSkipListMap<Integer, TextEntry> lines = new ConcurrentSkipListMap<>();
+    protected @NotNull ConcurrentSkipListMap<@NotNull Integer, @NotNull TextEntry> lines = new ConcurrentSkipListMap<>();
     protected Integer originalLinesSize = 0;
 
     public AbstractLinedVisual(UUID uuid) {
@@ -35,57 +38,66 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
     }
 
     @Override
-    public Map<Integer, TextEntry> lines() {
+    public @NotNull Map<@NotNull Integer, @NotNull TextEntry> lines() {
         return Map.copyOf(lines);
     }
 
     @Override
-    public Optional<Map.Entry<Integer, TextEntry>> lineByIdentifier(String identifier) {
+    public @Nullable Map.Entry<Integer, TextEntry> lineByIdentifier(@NotNull String identifier) {
         return lines.entrySet()
                 .stream()
                 .filter(next -> next.getValue().getIdentifier().equals(identifier))
                 .map(next -> Map.entry(next.getKey(), next.getValue()))
-                .findFirst();
+                .findFirst()
+                .orElse(null);
     }
 
+    @Contract("_ -> this")
     @Override
-    public T title(Component title) {
+    public @NotNull T title(@NotNull Component title) {
         return firstLine(title);
     }
 
+    @Contract("_ -> this")
     @Override
-    public T title(ComponentLike title) {
+    public @NotNull T title(@NotNull ComponentLike title) {
         return firstLine(title);
     }
 
+    @Contract("_ -> this")
     @Override
-    public T firstLine(Component text) {
+    public @NotNull T firstLine(@NotNull Component text) {
         return newLine(0, text);
     }
 
+    @Contract("_ -> this")
     @Override
-    public T firstLine(ComponentLike text) {
+    public @NotNull T firstLine(@NotNull ComponentLike text) {
         return newLine(0, text);
     }
 
+    @Contract("_ -> this")
     @Override
-    public T firstLine(TextEntry text) {
+    public @NotNull T firstLine(@NotNull TextEntry text) {
         return newLine(0, text);
     }
 
+    @Contract("_ -> this")
     @Override
-    public T bottomLine(Component text) {
+    public @NotNull T bottomLine(@NotNull Component text) {
         return bottomLine(TextEntry.of(text));
     }
 
+    @Contract("_ -> this")
     @Override
-    public T bottomLine(ComponentLike text) {
+    public @NotNull T bottomLine(@NotNull ComponentLike text) {
         return bottomLine(TextEntry.of(text));
     }
 
+    @Contract("_ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public T bottomLine(TextEntry text) {
+    public @NotNull T bottomLine(@NotNull TextEntry text) {
         if (lines.isEmpty()) {
             return firstLine(text);
         }
@@ -96,33 +108,37 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
         return (T) this;
     }
 
+    @Contract("_ -> this")
     @Override
-    public T replaceLine(TextEntry text) {
+    public @NotNull T replaceLine(@NotNull TextEntry text) {
         final var identifier = text.getIdentifier();
         if (identifier.isEmpty()) {
             return bottomLine(text);
         }
 
         final var line = lineByIdentifier(text.getIdentifier());
-        if (line.isEmpty()) {
+        if (line == null) {
             return bottomLine(text);
         }
-        return replaceLine(line.get().getKey(), text);
+        return replaceLine(line.getKey(), text);
     }
 
+    @Contract("_, _ -> this")
     @Override
-    public T replaceLine(Integer where, Component text) {
+    public @NotNull T replaceLine(@NotNull Integer where, @NotNull Component text) {
         return replaceLine(where, TextEntry.of(text));
     }
 
+    @Contract("_, _ -> this")
     @Override
-    public T replaceLine(Integer where, ComponentLike text) {
+    public @NotNull T replaceLine(@NotNull Integer where, @NotNull ComponentLike text) {
         return replaceLine(where, TextEntry.of(text));
     }
 
+    @Contract("_, _ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public T replaceLine(Integer where, TextEntry text) {
+    public @NotNull T replaceLine(@NotNull Integer where, @NotNull TextEntry text) {
         if (!lines.containsKey(where)) {
             return newLine(where, text);
         }
@@ -132,17 +148,19 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
         return (T) this;
     }
 
+    @Contract("_ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public T setLines(Map<Integer, TextEntry> lines) {
+    public @NotNull T setLines(@NotNull Map<@NotNull Integer, @NotNull TextEntry> lines) {
         originalLinesSize = this.lines.size();
         this.lines = new ConcurrentSkipListMap<>(lines);
         update();
         return (T) this;
     }
 
+    @Contract("_ -> this")
     @Override
-    public T setLines(List<Component> lines) {
+    public @NotNull T setLines(@NotNull List<@NotNull Component> lines) {
         final var toSet = new HashMap<Integer, TextEntry>();
         for (int i = 0; i < lines.size(); i++) {
             toSet.put(i, TextEntry.of(lines.get(i)));
@@ -150,9 +168,10 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
         return setLines(toSet);
     }
 
+    @Contract("_ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public T setLines(Set<TextEntry> lines) {
+    public @NotNull T setLines(@NotNull Set<@NotNull TextEntry> lines) {
         final var ls = List.copyOf(lines);
         final var toSet = new HashMap<Integer, TextEntry>();
         for (int i = 0; i < ls.size(); i++) {
@@ -161,43 +180,48 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
         return setLines(toSet);
     }
 
+    @Contract("_, _ -> this")
     @Override
-    public T newLine(Integer where, Component text) {
+    public @NotNull T newLine(@NotNull Integer where, @NotNull Component text) {
         return newLine(where, TextEntry.of(text));
     }
 
+    @Contract("_, _ -> this")
     @Override
-    public T newLine(Integer where, ComponentLike text) {
+    public @NotNull T newLine(@NotNull Integer where, @NotNull ComponentLike text) {
         return newLine(where, TextEntry.of(text));
     }
 
+    @Contract("_, _ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public T newLine(Integer where, TextEntry text) {
+    public @NotNull T newLine(@NotNull Integer where, @NotNull TextEntry text) {
         originalLinesSize = lines.size();
         lines = VisualUtils.addEntryAndMoveRest(lines, where, text);
         update();
         return (T) this;
     }
 
+    @Contract("_ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public T removeLine(Integer where) {
+    public @NotNull T removeLine(@NotNull Integer where) {
         originalLinesSize = lines.size();
         lines = VisualUtils.removeEntryAndMoveRest(lines, where);
         update();
         return (T) this;
     }
 
+    @Contract("_ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public T removeLine(String identifier) {
-        lineByIdentifier(identifier)
-                .ifPresent(next -> {
-                    originalLinesSize = lines.size();
-                    lines = VisualUtils.removeEntryAndMoveRest(lines, next.getKey());
-                    update();
-                });
+    public @NotNull T removeLine(@NotNull String identifier) {
+        var next = lineByIdentifier(identifier);
+        if (next != null) {
+            originalLinesSize = lines.size();
+            lines = VisualUtils.removeEntryAndMoveRest(lines, next.getKey());
+            update();
+        }
         return (T) this;
     }
 }

@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.visuals;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.*;
@@ -32,22 +33,22 @@ import java.util.Map;
 import java.util.UUID;
 
 public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
-    protected final Map<UUID, T> activeVisuals = new HashMap<>();
-    private final Map<UUID, Long> coolDownMap = new HashMap<>();
+    protected final @NotNull Map<@NotNull UUID, @NotNull T> activeVisuals = new HashMap<>();
+    private final @NotNull Map<@NotNull UUID, @NotNull Long> coolDownMap = new HashMap<>();
 
-    public void addVisual(UUID uuid, T visual) {
+    public void addVisual(@NotNull UUID uuid, @NotNull T visual) {
         activeVisuals.put(uuid, visual);
     }
 
-    public void removeVisual(T visual) {
+    public void removeVisual(@NotNull T visual) {
         removeVisual(visual.uuid());
     }
 
-    public void removeVisual(UUID uuid) {
+    public void removeVisual(@NotNull UUID uuid) {
         activeVisuals.remove(uuid);
     }
 
-    public Map<UUID, T> getActiveVisuals() {
+    public @NotNull Map<@NotNull UUID, @NotNull T> getActiveVisuals() {
         return Map.copyOf(activeVisuals);
     }
 
@@ -62,7 +63,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     }
 
     @OnEvent
-    public void onLeave(SPlayerLeaveEvent event) {
+    public void onLeave(@NotNull SPlayerLeaveEvent event) {
         coolDownMap.remove(event.player().getUuid());
         if (activeVisuals.isEmpty()) {
             return;
@@ -78,7 +79,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     }
 
     @OnEvent
-    public void onMove(SPlayerMoveEvent event) {
+    public void onMove(@NotNull SPlayerMoveEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
         }
@@ -109,7 +110,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     }
 
     @OnEvent
-    public void onRespawn(SPlayerRespawnEvent event) {
+    public void onRespawn(@NotNull SPlayerRespawnEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
         }
@@ -141,7 +142,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     }
 
     @OnEvent
-    public void onWorldChange(SPlayerWorldChangeEvent event) {
+    public void onWorldChange(@NotNull SPlayerWorldChangeEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
         }
@@ -177,7 +178,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     }
 
     @OnEvent
-    public void onTeleport(SPlayerTeleportEvent event) {
+    public void onTeleport(@NotNull SPlayerTeleportEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
         }
@@ -217,7 +218,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     }
 
     @OnEvent
-    public void onInteract(SPlayerServerboundInteractEvent event) {
+    public void onInteract(@NotNull SPlayerServerboundInteractEvent event) {
         final var player = event.getPlayer();
         final var entityId = event.getEntityId();
 
@@ -239,7 +240,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         }
     }
 
-    private void softAddViewer(T visual, PlayerWrapper player, long tickedDelay) {
+    private void softAddViewer(@NotNull T visual, @NotNull PlayerWrapper player, long tickedDelay) {
         Tasker.build(() -> {
             if (!player.isOnline()) {
                 return;
@@ -248,7 +249,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         }).delay(tickedDelay, TaskerTime.TICKS).async().start();
     }
 
-    private void softRemoveViewer(T visual, PlayerWrapper player, long tickedDelay) {
+    private void softRemoveViewer(@NotNull T visual, @NotNull PlayerWrapper player, long tickedDelay) {
         Tasker.build(() -> {
             if (!player.isOnline()) {
                 return;
@@ -257,5 +258,5 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         }).delay(tickedDelay, TaskerTime.TICKS).async().start();
     }
 
-    public abstract void fireVisualTouchEvent(PlayerWrapper sender, T visual, InteractType interactType);
+    public abstract void fireVisualTouchEvent(@NotNull PlayerWrapper sender, @NotNull T visual, @NotNull InteractType interactType);
 }

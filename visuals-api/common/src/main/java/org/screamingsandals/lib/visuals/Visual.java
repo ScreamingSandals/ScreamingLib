@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.visuals;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -33,32 +35,40 @@ public interface Visual<T> {
      *
      * @return UUID of this visual.
      */
-    UUID uuid();
+    @NotNull UUID uuid();
 
     /**
      * @return viewers that are currently looking and this visual.
      */
-    Collection<PlayerWrapper> viewers();
+    @NotNull Collection<@NotNull PlayerWrapper> viewers();
 
-    default T update() {
+    @Contract("-> this")
+    default @NotNull T update() {
         return update(UpdateStrategy.ALL);
     }
 
-    T update(UpdateStrategy strategy);
+    @Contract("_ -> this")
+    @NotNull T update(@NotNull UpdateStrategy strategy);
 
-    T show();
+    @Contract("-> this")
+    @NotNull T show();
 
-    T hide();
+    @Contract("-> this")
+    @NotNull T hide();
+    @Contract("_ -> this")
+    @NotNull T addViewer(@NotNull PlayerWrapper viewer);
 
-    T addViewer(PlayerWrapper viewer);
+    @Contract("_ -> this")
+    @NotNull T removeViewer(@NotNull PlayerWrapper viewer);
 
-    T removeViewer(PlayerWrapper viewer);
+    @Contract("-> this")
+    @NotNull T clearViewers();
 
-    T clearViewers();
+    @Contract("_ -> this")
+    @NotNull T title(@NotNull Component title);
 
-    T title(Component title);
-
-    T title(ComponentLike title);
+    @Contract("_ -> this")
+    @NotNull T title(@NotNull ComponentLike title);
 
     /**
      * Checks if this Visual has any viewers.
@@ -77,17 +87,17 @@ public interface Visual<T> {
      */
     boolean destroyed();
 
-    boolean visibleTo(PlayerWrapper player);
+    boolean visibleTo(@NotNull PlayerWrapper player);
 
-    void onViewerAdded(PlayerWrapper viewer, boolean checkDistance);
+    void onViewerAdded(@NotNull PlayerWrapper viewer, boolean checkDistance);
 
-    void onViewerRemoved(PlayerWrapper viewer, boolean checkDistance);
+    void onViewerRemoved(@NotNull PlayerWrapper viewer, boolean checkDistance);
 
-    default void onViewerAdded(PlayerWrapper viewer) {
+    default void onViewerAdded(@NotNull PlayerWrapper viewer) {
         onViewerAdded(viewer, false);
     }
 
-    default void onViewerRemoved(PlayerWrapper viewer) {
+    default void onViewerRemoved(@NotNull PlayerWrapper viewer) {
         onViewerRemoved(viewer, false);
     }
 }

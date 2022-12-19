@@ -24,7 +24,6 @@ import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.WorldMapper;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

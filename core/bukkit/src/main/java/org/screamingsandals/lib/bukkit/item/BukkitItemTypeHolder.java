@@ -32,7 +32,6 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 public class BukkitItemTypeHolder extends BasicWrapper<Material> implements ItemTypeHolder {
 

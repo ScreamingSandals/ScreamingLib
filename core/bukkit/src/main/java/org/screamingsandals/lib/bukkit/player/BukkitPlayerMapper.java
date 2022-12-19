@@ -180,7 +180,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
         if (offPlayer instanceof Player) {
             return new BukkitEntityPlayer((Player) offPlayer);
         }
-        return offlinePlayerConverter.convertOptional(offPlayer).toNullable();
+        return offlinePlayerConverter.convertNullable(offPlayer);
     }
 
     @Override

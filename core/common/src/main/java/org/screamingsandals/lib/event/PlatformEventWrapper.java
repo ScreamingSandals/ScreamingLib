@@ -47,12 +47,18 @@ public interface PlatformEventWrapper extends Wrapper, RawValueHolder {
         throw new UnsupportedOperationException("Can't unwrap wrapper to " + type.getName());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @ApiStatus.Experimental
     default <T> @NotNull Optional<T> asOptional(@NotNull Class<T> type) {
         return Wrapper.super.asOptional(type);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @ApiStatus.Experimental
     default <T> @Nullable T asNullable(@NotNull Class<T> type) {

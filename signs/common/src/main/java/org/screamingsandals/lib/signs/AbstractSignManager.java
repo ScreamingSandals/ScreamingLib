@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.signs;
 
 import lombok.experimental.ExtensionMethod;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.SPlayerInteractEvent;
@@ -36,13 +38,12 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ServiceDependencies
 @ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public abstract class AbstractSignManager {
-    private final List<ClickableSign> signs = new LinkedList<>();
+    private final @NotNull List<@NotNull ClickableSign> signs = new LinkedList<>();
     private boolean modified;
 
     @OnEnable
@@ -74,19 +75,20 @@ public abstract class AbstractSignManager {
                 .anyMatch(sign -> sign.getLocation().equals(location));
     }
 
-    public Optional<ClickableSign> getSign(SignLocation location) {
+    public @Nullable ClickableSign getSign(@NotNull SignLocation location) {
         return signs.stream()
                 .filter(sign -> sign.getLocation().equals(location))
-                .findFirst();
+                .findFirst()
+                .toNullable();
     }
 
-    public List<ClickableSign> getSignsForKey(String key) {
+    public @NotNull List<@NotNull ClickableSign> getSignsForKey(@NotNull String key) {
         return signs.stream()
                 .filter(sign -> sign.getKey().equals(key))
                 .collect(Collectors.toList());
     }
 
-    public void unregisterSign(SignLocation location) {
+    public void unregisterSign(@NotNull SignLocation location) {
         signs.stream()
                 .filter(sign -> sign.getLocation().equals(location))
                 .findFirst()
@@ -96,10 +98,10 @@ public abstract class AbstractSignManager {
                 });
     }
 
-    public boolean registerSign(SignLocation location, Component key) {
+    public boolean registerSign(@NotNull SignLocation location, @NotNull Component key) {
         var normalizedKey = normalizeKey(key);
-        if (normalizedKey.isPresent()) {
-            var sign = new ClickableSign(location, normalizedKey.get());
+        if (normalizedKey != null) {
+            var sign = new ClickableSign(location, normalizedKey);
             signs.add(sign);
             modified = true;
             updateSign(sign);
@@ -136,26 +138,26 @@ public abstract class AbstractSignManager {
     }
 
     @OnEvent
-    public void onRightClick(SPlayerInteractEvent event) {
+    public void onRightClick(@NotNull SPlayerInteractEvent event) {
         if (event.action() == SPlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
                 && event.clickedBlock() != null) {
             var state = event.clickedBlock().<BlockStateHolder>getBlockState().orElseThrow();
             if (state instanceof SignHolder) {
                 var location = new SignLocation(state.getLocation());
                 var sign = getSign(location);
-                if (sign.isPresent()) {
+                if (sign != null) {
                     if (!isAllowedToUse(event.player())) {
                         return;
                     }
 
-                    onClick(event.player(), sign.get());
+                    onClick(event.player(), sign);
                 }
             }
         }
     }
 
     @OnEvent
-    public void onBreak(SPlayerBlockBreakEvent event) {
+    public void onBreak(@NotNull SPlayerBlockBreakEvent event) {
         if (event.cancelled()) {
             return;
         }
@@ -176,7 +178,7 @@ public abstract class AbstractSignManager {
     }
 
     @OnEvent
-    public void onEdit(SPlayerUpdateSignEvent event) {
+    public void onEdit(@NotNull SPlayerUpdateSignEvent event) {
         if (event.cancelled()) {
             return;
         }
@@ -193,23 +195,23 @@ public abstract class AbstractSignManager {
         }
     }
 
-    protected abstract boolean isAllowedToUse(PlayerWrapper player);
+    protected abstract boolean isAllowedToUse(@NotNull PlayerWrapper player);
 
-    protected abstract boolean isAllowedToEdit(PlayerWrapper player);
+    protected abstract boolean isAllowedToEdit(@NotNull PlayerWrapper player);
 
-    protected abstract Optional<String> normalizeKey(Component key);
+    protected abstract @Nullable String normalizeKey(@NotNull Component key);
 
-    protected abstract void updateSign(ClickableSign sign);
+    protected abstract void updateSign(@NotNull ClickableSign sign);
 
-    protected abstract void onClick(PlayerWrapper player, ClickableSign sign);
+    protected abstract void onClick(@NotNull PlayerWrapper player, @NotNull ClickableSign sign);
 
-    protected abstract boolean isFirstLineValid(Component firstLine);
+    protected abstract boolean isFirstLineValid(@NotNull Component firstLine);
 
-    protected abstract Component signCreatedMessage(PlayerWrapper player);
+    protected abstract @NotNull Component signCreatedMessage(@NotNull PlayerWrapper player);
 
-    protected abstract Component signCannotBeCreatedMessage(PlayerWrapper player);
+    protected abstract @NotNull Component signCannotBeCreatedMessage(@NotNull PlayerWrapper player);
 
-    protected abstract Component signCannotBeDestroyedMessage(PlayerWrapper player);
+    protected abstract @NotNull Component signCannotBeDestroyedMessage(@NotNull PlayerWrapper player);
 
-    protected abstract ConfigurationLoader getLoader();
+    protected abstract @NotNull ConfigurationLoader getLoader();
 }

@@ -16,13 +16,14 @@
 
 package org.screamingsandals.lib.bukkit.entity;
 
-import org.bukkit.entity.*;
+import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
+import org.bukkit.entity.Slime;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.EntityPathfindingMob;
-
-import java.util.Optional;
 
 public class BukkitEntityPathfindingMob extends BukkitEntityLiving implements EntityPathfindingMob {
     public BukkitEntityPathfindingMob(LivingEntity wrappedObject) {

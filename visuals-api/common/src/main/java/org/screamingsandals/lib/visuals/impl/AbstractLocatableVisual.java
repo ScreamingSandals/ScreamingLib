@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.visuals.impl;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.visuals.LocatableVisual;
 import org.screamingsandals.lib.visuals.UpdateStrategy;
@@ -47,8 +48,9 @@ public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> exte
         return viewDistance;
     }
 
+    @Contract("_ -> this")
     @Override
-    public T viewDistance(int viewDistance) {
+    public @NotNull T viewDistance(int viewDistance) {
         this.viewDistance = viewDistance;
         return (T) this;
     }
@@ -60,15 +62,16 @@ public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> exte
     }
 
     @Override
-    public T location(LocationHolder location) {
+    public @NotNull T location(@NotNull LocationHolder location) {
         Objects.requireNonNull(location, "Location cannot be null!");
         this.location = location;
         update(UpdateStrategy.POSITION);
         return (T) this;
     }
 
+    @Contract("-> this")
     @Override
-    public T spawn() {
+    public @NotNull T spawn() {
         if (created) {
             throw new UnsupportedOperationException("Visual: " + uuid.toString() + " is already spawned!");
         }

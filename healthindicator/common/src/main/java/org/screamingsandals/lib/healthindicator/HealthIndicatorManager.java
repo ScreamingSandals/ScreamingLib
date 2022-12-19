@@ -17,6 +17,9 @@
 package org.screamingsandals.lib.healthindicator;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.packet.PacketMapper;
@@ -27,7 +30,6 @@ import org.screamingsandals.lib.visuals.Visual;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service(dependsOn = {
@@ -35,8 +37,8 @@ import java.util.UUID;
         PacketMapper.class
 })
 public class HealthIndicatorManager {
-    private static HealthIndicatorManager manager;
-    protected final Map<UUID, HealthIndicator> activeIndicators = new HashMap<>();
+    private static @Nullable HealthIndicatorManager manager;
+    protected final @NotNull Map<@NotNull UUID, @NotNull HealthIndicator> activeIndicators = new HashMap<>();
 
     @ApiStatus.Internal
     public HealthIndicatorManager() {
@@ -46,54 +48,57 @@ public class HealthIndicatorManager {
         manager = this;
     }
 
-    public static Map<UUID, HealthIndicator> getActiveIndicators() {
+    public static @NotNull Map<@NotNull UUID, @NotNull HealthIndicator> getActiveIndicators() {
         if (manager == null) {
             throw new UnsupportedOperationException("HealthIndicatorManager is not initialized yet!");
         }
         return Map.copyOf(manager.activeIndicators);
     }
 
-    public static Optional<HealthIndicator> getHealthIndicator(UUID uuid) {
+    @Contract("null -> null")
+    public static @Nullable HealthIndicator getHealthIndicator(@Nullable UUID uuid) {
         if (manager == null) {
             throw new UnsupportedOperationException("HealthIndicatorManager is not initialized yet!");
         }
-        return Optional.ofNullable(manager.activeIndicators.get(uuid));
+        if (uuid == null) {
+            return null;
+        }
+        return manager.activeIndicators.get(uuid);
     }
 
-    public static void addHealthIndicator(HealthIndicator healthIndicator) {
+    public static void addHealthIndicator(@NotNull HealthIndicator healthIndicator) {
         if (manager == null) {
             throw new UnsupportedOperationException("HealthIndicatorManager is not initialized yet!");
         }
         manager.activeIndicators.put(healthIndicator.uuid(), healthIndicator);
     }
 
-    public static void removeHealthIndicator(UUID uuid) {
-        getHealthIndicator(uuid).ifPresent(HealthIndicatorManager::removeHealthIndicator);
+    public static void removeHealthIndicator(@Nullable UUID uuid) {
+        var hi = getHealthIndicator(uuid);
+        if (hi != null) {
+            removeHealthIndicator(hi);
+        }
     }
 
-    public static void removeHealthIndicator(HealthIndicator healthIndicator) {
+    public static void removeHealthIndicator(@NotNull HealthIndicator healthIndicator) {
         if (manager == null) {
             throw new UnsupportedOperationException("HealthIndicatorManager is not initialized yet!");
         }
         manager.activeIndicators.remove(healthIndicator.uuid());
     }
 
-    public static HealthIndicator healthIndicator() {
+    public static @NotNull HealthIndicator healthIndicator() {
         return healthIndicator(UUID.randomUUID());
     }
 
-    public static HealthIndicator healthIndicator(UUID uuid) {
+    public static @NotNull HealthIndicator healthIndicator(@NotNull UUID uuid) {
         if (manager == null) {
             throw new UnsupportedOperationException("HealthIndicatorManager is not initialized yet!");
         }
 
-        final var healthIndicator = manager.healthIndicator0(uuid);
+        final var healthIndicator = new HealthIndicatorImpl(uuid);
         addHealthIndicator(healthIndicator);
         return healthIndicator;
-    }
-
-    protected HealthIndicator healthIndicator0(UUID uuid) {
-        return new HealthIndicatorImpl(uuid);
     }
 
     @OnPreDisable
@@ -101,11 +106,11 @@ public class HealthIndicatorManager {
         getActiveIndicators()
                 .values()
                 .forEach(Visual::destroy);
-        manager.activeIndicators.clear();
+        activeIndicators.clear();
     }
 
     @OnEvent
-    public void onLeave(SPlayerLeaveEvent event) {
+    public void onLeave(@NotNull SPlayerLeaveEvent event) {
         if (activeIndicators.isEmpty()) {
             return;
         }

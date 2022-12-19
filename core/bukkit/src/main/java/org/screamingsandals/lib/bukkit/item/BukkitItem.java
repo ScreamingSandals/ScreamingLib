@@ -346,7 +346,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return wrappedObject.toString();
     }
 }

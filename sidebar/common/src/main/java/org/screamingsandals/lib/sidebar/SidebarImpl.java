@@ -19,6 +19,9 @@ package org.screamingsandals.lib.sidebar;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
@@ -41,18 +44,18 @@ import java.util.stream.Stream;
 public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar {
     @Accessors(fluent = false)
     @Getter
-    protected final List<ScoreboardTeam> teams = new LinkedList<>();
+    protected final @NotNull List<@NotNull ScoreboardTeam> teams = new LinkedList<>();
     @Getter
     @Setter
-    protected DataContainer data;
+    protected @Nullable DataContainer data;
     protected boolean ready;
     @Getter
     protected boolean destroyed;
-    protected AudienceComponentLike title = AudienceComponentLike.empty();
-    private final String objectiveKey;
-    private final ConcurrentSkipListMap<UUID, ConcurrentSkipListMap<Integer, String>> lines = new ConcurrentSkipListMap<>();
+    protected @NotNull AudienceComponentLike title = AudienceComponentLike.empty();
+    private final @NotNull String objectiveKey;
+    private final @NotNull ConcurrentSkipListMap<@NotNull UUID, @NotNull ConcurrentSkipListMap<@NotNull Integer, @NotNull String>> lines = new ConcurrentSkipListMap<>();
 
-    public SidebarImpl(UUID uuid) {
+    public SidebarImpl(@NotNull UUID uuid) {
         super(uuid);
         this.objectiveKey =
                 new Random().ints(48, 123)
@@ -63,18 +66,23 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     }
 
     @Override
-    public Optional<ScoreboardTeam> getTeam(String identifier) {
-        return teams.stream().filter(scoreboardTeam -> identifier.equals(scoreboardTeam.identifier())).findFirst();
+    public @Nullable ScoreboardTeam getTeam(@NotNull String identifier) {
+        return teams.stream().filter(scoreboardTeam -> identifier.equals(scoreboardTeam.identifier())).findFirst().orElse(null);
     }
 
+    @Contract("_ -> this")
     @Override
-    public Sidebar removeTeam(String identifier) {
-        getTeam(identifier).ifPresent(this::removeTeam);
+    public @NotNull Sidebar removeTeam(@NotNull String identifier) {
+        var team = getTeam(identifier);
+        if (team != null) {
+            this.removeTeam(team);
+        }
         return this;
     }
 
+    @Contract("_ -> this")
     @Override
-    public Sidebar removeTeam(ScoreboardTeam scoreboardTeam) {
+    public @NotNull Sidebar removeTeam(@NotNull ScoreboardTeam scoreboardTeam) {
         scoreboardTeam.destroy();
         teams.remove(scoreboardTeam);
         return this;
@@ -89,13 +97,15 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
         return !data.isEmpty();
     }
 
+    @Contract("_ -> this")
     @Override
-    public Sidebar title(Component title) {
+    public @NotNull Sidebar title(@NotNull Component title) {
         return title(AudienceComponentLike.of(title));
     }
 
+    @Contract("_ -> this")
     @Override
-    public Sidebar title(ComponentLike title) {
+    public @NotNull Sidebar title(@NotNull ComponentLike title) {
         if (title instanceof AudienceComponentLike) {
             this.title = (AudienceComponentLike) title;
         } else {
@@ -105,16 +115,18 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
         return this;
     }
 
+    @Contract("_ -> this")
     @Override
-    public Sidebar update(UpdateStrategy strategy) {
+    public @NotNull Sidebar update(@NotNull UpdateStrategy strategy) {
         if (ready) {
             List.copyOf(viewers).forEach(this::updateForPlayer);
         }
         return this;
     }
 
+    @Contract("-> this")
     @Override
-    public Sidebar show() {
+    public @NotNull Sidebar show() {
         if (shown()) {
             return this;
         }
@@ -126,8 +138,9 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
         return this;
     }
 
+    @Contract("-> this")
     @Override
-    public Sidebar hide() {
+    public @NotNull Sidebar hide() {
         if (!shown()) {
             return this;
         }
@@ -148,7 +161,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     }
 
     @Override
-    public void onViewerAdded(PlayerWrapper player, boolean checkDistance) {
+    public void onViewerAdded(@NotNull PlayerWrapper player, boolean checkDistance) {
         if (visible) {
             getCreateObjectivePacket(player).sendPacket(player);
             updateForPlayer(player);
@@ -160,7 +173,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     }
 
     @Override
-    public void onViewerRemoved(PlayerWrapper player, boolean checkDistance) {
+    public void onViewerRemoved(@NotNull PlayerWrapper player, boolean checkDistance) {
         if (visible) {
             teams.forEach(scoreboardTeam ->
                     ((ScoreboardTeamImpl) scoreboardTeam).constructDestructPacket().sendPacket(player)
@@ -239,38 +252,38 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     }
     // INTERNAL METHODS
 
-    private SClientboundSetObjectivePacket getCreateObjectivePacket(PlayerWrapper player) {
+    private @NotNull SClientboundSetObjectivePacket getCreateObjectivePacket(@NotNull PlayerWrapper player) {
         var packet = getNotFinalObjectivePacket(player);
         packet.mode(SClientboundSetObjectivePacket.Mode.CREATE);
         return packet;
     }
 
-    private SClientboundSetObjectivePacket getUpdateObjectivePacket(PlayerWrapper player) {
+    private @NotNull SClientboundSetObjectivePacket getUpdateObjectivePacket(@NotNull PlayerWrapper player) {
         var packet = getNotFinalObjectivePacket(player);
         packet.mode(SClientboundSetObjectivePacket.Mode.UPDATE);
         return packet;
     }
 
-    private SClientboundSetObjectivePacket getNotFinalObjectivePacket(PlayerWrapper player) {
+    private @NotNull SClientboundSetObjectivePacket getNotFinalObjectivePacket(@NotNull PlayerWrapper player) {
         return new SClientboundSetObjectivePacket()
                 .objectiveKey(objectiveKey)
                 .title(title.asComponent(player))
                 .criteriaType(SClientboundSetObjectivePacket.Type.INTEGER);
     }
 
-    private SClientboundSetObjectivePacket getDestroyObjectivePacket() {
+    private @NotNull SClientboundSetObjectivePacket getDestroyObjectivePacket() {
         return new SClientboundSetObjectivePacket()
                 .objectiveKey(objectiveKey)
                 .mode(SClientboundSetObjectivePacket.Mode.DESTROY);
     }
 
-    private SClientboundSetDisplayObjectivePacket getDisplayObjectivePacket() {
+    private @NotNull SClientboundSetDisplayObjectivePacket getDisplayObjectivePacket() {
         return new SClientboundSetDisplayObjectivePacket()
                 .objectiveKey(objectiveKey)
                 .slot(SClientboundSetDisplayObjectivePacket.DisplaySlot.SIDEBAR);
     }
 
-    private SClientboundSetScorePacket getCreateScorePacket(int i, String value) {
+    private @NotNull SClientboundSetScorePacket getCreateScorePacket(int i, @NotNull String value) {
         return new SClientboundSetScorePacket()
                 .entityName(value)
                 .objectiveKey(objectiveKey)
@@ -278,14 +291,14 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
                 .action(SClientboundSetScorePacket.ScoreboardAction.CHANGE);
     }
 
-    private SClientboundSetScorePacket destroyScore(String value) {
+    private @NotNull SClientboundSetScorePacket destroyScore(@NotNull String value) {
         return new SClientboundSetScorePacket()
                 .entityName(value)
                 .objectiveKey(objectiveKey)
                 .action(SClientboundSetScorePacket.ScoreboardAction.REMOVE);
     }
 
-    public String makeUnique(String toUnique, List<String> from) {
+    public @NotNull String makeUnique(@Nullable String toUnique, @NotNull List<@NotNull String> from) {
         if (toUnique == null) toUnique = " ";
         final var stringBuilder = new StringBuilder(toUnique);
         while (from.contains(stringBuilder.toString())) {
@@ -299,7 +312,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     }
 
     @Override
-    public ScoreboardTeam team(String identifier) {
+    public @NotNull ScoreboardTeam team(@NotNull String identifier) {
         var team = new ScoreboardTeamImpl(this, identifier);
         teams.add(team);
         if (visible && !viewers.isEmpty()) {

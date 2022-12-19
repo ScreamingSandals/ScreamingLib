@@ -18,6 +18,7 @@ package org.screamingsandals.lib.lang;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.lang.container.TranslationContainer;
@@ -26,26 +27,26 @@ import org.screamingsandals.lib.spectator.Component;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Service that provides containers ({@link TranslationContainer}) for given locales.
  */
 public abstract class LangService {
-    protected final Map<Locale, TranslationContainer> containers = new ConcurrentHashMap<>();
+    protected final @NotNull Map<@NotNull Locale, @NotNull TranslationContainer> containers = new ConcurrentHashMap<>();
     @Setter
     @Getter
-    protected TranslationContainer fallbackContainer = TranslationContainer.empty();
+    protected @NotNull TranslationContainer fallbackContainer = TranslationContainer.empty();
 
     /**
      * Resolves a {@link TranslationContainer} for given Locale.
      *
      * @param locale locale to resolve
-     * @return a {@link TranslationContainer} wrapped in {@link Optional}
+     * @return a {@link TranslationContainer} or null if there is no container for the given locale or if the locale is null
      */
-    public Optional<TranslationContainer> getFor(Locale locale) {
-        return Optional.ofNullable(containers.get(locale));
+    @Contract("null -> null")
+    public @Nullable TranslationContainer getFor(@Nullable Locale locale) {
+        return containers.get(locale);
     }
 
     /**
@@ -54,7 +55,7 @@ public abstract class LangService {
      * @param sender sender from who to resolve
      * @return a {@link TranslationContainer}
      */
-    public TranslationContainer getFor(CommandSenderWrapper sender) {
+    public @NotNull TranslationContainer getFor(@Nullable CommandSenderWrapper sender) {
         /* SINGLE LANGUAGE */
         if (containers.isEmpty() || sender == null) {
             return fallbackContainer;
@@ -79,7 +80,7 @@ public abstract class LangService {
     /**
      * @return a default prefix.
      */
-    public Component getDefaultPrefix() {
+    public @NotNull Component getDefaultPrefix() {
         return Lang.getDefaultPrefix();
     }
 
@@ -119,8 +120,7 @@ public abstract class LangService {
      *
      * @return the message placeholder name or null
      */
-    @Nullable
-    public String getMessagePlaceholderName() {
+    public @Nullable String getMessagePlaceholderName() {
         return null;
     }
 }

@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.visuals.impl;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.visuals.TouchableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
 
@@ -36,9 +38,10 @@ public abstract class AbstractTouchableVisual<T extends TouchableVisual<T>> exte
         return touchable;
     }
 
+    @Contract("_ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public T touchable(boolean touchable) {
+    public @NotNull T touchable(boolean touchable) {
         this.touchable = touchable;
         return (T) this;
     }
@@ -48,9 +51,10 @@ public abstract class AbstractTouchableVisual<T extends TouchableVisual<T>> exte
         return clickCoolDown;
     }
 
+    @Contract("_ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public T clickCooldown(long delay) {
+    public @NotNull T clickCooldown(long delay) {
         if (delay < 0) {
             return (T) this;
         }

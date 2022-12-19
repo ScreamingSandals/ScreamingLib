@@ -16,7 +16,9 @@
 
 package org.screamingsandals.lib.utils.reflect;
 
-import org.screamingsandals.lib.utils.BasicWrapper;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.utils.BasicNullableWrapper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -24,8 +26,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Optional;
 
-public class InvocationResult extends BasicWrapper<Object> {
-    public InvocationResult(Object wrappedObject) {
+public class InvocationResult extends BasicNullableWrapper<Object> {
+    public InvocationResult(@Nullable Object wrappedObject) {
         super(wrappedObject);
     }
 
@@ -175,16 +177,8 @@ public class InvocationResult extends BasicWrapper<Object> {
         return Reflect.hasMethod(wrappedObject, methodNames, arguments);
     }
 
-    public boolean isPresent() {
-        return wrappedObject != null;
-    }
-
-    public boolean isEmpty() {
-        return wrappedObject == null;
-    }
-
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return String.valueOf(fastInvoke("toString"));
     }
 }
