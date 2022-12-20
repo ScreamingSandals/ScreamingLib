@@ -46,7 +46,7 @@ public class BukkitEntityTypeMapping extends EntityTypeMapping {
                     namespaced = entityType.getKey();
 
                     mapping.put(NamespacedMappingKey.of(namespaced.getNamespace(), namespaced.getKey()), holder);
-                    if (NamespacedKey.MINECRAFT.equals(namespaced.namespace()) && !entityType.name().equalsIgnoreCase(namespaced.getKey())) {
+                    if (NamespacedKey.MINECRAFT.equals(namespaced.getNamespace()) && !entityType.name().equalsIgnoreCase(namespaced.getKey())) {
                         // Bukkit API is sus
                         mapping.put(NamespacedMappingKey.of(entityType.name()), holder);
                     }
@@ -55,7 +55,7 @@ public class BukkitEntityTypeMapping extends EntityTypeMapping {
                 }
                 values.add(holder);
                 /* we are probably not able to backport non-minecraft entity tags */
-                if (namespaced != null && NamespacedKey.MINECRAFT.equals(namespaced.namespace())) {
+                if (namespaced != null && NamespacedKey.MINECRAFT.equals(namespaced.getNamespace())) {
                     var backPorts = EntityTypeTagBackPorts.getPortedTags(holder, s -> {
                         if (Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null) {
                             return KeyedUtils.isTagged(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey("minecraft", s.toLowerCase(Locale.ROOT)), EntityType.class, entityType);
