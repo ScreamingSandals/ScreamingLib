@@ -52,8 +52,8 @@ public class BukkitServer extends Server {
         try {
             if (Reflect.hasMethod(Sound.class, "getKey")) {
                 for (var v : Sound.values()) {
-                    if (v.getKey().namespace().equals("minecraft")) {
-                        UNSAFE_SOUND_CACHE.put(v.name(), v.getKey().value());
+                    if (v.getKey().getNamespace().equals("minecraft")) {
+                        UNSAFE_SOUND_CACHE.put(v.name(), v.getKey().getKey());
                     }
                 }
             } else {
