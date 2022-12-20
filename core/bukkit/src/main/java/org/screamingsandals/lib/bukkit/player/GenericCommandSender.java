@@ -32,7 +32,7 @@ public class GenericCommandSender extends BasicWrapper<CommandSender> implements
     }
 
     @Override
-    public Type getType() {
+    public @NotNull Type getType() {
         if (wrappedObject instanceof Player) {
             return Type.PLAYER;
         } else if (wrappedObject instanceof ConsoleCommandSender) {
@@ -43,12 +43,12 @@ public class GenericCommandSender extends BasicWrapper<CommandSender> implements
     }
 
     @Override
-    public void sendMessage(String message) {
+    public void sendMessage(@NotNull String message) {
         wrappedObject.sendMessage(message);
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return wrappedObject.getName();
     }
 

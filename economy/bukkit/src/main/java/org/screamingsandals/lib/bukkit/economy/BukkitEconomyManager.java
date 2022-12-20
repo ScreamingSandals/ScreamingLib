@@ -41,7 +41,8 @@ public class BukkitEconomyManager extends EconomyManager {
 
     @OnEnable
     public void onEnable() {
-        if (PluginManager.isEnabled(PluginManager.createKey("Vault").orElseThrow())) {
+        var key = PluginManager.createKey("Vault");
+        if (key != null && PluginManager.isEnabled(key)) {
             var econProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
             if (econProvider != null) {
                 vaultEcon = econProvider.getProvider();

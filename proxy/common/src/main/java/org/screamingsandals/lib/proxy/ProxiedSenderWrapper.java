@@ -29,26 +29,26 @@ import java.util.Locale;
 @Data
 @RequiredArgsConstructor
 public class ProxiedSenderWrapper implements Wrapper, CommandSenderWrapper {
-    private final String name;
-    private final Type type;
+    private final @NotNull String name;
+    private final @NotNull Type type;
 
-    public void sendMessage(String message) {
+    public void sendMessage(@NotNull String message) {
         ProxiedPlayerMapper.sendMessage(this, message);
     }
 
     @Override
-    public boolean hasPermission(Permission permission) {
+    public boolean hasPermission(@NotNull Permission permission) {
         return ProxiedPlayerMapper.hasPermission(this, permission);
     }
 
     @Override
-    public boolean isPermissionSet(Permission permission) {
+    public boolean isPermissionSet(@NotNull Permission permission) {
         return ProxiedPlayerMapper.isPermissionSet(this, permission);
     }
 
     @Override
-    public Locale getLocale() {
-        return null;
+    public @NotNull Locale getLocale() {
+        return ProxiedPlayerMapper.getLocale(this);
     }
 
 
@@ -69,6 +69,6 @@ public class ProxiedSenderWrapper implements Wrapper, CommandSenderWrapper {
 
     @Override
     public @NotNull Adapter adapter() {
-        return null; // TODO
+        return ProxiedPlayerMapper.adapter(this);
     }
 }

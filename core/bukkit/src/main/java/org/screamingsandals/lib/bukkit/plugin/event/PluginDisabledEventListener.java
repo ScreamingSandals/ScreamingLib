@@ -16,20 +16,25 @@
 
 package org.screamingsandals.lib.bukkit.plugin.event;
 
+import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.plugin.PluginManager;
 import org.screamingsandals.lib.plugin.event.PluginDisabledEvent;
+import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class PluginDisabledEventListener extends AbstractBukkitEventHandlerFactory<PluginDisableEvent, PluginDisabledEvent> {
-    public PluginDisabledEventListener(Plugin plugin) {
+    public PluginDisabledEventListener(@NotNull Plugin plugin) {
         super(PluginDisableEvent.class, PluginDisabledEvent.class, plugin);
     }
 
     @Override
-    protected PluginDisabledEvent wrapEvent(PluginDisableEvent event, EventPriority priority) {
+    protected @Nullable PluginDisabledEvent wrapEvent(@NotNull PluginDisableEvent event, @NotNull EventPriority priority) {
         return new PluginDisabledEvent(PluginManager.getPluginFromPlatformObject(event.getPlugin()).orElseThrow());
     }
 }

@@ -18,24 +18,24 @@ package org.screamingsandals.lib.plugin;
 
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 
 @Data
 public class PluginDescription implements Wrapper {
-    private final PluginKey pluginKey;
-    private final String name;
-    private final String version;
-    private final String description;
-    private final List<String> authors;
-    private final List<String> dependencies;
-    private final List<String> softDependencies;
-    private final Path dataFolder;
+    private final @NotNull PluginKey pluginKey;
+    private final @NotNull String name;
+    private final @NotNull String version;
+    private final @Nullable String description;
+    private final @NotNull List<String> authors;
+    private final @NotNull List<String> dependencies;
+    private final @NotNull List<String> softDependencies;
+    private final @NotNull Path dataFolder;
 
-    public Optional<Object> getInstance() {
+    public @Nullable Object getInstance() {
         return PluginManager.getPlatformClass(this.pluginKey);
     }
 
@@ -51,8 +51,8 @@ public class PluginDescription implements Wrapper {
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
         var instance = PluginManager.getPlatformClass(this.pluginKey);
-        if (instance.isPresent() && type.isInstance(instance.get())) {
-            return (T) instance.get();
+        if (type.isInstance(instance)) {
+            return (T) instance;
         }
         throw new UnsupportedOperationException("Can't convert instance to this type!");
     }

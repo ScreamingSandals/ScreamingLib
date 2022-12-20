@@ -163,12 +163,12 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public void sendMessage(String message) {
+    public void sendMessage(@NotNull String message) {
         wrappedObject.sendMessage(message);
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return wrappedObject.getName();
     }
 
@@ -178,7 +178,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public Locale getLocale() {
+    public @NotNull Locale getLocale() {
         var bukkitPlayer = (Player) wrappedObject;
         var locale = Locale.US;
         if (Reflect.hasMethod(bukkitPlayer, "getLocale")) {

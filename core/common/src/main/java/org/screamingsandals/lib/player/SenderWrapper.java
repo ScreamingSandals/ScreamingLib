@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sender.permissions.Permission;
 
@@ -36,7 +37,7 @@ public interface SenderWrapper extends CommandSenderWrapper {
      * {@inheritDoc}
      */
     @Override
-    default boolean hasPermission(Permission permission) {
+    default boolean hasPermission(@NotNull Permission permission) {
         return PlayerMapper.hasPermission(this, permission);
     }
 
@@ -44,7 +45,7 @@ public interface SenderWrapper extends CommandSenderWrapper {
      * {@inheritDoc}
      */
     @Override
-    default boolean isPermissionSet(Permission permission) {
+    default boolean isPermissionSet(@NotNull Permission permission) {
         return PlayerMapper.isPermissionSet(this, permission);
     }
 
@@ -52,7 +53,7 @@ public interface SenderWrapper extends CommandSenderWrapper {
      * {@inheritDoc}
      */
     @Override
-    default Locale getLocale() {
+    default @NotNull Locale getLocale() {
         return Locale.US;
     }
 }

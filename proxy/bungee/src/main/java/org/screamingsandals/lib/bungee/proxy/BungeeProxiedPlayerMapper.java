@@ -23,6 +23,8 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bungee.proxy.listener.ChatEventListener;
 import org.screamingsandals.lib.bungee.spectator.BungeeBackend;
 import org.screamingsandals.lib.bungee.spectator.audience.adapter.BungeeAdapter;
@@ -41,7 +43,6 @@ import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -49,10 +50,6 @@ import java.util.stream.Collectors;
         EventManager.class
 })
 public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
-
-    public static void init(Plugin plugin) {
-        ProxiedPlayerMapper.init(() -> new BungeeProxiedPlayerMapper(plugin));
-    }
 
     public BungeeProxiedPlayerMapper(Plugin plugin) {
         Spectator.setBackend(new BungeeBackend());
@@ -69,25 +66,27 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     @Override
-    public void sendMessage0(ProxiedSenderWrapper wrapper, String message) {
+    public void sendMessage0(@NotNull ProxiedSenderWrapper wrapper, @NotNull String message) {
         wrapper.as(CommandSender.class).sendMessage(TextComponent.fromLegacyText(message));
     }
 
     @Override
-    public void switchServer0(ProxiedPlayerWrapper playerWrapper, ServerWrapper server) {
+    public void switchServer0(@NotNull ProxiedPlayerWrapper playerWrapper, @NotNull ServerWrapper server) {
         playerWrapper.as(ProxiedPlayer.class).connect(server.as(ServerInfo.class));
     }
 
     @Override
-    public Optional<ServerWrapper> getServer0(String name) {
-        return Optional.ofNullable(ProxyServer.getInstance()
-                .getServerInfo(name))
-                .map(ProxiedPlayerMapper::wrapServer);
+    public @Nullable ServerWrapper getServer0(@NotNull String name) {
+        var serverInfo = ProxyServer.getInstance().getServerInfo(name);
+        if (serverInfo != null) {
+            return wrapServer(serverInfo);
+        }
+        return null;
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public List<ServerWrapper> getServers0() {
+    public @NotNull List<@NotNull ServerWrapper> getServers0() {
         return ProxyServer.getInstance().getServers()
                 .values()
                 .stream()
@@ -96,19 +95,25 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     @Override
-    public Optional<ProxiedPlayerWrapper> getPlayer0(String name) {
-        return Optional.ofNullable(ProxyServer.getInstance().getPlayer(name))
-                .map(ProxiedPlayerMapper::wrapPlayer);
+    public @Nullable ProxiedPlayerWrapper getPlayer0(@NotNull String name) {
+        var player = ProxyServer.getInstance().getPlayer(name);
+        if (player != null) {
+            return wrapPlayer(player);
+        }
+        return null;
     }
 
     @Override
-    public Optional<ProxiedPlayerWrapper> getPlayer0(UUID uuid) {
-        return Optional.ofNullable(ProxyServer.getInstance().getPlayer(uuid))
-                .map(ProxiedPlayerMapper::wrapPlayer);
+    public @Nullable ProxiedPlayerWrapper getPlayer0(@NotNull UUID uuid) {
+        var player = ProxyServer.getInstance().getPlayer(uuid);
+        if (player != null) {
+            return wrapPlayer(player);
+        }
+        return null;
     }
 
     @Override
-    public List<ProxiedPlayerWrapper> getPlayers0() {
+    public @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers0() {
         return ProxyServer.getInstance().getPlayers()
                 .stream()
                 .map(ProxiedPlayerMapper::wrapPlayer)
@@ -116,7 +121,7 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     @Override
-    public List<ProxiedPlayerWrapper> getPlayers0(ServerWrapper serverWrapper) {
+    public @NotNull List<ProxiedPlayerWrapper> getPlayers0(@NotNull ServerWrapper serverWrapper) {
         return serverWrapper.as(ServerInfo.class)
                 .getPlayers()
                 .stream()
@@ -125,7 +130,7 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     @Override
-    public boolean hasPermission0(CommandSenderWrapper wrapper, Permission permission) {
+    public boolean hasPermission0(@NotNull CommandSenderWrapper wrapper, @NotNull Permission permission) {
         if (permission instanceof SimplePermission) {
             if (isPermissionSet0(wrapper, permission)) {
                 return wrapper.as(CommandSender.class).hasPermission(((SimplePermission) permission).getPermissionString());
@@ -143,7 +148,7 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     @Override
-    public boolean isPermissionSet0(CommandSenderWrapper wrapper, Permission permission) {
+    public boolean isPermissionSet0(@NotNull CommandSenderWrapper wrapper, @NotNull Permission permission) {
         if (permission instanceof SimplePermission) {
             return wrapper.as(CommandSender.class).getPermissions().contains(((SimplePermission) permission).getPermissionString());
         }
@@ -151,14 +156,14 @@ public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     @Override
-    public Locale getLocale0(ProxiedSenderWrapper wrapper) {
+    public @NotNull Locale getLocale0(@NotNull ProxiedSenderWrapper wrapper) {
         return wrapper.asOptional(ProxiedPlayer.class)
                 .map(ProxiedPlayer::getLocale)
                 .orElse(Locale.US);
     }
 
     @Override
-    protected Adapter adapter0(ProxiedSenderWrapper wrapper) {
+    protected @NotNull Adapter adapter0(@NotNull ProxiedSenderWrapper wrapper) {
         var source = wrapper.as(CommandSender.class);
         if (source instanceof ProxiedPlayer && source instanceof ProxiedPlayerWrapper) {
             return new BungeePlayerAdapter((ProxiedPlayer) source, (PlayerAudience) wrapper);

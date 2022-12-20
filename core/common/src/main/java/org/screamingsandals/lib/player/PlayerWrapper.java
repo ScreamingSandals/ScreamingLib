@@ -408,7 +408,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      * {@inheritDoc}
      */
     @Override
-    default Type getType() {
+    default @NotNull Type getType() {
         return Type.PLAYER;
     }
 

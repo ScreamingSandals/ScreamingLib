@@ -19,31 +19,31 @@ package org.screamingsandals.lib.proxy;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.List;
-import java.util.Optional;
 
 @Data
 @RequiredArgsConstructor
 public class ServerWrapper implements Wrapper {
-    private final String name;
-    private final SocketAddress address;
+    private final @NotNull String name;
+    private final @NotNull SocketAddress address;
 
     /**
      * @return optional containing InetSocketAddress or empty optional if connection is done by Unix domain socket
      */
-    public Optional<InetSocketAddress> getAddress() {
+    public @Nullable InetSocketAddress getAddress() {
         if (address instanceof InetSocketAddress) {
-            return Optional.of((InetSocketAddress) address);
+            return (InetSocketAddress) address;
         } else {
-            return Optional.empty();
+            return null;
         }
     }
 
-    public List<ProxiedPlayerWrapper> getPlayers() {
+    public @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers() {
         return ProxiedPlayerMapper.getPlayers(this);
     }
 

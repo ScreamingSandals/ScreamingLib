@@ -19,6 +19,8 @@ package org.screamingsandals.lib.velocity.plugin;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.plugin.meta.PluginDependency;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
 import org.screamingsandals.lib.plugin.PluginKey;
@@ -28,69 +30,65 @@ import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitiali
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @InternalEarlyInitialization
 public class VelocityPluginManager extends PluginManager {
-    private final com.velocitypowered.api.plugin.PluginManager pluginManager;
+    private final @NotNull com.velocitypowered.api.plugin.PluginManager pluginManager;
 
-    public static void init(com.velocitypowered.api.plugin.PluginManager pluginManager) {
-        PluginManager.init(() -> new VelocityPluginManager(pluginManager));
+    @Override
+    protected @Nullable Object getPlatformClass0(@NotNull PluginKey pluginKey) {
+        return pluginManager.getPlugin(pluginKey.as(String.class)).orElse(null);
     }
 
     @Override
-    protected Optional<Object> getPlatformClass0(PluginKey pluginKey) {
-        // that weird map o -> o is needed cause compiler is on some drugs
-        return pluginManager.getPlugin(pluginKey.as(String.class)).map(o -> o);
-    }
-
-    @Override
-    protected boolean isEnabled0(PluginKey pluginKey) {
+    protected boolean isEnabled0(@NotNull PluginKey pluginKey) {
         return pluginManager.isLoaded(pluginKey.as(String.class));
     }
 
     @Override
-    protected Optional<PluginDescription> getPlugin0(PluginKey pluginKey) {
-        return pluginManager.getPlugin(pluginKey.as(String.class)).map(this::wrap);
+    protected @Nullable PluginDescription getPlugin0(@NotNull PluginKey pluginKey) {
+        return pluginManager.getPlugin(pluginKey.as(String.class)).map(this::wrap).orElse(null);
     }
 
     @Override
-    protected List<PluginDescription> getAllPlugins0() {
+    protected @NotNull List<@NotNull PluginDescription> getAllPlugins0() {
         return pluginManager.getPlugins().stream().map(this::wrap).collect(Collectors.toList());
     }
 
     @Override
-    protected Optional<PluginKey> createKey0(Object identifier) {
-        return Optional.of(VelocityPluginKey.of(identifier.toString()));
+    protected @Nullable PluginKey createKey0(@NotNull Object identifier) {
+        return VelocityPluginKey.of(identifier.toString());
     }
 
     @Override
-    protected PlatformType getPlatformType0() {
+    protected @NotNull PlatformType getPlatformType0() {
         return PlatformType.VELOCITY;
     }
 
     @Override
-    protected Optional<PluginDescription> getPluginFromPlatformObject0(Object object) {
+    protected @Nullable PluginDescription getPluginFromPlatformObject0(@NotNull Object object) {
         return  pluginManager.getPlugins()
                 .stream()
                 .filter(a -> a == object)
                 .findFirst()
-                .map(this::wrap);
+                .map(this::wrap)
+                .orElse(null);
     }
 
-    private PluginDescription wrap(PluginContainer plugin) {
+    private @NotNull PluginDescription wrap(@NotNull PluginContainer plugin) {
+        var description = plugin.getDescription();
         return new PluginDescription(
-                VelocityPluginKey.of(plugin.getDescription().getId()),
-                plugin.getDescription().getName().orElse(plugin.getDescription().getId()),
-                plugin.getDescription().getVersion().orElse(""),
-                plugin.getDescription().getDescription().orElse(""),
-                plugin.getDescription().getAuthors(),
-                plugin.getDescription().getDependencies().stream().map(PluginDependency::getId).collect(Collectors.toList()),
+                VelocityPluginKey.of(description.getId()),
+                description.getName().orElse(description.getId()),
+                description.getVersion().orElse("unknown"),
+                description.getDescription().orElse(""),
+                description.getAuthors(),
+                description.getDependencies().stream().map(PluginDependency::getId).collect(Collectors.toList()),
                 List.of(),
-                plugin.getDescription().getSource().map(path -> path.getParent().resolve(plugin.getDescription().getId())).orElse(Path.of("."))
+                description.getSource().map(path -> path.getParent().resolve(description.getId())).orElse(Path.of("."))
         );
     }
 }

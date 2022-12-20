@@ -23,6 +23,8 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventureAdapter;
 import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventurePlayerAdapter;
@@ -43,7 +45,6 @@ import org.screamingsandals.lib.velocity.proxy.event.PlayerLoginEventFactory;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -51,21 +52,16 @@ import java.util.stream.Collectors;
         EventManager.class
 })
 public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
-    private final static String CONSOLE_NAME = "CONSOLE";
-    private final Object plugin;
-    private final ProxyServer proxyServer;
-    private final AdventureBackend backend;
+    private static final @NotNull String CONSOLE_NAME = "CONSOLE";
+    private final @NotNull Object plugin;
+    private final @NotNull ProxyServer proxyServer;
 
-    public static void init(Object plugin, ProxyServer proxyServer) {
-        ProxiedPlayerMapper.init(() -> new VelocityProxiedPlayerMapper(plugin, proxyServer));
-    }
-
-    public VelocityProxiedPlayerMapper(Object plugin, ProxyServer proxyServer) {
+    public VelocityProxiedPlayerMapper(@NotNull Object plugin, @NotNull ProxyServer proxyServer) {
         this.plugin = plugin;
         this.proxyServer = proxyServer;
-        this.backend = new AdventureBackend();
+        var backend = new AdventureBackend();
         registerEvents();
-        Spectator.setBackend(this.backend);
+        Spectator.setBackend(backend);
 
         playerConverter
                 .registerP2W(Player.class, player -> new ProxiedPlayerWrapper(player.getUsername(), player.getUniqueId()))
@@ -107,47 +103,47 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     @Override
-    public void sendMessage0(ProxiedSenderWrapper wrapper, String message) {
+    public void sendMessage0(@NotNull ProxiedSenderWrapper wrapper, @NotNull String message) {
         wrapper.as(CommandSource.class).sendMessage(LegacyComponentSerializer.legacySection().deserialize(message));
     }
 
     @Override
-    public void switchServer0(ProxiedPlayerWrapper playerWrapper, ServerWrapper server) {
+    public void switchServer0(@NotNull ProxiedPlayerWrapper playerWrapper, @NotNull ServerWrapper server) {
         playerWrapper.as(Player.class).createConnectionRequest(server.as(RegisteredServer.class));
     }
 
     @Override
-    public Optional<ServerWrapper> getServer0(String name) {
-        return proxyServer.getServer(name).map(ProxiedPlayerMapper::wrapServer);
+    public @Nullable ServerWrapper getServer0(@NotNull String name) {
+        return proxyServer.getServer(name).map(ProxiedPlayerMapper::wrapServer).orElse(null);
     }
 
     @Override
-    public List<ServerWrapper> getServers0() {
+    public @NotNull List<@NotNull ServerWrapper> getServers0() {
         return proxyServer.getAllServers().stream().map(ProxiedPlayerMapper::wrapServer).collect(Collectors.toList());
     }
 
     @Override
-    public Optional<ProxiedPlayerWrapper> getPlayer0(String name) {
-        return proxyServer.getPlayer(name).map(ProxiedPlayerMapper::wrapPlayer);
+    public @Nullable ProxiedPlayerWrapper getPlayer0(@NotNull String name) {
+        return proxyServer.getPlayer(name).map(ProxiedPlayerMapper::wrapPlayer).orElse(null);
     }
 
     @Override
-    public Optional<ProxiedPlayerWrapper> getPlayer0(UUID uuid) {
-        return proxyServer.getPlayer(uuid).map(ProxiedPlayerMapper::wrapPlayer);
+    public @Nullable ProxiedPlayerWrapper getPlayer0(@NotNull UUID uuid) {
+        return proxyServer.getPlayer(uuid).map(ProxiedPlayerMapper::wrapPlayer).orElse(null);
     }
 
     @Override
-    public List<ProxiedPlayerWrapper> getPlayers0() {
+    public @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers0() {
         return proxyServer.getAllPlayers().stream().map(ProxiedPlayerMapper::wrapPlayer).collect(Collectors.toList());
     }
 
     @Override
-    public List<ProxiedPlayerWrapper> getPlayers0(ServerWrapper serverWrapper) {
+    public @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers0(@NotNull ServerWrapper serverWrapper) {
         return serverWrapper.as(RegisteredServer.class).getPlayersConnected().stream().map(ProxiedPlayerMapper::wrapPlayer).collect(Collectors.toList());
     }
 
     @Override
-    public boolean hasPermission0(CommandSenderWrapper wrapper, Permission permission) {
+    public boolean hasPermission0(@NotNull CommandSenderWrapper wrapper, @NotNull Permission permission) {
         if (permission instanceof SimplePermission) {
             if (isPermissionSet0(wrapper, permission)) {
                 return wrapper.as(CommandSource.class).hasPermission(((SimplePermission) permission).getPermissionString());
@@ -165,7 +161,7 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     @Override
-    public boolean isPermissionSet0(CommandSenderWrapper wrapper, Permission permission) {
+    public boolean isPermissionSet0(@NotNull CommandSenderWrapper wrapper, @NotNull Permission permission) {
         if (permission instanceof SimplePermission) {
             return wrapper.as(CommandSource.class).getPermissionValue(((SimplePermission) permission).getPermissionString()) == Tristate.UNDEFINED;
         }
@@ -173,14 +169,14 @@ public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     }
 
     @Override
-    public Locale getLocale0(ProxiedSenderWrapper wrapper) {
+    public @NotNull Locale getLocale0(@NotNull ProxiedSenderWrapper wrapper) {
         return wrapper.asOptional(Player.class)
                 .map(player -> player.getPlayerSettings().getLocale())
                 .orElse(Locale.US);
     }
 
     @Override
-    protected Adapter adapter0(ProxiedSenderWrapper wrapper) {
+    protected @NotNull Adapter adapter0(@NotNull ProxiedSenderWrapper wrapper) {
         var source = wrapper.as(CommandSource.class);
         if (source instanceof Player && source instanceof ProxiedPlayerWrapper) {
             return new AdventurePlayerAdapter(source, (PlayerAudience) wrapper);

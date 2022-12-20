@@ -17,93 +17,99 @@
 package org.screamingsandals.lib.plugin;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 @AbstractService
 public abstract class PluginManager {
-    private static PluginManager pluginManager;
+    private static @Nullable PluginManager pluginManager;
 
     @ApiStatus.Internal
-    public static void init(Supplier<PluginManager> supplier) {
+    public PluginManager() {
         if (pluginManager != null) {
             throw new UnsupportedOperationException("PluginManager is already initialized.");
         }
 
-        pluginManager = supplier.get();
+        pluginManager = this;
     }
 
-    public static Optional<Object> getPlatformClass(PluginKey pluginKey) {
+    public static @Nullable Object getPlatformClass(@NotNull PluginKey pluginKey) {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
         }
         return pluginManager.getPlatformClass0(pluginKey);
     }
 
-    protected abstract Optional<Object> getPlatformClass0(PluginKey pluginKey);
+    protected abstract @Nullable Object getPlatformClass0(@NotNull PluginKey pluginKey);
 
-    public static boolean isEnabled(PluginKey pluginKey) {
+    public static boolean isEnabled(@NotNull PluginKey pluginKey) {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
         }
         return pluginManager.isEnabled0(pluginKey);
     }
 
-    protected abstract boolean isEnabled0(PluginKey pluginKey);
+    protected abstract boolean isEnabled0(@NotNull PluginKey pluginKey);
 
-    public static Optional<PluginDescription> getPlugin(PluginKey pluginKey) {
+    public static @Nullable PluginDescription getPlugin(@NotNull PluginKey pluginKey) {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
         }
         return pluginManager.getPlugin0(pluginKey);
     }
 
-    protected abstract Optional<PluginDescription> getPlugin0(PluginKey pluginKey);
+    protected abstract @Nullable PluginDescription getPlugin0(@NotNull PluginKey pluginKey);
 
-    public static List<PluginDescription> getAllPlugins() {
+    public static @NotNull List<@NotNull PluginDescription> getAllPlugins() {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
         }
         return pluginManager.getAllPlugins0();
     }
 
-    protected abstract List<PluginDescription> getAllPlugins0();
+    protected abstract @NotNull List<@NotNull PluginDescription> getAllPlugins0();
 
     /**
      * Creates key that can be used to access plugin.
      * Any valid identifiers will create PluginKey, it doesn't matter, if the plugin really exists.
      *
      * @param identifier platform identifier
-     * @return optional with PluginKey
+     * @return PluginKey or null if identifier is invalid
      */
-    public static Optional<PluginKey> createKey(Object identifier) {
+    public static @Nullable PluginKey createKey(@NotNull Object identifier) {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
         }
         return pluginManager.createKey0(identifier);
     }
 
-    protected abstract Optional<PluginKey> createKey0(Object identifier);
+    protected abstract @Nullable PluginKey createKey0(@NotNull Object identifier);
 
-    public static PlatformType getPlatformType() {
+    public static @NotNull PlatformType getPlatformType() {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
         }
         return pluginManager.getPlatformType0();
     }
 
-    protected abstract PlatformType getPlatformType0();
+    protected abstract @NotNull PlatformType getPlatformType0();
 
-    public static Optional<PluginDescription> getPluginFromPlatformObject(Object object) {
+    @Contract("null -> null")
+    public static @Nullable PluginDescription getPluginFromPlatformObject(@Nullable Object object) {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
+        }
+        if (object == null) {
+            return null;
         }
         return pluginManager.getPluginFromPlatformObject0(object);
     }
 
-    protected abstract Optional<PluginDescription> getPluginFromPlatformObject0(Object object);
+    protected abstract @Nullable PluginDescription getPluginFromPlatformObject0(@NotNull Object object);
 }

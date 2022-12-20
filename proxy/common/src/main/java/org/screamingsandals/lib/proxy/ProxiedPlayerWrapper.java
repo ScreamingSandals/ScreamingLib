@@ -18,6 +18,7 @@ package org.screamingsandals.lib.proxy;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
@@ -26,18 +27,14 @@ import java.util.UUID;
 
 @Getter
 public class ProxiedPlayerWrapper extends ProxiedSenderWrapper implements PlayerAudience.ForwardingToAdapter {
-    private final UUID uuid;
+    private final @NotNull UUID uuid;
 
-    public ProxiedPlayerWrapper(String name, UUID uuid) {
+    public ProxiedPlayerWrapper(@NotNull String name, @NotNull UUID uuid) {
         super(name, Type.PLAYER);
         this.uuid = uuid;
     }
 
-    public void sendMessage(String message) {
-        ProxiedPlayerMapper.sendMessage(this, message);
-    }
-
-    public void switchServer(ServerWrapper server) {
+    public void switchServer(@NotNull ServerWrapper server) {
         ProxiedPlayerMapper.switchServer(this, server);
     }
 
@@ -46,7 +43,7 @@ public class ProxiedPlayerWrapper extends ProxiedSenderWrapper implements Player
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(@Nullable Object obj) {
         if (!(obj instanceof ProxiedPlayerWrapper)) {
             return false;
         }
@@ -62,8 +59,7 @@ public class ProxiedPlayerWrapper extends ProxiedSenderWrapper implements Player
     }
 
     @Override
-    @NotNull
-    public PlayerAdapter adapter() {
+    public @NotNull PlayerAdapter adapter() {
         return (PlayerAdapter) super.adapter();
     }
 }

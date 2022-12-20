@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.sender;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.sender.permissions.SimplePermission;
 import org.screamingsandals.lib.spectator.audience.Audience;
@@ -25,26 +26,26 @@ import java.util.Locale;
 
 public interface CommandSenderWrapper extends Wrapper, Operator, Audience.ForwardingToAdapter {
 
-    Type getType();
+    @NotNull Type getType();
 
     @Deprecated // legacy message ew
-    void sendMessage(String message);
+    void sendMessage(@NotNull String message);
 
-    default boolean hasPermission(String permission) {
+    default boolean hasPermission(@NotNull String permission) {
         return hasPermission(SimplePermission.of(permission));
     }
 
-    boolean hasPermission(Permission permission);
+    boolean hasPermission(@NotNull Permission permission);
 
-    default boolean isPermissionSet(String permission) {
+    default boolean isPermissionSet(@NotNull String permission) {
         return isPermissionSet(SimplePermission.of(permission));
     }
 
-    boolean isPermissionSet(Permission permission);
+    boolean isPermissionSet(@NotNull Permission permission);
 
-    String getName();
+    @NotNull String getName();
 
-    Locale getLocale();
+    @NotNull Locale getLocale();
 
     enum Type {
         PLAYER,

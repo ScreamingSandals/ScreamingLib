@@ -27,6 +27,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.world.*;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
 import org.screamingsandals.lib.bukkit.event.block.*;
@@ -197,7 +198,7 @@ public class BukkitCore extends Core {
         /* we should register this only if someone exactly wants PlayerMoveEvent and not PlayerTeleportEvent */
         new AbstractBukkitEventHandlerFactory<>(PlayerMoveEvent.class, SPlayerMoveEvent.class, plugin, false, true) {
             @Override
-            protected SPlayerMoveEvent wrapEvent(PlayerMoveEvent event, EventPriority priority) {
+            protected SPlayerMoveEvent wrapEvent(@NotNull PlayerMoveEvent event, @NotNull EventPriority priority) {
                 return new SBukkitPlayerMoveEvent(event);
             }
         };
@@ -340,7 +341,7 @@ public class BukkitCore extends Core {
     private <S extends SEvent, B extends Event> void constructDefaultListener(Class<B> bukkitEvent, Class<S> screamingEvent, Function<B, ? extends S> function) {
         new AbstractBukkitEventHandlerFactory<>(bukkitEvent, screamingEvent, plugin) {
             @Override
-            protected S wrapEvent(B event, EventPriority priority) {
+            protected S wrapEvent(@NotNull B event, @NotNull EventPriority priority) {
                 return function.apply(event);
             }
         };

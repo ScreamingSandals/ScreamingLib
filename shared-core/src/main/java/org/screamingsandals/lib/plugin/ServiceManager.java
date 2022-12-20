@@ -16,7 +16,10 @@
 
 package org.screamingsandals.lib.plugin;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -26,28 +29,34 @@ import java.util.stream.Collectors;
 /**
  * Class holding all instantiable services. You can retrieve them here or via the annotation processor.
  */
+@UtilityClass
 public class ServiceManager {
-    private static final List<Object> services = new LinkedList<>();
+    private static final @NotNull List<@NotNull Object> services = new LinkedList<>();
 
     @ApiStatus.Internal
-    public static void putService(Object service) {
+    public static void putService(@NotNull Object service) {
         if (!services.contains(service)) {
             services.add(service);
         }
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T get(Class<T> serviceType) {
+    public static <T> @NotNull T get(@NotNull Class<T> serviceType) {
         return (T) services.stream().filter(o -> serviceType.isAssignableFrom(o.getClass())).findFirst().orElseThrow();
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Optional<T> getOptional(Class<T> serviceType) {
+    public static <T> Optional<T> getOptional(@NotNull Class<T> serviceType) {
         return (Optional<T>) services.stream().filter(o -> serviceType.isAssignableFrom(o.getClass())).findFirst();
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> List<T> getAll(Class<T> serviceType) {
+    public static <T> @Nullable T getNullable(@NotNull Class<T> serviceType) {
+        return (T) services.stream().filter(o -> serviceType.isAssignableFrom(o.getClass())).findFirst().orElse(null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> @NotNull List<@NotNull T> getAll(@NotNull Class<T> serviceType) {
         return (List<T>) services.stream().filter(o -> serviceType.isAssignableFrom(o.getClass())).collect(Collectors.toList());
     }
 }

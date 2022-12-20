@@ -22,6 +22,8 @@ import org.bukkit.event.EventException;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.*;
 
 import java.util.HashMap;
@@ -29,22 +31,22 @@ import java.util.Map;
 
 public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE extends SEvent> implements Listener {
 
-    protected final Map<EventPriority, EventExecutor> eventMap = new HashMap<>();
+    protected final @NotNull Map<@NotNull EventPriority, @NotNull EventExecutor> eventMap = new HashMap<>();
     protected final boolean fireAsync;
     protected final boolean checkOnlySameNotChildren;
-    protected final Class<SE> eventClass;
-    protected final Class<T> platformEventClass;
+    protected final @NotNull Class<SE> eventClass;
+    protected final @NotNull Class<T> platformEventClass;
 
-    public AbstractBukkitEventHandlerFactory(Class<T> platformEventClass, Class<SE> eventClass, final Plugin plugin) {
+    public AbstractBukkitEventHandlerFactory(@NotNull Class<T> platformEventClass, @NotNull Class<SE> eventClass, @NotNull Plugin plugin) {
         this(platformEventClass, eventClass, plugin, false);
     }
 
-    public AbstractBukkitEventHandlerFactory(Class<T> platformEventClass, Class<SE> eventClass, final Plugin plugin, boolean fireAsync) {
+    public AbstractBukkitEventHandlerFactory(@NotNull Class<T> platformEventClass, @NotNull Class<SE> eventClass, @NotNull Plugin plugin, boolean fireAsync) {
         this(platformEventClass, eventClass, plugin, fireAsync, false);
     }
 
     @SuppressWarnings("unchecked")
-    public AbstractBukkitEventHandlerFactory(Class<T> platformEventClass, Class<SE> eventClass, final Plugin plugin, boolean fireAsync, boolean checkOnlySameNotChildren) {
+    public AbstractBukkitEventHandlerFactory(@NotNull Class<T> platformEventClass, @NotNull Class<SE> eventClass, @NotNull Plugin plugin, boolean fireAsync, boolean checkOnlySameNotChildren) {
         this.eventClass = eventClass;
         this.platformEventClass = platformEventClass;
         this.fireAsync = fireAsync;
@@ -111,5 +113,5 @@ public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE exte
      * @param priority priority
      * @return wrapped event or null (if null, nothing happens)
      */
-    protected abstract SE wrapEvent(T event, EventPriority priority);
+    protected abstract @Nullable SE wrapEvent(@NotNull T event, @NotNull EventPriority priority);
 }
