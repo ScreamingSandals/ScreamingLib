@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,16 +29,16 @@ import java.util.Arrays;
 @ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Integer>> implements EnchantmentHolder {
 
-    public BukkitEnchantmentHolder(Enchantment enchantment) {
+    public BukkitEnchantmentHolder(@NotNull Enchantment enchantment) {
         this(Pair.of(enchantment, 1));
     }
 
-    public BukkitEnchantmentHolder(Pair<Enchantment, Integer> wrappedObject) {
+    public BukkitEnchantmentHolder(@NotNull Pair<@NotNull Enchantment, @NotNull Integer> wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    public String platformName() {
+    public @NotNull String platformName() {
         return wrappedObject.first().getName();
     }
 

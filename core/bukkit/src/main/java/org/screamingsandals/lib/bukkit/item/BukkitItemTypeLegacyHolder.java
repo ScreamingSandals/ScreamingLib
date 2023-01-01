@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,20 +31,20 @@ import java.util.Arrays;
 
 public class BukkitItemTypeLegacyHolder extends BasicWrapper<Pair<Material, Short>> implements ItemTypeHolder {
 
-    public BukkitItemTypeLegacyHolder(Material material) {
+    public BukkitItemTypeLegacyHolder(@NotNull Material material) {
         this(Pair.of(material, (short) 0));
     }
 
-    public BukkitItemTypeLegacyHolder(Material material, short forcedDurability) {
+    public BukkitItemTypeLegacyHolder(@NotNull Material material, short forcedDurability) {
         this(Pair.of(material, forcedDurability));
     }
 
-    public BukkitItemTypeLegacyHolder(Pair<Material, Short> wrappedObject) {
+    public BukkitItemTypeLegacyHolder(@NotNull Pair<@NotNull Material, @NotNull Short> wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    public String platformName() {
+    public @NotNull String platformName() {
         return wrappedObject.first().name();
     }
 
@@ -79,7 +79,7 @@ public class BukkitItemTypeLegacyHolder extends BasicWrapper<Pair<Material, Shor
         } else {
             key = NamespacedMappingKey.of(tag.toString());
         }
-        if (!key.namespace().equals("minecraft")) {
+        if (!"minecraft".equals(key.namespace())) {
             return false;
         }
         var value = key.value();
@@ -89,7 +89,7 @@ public class BukkitItemTypeLegacyHolder extends BasicWrapper<Pair<Material, Shor
     @Override
     public boolean is(Object object) {
         if (object instanceof Material && wrappedObject.second() == 0) {
-            return wrappedObject.first().equals(object);
+            return wrappedObject.first() == object;
         }
         if (object instanceof ItemTypeHolder) {
             return equals(object);

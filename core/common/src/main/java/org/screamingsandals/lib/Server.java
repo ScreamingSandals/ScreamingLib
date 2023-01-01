@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ public abstract class Server {
      * @param world the world
      * @return list of players currently in the world
      */
-    public static List<PlayerWrapper> getConnectedPlayersFromWorld(@NotNull WorldHolder world) {
+    public static @NotNull List<@NotNull PlayerWrapper> getConnectedPlayersFromWorld(@NotNull WorldHolder world) {
         Preconditions.checkNotNull(server, "Server has not yet been initialized!");
         Preconditions.checkNotNull(world, "Invalid world provided!");
         return server.getConnectedPlayersFromWorld0(world);
@@ -175,13 +175,13 @@ public abstract class Server {
 
     public abstract boolean isServerThread0();
 
-    public abstract List<PlayerWrapper> getConnectedPlayers0();
+    public abstract @NotNull List<@NotNull PlayerWrapper> getConnectedPlayers0();
 
-    public abstract List<PlayerWrapper> getConnectedPlayersFromWorld0(WorldHolder world);
+    public abstract @NotNull List<@NotNull PlayerWrapper> getConnectedPlayersFromWorld0(@NotNull WorldHolder world);
 
-    public abstract List<WorldHolder> getWorlds0();
+    public abstract @NotNull List<@NotNull WorldHolder> getWorlds0();
 
-    public abstract void runSynchronously0(Runnable task);
+    public abstract void runSynchronously0(@NotNull Runnable task);
 
     public abstract List<ChannelFuture> getConnections0();
 

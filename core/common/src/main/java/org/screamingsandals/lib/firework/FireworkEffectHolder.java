@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,100 +29,27 @@ import java.util.List;
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface FireworkEffectHolder extends ComparableWrapper {
 
-    String platformName();
+    @NotNull String platformName();
 
-    List<Color> colors();
+    @NotNull List<@NotNull Color> colors();
 
-    List<Color> fadeColors();
+    @NotNull List<@NotNull Color> fadeColors();
 
     boolean flicker();
 
     boolean trail();
 
     @Contract(value = "_ -> new", pure = true)
-    FireworkEffectHolder withColors(List<Color> colors);
+    @NotNull FireworkEffectHolder withColors(@NotNull List<@NotNull Color> colors);
 
     @Contract(value = "_ -> new", pure = true)
-    FireworkEffectHolder withFadeColors(List<Color> fadeColors);
+    @NotNull FireworkEffectHolder withFadeColors(@NotNull List<@NotNull Color> fadeColors);
 
     @Contract(value = "_ -> new", pure = true)
-    FireworkEffectHolder withFlicker(boolean flicker);
+    @NotNull FireworkEffectHolder withFlicker(boolean flicker);
 
     @Contract(value = "_ -> new", pure = true)
-    FireworkEffectHolder withTrail(boolean trail);
-
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
-
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default List<Color> getColors() {
-        return colors();
-    }
-
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default List<Color> getFadeColors() {
-        return fadeColors();
-    }
-
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default boolean isFlicker() {
-        return flicker();
-    }
-
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default boolean isTrail() {
-        return trail();
-    }
-
-    /**
-     * Inconsistent naming (holders use with prefix)
-     */
-    @Deprecated(forRemoval = true)
-    default FireworkEffectHolder colors(List<Color> colors) {
-        return withColors(colors);
-    }
-
-    /**
-     * Inconsistent naming (holders use with prefix)
-     */
-    @Deprecated(forRemoval = true)
-    default FireworkEffectHolder fadeColors(List<Color> fadeColors) {
-        return withFadeColors(fadeColors);
-    }
-
-    /**
-     * Inconsistent naming (holders use with prefix)
-     */
-    @Deprecated(forRemoval = true)
-    default FireworkEffectHolder flicker(boolean flicker) {
-        return withFlicker(flicker);
-    }
-
-    /**
-     * Inconsistent naming (holders use with prefix)
-     */
-    @Deprecated(forRemoval = true)
-    default FireworkEffectHolder trail(boolean trail) {
-        return withTrail(trail);
-    }
-
+    @NotNull FireworkEffectHolder withTrail(boolean trail);
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
     boolean is(Object... objects);

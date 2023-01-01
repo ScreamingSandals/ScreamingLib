@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,37 +27,34 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 import java.util.OptionalLong;
 
 public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundStart {
-    public AdventureSoundStart(Sound wrappedObject) {
+    public AdventureSoundStart(@NotNull Sound wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    @NotNull
-    public NamespacedMappingKey soundKey() {
+    public @NotNull NamespacedMappingKey soundKey() {
         return NamespacedMappingKey.of(wrappedObject.name().namespace(), wrappedObject.name().value());
     }
 
     @SuppressWarnings("PatternValidation")
     @Override
-    @NotNull
-    public SoundStart withSoundKey(@NotNull NamespacedMappingKey soundKey) {
+    public @NotNull SoundStart withSoundKey(@NotNull NamespacedMappingKey soundKey) {
         return new AdventureSoundStart(Sound.sound(Key.key(soundKey.namespace(), soundKey.value()), wrappedObject.source(), wrappedObject.volume(), wrappedObject.pitch()));
     }
 
     @Override
-    @NotNull
-    public SoundSource source() {
+    public @NotNull SoundSource source() {
         return new AdventureSoundSource(wrappedObject.source());
     }
 
     @Override
-    @NotNull
-    public SoundStart withSource(@NotNull SoundSource source) {
+    public @NotNull SoundStart withSource(@NotNull SoundSource source) {
         return new AdventureSoundStart(Sound.sound(wrappedObject.name(), source.as(Sound.Source.class), wrappedObject.volume(), wrappedObject.pitch()));
     }
 
@@ -67,8 +64,7 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
     }
 
     @Override
-    @NotNull
-    public SoundStart withVolume(float volume) {
+    public @NotNull SoundStart withVolume(float volume) {
         return new AdventureSoundStart(Sound.sound(wrappedObject.name(), wrappedObject.source(), volume, wrappedObject.pitch()));
     }
 
@@ -78,8 +74,7 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
     }
 
     @Override
-    @NotNull
-    public SoundStart withPitch(float pitch) {
+    public @NotNull SoundStart withPitch(float pitch) {
         return new AdventureSoundStart(Sound.sound(wrappedObject.name(), wrappedObject.source(), wrappedObject.volume(), pitch));
     }
 
@@ -105,8 +100,7 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
     }
 
     @Override
-    @NotNull
-    public SoundStart.Builder toBuilder() {
+    public @NotNull SoundStart.Builder toBuilder() {
         return new AdventureSoundStartBuilder(
                 soundKey(),
                 source(),
@@ -121,18 +115,18 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
     @Accessors(fluent = true, chain = true)
     @Setter
     public static class AdventureSoundStartBuilder implements SoundStart.Builder {
-        private static final SoundSource MASTER = SoundSource.soundSource("master");
+        private static final @NotNull SoundSource MASTER = SoundSource.soundSource("master");
 
-        private NamespacedMappingKey soundKey;
-        private SoundSource source = MASTER;
+        private @Nullable NamespacedMappingKey soundKey;
+        private @NotNull SoundSource source = MASTER;
         private float volume = 1;
         private float pitch = 1;
-        private Long seed = null;
+        private @Nullable Long seed;
 
         @SuppressWarnings("PatternValidation")
         @Override
-        @NotNull
-        public SoundStart build() {
+        public @NotNull SoundStart build() {
+            Preconditions.checkNotNull(soundKey, "Sound key must be present!");
             try {
                 // Adventure 4.12.0+
                 return new AdventureSoundStart(

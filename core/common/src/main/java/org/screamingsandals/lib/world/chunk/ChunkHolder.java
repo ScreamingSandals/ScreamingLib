@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.world.chunk;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -46,7 +47,7 @@ public interface ChunkHolder extends Wrapper, RawValueHolder {
      *
      * @return the world of this chunk
      */
-    WorldHolder getWorld();
+    @NotNull WorldHolder getWorld();
 
     /**
      * Gets a block inside this chunk at the given coordinates.
@@ -56,7 +57,7 @@ public interface ChunkHolder extends Wrapper, RawValueHolder {
      * @param z the block Z coordinate inside this chunk (0 to 15)
      * @return the block
      */
-    BlockHolder getBlock(@Range(from = 0, to = 15) int x, int y, @Range(from = 0, to = 15) int z);
+    @NotNull BlockHolder getBlock(@Range(from = 0, to = 15) int x, int y, @Range(from = 0, to = 15) int z);
 
     /**
      * Gets all entities inhabiting this chunk.
@@ -64,7 +65,7 @@ public interface ChunkHolder extends Wrapper, RawValueHolder {
      *
      * @return the entities
      */
-    EntityBasic[] getEntities();
+    @NotNull EntityBasic @NotNull [] getEntities();
 
     /**
      * Determines if this chunk is loaded.

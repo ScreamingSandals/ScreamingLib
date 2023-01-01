@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.NBTComponent;
 
 public class AdventureBlockNBTComponent extends AdventureNBTComponent<net.kyori.adventure.text.BlockNBTComponent> implements BlockNBTComponent {
-    public AdventureBlockNBTComponent(net.kyori.adventure.text.BlockNBTComponent wrappedObject) {
+    public AdventureBlockNBTComponent(net.kyori.adventure.text.@NotNull BlockNBTComponent wrappedObject) {
         super(wrappedObject);
     }
 

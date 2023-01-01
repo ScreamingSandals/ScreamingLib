@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
 public class AdventureColor extends BasicWrapper<TextColor> implements Color {
-    public AdventureColor(TextColor wrappedObject) {
+    public AdventureColor(@NotNull TextColor wrappedObject) {
         super(wrappedObject);
     }
 

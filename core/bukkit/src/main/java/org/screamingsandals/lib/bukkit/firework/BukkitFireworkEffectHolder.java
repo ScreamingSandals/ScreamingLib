@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,21 +27,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> implements FireworkEffectHolder {
-    public BukkitFireworkEffectHolder(FireworkEffect.Type type) {
+    public BukkitFireworkEffectHolder(FireworkEffect.@NotNull Type type) {
         this(FireworkEffect.builder().with(type).withColor(Color.WHITE).build());
     }
 
-    public BukkitFireworkEffectHolder(FireworkEffect wrappedObject) {
+    public BukkitFireworkEffectHolder(@NotNull FireworkEffect wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    public String platformName() {
+    public @NotNull String platformName() {
         return wrappedObject.getType().name();
     }
 
     @Override
-    public List<org.screamingsandals.lib.spectator.Color> colors() {
+    public @NotNull List<org.screamingsandals.lib.spectator.@NotNull Color> colors() {
         return wrappedObject.getColors()
                 .stream()
                 .map(color -> org.screamingsandals.lib.spectator.Color.rgb(color.getRed(), color.getGreen(), color.getBlue()))
@@ -49,7 +49,7 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public List<org.screamingsandals.lib.spectator.Color> fadeColors() {
+    public @NotNull List<org.screamingsandals.lib.spectator.@NotNull Color> fadeColors() {
         return wrappedObject.getFadeColors()
                 .stream()
                 .map(color -> org.screamingsandals.lib.spectator.Color.rgb(color.getRed(), color.getGreen(), color.getBlue()))
@@ -67,7 +67,7 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public FireworkEffectHolder withColors(List<org.screamingsandals.lib.spectator.Color> colors) {
+    public @NotNull FireworkEffectHolder withColors(@NotNull List<org.screamingsandals.lib.spectator.@NotNull Color> colors) {
         /* Dear Bukkit API, I hate your inconsistency so much */
         return new BukkitFireworkEffectHolder(
                 FireworkEffect.builder()
@@ -81,7 +81,7 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public FireworkEffectHolder withFadeColors(List<org.screamingsandals.lib.spectator.Color> fadeColors) {
+    public @NotNull FireworkEffectHolder withFadeColors(@NotNull List<org.screamingsandals.lib.spectator.@NotNull Color> fadeColors) {
         /* Dear Bukkit API, I hate your inconsistency so much */
         return new BukkitFireworkEffectHolder(
                 FireworkEffect.builder()
@@ -95,7 +95,7 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public FireworkEffectHolder withFlicker(boolean flicker) {
+    public @NotNull FireworkEffectHolder withFlicker(boolean flicker) {
         /* Dear Bukkit API, I hate your inconsistency so much */
         return new BukkitFireworkEffectHolder(
                 FireworkEffect.builder()
@@ -109,7 +109,7 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public FireworkEffectHolder withTrail(boolean trail) {
+    public @NotNull FireworkEffectHolder withTrail(boolean trail) {
         /* Dear Bukkit API, I hate your inconsistency so much */
         return new BukkitFireworkEffectHolder(
                 FireworkEffect.builder()
@@ -125,7 +125,7 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     @Override
     public boolean is(Object object) {
         if (object instanceof FireworkEffect.Type) {
-            return wrappedObject.getType().equals(object);
+            return wrappedObject.getType() == object;
         }
         if (object instanceof FireworkEffect || object instanceof FireworkEffectHolder) {
             return equals(object);

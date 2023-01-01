@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,16 +26,16 @@ import java.util.Arrays;
 
 public class BukkitPotionHolder extends BasicWrapper<PotionData> implements PotionHolder {
 
-    public BukkitPotionHolder(PotionType type) {
+    public BukkitPotionHolder(@NotNull PotionType type) {
         this(new PotionData(type));
     }
 
-    public BukkitPotionHolder(PotionData wrappedObject) {
+    public BukkitPotionHolder(@NotNull PotionData wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    public String platformName() {
+    public @NotNull String platformName() {
         if (wrappedObject.isExtended()) {
             return "LONG_" + wrappedObject.getType().name();
         } else if (wrappedObject.isUpgraded()) {

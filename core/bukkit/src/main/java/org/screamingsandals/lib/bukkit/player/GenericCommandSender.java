@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
 public class GenericCommandSender extends BasicWrapper<CommandSender> implements SenderWrapper {
-    public GenericCommandSender(CommandSender wrappedObject) {
+    public GenericCommandSender(@NotNull CommandSender wrappedObject) {
         super(wrappedObject);
     }
 
@@ -63,13 +63,12 @@ public class GenericCommandSender extends BasicWrapper<CommandSender> implements
     }
 
     @Override
-    public void tryToDispatchCommand(String command) {
+    public void tryToDispatchCommand(@NotNull String command) {
         Bukkit.dispatchCommand(wrappedObject, command);
     }
 
     @Override
-    @NotNull
-    public Adapter adapter() {
+    public @NotNull Adapter adapter() {
         return BukkitCore.getSpectatorBackend().adapter(this, wrappedObject);
     }
 }

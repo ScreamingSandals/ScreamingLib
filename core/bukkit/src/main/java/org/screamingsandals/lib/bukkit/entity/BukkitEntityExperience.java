@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,11 @@
 package org.screamingsandals.lib.bukkit.entity;
 
 import org.bukkit.entity.ExperienceOrb;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityExperience;
 
 public class BukkitEntityExperience extends BukkitEntityBasic implements EntityExperience {
-    public BukkitEntityExperience(ExperienceOrb wrappedObject) {
+    public BukkitEntityExperience(@NotNull ExperienceOrb wrappedObject) {
         super(wrappedObject);
     }
 

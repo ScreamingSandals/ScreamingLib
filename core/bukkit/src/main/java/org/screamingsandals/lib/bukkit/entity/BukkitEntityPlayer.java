@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ import java.util.UUID;
 
 @ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapper {
-    public BukkitEntityPlayer(Player wrappedObject) {
+    public BukkitEntityPlayer(@NotNull Player wrappedObject) {
         super(wrappedObject);
     }
 
@@ -173,7 +173,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public void tryToDispatchCommand(String command) {
+    public void tryToDispatchCommand(@NotNull String command) {
         Bukkit.dispatchCommand(wrappedObject, command);
     }
 

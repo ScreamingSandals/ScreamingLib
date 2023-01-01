@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface GameRuleHolder extends ComparableWrapper {
 
-    String platformName();
+    @NotNull String platformName();
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_RULE)

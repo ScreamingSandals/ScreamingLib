@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,38 +31,33 @@ import java.util.function.Function;
  * @param <SpecificWrapper> given wrapper
  */
 @NoArgsConstructor(staticName = "build")
-public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
-    private final Map<Class<?>, Function<Object, SpecificWrapper>> p2wConverters = new HashMap<>();
-    private final Map<Class<?>, Function<SpecificWrapper, Object>> w2pConverters = new HashMap<>();
-    private Class<?> normalizeType;
+public final class BidirectionalConverter<SpecificWrapper extends Wrapper> {
+    private final @NotNull Map<@NotNull Class<?>, @NotNull Function<@NotNull Object, @Nullable SpecificWrapper>> p2wConverters = new HashMap<>();
+    private final @NotNull Map<@NotNull Class<?>, @NotNull Function<@NotNull SpecificWrapper, @Nullable Object>> w2pConverters = new HashMap<>();
+    private @Nullable Class<?> normalizeType;
 
     @SuppressWarnings("unchecked")
-    @NotNull
-    public <P> BidirectionalConverter<SpecificWrapper> registerW2P(@NotNull Class<P> type, @NotNull Function<SpecificWrapper, P> convertor) {
+    public <P> @NotNull BidirectionalConverter<SpecificWrapper> registerW2P(@NotNull Class<P> type, @NotNull Function<@NotNull SpecificWrapper, @Nullable P> convertor) {
         w2pConverters.put(type, (Function<SpecificWrapper, Object>) convertor);
         return this;
     }
 
-    @NotNull
-    public <P> BidirectionalConverter<SpecificWrapper> normalizeType(Class<P> type) {
+    public <P> @NotNull BidirectionalConverter<SpecificWrapper> normalizeType(@Nullable Class<P> type) {
         normalizeType = type;
         return this;
     }
 
     @SuppressWarnings("unchecked")
-    @NotNull
-    public <P> BidirectionalConverter<SpecificWrapper> registerP2W(@NotNull Class<P> type, @NotNull Function<P, SpecificWrapper> convertor) {
+    public <P> @NotNull BidirectionalConverter<SpecificWrapper> registerP2W(@NotNull Class<P> type, @NotNull Function<@NotNull P, @Nullable SpecificWrapper> convertor) {
         p2wConverters.put(type, (Function<Object, SpecificWrapper>) convertor);
         return this;
     }
 
-    @NotNull
-    public <P> SpecificWrapper convert(@NotNull P object) {
+    public <P> @NotNull SpecificWrapper convert(@NotNull P object) {
        return convertOptional(object).orElseThrow(() -> new UnsupportedOperationException("Can't convert " + object.getClass().getName() + " to the wrapper"));
     }
 
-    @NotNull
-    public <P> Optional<SpecificWrapper> convertOptional(@Nullable P object) {
+    public <P> @NotNull Optional<SpecificWrapper> convertOptional(@Nullable P object) {
         if (object == null) {
             return Optional.empty();
         }
@@ -79,15 +74,13 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
         return convertOptional(object).orElse(null);
     }
 
-    @NotNull
-    public <P> P convert(@NotNull SpecificWrapper object, @NotNull Class<P> newType) {
+    public <P> @NotNull P convert(@NotNull SpecificWrapper object, @NotNull Class<P> newType) {
         return convertOptional(object, newType).orElseThrow(() ->
                 new UnsupportedOperationException("Can't convert wrapper " + object.getClass().getName() + " to " + newType.getName()));
     }
 
     @SuppressWarnings("unchecked")
-    @NotNull
-    public <P> Optional<P> convertOptional(@Nullable SpecificWrapper object, @NotNull Class<P> newType) {
+    public <P> @NotNull Optional<P> convertOptional(@Nullable SpecificWrapper object, @NotNull Class<P> newType) {
         if (object == null) {
             return Optional.empty();
         }
@@ -109,8 +102,7 @@ public class BidirectionalConverter<SpecificWrapper extends Wrapper> {
      * @param object which should be normalized
      * @return normalized object
      */
-    @NotNull
-    public SpecificWrapper normalize(@NotNull SpecificWrapper object) {
+    public @NotNull SpecificWrapper normalize(@NotNull SpecificWrapper object) {
         if (normalizeType == null) {
             throw new UnsupportedOperationException("Can't normalize " + object.getClass().getName() + ", no normalization class is registered");
         }

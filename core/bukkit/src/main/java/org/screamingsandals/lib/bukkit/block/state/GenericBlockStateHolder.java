@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.InventoryHolder;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.container.BukkitContainer;
@@ -30,12 +31,12 @@ import org.screamingsandals.lib.world.*;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 
 public class GenericBlockStateHolder extends BasicWrapper<BlockState> implements BlockStateHolder {
-    protected GenericBlockStateHolder(BlockState wrappedObject) {
+    protected GenericBlockStateHolder(@NotNull BlockState wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    public BlockTypeHolder getType() {
+    public @NotNull BlockTypeHolder getType() {
         if (!Version.isVersion(1,13)) {
             return BlockTypeHolder.of(wrappedObject.getData());
         } else {
@@ -54,7 +55,7 @@ public class GenericBlockStateHolder extends BasicWrapper<BlockState> implements
     }
 
     @Override
-    public LocationHolder getLocation() {
+    public @NotNull LocationHolder getLocation() {
         return LocationMapper.wrapLocation(wrappedObject.getLocation());
     }
 

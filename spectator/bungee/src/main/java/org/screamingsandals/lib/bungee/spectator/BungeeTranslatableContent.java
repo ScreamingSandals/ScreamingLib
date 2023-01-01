@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BungeeTranslatableContent extends BungeeComponent implements TranslatableComponent {
-    protected BungeeTranslatableContent(net.md_5.bungee.api.chat.TranslatableComponent wrappedObject) {
+    protected BungeeTranslatableContent(net.md_5.bungee.api.chat.@NotNull TranslatableComponent wrappedObject) {
         super(wrappedObject);
     }
 

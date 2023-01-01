@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,14 @@ import org.bukkit.entity.Creature;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Slime;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.EntityPathfindingMob;
 
 public class BukkitEntityPathfindingMob extends BukkitEntityLiving implements EntityPathfindingMob {
-    public BukkitEntityPathfindingMob(LivingEntity wrappedObject) {
+    public BukkitEntityPathfindingMob(@NotNull LivingEntity wrappedObject) {
         super(wrappedObject);
 
         if (BukkitEntityMapper.HAS_MOB_INTERFACE) {

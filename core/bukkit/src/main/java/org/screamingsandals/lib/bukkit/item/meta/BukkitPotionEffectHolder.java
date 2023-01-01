@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,16 +29,16 @@ import java.util.Arrays;
 @ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> implements PotionEffectHolder {
 
-    public BukkitPotionEffectHolder(PotionEffectType type) {
+    public BukkitPotionEffectHolder(@NotNull PotionEffectType type) {
         this(new PotionEffect(type, 0, 0));
     }
 
-    public BukkitPotionEffectHolder(PotionEffect wrappedObject) {
+    public BukkitPotionEffectHolder(@NotNull PotionEffect wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    public String platformName() {
+    public @NotNull String platformName() {
         return wrappedObject.getType().getName();
     }
 

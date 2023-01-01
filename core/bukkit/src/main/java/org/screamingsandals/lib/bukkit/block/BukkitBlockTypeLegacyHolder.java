@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,15 +34,15 @@ import java.util.Map;
 @ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
 public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> implements BlockTypeHolder {
 
-    public BukkitBlockTypeLegacyHolder(Material material) {
+    public BukkitBlockTypeLegacyHolder(@NotNull Material material) {
         this(material.getNewData((byte) 0));
     }
 
-    public BukkitBlockTypeLegacyHolder(Material material, byte legacyData) {
+    public BukkitBlockTypeLegacyHolder(@NotNull Material material, byte legacyData) {
         this(material.getNewData(legacyData));
     }
 
-    public BukkitBlockTypeLegacyHolder(MaterialData wrappedObject) {
+    public BukkitBlockTypeLegacyHolder(@NotNull MaterialData wrappedObject) {
         super(wrappedObject);
         if (!wrappedObject.getItemType().isBlock()) {
             throw new UnsupportedOperationException("Material must be a block!");
@@ -50,7 +50,7 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     }
 
     @Override
-    public String platformName() {
+    public @NotNull String platformName() {
         return wrappedObject.getItemType().name();
     }
 
@@ -60,23 +60,19 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     }
 
     @Override
-    @NotNull
-    public BlockTypeHolder withLegacyData(byte legacyData) {
+    public @NotNull BlockTypeHolder withLegacyData(byte legacyData) {
         var clone = wrappedObject.clone();
         clone.setData(legacyData);
         return new BukkitBlockTypeLegacyHolder(clone);
     }
 
     @Override
-    @Unmodifiable
-    @NotNull
-    public Map<@NotNull String, @NotNull String> flatteningData() {
+    public @Unmodifiable @NotNull Map<@NotNull String, @NotNull String> flatteningData() {
         return LegacyMaterialDataToFlatteningConverter.get(wrappedObject);
     }
 
     @Override
-    @NotNull
-    public BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> flatteningData) {
+    public @NotNull BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> flatteningData) {
         var materialName = wrappedObject.getItemType().name();
         byte baseData = 0;
 
@@ -176,20 +172,17 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     }
 
     @Override
-    @NotNull
-    public BlockTypeHolder with(@NotNull String attribute, @NotNull String value) {
+    public @NotNull BlockTypeHolder with(@NotNull String attribute, @NotNull String value) {
         return new BukkitBlockTypeLegacyHolder(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, value));
     }
 
     @Override
-    @NotNull
-    public BlockTypeHolder with(@NotNull String attribute, int value) {
+    public @NotNull BlockTypeHolder with(@NotNull String attribute, int value) {
         return new BukkitBlockTypeLegacyHolder(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, String.valueOf(value)));
     }
 
     @Override
-    @NotNull
-    public BlockTypeHolder with(@NotNull String attribute, boolean value) {
+    public @NotNull BlockTypeHolder with(@NotNull String attribute, boolean value) {
         return new BukkitBlockTypeLegacyHolder(LegacyMaterialDataToFlatteningConverter.set(wrappedObject, attribute, String.valueOf(value)));
     }
 

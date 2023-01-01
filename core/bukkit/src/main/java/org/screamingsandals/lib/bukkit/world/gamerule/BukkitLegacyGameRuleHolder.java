@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,19 @@
 
 package org.screamingsandals.lib.bukkit.world.gamerule;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
 
 import java.util.Arrays;
 
 public class BukkitLegacyGameRuleHolder extends BasicWrapper<String> implements GameRuleHolder {
-    protected BukkitLegacyGameRuleHolder(String wrappedObject) {
+    protected BukkitLegacyGameRuleHolder(@NotNull String wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    public String platformName() {
+    public @NotNull String platformName() {
         return wrappedObject;
     }
 

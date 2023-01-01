@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.world.chunk;
 
 import org.bukkit.Chunk;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -31,7 +32,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class BukkitChunkHolder extends BasicWrapper<Chunk> implements ChunkHolder {
-    public BukkitChunkHolder(Chunk wrappedObject) {
+    public BukkitChunkHolder(@NotNull Chunk wrappedObject) {
         super(wrappedObject);
     }
 
@@ -46,17 +47,17 @@ public class BukkitChunkHolder extends BasicWrapper<Chunk> implements ChunkHolde
     }
 
     @Override
-    public WorldHolder getWorld() {
+    public @NotNull WorldHolder getWorld() {
         return WorldMapper.wrapWorld(wrappedObject.getWorld());
     }
 
     @Override
-    public BlockHolder getBlock(@Range(from = 0, to = 15) int x, int y, @Range(from = 0, to = 15) int z) {
+    public @NotNull BlockHolder getBlock(@Range(from = 0, to = 15) int x, int y, @Range(from = 0, to = 15) int z) {
         return BlockMapper.wrapBlock(wrappedObject.getBlock(x, y, z));
     }
 
     @Override
-    public EntityBasic[] getEntities() {
+    public @NotNull EntityBasic @NotNull [] getEntities() {
         return Arrays.stream(wrappedObject.getEntities())
                 .map(EntityMapper::wrapEntity)
                 .filter(Objects::nonNull)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.entity.pose;
 
 import org.bukkit.entity.Pose;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -24,12 +25,12 @@ import java.util.Arrays;
 
 public class BukkitEntityPoseHolder extends BasicWrapper<Pose> implements EntityPoseHolder {
 
-    public BukkitEntityPoseHolder(Pose wrappedObject) {
+    public BukkitEntityPoseHolder(@NotNull Pose wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    public String platformName() {
+    public @NotNull String platformName() {
         return wrappedObject.name();
     }
 

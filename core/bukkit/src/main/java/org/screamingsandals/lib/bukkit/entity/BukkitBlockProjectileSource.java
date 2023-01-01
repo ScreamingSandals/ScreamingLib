@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 
 public class BukkitBlockProjectileSource extends BasicWrapper<BlockProjectileSource> implements BlockProjectileShooter {
-    public BukkitBlockProjectileSource(BlockProjectileSource wrappedObject) {
+    public BukkitBlockProjectileSource(@NotNull BlockProjectileSource wrappedObject) {
         super(wrappedObject);
     }
 
@@ -57,7 +57,7 @@ public class BukkitBlockProjectileSource extends BasicWrapper<BlockProjectileSou
     }
 
     @Override
-    public BlockHolder getBlock() {
+    public @NotNull BlockHolder getBlock() {
         return BlockMapper.wrapBlock(wrappedObject.getBlock());
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import org.screamingsandals.lib.spectator.StorageNBTComponent;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 public class AdventureStorageNBTComponent extends AdventureNBTComponent<net.kyori.adventure.text.StorageNBTComponent> implements StorageNBTComponent {
-    public AdventureStorageNBTComponent(net.kyori.adventure.text.StorageNBTComponent wrappedObject) {
+    public AdventureStorageNBTComponent(net.kyori.adventure.text.@NotNull StorageNBTComponent wrappedObject) {
         super(wrappedObject);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.SPlayerCraftItemEvent;
 import org.screamingsandals.lib.item.Item;
@@ -47,12 +48,12 @@ public class SBukkitPlayerCraftItemEvent extends SBukkitPlayerInventoryClickEven
     // TODO: Proper Recipe API
     public static class BukkitRecipe extends BasicWrapper<org.bukkit.inventory.Recipe> implements Recipe {
 
-        public BukkitRecipe(org.bukkit.inventory.Recipe wrappedObject) {
+        public BukkitRecipe(org.bukkit.inventory.@NotNull Recipe wrappedObject) {
             super(wrappedObject);
         }
 
         @Override
-        public Item result() {
+        public @NotNull Item result() {
             return new BukkitItem(wrappedObject.getResult());
         }
     }

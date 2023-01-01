@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,12 +35,12 @@ import java.util.Arrays;
 
 public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements EntityTypeHolder {
 
-    public BukkitEntityTypeHolder(EntityType wrappedObject) {
+    public BukkitEntityTypeHolder(@NotNull EntityType wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    public String platformName() {
+    public @NotNull String platformName() {
         return wrappedObject.name();
     }
 

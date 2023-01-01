@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeHolder;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.nms.accessors.*;
-import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -96,7 +96,7 @@ public class BukkitServer extends Server {
     }
 
     @Override
-    public List<PlayerWrapper> getConnectedPlayers0() {
+    public @NotNull List<@NotNull PlayerWrapper> getConnectedPlayers0() {
         return Bukkit.getOnlinePlayers()
                 .stream()
                 .map(BukkitEntityPlayer::new)
@@ -104,7 +104,7 @@ public class BukkitServer extends Server {
     }
 
     @Override
-    public List<PlayerWrapper> getConnectedPlayersFromWorld0(WorldHolder holder) {
+    public @NotNull List<@NotNull PlayerWrapper> getConnectedPlayersFromWorld0(@NotNull WorldHolder holder) {
         return holder.as(World.class).getPlayers()
                 .stream()
                 .map(BukkitEntityPlayer::new)
@@ -112,14 +112,14 @@ public class BukkitServer extends Server {
     }
 
     @Override
-    public List<WorldHolder> getWorlds0() {
+    public @NotNull List<@NotNull WorldHolder> getWorlds0() {
         return Bukkit.getWorlds().stream()
                 .map(WorldMapper::wrapWorld)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void runSynchronously0(Runnable task) {
+    public void runSynchronously0(@NotNull Runnable task) {
         Bukkit.getServer().getScheduler().runTask(plugin, task);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,19 +33,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AdventureBossBar extends BasicWrapper<net.kyori.adventure.bossbar.BossBar> implements BossBar {
-    public AdventureBossBar(net.kyori.adventure.bossbar.BossBar wrappedObject) {
+    public AdventureBossBar(net.kyori.adventure.bossbar.@NotNull BossBar wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    @NotNull
-    public Component title() {
+    public @NotNull Component title() {
         return AdventureBackend.wrapComponent(wrappedObject.name());
     }
 
     @Override
-    @NotNull
-    public BossBar title(@NotNull Component title) {
+    public @NotNull BossBar title(@NotNull Component title) {
         wrappedObject.name(title.as(net.kyori.adventure.text.Component.class));
         return this;
     }
@@ -56,55 +54,46 @@ public class AdventureBossBar extends BasicWrapper<net.kyori.adventure.bossbar.B
     }
 
     @Override
-    @NotNull
-    public BossBar progress(float progress) {
+    public @NotNull BossBar progress(float progress) {
         wrappedObject.progress(progress);
         return this;
     }
 
     @Override
-    @NotNull
-    @Unmodifiable
-    public List<BossBarFlag> flags() {
+    public @NotNull @Unmodifiable List<@NotNull BossBarFlag> flags() {
         return BossBarUtils.convertFlags(wrappedObject.flags());
     }
 
     @Override
-    @NotNull
-    public BossBar flags(@NotNull List<BossBarFlag> flags) {
+    public @NotNull BossBar flags(@NotNull List<BossBarFlag> flags) {
         wrappedObject.flags(BossBarUtils.convertFlags(flags));
         return this;
     }
 
     @Override
-    @NotNull
-    public BossBarColor color() {
+    public @NotNull BossBarColor color() {
         return BossBarUtils.convertColor(wrappedObject.color());
     }
 
     @Override
-    @NotNull
-    public BossBar color(@NotNull BossBarColor color) {
+    public @NotNull BossBar color(@NotNull BossBarColor color) {
         wrappedObject.color(BossBarUtils.convertColor(color));
         return this;
     }
 
     @Override
-    @NotNull
-    public BossBarDivision division() {
+    public @NotNull BossBarDivision division() {
         return BossBarUtils.convertDivision(wrappedObject.overlay());
     }
 
     @Override
-    @NotNull
-    public BossBar division(@NotNull BossBarDivision division) {
+    public @NotNull BossBar division(@NotNull BossBarDivision division) {
         wrappedObject.overlay(BossBarUtils.convertDivision(division));
         return this;
     }
 
     @Override
-    @NotNull
-    public RegisteredListener addListener(@NotNull BossBarListener listener) {
+    public @NotNull RegisteredListener addListener(@NotNull BossBarListener listener) {
         var adventureListener = new AdventureBossBarListener(listener);
         wrappedObject.addListener(adventureListener);
         return adventureListener;
@@ -118,26 +107,21 @@ public class AdventureBossBar extends BasicWrapper<net.kyori.adventure.bossbar.B
     @Setter
     @Accessors(fluent = true, chain = true)
     public static class AdventureBossBarBuilder implements BossBar.Builder {
-        @NotNull
-        private Component title = Component.empty();
+        private @NotNull Component title = Component.empty();
         private float progress;
-        @NotNull
-        private BossBarColor color = BossBarColor.PINK;
-        @NotNull
-        private BossBarDivision division = BossBarDivision.NO_DIVISION;
-        @NotNull
-        private Collection<BossBarFlag> flags;
-        private final List<BossBarListener> listeners = new ArrayList<>();
+        private @NotNull BossBarColor color = BossBarColor.PINK;
+        private @NotNull BossBarDivision division = BossBarDivision.NO_DIVISION;
+        private @NotNull Collection<@NotNull BossBarFlag> flags;
+        private final @NotNull List<BossBarListener> listeners = new ArrayList<>();
 
         @Override
-        @NotNull
-        public Builder flags(@NotNull Collection<BossBarFlag> flags) {
+        public @NotNull Builder flags(@NotNull Collection<@NotNull BossBarFlag> flags) {
             this.flags = flags;
             return this;
         }
 
         @Override
-        public @NotNull Builder flags(@NotNull BossBarFlag... flags) {
+        public @NotNull Builder flags(@NotNull BossBarFlag @NotNull... flags) {
             this.flags = Arrays.asList(flags);
             return this;
         }
@@ -151,8 +135,7 @@ public class AdventureBossBar extends BasicWrapper<net.kyori.adventure.bossbar.B
         }
 
         @Override
-        @NotNull
-        public BossBar build() {
+        public @NotNull BossBar build() {
             var bossBar = new AdventureBossBar(net.kyori.adventure.bossbar.BossBar.bossBar(
                     title.as(net.kyori.adventure.text.Component.class),
                     progress,

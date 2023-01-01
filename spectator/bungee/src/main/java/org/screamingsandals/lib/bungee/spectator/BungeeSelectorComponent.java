@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.SelectorComponent;
 
 public class BungeeSelectorComponent extends BungeeComponent implements SelectorComponent {
-    protected BungeeSelectorComponent(net.md_5.bungee.api.chat.SelectorComponent wrappedObject) {
+    protected BungeeSelectorComponent(net.md_5.bungee.api.chat.@NotNull SelectorComponent wrappedObject) {
         super(wrappedObject);
     }
 

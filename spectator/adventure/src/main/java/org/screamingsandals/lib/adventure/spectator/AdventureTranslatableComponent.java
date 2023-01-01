@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AdventureTranslatableComponent extends AdventureComponent implements TranslatableComponent {
-    public AdventureTranslatableComponent(net.kyori.adventure.text.TranslatableComponent wrappedObject) {
+    public AdventureTranslatableComponent(net.kyori.adventure.text.@NotNull TranslatableComponent wrappedObject) {
         super(wrappedObject);
     }
 

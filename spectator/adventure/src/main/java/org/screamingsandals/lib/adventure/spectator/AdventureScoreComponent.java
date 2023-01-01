@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.ScoreComponent;
 
 public class AdventureScoreComponent extends AdventureComponent implements ScoreComponent {
-    public AdventureScoreComponent(net.kyori.adventure.text.ScoreComponent wrappedObject) {
+    public AdventureScoreComponent(net.kyori.adventure.text.@NotNull ScoreComponent wrappedObject) {
         super(wrappedObject);
     }
 

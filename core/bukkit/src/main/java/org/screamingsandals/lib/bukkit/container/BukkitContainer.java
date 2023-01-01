@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class BukkitContainer extends BasicWrapper<Inventory> implements Container {
-    public BukkitContainer(Inventory wrappedObject) {
+    public BukkitContainer(@NotNull Inventory wrappedObject) {
         super(wrappedObject);
     }
 

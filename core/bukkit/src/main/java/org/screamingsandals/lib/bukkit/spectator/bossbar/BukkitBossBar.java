@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.bossbar.*;
@@ -36,15 +37,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BukkitBossBar extends BasicWrapper<BossBar> implements org.screamingsandals.lib.spectator.bossbar.BossBar {
-    private final List<RegisteredListener> internalListeners = new ArrayList<>();
+    private final @NotNull List<@NotNull RegisteredListener> internalListeners = new ArrayList<>();
 
-    public BukkitBossBar(BossBar wrappedObject) {
+    public BukkitBossBar(@NotNull BossBar wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    @NotNull
-    public Component title() {
+    public @NotNull Component title() {
         return Component.fromLegacy(wrappedObject.getTitle());
     }
 
@@ -69,7 +69,7 @@ public class BukkitBossBar extends BasicWrapper<BossBar> implements org.screamin
     }
 
     @Override
-    public @NotNull @Unmodifiable List<BossBarFlag> flags() {
+    public @NotNull @Unmodifiable List<@NotNull BossBarFlag> flags() {
         return Arrays.stream(BossBarFlag.values())
                 .filter(bossBarFlag -> {
                     try {
@@ -82,7 +82,7 @@ public class BukkitBossBar extends BasicWrapper<BossBar> implements org.screamin
     }
 
     @Override
-    public org.screamingsandals.lib.spectator.bossbar.@NotNull BossBar flags(@NotNull List<BossBarFlag> flags) {
+    public org.screamingsandals.lib.spectator.bossbar.@NotNull BossBar flags(@NotNull List<@NotNull BossBarFlag> flags) {
         var added = new ArrayList<BossBarFlag>();
         var removed = new ArrayList<BossBarFlag>();
         for (BarFlag value : BarFlag.values()) {
@@ -156,8 +156,7 @@ public class BukkitBossBar extends BasicWrapper<BossBar> implements org.screamin
     }
 
     @Override
-    @NotNull
-    public RegisteredListener addListener(@NotNull BossBarListener listener) {
+    public @NotNull RegisteredListener addListener(@NotNull BossBarListener listener) {
         RegisteredListener registered = () -> listener;
         internalListeners.add(registered);
         return registered;
@@ -171,37 +170,33 @@ public class BukkitBossBar extends BasicWrapper<BossBar> implements org.screamin
     @Setter
     @Accessors(fluent = true)
     public static class BukkitBossBarBuilder implements org.screamingsandals.lib.spectator.bossbar.BossBar.Builder {
-        private Component title = Component.empty();
-        private float progress = 0;
-        private BossBarColor color = BossBarColor.PINK;
-        private BossBarDivision division = BossBarDivision.NO_DIVISION;
-        private Collection<BossBarFlag> flags;
-        private final List<BossBarListener> listeners = new ArrayList<>();
+        private @NotNull Component title = Component.empty();
+        private float progress;
+        private @NotNull BossBarColor color = BossBarColor.PINK;
+        private @NotNull BossBarDivision division = BossBarDivision.NO_DIVISION;
+        private @Nullable Collection<@NotNull BossBarFlag> flags;
+        private final @NotNull List<@NotNull BossBarListener> listeners = new ArrayList<>();
 
         @Override
-        @NotNull
-        public Builder flags(@NotNull Collection<BossBarFlag> flags) {
+        public @NotNull Builder flags(@NotNull Collection<BossBarFlag> flags) {
             this.flags = flags;
             return this;
         }
 
         @Override
-        @NotNull
-        public Builder flags(@NotNull BossBarFlag... flags) {
+        public @NotNull Builder flags(@NotNull BossBarFlag... flags) {
             this.flags = Arrays.asList(flags);
             return this;
         }
 
         @Override
-        @NotNull
-        public Builder listener(@NotNull BossBarListener listener) {
+        public @NotNull Builder listener(@NotNull BossBarListener listener) {
             listeners.add(listener);
             return this;
         }
 
         @Override
-        @NotNull
-        public org.screamingsandals.lib.spectator.bossbar.BossBar build() {
+        public org.screamingsandals.lib.spectator.bossbar.@NotNull BossBar build() {
             var boss = new BukkitBossBar(Bukkit.createBossBar(
                     title.toLegacy(),
                     BarColor.PURPLE,

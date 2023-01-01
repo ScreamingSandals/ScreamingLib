@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 
 public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.ClickEvent> implements ClickEvent {
-    public BungeeClickEvent(net.md_5.bungee.api.chat.ClickEvent wrappedObject) {
+    public BungeeClickEvent(net.md_5.bungee.api.chat.@NotNull ClickEvent wrappedObject) {
         super(wrappedObject);
     }
 

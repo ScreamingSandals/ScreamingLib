@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.HoverEvent> implements HoverEvent {
-    public BungeeHoverEvent(net.md_5.bungee.api.chat.HoverEvent wrappedObject) {
+    public BungeeHoverEvent(net.md_5.bungee.api.chat.@NotNull HoverEvent wrappedObject) {
         super(wrappedObject);
     }
 

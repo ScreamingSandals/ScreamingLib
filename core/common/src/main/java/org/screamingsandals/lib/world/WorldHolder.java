@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,14 +43,14 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Play
      *
      * @return the world uuid
      */
-    UUID getUuid();
+    @NotNull UUID getUuid();
 
     /**
      * Gets the world's name.
      *
      * @return the world name
      */
-    String getName();
+    @NotNull String getName();
 
     /**
      * Gets the world's minimal Y coordinate.
@@ -71,14 +71,14 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Play
      *
      * @return the world difficulty
      */
-    DifficultyHolder getDifficulty();
+    @NotNull DifficultyHolder getDifficulty();
 
     /**
      * Gets the world dimension holder.
      *
      * @return the world dimension
      */
-    DimensionHolder getDimension();
+    @NotNull DimensionHolder getDimension();
 
     /**
      * Gets the world's chunk at the supplied coordinates.
@@ -102,7 +102,7 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Play
      *
      * @return the list of the entities in this world
      */
-    List<EntityBasic> getEntities();
+    @NotNull List<@NotNull EntityBasic> getEntities();
 
     /**
      * Gets the list of entities extending the supplied class in this world.
@@ -125,7 +125,7 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Play
      * @param <T> the gamerule value type
      * @return the gamerule value
      */
-    <T> T getGameRuleValue(GameRuleHolder holder);
+    <T> @Nullable T getGameRuleValue(@NotNull GameRuleHolder holder);
 
     /**
      * Sets the value of the supplied gamerule holder in this world.
@@ -134,7 +134,7 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Play
      * @param value the gamerule value
      * @param <T> the gamerule value type
      */
-    <T> void setGameRuleValue(GameRuleHolder holder, T value);
+    <T> void setGameRuleValue(@NotNull GameRuleHolder holder, @NotNull T value);
 
     /**
      * Gets the time in this world.
@@ -156,7 +156,7 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Play
      * @param particle the particle
      * @param location the location
      */
-    void sendParticle(ParticleHolder particle, LocationHolder location);
+    void sendParticle(@NotNull ParticleHolder particle, @NotNull LocationHolder location);
 
     /**
      * Determines if the spawn point of this world is loaded and being held in memory.
@@ -186,7 +186,7 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Play
      * @param z the z coordinate
      * @return the highest non-empty block
      */
-    BlockHolder getHighestBlockAt(int x, int z);
+    @NotNull BlockHolder getHighestBlockAt(int x, int z);
 
     /**
      * Gets the highest non-empty Y coordinate at the given X and Z coordinates.

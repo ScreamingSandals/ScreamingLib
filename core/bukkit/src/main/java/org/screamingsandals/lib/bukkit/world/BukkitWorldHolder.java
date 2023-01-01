@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,17 +48,17 @@ import java.util.stream.Collectors;
 
 @ConfigSerializable
 public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolder {
-    public BukkitWorldHolder(World wrappedObject) {
+    public BukkitWorldHolder(@NotNull World wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    public UUID getUuid() {
+    public @NotNull UUID getUuid() {
         return wrappedObject.getUID();
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return wrappedObject.getName();
     }
 
@@ -76,12 +76,12 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
     }
 
     @Override
-    public DifficultyHolder getDifficulty() {
+    public @NotNull DifficultyHolder getDifficulty() {
         return DifficultyHolder.of(wrappedObject.getDifficulty());
     }
 
     @Override
-    public DimensionHolder getDimension() {
+    public @NotNull DimensionHolder getDimension() {
         return DimensionHolder.of(wrappedObject.getEnvironment());
     }
 
@@ -96,7 +96,7 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
     }
 
     @Override
-    public List<EntityBasic> getEntities() {
+    public @NotNull List<@NotNull EntityBasic> getEntities() {
         return wrappedObject.getEntities().stream()
                 .map(EntityMapper::wrapEntity)
                 .filter(Objects::nonNull)
@@ -105,7 +105,7 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getGameRuleValue(GameRuleHolder holder) {
+    public <T> @Nullable T getGameRuleValue(@NotNull GameRuleHolder holder) {
         if (Reflect.has("org.bukkit.GameRule")) {
             return (T) wrappedObject.getGameRuleValue(holder.as(GameRule.class));
         } else {
@@ -116,7 +116,7 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
             try {
                 return (T) Integer.valueOf(val);
             } catch (Throwable ignored) {
-                if (val.equalsIgnoreCase("true") || val.equalsIgnoreCase("false")) {
+                if ("true".equalsIgnoreCase(val) || "false".equalsIgnoreCase(val)) {
                     return (T) Boolean.valueOf(val);
                 } else {
                     return (T) val;
@@ -127,7 +127,7 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void setGameRuleValue(GameRuleHolder holder, T value) {
+    public <T> void setGameRuleValue(@NotNull GameRuleHolder holder, @NotNull T value) {
         if (Reflect.has("org.bukkit.GameRule")) {
             wrappedObject.setGameRule((GameRule<T>) holder.as(GameRule.class), value);
         } else {
@@ -146,7 +146,7 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
     }
 
     @Override
-    public void sendParticle(ParticleHolder particle, LocationHolder location) {
+    public void sendParticle(@NotNull ParticleHolder particle, @NotNull LocationHolder location) {
         try {
             // 1.13.1 +
             wrappedObject.spawnParticle(
@@ -196,7 +196,7 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
     }
 
     @Override
-    public BlockHolder getHighestBlockAt(int x, int z) {
+    public @NotNull BlockHolder getHighestBlockAt(int x, int z) {
         return BlockMapper.wrapBlock(wrappedObject.getHighestBlockAt(x, z));
     }
 
@@ -206,8 +206,7 @@ public class BukkitWorldHolder extends BasicWrapper<World> implements WorldHolde
     }
 
     @Override
-    @NotNull
-    public Iterable<? extends PlayerAudience> audiences() {
+    public @NotNull Iterable<? extends @NotNull PlayerAudience> audiences() {
         return Server.getConnectedPlayersFromWorld(this);
     }
 }

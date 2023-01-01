@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,18 @@
 package org.screamingsandals.lib.adventure.spectator.audience.adapter;
 
 import net.kyori.adventure.audience.Audience;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.audience.ConsoleAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.ConsoleAdapter;
 
 public class AdventureConsoleAdapter extends AdventureAdapter implements ConsoleAdapter {
-    public AdventureConsoleAdapter(Audience wrappedObject, @Nullable ConsoleAudience owner) {
+    public AdventureConsoleAdapter(@NotNull Audience wrappedObject, @Nullable ConsoleAudience owner) {
         super(wrappedObject, owner);
     }
 
     @Override
-    @Nullable
-    public ConsoleAudience owner() {
+    public @Nullable ConsoleAudience owner() {
         return (ConsoleAudience) super.owner();
     }
 }

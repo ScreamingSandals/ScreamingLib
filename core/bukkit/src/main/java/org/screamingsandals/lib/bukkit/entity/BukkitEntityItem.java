@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.entity;
 
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.item.Item;
@@ -25,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 public class BukkitEntityItem extends BukkitEntityBasic implements EntityItem {
 
-    public BukkitEntityItem(org.bukkit.entity.Item wrappedObject) {
+    public BukkitEntityItem(org.bukkit.entity.@NotNull Item wrappedObject) {
         super(wrappedObject);
     }
 

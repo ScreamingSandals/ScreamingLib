@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@ import java.util.UUID;
 
 @Data
 public class FinalOfflinePlayerWrapper implements OfflinePlayerWrapper {
-    private final UUID uuid;
+    private final @NotNull UUID uuid;
     @EqualsAndHashCode.Exclude
-    private final String name;
+    private final @Nullable String name;
 
     @Override
     public @Nullable String getLastName() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bukkit.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.ext.paperlib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -44,7 +45,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBasic {
-    public BukkitEntityBasic(Entity wrappedObject) {
+    public BukkitEntityBasic(@NotNull Entity wrappedObject) {
         super(wrappedObject);
     }
 

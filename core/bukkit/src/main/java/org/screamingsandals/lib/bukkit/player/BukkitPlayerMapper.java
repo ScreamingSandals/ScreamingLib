@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public boolean hasPermission0(CommandSenderWrapper wrapper, Permission permission) {
+    public boolean hasPermission0(@NotNull CommandSenderWrapper wrapper, @NotNull Permission permission) {
         if (isOp0(wrapper)) {
             return true;
         }
@@ -118,7 +118,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public boolean isPermissionSet0(CommandSenderWrapper wrapper, Permission permission) {
+    public boolean isPermissionSet0(@NotNull CommandSenderWrapper wrapper, @NotNull Permission permission) {
         if (permission instanceof SimplePermission) {
             return wrapper.as(CommandSender.class).isPermissionSet(((SimplePermission) permission).getPermissionString());
         }
@@ -126,42 +126,42 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public boolean isOp0(Operator wrapper) {
+    public boolean isOp0(@NotNull Operator wrapper) {
         return wrapper.as(CommandSender.class).isOp();
     }
 
     @Override
-    public void setOp0(Operator wrapper, boolean op) {
+    public void setOp0(@NotNull Operator wrapper, boolean op) {
         wrapper.as(CommandSender.class).setOp(op);
     }
 
     @Override
-    public long getFirstPlayed0(OfflinePlayerWrapper playerWrapper) {
+    public long getFirstPlayed0(@NotNull OfflinePlayerWrapper playerWrapper) {
         return playerWrapper.as(OfflinePlayer.class).getFirstPlayed();
     }
 
     @Override
-    public long getLastPlayed0(OfflinePlayerWrapper playerWrapper) {
+    public long getLastPlayed0(@NotNull OfflinePlayerWrapper playerWrapper) {
         return playerWrapper.as(OfflinePlayer.class).getLastPlayed();
     }
 
     @Override
-    public boolean isBanned0(OfflinePlayerWrapper playerWrapper) {
+    public boolean isBanned0(@NotNull OfflinePlayerWrapper playerWrapper) {
         return playerWrapper.as(OfflinePlayer.class).isBanned();
     }
 
     @Override
-    public boolean isWhitelisted0(OfflinePlayerWrapper playerWrapper) {
+    public boolean isWhitelisted0(@NotNull OfflinePlayerWrapper playerWrapper) {
         return playerWrapper.as(OfflinePlayer.class).isWhitelisted();
     }
 
     @Override
-    public boolean isOnline0(OfflinePlayerWrapper playerWrapper) {
+    public boolean isOnline0(@NotNull OfflinePlayerWrapper playerWrapper) {
         return playerWrapper.as(OfflinePlayer.class).isOnline();
     }
 
     @Override
-    public void setWhitelisted0(OfflinePlayerWrapper playerWrapper, boolean whitelisted) {
+    public void setWhitelisted0(@NotNull OfflinePlayerWrapper playerWrapper, boolean whitelisted) {
         playerWrapper.as(OfflinePlayer.class).setWhitelisted(whitelisted);
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.attribute;
 
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.attribute.*;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -27,12 +28,12 @@ import java.util.stream.Collectors;
 
 public class BukkitAttributeHolder extends BasicWrapper<AttributeInstance> implements AttributeHolder {
 
-    protected BukkitAttributeHolder(AttributeInstance wrappedObject) {
+    protected BukkitAttributeHolder(@NotNull AttributeInstance wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    public AttributeTypeHolder getAttributeType() {
+    public @NotNull AttributeTypeHolder getAttributeType() {
         return new BukkitAttributeTypeHolder(wrappedObject.getAttribute());
     }
 
@@ -57,7 +58,7 @@ public class BukkitAttributeHolder extends BasicWrapper<AttributeInstance> imple
     }
 
     @Override
-    public List<AttributeModifierHolder> getModifiers() {
+    public @NotNull List<@NotNull AttributeModifierHolder> getModifiers() {
         return wrappedObject.getModifiers().stream()
                 .map(AttributeMapping::wrapAttributeModifier)
                 .filter(Objects::nonNull)

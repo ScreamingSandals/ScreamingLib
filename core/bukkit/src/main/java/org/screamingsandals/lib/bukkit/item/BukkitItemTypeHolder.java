@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class BukkitItemTypeHolder extends BasicWrapper<Material> implements Item
     // Because people can be stupid + it's also used in our current code for deserializing items ;)
     private short forcedDurability;
 
-    public BukkitItemTypeHolder(Material wrappedObject) {
+    public BukkitItemTypeHolder(@NotNull Material wrappedObject) {
         super(wrappedObject);
         if (!wrappedObject.isItem()) {
             throw new UnsupportedOperationException("BukkitItemTypeHolder can wrap only item types!!!");
@@ -46,7 +46,7 @@ public class BukkitItemTypeHolder extends BasicWrapper<Material> implements Item
     }
 
     @Override
-    public String platformName() {
+    public @NotNull String platformName() {
         return wrappedObject.name();
     }
 
@@ -89,7 +89,7 @@ public class BukkitItemTypeHolder extends BasicWrapper<Material> implements Item
             return bukkitTag.isTagged(wrappedObject);
         }
         // backported tags
-        if (!key.namespace().equals("minecraft")) {
+        if (!"minecraft".equals(key.namespace())) {
             return false;
         }
         var value = key.value();

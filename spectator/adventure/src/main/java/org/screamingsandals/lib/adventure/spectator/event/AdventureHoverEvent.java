@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.screamingsandals.lib.adventure.spectator.event;
 
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.adventure.spectator.event.hover.AdventureEntityContent;
 import org.screamingsandals.lib.adventure.spectator.event.hover.AdventureItemContent;
@@ -32,13 +33,12 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class AdventureHoverEvent extends BasicWrapper<net.kyori.adventure.text.event.HoverEvent<?>> implements HoverEvent {
-    public AdventureHoverEvent(net.kyori.adventure.text.event.HoverEvent<?> wrappedObject) {
+    public AdventureHoverEvent(net.kyori.adventure.text.event.@NotNull HoverEvent<?> wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    @NotNull
-    public Action action() {
+    public @NotNull Action action() {
         try {
             return Action.valueOf(Objects.requireNonNull(net.kyori.adventure.text.event.HoverEvent.Action.NAMES.key(wrappedObject.action())).toUpperCase(Locale.ROOT));
         } catch (Throwable ignored) {
@@ -47,8 +47,7 @@ public class AdventureHoverEvent extends BasicWrapper<net.kyori.adventure.text.e
     }
 
     @Override
-    @NotNull
-    public Content content() {
+    public @NotNull Content content() {
         if (wrappedObject.action().type() == Component.class) {
             return AdventureBackend.wrapComponent((Component) wrappedObject.value());
         } else if (wrappedObject.action().type() == net.kyori.adventure.text.event.HoverEvent.ShowItem.class) {
@@ -69,26 +68,23 @@ public class AdventureHoverEvent extends BasicWrapper<net.kyori.adventure.text.e
     }
 
     public static class AdventureHoverEventBuilder implements HoverEvent.Builder {
-        private Action action = Action.SHOW_TEXT;
-        private Content content;
+        private @NotNull Action action = Action.SHOW_TEXT;
+        private @Nullable Content content;
 
         @Override
-        @NotNull
-        public Builder action(@NotNull Action action) {
+        public @NotNull Builder action(@NotNull Action action) {
             this.action = action;
             return this;
         }
 
         @Override
-        @NotNull
-        public Builder content(@NotNull Content content) {
+        public @NotNull Builder content(@NotNull Content content) {
             this.content = content;
             return this;
         }
 
         @Override
-        @NotNull
-        public HoverEvent build() {
+        public @NotNull HoverEvent build() {
             Preconditions.checkArgument(content != null, "Content is not specified!");
             switch (action) {
                 case SHOW_TEXT:

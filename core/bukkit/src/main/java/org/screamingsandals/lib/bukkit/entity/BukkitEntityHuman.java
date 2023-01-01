@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityHuman;
 
 public class BukkitEntityHuman extends BukkitEntityLiving implements EntityHuman {
-    public BukkitEntityHuman(HumanEntity wrappedObject) {
+    public BukkitEntityHuman(@NotNull HumanEntity wrappedObject) {
         super(wrappedObject);
     }
 

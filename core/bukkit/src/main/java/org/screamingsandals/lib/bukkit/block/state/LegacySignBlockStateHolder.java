@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.block.state;
 
 import org.bukkit.block.Sign;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.block.state.SignHolder;
 import org.screamingsandals.lib.spectator.Component;
@@ -24,18 +25,18 @@ import org.screamingsandals.lib.spectator.Component;
 import java.util.Arrays;
 
 public class LegacySignBlockStateHolder extends GenericBlockStateHolder implements SignHolder {
-    protected LegacySignBlockStateHolder(Sign wrappedObject) {
+    protected LegacySignBlockStateHolder(@NotNull Sign wrappedObject) {
         super(wrappedObject);
     }
 
     // TODO: IMPLEMENT PLATFORM ADVENTURE
     @Override
-    public Component[] lines() {
+    public @NotNull Component @NotNull [] lines() {
         return Arrays.stream(((Sign) wrappedObject).getLines()).map(Component::fromLegacy).toArray(Component[]::new);
     }
 
     @Override
-    public Component line(@Range(from = 0, to = 3) int index) {
+    public @NotNull Component line(@Range(from = 0, to = 3) int index) {
         return lines()[index];
     }
 

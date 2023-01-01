@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.PluginMessageListenerRegistration;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.CustomPayload;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.player.PlayerMapper;
@@ -96,7 +97,7 @@ public class BukkitCustomPayload extends CustomPayload {
 
     public static class BukkitRegistration extends BasicWrapper<PluginMessageListenerRegistration> implements Registration {
 
-        protected BukkitRegistration(PluginMessageListenerRegistration wrappedObject) {
+        protected BukkitRegistration(@NotNull PluginMessageListenerRegistration wrappedObject) {
             super(wrappedObject);
         }
     }

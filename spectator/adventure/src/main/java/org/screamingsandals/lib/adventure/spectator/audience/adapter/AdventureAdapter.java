@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,10 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 
 @Accessors(fluent = true)
 public class AdventureAdapter extends BasicWrapper<net.kyori.adventure.audience.Audience> implements Adapter {
-    @Nullable
     @Getter
-    private final Audience owner;
+    private final @Nullable Audience owner;
 
-    public AdventureAdapter(net.kyori.adventure.audience.Audience wrappedObject, @Nullable Audience owner) {
+    public AdventureAdapter(net.kyori.adventure.audience.@NotNull Audience wrappedObject, @Nullable Audience owner) {
         super(wrappedObject);
         this.owner = owner;
     }

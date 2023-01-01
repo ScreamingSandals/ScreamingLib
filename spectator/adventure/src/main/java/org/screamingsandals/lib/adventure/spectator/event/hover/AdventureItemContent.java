@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> implements ItemContent {
-    public AdventureItemContent(HoverEvent.ShowItem wrappedObject) {
+    public AdventureItemContent(HoverEvent.@NotNull ShowItem wrappedObject) {
         super(wrappedObject);
     }
 
@@ -102,8 +102,7 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
 
         @SuppressWarnings("PatternValidation")
         @Override
-        @NotNull
-        public ItemContent build() {
+        public @NotNull ItemContent build() {
             return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.getNamespace(), id.getKey()), count, tag == null ? null : BinaryTagHolder.of(AdventureBackend.getSnbtSerializer().serialize(tag))));
         }
     }

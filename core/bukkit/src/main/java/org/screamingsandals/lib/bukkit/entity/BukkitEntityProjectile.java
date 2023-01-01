@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,19 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.BlockProjectileSource;
 import org.bukkit.projectiles.ProjectileSource;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.EntityProjectile;
 import org.screamingsandals.lib.entity.ProjectileShooter;
 
 public class BukkitEntityProjectile extends BukkitEntityBasic implements EntityProjectile {
-    public BukkitEntityProjectile(Projectile wrappedObject) {
+    public BukkitEntityProjectile(@NotNull Projectile wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    @Nullable
-    public ProjectileShooter getShooter() {
+    public @Nullable ProjectileShooter getShooter() {
         var source = ((Projectile) wrappedObject).getShooter();
         if (source instanceof Entity) {
             return EntityMapper.wrapEntityLiving(source);

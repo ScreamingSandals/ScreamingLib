@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,12 @@
 package org.screamingsandals.lib.bukkit.block.state;
 
 import org.bukkit.block.TileState;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.state.TileStateHolder;
 
 // TODO: Persistent data container
 public class TileBlockStateHolder extends GenericBlockStateHolder implements TileStateHolder {
-    protected TileBlockStateHolder(TileState wrappedObject) {
+    protected TileBlockStateHolder(@NotNull TileState wrappedObject) {
         super(wrappedObject);
     }
 }

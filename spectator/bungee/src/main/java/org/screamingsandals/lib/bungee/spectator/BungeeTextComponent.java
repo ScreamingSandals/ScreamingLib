@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.TextComponent;
 
 public class BungeeTextComponent extends BungeeComponent implements TextComponent {
-    protected BungeeTextComponent(net.md_5.bungee.api.chat.TextComponent wrappedObject) {
+    protected BungeeTextComponent(net.md_5.bungee.api.chat.@NotNull TextComponent wrappedObject) {
         super(wrappedObject);
     }
 

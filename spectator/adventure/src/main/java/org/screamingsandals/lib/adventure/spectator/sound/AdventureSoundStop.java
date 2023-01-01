@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,13 +30,12 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 public class AdventureSoundStop extends BasicWrapper<SoundStop> implements org.screamingsandals.lib.spectator.sound.SoundStop {
-    public AdventureSoundStop(SoundStop wrappedObject) {
+    public AdventureSoundStop(@NotNull SoundStop wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
-    @Nullable
-    public NamespacedMappingKey soundKey() {
+    public @Nullable NamespacedMappingKey soundKey() {
         var sound = wrappedObject.sound();
         if (sound == null) {
             return null;
@@ -45,27 +44,23 @@ public class AdventureSoundStop extends BasicWrapper<SoundStop> implements org.s
     }
 
     @Override
-    @Nullable
-    public SoundSource source() {
+    public @Nullable SoundSource source() {
         var source = wrappedObject.source();
         return source == null ? null : new AdventureSoundSource(source);
     }
 
     @Override
-    @NotNull
-    public org.screamingsandals.lib.spectator.sound.SoundStop withSoundKey(@Nullable NamespacedMappingKey soundKey) {
+    public org.screamingsandals.lib.spectator.sound.@NotNull SoundStop withSoundKey(@Nullable NamespacedMappingKey soundKey) {
         return toBuilder().soundKey(soundKey).build();
     }
 
     @Override
-    @NotNull
-    public org.screamingsandals.lib.spectator.sound.SoundStop withSource(@Nullable SoundSource source) {
+    public org.screamingsandals.lib.spectator.sound.@NotNull SoundStop withSource(@Nullable SoundSource source) {
         return toBuilder().source(source).build();
     }
 
-    @NotNull
     @Override
-    public org.screamingsandals.lib.spectator.sound.SoundStop.Builder toBuilder() {
+    public org.screamingsandals.lib.spectator.sound.SoundStop.@NotNull Builder toBuilder() {
         return new AdventureSoundStopBuilder(
                 soundKey(),
                 source()
@@ -78,16 +73,13 @@ public class AdventureSoundStop extends BasicWrapper<SoundStop> implements org.s
     @Setter
     public static class AdventureSoundStopBuilder implements org.screamingsandals.lib.spectator.sound.SoundStop.Builder {
 
-        @Nullable
-        private NamespacedMappingKey soundKey;
+        private @Nullable NamespacedMappingKey soundKey;
 
-        @Nullable
-        private SoundSource source;
+        private @Nullable SoundSource source;
 
         @SuppressWarnings("PatternValidation")
         @Override
-        @NotNull
-        public org.screamingsandals.lib.spectator.sound.SoundStop build() {
+        public org.screamingsandals.lib.spectator.sound.@NotNull SoundStop build() {
             if (soundKey == null && source == null) {
                 return new AdventureSoundStop(SoundStop.all());
             } else if (source == null) {

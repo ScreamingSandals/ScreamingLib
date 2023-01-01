@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 ScreamingSandals
+ * Copyright 2023 ScreamingSandals
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.entity;
 
 import org.bukkit.FireworkEffect;
 import org.bukkit.entity.Firework;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityFirework;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.utils.Pair;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BukkitEntityFirework extends BukkitEntityProjectile implements EntityFirework {
-    public BukkitEntityFirework(Firework wrappedObject) {
+    public BukkitEntityFirework(@NotNull Firework wrappedObject) {
         super(wrappedObject);
     }
 
