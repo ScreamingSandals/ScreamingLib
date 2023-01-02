@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.event.player;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.bukkit.event.block.SignChangeEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -45,7 +46,7 @@ public class SBukkitPlayerUpdateSignEvent implements SPlayerUpdateSignEvent, Buk
     private BlockHolder block;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

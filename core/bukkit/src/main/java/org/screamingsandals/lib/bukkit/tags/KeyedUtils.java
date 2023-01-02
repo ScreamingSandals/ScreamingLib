@@ -16,12 +16,14 @@
 
 package org.screamingsandals.lib.bukkit.tags;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 
 // To trick plugin-class-loader in legacy, all methods here are not in their respective Mapping class, that's also why we can't use generics here properly
+@UtilityClass
 public class KeyedUtils {
     @SuppressWarnings("unchecked")
     public static <T> boolean isTagged(@NotNull String registry, @NotNull NamespacedKey key, @NotNull Class<T> type, @NotNull T object) {

@@ -220,9 +220,7 @@ public interface ItemBuilder extends MetadataConsumer {
     @CustomAutocompletion(CustomAutocompletion.Type.POTION)
     @Contract("_ -> this")
     default @NotNull ItemBuilder potion(@NotNull Object potion) {
-        NullableExtension.ifNotNull(PotionHolder.ofNullable(potion), potionHolder -> {
-            this.setMetadata(ItemMeta.POTION_TYPE, potionHolder);
-        });
+        NullableExtension.ifNotNull(PotionHolder.ofNullable(potion), potionHolder -> this.setMetadata(ItemMeta.POTION_TYPE, potionHolder));
         return this;
     }
 
@@ -240,15 +238,11 @@ public interface ItemBuilder extends MetadataConsumer {
     default @NotNull ItemBuilder effect(@NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;
-            list.forEach(effect1 -> NullableExtension.ifNotNull(PotionEffectHolder.ofNullable(effect1), potionEffectHolder -> {
-                this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder);
-            }));
+            list.forEach(effect1 -> NullableExtension.ifNotNull(PotionEffectHolder.ofNullable(effect1), potionEffectHolder -> this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder)));
             return this;
         }
 
-        NullableExtension.ifNotNull(PotionEffectHolder.ofNullable(effect), potionEffectHolder -> {
-            this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder);
-        });
+        NullableExtension.ifNotNull(PotionEffectHolder.ofNullable(effect), potionEffectHolder -> this.addToListMetadata(ItemMeta.CUSTOM_POTION_EFFECTS, potionEffectHolder));
         return this;
     }
 
@@ -298,9 +292,7 @@ public interface ItemBuilder extends MetadataConsumer {
     default @NotNull ItemBuilder fireworkEffect(@NotNull Object effect) {
         if (effect instanceof List) {
             final var list = (List<?>) effect;
-            list.forEach(effect1 -> NullableExtension.ifNotNull(FireworkEffectHolder.ofNullable(effect1), fireworkEffectHolder -> {
-                this.addToListMetadata(ItemMeta.FIREWORK_EFFECTS, fireworkEffectHolder);
-            }));
+            list.forEach(effect1 -> NullableExtension.ifNotNull(FireworkEffectHolder.ofNullable(effect1), fireworkEffectHolder -> this.addToListMetadata(ItemMeta.FIREWORK_EFFECTS, fireworkEffectHolder)));
             return this;
         }
 

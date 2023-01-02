@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AdventureBossBar extends BasicWrapper<net.kyori.adventure.bossbar.BossBar> implements BossBar {
     public AdventureBossBar(net.kyori.adventure.bossbar.@NotNull BossBar wrappedObject) {

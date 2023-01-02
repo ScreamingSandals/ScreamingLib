@@ -31,8 +31,7 @@ public class ItemAttributeHolder implements Wrapper {
     private final String name;
     private final double amount;
     private final AttributeModifierHolder.Operation operation;
-    @Nullable
-    private final EquipmentSlotHolder slot;
+    private final @Nullable EquipmentSlotHolder slot;
 
     /**
      * {@inheritDoc}

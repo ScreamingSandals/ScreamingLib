@@ -18,9 +18,10 @@ package org.screamingsandals.lib.minitag.tags;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 @Accessors(fluent = true, chain = true)
 public class StandardTag implements RegisteredTag {
-    private final TagType tagType;
+    private final @NotNull TagType tagType;
 }

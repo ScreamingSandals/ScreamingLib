@@ -40,9 +40,8 @@ public interface AudienceComponentLike extends ComponentLike {
      * @param audience audience
      * @return new components in list
      */
-    @NotNull
     @ApiStatus.Internal
-    default List<Component> asComponentList(@Nullable Audience audience) {
+    default @NotNull List<Component> asComponentList(@Nullable Audience audience) {
         return List.of(asComponent(audience));
     }
 

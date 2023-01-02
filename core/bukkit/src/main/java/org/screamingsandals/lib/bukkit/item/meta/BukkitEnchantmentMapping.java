@@ -17,7 +17,6 @@
 package org.screamingsandals.lib.bukkit.item.meta;
 
 import org.bukkit.enchantments.Enchantment;
-import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.item.meta.EnchantmentMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;

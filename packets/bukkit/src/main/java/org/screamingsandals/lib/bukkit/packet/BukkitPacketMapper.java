@@ -32,9 +32,7 @@ import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 
-@Service(dependsOn = {
-        ServerboundInteractPacketListener.class
-})
+@Service(dependsOn = ServerboundInteractPacketListener.class)
 @RequiredArgsConstructor
 public class BukkitPacketMapper extends PacketMapper {
 

@@ -36,7 +36,7 @@ import java.util.List;
 )
 public abstract class Server {
     private static Server server;
-    private static Integer PROTOCOL_VERSION = null;
+    private static Integer PROTOCOL_VERSION;
 
     @ApiStatus.Internal
     public Server() {

@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.spectator;
 
-import com.google.errorprone.annotations.Immutable;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,33 +54,28 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return Spectator.getBackend().space();
     }
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    static Component fromLegacy(@Nullable String legacy) {
+    static @NotNull Component fromLegacy(@Nullable String legacy) {
         return Spectator.getBackend().fromLegacy(legacy);
     }
 
-    @NotNull
     @Contract(value = "_, _ -> new", pure = true)
-    static Component fromLegacy(@Nullable String legacy, char colorChar) {
+    static @NotNull Component fromLegacy(@Nullable String legacy, char colorChar) {
         return Spectator.getBackend().fromLegacy(legacy, colorChar);
     }
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    static Component fromJavaJson(@Nullable String json) {
+    static @NotNull Component fromJavaJson(@Nullable String json) {
         return Spectator.getBackend().fromJson(json);
     }
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    static Component fromMiniMessage(@NotNull String miniMessage) {
+    static @NotNull Component fromMiniMessage(@NotNull String miniMessage) {
         return MiniMessageParser.INSTANCE.parse(miniMessage);
     }
 
-    @NotNull
     @Contract(value = "_, _ -> new", pure = true)
-    static Component fromMiniMessage(@NotNull String miniMessage, @NotNull Placeholder...placeholders) {
+    static @NotNull Component fromMiniMessage(@NotNull String miniMessage, @NotNull Placeholder...placeholders) {
         return MiniMessageParser.INSTANCE.parse(miniMessage, placeholders);
     }
 
@@ -197,13 +191,11 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return Spectator.getBackend().translatable();
     }
 
-    @NotNull
-    static Component join(@NotNull Component separator, @NotNull Collection<@NotNull Component> components) {
+    static @NotNull Component join(@NotNull Component separator, @NotNull Collection<@NotNull Component> components) {
         return join(separator, components.toArray(Component[]::new));
     }
 
-    @NotNull
-    static Component join(@NotNull Component separator, @NotNull Component @NotNull ... components) {
+    static @NotNull Component join(@NotNull Component separator, @NotNull Component @NotNull ... components) {
         var finalComponents = new ArrayList<Component>();
 
         for (var comp : components) {
@@ -251,9 +243,8 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     Component withColor(@Nullable Color color);
 
 
-    @NotNull
     @Contract(pure = true)
-    default Component withColorIfAbsent(@Nullable Color color) {
+    default @NotNull Component withColorIfAbsent(@Nullable Color color) {
         if (color() == null) {
             return withColor(color);
         }
@@ -337,9 +328,8 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     @Contract(pure = true)
     Component withHoverEvent(@Nullable ItemContent itemContent);
 
-    @NotNull
     @Contract(pure = true)
-    default Component withHoverEvent(@Nullable ItemContentLike itemContent) {
+    default @NotNull Component withHoverEvent(@Nullable ItemContentLike itemContent) {
         return withHoverEvent(itemContent == null ? null : itemContent.asItemContent());
     }
 
@@ -347,9 +337,8 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     @Contract(pure = true)
     Component withHoverEvent(@Nullable EntityContent entityContent);
 
-    @NotNull
     @Contract(pure = true)
-    default Component withHoverEvent(@Nullable EntityContentLike entityContent) {
+    default @NotNull Component withHoverEvent(@Nullable EntityContentLike entityContent) {
         return withHoverEvent(entityContent == null ? null : entityContent.asEntityContent());
     }
 
@@ -368,27 +357,23 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     @Contract(pure = true)
     Component withClickEvent(@Nullable ClickEvent clickEvent);
 
-    @NotNull
     @Contract(pure = true)
-    default Component replaceText(@NotNull Pattern pattern, @NotNull String replacement) {
+    default @NotNull Component replaceText(@NotNull Pattern pattern, @NotNull String replacement) {
         return SimpleTextReplacement.builder().matchPattern(pattern).replacement(matchResult -> replacement).build().replace(this);
     }
 
-    @NotNull
     @Contract(pure = true)
-    default Component replaceText(@NotNull Pattern pattern, @NotNull Function<@NotNull MatchResult, @Nullable String> replacement) {
+    default @NotNull Component replaceText(@NotNull Pattern pattern, @NotNull Function<@NotNull MatchResult, @Nullable String> replacement) {
         return SimpleTextReplacement.builder().matchPattern(pattern).replacement(replacement).build().replace(this);
     }
 
-    @NotNull
     @Contract(pure = true)
-    default Component replaceText(@NotNull String literal, @NotNull String replacement) {
+    default @NotNull Component replaceText(@NotNull String literal, @NotNull String replacement) {
         return SimpleTextReplacement.builder().matchPattern(Pattern.compile(literal, Pattern.LITERAL)).replacement(matchResult -> replacement).build().replace(this);
     }
 
-    @NotNull
     @Contract(pure = true)
-    default Component replaceText(@NotNull String literal, @NotNull Function<@NotNull MatchResult, @Nullable String> replacement) {
+    default @NotNull Component replaceText(@NotNull String literal, @NotNull Function<@NotNull MatchResult, @Nullable String> replacement) {
         return SimpleTextReplacement.builder().matchPattern(Pattern.compile(literal, Pattern.LITERAL)).replacement(replacement).build().replace(this);
     }
 
@@ -402,21 +387,18 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return this;
     }
 
-    @NotNull
     @Contract(pure = true)
-    default Component repeat(int repetitions) {
+    default @NotNull Component repeat(int repetitions) {
         return ComponentUtils.repeat(this, repetitions, null);
     }
 
-    @NotNull
     @Contract(pure = true)
-    default Component repeat(int repetitions, @Nullable Component separator) {
+    default @NotNull Component repeat(int repetitions, @Nullable Component separator) {
         return ComponentUtils.repeat(this, repetitions, separator);
     }
 
-    @NotNull
     @Contract(pure = true)
-    default Component linear(@NotNull ComponentBuilderApplicable @NotNull... applicables) {
+    default @NotNull Component linear(@NotNull ComponentBuilderApplicable @NotNull... applicables) {
         var newArr = new ComponentBuilderApplicable[applicables.length + 1];
         newArr[0] = this;
         System.arraycopy(applicables, 0, newArr, 1, applicables.length);

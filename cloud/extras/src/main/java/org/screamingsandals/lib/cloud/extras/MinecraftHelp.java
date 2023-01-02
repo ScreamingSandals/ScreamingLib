@@ -217,8 +217,7 @@ public final class MinecraftHelp<C> {
      *
      * @param commandPredicate Predicate to filter commands by
      */
-    @NotNull
-    public MinecraftHelp<C> commandFilter(final @NotNull Predicate<Command<C>> commandPredicate) {
+    public @NotNull MinecraftHelp<C> commandFilter(final @NotNull Predicate<Command<C>> commandPredicate) {
         this.commandFilter = (c, s) -> commandPredicate.test(c);
         return this;
     }
@@ -232,8 +231,7 @@ public final class MinecraftHelp<C> {
      *
      * @param commandPredicate Predicate to filter commands by
      */
-    @NotNull
-    public MinecraftHelp<C> commandFilter(final @NotNull BiPredicate<Command<C>, C> commandPredicate) {
+    public @NotNull MinecraftHelp<C> commandFilter(final @NotNull BiPredicate<Command<C>, C> commandPredicate) {
         this.commandFilter = commandPredicate;
         return this;
     }
@@ -245,8 +243,7 @@ public final class MinecraftHelp<C> {
      *
      * @param decorator description decorator
      */
-    @NotNull
-    public MinecraftHelp<C> descriptionDecorator(final @NotNull Function<@NotNull String, @NotNull Component> decorator) {
+    public @NotNull MinecraftHelp<C> descriptionDecorator(final @NotNull Function<@NotNull String, @NotNull Component> decorator) {
         this.descriptionDecorator = decorator;
         return this;
     }
@@ -257,8 +254,7 @@ public final class MinecraftHelp<C> {
      * @param key   Message key. These are constants in {@link MinecraftHelp}
      * @param value The text for the message
      */
-    @NotNull
-    public MinecraftHelp<C> setMessage(
+    public @NotNull MinecraftHelp<C> setMessage(
             final @NotNull String key,
             final @NotNull String value
     ) {
@@ -272,8 +268,7 @@ public final class MinecraftHelp<C> {
      * @param key   Message key. These are constants in {@link MinecraftHelp}
      * @param value The component for the message
      */
-    @NotNull
-    public MinecraftHelp<C> setMessage(
+    public @NotNull MinecraftHelp<C> setMessage(
             final @NotNull String key,
             final @NotNull ComponentLike value
     ) {
@@ -310,8 +305,7 @@ public final class MinecraftHelp<C> {
      *
      * @param colors The new {@link HelpColors} to use
      */
-    @NotNull
-    public MinecraftHelp<C> setHelpColors(final @NotNull HelpColors colors) {
+    public @NotNull MinecraftHelp<C> setHelpColors(final @NotNull HelpColors colors) {
         this.colors = colors;
         return this;
     }
@@ -332,8 +326,7 @@ public final class MinecraftHelp<C> {
      *
      * @param headerFooterLength The new length
      */
-    @NotNull
-    public MinecraftHelp<C> setHeaderFooterLength(final int headerFooterLength) {
+    public @NotNull MinecraftHelp<C> setHeaderFooterLength(final int headerFooterLength) {
         this.headerFooterLength = headerFooterLength;
         return this;
     }
@@ -345,8 +338,7 @@ public final class MinecraftHelp<C> {
      *
      * @param maxResultsPerPage The new value
      */
-    @NotNull
-    public MinecraftHelp<C> setMaxResultsPerPage(final int maxResultsPerPage) {
+    public @NotNull MinecraftHelp<C> setMaxResultsPerPage(final int maxResultsPerPage) {
         this.maxResultsPerPage = maxResultsPerPage;
         return this;
     }
@@ -711,28 +703,23 @@ public final class MinecraftHelp<C> {
         );
     }
 
-    @NotNull
-    private Component line(final int length) {
+    private @NotNull Component line(final int length) {
         return ComponentHelper.line(length, this.colors.primary);
     }
 
-    @NotNull
-    private Component branch() {
+    private @NotNull Component branch() {
         return ComponentHelper.branch(this.colors.accent);
     }
 
-    @NotNull
-    private Component lastBranch() {
+    private @NotNull Component lastBranch() {
         return ComponentHelper.lastBranch(this.colors.accent);
     }
 
-    @NotNull
-    private Component highlight(final @NotNull Component component) {
+    private @NotNull Component highlight(final @NotNull Component component) {
         return ComponentHelper.highlight(component, this.colors.alternateHighlight);
     }
 
-    @NotNull
-    private Component pageOutOfRange(final @NotNull C sender, final int attemptedPage, final int maxPages) {
+    private @NotNull Component pageOutOfRange(final @NotNull C sender, final int attemptedPage, final int maxPages) {
         return this.highlight(
                 this.messageProvider.provide(
                         sender,

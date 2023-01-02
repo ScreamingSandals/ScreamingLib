@@ -32,24 +32,20 @@ public interface TimesProvider {
     Duration fadeOut();
 
     @Contract(value = "_,_,_ -> new", pure = true)
-    @NotNull
-    static TimesProvider times(@NotNull Duration fadeIn, @NotNull Duration stay, @NotNull Duration fadeOut) {
+    static @NotNull TimesProvider times(@NotNull Duration fadeIn, @NotNull Duration stay, @NotNull Duration fadeOut) {
         return new TimesProvider() {
             @Override
-            @NotNull
-            public Duration fadeIn() {
+            public @NotNull Duration fadeIn() {
                 return fadeIn;
             }
 
             @Override
-            @NotNull
-            public Duration stay() {
+            public @NotNull Duration stay() {
                 return stay;
             }
 
             @Override
-            @NotNull
-            public Duration fadeOut() {
+            public @NotNull Duration fadeOut() {
                 return fadeOut;
             }
         };

@@ -101,8 +101,7 @@ public class BungeeItemContent extends BasicWrapper<Item> implements ItemContent
         private @Nullable CompoundTag tag;
 
         @Override
-        @NotNull
-        public ItemContent build() {
+        public @NotNull ItemContent build() {
             return new BungeeItemContent(new Item(
                     id != null ? id.asString() : "minecraft:air",
                     count,

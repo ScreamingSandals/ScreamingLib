@@ -29,39 +29,33 @@ public class AdventureStorageNBTComponent extends AdventureNBTComponent<net.kyor
     }
 
     @Override
-    @NotNull
-    public NamespacedMappingKey storageKey() {
+    public @NotNull NamespacedMappingKey storageKey() {
         return NamespacedMappingKey.of(((net.kyori.adventure.text.StorageNBTComponent) wrappedObject).storage().asString());
     }
 
     @SuppressWarnings("PatternValidation")
     @Override
-    @NotNull
-    public StorageNBTComponent withStorageKey(@NotNull NamespacedMappingKey storageKey) {
+    public @NotNull StorageNBTComponent withStorageKey(@NotNull NamespacedMappingKey storageKey) {
         return (StorageNBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.StorageNBTComponent) wrappedObject).storage(Key.key(storageKey.asString())));
     }
 
     @Override
-    @NotNull
-    public StorageNBTComponent.Builder toBuilder() {
+    public StorageNBTComponent.@NotNull Builder toBuilder() {
         return new AdventureStorageNBTBuilder(((net.kyori.adventure.text.StorageNBTComponent) wrappedObject).toBuilder());
     }
 
     @Override
-    @NotNull
-    public StorageNBTComponent withNbtPath(@NotNull String nbtPath) {
+    public @NotNull StorageNBTComponent withNbtPath(@NotNull String nbtPath) {
         return (StorageNBTComponent) super.withNbtPath(nbtPath);
     }
 
     @Override
-    @NotNull
-    public StorageNBTComponent withInterpret(boolean interpret) {
+    public @NotNull StorageNBTComponent withInterpret(boolean interpret) {
         return (StorageNBTComponent) super.withInterpret(interpret);
     }
 
     @Override
-    @NotNull
-    public StorageNBTComponent withSeparator(@Nullable Component separator) {
+    public @NotNull StorageNBTComponent withSeparator(@Nullable Component separator) {
         return (StorageNBTComponent) super.withSeparator(separator);
     }
 
@@ -78,8 +72,7 @@ public class AdventureStorageNBTComponent extends AdventureNBTComponent<net.kyor
 
         @SuppressWarnings("PatternValidation")
         @Override
-        @NotNull
-        public StorageNBTComponent.Builder storageKey(@NotNull NamespacedMappingKey storageKey) {
+        public StorageNBTComponent.@NotNull Builder storageKey(@NotNull NamespacedMappingKey storageKey) {
             getBuilder().storage(Key.key(storageKey.asString()));
             return self();
         }

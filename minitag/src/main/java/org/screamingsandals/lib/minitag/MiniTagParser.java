@@ -52,10 +52,8 @@ public class MiniTagParser {
 
     private final boolean strictClosing;
     private final boolean escapeInvalidEndings;
-    @Nullable
-    private final String preTag;
-    @Nullable
-    private final String resetTag;
+    private final @Nullable String preTag;
+    private final @Nullable String resetTag;
     private final TagType unknownTagType;
     private final char escapeSymbol;
     private final char tagOpeningSymbol;
@@ -356,7 +354,7 @@ public class MiniTagParser {
                 } else if (c == argumentSeparator) {
                     arguments.add(builder.toString());
                     builder.setLength(0);
-                } else if (builder.length() == 0 && quotes.contains(c)) {
+                } else if (builder.isEmpty() && quotes.contains(c)) {
                     inQuotes = true;
                     usedQuote = c;
                 } else {
@@ -364,7 +362,7 @@ public class MiniTagParser {
                 }
             }
 
-            if (builder.length() != 0) {
+            if (!builder.isEmpty()) {
                 arguments.add(builder.toString());
             }
 
@@ -394,7 +392,7 @@ public class MiniTagParser {
             if (child instanceof TextNode) {
                 builder.append(((TextNode) child).getText());
             } else {
-                if (builder.length() > 0) {
+                if (!builder.isEmpty()) {
                     node.putChildren(new TextNode(builder.toString()));
                     builder.setLength(0);
                 }
@@ -403,7 +401,7 @@ public class MiniTagParser {
             }
         }
 
-        if (builder.length() > 0) {
+        if (!builder.isEmpty()) {
             node.putChildren(new TextNode(builder.toString()));
             builder.setLength(0);
         }
@@ -440,20 +438,16 @@ public class MiniTagParser {
 
     @RequiredArgsConstructor
     private static class NodeCursor {
-        @Nullable
-        private final NodeCursor cursor;
-        @NotNull
-        private final Node node;
+        private final @Nullable NodeCursor cursor;
+        private final @NotNull Node node;
     }
 
     @Setter
     public static class Builder {
         private boolean strictClosing = true;
-        private boolean escapeInvalidEndings = false;
-        @Nullable
-        private String preTag;
-        @Nullable
-        private String resetTag = RESET_TAG;
+        private boolean escapeInvalidEndings;
+        private @Nullable String preTag;
+        private @Nullable String resetTag = RESET_TAG;
         private TagType unknownTagType = UNKNOWN_TAG_TYPE;
         private char escapeSymbol = ESCAPE_SYMBOL;
         private char tagOpeningSymbol = TAG_OPENING_SYMBOL;
@@ -464,53 +458,45 @@ public class MiniTagParser {
         private final Map<String, RegisteredTag> registeredTags = new HashMap<>();
         private final Map<Pattern, RegisteredTag> registeredRegexTags = new HashMap<>();
 
-        @NotNull
         @Tolerate
-        public Builder preTag(boolean enablePreTag) {
+        public @NotNull Builder preTag(boolean enablePreTag) {
             preTag = enablePreTag ? PRE_TAG : null;
             return this;
         }
 
-        @NotNull
         @Tolerate
-        public Builder resetTag(boolean enableResetTag) {
+        public @NotNull Builder resetTag(boolean enableResetTag) {
             resetTag = enableResetTag ? RESET_TAG : null;
             return this;
         }
 
-        @NotNull
         @Tolerate
-        public Builder quotes(Character... quotes) {
+        public @NotNull Builder quotes(Character... quotes) {
             this.quotes = Arrays.asList(quotes);
             return this;
         }
 
-        @NotNull
-        public Builder registerTag(String tag, RegisteredTag registeredTag) {
+        public @NotNull Builder registerTag(String tag, RegisteredTag registeredTag) {
             registeredTags.put(tag, registeredTag);
             return this;
         }
 
-        @NotNull
-        public Builder registerTag(Pattern tag, RegisteredTag registeredTag) {
+        public @NotNull Builder registerTag(Pattern tag, RegisteredTag registeredTag) {
             registeredRegexTags.put(tag, registeredTag);
             return this;
         }
 
-        @NotNull
-        public Builder registerTag(String tag, TagType type) {
+        public @NotNull Builder registerTag(String tag, TagType type) {
             registeredTags.put(tag, new StandardTag(type));
             return this;
         }
 
-        @NotNull
-        public Builder registerTag(Pattern tag, TagType type) {
+        public @NotNull Builder registerTag(Pattern tag, TagType type) {
             registeredRegexTags.put(tag, new StandardTag(type));
             return this;
         }
 
-        @NotNull
-        public Builder registerTag(String tag, RegisteredTag registeredTag, String... aliases) {
+        public @NotNull Builder registerTag(String tag, RegisteredTag registeredTag, String... aliases) {
             registeredTags.put(tag, registeredTag);
             for (var alias : aliases) {
                 if (registeredTag instanceof TransformedTag) {
@@ -522,8 +508,7 @@ public class MiniTagParser {
             return this;
         }
 
-        @NotNull
-        public Builder registerTag(String tag, TagType type, String... aliases) {
+        public @NotNull Builder registerTag(String tag, TagType type, String... aliases) {
             registeredTags.put(tag, new StandardTag(type));
             for (var alias : aliases) {
                 registeredTags.put(alias, new TransformedTag(type, node -> new TagNode(tag, node.getArgs())));

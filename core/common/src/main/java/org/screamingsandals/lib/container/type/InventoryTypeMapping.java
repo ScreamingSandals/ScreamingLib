@@ -34,7 +34,7 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import java.util.Collections;
 import java.util.List;
 
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )

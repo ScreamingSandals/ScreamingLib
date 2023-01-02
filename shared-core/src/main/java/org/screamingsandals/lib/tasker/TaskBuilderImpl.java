@@ -35,8 +35,8 @@ public class TaskBuilderImpl implements Tasker.TaskBuilder {
     private final List<Consumer<TaskerTask>> startEvent = new LinkedList<>();
     private final List<Consumer<TaskerTask>> stopEvent = new LinkedList<>();
 
-    private boolean afterOneTick = false;
-    private boolean async = false;
+    private boolean afterOneTick;
+    private boolean async;
     private long delay;
     private long repeat;
 

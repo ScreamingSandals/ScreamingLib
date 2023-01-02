@@ -44,7 +44,7 @@ public interface SVillagerCareerChangeEvent extends SCancellableEvent, PlatformE
         /**
          * Villager gained employment.
          */
-        EMPLOYED;
+        EMPLOYED
     }
 
     /**
@@ -123,6 +123,6 @@ public interface SVillagerCareerChangeEvent extends SCancellableEvent, PlatformE
          * Weaponsmith profession. Wears a black apron. Weapon smiths primarily
          * trade for iron and diamond weapons, sometimes enchanted.
          */
-        WEAPONSMITH;
+        WEAPONSMITH
     }
 }

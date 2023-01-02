@@ -41,7 +41,7 @@ public class SBukkitPlayerCraftItemEvent extends SBukkitPlayerInventoryClickEven
     }
 
     @Override
-    public CraftItemEvent event() {
+    public @NotNull CraftItemEvent event() {
         return (CraftItemEvent) super.event();
     }
 

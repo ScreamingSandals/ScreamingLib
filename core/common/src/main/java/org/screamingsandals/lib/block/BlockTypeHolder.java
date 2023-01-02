@@ -36,39 +36,31 @@ import java.util.*;
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface BlockTypeHolder extends ComparableWrapper, ParticleData, TaggableHolder {
 
-    String platformName();
+    @NotNull String platformName();
 
     @Deprecated
     byte legacyData();
 
     @Deprecated
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    BlockTypeHolder withLegacyData(byte legacyData);
+    @NotNull BlockTypeHolder withLegacyData(byte legacyData);
 
-    @Unmodifiable
-    @NotNull
-    Map<String, String> flatteningData();
+    @Unmodifiable @NotNull Map<String, String> flatteningData();
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> flatteningData);
+    @NotNull BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> flatteningData);
 
     @Contract(value = "_, _ -> new", pure = true)
-    @NotNull
-    BlockTypeHolder with(@NotNull String attribute, @NotNull String value);
+    @NotNull BlockTypeHolder with(@NotNull String attribute, @NotNull String value);
 
     @Contract(value = "_, _ -> new", pure = true)
-    @NotNull
-    BlockTypeHolder with(@NotNull String attribute, int value);
+    @NotNull BlockTypeHolder with(@NotNull String attribute, int value);
 
     @Contract(value = "_, _ -> new", pure = true)
-    @NotNull
-    BlockTypeHolder with(@NotNull String attribute, boolean value);
+    @NotNull BlockTypeHolder with(@NotNull String attribute, boolean value);
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    default BlockTypeHolder colorize(@NotNull String color) {
+    default @NotNull BlockTypeHolder colorize(@NotNull String color) {
         return BlockTypeMapper.colorize(this, color);
     }
 
@@ -138,11 +130,11 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData, Taggab
         return BlockTypeMapper.resolve(type);
     }
 
-    static BlockTypeHolder air() {
+    static @NotNull BlockTypeHolder air() {
         return BlockTypeMapper.getCachedAir();
     }
 
-    static List<BlockTypeHolder> all() {
+    static @NotNull List<@NotNull BlockTypeHolder> all() {
         return BlockTypeMapper.getValues();
     }
 }

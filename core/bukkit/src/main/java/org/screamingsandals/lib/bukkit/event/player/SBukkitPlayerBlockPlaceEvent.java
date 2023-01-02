@@ -26,6 +26,7 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockMultiPlaceEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
@@ -47,7 +48,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -111,7 +112,7 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
     }
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

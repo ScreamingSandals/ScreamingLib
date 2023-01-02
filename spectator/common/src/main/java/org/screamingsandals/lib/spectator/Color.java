@@ -24,7 +24,7 @@ import java.util.Map;
 public interface Color extends Wrapper, ComponentBuilderApplicable, RawValueHolder {
     Color BLACK = new ColorLink("BLACK");
     Color DARK_BLUE = new ColorLink("DARK_BLUE");
-    Color DARK_GREEN = new ColorLink("DARK_GREEN");;
+    Color DARK_GREEN = new ColorLink("DARK_GREEN");
     Color DARK_AQUA = new ColorLink("DARK_AQUA");
     Color DARK_RED = new ColorLink("DARK_RED");
     Color DARK_PURPLE = new ColorLink("DARK_PURPLE");

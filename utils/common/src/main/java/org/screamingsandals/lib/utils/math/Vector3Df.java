@@ -97,8 +97,7 @@ public class Vector3Df implements Cloneable {
         return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
     }
 
-    @NotNull
-    public Vector3Df normalize() {
+    public @NotNull Vector3Df normalize() {
         var length = length();
 
         x /= length;

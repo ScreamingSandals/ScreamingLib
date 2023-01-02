@@ -35,5 +35,5 @@ public enum PortalType {
     /**
      * This is a custom Plugin portal.
      */
-    CUSTOM;
+    CUSTOM
 }

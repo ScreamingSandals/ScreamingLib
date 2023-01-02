@@ -99,8 +99,7 @@ public class Vector3Di implements Cloneable {
         return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
     }
 
-    @NotNull
-    public Vector3Di normalize() {
+    public @NotNull Vector3Di normalize() {
         var length = length();
 
         x /= length;

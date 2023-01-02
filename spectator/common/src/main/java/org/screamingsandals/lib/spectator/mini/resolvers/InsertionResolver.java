@@ -36,8 +36,7 @@ public class InsertionResolver implements StylingResolver {
     }
 
     @Override
-    @Nullable
-    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+    public @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         var insertion = component.insertion();
         if (insertion != null) {
             return new TagNode(tagName, List.of(insertion));

@@ -83,8 +83,7 @@ public class HoverResolver implements StylingResolver {
     }
 
     @Override
-    @Nullable
-    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+    public @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         var hover = component.hoverEvent();
         if (hover != null) {
             switch (hover.action()) {

@@ -72,8 +72,7 @@ public abstract class EconomyManager {
         return economyManager.has0(player, worldName, amount);
     }
 
-    @NotNull
-    public static TransactionResult withdrawPlayer(@NotNull MultiPlatformOfflinePlayer player, double amount) {
+    public static @NotNull TransactionResult withdrawPlayer(@NotNull MultiPlatformOfflinePlayer player, double amount) {
         if (economyManager == null) {
             throw new UnsupportedOperationException("EconomyManager is not initialized yet!");
         }
@@ -83,16 +82,14 @@ public abstract class EconomyManager {
     /**
      * Some economy plugins can use world-specific balance (Vault supports it). If this is not supported by the economy plugin, global balance is used.
      */
-    @NotNull
-    public static TransactionResult withdrawPlayer(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount) {
+    public static @NotNull TransactionResult withdrawPlayer(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount) {
         if (economyManager == null) {
             throw new UnsupportedOperationException("EconomyManager is not initialized yet!");
         }
         return economyManager.withdrawPlayer0(player, worldName, amount);
     }
 
-    @NotNull
-    public static TransactionResult depositPlayer(@NotNull MultiPlatformOfflinePlayer player, double amount) {
+    public static @NotNull TransactionResult depositPlayer(@NotNull MultiPlatformOfflinePlayer player, double amount) {
         if (economyManager == null) {
             throw new UnsupportedOperationException("EconomyManager is not initialized yet!");
         }
@@ -102,24 +99,21 @@ public abstract class EconomyManager {
     /**
      * Some economy plugins can use world-specific balance (Vault supports it). If this is not supported by the economy plugin, global balance is used.
      */
-    @NotNull
-    public static TransactionResult depositPlayer(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount) {
+    public static @NotNull TransactionResult depositPlayer(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount) {
         if (economyManager == null) {
             throw new UnsupportedOperationException("EconomyManager is not initialized yet!");
         }
         return economyManager.depositPlayer0(player, worldName, amount);
     }
 
-    @NotNull
-    public static String getCurrencyNamePlural() {
+    public static @NotNull String getCurrencyNamePlural() {
         if (economyManager == null) {
             throw new UnsupportedOperationException("EconomyManager is not initialized yet!");
         }
         return economyManager.getCurrencyPluralName0();
     }
 
-    @NotNull
-    public static String getCurrencyNameSingular() {
+    public static @NotNull String getCurrencyNameSingular() {
         if (economyManager == null) {
             throw new UnsupportedOperationException("EconomyManager is not initialized yet!");
         }
@@ -136,21 +130,15 @@ public abstract class EconomyManager {
 
     protected abstract boolean has0(@NotNull MultiPlatformOfflinePlayer player, String worldName, double amount);
 
-    @NotNull
-    protected abstract TransactionResult withdrawPlayer0(@NotNull MultiPlatformOfflinePlayer player, double amount);
+    protected abstract @NotNull TransactionResult withdrawPlayer0(@NotNull MultiPlatformOfflinePlayer player, double amount);
 
-    @NotNull
-    protected abstract TransactionResult withdrawPlayer0(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount);
+    protected abstract @NotNull TransactionResult withdrawPlayer0(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount);
 
-    @NotNull
-    protected abstract TransactionResult depositPlayer0(@NotNull MultiPlatformOfflinePlayer player, double amount);
+    protected abstract @NotNull TransactionResult depositPlayer0(@NotNull MultiPlatformOfflinePlayer player, double amount);
 
-    @NotNull
-    protected abstract TransactionResult depositPlayer0(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount);
+    protected abstract @NotNull TransactionResult depositPlayer0(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount);
 
-    @NotNull
-    protected abstract String getCurrencyPluralName0();
+    protected abstract @NotNull String getCurrencyPluralName0();
 
-    @NotNull
-    protected abstract String getCurrencyNameSingular0();
+    protected abstract @NotNull String getCurrencyNameSingular0();
 }

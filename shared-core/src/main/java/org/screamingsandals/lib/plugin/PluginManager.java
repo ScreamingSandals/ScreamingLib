@@ -24,7 +24,6 @@ import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.List;
-import java.util.Optional;
 
 @AbstractService
 public abstract class PluginManager {

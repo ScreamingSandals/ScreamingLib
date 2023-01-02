@@ -34,9 +34,8 @@ public interface SoundSource extends Wrapper, RawValueHolder {
     SoundSource AMBIENT = new SoundSourceLink("ambient");
     SoundSource VOICE = new SoundSourceLink("voice");
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    static SoundSource soundSource(@NotNull String source) {
+    static @NotNull SoundSource soundSource(@NotNull String source) {
         return Spectator.getBackend().soundSource(source);
     }
 

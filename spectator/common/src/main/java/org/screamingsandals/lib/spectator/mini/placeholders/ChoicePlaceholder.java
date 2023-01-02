@@ -23,10 +23,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
 import java.text.ChoiceFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.List;
-import java.util.Locale;
 
 @Data
 public class ChoicePlaceholder implements Placeholder {
@@ -36,8 +33,7 @@ public class ChoicePlaceholder implements Placeholder {
 
     @SuppressWarnings("unchecked")
     @Override
-    @NotNull
-    public <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
+    public @NotNull <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
         if (arguments.size() == 1) {
             try {
                 return parser.parseIntoBuilder(new ChoiceFormat(arguments.get(0)).format(value), placeholders);

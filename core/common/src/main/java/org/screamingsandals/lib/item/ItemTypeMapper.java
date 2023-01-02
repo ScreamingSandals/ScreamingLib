@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
 public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> {
 
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?::)?(?<durability>\\d+)?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
-    protected BidirectionalConverter<ItemTypeHolder> itemTypeConverter = BidirectionalConverter.<ItemTypeHolder>build()
+    protected final BidirectionalConverter<ItemTypeHolder> itemTypeConverter = BidirectionalConverter.<ItemTypeHolder>build()
             .registerP2W(ItemTypeHolder.class, i -> i)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {

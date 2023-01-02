@@ -27,8 +27,7 @@ import java.util.UUID;
 
 public interface EntityContent extends Content, EntityContentLike {
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    static EntityContent.Builder builder() {
+    static @NotNull EntityContent.Builder builder() {
         return Spectator.getBackend().entityContent();
     }
 
@@ -58,14 +57,12 @@ public interface EntityContent extends Content, EntityContentLike {
     EntityContent.Builder toBuilder();
 
     @Override
-    @NotNull
-    default EntityContent asEntityContent() {
+    default @NotNull EntityContent asEntityContent() {
         return this;
     }
 
     @Override
-    @NotNull
-    default Content asContent() {
+    default @NotNull Content asContent() {
         return this;
     }
 

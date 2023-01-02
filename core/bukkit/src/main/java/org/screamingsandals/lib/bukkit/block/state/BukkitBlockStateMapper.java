@@ -28,9 +28,7 @@ import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
-@Service(dependsOn = {
-        BukkitBlockMapper.class
-})
+@Service(dependsOn = BukkitBlockMapper.class)
 public class BukkitBlockStateMapper extends BlockStateMapper {
     public static final boolean HAS_TILE_STATE = Reflect.has("org.bukkit.block.TileState");
 

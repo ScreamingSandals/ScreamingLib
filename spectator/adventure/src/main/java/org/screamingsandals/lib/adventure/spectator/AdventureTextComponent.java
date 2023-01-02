@@ -25,20 +25,17 @@ public class AdventureTextComponent extends AdventureComponent implements TextCo
     }
 
     @Override
-    @NotNull
-    public String content() {
+    public @NotNull String content() {
         return ((net.kyori.adventure.text.TextComponent) wrappedObject).content();
     }
 
     @Override
-    @NotNull
-    public TextComponent withContent(@NotNull String content) {
+    public @NotNull TextComponent withContent(@NotNull String content) {
         return (TextComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.TextComponent) wrappedObject).content(content));
     }
 
     @Override
-    @NotNull
-    public TextComponent.Builder toBuilder() {
+    public @NotNull TextComponent.Builder toBuilder() {
         return new AdventureTextBuilder(((net.kyori.adventure.text.TextComponent) wrappedObject).toBuilder());
     }
 
@@ -54,8 +51,7 @@ public class AdventureTextComponent extends AdventureComponent implements TextCo
         }
 
         @Override
-        @NotNull
-        public TextComponent.Builder content(@NotNull String content) {
+        public TextComponent.@NotNull Builder content(@NotNull String content) {
             getBuilder().content(content);
             return self();
         }

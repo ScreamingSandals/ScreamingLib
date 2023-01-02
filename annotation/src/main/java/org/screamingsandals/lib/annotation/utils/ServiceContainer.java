@@ -28,10 +28,8 @@ import java.util.List;
 @Data
 public class ServiceContainer {
     private final Types types;
-    @NotNull
-    private final TypeElement service;
-    @Nullable
-    private final TypeElement forwardedType;
+    private final @NotNull TypeElement service;
+    private final @Nullable TypeElement forwardedType;
 
     private final List<TypeElement> dependencies = new LinkedList<>();
     private final List<TypeElement> loadAfter = new LinkedList<>();

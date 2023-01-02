@@ -38,20 +38,17 @@ public class BungeeEntityContent extends BasicWrapper<Entity> implements EntityC
     }
 
     @Override
-    @NotNull
-    public UUID id() {
+    public @NotNull UUID id() {
         return UUID.fromString(wrappedObject.getId());
     }
 
     @Override
-    @NotNull
-    public EntityContent withId(@NotNull UUID id) {
+    public @NotNull EntityContent withId(@NotNull UUID id) {
         return new BungeeEntityContent(new Entity(wrappedObject.getType(), id.toString(), wrappedObject.getName()));
     }
 
     @Override
-    @NotNull
-    public NamespacedMappingKey type() {
+    public @NotNull NamespacedMappingKey type() {
         var type = wrappedObject.getType();
         if (type == null) {
             return NamespacedMappingKey.of("minecraft:pig"); // md_5's nice api said: will be pig if null
@@ -60,26 +57,22 @@ public class BungeeEntityContent extends BasicWrapper<Entity> implements EntityC
     }
 
     @Override
-    @NotNull
-    public EntityContent withType(@NotNull NamespacedMappingKey type) {
+    public @NotNull EntityContent withType(@NotNull NamespacedMappingKey type) {
         return new BungeeEntityContent(new Entity(type.asString(), wrappedObject.getId(), wrappedObject.getName()));
     }
 
     @Override
-    @Nullable
-    public Component name() {
+    public @Nullable Component name() {
         return AbstractBungeeBackend.wrapComponent(wrappedObject.getName());
     }
 
     @Override
-    @NotNull
-    public EntityContent withType(@Nullable Component name) {
+    public @NotNull EntityContent withType(@Nullable Component name) {
         return new BungeeEntityContent(new Entity(wrappedObject.getType(), wrappedObject.getId(), name == null ? null : name.as(BaseComponent.class)));
     }
 
     @Override
-    @NotNull
-    public EntityContent.Builder toBuilder() {
+    public @NotNull EntityContent.Builder toBuilder() {
         return new BungeeEntityContentBuilder(
                 id(),
                 type(),
@@ -106,8 +99,7 @@ public class BungeeEntityContent extends BasicWrapper<Entity> implements EntityC
         private Component name;
 
         @Override
-        @NotNull
-        public EntityContent build() {
+        public @NotNull EntityContent build() {
             return new BungeeEntityContent(new Entity(
                     type != null ? type.asString() : "minecraft:pig",
                     id != null ? id.toString() : UUID.randomUUID().toString(),

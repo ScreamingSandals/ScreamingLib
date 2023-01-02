@@ -42,7 +42,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitEntityDeathEvent implements SEntityDeathEvent, NoAutoCancellable {
     @Getter
     @EqualsAndHashCode.Include

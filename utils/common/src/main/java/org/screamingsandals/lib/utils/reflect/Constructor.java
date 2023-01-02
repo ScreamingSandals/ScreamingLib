@@ -53,8 +53,7 @@ public class Constructor implements ReflectedExecutable<Constructor> {
     }
 
     @Override
-    @Nullable
-    public Executable get() {
+    public @Nullable Executable get() {
         return constructor;
     }
 }

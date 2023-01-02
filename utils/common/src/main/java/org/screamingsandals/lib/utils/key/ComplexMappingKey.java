@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Data
 @RequiredArgsConstructor(staticName = "of")
-public class ComplexMappingKey implements MappingKey {
+public final class ComplexMappingKey implements MappingKey {
     private final List<MappingKey> mappingKeys;
 
     public static ComplexMappingKey of(MappingKey...keys) {
@@ -34,8 +34,7 @@ public class ComplexMappingKey implements MappingKey {
     }
 
     @Override
-    @NotNull
-    public String toString() {
+    public @NotNull String toString() {
         return mappingKeys.stream().map(Object::toString).collect(Collectors.joining(":"));
     }
 }

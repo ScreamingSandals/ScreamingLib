@@ -35,9 +35,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
-@SupportedAnnotationTypes({
-        "org.screamingsandals.lib.utils.annotations.Plugin"
-})
+@SupportedAnnotationTypes("org.screamingsandals.lib.utils.annotations.Plugin")
 @SupportedOptions({
         "lookForPluginAndSaveFullClassNameTo",
         "usePluginClassFrom"

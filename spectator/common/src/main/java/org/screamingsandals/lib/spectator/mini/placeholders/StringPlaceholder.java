@@ -32,8 +32,7 @@ public class StringPlaceholder implements Placeholder {
 
     @SuppressWarnings("unchecked")
     @Override
-    @NotNull
-    public <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
+    public @NotNull <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
         return (B) Component.text().content(value);
     }
 }

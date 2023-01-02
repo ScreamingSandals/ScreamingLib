@@ -57,8 +57,7 @@ public class ItemMetaHelper {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
-    public static <T> T getMetadata(ItemMeta meta, MetadataKey<T> key) {
+    public static @Nullable <T> T getMetadata(ItemMeta meta, MetadataKey<T> key) {
         var name = NBT_TO_BUKKIT_METHODS.getOrDefault(key.getKey(), key.getKey().replace(".", ""));
 
         var hasMethod = Reflect.getMethod(meta, "has" + name);
@@ -101,7 +100,7 @@ public class ItemMetaHelper {
             return (Collection<T>) getMethod.invokeResulted()
                     .as(Collection.class)
                     .stream()
-                    .map(o -> (T) MetadataValuesRemapper.remapToWrapper(o, key.getComponentType()))
+                    .map(o -> MetadataValuesRemapper.remapToWrapper(o, key.getComponentType()))
                     .collect(Collectors.toList());
         }
 

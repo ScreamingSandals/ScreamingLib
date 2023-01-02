@@ -16,9 +16,11 @@
 
 package org.screamingsandals.lib.utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.UUID;
 
 public interface UniqueIdentifiable {
 
-    UUID uuid();
+    @NotNull UUID uuid();
 }

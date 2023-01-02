@@ -24,7 +24,6 @@ import org.bukkit.plugin.messaging.PluginMessageListenerRegistration;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.CustomPayload;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
-import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;

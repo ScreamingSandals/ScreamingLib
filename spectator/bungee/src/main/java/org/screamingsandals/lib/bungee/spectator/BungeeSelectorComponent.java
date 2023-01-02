@@ -27,35 +27,30 @@ public class BungeeSelectorComponent extends BungeeComponent implements Selector
     }
 
     @Override
-    @NotNull
-    public String pattern() {
+    public @NotNull String pattern() {
         return ((net.md_5.bungee.api.chat.SelectorComponent) wrappedObject).getSelector();
     }
 
     @Override
-    @NotNull
-    public SelectorComponent withPattern(String pattern) {
+    public @NotNull SelectorComponent withPattern(String pattern) {
         var duplicate = (net.md_5.bungee.api.chat.SelectorComponent) wrappedObject.duplicate();
         duplicate.setSelector(pattern);
         return (SelectorComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    @NotNull
-    public SelectorComponent.Builder toBuilder() {
+    public @NotNull SelectorComponent.Builder toBuilder() {
         var duplicate = (net.md_5.bungee.api.chat.SelectorComponent) wrappedObject.duplicate();
         return new BungeeSelectorBuilder(duplicate);
     }
 
     @Override
-    @Nullable
-    public Component separator() {
+    public @Nullable Component separator() {
         return null; // TODO: WHERE IS IT ???
     }
 
     @Override
-    @NotNull
-    public SelectorComponent withSeparator(@Nullable Component separator) {
+    public @NotNull SelectorComponent withSeparator(@Nullable Component separator) {
         return this; // TODO: WHERE IS IT ???
     }
 
@@ -66,15 +61,13 @@ public class BungeeSelectorComponent extends BungeeComponent implements Selector
         }
 
         @Override
-        @NotNull
-        public SelectorComponent.Builder pattern(@NotNull String pattern) {
+        public @NotNull SelectorComponent.Builder pattern(@NotNull String pattern) {
             component.setSelector(pattern);
             return this;
         }
 
         @Override
-        @NotNull
-        public SelectorComponent.Builder separator(@Nullable Component separator) {
+        public @NotNull SelectorComponent.Builder separator(@Nullable Component separator) {
             // TODO: Hey md_5, I hate you with all my hearth
             return this;
         }

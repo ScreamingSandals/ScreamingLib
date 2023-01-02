@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class CollectionLinkedToCollection<L, O> implements Collection<L> {
-    protected final Collection<O> original;
-    protected final Function<L, O> linkToOriginal;
-    protected final Function<O, L> originalToLink;
+    protected final @NotNull Collection<O> original;
+    protected final @NotNull Function<L, O> linkToOriginal;
+    protected final @NotNull Function<O, L> originalToLink;
 
     @Override
     public int size() {
@@ -47,9 +47,8 @@ public class CollectionLinkedToCollection<L, O> implements Collection<L> {
         return original.contains(linkToOriginal.apply((L) o));
     }
 
-    @NotNull
     @Override
-    public Iterator<L> iterator() {
+    public @NotNull Iterator<L> iterator() {
         var realIterator = original.iterator();
 
         return new Iterator<>() {
@@ -70,16 +69,14 @@ public class CollectionLinkedToCollection<L, O> implements Collection<L> {
         };
     }
 
-    @NotNull
     @Override
-    public Object[] toArray() {
+    public Object @NotNull [] toArray() {
         return original.stream().map(originalToLink).toArray();
     }
 
-    @SuppressWarnings({"unchecked", "SuspiciousToArrayCall"})
-    @NotNull
+    @SuppressWarnings("unchecked")
     @Override
-    public <T> T @NotNull [] toArray(@NotNull T[] a) {
+    public <T> T @NotNull [] toArray(T @NotNull [] a) {
         return original.stream().map(originalToLink).toArray(value -> (T[]) Array.newInstance(a.getClass().getComponentType(), value));
     }
 

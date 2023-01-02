@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.event.player;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.bukkit.event.player.PlayerKickEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -43,7 +44,7 @@ public class SBukkitPlayerKickEvent implements SPlayerKickEvent, BukkitCancellab
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

@@ -29,32 +29,27 @@ import java.time.Duration;
 // TODO: Support for AudienceComponentLike
 public interface Title extends Wrapper, RawValueHolder, TimesProvider {
     @Contract(value = "_, _ -> new", pure = true)
-    @NotNull
-    static Title title(@NotNull Component title, @NotNull Component subtitle) {
+    static @NotNull Title title(@NotNull Component title, @NotNull Component subtitle) {
         return builder().title(title).subtitle(subtitle).build();
     }
 
     @Contract(value = "_, _, _ -> new", pure = true)
-    @NotNull
-    static Title title(@NotNull Component title, @NotNull Component subtitle, @Nullable TimesProvider times) {
+    static @NotNull Title title(@NotNull Component title, @NotNull Component subtitle, @Nullable TimesProvider times) {
         return builder().title(title).subtitle(subtitle).times(times).build();
     }
 
     @Contract(value = "_, _, _, _, _ -> new", pure = true)
-    @NotNull
-    static Title title(@NotNull Component title, @NotNull Component subtitle, @Nullable Duration fadeIn, @Nullable Duration stay, @Nullable Duration fadeOut) {
+    static @NotNull Title title(@NotNull Component title, @NotNull Component subtitle, @Nullable Duration fadeIn, @Nullable Duration stay, @Nullable Duration fadeOut) {
         return builder().title(title).subtitle(subtitle).times(fadeIn, stay, fadeOut).build();
     }
 
     @Contract(value = "_, _, _, _, _ -> new", pure = true)
-    @NotNull
-    static Title title(@NotNull Component title, @NotNull Component subtitle, long fadeIn, long stay, long fadeOut) {
+    static @NotNull Title title(@NotNull Component title, @NotNull Component subtitle, long fadeIn, long stay, long fadeOut) {
         return builder().title(title).subtitle(subtitle).times(fadeIn, stay, fadeOut).build();
     }
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    static Title.Builder builder() {
+    static @NotNull Title.Builder builder() {
         return Spectator.getBackend().title();
     }
 
@@ -125,9 +120,8 @@ public interface Title extends Wrapper, RawValueHolder, TimesProvider {
         @Contract("_ -> this")
         Builder fadeIn(@Nullable Duration fadeIn);
 
-        @NotNull
         @Contract("_ -> this")
-        default Builder fadeIn(long ticks) {
+        default @NotNull Builder fadeIn(long ticks) {
             return fadeIn(Duration.ofMillis(ticks * 50));
         }
 
@@ -135,9 +129,8 @@ public interface Title extends Wrapper, RawValueHolder, TimesProvider {
         @Contract("_ -> this")
         Builder stay(@Nullable Duration stay);
 
-        @NotNull
         @Contract("_ -> this")
-        default Builder stay(long ticks) {
+        default @NotNull Builder stay(long ticks) {
             return stay(Duration.ofMillis(ticks * 50));
         }
 
@@ -145,15 +138,13 @@ public interface Title extends Wrapper, RawValueHolder, TimesProvider {
         @Contract("_ -> this")
         Builder fadeOut(@Nullable Duration fadeOut);
 
-        @NotNull
         @Contract("_ -> this")
-        default Builder fadeOut(long ticks) {
+        default @NotNull Builder fadeOut(long ticks) {
             return fadeOut(Duration.ofMillis(ticks * 50));
         }
 
-        @NotNull
         @Contract("_ -> this")
-        default Builder times(@Nullable TimesProvider times) {
+        default @NotNull Builder times(@Nullable TimesProvider times) {
             if (times != null) {
                 fadeIn(times.fadeIn());
                 stay(times.stay());
@@ -166,18 +157,16 @@ public interface Title extends Wrapper, RawValueHolder, TimesProvider {
             return this;
         }
 
-        @NotNull
         @Contract("_, _, _ -> this")
-        default Builder times(@Nullable Duration fadeIn, @Nullable Duration stay, @Nullable Duration fadeOut) {
+        default @NotNull Builder times(@Nullable Duration fadeIn, @Nullable Duration stay, @Nullable Duration fadeOut) {
             fadeIn(fadeIn);
             stay(stay);
             fadeOut(fadeOut);
             return this;
         }
 
-        @NotNull
         @Contract("_, _, _ -> this")
-        default Builder times(long fadeIn, long stay, long fadeOut) {
+        default @NotNull Builder times(long fadeIn, long stay, long fadeOut) {
             fadeIn(fadeIn);
             stay(stay);
             fadeOut(fadeOut);

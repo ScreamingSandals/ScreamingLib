@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.player.SPlayerPortalEvent;
 
 public class SBukkitPlayerPortalEvent extends SBukkitPlayerTeleportEvent implements SPlayerPortalEvent {
@@ -25,7 +26,7 @@ public class SBukkitPlayerPortalEvent extends SBukkitPlayerTeleportEvent impleme
     }
 
     @Override
-    public PlayerPortalEvent event() {
+    public @NotNull PlayerPortalEvent event() {
         return (PlayerPortalEvent) super.event();
     }
 

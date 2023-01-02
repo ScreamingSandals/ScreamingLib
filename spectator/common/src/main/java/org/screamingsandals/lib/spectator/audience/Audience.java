@@ -18,14 +18,10 @@ package org.screamingsandals.lib.spectator.audience;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
-import org.screamingsandals.lib.utils.UniqueIdentifiable;
-
-import java.util.UUID;
 
 public interface Audience {
 
@@ -43,6 +39,7 @@ public interface Audience {
         sendMessage(Component.text(message, color));
     }
 
+    @FunctionalInterface
     interface ForwardingToMulti extends Audience {
         @NotNull
         @ApiStatus.OverrideOnly
@@ -54,6 +51,7 @@ public interface Audience {
         }
     }
 
+    @FunctionalInterface
     interface ForwardingToSingle extends Audience {
         @NotNull
         @ApiStatus.OverrideOnly
@@ -65,6 +63,7 @@ public interface Audience {
         }
     }
 
+    @FunctionalInterface
     @ApiStatus.NonExtendable // don't extend it guys
     interface ForwardingToAdapter extends Audience {
         @NotNull

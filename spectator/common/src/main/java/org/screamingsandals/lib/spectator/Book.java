@@ -26,9 +26,8 @@ import java.util.List;
 
 // TODO: Support for AudienceComponentLike
 public interface Book extends Wrapper, RawValueHolder {
-    @NotNull
     @Contract(value = "-> new", pure = true)
-    static Book.Builder builder() {
+    static Book.@NotNull Builder builder() {
         return Spectator.getBackend().book();
     }
 

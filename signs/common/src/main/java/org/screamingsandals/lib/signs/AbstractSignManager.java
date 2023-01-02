@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ServiceDependencies
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public abstract class AbstractSignManager {
     private final @NotNull List<@NotNull ClickableSign> signs = new LinkedList<>();
     private boolean modified;

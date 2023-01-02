@@ -169,7 +169,6 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
     }
 
     @Contract("_ -> this")
-    @SuppressWarnings("unchecked")
     @Override
     public @NotNull T setLines(@NotNull Set<@NotNull TextEntry> lines) {
         final var ls = List.copyOf(lines);

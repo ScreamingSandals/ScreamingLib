@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bukkit.utils.nms;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -31,11 +32,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+@UtilityClass
 public class ClassStorage {
 	public static final boolean NMS_BASED_SERVER = safeGetClass("org.bukkit.craftbukkit.Main") != null;
-	public static final String NMS_VERSION = checkNMSVersion();
+	public static final @NotNull String NMS_VERSION = checkNMSVersion();
 
 	// CraftBukkit classes
+	@UtilityClass
 	public static final class CB {
 		public static final Class<?> CraftItemStack = safeGetClass("{obc}.inventory.CraftItemStack");
 		public static final Class<?> CraftMagicNumbers = safeGetClass("{obc}.util.CraftMagicNumbers");
@@ -57,7 +60,7 @@ public class ClassStorage {
 		}
 	}
 	
-	private static String checkNMSVersion() {
+	private static @NotNull String checkNMSVersion() {
 		/* if NMS is not found, finding class will fail, but we still need some string */
 		String nmsVersion = "nms_not_found"; 
 		

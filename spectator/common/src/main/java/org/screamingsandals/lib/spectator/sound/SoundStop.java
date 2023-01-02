@@ -26,32 +26,27 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 public interface SoundStop extends Wrapper, RawValueHolder {
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    static SoundStop all() {
+    static @NotNull SoundStop all() {
         return builder().build(); // TODO: constant
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static SoundStop named(NamespacedMappingKey soundKey) {
+    static @NotNull SoundStop named(NamespacedMappingKey soundKey) {
         return builder().soundKey(soundKey).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static SoundStop sourced(SoundSource source) {
+    static @NotNull SoundStop sourced(SoundSource source) {
         return builder().source(source).build();
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    @NotNull
-    static SoundStop namedSourced(NamespacedMappingKey soundKey, SoundSource source) {
+    static @NotNull SoundStop namedSourced(NamespacedMappingKey soundKey, SoundSource source) {
         return builder().soundKey(soundKey).source(source).build();
     }
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    static SoundStop.Builder builder() {
+    static @NotNull SoundStop.Builder builder() {
         return Spectator.getBackend().soundStop();
     }
 

@@ -18,6 +18,7 @@ package org.screamingsandals.lib.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.function.Consumer;
@@ -28,6 +29,7 @@ import java.util.function.Predicate;
  * ConsumerExecutor is class used for calling {@link Consumer}, {@link Predicate} and {@link Function}. This class automatically sets delegate for JVM language other than Java.
  */
 @NoArgsConstructor(access = AccessLevel.NONE)
+@UtilityClass
 public class ConsumerExecutor {
 
     /**

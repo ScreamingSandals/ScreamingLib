@@ -25,7 +25,6 @@ import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TranslatableResolver implements ComponentBuilderResolver {
 
@@ -57,8 +56,7 @@ public class TranslatableResolver implements ComponentBuilderResolver {
     }
 
     @Override
-    @Nullable
-    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+    public @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         if (component instanceof TranslatableComponent) {
             var args = new ArrayList<String>();
             args.add(((TranslatableComponent) component).translate());

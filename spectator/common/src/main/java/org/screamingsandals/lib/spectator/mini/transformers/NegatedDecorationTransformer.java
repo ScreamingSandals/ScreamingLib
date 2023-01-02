@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.spectator.mini.transformers;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.minitag.tags.TransformedTag;
 
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class NegatedDecorationTransformer implements TransformedTag.Transformer {
     @Override
-    public TagNode transform(TagNode node) {
+    public @NotNull TagNode transform(@NotNull TagNode node) {
         if (!node.getArgs().isEmpty()) {
             var attributes = new ArrayList<>(node.getArgs());
             attributes.add(0, "false");

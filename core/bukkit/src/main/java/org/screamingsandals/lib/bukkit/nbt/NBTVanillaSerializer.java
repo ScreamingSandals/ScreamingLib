@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bukkit.nbt;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.nbt.*;
 import org.screamingsandals.lib.nms.accessors.*;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Objects;
 
 // TODO: move to core-vanilla when work on sponge-impl starts
+@UtilityClass
 public class NBTVanillaSerializer {
     public static @NotNull Tag deserialize(@NotNull Object nmsTag) {
         Preconditions.checkArgument(TagAccessor.getType().isInstance(nmsTag), "nmsTag must be of type " + TagAccessor.getType().getName() + ", got " + nmsTag);

@@ -29,8 +29,7 @@ public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.N
 
     @SuppressWarnings("unchecked")
     @Override
-    @NotNull
-    public String nbtPath() {
+    public @NotNull String nbtPath() {
         return ((C) wrappedObject).nbtPath();
     }
 
@@ -41,8 +40,7 @@ public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.N
     }
 
     @Override
-    @Nullable
-    public Component separator() {
+    public @Nullable Component separator() {
         try {
             return AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?,?>) wrappedObject).separator());
         } catch (Throwable ignored) {
@@ -51,8 +49,7 @@ public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.N
     }
 
     @Override
-    @NotNull
-    public NBTComponent withSeparator(@Nullable Component separator) {
+    public @NotNull NBTComponent withSeparator(@Nullable Component separator) {
         try {
             return (NBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?,?>) wrappedObject).separator(separator == null ? null : separator.as(net.kyori.adventure.text.Component.class)));
         } catch (Throwable ignored) {
@@ -62,14 +59,12 @@ public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.N
     }
 
     @Override
-    @NotNull
-    public NBTComponent withNbtPath(@NotNull String nbtPath) {
+    public @NotNull NBTComponent withNbtPath(@NotNull String nbtPath) {
         return (NBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?,?>) wrappedObject).nbtPath(nbtPath));
     }
 
     @Override
-    @NotNull
-    public NBTComponent withInterpret(boolean interpret) {
+    public @NotNull NBTComponent withInterpret(boolean interpret) {
         return (NBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.NBTComponent<?,?>) wrappedObject).interpret(interpret));
     }
 
@@ -85,22 +80,19 @@ public abstract class AdventureNBTComponent<C extends net.kyori.adventure.text.N
         }
 
         @Override
-        @NotNull
-        public B nbtPath(@NotNull String nbtPath) {
+        public @NotNull B nbtPath(@NotNull String nbtPath) {
             getBuilder().nbtPath(nbtPath);
             return self();
         }
 
         @Override
-        @NotNull
-        public B interpret(boolean interpret) {
+        public @NotNull B interpret(boolean interpret) {
             getBuilder().interpret(interpret);
             return self();
         }
 
         @Override
-        @NotNull
-        public B separator(@Nullable Component separator) {
+        public @NotNull B separator(@Nullable Component separator) {
             try {
                 getBuilder().separator(separator == null ? null : separator.as(net.kyori.adventure.text.Component.class));
             } catch (Throwable ignored) {

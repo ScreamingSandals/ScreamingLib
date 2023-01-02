@@ -26,10 +26,8 @@ import java.util.function.Predicate;
 
 @Data
 public class TagPortHelper {
-    @NotNull
-    private final Predicate<@NotNull String> nativeTagChecker;
-    @Nullable
-    private List<@NotNull String> ports;
+    private final @NotNull Predicate<@NotNull String> nativeTagChecker;
+    private @Nullable List<@NotNull String> ports;
 
     public void port(@NotNull String tag) {
         if (ports == null) {

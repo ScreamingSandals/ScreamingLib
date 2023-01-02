@@ -37,9 +37,8 @@ public interface SPlayerInventoryClickEvent extends SCancellableEvent, SPlayerEv
     Container clickedInventory();
 
     // Who tf called this method getContainer()?
-    @Nullable
     @Deprecated
-    default Container container() {
+    default @Nullable Container container() {
         return clickedInventory();
     }
 

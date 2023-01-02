@@ -87,8 +87,6 @@ public class SClientboundSetPlayerTeamPacket extends AbstractPacket {
         REMOVE_ENTITY
     }
 
-    ;
-
     @RequiredArgsConstructor
     public enum TagVisibility {
         ALWAYS("always"),

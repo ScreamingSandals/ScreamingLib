@@ -22,7 +22,7 @@ import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import java.util.function.Predicate;
 
 @RequiredArgsConstructor(staticName = "of")
-public class PredicatePermission implements Permission {
+public final class PredicatePermission implements Permission {
     private final Predicate<CommandSenderWrapper> predicate;
 
     @Override

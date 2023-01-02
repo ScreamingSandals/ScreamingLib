@@ -18,6 +18,7 @@ package org.screamingsandals.lib.spectator.event.hover;
 
 import org.jetbrains.annotations.NotNull;
 
+@FunctionalInterface
 public interface ContentLike {
     @NotNull Content asContent();
 }

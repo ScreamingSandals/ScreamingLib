@@ -19,7 +19,6 @@ package org.screamingsandals.lib.bukkit.world.difficulty;
 import org.bukkit.Difficulty;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
-import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import org.screamingsandals.lib.world.difficulty.DifficultyMapping;
 
 import java.util.Arrays;

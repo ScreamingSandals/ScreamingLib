@@ -101,7 +101,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     @Override
     public NPC skin(NPCSkin skin) {
         this.skin = skin;
-        properties.removeIf(property -> property.name().equals("textures"));
+        properties.removeIf(property -> "textures".equals(property.name()));
         if (skin != null) {
             properties.add(
                     new SClientboundPlayerInfoPacket.Property(
@@ -159,9 +159,8 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                 .sendPacket(player);
     }
 
-    @Nullable
     @Override
-    public List<TextEntry> displayName() {
+    public @Nullable List<TextEntry> displayName() {
         return List.copyOf(hologram.lines().values());
     }
 
@@ -242,7 +241,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     @Override
     public @NotNull NPC title(@NotNull ComponentLike title) {
         hologram.title(title);
-        return null;
+        return this;
     }
     private void cancelTabHide(PlayerWrapper viewer) {
         hiderTask.computeIfPresent(viewer.getUuid(), (uuid, task) -> {

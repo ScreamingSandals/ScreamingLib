@@ -40,98 +40,79 @@ public interface Placeholder extends ComponentBuilderResolver {
         return getResult(parser, tag.getArgs(), placeholders);
     }
 
-    @NotNull
-    static Placeholder component(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Component component) {
+    static @NotNull Placeholder component(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Component component) {
         return new ComponentPlaceholder(name, component);
     }
 
-    @NotNull
-    static Placeholder lazyComponent(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Component> component) {
+    static @NotNull Placeholder lazyComponent(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Component> component) {
         return new LazyComponentPlaceholder(name, component);
     }
 
-    @NotNull
-    static Placeholder unparsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull String value) {
+    static @NotNull Placeholder unparsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull String value) {
         return new StringPlaceholder(name, value);
     }
 
-    @NotNull
-    static Placeholder lazyUnparsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull String> value) {
+    static @NotNull Placeholder lazyUnparsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull String> value) {
         return new LazyStringPlaceholder(name, value);
     }
 
-    @NotNull
-    static Placeholder parsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull String value) {
+    static @NotNull Placeholder parsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull String value) {
         return new MiniPlaceholder(name, value);
     }
 
-    @NotNull
-    static Placeholder lazyParsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull String> value) {
+    static @NotNull Placeholder lazyParsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull String> value) {
         return new LazyMiniPlaceholder(name, value);
     }
 
-    @NotNull
-    static Placeholder number(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Number value) {
+    static @NotNull Placeholder number(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Number value) {
         return new NumberPlaceholder(name, value);
     }
 
-    @NotNull
-    static Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Number> value) {
+    static @NotNull Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Number> value) {
         return new LazyNumberPlaceholder(name, value);
     }
 
-    @NotNull
-    static Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull IntSupplier value) {
+    static @NotNull Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull IntSupplier value) {
         return new LazyNumberPlaceholder(name, value::getAsInt);
     }
 
-    @NotNull
-    static Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull LongSupplier value) {
+    static @NotNull Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull LongSupplier value) {
         return new LazyNumberPlaceholder(name, value::getAsLong);
     }
 
-    @NotNull
-    static Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull DoubleSupplier value) {
+    static @NotNull Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull DoubleSupplier value) {
         return new LazyNumberPlaceholder(name, value::getAsDouble);
     }
 
-    @NotNull
-    static Placeholder bool(@Pattern("[a-z\\d_-]+") @NotNull String name, boolean value) {
+    static @NotNull Placeholder bool(@Pattern("[a-z\\d_-]+") @NotNull String name, boolean value) {
         return new BooleanPlaceholder(name, value);
     }
 
-    @NotNull
-    static Placeholder lazyBool(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull BooleanSupplier value) {
+    static @NotNull Placeholder lazyBool(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull BooleanSupplier value) {
         return new LazyBooleanPlaceholder(name, value);
     }
 
-    @NotNull
-    static Placeholder character(@Pattern("[a-z\\d_-]+") @NotNull String name, char value) {
+    static @NotNull Placeholder character(@Pattern("[a-z\\d_-]+") @NotNull String name, char value) {
         return new CharPlaceholder(name, value);
     }
 
-    @NotNull
-    static Placeholder lazyCharacter(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Character> value) {
+    static @NotNull Placeholder lazyCharacter(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Character> value) {
         return new LazyCharPlaceholder(name, value);
     }
 
-    @NotNull
-    static Placeholder dateTime(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull TemporalAccessor value) {
+    static @NotNull Placeholder dateTime(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull TemporalAccessor value) {
         return new DateTimePlaceholder(name, value);
     }
 
-    @NotNull
-    static Placeholder lazyDateTime(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull TemporalAccessor> value) {
+    static @NotNull Placeholder lazyDateTime(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull TemporalAccessor> value) {
         return new LazyDateTimePlaceholder(name, value);
     }
 
-    @NotNull
-    static Placeholder choice(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Number value) {
+    static @NotNull Placeholder choice(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Number value) {
         return new ChoicePlaceholder(name, value);
     }
 
-    @NotNull
-    static Placeholder lazyChoice(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Number> value) {
+    static @NotNull Placeholder lazyChoice(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Number> value) {
         return new LazyChoicePlaceholder(name, value);
     }
 

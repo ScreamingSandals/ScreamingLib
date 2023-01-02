@@ -114,6 +114,6 @@ public interface SEntityTargetEvent extends SCancellableEvent, PlatformEventWrap
         /**
          * A currently unknown reason for the entity changing target.
          */
-        UNKNOWN;
+        UNKNOWN
     }
 }

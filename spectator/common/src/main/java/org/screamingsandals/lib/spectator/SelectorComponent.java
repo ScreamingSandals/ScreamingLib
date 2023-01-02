@@ -22,8 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface SelectorComponent extends SeparableComponent {
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    static SelectorComponent.Builder builder() {
+    static @NotNull SelectorComponent.Builder builder() {
         return Spectator.getBackend().selector();
     }
 

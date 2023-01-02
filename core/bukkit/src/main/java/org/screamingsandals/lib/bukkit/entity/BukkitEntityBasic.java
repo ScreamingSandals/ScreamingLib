@@ -247,8 +247,7 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    @Nullable
-    public Component getCustomName() {
+    public @Nullable Component getCustomName() {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             return AdventureBackend.wrapComponent(wrappedObject.customName());
         } else {

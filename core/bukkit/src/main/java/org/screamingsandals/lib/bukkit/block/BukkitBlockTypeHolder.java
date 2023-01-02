@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements BlockTypeHolder {
 
     public static boolean NAG_AUTHOR_ABOUT_LEGACY_METHOD_USED;

@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import org.bukkit.event.entity.ExpBottleEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.entity.SExpBottleEvent;
 
 public class SBukkitExpBottleEvent extends SBukkitProjectileHitEvent implements SExpBottleEvent {
@@ -45,7 +46,7 @@ public class SBukkitExpBottleEvent extends SBukkitProjectileHitEvent implements 
     }
 
     @Override
-    public ExpBottleEvent event() {
+    public @NotNull ExpBottleEvent event() {
         return (ExpBottleEvent) super.event();
     }
 }

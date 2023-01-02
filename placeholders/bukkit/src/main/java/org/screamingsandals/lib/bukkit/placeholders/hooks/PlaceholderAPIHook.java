@@ -47,20 +47,17 @@ public class PlaceholderAPIHook implements Hook {
         private final PlaceholderExpansion placeholderExpansion;
 
         @Override
-        @NotNull
-        public String getIdentifier() {
+        public @NotNull String getIdentifier() {
             return placeholderExpansion.getIdentifier();
         }
 
         @Override
-        @NotNull
-        public String getAuthor() {
+        public @NotNull String getAuthor() {
             return String.join(", ", plugin.getDescription().getAuthors());
         }
 
         @Override
-        @NotNull
-        public String getVersion() {
+        public @NotNull String getVersion() {
             return plugin.getDescription().getVersion();
         }
 

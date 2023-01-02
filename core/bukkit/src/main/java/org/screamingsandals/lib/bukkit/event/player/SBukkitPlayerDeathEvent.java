@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.bukkit.BukkitCore;
@@ -36,14 +37,11 @@ public class SBukkitPlayerDeathEvent extends SBukkitEntityDeathEvent implements 
     }
 
     // Internal cache
-    @Nullable
-    private final Player bukkitKiller;
-    @Nullable
-    private PlayerWrapper killer;
+    private final @Nullable Player bukkitKiller;
+    private @Nullable PlayerWrapper killer;
 
     @Override
-    @Nullable
-    public Component deathMessage() {
+    public @Nullable Component deathMessage() {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             var dm = event().deathMessage();
             return dm != null ? AdventureBackend.wrapComponent(dm) : null;
@@ -143,8 +141,7 @@ public class SBukkitPlayerDeathEvent extends SBukkitEntityDeathEvent implements 
     }
 
     @Override
-    @Nullable
-    public PlayerWrapper killer() {
+    public @Nullable PlayerWrapper killer() {
         if (bukkitKiller != null && killer == null) {
             killer = new BukkitEntityPlayer(bukkitKiller);
         }
@@ -152,12 +149,12 @@ public class SBukkitPlayerDeathEvent extends SBukkitEntityDeathEvent implements 
     }
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         return (PlayerWrapper) entity();
     }
 
     @Override
-    public PlayerDeathEvent event() {
+    public @NotNull PlayerDeathEvent event() {
         return (PlayerDeathEvent) super.event();
     }
 }

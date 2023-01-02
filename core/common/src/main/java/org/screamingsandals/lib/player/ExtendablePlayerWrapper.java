@@ -33,8 +33,7 @@ public class ExtendablePlayerWrapper implements PlayerWrapper {
     }
 
     @Override
-    @NotNull
-    public PlayerAdapter adapter() {
+    public @NotNull PlayerAdapter adapter() {
         return wrappedObject.adapter();
     }
 

@@ -24,8 +24,7 @@ import java.util.List;
 
 public interface TranslatableComponent extends Component {
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    static TranslatableComponent.Builder builder() {
+    static @NotNull TranslatableComponent.Builder builder() {
         return Spectator.getBackend().translatable();
     }
 

@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.event;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,9 +34,9 @@ public interface SEvent {
         DEFAULT,
         ALLOW;
 
-        public static List<Result> VALUES = Arrays.asList(values());
+        public static final @NotNull List<@NotNull Result> VALUES = List.of(values());
 
-        public static Result convert(String result) {
+        public static @NotNull Result convert(@NotNull String result) {
             return VALUES.stream()
                     .filter(next -> result.equalsIgnoreCase(next.name()))
                     .findFirst()

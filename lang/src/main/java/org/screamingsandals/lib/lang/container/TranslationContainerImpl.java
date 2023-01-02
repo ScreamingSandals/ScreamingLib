@@ -32,8 +32,7 @@ class TranslationContainerImpl implements TranslationContainer {
     static final TranslationContainer EMPTY = new TranslationContainerImpl(BasicConfigurationNode.root(), null);
 
     private ConfigurationNode node;
-    @Nullable
-    private TranslationContainer fallbackContainer;
+    private @Nullable TranslationContainer fallbackContainer;
 
     public List<String> translate(Collection<String> key) {
         return translate(key.toArray(String[]::new));

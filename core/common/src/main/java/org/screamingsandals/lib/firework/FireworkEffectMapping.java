@@ -36,9 +36,9 @@ import java.util.*;
 @SuppressWarnings("AlternativeMethodAvailable")
 @AbstractService
 public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkEffectHolder> {
-    private static FireworkEffectMapping fireworkEffectMapping = null;
+    private static FireworkEffectMapping fireworkEffectMapping;
 
-    protected BidirectionalConverter<FireworkEffectHolder> fireworkEffectConverter = BidirectionalConverter.<FireworkEffectHolder>build()
+    protected final BidirectionalConverter<FireworkEffectHolder> fireworkEffectConverter = BidirectionalConverter.<FireworkEffectHolder>build()
             .registerP2W(FireworkEffectHolder.class, e -> e)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {

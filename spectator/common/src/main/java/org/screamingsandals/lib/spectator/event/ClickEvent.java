@@ -26,45 +26,38 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 public interface ClickEvent extends Wrapper, RawValueHolder {
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    static ClickEvent.Builder builder() {
+    static @NotNull ClickEvent.Builder builder() {
         return Spectator.getBackend().clickEvent();
     }
 
     @LimitedVersionSupport(">= 1.15")
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static ClickEvent copyToClipboard(@NotNull String value) {
+    static @NotNull ClickEvent copyToClipboard(@NotNull String value) {
         return Spectator.getBackend().clickEvent().action(Action.COPY_TO_CLIPBOARD).value(value).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static ClickEvent openUrl(@NotNull String value) {
+    static @NotNull ClickEvent openUrl(@NotNull String value) {
         return Spectator.getBackend().clickEvent().action(Action.OPEN_URL).value(value).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static ClickEvent openFile(@NotNull String value) {
+    static @NotNull ClickEvent openFile(@NotNull String value) {
         return Spectator.getBackend().clickEvent().action(Action.OPEN_FILE).value(value).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static ClickEvent runCommand(@NotNull String value) {
+    static @NotNull ClickEvent runCommand(@NotNull String value) {
         return Spectator.getBackend().clickEvent().action(Action.RUN_COMMAND).value(value).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static ClickEvent suggestCommand(@NotNull String value) {
+    static @NotNull ClickEvent suggestCommand(@NotNull String value) {
         return Spectator.getBackend().clickEvent().action(Action.SUGGEST_COMMAND).value(value).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static ClickEvent changePage(@NotNull String value) {
+    static @NotNull ClickEvent changePage(@NotNull String value) {
         return Spectator.getBackend().clickEvent().action(Action.CHANGE_PAGE).value(value).build();
     }
 

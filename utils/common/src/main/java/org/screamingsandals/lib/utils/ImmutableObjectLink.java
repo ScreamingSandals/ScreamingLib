@@ -21,9 +21,9 @@ import lombok.RequiredArgsConstructor;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor(staticName = "of")
-public class ImmutableObjectLink<T> {
+public final class ImmutableObjectLink<T> {
     private final Supplier<T> getter;
-    private boolean cached = false;
+    private boolean cached;
     private T cache;
 
     public T get() {

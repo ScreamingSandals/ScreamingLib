@@ -55,7 +55,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     private @Nullable CompoundTag tagCache;
 
@@ -261,8 +261,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
 
     @Deprecated
     @Override
-    @Nullable
-    public <T> T getMetadata(MetadataKey<T> key) {
+    public <T> @Nullable T getMetadata(MetadataKey<T> key) {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
             return ItemMetaHelper.getMetadata(meta, key);
@@ -282,8 +281,7 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
 
     @Deprecated
     @Override
-    @Nullable
-    public <T> Collection<T> getMetadata(MetadataCollectionKey<T> key) {
+    public <T> @Nullable Collection<T> getMetadata(MetadataCollectionKey<T> key) {
         var meta = wrappedObject.getItemMeta();
         if (meta != null) {
             return ItemMetaHelper.getMetadata(meta, key);

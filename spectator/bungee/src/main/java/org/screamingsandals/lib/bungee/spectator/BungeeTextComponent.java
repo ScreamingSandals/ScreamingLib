@@ -25,22 +25,19 @@ public class BungeeTextComponent extends BungeeComponent implements TextComponen
     }
 
     @Override
-    @NotNull
-    public String content() {
+    public @NotNull String content() {
         return ((net.md_5.bungee.api.chat.TextComponent) wrappedObject).getText();
     }
 
     @Override
-    @NotNull
-    public TextComponent withContent(@NotNull String content) {
+    public @NotNull TextComponent withContent(@NotNull String content) {
         var duplicate = (net.md_5.bungee.api.chat.TextComponent) wrappedObject.duplicate();
         duplicate.setText(content);
         return (TextComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    @NotNull
-    public TextComponent.Builder toBuilder() {
+    public @NotNull TextComponent.Builder toBuilder() {
         var duplicate = (net.md_5.bungee.api.chat.TextComponent) wrappedObject.duplicate();
         return new BungeeTextBuilder(duplicate);
     }
@@ -56,8 +53,7 @@ public class BungeeTextComponent extends BungeeComponent implements TextComponen
         }
 
         @Override
-        @NotNull
-        public TextComponent.Builder content(@NotNull String content) {
+        public @NotNull TextComponent.Builder content(@NotNull String content) {
             component.setText(content);
             return self();
         }

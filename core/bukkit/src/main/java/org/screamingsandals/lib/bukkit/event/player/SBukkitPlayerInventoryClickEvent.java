@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -42,7 +43,7 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -59,7 +60,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     private SlotType slotType;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer((Player) event.getWhoClicked());
         }

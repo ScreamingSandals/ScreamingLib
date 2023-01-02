@@ -38,7 +38,7 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitEntityBreedEvent implements SEntityBreedEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -49,11 +49,9 @@ public class SBukkitEntityBreedEvent implements SEntityBreedEvent, BukkitCancell
     private EntityBasic entity;
     private EntityBasic mother;
     private EntityBasic father;
-    @Nullable
-    private EntityBasic breeder;
+    private @Nullable EntityBasic breeder;
     private boolean breederCached;
-    @Nullable
-    private Item bredWith;
+    private @Nullable Item bredWith;
     private boolean bredWithCached;
 
     @Override

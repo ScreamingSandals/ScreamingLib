@@ -32,7 +32,7 @@ import org.screamingsandals.lib.world.LocationMapper;
         BlockTypeMapper.class
 })
 public abstract class BlockMapper {
-    protected BidirectionalConverter<BlockHolder> converter = BidirectionalConverter.<BlockHolder>build()
+    protected final BidirectionalConverter<BlockHolder> converter = BidirectionalConverter.<BlockHolder>build()
             .registerP2W(BlockHolder.class, e -> e);
 
     private static BlockMapper mapping;

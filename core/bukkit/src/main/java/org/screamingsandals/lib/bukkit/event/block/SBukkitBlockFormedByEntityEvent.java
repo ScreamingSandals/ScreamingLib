@@ -27,7 +27,7 @@ import lombok.experimental.Accessors;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitBlockFormedByEntityEvent extends SBukkitBlockFormEvent implements SBlockFormedByEntityEvent {
     // Internal cache
     private EntityBasic producer;

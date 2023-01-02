@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -45,7 +46,7 @@ public class SBukkitPlayerFoodLevelChangeEvent implements SPlayerFoodLevelChange
     private boolean itemCached;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer((Player) event.getEntity());
         }

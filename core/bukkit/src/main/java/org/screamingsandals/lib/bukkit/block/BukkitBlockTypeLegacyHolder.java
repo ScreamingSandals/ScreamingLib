@@ -31,7 +31,7 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import java.util.Arrays;
 import java.util.Map;
 
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> implements BlockTypeHolder {
 
     public BukkitBlockTypeLegacyHolder(@NotNull Material material) {
@@ -245,7 +245,7 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
         } else {
             key = NamespacedMappingKey.of(tag.toString());
         }
-        if (!key.namespace().equals("minecraft")) {
+        if (!"minecraft".equals(key.namespace())) {
             return false;
         }
         var value = key.value();

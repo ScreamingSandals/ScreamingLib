@@ -24,8 +24,7 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 @LimitedVersionSupport(">= 1.14")
 public interface EntityNBTComponent extends NBTComponent {
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    static EntityNBTComponent.Builder builder() {
+    static @NotNull EntityNBTComponent.Builder builder() {
         return Spectator.getBackend().entityNBT();
     }
 

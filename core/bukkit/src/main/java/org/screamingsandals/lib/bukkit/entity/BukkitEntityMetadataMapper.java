@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.entity;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.ExtensionMethod;
+import lombok.experimental.UtilityClass;
 import org.bukkit.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.*;
@@ -50,10 +51,11 @@ import org.screamingsandals.lib.world.LocationMapper;
 import java.util.*;
 import java.util.function.*;
 
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
+@UtilityClass
 public class BukkitEntityMetadataMapper {
 
-    private static final Map<Class<? extends Entity>, Map<String, BukkitMetadata<?, ?>>> METADATA = new HashMap<>();
+    private static final @NotNull Map<@NotNull Class<? extends Entity>, Map<@NotNull String, BukkitMetadata<?, ?>>> METADATA = new HashMap<>();
 
     // TODO: it would be better to generate this static initializer or maybe find a better way then manually doing this shit (because of fucking modded servers)
     // sometimes compiler optimizations cause this too not work on some versions, so that's why you may sometimes find reflection where it does not make any sense :)
@@ -791,17 +793,15 @@ public class BukkitEntityMetadataMapper {
     @Data
     public static class BukkitMetadata<E extends Entity, V> {
         private final Class<V> valueClass;
-        @NotNull
-        private final Function<E, V> getter;
-        @Nullable
-        private final BiConsumer<E, V> setter;
+        private final @NotNull Function<E, V> getter;
+        private final @Nullable BiConsumer<E, V> setter;
 
     }
 
     @RequiredArgsConstructor
     public static class Builder<E extends Entity> {
         private final Class<E> clazz;
-        private boolean registered = false;
+        private boolean registered;
         private final Map<String, BukkitMetadata<E, ?>> metadataMap = new HashMap<>();
 
         public static <E extends Entity> Builder<E> begin(Class<E> entityClass) {

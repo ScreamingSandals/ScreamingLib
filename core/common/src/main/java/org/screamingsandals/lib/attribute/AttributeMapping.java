@@ -36,7 +36,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 @AbstractService
 @ServiceDependencies(dependsOn = {
         AttributeTypeMapping.class,

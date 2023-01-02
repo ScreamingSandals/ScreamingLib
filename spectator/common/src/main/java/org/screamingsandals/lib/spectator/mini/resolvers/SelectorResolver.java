@@ -45,8 +45,7 @@ public class SelectorResolver implements ComponentBuilderResolver {
     }
 
     @Override
-    @Nullable
-    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+    public @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         if (component instanceof SelectorComponent) {
             var args = new ArrayList<String>();
             args.add(((SelectorComponent) component).pattern());

@@ -35,7 +35,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 import java.util.*;
 
 @Service
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitPlayerMapper extends PlayerMapper {
     public BukkitPlayerMapper() {
         offlinePlayerConverter

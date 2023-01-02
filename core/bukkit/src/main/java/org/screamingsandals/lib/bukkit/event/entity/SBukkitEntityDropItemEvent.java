@@ -37,7 +37,7 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitEntityDropItemEvent implements SEntityDropItemEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include

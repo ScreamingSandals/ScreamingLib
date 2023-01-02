@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.block.BlockBreakEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.event.block.SBukkitBlockExperienceEvent;
@@ -42,7 +43,7 @@ public class SBukkitPlayerBlockBreakEvent extends SBukkitBlockExperienceEvent im
     }
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event().getPlayer());
         }
@@ -50,7 +51,7 @@ public class SBukkitPlayerBlockBreakEvent extends SBukkitBlockExperienceEvent im
     }
 
     @Override
-    public BlockBreakEvent event() {
+    public @NotNull BlockBreakEvent event() {
         return (BlockBreakEvent) super.event();
     }
 }

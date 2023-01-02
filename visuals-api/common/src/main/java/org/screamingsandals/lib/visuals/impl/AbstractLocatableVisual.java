@@ -31,7 +31,7 @@ public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> exte
     private volatile LocationHolder location;
     private volatile boolean created;
 
-    public AbstractLocatableVisual(UUID uuid, LocationHolder location) {
+    public AbstractLocatableVisual(@NotNull UUID uuid, @NotNull LocationHolder location) {
         super(uuid);
         Objects.requireNonNull(location, "Location cannot be null!");
         this.viewDistance = LocatableVisual.DEFAULT_VIEW_DISTANCE;
@@ -56,8 +56,7 @@ public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> exte
     }
 
     @Override
-    @NotNull
-    public LocationHolder location() {
+    public @NotNull LocationHolder location() {
         return location;
     }
 
@@ -73,7 +72,7 @@ public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> exte
     @Override
     public @NotNull T spawn() {
         if (created) {
-            throw new UnsupportedOperationException("Visual: " + uuid.toString() + " is already spawned!");
+            throw new UnsupportedOperationException("Visual: " + uuid + " is already spawned!");
         }
         show();
         created = true;
@@ -83,7 +82,7 @@ public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> exte
     @Override
     public void destroy() {
         if (destroyed) {
-            throw new UnsupportedOperationException("Visual: " + uuid.toString() + " is already destroyed!");
+            throw new UnsupportedOperationException("Visual: " + uuid + " is already destroyed!");
         }
         hide();
         destroyed = true;

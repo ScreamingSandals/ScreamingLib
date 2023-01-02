@@ -27,26 +27,22 @@ public class AdventureSelectorComponent extends AdventureComponent implements Se
     }
 
     @Override
-    @NotNull
-    public String pattern() {
+    public @NotNull String pattern() {
         return ((net.kyori.adventure.text.SelectorComponent) wrappedObject).pattern();
     }
 
     @Override
-    @NotNull
-    public SelectorComponent withPattern(String pattern) {
+    public @NotNull SelectorComponent withPattern(String pattern) {
         return (SelectorComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.SelectorComponent) wrappedObject).pattern(pattern));
     }
 
     @Override
-    @NotNull
-    public SelectorComponent.Builder toBuilder() {
+    public @NotNull SelectorComponent.Builder toBuilder() {
         return new AdventureSelectorBuilder(((net.kyori.adventure.text.SelectorComponent) wrappedObject).toBuilder());
     }
 
     @Override
-    @Nullable
-    public Component separator() {
+    public @Nullable Component separator() {
         try {
             return AdventureBackend.wrapComponent(((net.kyori.adventure.text.SelectorComponent) wrappedObject).separator());
         } catch (Throwable ignored) {
@@ -55,8 +51,7 @@ public class AdventureSelectorComponent extends AdventureComponent implements Se
     }
 
     @Override
-    @NotNull
-    public SelectorComponent withSeparator(@Nullable Component separator) {
+    public @NotNull SelectorComponent withSeparator(@Nullable Component separator) {
         try {
             return (SelectorComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.SelectorComponent) wrappedObject).separator(separator == null ? null : separator.as(net.kyori.adventure.text.Component.class)));
         } catch (Throwable ignored) {
@@ -77,15 +72,13 @@ public class AdventureSelectorComponent extends AdventureComponent implements Se
         }
 
         @Override
-        @NotNull
-        public SelectorComponent.Builder pattern(@NotNull String pattern) {
+        public SelectorComponent.@NotNull Builder pattern(@NotNull String pattern) {
             getBuilder().pattern(pattern);
             return self();
         }
 
         @Override
-        @NotNull
-        public SelectorComponent.Builder separator(@Nullable Component separator) {
+        public SelectorComponent.@NotNull Builder separator(@Nullable Component separator) {
             try {
                 getBuilder().separator(separator == null ? null : separator.as(net.kyori.adventure.text.Component.class));
             } catch (Throwable ignored) {

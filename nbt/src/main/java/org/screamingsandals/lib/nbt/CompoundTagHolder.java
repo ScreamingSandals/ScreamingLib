@@ -18,6 +18,7 @@ package org.screamingsandals.lib.nbt;
 
 import org.jetbrains.annotations.NotNull;
 
+@FunctionalInterface
 public interface CompoundTagHolder {
     @NotNull CompoundTag getTag();
 }

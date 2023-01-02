@@ -29,12 +29,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TagNode extends Node {
     private final String tag;
-    @NotNull
-    private final List<String> args;
+    private final @NotNull List<String> args;
 
     @Override
-    @Nullable
-    protected String toStringAdditional() {
+    protected @Nullable String toStringAdditional() {
         return tag + (!args.isEmpty() ? ", " + args : "");
     }
 }

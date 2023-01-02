@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
+@FunctionalInterface
 public interface CompoundTagTreeInspector {
     @Nullable Tag findTag(@NotNull String @NotNull... tagKeys);
 

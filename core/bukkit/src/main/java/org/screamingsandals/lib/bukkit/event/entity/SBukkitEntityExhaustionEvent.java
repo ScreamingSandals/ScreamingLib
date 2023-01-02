@@ -35,7 +35,7 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitEntityExhaustionEvent implements SEntityExhaustionEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include

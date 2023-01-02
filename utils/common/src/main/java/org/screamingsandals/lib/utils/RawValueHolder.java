@@ -19,6 +19,7 @@ package org.screamingsandals.lib.utils;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.reflect.InvocationResult;
 
+@FunctionalInterface
 public interface RawValueHolder {
     @NotNull Object raw();
 

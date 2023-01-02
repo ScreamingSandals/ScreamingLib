@@ -45,7 +45,7 @@ public class ServerboundInteractPacketListener {
             final var entityId = (int) Reflect.getField(packet, ServerboundInteractPacketAccessor.getFieldEntityId());
 
             var interactType = (nmsEnum == ATTACK_FIELD  ||
-                    nmsEnum == ATTACK_ACTION_FIELD || (nmsEnum != null && nmsEnum.toString().equals("ATTACK")))
+                    nmsEnum == ATTACK_ACTION_FIELD || (nmsEnum != null && "ATTACK".equals(nmsEnum.toString())))
                     ?  InteractType.LEFT_CLICK : InteractType.RIGHT_CLICK;
 
             final var completableFuture = EventManager.fireAsync(new SPlayerServerboundInteractEvent(player, entityId, interactType));

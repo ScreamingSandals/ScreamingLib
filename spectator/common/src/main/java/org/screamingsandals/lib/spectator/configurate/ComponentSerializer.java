@@ -84,15 +84,14 @@ public class ComponentSerializer implements TypeSerializer<Component> {
     private static final String CLICK_EVENT_KEY = "clickEvent";
     private static final String HOVER_EVENT_KEY = "hoverEvent";
 
-    @Nullable
-    private final Function<String, Component> stringDeserializer;
+    private final @Nullable Function<String, Component> stringDeserializer;
 
     @Override
     public Component deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {
             if (node.isList()) {
                 var list = node.childrenList();
-                if (list.size() == 0) {
+                if (list.isEmpty()) {
                     return Component.empty();
                 } else if (list.size() == 1) {
                     return list.get(0).get(Component.class);
@@ -353,8 +352,7 @@ public class ComponentSerializer implements TypeSerializer<Component> {
     }
 
     @Override
-    @Nullable
-    public Component emptyValue(Type specificType, ConfigurationOptions options) {
+    public @Nullable Component emptyValue(Type specificType, ConfigurationOptions options) {
         return Component.empty();
     }
 }

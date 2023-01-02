@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.spectator;
 
 import io.papermc.paper.text.PaperComponents;
+import lombok.experimental.UtilityClass;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.format.TextColor;
@@ -44,8 +45,9 @@ import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 
 // let's trick the bukkit's class loader a little
+@UtilityClass
 class SpigotBackendAdventureExtension {
-    static SpectatorBackend initAdventureBackend(@NotNull SNBTSerializer snbtSerializerLocal) {
+    static @NotNull SpectatorBackend initAdventureBackend(@NotNull SNBTSerializer snbtSerializerLocal) {
         var adventureBackend = new AdventureBackend() {
             {
                 snbtSerializer = snbtSerializerLocal;

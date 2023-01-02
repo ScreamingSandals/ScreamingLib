@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.container;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 /**
@@ -27,5 +28,5 @@ public interface Openable {
      *
      * @param wrapper the player
      */
-    void openInventory(PlayerWrapper wrapper);
+    void openInventory(@NotNull PlayerWrapper wrapper);
 }

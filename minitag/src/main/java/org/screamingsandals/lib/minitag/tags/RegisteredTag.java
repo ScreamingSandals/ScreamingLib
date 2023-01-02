@@ -16,6 +16,9 @@
 
 package org.screamingsandals.lib.minitag.tags;
 
+import org.jetbrains.annotations.NotNull;
+
+@FunctionalInterface
 public interface RegisteredTag {
-    TagType tagType();
+    @NotNull TagType tagType();
 }

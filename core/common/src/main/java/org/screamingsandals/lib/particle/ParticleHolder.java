@@ -33,8 +33,7 @@ public class ParticleHolder {
     private final Vector3D offset;
     private final double particleData; // ?
     private final boolean longDistance;
-    @Nullable
-    private final ParticleData specialData;
+    private final @Nullable ParticleData specialData;
 
     public ParticleHolder(ParticleTypeHolder particleType) {
         this(particleType, 1, Vector3D.ZERO, 1, false, null);

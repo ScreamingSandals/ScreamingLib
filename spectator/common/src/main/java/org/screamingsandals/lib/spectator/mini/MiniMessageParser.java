@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class MiniMessageParser {
+public final class MiniMessageParser {
 
     public static final MiniMessageParser INSTANCE = MiniMessageParser.builder()
             .defaultStylingTags()
@@ -55,8 +55,7 @@ public class MiniMessageParser {
     private final Map<String, ComponentBuilderResolver> componentTagResolvers;
     private final Map<String, StylingResolver> componentStylingResolvers;
 
-    @NotNull
-    public Component parse(@NotNull String str, @NotNull Placeholder... placeholders) {
+    public @NotNull Component parse(@NotNull String str, @NotNull Placeholder... placeholders) {
         if (str.isEmpty()) {
             return Component.empty();
         }
@@ -76,9 +75,8 @@ public class MiniMessageParser {
         }
     }
     @SuppressWarnings("unchecked")
-    @NotNull
     @ApiStatus.Internal
-    public <B extends Component.Builder<B, C>, C extends Component> B parseIntoBuilder(@NotNull String str, @NotNull Placeholder... placeholders) {
+    public @NotNull <B extends Component.Builder<B, C>, C extends Component> B parseIntoBuilder(@NotNull String str, @NotNull Placeholder... placeholders) {
         if (str.isEmpty()) {
             return (B) Component.text();
         }
@@ -170,8 +168,7 @@ public class MiniMessageParser {
         }
     }
 
-    @NotNull
-    public String serialize(@NotNull Component component) {
+    public @NotNull String serialize(@NotNull Component component) {
         var root = new RootNode();
         visitComponent(root, component);
         return parser.serialize(root);
@@ -207,8 +204,7 @@ public class MiniMessageParser {
         }
     }
 
-    @NotNull
-    public static Builder builder() {
+    public static @NotNull Builder builder() {
         return new Builder();
     }
 
@@ -217,151 +213,130 @@ public class MiniMessageParser {
         private final Map<String, ComponentBuilderResolver> componentTagResolvers = new HashMap<>();
         private final Map<String, StylingResolver> componentStylingResolvers = new HashMap<>();
 
-        @NotNull
         @Contract("_ -> this")
-        public Builder strictClosing(boolean strictClosing) {
+        public @NotNull Builder strictClosing(boolean strictClosing) {
             miniTagParserBuilder.strictClosing(strictClosing);
             return this;
         }
 
-        @NotNull
         @Contract("_ -> this")
-        public Builder escapeInvalidEndings(boolean escapeInvalidEndings) {
+        public @NotNull Builder escapeInvalidEndings(boolean escapeInvalidEndings) {
             miniTagParserBuilder.escapeInvalidEndings(escapeInvalidEndings);
             return this;
         }
 
-        @NotNull
         @Contract("_ -> this")
-        public Builder preTag(@Nullable String preTag) {
+        public @NotNull Builder preTag(@Nullable String preTag) {
             miniTagParserBuilder.preTag(preTag);
             return this;
         }
 
-        @NotNull
         @Contract("_ -> this")
-        public Builder preTag(boolean enablePreTag) {
+        public @NotNull Builder preTag(boolean enablePreTag) {
             miniTagParserBuilder.preTag(enablePreTag);
             return this;
         }
 
-        @NotNull
         @Contract("_ -> this")
-        public Builder resetTag(@Nullable String resetTag) {
+        public @NotNull Builder resetTag(@Nullable String resetTag) {
             miniTagParserBuilder.resetTag(resetTag);
             return this;
         }
 
-        @NotNull
         @Contract("_ -> this")
-        public Builder resetTag(boolean enableResetTag) {
+        public @NotNull Builder resetTag(boolean enableResetTag) {
             miniTagParserBuilder.resetTag(enableResetTag);
             return this;
         }
 
-        @NotNull
         @Contract("_ -> this")
-        public Builder escapeSymbol(char escapeSymbol) {
+        public @NotNull Builder escapeSymbol(char escapeSymbol) {
             miniTagParserBuilder.escapeSymbol(escapeSymbol);
             return this;
         }
 
-        @NotNull
         @Contract("_ -> this")
-        public Builder tagOpeningSymbol(char tagOpeningSymbol) {
+        public @NotNull Builder tagOpeningSymbol(char tagOpeningSymbol) {
             miniTagParserBuilder.tagOpeningSymbol(tagOpeningSymbol);
             return this;
         }
 
-        @NotNull
         @Contract("_ -> this")
-        public Builder tagClosingSymbol(char tagClosingSymbol) {
+        public @NotNull Builder tagClosingSymbol(char tagClosingSymbol) {
             miniTagParserBuilder.tagClosingSymbol(tagClosingSymbol);
             return this;
         }
 
-        @NotNull
         @Contract("_ -> this")
-        public Builder endingTagSymbol(char endingTagSymbol) {
+        public @NotNull Builder endingTagSymbol(char endingTagSymbol) {
             miniTagParserBuilder.endingTagSymbol(endingTagSymbol);
             return this;
         }
 
-        @NotNull
         @Contract("_ -> this")
-        public Builder argumentSeparator(char argumentSeparator) {
+        public @NotNull Builder argumentSeparator(char argumentSeparator) {
             miniTagParserBuilder.argumentSeparator(argumentSeparator);
             return this;
         }
 
-        @NotNull
         @Contract("_ -> this")
-        public Builder quotes(List<Character> quotes) {
+        public @NotNull Builder quotes(List<Character> quotes) {
             miniTagParserBuilder.quotes(quotes);
             return this;
         }
 
-        @NotNull
         @Contract("_ -> this")
-        public Builder quotes(Character... quotes) {
+        public @NotNull Builder quotes(Character... quotes) {
             miniTagParserBuilder.quotes(quotes);
             return this;
         }
 
-        @NotNull
         @Contract("_, _, _ -> this")
-        public Builder registerStylingTag(String name, StylingResolver resolver, String... aliases) {
+        public @NotNull Builder registerStylingTag(String name, StylingResolver resolver, String... aliases) {
             miniTagParserBuilder.registerTag(name, TagType.PAIR, aliases);
             componentStylingResolvers.put(name, resolver);
             return this;
         }
 
-        @NotNull
         @Contract("_, _, _ -> this")
-        public Builder registerComponentTag(String name, ComponentBuilderResolver resolver, String... aliases) {
+        public @NotNull Builder registerComponentTag(String name, ComponentBuilderResolver resolver, String... aliases) {
             miniTagParserBuilder.registerTag(name, TagType.SINGLE, aliases);
             componentTagResolvers.put(name, resolver);
             return this;
         }
 
-        @NotNull
         @Contract("_, _ -> this")
-        public Builder registerPlaceholder(Placeholder placeholder, String... aliases) {
+        public @NotNull Builder registerPlaceholder(Placeholder placeholder, String... aliases) {
             registerComponentTag(placeholder.getName(), placeholder, aliases);
             return this;
         }
 
-        @NotNull
         @Contract("_, _, _ -> this")
-        public Builder putStylingAlias(String name, TransformedTag.Transformer transformer, String... aliases) {
+        public @NotNull Builder putStylingAlias(String name, TransformedTag.Transformer transformer, String... aliases) {
             miniTagParserBuilder.registerTag(name, new TransformedTag(TagType.PAIR, transformer), aliases);
             return this;
         }
 
-        @NotNull
         @Contract("-_, _ > this")
-        public Builder putStylingAlias(Pattern pattern, TransformedTag.Transformer transformer) {
+        public @NotNull Builder putStylingAlias(Pattern pattern, TransformedTag.Transformer transformer) {
             miniTagParserBuilder.registerTag(pattern, new TransformedTag(TagType.PAIR, transformer));
             return this;
         }
 
-        @NotNull
         @Contract("_, _, _ -> this")
-        public Builder putComponentAlias(String name, TransformedTag.Transformer transformer, String... aliases) {
+        public @NotNull Builder putComponentAlias(String name, TransformedTag.Transformer transformer, String... aliases) {
             miniTagParserBuilder.registerTag(name, new TransformedTag(TagType.SINGLE, transformer), aliases);
             return this;
         }
 
-        @NotNull
         @Contract("_, _ -> this")
-        public Builder putComponentAlias(Pattern pattern, TransformedTag.Transformer transformer) {
+        public @NotNull Builder putComponentAlias(Pattern pattern, TransformedTag.Transformer transformer) {
             miniTagParserBuilder.registerTag(pattern, new TransformedTag(TagType.SINGLE, transformer));
             return this;
         }
 
-        @NotNull
         @Contract("-> this")
-        public Builder defaultStylingTags() {
+        public @NotNull Builder defaultStylingTags() {
             // colors
             registerStylingTag("color", new ColorResolver(), "colour", "c");
 
@@ -411,9 +386,8 @@ public class MiniMessageParser {
             return this;
         }
 
-        @NotNull
         @Contract("-> this")
-        public Builder defaultComponentTags() {
+        public @NotNull Builder defaultComponentTags() {
             registerComponentTag("selector", new SelectorResolver(), "sel");
             registerComponentTag("lang", new TranslatableResolver(), "tr", "translate");
             registerComponentTag("key", new KeybindResolver());
@@ -422,9 +396,8 @@ public class MiniMessageParser {
             return this;
         }
 
-        @NotNull
         @Contract(value = "-> new", pure = true)
-        public MiniMessageParser build() {
+        public @NotNull MiniMessageParser build() {
             return new MiniMessageParser(miniTagParserBuilder.build(), Map.copyOf(componentTagResolvers), Map.copyOf(componentStylingResolvers));
         }
     }

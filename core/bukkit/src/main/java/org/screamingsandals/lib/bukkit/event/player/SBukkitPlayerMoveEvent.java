@@ -25,6 +25,7 @@ import lombok.experimental.Accessors;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
@@ -51,7 +52,7 @@ public class SBukkitPlayerMoveEvent implements SPlayerMoveEvent, BukkitCancellab
     private LocationHolder newLocation;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

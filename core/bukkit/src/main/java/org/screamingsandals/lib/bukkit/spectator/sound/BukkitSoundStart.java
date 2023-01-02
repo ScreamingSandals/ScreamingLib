@@ -31,14 +31,11 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 @Data
 @Accessors(fluent = true)
 public class BukkitSoundStart implements SoundStart {
-    @NotNull
-    private final NamespacedMappingKey soundKey;
-    @NotNull
-    private final SoundSource source;
+    private final @NotNull NamespacedMappingKey soundKey;
+    private final @NotNull SoundSource source;
     private final float volume;
     private final float pitch;
-    @Nullable
-    private final Long seed;
+    private final @Nullable Long seed;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -50,49 +47,42 @@ public class BukkitSoundStart implements SoundStart {
     }
 
     @Override
-    public Object raw() {
+    public @NotNull Object raw() {
         return null;
     }
 
     @Override
-    @NotNull
-    public SoundStart withSoundKey(@NotNull NamespacedMappingKey soundKey) {
+    public @NotNull SoundStart withSoundKey(@NotNull NamespacedMappingKey soundKey) {
         return new BukkitSoundStart(soundKey, source, volume, pitch, seed);
     }
 
     @Override
-    @NotNull
-    public SoundStart withSource(@NotNull SoundSource source) {
+    public @NotNull SoundStart withSource(@NotNull SoundSource source) {
         return new BukkitSoundStart(soundKey, source, volume, pitch, seed);
     }
 
     @Override
-    @NotNull
-    public SoundStart withVolume(float volume) {
+    public @NotNull SoundStart withVolume(float volume) {
         return new BukkitSoundStart(soundKey, source, volume, pitch, seed);
     }
 
     @Override
-    @NotNull
-    public SoundStart withPitch(float pitch) {
+    public @NotNull SoundStart withPitch(float pitch) {
         return new BukkitSoundStart(soundKey, source, volume, pitch, seed);
     }
 
     @Override
-    @Nullable
-    public Long seed() {
+    public @Nullable Long seed() {
         return seed;
     }
 
     @Override
-    @NotNull
-    public SoundStart withSeed(@Nullable Long seed) {
+    public @NotNull SoundStart withSeed(@Nullable Long seed) {
         return new BukkitSoundStart(soundKey, source, volume, pitch, seed);
     }
 
     @Override
-    @NotNull
-    public SoundStart.Builder toBuilder() {
+    public SoundStart.@NotNull Builder toBuilder() {
         return new BukkitSoundStartBuilder(soundKey, source, volume, pitch, seed);
     }
 
@@ -100,15 +90,14 @@ public class BukkitSoundStart implements SoundStart {
     @AllArgsConstructor
     @Setter
     public static class BukkitSoundStartBuilder implements SoundStart.Builder {
-        private NamespacedMappingKey soundKey;
-        private SoundSource source = SoundSource.soundSource("master");
+        private @Nullable NamespacedMappingKey soundKey;
+        private @NotNull SoundSource source = SoundSource.soundSource("master");
         private float volume = 1;
         private float pitch = 1;
-        private Long seed = null;
+        private @Nullable Long seed;
 
         @Override
-        @NotNull
-        public SoundStart build() {
+        public @NotNull SoundStart build() {
             Preconditions.checkNotNull(soundKey, "Sound key cannot be null");
             return new BukkitSoundStart(soundKey, source, volume, pitch, seed);
         }

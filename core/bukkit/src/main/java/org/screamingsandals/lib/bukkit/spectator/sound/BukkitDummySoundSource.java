@@ -22,8 +22,7 @@ import org.screamingsandals.lib.spectator.sound.SoundSource;
 public class BukkitDummySoundSource implements SoundSource {
 
     @Override
-    @NotNull
-    public String name() {
+    public @NotNull String name() {
         return "neutral";
     }
 
@@ -37,7 +36,7 @@ public class BukkitDummySoundSource implements SoundSource {
     }
 
     @Override
-    public Object raw() {
-        return null;
+    public @NotNull Object raw() {
+        throw new UnsupportedOperationException("This version of Bukkit doesn't have SoundCategory class");
     }
 }

@@ -76,8 +76,7 @@ public class BungeeLegacyItemContent extends BasicWrapper<CompoundTag> implement
     }
 
     @Override
-    @NotNull
-    public ItemContent withCount(int count) {
+    public @NotNull ItemContent withCount(int count) {
         return new BungeeLegacyItemContent(wrappedObject.with("Count", (byte) count));
     }
 
@@ -125,8 +124,7 @@ public class BungeeLegacyItemContent extends BasicWrapper<CompoundTag> implement
         private @Nullable CompoundTag tag;
 
         @Override
-        @NotNull
-        public ItemContent build() {
+        public @NotNull ItemContent build() {
             var compoundTag = CompoundTag.EMPTY
                     .with("id", id == null ? "minecraft:air" : id.asString())
                     .with("Count", (byte) count);

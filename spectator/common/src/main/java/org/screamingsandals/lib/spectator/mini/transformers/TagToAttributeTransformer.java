@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.spectator.mini.transformers;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.minitag.tags.TransformedTag;
 
@@ -25,10 +26,10 @@ import java.util.List;
 
 @Data
 public class TagToAttributeTransformer implements TransformedTag.Transformer {
-    private final String tag;
+    private final @NotNull String tag;
 
     @Override
-    public TagNode transform(TagNode node) {
+    public @NotNull TagNode transform(@NotNull TagNode node) {
         if (!node.getArgs().isEmpty()) {
             var attributes = new ArrayList<>(node.getArgs());
             attributes.add(0, node.getTag());

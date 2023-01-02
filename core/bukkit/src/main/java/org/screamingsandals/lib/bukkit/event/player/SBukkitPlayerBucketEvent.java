@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import org.bukkit.event.player.PlayerBucketEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -52,7 +53,7 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
     private ItemTypeHolder bucket;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -92,8 +93,7 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
     }
 
     @Override
-    @Nullable
-    public Item item() {
+    public @Nullable Item item() {
         return event.getItemStack() != null ? new BukkitItem(event.getItemStack()) : null;
     }
 

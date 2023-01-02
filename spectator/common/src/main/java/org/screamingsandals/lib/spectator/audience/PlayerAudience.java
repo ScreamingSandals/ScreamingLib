@@ -144,10 +144,10 @@ public interface PlayerAudience extends Audience {
 
     void openBook(@NotNull Book book);
 
+    @FunctionalInterface
     interface ForwardingToMulti extends PlayerAudience, Audience.ForwardingToMulti {
-        @NotNull
         @ApiStatus.OverrideOnly
-        Iterable<? extends PlayerAudience> audiences();
+        @NotNull Iterable<? extends PlayerAudience> audiences();
 
         @Override
         default void sendActionBar(@NotNull ComponentLike message) {
@@ -205,10 +205,10 @@ public interface PlayerAudience extends Audience {
         }
     }
 
+     @FunctionalInterface
      interface ForwardingToSingle extends PlayerAudience, Audience.ForwardingToSingle {
-        @NotNull
         @ApiStatus.OverrideOnly
-        PlayerAudience audience();
+        @NotNull PlayerAudience audience();
 
         @Override
         default void sendActionBar(@NotNull ComponentLike message) {
@@ -266,12 +266,12 @@ public interface PlayerAudience extends Audience {
         }
     }
 
+    @FunctionalInterface
     @ApiStatus.NonExtendable // don't extend it guys
     interface ForwardingToAdapter extends PlayerAudience, Audience.ForwardingToAdapter {
         @Override
-        @NotNull
         @ApiStatus.OverrideOnly
-        PlayerAdapter adapter();
+        @NotNull PlayerAdapter adapter();
 
         @Override
         default void sendActionBar(@NotNull ComponentLike message) {

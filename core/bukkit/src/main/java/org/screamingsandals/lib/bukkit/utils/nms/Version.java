@@ -16,12 +16,14 @@
 
 package org.screamingsandals.lib.bukkit.utils.nms;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@UtilityClass
 public class Version {
 	
 	public static final int MAJOR_VERSION;

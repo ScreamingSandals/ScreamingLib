@@ -24,7 +24,7 @@ import java.util.Objects;
 
 @Data
 @RequiredArgsConstructor(staticName = "of")
-public class StringMappingKey implements MappingKey {
+public final class StringMappingKey implements MappingKey {
     private final String str;
 
     @Override
@@ -44,8 +44,7 @@ public class StringMappingKey implements MappingKey {
     }
 
     @Override
-    @NotNull
-    public String toString() {
+    public @NotNull String toString() {
         return str;
     }
 }

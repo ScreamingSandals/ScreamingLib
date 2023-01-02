@@ -31,9 +31,9 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
  * Class responsible for converting platform locations to wrappers.
  */
 @AbstractService
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public abstract class LocationMapper {
-    protected BidirectionalConverter<LocationHolder> converter = BidirectionalConverter.<LocationHolder>build()
+    protected final BidirectionalConverter<LocationHolder> converter = BidirectionalConverter.<LocationHolder>build()
             .registerP2W(LocationHolder.class, e -> e)
             .registerW2P(BlockHolder.class, BlockMapper::resolve);
 

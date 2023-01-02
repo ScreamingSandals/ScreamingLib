@@ -55,7 +55,7 @@ public class SpecialSoundKey extends NamespacedMappingKey {
             return Optional.empty();
         }
 
-        if (namespace.equals("minecraft")) {
+        if ("minecraft".equals(namespace)) {
             key = Server.UNSAFE_normalizeSoundKey(key);
         }
 

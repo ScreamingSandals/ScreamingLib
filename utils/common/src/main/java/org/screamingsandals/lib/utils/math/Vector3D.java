@@ -92,8 +92,7 @@ public class Vector3D implements Cloneable {
         return this;
     }
 
-    @NotNull
-    public Vector3D normalize() {
+    public @NotNull Vector3D normalize() {
         var length = length();
 
         x /= length;

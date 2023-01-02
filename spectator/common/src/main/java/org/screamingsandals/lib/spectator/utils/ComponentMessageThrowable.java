@@ -21,10 +21,10 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 
+@FunctionalInterface
 public interface ComponentMessageThrowable extends ComponentLike {
 
-    @Nullable
-    static Component toComponent(@Nullable Throwable throwable) {
+    static @Nullable Component toComponent(@Nullable Throwable throwable) {
         if (throwable instanceof ComponentMessageThrowable) {
             return ((ComponentMessageThrowable) throwable).componentMessage();
         } else if (throwable != null) {

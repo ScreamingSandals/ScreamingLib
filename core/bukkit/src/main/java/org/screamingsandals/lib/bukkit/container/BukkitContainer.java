@@ -159,7 +159,7 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public void openInventory(PlayerWrapper wrapper) {
+    public void openInventory(@NotNull PlayerWrapper wrapper) {
         wrapper.asOptional(Player.class).ifPresent(player ->
                 player.openInventory(wrappedObject)
         );

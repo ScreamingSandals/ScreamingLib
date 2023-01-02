@@ -31,9 +31,9 @@ import java.util.UUID;
  * Class responsible for converting platform worlds to wrappers.
  */
 @AbstractService
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public abstract class WorldMapper {
-    protected BidirectionalConverter<WorldHolder> converter = BidirectionalConverter.<WorldHolder>build()
+    protected final BidirectionalConverter<WorldHolder> converter = BidirectionalConverter.<WorldHolder>build()
             .registerP2W(WorldHolder.class, e -> e);
 
     private static WorldMapper mapping;

@@ -18,11 +18,15 @@ package org.screamingsandals.lib.spectator;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.UnknownNullability;
 
 @ApiStatus.Internal
+@UtilityClass
 public class Spectator {
     @Getter
     @Setter(onMethod_=@ApiStatus.Internal)
+    @UnknownNullability("Should not be null when needed, but it's not set to non-null value immediately.")
     private static SpectatorBackend backend;
 }

@@ -27,14 +27,11 @@ import org.screamingsandals.lib.placeholders.PlaceholderExpansion;
 import org.screamingsandals.lib.placeholders.PlaceholderManager;
 import org.screamingsandals.lib.placeholders.hooks.DummyHook;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
-import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 
-@Service(dependsOn = {
-        BukkitPlayerMapper.class
-})
+@Service(dependsOn = BukkitPlayerMapper.class)
 public class BukkitPlaceholderManager extends PlaceholderManager {
 
     @ApiStatus.Internal

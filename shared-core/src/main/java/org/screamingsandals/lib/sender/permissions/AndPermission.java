@@ -24,7 +24,7 @@ import java.util.List;
 
 @Data
 @RequiredArgsConstructor(staticName = "of")
-public class AndPermission implements Permission {
+public final class AndPermission implements Permission {
     private final List<Permission> permissions;
 
     public static AndPermission of(Permission...permissions) {

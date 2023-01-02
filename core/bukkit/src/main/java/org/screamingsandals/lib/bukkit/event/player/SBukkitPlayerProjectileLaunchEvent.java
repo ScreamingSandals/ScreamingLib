@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.event.entity.SBukkitProjectileLaunchEvent;
 import org.screamingsandals.lib.event.player.SPlayerProjectileLaunchEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -27,7 +28,7 @@ public class SBukkitPlayerProjectileLaunchEvent extends SBukkitProjectileLaunchE
     }
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         return (PlayerWrapper) shooter();
     }
 }

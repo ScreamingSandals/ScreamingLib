@@ -20,6 +20,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerBedLeaveEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -42,7 +43,7 @@ public class SBukkitPlayerBedLeaveEvent implements SPlayerBedLeaveEvent, BukkitC
     private BlockHolder bed;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

@@ -27,12 +27,12 @@ import java.util.Optional;
 public interface PlatformEventWrapper extends Wrapper, RawValueHolder {
     @Override
     @ApiStatus.Experimental
-    default Object raw() {
+    default @NotNull Object raw() {
         return event();
     }
 
     @ApiStatus.Experimental
-    Object event();
+    @NotNull Object event();
 
     /**
      * {@inheritDoc}

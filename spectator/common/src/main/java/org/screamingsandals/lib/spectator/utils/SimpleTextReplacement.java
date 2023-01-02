@@ -35,13 +35,10 @@ import java.util.regex.Pattern;
 @Builder
 // TODO: create one that can manipulate with styling
 public class SimpleTextReplacement {
-    @NotNull
-    private final Pattern matchPattern;
-    @NotNull
-    private final Function<@NotNull MatchResult, @Nullable String> replacement;
+    private final @NotNull Pattern matchPattern;
+    private final @NotNull Function<@NotNull MatchResult, @Nullable String> replacement;
 
-    @NotNull
-    public Component replace(@NotNull Component component) {
+    public @NotNull Component replace(@NotNull Component component) {
         if (component instanceof TextComponent) {
             var content = ((TextComponent) component).content();
             if (!content.isEmpty()) {

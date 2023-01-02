@@ -23,8 +23,7 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 public interface ScoreComponent extends Component {
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    static ScoreComponent.Builder builder() {
+    static @NotNull ScoreComponent.Builder builder() {
         return Spectator.getBackend().score();
     }
 

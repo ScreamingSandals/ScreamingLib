@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet.entity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -46,8 +47,7 @@ public class FakeEntity {
     private Component customName;
     @Getter
     @Setter
-    @Nullable
-    private AudienceComponentLike customNameSenderMessage;
+    private @Nullable AudienceComponentLike customNameSenderMessage;
     @Setter
     private boolean isOnGround;
 
@@ -281,6 +281,7 @@ public class FakeEntity {
 
         RIGHT_LEG_ROTATION;
 
+        @UtilityClass
         public static class Registry {
             private static final Map<EntityMetadata, Byte> idMap = new HashMap<>();
             private static byte SEQUENTIAL_INDEXING = -1;

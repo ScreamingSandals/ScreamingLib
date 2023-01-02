@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.entity.SBukkitEntityUnleashEvent;
 import org.screamingsandals.lib.event.player.SPlayerUnleashEntityEvent;
@@ -31,7 +32,7 @@ public class SBukkitPlayerUnleashEntityEvent extends SBukkitEntityUnleashEvent i
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(((PlayerUnleashEntityEvent) event()).getPlayer());
         }

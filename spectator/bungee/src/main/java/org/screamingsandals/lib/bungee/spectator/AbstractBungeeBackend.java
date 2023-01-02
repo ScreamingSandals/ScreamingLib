@@ -252,7 +252,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
             s = 0;
         }
         if (s == 0) {
-            return new float[] {0, s, max};
+            return new float[] {0, 0, max};
         }
 
         float h;
@@ -358,9 +358,8 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
         }
     }
 
-    @Nullable
     @Contract("null -> null; !null -> !null")
-    public static Component wrapComponent(@Nullable BaseComponent component) {
+    public static @Nullable Component wrapComponent(@Nullable BaseComponent component) {
         if (component == null) {
             return null;
         }

@@ -31,8 +31,7 @@ import java.util.stream.LongStream;
 public final class LongArrayTag implements CollectionTag, Iterable<Long> {
     private final long @NotNull [] value;
 
-    @NotNull
-    public String toString() {
+    public @NotNull String toString() {
         return "LongArrayTag(value=" + Arrays.toString(value) + ")";
     }
 
@@ -75,8 +74,7 @@ public final class LongArrayTag implements CollectionTag, Iterable<Long> {
         }
     }
 
-    @NotNull
-    public LongStream stream() {
+    public @NotNull LongStream stream() {
         return LongStream.of(value);
     }
 }

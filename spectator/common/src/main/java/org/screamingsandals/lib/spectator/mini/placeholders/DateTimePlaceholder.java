@@ -34,8 +34,7 @@ public class DateTimePlaceholder implements Placeholder {
 
     @SuppressWarnings("unchecked")
     @Override
-    @NotNull
-    public <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
+    public @NotNull <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
         if (arguments.size() >= 1) {
             try {
                 return (B) Component.text().content(DateTimeFormatter.ofPattern(arguments.get(0)).format(value));

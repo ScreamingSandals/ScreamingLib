@@ -58,7 +58,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapper {
     public BukkitEntityPlayer(@NotNull Player wrappedObject) {
         super(wrappedObject);
@@ -96,12 +96,12 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
 
     @Override
     public boolean isSneaking() {
-        return ((Player) wrappedObject).isSneaking();
+        return wrappedObject.isSneaking();
     }
 
     @Override
     public void setSneaking(boolean sneaking) {
-        ((Player) wrappedObject).setSneaking(sneaking);
+        wrappedObject.setSneaking(sneaking);
     }
 
     @Override
@@ -111,8 +111,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    @Nullable
-    public Component getPlayerListName() {
+    public @Nullable Component getPlayerListName() {
         var bukkitPlayer = (Player) wrappedObject;
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             return AdventureBackend.wrapComponent(bukkitPlayer.playerListName());
@@ -121,8 +120,8 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
         }
     }
 
-    public
-    @Override void setPlayerListName(@Nullable Component component) {
+    @Override
+    public void setPlayerListName(@Nullable Component component) {
         var bukkitPlayer = (Player) wrappedObject;
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             bukkitPlayer.playerListName(component == null ? null : component.as(net.kyori.adventure.text.Component.class));
@@ -137,8 +136,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    @NotNull
-    public Component getDisplayName() {
+    public @NotNull Component getDisplayName() {
         var bukkitPlayer = (Player) wrappedObject;
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             return AdventureBackend.wrapComponent(bukkitPlayer.displayName());
@@ -421,8 +419,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    @NotNull
-    public PlayerAdapter adapter() {
+    public @NotNull PlayerAdapter adapter() {
         return BukkitCore.getSpectatorBackend().adapter(this, wrappedObject);
     }
 }

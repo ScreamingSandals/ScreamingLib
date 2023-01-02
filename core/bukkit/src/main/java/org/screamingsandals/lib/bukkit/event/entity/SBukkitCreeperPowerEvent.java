@@ -37,7 +37,7 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitCreeperPowerEvent implements SCreeperPowerEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -46,8 +46,7 @@ public class SBukkitCreeperPowerEvent implements SCreeperPowerEvent, BukkitCance
 
     // Internal cache
     private EntityBasic entity;
-    @Nullable
-    private EntityLightning bolt;
+    private @Nullable EntityLightning bolt;
     private boolean boltCached;
     private PowerCause cause;
 

@@ -23,7 +23,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.ItemSerializer;
 import org.screamingsandals.lib.item.*;
-import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
@@ -39,13 +38,11 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
-@ServiceDependencies(dependsOn = {
-        ItemTypeMapper.class
-})
+@ServiceDependencies(dependsOn = ItemTypeMapper.class)
 public abstract class ItemFactory {
 
     private static final @NotNull Function<@NotNull ConfigurationNode, @Nullable Item> CONFIGURATE_RESOLVER = node -> {
@@ -56,7 +53,7 @@ public abstract class ItemFactory {
         }
     };
 
-    protected @NotNull BidirectionalConverter<Item> itemConverter = BidirectionalConverter.<Item>build()
+    protected final @NotNull BidirectionalConverter<Item> itemConverter = BidirectionalConverter.<Item>build()
             .registerW2P(String.class, item -> item.getMaterial().platformName())
             .registerW2P(ItemTypeHolder.class, Item::getMaterial)
             .registerP2W(ConfigurationNode.class, CONFIGURATE_RESOLVER)

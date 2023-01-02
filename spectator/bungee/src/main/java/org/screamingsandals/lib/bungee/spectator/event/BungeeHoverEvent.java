@@ -42,8 +42,7 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
     }
 
     @Override
-    @NotNull
-    public Action action() {
+    public @NotNull Action action() {
         try {
             return Action.valueOf(wrappedObject.getAction().name());
         } catch (Throwable ignored) {
@@ -52,28 +51,27 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
     }
 
     @Override
-    @NotNull
-    public Content content() {
+    public @NotNull Content content() {
         try {
             // new api
             var content = wrappedObject.getContents();
             switch (wrappedObject.getAction()) {
                 case SHOW_ENTITY:
-                    if (content.size() == 0) {
+                    if (content.isEmpty()) {
                         return null; // Dear API, this is not valid
                     } else {
                         // Dear API, more values are also not valid
                         return new BungeeEntityContent((Entity) content.get(0));
                     }
                 case SHOW_ITEM:
-                    if (content.size() == 0) {
+                    if (content.isEmpty()) {
                         return null; // Dear API, this is not valid
                     } else {
                         // Dear API, more values are also not valid
                         return new BungeeItemContent((Item) content.get(0));
                     }
                 default:
-                    if (content.size() == 0) {
+                    if (content.isEmpty()) {
                         return Component.empty();
                     } else if (content.size() == 1) {
                         var text = (Text) content.get(0);
@@ -143,22 +141,19 @@ public class BungeeHoverEvent extends BasicWrapper<net.md_5.bungee.api.chat.Hove
         private Content content;
 
         @Override
-        @NotNull
-        public Builder action(@NotNull Action action) {
+        public @NotNull Builder action(@NotNull Action action) {
             this.action = action;
             return this;
         }
 
         @Override
-        @NotNull
-        public Builder content(@NotNull Content content) {
+        public @NotNull Builder content(@NotNull Content content) {
             this.content = content;
             return this;
         }
 
         @Override
-        @NotNull
-        public HoverEvent build() {
+        public @NotNull HoverEvent build() {
             Preconditions.checkNotNull(content, "Content of HoverEvent must be specified");
             try {
                 return new BungeeHoverEvent(new net.md_5.bungee.api.chat.HoverEvent(

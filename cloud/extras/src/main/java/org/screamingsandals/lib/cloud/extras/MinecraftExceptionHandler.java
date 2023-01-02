@@ -164,8 +164,7 @@ public final class MinecraftExceptionHandler<C> {
      *
      * @return {@code this}
      */
-    @NotNull
-    public MinecraftExceptionHandler<C> withInvalidSyntaxHandler() {
+    public @NotNull MinecraftExceptionHandler<C> withInvalidSyntaxHandler() {
         return this.withHandler(ExceptionType.INVALID_SYNTAX, DEFAULT_INVALID_SYNTAX_FUNCTION);
     }
 
@@ -174,8 +173,7 @@ public final class MinecraftExceptionHandler<C> {
      *
      * @return {@code this}
      */
-    @NotNull
-    public MinecraftExceptionHandler<C> withInvalidSenderHandler() {
+    public @NotNull MinecraftExceptionHandler<C> withInvalidSenderHandler() {
         return this.withHandler(ExceptionType.INVALID_SENDER, DEFAULT_INVALID_SENDER_FUNCTION);
     }
 
@@ -184,8 +182,7 @@ public final class MinecraftExceptionHandler<C> {
      *
      * @return {@code this}
      */
-    @NotNull
-    public MinecraftExceptionHandler<C> withNoPermissionHandler() {
+    public @NotNull MinecraftExceptionHandler<C> withNoPermissionHandler() {
         return this.withHandler(ExceptionType.NO_PERMISSION, DEFAULT_NO_PERMISSION_FUNCTION);
     }
 
@@ -194,8 +191,7 @@ public final class MinecraftExceptionHandler<C> {
      *
      * @return {@code this}
      */
-    @NotNull
-    public MinecraftExceptionHandler<C> withArgumentParsingHandler() {
+    public @NotNull MinecraftExceptionHandler<C> withArgumentParsingHandler() {
         return this.withHandler(ExceptionType.ARGUMENT_PARSING, DEFAULT_ARGUMENT_PARSING_FUNCTION);
     }
 
@@ -204,8 +200,7 @@ public final class MinecraftExceptionHandler<C> {
      *
      * @return {@code this}
      */
-    @NotNull
-    public MinecraftExceptionHandler<C> withCommandExecutionHandler() {
+    public @NotNull MinecraftExceptionHandler<C> withCommandExecutionHandler() {
         return this.withHandler(ExceptionType.COMMAND_EXECUTION, DEFAULT_COMMAND_EXECUTION_FUNCTION);
     }
 
@@ -214,8 +209,7 @@ public final class MinecraftExceptionHandler<C> {
      *
      * @return {@code this}
      */
-    @NotNull
-    public MinecraftExceptionHandler<C> withDefaultHandlers() {
+    public @NotNull MinecraftExceptionHandler<C> withDefaultHandlers() {
         return this
                 .withArgumentParsingHandler()
                 .withInvalidSenderHandler()
@@ -231,8 +225,7 @@ public final class MinecraftExceptionHandler<C> {
      * @param componentBuilder Component builder
      * @return {@code this}
      */
-    @NotNull
-    public MinecraftExceptionHandler<C> withHandler(final @NotNull ExceptionType type, final @NotNull Function<@NotNull Exception, @NotNull Component> componentBuilder) {
+    public @NotNull MinecraftExceptionHandler<C> withHandler(final @NotNull ExceptionType type, final @NotNull Function<@NotNull Exception, @NotNull Component> componentBuilder) {
         return this.withHandler(
                 type,
                 (sender, exception) -> componentBuilder.apply(exception)
@@ -246,8 +239,7 @@ public final class MinecraftExceptionHandler<C> {
      * @param componentBuilder Component builder
      * @return {@code this}
      */
-    @NotNull
-    public MinecraftExceptionHandler<C> withHandler(final @NotNull ExceptionType type, final @NotNull BiFunction<@NotNull C, @NotNull Exception, @NotNull Component> componentBuilder) {
+    public @NotNull MinecraftExceptionHandler<C> withHandler(final @NotNull ExceptionType type, final @NotNull BiFunction<@NotNull C, @NotNull Exception, @NotNull Component> componentBuilder) {
         this.componentBuilders.put(
                 type,
                 componentBuilder
@@ -261,8 +253,7 @@ public final class MinecraftExceptionHandler<C> {
      * @param decorator Component decorator
      * @return {@code this}
      */
-    @NotNull
-    public MinecraftExceptionHandler<C> withDecorator(final @NotNull Function<@NotNull Component, @NotNull Component> decorator) {
+    public @NotNull MinecraftExceptionHandler<C> withDecorator(final @NotNull Function<@NotNull Component, @NotNull Component> decorator) {
         this.decorator = decorator;
         return this;
     }

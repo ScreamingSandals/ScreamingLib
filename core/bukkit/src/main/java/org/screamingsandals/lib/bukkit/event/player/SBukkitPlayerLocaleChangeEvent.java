@@ -43,7 +43,7 @@ public class SBukkitPlayerLocaleChangeEvent implements SPlayerLocaleChangeEvent 
     private Locale locale;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

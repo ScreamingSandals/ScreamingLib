@@ -34,6 +34,6 @@ public @interface Provider {
     enum Level {
         INIT,
         ENABLE,
-        POST_ENABLE;
+        POST_ENABLE
     }
 }

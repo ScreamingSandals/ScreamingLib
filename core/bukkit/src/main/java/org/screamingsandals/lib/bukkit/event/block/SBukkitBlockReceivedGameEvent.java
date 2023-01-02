@@ -36,7 +36,7 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitBlockReceivedGameEvent implements SBlockReceivedGameEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include

@@ -30,10 +30,8 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 @Data
 @Accessors(fluent = true)
 public class BukkitSoundStop implements SoundStop {
-    @Nullable
-    private final NamespacedMappingKey soundKey;
-    @Nullable
-    private final SoundSource source;
+    private final @Nullable NamespacedMappingKey soundKey;
+    private final @Nullable SoundSource source;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -45,25 +43,22 @@ public class BukkitSoundStop implements SoundStop {
     }
 
     @Override
-    public Object raw() {
-        return null;
+    public @NotNull Object raw() {
+        throw new UnsupportedOperationException("Bukkit doesn't have any class for stopping custom sounds, just methods");
     }
 
     @Override
-    @NotNull
-    public SoundStop withSoundKey(@Nullable NamespacedMappingKey soundKey) {
+    public @NotNull SoundStop withSoundKey(@Nullable NamespacedMappingKey soundKey) {
         return new BukkitSoundStop(soundKey, source);
     }
 
     @Override
-    @NotNull
-    public SoundStop withSource(@Nullable SoundSource source) {
+    public @NotNull SoundStop withSource(@Nullable SoundSource source) {
         return new BukkitSoundStop(soundKey, source);
     }
 
     @Override
-    @NotNull
-    public SoundStop.Builder toBuilder() {
+    public @NotNull SoundStop.Builder toBuilder() {
         return new BukkitSoundStartBuilder(soundKey, source);
     }
 
@@ -71,12 +66,11 @@ public class BukkitSoundStop implements SoundStop {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BukkitSoundStartBuilder implements Builder {
-        private NamespacedMappingKey soundKey;
-        private SoundSource source;
+        private @Nullable NamespacedMappingKey soundKey;
+        private @Nullable SoundSource source;
 
         @Override
-        @NotNull
-        public SoundStop build() {
+        public @NotNull SoundStop build() {
             return new BukkitSoundStop(soundKey, source);
         }
     }

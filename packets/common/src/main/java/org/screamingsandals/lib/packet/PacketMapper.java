@@ -26,11 +26,9 @@ import java.util.Collection;
  *  Represents the PacketMapper instance which is useful for sending {@link AbstractPacket} to Player connections.
  */
 @AbstractService
-@ServiceDependencies(dependsOn = {
-        ProtocolInjector.class
-})
+@ServiceDependencies(dependsOn = ProtocolInjector.class)
 public abstract class PacketMapper {
-    private static PacketMapper packetMapper = null;
+    private static PacketMapper packetMapper;
 
     public PacketMapper() {
         if (packetMapper != null) {

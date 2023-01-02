@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerCommandPreprocessEvent;
@@ -37,7 +38,7 @@ public class SBukkitPlayerCommandPreprocessEvent implements SPlayerCommandPrepro
     private final PlayerCommandPreprocessEvent event;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         return new BukkitEntityPlayer(event.getPlayer());
     }
     @Override

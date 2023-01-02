@@ -53,7 +53,7 @@ public class BungeeTitle implements Title {
     }
 
     @Override
-    public Object raw() {
+    public @NotNull Object raw() {
         return ProxyServer.getInstance().createTitle()
                 .title(title.as(BaseComponent.class))
                 .subTitle(subtitle.as(BaseComponent.class))
@@ -63,26 +63,22 @@ public class BungeeTitle implements Title {
     }
 
     @Override
-    @NotNull
-    public Title withTitle(@NotNull Component title) {
+    public @NotNull Title withTitle(@NotNull Component title) {
         return new BungeeTitle(title, subtitle, fadeIn, stay, fadeOut);
     }
 
     @Override
-    @NotNull
-    public Title withSubtitle(@NotNull Component subtitle) {
+    public @NotNull Title withSubtitle(@NotNull Component subtitle) {
         return new BungeeTitle(title, subtitle, fadeIn, stay, fadeOut);
     }
 
     @Override
-    @NotNull
-    public Title withTimes(@NotNull TimesProvider times) {
+    public @NotNull Title withTimes(@NotNull TimesProvider times) {
         return new BungeeTitle(title, subtitle, times.fadeIn(), times.stay(), times.fadeOut());
     }
 
     @Override
-    @NotNull
-    public Title withTimes(@Nullable Duration fadeIn, @Nullable Duration stay, @Nullable Duration fadeOut) {
+    public @NotNull Title withTimes(@Nullable Duration fadeIn, @Nullable Duration stay, @Nullable Duration fadeOut) {
         return new BungeeTitle(title, subtitle,
                 fadeIn == null ? Duration.ofMillis(500) : fadeIn,
                 stay == null ? Duration.ofMillis(3500) : stay,
@@ -91,50 +87,42 @@ public class BungeeTitle implements Title {
     }
 
     @Override
-    @NotNull
-    public Title withTimes(long fadeIn, long stay, long fadeOut) {
+    public @NotNull Title withTimes(long fadeIn, long stay, long fadeOut) {
         return new BungeeTitle(title, subtitle, Duration.ofMillis(fadeIn * 50), Duration.ofMillis(stay * 50), Duration.ofMillis(fadeOut * 50));
     }
 
     @Override
-    @NotNull
-    public Title withFadeIn(@Nullable Duration fadeIn) {
+    public @NotNull Title withFadeIn(@Nullable Duration fadeIn) {
         return new BungeeTitle(title, subtitle, fadeIn == null ? Duration.ofMillis(500) : fadeIn, stay, fadeOut);
     }
 
     @Override
-    @NotNull
-    public Title withStay(@Nullable Duration stay) {
+    public @NotNull Title withStay(@Nullable Duration stay) {
         return new BungeeTitle(title, subtitle, fadeIn, stay == null ? Duration.ofMillis(3500) : stay, fadeOut);
     }
 
     @Override
-    @NotNull
-    public Title withFadeOut(@Nullable Duration fadeOut) {
+    public @NotNull Title withFadeOut(@Nullable Duration fadeOut) {
         return new BungeeTitle(title, subtitle, fadeIn, stay, fadeOut == null ? Duration.ofMillis(1000) : fadeOut);
     }
 
     @Override
-    @NotNull
-    public Title withFadeIn(long ticks) {
+    public @NotNull Title withFadeIn(long ticks) {
         return new BungeeTitle(title, subtitle, Duration.ofMillis(ticks * 50), stay, fadeOut);
     }
 
     @Override
-    @NotNull
-    public Title withStay(long ticks) {
+    public @NotNull Title withStay(long ticks) {
         return new BungeeTitle(title, subtitle, fadeIn, Duration.ofMillis(ticks * 50), fadeOut);
     }
 
     @Override
-    @NotNull
-    public Title withFadeOut(long ticks) {
+    public @NotNull Title withFadeOut(long ticks) {
         return new BungeeTitle(title, subtitle, fadeIn, stay, Duration.ofMillis(ticks * 50));
     }
 
     @Override
-    @NotNull
-    public Title.Builder toBuilder() {
+    public @NotNull Title.Builder toBuilder() {
         return new BungeeTitleBuilder(title, subtitle, fadeIn, stay, fadeOut);
     }
 
@@ -149,8 +137,7 @@ public class BungeeTitle implements Title {
         private Duration fadeOut;
 
         @Override
-        @NotNull
-        public Title build() {
+        public @NotNull Title build() {
             return new BungeeTitle(
                     title == null ? Component.empty() : title,
                     subtitle == null ? Component.empty() : subtitle,

@@ -16,11 +16,14 @@
 
 package org.screamingsandals.lib.utils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 /**
  * Something that can have a name.
  */
+@FunctionalInterface
 public interface Nameable extends Serializable {
 
     /**
@@ -29,12 +32,12 @@ public interface Nameable extends Serializable {
      * @param name the name to use
      * @return new Nameable instance.
      */
-    static Nameable of(String name) {
+    static Nameable of(@NotNull String name) {
         return () -> name;
     }
 
     /**
      * @return the name
      */
-    String name();
+    @NotNull String name();
 }

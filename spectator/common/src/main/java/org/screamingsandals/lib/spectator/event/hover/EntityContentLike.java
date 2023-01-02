@@ -18,13 +18,12 @@ package org.screamingsandals.lib.spectator.event.hover;
 
 import org.jetbrains.annotations.NotNull;
 
+@FunctionalInterface
 public interface EntityContentLike extends ContentLike {
-    @NotNull
-    EntityContent asEntityContent();
+    @NotNull EntityContent asEntityContent();
 
     @Override
-    @NotNull
-    default Content asContent() {
+    default @NotNull Content asContent() {
         return asEntityContent();
     }
 }

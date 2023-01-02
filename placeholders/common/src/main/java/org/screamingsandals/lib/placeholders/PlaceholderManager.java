@@ -17,12 +17,9 @@
 package org.screamingsandals.lib.placeholders;
 
 import org.jetbrains.annotations.ApiStatus;
-import org.screamingsandals.lib.placeholders.hooks.DummyHook;
 import org.screamingsandals.lib.placeholders.hooks.Hook;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
-import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
-import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 
 import java.util.LinkedList;
 import java.util.List;

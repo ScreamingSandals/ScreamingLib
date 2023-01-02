@@ -20,6 +20,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerItemHeldEvent;
@@ -39,7 +40,7 @@ public class SBukkitPlayerItemHeldEvent implements SPlayerItemHeldEvent, BukkitC
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

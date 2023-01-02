@@ -49,8 +49,7 @@ public abstract class Node {
     }
 
     @ApiStatus.OverrideOnly
-    @Nullable
-    protected String toStringAdditional() {
+    protected @Nullable String toStringAdditional() {
         return null;
     }
 }

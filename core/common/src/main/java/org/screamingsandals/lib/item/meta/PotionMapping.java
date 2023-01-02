@@ -35,7 +35,7 @@ import java.util.List;
 @AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
 public abstract class PotionMapping extends AbstractTypeMapper<PotionHolder> {
     private static PotionMapping potionMapping;
-    protected BidirectionalConverter<PotionHolder> potionConverter = BidirectionalConverter.<PotionHolder>build()
+    protected final BidirectionalConverter<PotionHolder> potionConverter = BidirectionalConverter.<PotionHolder>build()
             .registerP2W(PotionHolder.class, e -> e)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {

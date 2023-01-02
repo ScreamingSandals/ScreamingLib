@@ -39,8 +39,7 @@ public class KeybindResolver implements ComponentBuilderResolver {
     }
 
     @Override
-    @Nullable
-    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+    public @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         if (component instanceof KeybindComponent) {
             return new TagNode(tagName, List.of(((KeybindComponent) component).keybind()));
         }

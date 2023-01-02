@@ -37,7 +37,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitSpongeAbsorbEvent implements SSpongeAbsorbEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include

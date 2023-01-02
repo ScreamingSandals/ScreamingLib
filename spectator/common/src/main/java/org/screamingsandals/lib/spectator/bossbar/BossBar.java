@@ -29,90 +29,69 @@ import java.util.List;
 
 // TODO: Support for AudienceComponentLike
 public interface BossBar extends Wrapper, RawValueHolder {
-    @NotNull
     @Contract(value = "-> new", pure = true)
-    static BossBar.Builder builder() {
+    static BossBar.@NotNull Builder builder() {
         return Spectator.getBackend().bossBar();
     }
 
-    @NotNull
     @Contract(value = "-> new", pure = true)
-    static BossBar bossBar() {
+    static @NotNull BossBar bossBar() {
         return builder().build();
     }
 
-    @NotNull
-    Component title();
+    @NotNull Component title();
 
-    @NotNull
     @Contract("_ -> this")
-    BossBar title(@NotNull Component title);
+    @NotNull BossBar title(@NotNull Component title);
 
     float progress();
 
-    @NotNull
     @Contract("_ -> this")
-    BossBar progress(float progress);
+    @NotNull BossBar progress(float progress);
 
-    @NotNull
-    @Unmodifiable
-    List<BossBarFlag> flags();
+    @NotNull @Unmodifiable List<@NotNull BossBarFlag> flags();
 
-    @NotNull
     @Contract("_ -> this")
-    BossBar flags(@NotNull List<BossBarFlag> flags);
+    @NotNull BossBar flags(@NotNull List<@NotNull BossBarFlag> flags);
 
-    @NotNull
-    BossBarColor color();
+    @NotNull BossBarColor color();
 
-    @NotNull
     @Contract("_ -> this")
-    BossBar color(@NotNull BossBarColor color);
+    @NotNull BossBar color(@NotNull BossBarColor color);
 
-    @NotNull
-    BossBarDivision division();
+    @NotNull BossBarDivision division();
 
-    @NotNull
     @Contract("_ -> this")
-    BossBar division(@NotNull BossBarDivision division);
+    @NotNull BossBar division(@NotNull BossBarDivision division);
 
-    @NotNull
     @Contract("_ -> new")
-    RegisteredListener addListener(@NotNull BossBarListener listener);
+    @NotNull RegisteredListener addListener(@NotNull BossBarListener listener);
 
     void removeListener(@NotNull RegisteredListener listener);
 
     interface Builder {
-        @NotNull
         @Contract("_ -> this")
-        Builder title(@NotNull Component title);
+        @NotNull Builder title(@NotNull Component title);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder progress(float progress);
+        @NotNull Builder progress(float progress);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder color(@NotNull BossBarColor color);
+        @NotNull Builder color(@NotNull BossBarColor color);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder division(@NotNull BossBarDivision division);
+        @NotNull Builder division(@NotNull BossBarDivision division);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder flags(@NotNull Collection<BossBarFlag> flags);
+        @NotNull Builder flags(@NotNull Collection<BossBarFlag> flags);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder flags(@NotNull BossBarFlag... flags);
+        @NotNull Builder flags(@NotNull BossBarFlag... flags);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder listener(@NotNull BossBarListener listener);
+        @NotNull Builder listener(@NotNull BossBarListener listener);
 
-        @NotNull
         @Contract(value = "-> new", pure = true)
-        BossBar build();
+        @NotNull BossBar build();
     }
 }

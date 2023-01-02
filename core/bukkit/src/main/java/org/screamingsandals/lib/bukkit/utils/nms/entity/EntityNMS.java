@@ -31,7 +31,7 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.UUID;
 
 public class EntityNMS {
-	protected Object handler;
+	protected final Object handler;
 
 	public EntityNMS(Object handler) {
 		this.handler = handler;
@@ -120,7 +120,7 @@ public class EntityNMS {
 			try {
 				return Component.fromLegacy((String) Reflect.fastInvoke(textComponent, ComponentAccessor.getMethodFunc_150254_d1()));
 			} catch (Throwable t) {
-				throw new UnsupportedOperationException("Cannot deserialize " + textComponent.toString(), t);
+				throw new UnsupportedOperationException("Cannot deserialize " + textComponent, t);
 			}
 		}
 

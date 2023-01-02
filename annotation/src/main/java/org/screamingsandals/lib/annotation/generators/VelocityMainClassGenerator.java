@@ -94,7 +94,7 @@ public class VelocityMainClassGenerator extends MainClassGenerator {
         onEnableBuilder.addStatement("$T $N = $T.createKey($S).orElseThrow()", pluginKeyClass, "key", pluginManagerClass, pluginAnnotation.id())
                 .addStatement("$T $N = $T.getPlugin($N).orElseThrow()", pluginDescriptionClass, "description", pluginManagerClass, "key");
 
-        if (pluginContainer.getEnclosedElements().stream().filter(element -> element.getKind() == ElementKind.CONSTRUCTOR).map(el -> (ExecutableElement) el).anyMatch(el -> el.getParameters().size() == 1 && el.getParameters().get(0).asType().toString().equals("com.google.inject.Injector"))) {
+        if (pluginContainer.getEnclosedElements().stream().filter(element -> element.getKind() == ElementKind.CONSTRUCTOR).map(el -> (ExecutableElement) el).anyMatch(el -> el.getParameters().size() == 1 && "com.google.inject.Injector".equals(el.getParameters().get(0).asType().toString()))) {
             onEnableBuilder.addStatement("this.$N = new $T(guiceInjector)", "pluginContainer", pluginContainer);
         } else {
             onEnableBuilder.addStatement("this.$N = new $T()", "pluginContainer", pluginContainer);

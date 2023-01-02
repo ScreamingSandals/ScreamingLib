@@ -48,8 +48,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor(staticName = "builder")
-public class ServiceInitGenerator {
-    private long index = 0;
+public final class ServiceInitGenerator {
+    private long index;
 
     private final String platformClassName;
     private final MethodSpec.Builder methodSpec;
@@ -361,7 +361,7 @@ public class ServiceInitGenerator {
                 throw new UnsupportedOperationException("Service " + typeElement.getQualifiedName() + " has more than one @" + annotationClass.getSimpleName() + " methods");
             }
 
-        } while (result1.size() == 0 && (superClass = (TypeElement) types.asElement(superClass.getSuperclass())) != null);
+        } while (result1.isEmpty() && (superClass = (TypeElement) types.asElement(superClass.getSuperclass())) != null);
 
         if (result1.size() == 1) {
             var method = (ExecutableElement) result1.get(0);
@@ -459,11 +459,11 @@ public class ServiceInitGenerator {
                 throw new UnsupportedOperationException("Service " + typeElement.getQualifiedName() + " has more than one @ShouldRunControllable methods");
             }
 
-        } while (result1.size() == 0 && (superClass = (TypeElement) types.asElement(superClass.getSuperclass())) != null);
+        } while (result1.isEmpty() && (superClass = (TypeElement) types.asElement(superClass.getSuperclass())) != null);
 
         if (result1.size() == 1) {
             var method = (ExecutableElement) result1.get(0);
-            if (method.getParameters().size() > 0) {
+            if (!method.getParameters().isEmpty()) {
                 throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @ShouldRunControllable can't have parameters");
             }
             if (method.getReturnType().getKind() != TypeKind.BOOLEAN) {
@@ -499,11 +499,11 @@ public class ServiceInitGenerator {
                 throw new UnsupportedOperationException("Service " + typeElement.getQualifiedName() + " has more than one @OnPostConstruct methods");
             }
 
-        } while (result1.size() == 0 && (superClass = (TypeElement) types.asElement(superClass.getSuperclass())) != null);
+        } while (result1.isEmpty() && (superClass = (TypeElement) types.asElement(superClass.getSuperclass())) != null);
 
         if (result1.size() == 1) {
             var method = (ExecutableElement) result1.get(0);
-            if (method.getParameters().size() > 0) {
+            if (!method.getParameters().isEmpty()) {
                 throw new UnsupportedOperationException(typeElement.getQualifiedName() + ": Method annotated with @OnPostConstruct can't have parameters");
             }
             if (method.getModifiers().contains(Modifier.STATIC)) {
@@ -547,7 +547,7 @@ public class ServiceInitGenerator {
                 ))
                 .collect(Collectors.toList());
 
-        if (result.size() == 0) {
+        if (result.isEmpty()) {
             return;
         }
 
@@ -699,7 +699,7 @@ public class ServiceInitGenerator {
                 ))
                 .collect(Collectors.toList());
 
-        if (result.size() == 0) {
+        if (result.isEmpty()) {
             return;
         }
 

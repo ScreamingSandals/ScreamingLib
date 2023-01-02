@@ -56,8 +56,7 @@ public enum BlockFace {
         );
     }
 
-    @NotNull
-    public Vector3D getDirection() {
+    public @NotNull Vector3D getDirection() {
         var direction = new Vector3D(modX, modY, modZ);
         if (modX != 0 || modY != 0 || modZ != 0) {
             direction.normalize();
@@ -65,13 +64,11 @@ public enum BlockFace {
         return direction;
     }
 
-    @NotNull
-    public Vector3D getBlockDirection() {
+    public @NotNull Vector3D getBlockDirection() {
         return new Vector3D(modX, modY, modZ);
     }
 
-    @NotNull
-    public BlockFace getOppositeFace() {
+    public @NotNull BlockFace getOppositeFace() {
         switch (this) {
             case NORTH:
                 return BlockFace.SOUTH;

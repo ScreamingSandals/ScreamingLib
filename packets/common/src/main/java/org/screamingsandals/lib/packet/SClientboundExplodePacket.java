@@ -19,7 +19,6 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.world.LocationHolder;
 

@@ -23,6 +23,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerWorldChangeEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -44,7 +45,7 @@ public class SBukkitPlayerWorldChangeEvent implements SPlayerWorldChangeEvent {
     private WorldHolder from;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

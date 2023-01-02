@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 @Data
 @RequiredArgsConstructor(staticName = "of")
-public class StringMapMappingKey implements MappingKey {
+public final class StringMapMappingKey implements MappingKey {
     private final Map<String, String> str;
 
     @Override
@@ -50,8 +50,7 @@ public class StringMapMappingKey implements MappingKey {
     }
 
     @Override
-    @NotNull
-    public String toString() {
+    public @NotNull String toString() {
         return '[' + str.entrySet().stream().map(e -> e.getKey().toLowerCase(Locale.ROOT) + "=" + e.getValue().toLowerCase(Locale.ROOT)).collect(Collectors.joining(",")) + ']';
     }
 }

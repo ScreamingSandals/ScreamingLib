@@ -38,8 +38,7 @@ public class ItalicResolver implements StylingResolver {
     }
 
     @Override
-    @Nullable
-    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+    public @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         if (component.bold() == TriState.TRUE) {
             return new TagNode(tagName, List.of());
         } else if (component.bold() == TriState.FALSE) {

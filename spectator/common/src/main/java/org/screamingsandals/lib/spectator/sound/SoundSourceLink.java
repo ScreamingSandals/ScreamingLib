@@ -34,13 +34,12 @@ class SoundSourceLink implements SoundSource {
     }
 
     @Override
-    @NotNull
-    public String name() {
+    public @NotNull String name() {
         return obtainSource().name();
     }
 
     @Override
-    public Object raw() {
+    public @NotNull Object raw() {
         return obtainSource().raw();
     }
 

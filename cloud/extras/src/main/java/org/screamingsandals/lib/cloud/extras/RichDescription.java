@@ -68,8 +68,7 @@ public final class RichDescription implements ArgumentDescription {
      *
      * @return the empty description
      */
-    @NotNull
-    public static RichDescription empty() {
+    public static @NotNull RichDescription empty() {
         return EMPTY;
     }
 
@@ -79,8 +78,7 @@ public final class RichDescription implements ArgumentDescription {
      * @param contents the rich contents
      * @return a new rich description
      */
-    @NotNull
-    public static RichDescription of(final @NotNull ComponentLike contents) {
+    public static @NotNull RichDescription of(final @NotNull ComponentLike contents) {
         final Component componentContents = requireNonNull(contents, "contents").asComponent();
         if (Component.empty().equals(componentContents)) {
             return EMPTY;
@@ -97,8 +95,7 @@ public final class RichDescription implements ArgumentDescription {
      * @param key the translation key
      * @return a new rich description
      */
-    @NotNull
-    public static RichDescription translatable(final @NotNull String key) {
+    public static @NotNull RichDescription translatable(final @NotNull String key) {
         requireNonNull(key, "key");
 
         return new RichDescription(Component.translatable().translate(key).build());
@@ -111,8 +108,7 @@ public final class RichDescription implements ArgumentDescription {
      * @param args the arguments to use with the translation key
      * @return a new rich description
      */
-    @NotNull
-    public static RichDescription translatable(final @NotNull String key, final @NotNull ComponentLike @NotNull... args) {
+    public static @NotNull RichDescription translatable(final @NotNull String key, final @NotNull ComponentLike @NotNull... args) {
         requireNonNull(key, "key");
         requireNonNull(args, "args");
 
@@ -127,8 +123,7 @@ public final class RichDescription implements ArgumentDescription {
      */
     @Override
     @Deprecated
-    @NotNull
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return getContents().toPlainText(); // TODO: implement Translator
     }
 
@@ -137,8 +132,7 @@ public final class RichDescription implements ArgumentDescription {
      *
      * @return the component contents of this description
      */
-    @NotNull
-    public Component getContents() {
+    public @NotNull Component getContents() {
         return this.contents;
     }
 

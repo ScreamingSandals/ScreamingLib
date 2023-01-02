@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor(staticName = "of")
-public class SimplePermission implements Permission {
+public final class SimplePermission implements Permission {
     private final String permissionString;
     private final boolean defaultAllowed;
 

@@ -62,10 +62,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
     @Getter(onMethod_ = @ApiStatus.Internal)
     private Placeholder @Nullable [] rawPlaceholders;
     private final LangService langService;
-    @NotNull
-    private Component prefix;
-    @Nullable
-    private TimesProvider times;
+    private @NotNull Component prefix;
+    private @Nullable TimesProvider times;
     private PrefixPolicy prefixPolicy = PrefixPolicy.ALL_MESSAGES;
     private PrefixResolving prefixResolving = PrefixResolving.DEFAULT;
     @Accessors(chain = true, fluent = true)
@@ -1918,55 +1916,46 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return {@link Component}.
      */
     @Override
-    @NotNull
-    public Component asComponent(@Nullable Audience audience) {
+    public @NotNull Component asComponent(@Nullable Audience audience) {
         return getForJoined(audience instanceof CommandSenderWrapper ? (CommandSenderWrapper) audience : null);
     }
 
     @Override
-    @NotNull
-    public List<Component> asComponentList(@Nullable Audience audience) {
+    public @NotNull List<Component> asComponentList(@Nullable Audience audience) {
         return getFor(audience instanceof CommandSenderWrapper ? (CommandSenderWrapper) audience : null);
     }
 
     @Override
-    @NotNull
-    public Component asComponent() {
+    public @NotNull Component asComponent() {
         return getForAnyoneJoined();
     }
 
     @Override
-    @NotNull
-    public Title asTitle(@Nullable Audience sender, @Nullable TimesProvider times) {
+    public @NotNull Title asTitle(@Nullable Audience sender, @Nullable TimesProvider times) {
         var messages = getFor(sender instanceof CommandSenderWrapper ? (CommandSenderWrapper) sender : null);
         return Title.title(messages.size() >= 1 ? messages.get(0) : Component.empty(), messages.size() >= 2 ? messages.get(1) : Component.empty(), times);
     }
 
     @Override
-    @NotNull
-    public Title asTitle(@Nullable Audience sender) {
+    public @NotNull Title asTitle(@Nullable Audience sender) {
         return asTitle(sender, times);
     }
 
     @Override
-    @NotNull
-    public Title asTitle(@Nullable TimesProvider times) {
+    public @NotNull Title asTitle(@Nullable TimesProvider times) {
         return asTitle(null, times);
     }
 
     @Override
-    @NotNull
-    public Title asTitle() {
+    public @NotNull Title asTitle() {
         return asTitle(null, times);
     }
 
-    @NotNull
-    public TextEntry asTextEntry(@Nullable CommandSenderWrapper wrapper) {
+    public @NotNull TextEntry asTextEntry(@Nullable CommandSenderWrapper wrapper) {
         return TextEntry.of(asComponent(wrapper));
     }
 
-    @NotNull
-    public TextEntry asTextEntry(@NotNull String identifier, @Nullable CommandSenderWrapper wrapper) {
+    public @NotNull TextEntry asTextEntry(@NotNull String identifier, @Nullable CommandSenderWrapper wrapper) {
         return TextEntry.of(identifier, asComponent(wrapper));
     }
 

@@ -31,8 +31,7 @@ public enum TriState {
         return bool == null ? INITIAL : (bool ? TRUE : FALSE);
     }
 
-    @Nullable
-    public Boolean toBoxedBoolean() {
+    public @Nullable Boolean toBoxedBoolean() {
         return this == INITIAL ? null : (this == TRUE);
     }
 }

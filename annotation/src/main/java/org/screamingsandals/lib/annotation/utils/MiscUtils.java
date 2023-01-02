@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.annotation.utils;
 
+import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.*;
@@ -38,8 +40,9 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public class MiscUtils {
-    private static final Class<? extends Annotation> LOMBOK_UTILITY_CLASS;
+    private static final @Nullable Class<? extends Annotation> LOMBOK_UTILITY_CLASS;
 
     static {
         Class<? extends Annotation> lombok = null;

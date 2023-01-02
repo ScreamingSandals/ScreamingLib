@@ -48,9 +48,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service(dependsOn = {
-        EventManager.class
-})
+@Service(dependsOn = EventManager.class)
 public class VelocityProxiedPlayerMapper extends ProxiedPlayerMapper {
     private static final @NotNull String CONSOLE_NAME = "CONSOLE";
     private final @NotNull Object plugin;

@@ -20,6 +20,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerExpChangeEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerExpChangeEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -38,7 +39,7 @@ public class SBukkitPlayerExpChangeEvent implements SPlayerExpChangeEvent {
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

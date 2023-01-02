@@ -26,9 +26,8 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 public interface SoundStart extends Wrapper, RawValueHolder {
-    @NotNull
     @Contract(value = "_, _, _, _ -> new", pure = true)
-    static SoundStart sound(NamespacedMappingKey soundKey, SoundSource soundSource, float volume, float pitch) {
+    static @NotNull SoundStart sound(NamespacedMappingKey soundKey, SoundSource soundSource, float volume, float pitch) {
         return builder()
                 .soundKey(soundKey)
                 .source(soundSource)
@@ -37,9 +36,8 @@ public interface SoundStart extends Wrapper, RawValueHolder {
                 .build();
     }
 
-    @NotNull
     @Contract(value = "-> new", pure = true)
-    static SoundStart.Builder builder() {
+    static @NotNull SoundStart.Builder builder() {
         return Spectator.getBackend().soundStart();
     }
 

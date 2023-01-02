@@ -20,7 +20,6 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
-import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
 
 import java.util.UUID;

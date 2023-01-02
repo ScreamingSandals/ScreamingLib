@@ -18,16 +18,17 @@ package org.screamingsandals.lib.minitag.tags;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 
 @Data
 @Accessors(fluent = true, chain = true)
 public class TransformedTag implements RegisteredTag {
-    private final TagType tagType;
-    private final Transformer transformer;
+    private final @NotNull TagType tagType;
+    private final @NotNull Transformer transformer;
 
     @FunctionalInterface
     public interface Transformer {
-        TagNode transform(TagNode node);
+        @NotNull TagNode transform(@NotNull TagNode node);
     }
 }

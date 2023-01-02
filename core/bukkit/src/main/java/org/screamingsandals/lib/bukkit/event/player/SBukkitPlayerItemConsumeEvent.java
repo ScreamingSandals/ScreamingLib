@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -43,7 +44,7 @@ public class SBukkitPlayerItemConsumeEvent implements SPlayerItemConsumeEvent, B
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -51,8 +52,7 @@ public class SBukkitPlayerItemConsumeEvent implements SPlayerItemConsumeEvent, B
     }
 
     @Override
-    @Nullable
-    public Item item() {
+    public @Nullable Item item() {
         return event.getItem() != null ? new BukkitItem(event.getItem()) : null;
     }
 

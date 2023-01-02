@@ -21,18 +21,21 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.audience.adapter.ConsoleAdapter;
 
 public interface ConsoleAudience extends Audience {
+    @FunctionalInterface
     interface ForwardingToMulti extends ConsoleAudience, Audience.ForwardingToMulti {
         @NotNull
         @ApiStatus.OverrideOnly
         Iterable<ConsoleAudience> audiences();
     }
 
+    @FunctionalInterface
     interface ForwardingToSingle extends ConsoleAudience, Audience.ForwardingToSingle {
         @NotNull
         @ApiStatus.OverrideOnly
         ConsoleAudience audience();
     }
 
+    @FunctionalInterface
     @ApiStatus.NonExtendable // don't extend it guys
     interface ForwardingToAdapter extends ConsoleAudience, Audience.ForwardingToAdapter {
         @Override

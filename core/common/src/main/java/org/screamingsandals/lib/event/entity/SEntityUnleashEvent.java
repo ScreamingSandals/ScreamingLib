@@ -41,6 +41,6 @@ public interface SEntityUnleashEvent extends SEvent, PlatformEventWrapper {
          * When the entity's leashholder is more than 10 blocks away
          */
         DISTANCE,
-        UNKNOWN;
+        UNKNOWN
     }
 }

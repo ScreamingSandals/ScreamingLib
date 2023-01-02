@@ -28,9 +28,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.function.Function;
 
-@Service(dependsOn = {
-        BungeeProxiedPlayerMapper.class
-})
+@Service(dependsOn = BungeeProxiedPlayerMapper.class)
 @RequiredArgsConstructor
 public class BungeeCloudConstructor extends CloudConstructor {
     private final Plugin plugin;

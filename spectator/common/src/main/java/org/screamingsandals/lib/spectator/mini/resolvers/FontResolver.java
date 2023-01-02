@@ -37,8 +37,7 @@ public class FontResolver implements StylingResolver {
     }
 
     @Override
-    @Nullable
-    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+    public @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         if (component.font() != null) {
             return new TagNode(tagName, List.of(component.font().asString()));
         }

@@ -39,7 +39,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitBlockDropItemEvent implements SBlockDropItemEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include

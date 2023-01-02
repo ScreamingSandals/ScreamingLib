@@ -35,9 +35,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 import java.util.Map;
 import java.util.UUID;
 
-@Service(dependsOn = {
-        HologramManager.class
-})
+@Service(dependsOn = HologramManager.class)
 public class NPCManager extends AbstractVisualsManager<NPC> {
     private static @Nullable NPCManager manager;
 

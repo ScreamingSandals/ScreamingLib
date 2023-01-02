@@ -86,8 +86,7 @@ public class NamespacedMappingKey implements MappingKey, ComparableWrapper {
     }
 
     @Override
-    @NotNull
-    public String toString() {
+    public @NotNull String toString() {
         return namespace + ":" + key;
     }
 
@@ -106,18 +105,15 @@ public class NamespacedMappingKey implements MappingKey, ComparableWrapper {
         throw new UnsupportedOperationException("Can't convert wrapper to " + type.getName());
     }
 
-    @NotNull
-    public String value() {
+    public @NotNull String value() {
         return key;
     }
 
-    @NotNull
-    public String asString() {
+    public @NotNull String asString() {
         return toString();
     }
 
-    @NotNull
-    public String namespace() {
+    public @NotNull String namespace() {
         return namespace;
     }
 

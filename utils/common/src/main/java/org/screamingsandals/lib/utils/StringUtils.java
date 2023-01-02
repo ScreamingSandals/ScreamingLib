@@ -38,7 +38,7 @@ public class StringUtils {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    static class LowerCamelCase implements Case {
+    static final class LowerCamelCase implements Case {
         @Override
         public String toLowerCamel(String s) {
             return s;
@@ -58,7 +58,7 @@ public class StringUtils {
     }
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
-    static class SnakeCase implements Case {
+    static final class SnakeCase implements Case {
         @Override
         public String toLowerCamel(String s) {
             final String[] split = s.split("_");

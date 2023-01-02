@@ -22,8 +22,7 @@ import org.screamingsandals.lib.utils.Wrapper;
 
 public interface Content extends Wrapper, RawValueHolder, ContentLike {
     @Override
-    @NotNull
-    default Content asContent() {
+    default @NotNull Content asContent() {
         return this;
     }
 }

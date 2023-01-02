@@ -28,44 +28,37 @@ import org.screamingsandals.lib.utils.Wrapper;
 public interface HoverEvent extends Wrapper, RawValueHolder {
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    static HoverEvent.Builder builder() {
+    static @NotNull HoverEvent.Builder builder() {
         return Spectator.getBackend().hoverEvent();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static HoverEvent showText(@NotNull Component text) {
+    static @NotNull HoverEvent showText(@NotNull Component text) {
         return Spectator.getBackend().hoverEvent().action(Action.SHOW_TEXT).content(text).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static HoverEvent showText(@NotNull ComponentLike text) {
+    static @NotNull HoverEvent showText(@NotNull ComponentLike text) {
         return Spectator.getBackend().hoverEvent().action(Action.SHOW_TEXT).content(text).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static HoverEvent showItem(@NotNull ItemContent itemContent) {
+    static @NotNull HoverEvent showItem(@NotNull ItemContent itemContent) {
         return Spectator.getBackend().hoverEvent().action(Action.SHOW_ITEM).content(itemContent).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static HoverEvent showItem(@NotNull ItemContentLike itemContent) {
+    static @NotNull HoverEvent showItem(@NotNull ItemContentLike itemContent) {
         return Spectator.getBackend().hoverEvent().action(Action.SHOW_ITEM).content(itemContent).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static HoverEvent showEntity(@NotNull EntityContent itemContent) {
+    static @NotNull HoverEvent showEntity(@NotNull EntityContent itemContent) {
         return Spectator.getBackend().hoverEvent().action(Action.SHOW_ENTITY).content(itemContent).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull
-    static HoverEvent showEntity(@NotNull EntityContentLike itemContent) {
+    static @NotNull HoverEvent showEntity(@NotNull EntityContentLike itemContent) {
         return Spectator.getBackend().hoverEvent().action(Action.SHOW_ENTITY).content(itemContent).build();
     }
 
@@ -92,8 +85,7 @@ public interface HoverEvent extends Wrapper, RawValueHolder {
         Builder content(@NotNull Content content);
 
         @Contract("_ -> this")
-        @NotNull
-        default Builder content(@NotNull ContentLike contentLike) {
+        default @NotNull Builder content(@NotNull ContentLike contentLike) {
             return content(contentLike.asContent());
         }
 

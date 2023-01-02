@@ -59,7 +59,7 @@ public abstract class DifficultyMapping extends AbstractTypeMapper<DifficultyHol
 
     @CustomAutocompletion(CustomAutocompletion.Type.DIFFICULTY)
     @OfMethodAlternative(value = DifficultyHolder.class, methodName = "ofNullable")
-    @Contract(value = "null -> null")
+    @Contract("null -> null")
     public static @Nullable DifficultyHolder resolve(Object difficulty) {
         if (difficultyMapping == null) {
             throw new UnsupportedOperationException("DifficultyMapping is not initialized yet.");

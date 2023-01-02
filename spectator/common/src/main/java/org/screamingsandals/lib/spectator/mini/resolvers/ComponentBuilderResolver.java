@@ -26,8 +26,7 @@ import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 public interface ComponentBuilderResolver {
     <B extends Component.Builder<B,C>, C extends Component> B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag, Placeholder... placeholders);
 
-    @Nullable
-    default TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+    default @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         return null;
     }
 }

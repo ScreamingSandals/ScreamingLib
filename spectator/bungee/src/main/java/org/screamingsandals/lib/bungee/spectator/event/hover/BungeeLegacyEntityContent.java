@@ -124,8 +124,7 @@ public class BungeeLegacyEntityContent extends BasicWrapper<CompoundTag> impleme
         private @Nullable Component name;
 
         @Override
-        @NotNull
-        public EntityContent build() {
+        public @NotNull EntityContent build() {
             var compound = CompoundTag.EMPTY
                     .with("id", id != null ? id.toString() : UUID.randomUUID().toString())
                     .with("type", type != null ? type.asString() : "minecraft:pig");

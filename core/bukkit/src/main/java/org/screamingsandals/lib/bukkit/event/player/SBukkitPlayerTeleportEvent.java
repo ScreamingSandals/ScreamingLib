@@ -37,7 +37,7 @@ public class SBukkitPlayerTeleportEvent extends SBukkitPlayerMoveEvent implement
     }
 
     @Override
-    public PlayerTeleportEvent event() {
+    public @NotNull PlayerTeleportEvent event() {
         return (PlayerTeleportEvent) super.event();
     }
 }

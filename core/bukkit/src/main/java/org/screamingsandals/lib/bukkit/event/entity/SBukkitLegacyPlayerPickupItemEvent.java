@@ -23,6 +23,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -64,7 +65,7 @@ public class SBukkitLegacyPlayerPickupItemEvent implements SPlayerPickupItemEven
     }
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

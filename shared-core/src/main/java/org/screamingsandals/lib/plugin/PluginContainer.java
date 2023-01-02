@@ -46,7 +46,7 @@ public abstract class PluginContainer implements Wrapper {
 
     // stolen from bukkit api ;)
     public void saveResource(@NotNull String resourcePath, boolean replace) {
-        if (resourcePath.equals("")) {
+        if ("".equals(resourcePath)) {
             throw new IllegalArgumentException("ResourcePath cannot be null or empty");
         }
 

@@ -26,51 +26,44 @@ public class BungeeScoreComponent extends BungeeComponent implements ScoreCompon
     }
 
     @Override
-    @NotNull
-    public String name() {
+    public @NotNull String name() {
         return ((net.md_5.bungee.api.chat.ScoreComponent) wrappedObject).getName();
     }
 
     @Override
-    @NotNull
-    public ScoreComponent withName(@NotNull String name) {
+    public @NotNull ScoreComponent withName(@NotNull String name) {
         var duplicate = (net.md_5.bungee.api.chat.ScoreComponent) wrappedObject.duplicate();
         duplicate.setName(name);
         return (ScoreComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    @NotNull
-    public String objective() {
+    public @NotNull String objective() {
         return ((net.md_5.bungee.api.chat.ScoreComponent) wrappedObject).getObjective();
     }
 
     @Override
-    @NotNull
-    public ScoreComponent withObjective(@NotNull String objective) {
+    public @NotNull ScoreComponent withObjective(@NotNull String objective) {
         var duplicate = (net.md_5.bungee.api.chat.ScoreComponent) wrappedObject.duplicate();
         duplicate.setObjective(objective);
         return (ScoreComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    @Nullable
-    public String value() {
+    public @Nullable String value() {
         var value = ((net.md_5.bungee.api.chat.ScoreComponent) wrappedObject).getValue();
         return value.isEmpty() ? null : value;
     }
 
     @Override
-    @NotNull
-    public ScoreComponent withValue(@Nullable String value) {
+    public @NotNull ScoreComponent withValue(@Nullable String value) {
         var duplicate = (net.md_5.bungee.api.chat.ScoreComponent) wrappedObject.duplicate();
         duplicate.setValue(value == null ? "" : value);
         return (ScoreComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    @NotNull
-    public ScoreComponent.Builder toBuilder() {
+    public @NotNull ScoreComponent.Builder toBuilder() {
         var duplicate = (net.md_5.bungee.api.chat.ScoreComponent) wrappedObject.duplicate();
         return new BungeeScoreBuilder(duplicate);
     }
@@ -82,22 +75,19 @@ public class BungeeScoreComponent extends BungeeComponent implements ScoreCompon
         }
 
         @Override
-        @NotNull
-        public ScoreComponent.Builder name(@NotNull String name) {
+        public @NotNull ScoreComponent.Builder name(@NotNull String name) {
             component.setValue(name);
             return this;
         }
 
         @Override
-        @NotNull
-        public ScoreComponent.Builder objective(@NotNull String objective) {
+        public @NotNull ScoreComponent.Builder objective(@NotNull String objective) {
             component.setValue(objective);
             return this;
         }
 
         @Override
-        @NotNull
-        public ScoreComponent.Builder value(@Nullable String value) {
+        public @NotNull ScoreComponent.Builder value(@Nullable String value) {
             component.setValue(value);
             return this;
         }

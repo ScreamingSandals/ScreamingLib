@@ -34,7 +34,8 @@ public class BookSerializer implements TypeSerializer<Book> {
     private static final String TITLE_KEY = "title";
     private static final String AUTHOR_KEY = "author";
     private static final String PAGES_KEY = "pages";
-    private static final TypeToken<List<Component>> COMPONENT_LIST_TYPE_TOKEN = new TypeToken<List<Component>>() {};
+    private static final TypeToken<List<Component>> COMPONENT_LIST_TYPE_TOKEN = new TypeToken<>() {
+    };
 
     @Override
     public Book deserialize(Type type, ConfigurationNode node) throws SerializationException {

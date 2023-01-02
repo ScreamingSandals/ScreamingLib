@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.player.SPlayerPickupItemEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
@@ -29,7 +30,7 @@ public class SBukkitModernPlayerPickupItemEvent extends SBukkitEntityPickupItemE
     }
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         return (PlayerWrapper) entity();
     }
 }

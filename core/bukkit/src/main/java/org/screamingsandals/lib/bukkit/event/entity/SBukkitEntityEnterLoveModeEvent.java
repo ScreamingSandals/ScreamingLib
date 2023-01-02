@@ -36,7 +36,7 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitEntityEnterLoveModeEvent implements SEntityEnterLoveModeEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -45,8 +45,7 @@ public class SBukkitEntityEnterLoveModeEvent implements SEntityEnterLoveModeEven
 
     // Internal cache
     private EntityBasic entity;
-    @Nullable
-    private EntityBasic humanEntity;
+    private @Nullable EntityBasic humanEntity;
     private boolean humanEntityCached;
 
 

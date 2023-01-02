@@ -26,26 +26,22 @@ public class AdventureScoreComponent extends AdventureComponent implements Score
     }
 
     @Override
-    @NotNull
-    public String name() {
+    public @NotNull String name() {
         return ((net.kyori.adventure.text.ScoreComponent) wrappedObject).name();
     }
 
     @Override
-    @NotNull
-    public ScoreComponent withName(@NotNull String name) {
+    public @NotNull ScoreComponent withName(@NotNull String name) {
         return (ScoreComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.ScoreComponent) wrappedObject).name(name));
     }
 
     @Override
-    @NotNull
-    public String objective() {
+    public @NotNull String objective() {
         return ((net.kyori.adventure.text.ScoreComponent) wrappedObject).objective();
     }
 
     @Override
-    @NotNull
-    public ScoreComponent withObjective(@NotNull String objective) {
+    public @NotNull ScoreComponent withObjective(@NotNull String objective) {
         return (ScoreComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.ScoreComponent) wrappedObject).objective(objective));
     }
 
@@ -55,14 +51,12 @@ public class AdventureScoreComponent extends AdventureComponent implements Score
     }
 
     @Override
-    @NotNull
-    public ScoreComponent withValue(@Nullable String value) {
+    public @NotNull ScoreComponent withValue(@Nullable String value) {
         return (ScoreComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.ScoreComponent) wrappedObject).value(value));
     }
 
     @Override
-    @NotNull
-    public ScoreComponent.Builder toBuilder() {
+    public @NotNull ScoreComponent.Builder toBuilder() {
         return new AdventureScoreBuilder(((net.kyori.adventure.text.ScoreComponent) wrappedObject).toBuilder());
     }
 
@@ -78,22 +72,19 @@ public class AdventureScoreComponent extends AdventureComponent implements Score
         }
 
         @Override
-        @NotNull
-        public ScoreComponent.Builder name(@NotNull String name) {
+        public ScoreComponent.@NotNull Builder name(@NotNull String name) {
             getBuilder().name(name);
             return self();
         }
 
         @Override
-        @NotNull
-        public ScoreComponent.Builder objective(@NotNull String objective) {
+        public ScoreComponent.@NotNull Builder objective(@NotNull String objective) {
             getBuilder().objective(objective);
             return self();
         }
 
         @Override
-        @NotNull
-        public ScoreComponent.Builder value(@Nullable String value) {
+        public ScoreComponent.@NotNull Builder value(@Nullable String value) {
             getBuilder().value(value);
             return self();
         }

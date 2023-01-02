@@ -40,7 +40,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitPlantGrowEvent implements SPlantGrowEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include

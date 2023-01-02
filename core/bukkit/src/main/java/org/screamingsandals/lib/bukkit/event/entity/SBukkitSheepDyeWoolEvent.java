@@ -35,7 +35,7 @@ import java.util.Locale;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitSheepDyeWoolEvent implements SSheepDyeWoolEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include

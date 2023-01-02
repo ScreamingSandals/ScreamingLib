@@ -23,6 +23,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.block.BlockDamageEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -48,7 +49,7 @@ public class SBukkitPlayerBlockDamageEvent implements SPlayerBlockDamageEvent, B
     private Item itemInHand;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

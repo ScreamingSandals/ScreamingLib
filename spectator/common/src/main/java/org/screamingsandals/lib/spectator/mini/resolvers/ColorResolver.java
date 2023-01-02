@@ -37,8 +37,7 @@ public class ColorResolver implements StylingResolver {
     }
 
     @Override
-    @Nullable
-    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+    public @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         if (component.color() != null) {
             return new TagNode(tagName, List.of(component.color().toString()));
         }

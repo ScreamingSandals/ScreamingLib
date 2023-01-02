@@ -36,7 +36,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitEntityPortalEnterEvent implements SEntityPortalEnterEvent {
     @Getter
     @EqualsAndHashCode.Include

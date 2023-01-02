@@ -33,8 +33,7 @@ public class LazyComponentPlaceholder implements Placeholder {
 
     @SuppressWarnings("unchecked")
     @Override
-    @NotNull
-    public <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
+    public @NotNull <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
         if (supplier == null) {
             return (B) Component.text();
         }

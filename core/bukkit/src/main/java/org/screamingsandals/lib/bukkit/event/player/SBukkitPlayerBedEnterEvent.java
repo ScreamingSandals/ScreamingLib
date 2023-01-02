@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -44,7 +45,7 @@ public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoC
     private BedEnterResult bedEnterResult;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }

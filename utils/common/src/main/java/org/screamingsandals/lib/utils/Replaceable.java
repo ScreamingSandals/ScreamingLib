@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param <R> replacement type
  */
+@FunctionalInterface
 public interface Replaceable<R> {
     void replace(@Nullable R replaceable);
 }

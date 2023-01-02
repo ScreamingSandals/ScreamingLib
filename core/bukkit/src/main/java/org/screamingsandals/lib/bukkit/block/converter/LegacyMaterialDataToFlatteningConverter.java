@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bukkit.block.converter;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.Material;
 import org.bukkit.NetherWartsState;
 import org.bukkit.block.BlockFace;
@@ -30,16 +31,16 @@ import java.util.Locale;
 import java.util.Map;
 
 @SuppressWarnings("deprecation")
+@UtilityClass
 public class LegacyMaterialDataToFlatteningConverter {
     // TODO: consider not using o.b.m and remove all duplicates (but is it worth? no one will touch this code in the future)
-    @NotNull
-    public static MaterialData set(@NotNull MaterialData materialData, @NotNull String key, @NotNull String value) {
+    public static @NotNull MaterialData set(@NotNull MaterialData materialData, @NotNull String key, @NotNull String value) {
         materialData = materialData.clone();
         var materialName = materialData.getItemType().name();
         try {
             if ("ANVIL".equals(materialName)) {
                 // We want to reset only the lower two bits, the upper two bits are used for damage
-                if (key.equalsIgnoreCase("facing")) {
+                if ("facing".equalsIgnoreCase(key)) {
                     switch (value.toLowerCase(Locale.ROOT)) {
                         case "east":
                             materialData.setData((byte) ((materialData.getData() & 0b1100) | 0b0010));
@@ -57,7 +58,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if (materialData instanceof Banner) {
                 if (((Banner) materialData).isWallBanner()) {
-                    if (key.equalsIgnoreCase("facing")) {
+                    if ("facing".equalsIgnoreCase(key)) {
                         switch (value.toLowerCase(Locale.ROOT)) {
                             case "east":
                                 ((Banner) materialData).setFacingDirection(BlockFace.EAST);
@@ -74,7 +75,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                         }
                     }
                 } else {
-                    if (key.equalsIgnoreCase("rotation")) {
+                    if ("rotation".equalsIgnoreCase(key)) {
                         var c = ((Banner) materialData).clone();
                         c.setData(Byte.parseByte(value));
                         return c;
@@ -486,7 +487,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                             break;
                     }
                 }
-            } else if (materialName.equals("SOIL")) {
+            } else if ("SOIL".equals(materialName)) {
                 if ("moisture".equalsIgnoreCase(key)) {
                     var moisture = Byte.parseByte(value);
                     if (moisture < 0 || moisture > 7) {
@@ -1473,12 +1474,11 @@ public class LegacyMaterialDataToFlatteningConverter {
         return materialData;
     }
 
-    @Nullable
-    public static String get(@NotNull MaterialData materialData, @NotNull String key) {
+    public static @Nullable String get(@NotNull MaterialData materialData, @NotNull String key) {
         try {
             var materialName = materialData.getItemType().name();
 
-            if (key.equalsIgnoreCase("waterlogged")) {
+            if ("waterlogged".equalsIgnoreCase(key)) {
                 // Waterlogging was added in 1.13, but let's return false for 1.13 waterloggable block in older versions too
                 switch (materialName) {
                     case "CHEST":
@@ -1530,7 +1530,7 @@ public class LegacyMaterialDataToFlatteningConverter {
 
             // Only features present in 1.13 should be backported if possible
             if ("ANVIL".equals(materialName)) {
-                if (key.equalsIgnoreCase("facing")) {
+                if ("facing".equalsIgnoreCase(key)) {
                     var value = materialData.getData() & 0x3;
                     switch (value) {
                         case 0x0:
@@ -1545,11 +1545,11 @@ public class LegacyMaterialDataToFlatteningConverter {
                 }
             } else if (materialData instanceof Banner) {
                 if (((Banner) materialData).isWallBanner()) {
-                    if (key.equalsIgnoreCase("facing")) {
+                    if ("facing".equalsIgnoreCase(key)) {
                         return ((Banner) materialData).getFacing().name().toLowerCase(Locale.ROOT);
                     }
                 } else {
-                    if (key.equalsIgnoreCase("rotation")) {
+                    if ("rotation".equalsIgnoreCase(key)) {
                         return String.valueOf(materialData.getData());
                     }
                 }
@@ -1750,7 +1750,7 @@ public class LegacyMaterialDataToFlatteningConverter {
                             return "east";
                     }
                 }
-            } else if (materialName.equals("SOIL")) {
+            } else if ("SOIL".equals(materialName)) {
                 if ("moisture".equalsIgnoreCase(key)) {
                     return String.valueOf(materialData.getData());
                 }
@@ -2249,8 +2249,7 @@ public class LegacyMaterialDataToFlatteningConverter {
         return null;
     }
 
-    @NotNull
-    public static Map<@NotNull String, @NotNull String> get(@NotNull MaterialData materialData) {
+    public static @NotNull Map<@NotNull String, @NotNull String> get(@NotNull MaterialData materialData) {
         // TODO: actually implement it in some normal way instead of this
         var possibleKeys = List.of(
                 "waterlogged",

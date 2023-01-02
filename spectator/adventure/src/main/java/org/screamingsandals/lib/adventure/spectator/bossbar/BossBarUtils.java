@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.adventure.spectator.bossbar;
 
+import lombok.experimental.UtilityClass;
 import net.kyori.adventure.bossbar.BossBar;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.bossbar.BossBarColor;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public class BossBarUtils {
     public static BossBarColor convertColor(BossBar.Color color) {
         try {

@@ -118,6 +118,6 @@ public interface SAsyncPlayerPreLoginEvent extends SAsyncEvent, PlatformEventWra
         /**
          * The player is not allowed to log in, for reasons undefined
          */
-        KICK_OTHER;
+        KICK_OTHER
     }
 }

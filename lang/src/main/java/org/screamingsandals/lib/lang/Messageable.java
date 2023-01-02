@@ -20,7 +20,6 @@ import org.screamingsandals.lib.lang.container.TranslationContainer;
 import org.screamingsandals.lib.spectator.Component;
 
 import java.util.List;
-import java.util.function.Function;
 
 public interface Messageable {
     boolean needsTranslation();

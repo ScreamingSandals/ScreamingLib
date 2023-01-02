@@ -68,9 +68,8 @@ public class ListLinkedToList<L, O> extends CollectionLinkedToCollection<L, O> i
         return original().lastIndexOf(linkToOriginal.apply((L) o));
     }
 
-    @NotNull
     @Override
-    public ListIterator<L> listIterator() {
+    public @NotNull ListIterator<L> listIterator() {
         var realIterator = original().listIterator();
 
         return new ListIterator<>() {
@@ -121,9 +120,8 @@ public class ListLinkedToList<L, O> extends CollectionLinkedToCollection<L, O> i
         };
     }
 
-    @NotNull
     @Override
-    public ListIterator<L> listIterator(int index) {
+    public @NotNull ListIterator<L> listIterator(int index) {
         var realIterator = original().listIterator(index);
 
         return new ListIterator<>() {
@@ -174,9 +172,8 @@ public class ListLinkedToList<L, O> extends CollectionLinkedToCollection<L, O> i
         };
     }
 
-    @NotNull
     @Override
-    public List<L> subList(int fromIndex, int toIndex) {
+    public @NotNull List<L> subList(int fromIndex, int toIndex) {
         throw new UnsupportedOperationException();
     }
 }

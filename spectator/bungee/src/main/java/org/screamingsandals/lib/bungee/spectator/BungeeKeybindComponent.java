@@ -24,22 +24,19 @@ public class BungeeKeybindComponent extends BungeeComponent implements KeybindCo
         super(wrappedObject);
     }
 
-    @NotNull
-    public String keybind() {
+    public @NotNull String keybind() {
         return ((net.md_5.bungee.api.chat.KeybindComponent) wrappedObject).getKeybind();
     }
 
     @Override
-    @NotNull
-    public KeybindComponent withKeybind(@NotNull String keybind) {
+    public @NotNull KeybindComponent withKeybind(@NotNull String keybind) {
         var duplicate = (net.md_5.bungee.api.chat.KeybindComponent) wrappedObject.duplicate();
         duplicate.setKeybind(keybind);
         return (KeybindComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
-    @NotNull
     @Override
-    public KeybindComponent.Builder toBuilder() {
+    public @NotNull KeybindComponent.Builder toBuilder() {
         var duplicate = (net.md_5.bungee.api.chat.KeybindComponent) wrappedObject.duplicate();
         return new BungeeKeybindBuilder(duplicate);
     }
@@ -51,8 +48,7 @@ public class BungeeKeybindComponent extends BungeeComponent implements KeybindCo
         }
 
         @Override
-        @NotNull
-        public KeybindComponent.Builder keybind(@NotNull String keybind) {
+        public @NotNull KeybindComponent.Builder keybind(@NotNull String keybind) {
             component.setKeybind(keybind);
             return this;
         }

@@ -49,8 +49,7 @@ public class ComponentUtils {
         return builder.build();
     }
 
-    @NotNull
-    public static Component repeat(@NotNull Component component, int repetitions, @Nullable Component separator) {
+    public static @NotNull Component repeat(@NotNull Component component, int repetitions, @Nullable Component separator) {
         if (repetitions == 0) {
             return Component.empty();
         }

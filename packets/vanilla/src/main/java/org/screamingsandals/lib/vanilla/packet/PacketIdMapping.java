@@ -16,6 +16,9 @@
 
 package org.screamingsandals.lib.vanilla.packet;
 
+import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -24,9 +27,10 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@UtilityClass
 public class PacketIdMapping {
-    private static final Map<Class<? extends AbstractPacket>, Class<?>> PACKET_CLASS_TRANSLATE = new ConcurrentHashMap<>();
-    private static final Map<Class<? extends AbstractPacket>, Integer> ID_CACHE = new ConcurrentHashMap<>();
+    private static final @NotNull Map<@NotNull Class<? extends AbstractPacket>, Class<?>> PACKET_CLASS_TRANSLATE = new ConcurrentHashMap<>();
+    private static final @NotNull Map<@NotNull Class<? extends AbstractPacket>, Integer> ID_CACHE = new ConcurrentHashMap<>();
 
     static {
         putTranslateSafely(SClientboundAddEntityPacket.class, ClientboundAddEntityPacketAccessor.getType());
@@ -68,13 +72,13 @@ public class PacketIdMapping {
         putTranslateSafely(SClientboundUpdateMobEffectPacket.class, ClientboundUpdateMobEffectPacketAccessor.getType());
     }
 
-    private static void putTranslateSafely(Class<? extends AbstractPacket> packetClass, Class<?> clazz) {
+    private static void putTranslateSafely(@NotNull Class<? extends AbstractPacket> packetClass, @Nullable Class<?> clazz) {
         if (clazz != null) {
             PACKET_CLASS_TRANSLATE.put(packetClass, clazz);
         }
     }
 
-    public static Integer getPacketId(Class<? extends AbstractPacket> packetClass) {
+    public static Integer getPacketId(@NotNull Class<? extends AbstractPacket> packetClass) {
         Preconditions.checkNotNull(packetClass, "Cannot get packet id of null class!");
 
         final var cachedId = ID_CACHE.get(packetClass);

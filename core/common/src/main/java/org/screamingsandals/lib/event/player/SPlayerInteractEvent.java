@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.event.SEvent;
-import org.screamingsandals.lib.item.ItemTypeHolder;;
+import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.ItemView;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.BlockFace;
@@ -93,8 +93,7 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
      *
      * @return Material the material of the item used
      */
-    @NotNull
-    default ItemTypeHolder material() {
+    default @NotNull ItemTypeHolder material() {
         if (!hasItem()) {
             return ItemTypeHolder.air();
         }
@@ -126,9 +125,9 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
         RIGHT_CLICK_AIR,
         PHYSICAL;
 
-        public static List<Action> VALUES = Arrays.asList(values());
+        public static final @NotNull List<@NotNull Action> VALUES = List.of(values());
 
-        public static Action convert(String name) {
+        public static @NotNull Action convert(@NotNull String name) {
             return VALUES.stream()
                     .filter(next -> next.name().equalsIgnoreCase(name))
                     .findFirst()

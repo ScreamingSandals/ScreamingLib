@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -32,8 +33,7 @@ public class SBukkitEntityDamageByBlockEvent extends SBukkitEntityDamageEvent im
     private boolean damagerCached;
 
     @Override
-    @Nullable
-    public BlockHolder damager() {
+    public @Nullable BlockHolder damager() {
         if (!damagerCached) {
             if (event().getDamager() != null) {
                 damager = BlockMapper.wrapBlock(event().getDamager());
@@ -44,7 +44,7 @@ public class SBukkitEntityDamageByBlockEvent extends SBukkitEntityDamageEvent im
     }
 
     @Override
-    public EntityDamageByBlockEvent event() {
+    public @NotNull EntityDamageByBlockEvent event() {
         return (EntityDamageByBlockEvent) super.event();
     }
 }

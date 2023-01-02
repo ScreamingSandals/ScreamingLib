@@ -33,11 +33,11 @@ import org.screamingsandals.lib.world.LocationHolder;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 @Service
 public class BukkitEntityMapper extends EntityMapper {
 
-    public static boolean HAS_MOB_INTERFACE = Reflect.has("org.bukkit.entity.Mob");
+    public static final boolean HAS_MOB_INTERFACE = Reflect.has("org.bukkit.entity.Mob");
 
     @Override
     protected @Nullable EntityBasic wrapEntity0(@NotNull Object entity) {

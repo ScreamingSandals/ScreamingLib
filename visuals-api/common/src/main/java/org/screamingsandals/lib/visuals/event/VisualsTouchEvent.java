@@ -18,7 +18,6 @@ package org.screamingsandals.lib.visuals.event;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import org.jetbrains.annotations.NotNull;

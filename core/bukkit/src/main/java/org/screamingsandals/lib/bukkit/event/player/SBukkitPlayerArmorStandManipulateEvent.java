@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.SPlayerArmorStandManipulateEvent;
 import org.screamingsandals.lib.item.Item;
@@ -57,7 +58,7 @@ public class SBukkitPlayerArmorStandManipulateEvent extends SBukkitPlayerInterac
     }
 
     @Override
-    public PlayerArmorStandManipulateEvent event() {
+    public @NotNull PlayerArmorStandManipulateEvent event() {
         return (PlayerArmorStandManipulateEvent) super.event();
     }
 }

@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bukkit.item.tags;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 // because we support legacy only on bukkit and this doesn't affect flattening versions, we don't need it in common module
+@UtilityClass
 public class BukkitLegacyItemTagResolution {
-    @NotNull
-    public static List<String> constructTags(@NotNull Material material) {
+    public static @NotNull List<String> constructTags(@NotNull Material material) {
         var list = new ArrayList<String>();
         switch (material.name()) {
             // TODO: acacia_logs

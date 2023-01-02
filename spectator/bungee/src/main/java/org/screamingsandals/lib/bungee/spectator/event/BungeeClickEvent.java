@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -32,8 +33,7 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
     }
 
     @Override
-    @NotNull
-    public Action action() {
+    public @NotNull Action action() {
         try {
             return Action.valueOf(wrappedObject.getAction().name());
         } catch (Throwable ignored) {
@@ -42,8 +42,7 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
     }
 
     @Override
-    @NotNull
-    public ClickEvent withAction(@NotNull Action action) {
+    public @NotNull ClickEvent withAction(@NotNull Action action) {
         net.md_5.bungee.api.chat.ClickEvent.Action bungeeAction;
         try {
             bungeeAction = net.md_5.bungee.api.chat.ClickEvent.Action.valueOf(action.name());
@@ -54,20 +53,17 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
     }
 
     @Override
-    @NotNull
-    public String value() {
+    public @NotNull String value() {
         return wrappedObject.getValue();
     }
 
     @Override
-    @NotNull
-    public ClickEvent withValue(@NotNull String value) {
+    public @NotNull ClickEvent withValue(@NotNull String value) {
         return new BungeeClickEvent(new net.md_5.bungee.api.chat.ClickEvent(wrappedObject.getAction(), value));
     }
 
     @Override
-    @NotNull
-    public ClickEvent.Builder toBuilder() {
+    public @NotNull ClickEvent.Builder toBuilder() {
         return new BungeeClickBuilder(action(), value());
     }
 
@@ -85,12 +81,11 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
     @Accessors(fluent = true, chain = true)
     @Setter
     public static class BungeeClickBuilder implements ClickEvent.Builder {
-        private Action action = Action.OPEN_URL;
-        private String value;
+        private @NotNull Action action = Action.OPEN_URL;
+        private @Nullable String value;
 
         @Override
-        @NotNull
-        public ClickEvent build() {
+        public @NotNull ClickEvent build() {
             Preconditions.checkNotNull(action, "Action is not specified!");
             Preconditions.checkNotNull(value, "Value is not specified!");
             net.md_5.bungee.api.chat.ClickEvent.Action action;

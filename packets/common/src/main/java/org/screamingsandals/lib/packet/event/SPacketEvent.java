@@ -18,6 +18,7 @@ package org.screamingsandals.lib.packet.event;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.SCancellableAsyncEvent;
 import org.screamingsandals.lib.event.player.SPlayerEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -32,7 +33,7 @@ public class SPacketEvent implements SPlayerEvent, SCancellableAsyncEvent {
     private boolean cancelled;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         return player;
     }
 

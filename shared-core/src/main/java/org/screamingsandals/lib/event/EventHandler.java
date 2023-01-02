@@ -18,17 +18,15 @@ package org.screamingsandals.lib.event;
 
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.utils.ConsumerExecutor;
 import org.screamingsandals.lib.utils.ReceiverConsumer;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, staticName = "of")
 @AllArgsConstructor(staticName = "of")
-public class EventHandler<E extends SEvent> {
-    @Setter(value = AccessLevel.NONE)
+public final class EventHandler<E extends SEvent> {
+    @Setter(AccessLevel.NONE)
     private ReceiverConsumer<E> consumer;
     private final EventPriority eventPriority;
     private final boolean ignoreCancelled;

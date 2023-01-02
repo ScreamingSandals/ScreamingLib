@@ -47,7 +47,7 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?<namespaced>[A-Za-z0-9_.\\-/:]+)(\\s+(?<duration>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
     private static PotionEffectMapping potionEffectMapping;
 
-    protected BidirectionalConverter<PotionEffectHolder> potionEffectConverter = BidirectionalConverter.<PotionEffectHolder>build()
+    protected final BidirectionalConverter<PotionEffectHolder> potionEffectConverter = BidirectionalConverter.<PotionEffectHolder>build()
             .registerP2W(PotionEffectHolder.class, e -> e)
             .registerP2W(Map.class, map -> {
                 try {

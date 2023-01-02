@@ -16,8 +16,11 @@
 
 package org.screamingsandals.lib.utils;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.Locale;
 
+@UtilityClass
 public class RomanToDecimal {
     public static int romanToDecimal(String romanNumber) {
         var decimal = 0;

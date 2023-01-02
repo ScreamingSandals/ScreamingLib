@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import org.bukkit.event.entity.EntityPortalEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.entity.SEntityPortalEvent;
 
 public class SBukkitEntityPortalEvent extends SBukkitEntityTeleportEvent implements SEntityPortalEvent {
@@ -25,7 +26,7 @@ public class SBukkitEntityPortalEvent extends SBukkitEntityTeleportEvent impleme
     }
 
     @Override
-    public EntityPortalEvent event() {
+    public @NotNull EntityPortalEvent event() {
         return (EntityPortalEvent) super.event();
     }
 

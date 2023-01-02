@@ -31,8 +31,7 @@ import java.util.stream.IntStream;
 public final class IntArrayTag implements CollectionTag, Iterable<Integer> {
     private final int @NotNull [] value;
 
-    @NotNull
-    public String toString() {
+    public @NotNull String toString() {
         return "IntArrayTag(value=" + Arrays.toString(value) + ")";
     }
 
@@ -75,8 +74,7 @@ public final class IntArrayTag implements CollectionTag, Iterable<Integer> {
         }
     }
 
-    @NotNull
-    public IntStream stream() {
+    public @NotNull IntStream stream() {
         return IntStream.of(value);
     }
 }

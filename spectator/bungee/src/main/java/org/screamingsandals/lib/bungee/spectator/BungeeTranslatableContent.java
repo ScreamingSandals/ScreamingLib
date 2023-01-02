@@ -32,22 +32,19 @@ public class BungeeTranslatableContent extends BungeeComponent implements Transl
     }
 
     @Override
-    @NotNull
-    public String translate() {
+    public @NotNull String translate() {
         return ((net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject).getTranslate();
     }
 
     @Override
-    @NotNull
-    public TranslatableComponent withTranslate(@NotNull String translate) {
+    public @NotNull TranslatableComponent withTranslate(@NotNull String translate) {
         var duplicate = (net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject.duplicate();
         duplicate.setTranslate(translate);
         return (TranslatableComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    @NotNull
-    public List<Component> args() {
+    public @NotNull List<Component> args() {
         var with = ((net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject).getWith();
         if (with == null || with.isEmpty()) {
             return List.of();
@@ -58,24 +55,21 @@ public class BungeeTranslatableContent extends BungeeComponent implements Transl
     }
 
     @Override
-    @NotNull
-    public TranslatableComponent withArgs(@NotNull Component @NotNull... components) {
+    public @NotNull TranslatableComponent withArgs(@NotNull Component @NotNull... components) {
         var duplicate = (net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject.duplicate();
         duplicate.setWith(Arrays.stream(components).map(component1 -> component1.as(BaseComponent.class).duplicate()).collect(Collectors.toUnmodifiableList()));
         return (TranslatableComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    @NotNull
-    public TranslatableComponent withArgs(@NotNull Collection<Component> components) {
+    public @NotNull TranslatableComponent withArgs(@NotNull Collection<Component> components) {
         var duplicate = (net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject.duplicate();
         duplicate.setWith(components.stream().map(component1 -> component1.as(BaseComponent.class).duplicate()).collect(Collectors.toUnmodifiableList()));
         return (TranslatableComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    @NotNull
-    public TranslatableComponent.Builder toBuilder() {
+    public @NotNull TranslatableComponent.Builder toBuilder() {
         var duplicate = (net.md_5.bungee.api.chat.TranslatableComponent) wrappedObject.duplicate();
         return new BungeeTranslatableBuilder(duplicate);
     }
@@ -91,22 +85,19 @@ public class BungeeTranslatableContent extends BungeeComponent implements Transl
         }
 
         @Override
-        @NotNull
-        public TranslatableComponent.Builder translate(@NotNull String translate) {
+        public @NotNull TranslatableComponent.Builder translate(@NotNull String translate) {
             component.setTranslate(translate);
             return self();
         }
 
         @Override
-        @NotNull
-        public TranslatableComponent.Builder args(@NotNull Component @NotNull... components) {
+        public @NotNull TranslatableComponent.Builder args(@NotNull Component @NotNull... components) {
             component.setWith(Arrays.stream(components).map(component1 -> component1.as(BaseComponent.class).duplicate()).collect(Collectors.toUnmodifiableList()));
             return self();
         }
 
         @Override
-        @NotNull
-        public TranslatableComponent.Builder args(@NotNull Collection<Component> components) {
+        public @NotNull TranslatableComponent.Builder args(@NotNull Collection<Component> components) {
             component.setWith(components.stream().map(component1 -> component1.as(BaseComponent.class).duplicate()).collect(Collectors.toUnmodifiableList()));
             return self();
         }

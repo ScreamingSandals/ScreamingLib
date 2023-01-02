@@ -37,7 +37,7 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitEnderDragonChangePhaseEvent implements SEnderDragonChangePhaseEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
@@ -46,8 +46,7 @@ public class SBukkitEnderDragonChangePhaseEvent implements SEnderDragonChangePha
 
     // Internal cache
     private EntityBasic entity;
-    @Nullable
-    private Phase currentPhase;
+    private @Nullable Phase currentPhase;
     private boolean currentPhaseCached;
 
     @Override

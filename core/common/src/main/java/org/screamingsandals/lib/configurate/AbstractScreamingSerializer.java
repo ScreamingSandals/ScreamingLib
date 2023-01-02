@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.configurate;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Color;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -23,8 +24,7 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 public abstract class AbstractScreamingSerializer {
 
-    @Nullable
-    protected Color deserializeColor(ConfigurationNode colorNode) {
+    protected @Nullable Color deserializeColor(@NotNull ConfigurationNode colorNode) {
         try {
             return colorNode.get(Color.class);
         } catch (SerializationException ex) {

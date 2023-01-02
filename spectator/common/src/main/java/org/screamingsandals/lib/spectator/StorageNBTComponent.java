@@ -25,8 +25,7 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 @LimitedVersionSupport(">= 1.15")
 public interface StorageNBTComponent extends NBTComponent {
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    static StorageNBTComponent.Builder builder() {
+    static @NotNull StorageNBTComponent.Builder builder() {
         return Spectator.getBackend().storageNBT();
     }
 

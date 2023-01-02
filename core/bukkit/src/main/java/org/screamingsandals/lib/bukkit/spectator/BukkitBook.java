@@ -23,6 +23,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.Tolerate;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -33,9 +34,9 @@ import java.util.List;
 @Data
 @Accessors(fluent = true)
 public class BukkitBook implements Book {
-    private final Component title;
-    private final Component author;
-    private final List<Component> pages;
+    private final @NotNull Component title;
+    private final @NotNull Component author;
+    private final @NotNull List<@NotNull Component> pages;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -47,37 +48,32 @@ public class BukkitBook implements Book {
     }
 
     @Override
-    public Object raw() {
-        return null;
+    public @NotNull Object raw() {
+        throw new UnsupportedOperationException("Bukkit doesn't have any class for books");
     }
 
     @Override
-    @NotNull
-    public Book withTitle(@NotNull Component title) {
+    public @NotNull Book withTitle(@NotNull Component title) {
         return new BukkitBook(title, author, pages);
     }
 
     @Override
-    @NotNull
-    public Book withAuthor(@NotNull Component author) {
+    public @NotNull Book withAuthor(@NotNull Component author) {
         return new BukkitBook(title, author, pages);
     }
 
     @Override
-    @NotNull
-    public Book withPages(@NotNull List<Component> pages) {
+    public @NotNull Book withPages(@NotNull List<Component> pages) {
         return new BukkitBook(title, author, pages);
     }
 
     @Override
-    @NotNull
-    public Book withPages(@NotNull Component... pages) {
+    public @NotNull Book withPages(@NotNull Component... pages) {
         return new BukkitBook(title, author, Arrays.asList(pages));
     }
 
     @Override
-    @NotNull
-    public Book.Builder toBuilder() {
+    public Book.@NotNull Builder toBuilder() {
         return new BukkitBookBuilder(title, author, pages);
     }
 
@@ -85,21 +81,19 @@ public class BukkitBook implements Book {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BukkitBookBuilder implements Book.Builder {
-        private Component title;
-        private Component author;
-        private List<Component> pages;
+        private @Nullable Component title;
+        private @Nullable Component author;
+        private @Nullable List<@NotNull Component> pages;
 
         @Override
-        @NotNull
         @Tolerate
-        public Builder pages(@NotNull Component... pages) {
+        public @NotNull Builder pages(@NotNull Component... pages) {
             this.pages = Arrays.asList(pages);
             return this;
         }
 
         @Override
-        @NotNull
-        public Book build() {
+        public @NotNull Book build() {
             Preconditions.checkNotNull(title);
             Preconditions.checkNotNull(author);
             Preconditions.checkNotNull(pages);

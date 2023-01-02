@@ -19,7 +19,6 @@ package org.screamingsandals.lib.proxy.event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;

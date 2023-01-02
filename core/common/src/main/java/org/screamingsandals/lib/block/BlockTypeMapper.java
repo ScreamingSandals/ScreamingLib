@@ -45,7 +45,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
     private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?<blockState>:\\d*|\\[[^]]*])?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
     @Getter
     protected final Map<Predicate<NamespacedMappingKey>, Pair<Function<Byte, Map<String, String>>, Function<Map<String, String>, Byte>>> blockDataTranslators = new HashMap<>();
-    protected BidirectionalConverter<BlockTypeHolder> blockTypeConverter = BidirectionalConverter.<BlockTypeHolder>build()
+    protected final BidirectionalConverter<BlockTypeHolder> blockTypeConverter = BidirectionalConverter.<BlockTypeHolder>build()
             .registerP2W(BlockTypeHolder.class, i -> i)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {
@@ -188,7 +188,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
     }
 
     @OfMethodAlternative(value = BlockTypeHolder.class, methodName = "all")
-    public static List<BlockTypeHolder> getValues() {
+    public static @NotNull List<@NotNull BlockTypeHolder> getValues() {
         if (blockTypeMapper == null) {
             throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
         }

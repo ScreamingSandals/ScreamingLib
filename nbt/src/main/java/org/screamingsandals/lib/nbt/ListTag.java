@@ -32,8 +32,7 @@ import java.util.stream.Stream;
 public final class ListTag implements CollectionTag, Iterable<Tag> {
     public static final @NotNull ListTag EMPTY = new ListTag(List.of());
 
-    @NotNull
-    private final List<@NotNull Tag> tags;
+    private final @NotNull List<@NotNull Tag> tags;
 
     public ListTag(@NotNull List<@NotNull Tag> tags) {
         this.tags = new ArrayList<@NotNull Tag>();
@@ -52,14 +51,12 @@ public final class ListTag implements CollectionTag, Iterable<Tag> {
         }
     }
 
-    @NotNull
-    public List<@NotNull Tag> value() {
+    public @NotNull List<@NotNull Tag> value() {
         return List.copyOf(tags); // keep this class immutable
     }
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    public ListTag with(@NotNull Tag tag) {
+    public @NotNull ListTag with(@NotNull Tag tag) {
         if (!tags.isEmpty()) {
             var firstTag = tags.get(0);
             if (!firstTag.getClass().isInstance(tag)) {
@@ -75,9 +72,8 @@ public final class ListTag implements CollectionTag, Iterable<Tag> {
         return new ListTag(clone);
     }
 
-    @NotNull
     @Contract(value = "_,_ -> new", pure = true)
-    public ListTag withAt(int index, @NotNull Tag tag) {
+    public @NotNull ListTag withAt(int index, @NotNull Tag tag) {
         if (!tags.isEmpty()) {
             var firstTag = tags.get(0);
             if (!firstTag.getClass().isInstance(tag)) {
@@ -93,24 +89,21 @@ public final class ListTag implements CollectionTag, Iterable<Tag> {
         return new ListTag(clone);
     }
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    public ListTag without(@NotNull Tag tag) {
+    public @NotNull ListTag without(@NotNull Tag tag) {
         var clone = new ArrayList<>(tags);
         clone.remove(tag);
         return new ListTag(clone);
     }
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    public ListTag without(int index) {
+    public @NotNull ListTag without(int index) {
         var clone = new ArrayList<>(tags);
         clone.remove(index);
         return new ListTag(clone);
     }
 
-    @NotNull
-    public Tag get(int index) {
+    public @NotNull Tag get(int index) {
         return tags.get(index);
     }
 
@@ -123,9 +116,8 @@ public final class ListTag implements CollectionTag, Iterable<Tag> {
         return tags.size();
     }
 
-    @NotNull
     @Override
-    public Iterator<@NotNull Tag> iterator() {
+    public @NotNull Iterator<@NotNull Tag> iterator() {
         return new Iterator<>() {
             private int cursor;
 
@@ -135,8 +127,7 @@ public final class ListTag implements CollectionTag, Iterable<Tag> {
             }
 
             @Override
-            @NotNull
-            public Tag next() {
+            public @NotNull Tag next() {
                 try {
                     var tag = tags.get(cursor);
                     cursor++;
@@ -148,8 +139,7 @@ public final class ListTag implements CollectionTag, Iterable<Tag> {
         };
     }
 
-    @NotNull
-    public Stream<@NotNull Tag> stream() {
+    public @NotNull Stream<@NotNull Tag> stream() {
         return tags.stream();
     }
 }

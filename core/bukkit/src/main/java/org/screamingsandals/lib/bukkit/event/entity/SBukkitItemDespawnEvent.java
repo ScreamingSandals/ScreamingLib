@@ -34,7 +34,7 @@ import org.screamingsandals.lib.world.LocationMapper;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitItemDespawnEvent implements SItemDespawnEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include

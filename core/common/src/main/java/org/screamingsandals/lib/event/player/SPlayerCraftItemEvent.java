@@ -25,9 +25,8 @@ import org.screamingsandals.lib.utils.*;
 public interface SPlayerCraftItemEvent extends SPlayerInventoryClickEvent {
 
     // Who tf called this method getClickedInventoryContainer()?
-    @Nullable
     @Deprecated
-    default Container getClickedInventoryContainer() {
+    default @Nullable Container getClickedInventoryContainer() {
         return clickedInventory();
     }
 

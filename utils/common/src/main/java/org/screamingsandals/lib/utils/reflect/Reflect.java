@@ -16,10 +16,13 @@
 
 package org.screamingsandals.lib.utils.reflect;
 
+import lombok.experimental.UtilityClass;
+
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public class Reflect {
     @SuppressWarnings("unchecked")
     public static <T> Class<T> getClassSafe(String... classNames) {

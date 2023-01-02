@@ -112,8 +112,7 @@ public final class ColorArgument<C> extends CommandArgument<C, Color> {
      * @param <C>  Command sender type
      * @return Created argument
      */
-    @NotNull
-    public static <C> ColorArgument<C> of(final @NotNull String name) {
+    public static @NotNull <C> ColorArgument<C> of(final @NotNull String name) {
         return new ColorArgument<>(
                 true,
                 name,
@@ -128,8 +127,7 @@ public final class ColorArgument<C> extends CommandArgument<C, Color> {
      * @param <C>  Command sender type
      * @return Created argument
      */
-    @NotNull
-    public static <C> ColorArgument<C> optional(final @NotNull String name) {
+    public static @NotNull <C> ColorArgument<C> optional(final @NotNull String name) {
         return new ColorArgument<>(
                 false,
                 name,
@@ -145,8 +143,7 @@ public final class ColorArgument<C> extends CommandArgument<C, Color> {
      * @param <C>          Command sender type
      * @return Created argument
      */
-    @NotNull
-    public static <C> ColorArgument<C> optionalWithDefault(final @NotNull String name, final @NotNull String defaultValue) {
+    public static @NotNull <C> ColorArgument<C> optionalWithDefault(final @NotNull String name, final @NotNull String defaultValue) {
         return new ColorArgument<>(
                 false,
                 name,
@@ -158,8 +155,7 @@ public final class ColorArgument<C> extends CommandArgument<C, Color> {
     public static final class ColorParser<C> implements ArgumentParser<C, Color> {
 
         @Override
-        @NotNull
-        public ArgumentParseResult<@NotNull Color> parse(final @NotNull CommandContext<@NotNull C> commandContext, final @NotNull Queue<@NotNull String> inputQueue) {
+        public @NotNull ArgumentParseResult<@NotNull Color> parse(final @NotNull CommandContext<@NotNull C> commandContext, final @NotNull Queue<@NotNull String> inputQueue) {
             final String input = inputQueue.peek();
             if (input == null) {
                 return ArgumentParseResult.failure(new NoInputProvidedException(
@@ -201,10 +197,9 @@ public final class ColorArgument<C> extends CommandArgument<C, Color> {
         }
 
         @Override
-        @NotNull
-        public List<@NotNull String> suggestions(final @NotNull CommandContext<C> commandContext, final @NotNull String input) {
+        public @NotNull List<@NotNull String> suggestions(final @NotNull CommandContext<C> commandContext, final @NotNull String input) {
             final List<String> suggestions = new LinkedList<>();
-            if (input.isEmpty() || input.equals("#") || (HEX_PREDICATE.matcher(input).matches()
+            if (input.isEmpty() || "#".equals(input) || (HEX_PREDICATE.matcher(input).matches()
                     && input.length() < (input.startsWith("#") ? 7 : 6))) {
                 for (char c = 'a'; c <= 'f'; c++) {
                     suggestions.add(String.format("%s%c", input, c));

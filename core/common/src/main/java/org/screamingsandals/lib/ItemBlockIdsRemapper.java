@@ -37,7 +37,7 @@ import java.util.function.Predicate;
 /**
  * Class responsible for remapping item and block id's.
  */
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<className>.+)$",
         replaceRule = "{basePackage}.{platform}.{Platform}{className}"

@@ -28,8 +28,7 @@ import java.util.stream.Stream;
 public final class ByteArrayTag implements CollectionTag, Iterable<Byte> {
     private final byte @NotNull [] value;
 
-    @NotNull
-    public String toString() {
+    public @NotNull String toString() {
         return "ByteArrayTag(value=" + Arrays.toString(value) + ")";
     }
 
@@ -46,9 +45,8 @@ public final class ByteArrayTag implements CollectionTag, Iterable<Byte> {
         return value.length;
     }
 
-    @NotNull
     @Override
-    public Iterator<@NotNull Byte> iterator() {
+    public @NotNull Iterator<@NotNull Byte> iterator() {
         return new Iterator<>() {
             private int cursor;
 
@@ -58,15 +56,13 @@ public final class ByteArrayTag implements CollectionTag, Iterable<Byte> {
             }
 
             @Override
-            @NotNull
-            public Byte next() {
+            public @NotNull Byte next() {
                 return value[cursor++];
             }
         };
     }
 
-    @NotNull
-    public Stream<@NotNull Byte> stream() {
+    public @NotNull Stream<@NotNull Byte> stream() {
         var byteList = new ArrayList<Byte>();
         for (var val : value) {
             byteList.add(val);

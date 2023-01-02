@@ -50,7 +50,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLiving {
     public BukkitEntityLiving(@NotNull LivingEntity wrappedObject) {
         super(wrappedObject);
@@ -346,8 +346,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     }
 
     @Override
-    @Nullable
-    public Item getHelmet() {
+    public @Nullable Item getHelmet() {
         var eq = ((LivingEntity) wrappedObject).getEquipment();
         if (eq == null || eq.getHelmet() == null) {
             return null;
@@ -357,8 +356,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     }
 
     @Override
-    @Nullable
-    public Item getChestplate() {
+    public @Nullable Item getChestplate() {
         var eq = ((LivingEntity) wrappedObject).getEquipment();
         if (eq == null || eq.getChestplate() == null) {
             return null;
@@ -368,8 +366,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     }
 
     @Override
-    @Nullable
-    public Item getLeggings() {
+    public @Nullable Item getLeggings() {
         var eq = ((LivingEntity) wrappedObject).getEquipment();
         if (eq == null || eq.getLeggings() == null) {
             return null;
@@ -379,8 +376,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     }
 
     @Override
-    @Nullable
-    public Item getBoots() {
+    public @Nullable Item getBoots() {
         var eq = ((LivingEntity) wrappedObject).getEquipment();
         if (eq == null || eq.getBoots() == null) {
             return null;
@@ -446,8 +442,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     }
 
     @Override
-    @Nullable
-    public Item getItemInMainHand() {
+    public @Nullable Item getItemInMainHand() {
         var eq = ((LivingEntity) wrappedObject).getEquipment();
         if (eq == null) {
             return null;
@@ -471,8 +466,7 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
     }
 
     @Override
-    @Nullable
-    public Item getItemInOffHand() {
+    public @Nullable Item getItemInOffHand() {
         var eq = ((LivingEntity) wrappedObject).getEquipment();
         if (eq == null) {
             return null;

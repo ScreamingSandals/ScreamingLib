@@ -47,8 +47,7 @@ public class ScoreResolver implements ComponentBuilderResolver {
     }
 
     @Override
-    @Nullable
-    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+    public @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         if (component instanceof ScoreComponent) {
             var args = new ArrayList<String>();
             args.add(((ScoreComponent) component).name());

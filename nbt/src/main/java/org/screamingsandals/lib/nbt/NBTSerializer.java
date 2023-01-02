@@ -16,14 +16,12 @@
 
 package org.screamingsandals.lib.nbt;
 
-import com.sun.source.tree.UsesTree;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class NBTSerializer {
     public byte @NotNull[] serialize(@NotNull Tag tag) throws IOException {
@@ -111,7 +109,7 @@ public class NBTSerializer {
             output.writeInt(((IntTag) tag).value());
         } else if (tag instanceof ListTag) {
             var values = ((ListTag) tag).value();
-            if (values.size() == 0) {
+            if (values.isEmpty()) {
                 output.writeByte(0);
                 output.writeInt(0);
             } else {
@@ -143,16 +141,14 @@ public class NBTSerializer {
         }
     }
 
-    @NotNull
-    public Tag deserialize(byte @NotNull[] bytes) throws IOException {
+    public @NotNull Tag deserialize(byte @NotNull[] bytes) throws IOException {
         var input = new DataInputStream(new ByteArrayInputStream(bytes));
         var id = input.readByte();
         input.skipBytes(input.readUnsignedShort()); // skip name
         return read(input, id);
     }
 
-    @NotNull
-    private Tag read(@NotNull DataInputStream stream, byte id) throws IOException {
+    private @NotNull Tag read(@NotNull DataInputStream stream, byte id) throws IOException {
         switch (id) {
             case 1:
                 return new ByteTag(stream.readByte());

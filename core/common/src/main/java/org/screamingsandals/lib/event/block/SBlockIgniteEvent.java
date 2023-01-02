@@ -42,6 +42,6 @@ public interface SBlockIgniteEvent extends SCancellableEvent, PlatformEventWrapp
         FLINT_AND_STEEL,
         LAVA,
         LIGHTNING,
-        SPREAD;
+        SPREAD
     }
 }

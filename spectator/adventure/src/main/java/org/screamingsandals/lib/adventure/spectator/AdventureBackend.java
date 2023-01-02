@@ -17,7 +17,6 @@
 package org.screamingsandals.lib.adventure.spectator;
 
 import lombok.Getter;
-import net.kyori.adventure.Adventure;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -276,9 +275,8 @@ public class AdventureBackend implements SpectatorBackend {
         return new AdventureItemContent.AdventureItemContentBuilder();
     }
 
-    @Nullable
     @Contract("null -> null; !null -> !null")
-    public static Component wrapComponent(@Nullable net.kyori.adventure.text.Component component) {
+    public static @Nullable Component wrapComponent(@Nullable net.kyori.adventure.text.Component component) {
         if (component == null) {
             return null;
         }

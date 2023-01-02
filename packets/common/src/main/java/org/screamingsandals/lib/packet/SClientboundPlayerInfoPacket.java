@@ -130,8 +130,7 @@ public class SClientboundPlayerInfoPacket extends AbstractPacket {
     public static class Property {
         private final String name;
         private final String value;
-        @Nullable
-        private final String signature;
+        private final @Nullable String signature;
 
         public Property(String name, String value) {
             this(name, value, null);

@@ -28,7 +28,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 import java.util.UUID;
 
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class WorldHolderTypeSerializer implements TypeSerializer<WorldHolder> {
     private final String UUID_FIELD = "uuid";
 

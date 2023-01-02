@@ -23,7 +23,7 @@ import org.screamingsandals.lib.spectator.Component;
 
 @AllArgsConstructor(staticName = "of", access = AccessLevel.PACKAGE)
 @Data
-public class SimpleTextEntry implements TextEntry {
+public final class SimpleTextEntry implements TextEntry {
     private final String identifier;
     private final Component text;
 

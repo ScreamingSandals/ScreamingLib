@@ -50,8 +50,7 @@ public interface NBTComponent extends SeparableComponent {
         B nbtPath(@NotNull String nbtPath);
 
         @Contract("-> this")
-        @NotNull
-        default B interpret() {
+        default @NotNull B interpret() {
             return interpret(true);
         }
 

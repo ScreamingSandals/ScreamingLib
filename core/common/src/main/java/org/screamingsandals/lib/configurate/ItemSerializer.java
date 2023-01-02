@@ -46,7 +46,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class ItemSerializer extends AbstractScreamingSerializer implements TypeSerializer<Item> {
     public static final @NotNull ItemSerializer INSTANCE = new ItemSerializer();
 

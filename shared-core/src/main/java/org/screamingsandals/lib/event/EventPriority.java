@@ -16,7 +16,8 @@
 
 package org.screamingsandals.lib.event;
 
-import java.util.Arrays;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public enum EventPriority {
@@ -26,5 +27,5 @@ public enum EventPriority {
     HIGH,
     HIGHEST;
 
-    public static List<EventPriority> VALUES = Arrays.asList(values());
+    public static final @NotNull List<@NotNull EventPriority> VALUES = List.of(values());
 }

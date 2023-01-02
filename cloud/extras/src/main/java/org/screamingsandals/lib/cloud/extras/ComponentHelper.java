@@ -55,8 +55,7 @@ public final class ComponentHelper {
 
     public static final Pattern SPECIAL_CHARACTERS_PATTERN = Pattern.compile("[^\\s\\w\\-]");
 
-    @NotNull
-    public static Component highlight(final @NotNull Component component, final @NotNull Color highlightColor) {
+    public static @NotNull Component highlight(final @NotNull Component component, final @NotNull Color highlightColor) {
         return component; // TODO
         /*return component.replaceText(config -> {
             config.match(SPECIAL_CHARACTERS_PATTERN);
@@ -76,23 +75,19 @@ public final class ComponentHelper {
         return length;
     }
 
-    @NotNull
-    public static Component line(int length, Color color) {
+    public static @NotNull Component line(int length, Color color) {
         return text().content("-").color(color).strikethrough().build().repeat(length);
     }
 
-    @NotNull
-    public static Component branch(Color color) {
+    public static @NotNull Component branch(Color color) {
         return text("├─", color);
     }
 
-    @NotNull
-    public static Component lastBranch(Color color) {
+    public static @NotNull Component lastBranch(Color color) {
         return text("└─", color);
     }
 
-    @NotNull
-    public static Component header(@NotNull Component title, int headerFooterLength, Color color) {
+    public static @NotNull Component header(@NotNull Component title, int headerFooterLength, Color color) {
         final int sideLength = (headerFooterLength - ComponentHelper.length(title)) / 2;
         return text()
                 .append(line(sideLength, color))

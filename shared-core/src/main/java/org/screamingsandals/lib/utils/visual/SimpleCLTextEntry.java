@@ -24,7 +24,7 @@ import org.screamingsandals.lib.spectator.ComponentLike;
 
 @AllArgsConstructor(staticName = "of", access = AccessLevel.PACKAGE)
 @Data
-public class SimpleCLTextEntry implements TextEntry {
+public final class SimpleCLTextEntry implements TextEntry {
     private final String identifier;
     private final ComponentLike text;
 

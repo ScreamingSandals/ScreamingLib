@@ -24,7 +24,7 @@ import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityCombustByEntityEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitEntityCombustByEntityEvent extends SBukkitEntityCombustEvent implements SEntityCombustByEntityEvent {
     public SBukkitEntityCombustByEntityEvent(EntityCombustByEntityEvent event) {
         super(event);

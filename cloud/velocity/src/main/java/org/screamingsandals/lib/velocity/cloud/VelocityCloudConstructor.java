@@ -29,9 +29,7 @@ import org.screamingsandals.lib.velocity.proxy.VelocityProxiedPlayerMapper;
 
 import java.util.function.Function;
 
-@Service(dependsOn = {
-        VelocityProxiedPlayerMapper.class
-})
+@Service(dependsOn = VelocityProxiedPlayerMapper.class)
 @RequiredArgsConstructor
 public class VelocityCloudConstructor extends CloudConstructor {
     private final PluginContainer plugin;

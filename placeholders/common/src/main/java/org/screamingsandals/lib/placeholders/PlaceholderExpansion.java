@@ -25,14 +25,11 @@ import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostEnable;
 
 @Data
-@ServiceDependencies(dependsOn = {
-        PlaceholderManager.class
-})
+@ServiceDependencies(dependsOn = PlaceholderManager.class)
 public abstract class PlaceholderExpansion {
     private final String identifier;
 
-    @Nullable
-    public abstract Component onRequest(@Nullable MultiPlatformOfflinePlayer player, @NotNull String params);
+    public abstract @Nullable Component onRequest(@Nullable MultiPlatformOfflinePlayer player, @NotNull String params);
 
     @OnPostEnable
     public void onPostEnable() {

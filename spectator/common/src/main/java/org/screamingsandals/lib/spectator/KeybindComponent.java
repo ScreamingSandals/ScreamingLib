@@ -23,8 +23,7 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 @LimitedVersionSupport(">= 1.12")
 public interface KeybindComponent extends Component {
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    static KeybindComponent.Builder builder() {
+    static @NotNull KeybindComponent.Builder builder() {
         return Spectator.getBackend().keybind();
     }
 

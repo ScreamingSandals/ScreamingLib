@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor(staticName = "of")
-public class MetadataCollectionKey<T> {
+public final class MetadataCollectionKey<T> {
     /**
      * NBT key
      */

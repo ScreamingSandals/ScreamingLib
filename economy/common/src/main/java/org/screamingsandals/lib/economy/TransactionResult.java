@@ -24,6 +24,5 @@ public final class TransactionResult {
     private final double amount;
     private final double balance;
     private final boolean successful;
-    @Nullable
-    private final String errorMessage;
+    private final @Nullable String errorMessage;
 }

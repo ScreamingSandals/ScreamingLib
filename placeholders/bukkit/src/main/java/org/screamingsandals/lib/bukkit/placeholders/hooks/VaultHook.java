@@ -39,15 +39,15 @@ public class VaultHook extends AbstractPAPILikePlaceholder {
 
     @Override
     protected boolean has(String identifier) {
-        return identifier.equals("vault_prefix") || identifier.equals("vault_suffix");
+        return "vault_prefix".equals(identifier) || "vault_suffix".equals(identifier);
     }
 
     @Override
     protected String resolve(MultiPlatformOfflinePlayer player, String identifier, String parameters) {
-        if (identifier.equals("vault_prefix")) {
+        if ("vault_prefix".equals(identifier)) {
             var prefix = chat.getPlayerPrefix(Bukkit.getWorlds().get(0).getName(), player.as(OfflinePlayer.class));
             return prefix == null ? "" : prefix;
-        } else if (identifier.equals("vault_suffix")) {
+        } else if ("vault_suffix".equals(identifier)) {
             var prefix = chat.getPlayerSuffix(Bukkit.getWorlds().get(0).getName(), player.as(OfflinePlayer.class));
             return prefix == null ? "" : prefix;
         }

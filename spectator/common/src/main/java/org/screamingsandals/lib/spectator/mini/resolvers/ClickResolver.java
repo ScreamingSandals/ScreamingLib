@@ -42,8 +42,7 @@ public class ClickResolver implements StylingResolver {
     }
 
     @Override
-    @Nullable
-    public TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
+    public @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         var click = component.clickEvent();
         if (click != null) {
             return new TagNode(tagName, List.of(click.action().name().toLowerCase(Locale.ROOT), click.value()));

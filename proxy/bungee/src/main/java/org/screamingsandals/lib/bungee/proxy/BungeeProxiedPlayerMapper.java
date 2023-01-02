@@ -46,9 +46,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service(dependsOn = {
-        EventManager.class
-})
+@Service(dependsOn = EventManager.class)
 public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
 
     public BungeeProxiedPlayerMapper(Plugin plugin) {

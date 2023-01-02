@@ -21,12 +21,11 @@ import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.economy.EconomyManager;
 import org.screamingsandals.lib.economy.TransactionResult;
 import org.screamingsandals.lib.plugin.PluginManager;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
-import org.screamingsandals.lib.spectator.Component;
-import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
@@ -95,8 +94,7 @@ public class BukkitEconomyManager extends EconomyManager {
     }
 
     @Override
-    @NotNull
-    protected TransactionResult withdrawPlayer0(@NotNull MultiPlatformOfflinePlayer player, double amount) {
+    protected @NotNull TransactionResult withdrawPlayer0(@NotNull MultiPlatformOfflinePlayer player, double amount) {
         if (vaultEcon != null) {
             return convert(vaultEcon.withdrawPlayer(player.as(OfflinePlayer.class), amount));
         }
@@ -104,8 +102,7 @@ public class BukkitEconomyManager extends EconomyManager {
     }
 
     @Override
-    @NotNull
-    protected TransactionResult withdrawPlayer0(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount) {
+    protected @NotNull TransactionResult withdrawPlayer0(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount) {
         if (vaultEcon != null) {
             return convert(vaultEcon.withdrawPlayer(player.as(OfflinePlayer.class), worldName, amount));
         }
@@ -113,8 +110,7 @@ public class BukkitEconomyManager extends EconomyManager {
     }
 
     @Override
-    @NotNull
-    protected TransactionResult depositPlayer0(@NotNull MultiPlatformOfflinePlayer player, double amount) {
+    protected @NotNull TransactionResult depositPlayer0(@NotNull MultiPlatformOfflinePlayer player, double amount) {
         if (vaultEcon != null) {
             return convert(vaultEcon.depositPlayer(player.as(OfflinePlayer.class), amount));
         }
@@ -122,8 +118,7 @@ public class BukkitEconomyManager extends EconomyManager {
     }
 
     @Override
-    @NotNull
-    protected TransactionResult depositPlayer0(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount) {
+    protected @NotNull TransactionResult depositPlayer0(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount) {
         if (vaultEcon != null) {
             return convert(vaultEcon.depositPlayer(player.as(OfflinePlayer.class), worldName, amount));
         }
@@ -131,8 +126,7 @@ public class BukkitEconomyManager extends EconomyManager {
     }
 
     @Override
-    @NotNull
-    protected String getCurrencyPluralName0() {
+    protected @NotNull String getCurrencyPluralName0() {
         if (vaultEcon != null) {
             return vaultEcon.currencyNamePlural();
         }
@@ -140,16 +134,14 @@ public class BukkitEconomyManager extends EconomyManager {
     }
 
     @Override
-    @NotNull
-    protected String getCurrencyNameSingular0() {
+    protected @NotNull String getCurrencyNameSingular0() {
         if (vaultEcon != null) {
             return vaultEcon.currencyNameSingular();
         }
         return "coin";
     }
 
-    @NotNull
-    private TransactionResult convert(EconomyResponse response) {
+    private @NotNull TransactionResult convert(@Nullable EconomyResponse response) {
         if (response == null) {
             return VAULT_RETURNED_NULL;
         }

@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.bukkit.BukkitCore;
@@ -46,7 +47,7 @@ public class SBukkitPlayerJoinEvent implements SPlayerJoinEvent {
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -54,8 +55,7 @@ public class SBukkitPlayerJoinEvent implements SPlayerJoinEvent {
     }
 
     @Override
-    @Nullable
-    public Component joinMessage() {
+    public @Nullable Component joinMessage() {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             return AdventureBackend.wrapComponent(event.joinMessage());
         } else {

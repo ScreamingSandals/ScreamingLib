@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.block.tags;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,9 +30,9 @@ import java.util.function.Predicate;
 
 @LimitedVersionSupport(">= 1.13")
 @ApiStatus.Internal
+@UtilityClass
 public class ModernBlockTagBackPorts {
-    @Nullable
-    public static List<@NotNull String> getPortedTags(@NotNull BlockTypeHolder blockType, @NotNull Predicate<@NotNull String> nativeTagChecker) {
+    public static @Nullable List<@NotNull String> getPortedTags(@NotNull BlockTypeHolder blockType, @NotNull Predicate<@NotNull String> nativeTagChecker) {
         if (!Server.isVersion(1, 13)) {
             /* This file doesn't support legacy version backports (these are supported by Bukkit-specific implementation, because Bukkit is the only legacy platform) */
             return List.of();

@@ -28,9 +28,7 @@ import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.function.Function;
 
-@Service(dependsOn = {
-        BukkitPlayerMapper.class
-})
+@Service(dependsOn = BukkitPlayerMapper.class)
 @RequiredArgsConstructor
 public class BukkitCloudConstructor extends CloudConstructor {
     private final Plugin plugin;

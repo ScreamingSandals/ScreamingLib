@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -43,7 +44,7 @@ public class SBukkitPlayerSwapHandItemsEvent implements SPlayerSwapHandItemsEven
     private PlayerWrapper player;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -51,8 +52,7 @@ public class SBukkitPlayerSwapHandItemsEvent implements SPlayerSwapHandItemsEven
     }
 
     @Override
-    @Nullable
-    public Item mainHandItem() {
+    public @Nullable Item mainHandItem() {
         return event.getMainHandItem() == null ? null : new BukkitItem(event.getMainHandItem());
     }
 
@@ -62,8 +62,7 @@ public class SBukkitPlayerSwapHandItemsEvent implements SPlayerSwapHandItemsEven
     }
 
     @Override
-    @Nullable
-    public Item offHandItem() {
+    public @Nullable Item offHandItem() {
         return event.getOffHandItem() == null ? null : new BukkitItem(event.getOffHandItem());
     }
 

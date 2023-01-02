@@ -69,7 +69,7 @@ class ColorLink implements Color {
     }
 
     @Override
-    public Object raw() {
+    public @NotNull Object raw() {
         return obtainColor().raw();
     }
 }

@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 @Builder(toBuilder = true)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @With
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class LocationHolder implements Wrapper, Serializable {
     /**
      * The X coordinate of this location.

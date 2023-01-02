@@ -34,8 +34,7 @@ public class LazyBooleanPlaceholder implements Placeholder {
     // addition: custom strings for true/false
     @SuppressWarnings("unchecked")
     @Override
-    @NotNull
-    public <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
+    public @NotNull <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
         var value = supplier.getAsBoolean();
 
         if (arguments.size() == 2) {

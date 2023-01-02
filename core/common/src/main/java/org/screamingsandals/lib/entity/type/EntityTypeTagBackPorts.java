@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.entity.type;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,9 +27,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @ApiStatus.Internal
+@UtilityClass
 public class EntityTypeTagBackPorts {
-    @Nullable
-    public static List<@NotNull String> getPortedTags(@NotNull EntityTypeHolder entityType, @NotNull Predicate<@NotNull String> nativeTagChecker, boolean platformSupportsTags) {
+    public static @Nullable List<@NotNull String> getPortedTags(@NotNull EntityTypeHolder entityType, @NotNull Predicate<@NotNull String> nativeTagChecker, boolean platformSupportsTags) {
         var helper = new TagPortHelper(nativeTagChecker);
 
         /*

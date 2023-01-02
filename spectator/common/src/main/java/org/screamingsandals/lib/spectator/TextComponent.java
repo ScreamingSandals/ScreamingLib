@@ -21,8 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface TextComponent extends Component {
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    static TextComponent.Builder builder() {
+    static @NotNull TextComponent.Builder builder() {
         return Spectator.getBackend().text();
     }
 
@@ -42,48 +41,39 @@ public interface TextComponent extends Component {
         @NotNull
         Builder content(@NotNull String content);
         @Contract("_ -> this")
-        @NotNull
-        default Builder content(byte value) {
+        default @NotNull Builder content(byte value) {
             return content(String.valueOf(value));
         }
         @Contract("_ -> this")
-        @NotNull
-        default Builder content(short value) {
+        default @NotNull Builder content(short value) {
             return content(String.valueOf(value));
         }
         @Contract("_ -> this")
-        @NotNull
-        default Builder content(int value) {
+        default @NotNull Builder content(int value) {
             return content(String.valueOf(value));
         }
         @Contract("_ -> this")
-        @NotNull
-        default Builder content(long value) {
+        default @NotNull Builder content(long value) {
             return content(String.valueOf(value));
         }
         @Contract("_ -> this")
-        @NotNull
-        default Builder content(float value) {
+        default @NotNull Builder content(float value) {
             return content(String.valueOf(value));
         }
         @Contract("_ -> this")
-        @NotNull
-        default Builder content(double value) {
+        default @NotNull Builder content(double value) {
             return content(String.valueOf(value));
         }
         @Contract("_ -> this")
-        @NotNull
-        default Builder content(Number value) {
+        default @NotNull Builder content(Number value) {
             return content(String.valueOf(value));
         }
         @Contract("_ -> this")
-        @NotNull
-        default Builder content(boolean value) {
+        default @NotNull Builder content(boolean value) {
             return content(String.valueOf(value));
         }
         @Contract("_ -> this")
-        @NotNull
-        default Builder content(char value) {
+        default @NotNull Builder content(char value) {
             return content(String.valueOf(value));
         }
     }

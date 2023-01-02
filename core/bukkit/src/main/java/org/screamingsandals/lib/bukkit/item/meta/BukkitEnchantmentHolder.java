@@ -26,7 +26,7 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 import java.util.Arrays;
 
-@ExtensionMethod(value = {NullableExtension.class}, suppressBaseMethods = false)
+@ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Integer>> implements EnchantmentHolder {
 
     public BukkitEnchantmentHolder(@NotNull Enchantment enchantment) {

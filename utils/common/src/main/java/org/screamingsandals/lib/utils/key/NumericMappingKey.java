@@ -24,7 +24,7 @@ import java.util.Objects;
 
 @Data
 @RequiredArgsConstructor(staticName = "of")
-public class NumericMappingKey implements MappingKey {
+public final class NumericMappingKey implements MappingKey {
     private final int number;
 
     @Override
@@ -48,8 +48,7 @@ public class NumericMappingKey implements MappingKey {
     }
 
     @Override
-    @NotNull
-    public String toString() {
+    public @NotNull String toString() {
         return String.valueOf(number);
     }
 }

@@ -51,9 +51,9 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 public class HologramImpl extends AbstractLinedVisual<Hologram> implements Hologram {
-    @Getter(value = AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private final Map<Integer, HologramPiece> entitiesOnLines;
-    @Getter(value = AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private volatile HologramPiece itemEntity;
     private volatile TaskerTask rotationTask;
     private LocationHolder cachedLocation;
@@ -220,7 +220,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         }
 
         final var toSend = new LinkedList<AbstractPacket>();
-        if (itemEntity != null || entitiesOnLines.size() > 0) {
+        if (itemEntity != null || !entitiesOnLines.isEmpty()) {
             toSend.add(getFullDestroyPacket());
             update(viewer, toSend, false);
         }
@@ -241,7 +241,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
 
     private void updateEntities() {
         final var packets = new LinkedList<Function<PlayerWrapper, List<AbstractPacket>>>();
-        if (visible && viewers.size() > 0) {
+        if (visible && !viewers.isEmpty()) {
             if (lines.size() != originalLinesSize
                     && itemEntity != null) {
                 itemEntity.setLocation(cachedLocation.clone().add(0, itemPosition == ItemPosition.BELOW

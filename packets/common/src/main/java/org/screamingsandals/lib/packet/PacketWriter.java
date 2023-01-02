@@ -46,7 +46,7 @@ public abstract class PacketWriter extends OutputStream {
     /**
      * Maximum string length in bytes allowed by the current protocol.
      */
-    public static int MAX_STRING_LENGTH = 32767;
+    public static final int MAX_STRING_LENGTH = 32767;
 
     /**
      * Gets the size of the variable integer.
@@ -86,7 +86,7 @@ public abstract class PacketWriter extends OutputStream {
      */
     private final List<AbstractPacket> appendedPackets = new ArrayList<>();
 
-    private boolean cancelled = false;
+    private boolean cancelled;
 
     /**
      * Serializes a component to the buffer as a sized string.

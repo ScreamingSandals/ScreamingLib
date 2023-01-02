@@ -108,9 +108,8 @@ public class ClassMethod implements ReflectedExecutable<ClassMethod> {
         return this;
     }
 
-    @Nullable
     @Override
-    public Executable get() {
+    public @Nullable Executable get() {
         return method;
     }
 }
