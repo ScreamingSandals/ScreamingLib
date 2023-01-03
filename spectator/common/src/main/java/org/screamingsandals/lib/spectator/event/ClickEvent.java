@@ -26,7 +26,7 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 public interface ClickEvent extends Wrapper, RawValueHolder {
 
     @Contract(value = "-> new", pure = true)
-    static @NotNull ClickEvent.Builder builder() {
+    static ClickEvent.@NotNull Builder builder() {
         return Spectator.getBackend().clickEvent();
     }
 
@@ -61,23 +61,18 @@ public interface ClickEvent extends Wrapper, RawValueHolder {
         return Spectator.getBackend().clickEvent().action(Action.CHANGE_PAGE).value(value).build();
     }
 
-    @NotNull
-    Action action();
+    @NotNull Action action();
 
     @Contract(pure = true)
-    @NotNull
-    ClickEvent withAction(@NotNull Action action);
+    @NotNull ClickEvent withAction(@NotNull Action action);
 
-    @NotNull
-    String value();
+    @NotNull String value();
 
     @Contract(pure = true)
-    @NotNull
-    ClickEvent withValue(@NotNull String value);
+    @NotNull ClickEvent withValue(@NotNull String value);
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    ClickEvent.Builder toBuilder();
+    ClickEvent.@NotNull Builder toBuilder();
 
     enum Action {
         OPEN_URL,
@@ -94,15 +89,12 @@ public interface ClickEvent extends Wrapper, RawValueHolder {
 
     interface Builder {
         @Contract("_ -> this")
-        @NotNull
-        Builder action(@NotNull Action action);
+        @NotNull Builder action(@NotNull Action action);
 
         @Contract("_ -> this")
-        @NotNull
-        Builder value(@NotNull String value);
+        @NotNull Builder value(@NotNull String value);
 
         @Contract(value = "-> new", pure = true)
-        @NotNull
-        ClickEvent build();
+        @NotNull ClickEvent build();
     }
 }

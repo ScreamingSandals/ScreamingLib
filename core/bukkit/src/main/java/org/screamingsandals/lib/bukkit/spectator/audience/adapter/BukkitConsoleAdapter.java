@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.spectator.audience.adapter;
 
 import org.bukkit.command.ConsoleCommandSender;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.audience.ConsoleAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.ConsoleAdapter;
 
@@ -26,7 +27,7 @@ public class BukkitConsoleAdapter extends BukkitAdapter implements ConsoleAdapte
     }
 
     @Override
-    public ConsoleAudience owner() {
+    public @NotNull ConsoleAudience owner() {
         return (ConsoleAudience) super.owner();
     }
 

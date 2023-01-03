@@ -28,11 +28,11 @@ import java.util.function.Supplier;
 @Data
 public class LazyMiniPlaceholder implements Placeholder {
     @Pattern("[a-z\\d_-]+")
-    private final String name;
-    private final Supplier<String> supplier;
+    private final @NotNull String name;
+    private final @NotNull Supplier<@NotNull String> supplier;
 
     @Override
-    public @NotNull <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
         return parser.parseIntoBuilder(supplier.get(), placeholders);
     }
 }

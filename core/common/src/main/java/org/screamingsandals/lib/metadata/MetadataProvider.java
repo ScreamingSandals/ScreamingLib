@@ -43,8 +43,7 @@ public interface MetadataProvider {
     boolean supportsMetadata(MetadataCollectionKey<?> key);
 
     @Deprecated
-    @Nullable
-    <T> T getMetadata(MetadataKey<T> key);
+    <T> @Nullable T getMetadata(MetadataKey<T> key);
 
     @Deprecated
     <T> Optional<T> getMetadataOptional(MetadataKey<T> key);
@@ -55,6 +54,5 @@ public interface MetadataProvider {
     }
 
     @Deprecated
-    @Nullable
-    <T> Collection<T> getMetadata(MetadataCollectionKey<T> key);
+    <T> @Nullable Collection<T> getMetadata(MetadataCollectionKey<T> key);
 }

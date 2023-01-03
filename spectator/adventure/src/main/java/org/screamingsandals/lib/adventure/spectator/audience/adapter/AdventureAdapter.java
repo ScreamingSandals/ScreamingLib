@@ -30,9 +30,9 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 @Accessors(fluent = true)
 public class AdventureAdapter extends BasicWrapper<net.kyori.adventure.audience.Audience> implements Adapter {
     @Getter
-    private final @Nullable Audience owner;
+    private final @NotNull Audience owner;
 
-    public AdventureAdapter(net.kyori.adventure.audience.@NotNull Audience wrappedObject, @Nullable Audience owner) {
+    public AdventureAdapter(net.kyori.adventure.audience.@NotNull Audience wrappedObject, @NotNull Audience owner) {
         super(wrappedObject);
         this.owner = owner;
     }

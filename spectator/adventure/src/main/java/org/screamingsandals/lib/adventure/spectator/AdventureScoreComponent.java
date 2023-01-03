@@ -56,7 +56,7 @@ public class AdventureScoreComponent extends AdventureComponent implements Score
     }
 
     @Override
-    public @NotNull ScoreComponent.Builder toBuilder() {
+    public ScoreComponent.@NotNull Builder toBuilder() {
         return new AdventureScoreBuilder(((net.kyori.adventure.text.ScoreComponent) wrappedObject).toBuilder());
     }
 

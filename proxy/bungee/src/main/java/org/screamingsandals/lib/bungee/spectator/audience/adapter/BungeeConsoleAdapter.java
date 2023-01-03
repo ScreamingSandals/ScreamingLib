@@ -17,16 +17,17 @@
 package org.screamingsandals.lib.bungee.spectator.audience.adapter;
 
 import net.md_5.bungee.api.CommandSender;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.audience.ConsoleAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.ConsoleAdapter;
 
 public class BungeeConsoleAdapter extends BungeeAdapter implements ConsoleAdapter {
-    public BungeeConsoleAdapter(CommandSender sender, ConsoleAudience owner) {
+    public BungeeConsoleAdapter(@NotNull CommandSender sender, @NotNull ConsoleAudience owner) {
         super(sender, owner);
     }
 
     @Override
-    public ConsoleAudience owner() {
+    public @NotNull ConsoleAudience owner() {
         return (ConsoleAudience) super.owner();
     }
 }

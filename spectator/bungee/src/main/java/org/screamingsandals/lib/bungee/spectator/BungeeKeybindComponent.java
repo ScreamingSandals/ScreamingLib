@@ -36,7 +36,7 @@ public class BungeeKeybindComponent extends BungeeComponent implements KeybindCo
     }
 
     @Override
-    public @NotNull KeybindComponent.Builder toBuilder() {
+    public KeybindComponent.@NotNull Builder toBuilder() {
         var duplicate = (net.md_5.bungee.api.chat.KeybindComponent) wrappedObject.duplicate();
         return new BungeeKeybindBuilder(duplicate);
     }
@@ -48,7 +48,7 @@ public class BungeeKeybindComponent extends BungeeComponent implements KeybindCo
         }
 
         @Override
-        public @NotNull KeybindComponent.Builder keybind(@NotNull String keybind) {
+        public KeybindComponent.@NotNull Builder keybind(@NotNull String keybind) {
             component.setKeybind(keybind);
             return this;
         }

@@ -44,7 +44,7 @@ import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
 @UtilityClass
 public class SLibSerializers {
-    public @NotNull TypeSerializerCollection.Builder appendSerializers(TypeSerializerCollection.@NotNull Builder builder) {
+    public TypeSerializerCollection.@NotNull Builder appendSerializers(TypeSerializerCollection.@NotNull Builder builder) {
         return SpectatorSerializers.appendSerializers(builder)
                 .register(Tag.class, TagSerializer.INSTANCE)
                 .register(AttributeTypeHolder.class, AttributeTypeHolderSerializer.INSTANCE)

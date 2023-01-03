@@ -23,12 +23,12 @@ import org.screamingsandals.lib.spectator.audience.ConsoleAudience;
 import org.screamingsandals.lib.spectator.audience.adapter.ConsoleAdapter;
 
 public class AdventureConsoleAdapter extends AdventureAdapter implements ConsoleAdapter {
-    public AdventureConsoleAdapter(@NotNull Audience wrappedObject, @Nullable ConsoleAudience owner) {
+    public AdventureConsoleAdapter(@NotNull Audience wrappedObject, @NotNull ConsoleAudience owner) {
         super(wrappedObject, owner);
     }
 
     @Override
-    public @Nullable ConsoleAudience owner() {
+    public @NotNull ConsoleAudience owner() {
         return (ConsoleAudience) super.owner();
     }
 }

@@ -32,7 +32,7 @@ import org.screamingsandals.lib.spectator.title.Title;
 @ApiStatus.Internal
 public interface PlayerAdapter extends Adapter {
     @Override
-    PlayerAudience owner();
+    @NotNull PlayerAudience owner();
 
     void sendActionBar(@NotNull ComponentLike message);
 

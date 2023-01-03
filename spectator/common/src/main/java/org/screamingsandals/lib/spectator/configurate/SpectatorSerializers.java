@@ -32,7 +32,7 @@ import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
 @UtilityClass
 public class SpectatorSerializers {
-    public @NotNull TypeSerializerCollection.Builder appendSerializers(TypeSerializerCollection.@NotNull Builder builder) {
+    public TypeSerializerCollection.@NotNull Builder appendSerializers(TypeSerializerCollection.@NotNull Builder builder) {
         return builder
                 .register(DurationSerializer.INSTANCE)
                 .register(SoundStart.class, SoundStartSerializer.INSTANCE)

@@ -46,7 +46,7 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param identifier where's my identity?!
      * @return this visual
      */
-    @Nullable Map.Entry<Integer, TextEntry> lineByIdentifier(@NotNull String identifier);
+    Map.@Nullable Entry<Integer, TextEntry> lineByIdentifier(@NotNull String identifier);
 
     /**
      * Adds new line to this visual and moves everything else 1 line down.

@@ -178,13 +178,13 @@ public class BukkitBossBar extends BasicWrapper<BossBar> implements org.screamin
         private final @NotNull List<@NotNull BossBarListener> listeners = new ArrayList<>();
 
         @Override
-        public @NotNull Builder flags(@NotNull Collection<BossBarFlag> flags) {
+        public @NotNull Builder flags(@NotNull Collection<@NotNull BossBarFlag> flags) {
             this.flags = flags;
             return this;
         }
 
         @Override
-        public @NotNull Builder flags(@NotNull BossBarFlag... flags) {
+        public @NotNull Builder flags(@NotNull BossBarFlag @NotNull... flags) {
             this.flags = Arrays.asList(flags);
             return this;
         }

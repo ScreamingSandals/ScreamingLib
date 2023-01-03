@@ -21,6 +21,5 @@ import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.NonExtendable
 public interface RegisteredListener {
-    @NotNull
-    BossBarListener listener();
+    @NotNull BossBarListener listener();
 }

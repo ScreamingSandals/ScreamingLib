@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.spectator.configurate;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -26,13 +27,13 @@ import java.lang.reflect.Type;
 import java.util.Locale;
 
 public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
-    public static final ClickEventSerializer INSTANCE = new ClickEventSerializer();
+    public static final @NotNull ClickEventSerializer INSTANCE = new ClickEventSerializer();
 
-    private static final String ACTION_KEY = "action";
-    private static final String VALUE_KEY = "value";
+    private static final @NotNull String ACTION_KEY = "action";
+    private static final @NotNull String VALUE_KEY = "value";
 
     @Override
-    public ClickEvent deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull ClickEvent deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             var action = ClickEvent.Action.valueOf(node.node(ACTION_KEY).getString("open_url").toUpperCase(Locale.ROOT));
             var value = node.node(VALUE_KEY).getString("");
@@ -46,7 +47,7 @@ public class ClickEventSerializer implements TypeSerializer<ClickEvent> {
     }
 
     @Override
-    public void serialize(Type type, @Nullable ClickEvent obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable ClickEvent obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

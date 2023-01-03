@@ -39,6 +39,5 @@ public interface SBlockDispenseEvent extends SCancellableEvent, PlatformEventWra
     /*
      * Only in case when dispenser is used to attach armor to an entity
      */
-    @Nullable
-    EntityLiving receiver();
+    @Nullable EntityLiving receiver();
 }

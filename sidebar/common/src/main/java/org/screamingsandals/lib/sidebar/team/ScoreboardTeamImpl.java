@@ -133,12 +133,12 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public List<PlayerWrapper> players() {
+    public @NotNull List<@NotNull PlayerWrapper> players() {
         return List.copyOf(players);
     }
 
     @Override
-    public @NotNull Iterable<? extends PlayerAudience> audiences() {
+    public @NotNull Iterable<? extends @NotNull PlayerAudience> audiences() {
         return players();
     }
 

@@ -24,43 +24,34 @@ import java.util.List;
 
 public interface TranslatableComponent extends Component {
     @Contract(value = "-> new", pure = true)
-    static @NotNull TranslatableComponent.Builder builder() {
+    static TranslatableComponent.@NotNull Builder builder() {
         return Spectator.getBackend().translatable();
     }
 
-    @NotNull
-    String translate();
+    @NotNull String translate();
 
     @Contract(pure = true)
-    @NotNull
-    TranslatableComponent withTranslate(@NotNull String translate);
+    @NotNull TranslatableComponent withTranslate(@NotNull String translate);
 
-    @NotNull
-    List<Component> args();
+    @NotNull List<Component> args();
 
     @Contract(pure = true)
-    @NotNull
-    TranslatableComponent withArgs(@NotNull Component @NotNull...components);
+    @NotNull TranslatableComponent withArgs(@NotNull Component @NotNull...components);
 
     @Contract(pure = true)
-    @NotNull
-    TranslatableComponent withArgs(@NotNull Collection<Component> components);
+    @NotNull TranslatableComponent withArgs(@NotNull Collection<Component> components);
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    TranslatableComponent.Builder toBuilder();
+    TranslatableComponent.@NotNull Builder toBuilder();
 
     interface Builder extends Component.Builder<Builder, TranslatableComponent> {
         @Contract("_ -> this")
-        @NotNull
-        Builder translate(@NotNull String translate);
+        @NotNull Builder translate(@NotNull String translate);
 
         @Contract("_ -> this")
-        @NotNull
-        Builder args(@NotNull Component @NotNull...components);
+        @NotNull Builder args(@NotNull Component @NotNull...components);
 
         @Contract("_ -> this")
-        @NotNull
-        Builder args(@NotNull Collection<Component> components);
+        @NotNull Builder args(@NotNull Collection<Component> components);
     }
 }

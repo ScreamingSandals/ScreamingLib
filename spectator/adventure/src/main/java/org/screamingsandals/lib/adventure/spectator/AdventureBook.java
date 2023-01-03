@@ -42,7 +42,7 @@ public class AdventureBook extends BasicWrapper<Book> implements org.screamingsa
     }
 
     @Override
-    public @NotNull org.screamingsandals.lib.spectator.Book withTitle(@NotNull Component title) {
+    public org.screamingsandals.lib.spectator.@NotNull Book withTitle(@NotNull Component title) {
         return new AdventureBook(wrappedObject.title(title.as(net.kyori.adventure.text.Component.class)));
     }
 
@@ -52,7 +52,7 @@ public class AdventureBook extends BasicWrapper<Book> implements org.screamingsa
     }
 
     @Override
-    public @NotNull org.screamingsandals.lib.spectator.Book withAuthor(@NotNull Component author) {
+    public org.screamingsandals.lib.spectator.@NotNull Book withAuthor(@NotNull Component author) {
         return new AdventureBook(wrappedObject.author(author.as(net.kyori.adventure.text.Component.class)));
     }
 
@@ -62,7 +62,7 @@ public class AdventureBook extends BasicWrapper<Book> implements org.screamingsa
     }
 
     @Override
-    public @NotNull org.screamingsandals.lib.spectator.Book withPages(@NotNull List<Component> pages) {
+    public org.screamingsandals.lib.spectator.@NotNull Book withPages(@NotNull List<Component> pages) {
         return new AdventureBook(wrappedObject.pages(pages.stream()
                 .map(component -> component.as(net.kyori.adventure.text.Component.class))
                 .collect(Collectors.toUnmodifiableList())
@@ -70,7 +70,7 @@ public class AdventureBook extends BasicWrapper<Book> implements org.screamingsa
     }
 
     @Override
-    public @NotNull org.screamingsandals.lib.spectator.Book withPages(@NotNull Component... pages) {
+    public org.screamingsandals.lib.spectator.@NotNull Book withPages(@NotNull Component... pages) {
         return new AdventureBook(wrappedObject.pages(Arrays.stream(pages)
                 .map(component -> component.as(net.kyori.adventure.text.Component.class))
                 .collect(Collectors.toUnmodifiableList())
@@ -78,7 +78,7 @@ public class AdventureBook extends BasicWrapper<Book> implements org.screamingsa
     }
 
     @Override
-    public @NotNull org.screamingsandals.lib.spectator.Book.Builder toBuilder() {
+    public org.screamingsandals.lib.spectator.Book.@NotNull Builder toBuilder() {
         return new AdventureBookBuilder(
                 title(),
                 author(),
@@ -103,7 +103,7 @@ public class AdventureBook extends BasicWrapper<Book> implements org.screamingsa
         }
 
         @Override
-        public @NotNull org.screamingsandals.lib.spectator.Book build() {
+        public org.screamingsandals.lib.spectator.@NotNull Book build() {
             return new AdventureBook(Book.book(
                     this.title.as(net.kyori.adventure.text.Component.class),
                     this.author.as(net.kyori.adventure.text.Component.class),

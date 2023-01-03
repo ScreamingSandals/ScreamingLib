@@ -23,50 +23,40 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 public interface ScoreComponent extends Component {
     @Contract(value = "-> new", pure = true)
-    static @NotNull ScoreComponent.Builder builder() {
+    static ScoreComponent.@NotNull Builder builder() {
         return Spectator.getBackend().score();
     }
 
-    @NotNull
-    String name();
+    @NotNull String name();
 
     @Contract(pure = true)
-    @NotNull
-    ScoreComponent withName(@NotNull String name);
+    @NotNull ScoreComponent withName(@NotNull String name);
 
-    @NotNull
-    String objective();
+    @NotNull String objective();
 
     @Contract(pure = true)
-    @NotNull
-    ScoreComponent withObjective(@NotNull String objective);
+    @NotNull ScoreComponent withObjective(@NotNull String objective);
 
     @LimitedVersionSupport("< 1.16.5")
     @Deprecated
-    @Nullable
-    String value();
+    @Nullable String value();
 
     @Contract(pure = true)
-    @NotNull
-    ScoreComponent withValue(@Nullable String value);
+    @NotNull ScoreComponent withValue(@Nullable String value);
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    ScoreComponent.Builder toBuilder();
+    ScoreComponent.@NotNull Builder toBuilder();
 
     interface Builder extends Component.Builder<Builder, ScoreComponent> {
         @Contract("_ -> this")
-        @NotNull
-        Builder name(@NotNull String name);
+        @NotNull Builder name(@NotNull String name);
 
         @Contract("_ -> this")
-        @NotNull
-        Builder objective(@NotNull String objective);
+        @NotNull Builder objective(@NotNull String objective);
 
         @Contract("_ -> this")
-        @NotNull
         @LimitedVersionSupport("< 1.16.5")
         @Deprecated
-        Builder value(@Nullable String value);
+        @NotNull Builder value(@Nullable String value);
     }
 }

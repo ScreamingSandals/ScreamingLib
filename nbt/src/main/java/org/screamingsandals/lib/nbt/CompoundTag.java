@@ -217,7 +217,7 @@ public final class CompoundTag implements Tag, CompoundTagTreeInspector, Compoun
     }
 
     @Override
-    public @NotNull <T extends Tag> CompoundTag with(@NotNull TreeInspectorKey<T> treeKey, @NotNull T tag) {
+    public <T extends Tag> @NotNull CompoundTag with(@NotNull TreeInspectorKey<T> treeKey, @NotNull T tag) {
         var tagKeys = treeKey.getTagKeys();
         if (tagKeys.length == 0) {
             return this;
@@ -411,7 +411,7 @@ public final class CompoundTag implements Tag, CompoundTagTreeInspector, Compoun
     }
 
     @Override
-    public @NotNull <T extends Tag> CompoundTag without(@NotNull TreeInspectorKey<T> treeKey) {
+    public <T extends Tag> @NotNull CompoundTag without(@NotNull TreeInspectorKey<T> treeKey) {
         var tagKeys = treeKey.getTagKeys();
         if (tagKeys.length == 0) {
             return this;

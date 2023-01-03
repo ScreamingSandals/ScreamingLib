@@ -23,22 +23,21 @@ import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 public interface SoundSource extends Wrapper, RawValueHolder {
-    SoundSource MASTER = new SoundSourceLink("master");
-    SoundSource MUSIC = new SoundSourceLink("music");
-    SoundSource RECORD = new SoundSourceLink("record");
-    SoundSource WEATHER = new SoundSourceLink("weather");
-    SoundSource BLOCK = new SoundSourceLink("block");
-    SoundSource HOSTILE = new SoundSourceLink("hostile");
-    SoundSource NEUTRAL = new SoundSourceLink("neutral");
-    SoundSource PLAYER = new SoundSourceLink("player");
-    SoundSource AMBIENT = new SoundSourceLink("ambient");
-    SoundSource VOICE = new SoundSourceLink("voice");
+    @NotNull SoundSource MASTER = new SoundSourceLink("master");
+    @NotNull SoundSource MUSIC = new SoundSourceLink("music");
+    @NotNull SoundSource RECORD = new SoundSourceLink("record");
+    @NotNull SoundSource WEATHER = new SoundSourceLink("weather");
+    @NotNull SoundSource BLOCK = new SoundSourceLink("block");
+    @NotNull SoundSource HOSTILE = new SoundSourceLink("hostile");
+    @NotNull SoundSource NEUTRAL = new SoundSourceLink("neutral");
+    @NotNull SoundSource PLAYER = new SoundSourceLink("player");
+    @NotNull SoundSource AMBIENT = new SoundSourceLink("ambient");
+    @NotNull SoundSource VOICE = new SoundSourceLink("voice");
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull SoundSource soundSource(@NotNull String source) {
         return Spectator.getBackend().soundSource(source);
     }
 
-    @NotNull
-    String name();
+    @NotNull String name();
 }

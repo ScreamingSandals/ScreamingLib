@@ -30,13 +30,12 @@ import java.util.function.*;
 public interface Placeholder extends ComponentBuilderResolver {
 
     @Pattern("[a-z\\d_-]+")
-    String getName();
+    @NotNull String getName();
 
-    @NotNull
-    <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders);
+    <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders);
 
     @Override
-    default <B extends Component.Builder<B, C>, C extends Component> B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag, Placeholder... placeholders) {
+    default <B extends Component.Builder<B, C>, C extends Component> @NotNull B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag, @NotNull Placeholder @NotNull ... placeholders) {
         return getResult(parser, tag.getArgs(), placeholders);
     }
 

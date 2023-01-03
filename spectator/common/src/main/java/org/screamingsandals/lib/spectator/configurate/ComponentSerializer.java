@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.spectator.configurate;
 
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.*;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
@@ -30,12 +31,13 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
+import java.util.Objects;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class ComponentSerializer implements TypeSerializer<Component> {
 
-    public static final ComponentSerializer INSTANCE = new ComponentSerializer(s -> {
+    public static final @NotNull ComponentSerializer INSTANCE = new ComponentSerializer(s -> {
         if (s.matches(".*§[0123456789AaBbCcDdEeFfKkLlMmNnOoRrXx].*")) {
             return Component.fromLegacy(s);
         }
@@ -43,68 +45,68 @@ public class ComponentSerializer implements TypeSerializer<Component> {
     });
 
     // Text
-    private static final String TEXT_KEY = "text";
+    private static final @NotNull String TEXT_KEY = "text";
 
     // Translate
-    private static final String TRANSLATE_KEY = "translate";
-    private static final String WITH_KEY = "with";
+    private static final @NotNull String TRANSLATE_KEY = "translate";
+    private static final @NotNull String WITH_KEY = "with";
 
     // Score
-    private static final String SCORE_KEY = "score";
-    private static final String SCORE_NAME_KEY = "name";
-    private static final String SCORE_OBJECTIVE_KEY = "objective";
-    private static final String SCORE_VALUE_KEY = "value";
+    private static final @NotNull String SCORE_KEY = "score";
+    private static final @NotNull String SCORE_NAME_KEY = "name";
+    private static final @NotNull String SCORE_OBJECTIVE_KEY = "objective";
+    private static final @NotNull String SCORE_VALUE_KEY = "value";
 
     // Selector
-    private static final String SELECTOR_KEY = "selector";
+    private static final @NotNull String SELECTOR_KEY = "selector";
 
     // Keybind
-    private static final String KEYBIND_KEY = "keybind";
+    private static final @NotNull String KEYBIND_KEY = "keybind";
 
     // NBT
-    private static final String NBT_KEY = "nbt";
-    private static final String INTERPRET_KEY = "interpret";
-    private static final String BLOCK_KEY = "block";
-    private static final String ENTITY_KEY = "entity";
-    private static final String STORAGE_KEY = "storage";
+    private static final @NotNull String NBT_KEY = "nbt";
+    private static final @NotNull String INTERPRET_KEY = "interpret";
+    private static final @NotNull String BLOCK_KEY = "block";
+    private static final @NotNull String ENTITY_KEY = "entity";
+    private static final @NotNull String STORAGE_KEY = "storage";
 
     // NBT # Selector
-    private static final String SEPARATOR_KEY = "separator";
+    private static final @NotNull String SEPARATOR_KEY = "separator";
 
     // Shared content & Formatting
-    private static final String EXTRA_KEY = "extra";
-    private static final String COLOR_KEY = "color";
-    private static final String FONT_KEY = "font";
-    private static final String BOLD_KEY = "bold";
-    private static final String ITALIC_KEY = "italic";
-    private static final String UNDERLINED_KEY = "underlined";
-    private static final String STRIKETHROUGH_KEY = "strikethrough";
-    private static final String OBFUSCATED_KEY = "obfuscated";
-    private static final String INSERTION_KEY = "insertion";
-    private static final String CLICK_EVENT_KEY = "clickEvent";
-    private static final String HOVER_EVENT_KEY = "hoverEvent";
+    private static final @NotNull String EXTRA_KEY = "extra";
+    private static final @NotNull String COLOR_KEY = "color";
+    private static final @NotNull String FONT_KEY = "font";
+    private static final @NotNull String BOLD_KEY = "bold";
+    private static final @NotNull String ITALIC_KEY = "italic";
+    private static final @NotNull String UNDERLINED_KEY = "underlined";
+    private static final @NotNull String STRIKETHROUGH_KEY = "strikethrough";
+    private static final @NotNull String OBFUSCATED_KEY = "obfuscated";
+    private static final @NotNull String INSERTION_KEY = "insertion";
+    private static final @NotNull String CLICK_EVENT_KEY = "clickEvent";
+    private static final @NotNull String HOVER_EVENT_KEY = "hoverEvent";
 
     private final @Nullable Function<String, Component> stringDeserializer;
 
     @Override
-    public Component deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull Component deserialize(Type type, ConfigurationNode node) throws SerializationException {
         try {
             if (node.isList()) {
                 var list = node.childrenList();
                 if (list.isEmpty()) {
                     return Component.empty();
                 } else if (list.size() == 1) {
-                    return list.get(0).get(Component.class);
+                    return Objects.requireNonNull(list.get(0).get(Component.class));
                 } else {
                     Component first = null; // TODO: Optimize by using builder
                     for (var child : list) {
                         if (first == null) {
                             first = child.get(Component.class);
                         } else {
-                            first = first.withAppendix(child.get(Component.class));
+                            first = first.withAppendix(Objects.requireNonNull(child.get(Component.class)));
                         }
                     }
-                    return first;
+                    return Objects.requireNonNull(first);
                 }
             } else if (!node.isMap()) {
                 var str = node.getString();
@@ -179,11 +181,11 @@ public class ComponentSerializer implements TypeSerializer<Component> {
                 if (extraNode.isList()) {
                     var extra = extraNode.childrenList();
                     for (var ex : extra) {
-                        builder.append(ex.get(Component.class));
+                        builder.append(Objects.requireNonNull(ex.get(Component.class)));
                     }
                 } else {
                     /* This is not valid in the official format, but it's probably just one component */
-                    builder.append(extraNode.get(Component.class));
+                    builder.append(Objects.requireNonNull(extraNode.get(Component.class)));
                 }
             }
 
@@ -238,7 +240,7 @@ public class ComponentSerializer implements TypeSerializer<Component> {
     }
 
     @Override
-    public void serialize(Type type, @Nullable Component obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable Component obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;
@@ -352,7 +354,7 @@ public class ComponentSerializer implements TypeSerializer<Component> {
     }
 
     @Override
-    public @Nullable Component emptyValue(Type specificType, ConfigurationOptions options) {
+    public @Nullable Component emptyValue(@NotNull Type specificType, @NotNull ConfigurationOptions options) {
         return Component.empty();
     }
 }

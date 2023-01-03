@@ -105,28 +105,28 @@ public class AdventureBackend implements SpectatorBackend {
     }
 
     @Override
-    public Component empty() {
+    public @NotNull Component empty() {
         return empty;
     }
 
     @Override
-    public Component newLine() {
+    public @NotNull Component newLine() {
         return newLine;
     }
 
     @Override
-    public Component space() {
+    public @NotNull Component space() {
         return space;
     }
 
     @Override
-    public Component fromLegacy(String legacy) {
-        return legacy == null || legacy.isEmpty() ? empty : wrapComponent(legacyComponentSerializer.deserialize(legacy));
+    public @NotNull Component fromLegacy(@NotNull String legacy) {
+        return legacy.isEmpty() ? empty : wrapComponent(legacyComponentSerializer.deserialize(legacy));
     }
 
     @Override
-    public Component fromLegacy(String legacy, char colorCharacter) {
-        if (legacy == null || legacy.isEmpty()) {
+    public @NotNull Component fromLegacy(@NotNull String legacy, char colorCharacter) {
+        if (legacy.isEmpty()) {
             return empty;
         }
         if (colorCharacter == '§') {
@@ -142,60 +142,60 @@ public class AdventureBackend implements SpectatorBackend {
     }
 
     @Override
-    public Component fromJson(String json) {
-        if (json == null || json.isEmpty()) {
+    public @NotNull Component fromJson(@NotNull String json) {
+        if (json.isEmpty()) {
             return empty;
         }
         return new AdventureComponent(gsonComponentSerializer.deserialize(json));
     }
 
     @Override
-    public org.screamingsandals.lib.spectator.BlockNBTComponent.Builder blockNBT() {
+    public org.screamingsandals.lib.spectator.BlockNBTComponent.@NotNull Builder blockNBT() {
         return new AdventureBlockNBTComponent.AdventureBlockNBTBuilder(net.kyori.adventure.text.Component.blockNBT());
     }
 
     @Override
-    public org.screamingsandals.lib.spectator.EntityNBTComponent.Builder entityNBT() {
+    public org.screamingsandals.lib.spectator.EntityNBTComponent.@NotNull Builder entityNBT() {
         return new AdventureEntityNBTComponent.AdventureEntityNBTBuilder(net.kyori.adventure.text.Component.entityNBT());
     }
 
     @Override
-    public org.screamingsandals.lib.spectator.KeybindComponent.Builder keybind() {
+    public org.screamingsandals.lib.spectator.KeybindComponent.@NotNull Builder keybind() {
         return new AdventureKeybindComponent.AdventureKeybindBuilder(net.kyori.adventure.text.Component.keybind());
     }
 
     @Override
-    public org.screamingsandals.lib.spectator.ScoreComponent.Builder score() {
+    public org.screamingsandals.lib.spectator.ScoreComponent.@NotNull Builder score() {
         return new AdventureScoreComponent.AdventureScoreBuilder(net.kyori.adventure.text.Component.score());
     }
 
     @Override
-    public org.screamingsandals.lib.spectator.SelectorComponent.Builder selector() {
+    public org.screamingsandals.lib.spectator.SelectorComponent.@NotNull Builder selector() {
         return new AdventureSelectorComponent.AdventureSelectorBuilder(net.kyori.adventure.text.Component.selector());
     }
 
     @Override
-    public org.screamingsandals.lib.spectator.StorageNBTComponent.Builder storageNBT() {
+    public org.screamingsandals.lib.spectator.StorageNBTComponent.@NotNull Builder storageNBT() {
         return new AdventureStorageNBTComponent.AdventureStorageNBTBuilder(net.kyori.adventure.text.Component.storageNBT());
     }
 
     @Override
-    public org.screamingsandals.lib.spectator.TextComponent.Builder text() {
+    public org.screamingsandals.lib.spectator.TextComponent.@NotNull Builder text() {
         return new AdventureTextComponent.AdventureTextBuilder(net.kyori.adventure.text.Component.text());
     }
 
     @Override
-    public org.screamingsandals.lib.spectator.TranslatableComponent.Builder translatable() {
+    public org.screamingsandals.lib.spectator.TranslatableComponent.@NotNull Builder translatable() {
         return new AdventureTranslatableComponent.AdventureTranslatableBuilder(net.kyori.adventure.text.Component.translatable());
     }
 
     @Override
-    public Color rgb(int red, int green, int blue) {
+    public @NotNull Color rgb(int red, int green, int blue) {
         return new AdventureColor(TextColor.color(red, green, blue));
     }
 
     @Override
-    public Color named(String name) {
+    public @Nullable Color named(@NotNull String name) {
         var value = NamedTextColor.NAMES.value(name.toLowerCase(Locale.ROOT));
         if (value != null) {
             return new AdventureColor(value);
@@ -204,7 +204,7 @@ public class AdventureBackend implements SpectatorBackend {
     }
 
     @Override
-    public Color hexOrName(String hexName) {
+    public @NotNull Color hexOrName(@NotNull String hexName) {
         var value = NamedTextColor.NAMES.value(hexName.toLowerCase(Locale.ROOT));
         if (value != null) {
             return new AdventureColor(value);
@@ -213,70 +213,67 @@ public class AdventureBackend implements SpectatorBackend {
             hexName = "#" + hexName;
         }
         var hex = TextColor.fromCSSHexString(hexName);
-        if (hex != null) {
-            return new AdventureColor(hex);
-        }
-        return null;
+        return new AdventureColor(hex != null ? hex : NamedTextColor.WHITE);
     }
 
     @Override
-    public Color nearestNamedTo(Color color) {
+    public @NotNull Color nearestNamedTo(@Nullable Color color) {
         return new AdventureColor(NamedTextColor.nearestTo(color != null ? color.as(TextColor.class) : NamedTextColor.WHITE));
     }
 
     @Override
-    public BossBar.Builder bossBar() {
+    public BossBar.@NotNull Builder bossBar() {
         return new AdventureBossBar.AdventureBossBarBuilder();
     }
 
     @Override
-    public SoundStart.Builder soundStart() {
+    public SoundStart.@NotNull Builder soundStart() {
         return new AdventureSoundStart.AdventureSoundStartBuilder();
     }
 
     @Override
-    public SoundStop.Builder soundStop() {
+    public SoundStop.@NotNull Builder soundStop() {
         return new AdventureSoundStop.AdventureSoundStopBuilder();
     }
 
     @Override
-    public SoundSource soundSource(String source) {
+    public @NotNull SoundSource soundSource(@NotNull String source) {
         var soundSource = Sound.Source.NAMES.value(source);
         return new AdventureSoundSource(Objects.requireNonNullElse(soundSource, Sound.Source.MASTER));
     }
 
     @Override
-    public Title.Builder title() {
+    public Title.@NotNull Builder title() {
         return new AdventureTitle.AdventureTitleBuilder();
     }
 
     @Override
-    public Book.Builder book() {
+    public Book.@NotNull Builder book() {
         return new AdventureBook.AdventureBookBuilder();
     }
 
     @Override
-    public ClickEvent.Builder clickEvent() {
+    public ClickEvent.@NotNull Builder clickEvent() {
         return new AdventureClickEvent.AdventureClickEventBuilder();
     }
 
     @Override
-    public HoverEvent.Builder hoverEvent() {
+    public HoverEvent.@NotNull Builder hoverEvent() {
         return new AdventureHoverEvent.AdventureHoverEventBuilder();
     }
 
     @Override
-    public EntityContent.Builder entityContent() {
+    public EntityContent.@NotNull Builder entityContent() {
         return new AdventureEntityContent.AdventureEntityContentBuilder();
     }
 
     @Override
-    public ItemContent.Builder itemContent() {
+    public ItemContent.@NotNull Builder itemContent() {
         return new AdventureItemContent.AdventureItemContentBuilder();
     }
 
     @Contract("null -> null; !null -> !null")
-    public static @Nullable Component wrapComponent(@Nullable net.kyori.adventure.text.Component component) {
+    public static @Nullable Component wrapComponent(net.kyori.adventure.text.@Nullable Component component) {
         if (component == null) {
             return null;
         }

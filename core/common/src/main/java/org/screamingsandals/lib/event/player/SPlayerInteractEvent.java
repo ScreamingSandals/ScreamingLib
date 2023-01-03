@@ -27,18 +27,15 @@ import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.block.BlockHolder;
 
-import java.util.Arrays;
 import java.util.List;
 
 public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    @Nullable
-    ItemView item();
+    @Nullable ItemView item();
 
     Action action();
 
-    @Nullable
-    BlockHolder clickedBlock();
+    @Nullable BlockHolder clickedBlock();
 
     BlockFace blockFace();
 
@@ -50,8 +47,7 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
 
     void useItemInHand(Result useItemInHand);
 
-    @Nullable
-    EquipmentSlotHolder hand();
+    @Nullable EquipmentSlotHolder hand();
 
     /**
      * Sets the cancellation state of this event. A canceled event will not be

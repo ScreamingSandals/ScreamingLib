@@ -137,5 +137,5 @@ public interface CompoundTagModifier {
 
     @NotNull CompoundTag without(@NotNull String @NotNull... tagKeys);
 
-    @NotNull <T extends Tag> CompoundTag without(@NotNull TreeInspectorKey<T> key);
+    <T extends Tag> @NotNull CompoundTag without(@NotNull TreeInspectorKey<T> key);
 }

@@ -32,14 +32,14 @@ public class BungeeSelectorComponent extends BungeeComponent implements Selector
     }
 
     @Override
-    public @NotNull SelectorComponent withPattern(String pattern) {
+    public @NotNull SelectorComponent withPattern(@NotNull String pattern) {
         var duplicate = (net.md_5.bungee.api.chat.SelectorComponent) wrappedObject.duplicate();
         duplicate.setSelector(pattern);
         return (SelectorComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    public @NotNull SelectorComponent.Builder toBuilder() {
+    public SelectorComponent.@NotNull Builder toBuilder() {
         var duplicate = (net.md_5.bungee.api.chat.SelectorComponent) wrappedObject.duplicate();
         return new BungeeSelectorBuilder(duplicate);
     }
@@ -61,13 +61,13 @@ public class BungeeSelectorComponent extends BungeeComponent implements Selector
         }
 
         @Override
-        public @NotNull SelectorComponent.Builder pattern(@NotNull String pattern) {
+        public SelectorComponent.@NotNull Builder pattern(@NotNull String pattern) {
             component.setSelector(pattern);
             return this;
         }
 
         @Override
-        public @NotNull SelectorComponent.Builder separator(@Nullable Component separator) {
+        public SelectorComponent.@NotNull Builder separator(@Nullable Component separator) {
             // TODO: Hey md_5, I hate you with all my hearth
             return this;
         }

@@ -23,17 +23,14 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 public interface SeparableComponent extends Component {
     @LimitedVersionSupport(">= 1.17")
-    @Nullable
-    Component separator();
+    @Nullable Component separator();
 
     @Contract(pure = true)
-    @NotNull
-    SeparableComponent withSeparator(@Nullable Component separator);
+    @NotNull SeparableComponent withSeparator(@Nullable Component separator);
 
     interface Builder<B extends Builder<B, C>, C extends SeparableComponent> extends Component.Builder<B, C> {
         @LimitedVersionSupport(">= 1.17")
         @Contract("_ -> this")
-        @NotNull
-        B separator(@Nullable Component separator);
+        @NotNull B separator(@Nullable Component separator);
     }
 }

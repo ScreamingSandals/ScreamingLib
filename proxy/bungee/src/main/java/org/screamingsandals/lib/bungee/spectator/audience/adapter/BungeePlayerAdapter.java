@@ -35,17 +35,17 @@ import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.spectator.title.Title;
 
 public class BungeePlayerAdapter extends BungeeAdapter implements PlayerAdapter {
-    public BungeePlayerAdapter(ProxiedPlayer sender, PlayerAudience owner) {
+    public BungeePlayerAdapter(@NotNull ProxiedPlayer sender, @NotNull PlayerAudience owner) {
         super(sender, owner);
     }
 
     @Override
-    public PlayerAudience owner() {
+    public @NotNull PlayerAudience owner() {
         return (PlayerAudience) super.owner();
     }
 
     @Override
-    public ProxiedPlayer sender() {
+    public @NotNull ProxiedPlayer sender() {
         return (ProxiedPlayer) super.sender();
     }
 
@@ -86,12 +86,12 @@ public class BungeePlayerAdapter extends BungeeAdapter implements PlayerAdapter 
 
     @Override
     public void showBossBar(@NotNull BossBar bossBar) {
-
+        // TODO
     }
 
     @Override
     public void hideBossBar(@NotNull BossBar bossBar) {
-
+        // TODO
     }
 
     @Override

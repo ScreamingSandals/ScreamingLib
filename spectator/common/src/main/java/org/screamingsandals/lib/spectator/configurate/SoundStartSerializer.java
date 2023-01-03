@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.spectator.configurate;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
@@ -28,15 +29,15 @@ import java.lang.reflect.Type;
 import java.util.Locale;
 
 public class SoundStartSerializer implements TypeSerializer<SoundStart> {
-    public static final SoundStartSerializer INSTANCE = new SoundStartSerializer();
+    public static final @NotNull SoundStartSerializer INSTANCE = new SoundStartSerializer();
 
-    private static final String NAME_KEY = "name";
-    private static final String SOURCE_KEY = "source";
-    private static final String PITCH_KEY = "pitch";
-    private static final String VOLUME_KEY = "volume";
+    private static final @NotNull String NAME_KEY = "name";
+    private static final @NotNull String SOURCE_KEY = "source";
+    private static final @NotNull String PITCH_KEY = "pitch";
+    private static final @NotNull String VOLUME_KEY = "volume";
 
     @Override
-    public SoundStart deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull SoundStart deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             if (node.isMap()) {
                 final var name = NamespacedMappingKey.of(node.node(NAME_KEY).getString());
@@ -64,7 +65,7 @@ public class SoundStartSerializer implements TypeSerializer<SoundStart> {
     }
 
     @Override
-    public void serialize(Type type, @Nullable SoundStart obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable SoundStart obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

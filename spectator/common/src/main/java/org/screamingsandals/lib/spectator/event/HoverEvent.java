@@ -28,7 +28,7 @@ import org.screamingsandals.lib.utils.Wrapper;
 public interface HoverEvent extends Wrapper, RawValueHolder {
 
     @Contract(value = "-> new", pure = true)
-    static @NotNull HoverEvent.Builder builder() {
+    static HoverEvent.@NotNull Builder builder() {
         return Spectator.getBackend().hoverEvent();
     }
 
@@ -62,11 +62,9 @@ public interface HoverEvent extends Wrapper, RawValueHolder {
         return Spectator.getBackend().hoverEvent().action(Action.SHOW_ENTITY).content(itemContent).build();
     }
 
-    @NotNull
-    Action action();
+    @NotNull Action action();
 
-    @NotNull
-    Content content();
+    @NotNull Content content();
 
     enum Action {
         SHOW_TEXT,
@@ -77,12 +75,10 @@ public interface HoverEvent extends Wrapper, RawValueHolder {
 
     interface Builder {
         @Contract("_ -> this")
-        @NotNull
-        Builder action(@NotNull Action action);
+        @NotNull Builder action(@NotNull Action action);
 
         @Contract("_ -> this")
-        @NotNull
-        Builder content(@NotNull Content content);
+        @NotNull Builder content(@NotNull Content content);
 
         @Contract("_ -> this")
         default @NotNull Builder content(@NotNull ContentLike contentLike) {
@@ -90,7 +86,6 @@ public interface HoverEvent extends Wrapper, RawValueHolder {
         }
 
         @Contract(value = "-> new", pure = true)
-        @NotNull
-        HoverEvent build();
+        @NotNull HoverEvent build();
     }
 }

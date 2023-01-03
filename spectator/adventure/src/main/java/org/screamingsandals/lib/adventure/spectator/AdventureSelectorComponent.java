@@ -32,12 +32,12 @@ public class AdventureSelectorComponent extends AdventureComponent implements Se
     }
 
     @Override
-    public @NotNull SelectorComponent withPattern(String pattern) {
+    public @NotNull SelectorComponent withPattern(@NotNull String pattern) {
         return (SelectorComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.SelectorComponent) wrappedObject).pattern(pattern));
     }
 
     @Override
-    public @NotNull SelectorComponent.Builder toBuilder() {
+    public SelectorComponent.@NotNull Builder toBuilder() {
         return new AdventureSelectorBuilder(((net.kyori.adventure.text.SelectorComponent) wrappedObject).toBuilder());
     }
 

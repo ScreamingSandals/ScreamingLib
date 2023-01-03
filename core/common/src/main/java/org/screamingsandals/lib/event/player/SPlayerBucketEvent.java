@@ -34,8 +34,7 @@ public interface SPlayerBucketEvent extends SCancellableEvent, SPlayerEvent, Pla
 
     ItemTypeHolder bucket();
 
-    @Nullable
-    Item item();
+    @Nullable Item item();
 
     void item(@Nullable Item item);
 

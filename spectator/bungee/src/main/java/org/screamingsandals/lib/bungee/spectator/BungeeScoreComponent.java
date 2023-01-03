@@ -63,7 +63,7 @@ public class BungeeScoreComponent extends BungeeComponent implements ScoreCompon
     }
 
     @Override
-    public @NotNull ScoreComponent.Builder toBuilder() {
+    public ScoreComponent.@NotNull Builder toBuilder() {
         var duplicate = (net.md_5.bungee.api.chat.ScoreComponent) wrappedObject.duplicate();
         return new BungeeScoreBuilder(duplicate);
     }
@@ -75,19 +75,19 @@ public class BungeeScoreComponent extends BungeeComponent implements ScoreCompon
         }
 
         @Override
-        public @NotNull ScoreComponent.Builder name(@NotNull String name) {
+        public ScoreComponent.@NotNull Builder name(@NotNull String name) {
             component.setValue(name);
             return this;
         }
 
         @Override
-        public @NotNull ScoreComponent.Builder objective(@NotNull String objective) {
+        public ScoreComponent.@NotNull Builder objective(@NotNull String objective) {
             component.setValue(objective);
             return this;
         }
 
         @Override
-        public @NotNull ScoreComponent.Builder value(@Nullable String value) {
+        public ScoreComponent.@NotNull Builder value(@Nullable String value) {
             component.setValue(value);
             return this;
         }

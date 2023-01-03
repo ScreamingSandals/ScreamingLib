@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.spectator.configurate;
 
 import io.leangen.geantyref.TypeToken;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Book;
 import org.screamingsandals.lib.spectator.Component;
@@ -29,16 +30,16 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class BookSerializer implements TypeSerializer<Book> {
-    public static final BookSerializer INSTANCE = new BookSerializer();
+    public static final @NotNull BookSerializer INSTANCE = new BookSerializer();
 
-    private static final String TITLE_KEY = "title";
-    private static final String AUTHOR_KEY = "author";
-    private static final String PAGES_KEY = "pages";
-    private static final TypeToken<List<Component>> COMPONENT_LIST_TYPE_TOKEN = new TypeToken<>() {
+    private static final @NotNull String TITLE_KEY = "title";
+    private static final @NotNull String AUTHOR_KEY = "author";
+    private static final @NotNull String PAGES_KEY = "pages";
+    private static final @NotNull TypeToken<List<Component>> COMPONENT_LIST_TYPE_TOKEN = new TypeToken<>() {
     };
 
     @Override
-    public Book deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull Book deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             var title = node.node(TITLE_KEY).get(Component.class);
             var author = node.node(AUTHOR_KEY).get(Component.class);
@@ -57,7 +58,7 @@ public class BookSerializer implements TypeSerializer<Book> {
     }
 
     @Override
-    public void serialize(Type type, @Nullable Book obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable Book obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

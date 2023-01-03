@@ -76,7 +76,7 @@ public final class MiniMessageParser {
     }
     @SuppressWarnings("unchecked")
     @ApiStatus.Internal
-    public @NotNull <B extends Component.Builder<B, C>, C extends Component> B parseIntoBuilder(@NotNull String str, @NotNull Placeholder... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B parseIntoBuilder(@NotNull String str, @NotNull Placeholder... placeholders) {
         if (str.isEmpty()) {
             return (B) Component.text();
         }

@@ -63,7 +63,7 @@ public class BungeeClickEvent extends BasicWrapper<net.md_5.bungee.api.chat.Clic
     }
 
     @Override
-    public @NotNull ClickEvent.Builder toBuilder() {
+    public ClickEvent.@NotNull Builder toBuilder() {
         return new BungeeClickBuilder(action(), value());
     }
 

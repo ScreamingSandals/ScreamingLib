@@ -75,8 +75,7 @@ public class MiniTagParser {
         var inPre = false;
         var usedQuote = '"';
         var builder = new StringBuilder();
-        @NotNull
-        var cursor = new NodeCursor(null, root);
+        @NotNull var cursor = new NodeCursor(null, root);
 
         for (int i = 0; i < chars.length; i++) {
             var c = chars[i];

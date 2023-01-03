@@ -67,8 +67,7 @@ public final class Pagination<T> {
         this.outOfRangeRenderer = outOfRangeRenderer;
     }
 
-    @NotNull
-    List<Component> render(
+    @NotNull List<Component> render(
             final @NotNull List<T> content,
             final int page,
             final int itemsPerPage

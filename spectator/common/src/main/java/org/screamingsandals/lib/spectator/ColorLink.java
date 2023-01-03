@@ -19,17 +19,19 @@ package org.screamingsandals.lib.spectator;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @RequiredArgsConstructor
 @ApiStatus.Internal
 class ColorLink implements Color {
-    private final String name;
-    private Color cache;
+    private final @NotNull String name;
+    private @Nullable Color cache;
 
-    private Color obtainColor() {
+    private @NotNull Color obtainColor() {
         if (cache == null) {
             cache = Color.named(name);
         }
+        assert cache != null;
         return cache;
     }
 
@@ -64,7 +66,7 @@ class ColorLink implements Color {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return obtainColor().toString();
     }
 

@@ -57,7 +57,7 @@ public class ItemMetaHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public static @Nullable <T> T getMetadata(ItemMeta meta, MetadataKey<T> key) {
+    public static <T> @Nullable T getMetadata(ItemMeta meta, MetadataKey<T> key) {
         var name = NBT_TO_BUKKIT_METHODS.getOrDefault(key.getKey(), key.getKey().replace(".", ""));
 
         var hasMethod = Reflect.getMethod(meta, "has" + name);

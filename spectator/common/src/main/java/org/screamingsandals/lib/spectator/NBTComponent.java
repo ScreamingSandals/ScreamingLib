@@ -23,31 +23,26 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 @LimitedVersionSupport(">= 1.14")
 public interface NBTComponent extends SeparableComponent {
-    @NotNull
-    String nbtPath();
+    @NotNull String nbtPath();
 
     @Contract(pure = true)
-    @NotNull
-    NBTComponent withNbtPath(@NotNull String nbtPath);
+    @NotNull NBTComponent withNbtPath(@NotNull String nbtPath);
 
     boolean interpret();
 
     @Contract(pure = true)
-    @NotNull
-    NBTComponent withInterpret(boolean interpret);
+    @NotNull NBTComponent withInterpret(boolean interpret);
 
     /**
      * {@inheritDoc}
      */
     @Contract(pure = true)
     @Override
-    @NotNull
-    NBTComponent withSeparator(@Nullable Component separator);
+    @NotNull NBTComponent withSeparator(@Nullable Component separator);
 
     interface Builder<B extends Builder<B, C>, C extends NBTComponent> extends SeparableComponent.Builder<B, C> {
         @Contract("_ -> this")
-        @NotNull
-        B nbtPath(@NotNull String nbtPath);
+        @NotNull B nbtPath(@NotNull String nbtPath);
 
         @Contract("-> this")
         default @NotNull B interpret() {
@@ -55,7 +50,6 @@ public interface NBTComponent extends SeparableComponent {
         }
 
         @Contract("_ -> this")
-        @NotNull
-        B interpret(boolean interpret);
+        @NotNull B interpret(boolean interpret);
     }
 }

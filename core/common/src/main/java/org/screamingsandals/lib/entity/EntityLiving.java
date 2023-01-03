@@ -142,17 +142,13 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
     void setHealth(double health);
 
-    @Nullable
-    Item getHelmet();
+    @Nullable Item getHelmet();
 
-    @Nullable
-    Item getChestplate();
+    @Nullable Item getChestplate();
 
-    @Nullable
-    Item getLeggings();
+    @Nullable Item getLeggings();
 
-    @Nullable
-    Item getBoots();
+    @Nullable Item getBoots();
 
     void setHelmet(@Nullable Item helmet);
 
@@ -162,13 +158,11 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
     void setBoots(@Nullable Item boots);
 
-    @Nullable
-    Item getItemInMainHand();
+    @Nullable Item getItemInMainHand();
 
     void setItemInMainHand(@Nullable Item item);
 
-    @Nullable
-    Item getItemInOffHand();
+    @Nullable Item getItemInOffHand();
 
     void setItemInOffHand(@Nullable Item item);
 

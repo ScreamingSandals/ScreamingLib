@@ -83,10 +83,10 @@ public interface BossBar extends Wrapper, RawValueHolder {
         @NotNull Builder division(@NotNull BossBarDivision division);
 
         @Contract("_ -> this")
-        @NotNull Builder flags(@NotNull Collection<BossBarFlag> flags);
+        @NotNull Builder flags(@NotNull Collection<@NotNull BossBarFlag> flags);
 
         @Contract("_ -> this")
-        @NotNull Builder flags(@NotNull BossBarFlag... flags);
+        @NotNull Builder flags(@NotNull BossBarFlag @NotNull... flags);
 
         @Contract("_ -> this")
         @NotNull Builder listener(@NotNull BossBarListener listener);

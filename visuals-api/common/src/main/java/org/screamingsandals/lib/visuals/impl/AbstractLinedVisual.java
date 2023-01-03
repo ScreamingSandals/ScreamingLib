@@ -43,7 +43,7 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
     }
 
     @Override
-    public @Nullable Map.Entry<Integer, TextEntry> lineByIdentifier(@NotNull String identifier) {
+    public Map.@Nullable Entry<Integer, TextEntry> lineByIdentifier(@NotNull String identifier) {
         return lines.entrySet()
                 .stream()
                 .filter(next -> next.getValue().getIdentifier().equals(identifier))

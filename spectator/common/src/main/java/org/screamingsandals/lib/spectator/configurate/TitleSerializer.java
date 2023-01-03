@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.spectator.configurate;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.title.Title;
@@ -27,26 +28,23 @@ import java.lang.reflect.Type;
 import java.time.Duration;
 
 public class TitleSerializer implements TypeSerializer<Title> {
-    public static final TitleSerializer INSTANCE = new TitleSerializer();
+    public static final @NotNull TitleSerializer INSTANCE = new TitleSerializer();
 
-    private static final String TITLE_KEY = "title";
-    private static final String SUBTITLE_KEY = "subtitle";
-    private static final String TIMES_KEY = "times";
-    private static final String FADE_IN_KEY = "fade-in";
-    private static final String STAY_KEY = "stay";
-    private static final String FADE_OUT_KEY = "fade-out";
+    private static final @NotNull String TITLE_KEY = "title";
+    private static final @NotNull String SUBTITLE_KEY = "subtitle";
+    private static final @NotNull String TIMES_KEY = "times";
+    private static final @NotNull String FADE_IN_KEY = "fade-in";
+    private static final @NotNull String STAY_KEY = "stay";
+    private static final @NotNull String FADE_OUT_KEY = "fade-out";
 
     @Override
-    public Title deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull Title deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             var title = node.node(TITLE_KEY).get(Component.class, Component.empty());
             var subtitle = node.node(SUBTITLE_KEY).get(Component.class, Component.empty());
-            @Nullable
-            var fadeIn = node.node(TIMES_KEY, FADE_IN_KEY).get(Duration.class);
-            @Nullable
-            var stay = node.node(TIMES_KEY, STAY_KEY).get(Duration.class);
-            @Nullable
-            var fadeOut = node.node(TIMES_KEY, FADE_OUT_KEY).get(Duration.class);
+            @Nullable var fadeIn = node.node(TIMES_KEY, FADE_IN_KEY).get(Duration.class);
+            @Nullable var stay = node.node(TIMES_KEY, STAY_KEY).get(Duration.class);
+            @Nullable var fadeOut = node.node(TIMES_KEY, FADE_OUT_KEY).get(Duration.class);
             return Title.builder()
                     .title(title)
                     .subtitle(subtitle)
@@ -60,7 +58,7 @@ public class TitleSerializer implements TypeSerializer<Title> {
     }
 
     @Override
-    public void serialize(Type type, @Nullable Title obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable Title obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

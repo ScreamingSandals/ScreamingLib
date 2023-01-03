@@ -21,11 +21,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 public interface TreeInspectorKey<T extends Tag> {
-    static @NotNull <T extends Tag> TreeInspectorKey<T> of(@NotNull Class<T> tagClass, @NotNull String @NotNull... tagKeys) {
+    static <T extends Tag> @NotNull TreeInspectorKey<T> of(@NotNull Class<T> tagClass, @NotNull String @NotNull... tagKeys) {
         return new TreeInspectorKeyImpl<>(tagClass, tagKeys);
     }
 
-    static @NotNull <T extends Tag> TreeInspectorKeyLazyImpl<T> of(@NotNull Class<T> tagClass, @NotNull Supplier<@NotNull String @NotNull []> tagKeysSupplier) {
+    static <T extends Tag> @NotNull TreeInspectorKeyLazyImpl<T> of(@NotNull Class<T> tagClass, @NotNull Supplier<@NotNull String @NotNull []> tagKeysSupplier) {
         return new TreeInspectorKeyLazyImpl<>(tagClass, tagKeysSupplier);
     }
 

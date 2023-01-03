@@ -35,7 +35,7 @@ public class AdventureKeybindComponent extends AdventureComponent implements Key
     }
 
     @Override
-    public @NotNull KeybindComponent.Builder toBuilder() {
+    public KeybindComponent.@NotNull Builder toBuilder() {
         return new AdventureKeybindBuilder(((net.kyori.adventure.text.KeybindComponent) wrappedObject).toBuilder());
     }
 
@@ -51,7 +51,7 @@ public class AdventureKeybindComponent extends AdventureComponent implements Key
         }
 
         @Override
-        public @NotNull KeybindComponent.Builder keybind(@NotNull String keybind) {
+        public KeybindComponent.@NotNull Builder keybind(@NotNull String keybind) {
             getBuilder().keybind(keybind);
             return self();
         }

@@ -28,13 +28,13 @@ import java.util.function.BooleanSupplier;
 @Data
 public class LazyBooleanPlaceholder implements Placeholder {
     @Pattern("[a-z\\d_-]+")
-    private final String name;
-    private final BooleanSupplier supplier;
+    private final @NotNull String name;
+    private final @NotNull BooleanSupplier supplier;
 
     // addition: custom strings for true/false
     @SuppressWarnings("unchecked")
     @Override
-    public @NotNull <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
         var value = supplier.getAsBoolean();
 
         if (arguments.size() == 2) {

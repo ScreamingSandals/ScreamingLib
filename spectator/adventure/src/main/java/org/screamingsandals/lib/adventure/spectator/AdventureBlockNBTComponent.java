@@ -37,7 +37,7 @@ public class AdventureBlockNBTComponent extends AdventureNBTComponent<net.kyori.
     }
 
     @Override
-    public @NotNull BlockNBTComponent.Builder toBuilder() {
+    public BlockNBTComponent.@NotNull Builder toBuilder() {
         return new AdventureBlockNBTBuilder(((net.kyori.adventure.text.BlockNBTComponent) wrappedObject).toBuilder());
     }
 
@@ -68,7 +68,7 @@ public class AdventureBlockNBTComponent extends AdventureNBTComponent<net.kyori.
         }
 
         @Override
-        public @NotNull BlockNBTComponent.Builder blockPosition(@NotNull String blockPosition) {
+        public BlockNBTComponent.@NotNull Builder blockPosition(@NotNull String blockPosition) {
             getBuilder().pos(net.kyori.adventure.text.BlockNBTComponent.Pos.fromString(blockPosition));
             return self();
         }

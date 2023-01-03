@@ -112,7 +112,7 @@ public final class ColorArgument<C> extends CommandArgument<C, Color> {
      * @param <C>  Command sender type
      * @return Created argument
      */
-    public static @NotNull <C> ColorArgument<C> of(final @NotNull String name) {
+    public static <C> @NotNull ColorArgument<C> of(final @NotNull String name) {
         return new ColorArgument<>(
                 true,
                 name,
@@ -127,7 +127,7 @@ public final class ColorArgument<C> extends CommandArgument<C, Color> {
      * @param <C>  Command sender type
      * @return Created argument
      */
-    public static @NotNull <C> ColorArgument<C> optional(final @NotNull String name) {
+    public static <C> @NotNull ColorArgument<C> optional(final @NotNull String name) {
         return new ColorArgument<>(
                 false,
                 name,
@@ -143,7 +143,7 @@ public final class ColorArgument<C> extends CommandArgument<C, Color> {
      * @param <C>          Command sender type
      * @return Created argument
      */
-    public static @NotNull <C> ColorArgument<C> optionalWithDefault(final @NotNull String name, final @NotNull String defaultValue) {
+    public static <C> @NotNull ColorArgument<C> optionalWithDefault(final @NotNull String name, final @NotNull String defaultValue) {
         return new ColorArgument<>(
                 false,
                 name,

@@ -35,7 +35,7 @@ public class AdventureTextComponent extends AdventureComponent implements TextCo
     }
 
     @Override
-    public @NotNull TextComponent.Builder toBuilder() {
+    public TextComponent.@NotNull Builder toBuilder() {
         return new AdventureTextBuilder(((net.kyori.adventure.text.TextComponent) wrappedObject).toBuilder());
     }
 

@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.spectator;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.bossbar.BossBar;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
@@ -29,59 +31,59 @@ import org.screamingsandals.lib.spectator.title.Title;
 
 @ApiStatus.Internal
 public interface SpectatorBackend {
-    Component empty();
+    @NotNull Component empty();
 
-    Component newLine();
+    @NotNull Component newLine();
 
-    Component space();
+    @NotNull Component space();
 
-    Component fromLegacy(String legacy);
+    @NotNull Component fromLegacy(@NotNull String legacy);
 
-    Component fromLegacy(String legacy, char colorChar);
+    @NotNull Component fromLegacy(@NotNull String legacy, char colorChar);
 
-    Component fromJson(String json);
+    @NotNull Component fromJson(@NotNull String json);
 
-    BlockNBTComponent.Builder blockNBT();
+    BlockNBTComponent.@NotNull Builder blockNBT();
 
-    EntityNBTComponent.Builder entityNBT();
+    EntityNBTComponent.@NotNull Builder entityNBT();
 
-    KeybindComponent.Builder keybind();
+    KeybindComponent.@NotNull Builder keybind();
 
-    ScoreComponent.Builder score();
+    ScoreComponent.@NotNull Builder score();
 
-    SelectorComponent.Builder selector();
+    SelectorComponent.@NotNull Builder selector();
 
-    StorageNBTComponent.Builder storageNBT();
+    StorageNBTComponent.@NotNull Builder storageNBT();
 
-    TextComponent.Builder text();
+    TextComponent.@NotNull Builder text();
 
-    TranslatableComponent.Builder translatable();
+    TranslatableComponent.@NotNull Builder translatable();
 
-    Color rgb(int red, int green, int blue);
+    @NotNull Color rgb(int red, int green, int blue);
 
-    Color named(String name);
+    @Nullable Color named(@NotNull String name);
 
-    Color hexOrName(String hex);
+    @NotNull Color hexOrName(@NotNull String hex);
 
-    Color nearestNamedTo(Color color);
+    @NotNull Color nearestNamedTo(@Nullable Color color);
 
-    BossBar.Builder bossBar();
+    BossBar.@NotNull Builder bossBar();
 
-    SoundStart.Builder soundStart();
+    SoundStart.@NotNull Builder soundStart();
 
-    SoundStop.Builder soundStop();
+    SoundStop.@NotNull Builder soundStop();
 
-    SoundSource soundSource(String source);
+    @NotNull SoundSource soundSource(@NotNull String source);
 
-    Title.Builder title();
+    Title.@NotNull Builder title();
 
-    Book.Builder book();
+    Book.@NotNull Builder book();
 
-    ClickEvent.Builder clickEvent();
+    ClickEvent.@NotNull Builder clickEvent();
 
-    HoverEvent.Builder hoverEvent();
+    HoverEvent.@NotNull Builder hoverEvent();
 
-    EntityContent.Builder entityContent();
+    EntityContent.@NotNull Builder entityContent();
 
-    ItemContent.Builder itemContent();
+    ItemContent.@NotNull Builder itemContent();
 }

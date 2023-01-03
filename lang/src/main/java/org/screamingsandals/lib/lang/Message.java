@@ -1529,7 +1529,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <M>          type of the {@link Messageable}
      * @return self
      */
-    public @NotNull <M extends Messageable> Message join(List<M> translations) {
+    public <M extends Messageable> @NotNull Message join(List<M> translations) {
         this.translations.addAll(translations);
         return this;
     }

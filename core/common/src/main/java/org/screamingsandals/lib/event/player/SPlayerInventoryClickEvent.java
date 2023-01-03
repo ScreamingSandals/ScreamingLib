@@ -25,16 +25,13 @@ import org.screamingsandals.lib.utils.*;
 
 public interface SPlayerInventoryClickEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    @Nullable
-    Item cursorItem();
+    @Nullable Item cursorItem();
 
-    @Nullable
-    Item currentItem();
+    @Nullable Item currentItem();
 
     void currentItem(Item currentItem);
 
-    @Nullable
-    Container clickedInventory();
+    @Nullable Container clickedInventory();
 
     // Who tf called this method getContainer()?
     @Deprecated

@@ -49,8 +49,7 @@ public interface NPC extends TouchableVisual<NPC> {
      * @return a list containing text entries for the NPC name, null if not set
      * @see NPC#displayName(List) for setting the display name
      */
-    @Nullable
-    List<TextEntry> displayName();
+    @Nullable List<TextEntry> displayName();
 
     /**
      * Gets the skin of this NPC.

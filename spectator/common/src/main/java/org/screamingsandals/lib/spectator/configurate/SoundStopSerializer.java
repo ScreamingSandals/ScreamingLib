@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.spectator.configurate;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
@@ -27,13 +28,13 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 
 public class SoundStopSerializer implements TypeSerializer<SoundStop> {
-    public static final SoundStopSerializer INSTANCE = new SoundStopSerializer();
+    public static final @NotNull SoundStopSerializer INSTANCE = new SoundStopSerializer();
 
-    private static final String SOUND_KEY = "sound";
-    private static final String SOURCE_KEY = "source";
+    private static final @NotNull String SOUND_KEY = "sound";
+    private static final @NotNull String SOURCE_KEY = "source";
 
     @Override
-    public SoundStop deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull SoundStop deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             if (node.empty()) {
                 return SoundStop.builder().build();
@@ -57,7 +58,7 @@ public class SoundStopSerializer implements TypeSerializer<SoundStop> {
     }
 
     @Override
-    public void serialize(Type type, @Nullable SoundStop obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable SoundStop obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

@@ -46,17 +46,17 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import java.util.ArrayList;
 
 public class BukkitPlayerAdapter extends BukkitAdapter implements PlayerAdapter {
-    public BukkitPlayerAdapter(PlayerAudience owner, Player commandSender) {
+    public BukkitPlayerAdapter(@NotNull PlayerAudience owner, @NotNull Player commandSender) {
         super(owner, commandSender);
     }
 
     @Override
-    public PlayerAudience owner() {
+    public @NotNull PlayerAudience owner() {
         return (PlayerAudience) super.owner();
     }
 
     @Override
-    public Player commandSender() {
+    public @NotNull Player commandSender() {
         return (Player) super.commandSender();
     }
 

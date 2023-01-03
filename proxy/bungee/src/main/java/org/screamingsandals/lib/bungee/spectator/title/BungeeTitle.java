@@ -122,7 +122,7 @@ public class BungeeTitle implements Title {
     }
 
     @Override
-    public @NotNull Title.Builder toBuilder() {
+    public Title.@NotNull Builder toBuilder() {
         return new BungeeTitleBuilder(title, subtitle, fadeIn, stay, fadeOut);
     }
 

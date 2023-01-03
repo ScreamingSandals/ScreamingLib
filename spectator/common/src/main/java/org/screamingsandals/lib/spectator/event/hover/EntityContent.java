@@ -27,34 +27,27 @@ import java.util.UUID;
 
 public interface EntityContent extends Content, EntityContentLike {
     @Contract(value = "-> new", pure = true)
-    static @NotNull EntityContent.Builder builder() {
+    static EntityContent.@NotNull Builder builder() {
         return Spectator.getBackend().entityContent();
     }
 
-    @NotNull
-    UUID id();
+    @NotNull UUID id();
 
     @Contract(pure = true)
-    @NotNull
-    EntityContent withId(@NotNull UUID id);
+    @NotNull EntityContent withId(@NotNull UUID id);
 
-    @NotNull
-    NamespacedMappingKey type();
+    @NotNull NamespacedMappingKey type();
 
     @Contract(pure = true)
-    @NotNull
-    EntityContent withType(@NotNull NamespacedMappingKey type);
+    @NotNull EntityContent withType(@NotNull NamespacedMappingKey type);
 
-    @Nullable
-    Component name();
+    @Nullable Component name();
 
     @Contract(pure = true)
-    @NotNull
-    EntityContent withType(@Nullable Component name);
+    @NotNull EntityContent withType(@Nullable Component name);
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    EntityContent.Builder toBuilder();
+    EntityContent.@NotNull Builder toBuilder();
 
     @Override
     default @NotNull EntityContent asEntityContent() {
@@ -68,19 +61,15 @@ public interface EntityContent extends Content, EntityContentLike {
 
     interface Builder {
         @Contract("_ -> this")
-        @NotNull
-        Builder id(@NotNull UUID id);
+        @NotNull Builder id(@NotNull UUID id);
 
         @Contract("_ -> this")
-        @NotNull
-        Builder type(@NotNull NamespacedMappingKey type);
+        @NotNull Builder type(@NotNull NamespacedMappingKey type);
 
         @Contract("_ -> this")
-        @NotNull
-        Builder name(@Nullable Component name);
+        @NotNull Builder name(@Nullable Component name);
 
         @Contract(value = "-> new", pure = true)
-        @NotNull
-        EntityContent build();
+        @NotNull EntityContent build();
     }
 }

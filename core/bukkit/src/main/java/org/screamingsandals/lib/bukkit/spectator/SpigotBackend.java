@@ -20,6 +20,8 @@ import org.bukkit.SoundCategory;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.spectator.audience.adapter.BukkitAdapter;
 import org.screamingsandals.lib.bukkit.spectator.audience.adapter.BukkitConsoleAdapter;
 import org.screamingsandals.lib.bukkit.spectator.audience.adapter.BukkitPlayerAdapter;
@@ -71,7 +73,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public BossBar.Builder bossBar() {
+    public BossBar.@NotNull Builder bossBar() {
         if (adventureBackend != null) {
             return adventureBackend.bossBar();
         }
@@ -80,7 +82,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public SoundStart.Builder soundStart() {
+    public SoundStart.@NotNull Builder soundStart() {
         if (adventureBackend != null) {
             return adventureBackend.soundStart();
         }
@@ -89,7 +91,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public SoundStop.Builder soundStop() {
+    public SoundStop.@NotNull Builder soundStop() {
         if (adventureBackend != null) {
             return adventureBackend.soundStop();
         }
@@ -98,7 +100,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public SoundSource soundSource(String source) {
+    public @NotNull SoundSource soundSource(@NotNull String source) {
         if (adventureBackend != null) {
             return adventureBackend.soundSource(source);
         }
@@ -115,7 +117,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public Title.Builder title() {
+    public Title.@NotNull Builder title() {
         if (adventureBackend != null) {
             return adventureBackend.title();
         }
@@ -124,7 +126,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public Book.Builder book() {
+    public Book.@NotNull Builder book() {
         if (adventureBackend != null) {
             return adventureBackend.book();
         }
@@ -133,7 +135,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public Component empty() {
+    public @NotNull Component empty() {
         if (adventureBackend != null) {
             return adventureBackend.empty();
         }
@@ -142,7 +144,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public Component newLine() {
+    public @NotNull Component newLine() {
         if (adventureBackend != null) {
             return adventureBackend.newLine();
         }
@@ -151,7 +153,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public Component space() {
+    public @NotNull Component space() {
         if (adventureBackend != null) {
             return adventureBackend.space();
         }
@@ -160,7 +162,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public BlockNBTComponent.Builder blockNBT() {
+    public BlockNBTComponent.@NotNull Builder blockNBT() {
         if (adventureBackend != null) {
             return adventureBackend.blockNBT();
         }
@@ -169,7 +171,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public EntityNBTComponent.Builder entityNBT() {
+    public EntityNBTComponent.@NotNull Builder entityNBT() {
         if (adventureBackend != null) {
             return adventureBackend.entityNBT();
         }
@@ -178,7 +180,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public KeybindComponent.Builder keybind() {
+    public KeybindComponent.@NotNull Builder keybind() {
         if (adventureBackend != null) {
             return adventureBackend.keybind();
         }
@@ -187,7 +189,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public ScoreComponent.Builder score() {
+    public ScoreComponent.@NotNull Builder score() {
         if (adventureBackend != null) {
             return adventureBackend.score();
         }
@@ -196,7 +198,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public SelectorComponent.Builder selector() {
+    public SelectorComponent.@NotNull Builder selector() {
         if (adventureBackend != null) {
             return adventureBackend.selector();
         }
@@ -205,7 +207,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public StorageNBTComponent.Builder storageNBT() {
+    public StorageNBTComponent.@NotNull Builder storageNBT() {
         if (adventureBackend != null) {
             return adventureBackend.storageNBT();
         }
@@ -214,7 +216,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public TextComponent.Builder text() {
+    public TextComponent.@NotNull Builder text() {
         if (adventureBackend != null) {
             return adventureBackend.text();
         }
@@ -223,7 +225,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public TranslatableComponent.Builder translatable() {
+    public TranslatableComponent.@NotNull Builder translatable() {
         if (adventureBackend != null) {
             return adventureBackend.translatable();
         }
@@ -232,7 +234,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public Color rgb(int red, int green, int blue) {
+    public @NotNull Color rgb(int red, int green, int blue) {
         if (adventureBackend != null) {
             return adventureBackend.rgb(red, green, blue);
         }
@@ -241,7 +243,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public Color named(String name) {
+    public @Nullable Color named(@NotNull String name) {
         if (adventureBackend != null) {
             return adventureBackend.named(name);
         }
@@ -250,7 +252,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public Color hexOrName(String hex) {
+    public @NotNull Color hexOrName(@NotNull String hex) {
         if (adventureBackend != null) {
             return adventureBackend.hexOrName(hex);
         }
@@ -259,7 +261,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public Color nearestNamedTo(Color color) {
+    public @NotNull Color nearestNamedTo(@Nullable Color color) {
         if (adventureBackend != null) {
             return adventureBackend.nearestNamedTo(color);
         }
@@ -268,7 +270,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public ClickEvent.Builder clickEvent() {
+    public ClickEvent.@NotNull Builder clickEvent() {
         if (adventureBackend != null) {
             return adventureBackend.clickEvent();
         }
@@ -277,7 +279,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public HoverEvent.Builder hoverEvent() {
+    public HoverEvent.@NotNull Builder hoverEvent() {
         if (adventureBackend != null) {
             return adventureBackend.hoverEvent();
         }
@@ -286,7 +288,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public EntityContent.Builder entityContent() {
+    public EntityContent.@NotNull Builder entityContent() {
         if (adventureBackend != null) {
             return adventureBackend.entityContent();
         }
@@ -295,7 +297,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public ItemContent.Builder itemContent() {
+    public ItemContent.@NotNull Builder itemContent() {
         if (adventureBackend != null) {
             return adventureBackend.itemContent();
         }
@@ -304,7 +306,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public Component fromLegacy(String legacy) {
+    public @NotNull Component fromLegacy(@NotNull String legacy) {
         if (adventureBackend != null) {
             return adventureBackend.fromLegacy(legacy);
         }
@@ -313,7 +315,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public Component fromLegacy(String legacy, char colorChar) {
+    public @NotNull Component fromLegacy(@NotNull String legacy, char colorChar) {
         if (adventureBackend != null) {
             return adventureBackend.fromLegacy(legacy, colorChar);
         }
@@ -322,7 +324,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @Override
-    public Component fromJson(String json) {
+    public @NotNull Component fromJson(@NotNull String json) {
         if (adventureBackend != null) {
             return adventureBackend.fromJson(json);
         }
@@ -331,7 +333,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @SuppressWarnings("unchecked")
-    public <A extends Adapter> A adapter(CommandSenderWrapper wrapper, CommandSender sender) {
+    public <A extends Adapter> @NotNull A adapter(@NotNull CommandSenderWrapper wrapper, @NotNull CommandSender sender) {
         if (adventureBackend != null) {
             return SpigotBackendAdventureExtension.adapter(wrapper, sender);
         }

@@ -36,8 +36,7 @@ public interface ComponentMessageThrowable extends ComponentLike {
         return null;
     }
 
-    @Nullable
-    Component componentMessage();
+    @Nullable Component componentMessage();
 
     @Override
     default @NotNull Component asComponent() {

@@ -32,12 +32,12 @@ import org.screamingsandals.lib.spectator.title.TimesProvider;
 import org.screamingsandals.lib.spectator.title.Title;
 
 public class AdventurePlayerAdapter extends AdventureAdapter implements PlayerAdapter {
-    public AdventurePlayerAdapter(@NotNull Audience wrappedObject, @Nullable PlayerAudience owner) {
+    public AdventurePlayerAdapter(@NotNull Audience wrappedObject, @NotNull PlayerAudience owner) {
         super(wrappedObject, owner);
     }
 
     @Override
-    public @Nullable PlayerAudience owner() {
+    public @NotNull PlayerAudience owner() {
         return (PlayerAudience) super.owner();
     }
 

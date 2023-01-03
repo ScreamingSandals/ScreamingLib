@@ -23,8 +23,7 @@ import org.screamingsandals.lib.item.Item;
 
 public interface SPlayerFoodLevelChangeEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    @Nullable
-    Item item();
+    @Nullable Item item();
 
     int foodLevel();
 

@@ -37,7 +37,7 @@ public class AdventureEntityNBTComponent extends AdventureNBTComponent<net.kyori
     }
 
     @Override
-    public @NotNull EntityNBTComponent.Builder toBuilder() {
+    public EntityNBTComponent.@NotNull Builder toBuilder() {
         return new AdventureEntityNBTBuilder(((net.kyori.adventure.text.EntityNBTComponent) wrappedObject).toBuilder());
     }
 
@@ -68,7 +68,7 @@ public class AdventureEntityNBTComponent extends AdventureNBTComponent<net.kyori
         }
 
         @Override
-        public @NotNull EntityNBTComponent.Builder selector(@NotNull String selector) {
+        public EntityNBTComponent.@NotNull Builder selector(@NotNull String selector) {
             getBuilder().selector(selector);
             return self();
         }

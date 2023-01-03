@@ -30,12 +30,12 @@ public interface ComponentLike extends ContentLike, ComponentBuilderApplicable {
     }
 
     @Override
-    default <C extends Component, B extends Component.Builder<B, C>> void apply(B builder) {
+    default <C extends Component, B extends Component.Builder<B, C>> void apply(@NotNull B builder) {
         builder.append(this.asComponent());
     }
 
     @Override
-    default Component applyTo(Component component) {
+    default @NotNull Component applyTo(@NotNull Component component) {
         return component.withAppendix(this.asComponent());
     }
 }

@@ -92,7 +92,7 @@ public interface PlayerAudience extends Audience {
         sendPlayerListHeaderFooter(Component.text(header, headerColor), Component.text(footer, footerColor));
     }
 
-    default void showTitle(@NotNull Title.Builder title) {
+    default void showTitle(Title.@NotNull Builder title) {
         showTitle(title.build());
     }
 
@@ -110,13 +110,13 @@ public interface PlayerAudience extends Audience {
 
     void hideBossBar(@NotNull BossBar bossBar);
 
-    default void playSound(@NotNull SoundStart.Builder sound) {
+    default void playSound(SoundStart.@NotNull Builder sound) {
         playSound(sound.build());
     }
 
     void playSound(@NotNull SoundStart sound);
 
-    default void playSound(@NotNull SoundStart.Builder sound, double x, double y, double z) {
+    default void playSound(SoundStart.@NotNull Builder sound, double x, double y, double z) {
         playSound(sound.build(), x, y, z);
     }
 
@@ -124,7 +124,7 @@ public interface PlayerAudience extends Audience {
 
     // TODO: Emitter??? it's relatively new in Adventure
 
-    default void stopSound(@NotNull SoundStart.Builder sound) {
+    default void stopSound(SoundStart.@NotNull Builder sound) {
         stopSound(sound.build());
     }
 
@@ -132,13 +132,13 @@ public interface PlayerAudience extends Audience {
         stopSound(SoundStop.namedSourced(sound.soundKey(), sound.source()));
     }
 
-    default void stopSound(@NotNull SoundStop.Builder sound) {
+    default void stopSound(SoundStop.@NotNull Builder sound) {
         stopSound(sound.build());
     }
 
     void stopSound(@NotNull SoundStop sound);
 
-    default void openBook(@NotNull Book.Builder book) {
+    default void openBook(Book.@NotNull Builder book) {
         openBook(book.build());
     }
 
@@ -147,7 +147,7 @@ public interface PlayerAudience extends Audience {
     @FunctionalInterface
     interface ForwardingToMulti extends PlayerAudience, Audience.ForwardingToMulti {
         @ApiStatus.OverrideOnly
-        @NotNull Iterable<? extends PlayerAudience> audiences();
+        @NotNull Iterable<? extends @NotNull PlayerAudience> audiences();
 
         @Override
         default void sendActionBar(@NotNull ComponentLike message) {

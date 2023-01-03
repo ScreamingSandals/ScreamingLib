@@ -29,12 +29,12 @@ import java.util.List;
 @Data
 public class DateTimePlaceholder implements Placeholder {
     @Pattern("[a-z\\d_-]+")
-    private final String name;
-    private final TemporalAccessor value;
+    private final @NotNull String name;
+    private final @NotNull TemporalAccessor value;
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NotNull <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
         if (arguments.size() >= 1) {
             try {
                 return (B) Component.text().content(DateTimeFormatter.ofPattern(arguments.get(0)).format(value));

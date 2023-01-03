@@ -744,8 +744,7 @@ public final class MinecraftHelp<C> {
          * @param args   args
          * @return component
          */
-        @NotNull
-        Component provide(@NotNull C sender, @NotNull String key, @NotNull String... args);
+        @NotNull Component provide(@NotNull C sender, @NotNull String key, @NotNull String... args);
 
     }
 

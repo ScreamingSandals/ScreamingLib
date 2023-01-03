@@ -30,8 +30,8 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 @Data
 @Accessors(fluent = true)
 public class BukkitAdapter implements Adapter {
-    private final Audience owner;
-    private final CommandSender commandSender;
+    private final @NotNull Audience owner;
+    private final @NotNull CommandSender commandSender;
 
     @Override
     public void sendMessage(@NotNull ComponentLike message) {

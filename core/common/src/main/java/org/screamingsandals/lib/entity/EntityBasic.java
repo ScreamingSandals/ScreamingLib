@@ -141,8 +141,7 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
         setCustomName(name.asComponent());
     }
 
-    @Nullable
-    Component getCustomName();
+    @Nullable Component getCustomName();
 
     void setCustomNameVisible(boolean flag);
 

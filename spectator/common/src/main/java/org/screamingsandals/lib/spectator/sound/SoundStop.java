@@ -31,54 +31,46 @@ public interface SoundStop extends Wrapper, RawValueHolder {
     }
 
     @Contract(value = "_ -> new", pure = true)
-    static @NotNull SoundStop named(NamespacedMappingKey soundKey) {
+    static @NotNull SoundStop named(@Nullable NamespacedMappingKey soundKey) {
         return builder().soundKey(soundKey).build();
     }
 
     @Contract(value = "_ -> new", pure = true)
-    static @NotNull SoundStop sourced(SoundSource source) {
+    static @NotNull SoundStop sourced(@Nullable SoundSource source) {
         return builder().source(source).build();
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    static @NotNull SoundStop namedSourced(NamespacedMappingKey soundKey, SoundSource source) {
+    static @NotNull SoundStop namedSourced(@Nullable NamespacedMappingKey soundKey, @Nullable SoundSource source) {
         return builder().soundKey(soundKey).source(source).build();
     }
 
     @Contract(value = "-> new", pure = true)
-    static @NotNull SoundStop.Builder builder() {
+    static SoundStop.@NotNull Builder builder() {
         return Spectator.getBackend().soundStop();
     }
 
-    @Nullable
-    NamespacedMappingKey soundKey();
+    @Nullable NamespacedMappingKey soundKey();
 
-    @Nullable
-    SoundSource source();
+    @Nullable SoundSource source();
 
     @Contract(pure = true)
-    @NotNull
-    SoundStop withSoundKey(@Nullable NamespacedMappingKey soundKey);
+    @NotNull SoundStop withSoundKey(@Nullable NamespacedMappingKey soundKey);
 
     @Contract(pure = true)
-    @NotNull
-    SoundStop withSource(@Nullable SoundSource source);
+    @NotNull SoundStop withSource(@Nullable SoundSource source);
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    SoundStop.Builder toBuilder();
+    SoundStop.@NotNull Builder toBuilder();
 
     interface Builder {
-        @NotNull
         @Contract("_ -> this")
-        Builder soundKey(@Nullable NamespacedMappingKey key);
+        @NotNull Builder soundKey(@Nullable NamespacedMappingKey key);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder source(@Nullable SoundSource source);
+        @NotNull Builder source(@Nullable SoundSource source);
 
-        @NotNull
         @Contract(value = "-> new", pure = true)
-        SoundStop build();
+        @NotNull SoundStop build();
     }
 }

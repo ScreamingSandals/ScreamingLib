@@ -111,8 +111,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @return the player's tab list name
      */
-    @Nullable
-    Component getPlayerListName();
+    @Nullable Component getPlayerListName();
 
     /**
      * Sets the player's display name.
@@ -133,8 +132,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @return the player's display name
      */
-    @NotNull
-    Component getDisplayName();
+    @NotNull Component getDisplayName();
 
     /**
      * Sets the player's display name.

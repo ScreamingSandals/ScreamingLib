@@ -31,55 +31,41 @@ public interface Book extends Wrapper, RawValueHolder {
         return Spectator.getBackend().book();
     }
 
-    @NotNull
-    Component title();
+    @NotNull Component title();
 
     @Contract(pure = true)
-    @NotNull
-    Book withTitle(@NotNull Component title);
+    @NotNull Book withTitle(@NotNull Component title);
 
-    @NotNull
-    Component author();
+    @NotNull Component author();
 
     @Contract(pure = true)
-    @NotNull
-    Book withAuthor(@NotNull Component author);
+    @NotNull Book withAuthor(@NotNull Component author);
 
-    @Unmodifiable
-    @NotNull
-    List<Component> pages();
+    @Unmodifiable @NotNull List<Component> pages();
 
     @Contract(pure = true)
-    @NotNull
-    Book withPages(@NotNull List<Component> pages);
+    @NotNull Book withPages(@NotNull List<Component> pages);
 
     @Contract(pure = true)
-    @NotNull
-    Book withPages(@NotNull Component... pages);
+    @NotNull Book withPages(@NotNull Component... pages);
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    Book.Builder toBuilder();
+    Book.@NotNull Builder toBuilder();
 
     interface Builder {
-        @NotNull
         @Contract("_ -> this")
-        Builder title(@NotNull Component title);
+        @NotNull Builder title(@NotNull Component title);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder author(@NotNull Component author);
+        @NotNull Builder author(@NotNull Component author);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder pages(@NotNull List<Component> pages);
+        @NotNull Builder pages(@NotNull List<Component> pages);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder pages(@NotNull Component... pages);
+        @NotNull Builder pages(@NotNull Component... pages);
 
-        @NotNull
         @Contract(value = "-> new", pure = true)
-        Book build();
+        @NotNull Book build();
     }
 }

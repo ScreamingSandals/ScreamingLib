@@ -17,10 +17,11 @@
 package org.screamingsandals.lib.spectator;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public interface ComponentBuilderApplicable {
-    <C extends Component, B extends Component.Builder<B, C>> void apply(B builder);
+    <C extends Component, B extends Component.Builder<B, C>> void apply(@NotNull B builder);
 
     @Contract(pure = true)
-    Component applyTo(Component component);
+    @NotNull Component applyTo(@NotNull Component component);
 }

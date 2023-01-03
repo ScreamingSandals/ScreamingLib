@@ -19,8 +19,7 @@ package org.screamingsandals.lib.entity;
 import org.jetbrains.annotations.Nullable;
 
 public interface EntityProjectile extends EntityBasic {
-    @Nullable
-    ProjectileShooter getShooter();
+    @Nullable ProjectileShooter getShooter();
 
     void setShooter(@Nullable ProjectileShooter shooter);
 }

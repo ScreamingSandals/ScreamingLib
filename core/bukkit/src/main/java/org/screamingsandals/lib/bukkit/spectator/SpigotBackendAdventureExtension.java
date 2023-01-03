@@ -177,7 +177,8 @@ class SpigotBackendAdventureExtension {
         return adventureBackend;
     }
 
-    static <A extends Adapter> A adapter(CommandSenderWrapper wrapper, CommandSender sender) {
+    @SuppressWarnings("unchecked")
+    static <A extends Adapter> @NotNull A adapter(@NotNull CommandSenderWrapper wrapper, @NotNull CommandSender sender) {
         if (sender instanceof Player && wrapper instanceof PlayerAudience) {
             return (A) new AdventurePlayerAdapter(sender, (PlayerAudience) wrapper);
         } else if (sender instanceof ConsoleCommandSender && wrapper instanceof ConsoleAudience) {

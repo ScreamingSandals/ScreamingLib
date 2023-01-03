@@ -36,7 +36,7 @@ public class ColorSerializer implements TypeSerializer<Color> {
     private static final @NotNull String BLUE_KEY_LEGACY_BUKKIT = "BLUE";
 
     @Override
-    public Color deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull Color deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             // TODO: numerical values to match Adventure
             if (node.isMap()) {
@@ -55,7 +55,7 @@ public class ColorSerializer implements TypeSerializer<Color> {
     }
 
     @Override
-    public void serialize(Type type, @Nullable Color color, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable Color color, @NotNull ConfigurationNode node) throws SerializationException {
         node.set(color == null ? null : color.toString());
     }
 }

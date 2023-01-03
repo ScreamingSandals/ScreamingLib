@@ -17,10 +17,11 @@
 package org.screamingsandals.lib.spectator.audience.adapter;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.audience.ConsoleAudience;
 
 @ApiStatus.Internal
 public interface ConsoleAdapter extends Adapter {
     @Override
-    ConsoleAudience owner();
+    @NotNull ConsoleAudience owner();
 }

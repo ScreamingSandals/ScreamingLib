@@ -31,12 +31,12 @@ import java.util.function.Supplier;
 @Data
 public class LazyNumberPlaceholder implements Placeholder {
     @Pattern("[a-z\\d_-]+")
-    private final String name;
-    private final Supplier<Number> supplier;
+    private final @NotNull String name;
+    private final @NotNull Supplier<@NotNull Number> supplier;
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NotNull <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
         var value = supplier.get();
 
         if (arguments.size() == 1) {

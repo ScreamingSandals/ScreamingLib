@@ -58,7 +58,7 @@ public class BukkitSoundStop implements SoundStop {
     }
 
     @Override
-    public @NotNull SoundStop.Builder toBuilder() {
+    public SoundStop.@NotNull Builder toBuilder() {
         return new BukkitSoundStartBuilder(soundKey, source);
     }
 

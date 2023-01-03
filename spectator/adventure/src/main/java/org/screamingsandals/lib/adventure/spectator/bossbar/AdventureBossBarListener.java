@@ -41,11 +41,11 @@ public class AdventureBossBarListener implements BossBar.Listener, RegisteredLis
     }
 
 
-    public void bossBarColorChanged(final @NotNull BossBar bar, final @NotNull BossBar.Color oldColor, final @NotNull BossBar.Color newColor) {
+    public void bossBarColorChanged(final @NotNull BossBar bar, final BossBar.@NotNull Color oldColor, final BossBar.@NotNull Color newColor) {
         listener.onColorChanged(new AdventureBossBar(bar), BossBarUtils.convertColor(oldColor), BossBarUtils.convertColor(newColor));
     }
 
-    public void bossBarOverlayChanged(final @NotNull BossBar bar, final @NotNull BossBar.Overlay oldOverlay, final @NotNull BossBar.Overlay newOverlay) {
+    public void bossBarOverlayChanged(final @NotNull BossBar bar, final BossBar.@NotNull Overlay oldOverlay, final BossBar.@NotNull Overlay newOverlay) {
         listener.onDivisionChanged(new AdventureBossBar(bar), BossBarUtils.convertDivision(oldOverlay), BossBarUtils.convertDivision(newOverlay));
     }
 

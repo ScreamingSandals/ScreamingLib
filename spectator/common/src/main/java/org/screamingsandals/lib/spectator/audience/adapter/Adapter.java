@@ -23,7 +23,7 @@ import org.screamingsandals.lib.spectator.audience.Audience;
 
 @ApiStatus.Internal
 public interface Adapter {
-    Audience owner();
+    @NotNull Audience owner();
 
     void sendMessage(@NotNull ComponentLike message);
 }

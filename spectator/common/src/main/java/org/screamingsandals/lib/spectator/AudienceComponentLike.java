@@ -30,9 +30,8 @@ public interface AudienceComponentLike extends ComponentLike {
      * @param audience audience
      * @return new component
      */
-    @NotNull
     @ApiStatus.Internal
-    Component asComponent(@Nullable Audience audience);
+    @NotNull Component asComponent(@Nullable Audience audience);
 
     /**
      * Resolves the component for specific audience. Should not be used with {@link Audience.ForwardingToMulti}.
@@ -45,15 +44,15 @@ public interface AudienceComponentLike extends ComponentLike {
         return List.of(asComponent(audience));
     }
 
-    static AudienceComponentLike empty() {
+    static @NotNull AudienceComponentLike empty() {
         return new StaticAudienceComponentLike(Component.empty());
     }
 
-    static AudienceComponentLike of(Component component) {
+    static @NotNull AudienceComponentLike of(@NotNull Component component) {
         return new StaticAudienceComponentLike(component);
     }
 
-    static AudienceComponentLike of(ComponentLike component) {
+    static @NotNull AudienceComponentLike of(@NotNull ComponentLike component) {
         if (component instanceof AudienceComponentLike) {
             return (AudienceComponentLike) component;
         }

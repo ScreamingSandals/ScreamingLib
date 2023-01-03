@@ -51,7 +51,7 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public @Unmodifiable List<Component> children() {
+    public @Unmodifiable @NotNull List<@NotNull Component> children() {
         return wrappedObject.children()
                 .stream()
                 .map(AdventureBackend::wrapComponent)
@@ -59,25 +59,25 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public @NotNull Component withChildren(@Nullable List<Component> children) {
+    public @NotNull Component withChildren(@Nullable List<@NotNull Component> children) {
         return AdventureBackend.wrapComponent(wrappedObject.children(
                 children == null ? List.of() : children.stream().map(component -> component.as(net.kyori.adventure.text.Component.class)
                 ).collect(Collectors.toList())));
     }
 
     @Override
-    public @NotNull Component withAppendix(Component component) {
+    public @NotNull Component withAppendix(@NotNull Component component) {
         return AdventureBackend.wrapComponent(wrappedObject.append(component.as(net.kyori.adventure.text.Component.class)));
     }
 
     @Override
-    public @NotNull Component withAppendix(ComponentLike component) {
+    public @NotNull Component withAppendix(@NotNull ComponentLike component) {
         return withAppendix(component.asComponent());
     }
 
     @Override
-    public @NotNull Component withAppendix(Component... components) {
-        if (components == null || components.length == 0) {
+    public @NotNull Component withAppendix(@NotNull Component @NotNull... components) {
+        if (components.length == 0) {
             return this;
         }
         var returnC = wrappedObject;
@@ -88,8 +88,8 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public @NotNull Component withAppendix(ComponentLike... components) {
-        if (components == null || components.length == 0) {
+    public @NotNull Component withAppendix(@NotNull ComponentLike @NotNull... components) {
+        if (components.length == 0) {
             return this;
         }
         var returnC = wrappedObject;
@@ -100,8 +100,8 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public @NotNull Component withAppendix(Collection<Component> components) {
-        if (components == null || components.isEmpty()) {
+    public @NotNull Component withAppendix(@NotNull Collection<@NotNull Component> components) {
+        if (components.isEmpty()) {
             return this;
         }
         var returnC = wrappedObject;
@@ -141,7 +141,7 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public TriState bold() {
+    public @NotNull TriState bold() {
         return fromAdventure(wrappedObject.style().decoration(TextDecoration.BOLD));
     }
 
@@ -151,12 +151,12 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public @NotNull Component withBold(TriState bold) {
+    public @NotNull Component withBold(@NotNull TriState bold) {
         return AdventureBackend.wrapComponent(wrappedObject.decoration(TextDecoration.BOLD, toAdventure(bold)));
     }
 
     @Override
-    public TriState italic() {
+    public @NotNull TriState italic() {
         return fromAdventure(wrappedObject.style().decoration(TextDecoration.ITALIC));
     }
 
@@ -166,12 +166,12 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public @NotNull Component withItalic(TriState italic) {
+    public @NotNull Component withItalic(@NotNull TriState italic) {
         return AdventureBackend.wrapComponent(wrappedObject.decoration(TextDecoration.ITALIC, toAdventure(italic)));
     }
 
     @Override
-    public TriState underlined() {
+    public @NotNull TriState underlined() {
         return fromAdventure(wrappedObject.style().decoration(TextDecoration.UNDERLINED));
     }
 
@@ -181,12 +181,12 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public @NotNull Component withUnderlined(TriState underlined) {
+    public @NotNull Component withUnderlined(@NotNull TriState underlined) {
         return AdventureBackend.wrapComponent(wrappedObject.decoration(TextDecoration.UNDERLINED, toAdventure(underlined)));
     }
 
     @Override
-    public TriState strikethrough() {
+    public @NotNull TriState strikethrough() {
         return fromAdventure(wrappedObject.style().decoration(TextDecoration.STRIKETHROUGH));
     }
 
@@ -196,12 +196,12 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public @NotNull Component withStrikethrough(TriState strikethrough) {
+    public @NotNull Component withStrikethrough(@NotNull TriState strikethrough) {
         return AdventureBackend.wrapComponent(wrappedObject.decoration(TextDecoration.STRIKETHROUGH, toAdventure(strikethrough)));
     }
 
     @Override
-    public TriState obfuscated() {
+    public @NotNull TriState obfuscated() {
         return fromAdventure(wrappedObject.style().decoration(TextDecoration.OBFUSCATED));
     }
 
@@ -211,7 +211,7 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public @NotNull Component withObfuscated(TriState obfuscated) {
+    public @NotNull Component withObfuscated(@NotNull TriState obfuscated) {
         return AdventureBackend.wrapComponent(wrappedObject.decoration(TextDecoration.OBFUSCATED, toAdventure(obfuscated)));
     }
 
@@ -274,17 +274,17 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public String toLegacy() {
+    public @NotNull String toLegacy() {
         return AdventureBackend.getLegacyComponentSerializer().serialize(wrappedObject);
     }
 
     @Override
-    public String toPlainText() {
+    public @NotNull String toPlainText() {
         return AdventureBackend.getPlainTextComponentSerializer().serialize(wrappedObject);
     }
 
     @Override
-    public String toJavaJson() {
+    public @NotNull String toJavaJson() {
         return AdventureBackend.getGsonComponentSerializer().serialize(wrappedObject);
     }
 
@@ -305,142 +305,142 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     @RequiredArgsConstructor
     @Data
     public abstract static class AdventureBuilder<A extends BuildableComponent<A, D>, B extends Builder<B, C>, C extends Component, D extends ComponentBuilder<A, D>> implements Builder<B, C> {
-        private final D builder;
+        private final @NotNull D builder;
 
         @SuppressWarnings("unchecked")
-        protected B self() {
+        protected @NotNull B self() {
             return (B) this;
         }
 
         @Override
-        public B color(Color color) {
+        public @NotNull B color(@NotNull Color color) {
             builder.color(color.as(TextColor.class));
             return self();
         }
 
         @Override
-        public B append(Component component) {
+        public @NotNull B append(@NotNull Component component) {
             builder.append(component.as(net.kyori.adventure.text.Component.class));
             return self();
         }
 
         @Override
-        public B append(ComponentLike component) {
+        public @NotNull B append(@NotNull ComponentLike component) {
             builder.append(component.asComponent().as(net.kyori.adventure.text.Component.class));
             return self();
         }
 
         @Override
-        public B append(Component... components) {
+        public @NotNull B append(@NotNull Component @NotNull ... components) {
             builder.append(Arrays.stream(components).map(component -> component.as(net.kyori.adventure.text.Component.class)).collect(Collectors.toList()));
             return self();
         }
 
         @Override
-        public B append(ComponentLike... components) {
+        public @NotNull B append(@NotNull ComponentLike @NotNull ... components) {
             builder.append(Arrays.stream(components).map(component -> component.asComponent().as(net.kyori.adventure.text.Component.class)).collect(Collectors.toList()));
             return self();
         }
 
         @Override
-        public B append(Collection<Component> components) {
+        public @NotNull B append(@NotNull Collection<@NotNull Component> components) {
             builder.append(components.stream().map(component -> component.as(net.kyori.adventure.text.Component.class)).collect(Collectors.toList()));
             return self();
         }
 
         @SuppressWarnings("PatternValidation")
         @Override
-        public B font(NamespacedMappingKey font) {
+        public @NotNull B font(@Nullable NamespacedMappingKey font) {
             builder.font(font == null ? null : Key.key(font.toString()));
             return self();
         }
 
         @Override
-        public B bold(boolean bold) {
+        public @NotNull B bold(boolean bold) {
             builder.decoration(TextDecoration.BOLD, bold);
             return self();
         }
 
         @Override
-        public B bold(TriState bold) {
+        public @NotNull B bold(@NotNull TriState bold) {
             builder.decoration(TextDecoration.BOLD, toAdventure(bold));
             return self();
         }
 
         @Override
-        public B italic(boolean italic) {
+        public @NotNull B italic(boolean italic) {
             builder.decoration(TextDecoration.ITALIC, italic);
             return self();
         }
 
         @Override
-        public B italic(TriState italic) {
+        public @NotNull B italic(@NotNull TriState italic) {
             builder.decoration(TextDecoration.ITALIC, toAdventure(italic));
             return self();
         }
 
         @Override
-        public B underlined(boolean underlined) {
+        public @NotNull B underlined(boolean underlined) {
             builder.decoration(TextDecoration.UNDERLINED, underlined);
             return self();
         }
 
         @Override
-        public B underlined(TriState underlined) {
+        public @NotNull B underlined(@NotNull TriState underlined) {
             builder.decoration(TextDecoration.UNDERLINED, toAdventure(underlined));
             return self();
         }
 
         @Override
-        public B strikethrough(boolean strikethrough) {
+        public @NotNull B strikethrough(boolean strikethrough) {
             builder.decoration(TextDecoration.STRIKETHROUGH, strikethrough);
             return self();
         }
 
         @Override
-        public B strikethrough(TriState strikethrough) {
+        public @NotNull B strikethrough(@NotNull TriState strikethrough) {
             builder.decoration(TextDecoration.STRIKETHROUGH, toAdventure(strikethrough));
             return self();
         }
 
         @Override
-        public B obfuscated(boolean obfuscated) {
+        public @NotNull B obfuscated(boolean obfuscated) {
             builder.decoration(TextDecoration.OBFUSCATED, obfuscated);
             return self();
         }
 
         @Override
-        public B obfuscated(TriState obfuscated) {
+        public @NotNull B obfuscated(@NotNull TriState obfuscated) {
             builder.decoration(TextDecoration.OBFUSCATED, toAdventure(obfuscated));
             return self();
         }
 
         @Override
-        public B insertion(@Nullable String insertion) {
+        public @NotNull B insertion(@Nullable String insertion) {
             builder.insertion(insertion);
             return self();
         }
 
         @Override
-        public B hoverEvent(@Nullable HoverEvent event) {
+        public @NotNull B hoverEvent(@Nullable HoverEvent event) {
             builder.hoverEvent(event == null ? null : event.as(net.kyori.adventure.text.event.HoverEvent.class));
             return self();
         }
 
         @Override
-        public B hoverEvent(@Nullable ItemContent itemContent) {
+        public @NotNull B hoverEvent(@Nullable ItemContent itemContent) {
             builder.hoverEvent(itemContent == null ? null : net.kyori.adventure.text.event.HoverEvent.showItem(itemContent.as(net.kyori.adventure.text.event.HoverEvent.ShowItem.class)));
             return self();
         }
 
         @Override
-        public B hoverEvent(@Nullable EntityContent entityContent) {
+        public @NotNull B hoverEvent(@Nullable EntityContent entityContent) {
             builder.hoverEvent(entityContent == null ? null : net.kyori.adventure.text.event.HoverEvent.showEntity(entityContent.as(net.kyori.adventure.text.event.HoverEvent.ShowEntity.class)));
             return self();
         }
 
         @Override
-        public B hoverEvent(@Nullable ComponentLike component) {
+        public @NotNull B hoverEvent(@Nullable ComponentLike component) {
             if (component != null) {
                 hoverEvent(component.asComponent());
             }
@@ -448,13 +448,13 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
         }
 
         @Override
-        public B hoverEvent(@Nullable Component component) {
+        public @NotNull B hoverEvent(@Nullable Component component) {
             builder.hoverEvent(component == null ? null : net.kyori.adventure.text.event.HoverEvent.showText(component.as(net.kyori.adventure.text.Component.class)));
             return self();
         }
 
         @Override
-        public B clickEvent(@Nullable ClickEvent event) {
+        public @NotNull B clickEvent(@Nullable ClickEvent event) {
             builder.clickEvent(event == null ? null : event.as(net.kyori.adventure.text.event.ClickEvent.class));
             return self();
         }
@@ -467,12 +467,12 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
 
         @SuppressWarnings("unchecked")
         @Override
-        public C build() {
+        public @NotNull C build() {
             return (C) AdventureBackend.wrapComponent(builder.build());
         }
     }
 
-    private static TriState fromAdventure(TextDecoration.State state) {
+    private static @NotNull TriState fromAdventure(TextDecoration.@NotNull State state) {
         switch (state) {
             case TRUE:
                 return TriState.TRUE;
@@ -483,7 +483,7 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
         }
     }
 
-    private static TextDecoration.State toAdventure(TriState state) {
+    private static TextDecoration.@NotNull State toAdventure(@NotNull TriState state) {
         switch (state) {
             case TRUE:
                 return TextDecoration.State.TRUE;

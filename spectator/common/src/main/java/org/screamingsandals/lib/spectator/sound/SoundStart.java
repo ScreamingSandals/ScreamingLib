@@ -27,7 +27,7 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 public interface SoundStart extends Wrapper, RawValueHolder {
     @Contract(value = "_, _, _, _ -> new", pure = true)
-    static @NotNull SoundStart sound(NamespacedMappingKey soundKey, SoundSource soundSource, float volume, float pitch) {
+    static @NotNull SoundStart sound(@NotNull NamespacedMappingKey soundKey, @NotNull SoundSource soundSource, float volume, float pitch) {
         return builder()
                 .soundKey(soundKey)
                 .source(soundSource)
@@ -37,73 +37,58 @@ public interface SoundStart extends Wrapper, RawValueHolder {
     }
 
     @Contract(value = "-> new", pure = true)
-    static @NotNull SoundStart.Builder builder() {
+    static SoundStart.@NotNull Builder builder() {
         return Spectator.getBackend().soundStart();
     }
 
-    @NotNull
-    NamespacedMappingKey soundKey();
+    @NotNull NamespacedMappingKey soundKey();
 
     @Contract(pure = true)
-    @NotNull
-    SoundStart withSoundKey(@NotNull NamespacedMappingKey soundKey);
+    @NotNull SoundStart withSoundKey(@NotNull NamespacedMappingKey soundKey);
 
-    @NotNull
-    SoundSource source();
+    @NotNull SoundSource source();
 
     @Contract(pure = true)
-    @NotNull
-    SoundStart withSource(@NotNull SoundSource source);
+    @NotNull SoundStart withSource(@NotNull SoundSource source);
 
     float volume();
 
     @Contract(pure = true)
-    @NotNull
-    SoundStart withVolume(float volume);
+    @NotNull SoundStart withVolume(float volume);
 
     float pitch();
 
     @Contract(pure = true)
-    @NotNull
-    SoundStart withPitch(float pitch);
+    @NotNull SoundStart withPitch(float pitch);
 
     @LimitedVersionSupport(">= 1.19")
-    @Nullable
-    Long seed();
+    @Nullable Long seed();
 
     @Contract(pure = true)
-    @NotNull
     @LimitedVersionSupport(">= 1.19")
-    SoundStart withSeed(@Nullable Long seed);
+    @NotNull SoundStart withSeed(@Nullable Long seed);
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    SoundStart.Builder toBuilder();
+    SoundStart.@NotNull Builder toBuilder();
 
     interface Builder {
-        @NotNull
         @Contract("_ -> this")
-        Builder soundKey(@NotNull NamespacedMappingKey key);
+        @NotNull Builder soundKey(@NotNull NamespacedMappingKey key);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder source(@NotNull SoundSource source);
+        @NotNull Builder source(@NotNull SoundSource source);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder volume(float volume);
+        @NotNull Builder volume(float volume);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder pitch(float pitch);
+        @NotNull Builder pitch(float pitch);
 
-        @NotNull
         @Contract("_ -> this")
         @LimitedVersionSupport(">= 1.19")
-        Builder seed(@Nullable Long seed);
+        @NotNull Builder seed(@Nullable Long seed);
 
-        @NotNull
         @Contract(value = "-> new", pure = true)
-        SoundStart build();
+        @NotNull SoundStart build();
     }
 }

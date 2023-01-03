@@ -60,7 +60,7 @@ public class AdventureClickEvent extends BasicWrapper<net.kyori.adventure.text.e
     }
 
     @Override
-    public @NotNull ClickEvent.Builder toBuilder() {
+    public ClickEvent.@NotNull Builder toBuilder() {
         return new AdventureClickEventBuilder(action(), value());
     }
 

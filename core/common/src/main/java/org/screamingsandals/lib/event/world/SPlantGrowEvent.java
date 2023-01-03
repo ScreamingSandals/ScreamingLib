@@ -31,8 +31,7 @@ public interface SPlantGrowEvent extends SCancellableEvent, PlatformEventWrapper
 
     LocationHolder getLocation();
 
-    @Nullable
-    PlayerWrapper player();
+    @Nullable PlayerWrapper player();
 
     boolean boneMealed();
 }

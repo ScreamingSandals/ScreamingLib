@@ -56,7 +56,7 @@ public interface SPlayerLoginEvent extends SPlayerEvent, PlatformEventWrapper {
      * @param result New result for disallowing the player
      * @param message Kick message to display to the user
      */
-    default void disallow(final @NotNull SAsyncPlayerPreLoginEvent.Result result, final @NotNull Component message) {
+    default void disallow(final SAsyncPlayerPreLoginEvent.@NotNull Result result, final @NotNull Component message) {
         result(result);
         message(message);
     }

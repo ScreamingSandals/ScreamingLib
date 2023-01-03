@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.utils;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public enum TriState {
@@ -23,11 +24,11 @@ public enum TriState {
     FALSE,
     INITIAL;
 
-    public static TriState fromBoolean(boolean bool) {
+    public static @NotNull TriState fromBoolean(boolean bool) {
         return bool ? TRUE : FALSE;
     }
 
-    public static TriState fromBoolean(@Nullable Boolean bool) {
+    public static @NotNull TriState fromBoolean(@Nullable Boolean bool) {
         return bool == null ? INITIAL : (bool ? TRUE : FALSE);
     }
 

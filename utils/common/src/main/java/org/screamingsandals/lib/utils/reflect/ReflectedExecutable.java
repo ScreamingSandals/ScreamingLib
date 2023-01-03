@@ -80,7 +80,6 @@ public interface ReflectedExecutable<T extends ReflectedExecutable<T>> {
 
     T self();
 
-    @Nullable
-    Executable get();
+    @Nullable Executable get();
 
 }

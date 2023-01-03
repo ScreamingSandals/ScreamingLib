@@ -108,7 +108,7 @@ public class BukkitEntityMapper extends EntityMapper {
     }
 
     @Override
-    public @Nullable EntityItem dropItem0(@NotNull org.screamingsandals.lib.item.Item item, @NotNull LocationHolder locationHolder) {
+    public @Nullable EntityItem dropItem0(org.screamingsandals.lib.item.@NotNull Item item, @NotNull LocationHolder locationHolder) {
         var bukkitLoc = locationHolder.as(Location.class);
         var itemEntity = bukkitLoc.getWorld().dropItem(bukkitLoc, item.as(ItemStack.class));
         return new BukkitEntityItem(itemEntity);

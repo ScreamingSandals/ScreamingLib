@@ -28,21 +28,13 @@ import java.util.function.Supplier;
 @Data
 public class LazyComponentPlaceholder implements Placeholder {
     @Pattern("[a-z\\d_-]+")
-    private final String name;
-    private final Supplier<Component> supplier;
+    private final @NotNull String name;
+    private final @NotNull Supplier<@NotNull Component> supplier;
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NotNull <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
-        if (supplier == null) {
-            return (B) Component.text();
-        }
-
+    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
         var value = supplier.get();
-
-        if (value == null) {
-            return (B) Component.text();
-        }
 
         if (value instanceof TextComponent) {
             return (B) ((TextComponent) value).toBuilder();

@@ -23,24 +23,20 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 @LimitedVersionSupport(">= 1.12")
 public interface KeybindComponent extends Component {
     @Contract(value = "-> new", pure = true)
-    static @NotNull KeybindComponent.Builder builder() {
+    static KeybindComponent.@NotNull Builder builder() {
         return Spectator.getBackend().keybind();
     }
 
-    @NotNull
-    String keybind();
+    @NotNull String keybind();
 
     @Contract(pure = true)
-    @NotNull
-    KeybindComponent withKeybind(@NotNull String keybind);
+    @NotNull KeybindComponent withKeybind(@NotNull String keybind);
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    KeybindComponent.Builder toBuilder();
+    KeybindComponent.@NotNull Builder toBuilder();
 
     interface Builder extends Component.Builder<Builder, KeybindComponent> {
         @Contract("_ -> this")
-        @NotNull
-        Builder keybind(@NotNull String keybind);
+        @NotNull Builder keybind(@NotNull String keybind);
     }
 }

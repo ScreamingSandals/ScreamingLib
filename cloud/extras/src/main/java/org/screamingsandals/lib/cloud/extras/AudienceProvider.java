@@ -59,8 +59,7 @@ public interface AudienceProvider<C> extends Function<@NotNull C, @NotNull Audie
      * @return Mapped audience
      */
     @Override
-    @NotNull
-    Audience apply(@NotNull C sender);
+    @NotNull Audience apply(@NotNull C sender);
 
     /**
      * Get an audience provider for sender types which are already an {@link Audience}.

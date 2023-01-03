@@ -22,32 +22,27 @@ import org.jetbrains.annotations.Nullable;
 
 public interface SelectorComponent extends SeparableComponent {
     @Contract(value = "-> new", pure = true)
-    static @NotNull SelectorComponent.Builder builder() {
+    static SelectorComponent.@NotNull Builder builder() {
         return Spectator.getBackend().selector();
     }
 
-    @NotNull
-    String pattern();
+    @NotNull String pattern();
 
     @Contract(pure = true)
-    @NotNull
-    SelectorComponent withPattern(String pattern);
+    @NotNull SelectorComponent withPattern(@NotNull String pattern);
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    SelectorComponent.Builder toBuilder();
+    SelectorComponent.@NotNull Builder toBuilder();
 
     /**
      * {@inheritDoc}
      */
     @Override
     @Contract(pure = true)
-    @NotNull
-    SelectorComponent withSeparator(@Nullable Component separator);
+    @NotNull SelectorComponent withSeparator(@Nullable Component separator);
 
     interface Builder extends SeparableComponent.Builder<Builder, SelectorComponent> {
         @Contract("_ -> this")
-        @NotNull
-        Builder pattern(@NotNull String pattern);
+        @NotNull Builder pattern(@NotNull String pattern);
     }
 }

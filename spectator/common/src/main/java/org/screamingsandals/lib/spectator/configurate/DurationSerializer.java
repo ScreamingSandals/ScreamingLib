@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.spectator.configurate;
 
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.configurate.serialize.ScalarSerializer;
 import org.spongepowered.configurate.serialize.SerializationException;
 
@@ -24,14 +25,14 @@ import java.time.Duration;
 import java.util.function.Predicate;
 
 public class DurationSerializer extends ScalarSerializer<Duration> {
-    public static final DurationSerializer INSTANCE = new DurationSerializer();
+    public static final @NotNull DurationSerializer INSTANCE = new DurationSerializer();
 
     protected DurationSerializer() {
         super(Duration.class);
     }
 
     @Override
-    public Duration deserialize(Type type, Object obj) throws SerializationException {
+    public @NotNull Duration deserialize(@NotNull Type type, @NotNull Object obj) throws SerializationException {
         if (obj instanceof CharSequence) {
             try {
                 var value = obj.toString();
@@ -48,7 +49,7 @@ public class DurationSerializer extends ScalarSerializer<Duration> {
     }
 
     @Override
-    protected Object serialize(Duration item, Predicate<Class<?>> typeSupported) {
+    protected @NotNull Object serialize(@NotNull Duration item, @NotNull Predicate<Class<?>> typeSupported) {
         return item.toString();
     }
 }

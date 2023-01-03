@@ -22,6 +22,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeClickEvent;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeHoverEvent;
 import org.screamingsandals.lib.spectator.Color;
@@ -45,37 +46,37 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public List<Component> children() {
+    public @Unmodifiable @NotNull List<@NotNull Component> children() {
         var extra = wrappedObject.getExtra();
         if (extra == null || extra.isEmpty()) {
             return List.of();
         }
         return extra.stream()
                 .map(AbstractBungeeBackend::wrapComponent)
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
-    public @NotNull Component withChildren(@Nullable List<Component> children) {
+    public @NotNull Component withChildren(@Nullable List<@NotNull Component> children) {
         var duplicate = wrappedObject.duplicate();
         duplicate.setExtra(children == null ? null : children.stream().map(component -> component.as(BaseComponent.class).duplicate()).collect(Collectors.toList()));
         return AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    public @NotNull Component withAppendix(Component component) {
+    public @NotNull Component withAppendix(@NotNull Component component) {
         var duplicate = wrappedObject.duplicate();
         duplicate.addExtra(component.as(BaseComponent.class).duplicate());
         return AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    public @NotNull Component withAppendix(ComponentLike component) {
+    public @NotNull Component withAppendix(@NotNull ComponentLike component) {
         return withAppendix(component.asComponent());
     }
 
     @Override
-    public @NotNull Component withAppendix(Component... components) {
+    public @NotNull Component withAppendix(@NotNull Component @NotNull... components) {
         var duplicate = wrappedObject.duplicate();
         for (var component : components) {
             duplicate.addExtra(component.as(BaseComponent.class).duplicate());
@@ -84,7 +85,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public @NotNull Component withAppendix(ComponentLike... components) {
+    public @NotNull Component withAppendix(@NotNull ComponentLike @NotNull... components) {
         var duplicate = wrappedObject.duplicate();
         for (var component : components) {
             duplicate.addExtra(component.asComponent().as(BaseComponent.class).duplicate());
@@ -93,7 +94,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public @NotNull Component withAppendix(Collection<Component> components) {
+    public @NotNull Component withAppendix(@NotNull Collection<@NotNull Component> components) {
         var duplicate = wrappedObject.duplicate();
         for (var component : components) {
             duplicate.addExtra(component.as(BaseComponent.class).duplicate());
@@ -140,7 +141,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public TriState bold() {
+    public @NotNull TriState bold() {
         return TriState.fromBoolean(wrappedObject.isBoldRaw());
     }
 
@@ -152,14 +153,14 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public @NotNull Component withBold(TriState bold) {
+    public @NotNull Component withBold(@NotNull TriState bold) {
         var duplicate = wrappedObject.duplicate();
         duplicate.setBold(bold.toBoxedBoolean());
         return AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    public TriState italic() {
+    public @NotNull TriState italic() {
         return TriState.fromBoolean(Boolean.TRUE == wrappedObject.isItalicRaw());
     }
 
@@ -171,14 +172,14 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public @NotNull Component withItalic(TriState italic) {
+    public @NotNull Component withItalic(@NotNull TriState italic) {
         var duplicate = wrappedObject.duplicate();
         duplicate.setItalic(italic.toBoxedBoolean());
         return AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    public TriState underlined() {
+    public @NotNull TriState underlined() {
         return TriState.fromBoolean(wrappedObject.isUnderlinedRaw());
     }
 
@@ -190,14 +191,14 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public @NotNull Component withUnderlined(TriState underlined) {
+    public @NotNull Component withUnderlined(@NotNull TriState underlined) {
         var duplicate = wrappedObject.duplicate();
         duplicate.setUnderlined(underlined.toBoxedBoolean());
         return AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    public TriState strikethrough() {
+    public @NotNull TriState strikethrough() {
         return TriState.fromBoolean(wrappedObject.isStrikethroughRaw());
     }
 
@@ -209,14 +210,14 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public @NotNull Component withStrikethrough(TriState strikethrough) {
+    public @NotNull Component withStrikethrough(@NotNull TriState strikethrough) {
         var duplicate = wrappedObject.duplicate();
         duplicate.setStrikethrough(strikethrough.toBoxedBoolean());
         return AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
-    public TriState obfuscated() {
+    public @NotNull TriState obfuscated() {
         return TriState.fromBoolean(wrappedObject.isObfuscatedRaw());
     }
 
@@ -228,7 +229,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public @NotNull Component withObfuscated(TriState obfuscated) {
+    public @NotNull Component withObfuscated(@NotNull TriState obfuscated) {
         var duplicate = wrappedObject.duplicate();
         duplicate.setObfuscated(obfuscated.toBoxedBoolean());
         return AbstractBungeeBackend.wrapComponent(duplicate);
@@ -299,17 +300,17 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public String toLegacy() {
+    public @NotNull String toLegacy() {
         return wrappedObject.toLegacyText();
     }
 
     @Override
-    public String toPlainText() {
+    public @NotNull String toPlainText() {
         return wrappedObject.toPlainText();
     }
 
     @Override
-    public String toJavaJson() {
+    public @NotNull String toJavaJson() {
         return ComponentSerializer.toString(wrappedObject);
     }
 
@@ -332,25 +333,25 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         protected final @NotNull A component;
 
         @Override
-        public B color(Color color) {
+        public @NotNull B color(@NotNull Color color) {
             component.setColor(color.as(ChatColor.class));
             return self();
         }
 
         @Override
-        public B append(Component component) {
+        public @NotNull B append(@NotNull Component component) {
             this.component.addExtra(component.as(BaseComponent.class).duplicate());
             return self();
         }
 
         @Override
-        public B append(ComponentLike component) {
+        public @NotNull B append(@NotNull ComponentLike component) {
             this.component.addExtra(component.asComponent().as(BaseComponent.class).duplicate());
             return self();
         }
 
         @Override
-        public B append(Component... components) {
+        public @NotNull B append(@NotNull Component @NotNull ... components) {
             for (var component : components) {
                 append(component);
             }
@@ -358,7 +359,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         }
 
         @Override
-        public B append(ComponentLike... components) {
+        public @NotNull B append(@NotNull ComponentLike @NotNull ... components) {
             for (var component : components) {
                 append(component);
             }
@@ -366,7 +367,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         }
 
         @Override
-        public B append(Collection<Component> components) {
+        public @NotNull B append(@NotNull Collection<@NotNull Component> components) {
             for (var component : components) {
                 append(component);
             }
@@ -374,9 +375,9 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         }
 
         @Override
-        public B font(NamespacedMappingKey font) {
+        public @NotNull B font(@Nullable NamespacedMappingKey font) {
             try {
-                component.setFont(font.asString());
+                component.setFont(font == null ? null : font.asString());
             } catch (Throwable ignored) {
                 // old version basically
             }
@@ -384,103 +385,103 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         }
 
         @Override
-        public B bold(boolean bold) {
+        public @NotNull B bold(boolean bold) {
             component.setBold(bold);
             return self();
         }
 
         @Override
-        public B bold(TriState bold) {
+        public @NotNull B bold(@NotNull TriState bold) {
             component.setBold(bold.toBoxedBoolean());
             return self();
         }
 
         @Override
-        public B italic(boolean italic) {
+        public @NotNull B italic(boolean italic) {
             component.setItalic(italic);
             return self();
         }
 
         @Override
-        public B italic(TriState italic) {
+        public @NotNull B italic(@NotNull TriState italic) {
             component.setItalic(italic.toBoxedBoolean());
             return self();
         }
 
         @Override
-        public B underlined(boolean underlined) {
+        public @NotNull B underlined(boolean underlined) {
             component.setUnderlined(underlined);
             return self();
         }
 
         @Override
-        public B underlined(TriState underlined) {
+        public @NotNull B underlined(@NotNull TriState underlined) {
             component.setUnderlined(underlined.toBoxedBoolean());
             return self();
         }
 
         @Override
-        public B strikethrough(boolean strikethrough) {
+        public @NotNull B strikethrough(boolean strikethrough) {
             component.setStrikethrough(strikethrough);
             return self();
         }
 
         @Override
-        public B strikethrough(TriState strikethrough) {
+        public @NotNull B strikethrough(@NotNull TriState strikethrough) {
             component.setStrikethrough(strikethrough.toBoxedBoolean());
             return self();
         }
 
         @Override
-        public B obfuscated(TriState obfuscated) {
+        public @NotNull B obfuscated(@NotNull TriState obfuscated) {
             component.setObfuscated(obfuscated.toBoxedBoolean());
             return self();
         }
 
         @Override
-        public B obfuscated(boolean obfuscated) {
+        public @NotNull B obfuscated(boolean obfuscated) {
             component.setObfuscated(obfuscated);
             return self();
         }
 
         @Override
-        public B insertion(@Nullable String insertion) {
+        public @NotNull B insertion(@Nullable String insertion) {
             component.setInsertion(insertion);
             return self();
         }
 
         @Override
-        public B hoverEvent(@Nullable HoverEvent event) {
+        public @NotNull B hoverEvent(@Nullable HoverEvent event) {
             component.setHoverEvent(event == null ? null : event.as(net.md_5.bungee.api.chat.HoverEvent.class));
             return self();
         }
 
         @Override
-        public B hoverEvent(@Nullable ItemContent itemContent) {
+        public @NotNull B hoverEvent(@Nullable ItemContent itemContent) {
             hoverEvent(itemContent == null ? null : HoverEvent.builder().action(HoverEvent.Action.SHOW_ITEM).content(itemContent).build());
             return self();
         }
 
         @Override
-        public B hoverEvent(@Nullable EntityContent entityContent) {
+        public @NotNull B hoverEvent(@Nullable EntityContent entityContent) {
             hoverEvent(entityContent == null ? null : HoverEvent.builder().action(HoverEvent.Action.SHOW_ENTITY).content(entityContent).build());
             return self();
         }
 
         @Override
-        public B hoverEvent(@Nullable ComponentLike component) {
+        public @NotNull B hoverEvent(@Nullable ComponentLike component) {
             hoverEvent(component == null ? null : HoverEvent.builder().action(HoverEvent.Action.SHOW_TEXT).content(component).build());
             return self();
         }
 
         @Override
-        public B hoverEvent(@Nullable Component component) {
+        public @NotNull B hoverEvent(@Nullable Component component) {
             hoverEvent(component == null ? null : HoverEvent.builder().action(HoverEvent.Action.SHOW_TEXT).content(component).build());
             return self();
         }
 
         @Override
-        public B clickEvent(@Nullable ClickEvent event) {
+        public @NotNull B clickEvent(@Nullable ClickEvent event) {
             component.setClickEvent(event == null ? null : event.as(net.md_5.bungee.api.chat.ClickEvent.class));
             return self();
         }
@@ -492,12 +493,12 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
 
         @SuppressWarnings("unchecked")
         @Override
-        public C build() {
+        public @NotNull C build() {
             return (C) AbstractBungeeBackend.wrapComponent(component.duplicate());
         }
 
         @SuppressWarnings("unchecked")
-        protected B self() {
+        protected @NotNull B self() {
             return (B) this;
         }
     }

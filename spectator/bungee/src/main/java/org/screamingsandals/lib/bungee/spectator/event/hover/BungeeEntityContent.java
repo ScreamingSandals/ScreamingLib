@@ -72,7 +72,7 @@ public class BungeeEntityContent extends BasicWrapper<Entity> implements EntityC
     }
 
     @Override
-    public @NotNull EntityContent.Builder toBuilder() {
+    public EntityContent.@NotNull Builder toBuilder() {
         return new BungeeEntityContentBuilder(
                 id(),
                 type(),

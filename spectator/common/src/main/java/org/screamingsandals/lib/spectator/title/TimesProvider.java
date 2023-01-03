@@ -22,14 +22,11 @@ import org.jetbrains.annotations.NotNull;
 import java.time.Duration;
 
 public interface TimesProvider {
-    @NotNull
-    Duration fadeIn();
+    @NotNull Duration fadeIn();
 
-    @NotNull
-    Duration stay();
+    @NotNull Duration stay();
 
-    @NotNull
-    Duration fadeOut();
+    @NotNull Duration fadeOut();
 
     @Contract(value = "_,_,_ -> new", pure = true)
     static @NotNull TimesProvider times(@NotNull Duration fadeIn, @NotNull Duration stay, @NotNull Duration fadeOut) {

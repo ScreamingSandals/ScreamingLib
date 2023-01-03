@@ -39,32 +39,28 @@ public interface PlayerContainer extends Container {
      *
      * @return the item in the helmet slot, null if there is no item
      */
-    @Nullable
-    Item getHelmet();
+    @Nullable Item getHelmet();
 
     /**
      * Gets the item in the chestplate slot.
      *
      * @return the item in the chestplate slot, null if there is no item
      */
-    @Nullable
-    Item getChestplate();
+    @Nullable Item getChestplate();
 
     /**
      * Gets the item in the leggings slot.
      *
      * @return the item in the leggings slot, null if there is no item
      */
-    @Nullable
-    Item getLeggings();
+    @Nullable Item getLeggings();
 
     /**
      * Gets the item in the boots slot.
      *
      * @return the item in the boots slot, null if there is no item
      */
-    @Nullable
-    Item getBoots();
+    @Nullable Item getBoots();
 
     /**
      * Sets the armor slots to the supplied items.
@@ -106,8 +102,7 @@ public interface PlayerContainer extends Container {
      *
      * @return the item
      */
-    @NotNull
-    Item getItemInMainHand();
+    @NotNull Item getItemInMainHand();
 
     /**
      * Sets the main hand slot to the supplied item.
@@ -121,8 +116,7 @@ public interface PlayerContainer extends Container {
      *
      * @return the item
      */
-    @NotNull
-    Item getItemInOffHand();
+    @NotNull Item getItemInOffHand();
 
     /**
      * Sets the offhand slot to the supplied item.

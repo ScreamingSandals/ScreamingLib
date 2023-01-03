@@ -27,16 +27,12 @@ import java.util.List;
 @Data
 public class ComponentPlaceholder implements Placeholder {
     @Pattern("[a-z\\d_-]+")
-    private final String name;
-    private final Component value;
+    private final @NotNull String name;
+    private final @NotNull Component value;
 
     @SuppressWarnings("unchecked")
     @Override
-    public @NotNull <B extends Component.Builder<B, C>, C extends Component> B getResult(MiniMessageParser parser, List<String> arguments, Placeholder... placeholders) {
-        if (value == null) {
-            return (B) Component.text();
-        }
-
+    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
         if (value instanceof TextComponent) {
             return (B) ((TextComponent) value).toBuilder();
         } else if (value instanceof TranslatableComponent) {

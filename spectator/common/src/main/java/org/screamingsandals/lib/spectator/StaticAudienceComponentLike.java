@@ -25,7 +25,7 @@ import org.screamingsandals.lib.spectator.audience.Audience;
 @RequiredArgsConstructor
 @ApiStatus.Internal
 public final class StaticAudienceComponentLike implements AudienceComponentLike {
-    private final Component component;
+    private final @NotNull Component component;
 
     @Override
     public @NotNull Component asComponent(@Nullable Audience audience) {

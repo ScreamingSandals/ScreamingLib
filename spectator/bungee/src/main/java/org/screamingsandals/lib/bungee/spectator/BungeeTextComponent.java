@@ -37,7 +37,7 @@ public class BungeeTextComponent extends BungeeComponent implements TextComponen
     }
 
     @Override
-    public @NotNull TextComponent.Builder toBuilder() {
+    public TextComponent.@NotNull Builder toBuilder() {
         var duplicate = (net.md_5.bungee.api.chat.TextComponent) wrappedObject.duplicate();
         return new BungeeTextBuilder(duplicate);
     }
@@ -53,7 +53,7 @@ public class BungeeTextComponent extends BungeeComponent implements TextComponen
         }
 
         @Override
-        public @NotNull TextComponent.Builder content(@NotNull String content) {
+        public TextComponent.@NotNull Builder content(@NotNull String content) {
             component.setText(content);
             return self();
         }

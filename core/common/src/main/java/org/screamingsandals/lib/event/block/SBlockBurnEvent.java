@@ -25,6 +25,5 @@ public interface SBlockBurnEvent extends SCancellableEvent, PlatformEventWrapper
 
     BlockHolder block();
 
-    @Nullable
-    BlockHolder ignitingBlock();
+    @Nullable BlockHolder ignitingBlock();
 }

@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.spectator.configurate;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
@@ -28,19 +29,18 @@ import java.lang.reflect.Type;
 import java.util.UUID;
 
 public class EntityContentSerializer implements TypeSerializer<EntityContent> {
-    public static final EntityContentSerializer INSTANCE = new EntityContentSerializer();
+    public static final @NotNull EntityContentSerializer INSTANCE = new EntityContentSerializer();
 
-    private static final String TYPE_KEY = "type";
-    private static final String ID_KEY = "id";
-    private static final String NAME_KEY = "name";
+    private static final @NotNull String TYPE_KEY = "type";
+    private static final @NotNull String ID_KEY = "id";
+    private static final @NotNull String NAME_KEY = "name";
 
     @Override
-    public EntityContent deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull EntityContent deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             var entityType = NamespacedMappingKey.of(node.node(TYPE_KEY).getString("minecraft:pig"));
             var id = node.node(ID_KEY).get(UUID.class, UUID.randomUUID());
-            @Nullable
-            var name = node.node(NAME_KEY).get(Component.class);
+            @Nullable var name = node.node(NAME_KEY).get(Component.class);
 
             return EntityContent.builder()
                     .type(entityType)
@@ -53,7 +53,7 @@ public class EntityContentSerializer implements TypeSerializer<EntityContent> {
     }
 
     @Override
-    public void serialize(Type type, @Nullable EntityContent obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable EntityContent obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

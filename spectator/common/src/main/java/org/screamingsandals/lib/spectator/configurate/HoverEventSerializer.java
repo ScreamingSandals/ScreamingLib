@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.spectator.configurate;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
@@ -31,14 +32,14 @@ import java.lang.reflect.Type;
 import java.util.Locale;
 
 public class HoverEventSerializer implements TypeSerializer<HoverEvent> {
-    public static final HoverEventSerializer INSTANCE = new HoverEventSerializer();
+    public static final @NotNull HoverEventSerializer INSTANCE = new HoverEventSerializer();
 
-    private static final String ACTION_KEY = "action";
-    private static final String CONTENTS_KEY = "contents";
-    private static final String VALUE_KEY = "value";
+    private static final @NotNull String ACTION_KEY = "action";
+    private static final @NotNull String CONTENTS_KEY = "contents";
+    private static final @NotNull String VALUE_KEY = "value";
 
     @Override
-    public HoverEvent deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull HoverEvent deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             var action = HoverEvent.Action.valueOf(node.node(ACTION_KEY).getString("show_text").toUpperCase(Locale.ROOT));
             Content content;
@@ -76,7 +77,7 @@ public class HoverEventSerializer implements TypeSerializer<HoverEvent> {
     }
 
     @Override
-    public void serialize(Type type, @Nullable HoverEvent obj, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable HoverEvent obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

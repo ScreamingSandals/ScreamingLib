@@ -100,7 +100,7 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
     }
 
     @Override
-    public @NotNull SoundStart.Builder toBuilder() {
+    public SoundStart.@NotNull Builder toBuilder() {
         return new AdventureSoundStartBuilder(
                 soundKey(),
                 source(),

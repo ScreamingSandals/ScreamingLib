@@ -41,9 +41,8 @@ public interface Audience {
 
     @FunctionalInterface
     interface ForwardingToMulti extends Audience {
-        @NotNull
         @ApiStatus.OverrideOnly
-        Iterable<? extends Audience> audiences();
+        @NotNull Iterable<? extends @NotNull Audience> audiences();
 
         @Override
         default void sendMessage(@NotNull ComponentLike message) {
@@ -53,9 +52,8 @@ public interface Audience {
 
     @FunctionalInterface
     interface ForwardingToSingle extends Audience {
-        @NotNull
         @ApiStatus.OverrideOnly
-        Audience audience();
+        @NotNull Audience audience();
 
         @Override
         default void sendMessage(@NotNull ComponentLike message) {
@@ -66,9 +64,8 @@ public interface Audience {
     @FunctionalInterface
     @ApiStatus.NonExtendable // don't extend it guys
     interface ForwardingToAdapter extends Audience {
-        @NotNull
         @ApiStatus.OverrideOnly
-        Adapter adapter();
+        @NotNull Adapter adapter();
 
         @Override
         default void sendMessage(@NotNull ComponentLike message) {

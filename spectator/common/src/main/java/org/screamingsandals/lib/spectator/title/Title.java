@@ -49,94 +49,75 @@ public interface Title extends Wrapper, RawValueHolder, TimesProvider {
     }
 
     @Contract(value = "-> new", pure = true)
-    static @NotNull Title.Builder builder() {
+    static Title.@NotNull Builder builder() {
         return Spectator.getBackend().title();
     }
 
-    @NotNull
-    Component title();
+    @NotNull Component title();
 
     @Contract(pure = true)
-    @NotNull
-    Title withTitle(@NotNull Component title);
+    @NotNull Title withTitle(@NotNull Component title);
 
-    @NotNull
-    Component subtitle();
+    @NotNull Component subtitle();
 
     @Contract(pure = true)
-    @NotNull
-    Title withSubtitle(@NotNull Component subtitle);
+    @NotNull Title withSubtitle(@NotNull Component subtitle);
 
     @Contract(pure = true)
-    @NotNull
-    Title withTimes(@NotNull TimesProvider times);
+    @NotNull Title withTimes(@NotNull TimesProvider times);
 
     @Contract(pure = true)
-    @NotNull
-    Title withTimes(@Nullable Duration fadeIn, @Nullable Duration stay, @Nullable Duration fadeOut);
+    @NotNull Title withTimes(@Nullable Duration fadeIn, @Nullable Duration stay, @Nullable Duration fadeOut);
 
     @Contract(pure = true)
-    @NotNull
-    Title withTimes(long fadeIn, long stay, long fadeOut);
+    @NotNull Title withTimes(long fadeIn, long stay, long fadeOut);
 
     @Contract(pure = true)
-    @NotNull
-    Title withFadeIn(@Nullable Duration fadeIn);
+    @NotNull Title withFadeIn(@Nullable Duration fadeIn);
 
     @Contract(pure = true)
-    @NotNull
-    Title withStay(@Nullable Duration stay);
+    @NotNull Title withStay(@Nullable Duration stay);
 
     @Contract(pure = true)
-    @NotNull
-    Title withFadeOut(@Nullable Duration fadeOut);
+    @NotNull Title withFadeOut(@Nullable Duration fadeOut);
 
     @Contract(pure = true)
-    @NotNull
-    Title withFadeIn(long ticks);
+    @NotNull Title withFadeIn(long ticks);
 
     @Contract(pure = true)
-    @NotNull
-    Title withStay(long ticks);
+    @NotNull Title withStay(long ticks);
 
     @Contract(pure = true)
-    @NotNull
-    Title withFadeOut(long ticks);
+    @NotNull Title withFadeOut(long ticks);
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    Title.Builder toBuilder();
+    Title.@NotNull Builder toBuilder();
 
     interface Builder {
-        @NotNull
         @Contract("_ -> this")
-        Builder title(@NotNull Component title);
+        @NotNull Builder title(@NotNull Component title);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder subtitle(@NotNull Component subtitle);
+        @NotNull Builder subtitle(@NotNull Component subtitle);
 
-        @NotNull
         @Contract("_ -> this")
-        Builder fadeIn(@Nullable Duration fadeIn);
+        @NotNull Builder fadeIn(@Nullable Duration fadeIn);
 
         @Contract("_ -> this")
         default @NotNull Builder fadeIn(long ticks) {
             return fadeIn(Duration.ofMillis(ticks * 50));
         }
 
-        @NotNull
         @Contract("_ -> this")
-        Builder stay(@Nullable Duration stay);
+        @NotNull Builder stay(@Nullable Duration stay);
 
         @Contract("_ -> this")
         default @NotNull Builder stay(long ticks) {
             return stay(Duration.ofMillis(ticks * 50));
         }
 
-        @NotNull
         @Contract("_ -> this")
-        Builder fadeOut(@Nullable Duration fadeOut);
+        @NotNull Builder fadeOut(@Nullable Duration fadeOut);
 
         @Contract("_ -> this")
         default @NotNull Builder fadeOut(long ticks) {
@@ -173,8 +154,7 @@ public interface Title extends Wrapper, RawValueHolder, TimesProvider {
             return this;
         }
 
-        @NotNull
         @Contract(value = "-> new", pure = true)
-        Title build();
+        @NotNull Title build();
     }
 }

@@ -70,7 +70,7 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
     }
 
     @Override
-    public @NotNull EntityContent.Builder toBuilder() {
+    public EntityContent.@NotNull Builder toBuilder() {
         return new AdventureEntityContentBuilder(
                 id(),
                 type(),

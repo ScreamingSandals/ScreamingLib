@@ -25,48 +25,41 @@ import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 @LimitedVersionSupport(">= 1.15")
 public interface StorageNBTComponent extends NBTComponent {
     @Contract(value = "-> new", pure = true)
-    static @NotNull StorageNBTComponent.Builder builder() {
+    static StorageNBTComponent.@NotNull Builder builder() {
         return Spectator.getBackend().storageNBT();
     }
 
-    @NotNull
-    NamespacedMappingKey storageKey();
+    @NotNull NamespacedMappingKey storageKey();
 
     @Contract(pure = true)
-    @NotNull
-    StorageNBTComponent withStorageKey(@NotNull NamespacedMappingKey storageKey);
+    @NotNull StorageNBTComponent withStorageKey(@NotNull NamespacedMappingKey storageKey);
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    StorageNBTComponent.Builder toBuilder();
+    StorageNBTComponent.@NotNull Builder toBuilder();
 
     /**
      * {@inheritDoc}
      */
     @Contract(pure = true)
     @Override
-    @NotNull
-    StorageNBTComponent withInterpret(boolean interpret);
+    @NotNull StorageNBTComponent withInterpret(boolean interpret);
 
     /**
      * {@inheritDoc}
      */
     @Contract(pure = true)
     @Override
-    @NotNull
-    StorageNBTComponent withNbtPath(@NotNull String nbtPath);
+    @NotNull StorageNBTComponent withNbtPath(@NotNull String nbtPath);
 
     /**
      * {@inheritDoc}
      */
     @Contract(pure = true)
     @Override
-    @NotNull
-    StorageNBTComponent withSeparator(@Nullable Component separator);
+    @NotNull StorageNBTComponent withSeparator(@Nullable Component separator);
 
     interface Builder extends NBTComponent.Builder<Builder, StorageNBTComponent> {
         @Contract("_ -> this")
-        @NotNull
-        Builder storageKey(@NotNull NamespacedMappingKey storageKey);
+        @NotNull Builder storageKey(@NotNull NamespacedMappingKey storageKey);
     }
 }

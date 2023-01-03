@@ -24,48 +24,41 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 @LimitedVersionSupport(">= 1.14")
 public interface EntityNBTComponent extends NBTComponent {
     @Contract(value = "-> new", pure = true)
-    static @NotNull EntityNBTComponent.Builder builder() {
+    static EntityNBTComponent.@NotNull Builder builder() {
         return Spectator.getBackend().entityNBT();
     }
 
-    @NotNull
-    String selector();
+    @NotNull String selector();
 
     @Contract(pure = true)
-    @NotNull
-    EntityNBTComponent withSelector(@NotNull String selector);
+    @NotNull EntityNBTComponent withSelector(@NotNull String selector);
 
     @Contract(value = "-> new", pure = true)
-    @NotNull
-    EntityNBTComponent.Builder toBuilder();
+    EntityNBTComponent.@NotNull Builder toBuilder();
 
     /**
      * {@inheritDoc}
      */
     @Contract(pure = true)
     @Override
-    @NotNull
-    EntityNBTComponent withNbtPath(@NotNull String nbtPath);
+    @NotNull EntityNBTComponent withNbtPath(@NotNull String nbtPath);
 
     /**
      * {@inheritDoc}
      */
     @Contract(pure = true)
     @Override
-    @NotNull
-    EntityNBTComponent withSeparator(@Nullable Component separator);
+    @NotNull EntityNBTComponent withSeparator(@Nullable Component separator);
 
     /**
      * {@inheritDoc}
      */
     @Contract(pure = true)
     @Override
-    @NotNull
-    EntityNBTComponent withInterpret(boolean interpret);
+    @NotNull EntityNBTComponent withInterpret(boolean interpret);
 
     interface Builder extends NBTComponent.Builder<Builder, EntityNBTComponent> {
         @Contract("_ -> this")
-        @NotNull
-        Builder selector(@NotNull String selector);
+        @NotNull Builder selector(@NotNull String selector);
     }
 }

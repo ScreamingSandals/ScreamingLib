@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @InternalEarlyInitialization
 public class VelocityPluginManager extends PluginManager {
-    private final @NotNull com.velocitypowered.api.plugin.PluginManager pluginManager;
+    private final com.velocitypowered.api.plugin.@NotNull PluginManager pluginManager;
 
     @Override
     protected @Nullable Object getPlatformClass0(@NotNull PluginKey pluginKey) {

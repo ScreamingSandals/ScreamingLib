@@ -71,74 +71,74 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     private static final boolean selectorSupported = Reflect.has("net.md_5.bungee.api.chat.SelectorComponent");
 
     @Override
-    public Component empty() {
+    public @NotNull Component empty() {
         return empty;
     }
 
     @Override
-    public Component newLine() {
+    public @NotNull Component newLine() {
         return newLine;
     }
 
     @Override
-    public Component space() {
+    public @NotNull Component space() {
         return space;
     }
 
     @Override
-    public BlockNBTComponent.Builder blockNBT() {
-        return null; // TODO
+    public BlockNBTComponent.@NotNull Builder blockNBT() {
+        throw new UnsupportedOperationException("Not implemented for md_5 ChatComponent API yet!"); // TODO
     }
 
     @Override
-    public EntityNBTComponent.Builder entityNBT() {
-        return null; // TODO
+    public EntityNBTComponent.@NotNull Builder entityNBT() {
+        throw new UnsupportedOperationException("Not implemented for md_5 ChatComponent API yet!"); // TODO
     }
 
     @Override
-    public KeybindComponent.Builder keybind() {
+    public KeybindComponent.@NotNull Builder keybind() {
         if (keybindSupported) {
             return new BungeeKeybindComponent.BungeeKeybindBuilder(new net.md_5.bungee.api.chat.KeybindComponent(""));
         } else {
-            return null; // not supported on this version
+            throw new UnsupportedOperationException("Not supported on this version of md_5 ChatComponent API!"); // TODO: not supported on this version
         }
     }
 
     @Override
-    public ScoreComponent.Builder score() {
+    public ScoreComponent.@NotNull Builder score() {
         if (scoreSupported) {
             return new BungeeScoreComponent.BungeeScoreBuilder(new net.md_5.bungee.api.chat.ScoreComponent("", ""));
         } else {
-            return null; // TODO :sad:
+            throw new UnsupportedOperationException("Not implemented for this version of md_5 ChatComponent API yet!"); // TODO :sad:
         }
     }
 
     @Override
-    public SelectorComponent.Builder selector() {
+    public SelectorComponent.@NotNull Builder selector() {
         if (selectorSupported) {
             return new BungeeSelectorComponent.BungeeSelectorBuilder(new net.md_5.bungee.api.chat.SelectorComponent(""));
         } else {
-            return null; // TODO :cry:
+            throw new UnsupportedOperationException("Not implemented for this version of md_5 ChatComponent API yet!"); // TODO :cry:
         }
     }
 
     @Override
-    public StorageNBTComponent.Builder storageNBT() {
-        return null; // TODO
+    public StorageNBTComponent.@NotNull Builder storageNBT() {
+        throw new UnsupportedOperationException("Not implemented for md_5 ChatComponent API yet!"); // TODO
     }
 
     @Override
-    public org.screamingsandals.lib.spectator.TextComponent.Builder text() {
+    public org.screamingsandals.lib.spectator.TextComponent.@NotNull Builder text() {
         return new BungeeTextComponent.BungeeTextBuilder(new TextComponent(""));
     }
 
     @Override
-    public org.screamingsandals.lib.spectator.TranslatableComponent.Builder translatable() {
+    public org.screamingsandals.lib.spectator.TranslatableComponent.@NotNull Builder translatable() {
         return new BungeeTranslatableContent.BungeeTranslatableBuilder(new TranslatableComponent(""));
     }
 
     @Override
-    public Color rgb(int red, int green, int blue) {
+    public @NotNull Color rgb(int red, int green, int blue) {
         int combined = red << 16 | green << 8 | blue;
         try {
             return new BungeeColor(ChatColor.of(String.format("#%06X", (0xFFFFFF & combined))));
@@ -181,12 +181,16 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     }
 
     @Override
-    public Color named(String name) {
-        return new BungeeColor(ChatColor.valueOf(name.toUpperCase(Locale.ROOT)));
+    public @Nullable Color named(@NotNull String name) {
+        try {
+            return new BungeeColor(ChatColor.valueOf(name.toUpperCase(Locale.ROOT)));
+        } catch (Throwable ignored) {
+            return null;
+        }
     }
 
     @Override
-    public Color hexOrName(String hexOrName) {
+    public @NotNull Color hexOrName(@NotNull String hexOrName) {
         try {
             return new BungeeColor(ChatColor.of(hexOrName.toLowerCase(Locale.ROOT)));
         } catch (Throwable ignored) {
@@ -211,7 +215,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
         return new BungeeColor(ChatColor.WHITE); // never returns null!!!
     }
 
-    public Color nearestNamedTo(Color color) {
+    public @NotNull Color nearestNamedTo(@Nullable Color color) {
         if (color == null) {
             return Color.WHITE;
         }
@@ -219,7 +223,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
         return nearestNamedTo(color.red(), color.green(), color.blue());
     }
 
-    private Color nearestNamedTo(int red, int green, int blue) {
+    private @NotNull Color nearestNamedTo(int red, int green, int blue) {
         var matchedDistance = Float.MAX_VALUE;
         var match = Color.WHITE;
         for (var potential : Color.NAMED_VALUES.values()) {
@@ -280,17 +284,17 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     }
 
     @Override
-    public ClickEvent.Builder clickEvent() {
+    public ClickEvent.@NotNull Builder clickEvent() {
         return new BungeeClickEvent.BungeeClickBuilder();
     }
 
     @Override
-    public HoverEvent.Builder hoverEvent() {
+    public HoverEvent.@NotNull Builder hoverEvent() {
         return new BungeeHoverEvent.BungeeHoverEventBuilder();
     }
 
     @Override
-    public EntityContent.Builder entityContent() {
+    public EntityContent.@NotNull Builder entityContent() {
         if (Reflect.has("net.md_5.bungee.api.chat.hover.content.Entity")) {
             return new BungeeEntityContent.BungeeEntityContentBuilder();
         } else {
@@ -299,7 +303,7 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     }
 
     @Override
-    public ItemContent.Builder itemContent() {
+    public ItemContent.@NotNull Builder itemContent() {
         if (Reflect.has("net.md_5.bungee.api.chat.hover.content.Item")) {
             return new BungeeItemContent.BungeeItemContentBuilder();
         } else {
@@ -308,8 +312,8 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     }
 
     @Override
-    public Component fromLegacy(String legacy) {
-        if (legacy == null || legacy.isEmpty()) {
+    public @NotNull Component fromLegacy(@NotNull String legacy) {
+        if (legacy.isEmpty()) {
             return empty;
         }
         // for some reason fromLegacyText implements its own custom url handling, which is not part of the format
@@ -324,8 +328,8 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     }
 
     @Override
-    public Component fromLegacy(String legacy, char colorChar) {
-        if (legacy == null || legacy.isEmpty()) {
+    public @NotNull Component fromLegacy(@NotNull String legacy, char colorChar) {
+        if (legacy.isEmpty()) {
             return empty;
         }
         if (colorChar == '§') {
@@ -344,8 +348,8 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     }
 
     @Override
-    public Component fromJson(String json) {
-        if (json == null || json.isEmpty()) {
+    public @NotNull Component fromJson(@NotNull String json) {
+        if (json.isEmpty()) {
             return empty;
         }
         var components = ComponentSerializer.parse(json);

@@ -44,6 +44,5 @@ public interface TeamedSidebar<T extends TeamedSidebar<T>> extends Visual<T> {
     @NotNull T title(@NotNull ComponentLike title);
 
     @Contract("_ -> this")
-    @NotNull
-    T title(@NotNull Component title);
+    @NotNull T title(@NotNull Component title);
 }

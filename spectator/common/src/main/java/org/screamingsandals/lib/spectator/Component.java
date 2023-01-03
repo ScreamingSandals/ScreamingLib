@@ -42,15 +42,15 @@ import java.util.regex.Pattern;
 
 public interface Component extends ComponentLike, Wrapper, Content, RawValueHolder {
 
-    static Component empty() {
+    static @NotNull Component empty() {
         return Spectator.getBackend().empty();
     }
 
-    static Component newLine() {
+    static @NotNull Component newLine() {
         return Spectator.getBackend().newLine();
     }
 
-    static Component space() {
+    static @NotNull Component space() {
         return Spectator.getBackend().space();
     }
 
@@ -75,7 +75,7 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    static @NotNull Component fromMiniMessage(@NotNull String miniMessage, @NotNull Placeholder...placeholders) {
+    static @NotNull Component fromMiniMessage(@NotNull String miniMessage, @NotNull Placeholder @NotNull...placeholders) {
         return MiniMessageParser.INSTANCE.parse(miniMessage, placeholders);
     }
 
@@ -103,91 +103,91 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return Spectator.getBackend().storageNBT();
     }
 
-    static TextComponent.Builder text() {
+    static TextComponent.@NotNull Builder text() {
         return Spectator.getBackend().text();
     }
 
-    static TextComponent text(String text) {
+    static @NotNull TextComponent text(@NotNull String text) {
         return Spectator.getBackend().text().content(text).build();
     }
 
-    static TextComponent text(byte value) {
+    static @NotNull TextComponent text(byte value) {
         return Spectator.getBackend().text().content(value).build();
     }
 
-    static TextComponent text(short value) {
+    static @NotNull TextComponent text(short value) {
         return Spectator.getBackend().text().content(value).build();
     }
 
-    static TextComponent text(int value) {
+    static @NotNull TextComponent text(int value) {
         return Spectator.getBackend().text().content(value).build();
     }
 
-    static TextComponent text(long value) {
+    static @NotNull TextComponent text(long value) {
         return Spectator.getBackend().text().content(value).build();
     }
 
-    static TextComponent text(float value) {
+    static @NotNull TextComponent text(float value) {
         return Spectator.getBackend().text().content(value).build();
     }
 
-    static TextComponent text(double value) {
+    static @NotNull TextComponent text(double value) {
         return Spectator.getBackend().text().content(value).build();
     }
 
-    static TextComponent text(Number value) {
+    static @NotNull TextComponent text(@NotNull Number value) {
         return Spectator.getBackend().text().content(value).build();
     }
 
-    static TextComponent text(boolean value) {
+    static @NotNull TextComponent text(boolean value) {
         return Spectator.getBackend().text().content(value).build();
     }
 
-    static TextComponent text(char value) {
+    static @NotNull TextComponent text(char value) {
         return Spectator.getBackend().text().content(value).build();
     }
 
-    static TextComponent text(String text, Color color) {
+    static @NotNull TextComponent text(@NotNull String text, @NotNull Color color) {
         return Spectator.getBackend().text().content(text).color(color).build();
     }
 
-    static TextComponent text(byte value, Color color) {
+    static @NotNull TextComponent text(byte value, @NotNull Color color) {
         return Spectator.getBackend().text().content(value).color(color).build();
     }
 
-    static TextComponent text(short value, Color color) {
+    static @NotNull TextComponent text(short value, @NotNull Color color) {
         return Spectator.getBackend().text().content(value).color(color).build();
     }
 
-    static TextComponent text(int value, Color color) {
+    static @NotNull TextComponent text(int value, @NotNull Color color) {
         return Spectator.getBackend().text().content(value).color(color).build();
     }
 
-    static TextComponent text(long value, Color color) {
+    static @NotNull TextComponent text(long value, @NotNull Color color) {
         return Spectator.getBackend().text().content(value).color(color).build();
     }
 
-    static TextComponent text(float value, Color color) {
+    static @NotNull TextComponent text(float value, @NotNull Color color) {
         return Spectator.getBackend().text().content(value).color(color).build();
     }
 
-    static TextComponent text(double value, Color color) {
+    static @NotNull TextComponent text(double value, @NotNull Color color) {
         return Spectator.getBackend().text().content(value).color(color).build();
     }
 
-    static TextComponent text(Number value, Color color) {
+    static @NotNull TextComponent text(@NotNull Number value, @NotNull Color color) {
         return Spectator.getBackend().text().content(value).color(color).build();
     }
 
-    static TextComponent text(boolean value, Color color) {
+    static @NotNull TextComponent text(boolean value, @NotNull Color color) {
         return Spectator.getBackend().text().content(value).color(color).build();
     }
 
-    static TextComponent text(char value, Color color) {
+    static @NotNull TextComponent text(char value, @NotNull Color color) {
         return Spectator.getBackend().text().content(value).color(color).build();
     }
 
-    static TranslatableComponent.Builder translatable() {
+    static TranslatableComponent.@NotNull Builder translatable() {
         return Spectator.getBackend().translatable();
     }
 
@@ -208,39 +208,30 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return Component.text().append(finalComponents).build();
     }
 
-    @Unmodifiable
-    List<Component> children();
+    @Unmodifiable @NotNull List<@NotNull Component> children();
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    Component withChildren(@Nullable List<Component> children);
+    @NotNull Component withChildren(@Nullable List<@NotNull Component> children);
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    Component withAppendix(Component component);
+    @NotNull Component withAppendix(@NotNull Component component);
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    Component withAppendix(ComponentLike component);
+    @NotNull Component withAppendix(@NotNull ComponentLike component);
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    Component withAppendix(Component... components);
+    @NotNull Component withAppendix(@NotNull Component @NotNull... components);
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    Component withAppendix(ComponentLike... component);
+    @NotNull Component withAppendix(@NotNull ComponentLike @NotNull... component);
 
-    @NotNull
     @Contract(value = "_ -> new", pure = true)
-    Component withAppendix(Collection<Component> components);
+    @NotNull Component withAppendix(@NotNull Collection<@NotNull Component> components);
 
-    @Nullable
-    Color color();
+    @Nullable Color color();
 
-    @NotNull
     @Contract(pure = true)
-    Component withColor(@Nullable Color color);
+    @NotNull Component withColor(@Nullable Color color);
 
 
     @Contract(pure = true)
@@ -252,110 +243,88 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     }
 
     @LimitedVersionSupport(">= 1.16")
-    @Nullable
-    NamespacedMappingKey font();
+    @Nullable NamespacedMappingKey font();
 
-    @NotNull
     @LimitedVersionSupport(">= 1.16")
     @Contract(pure = true)
-    Component withFont(@Nullable NamespacedMappingKey font);
+    @NotNull Component withFont(@Nullable NamespacedMappingKey font);
 
-    TriState bold();
+    @NotNull TriState bold();
 
-    @NotNull
     @Contract(pure = true)
-    Component withBold(boolean bold);
+    @NotNull Component withBold(boolean bold);
 
-    @NotNull
     @Contract(pure = true)
-    Component withBold(TriState bold);
+    @NotNull Component withBold(@NotNull TriState bold);
 
-    TriState italic();
+    @NotNull TriState italic();
 
-    @NotNull
-    @Contract( pure = true)
-    Component withItalic(boolean italic);
-
-    @NotNull
-    @Contract( pure = true)
-    Component withItalic(TriState italic);
-
-    TriState underlined();
-
-    @NotNull
     @Contract(pure = true)
-    Component withUnderlined(boolean underlined);
+    @NotNull Component withItalic(boolean italic);
 
-    @NotNull
     @Contract(pure = true)
-    Component withUnderlined(TriState underlined);
+    @NotNull Component withItalic(@NotNull TriState italic);
 
-    TriState strikethrough();
+    @NotNull TriState underlined();
 
-    @NotNull
     @Contract(pure = true)
-    Component withStrikethrough(boolean strikethrough);
+    @NotNull Component withUnderlined(boolean underlined);
 
-    @NotNull
     @Contract(pure = true)
-    Component withStrikethrough(TriState strikethrough);
+    @NotNull Component withUnderlined(@NotNull TriState underlined);
 
-    TriState obfuscated();
+    @NotNull TriState strikethrough();
 
-    @NotNull
     @Contract(pure = true)
-    Component withObfuscated(boolean obfuscated);
+    @NotNull Component withStrikethrough(boolean strikethrough);
 
-    @NotNull
     @Contract(pure = true)
-    Component withObfuscated(TriState obfuscated);
+    @NotNull Component withStrikethrough(@NotNull TriState strikethrough);
 
-    @Nullable
-    String insertion();
+    @NotNull TriState obfuscated();
 
-    @NotNull
     @Contract(pure = true)
-    Component withInsertion(@Nullable String insertion);
+    @NotNull Component withObfuscated(boolean obfuscated);
 
-    @Nullable
-    HoverEvent hoverEvent();
-
-    @NotNull
     @Contract(pure = true)
-    Component withHoverEvent(@Nullable HoverEvent hoverEvent);
+    @NotNull Component withObfuscated(@NotNull TriState obfuscated);
 
-    @NotNull
+    @Nullable String insertion();
+
     @Contract(pure = true)
-    Component withHoverEvent(@Nullable ItemContent itemContent);
+    @NotNull Component withInsertion(@Nullable String insertion);
+
+    @Nullable HoverEvent hoverEvent();
+
+    @Contract(pure = true)
+    @NotNull Component withHoverEvent(@Nullable HoverEvent hoverEvent);
+
+    @Contract(pure = true)
+    @NotNull Component withHoverEvent(@Nullable ItemContent itemContent);
 
     @Contract(pure = true)
     default @NotNull Component withHoverEvent(@Nullable ItemContentLike itemContent) {
         return withHoverEvent(itemContent == null ? null : itemContent.asItemContent());
     }
 
-    @NotNull
     @Contract(pure = true)
-    Component withHoverEvent(@Nullable EntityContent entityContent);
+    @NotNull Component withHoverEvent(@Nullable EntityContent entityContent);
 
     @Contract(pure = true)
     default @NotNull Component withHoverEvent(@Nullable EntityContentLike entityContent) {
         return withHoverEvent(entityContent == null ? null : entityContent.asEntityContent());
     }
 
-    @NotNull
     @Contract(pure = true)
-    Component withHoverEvent(@Nullable Component component);
+    @NotNull Component withHoverEvent(@Nullable Component component);
 
-    @NotNull
     @Contract(pure = true)
-    Component withHoverEvent(@Nullable ComponentLike component);
+    @NotNull Component withHoverEvent(@Nullable ComponentLike component);
 
-    @Nullable
-    ClickEvent clickEvent();
+    @Nullable ClickEvent clickEvent();
 
-    @NotNull
     @Contract(pure = true)
-    Component withClickEvent(@Nullable ClickEvent clickEvent);
+    @NotNull Component withClickEvent(@Nullable ClickEvent clickEvent);
 
     @Contract(pure = true)
     default @NotNull Component replaceText(@NotNull Pattern pattern, @NotNull String replacement) {
@@ -405,103 +374,137 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return ComponentUtils.linear(newArr);
     }
 
-    String toLegacy();
+    @NotNull String toLegacy();
 
-    String toPlainText();
+    @NotNull String toPlainText();
 
-    String toJavaJson();
+    @NotNull String toJavaJson();
 
     boolean hasStyling();
 
     interface Builder<B extends Builder<B, C>, C extends Component> extends ComponentLike {
-        B color(Color color);
+        @Contract("_ -> this")
+        @NotNull B color(@NotNull Color color);
 
-        default B append(String text) {
+        @Contract("_ -> this")
+        default @NotNull B append(@NotNull String text) {
             return append(Component.text(text));
         }
 
-        B append(Component component);
+        @Contract("_ -> this")
+        @NotNull B append(@NotNull Component component);
 
-        B append(ComponentLike component);
+        @Contract("_ -> this")
+        @NotNull B append(@NotNull ComponentLike component);
 
-        B append(Component... components);
+        @Contract("_ -> this")
+        @NotNull B append(@NotNull Component @NotNull... components);
 
-        B append(ComponentLike... components);
+        @Contract("_ -> this")
+        @NotNull B append(@NotNull ComponentLike @NotNull... components);
 
-        B append(Collection<Component> components);
+        @Contract("_ -> this")
+        @NotNull B append(@NotNull Collection<@NotNull Component> components);
 
         @LimitedVersionSupport(">= 1.16")
-        B font(NamespacedMappingKey font);
+        @Contract("_ -> this")
+        @NotNull B font(@Nullable NamespacedMappingKey font);
 
-        default B bold() {
+        @Contract("-> this")
+        default @NotNull B bold() {
             return bold(true);
         }
 
-        B bold(boolean bold);
+        @Contract("_ -> this")
+        @NotNull B bold(boolean bold);
 
-        B bold(TriState bold);
+        @Contract("_ -> this")
+        @NotNull B bold(@NotNull TriState bold);
 
-        default B italic() {
+        @Contract("-> this")
+        default @NotNull B italic() {
             return italic(true);
         }
 
-        B italic(boolean italic);
+        @Contract("_ -> this")
+        @NotNull B italic(boolean italic);
 
-        B italic(TriState italic);
+        @Contract("_ -> this")
+        @NotNull B italic(@NotNull TriState italic);
 
-        default B underlined() {
+        @Contract("-> this")
+        default @NotNull B underlined() {
             return underlined(true);
         }
 
-        B underlined(boolean underlined);
+        @Contract("_ -> this")
+        @NotNull B underlined(boolean underlined);
 
-        B underlined(TriState underlined);
+        @Contract("_ -> this")
+        @NotNull B underlined(@NotNull TriState underlined);
 
-        default B strikethrough() {
+        @Contract("-> this")
+        default @NotNull B strikethrough() {
             return strikethrough(true);
         }
 
-        B strikethrough(boolean strikethrough);
+        @Contract("_ -> this")
+        @NotNull B strikethrough(boolean strikethrough);
 
-        B strikethrough(TriState strikethrough);
+        @Contract("_ -> this")
+        @NotNull B strikethrough(@NotNull TriState strikethrough);
 
-        default B obfuscated() {
+        @Contract("-> this")
+        default @NotNull B obfuscated() {
             return obfuscated(true);
         }
 
-        B obfuscated(TriState obfuscated);
+        @Contract("_ -> this")
+        @NotNull B obfuscated(@NotNull TriState obfuscated);
 
-        B obfuscated(boolean obfuscated);
+        @Contract("_ -> this")
+        @NotNull B obfuscated(boolean obfuscated);
 
-        B insertion(@Nullable String insertion);
+        @Contract("_ -> this")
+        @NotNull B insertion(@Nullable String insertion);
 
-        B hoverEvent(@Nullable HoverEvent event);
+        @Contract("_ -> this")
+        @NotNull B hoverEvent(@Nullable HoverEvent event);
 
-        default B hoverEvent(@Nullable HoverEvent.Builder event) {
+        @Contract("_ -> this")
+        default @NotNull B hoverEvent(HoverEvent.@Nullable Builder event) {
             return hoverEvent(event != null ? event.build() : null);
         }
 
-        B hoverEvent(@Nullable ItemContent itemContent);
+        @Contract("_ -> this")
+        @NotNull B hoverEvent(@Nullable ItemContent itemContent);
 
-        default B hoverEvent(@Nullable ItemContent.Builder itemContent) {
+        @Contract("_ -> this")
+        default @NotNull B hoverEvent(ItemContent.@Nullable Builder itemContent) {
             return hoverEvent(itemContent != null ? itemContent.build() : null);
         }
 
-        B hoverEvent(@Nullable EntityContent entityContent);
+        @Contract("_ -> this")
+        @NotNull B hoverEvent(@Nullable EntityContent entityContent);
 
-        default B hoverEvent(@Nullable EntityContent.Builder entityContent) {
+        @Contract("_ -> this")
+        default @NotNull B hoverEvent(EntityContent.@Nullable Builder entityContent) {
             return hoverEvent(entityContent != null ? entityContent.build() : null);
         }
 
-        B hoverEvent(@Nullable ComponentLike component);
+        @Contract("_ -> this")
+        @NotNull B hoverEvent(@Nullable ComponentLike component);
 
-        B hoverEvent(@Nullable Component component);
+        @Contract("_ -> this")
+        @NotNull B hoverEvent(@Nullable Component component);
 
-        B clickEvent(@Nullable ClickEvent event);
+        @Contract("_ -> this")
+        @NotNull B clickEvent(@Nullable ClickEvent event);
 
         boolean hasStyling();
 
-        C build();
+        @Contract(value = "-> new", pure = true)
+        @NotNull C build();
 
         @Override
         default @NotNull Component asComponent() {

@@ -24,8 +24,7 @@ import org.screamingsandals.lib.spectator.ComponentLike;
 
 public interface SPlayerDeathEvent extends SEntityDeathEvent, SPlayerEvent {
 
-    @Nullable
-    Component deathMessage();
+    @Nullable Component deathMessage();
 
     void deathMessage(@Nullable Component deathMessage);
 
@@ -59,6 +58,5 @@ public interface SPlayerDeathEvent extends SEntityDeathEvent, SPlayerEvent {
 
     void droppedExp(int droppedExp);
 
-    @Nullable
-    PlayerWrapper killer();
+    @Nullable PlayerWrapper killer();
 }

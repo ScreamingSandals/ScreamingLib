@@ -19,14 +19,15 @@ package org.screamingsandals.lib.spectator.sound;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @RequiredArgsConstructor
 @ApiStatus.Internal
 class SoundSourceLink implements SoundSource {
-    private final String name;
-    private SoundSource cache;
+    private final @NotNull String name;
+    private @Nullable SoundSource cache;
 
-    private SoundSource obtainSource() {
+    private @NotNull SoundSource obtainSource() {
         if (cache == null) {
             cache = SoundSource.soundSource(name);
         }

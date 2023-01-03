@@ -29,8 +29,8 @@ import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 @Data
 @Accessors(fluent = true)
 public class BungeeAdapter implements Adapter {
-    private final CommandSender sender;
-    private final Audience owner;
+    private final @NotNull CommandSender sender;
+    private final @NotNull Audience owner;
 
     @Override
     public void sendMessage(@NotNull ComponentLike message) {
