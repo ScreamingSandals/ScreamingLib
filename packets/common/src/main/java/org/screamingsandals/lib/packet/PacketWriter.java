@@ -19,6 +19,8 @@ package org.screamingsandals.lib.packet;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.item.Item;
@@ -79,12 +81,12 @@ public abstract class PacketWriter extends OutputStream {
     /**
      * The ByteBuf buffer that will be populated according to packet contents.
      */
-    private final ByteBuf buffer;
+    private final @NotNull ByteBuf buffer;
 
     /**
      * Additional packets that are required to be sent alongside other packets for proper functionality.
      */
-    private final List<AbstractPacket> appendedPackets = new ArrayList<>();
+    private final @NotNull List<@NotNull AbstractPacket> appendedPackets = new ArrayList<>();
 
     private boolean cancelled;
 
@@ -93,7 +95,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param component the component to serialize
      */
-    public void writeComponent(Component component) {
+    public void writeComponent(@Nullable Component component) {
         writeSizedString(component == null ? "{\"text\":\"\"}" : component.toJavaJson());
     }
 
@@ -230,7 +232,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param string to write
      */
-    public void writeSizedString(String string) {
+    public void writeSizedString(@NotNull String string) {
         writeSizedString(string, MAX_STRING_LENGTH);
     }
 
@@ -254,7 +256,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param s the string to write
      */
-    public void writeNullTerminatedString(String s) {
+    public void writeNullTerminatedString(@NotNull String s) {
         buffer.writeCharSequence(s + '\0', StandardCharsets.UTF_8);
     }
 
@@ -263,7 +265,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param array the array to write
      */
-    public void writeVarIntArray(int[] array) {
+    public void writeVarIntArray(int @Nullable [] array) {
         if (array == null) {
             writeVarInt(0);
             return;
@@ -279,7 +281,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param array the array to write
      */
-    public void writeLongArray(long[] array) {
+    public void writeLongArray(long @Nullable [] array) {
         if (array == null) {
             writeVarInt(0);
             return;
@@ -295,7 +297,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param bytes the byte array to write
      */
-    public void writeBytes(byte[] bytes) {
+    public void writeBytes(byte @Nullable [] bytes) {
         buffer.writeBytes(bytes);
     }
 
@@ -304,7 +306,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param collection the string collection to write
      */
-    public void writeStringCollection(Collection<String> collection) {
+    public void writeStringCollection(@Nullable Collection<@NotNull String> collection) {
         if (collection == null) {
             writeVarInt(0);
             return;
@@ -320,7 +322,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param array the string array to write
      */
-    public void writeStringArray(String[] array) {
+    public void writeStringArray(@NotNull String @Nullable [] array) {
         if (array == null) {
             writeVarInt(0);
             return;
@@ -336,7 +338,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param uuid the uuid to write
      */
-    public void writeUuid(UUID uuid) {
+    public void writeUuid(@NotNull UUID uuid) {
         writeLong(uuid.getMostSignificantBits());
         writeLong(uuid.getLeastSignificantBits());
     }
@@ -346,7 +348,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param location the location at which the block exists to write to the buffer
      */
-    public void writeBlockPosition(LocationHolder location) {
+    public void writeBlockPosition(@NotNull LocationHolder location) {
         writeBlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
@@ -356,7 +358,7 @@ public abstract class PacketWriter extends OutputStream {
      * @param main the main location to calculate the offset from
      * @param location the location to find subtract to the main vector to calculate the offset from
      */
-    public void writeByteOffset(Vector3Df main, Vector3Df location) {
+    public void writeByteOffset(@NotNull Vector3Df main, @NotNull Vector3Df location) {
         writeByte((byte) (location.getX() - main.getX()));
         writeByte((byte) (location.getY() - main.getY()));
         writeByte((byte) (location.getZ() - main.getZ()));
@@ -378,7 +380,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param vector3D the vector3d instance to write to the buffer
      */
-    public void writeVector(Vector3D vector3D) {
+    public void writeVector(@NotNull Vector3D vector3D) {
         writeDouble(vector3D.getX());
         writeDouble(vector3D.getY());
         writeDouble(vector3D.getZ());
@@ -389,7 +391,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param locationHolder the location to write
      */
-    public void writeVector(LocationHolder locationHolder) {
+    public void writeVector(@NotNull LocationHolder locationHolder) {
         writeVector(locationHolder.asVector());
     }
 
@@ -398,7 +400,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param locationHolder the location to write the fixed point vector
      */
-    public void writeFixedPointVector(LocationHolder locationHolder) {
+    public void writeFixedPointVector(@NotNull LocationHolder locationHolder) {
         writeFixedPointVector(locationHolder.asVector());
     }
 
@@ -407,7 +409,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param vector3D the vector to write
      */
-    public void writeFixedPointVector(Vector3D vector3D) {
+    public void writeFixedPointVector(@NotNull Vector3D vector3D) {
         writeInt((int) (vector3D.getX() * 32));
         writeInt((int) (vector3D.getY() * 32));
         writeInt((int) (vector3D.getZ() * 32));
@@ -418,7 +420,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param locationHolder the location from which to write the (yaw/pitch) from
      */
-    public void writeByteRotation(LocationHolder locationHolder) {
+    public void writeByteRotation(@NotNull LocationHolder locationHolder) {
         writeByteRotation(locationHolder.getYaw(), locationHolder.getPitch());
     }
 
@@ -438,7 +440,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param vector3Df the vector to write
      */
-    public void writeVector(Vector3Df vector3Df) {
+    public void writeVector(@NotNull Vector3Df vector3Df) {
         writeFloat(vector3Df.getX());
         writeFloat(vector3Df.getY());
         writeFloat(vector3Df.getZ());
@@ -450,7 +452,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param vector3D the motion vector to write
      */
-    public void writeMotion(Vector3D vector3D) {
+    public void writeMotion(@NotNull Vector3D vector3D) {
         writeShort((int) (vector3D.getX() * 8000));
         writeShort((int) (vector3D.getY() * 8000));
         writeShort((int) (vector3D.getZ() * 8000));
@@ -458,7 +460,7 @@ public abstract class PacketWriter extends OutputStream {
 
     // TODO:
     // misat tf is this? fill jd for it
-    public void writeMove(Vector3D vector3D) {
+    public void writeMove(@NotNull Vector3D vector3D) {
         writeShort((int) (vector3D.getX() * 4096));
         writeShort((int) (vector3D.getY() * 4096));
         writeShort((int) (vector3D.getZ() * 4096));
@@ -469,7 +471,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param item the item to write
      */
-    public void writeItem(Item item) {
+    public void writeItem(@NotNull Item item) {
         if (item.getMaterial().isAir()) {
             if (protocol() >= 402) {
                 writeBoolean(false);
@@ -493,32 +495,32 @@ public abstract class PacketWriter extends OutputStream {
         }
     }
 
-    public <T> void writeSizedArray(T[] array, Consumer<T> consumer) {
+    public <T> void writeSizedArray(@NotNull T @NotNull [] array, @NotNull Consumer<@NotNull T> consumer) {
         writeVarInt(array.length);
         for (var a : array) {
             consumer.accept(a);
         }
     }
 
-    public <T> void writeSizedCollection(Collection<T> collection, Consumer<T> consumer) {
+    public <T> void writeSizedCollection(@NotNull Collection<@NotNull T> collection, @NotNull Consumer<@NotNull T> consumer) {
         writeVarInt(collection.size());
         for (var a : collection) {
             consumer.accept(a);
         }
     }
 
-    public <K, V> void writeSizedMap(Map<K, V> map, BiConsumer<K, V> consumer) {
+    public <K, V> void writeSizedMap(@NotNull Map<@NotNull K, V> map, @NotNull BiConsumer<@NotNull K, V> consumer) {
         writeVarInt(map.size());
         for (var a : map.entrySet()) {
             consumer.accept(a.getKey(), a.getValue());
         }
     }
 
-    public void writeBlockData(BlockTypeHolder blockDataHolder) {
+    public void writeBlockData(@NotNull BlockTypeHolder blockDataHolder) {
         writeVarInt(getBlockStateId(blockDataHolder));
     }
 
-    public void writeDataWatcherCollection(Collection<MetadataItem> collection) {
+    public void writeDataWatcherCollection(@NotNull Collection<@NotNull MetadataItem> collection) {
         for (var item : collection) {
             item.write(this);
         }
@@ -527,7 +529,7 @@ public abstract class PacketWriter extends OutputStream {
     }
 
     // Platform classes must override this method
-    public void writeNBTFromItem(Item item) {
+    public void writeNBTFromItem(@NotNull Item item) {
         write(0);
     }
 
@@ -535,7 +537,7 @@ public abstract class PacketWriter extends OutputStream {
         // TODO: write nbt
     //}
 
-    public void append(AbstractPacket packet) {
+    public void append(@NotNull AbstractPacket packet) {
         appendedPackets.add(packet);
     }
 
@@ -548,9 +550,9 @@ public abstract class PacketWriter extends OutputStream {
         return Server.getProtocolVersion();
     }
 
-    protected abstract int getItemId(ItemTypeHolder material);
+    protected abstract int getItemId(@NotNull ItemTypeHolder material);
 
-    protected abstract int getBlockStateId(BlockTypeHolder blockDataHolder);
+    protected abstract int getBlockStateId(@NotNull BlockTypeHolder blockDataHolder);
 
-    public abstract int getEquipmentSlotId(EquipmentSlotHolder equipmentSlotHolder);
+    public abstract int getEquipmentSlotId(@NotNull EquipmentSlotHolder equipmentSlotHolder);
 }

@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.experimental.Tolerate;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.minitag.nodes.Node;
@@ -46,25 +47,25 @@ public class MiniTagParser {
     public static final char QUOTE = '"';
     public static final char ALTERNATE_QUOTE = '\'';
     public static final char ARGUMENT_SEPARATOR = ':';
-    public static final String RESET_TAG = "reset";
-    public static final String PRE_TAG = "pre";
-    public static final TagType UNKNOWN_TAG_TYPE = TagType.SINGLE;
+    public static final @NotNull String RESET_TAG = "reset";
+    public static final @NotNull String PRE_TAG = "pre";
+    public static final @NotNull TagType UNKNOWN_TAG_TYPE = TagType.SINGLE;
 
     private final boolean strictClosing;
     private final boolean escapeInvalidEndings;
     private final @Nullable String preTag;
     private final @Nullable String resetTag;
-    private final TagType unknownTagType;
+    private final @NotNull TagType unknownTagType;
     private final char escapeSymbol;
     private final char tagOpeningSymbol;
     private final char tagClosingSymbol;
     private final char endingTagSymbol;
     private final char argumentSeparator;
-    private final List<Character> quotes;
-    private final Map<String, RegisteredTag> registeredTags;
-    private final Map<Pattern, RegisteredTag> registeredRegexTags;
+    private final @NotNull List<@NotNull Character> quotes;
+    private final @NotNull Map<@NotNull String, RegisteredTag> registeredTags;
+    private final @NotNull Map<@NotNull Pattern, RegisteredTag> registeredRegexTags;
 
-    public RootNode parse(String tag) {
+    public @NotNull RootNode parse(@NotNull String tag) {
 
         // First iteration: parse the string
         var chars = tag.toCharArray();
@@ -208,17 +209,18 @@ public class MiniTagParser {
         return transformAliases(root);
     }
 
-    public RootNode newRoot() {
+    @Contract(value = "-> new", pure = true)
+    public @NotNull RootNode newRoot() {
         return new RootNode();
     }
 
-    public String serialize(RootNode root) {
+    public @NotNull String serialize(@NotNull RootNode root) {
         var builder = new StringBuilder();
         serializeChildren(builder, root.children(), true);
         return builder.toString();
     }
 
-    private List<TagNode> serializeChildren(StringBuilder builder, List<Node> children, boolean top) {
+    private @NotNull List<@NotNull TagNode> serializeChildren(@NotNull StringBuilder builder, @NotNull List<@NotNull Node> children, boolean top) {
         var stillOpenedTags = new ArrayList<TagNode>();
         for (var a = 0; a < children.size(); a++) {
             var child = children.get(a);
@@ -321,7 +323,7 @@ public class MiniTagParser {
         return stillOpenedTags;
     }
 
-    private TagNode readTag(String tag) {
+    private @NotNull TagNode readTag(@NotNull String tag) {
         if (!tag.contains(":")) {
             return new TagNode(tag, List.of());
         } else {
@@ -353,7 +355,7 @@ public class MiniTagParser {
                 } else if (c == argumentSeparator) {
                     arguments.add(builder.toString());
                     builder.setLength(0);
-                } else if (builder.isEmpty() && quotes.contains(c)) {
+                } else if (builder.length() == 0 && quotes.contains(c)) {
                     inQuotes = true;
                     usedQuote = c;
                 } else {
@@ -361,7 +363,7 @@ public class MiniTagParser {
                 }
             }
 
-            if (!builder.isEmpty()) {
+            if (builder.length() != 0) {
                 arguments.add(builder.toString());
             }
 
@@ -371,7 +373,7 @@ public class MiniTagParser {
         }
     }
 
-    private void mergeTextChildren(Node node) {
+    private void mergeTextChildren(@NotNull Node node) {
         if (node.children().isEmpty()) {
             return;
         }
@@ -391,7 +393,7 @@ public class MiniTagParser {
             if (child instanceof TextNode) {
                 builder.append(((TextNode) child).getText());
             } else {
-                if (!builder.isEmpty()) {
+                if (builder.length() != 0) {
                     node.putChildren(new TextNode(builder.toString()));
                     builder.setLength(0);
                 }
@@ -400,14 +402,14 @@ public class MiniTagParser {
             }
         }
 
-        if (!builder.isEmpty()) {
+        if (builder.length() != 0) {
             node.putChildren(new TextNode(builder.toString()));
             builder.setLength(0);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Node> T transformAliases(T node) {
+    private <T extends Node> @NotNull T transformAliases(@NotNull T node) {
         var children = List.copyOf(node.children());
         node.children().clear();
         if (node instanceof TagNode) {
@@ -431,7 +433,8 @@ public class MiniTagParser {
         return node;
     }
 
-    public static Builder builder() {
+    @Contract(value = "-> new", pure = true)
+    public static @NotNull Builder builder() {
         return new Builder();
     }
 
@@ -447,55 +450,63 @@ public class MiniTagParser {
         private boolean escapeInvalidEndings;
         private @Nullable String preTag;
         private @Nullable String resetTag = RESET_TAG;
-        private TagType unknownTagType = UNKNOWN_TAG_TYPE;
+        private @NotNull TagType unknownTagType = UNKNOWN_TAG_TYPE;
         private char escapeSymbol = ESCAPE_SYMBOL;
         private char tagOpeningSymbol = TAG_OPENING_SYMBOL;
         private char tagClosingSymbol = TAG_CLOSING_SYMBOL;
         private char endingTagSymbol = ENDING_TAG_SYMBOL;
         private char argumentSeparator = ARGUMENT_SEPARATOR;
-        private List<Character> quotes = List.of(QUOTE, ALTERNATE_QUOTE);
-        private final Map<String, RegisteredTag> registeredTags = new HashMap<>();
-        private final Map<Pattern, RegisteredTag> registeredRegexTags = new HashMap<>();
+        private @NotNull List<@NotNull Character> quotes = List.of(QUOTE, ALTERNATE_QUOTE);
+        private final @NotNull Map<@NotNull String, RegisteredTag> registeredTags = new HashMap<>();
+        private final @NotNull Map<@NotNull Pattern, RegisteredTag> registeredRegexTags = new HashMap<>();
 
         @Tolerate
+        @Contract("_ -> this")
         public @NotNull Builder preTag(boolean enablePreTag) {
             preTag = enablePreTag ? PRE_TAG : null;
             return this;
         }
 
         @Tolerate
+        @Contract("_ -> this")
         public @NotNull Builder resetTag(boolean enableResetTag) {
             resetTag = enableResetTag ? RESET_TAG : null;
             return this;
         }
 
         @Tolerate
-        public @NotNull Builder quotes(Character... quotes) {
-            this.quotes = Arrays.asList(quotes);
+        @Contract("_ -> this")
+        public @NotNull Builder quotes(@NotNull Character @NotNull... quotes) {
+            this.quotes = List.of(quotes);
             return this;
         }
 
-        public @NotNull Builder registerTag(String tag, RegisteredTag registeredTag) {
+        @Contract("_, _ -> this")
+        public @NotNull Builder registerTag(@NotNull String tag, @NotNull RegisteredTag registeredTag) {
             registeredTags.put(tag, registeredTag);
             return this;
         }
 
-        public @NotNull Builder registerTag(Pattern tag, RegisteredTag registeredTag) {
+        @Contract("_, _ -> this")
+        public @NotNull Builder registerTag(@NotNull Pattern tag, @NotNull RegisteredTag registeredTag) {
             registeredRegexTags.put(tag, registeredTag);
             return this;
         }
 
-        public @NotNull Builder registerTag(String tag, TagType type) {
+        @Contract("_, _ -> this")
+        public @NotNull Builder registerTag(@NotNull String tag, @NotNull TagType type) {
             registeredTags.put(tag, new StandardTag(type));
             return this;
         }
 
-        public @NotNull Builder registerTag(Pattern tag, TagType type) {
+        @Contract("_, _ -> this")
+        public @NotNull Builder registerTag(@NotNull Pattern tag, @NotNull TagType type) {
             registeredRegexTags.put(tag, new StandardTag(type));
             return this;
         }
 
-        public @NotNull Builder registerTag(String tag, RegisteredTag registeredTag, String... aliases) {
+        @Contract("_, _, _ -> this")
+        public @NotNull Builder registerTag(@NotNull String tag, @NotNull RegisteredTag registeredTag, @NotNull String @NotNull... aliases) {
             registeredTags.put(tag, registeredTag);
             for (var alias : aliases) {
                 if (registeredTag instanceof TransformedTag) {
@@ -507,7 +518,8 @@ public class MiniTagParser {
             return this;
         }
 
-        public @NotNull Builder registerTag(String tag, TagType type, String... aliases) {
+        @Contract("_, _, _ -> this")
+        public @NotNull Builder registerTag(@NotNull String tag, @NotNull TagType type, @NotNull String @NotNull... aliases) {
             registeredTags.put(tag, new StandardTag(type));
             for (var alias : aliases) {
                 registeredTags.put(alias, new TransformedTag(type, node -> new TagNode(tag, node.getArgs())));
@@ -515,7 +527,8 @@ public class MiniTagParser {
             return this;
         }
 
-        public MiniTagParser build() {
+        @Contract(value = "-> new", pure = true)
+        public @NotNull MiniTagParser build() {
             return new MiniTagParser(
                     strictClosing,
                     escapeInvalidEndings,

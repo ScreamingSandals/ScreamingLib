@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 
@@ -35,11 +36,11 @@ public class SClientboundAddMobPacket extends AbstractPacket {
     private LocationHolder location;
     private Vector3D velocity;
     private int typeId;
-    private final List<MetadataItem> metadata = new ArrayList<>();
+    private final @NotNull List<@NotNull MetadataItem> metadata = new ArrayList<>();
     private byte headYaw;
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         if (writer.protocol() >= 759) {
             // 1.19: Switch to ClientboundAddEntityPacket
             writer.setCancelled(true);

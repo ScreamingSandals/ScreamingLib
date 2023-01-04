@@ -36,7 +36,7 @@ public abstract class PluginContainer implements Wrapper {
     private LoggerWrapper logger;
 
     @ApiStatus.Internal
-    public void init(@NotNull PluginDescription pluginDescription, LoggerWrapper logger) {
+    public void init(@NotNull PluginDescription pluginDescription, @NotNull LoggerWrapper logger) {
         if (this.pluginDescription != null) {
             throw new UnsupportedOperationException(pluginDescription.getName() + " is already initialized!");
         }
@@ -81,12 +81,12 @@ public abstract class PluginContainer implements Wrapper {
         }
     }
 
-    public Path getDataFolder() {
+    public @NotNull Path getDataFolder() {
         return getPluginDescription().getDataFolder();
     }
 
     @ApiStatus.Experimental
-    public Logger getSLF4JLogger() {
+    public @NotNull Logger getSLF4JLogger() {
         return logger.as(Logger.class);
     }
 

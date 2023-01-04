@@ -19,15 +19,16 @@ package org.screamingsandals.lib.utils.visual;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 
 @AllArgsConstructor(staticName = "of", access = AccessLevel.PACKAGE)
 @Data
 public final class SimpleTextEntry implements TextEntry {
-    private final String identifier;
-    private final Component text;
+    private final @NotNull String identifier;
+    private final @NotNull Component text;
 
-    static SimpleTextEntry of(Component text) {
+    static @NotNull SimpleTextEntry of(@NotNull Component text) {
         return SimpleTextEntry.of("", text);
     }
 }

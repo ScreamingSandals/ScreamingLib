@@ -31,10 +31,10 @@ import java.util.stream.Stream;
 public final class CompoundTag implements Tag, CompoundTagTreeInspector, CompoundTagModifier {
     public static final @NotNull CompoundTag EMPTY = new CompoundTag(Map.of());
 
-    private final @NotNull Map<@NotNull String, @NotNull Tag> value;
+    private final @NotNull Map<@NotNull String, Tag> value;
 
     @Contract(value = "-> new", pure = true)
-    public @NotNull Map<@NotNull String, @NotNull Tag> value() {
+    public @NotNull Map<@NotNull String, Tag> value() {
         return Map.copyOf(value); // keep this class immutable
     }
 
@@ -75,7 +75,7 @@ public final class CompoundTag implements Tag, CompoundTagTreeInspector, Compoun
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    public @NotNull CompoundTag with(@NotNull String name, @NotNull Map<@NotNull String, @NotNull Tag> value) {
+    public @NotNull CompoundTag with(@NotNull String name, @NotNull Map<@NotNull String, Tag> value) {
         var clone = new HashMap<>(this.value);
         clone.put(name, new CompoundTag(value));
         return new CompoundTag(clone);

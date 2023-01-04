@@ -33,8 +33,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
-    protected final @NotNull Map<@NotNull UUID, @NotNull T> activeVisuals = new HashMap<>();
-    private final @NotNull Map<@NotNull UUID, @NotNull Long> coolDownMap = new HashMap<>();
+    protected final @NotNull Map<@NotNull UUID, T> activeVisuals = new HashMap<>();
+    private final @NotNull Map<@NotNull UUID, Long> coolDownMap = new HashMap<>();
 
     public void addVisual(@NotNull UUID uuid, @NotNull T visual) {
         activeVisuals.put(uuid, visual);
@@ -48,7 +48,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         activeVisuals.remove(uuid);
     }
 
-    public @NotNull Map<@NotNull UUID, @NotNull T> getActiveVisuals() {
+    public @NotNull Map<@NotNull UUID, T> getActiveVisuals() {
         return Map.copyOf(activeVisuals);
     }
 

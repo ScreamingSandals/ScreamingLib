@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -28,7 +29,7 @@ public class SClientboundRemoveMobEffectPacket extends AbstractPacket {
     private byte effect;
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         writer.writeVarInt(entityId);
         writer.writeByte(effect);
     }

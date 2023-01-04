@@ -20,6 +20,7 @@ import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.proxy.PendingConnection;
 import org.screamingsandals.lib.proxy.event.SPlayerLoginEvent;
@@ -32,7 +33,7 @@ public class PlayerLoginEventFactory extends AbstractVelocityEventHandlerFactory
     }
 
     @Override
-    protected SPlayerLoginEvent wrapEvent(LoginEvent event, EventPriority priority) {
+    protected @NotNull SPlayerLoginEvent wrapEvent(@NotNull LoginEvent event, @NotNull EventPriority priority) {
         final var player = event.getPlayer();
         final var connection = new PendingConnection(player.getUsername(),
                 player.getProtocolVersion().getProtocol(),

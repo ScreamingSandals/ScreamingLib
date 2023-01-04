@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 
@@ -27,9 +28,9 @@ import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 @Data
 @AllArgsConstructor
 public class SPlayerChatEvent implements SCancellableEvent {
-    private final ProxiedPlayerWrapper player;
+    private final @NotNull ProxiedPlayerWrapper player;
     private final boolean isCommand;
-    private String message;
+    private @NotNull String message;
     private boolean cancelled;
 
     @Override

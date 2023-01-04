@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.sidebar;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.visuals.DatableVisual;
 import org.screamingsandals.lib.visuals.LinedVisual;
 public interface Sidebar extends LinedVisual<Sidebar>, DatableVisual<Sidebar>, TeamedSidebar<Sidebar> {
@@ -25,7 +27,8 @@ public interface Sidebar extends LinedVisual<Sidebar>, DatableVisual<Sidebar>, T
      *
      * @return created Sidebar
      */
-    static Sidebar of() {
+    @Contract(value = "-> new", pure = true)
+    static @NotNull Sidebar of() {
         return SidebarManager.sidebar();
     }
 }

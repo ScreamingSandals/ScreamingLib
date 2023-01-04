@@ -32,11 +32,11 @@ import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 
 @Service
 public class BukkitEconomyManager extends EconomyManager {
-    private static final TransactionResult MISSING_PLUGIN_FAILURE = new TransactionResult(0, 0, false, "Vault is not installed or economy is not supported!");
-    private static final TransactionResult VAULT_RETURNED_NULL = new TransactionResult(0, 0, false, "Vault returned null!");
+    private static final @NotNull TransactionResult MISSING_PLUGIN_FAILURE = new TransactionResult(0, 0, false, "Vault is not installed or economy is not supported!");
+    private static final @NotNull TransactionResult VAULT_RETURNED_NULL = new TransactionResult(0, 0, false, "Vault returned null!");
 
 
-    private Economy vaultEcon;
+    private @Nullable Economy vaultEcon;
 
     @OnEnable
     public void onEnable() {

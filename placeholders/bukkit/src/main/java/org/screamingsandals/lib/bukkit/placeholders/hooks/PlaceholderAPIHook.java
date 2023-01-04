@@ -22,6 +22,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.placeholders.PlaceholderExpansion;
 import org.screamingsandals.lib.placeholders.hooks.Hook;
 import org.screamingsandals.lib.player.PlayerMapper;
@@ -29,22 +30,22 @@ import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 
 @RequiredArgsConstructor
 public class PlaceholderAPIHook implements Hook {
-    private final Plugin plugin;
+    private final @NotNull Plugin plugin;
 
     @Override
-    public void register(PlaceholderExpansion expansion) {
+    public void register(@NotNull PlaceholderExpansion expansion) {
         new GenericExpansion(plugin, expansion).register();
     }
 
     @Override
-    public String resolveString(MultiPlatformOfflinePlayer player, String message) {
-        return PlaceholderAPI.setPlaceholders(player.as(OfflinePlayer.class), message);
+    public @NotNull String resolveString(@Nullable MultiPlatformOfflinePlayer player, @NotNull String message) {
+        return PlaceholderAPI.setPlaceholders(player == null ? null : player.as(OfflinePlayer.class), message);
     }
 
     @RequiredArgsConstructor
     public static class GenericExpansion extends me.clip.placeholderapi.expansion.PlaceholderExpansion {
-        private final Plugin plugin;
-        private final PlaceholderExpansion placeholderExpansion;
+        private final @NotNull Plugin plugin;
+        private final @NotNull PlaceholderExpansion placeholderExpansion;
 
         @Override
         public @NotNull String getIdentifier() {
@@ -62,19 +63,19 @@ public class PlaceholderAPIHook implements Hook {
         }
 
         @Override
-        public String onRequest(OfflinePlayer player, @NotNull String params) {
-            var result = placeholderExpansion.onRequest(PlayerMapper.wrapOfflinePlayer(player), params);
+        public @Nullable String onRequest(@Nullable OfflinePlayer player, @NotNull String params) {
+            var result = placeholderExpansion.onRequest(player == null ? null : PlayerMapper.wrapOfflinePlayer(player), params);
             return result != null ? result.toLegacy() : null;
         }
 
         @Override
-        public String onPlaceholderRequest(Player player, @NotNull String params) {
+        public @Nullable String onPlaceholderRequest(@Nullable Player player, @NotNull String params) {
             // huh, older version?
             return onRequest(player, params);
         }
 
         @SuppressWarnings("all")
-        public String getPlugin() {
+        public @NotNull String getPlugin() {
             return plugin.getName();
         }
     }

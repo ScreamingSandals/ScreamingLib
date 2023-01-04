@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.entity.type;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.entity.EntityType;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
@@ -31,7 +32,7 @@ import java.util.*;
 
 @Service
 public class BukkitEntityTypeMapping extends EntityTypeMapping {
-    private static final Map<EntityType, List<String>> tagBackPorts = new HashMap<>();
+    private static final @NotNull Map<@NotNull EntityType, List<String>> tagBackPorts = new HashMap<>();
 
     public BukkitEntityTypeMapping() {
         entityTypeConverter

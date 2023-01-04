@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.tasker.initializer;
 
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.tasker.TaskBuilderImpl;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.task.TaskState;
@@ -33,9 +34,9 @@ public abstract class AbstractTaskInitializer {
         controllable.disable(Tasker::cancelAll);
     }
 
-    public abstract TaskerTask start(TaskBuilderImpl taskerBuilder);
+    public abstract @NotNull TaskerTask start(@NotNull TaskBuilderImpl taskerBuilder);
 
-    public abstract TaskState getState(TaskerTask taskerTask);
+    public abstract @NotNull TaskState getState(@NotNull TaskerTask taskerTask);
 
-    public abstract void cancel(TaskerTask task);
+    public abstract void cancel(@NotNull TaskerTask task);
 }

@@ -18,6 +18,7 @@ package org.screamingsandals.lib.event;
 
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.UnknownNullability;
 import org.screamingsandals.lib.utils.ReceiverConsumer;
 
 import java.util.function.Function;
@@ -27,48 +28,49 @@ import java.util.function.Function;
 @AllArgsConstructor(staticName = "of")
 public final class EventHandler<E extends SEvent> {
     @Setter(AccessLevel.NONE)
-    private ReceiverConsumer<E> consumer;
-    private final EventPriority eventPriority;
+    @UnknownNullability("At the end of execution of all of methods, this attribute is not null. However, immediately after the construction, it can be null.")
+    private ReceiverConsumer<@NotNull E> consumer;
+    private final @NotNull EventPriority eventPriority;
     private final boolean ignoreCancelled;
 
-    public static <E extends SEvent> EventHandler<E> of(ReceiverConsumer<E> consumer) {
+    public static <E extends SEvent> @NotNull EventHandler<E> of(@NotNull ReceiverConsumer<@NotNull E> consumer) {
         return of(consumer, EventPriority.NORMAL, false);
     }
 
-    public static <E extends SEvent> EventHandler<E> of(ReceiverConsumer<E> consumer, EventPriority eventPriority) {
+    public static <E extends SEvent> @NotNull EventHandler<E> of(@NotNull ReceiverConsumer<@NotNull E> consumer, @NotNull EventPriority eventPriority) {
         return of(consumer, eventPriority, false);
     }
 
-    public static <E extends SEvent> EventHandler<E> of(ReceiverConsumer<E> consumer, boolean ignoreCancelled) {
+    public static <E extends SEvent> @NotNull EventHandler<E> of(@NotNull ReceiverConsumer<@NotNull E> consumer, boolean ignoreCancelled) {
         return of(consumer, EventPriority.NORMAL, ignoreCancelled);
     }
 
-    public static <E extends SEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull ReceiverConsumer<E>> function) {
+    public static <E extends SEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull ReceiverConsumer<@NotNull E>> function) {
         EventHandler<E> manager = of(EventPriority.NORMAL, false);
         manager.consumer = function.apply(manager);
         return manager;
     }
 
-    public static <E extends SEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull ReceiverConsumer<E>> function, EventPriority eventPriority) {
+    public static <E extends SEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull ReceiverConsumer<@NotNull E>> function, @NotNull EventPriority eventPriority) {
         EventHandler<E> manager = of(eventPriority, false);
         manager.consumer = function.apply(manager);
         return manager;
     }
 
-    public static <E extends SEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull ReceiverConsumer<E>> function, boolean ignoreCancelled) {
+    public static <E extends SEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull ReceiverConsumer<@NotNull E>> function, boolean ignoreCancelled) {
         EventHandler<E> manager = of(EventPriority.NORMAL, ignoreCancelled);
         manager.consumer = function.apply(manager);
         return manager;
     }
 
-    public static <E extends SEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull ReceiverConsumer<E>> function, EventPriority eventPriority, boolean ignoreCancelled) {
+    public static <E extends SEvent> EventHandler<E> ofOneTime(Function<@NotNull EventHandler<E>, @NotNull ReceiverConsumer<@NotNull E>> function, @NotNull EventPriority eventPriority, boolean ignoreCancelled) {
         EventHandler<E> manager = of(eventPriority, ignoreCancelled);
         manager.consumer = function.apply(manager);
         return manager;
     }
 
     @SuppressWarnings("unchecked")
-    public void fire(SEvent event) {
+    public void fire(@NotNull SEvent event) {
         try {
             if (ignoreCancelled
                     && event instanceof Cancellable

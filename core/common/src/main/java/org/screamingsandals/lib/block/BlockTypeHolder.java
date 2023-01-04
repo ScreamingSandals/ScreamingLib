@@ -45,10 +45,10 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData, Taggab
     @Contract(value = "_ -> new", pure = true)
     @NotNull BlockTypeHolder withLegacyData(byte legacyData);
 
-    @Unmodifiable @NotNull Map<String, String> flatteningData();
+    @Unmodifiable @NotNull Map<@NotNull String, String> flatteningData();
 
     @Contract(value = "_ -> new", pure = true)
-    @NotNull BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> flatteningData);
+    @NotNull BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, String> flatteningData);
 
     @Contract(value = "_, _ -> new", pure = true)
     @NotNull BlockTypeHolder with(@NotNull String attribute, @NotNull String value);

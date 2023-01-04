@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.packet;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
@@ -28,7 +30,7 @@ import java.util.Collection;
 @AbstractService
 @ServiceDependencies(dependsOn = ProtocolInjector.class)
 public abstract class PacketMapper {
-    private static PacketMapper packetMapper;
+    private static @Nullable PacketMapper packetMapper;
 
     public PacketMapper() {
         if (packetMapper != null) {
@@ -52,7 +54,7 @@ public abstract class PacketMapper {
      * @param player the player to send the packet to
      * @param packet the packet instance to send the player
      */
-    public static void sendPacket(PlayerWrapper player, AbstractPacket packet) {
+    public static void sendPacket(@NotNull PlayerWrapper player, @NotNull AbstractPacket packet) {
         if (packetMapper == null) {
             throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
         }
@@ -65,7 +67,7 @@ public abstract class PacketMapper {
      * @param player the player to send the packet to
      * @param packet the packet instance to send the player
      */
-    public abstract void sendPacket0(PlayerWrapper player, AbstractPacket packet);
+    public abstract void sendPacket0(@NotNull PlayerWrapper player, @NotNull AbstractPacket packet);
 
 
     /**
@@ -74,14 +76,14 @@ public abstract class PacketMapper {
      * @param players the players to send the packet to
      * @param packet the packet instance to send the players
      */
-    public static void sendPacket(Collection<PlayerWrapper> players, AbstractPacket packet) {
+    public static void sendPacket(@NotNull Collection<@NotNull PlayerWrapper> players, @NotNull AbstractPacket packet) {
         if (packetMapper == null) {
             throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
         }
         players.forEach(player -> packetMapper.sendPacket0(player, packet));
     }
 
-    public static int getId(Class<? extends AbstractPacket> clazz) {
+    public static int getId(@NotNull Class<? extends AbstractPacket> clazz) {
         if (packetMapper == null) {
             throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
         }
@@ -95,7 +97,7 @@ public abstract class PacketMapper {
         return packetMapper.getArmorStandTypeId0();
     }
 
-    public abstract int getId0(Class<? extends AbstractPacket> clazz);
+    public abstract int getId0(@NotNull Class<? extends AbstractPacket> clazz);
 
     public abstract int getArmorStandTypeId0();
 }

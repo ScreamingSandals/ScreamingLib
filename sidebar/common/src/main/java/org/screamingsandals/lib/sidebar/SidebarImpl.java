@@ -53,7 +53,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     protected boolean destroyed;
     protected @NotNull AudienceComponentLike title = AudienceComponentLike.empty();
     private final @NotNull String objectiveKey;
-    private final @NotNull ConcurrentSkipListMap<@NotNull UUID, @NotNull ConcurrentSkipListMap<@NotNull Integer, @NotNull String>> lines = new ConcurrentSkipListMap<>();
+    private final @NotNull ConcurrentSkipListMap<@NotNull UUID, ConcurrentSkipListMap<@NotNull Integer, String>> lines = new ConcurrentSkipListMap<>();
 
     public SidebarImpl(@NotNull UUID uuid) {
         super(uuid);

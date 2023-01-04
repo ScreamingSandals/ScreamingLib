@@ -38,6 +38,7 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @ServiceDependencies
@@ -58,7 +59,7 @@ public abstract class AbstractSignManager {
                 }
                 try {
                     var loc = sign.node("location").get(SignLocation.class);
-                    var clickableSign = new ClickableSign(loc, name);
+                    var clickableSign = new ClickableSign(Objects.requireNonNull(loc), name);
                     signs.add(clickableSign);
                     updateSign(clickableSign);
                 } catch (SerializationException e) {
@@ -70,7 +71,7 @@ public abstract class AbstractSignManager {
         }
     }
 
-    public boolean isSignRegistered(SignLocation location) {
+    public boolean isSignRegistered(@NotNull SignLocation location) {
         return signs.stream()
                 .anyMatch(sign -> sign.getLocation().equals(location));
     }

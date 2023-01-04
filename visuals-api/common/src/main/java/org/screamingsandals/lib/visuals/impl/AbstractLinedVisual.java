@@ -30,20 +30,20 @@ import java.util.*;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractVisual<T> implements LinedVisual<T> {
-    protected @NotNull ConcurrentSkipListMap<@NotNull Integer, @NotNull TextEntry> lines = new ConcurrentSkipListMap<>();
-    protected Integer originalLinesSize = 0;
+    protected @NotNull ConcurrentSkipListMap<@NotNull Integer, TextEntry> lines = new ConcurrentSkipListMap<>();
+    protected @NotNull Integer originalLinesSize = 0;
 
-    public AbstractLinedVisual(UUID uuid) {
+    public AbstractLinedVisual(@NotNull UUID uuid) {
         super(uuid);
     }
 
     @Override
-    public @NotNull Map<@NotNull Integer, @NotNull TextEntry> lines() {
+    public @NotNull Map<@NotNull Integer, TextEntry> lines() {
         return Map.copyOf(lines);
     }
 
     @Override
-    public Map.@Nullable Entry<Integer, TextEntry> lineByIdentifier(@NotNull String identifier) {
+    public Map.@Nullable Entry<Integer, @NotNull TextEntry> lineByIdentifier(@NotNull String identifier) {
         return lines.entrySet()
                 .stream()
                 .filter(next -> next.getValue().getIdentifier().equals(identifier))
@@ -151,7 +151,7 @@ public abstract class AbstractLinedVisual<T extends Visual<T>> extends AbstractV
     @Contract("_ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public @NotNull T setLines(@NotNull Map<@NotNull Integer, @NotNull TextEntry> lines) {
+    public @NotNull T setLines(@NotNull Map<@NotNull Integer, TextEntry> lines) {
         originalLinesSize = this.lines.size();
         this.lines = new ConcurrentSkipListMap<>(lines);
         update();

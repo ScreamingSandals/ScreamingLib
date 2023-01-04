@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.plugin.event;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.plugin.PluginDescription;
 
@@ -25,5 +26,5 @@ import org.screamingsandals.lib.plugin.PluginDescription;
  */
 @Data
 public class PluginDisabledEvent implements SEvent {
-    private final PluginDescription plugin;
+    private final @NotNull PluginDescription plugin;
 }

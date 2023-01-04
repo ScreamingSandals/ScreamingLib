@@ -24,7 +24,7 @@ import org.screamingsandals.lib.utils.Nameable;
  */
 public interface TranslatedNameable extends Nameable {
 
-    static TranslatedNameable of(@NotNull String name, @NotNull Translation translation) {
+    static @NotNull TranslatedNameable of(@NotNull String name, @NotNull Translation translation) {
         return new TranslatedNameable() {
             @Override
             public @NotNull Translation nameTranslation() {

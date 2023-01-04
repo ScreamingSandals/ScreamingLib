@@ -27,9 +27,9 @@ import org.screamingsandals.lib.utils.PacketMethod;
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class SPacketEvent implements SPlayerEvent, SCancellableAsyncEvent {
-    private final PlayerWrapper player;
-    private final PacketMethod method;
-    private final Object packet;
+    private final @NotNull PlayerWrapper player;
+    private final @NotNull PacketMethod method;
+    private final @NotNull Object packet;
     private boolean cancelled;
 
     @Override

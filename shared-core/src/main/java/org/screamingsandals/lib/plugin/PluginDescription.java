@@ -30,9 +30,9 @@ public class PluginDescription implements Wrapper {
     private final @NotNull String name;
     private final @NotNull String version;
     private final @Nullable String description;
-    private final @NotNull List<String> authors;
-    private final @NotNull List<String> dependencies;
-    private final @NotNull List<String> softDependencies;
+    private final @NotNull List<@NotNull String> authors;
+    private final @NotNull List<@NotNull String> dependencies;
+    private final @NotNull List<@NotNull String> softDependencies;
     private final @NotNull Path dataFolder;
 
     public @Nullable Object getInstance() {

@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.world.LocationHolder;
 
@@ -30,7 +31,7 @@ public class SClientboundBlockUpdatePacket extends AbstractPacket {
     private BlockTypeHolder blockData;
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         writer.writeBlockPosition(blockLocation);
         writer.writeBlockData(blockData);
     }

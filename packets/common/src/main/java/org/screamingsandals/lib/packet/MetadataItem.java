@@ -19,6 +19,8 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.math.Vector3Df;
@@ -42,7 +44,7 @@ public abstract class MetadataItem {
      *
      * @param writer the PacketWriter instance to serialize this MetaDataItem to
      */
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         writer.writeByte(index);
     }
 
@@ -53,7 +55,7 @@ public abstract class MetadataItem {
      * @param value the value the MetaDataItem should hold
      * @return a ByteMetaDataItem instance that holds the index and value provided
      */
-    public static ByteMetadataItem of(byte index, byte value) {
+    public static @NotNull ByteMetadataItem of(byte index, byte value) {
         return new ByteMetadataItem(index, value);
     }
 
@@ -64,7 +66,7 @@ public abstract class MetadataItem {
      * @param value the value the MetaDataItem should hold
      * @return a VarIntMetadataItem instance that holds the index and value provided
      */
-    public static VarIntMetadataItem of(byte index, int value) {
+    public static @NotNull VarIntMetadataItem of(byte index, int value) {
         return new VarIntMetadataItem(index, value);
     }
 
@@ -75,7 +77,7 @@ public abstract class MetadataItem {
      * @param value the value the MetaDataItem should hold
      * @return a FloatMetadataItem instance that holds the index and value provided
      */
-    public static FloatMetadataItem of(byte index, float value) {
+    public static @NotNull FloatMetadataItem of(byte index, float value) {
         return new FloatMetadataItem(index, value);
     }
 
@@ -86,7 +88,7 @@ public abstract class MetadataItem {
      * @param value the value the MetaDataItem should hold
      * @return a StringMetadataItem instance that holds the index and value provided
      */
-    public static StringMetadataItem of(byte index, String value) {
+    public static @NotNull StringMetadataItem of(byte index, @NotNull String value) {
         return new StringMetadataItem(index, value);
     }
 
@@ -97,7 +99,7 @@ public abstract class MetadataItem {
      * @param value the value the MetaDataItem should hold
      * @return a ComponentMetadataItem instance that holds the index and value provided
      */
-    public static ComponentMetadataItem of(byte index, Component value) {
+    public static @NotNull ComponentMetadataItem of(byte index, @NotNull Component value) {
         return new ComponentMetadataItem(index, value);
     }
 
@@ -108,7 +110,7 @@ public abstract class MetadataItem {
      * @param value the value the MetaDataItem should hold
      * @return a BooleanMetadataItem instance that holds the index and value provided
      */
-    public static BooleanMetadataItem of(byte index, boolean value) {
+    public static @NotNull BooleanMetadataItem of(byte index, boolean value) {
         return new BooleanMetadataItem(index, value);
     }
 
@@ -119,7 +121,7 @@ public abstract class MetadataItem {
      * @param value the value the MetaDataItem should hold
      * @return a Vector3DfMetadataItem instance that holds the index and value provided
      */
-    public static Vector3DfMetadataItem of(byte index, Vector3Df value) {
+    public static @NotNull Vector3DfMetadataItem of(byte index, @NotNull Vector3Df value) {
         return new Vector3DfMetadataItem(index, value);
     }
 
@@ -130,7 +132,7 @@ public abstract class MetadataItem {
      * @param value the value the MetaDataItem should hold
      * @return a OptionalComponentMetadataItem instance that holds the index and value provided
      */
-    public static OptionalComponentMetadataItem ofOpt(byte index, Component value) {
+    public static @NotNull OptionalComponentMetadataItem ofOpt(byte index, @NotNull Component value) {
         return new OptionalComponentMetadataItem(index, value);
     }
 
@@ -141,7 +143,7 @@ public abstract class MetadataItem {
      * @param value the value the MetaDataItem should hold
      * @return a OptionalBlockPositionMetadataItem instance that holds the index and value provided
      */
-    public static OptionalBlockPositionMetadataItem ofOpt(byte index, Vector3Di value) {
+    public static @NotNull OptionalBlockPositionMetadataItem ofOpt(byte index, @NotNull Vector3Di value) {
         return new OptionalBlockPositionMetadataItem(index, value);
     }
 
@@ -175,7 +177,7 @@ public abstract class MetadataItem {
         }
 
         @Override
-        public void write(PacketWriter writer) {
+        public void write(@NotNull PacketWriter writer) {
             super.write(writer);
             writer.writeVarInt(0);
             writer.writeByte(data);
@@ -196,7 +198,7 @@ public abstract class MetadataItem {
         }
 
         @Override
-        public void write(PacketWriter writer) {
+        public void write(@NotNull PacketWriter writer) {
             super.write(writer);
             writer.writeVarInt(1);
             writer.writeVarInt(data);
@@ -217,7 +219,7 @@ public abstract class MetadataItem {
         }
 
         @Override
-        public void write(PacketWriter writer) {
+        public void write(@NotNull PacketWriter writer) {
             super.write(writer);
             writer.writeVarInt(writer.protocol() >= 761 ? 3 : 2);
             writer.writeFloat(data);
@@ -230,15 +232,15 @@ public abstract class MetadataItem {
     @Getter
     @ToString(callSuper = true)
     public static class StringMetadataItem extends MetadataItem {
-        private final String text;
+        private final @NotNull String text;
 
-        public StringMetadataItem(byte index, String text) {
+        public StringMetadataItem(byte index, @NotNull String text) {
             super(index);
             this.text = text;
         }
 
         @Override
-        public void write(PacketWriter writer) {
+        public void write(@NotNull PacketWriter writer) {
             super.write(writer);
             writer.writeVarInt(writer.protocol() >= 761 ? 4 : 3);
             writer.writeSizedString(text);
@@ -251,15 +253,15 @@ public abstract class MetadataItem {
     @Getter
     @ToString(callSuper = true)
     public static class ComponentMetadataItem extends MetadataItem {
-        private final Component text;
+        private final @NotNull Component text;
 
-        public ComponentMetadataItem(byte index, Component text) {
+        public ComponentMetadataItem(byte index, @NotNull Component text) {
             super(index);
             this.text = text;
         }
 
         @Override
-        public void write(PacketWriter writer) {
+        public void write(@NotNull PacketWriter writer) {
             super.write(writer);
             writer.writeVarInt(writer.protocol() >= 761 ? 5 : 4);
             writer.writeComponent(text);
@@ -272,15 +274,15 @@ public abstract class MetadataItem {
     @Getter
     @ToString(callSuper = true)
     public static class OptionalComponentMetadataItem extends MetadataItem {
-        private final Component val;
+        private final @Nullable Component val;
 
-        public OptionalComponentMetadataItem(byte index, Component val) {
+        public OptionalComponentMetadataItem(byte index, @Nullable Component val) {
             super(index);
             this.val = val;
         }
 
         @Override
-        public void write(PacketWriter writer) {
+        public void write(@NotNull PacketWriter writer) {
             super.write(writer);
             writer.writeVarInt(writer.protocol() >= 761 ? 6 : 5);
             var flag = val != null && !val.equals(Component.empty());
@@ -305,7 +307,7 @@ public abstract class MetadataItem {
         }
 
         @Override
-        public void write(PacketWriter writer) {
+        public void write(@NotNull PacketWriter writer) {
             super.write(writer);
             writer.writeVarInt(writer.protocol() < 393 ? 6 : writer.protocol() >= 761 ? 8 : 7);
             writer.writeBoolean(val);
@@ -318,15 +320,15 @@ public abstract class MetadataItem {
     @Getter
     @ToString(callSuper = true)
     public static class Vector3DfMetadataItem extends MetadataItem {
-        private final Vector3Df val;
+        private final @NotNull Vector3Df val;
 
-        public Vector3DfMetadataItem(byte index, Vector3Df val) {
+        public Vector3DfMetadataItem(byte index, @NotNull Vector3Df val) {
             super(index);
             this.val = val;
         }
 
         @Override
-        public void write(PacketWriter writer) {
+        public void write(@NotNull PacketWriter writer) {
             super.write(writer);
             writer.writeVarInt(writer.protocol() < 393 ? 7 : writer.protocol() >= 761 ? 9 : 8);
             writer.writeVector(val);
@@ -339,15 +341,15 @@ public abstract class MetadataItem {
     @Getter
     @ToString(callSuper = true)
     public static class BlockPositionMetadataItem extends MetadataItem {
-        private final Vector3Di val;
+        private final @NotNull Vector3Di val;
 
-        public BlockPositionMetadataItem(byte index, Vector3Di val) {
+        public BlockPositionMetadataItem(byte index, @NotNull Vector3Di val) {
             super(index);
             this.val = val;
         }
 
         @Override
-        public void write(PacketWriter writer) {
+        public void write(@NotNull PacketWriter writer) {
             super.write(writer);
             writer.writeVarInt(writer.protocol() < 393 ? 8 : writer.protocol() >= 761 ? 10 : 9);
             writer.writeLong(blockPosToLong(val.getX(), val.getY(), val.getZ()));
@@ -360,15 +362,15 @@ public abstract class MetadataItem {
     @Getter
     @ToString(callSuper = true)
     public static class OptionalBlockPositionMetadataItem extends MetadataItem {
-        private final Vector3Di blockPosition;
+        private final @Nullable Vector3Di blockPosition;
 
-        public OptionalBlockPositionMetadataItem(byte index, Vector3Di blockPosition) {
+        public OptionalBlockPositionMetadataItem(byte index, @Nullable Vector3Di blockPosition) {
             super(index);
             this.blockPosition = blockPosition;
         }
 
         @Override
-        public void write(PacketWriter writer) {
+        public void write(@NotNull PacketWriter writer) {
             super.write(writer);
             writer.writeVarInt(writer.protocol() < 393 ? 9 : writer.protocol() >= 761 ? 11 : 10);
             var present = blockPosition != null;

@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.lang;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -28,52 +29,52 @@ import java.util.List;
 
 @Data
 public final class Translation implements Messageable {
-    private final List<String> keys = new LinkedList<>();
-    private final ComponentLike fallback;
+    private final @NotNull List<@NotNull String> keys = new LinkedList<>();
+    private final @NotNull ComponentLike fallback;
 
-    private Translation(Collection<String> keys, ComponentLike fallback) {
+    private Translation(@NotNull Collection<@NotNull String> keys, @NotNull ComponentLike fallback) {
         this.keys.addAll(keys);
         this.fallback = fallback;
     }
 
-    public static Translation of(String... keys) {
+    public static @NotNull Translation of(@NotNull String @NotNull... keys) {
         return of(Arrays.asList(keys), Component.text().content(String.join(".", keys)).color(Color.RED).build());
     }
 
-    public static Translation of(Collection<String> keys) {
+    public static @NotNull Translation of(@NotNull Collection<@NotNull String> keys) {
         return of(keys, Component.text().content(String.join(".", keys)).color(Color.RED).build());
     }
 
-    public static Translation of(Collection<String> keys, ComponentLike fallback) {
+    public static @NotNull Translation of(@NotNull Collection<@NotNull String> keys, @NotNull ComponentLike fallback) {
         return new Translation(keys, fallback);
     }
 
-    public static Translation of(ComponentLike fallback, String... keys) {
+    public static @NotNull Translation of(@NotNull ComponentLike fallback, @NotNull String @NotNull... keys) {
         return of(Arrays.asList(keys), fallback);
     }
 
-    public Translation join(String... key) {
+    public @NotNull Translation join(@NotNull String @NotNull... key) {
         final var copied = new LinkedList<>(keys);
         copied.addAll(Arrays.asList(key));
 
         return of(copied);
     }
 
-    public Translation join(Collection<String> keys) {
+    public @NotNull Translation join(@NotNull Collection<@NotNull String> keys) {
         final var copied = new LinkedList<>(this.keys);
         copied.addAll(keys);
 
         return of(copied, Component.text().content(String.join(".", keys)).color(Color.RED).build());
     }
 
-    public Translation join(Collection<String> keys, Component fallback) {
+    public @NotNull Translation join(@NotNull Collection<@NotNull String> keys, @NotNull Component fallback) {
         final var copied = new LinkedList<>(this.keys);
         copied.addAll(keys);
 
         return of(copied, fallback);
     }
 
-    public Translation join(Collection<String> keys, ComponentLike fallback) {
+    public @NotNull Translation join(@NotNull Collection<@NotNull String> keys, @NotNull ComponentLike fallback) {
         final var copied = new LinkedList<>(this.keys);
         copied.addAll(keys);
 
@@ -86,11 +87,11 @@ public final class Translation implements Messageable {
     }
 
     @Override
-    public Type getType() {
+    public @NotNull Type getType() {
         return Type.ADVENTURE;
     }
 
-    public Component getFallback() {
+    public @NotNull Component getFallback() {
         return fallback.asComponent();
     }
 }

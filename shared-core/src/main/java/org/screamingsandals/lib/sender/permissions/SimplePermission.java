@@ -18,14 +18,15 @@ package org.screamingsandals.lib.sender.permissions;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 @RequiredArgsConstructor(staticName = "of")
 public final class SimplePermission implements Permission {
-    private final String permissionString;
+    private final @NotNull String permissionString;
     private final boolean defaultAllowed;
 
-    public static SimplePermission of(String line) {
+    public static @NotNull SimplePermission of(@NotNull String line) {
         return of(line, false);
     }
 }

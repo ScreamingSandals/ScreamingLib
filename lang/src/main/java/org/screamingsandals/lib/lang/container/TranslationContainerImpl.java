@@ -18,30 +18,32 @@ package org.screamingsandals.lib.lang.container;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurationNode;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
 class TranslationContainerImpl implements TranslationContainer {
-    static final TranslationContainer EMPTY = new TranslationContainerImpl(BasicConfigurationNode.root(), null);
+    static final @NotNull TranslationContainer EMPTY = new TranslationContainerImpl(BasicConfigurationNode.root(), null);
 
-    private ConfigurationNode node;
+    private @NotNull ConfigurationNode node;
     private @Nullable TranslationContainer fallbackContainer;
 
-    public List<String> translate(Collection<String> key) {
+    public @NotNull List<@NotNull String> translate(@NotNull Collection<@NotNull String> key) {
         return translate(key.toArray(String[]::new));
     }
 
-    public List<String> translate(String... key) {
+    public @NotNull List<@NotNull String> translate(@NotNull String @NotNull... key) {
         var node = this.node.node((Object[]) key);
         if (node.isList()) {
-            return node.childrenList().stream().map(ConfigurationNode::getString).collect(Collectors.toList());
+            return node.childrenList().stream().map(ConfigurationNode::getString).filter(Objects::nonNull).collect(Collectors.toList());
         }
         if (!node.empty()) {
             return List.of(node.getString(""));

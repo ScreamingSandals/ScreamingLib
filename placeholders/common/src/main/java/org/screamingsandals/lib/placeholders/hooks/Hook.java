@@ -16,11 +16,13 @@
 
 package org.screamingsandals.lib.placeholders.hooks;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.placeholders.PlaceholderExpansion;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 
 public interface Hook {
-    void register(PlaceholderExpansion expansion);
+    void register(@NotNull PlaceholderExpansion expansion);
 
-    String resolveString(MultiPlatformOfflinePlayer player, String message);
+    @NotNull String resolveString(@Nullable MultiPlatformOfflinePlayer player, @NotNull String message);
 }

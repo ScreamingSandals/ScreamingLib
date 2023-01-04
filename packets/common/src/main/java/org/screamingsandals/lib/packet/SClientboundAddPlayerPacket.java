@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.world.LocationHolder;
 
 import java.util.List;
@@ -31,10 +32,10 @@ public class SClientboundAddPlayerPacket extends AbstractPacket {
     private int entityId;
     private UUID uuid;
     private LocationHolder location;
-    private List<MetadataItem> metadata;
+    private List<@NotNull MetadataItem> metadata;
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         writer.writeVarInt(entityId);
         writer.writeUuid(uuid);
         if (writer.protocol() >= 100) {

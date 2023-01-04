@@ -19,6 +19,8 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -28,12 +30,13 @@ public class SClientboundRotateHeadPacket extends AbstractPacket {
     private byte rotation;
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         writer.writeVarInt(this.entityId);
         writer.writeByte(this.rotation);
     }
 
-    public SClientboundRotateHeadPacket headYaw(float headYaw) {
+    @Contract("_ -> this")
+    public @NotNull SClientboundRotateHeadPacket headYaw(float headYaw) {
         this.rotation = (byte) (headYaw * 256 / 360);
         return this;
     }

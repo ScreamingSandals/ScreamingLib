@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bungee.proxy.listener;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bungee.event.AbstractEventListener;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.EventPriority;
@@ -27,7 +28,7 @@ import org.screamingsandals.lib.proxy.event.SPlayerChatEvent;
 public class ChatEventListener extends AbstractEventListener<ChatEvent> {
 
     @Override
-    protected void onFire(ChatEvent chatEvent, EventPriority eventPriority) {
+    protected void onFire(@NotNull ChatEvent chatEvent, @NotNull EventPriority eventPriority) {
         if (!(chatEvent.getSender() instanceof ProxiedPlayer)) {
             return;
         }

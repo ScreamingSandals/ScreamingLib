@@ -19,6 +19,7 @@ package org.screamingsandals.lib.velocity.tasker;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.scheduler.ScheduledTask;
 import com.velocitypowered.api.scheduler.Scheduler;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.tasker.TaskBuilderImpl;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
@@ -32,21 +33,21 @@ import org.screamingsandals.lib.utils.annotations.Service;
 
 @Service
 public class VelocityTaskInitializer extends AbstractTaskInitializer {
-    private final Object owner;
-    private final Scheduler scheduler;
+    private final @NotNull Object owner;
+    private final @NotNull Scheduler scheduler;
 
-    public VelocityTaskInitializer(Controllable controllable, Object owner, Scheduler scheduler) {
+    public VelocityTaskInitializer(@NotNull Controllable controllable, @NotNull Object owner, @NotNull Scheduler scheduler) {
         super(controllable);
         this.owner = owner;
         this.scheduler = scheduler;
     }
 
-    public static void init(Controllable controllable, Object owner, ProxyServer proxyServer) {
+    public static void init(@NotNull Controllable controllable, @NotNull Object owner, @NotNull ProxyServer proxyServer) {
         Tasker.init(() -> new VelocityTaskInitializer(controllable, owner, proxyServer.getScheduler()));
     }
 
     @Override
-    public TaskerTask start(TaskBuilderImpl builder) {
+    public @NotNull TaskerTask start(@NotNull TaskBuilderImpl builder) {
         final var runnable = builder.getRunnable();
 
         if (builder.isAfterOneTick()) {
@@ -79,7 +80,7 @@ public class VelocityTaskInitializer extends AbstractTaskInitializer {
     }
 
     @Override
-    public TaskState getState(TaskerTask taskerTask) {
+    public @NotNull TaskState getState(@NotNull TaskerTask taskerTask) {
         final ScheduledTask task = taskerTask.getTaskObject();
 
         switch (task.status()) {
@@ -93,7 +94,7 @@ public class VelocityTaskInitializer extends AbstractTaskInitializer {
     }
 
     @Override
-    public void cancel(TaskerTask task) {
+    public void cancel(@NotNull TaskerTask task) {
         final ScheduledTask toCancel = task.getTaskObject();
         toCancel.cancel();
     }

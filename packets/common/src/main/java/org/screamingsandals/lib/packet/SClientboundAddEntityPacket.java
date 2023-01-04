@@ -18,6 +18,7 @@ package org.screamingsandals.lib.packet;
 
 import lombok.*;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.LocationHolder;
 
@@ -45,7 +46,7 @@ public class SClientboundAddEntityPacket extends AbstractPacket {
     }
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         writer.writeVarInt(entityId);
         if (writer.protocol() >= 49) {
             writer.writeUuid(uuid);

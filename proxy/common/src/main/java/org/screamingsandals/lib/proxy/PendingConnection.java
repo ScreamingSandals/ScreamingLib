@@ -18,6 +18,7 @@ package org.screamingsandals.lib.proxy;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 import java.net.InetSocketAddress;
 import java.util.UUID;
@@ -28,11 +29,11 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class PendingConnection {
-    private final String name;
+    private final @NotNull String name;
     private final int version;
-    private final InetSocketAddress address;
+    private final @NotNull InetSocketAddress address;
     private final boolean legacy;
 
-    private UUID uuid;
+    private @NotNull UUID uuid;
     private boolean onlineMode;
 }

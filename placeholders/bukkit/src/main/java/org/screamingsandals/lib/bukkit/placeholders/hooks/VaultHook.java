@@ -21,6 +21,8 @@ import lombok.EqualsAndHashCode;
 import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.placeholders.PlaceholderExpansion;
 import org.screamingsandals.lib.placeholders.hooks.AbstractPAPILikePlaceholder;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
@@ -30,26 +32,28 @@ import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class VaultHook extends AbstractPAPILikePlaceholder {
-    private final Chat chat;
+    private final @NotNull Chat chat;
 
     @Override
-    public void register(PlaceholderExpansion expansion) {
+    public void register(@NotNull PlaceholderExpansion expansion) {
         // you can't register placeholders to Vault ;)
     }
 
     @Override
-    protected boolean has(String identifier) {
+    protected boolean has(@NotNull String identifier) {
         return "vault_prefix".equals(identifier) || "vault_suffix".equals(identifier);
     }
 
     @Override
-    protected String resolve(MultiPlatformOfflinePlayer player, String identifier, String parameters) {
-        if ("vault_prefix".equals(identifier)) {
-            var prefix = chat.getPlayerPrefix(Bukkit.getWorlds().get(0).getName(), player.as(OfflinePlayer.class));
-            return prefix == null ? "" : prefix;
-        } else if ("vault_suffix".equals(identifier)) {
-            var prefix = chat.getPlayerSuffix(Bukkit.getWorlds().get(0).getName(), player.as(OfflinePlayer.class));
-            return prefix == null ? "" : prefix;
+    protected String resolve(@Nullable MultiPlatformOfflinePlayer player, @NotNull String identifier, @NotNull String parameters) {
+        if (player != null) {
+            if ("vault_prefix".equals(identifier)) {
+                var prefix = chat.getPlayerPrefix(Bukkit.getWorlds().get(0).getName(), player.as(OfflinePlayer.class));
+                return prefix == null ? "" : prefix;
+            } else if ("vault_suffix".equals(identifier)) {
+                var prefix = chat.getPlayerSuffix(Bukkit.getWorlds().get(0).getName(), player.as(OfflinePlayer.class));
+                return prefix == null ? "" : prefix;
+            }
         }
         return null;
     }

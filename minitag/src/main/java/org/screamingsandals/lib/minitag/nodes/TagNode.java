@@ -28,7 +28,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor
 public class TagNode extends Node {
-    private final String tag;
+    private final @NotNull String tag;
     private final @NotNull List<String> args;
 
     @Override

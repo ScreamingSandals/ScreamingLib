@@ -20,6 +20,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.item.tags.BukkitLegacyItemTagResolution;
 import org.screamingsandals.lib.bukkit.tags.KeyedUtils;
@@ -32,7 +33,7 @@ import java.util.*;
 
 @Service
 public class BukkitItemTypeMapper extends ItemTypeMapper {
-    private static final Map<Material, List<String>> tagBackPorts = new HashMap<>();
+    private static final @NotNull Map<@NotNull Material, List<String>> tagBackPorts = new HashMap<>();
 
     public BukkitItemTypeMapper() {
         if (Server.isVersion(1, 13)) {

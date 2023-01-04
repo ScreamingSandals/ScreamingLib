@@ -18,7 +18,9 @@ package org.screamingsandals.lib.event;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Controllable;
 import org.screamingsandals.lib.utils.ReceiverConsumer;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -41,12 +43,12 @@ import java.util.stream.Stream;
 @AbstractService
 @NoArgsConstructor
 public abstract class EventManager {
-    private static ExecutorService executor;
+    private static @Nullable ExecutorService executor;
     @Getter
-    private static EventManager defaultEventManager;
-    private final Map<Class<?>, List<EventHandler<? extends SEvent>>> handlers = new ConcurrentHashMap<>();
+    private static @Nullable EventManager defaultEventManager;
+    private final @NotNull Map<@NotNull Class<?>, List<@NotNull EventHandler<? extends SEvent>>> handlers = new ConcurrentHashMap<>();
     @Getter
-    private EventManager customManager;
+    private @Nullable EventManager customManager;
 
     public EventManager(Controllable controllable) {
         controllable
@@ -54,7 +56,8 @@ public abstract class EventManager {
                 .preDisable(this::destroy);
     }
 
-    public static void init(Supplier<EventManager> supplier) {
+    @ApiStatus.Internal
+    public static void init(@NotNull Supplier<@NotNull EventManager> supplier) {
         if (defaultEventManager != null) {
             throw new UnsupportedOperationException("Default EventManager has been already initialized!");
         }
@@ -62,15 +65,24 @@ public abstract class EventManager {
     }
 
 
-    public static <K extends SEvent> K fire(K event) {
+    public static <K extends SEvent> @NotNull K fire(@NotNull K event) {
+        if (defaultEventManager == null) {
+            throw new UnsupportedOperationException("Default EventManager has not been initialized yet!");
+        }
         return defaultEventManager.fireEvent(event);
     }
 
-    public static <K extends SEvent> CompletableFuture<K> fireAsync(K event) {
+    public static <K extends SEvent> @NotNull CompletableFuture<@NotNull K> fireAsync(@NotNull K event) {
+        if (defaultEventManager == null) {
+            throw new UnsupportedOperationException("Default EventManager has not been initialized yet!");
+        }
         return defaultEventManager.fireEventAsync(event);
     }
 
-    public static EventManager createChildManager() {
+    public static @NotNull EventManager createChildManager() {
+        if (defaultEventManager == null) {
+            throw new UnsupportedOperationException("Default EventManager has not been initialized yet!");
+        }
         return new EventManager() {
             @Override
             public boolean isServerThread() {
@@ -83,11 +95,11 @@ public abstract class EventManager {
         return defaultEventManager != null;
     }
 
-    public <T extends SEvent> EventHandler<T> register(Class<T> event, ReceiverConsumer<T> consumer) {
+    public <T extends SEvent> @NotNull EventHandler<T> register(@NotNull Class<T> event, @NotNull ReceiverConsumer<@NotNull T> consumer) {
         return register(event, EventHandler.of(consumer));
     }
 
-    public <T extends SEvent> EventHandler<T> registerOneTime(Class<T> event, Function<T, Boolean> function) {
+    public <T extends SEvent> @NotNull EventHandler<T> registerOneTime(@NotNull Class<T> event, @NotNull Function<@NotNull T, @NotNull Boolean> function) {
         return register(event, EventHandler.ofOneTime(handler -> e -> {
             if (function.apply(e)) {
                 unregister(handler);
@@ -95,11 +107,11 @@ public abstract class EventManager {
         }));
     }
 
-    public <T extends SEvent> EventHandler<T> register(Class<T> event, ReceiverConsumer<T> consumer, boolean ignoreCancelled) {
+    public <T extends SEvent> @NotNull EventHandler<T> register(@NotNull Class<T> event, @NotNull ReceiverConsumer<@NotNull T> consumer, boolean ignoreCancelled) {
         return register(event, EventHandler.of(consumer, ignoreCancelled));
     }
 
-    public <T extends SEvent> EventHandler<T> registerOneTime(Class<T> event, Function<T, Boolean> function, boolean ignoreCancelled) {
+    public <T extends SEvent> @NotNull EventHandler<T> registerOneTime(@NotNull Class<T> event, @NotNull Function<@NotNull T, @NotNull Boolean> function, boolean ignoreCancelled) {
         return register(event, EventHandler.ofOneTime(handler -> e -> {
             if (function.apply(e)) {
                 unregister(handler);
@@ -107,12 +119,11 @@ public abstract class EventManager {
         }, ignoreCancelled));
     }
 
-    public <T extends SEvent> EventHandler<T> register(Class<T> event, ReceiverConsumer<T> consumer, EventPriority eventPriority) {
+    public <T extends SEvent> @NotNull EventHandler<T> register(@NotNull Class<T> event, @NotNull ReceiverConsumer<@NotNull T> consumer, @NotNull EventPriority eventPriority) {
         return register(event, EventHandler.of(consumer, eventPriority));
     }
 
-    public <T extends SEvent> EventHandler<T> registerOneTime(Class<T> event, Function<T, Boolean> function, EventPriority eventPriority,
-                                                              boolean ignoreCancelled) {
+    public <T extends SEvent> @NotNull EventHandler<T> registerOneTime(@NotNull Class<T> event, @NotNull Function<@NotNull T, @NotNull Boolean> function, @NotNull EventPriority eventPriority, boolean ignoreCancelled) {
         return register(event, EventHandler.ofOneTime(handler -> e -> {
             if (function.apply(e)) {
                 unregister(handler);
@@ -120,19 +131,19 @@ public abstract class EventManager {
         }, eventPriority, ignoreCancelled));
     }
 
-    public <T extends SEvent> EventHandler<T> register(Class<T> event, ReceiverConsumer<T> consumer, EventPriority eventPriority,
-                                                       boolean ignoreCancelled) {
+    public <T extends SEvent> @NotNull EventHandler<T> register(@NotNull Class<T> event, @NotNull ReceiverConsumer<@NotNull T> consumer, @NotNull EventPriority eventPriority,
+                                                                boolean ignoreCancelled) {
         return register(event, EventHandler.of(consumer, eventPriority, ignoreCancelled));
     }
 
-    public <T extends SEvent> EventHandler<T> register(Class<T> event, EventHandler<T> handler) {
+    public <T extends SEvent> @NotNull EventHandler<T> register(@NotNull Class<T> event, @NotNull EventHandler<T> handler) {
         handlers.computeIfAbsent(event, e -> Collections.synchronizedList(new ArrayList<>())).add(handler);
         fireEvent(new HandlerRegisteredEvent(this, event, handler));
 
         return handler;
     }
 
-    public <T extends SEvent> void unregister(EventHandler<T> handler) {
+    public <T extends SEvent> void unregister(@NotNull EventHandler<T> handler) {
         handlers.forEach((key, value) -> {
             if (value.contains(handler)) {
                 fireEvent(new HandlerUnregisteredEvent(this, key, handler));
@@ -144,13 +155,13 @@ public abstract class EventManager {
         });
     }
 
-    public <K extends SEvent> K fireEvent(@NotNull K event) {
+    public <K extends SEvent> @NotNull K fireEvent(@NotNull K event) {
         EventPriority.VALUES.forEach(priority -> fireEvent(event, priority));
         return event;
     }
 
-    public <K extends SEvent> K fireEvent(@NotNull K event, @NotNull EventPriority eventPriority) {
-        if (event.isAsync() && isServerThread()) {
+    public <K extends SEvent> @NotNull K fireEvent(@NotNull K event, @NotNull EventPriority eventPriority) {
+        if (event.isAsync() && isServerThread() && executor != null) {
             throw new UnsupportedOperationException("Async event cannot be fired sync!");
         }
 
@@ -159,14 +170,14 @@ public abstract class EventManager {
 
         if (customManager != null) {
             customManager.fireEvent(event, eventPriority);
-        } else if (this != defaultEventManager) {
+        } else if (this != defaultEventManager && defaultEventManager != null) {
             defaultEventManager.fireEvent(event, eventPriority);
         }
 
         return event;
     }
 
-    public <K extends SEvent> CompletableFuture<K> fireEventAsync(@NotNull K event) {
+    public <K extends SEvent> @NotNull CompletableFuture<@NotNull K> fireEventAsync(@NotNull K event) {
         final var futures = new LinkedList<CompletableFuture<K>>();
         EventPriority.VALUES.forEach(priority -> futures.add(fireEventAsync(event, priority)));
 
@@ -174,8 +185,8 @@ public abstract class EventManager {
                 .thenApply(ignored -> event);
     }
 
-    public <K extends SEvent> CompletableFuture<K> fireEventAsync(@NotNull K event, @NotNull EventPriority eventPriority) {
-        if (!event.isAsync()) {
+    public <K extends SEvent> @NotNull CompletableFuture<@NotNull K> fireEventAsync(@NotNull K event, @NotNull EventPriority eventPriority) {
+        if (!event.isAsync() || executor == null) {
             //we don't want non-async events to be called async. :)
             return CompletableFuture.completedFuture(fireEvent(event, eventPriority));
         }
@@ -196,7 +207,7 @@ public abstract class EventManager {
         if (customManager != null) {
             futures.add(customManager.fireEventAsync(event, eventPriority)
                     .thenApply(ignored -> null));
-        } else if (this != defaultEventManager) {
+        } else if (this != defaultEventManager && defaultEventManager != null) {
             futures.add(defaultEventManager.fireEventAsync(event, eventPriority)
                     .thenApply(ignored -> null));
         }
@@ -217,31 +228,31 @@ public abstract class EventManager {
         handlers.clear();
     }
 
-    public void setCustomManager(EventManager parent) {
+    public void setCustomManager(@Nullable EventManager parent) {
         if (this != defaultEventManager) {
             this.customManager = parent;
         }
     }
 
-    public boolean isRegistered(EventHandler<?> eventHandler) {
+    public boolean isRegistered(@NotNull EventHandler<?> eventHandler) {
         return handlers.entrySet().stream()
                 .anyMatch(entry -> entry.getValue().contains(eventHandler));
     }
 
     @SuppressWarnings("unchecked")
-    public void cloneEventManager(EventManager originalEventManager) {
+    public void cloneEventManager(@NotNull EventManager originalEventManager) {
         originalEventManager.handlers.forEach((key, value) -> value.forEach(entry1 -> register((Class<SEvent>) key, (EventHandler<SEvent>) entry1)));
     }
 
     public void destroy() {
         handlers.clear();
 
-        if (this == defaultEventManager) {
+        if (this == defaultEventManager && executor != null) {
             ExecutorProvider.destroyExecutor(executor);
         }
     }
 
-    private <E extends SEvent> Stream<? extends EventHandler<? extends SEvent>> findEventHandlers(E event, EventPriority priority) {
+    private <E extends SEvent> @NotNull Stream<? extends @NotNull EventHandler<? extends SEvent>> findEventHandlers(@NotNull E event, @NotNull EventPriority priority) {
         return handlers.entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().isInstance(event))

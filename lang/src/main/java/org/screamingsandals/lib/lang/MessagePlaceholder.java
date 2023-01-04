@@ -19,6 +19,7 @@ package org.screamingsandals.lib.lang;
 import lombok.Data;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.TextComponent;
@@ -30,9 +31,9 @@ import java.util.List;
 @Data
 @ApiStatus.Internal
 public class MessagePlaceholder implements Placeholder {
-    private final String name;
-    private final LangService service;
-    private final CommandSenderWrapper sender;
+    private final @NotNull String name;
+    private final @NotNull LangService service;
+    private final @Nullable CommandSenderWrapper sender;
 
     @SuppressWarnings("unchecked")
     @Override

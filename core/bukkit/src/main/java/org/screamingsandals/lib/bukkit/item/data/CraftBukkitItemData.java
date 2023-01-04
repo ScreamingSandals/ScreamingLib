@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CraftBukkitItemData implements ItemData {
     @Getter
-    private final @NotNull Map<String, Object> keyNBTMap;
+    private final @NotNull Map<@NotNull String, Object> keyNBTMap;
 
     @Override
     public @NotNull Set<@NotNull NamespacedMappingKey> getKeys() {

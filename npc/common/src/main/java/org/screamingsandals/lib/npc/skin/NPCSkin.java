@@ -19,6 +19,7 @@ package org.screamingsandals.lib.npc.skin;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.gson.GsonConfigurationLoader;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -39,20 +40,20 @@ public class NPCSkin {
     /**
      * A skin cache based on player names.
      */
-    private static final Map<String, NPCSkin> PLAYER_NAME_SKIN_CACHE = new ConcurrentHashMap<>();
+    private static final @NotNull Map<@NotNull String, NPCSkin> PLAYER_NAME_SKIN_CACHE = new ConcurrentHashMap<>();
     /**
      * A skin cache based on player UUID's.
      */
-    private static final Map<UUID, NPCSkin> PLAYER_UUID_SKIN_CACHE = new ConcurrentHashMap<>();
+    private static final @NotNull Map<@NotNull UUID, NPCSkin> PLAYER_UUID_SKIN_CACHE = new ConcurrentHashMap<>();
 
     /**
      * The skin value.
      */
-    private String value;
+    private @NotNull String value;
     /**
      * The skin signature.
      */
-    private String signature;
+    private @NotNull String signature;
 
     /**
      * Attempts to retrieve a player skin from Mojang's API asynchronously.
@@ -61,7 +62,7 @@ public class NPCSkin {
      * @param playerName the player name
      * @return the {@link CompletableFuture} with the {@link NPCSkin}
      */
-    public static CompletableFuture<@Nullable NPCSkin> retrieveSkin(String playerName) {
+    public static @NotNull CompletableFuture<@Nullable NPCSkin> retrieveSkin(@NotNull String playerName) {
         return retrieveSkin(playerName, false);
     }
 
@@ -73,7 +74,7 @@ public class NPCSkin {
      * @param force should the cache be skipped?
      * @return the {@link CompletableFuture} with the {@link NPCSkin}
      */
-    public static CompletableFuture<@Nullable NPCSkin> retrieveSkin(String playerName, boolean force) {
+    public static @NotNull CompletableFuture<@Nullable NPCSkin> retrieveSkin(@NotNull String playerName, boolean force) {
         try {
             return retrieveSkin(UUID.fromString(playerName.replaceAll(
                     "(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})",
@@ -116,7 +117,7 @@ public class NPCSkin {
      * @param uuid the player uuid
      * @return the {@link CompletableFuture} with the {@link NPCSkin}
      */
-    public static CompletableFuture<@Nullable NPCSkin> retrieveSkin(UUID uuid) {
+    public static @NotNull CompletableFuture<@Nullable NPCSkin> retrieveSkin(@NotNull UUID uuid) {
         return retrieveSkin(uuid, false);
     }
 
@@ -128,7 +129,7 @@ public class NPCSkin {
      * @param force should the cache be skipped?
      * @return the {@link CompletableFuture} with the {@link NPCSkin}
      */
-    public static CompletableFuture<@Nullable NPCSkin> retrieveSkin(UUID uuid, boolean force) {
+    public static @NotNull CompletableFuture<@Nullable NPCSkin> retrieveSkin(@NotNull UUID uuid, boolean force) {
         if (PLAYER_UUID_SKIN_CACHE.containsKey(uuid) && !force) {
             return CompletableFuture.completedFuture(PLAYER_UUID_SKIN_CACHE.get(uuid));
         }
@@ -147,7 +148,7 @@ public class NPCSkin {
                         .findFirst()
                         .orElseThrow();
 
-                var skin = new NPCSkin(skinNode.node("value").getString(), skinNode.node("signature").getString());
+                var skin = new NPCSkin(Objects.requireNonNull(skinNode.node("value").getString()), Objects.requireNonNull(skinNode.node("signature").getString()));
                 PLAYER_UUID_SKIN_CACHE.put(uuid, skin);
 
                 return skin;

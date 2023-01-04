@@ -18,32 +18,33 @@ package org.screamingsandals.lib.lang;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @Data
 @RequiredArgsConstructor(staticName = "of")
 public final class StringMessageable implements Messageable {
-    private final List<String> keys;
-    private final Type type;
+    private final @NotNull List<@NotNull String> keys;
+    private final @NotNull Type type;
 
-    public static StringMessageable of(String message) {
+    public static @NotNull StringMessageable of(@NotNull String message) {
         return of(List.of(message), Type.LEGACY);
     }
 
-    public static StringMessageable of(String... messages) {
+    public static @NotNull StringMessageable of(@NotNull String @NotNull... messages) {
         return of(List.of(messages), Type.LEGACY);
     }
 
-    public static StringMessageable of(List<String> messages) {
+    public static @NotNull StringMessageable of(@NotNull List<@NotNull String> messages) {
         return of(messages, Type.LEGACY);
     }
 
-    public static StringMessageable of(String message, Type type) {
+    public static @NotNull StringMessageable of(@NotNull String message, @NotNull Type type) {
         return of(List.of(message), type);
     }
 
-    public static StringMessageable of(Type type, String... messages) {
+    public static @NotNull StringMessageable of(@NotNull Type type, @NotNull String @NotNull... messages) {
         return of(List.of(messages), type);
     }
 

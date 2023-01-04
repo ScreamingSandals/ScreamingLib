@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -39,19 +40,19 @@ import java.util.concurrent.ExecutionException;
 public class FakeEntity {
     private final int id;
     @Setter
-    private LocationHolder location;
+    private @NotNull LocationHolder location;
     private final int typeId;
-    private final UUID uuid;
-    private final List<MetadataItem> metadataItems;
+    private final @NotNull UUID uuid;
+    private final @NotNull List<@NotNull MetadataItem> metadataItems;
     private byte entityFlags;
-    private Component customName;
+    private @NotNull Component customName;
     @Getter
     @Setter
     private @Nullable AudienceComponentLike customNameSenderMessage;
     @Setter
     private boolean isOnGround;
 
-    public FakeEntity(LocationHolder location, int typeId) {
+    public FakeEntity(@NotNull LocationHolder location, int typeId) {
         // default values
         if (!Server.isServerThread()) {
             try {
@@ -73,7 +74,7 @@ public class FakeEntity {
         setEntityFlags();
     }
 
-    public void setCustomName(Component name) {
+    public void setCustomName(@NotNull Component name) {
         if (Server.isVersion(1, 13)) {
             put(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), name));
         } else {
@@ -86,7 +87,7 @@ public class FakeEntity {
         customName = name;
     }
 
-    public void put(MetadataItem metadataItem) {
+    public void put(@NotNull MetadataItem metadataItem) {
         metadataItems.removeIf(metadataItem1 -> metadataItem1.getIndex() == metadataItem.getIndex());
         metadataItems.add(metadataItem);
     }
@@ -140,19 +141,19 @@ public class FakeEntity {
         }
     }
 
-    public void spawn(PlayerWrapper player) {
+    public void spawn(@NotNull PlayerWrapper player) {
         getSpawnPackets().forEach(packet -> packet.sendPacket(player));
     }
 
-    public void teleport(PlayerWrapper player) {
+    public void teleport(@NotNull PlayerWrapper player) {
         getTeleportPacket().sendPacket(player);
     }
 
-    public List<AbstractPacket> getSpawnPackets() {
+    public @NotNull List<@NotNull AbstractPacket> getSpawnPackets() {
         return getSpawnPackets(List.of());
     }
 
-    public List<AbstractPacket> getSpawnPackets(PlayerWrapper viewer) {
+    public @NotNull List<@NotNull AbstractPacket> getSpawnPackets(@NotNull PlayerWrapper viewer) {
         if (customNameSenderMessage != null) {
             if (Server.isVersion(1, 13)) {
                 return getSpawnPackets(List.of(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), customNameSenderMessage.asComponent(viewer))));
@@ -167,7 +168,7 @@ public class FakeEntity {
         return getSpawnPackets(List.of());
     }
 
-    public List<AbstractPacket> getSpawnPackets(List<MetadataItem> additionalMetadata) {
+    public @NotNull List<@NotNull AbstractPacket> getSpawnPackets(@NotNull List<@NotNull MetadataItem> additionalMetadata) {
         final var toReturn = new LinkedList<AbstractPacket>();
         final var spawnPacket = new SClientboundAddMobPacket()
                 .entityId(id)
@@ -185,18 +186,18 @@ public class FakeEntity {
         return toReturn;
     }
 
-    public SClientboundTeleportEntityPacket getTeleportPacket() {
+    public @NotNull SClientboundTeleportEntityPacket getTeleportPacket() {
         return new SClientboundTeleportEntityPacket()
                 .entityId(id)
                 .location(location)
                 .onGround(isOnGround);
     }
 
-    public SClientboundSetEntityDataPacket getMetadataPacket() {
+    public @NotNull SClientboundSetEntityDataPacket getMetadataPacket() {
         return getMetadataPacket(List.of());
     }
 
-    public SClientboundSetEntityDataPacket getMetadataPacket(PlayerWrapper viewer) {
+    public @NotNull SClientboundSetEntityDataPacket getMetadataPacket(@NotNull PlayerWrapper viewer) {
         if (customNameSenderMessage != null) {
             if (Server.isVersion(1, 13)) {
                 return getMetadataPacket(List.of(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), customNameSenderMessage.asComponent(viewer))));
@@ -211,7 +212,7 @@ public class FakeEntity {
         return getMetadataPacket(List.of());
     }
 
-    public SClientboundSetEntityDataPacket getMetadataPacket(List<MetadataItem> additionalMetadata) {
+    public @NotNull SClientboundSetEntityDataPacket getMetadataPacket(@NotNull List<@NotNull MetadataItem> additionalMetadata) {
         final var metadataPacket = new SClientboundSetEntityDataPacket()
                 .entityId(id);
         metadataPacket.metadata().addAll(metadataItems);
@@ -283,7 +284,7 @@ public class FakeEntity {
 
         @UtilityClass
         public static class Registry {
-            private static final Map<EntityMetadata, Byte> idMap = new HashMap<>();
+            private static final @NotNull Map<@NotNull EntityMetadata, Byte> idMap = new HashMap<>();
             private static byte SEQUENTIAL_INDEXING = -1;
 
             static {
@@ -334,11 +335,11 @@ public class FakeEntity {
                 return Optional.empty();
             }
 
-            public static byte getId(EntityMetadata metadata) {
+            public static byte getId(@NotNull EntityMetadata metadata) {
                 return Objects.requireNonNull(idMap.get(metadata), "Has: " + metadata.name() + " not been registered into registry?");
             }
 
-            public static void register(EntityMetadata indices) {
+            public static void register(@NotNull EntityMetadata indices) {
                 if (idMap.containsKey(indices)) {
                     return;
                 }

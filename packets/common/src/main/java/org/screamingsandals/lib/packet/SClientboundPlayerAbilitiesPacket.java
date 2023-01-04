@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -32,7 +33,7 @@ public class SClientboundPlayerAbilitiesPacket extends AbstractPacket {
     private float walkingSpeed;
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         byte flags = 0;
         if (invulnerable) {
             flags |= 0x01;

@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 
 @EqualsAndHashCode(callSuper = true)
@@ -28,7 +29,7 @@ public class SClientboundDisconnectPacket extends AbstractPacket {
     private Component reason;
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         writer.writeComponent(reason);
     }
 }

@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bungee.tasker;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.tasker.TaskBuilderImpl;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
@@ -31,21 +32,21 @@ import org.screamingsandals.lib.utils.annotations.Service;
 
 @Service
 public class BungeeTaskInitializer extends AbstractTaskInitializer {
-    private final Plugin plugin;
-    private final TaskScheduler scheduler;
+    private final @NotNull Plugin plugin;
+    private final @NotNull TaskScheduler scheduler;
 
-    public static void init(Controllable controllable, Plugin plugin) {
+    public static void init(@NotNull Controllable controllable, @NotNull Plugin plugin) {
         Tasker.init(() -> new BungeeTaskInitializer(controllable, plugin));
     }
 
-    public BungeeTaskInitializer(Controllable controllable, Plugin plugin) {
+    public BungeeTaskInitializer(@NotNull Controllable controllable, @NotNull Plugin plugin) {
         super(controllable);
         this.plugin = plugin;
         this.scheduler = plugin.getProxy().getScheduler();
     }
 
     @Override
-    public TaskerTask start(TaskBuilderImpl builder) {
+    public @NotNull TaskerTask start(@NotNull TaskBuilderImpl builder) {
         final var runnable = builder.getRunnable();
         if (builder.isAfterOneTick()) {
             return AbstractTaskerTask.of(builder.getTaskId(), scheduler.runAsync(plugin, runnable), builder.getStopEvent());
@@ -75,7 +76,7 @@ public class BungeeTaskInitializer extends AbstractTaskInitializer {
     }
 
     @Override
-    public TaskState getState(TaskerTask taskerTask) {
+    public @NotNull TaskState getState(@NotNull TaskerTask taskerTask) {
         //TODO: check task
         if (Tasker.getRunningTasks().containsKey(taskerTask.getId())) {
             return TaskState.RUNNING;
@@ -84,7 +85,7 @@ public class BungeeTaskInitializer extends AbstractTaskInitializer {
     }
 
     @Override
-    public void cancel(TaskerTask task) {
+    public void cancel(@NotNull TaskerTask task) {
         final ScheduledTask toCancel = task.getTaskObject();
         toCancel.cancel();
     }

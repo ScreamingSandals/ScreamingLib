@@ -20,6 +20,8 @@ import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.placeholders.hooks.PlaceholderAPIHook;
 import org.screamingsandals.lib.bukkit.placeholders.hooks.VaultHook;
 import org.screamingsandals.lib.bukkit.player.BukkitPlayerMapper;
@@ -36,7 +38,7 @@ public class BukkitPlaceholderManager extends PlaceholderManager {
 
     @ApiStatus.Internal
     @OnEnable
-    public void onEnable(Plugin plugin) {
+    public void onEnable(@NotNull Plugin plugin) {
         activeHooks.add(new DummyHook());
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             activeHooks.add(new PlaceholderAPIHook(plugin));
@@ -61,12 +63,12 @@ public class BukkitPlaceholderManager extends PlaceholderManager {
     }
 
     @Override
-    public void registerExpansion0(PlaceholderExpansion expansion) {
+    public void registerExpansion0(@NotNull PlaceholderExpansion expansion) {
         activeHooks.forEach(hook -> hook.register(expansion));
     }
 
     @Override
-    public String resolveString0(MultiPlatformOfflinePlayer player, String message) {
+    public @NotNull String resolveString0(@Nullable MultiPlatformOfflinePlayer player, @NotNull String message) {
         for (var hook : activeHooks) {
             message = hook.resolveString(player, message);
         }

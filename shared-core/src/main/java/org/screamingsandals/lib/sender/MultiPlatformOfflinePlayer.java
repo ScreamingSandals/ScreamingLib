@@ -16,13 +16,14 @@
 
 package org.screamingsandals.lib.sender;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.UUID;
 
 public interface MultiPlatformOfflinePlayer extends Operator, Wrapper {
-    UUID getUuid();
+    @NotNull UUID getUuid();
 
     /**
      * Gets the player's last name.

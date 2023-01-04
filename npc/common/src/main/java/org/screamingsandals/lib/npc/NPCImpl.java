@@ -23,6 +23,7 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.hologram.Hologram;
@@ -55,23 +56,23 @@ import java.util.concurrent.ExecutionException;
 @Getter
 @Setter
 public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
-    private static final GameModeHolder GAME_MODE = GameModeHolder.of("SURVIVAL");
+    private static final @NotNull GameModeHolder GAME_MODE = GameModeHolder.of("SURVIVAL");
     private static final boolean IS_BUNGEE = Server.getProxyType() == ProxyType.BUNGEE;
 
     private final int entityId;
-    private final Hologram hologram;
-    private final String tabName16;
-    private Component tabListName;
+    private final @NotNull Hologram hologram;
+    private final @NotNull String tabName16;
+    private @NotNull Component tabListName;
     @Getter(AccessLevel.NONE)
-    private final List<SClientboundPlayerInfoPacket.Property> properties;
-    private NPCSkin skin;
+    private final @NotNull List<SClientboundPlayerInfoPacket. @NotNull Property> properties;
+    private @Nullable NPCSkin skin;
     private volatile boolean lookAtPlayer;
-    private final List<MetadataItem> metadata;
-    private SClientboundSetPlayerTeamPacket.CollisionRule collisionRule;
-    private final Map<UUID, TaskerTask> hiderTask;
+    private final @NotNull List<@NotNull MetadataItem> metadata;
+    private SClientboundSetPlayerTeamPacket.@NotNull CollisionRule collisionRule;
+    private final @NotNull Map<@NotNull UUID, TaskerTask> hiderTask;
     private double hologramElevation;
 
-    public NPCImpl(UUID uuid, LocationHolder location, boolean touchable) {
+    public NPCImpl(@NotNull UUID uuid, @NotNull LocationHolder location, boolean touchable) {
         super(uuid, location, touchable);
 
         try {
@@ -92,14 +93,14 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     }
 
     @Override
-    public NPC hologramElevation(double hologramElevation) {
+    public @NotNull NPC hologramElevation(double hologramElevation) {
         this.hologramElevation = hologramElevation;
         update(UpdateStrategy.POSITION);
         return this;
     }
 
     @Override
-    public NPC skin(NPCSkin skin) {
+    public @NotNull NPC skin(@Nullable NPCSkin skin) {
         this.skin = skin;
         properties.removeIf(property -> "textures".equals(property.name()));
         if (skin != null) {
@@ -144,7 +145,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     }
 
     @Override
-    public void lookAtLocation(LocationHolder location, PlayerWrapper player) {
+    public void lookAtLocation(@NotNull LocationHolder location, @NotNull PlayerWrapper player) {
         final var direction = location().setDirection(player.getLocation().subtract(location()).asVector());
         new SClientboundMoveEntityPacket.Rot()
                 .entityId(entityId())
@@ -160,12 +161,12 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     }
 
     @Override
-    public @Nullable List<TextEntry> displayName() {
+    public @Unmodifiable @Nullable List<@NotNull TextEntry> displayName() {
         return List.copyOf(hologram.lines().values());
     }
 
     @Override
-    public NPC displayName(List<Component> name) {
+    public @NotNull NPC displayName(@NotNull List<@NotNull Component> name) {
         hologram.setLines(name);
         return this;
     }
@@ -243,7 +244,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         hologram.title(title);
         return this;
     }
-    private void cancelTabHide(PlayerWrapper viewer) {
+    private void cancelTabHide(@NotNull PlayerWrapper viewer) {
         hiderTask.computeIfPresent(viewer.getUuid(), (uuid, task) -> {
             if (task.getState() == TaskState.RUNNING
                     || task.getState() == TaskState.SCHEDULED) {
@@ -253,7 +254,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         });
     }
 
-    private void scheduleTabHide(PlayerWrapper viewer) {
+    private void scheduleTabHide(@NotNull PlayerWrapper viewer) {
         cancelTabHide(viewer);
         Tasker.build(() -> {
             if (!viewer.isOnline()) {
@@ -267,7 +268,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         }).delay(6L, TaskerTime.SECONDS).start();
     }
 
-    private List<AbstractPacket> createSpawnPackets() {
+    private @NotNull List<@NotNull AbstractPacket> createSpawnPackets() {
         final List<AbstractPacket> spawnPackets = new ArrayList<>();
 
         if (IS_BUNGEE) {
@@ -305,21 +306,21 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         return spawnPackets;
     }
 
-    private SClientboundRemoveEntitiesPacket removeEntityPacket() {
+    private @NotNull SClientboundRemoveEntitiesPacket removeEntityPacket() {
         return new SClientboundRemoveEntitiesPacket()
                 .entityIds(new int[]{entityId()});
     }
 
-    private SClientboundPlayerInfoPacket createPlayerInfoPacket(
-            SClientboundPlayerInfoPacket.Action action
+    private @NotNull SClientboundPlayerInfoPacket createPlayerInfoPacket(
+            SClientboundPlayerInfoPacket.@NotNull Action action
     ) {
         return new SClientboundPlayerInfoPacket()
                 .action(action)
                 .data(getNPCInfoData());
     }
 
-    private SClientboundSetPlayerTeamPacket createPlayerTeamPacket(
-            SClientboundSetPlayerTeamPacket.Mode mode
+    private @NotNull SClientboundSetPlayerTeamPacket createPlayerTeamPacket(
+            SClientboundSetPlayerTeamPacket.@NotNull Mode mode
     ) {
         return new SClientboundSetPlayerTeamPacket()
                 .teamKey(tabName16)
@@ -335,7 +336,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                 .entities(Collections.singletonList(tabName16));
     }
 
-    private List<SClientboundPlayerInfoPacket.PlayerInfoData> getNPCInfoData() {
+    private @NotNull List<SClientboundPlayerInfoPacket.@NotNull PlayerInfoData> getNPCInfoData() {
         return Collections.singletonList(new SClientboundPlayerInfoPacket.PlayerInfoData(
                 uuid(),
                 tabName16,

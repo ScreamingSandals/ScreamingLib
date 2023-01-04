@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Service that provides containers ({@link TranslationContainer}) for given locales.
  */
 public abstract class LangService {
-    protected final @NotNull Map<@NotNull Locale, @NotNull TranslationContainer> containers = new ConcurrentHashMap<>();
+    protected final @NotNull Map<@NotNull Locale, TranslationContainer> containers = new ConcurrentHashMap<>();
     @Setter
     @Getter
     protected @NotNull TranslationContainer fallbackContainer = TranslationContainer.empty();
@@ -93,7 +93,7 @@ public abstract class LangService {
      * @param sender from whom to resolve locale
      * @return resolved prefix
      */
-    public @NotNull Component resolvePrefix(@NotNull CommandSenderWrapper sender) {
+    public @NotNull Component resolvePrefix(@Nullable CommandSenderWrapper sender) {
         return Lang.getDefaultPrefix();
     }
 

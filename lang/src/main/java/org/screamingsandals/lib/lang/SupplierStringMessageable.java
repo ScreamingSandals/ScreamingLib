@@ -18,6 +18,7 @@ package org.screamingsandals.lib.lang;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -25,15 +26,15 @@ import java.util.function.Supplier;
 @Data
 @RequiredArgsConstructor(staticName = "of")
 public final class SupplierStringMessageable implements Messageable {
-    private final Supplier<List<String>> supplier;
-    private final Type type;
+    private final @NotNull Supplier<@NotNull List<@NotNull String>> supplier;
+    private final @NotNull Type type;
 
-    public static SupplierStringMessageable of(Supplier<List<String>> message) {
+    public static @NotNull SupplierStringMessageable of(@NotNull Supplier<@NotNull List<@NotNull String>> message) {
         return of(message, Type.LEGACY);
     }
 
     @Override
-    public List<String> getKeys() {
+    public @NotNull List<@NotNull String> getKeys() {
         return supplier.get();
     }
 

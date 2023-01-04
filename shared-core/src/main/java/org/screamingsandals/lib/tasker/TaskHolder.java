@@ -16,19 +16,20 @@
 
 package org.screamingsandals.lib.tasker;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class TaskHolder {
-    private final List<TaskerTask> runningTasks = new LinkedList<>();
+    private final @NotNull List<@NotNull TaskerTask> runningTasks = new LinkedList<>();
 
-    public List<TaskerTask> getRunningTasks() {
+    public @NotNull List<@NotNull TaskerTask> getRunningTasks() {
         return List.copyOf(runningTasks);
     }
 
-    public Tasker.TaskBuilder build(Runnable runnable) {
+    public Tasker.@NotNull TaskBuilder build(@NotNull Runnable runnable) {
         return Tasker.build(runnable)
                 .startEvent(runningTasks::add)
                 .stopEvent(runningTasks::remove);

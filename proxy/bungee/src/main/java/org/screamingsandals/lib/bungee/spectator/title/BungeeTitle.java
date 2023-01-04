@@ -34,11 +34,11 @@ import java.time.Duration;
 @Data
 @Accessors(fluent = true)
 public class BungeeTitle implements Title {
-    private final Component title;
-    private final Component subtitle;
-    private final Duration fadeIn;
-    private final Duration stay;
-    private final Duration fadeOut;
+    private final @NotNull Component title;
+    private final @NotNull Component subtitle;
+    private final @NotNull Duration fadeIn;
+    private final @NotNull Duration stay;
+    private final @NotNull Duration fadeOut;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -130,11 +130,11 @@ public class BungeeTitle implements Title {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BungeeTitleBuilder implements Title.Builder {
-        private Component title;
-        private Component subtitle;
-        private Duration fadeIn;
-        private Duration stay;
-        private Duration fadeOut;
+        private @Nullable Component title;
+        private @Nullable Component subtitle;
+        private @Nullable Duration fadeIn;
+        private @Nullable Duration stay;
+        private @Nullable Duration fadeOut;
 
         @Override
         public @NotNull Title build() {

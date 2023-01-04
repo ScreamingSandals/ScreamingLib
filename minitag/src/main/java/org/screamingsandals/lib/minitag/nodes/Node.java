@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Data
 @Accessors(fluent = true)
 public abstract class Node {
-    private final List<Node> children = new ArrayList<>();
+    private final @NotNull List<@NotNull Node> children = new ArrayList<>();
 
     public void putChildren(@NotNull Node node) {
         children.add(node);
@@ -41,7 +41,7 @@ public abstract class Node {
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         var add = toStringAdditional();
         return this.getClass().getSimpleName().toLowerCase(Locale.ROOT).replace("node", "") + (add != null ? " (" + add + ")" : "") + " {\n" +
                 children.stream().map(Node::toString).map(s -> s.replaceAll("(?m)^", "  ")).collect(Collectors.joining(",\n"))

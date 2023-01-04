@@ -18,6 +18,7 @@ package org.screamingsandals.lib.proxy.event;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 
@@ -27,8 +28,8 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class SPlayerLeaveEvent implements SEvent {
-    private final ProxiedPlayerWrapper player;
-    private final LoginStatus status;
+    private final @NotNull ProxiedPlayerWrapper player;
+    private final @NotNull LoginStatus status;
 
     public enum LoginStatus {
         CANCELLED_BY_PROXY,

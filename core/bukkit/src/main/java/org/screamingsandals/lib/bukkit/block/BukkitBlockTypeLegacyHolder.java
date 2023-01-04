@@ -67,12 +67,12 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     }
 
     @Override
-    public @Unmodifiable @NotNull Map<@NotNull String, @NotNull String> flatteningData() {
+    public @Unmodifiable @NotNull Map<@NotNull String, String> flatteningData() {
         return LegacyMaterialDataToFlatteningConverter.get(wrappedObject);
     }
 
     @Override
-    public @NotNull BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> flatteningData) {
+    public @NotNull BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, String> flatteningData) {
         var materialName = wrappedObject.getItemType().name();
         byte baseData = 0;
 

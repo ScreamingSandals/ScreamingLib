@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.visuals.utils;
 
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -24,7 +25,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 @UtilityClass
 public class VisualUtils {
 
-    public ConcurrentSkipListMap<Integer, TextEntry> addEntryAndMoveRest(ConcurrentSkipListMap<Integer, TextEntry> input, Integer line, TextEntry text) {
+    public @NotNull ConcurrentSkipListMap<@NotNull Integer, TextEntry> addEntryAndMoveRest(@NotNull ConcurrentSkipListMap<@NotNull Integer, TextEntry> input, @NotNull Integer line, @NotNull TextEntry text) {
         if (!input.containsKey(line)) {
             input.put(line, text);
             return input;
@@ -39,7 +40,7 @@ public class VisualUtils {
         return toReturn;
     }
 
-    public ConcurrentSkipListMap<Integer, TextEntry> removeEntryAndMoveRest(ConcurrentSkipListMap<Integer, TextEntry> input, Integer line) {
+    public @NotNull ConcurrentSkipListMap<@NotNull Integer, TextEntry> removeEntryAndMoveRest(@NotNull ConcurrentSkipListMap<@NotNull Integer, TextEntry> input, @NotNull Integer line) {
         if (!input.containsKey(line)) {
             return input;
         }

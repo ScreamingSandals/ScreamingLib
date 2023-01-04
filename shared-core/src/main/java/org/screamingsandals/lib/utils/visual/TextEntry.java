@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.utils.visual;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 
@@ -31,7 +32,7 @@ public interface TextEntry {
      * @param text       actual text
      * @return baked text entry
      */
-    static TextEntry of(String identifier, Component text) {
+    static @NotNull TextEntry of(@NotNull String identifier, @NotNull Component text) {
         return SimpleTextEntry.of(identifier, text);
     }
 
@@ -41,7 +42,7 @@ public interface TextEntry {
      * @param text actual text
      * @return baked text entry with no identifier
      */
-    static TextEntry of(Component text) {
+    static @NotNull TextEntry of(@NotNull Component text) {
         return SimpleTextEntry.of(text);
     }
 
@@ -52,7 +53,7 @@ public interface TextEntry {
      * @param text       actual text
      * @return baked text entry
      */
-    static TextEntry of(String identifier, ComponentLike text) {
+    static @NotNull TextEntry of(@NotNull String identifier, @NotNull ComponentLike text) {
         return SimpleCLTextEntry.of(identifier, text);
     }
 
@@ -62,7 +63,7 @@ public interface TextEntry {
      * @param text actual text
      * @return baked text entry with no identifier
      */
-    static TextEntry of(ComponentLike text) {
+    static @NotNull TextEntry of(@NotNull ComponentLike text) {
         return SimpleCLTextEntry.of(text);
     }
 
@@ -73,7 +74,7 @@ public interface TextEntry {
      * @param text       actual text
      * @return baked text entry
      */
-    static TextEntry of(String identifier, String text) {
+    static @NotNull TextEntry of(@NotNull String identifier, @NotNull String text) {
         return SimpleTextEntry.of(identifier, Component.fromLegacy(text));
     }
 
@@ -83,7 +84,7 @@ public interface TextEntry {
      * @param text actual text
      * @return baked text entry with no identifier
      */
-    static TextEntry of(String text) {
+    static @NotNull TextEntry of(@NotNull String text) {
         return SimpleTextEntry.of(Component.fromLegacy(text));
     }
 
@@ -93,14 +94,14 @@ public interface TextEntry {
      *
      * @return identifier or empty String if undefined.
      */
-    String getIdentifier();
+    @NotNull String getIdentifier();
 
     /**
      * Text of this entry
      *
      * @return the actual text
      */
-    Component getText();
+    @NotNull Component getText();
 
     /**
      * Checks if the TextEntry is the same.
@@ -108,7 +109,7 @@ public interface TextEntry {
      * @param another another entry
      * @return true if the identifier is the same.
      */
-    default boolean isSame(TextEntry another) {
+    default boolean isSame(@NotNull TextEntry another) {
         return getIdentifier().equalsIgnoreCase(another.getIdentifier());
     }
 }

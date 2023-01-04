@@ -34,10 +34,10 @@ import java.util.stream.Collectors;
 @Accessors(chain = true, fluent = true)
 public class SClientboundPlayerInfoPacket extends AbstractPacket {
     private Action action;
-    private List<PlayerInfoData> data;
+    private List<@NotNull PlayerInfoData> data;
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         if (writer.protocol() >= 761) {
             if (action == Action.REMOVE_PLAYER) {
                 writer.setCancelled(true);
@@ -64,10 +64,10 @@ public class SClientboundPlayerInfoPacket extends AbstractPacket {
                     writer.writeSizedCollection(playerInfoData.properties(), property -> {
                         writer.writeSizedString(property.name());
                         writer.writeSizedString(property.value());
-                        var hasSignature = property.hasSignature();
-                        writer.writeBoolean(hasSignature);
-                        if (hasSignature) {
-                            writer.writeSizedString(property.signature());
+                        var signature = property.signature();
+                        writer.writeBoolean(signature != null);
+                        if (signature != null) {
+                            writer.writeSizedString(signature);
                         }
                     });
                     if (writer.protocol() >= 761) {
@@ -116,23 +116,23 @@ public class SClientboundPlayerInfoPacket extends AbstractPacket {
 
     @Data
     public static class PlayerInfoData {
-        private final UUID uuid;
-        private final String realName;
+        private final @NotNull UUID uuid;
+        private final @NotNull String realName;
         private final int latency;
-        private final GameModeHolder gameMode;
-        private final Component displayName;
-        private final List<Property> properties;
+        private final @NotNull GameModeHolder gameMode;
+        private final @Nullable Component displayName;
+        private final @NotNull List<@NotNull Property> properties;
         private final boolean listed;
     }
 
     @Data
     @RequiredArgsConstructor
     public static class Property {
-        private final String name;
-        private final String value;
+        private final @NotNull String name;
+        private final @NotNull String value;
         private final @Nullable String signature;
 
-        public Property(String name, String value) {
+        public Property(@NotNull String name, @NotNull String value) {
             this(name, value, null);
         }
 

@@ -18,6 +18,7 @@ package org.screamingsandals.lib.velocity.proxy.event;
 
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxy.event.SPlayerLeaveEvent;
@@ -30,7 +31,7 @@ public class PlayerLeaveEventFactory extends AbstractVelocityEventHandlerFactory
     }
 
     @Override
-    protected SPlayerLeaveEvent wrapEvent(DisconnectEvent event, EventPriority priority) {
+    protected @NotNull SPlayerLeaveEvent wrapEvent(@NotNull DisconnectEvent event, @NotNull EventPriority priority) {
         final var player = event.getPlayer();
         final var login = SPlayerLeaveEvent.LoginStatus.convert(event.getLoginStatus().name());
         return new SPlayerLeaveEvent(ProxiedPlayerMapper.wrapPlayer(player), login);

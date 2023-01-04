@@ -38,7 +38,7 @@ public interface LinedVisual<T> extends Visual<T> {
      *
      * @return currently displayed lines.
      */
-    @NotNull Map<@NotNull Integer, @NotNull TextEntry> lines();
+    @NotNull Map<@NotNull Integer, TextEntry> lines();
 
     /**
      * Tries to get a line by given identifier.
@@ -46,7 +46,7 @@ public interface LinedVisual<T> extends Visual<T> {
      * @param identifier where's my identity?!
      * @return this visual
      */
-    Map.@Nullable Entry<Integer, TextEntry> lineByIdentifier(@NotNull String identifier);
+    Map.@Nullable Entry<Integer, @NotNull TextEntry> lineByIdentifier(@NotNull String identifier);
 
     /**
      * Adds new line to this visual and moves everything else 1 line down.
@@ -148,7 +148,7 @@ public interface LinedVisual<T> extends Visual<T> {
      * @return this visual
      */
     @Contract("_ -> this")
-    @NotNull T setLines(@NotNull Map<@NotNull Integer, @NotNull TextEntry> lines);
+    @NotNull T setLines(@NotNull Map<@NotNull Integer, TextEntry> lines);
 
     /**
      * Replaces all lines.

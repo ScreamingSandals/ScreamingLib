@@ -31,7 +31,7 @@ import java.util.Map;
 
 public abstract class AbstractBukkitEventHandlerFactory<T extends Event, SE extends SEvent> implements Listener {
 
-    protected final @NotNull Map<@NotNull EventPriority, @NotNull EventExecutor> eventMap = new HashMap<>();
+    protected final @NotNull Map<@NotNull EventPriority, EventExecutor> eventMap = new HashMap<>();
     protected final boolean fireAsync;
     protected final boolean checkOnlySameNotChildren;
     protected final @NotNull Class<SE> eventClass;

@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 
 import java.util.Locale;
@@ -33,7 +34,7 @@ public class SClientboundSetObjectivePacket extends AbstractPacket {
     private Mode mode;
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         writer.writeSizedString(objectiveKey);
         writer.writeByte((byte) mode.ordinal());
 

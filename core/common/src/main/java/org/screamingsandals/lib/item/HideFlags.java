@@ -18,6 +18,7 @@ package org.screamingsandals.lib.item;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -34,9 +35,9 @@ public enum HideFlags {
     DYED("HIDE_DYE");
 
     @Getter
-    private final String bukkitName;
+    private final @NotNull String bukkitName;
 
-    private static final Map<String, HideFlags> VALUES = new HashMap<>();
+    private static final @NotNull Map<@NotNull String, HideFlags> VALUES = new HashMap<>();
 
     static {
         for (var flag : values()) {
@@ -45,7 +46,7 @@ public enum HideFlags {
         }
     }
 
-    public static HideFlags convert(String name) {
+    public static @NotNull HideFlags convert(@NotNull String name) {
         return VALUES.getOrDefault(name.toUpperCase(Locale.ROOT), MISC);
     }
 }

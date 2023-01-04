@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.item;
 
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.metadata.MetadataValuesRemapper;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
@@ -31,7 +32,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ItemMetaHelper {
-    private static final Map<String, String> NBT_TO_BUKKIT_METHODS = Map.ofEntries(
+    private static final @NotNull Map<@NotNull String, String> NBT_TO_BUKKIT_METHODS = Map.ofEntries(
             // PotionMeta
             Map.entry("Potion", "BasePotionData"),
             Map.entry("CustomPotionColor", "Color"),

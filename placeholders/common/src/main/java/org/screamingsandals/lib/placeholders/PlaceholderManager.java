@@ -17,6 +17,8 @@
 package org.screamingsandals.lib.placeholders;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.placeholders.hooks.Hook;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -27,9 +29,9 @@ import java.util.List;
 @AbstractService
 public abstract class PlaceholderManager {
 
-    protected final List<Hook> activeHooks = new LinkedList<>();
+    protected final @NotNull List<@NotNull Hook> activeHooks = new LinkedList<>();
 
-    private static PlaceholderManager placeholderManager;
+    private static @Nullable PlaceholderManager placeholderManager;
 
     @ApiStatus.Internal
     public PlaceholderManager() {
@@ -39,23 +41,23 @@ public abstract class PlaceholderManager {
         placeholderManager = this;
     }
 
-    public static void registerExpansion(PlaceholderExpansion expansion) {
+    public static void registerExpansion(@NotNull PlaceholderExpansion expansion) {
         if (placeholderManager == null) {
             throw new UnsupportedOperationException("PlaceholderManager is not initialized yet!");
         }
         placeholderManager.registerExpansion0(expansion);
     }
 
-    public abstract void registerExpansion0(PlaceholderExpansion expansion);
+    public abstract void registerExpansion0(@NotNull PlaceholderExpansion expansion);
 
-    public static String resolveString(MultiPlatformOfflinePlayer player, String message) {
+    public static @NotNull String resolveString(@Nullable MultiPlatformOfflinePlayer player, @NotNull String message) {
         if (placeholderManager == null) {
             throw new UnsupportedOperationException("PlaceholderManager is not initialized yet!");
         }
         return placeholderManager.resolveString0(player, message);
     }
 
-    public abstract String resolveString0(MultiPlatformOfflinePlayer player, String message);
+    public abstract @NotNull String resolveString0(@Nullable MultiPlatformOfflinePlayer player, @NotNull String message);
 
     public static boolean isInitialized() {
         return placeholderManager != null;

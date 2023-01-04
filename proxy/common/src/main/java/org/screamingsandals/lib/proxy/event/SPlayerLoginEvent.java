@@ -18,6 +18,7 @@ package org.screamingsandals.lib.proxy.event;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.SCancellableAsyncEvent;
 import org.screamingsandals.lib.proxy.PendingConnection;
 import org.screamingsandals.lib.spectator.Component;
@@ -25,9 +26,9 @@ import org.screamingsandals.lib.spectator.Component;
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class SPlayerLoginEvent implements SCancellableAsyncEvent {
-    private final PendingConnection player;
-    private Result result = Result.ALLOW;
-    private Component cancelMessage = Component.text("Nope.");
+    private final @NotNull PendingConnection player;
+    private @NotNull Result result = Result.ALLOW;
+    private @NotNull Component cancelMessage = Component.text("Nope.");
     private boolean cancelled;
 
     @Override

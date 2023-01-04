@@ -25,10 +25,10 @@ import org.jetbrains.annotations.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @RequiredArgsConstructor
 public class TextNode extends Node {
-    private final String text;
+    private final @NotNull String text;
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return '\"' + text + '\"';
     }
 

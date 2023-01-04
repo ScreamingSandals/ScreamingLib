@@ -19,24 +19,25 @@ package org.screamingsandals.lib.utils.visual;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 
 @AllArgsConstructor(staticName = "of", access = AccessLevel.PACKAGE)
 @Data
 public final class SimpleCLTextEntry implements TextEntry {
-    private final String identifier;
-    private final ComponentLike text;
+    private final @NotNull String identifier;
+    private final @NotNull ComponentLike text;
 
-    static SimpleCLTextEntry of(ComponentLike text) {
+    static @NotNull SimpleCLTextEntry of(@NotNull ComponentLike text) {
         return SimpleCLTextEntry.of("", text);
     }
 
-    public Component getText() {
+    public @NotNull Component getText() {
         return text.asComponent();
     }
 
-    public ComponentLike getComponentLike() {
+    public @NotNull ComponentLike getComponentLike() {
         return text;
     }
 }

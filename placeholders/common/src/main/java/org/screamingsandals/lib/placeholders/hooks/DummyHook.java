@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.placeholders.hooks;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.placeholders.PlaceholderExpansion;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 
@@ -23,22 +25,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DummyHook extends AbstractPAPILikePlaceholder {
-    private final List<PlaceholderExpansion> expansions = new ArrayList<>();
+    private final @NotNull List<@NotNull PlaceholderExpansion> expansions = new ArrayList<>();
 
     @Override
-    public void register(PlaceholderExpansion expansion) {
+    public void register(@NotNull PlaceholderExpansion expansion) {
         if (!expansions.contains(expansion)) {
             expansions.add(expansion);
         }
     }
 
     @Override
-    protected boolean has(String identifier) {
+    protected boolean has(@NotNull String identifier) {
         return expansions.stream().anyMatch(placeholderExpansion -> placeholderExpansion.getIdentifier().equals(identifier));
     }
 
     @Override
-    protected String resolve(MultiPlatformOfflinePlayer player, String identifier, String parameters) {
+    protected @Nullable String resolve(@Nullable MultiPlatformOfflinePlayer player, @NotNull String identifier, @NotNull String parameters) {
         final var expansion = expansions.stream().filter(placeholderExpansion -> placeholderExpansion.getIdentifier().equals(identifier)).findFirst();
         if (expansion.isEmpty()) {
             return null;

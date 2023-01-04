@@ -28,7 +28,7 @@ import java.util.UUID;
 @SuppressWarnings("unchecked") // this is just java being dum
 public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> extends AbstractVisual<T> implements LocatableVisual<T> {
     private volatile int viewDistance;
-    private volatile LocationHolder location;
+    private volatile @NotNull LocationHolder location;
     private volatile boolean created;
 
     public AbstractLocatableVisual(@NotNull UUID uuid, @NotNull LocationHolder location) {

@@ -16,23 +16,25 @@
 
 package org.screamingsandals.lib.placeholders.hooks;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 
 import java.util.regex.Pattern;
 
 public abstract class AbstractPAPILikePlaceholder implements Hook {
-    private static final Pattern pattern = Pattern.compile("%((?<identifier>[a-zA-Z0-9]+)_)(?<parameters>[^%]+)%");
+    private static final @NotNull Pattern pattern = Pattern.compile("%((?<identifier>[a-zA-Z0-9]+)_)(?<parameters>[^%]+)%");
 
     // definitely not from:
     // https://github.com/PlaceholderAPI/PlaceholderAPI/blob/ce18d3b597b690d77a2cc485a9674b5096cdf14d/src/main/java/me/clip/placeholderapi/replacer/RegexReplacer.java
     @Override
-    public String resolveString(MultiPlatformOfflinePlayer player, String message) {
+    public @NotNull String resolveString(@Nullable MultiPlatformOfflinePlayer player, @NotNull String message) {
         final var matcher = pattern.matcher(message);
         if (!matcher.find()) {
             return message;
         }
 
-        final StringBuffer builder = new StringBuffer();
+        final StringBuilder builder = new StringBuilder();
 
         do {
             final String identifier = matcher.group("identifier");
@@ -50,7 +52,7 @@ public abstract class AbstractPAPILikePlaceholder implements Hook {
         return matcher.appendTail(builder).toString();
     }
 
-    protected abstract boolean has(String identifier);
+    protected abstract boolean has(@NotNull String identifier);
 
-    protected abstract String resolve(MultiPlatformOfflinePlayer player, String identifier, String parameters);
+    protected abstract @Nullable String resolve(@Nullable MultiPlatformOfflinePlayer player, @NotNull String identifier, @NotNull String parameters);
 }

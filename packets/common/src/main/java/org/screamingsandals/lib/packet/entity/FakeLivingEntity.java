@@ -16,13 +16,14 @@
 
 package org.screamingsandals.lib.packet.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.packet.MetadataItem;
 import org.screamingsandals.lib.utils.math.Vector3Di;
 import org.screamingsandals.lib.world.LocationHolder;
 
 public class FakeLivingEntity extends FakeEntity {
-    public FakeLivingEntity(LocationHolder location, int typeId) {
+    public FakeLivingEntity(@NotNull LocationHolder location, int typeId) {
         super(location, typeId);
     }
 
@@ -56,7 +57,7 @@ public class FakeLivingEntity extends FakeEntity {
         }
     }
 
-    public void setBedPosition(Vector3Di bedPosition) {
+    public void setBedPosition(@NotNull Vector3Di bedPosition) {
         if (Server.isVersion(1, 14)) {
             put(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.BED_BLOCK_POSITION), bedPosition));
         }

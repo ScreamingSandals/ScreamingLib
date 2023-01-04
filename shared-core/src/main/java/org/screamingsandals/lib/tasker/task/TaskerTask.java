@@ -16,16 +16,18 @@
 
 package org.screamingsandals.lib.tasker.task;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface TaskerTask extends TaskBase {
 
-    Integer getId();
+    @NotNull Integer getId();
 
     /**
      * Returns the current state of this task.
      *
      * @return the current state of this task
      */
-    TaskState getState();
+    @NotNull TaskState getState();
 
-    <P> P getTaskObject();
+    <P> @NotNull P getTaskObject();
 }

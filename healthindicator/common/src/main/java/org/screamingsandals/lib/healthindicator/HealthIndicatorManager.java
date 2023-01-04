@@ -38,7 +38,7 @@ import java.util.UUID;
 })
 public class HealthIndicatorManager {
     private static @Nullable HealthIndicatorManager manager;
-    protected final @NotNull Map<@NotNull UUID, @NotNull HealthIndicator> activeIndicators = new HashMap<>();
+    protected final @NotNull Map<@NotNull UUID, HealthIndicator> activeIndicators = new HashMap<>();
 
     @ApiStatus.Internal
     public HealthIndicatorManager() {

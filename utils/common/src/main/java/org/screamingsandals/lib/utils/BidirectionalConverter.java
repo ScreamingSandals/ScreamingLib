@@ -32,8 +32,8 @@ import java.util.function.Function;
  */
 @NoArgsConstructor(staticName = "build")
 public final class BidirectionalConverter<SpecificWrapper extends Wrapper> {
-    private final @NotNull Map<@NotNull Class<?>, @NotNull Function<@NotNull Object, @Nullable SpecificWrapper>> p2wConverters = new HashMap<>();
-    private final @NotNull Map<@NotNull Class<?>, @NotNull Function<@NotNull SpecificWrapper, @Nullable Object>> w2pConverters = new HashMap<>();
+    private final @NotNull Map<@NotNull Class<?>, Function<@NotNull Object, @Nullable SpecificWrapper>> p2wConverters = new HashMap<>();
+    private final @NotNull Map<@NotNull Class<?>, Function<@NotNull SpecificWrapper, @Nullable Object>> w2pConverters = new HashMap<>();
     private @Nullable Class<?> normalizeType;
 
     @SuppressWarnings("unchecked")

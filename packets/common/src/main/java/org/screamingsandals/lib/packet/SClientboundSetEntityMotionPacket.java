@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
 @EqualsAndHashCode(callSuper = true)
@@ -29,7 +30,7 @@ public class SClientboundSetEntityMotionPacket extends AbstractPacket {
     private Vector3D velocity;
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         writer.writeVarInt(entityId);
         writer.writeMotion(velocity);
     }

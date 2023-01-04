@@ -48,7 +48,7 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
         return manager != null;
     }
 
-    public static @NotNull Map<@NotNull UUID, @NotNull NPC> getActiveNPCS() {
+    public static @NotNull Map<@NotNull UUID, NPC> getActiveNPCS() {
         return Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!").getActiveVisuals();
     }
 

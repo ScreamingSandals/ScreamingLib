@@ -22,6 +22,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.ItemTypeHolder;
@@ -34,22 +35,22 @@ import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.vanilla.packet.VanillaPacketWriter;
 
 public class CraftBukkitPacketWriter extends VanillaPacketWriter {
-    public CraftBukkitPacketWriter(ByteBuf buffer) {
+    public CraftBukkitPacketWriter(@NotNull ByteBuf buffer) {
         super(buffer);
     }
 
     @Override
-    public int getEquipmentSlotId(EquipmentSlotHolder equipmentSlotHolder) {
+    public int getEquipmentSlotId(@NotNull EquipmentSlotHolder equipmentSlotHolder) {
         return equipmentSlotHolder.as(EquipmentSlot.class).ordinal();
     }
 
     @Override
-    protected Object materialHolderToItem(ItemTypeHolder material) {
+    protected @NotNull Object materialHolderToItem(@NotNull ItemTypeHolder material) {
         return Reflect.getMethod(ClassStorage.CB.CraftMagicNumbers, "getItem", Material.class).invokeStatic(material.as(Material.class));
     }
 
     @Override
-    protected Object blockDataToBlockState(BlockTypeHolder blockData) {
+    protected @NotNull Object blockDataToBlockState(@NotNull BlockTypeHolder blockData) {
         if (Reflect.has("org.bukkit.block.data.BlockData")) {
             return Reflect.fastInvoke(blockData.as(BlockData.class), "getState");
         } else {
@@ -61,7 +62,7 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
     }
 
     @Override
-    public void writeNBTFromItem(Item item) {
+    public void writeNBTFromItem(@NotNull Item item) {
         final var nmsStack = Reflect.fastInvoke(ClassStorage.stackAsNMS(item.as(ItemStack.class)), ItemStackAccessor.getMethodCopy1());
 
         // create temporary friendly ByteBuf instance that will write the NBT for us.

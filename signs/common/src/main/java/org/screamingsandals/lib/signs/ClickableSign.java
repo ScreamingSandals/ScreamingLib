@@ -17,9 +17,10 @@
 package org.screamingsandals.lib.signs;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 @Data
 public class ClickableSign {
-    private final SignLocation location;
-    private final String key;
+    private final @NotNull SignLocation location;
+    private final @NotNull String key;
 }

@@ -18,20 +18,20 @@ package org.screamingsandals.lib.velocity.proxy.event;
 
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.EventPriority;
 import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxy.event.SPlayerChatEvent;
 import org.screamingsandals.lib.velocity.event.AbstractVelocityEventHandlerFactory;
 
-public class ChatEventHandlerFactory extends
-        AbstractVelocityEventHandlerFactory<PlayerChatEvent, SPlayerChatEvent> {
+public class ChatEventHandlerFactory extends AbstractVelocityEventHandlerFactory<PlayerChatEvent, SPlayerChatEvent> {
 
-    public ChatEventHandlerFactory(Object plugin, ProxyServer proxyServer) {
+    public ChatEventHandlerFactory(@NotNull Object plugin, @NotNull ProxyServer proxyServer) {
         super(PlayerChatEvent.class, SPlayerChatEvent.class, plugin, proxyServer);
     }
 
     @Override
-    protected SPlayerChatEvent wrapEvent(PlayerChatEvent event, EventPriority priority) {
+    protected @NotNull SPlayerChatEvent wrapEvent(@NotNull PlayerChatEvent event, @NotNull EventPriority priority) {
         return new SPlayerChatEvent(
                 ProxiedPlayerMapper.wrapPlayer(event.getPlayer()),
                 event.getMessage().startsWith("/"),
@@ -41,7 +41,7 @@ public class ChatEventHandlerFactory extends
     }
 
     @Override
-    protected void postProcess(SPlayerChatEvent wrappedEvent, PlayerChatEvent event) {
+    protected void postProcess(@NotNull SPlayerChatEvent wrappedEvent, @NotNull PlayerChatEvent event) {
         if (wrappedEvent.cancelled()) {
             event.setResult(PlayerChatEvent.ChatResult.denied());
         } else {

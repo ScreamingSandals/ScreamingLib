@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bukkit.packet.listener;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.nms.accessors.ServerboundInteractPacketAccessor;
@@ -33,7 +34,7 @@ public class ServerboundInteractPacketListener {
     private static final Object ATTACK_FIELD = Reflect.getField(ServerboundInteractPacket_i_ActionTypeAccessor.getFieldATTACK());
 
     @OnEvent
-    public void onServerboundInteract(SPacketEvent event) {
+    public void onServerboundInteract(@NotNull SPacketEvent event) {
         if (event.getMethod() != PacketMethod.INBOUND) {
             return;
         }

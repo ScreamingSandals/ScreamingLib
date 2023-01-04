@@ -33,7 +33,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 @ConfigSerializable
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SignLocation implements Wrapper {
-    private String world;
+    private @NotNull String world;
     private double x;
     private double y;
     private double z;

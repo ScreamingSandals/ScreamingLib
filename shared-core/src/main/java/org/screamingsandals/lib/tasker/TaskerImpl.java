@@ -18,6 +18,7 @@ package org.screamingsandals.lib.tasker;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.tasker.task.TaskBase;
 import org.screamingsandals.lib.tasker.task.TaskState;
@@ -30,16 +31,16 @@ import java.util.function.Function;
 
 @RequiredArgsConstructor
 class TaskerImpl implements Tasker {
-    private final AtomicInteger counter = new AtomicInteger(0);
-    private final Map<Integer, TaskerTask> runningTasks = new ConcurrentHashMap<>();
-    protected final AbstractTaskInitializer initializer;
-    protected static TaskerImpl instance;
+    private final @NotNull AtomicInteger counter = new AtomicInteger(0);
+    private final @NotNull Map<@NotNull Integer, TaskerTask> runningTasks = new ConcurrentHashMap<>();
+    protected final @NotNull AbstractTaskInitializer initializer;
+    protected static @Nullable TaskerImpl instance;
 
-    TaskBuilder build(Runnable runnable) {
+    @NotNull TaskBuilder build(@NotNull Runnable runnable) {
         return new TaskBuilderImpl(runnable, initializer, counter.incrementAndGet());
     }
 
-    TaskBuilder build(Function<TaskBase, Runnable> taskBase) {
+    @NotNull TaskBuilder build(@NotNull Function<@NotNull TaskBase, @NotNull Runnable> taskBase) {
         final var id = counter.incrementAndGet();
         return new TaskBuilderImpl(taskBase.apply(() -> {
             final var task = runningTasks.get(id);
@@ -49,7 +50,7 @@ class TaskerImpl implements Tasker {
         }), initializer, id);
     }
 
-    public Map<Integer, TaskerTask> getRunningTasks() {
+    public @NotNull Map<@NotNull Integer, @NotNull TaskerTask> getRunningTasks() {
         return Map.copyOf(runningTasks);
     }
 
@@ -58,7 +59,7 @@ class TaskerImpl implements Tasker {
         tasks.forEach(this::cancel);
     }
 
-    public void cancel(TaskerTask taskerTask) {
+    public void cancel(@NotNull TaskerTask taskerTask) {
         final var task = runningTasks.get(taskerTask.getId());
 
         if (task == null) {
@@ -84,7 +85,7 @@ class TaskerImpl implements Tasker {
         return true;
     }
 
-    public TaskState getState(TaskerTask taskerTask) {
+    public @NotNull TaskState getState(@NotNull TaskerTask taskerTask) {
         return initializer.getState(taskerTask);
     }
 }

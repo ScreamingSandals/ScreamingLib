@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
 @Service(dependsOn = EventManager.class)
 public class BungeeProxiedPlayerMapper extends ProxiedPlayerMapper {
 
-    public BungeeProxiedPlayerMapper(Plugin plugin) {
+    public BungeeProxiedPlayerMapper(@NotNull Plugin plugin) {
         Spectator.setBackend(new BungeeBackend());
         plugin.getProxy().getPluginManager().registerListener(plugin, new ChatEventListener());
 

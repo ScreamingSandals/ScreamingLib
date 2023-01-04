@@ -19,6 +19,7 @@ package org.screamingsandals.lib;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.ExtensionMethod;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockDataTranslatorBuilder;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.block.BlockTypeMapper;
@@ -48,8 +49,8 @@ public abstract class ItemBlockIdsRemapper {
     private final BlockTypeMapper blockTypeMapper;
     @Getter
     protected Platform platform;
-    protected final List<MappingFlags> mappingFlags = new ArrayList<>();
-    public static final List<String> COLORS = List.of(
+    protected final @NotNull List<@NotNull MappingFlags> mappingFlags = new ArrayList<>();
+    public static final @NotNull List<@NotNull String> COLORS = List.of(
             "WHITE",
             "ORANGE",
             "MAGENTA",
@@ -67,8 +68,8 @@ public abstract class ItemBlockIdsRemapper {
             "RED",
             "BLACK"
     );
-    public static final Map<Predicate<BlockTypeHolder>, Function<String, Optional<BlockTypeHolder>>> colorableBlocks = new HashMap<>();
-    public static final Map<Predicate<ItemTypeHolder>, Function<String, Optional<ItemTypeHolder>>> colorableItems = new HashMap<>();
+    public static final @NotNull Map<@NotNull Predicate<BlockTypeHolder>, Function<String, Optional<BlockTypeHolder>>> colorableBlocks = new HashMap<>();
+    public static final @NotNull Map<@NotNull Predicate<ItemTypeHolder>, Function<String, Optional<ItemTypeHolder>>> colorableItems = new HashMap<>();
 
 
     /**

@@ -16,7 +16,10 @@
 
 package org.screamingsandals.lib.npc;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.npc.skin.NPCSkin;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -39,7 +42,8 @@ public interface NPC extends TouchableVisual<NPC> {
      * @param location the location of the newly created NPC
      * @return the created NPC
      */
-    static NPC of(LocationHolder location) {
+    @Contract(value = "_ -> new", pure = true)
+    static @NotNull NPC of(@NotNull LocationHolder location) {
         return NPCManager.npc(location);
     }
 
@@ -49,7 +53,7 @@ public interface NPC extends TouchableVisual<NPC> {
      * @return a list containing text entries for the NPC name, null if not set
      * @see NPC#displayName(List) for setting the display name
      */
-    @Nullable List<TextEntry> displayName();
+    @Unmodifiable @Nullable List<@NotNull TextEntry> displayName();
 
     /**
      * Gets the skin of this NPC.
@@ -57,7 +61,7 @@ public interface NPC extends TouchableVisual<NPC> {
      * @return the skin of this NPC
      * @see NPC#skin(NPCSkin) for setting the skin of this NPC
      */
-    NPCSkin skin();
+    @NotNull NPCSkin skin();
 
     /**
      * Sets the display name text entries of this NPC.
@@ -66,7 +70,7 @@ public interface NPC extends TouchableVisual<NPC> {
      * @return this NPC
      * @see NPC#displayName() for getting the current display name
      */
-    NPC displayName(List<Component> name);
+    @NotNull NPC displayName(@NotNull List<@NotNull Component> name);
 
     /**
      * Gets the ID of this NPC entity.
@@ -82,21 +86,21 @@ public interface NPC extends TouchableVisual<NPC> {
      * @return this NPC
      * @see NPC#skin() for getting the current skin of this NPC
      */
-    NPC skin(NPCSkin skin);
+    @NotNull NPC skin(@Nullable NPCSkin skin);
 
     /**
      * Makes the NPC look at the specified location in the eyes of the specified player.
      *
      * @param location the location
      */
-    void lookAtLocation(LocationHolder location, PlayerWrapper player);
+    void lookAtLocation(@NotNull LocationHolder location, @NotNull PlayerWrapper player);
 
     /**
      * Gets the entity name.
      *
      * @return a single line name of the entity generated from the UUID
      */
-    Component tabListName();
+    @NotNull Component tabListName();
 
     /**
      * Sets whether the line of sight of this NPC should follow a viewer.
@@ -105,7 +109,7 @@ public interface NPC extends TouchableVisual<NPC> {
      * @return this NPC
      * @see NPC#lookAtPlayer() for determining the current state
      */
-    NPC lookAtPlayer(boolean shouldLook);
+    @NotNull NPC lookAtPlayer(boolean shouldLook);
 
     /**
      * Determines if the line of sight of this NPC is following a viewer.
@@ -120,7 +124,7 @@ public interface NPC extends TouchableVisual<NPC> {
      *
      * @return the hologram
      */
-    Hologram hologram();
+    @NotNull Hologram hologram();
 
     /**
      * Determines the level of elevation of the hologram that displays the name-tag of the NPC above its head.
@@ -128,9 +132,9 @@ public interface NPC extends TouchableVisual<NPC> {
      * @param hologramElevation amount of elevation in block size approximation, example 1 -> height of 1 block
      * @return the hologram
      */
-    NPC hologramElevation(double hologramElevation);
+    @NotNull NPC hologramElevation(double hologramElevation);
 
-    SClientboundSetPlayerTeamPacket.CollisionRule collisionRule();
+    SClientboundSetPlayerTeamPacket.@NotNull CollisionRule collisionRule();
 
-    NPC collisionRule(SClientboundSetPlayerTeamPacket.CollisionRule collisionRule);
+    @NotNull NPC collisionRule(SClientboundSetPlayerTeamPacket.@NotNull CollisionRule collisionRule);
 }

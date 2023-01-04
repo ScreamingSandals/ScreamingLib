@@ -22,6 +22,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.packet.listener.ServerboundInteractPacketListener;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.ArmorStandAccessor;
@@ -37,7 +38,7 @@ import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 public class BukkitPacketMapper extends PacketMapper {
 
     @Override
-    public void sendPacket0(PlayerWrapper player, AbstractPacket packet) {
+    public void sendPacket0(@NotNull PlayerWrapper player, @NotNull AbstractPacket packet) {
         Preconditions.checkNotNull(packet, "Packet cannot be null!, skipping packet...");
 
         final var buffer = Unpooled.buffer();

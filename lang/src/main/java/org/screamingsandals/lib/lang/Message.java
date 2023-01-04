@@ -51,25 +51,25 @@ import java.util.stream.Stream;
  */
 @Data
 public class Message implements TitleableAudienceComponentLike, Cloneable {
-    private static final Pattern LEGACY_PLACEHOLDERS = Pattern.compile("[%]([^%]+)[%]");
-    private static final Pattern EARLY_MINI_MESSAGE_PLACEHOLDERS = Pattern.compile("[<]([^>]+)[>]");
+    private static final @NotNull Pattern LEGACY_PLACEHOLDERS = Pattern.compile("[%]([^%]+)[%]");
+    private static final @NotNull Pattern EARLY_MINI_MESSAGE_PLACEHOLDERS = Pattern.compile("[<]([^>]+)[>]");
 
-    private final List<Messageable> translations = new LinkedList<>();
-    private final List<Function<CommandSenderWrapper, Placeholder>> placeholders = new ArrayList<>();
-    private final Map<String, String> earlyPlaceholders = new HashMap<>();
+    private final @NotNull List<@NotNull Messageable> translations = new LinkedList<>();
+    private final @NotNull List<@NotNull Function<@Nullable CommandSenderWrapper, @NotNull Placeholder>> placeholders = new ArrayList<>();
+    private final @NotNull Map<@NotNull String, @NotNull String> earlyPlaceholders = new HashMap<>();
     @Accessors(chain = true)
     @Setter(onMethod_ = @ApiStatus.Internal)
     @Getter(onMethod_ = @ApiStatus.Internal)
     private Placeholder @Nullable [] rawPlaceholders;
-    private final LangService langService;
+    private final @NotNull LangService langService;
     private @NotNull Component prefix;
     private @Nullable TimesProvider times;
-    private PrefixPolicy prefixPolicy = PrefixPolicy.ALL_MESSAGES;
-    private PrefixResolving prefixResolving = PrefixResolving.DEFAULT;
+    private @NotNull PrefixPolicy prefixPolicy = PrefixPolicy.ALL_MESSAGES;
+    private @NotNull PrefixResolving prefixResolving = PrefixResolving.DEFAULT;
     @Accessors(chain = true, fluent = true)
-    private LinkPolicy linkPolicy = LinkPolicy.ONLY_NON_TRANSLATIONS;
+    private @NotNull LinkPolicy linkPolicy = LinkPolicy.ONLY_NON_TRANSLATIONS;
 
-    public <M extends Messageable> Message(Collection<M> translations, LangService langService, @NotNull Component prefix) {
+    public <M extends Messageable> Message(@NotNull Collection<@NotNull M> translations, @NotNull LangService langService, @NotNull Component prefix) {
         this.translations.addAll(translations);
         this.langService = langService;
         this.prefix = prefix;
@@ -81,7 +81,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return empty message.
      */
     public static @NotNull Message empty() {
-        return new Message(List.of(), Lang.getDefaultService(), Component.empty());
+        return new Message(List.of(), Objects.requireNonNull(Lang.getDefaultService()), Component.empty());
     }
 
     /**
@@ -91,7 +91,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return empty message.
      */
     public static @NotNull Message empty(@NotNull Component prefix) {
-        return new Message(List.of(), Lang.getDefaultService(), prefix);
+        return new Message(List.of(), Objects.requireNonNull(Lang.getDefaultService()), prefix);
     }
 
     /**
@@ -101,7 +101,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return empty message.
      */
     public static @NotNull Message empty(@NotNull ComponentLike prefix) {
-        return new Message(List.of(), Lang.getDefaultService(), prefix.asComponent());
+        return new Message(List.of(), Objects.requireNonNull(Lang.getDefaultService()), prefix.asComponent());
     }
 
     /**
@@ -143,7 +143,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return new message.
      */
     public static @NotNull Message ofPlainText(@NotNull String message) {
-        return new Message(List.of(StringMessageable.of(message)), Lang.getDefaultService(), Component.empty());
+        return new Message(List.of(StringMessageable.of(message)), Objects.requireNonNull(Lang.getDefaultService()), Component.empty());
     }
 
     /**
@@ -152,8 +152,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull String... messages) {
-        return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), Component.empty());
+    public static @NotNull Message ofPlainText(@NotNull String @NotNull... messages) {
+        return new Message(List.of(StringMessageable.of(messages)), Objects.requireNonNull(Lang.getDefaultService()), Component.empty());
     }
 
     /**
@@ -162,8 +162,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull List<String> messages) {
-        return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), Component.empty());
+    public static @NotNull Message ofPlainText(@NotNull List<@NotNull String> messages) {
+        return new Message(List.of(StringMessageable.of(messages)), Objects.requireNonNull(Lang.getDefaultService()), Component.empty());
     }
 
     /**
@@ -174,7 +174,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return new message.
      */
     public static @NotNull Message ofPlainText(@NotNull Component prefix, @NotNull String message) {
-        return new Message(List.of(StringMessageable.of(message)), Lang.getDefaultService(), prefix);
+        return new Message(List.of(StringMessageable.of(message)), Objects.requireNonNull(Lang.getDefaultService()), prefix);
     }
 
     /**
@@ -185,7 +185,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return new message.
      */
     public static @NotNull Message ofPlainText(@NotNull ComponentLike prefix, @NotNull String message) {
-        return new Message(List.of(StringMessageable.of(message)), Lang.getDefaultService(), prefix.asComponent());
+        return new Message(List.of(StringMessageable.of(message)), Objects.requireNonNull(Lang.getDefaultService()), prefix.asComponent());
     }
 
     /**
@@ -195,8 +195,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull Component prefix, @NotNull String... messages) {
-        return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix);
+    public static @NotNull Message ofPlainText(@NotNull Component prefix, @NotNull String @NotNull... messages) {
+        return new Message(List.of(StringMessageable.of(messages)), Objects.requireNonNull(Lang.getDefaultService()), prefix);
     }
 
     /**
@@ -206,8 +206,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static Message ofPlainText(ComponentLike prefix, String... messages) {
-        return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix.asComponent());
+    public static @NotNull Message ofPlainText(@NotNull ComponentLike prefix, String @NotNull... messages) {
+        return new Message(List.of(StringMessageable.of(messages)), Objects.requireNonNull(Lang.getDefaultService()), prefix.asComponent());
     }
 
     /**
@@ -217,8 +217,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull Component prefix, @NotNull List<String> messages) {
-        return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix);
+    public static @NotNull Message ofPlainText(@NotNull Component prefix, @NotNull List<@NotNull String> messages) {
+        return new Message(List.of(StringMessageable.of(messages)), Objects.requireNonNull(Lang.getDefaultService()), prefix);
     }
 
     /**
@@ -228,8 +228,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull ComponentLike prefix, @NotNull List<String> messages) {
-        return new Message(List.of(StringMessageable.of(messages)), Lang.getDefaultService(), prefix.asComponent());
+    public static @NotNull Message ofPlainText(@NotNull ComponentLike prefix, @NotNull List<@NotNull String> messages) {
+        return new Message(List.of(StringMessageable.of(messages)), Objects.requireNonNull(Lang.getDefaultService()), prefix.asComponent());
     }
 
     /**
@@ -250,7 +250,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull String... messages) {
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull String @NotNull... messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, Component.empty());
     }
 
@@ -261,7 +261,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull List<String> messages) {
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull List<@NotNull String> messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, Component.empty());
     }
 
@@ -297,7 +297,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull Component prefix, @NotNull String... messages) {
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull Component prefix, @NotNull String @NotNull... messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, prefix);
     }
 
@@ -309,7 +309,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull String... messages) {
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull String @NotNull... messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, prefix.asComponent());
     }
 
@@ -321,7 +321,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull Component prefix, @NotNull List<String> messages) {
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull Component prefix, @NotNull List<@NotNull String> messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, prefix);
     }
 
@@ -333,7 +333,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull List<String> messages) {
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull List<@NotNull String> messages) {
         return new Message(List.of(StringMessageable.of(messages)), service, prefix.asComponent());
     }
 
@@ -343,8 +343,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message supplier of input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull Supplier<List<String>> message) {
-        return new Message(List.of(SupplierStringMessageable.of(message)), Lang.getDefaultService(), Component.empty());
+    public static @NotNull Message ofPlainText(@NotNull Supplier<@NotNull List<@NotNull String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message)), Objects.requireNonNull(Lang.getDefaultService()), Component.empty());
     }
 
     /**
@@ -354,8 +354,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message supplier of input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull Component prefix, @NotNull Supplier<List<String>> message) {
-        return new Message(List.of(SupplierStringMessageable.of(message)), Lang.getDefaultService(), prefix);
+    public static @NotNull Message ofPlainText(@NotNull Component prefix, @NotNull Supplier<@NotNull List<@NotNull String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message)), Objects.requireNonNull(Lang.getDefaultService()), prefix);
     }
 
     /**
@@ -365,8 +365,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message supplier of input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull ComponentLike prefix, @NotNull Supplier<List<String>> message) {
-        return new Message(List.of(SupplierStringMessageable.of(message)), Lang.getDefaultService(), prefix.asComponent());
+    public static @NotNull Message ofPlainText(@NotNull ComponentLike prefix, @NotNull Supplier<@NotNull List<@NotNull String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message)), Objects.requireNonNull(Lang.getDefaultService()), prefix.asComponent());
     }
 
     /**
@@ -376,7 +376,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message supplier of input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull Supplier<List<String>> message) {
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull Supplier<@NotNull List<@NotNull String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message)), service, Component.empty());
     }
 
@@ -388,7 +388,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message supplier of input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull Component prefix, @NotNull Supplier<List<String>> message) {
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull Component prefix, @NotNull Supplier<@NotNull List<@NotNull String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message)), service, prefix);
     }
 
@@ -400,7 +400,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message supplier of input text
      * @return new message.
      */
-    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull Supplier<List<String>> message) {
+    public static @NotNull Message ofPlainText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull Supplier<@NotNull List<@NotNull String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message)), service, prefix.asComponent());
     }
 
@@ -411,7 +411,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return new message.
      */
     public static @NotNull Message ofRichText(@NotNull String message) {
-        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), Component.empty());
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), Objects.requireNonNull(Lang.getDefaultService()), Component.empty());
     }
 
     /**
@@ -420,8 +420,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull String... messages) {
-        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), Lang.getDefaultService(), Component.empty());
+    public static @NotNull Message ofRichText(@NotNull String @NotNull... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), Objects.requireNonNull(Lang.getDefaultService()), Component.empty());
     }
 
     /**
@@ -430,8 +430,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull List<String> messages) {
-        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), Component.empty());
+    public static @NotNull Message ofRichText(@NotNull List<@NotNull String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), Objects.requireNonNull(Lang.getDefaultService()), Component.empty());
     }
 
     /**
@@ -442,7 +442,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return new message.
      */
     public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull String message) {
-        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix);
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), Objects.requireNonNull(Lang.getDefaultService()), prefix);
     }
 
     /**
@@ -453,7 +453,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return new message.
      */
     public static @NotNull Message ofRichText(@NotNull ComponentLike prefix, @NotNull String message) {
-        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix.asComponent());
+        return new Message(List.of(StringMessageable.of(message, Messageable.Type.ADVENTURE)), Objects.requireNonNull(Lang.getDefaultService()), prefix.asComponent());
     }
 
     /**
@@ -463,8 +463,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull String... messages) {
-        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), Lang.getDefaultService(), prefix);
+    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull String @NotNull... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), Objects.requireNonNull(Lang.getDefaultService()), prefix);
     }
 
     /**
@@ -474,8 +474,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(ComponentLike prefix, String... messages) {
-        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), Lang.getDefaultService(), prefix.asComponent());
+    public static @NotNull Message ofRichText(@NotNull ComponentLike prefix, @NotNull String @NotNull... messages) {
+        return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), Objects.requireNonNull(Lang.getDefaultService()), prefix.asComponent());
     }
 
     /**
@@ -485,8 +485,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull List<String> messages) {
-        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix);
+    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull List<@NotNull String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), Objects.requireNonNull(Lang.getDefaultService()), prefix);
     }
 
     /**
@@ -496,8 +496,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull ComponentLike prefix, @NotNull List<String> messages) {
-        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix.asComponent());
+    public static @NotNull Message ofRichText(@NotNull ComponentLike prefix, @NotNull List<@NotNull String> messages) {
+        return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), Objects.requireNonNull(Lang.getDefaultService()), prefix.asComponent());
     }
 
     /**
@@ -565,7 +565,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull String... messages) {
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull String @NotNull... messages) {
         return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), service, prefix);
     }
 
@@ -577,7 +577,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull String... messages) {
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull String @NotNull... messages) {
         return new Message(List.of(StringMessageable.of(Messageable.Type.ADVENTURE, messages)), service, prefix.asComponent());
     }
 
@@ -589,7 +589,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull List<String> messages) {
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull List<@NotNull String> messages) {
         return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), service, prefix);
     }
 
@@ -601,7 +601,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull List<String> messages) {
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull List<@NotNull String> messages) {
         return new Message(List.of(StringMessageable.of(messages, Messageable.Type.ADVENTURE)), service, prefix.asComponent());
     }
 
@@ -611,8 +611,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message supplier of input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull Supplier<List<String>> message) {
-        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), Component.empty());
+    public static @NotNull Message ofRichText(@NotNull Supplier<@NotNull List<@NotNull String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), Objects.requireNonNull(Lang.getDefaultService()), Component.empty());
     }
 
     /**
@@ -622,8 +622,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message supplier of input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull Supplier<List<String>> message) {
-        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix);
+    public static @NotNull Message ofRichText(@NotNull Component prefix, @NotNull Supplier<@NotNull List<@NotNull String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), Objects.requireNonNull(Lang.getDefaultService()), prefix);
     }
 
     /**
@@ -633,8 +633,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message supplier of input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull ComponentLike prefix, @NotNull Supplier<List<String>> message) {
-        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), Lang.getDefaultService(), prefix.asComponent());
+    public static @NotNull Message ofRichText(@NotNull ComponentLike prefix, @NotNull Supplier<@NotNull List<@NotNull String>> message) {
+        return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), Objects.requireNonNull(Lang.getDefaultService()), prefix.asComponent());
     }
 
     /**
@@ -644,7 +644,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message supplier of input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Supplier<List<String>> message) {
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Supplier<@NotNull List<@NotNull String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), service, Component.empty());
     }
 
@@ -656,7 +656,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message supplier of input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull Supplier<List<String>> message) {
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull Component prefix, @NotNull Supplier<@NotNull List<@NotNull String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), service, prefix);
     }
 
@@ -668,7 +668,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message supplier of input text
      * @return new message.
      */
-    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull Supplier<List<String>> message) {
+    public static @NotNull Message ofRichText(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull Supplier<@NotNull List<@NotNull String>> message) {
         return new Message(List.of(SupplierStringMessageable.of(message, Messageable.Type.ADVENTURE)), service, prefix.asComponent());
     }
 
@@ -678,8 +678,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param key key of the translation
      * @return new message.
      */
-    public static @NotNull Message of(@NotNull String... key) {
-        return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), Component.empty());
+    public static @NotNull Message of(@NotNull String @NotNull... key) {
+        return new Message(List.of(Translation.of(key)), Objects.requireNonNull(Lang.getDefaultService()), Component.empty());
     }
 
     /**
@@ -689,7 +689,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return new message.
      */
     public static @NotNull Message of(@NotNull Translation translation) {
-        return new Message(List.of(translation), Lang.getDefaultService(), Component.empty());
+        return new Message(List.of(translation), Objects.requireNonNull(Lang.getDefaultService()), Component.empty());
     }
 
     /**
@@ -699,8 +699,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <M>          type that extends {@link Messageable}
      * @return new message.
      */
-    public static <M extends Messageable> @NotNull Message of(@NotNull List<M> translations) {
-        return new Message(translations, Lang.getDefaultService(), Component.empty());
+    public static <M extends Messageable> @NotNull Message of(@NotNull List<@NotNull M> translations) {
+        return new Message(translations, Objects.requireNonNull(Lang.getDefaultService()), Component.empty());
     }
 
     /**
@@ -710,7 +710,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param key     key of the translation
      * @return new message.
      */
-    public static @NotNull Message of(@NotNull LangService service, @NotNull String... key) {
+    public static @NotNull Message of(@NotNull LangService service, @NotNull String @NotNull... key) {
         return new Message(List.of(Translation.of(key)), service, Component.empty());
     }
 
@@ -721,7 +721,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param translation key of the translation
      * @return new message.
      */
-    public static Message of(LangService service, Translation translation) {
+    public static @NotNull Message of(@NotNull LangService service, @NotNull Translation translation) {
         return new Message(List.of(translation), service, Component.empty());
     }
 
@@ -733,7 +733,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <M>          type that extends {@link Messageable}
      * @return new message.
      */
-    public static <M extends Messageable> @NotNull Message of(@NotNull LangService service, @NotNull List<M> translations) {
+    public static <M extends Messageable> @NotNull Message of(@NotNull LangService service, @NotNull List<@NotNull M> translations) {
         return new Message(translations, service, Component.empty());
     }
 
@@ -744,8 +744,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param key    key of the translation
      * @return new message.
      */
-    public static @NotNull Message of(@NotNull Component prefix, @NotNull String... key) {
-        return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix);
+    public static @NotNull Message of(@NotNull Component prefix, @NotNull String @NotNull... key) {
+        return new Message(List.of(Translation.of(key)), Objects.requireNonNull(Lang.getDefaultService()), prefix);
     }
 
     /**
@@ -755,8 +755,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param key    key of the translation
      * @return new message.
      */
-    public static @NotNull Message of(@NotNull ComponentLike prefix, @NotNull String... key) {
-        return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix.asComponent());
+    public static @NotNull Message of(@NotNull ComponentLike prefix, @NotNull String @NotNull... key) {
+        return new Message(List.of(Translation.of(key)), Objects.requireNonNull(Lang.getDefaultService()), prefix.asComponent());
     }
 
     /**
@@ -767,7 +767,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return new message.
      */
     public static @NotNull Message of(@NotNull Component prefix, @NotNull Messageable translation) {
-        return new Message(List.of(translation), Lang.getDefaultService(), prefix);
+        return new Message(List.of(translation), Objects.requireNonNull(Lang.getDefaultService()), prefix);
     }
 
     /**
@@ -778,7 +778,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return new message.
      */
     public static @NotNull Message of(@NotNull ComponentLike prefix, @NotNull Messageable translation) {
-        return new Message(List.of(translation), Lang.getDefaultService(), prefix.asComponent());
+        return new Message(List.of(translation), Objects.requireNonNull(Lang.getDefaultService()), prefix.asComponent());
     }
 
     /**
@@ -789,8 +789,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <M>          type that extends {@link Messageable}
      * @return new message.
      */
-    public static <M extends Messageable> @NotNull Message of(@NotNull Component prefix, @NotNull List<M> translations) {
-        return new Message(translations, Lang.getDefaultService(), prefix);
+    public static <M extends Messageable> @NotNull Message of(@NotNull Component prefix, @NotNull List<@NotNull M> translations) {
+        return new Message(translations, Objects.requireNonNull(Lang.getDefaultService()), prefix);
     }
 
     /**
@@ -801,8 +801,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <M>          type that extends {@link Messageable}
      * @return new message.
      */
-    public static <M extends Messageable> @NotNull Message of(@NotNull ComponentLike prefix, @NotNull List<M> translations) {
-        return new Message(translations, Lang.getDefaultService(), prefix.asComponent());
+    public static <M extends Messageable> @NotNull Message of(@NotNull ComponentLike prefix, @NotNull List<@NotNull M> translations) {
+        return new Message(translations, Objects.requireNonNull(Lang.getDefaultService()), prefix.asComponent());
     }
 
 
@@ -814,7 +814,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param key     translation keys
      * @return new message.
      */
-    public static @NotNull Message of(@NotNull LangService service, @NotNull Component prefix, @NotNull String... key) {
+    public static @NotNull Message of(@NotNull LangService service, @NotNull Component prefix, @NotNull String @NotNull... key) {
         return new Message(List.of(Translation.of(key)), service, prefix);
     }
 
@@ -826,7 +826,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param key     translation keys
      * @return new message.
      */
-    public static @NotNull Message of(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull String... key) {
+    public static @NotNull Message of(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull String @NotNull... key) {
         return new Message(List.of(Translation.of(key)), service, prefix.asComponent());
     }
 
@@ -863,7 +863,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <M>          type that extends {@link Messageable}
      * @return new message.
      */
-    public static <M extends Messageable> @NotNull Message of(@NotNull LangService service, @NotNull Component prefix, @NotNull List<M> translations) {
+    public static <M extends Messageable> @NotNull Message of(@NotNull LangService service, @NotNull Component prefix, @NotNull List<@NotNull M> translations) {
         return new Message(translations, service, prefix);
     }
 
@@ -876,7 +876,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <M>          type that extends {@link Messageable}
      * @return new message.
      */
-    public static <M extends Messageable> @NotNull Message of(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull List<M> translations) {
+    public static <M extends Messageable> @NotNull Message of(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull List<@NotNull M> translations) {
         return new Message(translations, service, prefix.asComponent());
     }
 
@@ -886,8 +886,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param key translation keys
      * @return new message.
      */
-    public static @NotNull Message of(@NotNull Collection<String> key) {
-        return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), Component.empty());
+    public static @NotNull Message of(@NotNull Collection<@NotNull String> key) {
+        return new Message(List.of(Translation.of(key)), Objects.requireNonNull(Lang.getDefaultService()), Component.empty());
     }
 
     /**
@@ -897,7 +897,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param key     translation keys
      * @return new message.
      */
-    public static @NotNull Message of(@NotNull LangService service, @NotNull Collection<String> key) {
+    public static @NotNull Message of(@NotNull LangService service, @NotNull Collection<@NotNull String> key) {
         return new Message(List.of(Translation.of(key)), service, Component.empty());
     }
 
@@ -908,8 +908,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param key    translation keys
      * @return new message.
      */
-    public static @NotNull Message of(@NotNull Component prefix, @NotNull Collection<String> key) {
-        return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix);
+    public static @NotNull Message of(@NotNull Component prefix, @NotNull Collection<@NotNull String> key) {
+        return new Message(List.of(Translation.of(key)), Objects.requireNonNull(Lang.getDefaultService()), prefix);
     }
 
     /**
@@ -919,8 +919,8 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param key    translation keys
      * @return new message.
      */
-    public static @NotNull Message of(@NotNull ComponentLike prefix, @NotNull Collection<String> key) {
-        return new Message(List.of(Translation.of(key)), Lang.getDefaultService(), prefix.asComponent());
+    public static @NotNull Message of(@NotNull ComponentLike prefix, @NotNull Collection<@NotNull String> key) {
+        return new Message(List.of(Translation.of(key)), Objects.requireNonNull(Lang.getDefaultService()), prefix.asComponent());
     }
 
     /**
@@ -931,7 +931,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param key     translation keys
      * @return new message.
      */
-    public static @NotNull Message of(@NotNull LangService service, @NotNull Component prefix, @NotNull Collection<String> key) {
+    public static @NotNull Message of(@NotNull LangService service, @NotNull Component prefix, @NotNull Collection<@NotNull String> key) {
         return new Message(List.of(Translation.of(key)), service, prefix);
     }
 
@@ -943,7 +943,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param key     translation keys
      * @return new message.
      */
-    public static @NotNull Message of(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull Collection<String> key) {
+    public static @NotNull Message of(@NotNull LangService service, @NotNull ComponentLike prefix, @NotNull Collection<@NotNull String> key) {
         return new Message(List.of(Translation.of(key)), service, prefix.asComponent());
     }
 
@@ -1075,7 +1075,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param value       placeholder value
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, DoubleSupplier value) {
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull DoubleSupplier value) {
         return placeholder(Placeholder.lazyNumber(placeholder, value));
     }
 
@@ -1127,7 +1127,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param accessor placeholder value
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, TemporalAccessor accessor) {
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull TemporalAccessor accessor) {
         return placeholder(Placeholder.dateTime(placeholder, accessor));
     }
 
@@ -1216,7 +1216,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param componentFunction function that returns a {@link Component} as the placeholder value.
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull Function<CommandSenderWrapper, Component> componentFunction) {
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull Function<@Nullable CommandSenderWrapper, @NotNull Component> componentFunction) {
         placeholders.add(sender -> Placeholder.lazyComponent(placeholder, () -> componentFunction.apply(sender)));
         return this;
     }
@@ -1228,7 +1228,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param placeholderFunction function that returns a {@link Placeholder} for the specific {@link CommandSenderWrapper}.
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull Function<CommandSenderWrapper, Placeholder> placeholderFunction) {
+    public @NotNull Message placeholder(@NotNull Function<@Nullable CommandSenderWrapper, @NotNull Placeholder> placeholderFunction) {
         placeholders.add(placeholderFunction);
         return this;
     }
@@ -1297,7 +1297,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param prefix prefix to use
      * @return self
      */
-    public @NotNull Message prefix(ComponentLike prefix) {
+    public @NotNull Message prefix(@Nullable ComponentLike prefix) {
         if (prefix == null) {
             return noPrefix();
         }
@@ -1312,7 +1312,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param prefix prefix to use
      * @return self
      */
-    public @NotNull Message prefixOrDefault(Component prefix) {
+    public @NotNull Message prefixOrDefault(@Nullable Component prefix) {
         if (prefix == null || Component.empty().equals(prefix)) {
             return defaultPrefix();
         }
@@ -1327,7 +1327,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param prefix prefix to use
      * @return self
      */
-    public @NotNull Message prefixOrDefault(ComponentLike prefix) {
+    public @NotNull Message prefixOrDefault(@Nullable ComponentLike prefix) {
         if (prefix == null || Component.empty().equals(prefix.asComponent())) {
             return defaultPrefix();
         }
@@ -1351,7 +1351,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @return self
      */
     public @NotNull Message defaultPrefix() {
-        this.prefix = Lang.getDefaultService().getDefaultPrefix();
+        this.prefix = langService.getDefaultPrefix();
         return this;
     }
 
@@ -1374,7 +1374,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      *
      * @return self
      */
-    public @NotNull Message prefixPolicy(PrefixPolicy prefixPolicy) {
+    public @NotNull Message prefixPolicy(@NotNull PrefixPolicy prefixPolicy) {
         this.prefixPolicy = prefixPolicy;
         return this;
     }
@@ -1385,7 +1385,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      *
      * @return self
      */
-    public @NotNull Message prefixResolving(PrefixResolving resolving) {
+    public @NotNull Message prefixResolving(@NotNull PrefixResolving resolving) {
         this.prefixResolving = resolving;
         return this;
     }
@@ -1407,7 +1407,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param keys keys to join
      * @return self
      */
-    public @NotNull Message join(String... keys) {
+    public @NotNull Message join(@NotNull String @NotNull... keys) {
         this.translations.add(Translation.of(keys));
         return this;
     }
@@ -1418,7 +1418,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param keys keys to join
      * @return self
      */
-    public @NotNull Message join(Collection<String> keys) {
+    public @NotNull Message join(@NotNull Collection<@NotNull String> keys) {
         this.translations.add(Translation.of(keys));
         return this;
     }
@@ -1429,7 +1429,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message message to join
      * @return self
      */
-    public @NotNull Message joinPlainText(String message) {
+    public @NotNull Message joinPlainText(@NotNull String message) {
         this.translations.add(StringMessageable.of(message));
         return this;
     }
@@ -1440,7 +1440,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages message to join
      * @return self
      */
-    public @NotNull Message joinPlainText(String... messages) {
+    public @NotNull Message joinPlainText(@NotNull String @NotNull... messages) {
         this.translations.add(StringMessageable.of(messages));
         return this;
     }
@@ -1451,7 +1451,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages messages to join
      * @return self
      */
-    public @NotNull Message joinPlainText(List<String> messages) {
+    public @NotNull Message joinPlainText(@NotNull List<@NotNull String> messages) {
         this.translations.add(StringMessageable.of(messages));
         return this;
     }
@@ -1462,7 +1462,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages messages to join
      * @return self
      */
-    public @NotNull Message joinPlainText(Supplier<List<String>> messages) {
+    public @NotNull Message joinPlainText(@NotNull Supplier<@NotNull List<@NotNull String>> messages) {
         this.translations.add(SupplierStringMessageable.of(messages));
         return this;
     }
@@ -1473,7 +1473,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param message message to join
      * @return self
      */
-    public @NotNull Message joinRichText(String message) {
+    public @NotNull Message joinRichText(@NotNull String message) {
         this.translations.add(StringMessageable.of(message, Messageable.Type.ADVENTURE));
         return this;
     }
@@ -1484,7 +1484,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages message to join
      * @return self
      */
-    public @NotNull Message joinRichText(String... messages) {
+    public @NotNull Message joinRichText(@NotNull String @NotNull... messages) {
         this.translations.add(StringMessageable.of(Messageable.Type.ADVENTURE, messages));
         return this;
     }
@@ -1495,7 +1495,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages messages to join
      * @return self
      */
-    public @NotNull Message joinRichText(List<String> messages) {
+    public @NotNull Message joinRichText(@NotNull List<@NotNull String> messages) {
         this.translations.add(StringMessageable.of(messages, Messageable.Type.ADVENTURE));
         return this;
     }
@@ -1506,7 +1506,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param messages messages to join
      * @return self
      */
-    public @NotNull Message joinRichText(Supplier<List<String>> messages) {
+    public @NotNull Message joinRichText(@NotNull Supplier<@NotNull List<@NotNull String>> messages) {
         this.translations.add(SupplierStringMessageable.of(messages, Messageable.Type.ADVENTURE));
         return this;
     }
@@ -1517,7 +1517,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param translation translation to join
      * @return self
      */
-    public @NotNull Message join(Messageable translation) {
+    public @NotNull Message join(@NotNull Messageable translation) {
         this.translations.add(translation);
         return this;
     }
@@ -1529,7 +1529,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <M>          type of the {@link Messageable}
      * @return self
      */
-    public <M extends Messageable> @NotNull Message join(List<M> translations) {
+    public <M extends Messageable> @NotNull Message join(@NotNull List<@NotNull M> translations) {
         this.translations.addAll(translations);
         return this;
     }
@@ -1540,7 +1540,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param times times to set
      * @return self
      */
-    public @NotNull Message times(TimesProvider times) {
+    public @NotNull Message times(@NotNull TimesProvider times) {
         this.times = times;
         return this;
     }
@@ -1551,7 +1551,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param sender sender to resolve the components for
      * @return list of components.
      */
-    public @NotNull List<Component> getFor(CommandSenderWrapper sender) {
+    public @NotNull List<@NotNull Component> getFor(@Nullable CommandSenderWrapper sender) {
         final var prefixSetter = new AtomicBoolean(true);
         final var container = langService.getFor(sender);
 
@@ -1700,7 +1700,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param sender sender to resolve the components for
      * @return component
      */
-    public @NotNull Component getForJoined(CommandSenderWrapper sender) {
+    public @NotNull Component getForJoined(@Nullable CommandSenderWrapper sender) {
         return Component.join(Component.newLine(), getFor(sender));
     }
 
@@ -1710,7 +1710,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      *
      * @return list of components
      */
-    public @NotNull List<Component> getForAnyone() {
+    public @NotNull List<@NotNull Component> getForAnyone() {
         return getFor(null);
     }
 
@@ -1721,30 +1721,30 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      *
      * @return component
      */
-    public Component getForAnyoneJoined() {
+    public @NotNull Component getForAnyoneJoined() {
         return Component.join(Component.newLine(), getForAnyone());
     }
 
-    public <W extends CommandSenderWrapper> Message title(W sender) {
+    public <W extends CommandSenderWrapper> @NotNull Message title(@NotNull W sender) {
         if (sender instanceof PlayerAudience) {
             ((PlayerAudience) sender).showTitle(asTitle(sender));
         }
         return this;
     }
 
-    public <W extends CommandSenderWrapper> Message title(W... senders) {
+    public <W extends CommandSenderWrapper> @NotNull Message title(@NotNull W @NotNull... senders) {
         for (var sender : senders) {
             title(sender);
         }
         return this;
     }
 
-    public <W extends CommandSenderWrapper> Message title(Collection<W> senders) {
+    public <W extends CommandSenderWrapper> @NotNull Message title(@NotNull Collection<@NotNull W> senders) {
         senders.forEach(this::title);
         return this;
     }
 
-    public <W extends CommandSenderWrapper> Tasker.TaskBuilder titleTask(W sender) {
+    public <W extends CommandSenderWrapper> Tasker.@NotNull TaskBuilder titleTask(@NotNull W sender) {
         return Tasker
                 .build(() -> {
                     if (sender instanceof PlayerAudience) {
@@ -1753,7 +1753,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
                 });
     }
 
-    public <W extends CommandSenderWrapper> Tasker.TaskBuilder titleTask(W... senders) {
+    public <W extends CommandSenderWrapper> Tasker.@NotNull TaskBuilder titleTask(@NotNull W @NotNull... senders) {
         return Tasker
                 .build(() -> {
                     for (var sender : senders) {
@@ -1762,26 +1762,26 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
                 });
     }
 
-    public <W extends CommandSenderWrapper> Tasker.TaskBuilder titleTask(Collection<W> senders) {
+    public <W extends CommandSenderWrapper> Tasker.@NotNull TaskBuilder titleTask(@NotNull Collection<@NotNull W> senders) {
         return Tasker
                 .build(() -> senders.forEach(this::title));
     }
 
-    public <W extends CommandSenderWrapper> Message titleAsync(W sender) {
+    public <W extends CommandSenderWrapper> @NotNull Message titleAsync(@NotNull W sender) {
         titleTask(sender)
                 .async()
                 .start();
         return this;
     }
 
-    public <W extends CommandSenderWrapper> Message titleAsync(W... senders) {
+    public <W extends CommandSenderWrapper> @NotNull Message titleAsync(@NotNull W @NotNull... senders) {
         titleTask(senders)
                 .async()
                 .start();
         return this;
     }
 
-    public <W extends CommandSenderWrapper> Message titleAsync(Collection<W> receivers) {
+    public <W extends CommandSenderWrapper> @NotNull Message titleAsync(@NotNull Collection<@NotNull W> receivers) {
         titleTask(receivers)
                 .async()
                 .start();
@@ -1795,7 +1795,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <W>      type for {@link CommandSenderWrapper}.
      * @return this message.
      */
-    public <W extends CommandSenderWrapper> Message send(W receiver) {
+    public <W extends CommandSenderWrapper> @NotNull Message send(@NotNull W receiver) {
         getFor(receiver).forEach(receiver::sendMessage);
         return this;
     }
@@ -1807,7 +1807,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <W>       type for {@link CommandSenderWrapper}.
      * @return this message.
      */
-    public <W extends CommandSenderWrapper> Message send(W... receivers) {
+    public <W extends CommandSenderWrapper> @NotNull Message send(@NotNull W @NotNull... receivers) {
         for (var sender : receivers) {
             send(sender);
         }
@@ -1821,7 +1821,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <W>       type for {@link CommandSenderWrapper}.
      * @return this message.
      */
-    public <W extends CommandSenderWrapper> Message send(Collection<W> receivers) {
+    public <W extends CommandSenderWrapper> @NotNull Message send(@NotNull Collection<@NotNull W> receivers) {
         receivers.forEach(this::send);
         return this;
     }
@@ -1833,7 +1833,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <W>      type for {@link CommandSenderWrapper}.
      * @return prepared task for the sending.
      */
-    public <W extends CommandSenderWrapper> Tasker.TaskBuilder sendTask(W receiver) {
+    public <W extends CommandSenderWrapper> Tasker.@NotNull TaskBuilder sendTask(@NotNull W receiver) {
         return Tasker
                 .build(() -> getFor(receiver).forEach(receiver::sendMessage));
     }
@@ -1845,7 +1845,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <W>       type for {@link CommandSenderWrapper}.
      * @return prepared task for the sending.
      */
-    public <W extends CommandSenderWrapper> Tasker.TaskBuilder sendTask(W... receivers) {
+    public <W extends CommandSenderWrapper> Tasker.@NotNull TaskBuilder sendTask(@NotNull W @NotNull... receivers) {
         return Tasker
                 .build(() -> {
                     for (var sender : receivers) {
@@ -1861,7 +1861,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <W>       type for {@link CommandSenderWrapper}.
      * @return prepared task for the sending.
      */
-    public <W extends CommandSenderWrapper> Tasker.TaskBuilder sendTask(Collection<W> receivers) {
+    public <W extends CommandSenderWrapper> Tasker.@NotNull TaskBuilder sendTask(@NotNull Collection<@NotNull W> receivers) {
         return Tasker
                 .build(() -> receivers.forEach(this::send));
     }
@@ -1873,7 +1873,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <W>      type for {@link CommandSenderWrapper}.
      * @return this message
      */
-    public <W extends CommandSenderWrapper> Message sendAsync(W receiver) {
+    public <W extends CommandSenderWrapper> @NotNull Message sendAsync(@NotNull W receiver) {
         sendTask(receiver)
                 .async()
                 .start();
@@ -1887,7 +1887,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <W>       type for {@link CommandSenderWrapper}.
      * @return this message
      */
-    public <W extends CommandSenderWrapper> Message sendAsync(W... receivers) {
+    public <W extends CommandSenderWrapper> @NotNull Message sendAsync(@NotNull W @NotNull... receivers) {
         sendTask(receivers)
                 .async()
                 .start();
@@ -1901,7 +1901,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param <W>       type for {@link CommandSenderWrapper}.
      * @return this message
      */
-    public <W extends CommandSenderWrapper> Message sendAsync(Collection<W> receivers) {
+    public <W extends CommandSenderWrapper> @NotNull Message sendAsync(@NotNull Collection<@NotNull W> receivers) {
         sendTask(receivers)
                 .async()
                 .start();
@@ -1961,7 +1961,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
-    public Message clone() {
+    public @NotNull Message clone() {
         var msg = new Message(translations, langService, prefix);
         msg.times = times;
         msg.earlyPlaceholders.putAll(earlyPlaceholders);

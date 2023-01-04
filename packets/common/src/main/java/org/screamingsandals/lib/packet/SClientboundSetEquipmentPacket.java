@@ -18,6 +18,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
@@ -29,10 +30,10 @@ import java.util.Map;
 @Accessors(chain = true, fluent = true)
 public class SClientboundSetEquipmentPacket extends AbstractPacket {
     private int entityId;
-    private final Map<EquipmentSlotHolder, Item> slots = new HashMap<>();
+    private final @NotNull Map<@NotNull EquipmentSlotHolder, Item> slots = new HashMap<>();
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         writer.writeVarInt(entityId);
         var iterator = slots.entrySet().iterator();
         boolean hasNext = iterator.hasNext();

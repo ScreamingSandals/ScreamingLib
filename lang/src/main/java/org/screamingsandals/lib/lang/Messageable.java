@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.lang;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.lang.container.TranslationContainer;
 import org.screamingsandals.lib.spectator.Component;
 
@@ -28,15 +29,15 @@ public interface Messageable {
      *
      * @return translation keys if needsTranslation() returns true; otherwise list of translated messages
      */
-    List<String> getKeys();
+    @NotNull List<@NotNull String> getKeys();
 
-    Type getType();
+    @NotNull Type getType();
 
-    default Component getFallback() {
+    default @NotNull Component getFallback() {
         return Component.empty();
     }
 
-    default List<String> translateIfNeeded(TranslationContainer container) {
+    default @NotNull List<@NotNull String> translateIfNeeded(@NotNull TranslationContainer container) {
         if (needsTranslation()) {
             return container.translate(getKeys());
         } else {

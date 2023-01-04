@@ -190,7 +190,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public UUID getUuid() {
+    public @NotNull UUID getUuid() {
         return wrappedObject.getUniqueId();
     }
 

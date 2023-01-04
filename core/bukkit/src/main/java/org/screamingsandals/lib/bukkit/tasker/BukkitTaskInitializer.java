@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.tasker;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.tasker.TaskBuilderImpl;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
@@ -31,21 +32,21 @@ import org.screamingsandals.lib.utils.annotations.Service;
 
 @Service
 public class BukkitTaskInitializer extends AbstractTaskInitializer {
-    private final Plugin plugin;
-    private final BukkitScheduler scheduler;
+    private final @NotNull Plugin plugin;
+    private final @NotNull BukkitScheduler scheduler;
 
-    public static void init(Controllable controllable, Plugin plugin) {
+    public static void init(@NotNull Controllable controllable, @NotNull Plugin plugin) {
         Tasker.init(() -> new BukkitTaskInitializer(controllable, plugin));
     }
 
-    public BukkitTaskInitializer(Controllable controllable, Plugin plugin) {
+    public BukkitTaskInitializer(@NotNull Controllable controllable, @NotNull Plugin plugin) {
         super(controllable);
         this.plugin = plugin;
         this.scheduler = plugin.getServer().getScheduler();
     }
 
     @Override
-    public TaskerTask start(TaskBuilderImpl builder) {
+    public @NotNull TaskerTask start(@NotNull TaskBuilderImpl builder) {
         final var runnable = builder.getRunnable();
 
         if (builder.isAsync()
@@ -86,7 +87,7 @@ public class BukkitTaskInitializer extends AbstractTaskInitializer {
     }
 
     @Override
-    public TaskState getState(TaskerTask taskerTask) {
+    public @NotNull TaskState getState(@NotNull TaskerTask taskerTask) {
         final BukkitTask task = taskerTask.getTaskObject();
         if (task.isCancelled()) {
             return TaskState.FINISHED;
@@ -96,7 +97,7 @@ public class BukkitTaskInitializer extends AbstractTaskInitializer {
     }
 
     @Override
-    public void cancel(TaskerTask task) {
+    public void cancel(@NotNull TaskerTask task) {
         final BukkitTask toCancel = task.getTaskObject();
         toCancel.cancel();
     }

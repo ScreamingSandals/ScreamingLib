@@ -50,11 +50,11 @@ public interface CompoundTagModifier {
         return with(key, new ByteTag(value));
     }
 
-    default @NotNull CompoundTag with(@NotNull Map<@NotNull String, @NotNull Tag> value, @NotNull String @NotNull... tagKeys) {
+    default @NotNull CompoundTag with(@NotNull Map<@NotNull String, Tag> value, @NotNull String @NotNull... tagKeys) {
         return with(new CompoundTag(value), tagKeys);
     }
 
-    default @NotNull CompoundTag with(@NotNull TreeInspectorKey<CompoundTag> key, @NotNull Map<@NotNull String, @NotNull Tag> value) {
+    default @NotNull CompoundTag with(@NotNull TreeInspectorKey<CompoundTag> key, @NotNull Map<@NotNull String, Tag> value) {
         return with(key, new CompoundTag(value));
     }
 

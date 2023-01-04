@@ -68,7 +68,7 @@ public class HologramManager extends AbstractVisualsManager<Hologram> {
         return hologram;
     }
 
-    public static @NotNull Map<@NotNull UUID, @NotNull Hologram> getActiveHolograms() {
+    public static @NotNull Map<@NotNull UUID, Hologram> getActiveHolograms() {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }

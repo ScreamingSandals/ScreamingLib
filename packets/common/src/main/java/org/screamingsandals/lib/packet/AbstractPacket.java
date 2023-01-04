@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.packet;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 import java.util.Collection;
@@ -33,14 +34,14 @@ public abstract class AbstractPacket {
      *
      * @param writer the writer to populate packet contents
      */
-    public abstract void write(PacketWriter writer);
+    public abstract void write(@NotNull PacketWriter writer);
 
     /**
      * Sends the packet to the client the player is currently connected with.
      *
      * @param player the player to send the packet to
      */
-    public void sendPacket(PlayerWrapper player) {
+    public void sendPacket(@NotNull PlayerWrapper player) {
         PacketMapper.sendPacket(player, this);
     }
 
@@ -49,7 +50,7 @@ public abstract class AbstractPacket {
      *
      * @param players the players to send the packet to
      */
-    public void sendPacket(Collection<PlayerWrapper> players) {
+    public void sendPacket(@NotNull Collection<@NotNull PlayerWrapper> players) {
         PacketMapper.sendPacket(players, this);
     }
 

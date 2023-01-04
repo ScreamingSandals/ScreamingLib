@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.tasker;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.tasker.task.TaskBase;
 import org.screamingsandals.lib.tasker.task.TaskState;
@@ -30,7 +32,7 @@ import java.util.function.Supplier;
 @ForwardToService(AbstractTaskInitializer.class)
 public interface Tasker {
 
-    static Tasker init(Supplier<AbstractTaskInitializer> taskInitializer) {
+    static @NotNull Tasker init(@NotNull Supplier<@NotNull AbstractTaskInitializer> taskInitializer) {
         if (TaskerImpl.instance != null) {
             throw new UnsupportedOperationException("Tasker is already initialized!");
         }
@@ -45,7 +47,10 @@ public interface Tasker {
      * @param runnable the runnable to run
      * @return new TaskBuilder
      */
-    static TaskBuilder build(Runnable runnable) {
+    static @NotNull TaskBuilder build(@NotNull Runnable runnable) {
+        if (TaskerImpl.instance == null) {
+            throw new UnsupportedOperationException("Tasker is not initialized yet!");
+        }
         return TaskerImpl.instance.build(runnable);
     }
 
@@ -56,7 +61,10 @@ public interface Tasker {
      * @param runnable the runnable to run
      * @return new TaskBuilder
      */
-    static TaskBuilder build(Function<TaskBase, Runnable> runnable) {
+    static @NotNull TaskBuilder build(@NotNull Function<@NotNull TaskBase, @NotNull Runnable> runnable) {
+        if (TaskerImpl.instance == null) {
+            throw new UnsupportedOperationException("Tasker is not initialized yet!");
+        }
         return TaskerImpl.instance.build(runnable);
     }
 
@@ -65,7 +73,10 @@ public interface Tasker {
      *
      * @return immutable map of active tasks.
      */
-    static Map<Integer, TaskerTask> getRunningTasks() {
+    static @NotNull Map<@NotNull Integer, TaskerTask> getRunningTasks() {
+        if (TaskerImpl.instance == null) {
+            throw new UnsupportedOperationException("Tasker is not initialized yet!");
+        }
         return TaskerImpl.instance.getRunningTasks();
     }
 
@@ -73,6 +84,9 @@ public interface Tasker {
      * Cancels all tasks.
      */
     static void cancelAll() {
+        if (TaskerImpl.instance == null) {
+            throw new UnsupportedOperationException("Tasker is not initialized yet!");
+        }
         TaskerImpl.instance.cancelAll();
     }
 
@@ -81,7 +95,10 @@ public interface Tasker {
      *
      * @param taskerTask the task to cancel
      */
-    static void cancel(TaskerTask taskerTask) {
+    static void cancel(@NotNull TaskerTask taskerTask) {
+        if (TaskerImpl.instance == null) {
+            throw new UnsupportedOperationException("Tasker is not initialized yet!");
+        }
         TaskerImpl.instance.cancel(taskerTask);
     }
 
@@ -91,7 +108,10 @@ public interface Tasker {
      * @param taskerTask task to register
      * @return true if task was registered
      */
-    static boolean register(TaskerTask taskerTask) {
+    static boolean register(@NotNull TaskerTask taskerTask) {
+        if (TaskerImpl.instance == null) {
+            throw new UnsupportedOperationException("Tasker is not initialized yet!");
+        }
         return TaskerImpl.instance.register(taskerTask);
     }
 
@@ -99,7 +119,10 @@ public interface Tasker {
      * @param taskerTask task to check
      * @return Current state of the task
      */
-    static TaskState getState(TaskerTask taskerTask) {
+    static @NotNull TaskState getState(@NotNull TaskerTask taskerTask) {
+        if (TaskerImpl.instance == null) {
+            throw new UnsupportedOperationException("Tasker is not initialized yet!");
+        }
         return TaskerImpl.instance.getState(taskerTask);
     }
 
@@ -113,14 +136,16 @@ public interface Tasker {
          *
          * @return current task builder
          */
-        TaskBuilder afterOneTick();
+        @Contract("-> this")
+        @NotNull TaskBuilder afterOneTick();
 
         /**
          * Runs the task async
          *
          * @return current task builder
          */
-        TaskBuilder async();
+        @Contract("-> this")
+        @NotNull TaskBuilder async();
 
         /**
          * Runs the task after given delay
@@ -129,7 +154,8 @@ public interface Tasker {
          * @param unit unit
          * @return current task builder
          */
-        TaskBuilder delay(long time, TaskerTime unit);
+        @Contract("_, _ -> this")
+        @NotNull TaskBuilder delay(long time, @NotNull TaskerTime unit);
 
         /**
          * Runs the task repeatedly within given repeat time
@@ -137,7 +163,8 @@ public interface Tasker {
          * @param time time
          * @return current task builder
          */
-        TaskBuilder repeat(long time, TaskerTime unit);
+        @Contract("_, _ -> this")
+        @NotNull TaskBuilder repeat(long time, @NotNull TaskerTime unit);
 
         /**
          * Registers handler that will be used after starting the task.
@@ -145,7 +172,8 @@ public interface Tasker {
          * @param handler Handler
          * @return current task builder
          */
-        TaskBuilder startEvent(Consumer<TaskerTask> handler);
+        @Contract("_ -> this")
+        @NotNull TaskBuilder startEvent(@NotNull Consumer<@NotNull TaskerTask> handler);
 
         /**
          * Registers handler that will be used after ending the task.
@@ -153,11 +181,13 @@ public interface Tasker {
          * @param handler Handler
          * @return current task builder
          */
-        TaskBuilder stopEvent(Consumer<TaskerTask> handler);
+        @Contract("_ -> this")
+        @NotNull TaskBuilder stopEvent(@NotNull Consumer<@NotNull TaskerTask> handler);
 
         /**
          * Starts the task
          */
-        TaskerTask start();
+        @Contract("-> new")
+        @NotNull TaskerTask start();
     }
 }

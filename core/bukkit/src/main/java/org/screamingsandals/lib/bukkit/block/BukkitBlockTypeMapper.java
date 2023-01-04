@@ -21,6 +21,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.material.MaterialData;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.block.tags.ModernBlockTagBackPorts;
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class BukkitBlockTypeMapper extends BlockTypeMapper {
-    private static final Map<Material, List<String>> tagBackPorts = new HashMap<>();
+    private static final @NotNull Map<@NotNull Material, List<String>> tagBackPorts = new HashMap<>();
 
     public BukkitBlockTypeMapper() {
         if (Server.isVersion(1, 13)) {

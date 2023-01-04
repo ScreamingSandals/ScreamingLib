@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.world.LocationHolder;
 
 @EqualsAndHashCode(callSuper = true)
@@ -30,7 +31,7 @@ public class SClientboundTeleportEntityPacket extends AbstractPacket {
     private boolean onGround;
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         writer.writeVarInt(entityId);
         if (writer.protocol() >= 100) {
             writer.writeVector(location);

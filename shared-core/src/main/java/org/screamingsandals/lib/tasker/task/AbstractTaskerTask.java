@@ -18,6 +18,7 @@ package org.screamingsandals.lib.tasker.task;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.tasker.Tasker;
 
 import java.util.List;
@@ -26,22 +27,22 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public abstract class AbstractTaskerTask implements TaskerTask {
     @Getter
-    private final Integer id;
+    private final @NotNull Integer id;
     @Getter
-    private final Object taskObject;
+    private final @NotNull Object taskObject;
     @Getter
-    private final List<Consumer<TaskerTask>> taskEndHandlers;
+    private final @NotNull List<@NotNull Consumer<@NotNull TaskerTask>> taskEndHandlers;
 
-    private TaskState state = TaskState.SCHEDULED;
+    private @NotNull TaskState state = TaskState.SCHEDULED;
 
-    public static AbstractTaskerTask of(Integer id, Object taskObject, List<Consumer<TaskerTask>> taskEndHandlers) {
+    public static AbstractTaskerTask of(@NotNull Integer id, @NotNull Object taskObject, @NotNull List<@NotNull Consumer<@NotNull TaskerTask>> taskEndHandlers) {
         final var task = new AbstractTaskerTask(id, taskObject, taskEndHandlers) {
         };
         Tasker.register(task);
         return task;
     }
 
-    public TaskState getState() {
+    public @NotNull TaskState getState() {
         if (state == TaskState.SCHEDULED) {
             return state;
         }

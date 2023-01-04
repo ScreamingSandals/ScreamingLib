@@ -36,7 +36,7 @@ import java.util.UUID;
 })
 public class SidebarManager {
     private static @Nullable SidebarManager manager;
-    protected final @NotNull Map<@NotNull UUID, @NotNull TeamedSidebar<?>> activeSidebars = new HashMap<>();
+    protected final @NotNull Map<@NotNull UUID, TeamedSidebar<?>> activeSidebars = new HashMap<>();
 
     @ApiStatus.Internal
     public SidebarManager(@NotNull Controllable controllable) {

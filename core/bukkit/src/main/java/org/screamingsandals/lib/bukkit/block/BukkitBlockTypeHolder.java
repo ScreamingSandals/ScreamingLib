@@ -96,7 +96,7 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
     }
 
     @Override
-    public @Unmodifiable @NotNull Map<@NotNull String, @NotNull String> flatteningData() {
+    public @Unmodifiable @NotNull Map<@NotNull String, String> flatteningData() {
         var data = wrappedObject.getAsString();
         if (data.contains("[") && data.contains("]")) {
             final var values = data.substring(data.indexOf("[") + 1, data.lastIndexOf("]"));
@@ -105,13 +105,13 @@ public class BukkitBlockTypeHolder extends BasicWrapper<BlockData> implements Bl
             }
             return Arrays.stream(values.split(","))
                     .map(next -> next.split("="))
-                    .collect(Collectors.toMap(next -> next[0], next1 -> next1[1]));
+                    .collect(Collectors.toUnmodifiableMap(next -> next[0], next1 -> next1[1]));
         }
         return Map.of();
     }
 
     @Override
-    public @NotNull BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, @NotNull String> data) {
+    public @NotNull BlockTypeHolder withFlatteningData(@NotNull Map<@NotNull String, String> data) {
         final var builder = new StringBuilder();
         if (!data.isEmpty()) {
             builder.append('[');

@@ -21,6 +21,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 
 import java.util.Collection;
@@ -43,10 +44,10 @@ public class SClientboundSetPlayerTeamPacket extends AbstractPacket {
     private Component teamSuffix;
 
     // Create, Add Entities, Remove Entities
-    private Collection<String> entities;
+    private Collection<@NotNull String> entities;
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         writer.writeSizedString(teamKey);
         writer.writeByte((byte) mode.ordinal());
         if (mode == Mode.CREATE || mode == Mode.UPDATE) {

@@ -45,15 +45,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public final class MiniMessageParser {
 
-    public static final MiniMessageParser INSTANCE = MiniMessageParser.builder()
+    public static final @NotNull MiniMessageParser INSTANCE = MiniMessageParser.builder()
             .defaultStylingTags()
             .defaultComponentTags()
             .resetTag(true)
             .strictClosing(false)
             .build();
-    private final MiniTagParser parser;
-    private final Map<String, ComponentBuilderResolver> componentTagResolvers;
-    private final Map<String, StylingResolver> componentStylingResolvers;
+    private final @NotNull MiniTagParser parser;
+    private final @NotNull Map<@NotNull String, ComponentBuilderResolver> componentTagResolvers;
+    private final @NotNull Map<@NotNull String, StylingResolver> componentStylingResolvers;
 
     public @NotNull Component parse(@NotNull String str, @NotNull Placeholder... placeholders) {
         if (str.isEmpty()) {
@@ -209,9 +209,9 @@ public final class MiniMessageParser {
     }
 
     public static class Builder {
-        private final MiniTagParser.Builder miniTagParserBuilder = MiniTagParser.builder();
-        private final Map<String, ComponentBuilderResolver> componentTagResolvers = new HashMap<>();
-        private final Map<String, StylingResolver> componentStylingResolvers = new HashMap<>();
+        private final MiniTagParser.@NotNull Builder miniTagParserBuilder = MiniTagParser.builder();
+        private final @NotNull Map<@NotNull String, ComponentBuilderResolver> componentTagResolvers = new HashMap<>();
+        private final @NotNull Map<@NotNull String, StylingResolver> componentStylingResolvers = new HashMap<>();
 
         @Contract("_ -> this")
         public @NotNull Builder strictClosing(boolean strictClosing) {

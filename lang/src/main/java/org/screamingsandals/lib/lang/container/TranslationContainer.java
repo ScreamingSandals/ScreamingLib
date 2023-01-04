@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.lang.container;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 
@@ -29,7 +30,7 @@ public interface TranslationContainer {
      *
      * @return Empty translation container
      */
-    static TranslationContainer empty() {
+    static @NotNull TranslationContainer empty() {
         return TranslationContainerImpl.EMPTY;
     }
 
@@ -40,7 +41,7 @@ public interface TranslationContainer {
      * @param fallback fallback
      * @return new container
      */
-    static TranslationContainer of(ConfigurationNode node, @Nullable TranslationContainer fallback) {
+    static TranslationContainer of(@NotNull ConfigurationNode node, @Nullable TranslationContainer fallback) {
         return new TranslationContainerImpl(node, fallback);
     }
 
@@ -50,45 +51,45 @@ public interface TranslationContainer {
      * @param node a {@link ConfigurationNode} to translate
      * @return new container with EMPTY fallback
      */
-    static TranslationContainer of(ConfigurationNode node) {
+    static TranslationContainer of(@NotNull ConfigurationNode node) {
         return new TranslationContainerImpl(node, empty());
     }
 
     /**
      * @return root translation node
      */
-    ConfigurationNode getNode();
+    @NotNull ConfigurationNode getNode();
 
     /**
      * Replaces the node for translating
      *
      * @param node node
      */
-    void setNode(ConfigurationNode node);
+    void setNode(@NotNull ConfigurationNode node);
 
     /**
      * @return fallback container
      */
-    TranslationContainer getFallbackContainer();
+    @Nullable TranslationContainer getFallbackContainer();
 
     /**
      * replaces current fallback container
      *
      * @param fallbackContainer new fallback
      */
-    void setFallbackContainer(TranslationContainer fallbackContainer);
+    void setFallbackContainer(@Nullable TranslationContainer fallbackContainer);
 
     /**
      * @param key key to translate
      * @return translated list of strings
      */
-    List<String> translate(Collection<String> key);
+    @NotNull List<@NotNull String> translate(@NotNull Collection<@NotNull String> key);
 
     /**
      * @param key key to translate
      * @return translated list of strings
      */
-    List<String> translate(String... key);
+    @NotNull List<@NotNull String> translate(@NotNull String @NotNull... key);
 
     /**
      * Checks if this container is empty.

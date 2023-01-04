@@ -16,14 +16,17 @@
 
 package org.screamingsandals.lib.economy;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 @AbstractService
 public abstract class EconomyManager {
-    private static EconomyManager economyManager;
+    private static @Nullable EconomyManager economyManager;
 
+    @ApiStatus.Internal
     public EconomyManager() {
         if (economyManager != null) {
             throw new UnsupportedOperationException("EconomyManager is already initialized!");

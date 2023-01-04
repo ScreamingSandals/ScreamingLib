@@ -28,7 +28,7 @@ import java.util.List;
 
 public class BoldResolver implements StylingResolver {
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> void resolve(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag, Placeholder... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> void resolve(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag, @NotNull Placeholder @NotNull ... placeholders) {
         if (tag.getArgs().isEmpty()) {
             builder.bold();
         } else {

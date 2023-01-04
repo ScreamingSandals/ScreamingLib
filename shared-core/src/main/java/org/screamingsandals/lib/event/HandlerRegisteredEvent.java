@@ -19,6 +19,7 @@ package org.screamingsandals.lib.event;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * This event is called when new {@link EventHandler} is registered.
@@ -29,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class HandlerRegisteredEvent implements SEvent {
-    private final EventManager eventManager;
-    private final Class<?> eventClass;
-    private final EventHandler<?> handler;
+    private final @NotNull EventManager eventManager;
+    private final @NotNull Class<?> eventClass;
+    private final @NotNull EventHandler<?> handler;
 }

@@ -20,13 +20,14 @@ import com.velocitypowered.api.event.EventHandler;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.ResultedEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractVelocityEventHandlerFactory<T, SE extends SEvent> {
-    protected static final Map<EventPriority, PostOrder> EVENT_PRIORITY_POST_ORDER_MAP = Map.of(
+    protected static final @NotNull Map<@NotNull EventPriority, PostOrder> EVENT_PRIORITY_POST_ORDER_MAP = Map.of(
             EventPriority.LOWEST, PostOrder.FIRST,
             EventPriority.LOW, PostOrder.EARLY,
             EventPriority.NORMAL, PostOrder.NORMAL,
@@ -34,23 +35,35 @@ public abstract class AbstractVelocityEventHandlerFactory<T, SE extends SEvent> 
             EventPriority.HIGHEST, PostOrder.LAST
     );
 
-    protected final Map<EventPriority, EventHandler<T>> eventMap = new HashMap<>();
-    protected final Class<T> platformEventClass;
-    protected final Class<SE> eventClass;
+    protected final @NotNull Map<@NotNull EventPriority, EventHandler<T>> eventMap = new HashMap<>();
+    protected final @NotNull Class<T> platformEventClass;
+    protected final @NotNull Class<SE> eventClass;
     protected final boolean fireAsync;
 
-    public AbstractVelocityEventHandlerFactory(Class<T> platformEventClass, Class<SE> eventClass,
-                                               final Object plugin, final ProxyServer proxyServer) {
+    public AbstractVelocityEventHandlerFactory(
+            @NotNull Class<T> platformEventClass,
+            @NotNull Class<SE> eventClass,
+            final @NotNull Object plugin,
+            final @NotNull ProxyServer proxyServer
+    ) {
         this(platformEventClass, eventClass, plugin, proxyServer, false);
     }
 
     @SuppressWarnings("unchecked")
-    public AbstractVelocityEventHandlerFactory(Class<T> platformEventClass, Class<SE> eventClass,
-                                               final Object plugin, final ProxyServer proxyServer,
-                                               boolean fireAsync) {
+    public AbstractVelocityEventHandlerFactory(
+            @NotNull Class<T> platformEventClass,
+            @NotNull Class<SE> eventClass,
+            final @NotNull Object plugin,
+            final @NotNull ProxyServer proxyServer,
+            boolean fireAsync
+    ) {
         this.eventClass = eventClass;
         this.platformEventClass = platformEventClass;
         this.fireAsync = fireAsync;
+
+        if (EventManager.getDefaultEventManager() == null) {
+            throw new UnsupportedOperationException("Default EventManager is not initialized yet.");
+        }
 
         EventManager.getDefaultEventManager().register(HandlerRegisteredEvent.class, handlerRegisteredEvent -> {
             if (handlerRegisteredEvent.getEventManager() != EventManager.getDefaultEventManager()) {
@@ -94,7 +107,7 @@ public abstract class AbstractVelocityEventHandlerFactory<T, SE extends SEvent> 
         });
     }
 
-    protected abstract SE wrapEvent(T event, EventPriority priority);
+    protected abstract @NotNull SE wrapEvent(@NotNull T event, @NotNull EventPriority priority);
 
     /**
      * For additional processing of the event.
@@ -103,5 +116,5 @@ public abstract class AbstractVelocityEventHandlerFactory<T, SE extends SEvent> 
      * @param wrappedEvent wrapped event
      * @param event        velocity event
      */
-    protected abstract void postProcess(SE wrappedEvent, T event);
+    protected abstract void postProcess(@NotNull SE wrappedEvent, @NotNull T event);
 }

@@ -196,7 +196,7 @@ public interface ItemBuilder extends MetadataConsumer {
     }
 
     @Contract("_ -> this")
-    default @NotNull ItemBuilder enchant(@NotNull Map<@NotNull Object, @NotNull Integer> enchants) {
+    default @NotNull ItemBuilder enchant(@NotNull Map<@NotNull Object, Integer> enchants) {
         enchants.forEach(this::enchant);
         return this;
     }

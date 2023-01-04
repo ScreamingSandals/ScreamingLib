@@ -18,16 +18,16 @@ package org.screamingsandals.lib.sender.permissions;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Data
 @RequiredArgsConstructor(staticName = "of")
 public final class OrPermission implements Permission {
-    private final List<Permission> permissions;
+    private final @NotNull List<@NotNull Permission> permissions;
 
-    public static OrPermission of(Permission...permissions) {
-        return of(Arrays.asList(permissions));
+    public static @NotNull OrPermission of(@NotNull Permission @NotNull...permissions) {
+        return of(List.of(permissions));
     }
 }

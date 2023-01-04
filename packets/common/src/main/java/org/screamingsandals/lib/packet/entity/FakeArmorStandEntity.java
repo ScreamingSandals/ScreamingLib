@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.packet.entity;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.packet.MetadataItem;
 import org.screamingsandals.lib.utils.math.Vector3Df;
@@ -25,9 +26,9 @@ import org.screamingsandals.lib.world.LocationHolder;
 @Getter
 public class FakeArmorStandEntity extends FakeLivingEntity {
     private byte armorStandFlags;
-    private Vector3Df headRotation;
+    private @NotNull Vector3Df headRotation;
 
-    public FakeArmorStandEntity(LocationHolder location, int typeId) {
+    public FakeArmorStandEntity(@NotNull LocationHolder location, int typeId) {
         super(location, typeId);
         this.armorStandFlags = 0;
         this.headRotation = new Vector3Df(0.0f, 0.0f, 0.0f);
@@ -48,28 +49,28 @@ public class FakeArmorStandEntity extends FakeLivingEntity {
         put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.ARMOR_STAND_FLAGS), armorStandFlags));
     }
 
-    public void setHeadRotation(Vector3Df value) {
+    public void setHeadRotation(@NotNull Vector3Df value) {
         this.headRotation = value;
         put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.HEAD_ROTATION), value));
     }
 
-    public void setBodyRotation(Vector3Df value) {
+    public void setBodyRotation(@NotNull Vector3Df value) {
         put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.BODY_ROTATION), value));
     }
 
-    public void setLeftArmRotation(Vector3Df value) {
+    public void setLeftArmRotation(@NotNull Vector3Df value) {
         put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.LEFT_ARM_ROTATION), value));
     }
 
-    public void setRightArmRotation(Vector3Df value) {
+    public void setRightArmRotation(@NotNull Vector3Df value) {
         put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.RIGHT_ARM_ROTATION), value));
     }
 
-    public void setLeftLegRotation(Vector3Df value) {
+    public void setLeftLegRotation(@NotNull Vector3Df value) {
         put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.LEFT_LEG_ROTATION), value));
     }
 
-    public void setRightLegRotation(Vector3Df value) {
+    public void setRightLegRotation(@NotNull Vector3Df value) {
         put(MetadataItem.of(EntityMetadata.Registry.getId(EntityMetadata.RIGHT_LEG_ROTATION), value));
     }
 

@@ -2249,7 +2249,7 @@ public class LegacyMaterialDataToFlatteningConverter {
         return null;
     }
 
-    public static @NotNull Map<@NotNull String, @NotNull String> get(@NotNull MaterialData materialData) {
+    public static @NotNull Map<@NotNull String, String> get(@NotNull MaterialData materialData) {
         // TODO: actually implement it in some normal way instead of this
         var possibleKeys = List.of(
                 "waterlogged",

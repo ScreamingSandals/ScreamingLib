@@ -19,6 +19,7 @@ package org.screamingsandals.lib.packet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +29,10 @@ import java.util.List;
 @Accessors(chain = true, fluent = true)
 public class SClientboundSetEntityDataPacket extends AbstractPacket {
     private int entityId;
-    private final List<MetadataItem> metadata = new ArrayList<>();
+    private final @NotNull List<@NotNull MetadataItem> metadata = new ArrayList<>();
 
     @Override
-    public void write(PacketWriter writer) {
+    public void write(@NotNull PacketWriter writer) {
         writer.writeVarInt(entityId);
 
         writer.writeDataWatcherCollection(metadata);

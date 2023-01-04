@@ -20,6 +20,7 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.EventPriority;
@@ -43,10 +44,14 @@ import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
         PlayerMapper.class,
 })
 public class ProtocolInjector {
-    private static final String CHANNEL_NAME = "SPacketHandler";
+    private static final @NotNull String CHANNEL_NAME = "SPacketHandler";
 
     @OnPostEnable
     public void onPostEnable() {
+        if (EventManager.getDefaultEventManager() == null) {
+            throw new UnsupportedOperationException("Default EventManager is not initialized yet");
+        }
+
         EventManager.getDefaultEventManager().register(SPlayerLoginEvent.class, sPlayerLoginEvent -> addPlayer(sPlayerLoginEvent.player(), true), EventPriority.LOWEST);
         EventManager.getDefaultEventManager().register(SPlayerJoinEvent.class, sPlayerJoinEvent -> addPlayer(sPlayerJoinEvent.player(), false), EventPriority.HIGH);
         EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, sPlayerLeaveEvent -> removePlayer(sPlayerLeaveEvent.player()), EventPriority.HIGHEST);
@@ -58,7 +63,7 @@ public class ProtocolInjector {
         Server.getConnectedPlayers().forEach(this::removePlayer);
     }
 
-    public void addPlayer(PlayerWrapper player, boolean onLogin) {
+    public void addPlayer(@NotNull PlayerWrapper player, boolean onLogin) {
         try {
             final var channel = player.getChannel();
             Preconditions.checkNotNull(channel, "Failed to find player channel!");
@@ -78,7 +83,7 @@ public class ProtocolInjector {
         }
     }
 
-    public void removePlayer(PlayerWrapper player) {
+    public void removePlayer(@NotNull PlayerWrapper player) {
         try {
             final var channel = player.getChannel();
             if (channel != null && channel.pipeline().get(CHANNEL_NAME) != null) {
@@ -91,7 +96,7 @@ public class ProtocolInjector {
 
     @RequiredArgsConstructor
     private static class PacketHandler extends ChannelDuplexHandler {
-        private final PlayerWrapper player;
+        private final @NotNull PlayerWrapper player;
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object packet) {
