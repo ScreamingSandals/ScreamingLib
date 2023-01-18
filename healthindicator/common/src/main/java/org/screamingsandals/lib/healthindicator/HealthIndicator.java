@@ -25,21 +25,27 @@ import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.visuals.DatableVisual;
 
 public interface HealthIndicator extends DatableVisual<HealthIndicator> {
-    static HealthIndicator of() {
+    @Contract("-> new")
+    static @NotNull HealthIndicator of() {
         return HealthIndicatorManager.healthIndicator();
     }
+    @Contract("_ -> this")
+    @NotNull HealthIndicator showHealthInTabList(boolean flag);
 
-    HealthIndicator showHealthInTabList(boolean flag);
+    @Contract("_ -> this")
+    @NotNull HealthIndicator symbol(@NotNull Component symbol);
 
-    HealthIndicator symbol(Component symbol);
+    @Contract("_ -> this")
+    @NotNull HealthIndicator symbol(@NotNull ComponentLike symbol);
 
-    HealthIndicator symbol(ComponentLike symbol);
+    @Contract("_ -> this")
+    @NotNull HealthIndicator startUpdateTask(long time, @NotNull TaskerTime unit);
 
-    HealthIndicator startUpdateTask(long time, TaskerTime unit);
+    @Contract("_ -> this")
+    @NotNull HealthIndicator addTrackedPlayer(@NotNull PlayerWrapper player);
 
-    HealthIndicator addTrackedPlayer(PlayerWrapper player);
-
-    HealthIndicator removeTrackedPlayer(PlayerWrapper player);
+    @Contract("_ -> this")
+    @NotNull HealthIndicator removeTrackedPlayer(@NotNull PlayerWrapper player);
 
     @Contract("_ -> this")
     default @NotNull HealthIndicator title(@NotNull Component component) {

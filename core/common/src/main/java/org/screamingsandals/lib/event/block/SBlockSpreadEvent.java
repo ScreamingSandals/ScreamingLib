@@ -16,9 +16,10 @@
 
 package org.screamingsandals.lib.event.block;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SBlockSpreadEvent extends SBlockFormEvent {
 
-    BlockHolder source();
+    @NotNull BlockHolder source();
 }

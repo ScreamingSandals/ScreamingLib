@@ -20,6 +20,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -33,13 +35,13 @@ public class SBukkitRedstoneEvent implements SRedstoneEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockRedstoneEvent event;
+    private final @NotNull BlockRedstoneEvent event;
 
     // Internal cache
-    private BlockHolder block;
+    private @Nullable BlockHolder block;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }

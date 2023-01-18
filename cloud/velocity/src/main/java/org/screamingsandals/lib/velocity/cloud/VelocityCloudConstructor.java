@@ -22,6 +22,7 @@ import cloud.commandframework.execution.CommandExecutionCoordinator;
 import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.cloud.CloudConstructor;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -32,11 +33,11 @@ import java.util.function.Function;
 @Service(dependsOn = VelocityProxiedPlayerMapper.class)
 @RequiredArgsConstructor
 public class VelocityCloudConstructor extends CloudConstructor {
-    private final PluginContainer plugin;
-    private final ProxyServer proxyServer;
+    private final @NotNull PluginContainer plugin;
+    private final @NotNull ProxyServer proxyServer;
 
     @Override
-    public CommandManager<CommandSenderWrapper> construct0(Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) {
+    public @NotNull CommandManager<CommandSenderWrapper> construct0(@NotNull Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) {
         return new VelocityScreamingCloudManager(plugin, proxyServer, commandCoordinator);
     }
 }

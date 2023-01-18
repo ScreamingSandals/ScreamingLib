@@ -22,6 +22,8 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.Item;
 import org.bukkit.event.block.BlockDropItemEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
@@ -44,15 +46,15 @@ public class SBukkitBlockDropItemEvent implements SBlockDropItemEvent, BukkitCan
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockDropItemEvent event;
+    private final @NotNull BlockDropItemEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private BlockStateHolder blockState;
-    private Collection<EntityItem> items;
+    private @Nullable PlayerWrapper player;
+    private @Nullable BlockStateHolder blockState;
+    private @Nullable Collection<@NotNull EntityItem> items;
 
     @Override
-    public PlayerWrapper player() {
+    public @NotNull PlayerWrapper player() {
         if (player == null) {
             player = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -60,7 +62,7 @@ public class SBukkitBlockDropItemEvent implements SBlockDropItemEvent, BukkitCan
     }
 
     @Override
-    public BlockStateHolder state() {
+    public @NotNull BlockStateHolder state() {
         if (blockState == null) {
             blockState = BlockStateMapper.<BlockStateHolder>wrapBlockState(event.getBlockState()).orElseThrow();
         }
@@ -68,7 +70,7 @@ public class SBukkitBlockDropItemEvent implements SBlockDropItemEvent, BukkitCan
     }
 
     @Override
-    public Collection<EntityItem> items() {
+    public @NotNull Collection<@NotNull EntityItem> items() {
         if (items == null) {
             items = new CollectionLinkedToCollection<>(event.getItems(), entityItem -> entityItem.as(Item.class), BukkitEntityItem::new);
         }

@@ -21,6 +21,7 @@ import cloud.commandframework.CommandTree;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bungee.proxy.BungeeProxiedPlayerMapper;
 import org.screamingsandals.lib.cloud.CloudConstructor;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
@@ -31,10 +32,10 @@ import java.util.function.Function;
 @Service(dependsOn = BungeeProxiedPlayerMapper.class)
 @RequiredArgsConstructor
 public class BungeeCloudConstructor extends CloudConstructor {
-    private final Plugin plugin;
+    private final @NotNull Plugin plugin;
 
     @Override
-    public CommandManager<CommandSenderWrapper> construct0(Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) {
+    public @NotNull CommandManager<CommandSenderWrapper> construct0(@NotNull Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) {
         return new BungeeScreamingCloudManager(plugin, commandCoordinator);
     }
 }

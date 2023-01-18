@@ -53,7 +53,7 @@ import static org.screamingsandals.lib.spectator.Component.text;
 @UtilityClass
 public final class ComponentHelper {
 
-    public static final Pattern SPECIAL_CHARACTERS_PATTERN = Pattern.compile("[^\\s\\w\\-]");
+    public static final @NotNull Pattern SPECIAL_CHARACTERS_PATTERN = Pattern.compile("[^\\s\\w\\-]");
 
     public static @NotNull Component highlight(final @NotNull Component component, final @NotNull Color highlightColor) {
         return component; // TODO
@@ -75,19 +75,19 @@ public final class ComponentHelper {
         return length;
     }
 
-    public static @NotNull Component line(int length, Color color) {
+    public static @NotNull Component line(int length, @NotNull Color color) {
         return text().content("-").color(color).strikethrough().build().repeat(length);
     }
 
-    public static @NotNull Component branch(Color color) {
+    public static @NotNull Component branch(@NotNull Color color) {
         return text("├─", color);
     }
 
-    public static @NotNull Component lastBranch(Color color) {
+    public static @NotNull Component lastBranch(@NotNull Color color) {
         return text("└─", color);
     }
 
-    public static @NotNull Component header(@NotNull Component title, int headerFooterLength, Color color) {
+    public static @NotNull Component header(@NotNull Component title, int headerFooterLength, @NotNull Color color) {
         final int sideLength = (headerFooterLength - ComponentHelper.length(title)) / 2;
         return text()
                 .append(line(sideLength, color))

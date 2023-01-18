@@ -16,6 +16,9 @@
 
 package org.screamingsandals.lib.hologram;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.Pair;
@@ -23,8 +26,6 @@ import org.screamingsandals.lib.visuals.DatableVisual;
 import org.screamingsandals.lib.visuals.LinedVisual;
 import org.screamingsandals.lib.visuals.TouchableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
-
-import java.util.Map;
 
 /**
  * Hologram that shows some text.
@@ -41,7 +42,8 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param location location where to create the hologram
      * @return created hologram
      */
-    static Hologram of(LocationHolder location) {
+    @Contract("_ -> new")
+    static @NotNull Hologram of(@NotNull LocationHolder location) {
         return HologramManager.hologram(location);
     }
 
@@ -51,14 +53,15 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param location location where to create the hologram
      * @return created hologram
      */
-    static Hologram touchableOf(LocationHolder location) {
+    @Contract("_ -> new")
+    static @NotNull Hologram touchableOf(@NotNull LocationHolder location) {
         return HologramManager.hologram(location, true);
     }
 
     /**
      * @return current rotation time
      */
-    Pair<Integer, TaskerTime> rotationTime();
+    @NotNull Pair<@NotNull Integer, @NotNull TaskerTime> rotationTime();
 
     /**
      * The rotation time settings.
@@ -66,12 +69,13 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param rotatingTime {@link Pair} of time and unit.
      * @return this hologram
      */
-    Hologram rotationTime(Pair<Integer, TaskerTime> rotatingTime);
+    @Contract("_ -> this")
+    @NotNull Hologram rotationTime(@NotNull Pair<@NotNull Integer, @NotNull TaskerTime> rotatingTime);
 
     /**
      * @return current rotation mode
      */
-    RotationMode rotationMode();
+    @NotNull RotationMode rotationMode();
 
     /**
      * The mode that the Hologram should be rotating
@@ -79,7 +83,8 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param mode rotation mode
      * @return this hologram
      */
-    Hologram rotationMode(RotationMode mode);
+    @Contract("_ -> this")
+    @NotNull Hologram rotationMode(@NotNull RotationMode mode);
 
     /**
      * Stands for how much should this hologram rotate per one cycle
@@ -87,7 +92,8 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param toIncrement
      * @return
      */
-    Hologram rotationIncrement(float toIncrement);
+    @Contract("_ -> this")
+    @NotNull Hologram rotationIncrement(float toIncrement);
 
     /**
      * Changes the item to show
@@ -95,7 +101,8 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param item item to show
      * @return this hologram
      */
-    Hologram item(Item item);
+    @Contract("_ -> this")
+    @NotNull Hologram item(@Nullable Item item);
 
     /**
      * Position of the item shown as hologram
@@ -103,12 +110,13 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @param position position of the item
      * @return this hologram
      */
-    Hologram itemPosition(ItemPosition position);
+    @Contract("_ -> this")
+    @NotNull Hologram itemPosition(@NotNull ItemPosition position);
 
     /**
      * @return current item position
      */
-    ItemPosition itemPosition();
+    @NotNull ItemPosition itemPosition();
 
     /**
      * Represents rotation mode
@@ -128,25 +136,5 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
     enum ItemPosition {
         ABOVE,
         BELOW
-    }
-
-    /**
-     * Data storage for given hologram
-     */
-    interface Data {
-        /**
-         * Immutable copy of the data in this hologram.
-         *
-         * @return copy of data that this hologram has.
-         */
-        Map<String, Object> getAll();
-
-        <T> T get(String key);
-
-        boolean contains(String key);
-
-        void set(String key, Object data);
-
-        void add(String key, Object data);
     }
 }

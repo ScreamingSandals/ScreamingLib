@@ -20,6 +20,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.block.BlockBurnEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -34,15 +35,15 @@ public class SBukkitBlockBurnEvent implements SBlockBurnEvent, BukkitCancellable
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockBurnEvent event;
+    private final @NotNull BlockBurnEvent event;
 
     // Internal cache
-    private BlockHolder block;
-    private BlockHolder ignitingBlock;
+    private @Nullable BlockHolder block;
+    private @Nullable BlockHolder ignitingBlock;
     private boolean ignitingBlockCached;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }

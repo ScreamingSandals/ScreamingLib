@@ -20,6 +20,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.block.BlockTypeHolder;
@@ -34,15 +36,15 @@ public class SBukkitBlockPhysicsEvent implements SBlockPhysicsEvent, BukkitCance
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockPhysicsEvent event;
+    private final @NotNull BlockPhysicsEvent event;
 
     // Internal cache
-    private BlockHolder block;
-    private BlockTypeHolder material;
-    private BlockHolder causingBlock;
+    private @Nullable BlockHolder block;
+    private @Nullable BlockTypeHolder material;
+    private @Nullable BlockHolder causingBlock;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -50,7 +52,7 @@ public class SBukkitBlockPhysicsEvent implements SBlockPhysicsEvent, BukkitCance
     }
 
     @Override
-    public BlockTypeHolder material() {
+    public @NotNull BlockTypeHolder material() {
         if (material == null) {
             material = BlockTypeHolder.of(event.getChangedType());
         }
@@ -58,7 +60,7 @@ public class SBukkitBlockPhysicsEvent implements SBlockPhysicsEvent, BukkitCance
     }
 
     @Override
-    public BlockHolder causingBlock() {
+    public @NotNull BlockHolder causingBlock() {
         if (causingBlock == null) {
             causingBlock = BlockMapper.wrapBlock(event.getSourceBlock());
         }

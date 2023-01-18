@@ -131,7 +131,7 @@ public abstract class EconomyManager {
 
     protected abstract boolean has0(@NotNull MultiPlatformOfflinePlayer player, double amount);
 
-    protected abstract boolean has0(@NotNull MultiPlatformOfflinePlayer player, String worldName, double amount);
+    protected abstract boolean has0(@NotNull MultiPlatformOfflinePlayer player, @NotNull String worldName, double amount);
 
     protected abstract @NotNull TransactionResult withdrawPlayer0(@NotNull MultiPlatformOfflinePlayer player, double amount);
 

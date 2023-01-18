@@ -21,6 +21,8 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
 import org.screamingsandals.lib.bukkit.world.chunk.BukkitChunkHolder;
 import org.screamingsandals.lib.event.chunk.SChunkUnloadEvent;
@@ -34,13 +36,13 @@ public class SBukkitChunkUnloadEvent implements SChunkUnloadEvent, NoAutoCancell
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final ChunkUnloadEvent event;
+    private final @NotNull ChunkUnloadEvent event;
 
     // Internal cache
-    private ChunkHolder cachedChunk;
+    private @Nullable ChunkHolder cachedChunk;
 
     @Override
-    public ChunkHolder chunk() {
+    public @NotNull ChunkHolder chunk() {
         if (cachedChunk == null) {
             cachedChunk = new BukkitChunkHolder(event.getChunk());
         }

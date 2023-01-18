@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.block;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
@@ -26,15 +27,15 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SBlockDispenseEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder block();
+    @NotNull BlockHolder block();
 
-    Item item();
+    @NotNull Item item();
 
-    void item(Item item);
+    void item(@NotNull Item item);
 
-    Vector3D velocity();
+    @NotNull Vector3D velocity();
 
-    void velocity(Vector3D velocity);
+    void velocity(@NotNull Vector3D velocity);
 
     /*
      * Only in case when dispenser is used to attach armor to an entity

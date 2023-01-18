@@ -20,6 +20,8 @@ import cloud.commandframework.CommandManager;
 import cloud.commandframework.CommandTree;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
@@ -27,7 +29,7 @@ import java.util.function.Function;
 
 @AbstractService
 public abstract class CloudConstructor {
-    private static CloudConstructor cloudConstructor;
+    private static @Nullable CloudConstructor cloudConstructor;
 
     @ApiStatus.Internal
     public CloudConstructor() {
@@ -38,12 +40,12 @@ public abstract class CloudConstructor {
         cloudConstructor = this;
     }
 
-    public static CommandManager<CommandSenderWrapper> construct(Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) throws Exception {
+    public static @NotNull CommandManager<CommandSenderWrapper> construct(@NotNull Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) throws Exception {
         if (cloudConstructor == null) {
             throw new UnsupportedOperationException("CloudConstructor is not initialized yet!");
         }
         return cloudConstructor.construct0(commandCoordinator);
     }
 
-    public abstract CommandManager<CommandSenderWrapper> construct0(Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) throws Exception;
+    public abstract @NotNull CommandManager<CommandSenderWrapper> construct0(@NotNull Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) throws Exception;
 }

@@ -20,6 +20,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.world.ChunkPopulateEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.world.chunk.BukkitChunkHolder;
 import org.screamingsandals.lib.event.chunk.SChunkPopulateEvent;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
@@ -32,13 +34,13 @@ public class SBukkitChunkPopulateEvent implements SChunkPopulateEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final ChunkPopulateEvent event;
+    private final @NotNull ChunkPopulateEvent event;
 
     // Internal cache
-    private ChunkHolder cachedChunk;
+    private @Nullable ChunkHolder cachedChunk;
 
     @Override
-    public ChunkHolder chunk() {
+    public @NotNull ChunkHolder chunk() {
         if (cachedChunk == null) {
             cachedChunk = new BukkitChunkHolder(event.getChunk());
         }

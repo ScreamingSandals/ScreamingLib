@@ -22,6 +22,7 @@ import cloud.commandframework.execution.CommandExecutionCoordinator;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxy.ProxiedSenderWrapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
@@ -35,8 +36,8 @@ public class BungeeScreamingCloudManager extends BungeeCommandManager<CommandSen
      * @param owningPlugin       Plugin that is constructing the manager
      * @param commandCoordinator Coordinator provider
      */
-    public BungeeScreamingCloudManager(Plugin owningPlugin,
-                                       Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) {
+    public BungeeScreamingCloudManager(@NotNull Plugin owningPlugin,
+                                       @NotNull Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) {
         super(owningPlugin, commandCoordinator, sender -> {
             if (sender instanceof ProxiedPlayer) {
                 return ProxiedPlayerMapper.wrapPlayer(sender);

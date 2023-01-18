@@ -16,13 +16,14 @@
 
 package org.screamingsandals.lib.event.chunk;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 
 public interface SChunkLoadEvent extends SEvent, PlatformEventWrapper {
 
-    ChunkHolder chunk();
+    @NotNull ChunkHolder chunk();
 
     boolean newChunk();
 }

@@ -17,20 +17,22 @@
 package org.screamingsandals.lib.bukkit.event.block;
 
 import org.bukkit.event.block.BlockSpreadEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockSpreadEvent;
 
 public class SBukkitBlockSpreadEvent extends SBukkitBlockFormEvent implements SBlockSpreadEvent {
     // Internal cache
-    private BlockHolder source;
+    private @Nullable BlockHolder source;
 
-    public SBukkitBlockSpreadEvent(BlockSpreadEvent event) {
+    public SBukkitBlockSpreadEvent(@NotNull BlockSpreadEvent event) {
         super(event);
     }
 
     @Override
-    public BlockHolder source() {
+    public @NotNull BlockHolder source() {
         if (source == null) {
             source = BlockMapper.wrapBlock(((BlockSpreadEvent) event()).getSource());
         }

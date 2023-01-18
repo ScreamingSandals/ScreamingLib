@@ -41,7 +41,7 @@ public interface TranslationContainer {
      * @param fallback fallback
      * @return new container
      */
-    static TranslationContainer of(@NotNull ConfigurationNode node, @Nullable TranslationContainer fallback) {
+    static @NotNull TranslationContainer of(@NotNull ConfigurationNode node, @Nullable TranslationContainer fallback) {
         return new TranslationContainerImpl(node, fallback);
     }
 
@@ -51,7 +51,7 @@ public interface TranslationContainer {
      * @param node a {@link ConfigurationNode} to translate
      * @return new container with EMPTY fallback
      */
-    static TranslationContainer of(@NotNull ConfigurationNode node) {
+    static @NotNull TranslationContainer of(@NotNull ConfigurationNode node) {
         return new TranslationContainerImpl(node, empty());
     }
 

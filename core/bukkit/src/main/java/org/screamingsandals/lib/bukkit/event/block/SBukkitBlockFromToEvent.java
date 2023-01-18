@@ -20,6 +20,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.block.BlockFromToEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -34,15 +36,15 @@ public class SBukkitBlockFromToEvent implements SBlockFromToEvent, BukkitCancell
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockFromToEvent event;
+    private final @NotNull BlockFromToEvent event;
 
     // Internal cache
-    private BlockHolder sourceBlock;
-    private BlockHolder facedBlock;
-    private BlockFace face;
+    private @Nullable BlockHolder sourceBlock;
+    private @Nullable BlockHolder facedBlock;
+    private @Nullable BlockFace face;
 
     @Override
-    public BlockHolder sourceBlock() {
+    public @NotNull BlockHolder sourceBlock() {
         if (sourceBlock == null) {
             sourceBlock = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -50,7 +52,7 @@ public class SBukkitBlockFromToEvent implements SBlockFromToEvent, BukkitCancell
     }
 
     @Override
-    public BlockHolder facedBlock() {
+    public @NotNull BlockHolder facedBlock() {
         if (facedBlock == null) {
             facedBlock = BlockMapper.wrapBlock(event.getToBlock());
         }
@@ -58,7 +60,7 @@ public class SBukkitBlockFromToEvent implements SBlockFromToEvent, BukkitCancell
     }
 
     @Override
-    public BlockFace face() {
+    public @NotNull BlockFace face() {
         if (face == null) {
             face = BlockFace.valueOf(event.getFace().name());
         }

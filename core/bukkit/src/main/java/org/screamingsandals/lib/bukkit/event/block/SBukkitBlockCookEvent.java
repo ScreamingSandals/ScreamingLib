@@ -21,6 +21,8 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.block.BlockCookEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -36,14 +38,14 @@ public class SBukkitBlockCookEvent implements SBlockCookEvent, BukkitCancellable
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockCookEvent event;
+    private final @NotNull BlockCookEvent event;
 
     // Internal cache
-    private BlockHolder block;
-    private Item source;
+    private @Nullable BlockHolder block;
+    private @Nullable Item source;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -51,7 +53,7 @@ public class SBukkitBlockCookEvent implements SBlockCookEvent, BukkitCancellable
     }
 
     @Override
-    public Item source() {
+    public @NotNull Item source() {
         if (source == null) {
             source = new BukkitItem(event.getSource());
         }
@@ -59,12 +61,12 @@ public class SBukkitBlockCookEvent implements SBlockCookEvent, BukkitCancellable
     }
 
     @Override
-    public Item result() {
+    public @NotNull Item result() {
         return new BukkitItem(event.getResult());
     }
 
     @Override
-    public void result(Item item) {
+    public void result(@NotNull Item item) {
         event.setResult(item.as(ItemStack.class));
     }
 }

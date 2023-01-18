@@ -66,15 +66,15 @@ import org.screamingsandals.lib.spectator.Color;
  */
 public final class ColorArgument<C> extends CommandArgument<C, Color> {
 
-    private static final Pattern LEGACY_PREDICATE = Pattern.compile(
+    private static final @NotNull Pattern LEGACY_PREDICATE = Pattern.compile(
             "&[0-9a-fA-F]"
     );
 
-    private static final Pattern HEX_PREDICATE = Pattern.compile(
+    private static final @NotNull Pattern HEX_PREDICATE = Pattern.compile(
             "#?([a-fA-F0-9]{1,6})"
     );
 
-    private static final Collection<Pair<Character, Color>> COLORS = Arrays.asList(
+    private static final @NotNull Collection<@NotNull Pair<Character, Color>> COLORS = Arrays.asList(
             Pair.of('0', Color.BLACK),
             Pair.of('1', Color.DARK_BLUE),
             Pair.of('2', Color.DARK_GREEN),

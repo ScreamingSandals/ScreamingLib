@@ -38,7 +38,7 @@ public class PaperScreamingCloudManager extends PaperCommandManager<CommandSende
      * @param commandCoordinator Coordinator provider
      */
     public PaperScreamingCloudManager(@NotNull Plugin owningPlugin,
-                                      Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) throws Exception {
+                                      @NotNull Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) throws Exception {
         super(owningPlugin, commandCoordinator,
                 sender -> {
                     if (sender instanceof Player) {

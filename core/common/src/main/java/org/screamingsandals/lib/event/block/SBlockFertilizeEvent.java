@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.event.block;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
@@ -33,9 +35,9 @@ import java.util.Collection;
 @LimitedVersionSupport("Bukkit >= 1.13")
 public interface SBlockFertilizeEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    PlayerWrapper player();
+    @Nullable PlayerWrapper player();
 
-    BlockHolder block();
+    @NotNull BlockHolder block();
 
-    Collection<BlockStateHolder> changedBlockStates();
+    @NotNull Collection<@NotNull BlockStateHolder> changedBlockStates();
 }

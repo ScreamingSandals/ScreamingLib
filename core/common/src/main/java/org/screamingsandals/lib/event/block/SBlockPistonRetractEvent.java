@@ -16,11 +16,12 @@
 
 package org.screamingsandals.lib.event.block;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockHolder;
 
 import java.util.Collection;
 
 public interface SBlockPistonRetractEvent extends SBlockPistonEvent {
 
-    Collection<BlockHolder> pushedBlocks();
+    @NotNull Collection<@NotNull BlockHolder> pushedBlocks();
 }

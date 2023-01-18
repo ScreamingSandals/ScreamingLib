@@ -80,7 +80,7 @@ public final class MinecraftHelp<C> {
     /**
      * The default color scheme for {@link MinecraftHelp}
      */
-    public static final HelpColors DEFAULT_HELP_COLORS = HelpColors.of(
+    public static final @NotNull HelpColors DEFAULT_HELP_COLORS = HelpColors.of(
             Color.GOLD,
             Color.GREEN,
             Color.YELLOW,
@@ -88,29 +88,29 @@ public final class MinecraftHelp<C> {
             Color.DARK_GRAY
     );
 
-    public static final String MESSAGE_HELP_TITLE = "help";
-    public static final String MESSAGE_COMMAND = "command";
-    public static final String MESSAGE_DESCRIPTION = "description";
-    public static final String MESSAGE_NO_DESCRIPTION = "no_description";
-    public static final String MESSAGE_ARGUMENTS = "arguments";
-    public static final String MESSAGE_OPTIONAL = "optional";
-    public static final String MESSAGE_SHOWING_RESULTS_FOR_QUERY = "showing_results_for_query";
-    public static final String MESSAGE_NO_RESULTS_FOR_QUERY = "no_results_for_query";
-    public static final String MESSAGE_AVAILABLE_COMMANDS = "available_commands";
-    public static final String MESSAGE_CLICK_TO_SHOW_HELP = "click_to_show_help";
-    public static final String MESSAGE_PAGE_OUT_OF_RANGE = "page_out_of_range";
-    public static final String MESSAGE_CLICK_FOR_NEXT_PAGE = "click_for_next_page";
-    public static final String MESSAGE_CLICK_FOR_PREVIOUS_PAGE = "click_for_previous_page";
+    public static final @NotNull String MESSAGE_HELP_TITLE = "help";
+    public static final @NotNull String MESSAGE_COMMAND = "command";
+    public static final @NotNull String MESSAGE_DESCRIPTION = "description";
+    public static final @NotNull String MESSAGE_NO_DESCRIPTION = "no_description";
+    public static final @NotNull String MESSAGE_ARGUMENTS = "arguments";
+    public static final @NotNull String MESSAGE_OPTIONAL = "optional";
+    public static final @NotNull String MESSAGE_SHOWING_RESULTS_FOR_QUERY = "showing_results_for_query";
+    public static final @NotNull String MESSAGE_NO_RESULTS_FOR_QUERY = "no_results_for_query";
+    public static final @NotNull String MESSAGE_AVAILABLE_COMMANDS = "available_commands";
+    public static final @NotNull String MESSAGE_CLICK_TO_SHOW_HELP = "click_to_show_help";
+    public static final @NotNull String MESSAGE_PAGE_OUT_OF_RANGE = "page_out_of_range";
+    public static final @NotNull String MESSAGE_CLICK_FOR_NEXT_PAGE = "click_for_next_page";
+    public static final @NotNull String MESSAGE_CLICK_FOR_PREVIOUS_PAGE = "click_for_previous_page";
 
-    private final AudienceProvider<C> audienceProvider;
-    private final CommandManager<C> commandManager;
-    private final String commandPrefix;
-    private final Map<String, ComponentLike> messageMap = new HashMap<>();
+    private final @NotNull AudienceProvider<C> audienceProvider;
+    private final @NotNull CommandManager<C> commandManager;
+    private final @NotNull String commandPrefix;
+    private final @NotNull Map<String, ComponentLike> messageMap = new HashMap<>();
 
-    private BiPredicate<Command<C>, C> commandFilter = (c, s) -> true;
-    private MessageProvider<C> messageProvider = basicMessageProvider(this);
-    private Function<String, Component> descriptionDecorator = Component::text;
-    private HelpColors colors = DEFAULT_HELP_COLORS;
+    private @NotNull BiPredicate<Command<C>, C> commandFilter = (c, s) -> true;
+    private @NotNull MessageProvider<C> messageProvider = basicMessageProvider(this);
+    private @NotNull Function<String, Component> descriptionDecorator = Component::text;
+    private @NotNull HelpColors colors = DEFAULT_HELP_COLORS;
     private int headerFooterLength = DEFAULT_HEADER_FOOTER_LENGTH;
     private int maxResultsPerPage = DEFAULT_MAX_RESULTS_PER_PAGE;
 
@@ -134,7 +134,7 @@ public final class MinecraftHelp<C> {
         );
     }
 
-    public static <C extends Audience> MessageProvider<C> audienceMessageProvider(MinecraftHelp<C> minecraftHelp) {
+    public static <C extends Audience> MessageProvider<C> audienceMessageProvider(@NotNull MinecraftHelp<C> minecraftHelp) {
         return (sender, key, args) -> {
             var cl = minecraftHelp.messageMap.get(key);
             if (cl instanceof AudienceComponentLike) {
@@ -144,7 +144,7 @@ public final class MinecraftHelp<C> {
         };
     }
 
-    public static <C> MessageProvider<C> basicMessageProvider(MinecraftHelp<C> minecraftHelp) {
+    public static <C> MessageProvider<C> basicMessageProvider(@NotNull MinecraftHelp<C> minecraftHelp) {
         return (sender, key, args) -> minecraftHelp.messageMap.get(key).asComponent();
     }
 
@@ -283,7 +283,7 @@ public final class MinecraftHelp<C> {
      *
      * @param messageProvider The message provider to use
      */
-    public MinecraftHelp<C> messageProvider(final @NotNull MessageProvider<C> messageProvider) {
+    public @NotNull MinecraftHelp<C> messageProvider(final @NotNull MessageProvider<C> messageProvider) {
         this.messageProvider = messageProvider;
         return this;
     }
@@ -295,7 +295,7 @@ public final class MinecraftHelp<C> {
      *
      * @param messageProviderFunction Function that will construct message provider
      */
-    public MinecraftHelp<C> messageProvider(final @NotNull Function<MinecraftHelp<C> , MessageProvider<C>> messageProviderFunction) {
+    public @NotNull MinecraftHelp<C> messageProvider(final @NotNull Function<MinecraftHelp<C> , MessageProvider<C>> messageProviderFunction) {
         this.messageProvider = messageProviderFunction.apply(this);
         return this;
     }
@@ -592,7 +592,7 @@ public final class MinecraftHelp<C> {
         audience.sendMessage(this.footer(sender));
     }
 
-    private Component formatDescription(final ArgumentDescription description) {
+    private @NotNull Component formatDescription(final @NotNull ArgumentDescription description) {
         if (description instanceof RichDescription) {
             return ((RichDescription) description).getContents();
         } else {
@@ -752,11 +752,11 @@ public final class MinecraftHelp<C> {
     @RequiredArgsConstructor(staticName = "of")
     @Accessors(fluent = true)
     public static final class HelpColors {
-        private final Color primary;
-        private final Color highlight;
-        private final Color alternateHighlight;
-        private final Color text;
-        private final Color accent;
+        private final @NotNull Color primary;
+        private final @NotNull Color highlight;
+        private final @NotNull Color alternateHighlight;
+        private final @NotNull Color text;
+        private final @NotNull Color accent;
     }
 
 }

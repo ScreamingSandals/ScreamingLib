@@ -21,6 +21,8 @@ import lombok.experimental.Accessors;
 
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.block.MoistureChangeEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
@@ -38,14 +40,14 @@ public class SBukkitMoistureChangeEvent implements SMoistureChangeEvent, BukkitC
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final MoistureChangeEvent event;
+    private final @NotNull MoistureChangeEvent event;
 
     // Internal cache
-    private BlockHolder block;
-    private BlockStateHolder newBlockState;
+    private @Nullable BlockHolder block;
+    private @Nullable BlockStateHolder newBlockState;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -53,7 +55,7 @@ public class SBukkitMoistureChangeEvent implements SMoistureChangeEvent, BukkitC
     }
 
     @Override
-    public BlockStateHolder newBlockState() {
+    public @NotNull BlockStateHolder newBlockState() {
         if (newBlockState == null) {
             newBlockState = BlockStateMapper.<BlockStateHolder>wrapBlockState(event.getNewState()).orElseThrow();
         }

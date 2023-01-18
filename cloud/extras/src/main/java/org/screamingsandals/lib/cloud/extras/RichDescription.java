@@ -55,11 +55,11 @@ import static java.util.Objects.requireNonNull;
  * An argument description implementation that uses Spectator components.
  */
 public final class RichDescription implements ArgumentDescription {
-    private static final RichDescription EMPTY = new RichDescription(Component.empty());
+    private static final @NotNull RichDescription EMPTY = new RichDescription(Component.empty());
 
-    private final Component contents;
+    private final @NotNull Component contents;
 
-    RichDescription(final Component contents) {
+    RichDescription(final @NotNull Component contents) {
         this.contents = contents;
     }
 

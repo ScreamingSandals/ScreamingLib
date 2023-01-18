@@ -22,6 +22,8 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockFertilizeEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
@@ -44,16 +46,16 @@ public class SBukkitBlockFertilizeEvent implements SBlockFertilizeEvent, BukkitC
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockFertilizeEvent event;
+    private final @NotNull BlockFertilizeEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
     private boolean playerConverted;
-    private BlockHolder block;
-    private Collection<BlockStateHolder> changedBlockStates;
+    private @Nullable BlockHolder block;
+    private @Nullable Collection<@NotNull BlockStateHolder> changedBlockStates;
 
     @Override
-    public PlayerWrapper player() {
+    public @Nullable PlayerWrapper player() {
         if (!playerConverted) {
             if (event.getPlayer() != null) {
                 player = new BukkitEntityPlayer(event.getPlayer());
@@ -64,7 +66,7 @@ public class SBukkitBlockFertilizeEvent implements SBlockFertilizeEvent, BukkitC
     }
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -72,7 +74,7 @@ public class SBukkitBlockFertilizeEvent implements SBlockFertilizeEvent, BukkitC
     }
 
     @Override
-    public Collection<BlockStateHolder> changedBlockStates() {
+    public @NotNull Collection<@NotNull BlockStateHolder> changedBlockStates() {
         if (changedBlockStates == null) {
             changedBlockStates = new CollectionLinkedToCollection<>(event.getBlocks(), o -> o.as(BlockState.class), o -> BlockStateMapper.<BlockStateHolder>wrapBlockState(o).orElseThrow());
         }

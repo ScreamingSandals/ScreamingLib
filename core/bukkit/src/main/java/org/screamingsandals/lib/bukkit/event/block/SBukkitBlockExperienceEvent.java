@@ -20,6 +20,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.block.BlockExpEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockExperienceEvent;
@@ -32,13 +34,13 @@ public class SBukkitBlockExperienceEvent implements SBlockExperienceEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockExpEvent event;
+    private final @NotNull BlockExpEvent event;
 
     // Internal cache
-    private BlockHolder block;
+    private @Nullable BlockHolder block;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }

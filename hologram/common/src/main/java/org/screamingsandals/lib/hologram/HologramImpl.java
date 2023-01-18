@@ -22,6 +22,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.SClientboundRemoveEntitiesPacket;
@@ -52,25 +53,24 @@ import java.util.stream.Stream;
 @Setter
 public class HologramImpl extends AbstractLinedVisual<Hologram> implements Hologram {
     @Getter(AccessLevel.NONE)
-    private final Map<Integer, HologramPiece> entitiesOnLines;
+    private final @NotNull Map<@NotNull Integer, HologramPiece> entitiesOnLines;
     @Getter(AccessLevel.NONE)
-    private volatile HologramPiece itemEntity;
-    private volatile TaskerTask rotationTask;
-    private LocationHolder cachedLocation;
-    private LocationHolder location;
+    private volatile @Nullable HologramPiece itemEntity;
+    private volatile @Nullable TaskerTask rotationTask;
+    private @NotNull LocationHolder cachedLocation;
+    private @NotNull LocationHolder location;
     private int viewDistance;
     private boolean touchable;
     private boolean created;
-    private DataContainer data;
+    private @Nullable DataContainer data;
     private float rotationIncrement;
-    private Pair<Integer, TaskerTime> rotationTime;
-    private RotationMode rotationMode;
-    private Item item;
-    @Getter
-    private ItemPosition itemPosition;
+    private @NotNull Pair<@NotNull Integer, @NotNull TaskerTime> rotationTime;
+    private @NotNull RotationMode rotationMode;
+    private @Nullable Item item;
+    private @NotNull ItemPosition itemPosition;
     private long clickCooldown;
 
-    public HologramImpl(UUID uuid, LocationHolder location, boolean touchable) {
+    public HologramImpl(@NotNull UUID uuid, @NotNull LocationHolder location, boolean touchable) {
         super(uuid);
         this.location = location;
         this.touchable = touchable;
@@ -154,15 +154,15 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public Hologram rotationTime(Pair<Integer, TaskerTime> rotatingTime) {
-        this.rotationTime = rotatingTime;
+    public @NotNull Hologram rotationTime(@NotNull Pair<@NotNull Integer, @NotNull TaskerTime> rotationTime) {
+        this.rotationTime = rotationTime;
         update();
         restartRotationTask();
         return this;
     }
 
     @Override
-    public Hologram rotationMode(RotationMode mode) {
+    public @NotNull Hologram rotationMode(@NotNull RotationMode mode) {
         this.rotationMode = mode;
         update();
         restartRotationTask();
@@ -170,7 +170,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public Hologram item(Item item) {
+    public @NotNull Hologram item(@Nullable Item item) {
         this.item = item;
         update();
         restartRotationTask();
@@ -178,7 +178,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public Hologram itemPosition(ItemPosition location) {
+    public @NotNull Hologram itemPosition(@NotNull ItemPosition location) {
         this.itemPosition = location;
         update();
         restartRotationTask();
@@ -219,20 +219,19 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
             return;
         }
 
-        final var toSend = new LinkedList<AbstractPacket>();
+        final var toSend = new ArrayList<AbstractPacket>();
         if (itemEntity != null || !entitiesOnLines.isEmpty()) {
             toSend.add(getFullDestroyPacket());
             update(viewer, toSend, false);
         }
     }
 
-    private void update(PlayerWrapper player, List<AbstractPacket> packets, boolean checkDistance) {
+    private void update(PlayerWrapper player, @NotNull List<@NotNull AbstractPacket> packets, boolean checkDistance) {
         if (!player.getLocation().getWorld().equals(cachedLocation.getWorld())) {
             return;
         }
 
-        if (checkDistance
-                && player.getLocation().getDistanceSquared(cachedLocation) >= viewDistance) {
+        if (checkDistance && player.getLocation().getDistanceSquared(cachedLocation) >= viewDistance) {
             return;
         }
 
@@ -242,8 +241,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     private void updateEntities() {
         final var packets = new LinkedList<Function<PlayerWrapper, List<AbstractPacket>>>();
         if (visible && !viewers.isEmpty()) {
-            if (lines.size() != originalLinesSize
-                    && itemEntity != null) {
+            if (lines.size() != originalLinesSize && itemEntity != null) {
                 itemEntity.setLocation(cachedLocation.clone().add(0, itemPosition == ItemPosition.BELOW
                         ? (-lines.size() * .25 - .5)
                         : (lines.size() * .25), 0));
@@ -295,7 +293,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
 
             try {
                 if (rotationMode != RotationMode.NONE) {
-                    if (itemEntity == null) {
+                    if (itemEntity == null && item != null) {
                         final var newLocation = cachedLocation.clone().add(0, itemPosition == ItemPosition.BELOW
                                 ? (-lines.size() * .25 - .5)
                                 : (lines.size() * .25), 0);
@@ -347,7 +345,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         viewers.forEach(viewer -> update(viewer, packets.stream().map(f -> f.apply(viewer)).flatMap(Collection::stream).collect(Collectors.toList()), true));
     }
 
-    private SClientboundSetEquipmentPacket getEquipmentPacket(HologramPiece entity, Item item) {
+    private SClientboundSetEquipmentPacket getEquipmentPacket(@NotNull HologramPiece entity, @NotNull Item item) {
         var packet = new SClientboundSetEquipmentPacket()
                 .entityId(entity.getId());
         packet.slots().put(EquipmentSlotHolder.of("HEAD"), item);
@@ -375,17 +373,17 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         return destroyPacket;
     }
 
-    private List<AbstractPacket> getAllSpawnPackets(PlayerWrapper viewer) {
-        final var packets = new LinkedList<AbstractPacket>();
+    private @NotNull List<@NotNull AbstractPacket> getAllSpawnPackets(@NotNull PlayerWrapper viewer) {
+        final var packets = new ArrayList<AbstractPacket>();
         entitiesOnLines.forEach((line, entity) -> packets.addAll(entity.getSpawnPackets(viewer)));
-        if (itemEntity != null) {
+        if (itemEntity != null && item != null) {
             packets.addAll(itemEntity.getSpawnPackets());
             packets.add(getEquipmentPacket(itemEntity, item));
         }
         return packets;
     }
 
-    private Vector3Df checkAndAdd(Vector3Df in) {
+    private @NotNull Vector3Df checkAndAdd(@NotNull Vector3Df in) {
         final var toReturn = new Vector3Df();
         switch (rotationMode) {
             case X:

@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.block;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
@@ -28,9 +29,9 @@ import java.util.Collection;
 @LimitedVersionSupport("Bukkit >= 1.13.2")
 public interface SBlockDropItemEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    PlayerWrapper player();
+    @NotNull PlayerWrapper player();
 
-    BlockStateHolder state();
+    @NotNull BlockStateHolder state();
 
-    Collection<EntityItem> items();
+    @NotNull Collection<@NotNull EntityItem> items();
 }

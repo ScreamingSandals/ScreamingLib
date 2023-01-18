@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.chunk;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
@@ -25,7 +26,7 @@ import org.screamingsandals.lib.world.chunk.ChunkHolder;
  */
 public interface SChunkUnloadEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    ChunkHolder chunk();
+    @NotNull ChunkHolder chunk();
 
     boolean saveChunk();
 

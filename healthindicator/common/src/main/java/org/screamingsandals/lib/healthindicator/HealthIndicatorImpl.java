@@ -21,6 +21,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.SClientboundSetDisplayObjectivePacket;
@@ -40,27 +41,27 @@ import java.util.*;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> implements HealthIndicator {
-    private final String underNameTagKey;
-    private final String tabListKey;
-    private final ConcurrentSkipListMap<String, Integer> values = new ConcurrentSkipListMap<>();
-    protected final List<PlayerWrapper> trackedPlayers = new LinkedList<>();
+    private final @NotNull String underNameTagKey;
+    private final @NotNull String tabListKey;
+    private final @NotNull ConcurrentSkipListMap<@NotNull String, Integer> values = new ConcurrentSkipListMap<>();
+    protected final @NotNull List<@NotNull PlayerWrapper> trackedPlayers = new ArrayList<>();
     @Accessors(chain = true, fluent = true)
     @Getter
     @Setter
-    protected DataContainer data;
+    protected @Nullable DataContainer data;
     protected volatile boolean ready;
     protected volatile boolean healthInTabList;
-    protected volatile Component symbol = Component.empty();
-    protected TaskerTask task;
+    protected volatile @NotNull Component symbol = Component.empty();
+    protected @Nullable TaskerTask task;
 
-    public HealthIndicatorImpl(UUID uuid) {
+    public HealthIndicatorImpl(@NotNull UUID uuid) {
         super(uuid);
         this.underNameTagKey = generateObjectiveKey();
         this.tabListKey = generateObjectiveKey();
     }
 
     @Override
-    public HealthIndicator addTrackedPlayer(PlayerWrapper player) {
+    public @NotNull HealthIndicator addTrackedPlayer(@NotNull PlayerWrapper player) {
         if (!trackedPlayers.contains(player)) {
             trackedPlayers.add(player);
             if (visible && ready && task == null) {
@@ -71,7 +72,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     }
 
     @Override
-    public HealthIndicator removeTrackedPlayer(PlayerWrapper player) {
+    public @NotNull HealthIndicator removeTrackedPlayer(@NotNull PlayerWrapper player) {
         if (trackedPlayers.contains(player)) {
             trackedPlayers.remove(player);
             if (visible && ready && task == null) {
@@ -82,18 +83,18 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     }
 
     @Override
-    public HealthIndicator symbol(ComponentLike symbol) {
+    public @NotNull HealthIndicator symbol(@NotNull ComponentLike symbol) {
         return symbol(symbol.asComponent());
     }
 
     @Override
-    public HealthIndicator showHealthInTabList(boolean flag) {
+    public @NotNull HealthIndicator showHealthInTabList(boolean flag) {
         this.healthInTabList = flag;
         return this;
     }
 
     @Override
-    public HealthIndicator symbol(Component symbol) {
+    public @NotNull HealthIndicator symbol(@NotNull Component symbol) {
         this.symbol = symbol;
         if (visible && ready) {
             updateSymbol0();
@@ -184,7 +185,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     }
 
     @Override
-    public HealthIndicator startUpdateTask(long time, TaskerTime unit) {
+    public @NotNull HealthIndicator startUpdateTask(long time, @NotNull TaskerTime unit) {
         if (task != null) {
             task.cancel();
         }
@@ -253,37 +254,37 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
         }
     }
 
-    private SClientboundSetObjectivePacket getNotFinalObjectivePacket() {
+    private @NotNull SClientboundSetObjectivePacket getNotFinalObjectivePacket() {
         return new SClientboundSetObjectivePacket()
                 .title(symbol.asComponent())
                 .criteriaType(SClientboundSetObjectivePacket.Type.INTEGER);
     }
 
-    private SClientboundSetObjectivePacket getCreateObjectivePacket() {
+    private @NotNull SClientboundSetObjectivePacket getCreateObjectivePacket() {
         var packet = getNotFinalObjectivePacket();
         packet.mode(SClientboundSetObjectivePacket.Mode.CREATE);
         return packet;
     }
 
-    private SClientboundSetObjectivePacket getUpdateObjectivePacket() {
+    private @NotNull SClientboundSetObjectivePacket getUpdateObjectivePacket() {
         var packet = getNotFinalObjectivePacket();
         packet.mode(SClientboundSetObjectivePacket.Mode.UPDATE);
         return packet;
     }
 
-    private SClientboundSetObjectivePacket getDestroyObjectivePacket() {
+    private @NotNull SClientboundSetObjectivePacket getDestroyObjectivePacket() {
         return new SClientboundSetObjectivePacket()
                 .mode(SClientboundSetObjectivePacket.Mode.DESTROY);
     }
 
-    private SClientboundSetScorePacket createScorePacket(String key, int score) {
+    private @NotNull SClientboundSetScorePacket createScorePacket(@NotNull String key, int score) {
         return new SClientboundSetScorePacket()
                 .entityName(key)
                 .score(score)
                 .action(SClientboundSetScorePacket.ScoreboardAction.CHANGE);
     }
 
-    private SClientboundSetScorePacket getDestroyScorePacket(String key) {
+    private @NotNull SClientboundSetScorePacket getDestroyScorePacket(@NotNull String key) {
         return new SClientboundSetScorePacket()
                 .entityName(key)
                 .action(SClientboundSetScorePacket.ScoreboardAction.REMOVE);

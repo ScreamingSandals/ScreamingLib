@@ -23,6 +23,7 @@ import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
@@ -42,15 +43,15 @@ public class SBukkitBlockDispenseEvent implements SBlockDispenseEvent, BukkitCan
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockDispenseEvent event;
+    private final @NotNull BlockDispenseEvent event;
 
     // Internal cache
-    private BlockHolder block;
-    private EntityLiving receiver;
+    private @Nullable BlockHolder block;
+    private @Nullable EntityLiving receiver;
     private boolean receiverCached;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -58,22 +59,22 @@ public class SBukkitBlockDispenseEvent implements SBlockDispenseEvent, BukkitCan
     }
 
     @Override
-    public Item item() {
+    public @NotNull Item item() {
         return new BukkitItem(event.getItem());
     }
 
     @Override
-    public void item(Item item) {
+    public void item(@NotNull Item item) {
         event.setItem(item.as(ItemStack.class));
     }
 
     @Override
-    public Vector3D velocity() {
+    public @NotNull Vector3D velocity() {
         return new Vector3D(event.getVelocity().getX(), event.getVelocity().getY(), event.getVelocity().getZ());
     }
 
     @Override
-    public void velocity(Vector3D velocity) {
+    public void velocity(@NotNull Vector3D velocity) {
         event.setVelocity(new Vector(velocity.getX(), velocity.getY(), velocity.getZ()));
     }
 

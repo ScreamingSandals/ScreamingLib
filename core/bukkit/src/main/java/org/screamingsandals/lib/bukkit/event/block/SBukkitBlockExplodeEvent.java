@@ -21,6 +21,8 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockExplodeEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -37,14 +39,14 @@ public class SBukkitBlockExplodeEvent implements SBlockExplodeEvent, BukkitCance
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockExplodeEvent event;
+    private final @NotNull BlockExplodeEvent event;
 
     // Internal cache
-    private BlockHolder block;
-    private Collection<BlockHolder> destroyed;
+    private @Nullable BlockHolder block;
+    private @Nullable Collection<@NotNull BlockHolder> destroyed;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -52,7 +54,7 @@ public class SBukkitBlockExplodeEvent implements SBlockExplodeEvent, BukkitCance
     }
 
     @Override
-    public Collection<BlockHolder> destroyedBlocks() {
+    public @NotNull Collection<@NotNull BlockHolder> destroyedBlocks() {
         if (destroyed == null) {
             destroyed = new CollectionLinkedToCollection<>(event.blockList(), o -> o.as(Block.class), BlockMapper::wrapBlock);
         }

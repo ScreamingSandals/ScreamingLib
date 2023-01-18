@@ -50,10 +50,10 @@ import org.screamingsandals.lib.spectator.Component;
 
 public final class Pagination<T> {
 
-    private final BiFunction<Integer, Integer, List<Component>> headerRenderer;
-    private final BiFunction<T, Boolean, Component> rowRenderer;
-    private final BiFunction<Integer, Integer, Component> footerRenderer;
-    private final BiFunction<Integer, Integer, Component> outOfRangeRenderer;
+    private final @NotNull BiFunction<Integer, Integer, List<Component>> headerRenderer;
+    private final @NotNull BiFunction<T, Boolean, Component> rowRenderer;
+    private final @NotNull BiFunction<Integer, Integer, Component> footerRenderer;
+    private final @NotNull BiFunction<Integer, Integer, Component> outOfRangeRenderer;
 
     Pagination(
             final @NotNull BiFunction<Integer, Integer, List<Component>> headerRenderer,

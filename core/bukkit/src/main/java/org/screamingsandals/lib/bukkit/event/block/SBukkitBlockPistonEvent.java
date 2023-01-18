@@ -20,6 +20,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.block.BlockPistonEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -34,14 +36,14 @@ public class SBukkitBlockPistonEvent implements SBlockPistonEvent, BukkitCancell
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockPistonEvent event;
+    private final @NotNull BlockPistonEvent event;
 
     // Internal cache
-    private BlockHolder block;
-    private BlockFace direction;
+    private @Nullable BlockHolder block;
+    private @Nullable BlockFace direction;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -54,7 +56,7 @@ public class SBukkitBlockPistonEvent implements SBlockPistonEvent, BukkitCancell
     }
 
     @Override
-    public BlockFace direction() {
+    public @NotNull BlockFace direction() {
         if (direction == null) {
             direction = BlockFace.valueOf(event.getDirection().name());
         }

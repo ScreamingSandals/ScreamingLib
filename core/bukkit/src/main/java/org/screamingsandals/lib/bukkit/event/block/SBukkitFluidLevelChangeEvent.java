@@ -20,6 +20,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.block.FluidLevelChangeEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.block.BlockTypeHolder;
@@ -34,14 +36,14 @@ public class SBukkitFluidLevelChangeEvent implements SFluidLevelChangeEvent, Buk
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final FluidLevelChangeEvent event;
+    private final @NotNull FluidLevelChangeEvent event;
 
     // Internal cache
-    private BlockHolder block;
-    private BlockTypeHolder blockType;
+    private @Nullable BlockHolder block;
+    private @Nullable BlockTypeHolder blockType;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -49,7 +51,7 @@ public class SBukkitFluidLevelChangeEvent implements SFluidLevelChangeEvent, Buk
     }
 
     @Override
-    public BlockTypeHolder newBlockData() {
+    public @NotNull BlockTypeHolder newBlockData() {
         if (blockType == null) {
             blockType = BlockTypeHolder.of(event.getNewData());
         }

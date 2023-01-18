@@ -18,6 +18,8 @@ package org.screamingsandals.lib.bukkit.event.block;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.block.SBlockPistonExtendEvent;
@@ -28,14 +30,14 @@ import java.util.Collection;
 public class SBukkitBlockPistonExtendEvent extends SBukkitBlockPistonEvent implements SBlockPistonExtendEvent {
 
     // Internal cache
-    private Collection<BlockHolder> pushedBlocks;
+    private @Nullable Collection<@NotNull BlockHolder> pushedBlocks;
 
-    public SBukkitBlockPistonExtendEvent(BlockPistonExtendEvent event) {
+    public SBukkitBlockPistonExtendEvent(@NotNull BlockPistonExtendEvent event) {
         super(event);
     }
 
     @Override
-    public Collection<BlockHolder> pushedBlocks() {
+    public @NotNull Collection<@NotNull BlockHolder> pushedBlocks() {
         if (pushedBlocks == null) {
             pushedBlocks = new CollectionLinkedToCollection<>(((BlockPistonExtendEvent) event()).getBlocks(), o -> o.as(Block.class), BlockMapper::wrapBlock);
         }
