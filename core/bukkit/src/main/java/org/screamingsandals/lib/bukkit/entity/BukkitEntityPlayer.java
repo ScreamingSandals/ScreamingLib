@@ -406,6 +406,51 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
         return Server.getProtocolVersion();
     }
 
+    @Override
+    public @Nullable LocationHolder getBedLocation() {
+        return LocationMapper.resolve(((Player) wrappedObject).getBedSpawnLocation());
+    }
+
+    @Override
+    public long getFirstPlayed() {
+        return ((Player) wrappedObject).getFirstPlayed();
+    }
+
+    @Override
+    public long getLastPlayed() {
+        return ((Player) wrappedObject).getLastPlayed();
+    }
+
+    @Override
+    public boolean isBanned() {
+        return ((Player) wrappedObject).isBanned();
+    }
+
+    @Override
+    public boolean isWhitelisted() {
+        return ((Player) wrappedObject).isWhitelisted();
+    }
+
+    @Override
+    public void setWhitelisted(boolean whitelisted) {
+        ((Player) wrappedObject).setWhitelisted(whitelisted);
+    }
+
+    @Override
+    public boolean isOp() {
+        return wrappedObject.isOp();
+    }
+
+    @Override
+    public void setOp(boolean op) {
+        wrappedObject.setOp(op);
+    }
+
+    @Override
+    public boolean isOnline() {
+        return ((Player) wrappedObject).isOnline();
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -47,10 +47,6 @@ public abstract class PlayerMapper {
 
     @OnPostConstruct
     public void postConstruct() {
-        offlinePlayerConverter
-                .registerP2W(UUID.class, uuid -> new FinalOfflinePlayerWrapper(uuid, null))
-                .registerW2P(UUID.class, OfflinePlayerWrapper::getUuid)
-                .registerP2W(OfflinePlayerWrapper.class, e -> e);
         handConverter
                 .registerP2W(PlayerWrapper.Hand.class, e -> e);
     }
@@ -115,13 +111,6 @@ public abstract class PlayerMapper {
         return playerMapper.offlinePlayerConverter.convert(player, type);
     }
 
-    public static @Nullable LocationHolder getBedLocation(@NotNull OfflinePlayerWrapper wrapper) {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return playerMapper.getBedLocation0(wrapper);
-    }
-
     @Contract("null -> null")
     public static @Nullable PlayerWrapper getPlayer(@Nullable String name) {
         if (playerMapper == null) {
@@ -180,62 +169,6 @@ public abstract class PlayerMapper {
         return playerMapper.isPermissionSet0(wrapper, permission);
     }
 
-    public static boolean isOp(@NotNull Operator wrapper) {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return playerMapper.isOp0(wrapper);
-    }
-
-    public static void setOp(@NotNull Operator wrapper, boolean op) {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        playerMapper.setOp0(wrapper, op);
-    }
-
-    public static long getFirstPlayed(@NotNull OfflinePlayerWrapper wrapper) {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return playerMapper.getFirstPlayed0(wrapper);
-    }
-
-    public static long getLastPlayed(@NotNull OfflinePlayerWrapper wrapper) {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return playerMapper.getLastPlayed0(wrapper);
-    }
-
-    public static boolean isBanned(@NotNull OfflinePlayerWrapper wrapper) {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return playerMapper.isBanned0(wrapper);
-    }
-
-    public static boolean isWhitelisted(@NotNull OfflinePlayerWrapper wrapper) {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return playerMapper.isWhitelisted0(wrapper);
-    }
-
-    public static boolean isOnline(@NotNull OfflinePlayerWrapper wrapper) {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return playerMapper.isOnline0(wrapper);
-    }
-
-    public static void setWhitelisted(@NotNull OfflinePlayerWrapper wrapper, boolean whitelisted) {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        playerMapper.setWhitelisted0(wrapper, whitelisted);
-    }
-
     public static @NotNull OfflinePlayerWrapper getOfflinePlayer(@NotNull UUID uuid) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
@@ -276,27 +209,9 @@ public abstract class PlayerMapper {
 
     public abstract @NotNull SenderWrapper getConsoleSender0();
 
-    public abstract @Nullable LocationHolder getBedLocation0(@NotNull OfflinePlayerWrapper playerWrapper);
-
     public abstract boolean hasPermission0(@NotNull CommandSenderWrapper wrapper, @NotNull Permission permission);
 
     public abstract boolean isPermissionSet0(@NotNull CommandSenderWrapper wrapper, @NotNull Permission permission);
-
-    public abstract boolean isOp0(@NotNull Operator wrapper);
-
-    public abstract void setOp0(@NotNull Operator wrapper, boolean op);
-
-    public abstract long getFirstPlayed0(@NotNull OfflinePlayerWrapper playerWrapper);
-
-    public abstract long getLastPlayed0(@NotNull OfflinePlayerWrapper playerWrapper);
-
-    public abstract boolean isBanned0(@NotNull OfflinePlayerWrapper playerWrapper);
-
-    public abstract boolean isWhitelisted0(@NotNull OfflinePlayerWrapper playerWrapper);
-
-    public abstract boolean isOnline0(@NotNull OfflinePlayerWrapper playerWrapper);
-
-    public abstract void setWhitelisted0(@NotNull OfflinePlayerWrapper playerWrapper, boolean whitelisted);
 
     public abstract @NotNull OfflinePlayerWrapper getOfflinePlayer0(@NotNull UUID uuid);
 

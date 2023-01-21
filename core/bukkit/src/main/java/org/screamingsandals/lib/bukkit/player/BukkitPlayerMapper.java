@@ -26,12 +26,9 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.player.*;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
-import org.screamingsandals.lib.sender.Operator;
 import org.screamingsandals.lib.sender.permissions.*;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapper;
 import java.util.*;
 
 @Service
@@ -39,10 +36,8 @@ import java.util.*;
 public class BukkitPlayerMapper extends PlayerMapper {
     public BukkitPlayerMapper() {
         offlinePlayerConverter
-                .registerP2W(OfflinePlayer.class, offlinePlayer -> new FinalOfflinePlayerWrapper(offlinePlayer.getUniqueId(), offlinePlayer.getName()))
-                .registerP2W(PlayerWrapper.class, playerWrapper -> new FinalOfflinePlayerWrapper(playerWrapper.getUuid(), playerWrapper.getName()))
-                .registerW2P(OfflinePlayer.class, offlinePlayerWrapper -> Bukkit.getOfflinePlayer(offlinePlayerWrapper.getUuid()))
-                .registerW2P(PlayerWrapper.class, offlinePlayerWrapper -> getPlayer0(offlinePlayerWrapper.getUuid()));
+                .registerP2W(OfflinePlayer.class, BukkitOfflinePlayerWrapper::new)
+                .registerP2W(PlayerWrapper.class, playerWrapper -> new BukkitOfflinePlayerWrapper(Bukkit.getOfflinePlayer(playerWrapper.getUuid())));
 
         handConverter
                 .registerW2P(EquipmentSlot.class, wrapper -> {
@@ -91,13 +86,8 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public @Nullable LocationHolder getBedLocation0(@NotNull OfflinePlayerWrapper playerWrapper) {
-        return LocationMapper.resolve(playerWrapper.as(OfflinePlayer.class).getBedSpawnLocation());
-    }
-
-    @Override
     public boolean hasPermission0(@NotNull CommandSenderWrapper wrapper, @NotNull Permission permission) {
-        if (isOp0(wrapper)) {
+        if (wrapper.isOp()) {
             return true;
         }
 
@@ -126,52 +116,12 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public boolean isOp0(@NotNull Operator wrapper) {
-        return wrapper.as(CommandSender.class).isOp();
-    }
-
-    @Override
-    public void setOp0(@NotNull Operator wrapper, boolean op) {
-        wrapper.as(CommandSender.class).setOp(op);
-    }
-
-    @Override
-    public long getFirstPlayed0(@NotNull OfflinePlayerWrapper playerWrapper) {
-        return playerWrapper.as(OfflinePlayer.class).getFirstPlayed();
-    }
-
-    @Override
-    public long getLastPlayed0(@NotNull OfflinePlayerWrapper playerWrapper) {
-        return playerWrapper.as(OfflinePlayer.class).getLastPlayed();
-    }
-
-    @Override
-    public boolean isBanned0(@NotNull OfflinePlayerWrapper playerWrapper) {
-        return playerWrapper.as(OfflinePlayer.class).isBanned();
-    }
-
-    @Override
-    public boolean isWhitelisted0(@NotNull OfflinePlayerWrapper playerWrapper) {
-        return playerWrapper.as(OfflinePlayer.class).isWhitelisted();
-    }
-
-    @Override
-    public boolean isOnline0(@NotNull OfflinePlayerWrapper playerWrapper) {
-        return playerWrapper.as(OfflinePlayer.class).isOnline();
-    }
-
-    @Override
-    public void setWhitelisted0(@NotNull OfflinePlayerWrapper playerWrapper, boolean whitelisted) {
-        playerWrapper.as(OfflinePlayer.class).setWhitelisted(whitelisted);
-    }
-
-    @Override
     public @NotNull OfflinePlayerWrapper getOfflinePlayer0(@NotNull UUID uuid) {
         var offPlayer = Bukkit.getOfflinePlayer(uuid);
         if (offPlayer instanceof Player) {
             return new BukkitEntityPlayer((Player) offPlayer);
         }
-        return offlinePlayerConverter.convert(offPlayer);
+        return new BukkitOfflinePlayerWrapper(offPlayer);
     }
 
     @Override
@@ -180,7 +130,7 @@ public class BukkitPlayerMapper extends PlayerMapper {
         if (offPlayer instanceof Player) {
             return new BukkitEntityPlayer((Player) offPlayer);
         }
-        return offlinePlayerConverter.convertNullable(offPlayer);
+        return new BukkitOfflinePlayerWrapper(offPlayer);
     }
 
     @Override
