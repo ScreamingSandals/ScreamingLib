@@ -47,10 +47,12 @@ import java.util.stream.Collectors;
 public class BukkitServer extends Server {
     private final @NotNull Plugin plugin;
 
-    private final @NotNull Map<@NotNull String, String> UNSAFE_SOUND_CACHE = new HashMap<>();
+    private static final @NotNull Map<@NotNull String, String> UNSAFE_SOUND_CACHE = new HashMap<>();
 
     {
         try {
+            UNSAFE_SOUND_CACHE.clear();
+
             if (Reflect.hasMethod(Sound.class, "getKey")) {
                 for (var v : Sound.values()) {
                     if ("minecraft".equals(v.getKey().getNamespace())) {
@@ -163,13 +165,9 @@ public class BukkitServer extends Server {
                 .as(Integer.class);
     }
 
-    @Override
-    public @NotNull String UNSAFE_normalizeSoundKey0(@NotNull String s) {
-        if (UNSAFE_SOUND_CACHE.containsKey(s.toUpperCase(Locale.ROOT))) {
-            // TODO: map legacy <-> flattening conversion
-            return UNSAFE_SOUND_CACHE.get(s.toUpperCase(Locale.ROOT));
-        }
-        return super.UNSAFE_normalizeSoundKey0(s);
+    public static @NotNull String UNSAFE_normalizeSoundKey0(@NotNull String s) {
+        // TODO: map legacy <-> flattening conversion
+        return UNSAFE_SOUND_CACHE.getOrDefault(s.toUpperCase(Locale.ROOT), s);
     }
 
     @Override

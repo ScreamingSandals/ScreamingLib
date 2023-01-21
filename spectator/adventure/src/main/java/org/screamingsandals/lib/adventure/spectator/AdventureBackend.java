@@ -56,6 +56,7 @@ import org.screamingsandals.lib.utils.BidirectionalConverter;
 
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Function;
 
 public class AdventureBackend implements SpectatorBackend {
     @Getter
@@ -92,6 +93,8 @@ public class AdventureBackend implements SpectatorBackend {
     protected static @NotNull SNBTSerializer snbtSerializer = SNBTSerializer.builder()
             .shouldSaveLongArraysDirectly(false)
             .build();
+    @Getter
+    protected static @NotNull Function<String, String> soundKeyNormalizer = s -> s;
 
     static {
         ComponentSerializer<net.kyori.adventure.text.Component, TextComponent, String> plainText;

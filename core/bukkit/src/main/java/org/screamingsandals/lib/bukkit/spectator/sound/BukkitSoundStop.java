@@ -21,8 +21,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.experimental.Tolerate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bukkit.BukkitServer;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
@@ -68,6 +70,18 @@ public class BukkitSoundStop implements SoundStop {
     public static class BukkitSoundStartBuilder implements Builder {
         private @Nullable NamespacedMappingKey soundKey;
         private @Nullable SoundSource source;
+
+        @Tolerate
+        @Override
+        public @NotNull Builder soundKey(@Nullable String key) {
+            var k = NamespacedMappingKey.of(key);
+            if ("minecraft".equals(k.namespace())) {
+                this.soundKey = NamespacedMappingKey.of("minecraft", BukkitServer.UNSAFE_normalizeSoundKey0(k.value()));
+            } else {
+                this.soundKey = k;
+            }
+            return this;
+        }
 
         @Override
         public @NotNull SoundStop build() {

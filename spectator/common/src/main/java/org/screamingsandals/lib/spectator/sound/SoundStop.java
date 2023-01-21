@@ -22,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 public interface SoundStop extends Wrapper, RawValueHolder {
@@ -36,12 +37,24 @@ public interface SoundStop extends Wrapper, RawValueHolder {
     }
 
     @Contract(value = "_ -> new", pure = true)
+    @CustomAutocompletion(CustomAutocompletion.Type.SOUND)
+    static @NotNull SoundStop minecraftNamed(@Nullable String soundKey) {
+        return builder().soundKey(soundKey).build();
+    }
+
+    @Contract(value = "_ -> new", pure = true)
     static @NotNull SoundStop sourced(@Nullable SoundSource source) {
         return builder().source(source).build();
     }
 
     @Contract(value = "_, _ -> new", pure = true)
     static @NotNull SoundStop namedSourced(@Nullable NamespacedMappingKey soundKey, @Nullable SoundSource source) {
+        return builder().soundKey(soundKey).source(source).build();
+    }
+
+    @Contract(value = "_, _ -> new", pure = true)
+    @CustomAutocompletion(CustomAutocompletion.Type.SOUND)
+    static @NotNull SoundStop minecraftNamedSourced(@Nullable String soundKey, @Nullable SoundSource source) {
         return builder().soundKey(soundKey).source(source).build();
     }
 
@@ -66,6 +79,12 @@ public interface SoundStop extends Wrapper, RawValueHolder {
     interface Builder {
         @Contract("_ -> this")
         @NotNull Builder soundKey(@Nullable NamespacedMappingKey key);
+
+        @Contract("_ -> this")
+        @CustomAutocompletion(CustomAutocompletion.Type.SOUND)
+        default @NotNull Builder soundKey(@Nullable String key) {
+            return soundKey(key != null ? NamespacedMappingKey.of(key) : null);
+        }
 
         @Contract("_ -> this")
         @NotNull Builder source(@Nullable SoundSource source);

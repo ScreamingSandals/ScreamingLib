@@ -126,12 +126,6 @@ public abstract class Server {
         server.runSynchronously0(task);
     }
 
-    @ApiStatus.Internal
-    @ApiStatus.Experimental
-    public static @NotNull String UNSAFE_normalizeSoundKey(@NotNull String s) {
-        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").UNSAFE_normalizeSoundKey0(s);
-    }
-
     public static void shutdown() {
         Preconditions.checkNotNull(server, "Server has not yet been initialized!").shutdown0();
     }
@@ -191,10 +185,6 @@ public abstract class Server {
     public abstract @NotNull ProxyType getProxyType0();
 
     public abstract @NotNull Integer getProtocolVersion0();
-
-    public @NotNull String UNSAFE_normalizeSoundKey0(@NotNull String s) {
-        return s;
-    }
 
     @ApiStatus.OverrideOnly
     public void UNSAFE_earlyInitializeLegacySupportAndIgnoreItsUsage0() {

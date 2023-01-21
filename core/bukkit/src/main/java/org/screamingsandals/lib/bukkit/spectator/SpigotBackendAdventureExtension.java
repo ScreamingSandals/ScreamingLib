@@ -36,6 +36,7 @@ import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventureAdapter;
 import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventureConsoleAdapter;
 import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventurePlayerAdapter;
+import org.screamingsandals.lib.bukkit.BukkitServer;
 import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
@@ -51,6 +52,7 @@ class SpigotBackendAdventureExtension {
         var adventureBackend = new AdventureBackend() {
             {
                 snbtSerializer = snbtSerializerLocal;
+                soundKeyNormalizer = BukkitServer::UNSAFE_normalizeSoundKey0;
             }
         };
 

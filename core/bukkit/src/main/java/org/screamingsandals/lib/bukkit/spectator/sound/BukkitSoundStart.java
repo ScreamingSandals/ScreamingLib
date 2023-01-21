@@ -21,8 +21,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.experimental.Tolerate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bukkit.BukkitServer;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -48,7 +50,7 @@ public class BukkitSoundStart implements SoundStart {
 
     @Override
     public @NotNull Object raw() {
-        return null;
+        throw new UnsupportedOperationException("Bukkit doesn't have any class for custom sounds, just methods");
     }
 
     @Override
@@ -95,6 +97,18 @@ public class BukkitSoundStart implements SoundStart {
         private float volume = 1;
         private float pitch = 1;
         private @Nullable Long seed;
+
+        @Tolerate
+        @Override
+        public @NotNull Builder soundKey(@NotNull String key) {
+            var k = NamespacedMappingKey.of(key);
+            if ("minecraft".equals(k.namespace())) {
+                this.soundKey = NamespacedMappingKey.of("minecraft", BukkitServer.UNSAFE_normalizeSoundKey0(k.value()));
+            } else {
+                this.soundKey = k;
+            }
+            return this;
+        }
 
         @Override
         public @NotNull SoundStart build() {

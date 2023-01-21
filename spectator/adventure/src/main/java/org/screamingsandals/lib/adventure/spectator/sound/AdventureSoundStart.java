@@ -20,10 +20,12 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.experimental.Tolerate;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -122,6 +124,18 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
         private float volume = 1;
         private float pitch = 1;
         private @Nullable Long seed;
+
+        @Tolerate
+        @Override
+        public @NotNull Builder soundKey(@NotNull String key) {
+            var k = NamespacedMappingKey.of(key);
+            if ("minecraft".equals(k.namespace())) {
+                this.soundKey = NamespacedMappingKey.of("minecraft", AdventureBackend.getSoundKeyNormalizer().apply(k.value()));
+            } else {
+                this.soundKey = k;
+            }
+            return this;
+        }
 
         @SuppressWarnings("PatternValidation")
         @Override
