@@ -33,10 +33,10 @@ import java.util.UUID;
 @AbstractService
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public abstract class WorldMapper {
-    protected final BidirectionalConverter<WorldHolder> converter = BidirectionalConverter.<WorldHolder>build()
+    protected final @NotNull BidirectionalConverter<WorldHolder> converter = BidirectionalConverter.<WorldHolder>build()
             .registerP2W(WorldHolder.class, e -> e);
 
-    private static WorldMapper mapping;
+    private static @Nullable WorldMapper mapping;
 
     /**
      * Constructs the location mapper.
@@ -84,7 +84,7 @@ public abstract class WorldMapper {
      * @return the world holder converted to the supplied type
      * @throws UnsupportedOperationException when the wrapper could not be converted to its new type
      */
-    public static <T> T convert(WorldHolder holder, Class<T> newType) {
+    public static <T> T convert(@NotNull WorldHolder holder, @NotNull Class<T> newType) {
         if (mapping == null) {
             throw new UnsupportedOperationException("WorldMapper is not initialized yet.");
         }

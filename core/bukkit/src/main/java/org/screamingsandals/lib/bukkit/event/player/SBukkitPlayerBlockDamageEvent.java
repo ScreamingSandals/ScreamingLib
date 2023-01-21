@@ -24,6 +24,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.block.BlockDamageEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -41,12 +42,12 @@ public class SBukkitPlayerBlockDamageEvent implements SPlayerBlockDamageEvent, B
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockDamageEvent event;
+    private final @NotNull BlockDamageEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private BlockHolder block;
-    private Item itemInHand;
+    private @Nullable PlayerWrapper player;
+    private @Nullable BlockHolder block;
+    private @Nullable Item itemInHand;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -57,7 +58,7 @@ public class SBukkitPlayerBlockDamageEvent implements SPlayerBlockDamageEvent, B
     }
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -65,7 +66,7 @@ public class SBukkitPlayerBlockDamageEvent implements SPlayerBlockDamageEvent, B
     }
 
     @Override
-    public Item itemInHand() {
+    public @NotNull Item itemInHand() {
         if (itemInHand == null) {
             itemInHand = new BukkitItem(event.getItemInHand());
         }

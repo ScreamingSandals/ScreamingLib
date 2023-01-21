@@ -37,9 +37,9 @@ import java.util.List;
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
 public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHolder> {
-    private static EntityTypeMapping entityTypeMapping;
+    private static @Nullable EntityTypeMapping entityTypeMapping;
 
-    protected final BidirectionalConverter<EntityTypeHolder> entityTypeConverter = BidirectionalConverter.<EntityTypeHolder>build()
+    protected final @NotNull BidirectionalConverter<EntityTypeHolder> entityTypeConverter = BidirectionalConverter.<EntityTypeHolder>build()
             .registerP2W(EntityTypeHolder.class, e -> e)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {

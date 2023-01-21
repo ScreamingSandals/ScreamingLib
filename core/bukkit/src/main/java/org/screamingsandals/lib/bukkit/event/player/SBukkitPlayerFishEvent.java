@@ -40,14 +40,14 @@ public class SBukkitPlayerFishEvent implements SPlayerFishEvent, BukkitCancellab
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerFishEvent event;
+    private final @NotNull PlayerFishEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private EntityBasic entity;
+    private @Nullable PlayerWrapper player;
+    private @Nullable EntityBasic entity;
     private boolean entityCached;
-    private State state;
-    private EntityBasic hookEntity;
+    private @Nullable State state;
+    private @Nullable EntityBasic hookEntity;
 
     @Override
     public @NotNull PlayerWrapper player() {

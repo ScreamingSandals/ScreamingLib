@@ -16,13 +16,14 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.world.LocationHolder;
 
 public interface SPlayerRespawnEvent extends SEvent, SPlayerEvent, PlatformEventWrapper {
 
-    LocationHolder location();
+    @NotNull LocationHolder location();
 
-    void location(LocationHolder location);
+    void location(@NotNull LocationHolder location);
 }

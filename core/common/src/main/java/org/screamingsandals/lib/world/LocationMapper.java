@@ -33,11 +33,11 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 @AbstractService
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public abstract class LocationMapper {
-    protected final BidirectionalConverter<LocationHolder> converter = BidirectionalConverter.<LocationHolder>build()
+    protected final @NotNull BidirectionalConverter<LocationHolder> converter = BidirectionalConverter.<LocationHolder>build()
             .registerP2W(LocationHolder.class, e -> e)
             .registerW2P(BlockHolder.class, BlockMapper::resolve);
 
-    private static LocationMapper mapping;
+    private static @Nullable LocationMapper mapping;
 
     /**
      * Constructs the location mapper.
@@ -85,7 +85,7 @@ public abstract class LocationMapper {
      * @return the location holder converted to the supplied type
      * @throws UnsupportedOperationException when the wrapper could not be converted to its new type
      */
-    public static <T> T convert(LocationHolder holder, Class<T> newType) {
+    public static <T> T convert(@NotNull LocationHolder holder, @NotNull Class<T> newType) {
         if (mapping == null) {
             throw new UnsupportedOperationException("LocationMapper is not initialized yet.");
         }

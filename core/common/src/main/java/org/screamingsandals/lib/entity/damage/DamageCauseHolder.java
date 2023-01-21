@@ -19,6 +19,7 @@ package org.screamingsandals.lib.entity.damage;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -29,23 +30,15 @@ import java.util.List;
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface DamageCauseHolder extends ComparableWrapper, RawValueHolder {
 
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
-
-    String platformName();
+    @NotNull String platformName();
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
-    boolean is(Object damageCause);
+    boolean is(@Nullable Object damageCause);
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
-    boolean is(Object... damageCauses);
+    boolean is(@Nullable Object @NotNull... damageCauses);
 
     @CustomAutocompletion(CustomAutocompletion.Type.DAMAGE_CAUSE)
     static @NotNull DamageCauseHolder of(@NotNull Object damageCause) {
@@ -63,7 +56,7 @@ public interface DamageCauseHolder extends ComparableWrapper, RawValueHolder {
         return DamageCauseMapping.resolve(damageCause);
     }
 
-    static @NotNull List<@NotNull DamageCauseHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull DamageCauseHolder> all() {
         return DamageCauseMapping.getValues();
     }
 }

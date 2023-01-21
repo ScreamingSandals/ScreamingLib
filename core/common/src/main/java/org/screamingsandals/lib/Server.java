@@ -19,6 +19,7 @@ package org.screamingsandals.lib;
 import io.netty.channel.ChannelFuture;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.ProxyType;
@@ -35,8 +36,8 @@ import java.util.List;
         replaceRule = "{basePackage}.{platform}.{Platform}{className}"
 )
 public abstract class Server {
-    private static Server server;
-    private static Integer PROTOCOL_VERSION;
+    private static @Nullable Server server;
+    private static @Nullable Integer PROTOCOL_VERSION;
 
     @ApiStatus.Internal
     public Server() {
@@ -58,11 +59,11 @@ public abstract class Server {
      *
      * @return the version string (1.17.1 for example)
      */
-    public static String getVersion() {
+    public static @NotNull String getVersion() {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getVersion0();
     }
 
-    public static String getServerSoftwareVersion() {
+    public static @NotNull String getServerSoftwareVersion() {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getServerSoftwareVersion0();
     }
 
@@ -94,11 +95,11 @@ public abstract class Server {
      *
      * @return list of players currently connected to the server
      */
-    public static List<PlayerWrapper> getConnectedPlayers() {
+    public static @NotNull List<@NotNull PlayerWrapper> getConnectedPlayers() {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getConnectedPlayers0();
     }
 
-    public static List<WorldHolder> getWorlds() {
+    public static @NotNull List<@NotNull WorldHolder> getWorlds() {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getWorlds0();
     }
 
@@ -127,7 +128,7 @@ public abstract class Server {
 
     @ApiStatus.Internal
     @ApiStatus.Experimental
-    public static String UNSAFE_normalizeSoundKey(String s) {
+    public static @NotNull String UNSAFE_normalizeSoundKey(@NotNull String s) {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").UNSAFE_normalizeSoundKey0(s);
     }
 
@@ -135,11 +136,11 @@ public abstract class Server {
         Preconditions.checkNotNull(server, "Server has not yet been initialized!").shutdown0();
     }
 
-    public static ProxyType getProxyType() {
+    public static @NotNull ProxyType getProxyType() {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getProxyType0();
     }
 
-    public static Integer getProtocolVersion() {
+    public static @NotNull Integer getProtocolVersion() {
         if (PROTOCOL_VERSION == null) {
             PROTOCOL_VERSION = Preconditions.checkNotNull(server, "Server has not yet been initialized!").getProtocolVersion0();
         }
@@ -161,11 +162,11 @@ public abstract class Server {
 
     // abstract methods for implementations
 
-    public abstract String getVersion0();
+    public abstract @NotNull String getVersion0();
 
-    public abstract String getServerSoftwareVersion0();
+    public abstract @NotNull String getServerSoftwareVersion0();
 
-    public static List<ChannelFuture> getConnections() {
+    public static List<@NotNull ChannelFuture> getConnections() {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getConnections0();
     }
 
@@ -183,15 +184,15 @@ public abstract class Server {
 
     public abstract void runSynchronously0(@NotNull Runnable task);
 
-    public abstract List<ChannelFuture> getConnections0();
+    public abstract List<@NotNull ChannelFuture> getConnections0();
 
     public abstract void shutdown0();
 
-    public abstract ProxyType getProxyType0();
+    public abstract @NotNull ProxyType getProxyType0();
 
-    public abstract Integer getProtocolVersion0();
+    public abstract @NotNull Integer getProtocolVersion0();
 
-    public String UNSAFE_normalizeSoundKey0(String s) {
+    public @NotNull String UNSAFE_normalizeSoundKey0(@NotNull String s) {
         return s;
     }
 

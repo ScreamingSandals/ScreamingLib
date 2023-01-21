@@ -23,20 +23,7 @@ import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.utils.*;
 
 public interface SPlayerCraftItemEvent extends SPlayerInventoryClickEvent {
-
-    // Who tf called this method getClickedInventoryContainer()?
-    @Deprecated
-    default @Nullable Container getClickedInventoryContainer() {
-        return clickedInventory();
-    }
-
-    // That's the same thing like getInventory()
-    @Deprecated
-    default Container getCraftInventory() {
-        return inventory();
-    }
-
-    Recipe recipe();
+    @NotNull Recipe recipe();
 
     // TODO: we should create proper Recipe API
     interface Recipe extends Wrapper, RawValueHolder {

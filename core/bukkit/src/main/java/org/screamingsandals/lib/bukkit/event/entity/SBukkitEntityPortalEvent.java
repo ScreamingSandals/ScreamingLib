@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.entity.SEntityPortalEvent;
 
 public class SBukkitEntityPortalEvent extends SBukkitEntityTeleportEvent implements SEntityPortalEvent {
-    public SBukkitEntityPortalEvent(EntityPortalEvent event) {
+    public SBukkitEntityPortalEvent(@NotNull EntityPortalEvent event) {
         super(event);
     }
 

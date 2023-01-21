@@ -16,9 +16,10 @@
 
 package org.screamingsandals.lib.event.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityItem;
 
 public interface SItemSpawnEvent extends SEntitySpawnEvent {
     @Override
-    EntityItem entity();
+    @NotNull EntityItem entity();
 }

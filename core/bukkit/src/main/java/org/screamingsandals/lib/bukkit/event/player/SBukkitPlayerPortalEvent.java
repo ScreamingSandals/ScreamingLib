@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.player.SPlayerPortalEvent;
 
 public class SBukkitPlayerPortalEvent extends SBukkitPlayerTeleportEvent implements SPlayerPortalEvent {
-    public SBukkitPlayerPortalEvent(PlayerPortalEvent event) {
+    public SBukkitPlayerPortalEvent(@NotNull PlayerPortalEvent event) {
         super(event);
     }
 

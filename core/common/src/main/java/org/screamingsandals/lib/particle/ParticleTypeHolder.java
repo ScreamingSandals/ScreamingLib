@@ -19,6 +19,7 @@ package org.screamingsandals.lib.particle;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -29,7 +30,7 @@ import java.util.List;
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface ParticleTypeHolder extends ComparableWrapper, RawValueHolder {
 
-    String platformName();
+    @NotNull String platformName();
 
     @Nullable Class<? extends ParticleData> expectedDataClass();
 
@@ -38,14 +39,14 @@ public interface ParticleTypeHolder extends ComparableWrapper, RawValueHolder {
      */
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    static ParticleTypeHolder of(Object particle) {
+    static @NotNull ParticleTypeHolder of(@NotNull Object particle) {
         var result = ofNullable(particle);
         Preconditions.checkNotNullIllegal(result, "Could not find particle type: " + particle);
         return result;
@@ -60,7 +61,7 @@ public interface ParticleTypeHolder extends ComparableWrapper, RawValueHolder {
         return ParticleTypeMapping.resolve(particle);
     }
 
-    static @NotNull List<@NotNull ParticleTypeHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull ParticleTypeHolder> all() {
         return ParticleTypeMapping.getValues();
     }
 }

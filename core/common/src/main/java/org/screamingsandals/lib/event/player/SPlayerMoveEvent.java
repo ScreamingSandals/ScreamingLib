@@ -16,15 +16,16 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.world.LocationHolder;
 
 public interface SPlayerMoveEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    LocationHolder currentLocation();
+    @NotNull LocationHolder currentLocation();
 
-    LocationHolder newLocation();
+    @NotNull LocationHolder newLocation();
 
-    void newLocation(LocationHolder newLocation);
+    void newLocation(@NotNull LocationHolder newLocation);
 }

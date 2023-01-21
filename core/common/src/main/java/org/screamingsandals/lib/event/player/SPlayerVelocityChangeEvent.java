@@ -16,13 +16,14 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
 public interface SPlayerVelocityChangeEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    Vector3D velocity();
+    @NotNull Vector3D velocity();
 
-    void velocity(Vector3D velocity);
+    void velocity(@NotNull Vector3D velocity);
 }

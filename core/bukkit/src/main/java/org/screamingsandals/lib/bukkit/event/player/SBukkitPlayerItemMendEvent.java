@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerItemMendEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityExperience;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -38,12 +39,12 @@ public class SBukkitPlayerItemMendEvent implements SPlayerItemMendEvent, BukkitC
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerItemMendEvent event;
+    private final @NotNull PlayerItemMendEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private Item item;
-    private EntityExperience experienceOrb;
+    private @Nullable PlayerWrapper player;
+    private @Nullable Item item;
+    private @Nullable EntityExperience experienceOrb;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -54,7 +55,7 @@ public class SBukkitPlayerItemMendEvent implements SPlayerItemMendEvent, BukkitC
     }
 
     @Override
-    public Item item() {
+    public @NotNull Item item() {
         if (item == null) {
             item = new BukkitItem(event.getItem());
         }
@@ -62,7 +63,7 @@ public class SBukkitPlayerItemMendEvent implements SPlayerItemMendEvent, BukkitC
     }
 
     @Override
-    public EntityExperience experienceOrb() {
+    public @NotNull EntityExperience experienceOrb() {
         if (experienceOrb == null) {
             experienceOrb = new BukkitEntityExperience(event.getExperienceOrb());
         }

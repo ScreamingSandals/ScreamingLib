@@ -25,7 +25,7 @@ import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
 public class SBukkitModernPlayerPickupItemEvent extends SBukkitEntityPickupItemEvent implements SPlayerPickupItemEvent {
-    public SBukkitModernPlayerPickupItemEvent(EntityPickupItemEvent event) {
+    public SBukkitModernPlayerPickupItemEvent(@NotNull EntityPickupItemEvent event) {
         super(event);
     }
 

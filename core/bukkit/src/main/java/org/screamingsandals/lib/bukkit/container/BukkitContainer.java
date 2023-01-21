@@ -47,18 +47,18 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public void setItem(int index, Item item) {
-        wrappedObject.setItem(index, item.as(ItemStack.class));
+    public void setItem(int index, @Nullable Item item) {
+        wrappedObject.setItem(index, item != null ? item.as(ItemStack.class) : null);
     }
 
     @Override
-    public List<Item> addItem(Item... items) {
+    public @NotNull List<@NotNull Item> addItem(@NotNull Item @NotNull... items) {
         return wrappedObject.addItem(Arrays.stream(items).map(item -> item.as(ItemStack.class)).toArray(ItemStack[]::new))
                 .values().stream().filter(Objects::nonNull).map(BukkitItem::new).collect(Collectors.toList());
     }
 
     @Override
-    public List<Item> removeItem(Item... items) {
+    public @NotNull List<@NotNull Item> removeItem(@NotNull Item @NotNull... items) {
         return wrappedObject.removeItem(
                 Arrays.stream(items)
                         .map(item -> item.as(ItemStack.class))
@@ -119,17 +119,17 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public boolean contains(ItemTypeHolder materialHolder) {
+    public boolean contains(@NotNull ItemTypeHolder materialHolder) {
         return wrappedObject.contains(materialHolder.as(Material.class));
     }
 
     @Override
-    public boolean contains(Item item) {
+    public boolean contains(@NotNull Item item) {
         return wrappedObject.contains(item.as(ItemStack.class));
     }
 
     @Override
-    public boolean containsAtLeast(Item item, int amount) {
+    public boolean containsAtLeast(@NotNull Item item, int amount) {
         return wrappedObject.containsAtLeast(item.as(ItemStack.class), amount);
     }
 
@@ -144,7 +144,7 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public InventoryTypeHolder getType() {
+    public @NotNull InventoryTypeHolder getType() {
         return InventoryTypeHolder.of(wrappedObject.getType());
     }
 

@@ -44,10 +44,10 @@ import java.util.regex.Pattern;
 @AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
 public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffectHolder> {
 
-    private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?<namespaced>[A-Za-z0-9_.\\-/:]+)(\\s+(?<duration>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
-    private static PotionEffectMapping potionEffectMapping;
+    private static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(?<namespaced>[A-Za-z0-9_.\\-/:]+)(\\s+(?<duration>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
+    private static @Nullable PotionEffectMapping potionEffectMapping;
 
-    protected final BidirectionalConverter<PotionEffectHolder> potionEffectConverter = BidirectionalConverter.<PotionEffectHolder>build()
+    protected final @NotNull BidirectionalConverter<PotionEffectHolder> potionEffectConverter = BidirectionalConverter.<PotionEffectHolder>build()
             .registerP2W(PotionEffectHolder.class, e -> e)
             .registerP2W(Map.class, map -> {
                 try {

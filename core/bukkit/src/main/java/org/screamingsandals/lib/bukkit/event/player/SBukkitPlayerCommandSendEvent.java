@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerCommandSendEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -35,10 +36,10 @@ public class SBukkitPlayerCommandSendEvent implements SPlayerCommandSendEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerCommandSendEvent event;
+    private final @NotNull PlayerCommandSendEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -49,7 +50,7 @@ public class SBukkitPlayerCommandSendEvent implements SPlayerCommandSendEvent {
     }
 
     @Override
-    public Collection<String> commands() {
+    public @NotNull Collection<@NotNull String> commands() {
         return event.getCommands();
     }
 }

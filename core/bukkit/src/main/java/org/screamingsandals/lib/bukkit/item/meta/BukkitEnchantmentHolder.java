@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.item.meta;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Pair;
@@ -53,7 +54,7 @@ public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Inte
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof Enchantment) {
             return wrappedObject.equals(Pair.of(object, 1));
         }
@@ -64,12 +65,12 @@ public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Inte
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 
     @Override
-    public boolean isSameType(Object object) {
+    public boolean isSameType(@Nullable Object object) {
         if (object instanceof Enchantment) {
             return wrappedObject.first().equals(object);
         } else if (object instanceof BukkitEnchantmentHolder) {
@@ -79,7 +80,7 @@ public class BukkitEnchantmentHolder extends BasicWrapper<Pair<Enchantment, Inte
     }
 
     @Override
-    public boolean isSameType(Object... objects) {
+    public boolean isSameType(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::isSameType);
     }
 

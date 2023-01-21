@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerRespawnEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -36,10 +37,10 @@ public class SBukkitPlayerRespawnEvent implements SPlayerRespawnEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerRespawnEvent event;
+    private final @NotNull PlayerRespawnEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -50,12 +51,12 @@ public class SBukkitPlayerRespawnEvent implements SPlayerRespawnEvent {
     }
 
     @Override
-    public LocationHolder location() {
+    public @NotNull LocationHolder location() {
         return LocationMapper.wrapLocation(event.getRespawnLocation());
     }
 
     @Override
-    public void location(LocationHolder location) {
+    public void location(@NotNull LocationHolder location) {
         event.setRespawnLocation(location.as(Location.class));
     }
 }

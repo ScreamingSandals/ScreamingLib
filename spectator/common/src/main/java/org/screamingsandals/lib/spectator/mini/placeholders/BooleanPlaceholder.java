@@ -33,7 +33,7 @@ public class BooleanPlaceholder implements Placeholder {
     // addition: custom strings for true/false
     @SuppressWarnings("unchecked")
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders) {
         if (arguments.size() == 2) {
             if (value) {
                 return parser.parseIntoBuilder(arguments.get(0), placeholders);

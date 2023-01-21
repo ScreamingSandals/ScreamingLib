@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerToggleSprintEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerToggleSprintEvent;
@@ -34,10 +35,10 @@ public class SBukkitPlayerToggleSprintEvent implements SPlayerToggleSprintEvent,
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerToggleSprintEvent event;
+    private final @NotNull PlayerToggleSprintEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {

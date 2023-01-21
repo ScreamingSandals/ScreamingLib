@@ -29,7 +29,6 @@ public class LegacySignBlockStateHolder extends GenericBlockStateHolder implemen
         super(wrappedObject);
     }
 
-    // TODO: IMPLEMENT PLATFORM ADVENTURE
     @Override
     public @NotNull Component @NotNull [] lines() {
         return Arrays.stream(((Sign) wrappedObject).getLines()).map(Component::fromLegacy).toArray(Component[]::new);

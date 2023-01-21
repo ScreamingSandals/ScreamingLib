@@ -42,16 +42,16 @@ public class SBukkitEntityPotionEffectEvent implements SEntityPotionEffectEvent,
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityPotionEffectEvent event;
+    private final @NotNull EntityPotionEffectEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private PotionEffectHolder oldEffect;
+    private @Nullable EntityBasic entity;
+    private @Nullable PotionEffectHolder oldEffect;
     private boolean oldEffectCached;
-    private PotionEffectHolder newEffect;
+    private @Nullable PotionEffectHolder newEffect;
     private boolean newEffectCached;
-    private Cause cause;
-    private Action action;
+    private @Nullable Cause cause;
+    private @Nullable Action action;
 
     @Override
     public @NotNull EntityBasic entity() {
@@ -75,7 +75,7 @@ public class SBukkitEntityPotionEffectEvent implements SEntityPotionEffectEvent,
     @Override
     public @Nullable PotionEffectHolder newEffect() {
         if (!newEffectCached) {
-            if (event.getOldEffect() != null) {
+            if (event.getNewEffect() != null) {
                 newEffect = PotionEffectHolder.of(event.getNewEffect());
             }
             newEffectCached = true;

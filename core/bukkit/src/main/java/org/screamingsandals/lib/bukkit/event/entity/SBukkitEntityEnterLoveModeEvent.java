@@ -41,10 +41,10 @@ public class SBukkitEntityEnterLoveModeEvent implements SEntityEnterLoveModeEven
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityEnterLoveModeEvent event;
+    private final @NotNull EntityEnterLoveModeEvent event;
 
     // Internal cache
-    private EntityBasic entity;
+    private @Nullable EntityBasic entity;
     private @Nullable EntityBasic humanEntity;
     private boolean humanEntityCached;
 

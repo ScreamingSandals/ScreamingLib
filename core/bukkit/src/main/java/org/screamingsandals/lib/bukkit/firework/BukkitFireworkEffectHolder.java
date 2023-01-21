@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.firework;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -123,7 +124,7 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof FireworkEffect.Type) {
             return wrappedObject.getType() == object;
         }
@@ -134,7 +135,7 @@ public class BukkitFireworkEffectHolder extends BasicWrapper<FireworkEffect> imp
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 

@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.spectator.Component;
@@ -23,15 +24,15 @@ import org.screamingsandals.lib.spectator.ComponentLike;
 
 public interface SPlayerKickEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    Component leaveMessage();
+    @NotNull Component leaveMessage();
 
-    void leaveMessage(Component leaveMessage);
+    void leaveMessage(@NotNull Component leaveMessage);
 
-    void leaveMessage(ComponentLike leaveMessage);
+    void leaveMessage(@NotNull ComponentLike leaveMessage);
 
-    Component kickReason();
+    @NotNull Component kickReason();
 
-    void kickReason(Component kickReason);
+    void kickReason(@NotNull Component kickReason);
 
-    void kickReason(ComponentLike kickReason);
+    void kickReason(@NotNull ComponentLike kickReason);
 }

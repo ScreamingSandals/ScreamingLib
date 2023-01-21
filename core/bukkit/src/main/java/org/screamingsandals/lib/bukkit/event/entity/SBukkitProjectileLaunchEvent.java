@@ -24,12 +24,12 @@ import org.screamingsandals.lib.entity.ProjectileShooter;
 import org.screamingsandals.lib.event.entity.SProjectileLaunchEvent;
 
 public class SBukkitProjectileLaunchEvent extends SBukkitEntitySpawnEvent implements SProjectileLaunchEvent {
-    public SBukkitProjectileLaunchEvent(ProjectileLaunchEvent event) {
+    public SBukkitProjectileLaunchEvent(@NotNull ProjectileLaunchEvent event) {
         super(event);
     }
 
     // Internal cache
-    private ProjectileShooter shooter;
+    private @Nullable ProjectileShooter shooter;
 
     @Override
     public @NotNull EntityProjectile entity() {

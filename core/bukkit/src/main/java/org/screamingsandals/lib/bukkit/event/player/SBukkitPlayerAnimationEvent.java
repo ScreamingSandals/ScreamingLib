@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerAnimationEvent;
@@ -34,11 +35,11 @@ public class SBukkitPlayerAnimationEvent implements SPlayerAnimationEvent, Bukki
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerAnimationEvent event;
+    private final @NotNull PlayerAnimationEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private PlayerAnimationType animationType;
+    private @Nullable PlayerWrapper player;
+    private @Nullable PlayerAnimationType animationType;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -49,7 +50,7 @@ public class SBukkitPlayerAnimationEvent implements SPlayerAnimationEvent, Bukki
     }
 
     @Override
-    public PlayerAnimationType animationType() {
+    public @NotNull PlayerAnimationType animationType() {
         if (animationType == null) {
             animationType = PlayerAnimationType.convert(event.getAnimationType().name());
         }

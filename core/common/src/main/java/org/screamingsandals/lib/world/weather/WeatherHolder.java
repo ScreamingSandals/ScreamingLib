@@ -19,6 +19,7 @@ package org.screamingsandals.lib.world.weather;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -28,16 +29,15 @@ import java.util.List;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface WeatherHolder extends ComparableWrapper, RawValueHolder {
-
     @NotNull String platformName();
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.WEATHER)
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.WEATHER)
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.WEATHER)
     static @NotNull WeatherHolder of(@NotNull Object weather) {
@@ -55,7 +55,7 @@ public interface WeatherHolder extends ComparableWrapper, RawValueHolder {
         return WeatherMapping.resolve(weather);
     }
 
-    static @NotNull List<@NotNull WeatherHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull WeatherHolder> all() {
         return WeatherMapping.getValues();
     }
 }

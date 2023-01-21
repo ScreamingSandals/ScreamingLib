@@ -44,7 +44,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
      * @param index the inventory slot index
      * @param item the item
      */
-    void setItem(int index, Item item);
+    void setItem(int index, @Nullable Item item);
 
     /**
      * Tries to add items to empty slots in this inventory.
@@ -52,7 +52,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
      * @param items the items
      * @return the items that didn't fit the inventory
      */
-    List<Item> addItem(Item... items);
+    @NotNull List<@NotNull Item> addItem(@NotNull Item @NotNull... items);
 
     /**
      * Tries to remove the supplied items from this inventory.
@@ -60,7 +60,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
      * @param items the items
      * @return the items that couldn't be removed
      */
-    List<Item> removeItem(Item... items);
+    @NotNull List<@NotNull Item> removeItem(@NotNull Item @NotNull... items);
 
     /**
      * Returns all items in this inventory.
@@ -100,7 +100,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
      * @param materialHolder the item type
      * @return is the supplied item type present in this inventory?
      */
-    boolean contains(ItemTypeHolder materialHolder);
+    boolean contains(@NotNull ItemTypeHolder materialHolder);
 
     /**
      * Checks if the supplied item is present in this inventory.
@@ -108,7 +108,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
      * @param item the item
      * @return is the supplied item present in this inventory?
      */
-    boolean contains(Item item);
+    boolean contains(@NotNull Item item);
 
     /**
      * Checks if the amount of occurrences of the supplied item in this inventory is higher than or equal to the supplied amount.
@@ -117,7 +117,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
      * @param amount the amount
      * @return is the amount of occurrences at least the supplied amount?
      */
-    boolean containsAtLeast(Item item, int amount);
+    boolean containsAtLeast(@NotNull Item item, int amount);
 
     /**
      * Gets the size of this inventory.
@@ -138,7 +138,7 @@ public interface Container extends Openable, Wrapper, RawValueHolder {
      *
      * @return the type of this inventory
      */
-    InventoryTypeHolder getType();
+    @NotNull InventoryTypeHolder getType();
 
     /**
      * Completely wipes the contents of this inventory.

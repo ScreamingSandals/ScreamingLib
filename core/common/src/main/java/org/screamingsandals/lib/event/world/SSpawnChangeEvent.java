@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.world;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.world.LocationHolder;
@@ -23,9 +24,9 @@ import org.screamingsandals.lib.world.WorldHolder;
 
 public interface SSpawnChangeEvent extends SEvent, PlatformEventWrapper {
 
-    WorldHolder world();
+    @NotNull WorldHolder world();
 
-    LocationHolder oldLocation();
+    @NotNull LocationHolder oldLocation();
 
-    LocationHolder newLocation();
+    @NotNull LocationHolder newLocation();
 }

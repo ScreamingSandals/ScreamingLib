@@ -24,17 +24,17 @@ import org.screamingsandals.lib.player.PlayerWrapper;
 import java.util.Collection;
 
 public interface SPlayerChatEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
-    Collection<PlayerWrapper> recipients();
+    @NotNull Collection<@NotNull PlayerWrapper> recipients();
 
-    PlayerWrapper sender();
+    @NotNull PlayerWrapper sender();
 
-    String message();
+    @NotNull String message();
 
-    void message(String message);
+    void message(@NotNull String message);
 
-    String format();
+    @NotNull String format();
 
-    void format(String format);
+    void format(@NotNull String format);
 
     @Override
     default @NotNull PlayerWrapper player() {

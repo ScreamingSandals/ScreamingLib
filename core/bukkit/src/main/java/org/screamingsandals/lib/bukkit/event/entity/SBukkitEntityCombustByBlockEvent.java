@@ -17,22 +17,29 @@
 package org.screamingsandals.lib.bukkit.event.entity;
 
 import org.bukkit.event.entity.EntityCombustByBlockEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.entity.SEntityCombustByBlockEvent;
 
 public class SBukkitEntityCombustByBlockEvent extends SBukkitEntityCombustEvent implements SEntityCombustByBlockEvent {
-    public SBukkitEntityCombustByBlockEvent(EntityCombustByBlockEvent event) {
+    public SBukkitEntityCombustByBlockEvent(@NotNull EntityCombustByBlockEvent event) {
         super(event);
     }
 
     // Internal cache
-    private BlockHolder combuster;
+    private @Nullable BlockHolder combuster;
+    private boolean combusterCached;
 
     @Override
-    public BlockHolder combuster() {
-        if (combuster == null) {
-            combuster = BlockMapper.wrapBlock(((EntityCombustByBlockEvent) event()).getCombuster());
+    public @Nullable BlockHolder combuster() {
+        if (!combusterCached) {
+            var bukkitCombuster = ((EntityCombustByBlockEvent) event()).getCombuster();
+            if (bukkitCombuster != null) {
+                combuster = BlockMapper.wrapBlock(bukkitCombuster);
+            }
+            combusterCached = true;
         }
         return combuster;
     }

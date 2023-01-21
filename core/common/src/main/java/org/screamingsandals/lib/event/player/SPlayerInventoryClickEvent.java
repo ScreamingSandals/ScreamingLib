@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
@@ -29,31 +30,25 @@ public interface SPlayerInventoryClickEvent extends SCancellableEvent, SPlayerEv
 
     @Nullable Item currentItem();
 
-    void currentItem(Item currentItem);
+    void currentItem(@Nullable Item currentItem);
 
     @Nullable Container clickedInventory();
 
-    // Who tf called this method getContainer()?
-    @Deprecated
-    default @Nullable Container container() {
-        return clickedInventory();
-    }
+    @NotNull ClickType clickType();
 
-    ClickType getClickType();
+    @NotNull Container inventory();
 
-    Container inventory();
-
-    InventoryAction action();
+    @NotNull InventoryAction action();
 
     int hotbarButton();
 
     int slot();
 
-    SlotType slotType();
+    @NotNull SlotType slotType();
 
     int rawSlot();
 
-    Result result();
+    @NotNull Result result();
 
-    void result(Result result);
+    void result(@NotNull Result result);
 }

@@ -36,9 +36,9 @@ import java.util.List;
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
 public abstract class DimensionMapping extends AbstractTypeMapper<DimensionHolder> {
-    private static DimensionMapping dimensionMapping;
+    private static @Nullable DimensionMapping dimensionMapping;
 
-    protected final BidirectionalConverter<DimensionHolder> dimensionConverter = BidirectionalConverter.<DimensionHolder>build()
+    protected final @NotNull BidirectionalConverter<DimensionHolder> dimensionConverter = BidirectionalConverter.<DimensionHolder>build()
             .registerP2W(DimensionHolder.class, d -> d)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {

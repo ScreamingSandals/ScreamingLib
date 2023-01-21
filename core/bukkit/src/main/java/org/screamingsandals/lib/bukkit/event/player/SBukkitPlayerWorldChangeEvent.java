@@ -24,6 +24,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerWorldChangeEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -38,11 +39,11 @@ public class SBukkitPlayerWorldChangeEvent implements SPlayerWorldChangeEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerChangedWorldEvent event;
+    private final @NotNull PlayerChangedWorldEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private WorldHolder from;
+    private @Nullable PlayerWrapper player;
+    private @Nullable WorldHolder from;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -53,7 +54,7 @@ public class SBukkitPlayerWorldChangeEvent implements SPlayerWorldChangeEvent {
     }
 
     @Override
-    public WorldHolder from() {
+    public @NotNull WorldHolder from() {
         if (from == null) {
             from = WorldMapper.wrapWorld(event.getFrom());
         }

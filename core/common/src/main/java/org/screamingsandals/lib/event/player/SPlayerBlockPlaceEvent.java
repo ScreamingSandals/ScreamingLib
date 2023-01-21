@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.Item;
@@ -29,25 +31,25 @@ public interface SPlayerBlockPlaceEvent extends SCancellableEvent, SPlayerEvent,
     /**
      * Other blocks that were also placed by the placement of block. They may have material type of AIR. This list also includes the main block
      */
-    Collection<BlockStateHolder> replacedBlockStates();
+    @Unmodifiable @NotNull Collection<@NotNull BlockStateHolder> replacedBlockStates();
 
     /**
      * Hand used to place this block
      */
-    PlayerWrapper.Hand playerHand();
+    PlayerWrapper.@NotNull Hand playerHand();
 
     /**
      * Placed block
      */
-    BlockHolder block();
+    @NotNull BlockHolder block();
 
     /**
      * Replaced block state
      */
-    BlockStateHolder replacedBlockState();
+    @NotNull BlockStateHolder replacedBlockState();
 
     /**
      * Item in hand
      */
-    Item itemInHand();
+    @NotNull Item itemInHand();
 }

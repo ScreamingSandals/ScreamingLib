@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import org.bukkit.event.player.PlayerHarvestBlockEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -42,12 +43,12 @@ public class SBukkitPlayerHarvestBlockEvent implements SPlayerHarvestBlockEvent,
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerHarvestBlockEvent event;
+    private final @NotNull PlayerHarvestBlockEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private Collection<Item> itemsHarvested;
-    private BlockHolder harvestedBlock;
+    private @Nullable PlayerWrapper player;
+    private @Nullable Collection<@NotNull Item> itemsHarvested;
+    private @Nullable BlockHolder harvestedBlock;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -58,7 +59,7 @@ public class SBukkitPlayerHarvestBlockEvent implements SPlayerHarvestBlockEvent,
     }
 
     @Override
-    public Collection<Item> itemsHarvested() {
+    public @NotNull Collection<@NotNull Item> itemsHarvested() {
         if (itemsHarvested == null) {
             itemsHarvested = new CollectionLinkedToCollection<>(
                     event.getItemsHarvested(),
@@ -70,7 +71,7 @@ public class SBukkitPlayerHarvestBlockEvent implements SPlayerHarvestBlockEvent,
     }
 
     @Override
-    public BlockHolder harvestedBlock() {
+    public @NotNull BlockHolder harvestedBlock() {
         if (harvestedBlock == null) {
             harvestedBlock = BlockMapper.wrapBlock(event.getHarvestedBlock());
         }

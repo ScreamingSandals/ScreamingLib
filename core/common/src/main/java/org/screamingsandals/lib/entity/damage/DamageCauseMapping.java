@@ -36,9 +36,9 @@ import java.util.List;
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
 public abstract class DamageCauseMapping extends AbstractTypeMapper<DamageCauseHolder> {
-    private static DamageCauseMapping damageCauseMapping;
+    private static @Nullable DamageCauseMapping damageCauseMapping;
 
-    protected final BidirectionalConverter<DamageCauseHolder> damageCauseConverter = BidirectionalConverter.<DamageCauseHolder>build()
+    protected final @NotNull BidirectionalConverter<DamageCauseHolder> damageCauseConverter = BidirectionalConverter.<DamageCauseHolder>build()
             .registerP2W(DamageCauseHolder.class, d -> d)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {

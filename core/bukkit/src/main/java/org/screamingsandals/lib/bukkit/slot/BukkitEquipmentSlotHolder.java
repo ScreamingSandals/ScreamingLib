@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.slot;
 
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -34,7 +35,7 @@ public class BukkitEquipmentSlotHolder extends BasicWrapper<EquipmentSlot> imple
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof EquipmentSlot || object instanceof EquipmentSlotHolder) {
             return equals(object);
         }
@@ -42,7 +43,7 @@ public class BukkitEquipmentSlotHolder extends BasicWrapper<EquipmentSlot> imple
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 }

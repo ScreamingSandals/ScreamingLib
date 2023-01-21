@@ -33,7 +33,7 @@ public class LazyCharPlaceholder implements Placeholder {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders) {
         return (B) Component.text().content(supplier.get());
     }
 }

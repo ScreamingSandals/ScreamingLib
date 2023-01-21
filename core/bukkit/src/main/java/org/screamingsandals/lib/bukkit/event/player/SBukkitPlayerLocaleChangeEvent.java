@@ -36,11 +36,11 @@ public class SBukkitPlayerLocaleChangeEvent implements SPlayerLocaleChangeEvent 
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerLocaleChangeEvent event;
+    private final @NotNull PlayerLocaleChangeEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private Locale locale;
+    private @Nullable PlayerWrapper player;
+    private @Nullable Locale locale;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -51,7 +51,7 @@ public class SBukkitPlayerLocaleChangeEvent implements SPlayerLocaleChangeEvent 
     }
 
     @Override
-    public Locale locale() {
+    public @NotNull Locale locale() {
         if (locale == null) {
             if (Reflect.hasMethod(event, "locale")) {
                 locale = event.locale(); // java.util.Locale is not an adventure thing so we can

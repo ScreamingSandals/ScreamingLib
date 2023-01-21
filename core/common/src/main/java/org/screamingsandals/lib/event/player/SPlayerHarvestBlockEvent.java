@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -25,7 +26,7 @@ import java.util.Collection;
 
 public interface SPlayerHarvestBlockEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    Collection<Item> itemsHarvested();
+    @NotNull Collection<@NotNull Item> itemsHarvested();
 
-    BlockHolder harvestedBlock();
+    @NotNull BlockHolder harvestedBlock();
 }

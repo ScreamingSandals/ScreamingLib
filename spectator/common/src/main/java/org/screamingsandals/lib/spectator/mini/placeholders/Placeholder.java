@@ -35,7 +35,7 @@ public interface Placeholder extends ComponentBuilderResolver {
     <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders);
 
     @Override
-    default <B extends Component.Builder<B, C>, C extends Component> @NotNull B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag, @NotNull Placeholder @NotNull ... placeholders) {
+    default <B extends Component.Builder<B, C>, C extends Component> @NotNull B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag, @NotNull Placeholder @NotNull... placeholders) {
         return getResult(parser, tag.getArgs(), placeholders);
     }
 

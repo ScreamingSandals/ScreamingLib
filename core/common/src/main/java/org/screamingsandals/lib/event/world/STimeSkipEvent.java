@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.world;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
@@ -24,9 +25,9 @@ import org.screamingsandals.lib.world.WorldHolder;
 @LimitedVersionSupport("Bukkit >= 1.15.1")
 public interface STimeSkipEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    WorldHolder world();
+    @NotNull WorldHolder world();
 
-    Reason reason();
+    @NotNull Reason reason();
 
     long skipAmount();
 

@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityUnleashEvent;
@@ -36,11 +37,11 @@ public class SBukkitEntityUnleashEvent implements SEntityUnleashEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityUnleashEvent event;
+    private final @NotNull EntityUnleashEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private UnleashReason reason;
+    private @Nullable EntityBasic entity;
+    private @Nullable UnleashReason reason;
 
     @Override
     public @NotNull EntityBasic entity() {

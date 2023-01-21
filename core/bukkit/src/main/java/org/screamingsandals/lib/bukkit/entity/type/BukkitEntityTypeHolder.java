@@ -74,7 +74,7 @@ public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements 
     }
 
     @Override
-    public boolean is(Object entityType) {
+    public boolean is(@Nullable Object entityType) {
         if (entityType instanceof EntityType || entityType instanceof EntityTypeHolder) {
             return equals(entityType);
         }
@@ -89,7 +89,7 @@ public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements 
     }
 
     @Override
-    public boolean is(Object... entityTypes) {
+    public boolean is(@Nullable Object @NotNull... entityTypes) {
         return Arrays.stream(entityTypes).anyMatch(this::is);
     }
 

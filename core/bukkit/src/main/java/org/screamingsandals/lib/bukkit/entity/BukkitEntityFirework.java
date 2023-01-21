@@ -32,7 +32,7 @@ public class BukkitEntityFirework extends BukkitEntityProjectile implements Enti
     }
 
     @Override
-    public void setEffect(List<FireworkEffectHolder> fireworkEffect, int power) {
+    public void setEffect(@NotNull List<@NotNull FireworkEffectHolder> fireworkEffect, int power) {
         var meta = ((Firework) wrappedObject).getFireworkMeta();
         meta.setPower(power);
         meta.addEffects(fireworkEffect.stream().map(p -> p.as(FireworkEffect.class)).collect(Collectors.toList()));
@@ -40,7 +40,7 @@ public class BukkitEntityFirework extends BukkitEntityProjectile implements Enti
     }
 
     @Override
-    public Pair<List<FireworkEffectHolder>, Integer> getEffect() {
+    public @NotNull Pair<@NotNull List<@NotNull FireworkEffectHolder>, @NotNull Integer> getEffect() {
         var meta = ((Firework) wrappedObject).getFireworkMeta();
         return Pair.of(meta.getEffects().stream().map(FireworkEffectHolder::of).collect(Collectors.toList()), meta.getPower());
     }

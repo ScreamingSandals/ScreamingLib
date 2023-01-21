@@ -25,6 +25,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityPoseChangeEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
@@ -40,11 +41,11 @@ public class SBukkitEntityPoseChangeEvent implements SEntityPoseChangeEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityPoseChangeEvent event;
+    private final @NotNull EntityPoseChangeEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private EntityPoseHolder pose;
+    private @Nullable EntityBasic entity;
+    private @Nullable EntityPoseHolder pose;
 
     @Override
     public @NotNull EntityBasic entity() {

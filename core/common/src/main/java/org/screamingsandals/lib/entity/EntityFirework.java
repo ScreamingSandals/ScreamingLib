@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.utils.Pair;
 
@@ -23,9 +24,9 @@ import java.util.List;
 
 public interface EntityFirework extends EntityProjectile {
 
-    void setEffect(List<FireworkEffectHolder> fireworkEffect, int power);
+    void setEffect(@NotNull List<@NotNull FireworkEffectHolder> fireworkEffect, int power);
 
-    Pair<List<FireworkEffectHolder>, Integer> getEffect();
+    @NotNull Pair<@NotNull List<@NotNull FireworkEffectHolder>, @NotNull Integer> getEffect();
 
     void detonate();
 

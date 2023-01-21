@@ -31,7 +31,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 
 public class SBukkitPlayerDeathEvent extends SBukkitEntityDeathEvent implements SPlayerDeathEvent {
-    public SBukkitPlayerDeathEvent(PlayerDeathEvent event) {
+    public SBukkitPlayerDeathEvent(@NotNull PlayerDeathEvent event) {
         super(event);
         bukkitKiller = event.getEntity().getKiller();
     }

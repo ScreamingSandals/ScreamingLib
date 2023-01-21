@@ -41,10 +41,10 @@ public class SBukkitPlayerJoinEvent implements SPlayerJoinEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerJoinEvent event;
+    private final @NotNull PlayerJoinEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -59,7 +59,8 @@ public class SBukkitPlayerJoinEvent implements SPlayerJoinEvent {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             return AdventureBackend.wrapComponent(event.joinMessage());
         } else {
-            return Component.fromLegacy(event.getJoinMessage());
+            var joinMessage = event.getJoinMessage();
+            return joinMessage != null ? Component.fromLegacy(joinMessage) : null;
         }
     }
 

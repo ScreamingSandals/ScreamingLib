@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.world.difficulty;
 
 import org.bukkit.Difficulty;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 
@@ -34,7 +35,7 @@ public class BukkitDifficultyHolder extends BasicWrapper<Difficulty> implements 
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof DifficultyHolder || object instanceof Difficulty) {
             return equals(object);
         }
@@ -42,7 +43,7 @@ public class BukkitDifficultyHolder extends BasicWrapper<Difficulty> implements 
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 }

@@ -20,6 +20,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 
 import java.util.Arrays;
@@ -118,12 +119,12 @@ public class NamespacedMappingKey implements MappingKey, ComparableWrapper {
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         return equals(object);
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 }

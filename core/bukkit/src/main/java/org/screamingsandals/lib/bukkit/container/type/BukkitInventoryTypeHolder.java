@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.container.type;
 
 import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -40,7 +41,7 @@ public class BukkitInventoryTypeHolder extends BasicWrapper<InventoryType> imple
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof InventoryType || object instanceof InventoryTypeHolder) {
             return equals(object);
         }
@@ -48,7 +49,7 @@ public class BukkitInventoryTypeHolder extends BasicWrapper<InventoryType> imple
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 }

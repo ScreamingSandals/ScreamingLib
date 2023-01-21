@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -37,12 +38,12 @@ public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoC
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerBedEnterEvent event;
+    private final @NotNull PlayerBedEnterEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private BlockHolder bed;
-    private BedEnterResult bedEnterResult;
+    private @Nullable PlayerWrapper player;
+    private @Nullable BlockHolder bed;
+    private @Nullable BedEnterResult bedEnterResult;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -53,7 +54,7 @@ public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoC
     }
 
     @Override
-    public BlockHolder bed() {
+    public @NotNull BlockHolder bed() {
         if (bed == null) {
             bed = BlockMapper.wrapBlock(event.getBed());
         }
@@ -61,7 +62,7 @@ public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoC
     }
 
     @Override
-    public BedEnterResult bedEnterResult() {
+    public @NotNull BedEnterResult bedEnterResult() {
         if (bedEnterResult == null) {
             bedEnterResult = BedEnterResult.convert(event.getBedEnterResult().name());
         }
@@ -69,12 +70,12 @@ public class SBukkitPlayerBedEnterEvent implements SPlayerBedEnterEvent, NoAutoC
     }
 
     @Override
-    public Result useBed() {
+    public @NotNull Result useBed() {
         return Result.convert(event.useBed().name());
     }
 
     @Override
-    public void useBed(Result useBed) {
+    public void useBed(@NotNull Result useBed) {
         event.setUseBed(Event.Result.valueOf(useBed.name()));
     }
 }

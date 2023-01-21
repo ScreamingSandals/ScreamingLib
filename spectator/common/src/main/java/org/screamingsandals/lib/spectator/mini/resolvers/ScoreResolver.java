@@ -31,7 +31,7 @@ public class ScoreResolver implements ComponentBuilderResolver {
     // Exclusive: <score:name:objective[:value]>
     @SuppressWarnings("unchecked")
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> @Nullable B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag, @NotNull Placeholder @NotNull ... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> @Nullable B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag, @NotNull Placeholder @NotNull... placeholders) {
         if (tag.getArgs().size() < 2) {
             return null; // invalid
         }

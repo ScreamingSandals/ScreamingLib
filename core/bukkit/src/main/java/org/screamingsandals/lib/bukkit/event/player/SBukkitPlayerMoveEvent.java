@@ -26,6 +26,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.world.BukkitWorldHolder;
@@ -42,14 +43,14 @@ public class SBukkitPlayerMoveEvent implements SPlayerMoveEvent, BukkitCancellab
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerMoveEvent event;
+    private final @NotNull PlayerMoveEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private Location currentLocationBukkit;
-    private LocationHolder currentLocation;
-    private Location newLocationBukkit;
-    private LocationHolder newLocation;
+    private @Nullable PlayerWrapper player;
+    private @Nullable Location currentLocationBukkit;
+    private @Nullable LocationHolder currentLocation;
+    private @Nullable Location newLocationBukkit;
+    private @Nullable LocationHolder newLocation;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -60,7 +61,7 @@ public class SBukkitPlayerMoveEvent implements SPlayerMoveEvent, BukkitCancellab
     }
 
     @Override
-    public LocationHolder currentLocation() { // Mutable in Bukkit
+    public @NotNull LocationHolder currentLocation() { // Mutable in Bukkit
         if (event.getFrom() != currentLocationBukkit) {
             currentLocationBukkit = event.getFrom();
             currentLocation = new LocationHolder(
@@ -76,7 +77,7 @@ public class SBukkitPlayerMoveEvent implements SPlayerMoveEvent, BukkitCancellab
     }
 
     @Override
-    public LocationHolder newLocation() {
+    public @NotNull LocationHolder newLocation() {
         if (event.getTo() != newLocationBukkit) {
             newLocationBukkit = event.getTo();
             newLocation = new LocationHolder(
@@ -92,7 +93,7 @@ public class SBukkitPlayerMoveEvent implements SPlayerMoveEvent, BukkitCancellab
     }
 
     @Override
-    public void newLocation(LocationHolder newLocation) {
+    public void newLocation(@NotNull LocationHolder newLocation) {
         event.setTo(new Location(
                 newLocation.getWorld().as(World.class), // World is BasicWrapper, so the unwrapping is faster task
                 newLocation.getX(),

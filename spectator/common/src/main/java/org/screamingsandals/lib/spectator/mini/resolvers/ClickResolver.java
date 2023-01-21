@@ -29,7 +29,7 @@ import java.util.Locale;
 
 public class ClickResolver implements StylingResolver {
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> void resolve(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag, @NotNull Placeholder @NotNull ... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> void resolve(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag, @NotNull Placeholder @NotNull... placeholders) {
         if (tag.getArgs().size() < 2) {
             return;
         }

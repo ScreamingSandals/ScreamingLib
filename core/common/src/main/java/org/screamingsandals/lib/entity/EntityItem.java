@@ -25,9 +25,9 @@ import java.util.concurrent.TimeUnit;
 
 public interface EntityItem extends EntityBasic {
 
-    Item getItem();
+    @NotNull Item getItem();
 
-    void setItem(Item stack);
+    void setItem(@NotNull Item stack);
 
     int getPickupDelay();
 
@@ -37,7 +37,7 @@ public interface EntityItem extends EntityBasic {
      * @param delay
      * @param timeUnit
      */
-    void setPickupDelay(int delay, TimeUnit timeUnit);
+    void setPickupDelay(int delay, @NotNull TimeUnit timeUnit);
 
     boolean isPickable();
 

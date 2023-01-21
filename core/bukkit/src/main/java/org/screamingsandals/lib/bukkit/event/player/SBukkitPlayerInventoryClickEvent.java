@@ -48,16 +48,16 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final InventoryClickEvent event;
+    private final @NotNull InventoryClickEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private Container clickedInventory;
+    private @Nullable PlayerWrapper player;
+    private @Nullable Container clickedInventory;
     private boolean clickedInventoryCached;
-    private ClickType clickType;
-    private Container inventory;
-    private InventoryAction action;
-    private SlotType slotType;
+    private @Nullable ClickType clickType;
+    private @Nullable Container inventory;
+    private @Nullable InventoryAction action;
+    private @Nullable SlotType slotType;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -85,7 +85,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     }
 
     @Override
-    public void currentItem(Item currentItem) {
+    public void currentItem(@Nullable Item currentItem) {
         event.setCurrentItem(currentItem == null ? null : currentItem.as(ItemStack.class));
     }
 
@@ -100,7 +100,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     }
 
     @Override
-    public ClickType getClickType() {
+    public @NotNull ClickType clickType() {
         if (clickType == null) {
             clickType = ClickType.convert(event.getClick().name());
         }
@@ -108,7 +108,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     }
 
     @Override
-    public Container inventory() {
+    public @NotNull Container inventory() {
         if (inventory == null) {
             inventory = ContainerFactory.<Container>wrapContainer(event.getInventory()).orElseThrow();
         }
@@ -116,7 +116,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     }
 
     @Override
-    public InventoryAction action() {
+    public @NotNull InventoryAction action() {
         if (action == null) {
             action = InventoryAction.convert(event.getAction().name());
         }
@@ -134,7 +134,7 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     }
 
     @Override
-    public SlotType slotType() {
+    public @NotNull SlotType slotType() {
         if (slotType == null) {
             slotType = SlotType.convert(event.getSlotType().name());
         }
@@ -147,12 +147,12 @@ public class SBukkitPlayerInventoryClickEvent implements SPlayerInventoryClickEv
     }
 
     @Override
-    public Result result() {
+    public @NotNull Result result() {
         return Result.convert(event.getResult().name());
     }
 
     @Override
-    public void result(Result result) {
+    public void result(@NotNull Result result) {
         event.setResult(Event.Result.valueOf(event.getResult().name()));
     }
 }

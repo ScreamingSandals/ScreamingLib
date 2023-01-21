@@ -31,7 +31,7 @@ public class MiniPlaceholder implements Placeholder {
     private final @NotNull String value;
 
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders) {
         return parser.parseIntoBuilder(value, placeholders);
     }
 }

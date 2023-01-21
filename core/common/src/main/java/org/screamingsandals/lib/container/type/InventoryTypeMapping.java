@@ -40,9 +40,9 @@ import java.util.List;
 )
 // TODO: Bukkit's inventory types doesn't exactly match the vanilla types
 public abstract class InventoryTypeMapping extends AbstractTypeMapper<InventoryTypeHolder> {
-    private static InventoryTypeMapping inventoryTypeMapping;
+    private static @Nullable InventoryTypeMapping inventoryTypeMapping;
 
-    protected final BidirectionalConverter<InventoryTypeHolder> inventoryTypeConverter = BidirectionalConverter.<InventoryTypeHolder>build()
+    protected final @NotNull BidirectionalConverter<InventoryTypeHolder> inventoryTypeConverter = BidirectionalConverter.<InventoryTypeHolder>build()
             .registerP2W(InventoryTypeHolder.class, e -> e)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {

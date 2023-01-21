@@ -26,7 +26,7 @@ import org.screamingsandals.lib.utils.annotations.AbstractService;
 )
 public abstract class ChunkMapper {
 
-    private static ChunkMapper chunkMapper;
+    private static @Nullable ChunkMapper chunkMapper;
 
     @ApiStatus.Internal
     public ChunkMapper() {

@@ -25,6 +25,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
@@ -42,11 +43,11 @@ public class SBukkitEntityDropItemEvent implements SEntityDropItemEvent, BukkitC
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityDropItemEvent event;
+    private final @NotNull EntityDropItemEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private EntityItem drop;
+    private @Nullable EntityBasic entity;
+    private @Nullable EntityItem drop;
 
     @Override
     public @NotNull EntityBasic entity() {

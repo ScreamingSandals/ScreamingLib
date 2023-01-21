@@ -26,6 +26,7 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.Block;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -48,12 +49,12 @@ public class SBukkitEntityExplodeEvent implements SEntityExplodeEvent, BukkitCan
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityExplodeEvent event;
+    private final @NotNull EntityExplodeEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private LocationHolder location;
-    private Collection<BlockHolder> blocks;
+    private @Nullable EntityBasic entity;
+    private @Nullable LocationHolder location;
+    private @Nullable Collection<@NotNull BlockHolder> blocks;
 
     @Override
     public @NotNull EntityBasic entity() {

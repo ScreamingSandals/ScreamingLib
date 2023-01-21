@@ -25,6 +25,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -40,11 +41,11 @@ public class SBukkitEntityRegainHealthEvent implements SEntityRegainHealthEvent,
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityRegainHealthEvent event;
+    private final @NotNull EntityRegainHealthEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private RegainReason reason;
+    private @Nullable EntityBasic entity;
+    private @Nullable RegainReason reason;
 
     @Override
     public @NotNull EntityBasic entity() {

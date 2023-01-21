@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
@@ -25,15 +26,15 @@ import org.screamingsandals.lib.spectator.ComponentLike;
 
 public interface SPlayerUpdateSignEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    BlockHolder block();
+    @NotNull BlockHolder block();
 
-    Component[] lines();
+    @NotNull Component @NotNull [] lines();
 
-    Component line(@Range(from = 0, to = 3) int index);
+    @NotNull Component line(@Range(from = 0, to = 3) int index);
 
-    void line(@Range(from = 0, to = 3) int index, Component component);
+    void line(@Range(from = 0, to = 3) int index, @NotNull Component component);
 
-    default void line(@Range(from = 0, to = 3) int index, ComponentLike component) {
+    default void line(@Range(from = 0, to = 3) int index, @NotNull ComponentLike component) {
         line(index, component.asComponent());
     }
 }

@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -36,11 +37,11 @@ public class SBukkitPlayerBedLeaveEvent implements SPlayerBedLeaveEvent, BukkitC
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerBedLeaveEvent event;
+    private final @NotNull PlayerBedLeaveEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private BlockHolder bed;
+    private @Nullable PlayerWrapper player;
+    private @Nullable BlockHolder bed;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -51,7 +52,7 @@ public class SBukkitPlayerBedLeaveEvent implements SPlayerBedLeaveEvent, BukkitC
     }
 
     @Override
-    public BlockHolder bed() {
+    public @NotNull BlockHolder bed() {
         if (bed == null) {
             bed = BlockMapper.wrapBlock(event.getBed());
         }

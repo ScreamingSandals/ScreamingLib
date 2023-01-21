@@ -41,15 +41,15 @@ public class SBukkitProjectileHitEvent implements SProjectileHitEvent, BukkitCan
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final ProjectileHitEvent event;
+    private final @NotNull ProjectileHitEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private EntityBasic hitEntity;
+    private @Nullable EntityBasic entity;
+    private @Nullable EntityBasic hitEntity;
     private boolean hitEntityCached;
-    private BlockHolder hitBlock;
+    private @Nullable BlockHolder hitBlock;
     private boolean hitBlockCached;
-    private BlockFace hitFace;
+    private @Nullable BlockFace hitFace;
     private boolean hitFaceCached;
 
     @Override

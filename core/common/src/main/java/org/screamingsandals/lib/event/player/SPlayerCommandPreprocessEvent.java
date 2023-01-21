@@ -16,14 +16,15 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 public interface SPlayerCommandPreprocessEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
-    void player(PlayerWrapper player);
+    void player(@NotNull PlayerWrapper player);
 
-    String command();
+    @NotNull String command();
 
-    void command(String command);
+    void command(@NotNull String command);
 }

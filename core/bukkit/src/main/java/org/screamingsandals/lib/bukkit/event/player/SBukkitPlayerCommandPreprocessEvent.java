@@ -35,24 +35,24 @@ public class SBukkitPlayerCommandPreprocessEvent implements SPlayerCommandPrepro
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerCommandPreprocessEvent event;
+    private final @NotNull PlayerCommandPreprocessEvent event;
 
     @Override
     public @NotNull PlayerWrapper player() {
         return new BukkitEntityPlayer(event.getPlayer());
     }
     @Override
-    public void player(PlayerWrapper player) {
+    public void player(@NotNull PlayerWrapper player) {
         event.setPlayer(player.as(Player.class));
     }
 
     @Override
-    public String command() {
+    public @NotNull String command() {
         return event.getMessage();
     }
 
     @Override
-    public void command(String command) {
+    public void command(@NotNull String command) {
         event.setMessage(command);
     }
 }

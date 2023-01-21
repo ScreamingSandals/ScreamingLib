@@ -20,6 +20,7 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.particle.ParticleData;
@@ -33,7 +34,7 @@ import java.util.List;
 @SuppressWarnings("AlternativeMethodAvailable")
 @Accessors(fluent = true)
 public interface ItemTypeHolder extends ComparableWrapper, ParticleData, TaggableHolder {
-    String platformName();
+    @NotNull String platformName();
 
     @Deprecated
     @LimitedVersionSupport("<= 1.12.2")
@@ -50,14 +51,6 @@ public interface ItemTypeHolder extends ComparableWrapper, ParticleData, Taggabl
     @Contract(value = "_ -> new", pure = true)
     @NotNull ItemTypeHolder withForcedDurability(short durability);
 
-    /**
-     * Use fluent variant!!
-     */
-    @Deprecated(forRemoval = true)
-    default int getMaxStackSize() {
-        return maxStackSize();
-    }
-
     default @NotNull ItemTypeHolder colorize(@NotNull String color) {
         return ItemTypeMapper.colorize(this, color);
     }
@@ -70,11 +63,11 @@ public interface ItemTypeHolder extends ComparableWrapper, ParticleData, Taggabl
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Override
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Override
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     static @NotNull ItemTypeHolder of(@NotNull Object type) {
@@ -96,7 +89,7 @@ public interface ItemTypeHolder extends ComparableWrapper, ParticleData, Taggabl
         return ItemTypeMapper.getCachedAir();
     }
 
-    static @NotNull List<@NotNull ItemTypeHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull ItemTypeHolder> all() {
         return ItemTypeMapper.getValues();
     }
 }

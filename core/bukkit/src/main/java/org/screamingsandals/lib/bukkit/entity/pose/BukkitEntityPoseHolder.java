@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.entity.pose;
 
 import org.bukkit.entity.Pose;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -35,7 +36,7 @@ public class BukkitEntityPoseHolder extends BasicWrapper<Pose> implements Entity
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof Pose || object instanceof EntityPoseHolder) {
             return equals(object);
         }
@@ -43,7 +44,7 @@ public class BukkitEntityPoseHolder extends BasicWrapper<Pose> implements Entity
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 }

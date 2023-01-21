@@ -40,7 +40,7 @@ import java.util.concurrent.CompletableFuture;
 })
 public abstract class EntityMapper {
 
-    private static EntityMapper mapper;
+    private static @Nullable EntityMapper mapper;
 
     @ApiStatus.Internal
     public EntityMapper() {

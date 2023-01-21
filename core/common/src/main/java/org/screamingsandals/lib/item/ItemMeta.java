@@ -26,7 +26,7 @@ import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 
 @UtilityClass
-// TODO: map the rest
+@Deprecated
 public class ItemMeta {
     // Potions
     public static final MetadataKey<PotionHolder> POTION_TYPE = MetadataKey.of("Potion", PotionHolder.class);

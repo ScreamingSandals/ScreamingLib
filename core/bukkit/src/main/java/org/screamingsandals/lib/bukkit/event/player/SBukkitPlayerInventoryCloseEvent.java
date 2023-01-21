@@ -23,6 +23,7 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
@@ -40,13 +41,13 @@ public class SBukkitPlayerInventoryCloseEvent implements SPlayerInventoryCloseEv
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final InventoryCloseEvent event;
+    private final @NotNull InventoryCloseEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private Container topInventory;
-    private Container bottomInventory;
-    private NamespacedMappingKey reason;
+    private @Nullable PlayerWrapper player;
+    private @Nullable Container topInventory;
+    private @Nullable Container bottomInventory;
+    private @Nullable NamespacedMappingKey reason;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -57,7 +58,7 @@ public class SBukkitPlayerInventoryCloseEvent implements SPlayerInventoryCloseEv
     }
 
     @Override
-    public Container topInventory() {
+    public @NotNull Container topInventory() {
         if (topInventory == null) {
             topInventory = ContainerFactory.<Container>wrapContainer(event.getInventory()).orElseThrow();
         }
@@ -65,7 +66,7 @@ public class SBukkitPlayerInventoryCloseEvent implements SPlayerInventoryCloseEv
     }
 
     @Override
-    public Container bottomInventory() {
+    public @NotNull Container bottomInventory() {
         if (bottomInventory == null) {
             bottomInventory = ContainerFactory.<Container>wrapContainer(event.getView().getBottomInventory()).orElseThrow();
         }
@@ -73,7 +74,7 @@ public class SBukkitPlayerInventoryCloseEvent implements SPlayerInventoryCloseEv
     }
 
     @Override
-    public NamespacedMappingKey reason() {
+    public @NotNull NamespacedMappingKey reason() {
         if (reason == null) {
             reason = NamespacedMappingKey.of(event.getReason().name());
         }

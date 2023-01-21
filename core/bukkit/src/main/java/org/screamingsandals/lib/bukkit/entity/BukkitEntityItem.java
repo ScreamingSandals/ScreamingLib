@@ -31,12 +31,12 @@ public class BukkitEntityItem extends BukkitEntityBasic implements EntityItem {
     }
 
     @Override
-    public Item getItem() {
+    public @NotNull Item getItem() {
         return new BukkitItem(getWrappedObject().getItemStack());
     }
 
     @Override
-    public void setItem(Item stack) {
+    public void setItem(@NotNull Item stack) {
         getWrappedObject().setItemStack(stack.as(ItemStack.class));
     }
 
@@ -46,7 +46,7 @@ public class BukkitEntityItem extends BukkitEntityBasic implements EntityItem {
     }
 
     @Override
-    public void setPickupDelay(int delay, TimeUnit timeUnit) {
+    public void setPickupDelay(int delay, @NotNull TimeUnit timeUnit) {
         switch (timeUnit) {
             case SECONDS:
                 getWrappedObject().setPickupDelay(delay * 20);
@@ -101,7 +101,7 @@ public class BukkitEntityItem extends BukkitEntityBasic implements EntityItem {
         return getWrappedObject().getTicksLived();
     }
 
-    public org.bukkit.entity.Item getWrappedObject() {
+    public org.bukkit.entity.@NotNull Item getWrappedObject() {
         return (org.bukkit.entity.Item) wrappedObject;
     }
 }

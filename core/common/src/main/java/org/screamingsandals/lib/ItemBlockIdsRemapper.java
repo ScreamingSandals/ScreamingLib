@@ -45,10 +45,10 @@ import java.util.function.Predicate;
 )
 @RequiredArgsConstructor
 public abstract class ItemBlockIdsRemapper {
-    private final ItemTypeMapper itemTypeMapper;
-    private final BlockTypeMapper blockTypeMapper;
+    private final @NotNull ItemTypeMapper itemTypeMapper;
+    private final @NotNull BlockTypeMapper blockTypeMapper;
     @Getter
-    protected Platform platform;
+    protected final @NotNull Platform platform;
     protected final @NotNull List<@NotNull MappingFlags> mappingFlags = new ArrayList<>();
     public static final @NotNull List<@NotNull String> COLORS = List.of(
             "WHITE",

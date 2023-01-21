@@ -25,6 +25,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityPortalEnterEvent;
@@ -41,11 +42,11 @@ public class SBukkitEntityPortalEnterEvent implements SEntityPortalEnterEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityPortalEnterEvent event;
+    private final @NotNull EntityPortalEnterEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private LocationHolder location;
+    private @Nullable EntityBasic entity;
+    private @Nullable LocationHolder location;
 
     @Override
     public @NotNull EntityBasic entity() {

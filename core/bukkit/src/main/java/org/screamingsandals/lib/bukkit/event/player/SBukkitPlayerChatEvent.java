@@ -24,6 +24,8 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerChatEvent;
@@ -40,14 +42,14 @@ public class SBukkitPlayerChatEvent implements SPlayerChatEvent, BukkitCancellab
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final AsyncPlayerChatEvent event;
+    private final @NotNull AsyncPlayerChatEvent event;
 
     // Internal cache
-    private Collection<PlayerWrapper> recipients;
-    private PlayerWrapper sender;
+    private @Nullable Collection<@NotNull PlayerWrapper> recipients;
+    private @Nullable PlayerWrapper sender;
 
     @Override
-    public Collection<PlayerWrapper> recipients() {
+    public @NotNull Collection<@NotNull PlayerWrapper> recipients() {
         if (recipients == null) {
             recipients = new CollectionLinkedToCollection<>(event.getRecipients(), playerWrapper -> playerWrapper.as(Player.class), BukkitEntityPlayer::new);
         }
@@ -55,7 +57,7 @@ public class SBukkitPlayerChatEvent implements SPlayerChatEvent, BukkitCancellab
     }
 
     @Override
-    public PlayerWrapper sender() {
+    public @NotNull PlayerWrapper sender() {
         if (sender == null) {
             sender = new BukkitEntityPlayer(event.getPlayer());
         }
@@ -63,22 +65,22 @@ public class SBukkitPlayerChatEvent implements SPlayerChatEvent, BukkitCancellab
     }
 
     @Override
-    public String message() {
+    public @NotNull String message() {
         return event.getMessage();
     }
 
     @Override
-    public void message(String message) {
+    public void message(@NotNull String message) {
         event.setMessage(message);
     }
 
     @Override
-    public String format() {
+    public @NotNull String format() {
         return event.getFormat();
     }
 
     @Override
-    public void format(String format) {
+    public void format(@NotNull String format) {
         event.setFormat(format);
     }
 }

@@ -27,7 +27,7 @@ import org.screamingsandals.lib.block.BlockHolder;
 )
 public abstract class BlockStateMapper {
 
-    private static BlockStateMapper blockStateMapper;
+    private static @Nullable BlockStateMapper blockStateMapper;
 
     @ApiStatus.Internal
     public BlockStateMapper() {

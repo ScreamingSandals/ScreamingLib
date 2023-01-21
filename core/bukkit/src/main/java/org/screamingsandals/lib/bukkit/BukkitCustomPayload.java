@@ -34,15 +34,15 @@ import java.util.function.BiConsumer;
 @Service
 @RequiredArgsConstructor
 public class BukkitCustomPayload extends CustomPayload {
-    private final Plugin plugin;
+    private final @NotNull Plugin plugin;
 
     @Override
-    protected void registerOutgoingChannel0(String channel) {
+    protected void registerOutgoingChannel0(@NotNull String channel) {
         Bukkit.getMessenger().registerOutgoingPluginChannel(plugin, channel);
     }
 
     @Override
-    protected void unregisterOutgoingChannel0(String channel) {
+    protected void unregisterOutgoingChannel0(@NotNull String channel) {
         Bukkit.getMessenger().unregisterOutgoingPluginChannel(plugin, channel);
     }
 
@@ -52,12 +52,12 @@ public class BukkitCustomPayload extends CustomPayload {
     }
 
     @Override
-    protected Collection<String> getRegisteredOutgoingChannels0() {
+    protected @NotNull Collection<@NotNull String> getRegisteredOutgoingChannels0() {
         return Bukkit.getMessenger().getOutgoingChannels(plugin);
     }
 
     @Override
-    protected Registration registerIncomingChannel0(String channel, BiConsumer<PlayerWrapper, byte[]> listener) {
+    protected @NotNull Registration registerIncomingChannel0(@NotNull String channel, @NotNull BiConsumer<@NotNull PlayerWrapper, byte @NotNull []> listener) {
         return new BukkitRegistration(Bukkit.getMessenger().registerIncomingPluginChannel(plugin, channel, (channel1, player, message) -> {
             if (channel1.equals(channel)) {
                 listener.accept(new BukkitEntityPlayer(player), message);
@@ -66,7 +66,7 @@ public class BukkitCustomPayload extends CustomPayload {
     }
 
     @Override
-    protected void unregisterIncomingChannel0(Registration registration) {
+    protected void unregisterIncomingChannel0(@NotNull Registration registration) {
         if (!(registration instanceof BukkitRegistration)) {
             throw new UnsupportedOperationException("Registration is not instance of BukkitRegistration class!");
         }
@@ -80,17 +80,17 @@ public class BukkitCustomPayload extends CustomPayload {
     }
 
     @Override
-    protected Collection<String> getRegisteredIncomingChannels0() {
+    protected @NotNull Collection<@NotNull String> getRegisteredIncomingChannels0() {
         return Bukkit.getMessenger().getIncomingChannels(plugin);
     }
 
     @Override
-    protected void send0(PlayerWrapper player, String channel, byte[] payload) {
+    protected void send0(PlayerWrapper player, @NotNull String channel, byte @NotNull [] payload) {
         player.as(Player.class).sendPluginMessage(plugin, channel, payload);
     }
 
     @Override
-    protected void send0(String channel, byte[] payload) {
+    protected void send0(@NotNull String channel, byte @NotNull [] payload) {
         Bukkit.getServer().sendPluginMessage(plugin, channel, payload);
     }
 

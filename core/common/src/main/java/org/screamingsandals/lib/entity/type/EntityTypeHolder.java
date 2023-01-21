@@ -19,6 +19,7 @@ package org.screamingsandals.lib.entity.type;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.utils.ComparableWrapper;
@@ -31,16 +32,7 @@ import java.util.List;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder, TaggableHolder {
-
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
-
-    String platformName();
+    @NotNull String platformName();
 
     boolean isAlive();
 
@@ -56,7 +48,7 @@ public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder, Tag
      */
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
-    boolean is(Object entityType);
+    boolean is(@Nullable Object entityType);
 
     /**
      * Compares the entity type and the objects
@@ -66,7 +58,7 @@ public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder, Tag
      */
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
-    boolean is(Object... entityTypes);
+    boolean is(@Nullable Object @NotNull... entityTypes);
 
     @Nullable EntityBasic spawn(@NotNull LocationHolder location);
 
@@ -86,7 +78,7 @@ public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder, Tag
         return EntityTypeMapping.resolve(entityType);
     }
 
-    static List<EntityTypeHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull EntityTypeHolder> all() {
         return EntityTypeMapping.getValues();
     }
 }

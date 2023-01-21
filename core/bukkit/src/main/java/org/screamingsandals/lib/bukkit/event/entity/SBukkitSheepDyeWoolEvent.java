@@ -23,6 +23,7 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.DyeColor;
 import org.bukkit.event.entity.SheepDyeWoolEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -40,10 +41,10 @@ public class SBukkitSheepDyeWoolEvent implements SSheepDyeWoolEvent, BukkitCance
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final SheepDyeWoolEvent event;
+    private final @NotNull SheepDyeWoolEvent event;
 
     // Internal cache
-    private EntityBasic entity;
+    private @Nullable EntityBasic entity;
 
     @Override
     public @NotNull EntityBasic entity() {

@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -36,11 +37,11 @@ public class SBukkitPlayerDropItemEvent implements SPlayerDropItemEvent, BukkitC
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerDropItemEvent event;
+    private final @NotNull PlayerDropItemEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private EntityItem itemDrop;
+    private @Nullable PlayerWrapper player;
+    private @Nullable EntityItem itemDrop;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -51,7 +52,7 @@ public class SBukkitPlayerDropItemEvent implements SPlayerDropItemEvent, BukkitC
     }
 
     @Override
-    public EntityItem itemDrop() {
+    public @NotNull EntityItem itemDrop() {
         if (itemDrop == null) {
             itemDrop = new BukkitEntityItem(event.getItemDrop());
         }

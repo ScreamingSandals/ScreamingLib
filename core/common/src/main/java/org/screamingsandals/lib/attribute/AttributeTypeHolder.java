@@ -19,6 +19,7 @@ package org.screamingsandals.lib.attribute;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -29,7 +30,7 @@ import java.util.List;
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface AttributeTypeHolder extends ComparableWrapper, RawValueHolder {
 
-    String platformName();
+    @NotNull String platformName();
 
     @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
     static @NotNull AttributeTypeHolder of(@NotNull Object attributeType) {
@@ -47,15 +48,15 @@ public interface AttributeTypeHolder extends ComparableWrapper, RawValueHolder {
         return AttributeTypeMapping.resolve(attributeType);
     }
 
-    static @NotNull List<@NotNull AttributeTypeHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull AttributeTypeHolder> all() {
         return AttributeTypeMapping.getValues();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
     @Override
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ATTRIBUTE_TYPE)
     @Override
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 }

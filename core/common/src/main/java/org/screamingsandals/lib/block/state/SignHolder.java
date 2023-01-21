@@ -16,18 +16,19 @@
 
 package org.screamingsandals.lib.block.state;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 
 public interface SignHolder extends TileStateHolder {
-    Component[] lines();
+    @NotNull Component @NotNull [] lines();
 
-    Component line(@Range(from = 0, to = 3) int index);
+    @NotNull Component line(@Range(from = 0, to = 3) int index);
 
-    void line(@Range(from = 0, to = 3) int index, Component component);
+    void line(@Range(from = 0, to = 3) int index, @NotNull Component component);
 
-    default void line(@Range(from = 0, to = 3) int index, ComponentLike component) {
+    default void line(@Range(from = 0, to = 3) int index, @NotNull ComponentLike component) {
         line(index, component.asComponent());
     }
 }

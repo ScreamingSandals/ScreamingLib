@@ -20,6 +20,7 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -194,7 +195,7 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof PotionEffect || object instanceof PotionEffectHolder) {
             return equals(object);
         }
@@ -202,12 +203,12 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 
     @Override
-    public boolean isSameType(Object object) {
+    public boolean isSameType(@Nullable Object object) {
         if (object instanceof PotionEffect) {
             return ((PotionEffect) object).getType().equals(wrappedObject.getType());
         } else if (object instanceof BukkitPotionEffectHolder) {
@@ -219,7 +220,7 @@ public class BukkitPotionEffectHolder extends BasicWrapper<PotionEffect> impleme
     }
 
     @Override
-    public boolean isSameType(Object... objects) {
+    public boolean isSameType(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::isSameType);
     }
 }

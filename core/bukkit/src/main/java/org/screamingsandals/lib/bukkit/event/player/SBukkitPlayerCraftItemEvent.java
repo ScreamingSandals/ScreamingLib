@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.SPlayerCraftItemEvent;
 import org.screamingsandals.lib.item.Item;
@@ -25,15 +26,15 @@ import org.screamingsandals.lib.utils.BasicWrapper;
 
 public class SBukkitPlayerCraftItemEvent extends SBukkitPlayerInventoryClickEvent implements SPlayerCraftItemEvent {
 
-    public SBukkitPlayerCraftItemEvent(CraftItemEvent event) {
+    public SBukkitPlayerCraftItemEvent(@NotNull CraftItemEvent event) {
         super(event);
     }
 
     // Internal cache
-    private Recipe recipe;
+    private @Nullable Recipe recipe;
 
     @Override
-    public Recipe recipe() {
+    public @NotNull Recipe recipe() {
         if (recipe == null) {
             recipe = new BukkitRecipe(event().getRecipe());
         }

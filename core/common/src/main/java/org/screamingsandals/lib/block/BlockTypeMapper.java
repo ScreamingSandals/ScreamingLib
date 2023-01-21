@@ -42,10 +42,10 @@ import java.util.regex.Pattern;
 @SuppressWarnings("AlternativeMethodAvailable")
 @AbstractService
 public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder> {
-    private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?<blockState>:\\d*|\\[[^]]*])?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
+    private static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?<blockState>:\\d*|\\[[^]]*])?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
     @Getter
-    protected final Map<Predicate<NamespacedMappingKey>, Pair<Function<Byte, Map<String, String>>, Function<Map<String, String>, Byte>>> blockDataTranslators = new HashMap<>();
-    protected final BidirectionalConverter<BlockTypeHolder> blockTypeConverter = BidirectionalConverter.<BlockTypeHolder>build()
+    protected final @NotNull Map<@NotNull Predicate<@NotNull NamespacedMappingKey>, Pair<Function<Byte, Map<String, String>>, Function<Map<String, String>, Byte>>> blockDataTranslators = new HashMap<>();
+    protected final @NotNull BidirectionalConverter<BlockTypeHolder> blockTypeConverter = BidirectionalConverter.<BlockTypeHolder>build()
             .registerP2W(BlockTypeHolder.class, i -> i)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {
@@ -56,8 +56,8 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
                 }
             });
 
-    private static BlockTypeMapper blockTypeMapper;
-    private static BlockTypeHolder cachedAir;
+    private static @Nullable BlockTypeMapper blockTypeMapper;
+    private static @Nullable BlockTypeHolder cachedAir;
 
     @ApiStatus.Internal
     public BlockTypeMapper() {
@@ -195,7 +195,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
         return Collections.unmodifiableList(blockTypeMapper.values);
     }
 
-    public static BlockTypeHolder colorize(BlockTypeHolder holder, String color) {
+    public static @NotNull BlockTypeHolder colorize(@NotNull BlockTypeHolder holder, @NotNull String color) {
         if (blockTypeMapper == null) {
             throw new UnsupportedOperationException("BlockTypeMapper is not initialized yet.");
         }
@@ -216,16 +216,16 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
         return cachedAir;
     }
 
-    public Map<MappingKey, BlockTypeHolder> getUNSAFE_mapping() {
+    public @NotNull Map<@NotNull MappingKey, BlockTypeHolder> getUNSAFE_mapping() {
         return mapping;
     }
 
     @Override
-    public void mapAlias(String mappingKey, String alias) {
+    public void mapAlias(@NotNull String mappingKey, @NotNull String alias) {
         super.mapAlias(mappingKey, alias);
     }
 
-    protected abstract Map<String, String> getDataFromString(String data);
+    protected abstract @NotNull Map<@NotNull String, String> getDataFromString(@NotNull String data);
 
     protected abstract boolean isLegacy();
 }

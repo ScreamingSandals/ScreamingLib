@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.attribute;
 
 import org.bukkit.attribute.Attribute;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.AttributeTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -35,7 +36,7 @@ public class BukkitAttributeTypeHolder extends BasicWrapper<Attribute> implement
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof Attribute || object instanceof AttributeTypeHolder) {
             return equals(object);
         }
@@ -43,7 +44,7 @@ public class BukkitAttributeTypeHolder extends BasicWrapper<Attribute> implement
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 }

@@ -19,6 +19,7 @@ package org.screamingsandals.lib.attribute;
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.slot.EquipmentSlotMapping;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
@@ -43,8 +44,8 @@ import java.util.function.Supplier;
         EquipmentSlotMapping.class
 })
 public abstract class AttributeMapping {
-    private static AttributeMapping attributeMapping;
-    private static final Function<ConfigurationNode, AttributeModifierHolder> CONFIGURATE_LOAD_MODIFIER = node -> {
+    private static @Nullable AttributeMapping attributeMapping;
+    private static final @NotNull Function<@NotNull ConfigurationNode, @Nullable AttributeModifierHolder> CONFIGURATE_LOAD_MODIFIER = node -> {
         var uuid = node.node("uuid");
         var name = node.node("name");
         var amount = node.node("amount");
@@ -63,7 +64,7 @@ public abstract class AttributeMapping {
 
         return null;
     };
-    private static final Function<ConfigurationNode, ItemAttributeHolder> CONFIGURATE_LOAD_ITEM = node -> {
+    private static final @NotNull Function<@NotNull ConfigurationNode, @Nullable ItemAttributeHolder> CONFIGURATE_LOAD_ITEM = node -> {
         var type = node.node("type");
         var uuid = node.node("uuid");
         var name = node.node("name");
@@ -93,7 +94,7 @@ public abstract class AttributeMapping {
         return null;
     };
 
-    protected final BidirectionalConverter<AttributeModifierHolder> attributeModifierConverter = BidirectionalConverter.<AttributeModifierHolder>build()
+    protected final @NotNull BidirectionalConverter<AttributeModifierHolder> attributeModifierConverter = BidirectionalConverter.<AttributeModifierHolder>build()
             .registerP2W(ConfigurationNode.class, CONFIGURATE_LOAD_MODIFIER)
             .registerP2W(Map.class, map -> {
                 try {
@@ -104,7 +105,7 @@ public abstract class AttributeMapping {
             })
             .registerP2W(AttributeModifierHolder.class, e -> e);
 
-    protected final BidirectionalConverter<ItemAttributeHolder> itemAttributeConverter = BidirectionalConverter.<ItemAttributeHolder>build()
+    protected final @NotNull BidirectionalConverter<ItemAttributeHolder> itemAttributeConverter = BidirectionalConverter.<ItemAttributeHolder>build()
             .registerP2W(ConfigurationNode.class, CONFIGURATE_LOAD_ITEM)
             .registerP2W(Map.class, map -> {
                 try {
@@ -150,14 +151,14 @@ public abstract class AttributeMapping {
         return attributeMapping.itemAttributeConverter.convertNullable(attribute);
     }
 
-    public static <T> T convertItemAttributeHolder(ItemAttributeHolder holder, Class<T> newType) {
+    public static <T> T convertItemAttributeHolder(@NotNull ItemAttributeHolder holder, @NotNull Class<T> newType) {
         if (attributeMapping == null) {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }
         return attributeMapping.itemAttributeConverter.convert(holder, newType);
     }
 
-    public static <T> T convertAttributeModifierHolder(AttributeModifierHolder holder, Class<T> newType) {
+    public static <T> T convertAttributeModifierHolder(@NotNull AttributeModifierHolder holder, @NotNull Class<T> newType) {
         if (attributeMapping == null) {
             throw new UnsupportedOperationException("AttributeMapping is not initialized yet.");
         }

@@ -16,13 +16,14 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SPlayerBedLeaveEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    BlockHolder bed();
+    @NotNull BlockHolder bed();
 
     boolean bedSpawn();
 

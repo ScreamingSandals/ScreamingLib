@@ -20,6 +20,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.entity.ItemMergeEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityItem;
@@ -33,14 +35,14 @@ public class SBukkitItemMergeEvent implements SItemMergeEvent, BukkitCancellable
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final ItemMergeEvent event;
+    private final @NotNull ItemMergeEvent event;
 
     // Internal cache
-    private EntityItem entity;
-    private EntityItem target;
+    private @Nullable EntityItem entity;
+    private @Nullable EntityItem target;
 
     @Override
-    public EntityItem entity() {
+    public @NotNull EntityItem entity() {
         if (entity == null) {
             entity = new BukkitEntityItem(event.getEntity());
         }
@@ -48,7 +50,7 @@ public class SBukkitItemMergeEvent implements SItemMergeEvent, BukkitCancellable
     }
 
     @Override
-    public EntityItem target() {
+    public @NotNull EntityItem target() {
         if (target == null) {
             target = new BukkitEntityItem(event.getTarget());
         }

@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.entity;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.ContainerHolder;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
@@ -33,13 +34,13 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
-    EntityTypeHolder getEntityType();
+    @NotNull EntityTypeHolder getEntityType();
 
-    LocationHolder getLocation();
+    @NotNull LocationHolder getLocation();
 
-    Vector3D getVelocity();
+    @NotNull Vector3D getVelocity();
 
-    void setVelocity(Vector3D velocity);
+    void setVelocity(@NotNull Vector3D velocity);
 
     double getHeight();
 
@@ -60,7 +61,7 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
      * @param location the location to teleport to
      * @return the teleport future
      */
-    CompletableFuture<Boolean> teleport(LocationHolder location);
+    @NotNull CompletableFuture<@NotNull Boolean> teleport(@NotNull LocationHolder location);
 
     /**
      * Teleports this entity to a location asynchronously.
@@ -69,7 +70,7 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
      * @param callback the callback runnable
      * @return the teleport future
      */
-    default CompletableFuture<Void> teleport(LocationHolder location, Runnable callback) {
+    default @NotNull CompletableFuture<Void> teleport(@NotNull LocationHolder location, @NotNull Runnable callback) {
         return teleport(location, callback, false);
     }
 
@@ -81,7 +82,7 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
      * @param forceCallback should the callback be run even if the teleport didn't succeed?
      * @return the teleport future
      */
-    CompletableFuture<Void> teleport(LocationHolder location, Runnable callback, boolean forceCallback);
+    @NotNull CompletableFuture<Void> teleport(@NotNull LocationHolder location, @NotNull Runnable callback, boolean forceCallback);
 
     /**
      * Teleports this entity to a location synchronously.
@@ -89,7 +90,7 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
      * @param location the location to teleport to
      * @return true if the teleport was successful
      */
-    boolean teleportSync(LocationHolder location);
+    boolean teleportSync(@NotNull LocationHolder location);
 
     int getEntityId();
 
@@ -107,11 +108,11 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
 
     void setPersistent(boolean persistent);
 
-    List<EntityBasic> getPassengers();
+    @NotNull List<@NotNull EntityBasic> getPassengers();
 
-    boolean addPassenger(EntityBasic passenger);
+    boolean addPassenger(@NotNull EntityBasic passenger);
 
-    boolean removePassenger(EntityBasic passenger);
+    boolean removePassenger(@NotNull EntityBasic passenger);
 
     boolean hasPassengers();
 
@@ -121,7 +122,7 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
 
     void setFallDistance(float distance);
 
-    UUID getUniqueId();
+    @NotNull UUID getUniqueId();
 
     int getTicksLived();
 
@@ -131,13 +132,13 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
 
     boolean leaveVehicle();
 
-    EntityBasic getVehicle();
+    @Nullable EntityBasic getVehicle();
 
-    void setCustomName(String name);
+    void setCustomName(@Nullable String name);
 
-    void setCustomName(Component name);
+    void setCustomName(@Nullable Component name);
 
-    default void setCustomName(ComponentLike name) {
+    default void setCustomName(@Nullable ComponentLike name) {
         setCustomName(name.asComponent());
     }
 
@@ -167,29 +168,29 @@ public interface EntityBasic extends Wrapper, RawValueHolder, ContainerHolder {
 
     void setPortalCooldown(int cooldown);
 
-    boolean hasMetadata(String metadata);
+    boolean hasMetadata(@NotNull String metadata);
 
-    Object getMetadata(String metadata);
+    Object getMetadata(@NotNull String metadata);
 
-    int getIntMetadata(String metadata);
+    int getIntMetadata(@NotNull String metadata);
 
-    boolean getBooleanMetadata(String metadata);
+    boolean getBooleanMetadata(@NotNull String metadata);
 
-    byte getByteMetadata(String metadata);
+    byte getByteMetadata(@NotNull String metadata);
 
-    long getLongMetadata(String metadata);
+    long getLongMetadata(@NotNull String metadata);
 
-    String getStringMetadata(String metadata);
+    String getStringMetadata(@NotNull String metadata);
 
-    Component getComponentMetadata(String metadata);
+    Component getComponentMetadata(@NotNull String metadata);
 
-    LocationHolder getLocationMetadata(String metadata);
+    LocationHolder getLocationMetadata(@NotNull String metadata);
 
-    Color getColorMetadata(String metadata);
+    Color getColorMetadata(@NotNull String metadata);
 
-    Vector3D getVectorMetadata(String metadata);
+    Vector3D getVectorMetadata(@NotNull String metadata);
 
-    Vector3Df getFloatVectorMetadata(String metadata);
+    Vector3Df getFloatVectorMetadata(@NotNull String metadata);
 
-    void setMetadata(String metadata, Object value);
+    void setMetadata(@NotNull String metadata, Object value);
 }

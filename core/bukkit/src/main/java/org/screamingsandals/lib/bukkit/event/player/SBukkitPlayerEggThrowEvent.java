@@ -23,6 +23,7 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.player.PlayerEggThrowEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -40,11 +41,11 @@ public class SBukkitPlayerEggThrowEvent implements SPlayerEggThrowEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerEggThrowEvent event;
+    private final @NotNull PlayerEggThrowEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private EntityBasic egg;
+    private @Nullable PlayerWrapper player;
+    private @Nullable EntityBasic egg;
 
     @Override
     public @NotNull PlayerWrapper player() {

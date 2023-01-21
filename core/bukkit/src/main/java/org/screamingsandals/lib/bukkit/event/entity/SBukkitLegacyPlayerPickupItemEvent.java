@@ -24,6 +24,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -40,19 +41,19 @@ public class SBukkitLegacyPlayerPickupItemEvent implements SPlayerPickupItemEven
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerPickupItemEvent event;
+    private final @NotNull PlayerPickupItemEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private EntityItem item;
+    private @Nullable PlayerWrapper player;
+    private @Nullable EntityItem item;
 
     @Override
-    public EntityBasic entity() {
+    public @NotNull EntityBasic entity() {
         return player();
     }
 
     @Override
-    public EntityItem item() {
+    public @NotNull EntityItem item() {
         if (item == null) {
             item = new BukkitEntityItem(event.getItem());
         }

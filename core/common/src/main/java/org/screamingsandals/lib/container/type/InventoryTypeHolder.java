@@ -19,6 +19,7 @@ package org.screamingsandals.lib.container.type;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.spectator.Component;
@@ -32,32 +33,15 @@ import java.util.List;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
-
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
-
-    String platformName();
+    @NotNull String platformName();
 
     int size();
 
-    /**
-     * Use the fluent variant
-     */
-    @Deprecated(forRemoval = true)
-    default int getSize() {
-        return size();
+    default <C extends Container> @Nullable C createContainer(@Nullable ComponentLike name) {
+        return createContainer(name != null ? name.asComponent() : null);
     }
 
-    default <C extends Container> @Nullable C createContainer(ComponentLike name) {
-        return createContainer(name.asComponent());
-    }
-
-    default <C extends Container> @Nullable C createContainer(Component name) {
+    default <C extends Container> @Nullable C createContainer(@Nullable Component name) {
         return ContainerFactory.createContainer(this, name);
     }
 
@@ -73,7 +57,7 @@ public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
      */
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     /**
      * Compares the entity type and the objects
@@ -83,7 +67,7 @@ public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
      */
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.INVENTORY_TYPE)
     static @NotNull InventoryTypeHolder of(@NotNull Object inventoryType) {
@@ -101,7 +85,7 @@ public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
         return InventoryTypeMapping.resolve(inventoryType);
     }
 
-    static @NotNull List<@NotNull InventoryTypeHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull InventoryTypeHolder> all() {
         return InventoryTypeMapping.getValues();
     }
 }

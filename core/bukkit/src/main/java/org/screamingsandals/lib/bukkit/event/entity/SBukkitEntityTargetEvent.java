@@ -39,11 +39,11 @@ public class SBukkitEntityTargetEvent implements SEntityTargetEvent, BukkitCance
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityTargetEvent event;
+    private final @NotNull EntityTargetEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private TargetReason targetReason;
+    private @Nullable EntityBasic entity;
+    private @Nullable TargetReason targetReason;
 
     @Override
     public @NotNull EntityBasic entity() {

@@ -331,13 +331,13 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
         }
 
         @Override
-        public @NotNull B append(@NotNull Component @NotNull ... components) {
+        public @NotNull B append(@NotNull Component @NotNull... components) {
             builder.append(Arrays.stream(components).map(component -> component.as(net.kyori.adventure.text.Component.class)).collect(Collectors.toList()));
             return self();
         }
 
         @Override
-        public @NotNull B append(@NotNull ComponentLike @NotNull ... components) {
+        public @NotNull B append(@NotNull ComponentLike @NotNull... components) {
             builder.append(Arrays.stream(components).map(component -> component.asComponent().as(net.kyori.adventure.text.Component.class)).collect(Collectors.toList()));
             return self();
         }

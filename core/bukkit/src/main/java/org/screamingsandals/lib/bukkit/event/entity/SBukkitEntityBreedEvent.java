@@ -43,12 +43,12 @@ public class SBukkitEntityBreedEvent implements SEntityBreedEvent, BukkitCancell
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityBreedEvent event;
+    private final @NotNull EntityBreedEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private EntityBasic mother;
-    private EntityBasic father;
+    private @Nullable EntityBasic entity;
+    private @Nullable EntityBasic mother;
+    private @Nullable EntityBasic father;
     private @Nullable EntityBasic breeder;
     private boolean breederCached;
     private @Nullable Item bredWith;

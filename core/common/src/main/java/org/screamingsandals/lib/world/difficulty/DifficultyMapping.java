@@ -36,9 +36,9 @@ import java.util.List;
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
 public abstract class DifficultyMapping extends AbstractTypeMapper<DifficultyHolder> {
-    private static DifficultyMapping difficultyMapping;
+    private static @Nullable DifficultyMapping difficultyMapping;
 
-    protected final BidirectionalConverter<DifficultyHolder> difficultyConverter = BidirectionalConverter.<DifficultyHolder>build()
+    protected final @NotNull BidirectionalConverter<DifficultyHolder> difficultyConverter = BidirectionalConverter.<DifficultyHolder>build()
             .registerP2W(DifficultyHolder.class, d -> d)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {
@@ -60,7 +60,7 @@ public abstract class DifficultyMapping extends AbstractTypeMapper<DifficultyHol
     @CustomAutocompletion(CustomAutocompletion.Type.DIFFICULTY)
     @OfMethodAlternative(value = DifficultyHolder.class, methodName = "ofNullable")
     @Contract("null -> null")
-    public static @Nullable DifficultyHolder resolve(Object difficulty) {
+    public static @Nullable DifficultyHolder resolve(@Nullable Object difficulty) {
         if (difficultyMapping == null) {
             throw new UnsupportedOperationException("DifficultyMapping is not initialized yet.");
         }

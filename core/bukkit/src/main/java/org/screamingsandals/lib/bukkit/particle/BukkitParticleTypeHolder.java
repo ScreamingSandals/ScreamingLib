@@ -56,7 +56,7 @@ public class BukkitParticleTypeHolder extends BasicWrapper<Particle> implements 
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof Particle || object instanceof ParticleTypeHolder) {
             return equals(object);
         }
@@ -64,7 +64,7 @@ public class BukkitParticleTypeHolder extends BasicWrapper<Particle> implements 
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 }

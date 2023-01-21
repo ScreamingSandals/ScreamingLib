@@ -35,9 +35,9 @@ import java.util.List;
 
 @AbstractService
 public abstract class EquipmentSlotMapping extends AbstractTypeMapper<EquipmentSlotHolder> {
-    private static EquipmentSlotMapping equipmentSlotMapping;
+    private static @Nullable EquipmentSlotMapping equipmentSlotMapping;
 
-    protected final BidirectionalConverter<EquipmentSlotHolder> equipmentSlotConverter = BidirectionalConverter.<EquipmentSlotHolder>build()
+    protected final @NotNull BidirectionalConverter<EquipmentSlotHolder> equipmentSlotConverter = BidirectionalConverter.<EquipmentSlotHolder>build()
             .registerP2W(EquipmentSlotHolder.class, e -> e)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {

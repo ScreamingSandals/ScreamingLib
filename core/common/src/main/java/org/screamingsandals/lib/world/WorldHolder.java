@@ -111,7 +111,7 @@ public interface WorldHolder extends Wrapper, RawValueHolder, Serializable, Play
      * @param <T> the entity type
      * @return the list of entities
      */
-    default <T extends EntityBasic> List<T> getEntitiesByClass(Class<T> clazz) {
+    default <T extends EntityBasic> @NotNull List<@NotNull T> getEntitiesByClass(Class<T> clazz) {
         return getEntities().stream()
                 .filter(clazz::isInstance)
                 .map(clazz::cast)

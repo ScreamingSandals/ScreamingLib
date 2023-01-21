@@ -19,6 +19,7 @@ package org.screamingsandals.lib.entity.pose;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -30,27 +31,18 @@ import java.util.List;
 @SuppressWarnings("AlternativeMethodAvailable")
 @LimitedVersionSupport("Bukkit >= 1.17")
 public interface EntityPoseHolder extends ComparableWrapper, RawValueHolder {
-
-    /**
-     * Use fluent variant!
-     */
-    @Deprecated(forRemoval = true)
-    default String getPlatformName() {
-        return platformName();
-    }
-
-    String platformName();
+    @NotNull String platformName();
 
     /**
      * {@inheritDoc}
      */
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_POSE)
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_POSE)
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_POSE)
     static @NotNull EntityPoseHolder of(@NotNull Object entityPose) {
@@ -68,7 +60,7 @@ public interface EntityPoseHolder extends ComparableWrapper, RawValueHolder {
         return EntityPoseMapping.resolve(entityPose);
     }
 
-    static @NotNull List<@NotNull EntityPoseHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull EntityPoseHolder> all() {
         return EntityPoseMapping.getValues();
     }
 }

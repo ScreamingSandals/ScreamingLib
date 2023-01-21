@@ -19,6 +19,7 @@ package org.screamingsandals.lib.item.meta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -27,11 +28,10 @@ import java.util.List;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface PotionHolder extends ComparableWrapper {
-
-    String platformName();
+    @NotNull String platformName();
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION)
-    static PotionHolder of(Object potion) {
+    static @NotNull PotionHolder of(@NotNull Object potion) {
         var result = ofNullable(potion);
         Preconditions.checkNotNullIllegal(result, "Could not find potion: " + potion);
         return result;
@@ -46,15 +46,15 @@ public interface PotionHolder extends ComparableWrapper {
         return PotionMapping.resolve(potion);
     }
 
-    static @NotNull List<@NotNull PotionHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull PotionHolder> all() {
         return PotionMapping.getValues();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION)
     @Override
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION)
     @Override
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 }

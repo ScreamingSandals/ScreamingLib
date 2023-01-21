@@ -19,6 +19,7 @@ package org.screamingsandals.lib.item.meta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -28,7 +29,7 @@ import java.util.List;
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface EnchantmentHolder extends ComparableWrapper {
 
-    String platformName();
+    @NotNull String platformName();
 
     int level();
 
@@ -37,17 +38,17 @@ public interface EnchantmentHolder extends ComparableWrapper {
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     @Override
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     @Override
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    boolean isSameType(Object object);
+    boolean isSameType(@Nullable Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
-    boolean isSameType(Object... objects);
+    boolean isSameType(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENCHANTMENT)
     static @NotNull EnchantmentHolder of(@NotNull Object enchantment) {
@@ -65,7 +66,7 @@ public interface EnchantmentHolder extends ComparableWrapper {
         return EnchantmentMapping.resolve(enchantment);
     }
 
-    static @NotNull List<@NotNull EnchantmentHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull EnchantmentHolder> all() {
         return EnchantmentMapping.getValues();
     }
 }

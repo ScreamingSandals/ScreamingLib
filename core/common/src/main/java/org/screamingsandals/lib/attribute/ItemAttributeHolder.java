@@ -26,11 +26,11 @@ import java.util.UUID;
 
 @Data
 public class ItemAttributeHolder implements Wrapper {
-    private final AttributeTypeHolder type;
-    private final UUID uuid;
-    private final String name;
+    private final @NotNull AttributeTypeHolder type;
+    private final @NotNull UUID uuid;
+    private final @NotNull String name;
     private final double amount;
-    private final AttributeModifierHolder.Operation operation;
+    private final AttributeModifierHolder.@NotNull Operation operation;
     private final @Nullable EquipmentSlotHolder slot;
 
     /**

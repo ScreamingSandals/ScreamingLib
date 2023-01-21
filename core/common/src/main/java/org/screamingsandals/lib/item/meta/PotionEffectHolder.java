@@ -19,6 +19,7 @@ package org.screamingsandals.lib.item.meta;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -27,7 +28,7 @@ import java.util.List;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface PotionEffectHolder extends ComparableWrapper {
-    String platformName();
+    @NotNull String platformName();
 
     int duration();
 
@@ -56,35 +57,17 @@ public interface PotionEffectHolder extends ComparableWrapper {
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
     @Override
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
     @Override
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
-    boolean isSameType(Object object);
+    boolean isSameType(@Nullable Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
-    boolean isSameType(Object... objects);
-
-    /**
-     * Inconsistent naming (should be isSameType like in other holders)
-     */
-    @Deprecated(forRemoval = true)
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
-    default boolean isType(Object object) {
-        return isSameType(object);
-    }
-
-    /**
-     * Inconsistent naming (should be isSameType like in other holders)
-     */
-    @Deprecated(forRemoval = true)
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
-    default boolean isType(Object... objects) {
-        return isSameType(objects);
-    }
+    boolean isSameType(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION_EFFECT)
     static @NotNull PotionEffectHolder of(@NotNull Object effect) {
@@ -102,7 +85,7 @@ public interface PotionEffectHolder extends ComparableWrapper {
         return PotionEffectMapping.resolve(effect);
     }
 
-    static @NotNull List<@NotNull PotionEffectHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull PotionEffectHolder> all() {
         return PotionEffectMapping.getValues();
     }
 }

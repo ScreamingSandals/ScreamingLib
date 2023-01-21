@@ -19,6 +19,7 @@ package org.screamingsandals.lib.world.difficulty;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -28,14 +29,13 @@ import java.util.List;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface DifficultyHolder extends ComparableWrapper, RawValueHolder {
-
     @NotNull String platformName();
 
     @CustomAutocompletion(CustomAutocompletion.Type.DIFFICULTY)
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.DIFFICULTY)
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.DIFFICULTY)
     static @NotNull DifficultyHolder of(@NotNull Object difficulty) {
@@ -53,7 +53,7 @@ public interface DifficultyHolder extends ComparableWrapper, RawValueHolder {
         return DifficultyMapping.resolve(difficulty);
     }
 
-    static @NotNull List<@NotNull DifficultyHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull DifficultyHolder> all() {
         return DifficultyMapping.getValues();
     }
 }

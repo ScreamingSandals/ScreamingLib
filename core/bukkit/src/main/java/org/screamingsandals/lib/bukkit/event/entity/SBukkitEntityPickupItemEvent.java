@@ -25,6 +25,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityItem;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
@@ -42,11 +43,11 @@ public class SBukkitEntityPickupItemEvent implements SEntityPickupItemEvent, Buk
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityPickupItemEvent event;
+    private final @NotNull EntityPickupItemEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private EntityItem item;
+    private @Nullable EntityBasic entity;
+    private @Nullable EntityItem item;
 
     @Override
     public @NotNull EntityBasic entity() {

@@ -170,7 +170,7 @@ public final class CompoundTag implements Tag, CompoundTagTreeInspector, Compoun
     }
 
     @Override
-    public @Nullable Tag findTag(@NotNull String @NotNull ... tagKeys) {
+    public @Nullable Tag findTag(@NotNull String @NotNull... tagKeys) {
         if (tagKeys.length == 0) {
             return null;
         }
@@ -206,7 +206,7 @@ public final class CompoundTag implements Tag, CompoundTagTreeInspector, Compoun
 
     // TODO: test code below
     @Override
-    public @NotNull CompoundTag with(@NotNull Tag tag, @NotNull String @NotNull ... tagKeys) {
+    public @NotNull CompoundTag with(@NotNull Tag tag, @NotNull String @NotNull... tagKeys) {
         if (tagKeys.length == 0) {
             return this;
         }
@@ -357,7 +357,7 @@ public final class CompoundTag implements Tag, CompoundTagTreeInspector, Compoun
     }
 
     @Override
-    public @NotNull CompoundTag without(@NotNull String @NotNull ... tagKeys) {
+    public @NotNull CompoundTag without(@NotNull String @NotNull... tagKeys) {
         if (tagKeys.length == 0) {
             return this;
         }

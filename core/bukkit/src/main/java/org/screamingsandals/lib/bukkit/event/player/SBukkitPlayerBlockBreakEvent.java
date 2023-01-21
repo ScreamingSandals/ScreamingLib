@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.block.BlockBreakEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.event.block.SBukkitBlockExperienceEvent;
@@ -25,12 +26,12 @@ import org.screamingsandals.lib.event.player.SPlayerBlockBreakEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 public class SBukkitPlayerBlockBreakEvent extends SBukkitBlockExperienceEvent implements SPlayerBlockBreakEvent, BukkitCancellable {
-    public SBukkitPlayerBlockBreakEvent(BlockBreakEvent event) {
+    public SBukkitPlayerBlockBreakEvent(@NotNull BlockBreakEvent event) {
         super(event);
     }
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public boolean dropItems() {

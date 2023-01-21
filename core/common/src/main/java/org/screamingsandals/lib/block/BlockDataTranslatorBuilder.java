@@ -31,6 +31,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 @Accessors(chain = true, fluent = true)
+@Deprecated
 public class BlockDataTranslatorBuilder {
     private final List<DataEntry> entries = new ArrayList<>();
 

@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.block;
 
 import lombok.experimental.ExtensionMethod;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.ext.paperlib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -59,12 +60,12 @@ public class BukkitBlockMapper extends BlockMapper {
     }
 
     @Override
-    protected BlockHolder getBlockAt0(LocationHolder location) {
+    protected @NotNull BlockHolder getBlockAt0(@NotNull LocationHolder location) {
         return resolve(location).orElseThrow();
     }
 
     @Override
-    protected void setBlockAt0(LocationHolder location, BlockTypeHolder material, boolean ignorePhysics) {
+    protected void setBlockAt0(@NotNull LocationHolder location, @NotNull BlockTypeHolder material, boolean ignorePhysics) {
         final var bukkitLocation = location.as(Location.class);
         PaperLib.getChunkAtAsync(bukkitLocation)
                 .thenAccept(result -> {
@@ -78,7 +79,7 @@ public class BukkitBlockMapper extends BlockMapper {
     }
 
     @Override
-    protected void breakNaturally0(LocationHolder location) {
+    protected void breakNaturally0(@NotNull LocationHolder location) {
         location.as(Location.class).getBlock().breakNaturally();
     }
 }

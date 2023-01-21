@@ -16,14 +16,15 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
 public interface SPlayerArmorStandManipulateEvent extends SPlayerInteractEntityEvent {
 
-    Item playerItem();
+    @NotNull Item playerItem();
 
-    Item armorStandItem();
+    @NotNull Item armorStandItem();
 
-    EquipmentSlotHolder slot();
+    @NotNull EquipmentSlotHolder slot();
 }

@@ -24,10 +24,10 @@ import java.util.UUID;
 
 @Data
 public class AttributeModifierHolder implements Wrapper {
-    private final UUID uuid;
-    private final String name;
+    private final @NotNull UUID uuid;
+    private final @NotNull String name;
     private final double amount;
-    private final Operation operation;
+    private final @NotNull Operation operation;
 
     /**
      * {@inheritDoc}
@@ -42,7 +42,7 @@ public class AttributeModifierHolder implements Wrapper {
         MULTIPLY_BASE,
         MULTIPLY_TOTAL;
 
-        public static Operation byOrdinal(int ordinal) {
+        public static @NotNull Operation byOrdinal(int ordinal) {
             return values()[ordinal];
         }
     }

@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerVelocityChangeEvent;
@@ -36,10 +37,10 @@ public class SBukkitPlayerVelocityChangeEvent implements SPlayerVelocityChangeEv
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerVelocityEvent event;
+    private final @NotNull PlayerVelocityEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -50,12 +51,12 @@ public class SBukkitPlayerVelocityChangeEvent implements SPlayerVelocityChangeEv
     }
 
     @Override
-    public Vector3D velocity() {
+    public @NotNull Vector3D velocity() {
         return new Vector3D(event.getVelocity().getX(), event.getVelocity().getY(), event.getVelocity().getZ());
     }
 
     @Override
-    public void velocity(Vector3D velocity) {
+    public void velocity(@NotNull Vector3D velocity) {
         event.setVelocity(new Vector(velocity.getX(), velocity.getY(), velocity.getZ()));
     }
 }

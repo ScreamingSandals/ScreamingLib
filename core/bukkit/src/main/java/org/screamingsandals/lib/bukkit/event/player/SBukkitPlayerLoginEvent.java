@@ -20,6 +20,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -40,10 +41,10 @@ public class SBukkitPlayerLoginEvent implements SPlayerLoginEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerLoginEvent event;
+    private final @NotNull PlayerLoginEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -54,27 +55,27 @@ public class SBukkitPlayerLoginEvent implements SPlayerLoginEvent {
     }
 
     @Override
-    public InetAddress address() {
+    public @NotNull InetAddress address() {
         return event.getAddress();
     }
 
     @Override
-    public String hostname() {
+    public @NotNull String hostname() {
         return event.getHostname();
     }
 
     @Override
-    public SAsyncPlayerPreLoginEvent.Result result() {
+    public SAsyncPlayerPreLoginEvent.@NotNull Result result() {
         return SAsyncPlayerPreLoginEvent.Result.valueOf(event.getResult().name());
     }
 
     @Override
-    public void result(SAsyncPlayerPreLoginEvent.Result result) {
+    public void result(SAsyncPlayerPreLoginEvent.@NotNull Result result) {
         event.setResult(PlayerLoginEvent.Result.valueOf(result.name()));
     }
 
     @Override
-    public Component message() {
+    public @NotNull Component message() {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             return AdventureBackend.wrapComponent(event.kickMessage());
         } else {
@@ -83,7 +84,7 @@ public class SBukkitPlayerLoginEvent implements SPlayerLoginEvent {
     }
 
     @Override
-    public void message(Component kickMessage) {
+    public void message(@NotNull Component kickMessage) {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             event.kickMessage(kickMessage.as(net.kyori.adventure.text.Component.class));
         } else {
@@ -92,7 +93,7 @@ public class SBukkitPlayerLoginEvent implements SPlayerLoginEvent {
     }
 
     @Override
-    public void message(ComponentLike message) {
+    public void message(@NotNull ComponentLike message) {
         if (message instanceof AudienceComponentLike) {
             message(((AudienceComponentLike) message).asComponent(player()));
         } else {

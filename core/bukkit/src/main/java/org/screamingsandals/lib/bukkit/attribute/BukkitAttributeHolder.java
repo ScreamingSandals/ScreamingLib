@@ -66,12 +66,12 @@ public class BukkitAttributeHolder extends BasicWrapper<AttributeInstance> imple
     }
 
     @Override
-    public void addModifier(AttributeModifierHolder modifier) {
+    public void addModifier(@NotNull AttributeModifierHolder modifier) {
         wrappedObject.addModifier(modifier.as(AttributeModifier.class));
     }
 
     @Override
-    public void removeModifier(AttributeModifierHolder modifier) {
+    public void removeModifier(@NotNull AttributeModifierHolder modifier) {
         wrappedObject.removeModifier(modifier.as(AttributeModifier.class));
     }
 }

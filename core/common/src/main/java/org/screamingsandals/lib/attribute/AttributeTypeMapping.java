@@ -18,6 +18,7 @@ package org.screamingsandals.lib.attribute;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.configurate.AttributeTypeHolderSerializer;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
@@ -35,9 +36,9 @@ import java.util.Optional;
 
 @AbstractService
 public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeTypeHolder> {
-    private static AttributeTypeMapping attributeTypeMapping;
+    private static @Nullable AttributeTypeMapping attributeTypeMapping;
 
-    protected final BidirectionalConverter<AttributeTypeHolder> attributeTypeConverter = BidirectionalConverter.<AttributeTypeHolder>build()
+    protected final @NotNull BidirectionalConverter<AttributeTypeHolder> attributeTypeConverter = BidirectionalConverter.<AttributeTypeHolder>build()
             .registerP2W(AttributeTypeHolder.class, e -> e)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {
@@ -81,7 +82,7 @@ public abstract class AttributeTypeMapping extends AbstractTypeMapper<AttributeT
     }
 
     @OfMethodAlternative(value = AttributeTypeHolder.class, methodName = "all")
-    public static List<AttributeTypeHolder> getValues() {
+    public static @NotNull List<@NotNull AttributeTypeHolder> getValues() {
         if (attributeTypeMapping == null) {
             throw new UnsupportedOperationException("AttributeTypeMapping is not initialized yet.");
         }

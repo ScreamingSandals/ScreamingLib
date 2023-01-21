@@ -92,9 +92,4 @@ public class BukkitEntityHuman extends BukkitEntityLiving implements EntityHuman
             // TODO: backport missing api <= 1.16.4
         }
     }
-
-    @Override
-    public <T> @NotNull T as(@NotNull Class<T> type) {
-        return super.as(type);
-    }
 }

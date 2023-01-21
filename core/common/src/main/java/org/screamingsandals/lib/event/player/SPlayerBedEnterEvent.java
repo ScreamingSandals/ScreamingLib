@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.block.BlockHolder;
@@ -24,13 +25,13 @@ import java.util.Locale;
 
 public interface SPlayerBedEnterEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    BlockHolder bed();
+    @NotNull BlockHolder bed();
 
-    BedEnterResult bedEnterResult();
+    @NotNull BedEnterResult bedEnterResult();
 
-    Result useBed();
+    @NotNull Result useBed();
 
-    void useBed(Result useBed);
+    void useBed(@NotNull Result useBed);
 
     @Override
     default boolean cancelled() {
@@ -39,7 +40,7 @@ public interface SPlayerBedEnterEvent extends SCancellableEvent, SPlayerEvent, P
 
     @Override
     default void cancelled(boolean cancel) {
-        useBed(cancel ? Result.DENY: Result.DEFAULT);
+        useBed(cancel ? Result.DENY : Result.DEFAULT);
     }
 
     /**

@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.world.weather;
 
 import org.bukkit.WeatherType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.world.weather.WeatherHolder;
 
@@ -35,7 +36,7 @@ public class BukkitWeatherHolder extends BasicWrapper<WeatherType> implements We
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof WeatherType || object instanceof WeatherHolder) {
             return equals(object);
         }
@@ -43,7 +44,7 @@ public class BukkitWeatherHolder extends BasicWrapper<WeatherType> implements We
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 }

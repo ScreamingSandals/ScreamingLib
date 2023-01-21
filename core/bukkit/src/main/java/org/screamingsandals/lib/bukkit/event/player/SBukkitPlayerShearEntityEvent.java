@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
@@ -42,13 +43,13 @@ public class SBukkitPlayerShearEntityEvent implements SPlayerShearEntityEvent, B
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerShearEntityEvent event;
+    private final @NotNull PlayerShearEntityEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private EntityBasic what;
-    private Item item;
-    private EquipmentSlotHolder hand;
+    private @Nullable PlayerWrapper player;
+    private @Nullable EntityBasic what;
+    private @Nullable Item item;
+    private @Nullable EquipmentSlotHolder hand;
 
     @Override
     public @NotNull PlayerWrapper player() {

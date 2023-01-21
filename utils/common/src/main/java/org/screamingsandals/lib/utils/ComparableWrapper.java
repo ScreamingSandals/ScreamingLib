@@ -16,6 +16,9 @@
 
 package org.screamingsandals.lib.utils;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public interface ComparableWrapper extends Wrapper {
     /**
      * Compares the wrapper and the object.
@@ -23,7 +26,7 @@ public interface ComparableWrapper extends Wrapper {
      * @param object object that represents wrapped type
      * @return true, if specified object is the same as this
      */
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     /**
      * Compares the wrapper and the objects.
@@ -31,5 +34,5 @@ public interface ComparableWrapper extends Wrapper {
      * @param objects array of objects that represents wrapped type
      * @return true, if at least one of the specified objects is same as this
      */
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 }

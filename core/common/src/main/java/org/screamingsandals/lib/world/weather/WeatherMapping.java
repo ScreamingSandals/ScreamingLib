@@ -37,9 +37,9 @@ import java.util.List;
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
 public abstract class WeatherMapping extends AbstractTypeMapper<WeatherHolder> {
-    private static WeatherMapping weatherMapping;
+    private static @Nullable WeatherMapping weatherMapping;
 
-    protected final BidirectionalConverter<WeatherHolder> weatherConverter = BidirectionalConverter.<WeatherHolder>build()
+    protected final @NotNull BidirectionalConverter<WeatherHolder> weatherConverter = BidirectionalConverter.<WeatherHolder>build()
             .registerP2W(WeatherHolder.class, d -> d)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {

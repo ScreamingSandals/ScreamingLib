@@ -19,6 +19,7 @@ package org.screamingsandals.lib.slot;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -28,8 +29,7 @@ import java.util.List;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface EquipmentSlotHolder extends ComparableWrapper, RawValueHolder {
-
-    String platformName();
+    @NotNull String platformName();
 
     @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
     static @NotNull EquipmentSlotHolder of(@NotNull Object slot) {
@@ -47,15 +47,15 @@ public interface EquipmentSlotHolder extends ComparableWrapper, RawValueHolder {
         return EquipmentSlotMapping.resolve(slot);
     }
 
-    static @NotNull List<@NotNull EquipmentSlotHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull EquipmentSlotHolder> all() {
         return EquipmentSlotMapping.getValues();
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
     @Override
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.EQUIPMENT_SLOT)
     @Override
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 }

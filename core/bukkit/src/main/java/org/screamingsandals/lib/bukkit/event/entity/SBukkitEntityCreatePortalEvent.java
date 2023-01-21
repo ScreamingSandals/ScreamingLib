@@ -26,6 +26,7 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.entity.EntityCreatePortalEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -48,12 +49,12 @@ public class SBukkitEntityCreatePortalEvent implements SEntityCreatePortalEvent,
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityCreatePortalEvent event;
+    private final @NotNull EntityCreatePortalEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private Collection<BlockStateHolder> blocks;
-    private PortalType portalType;
+    private @Nullable EntityBasic entity;
+    private @Nullable Collection<@NotNull BlockStateHolder> blocks;
+    private @Nullable PortalType portalType;
 
     @Override
     public @NotNull EntityBasic entity() {

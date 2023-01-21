@@ -19,6 +19,7 @@ package org.screamingsandals.lib.player.gamemode;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -28,18 +29,17 @@ import java.util.List;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface GameModeHolder extends ComparableWrapper, RawValueHolder {
-
-    String platformName();
+    @NotNull String platformName();
 
     int id();
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
-    boolean is(Object gameMode);
+    boolean is(@Nullable Object gameMode);
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
-    boolean is(Object... gameModes);
+    boolean is(@Nullable Object @NotNull... gameModes);
 
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_MODE)
     static @NotNull GameModeHolder of(@NotNull Object gameMode) {
@@ -57,7 +57,7 @@ public interface GameModeHolder extends ComparableWrapper, RawValueHolder {
         return GameModeMapping.resolve(gameMode);
     }
 
-    static @NotNull List<@NotNull GameModeHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull GameModeHolder> all() {
         return GameModeMapping.getValues();
     }
 }

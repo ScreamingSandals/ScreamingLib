@@ -40,11 +40,11 @@ public class SBukkitFoodLevelChangeEvent implements SFoodLevelChangeEvent, Bukki
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final FoodLevelChangeEvent event;
+    private final @NotNull FoodLevelChangeEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private Item item;
+    private @Nullable EntityBasic entity;
+    private @Nullable Item item;
     private boolean itemCached;
 
     @Override

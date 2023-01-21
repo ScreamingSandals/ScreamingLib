@@ -67,7 +67,7 @@ public abstract class ItemFactory {
             })
             .registerP2W(Item.class, Item::clone);
 
-    private static ItemFactory factory;
+    private static @Nullable ItemFactory factory;
 
     @ApiStatus.Internal
     public ItemFactory() {
@@ -85,7 +85,7 @@ public abstract class ItemFactory {
         return factory.builder0();
     }
 
-    public static ItemView asView(Item item) {
+    public static @NotNull ItemView asView(@NotNull Item item) {
         if (factory == null) {
             throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
         }
@@ -131,7 +131,7 @@ public abstract class ItemFactory {
         return builder.build();
     }
 
-    public static @Nullable Item readShortStack(ItemBuilder builder, Object shortStackObject) {
+    public static @Nullable Item readShortStack(@NotNull ItemBuilder builder, @Nullable Object shortStackObject) {
         ShortStackDeserializer.deserializeShortStack(builder, shortStackObject);
         return builder.build();
     }
@@ -140,7 +140,7 @@ public abstract class ItemFactory {
         return objects.stream().map(o -> build(o).orElse(ItemFactory.getAir())).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    private static Item cachedAir;
+    private static @Nullable Item cachedAir;
 
     public static @NotNull Item getAir() {
         if (cachedAir == null) {
@@ -150,14 +150,14 @@ public abstract class ItemFactory {
         return cachedAir.clone();
     }
 
-    public static <T> T convertItem(Item item, Class<T> newType) {
+    public static <T> T convertItem(@NotNull Item item, @NotNull Class<T> newType) {
         if (factory == null) {
             throw new UnsupportedOperationException("ItemFactory is not initialized yet.");
         }
         return factory.itemConverter.convert(item, newType);
     }
 
-    protected abstract ItemBuilder builder0();
+    protected abstract @NotNull ItemBuilder builder0();
 
-    protected abstract ItemView asView0(Item item);
+    protected abstract @NotNull ItemView asView0(@NotNull Item item);
 }

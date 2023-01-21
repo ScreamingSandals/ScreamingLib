@@ -19,6 +19,7 @@ package org.screamingsandals.lib.world.gamerule;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
@@ -27,16 +28,15 @@ import java.util.List;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface GameRuleHolder extends ComparableWrapper {
-
     @NotNull String platformName();
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_RULE)
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_RULE)
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.GAME_RULE)
     static @NotNull GameRuleHolder of(@NotNull Object gameRule) {
@@ -54,7 +54,7 @@ public interface GameRuleHolder extends ComparableWrapper {
         return GameRuleMapping.resolve(gameRule);
     }
 
-    static @NotNull List<@NotNull GameRuleHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull GameRuleHolder> all() {
         return GameRuleMapping.getValues();
     }
 }

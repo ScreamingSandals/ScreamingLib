@@ -97,7 +97,7 @@ public class BukkitItemTypeHolder extends BasicWrapper<Material> implements Item
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof Material || object instanceof ItemTypeHolder) {
             return equals(object);
         }
@@ -112,7 +112,7 @@ public class BukkitItemTypeHolder extends BasicWrapper<Material> implements Item
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 

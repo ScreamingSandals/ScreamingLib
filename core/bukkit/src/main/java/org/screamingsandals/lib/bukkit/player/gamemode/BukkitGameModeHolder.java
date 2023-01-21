@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.player.gamemode;
 
 import org.bukkit.GameMode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -39,7 +40,7 @@ public class BukkitGameModeHolder extends BasicWrapper<GameMode> implements Game
     }
 
     @Override
-    public boolean is(Object gameMode) {
+    public boolean is(@Nullable Object gameMode) {
         if (gameMode instanceof GameMode || gameMode instanceof GameModeHolder) {
             return equals(gameMode);
         }
@@ -47,7 +48,7 @@ public class BukkitGameModeHolder extends BasicWrapper<GameMode> implements Game
     }
 
     @Override
-    public boolean is(Object... gameModes) {
+    public boolean is(@Nullable Object @NotNull... gameModes) {
         return Arrays.stream(gameModes).anyMatch(this::is);
     }
 

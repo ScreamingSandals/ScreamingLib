@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.entity.damage;
 
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.damage.DamageCauseHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -35,7 +36,7 @@ public class BukkitDamageCauseHolder extends BasicWrapper<EntityDamageEvent.Dama
     }
 
     @Override
-    public boolean is(Object damageCause) {
+    public boolean is(@Nullable Object damageCause) {
         if (damageCause instanceof EntityDamageEvent.DamageCause || damageCause instanceof DamageCauseHolder) {
             return equals(damageCause);
         }
@@ -43,7 +44,7 @@ public class BukkitDamageCauseHolder extends BasicWrapper<EntityDamageEvent.Dama
     }
 
     @Override
-    public boolean is(Object... damageCauses) {
+    public boolean is(@Nullable Object @NotNull... damageCauses) {
         return Arrays.stream(damageCauses).anyMatch(this::is);
     }
 }

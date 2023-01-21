@@ -23,9 +23,9 @@ import org.screamingsandals.lib.utils.Wrapper;
 
 public class ExtendablePlayerWrapper implements PlayerWrapper {
     @Delegate(types = PlayerWrapper.class, excludes = Wrapper.class)
-    private final PlayerWrapper wrappedObject;
+    private final @NotNull PlayerWrapper wrappedObject;
 
-    protected ExtendablePlayerWrapper(PlayerWrapper wrappedObject) {
+    protected ExtendablePlayerWrapper(@NotNull PlayerWrapper wrappedObject) {
         if (wrappedObject instanceof ExtendablePlayerWrapper) {
             throw new UnsupportedOperationException("ExtendablePlayerWrapper can't wrap another ExtendablePlayerWrapper!");
         }

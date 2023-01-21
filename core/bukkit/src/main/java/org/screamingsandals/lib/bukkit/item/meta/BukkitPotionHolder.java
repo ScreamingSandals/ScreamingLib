@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.item.meta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.item.meta.PotionHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -45,7 +46,7 @@ public class BukkitPotionHolder extends BasicWrapper<PotionData> implements Poti
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof PotionData || object instanceof PotionHolder) {
             return equals(object);
         }
@@ -53,7 +54,7 @@ public class BukkitPotionHolder extends BasicWrapper<PotionData> implements Poti
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 

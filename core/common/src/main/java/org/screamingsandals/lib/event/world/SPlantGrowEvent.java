@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.world;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
@@ -27,9 +28,9 @@ import java.util.Collection;
 
 public interface SPlantGrowEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    Collection<BlockStateHolder> blockStates();
+    @NotNull Collection<@NotNull BlockStateHolder> blockStates();
 
-    LocationHolder getLocation();
+    @NotNull LocationHolder getLocation();
 
     @Nullable PlayerWrapper player();
 

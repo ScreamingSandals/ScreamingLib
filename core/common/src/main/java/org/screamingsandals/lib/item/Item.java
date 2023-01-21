@@ -88,13 +88,13 @@ public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, C
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Override
-    default boolean is(@NotNull Object @NotNull... objects) {
+    default boolean is(@Nullable Object @NotNull... objects) {
         return getType().is(objects);
     }
 
     @CustomAutocompletion(CustomAutocompletion.Type.MATERIAL)
     @Override
-    default boolean is(@NotNull Object object) {
+    default boolean is(@Nullable Object object) {
         return getType().is(object);
     }
 
@@ -176,7 +176,7 @@ public interface Item extends ComparableWrapper, RawValueHolder, ParticleData, C
     }
 
     @Override
-    default @Nullable Tag findTag(@NotNull String @NotNull ... tagKeys) {
+    default @Nullable Tag findTag(@NotNull String @NotNull... tagKeys) {
         return getTag().findTag(tagKeys);
     }
 

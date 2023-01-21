@@ -38,10 +38,10 @@ public class SBukkitPlayerSwapHandItemsEvent implements SPlayerSwapHandItemsEven
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerSwapHandItemsEvent event;
+    private final @NotNull PlayerSwapHandItemsEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {

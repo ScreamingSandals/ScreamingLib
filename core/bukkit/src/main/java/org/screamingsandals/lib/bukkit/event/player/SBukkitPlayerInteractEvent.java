@@ -42,17 +42,17 @@ public class SBukkitPlayerInteractEvent implements SPlayerInteractEvent, NoAutoC
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerInteractEvent event;
+    private final @NotNull PlayerInteractEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private ItemView item;
+    private @Nullable PlayerWrapper player;
+    private @Nullable ItemView item;
     private boolean itemCached;
-    private Action action;
-    private BlockFace blockFace;
-    private BlockHolder clickedBlock;
+    private @Nullable Action action;
+    private @Nullable BlockFace blockFace;
+    private @Nullable BlockHolder clickedBlock;
     private boolean clickedBlockCached;
-    private EquipmentSlotHolder hand;
+    private @Nullable EquipmentSlotHolder hand;
     private boolean handCached;
 
     @Override
@@ -75,7 +75,7 @@ public class SBukkitPlayerInteractEvent implements SPlayerInteractEvent, NoAutoC
     }
 
     @Override
-    public Action action() {
+    public @NotNull Action action() {
         if (action == null) {
             action = Action.convert(event.getAction().name());
         }
@@ -94,7 +94,7 @@ public class SBukkitPlayerInteractEvent implements SPlayerInteractEvent, NoAutoC
     }
 
     @Override
-    public BlockFace blockFace() {
+    public @NotNull BlockFace blockFace() {
         if (blockFace == null) {
             blockFace = BlockFace.valueOf(event.getBlockFace().name());
         }
@@ -102,22 +102,22 @@ public class SBukkitPlayerInteractEvent implements SPlayerInteractEvent, NoAutoC
     }
 
     @Override
-    public Result useClickedBlock() {
+    public @NotNull Result useClickedBlock() {
         return Result.convert(event.useInteractedBlock().name());
     }
 
     @Override
-    public void useClickedBlock(Result useClickedBlock) {
+    public void useClickedBlock(@NotNull Result useClickedBlock) {
         event.setUseInteractedBlock(Event.Result.valueOf(useClickedBlock.name()));
     }
 
     @Override
-    public Result useItemInHand() {
+    public @NotNull Result useItemInHand() {
         return Result.convert(event.useItemInHand().name());
     }
 
     @Override
-    public void useItemInHand(Result useItemInHand) {
+    public void useItemInHand(@NotNull Result useItemInHand) {
         event.setUseItemInHand(Event.Result.valueOf(useItemInHand.name()));
     }
 

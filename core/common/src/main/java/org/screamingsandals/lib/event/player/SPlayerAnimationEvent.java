@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 
@@ -23,7 +24,7 @@ import java.util.Locale;
 
 public interface SPlayerAnimationEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    PlayerAnimationType animationType();
+    @NotNull PlayerAnimationType animationType();
 
     /**
      * Different types of player animations
@@ -32,7 +33,7 @@ public interface SPlayerAnimationEvent extends SCancellableEvent, SPlayerEvent, 
     enum PlayerAnimationType {
         ARM_SWING;
 
-        public static PlayerAnimationType convert(String cause) {
+        public static @NotNull PlayerAnimationType convert(@NotNull String cause) {
             try {
                 return PlayerAnimationType.valueOf(cause.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException ex) {

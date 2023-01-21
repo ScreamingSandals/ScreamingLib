@@ -20,6 +20,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
@@ -38,10 +39,10 @@ public class SBukkitPlayerKickEvent implements SPlayerKickEvent, BukkitCancellab
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerKickEvent event;
+    private final @NotNull PlayerKickEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -52,7 +53,7 @@ public class SBukkitPlayerKickEvent implements SPlayerKickEvent, BukkitCancellab
     }
 
     @Override
-    public Component leaveMessage() {
+    public @NotNull Component leaveMessage() {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             return AdventureBackend.wrapComponent(event.leaveMessage());
         } else {
@@ -61,7 +62,7 @@ public class SBukkitPlayerKickEvent implements SPlayerKickEvent, BukkitCancellab
     }
 
     @Override
-    public void leaveMessage(Component leaveMessage) {
+    public void leaveMessage(@NotNull Component leaveMessage) {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             event.leaveMessage(leaveMessage.as(net.kyori.adventure.text.Component.class));
         } else {
@@ -71,7 +72,7 @@ public class SBukkitPlayerKickEvent implements SPlayerKickEvent, BukkitCancellab
     }
 
     @Override
-    public void leaveMessage(ComponentLike leaveMessage) {
+    public void leaveMessage(@NotNull ComponentLike leaveMessage) {
         if (leaveMessage instanceof AudienceComponentLike) {
             // TODO: there should be another logic, because this message can be seen by more players
             leaveMessage(((AudienceComponentLike) leaveMessage).asComponent(player()));
@@ -81,7 +82,7 @@ public class SBukkitPlayerKickEvent implements SPlayerKickEvent, BukkitCancellab
     }
 
     @Override
-    public Component kickReason() {
+    public @NotNull Component kickReason() {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             return AdventureBackend.wrapComponent(event.reason());
         } else {
@@ -90,7 +91,7 @@ public class SBukkitPlayerKickEvent implements SPlayerKickEvent, BukkitCancellab
     }
 
     @Override
-    public void kickReason(Component kickReason) {
+    public void kickReason(@NotNull Component kickReason) {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             event.reason(kickReason.as(net.kyori.adventure.text.Component.class));
         } else {
@@ -99,7 +100,7 @@ public class SBukkitPlayerKickEvent implements SPlayerKickEvent, BukkitCancellab
     }
 
     @Override
-    public void kickReason(ComponentLike kickReason) {
+    public void kickReason(@NotNull ComponentLike kickReason) {
         if (kickReason instanceof AudienceComponentLike) {
             kickReason(((AudienceComponentLike) kickReason).asComponent(player()));
         } else {

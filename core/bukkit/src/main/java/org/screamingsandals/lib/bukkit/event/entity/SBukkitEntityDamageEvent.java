@@ -25,6 +25,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -41,11 +42,11 @@ public class SBukkitEntityDamageEvent implements SEntityDamageEvent, BukkitCance
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityDamageEvent event;
+    private final @NotNull EntityDamageEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private DamageCauseHolder damageCause;
+    private @Nullable EntityBasic entity;
+    private @Nullable DamageCauseHolder damageCause;
 
     @Override
     public @NotNull EntityBasic entity() {

@@ -253,7 +253,7 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     }
 
     @Override
-    public boolean isSameType(Object object) {
+    public boolean isSameType(@Nullable Object object) {
         if (object instanceof Material) {
             return wrappedObject.getItemType() == object;
         }
@@ -398,12 +398,12 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     }
 
     @Override
-    public boolean isSameType(Object... objects) {
+    public boolean isSameType(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::isSameType);
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof MaterialData || object instanceof BukkitBlockTypeLegacyHolder) {
             return equals(object);
         }
@@ -420,7 +420,7 @@ public class BukkitBlockTypeLegacyHolder extends BasicWrapper<MaterialData> impl
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 

@@ -34,8 +34,8 @@ import java.util.List;
 
 @AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
 public abstract class PotionMapping extends AbstractTypeMapper<PotionHolder> {
-    private static PotionMapping potionMapping;
-    protected final BidirectionalConverter<PotionHolder> potionConverter = BidirectionalConverter.<PotionHolder>build()
+    private static @Nullable PotionMapping potionMapping;
+    protected final @NotNull BidirectionalConverter<PotionHolder> potionConverter = BidirectionalConverter.<PotionHolder>build()
             .registerP2W(PotionHolder.class, e -> e)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {
@@ -64,11 +64,7 @@ public abstract class PotionMapping extends AbstractTypeMapper<PotionHolder> {
         mapAlias("REGENERATION", "REGEN");
     }
 
-    protected void mapAlias(String potion, String potionBukkit) {
-        if (potion == null || potionBukkit == null) {
-            throw new IllegalArgumentException("Both potions mustn't be null!");
-        }
-
+    protected void mapAlias(@NotNull String potion, @NotNull String potionBukkit) {
         super.mapAlias(potion, potionBukkit);
         super.mapAlias("long_" + potion, "long_" + potionBukkit);
         super.mapAlias("strong_" + potion, "strong_" + potionBukkit);

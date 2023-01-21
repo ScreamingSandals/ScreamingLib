@@ -45,7 +45,7 @@ public class GenericBlockStateHolder extends BasicWrapper<BlockState> implements
     }
 
     @Override
-    public void setType(BlockTypeHolder type) {
+    public void setType(@NotNull BlockTypeHolder type) {
         if (!Version.isVersion(1,13)) {
             wrappedObject.setType(type.as(Material.class));
             wrappedObject.setRawData(type.legacyData());

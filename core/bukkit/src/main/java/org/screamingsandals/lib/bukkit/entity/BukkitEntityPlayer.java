@@ -210,7 +210,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public void openInventory(Openable container) {
+    public void openInventory(@NotNull Openable container) {
         container.openInventory(this);
     }
 
@@ -220,7 +220,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public void kick(Component message) {
+    public void kick(@Nullable Component message) {
         var bukkitPlayer = ((Player) wrappedObject);
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             bukkitPlayer.kick(message == null ? null : message.as(net.kyori.adventure.text.Component.class));
@@ -230,12 +230,12 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public void kick(ComponentLike message) {
-        kick(message instanceof AudienceComponentLike ? ((AudienceComponentLike) message).asComponent(this) : message.asComponent());
+    public void kick(@Nullable ComponentLike message) {
+        kick(message instanceof AudienceComponentLike ? ((AudienceComponentLike) message).asComponent(this) : (message != null ? message.asComponent() : null));
     }
 
     @Override
-    public GameModeHolder getGameMode() {
+    public @NotNull GameModeHolder getGameMode() {
         return GameModeHolder.of(((Player) wrappedObject).getGameMode());
     }
 
@@ -304,7 +304,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public void sendParticle(ParticleHolder particle, LocationHolder location) {
+    public void sendParticle(@NotNull ParticleHolder particle, @NotNull LocationHolder location) {
         try {
             // 1.9.+
             ((Player) wrappedObject).spawnParticle(
@@ -325,7 +325,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public void setCompassTarget(LocationHolder location) {
+    public void setCompassTarget(@NotNull LocationHolder location) {
         ((Player) wrappedObject).setCompassTarget(location.as(Location.class));
     }
 
@@ -359,7 +359,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public void hidePlayer(PlayerWrapper player) {
+    public void hidePlayer(@NotNull PlayerWrapper player) {
         try {
             ((Player) wrappedObject).hidePlayer(BukkitCore.getPlugin(), player.as(Player.class));
         } catch (Throwable ignored) {
@@ -368,7 +368,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public void showPlayer(PlayerWrapper player) {
+    public void showPlayer(@NotNull PlayerWrapper player) {
         try {
             ((Player) wrappedObject).showPlayer(BukkitCore.getPlugin(), player.as(Player.class));
         } catch (Throwable ignored) {
@@ -377,7 +377,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public LocationHolder getCompassTarget() {
+    public @NotNull LocationHolder getCompassTarget() {
         return LocationMapper.wrapLocation(((Player) wrappedObject).getCompassTarget());
     }
 
@@ -390,7 +390,7 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public InetSocketAddress getAddress() {
+    public @Nullable InetSocketAddress getAddress() {
         return ((Player) wrappedObject).getAddress();
     }
 

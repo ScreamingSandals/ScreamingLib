@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.world;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
@@ -27,7 +28,7 @@ import java.util.Collection;
 @LimitedVersionSupport("Bukkit >= 1.13")
 public interface SSpongeAbsorbEvent extends SCancellableEvent, PlatformEventWrapper {
 
-    BlockHolder block();
+    @NotNull BlockHolder block();
 
-    Collection<BlockStateHolder> waterBlocks();
+    @NotNull Collection<@NotNull BlockStateHolder> waterBlocks();
 }

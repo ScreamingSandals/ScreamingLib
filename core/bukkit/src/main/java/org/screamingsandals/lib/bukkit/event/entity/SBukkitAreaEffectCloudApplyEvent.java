@@ -26,6 +26,7 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -44,11 +45,11 @@ public class SBukkitAreaEffectCloudApplyEvent implements SAreaEffectCloudApplyEv
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final AreaEffectCloudApplyEvent event;
+    private final @NotNull AreaEffectCloudApplyEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private Collection<EntityBasic> affectedEntities;
+    private @Nullable EntityBasic entity;
+    private @Nullable Collection<@NotNull EntityBasic> affectedEntities;
 
     @Override
     public @NotNull EntityBasic entity() {

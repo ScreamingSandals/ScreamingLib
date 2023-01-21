@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.world.configurate;
 
 import lombok.experimental.ExtensionMethod;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.world.WorldHolder;
@@ -30,15 +31,15 @@ import java.util.UUID;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class WorldHolderTypeSerializer implements TypeSerializer<WorldHolder> {
-    private final String UUID_FIELD = "uuid";
+    private final @NotNull String UUID_FIELD = "uuid";
 
     @Override
-    public WorldHolder deserialize(Type type, ConfigurationNode node) throws SerializationException {
+    public @NotNull WorldHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         return WorldMapper.getWorld(node.node(UUID_FIELD).get(UUID.class)).orElseThrow();
     }
 
     @Override
-    public void serialize(Type type, @Nullable WorldHolder holder, ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable WorldHolder holder, @NotNull ConfigurationNode node) throws SerializationException {
         if (holder == null) {
             node.raw(null);
             return;

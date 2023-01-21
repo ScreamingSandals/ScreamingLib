@@ -19,6 +19,7 @@ package org.screamingsandals.lib.firework;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -52,11 +53,11 @@ public interface FireworkEffectHolder extends ComparableWrapper {
     @NotNull FireworkEffectHolder withTrail(boolean trail);
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.FIREWORK_EFFECT)
     static @NotNull FireworkEffectHolder of(@NotNull Object effect) {
@@ -74,7 +75,7 @@ public interface FireworkEffectHolder extends ComparableWrapper {
         return FireworkEffectMapping.resolve(effect);
     }
 
-    static @NotNull List<@NotNull FireworkEffectHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull FireworkEffectHolder> all() {
         return FireworkEffectMapping.getValues();
     }
 }

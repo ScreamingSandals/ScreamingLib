@@ -91,10 +91,10 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData, Taggab
     boolean hasTag(@NotNull Object tag);
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
-    boolean isSameType(Object object);
+    boolean isSameType(@Nullable Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
-    boolean isSameType(Object... objects);
+    boolean isSameType(@Nullable Object @NotNull... objects);
 
     /**
      * This method accept any object that represents block type, or:
@@ -108,11 +108,11 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData, Taggab
      */
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     @Override
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     @Override
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.BLOCK)
     static @NotNull BlockTypeHolder of(@NotNull Object type) {
@@ -134,7 +134,7 @@ public interface BlockTypeHolder extends ComparableWrapper, ParticleData, Taggab
         return BlockTypeMapper.getCachedAir();
     }
 
-    static @NotNull List<@NotNull BlockTypeHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull BlockTypeHolder> all() {
         return BlockTypeMapper.getValues();
     }
 }

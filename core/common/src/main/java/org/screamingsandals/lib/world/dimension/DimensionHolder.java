@@ -19,6 +19,7 @@ package org.screamingsandals.lib.world.dimension;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
@@ -28,16 +29,15 @@ import java.util.List;
 
 @SuppressWarnings("AlternativeMethodAvailable")
 public interface DimensionHolder extends ComparableWrapper, RawValueHolder {
-
     @NotNull String platformName();
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.DIMENSION)
-    boolean is(Object object);
+    boolean is(@Nullable Object object);
 
     @Override
     @CustomAutocompletion(CustomAutocompletion.Type.DIMENSION)
-    boolean is(Object... objects);
+    boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.DIMENSION)
     static @NotNull DimensionHolder of(@NotNull Object dimension) {
@@ -55,7 +55,7 @@ public interface DimensionHolder extends ComparableWrapper, RawValueHolder {
         return DimensionMapping.resolve(dimension);
     }
 
-    static @NotNull List<@NotNull DimensionHolder> all() {
+    static @Unmodifiable @NotNull List<@NotNull DimensionHolder> all() {
         return DimensionMapping.getValues();
     }
 }

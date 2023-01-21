@@ -19,6 +19,7 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityCombustByEntityEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityCombustByEntityEvent;
@@ -26,12 +27,12 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
 public class SBukkitEntityCombustByEntityEvent extends SBukkitEntityCombustEvent implements SEntityCombustByEntityEvent {
-    public SBukkitEntityCombustByEntityEvent(EntityCombustByEntityEvent event) {
+    public SBukkitEntityCombustByEntityEvent(@NotNull EntityCombustByEntityEvent event) {
         super(event);
     }
 
     // Internal cache
-    private EntityBasic combuster;
+    private @Nullable EntityBasic combuster;
 
     @Override
     public @NotNull EntityBasic combuster() {

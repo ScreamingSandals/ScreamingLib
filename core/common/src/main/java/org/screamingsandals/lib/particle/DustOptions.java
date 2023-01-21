@@ -24,7 +24,7 @@ import org.screamingsandals.lib.spectator.Color;
 @Data
 @Accessors(chain = true, fluent = true)
 public class DustOptions implements ParticleData {
-    private final Color color;
+    private final @NotNull Color color;
     private final float size;
 
     /**

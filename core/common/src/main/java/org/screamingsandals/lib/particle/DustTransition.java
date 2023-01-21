@@ -24,8 +24,8 @@ import org.screamingsandals.lib.spectator.Color;
 @Data
 @Accessors(chain = true, fluent = true)
 public class DustTransition implements ParticleData {
-    private final Color fromColor;
-    private final Color toColor;
+    private final @NotNull Color fromColor;
+    private final @NotNull Color toColor;
     private final float size;
 
     /**

@@ -27,6 +27,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.EntityBasic;
@@ -47,11 +48,11 @@ public class SBukkitEntityDeathEvent implements SEntityDeathEvent, NoAutoCancell
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityDeathEvent event;
+    private final @NotNull EntityDeathEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private Collection<Item> drops;
+    private @Nullable EntityBasic entity;
+    private @Nullable Collection<@NotNull Item> drops;
 
     @Override
     public @NotNull Collection<@NotNull Item> drops() {

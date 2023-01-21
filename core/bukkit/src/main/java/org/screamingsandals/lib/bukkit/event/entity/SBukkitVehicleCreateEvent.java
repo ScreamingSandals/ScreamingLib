@@ -23,6 +23,7 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -38,10 +39,10 @@ public class SBukkitVehicleCreateEvent implements SVehicleCreateEvent, NoAutoCan
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final VehicleCreateEvent event;
+    private final @NotNull VehicleCreateEvent event;
 
     // Internal cache
-    private EntityBasic entity;
+    private @Nullable EntityBasic entity;
 
     @Override
     public @NotNull EntityBasic entity() {

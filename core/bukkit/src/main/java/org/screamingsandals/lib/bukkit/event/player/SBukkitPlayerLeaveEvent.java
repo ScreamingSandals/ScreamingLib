@@ -41,10 +41,10 @@ public class SBukkitPlayerLeaveEvent implements SPlayerLeaveEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerQuitEvent event;
+    private final @NotNull PlayerQuitEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -55,20 +55,21 @@ public class SBukkitPlayerLeaveEvent implements SPlayerLeaveEvent {
     }
 
     @Override
-    public Component leaveMessage() {
+    public @Nullable Component leaveMessage() {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             return AdventureBackend.wrapComponent(event.quitMessage());
         } else {
-            return Component.fromLegacy(event.getQuitMessage());
+            var qm = event.getQuitMessage();
+            return qm != null ? Component.fromLegacy(qm) : null;
         }
     }
 
     @Override
-    public void leaveMessage(Component leaveMessage) {
+    public void leaveMessage(@Nullable Component leaveMessage) {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
-            event.quitMessage(leaveMessage.as(net.kyori.adventure.text.Component.class));
+            event.quitMessage(leaveMessage != null ? leaveMessage.as(net.kyori.adventure.text.Component.class) : null);
         } else {
-            event.setQuitMessage(leaveMessage.toLegacy());
+            event.setQuitMessage(leaveMessage != null ? leaveMessage.toLegacy() : null);
         }
 
     }

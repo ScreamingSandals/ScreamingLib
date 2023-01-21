@@ -45,9 +45,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class BukkitServer extends Server {
-    private final Plugin plugin;
+    private final @NotNull Plugin plugin;
 
-    private final Map<String, String> UNSAFE_SOUND_CACHE = new HashMap<>();
+    private final @NotNull Map<@NotNull String, String> UNSAFE_SOUND_CACHE = new HashMap<>();
 
     {
         try {
@@ -68,7 +68,7 @@ public class BukkitServer extends Server {
     }
 
     @Override
-    public String getVersion0() {
+    public @NotNull String getVersion0() {
         if (Version.PATCH_VERSION == 0) {
             return Version.MAJOR_VERSION + "." + Version.MINOR_VERSION;
         }
@@ -76,7 +76,7 @@ public class BukkitServer extends Server {
     }
 
     @Override
-    public String getServerSoftwareVersion0() {
+    public @NotNull String getServerSoftwareVersion0() {
         return Bukkit.getVersion();
     }
 
@@ -125,7 +125,7 @@ public class BukkitServer extends Server {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<ChannelFuture> getConnections0() {
+    public List<@NotNull ChannelFuture> getConnections0() {
         return (List<ChannelFuture>) Reflect.fastInvokeResulted(Bukkit.getServer(), "getServer")
                 .getFieldResulted(MinecraftServerAccessor.getFieldConnection())
                 .getFieldResulted(ServerConnectionListenerAccessor.getFieldChannels())
@@ -138,7 +138,7 @@ public class BukkitServer extends Server {
     }
 
     @Override
-    public ProxyType getProxyType0() {
+    public @NotNull ProxyType getProxyType0() {
         // Bukkit#spigot() exists in 1.9.4, verified with https://helpch.at/docs/1.9.4/org/bukkit/Bukkit.html#spigot()
         // Server.Spigot#getPaperConfig() exists in 1.9.4, verified with https://github.com/PaperMC/Paper/blob/ver/1.9.4/Spigot-Server-Patches/0005-Timings-v2.patch#L995
         // Server.Spigot#getConfig() exists in 1.9.4 and resolves to org.spigotmc.SpigotConfig#config in 1.9.4 and latest
@@ -153,7 +153,7 @@ public class BukkitServer extends Server {
     }
 
     @Override
-    public Integer getProtocolVersion0() {
+    public @NotNull Integer getProtocolVersion0() {
         if (SharedConstantsAccessor.getMethodGetProtocolVersion1() != null) {
             return Reflect.fastInvokeResulted(SharedConstantsAccessor.getMethodGetProtocolVersion1()).as(Integer.class);
         }
@@ -164,7 +164,7 @@ public class BukkitServer extends Server {
     }
 
     @Override
-    public String UNSAFE_normalizeSoundKey0(String s) {
+    public @NotNull String UNSAFE_normalizeSoundKey0(@NotNull String s) {
         if (UNSAFE_SOUND_CACHE.containsKey(s.toUpperCase(Locale.ROOT))) {
             // TODO: map legacy <-> flattening conversion
             return UNSAFE_SOUND_CACHE.get(s.toUpperCase(Locale.ROOT));

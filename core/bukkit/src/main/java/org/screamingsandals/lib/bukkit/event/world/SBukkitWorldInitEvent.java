@@ -23,6 +23,8 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.world.WorldInitEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.world.SWorldInitEvent;
 import org.screamingsandals.lib.world.WorldHolder;
 import org.screamingsandals.lib.world.WorldMapper;
@@ -35,13 +37,13 @@ public class SBukkitWorldInitEvent implements SWorldInitEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final WorldInitEvent event;
+    private final @NotNull WorldInitEvent event;
 
     // Internal cache
-    private WorldHolder world;
+    private @Nullable WorldHolder world;
 
     @Override
-    public WorldHolder world() {
+    public @NotNull WorldHolder world() {
         if (world == null) {
             world = WorldMapper.wrapWorld(event.getWorld());
         }

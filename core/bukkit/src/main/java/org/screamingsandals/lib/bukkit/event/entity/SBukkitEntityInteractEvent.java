@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
@@ -39,11 +40,11 @@ public class SBukkitEntityInteractEvent implements SEntityInteractEvent, BukkitC
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityInteractEvent event;
+    private final @NotNull EntityInteractEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private BlockHolder block;
+    private @Nullable EntityBasic entity;
+    private @Nullable BlockHolder block;
 
     @Override
     public @NotNull EntityBasic entity() {

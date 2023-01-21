@@ -19,6 +19,9 @@ package org.screamingsandals.lib.bukkit.block.state;
 import org.bukkit.block.Sign;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
+import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
+import org.screamingsandals.lib.bukkit.BukkitCore;
+import org.screamingsandals.lib.bukkit.BukkitServer;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.block.state.SignHolder;
 
@@ -29,10 +32,13 @@ public class SignBlockStateHolder extends TileBlockStateHolder implements SignHo
         super(wrappedObject);
     }
 
-    // TODO: IMPLEMENT PLATFORM ADVENTURE
     @Override
     public @NotNull Component @NotNull [] lines() {
-        return Arrays.stream(((Sign) wrappedObject).getLines()).map(Component::fromLegacy).toArray(Component[]::new);
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            return ((Sign) wrappedObject).lines().stream().map(AdventureBackend::wrapComponent).toArray(Component[]::new);
+        } else {
+            return Arrays.stream(((Sign) wrappedObject).getLines()).map(Component::fromLegacy).toArray(Component[]::new);
+        }
     }
 
     @Override
@@ -42,6 +48,10 @@ public class SignBlockStateHolder extends TileBlockStateHolder implements SignHo
 
     @Override
     public void line(@Range(from = 0, to = 3) int index, Component component) {
-        ((Sign) wrappedObject).setLine(index, component.toLegacy());
+        if (BukkitCore.getSpectatorBackend().hasAdventure()) {
+            ((Sign) wrappedObject).line(index, component.as(net.kyori.adventure.text.Component.class));
+        } else {
+            ((Sign) wrappedObject).setLine(index, component.toLegacy());
+        }
     }
 }

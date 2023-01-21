@@ -50,23 +50,23 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public EntityTypeHolder getEntityType() {
+    public @NotNull EntityTypeHolder getEntityType() {
         return EntityTypeHolder.of(wrappedObject.getType());
     }
 
     @Override
-    public LocationHolder getLocation() {
+    public @NotNull LocationHolder getLocation() {
         return LocationMapper.wrapLocation(wrappedObject.getLocation());
     }
 
     @Override
-    public Vector3D getVelocity() {
+    public @NotNull Vector3D getVelocity() {
         var platformVector = wrappedObject.getVelocity();
         return new Vector3D(platformVector.getX(), platformVector.getY(), platformVector.getZ());
     }
 
     @Override
-    public void setVelocity(Vector3D velocity) {
+    public void setVelocity(@NotNull Vector3D velocity) {
         wrappedObject.setVelocity(new Vector(velocity.getX(), velocity.getY(), velocity.getZ()));
     }
 
@@ -91,12 +91,12 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public CompletableFuture<Boolean> teleport(LocationHolder locationHolder) {
+    public @NotNull CompletableFuture<@NotNull Boolean> teleport(@NotNull LocationHolder locationHolder) {
         return PaperLib.teleportAsync(wrappedObject, locationHolder.as(Location.class));
     }
 
     @Override
-    public CompletableFuture<Void> teleport(LocationHolder location, Runnable callback, boolean forceCallback) {
+    public @NotNull CompletableFuture<Void> teleport(@NotNull LocationHolder location, @NotNull Runnable callback, boolean forceCallback) {
         return teleport(location)
                 .thenAccept(result -> {
                     if (result || forceCallback) {
@@ -110,7 +110,7 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public boolean teleportSync(LocationHolder location) {
+    public boolean teleportSync(@NotNull LocationHolder location) {
         return wrappedObject.teleport(location.as(Location.class));
     }
 
@@ -155,7 +155,7 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public List<EntityBasic> getPassengers() {
+    public @NotNull List<@NotNull EntityBasic> getPassengers() {
         return wrappedObject.getPassengers()
                 .stream()
                 .map(EntityMapper::wrapEntity)
@@ -164,7 +164,7 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public boolean addPassenger(EntityBasic passenger) {
+    public boolean addPassenger(@NotNull EntityBasic passenger) {
         var bukkitPassenger = passenger.as(Entity.class);
         try {
             return wrappedObject.addPassenger(bukkitPassenger);
@@ -174,7 +174,7 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public boolean removePassenger(EntityBasic passenger) {
+    public boolean removePassenger(@NotNull EntityBasic passenger) {
         try {
             return wrappedObject.removePassenger(passenger.as(Entity.class));
         } catch (Throwable ignored) { // probably old version
@@ -203,7 +203,7 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public UUID getUniqueId() {
+    public @NotNull UUID getUniqueId() {
         return wrappedObject.getUniqueId();
     }
 
@@ -228,17 +228,17 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public EntityBasic getVehicle() {
+    public @Nullable EntityBasic getVehicle() {
         return EntityMapper.wrapEntity(wrappedObject.getVehicle());
     }
 
     @Override
-    public void setCustomName(String name) {
+    public void setCustomName(@Nullable String name) {
         wrappedObject.setCustomName(name);
     }
 
     @Override
-    public void setCustomName(Component name) {
+    public void setCustomName(@Nullable Component name) {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             wrappedObject.customName(name == null ? null : name.as(net.kyori.adventure.text.Component.class));
         } else {
@@ -316,71 +316,71 @@ public class BukkitEntityBasic extends BasicWrapper<Entity> implements EntityBas
     }
 
     @Override
-    public boolean hasMetadata(String metadata) {
+    public boolean hasMetadata(@NotNull String metadata) {
         return BukkitEntityMetadataMapper.has(wrappedObject, metadata);
     }
 
     @Override
-    public Object getMetadata(String metadata) {
+    public Object getMetadata(@NotNull String metadata) {
         return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Object.class);
     }
 
     @Override
-    public int getIntMetadata(String metadata) {
+    public int getIntMetadata(@NotNull String metadata) {
         var i = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Integer.class);
         return i == null ? 0 : i;
     }
 
     @Override
-    public boolean getBooleanMetadata(String metadata) {
+    public boolean getBooleanMetadata(@NotNull String metadata) {
         var b = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Boolean.class);
         return b != null && b;
     }
 
     @Override
-    public byte getByteMetadata(String metadata) {
+    public byte getByteMetadata(@NotNull String metadata) {
         var b = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Byte.class);
         return b == null ? 0 : b;
     }
 
     @Override
-    public long getLongMetadata(String metadata) {
+    public long getLongMetadata(@NotNull String metadata) {
         var b = BukkitEntityMetadataMapper.get(wrappedObject, metadata, Long.class);
         return b == null ? 0 : b;
     }
 
     @Override
-    public String getStringMetadata(String metadata) {
+    public String getStringMetadata(@NotNull String metadata) {
         return BukkitEntityMetadataMapper.get(wrappedObject, metadata, String.class);
     }
 
     @Override
-    public Component getComponentMetadata(String metadata) {
+    public Component getComponentMetadata(@NotNull String metadata) {
         return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Component.class);
     }
 
     @Override
-    public LocationHolder getLocationMetadata(String metadata) {
+    public LocationHolder getLocationMetadata(@NotNull String metadata) {
         return BukkitEntityMetadataMapper.get(wrappedObject, metadata, LocationHolder.class);
     }
 
     @Override
-    public Color getColorMetadata(String metadata) {
+    public Color getColorMetadata(@NotNull String metadata) {
         return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Color.class);
     }
 
     @Override
-    public Vector3D getVectorMetadata(String metadata) {
+    public Vector3D getVectorMetadata(@NotNull String metadata) {
         return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Vector3D.class);
     }
 
     @Override
-    public Vector3Df getFloatVectorMetadata(String metadata) {
+    public Vector3Df getFloatVectorMetadata(@NotNull String metadata) {
         return BukkitEntityMetadataMapper.get(wrappedObject, metadata, Vector3Df.class);
     }
 
     @Override
-    public void setMetadata(String metadata, Object value) {
+    public void setMetadata(@NotNull String metadata, Object value) {
         BukkitEntityMetadataMapper.set(wrappedObject, metadata, value);
     }
 

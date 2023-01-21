@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.block.state;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.container.ContainerHolder;
 import org.screamingsandals.lib.utils.Wrapper;
@@ -26,13 +27,13 @@ import org.screamingsandals.lib.world.LocationHolder;
 // TODO: Metadata
 public interface BlockStateHolder extends Wrapper, ContainerHolder {
 
-    BlockTypeHolder getType();
+    @NotNull BlockTypeHolder getType();
 
-    void setType(BlockTypeHolder type);
+    void setType(@NotNull BlockTypeHolder type);
 
-    LocationHolder getLocation();
+    @NotNull LocationHolder getLocation();
 
-    default BlockHolder getBlock() {
+    default @NotNull BlockHolder getBlock() {
         return BlockMapper.wrapBlock(getLocation());
     }
 

@@ -27,6 +27,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.event.block.BlockMultiPlaceEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
@@ -53,18 +54,18 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockPlaceEvent event;
+    private final @NotNull BlockPlaceEvent event;
 
     // Internal cache;
-    private PlayerWrapper player;
-    private Collection<BlockStateHolder> replacedBlockStates;
-    private PlayerWrapper.Hand playerHand;
-    private BlockHolder block;
-    private BlockStateHolder replacedBlockState;
-    private Item itemInHand;
+    private @Nullable PlayerWrapper player;
+    private @Nullable Collection<@NotNull BlockStateHolder> replacedBlockStates;
+    private PlayerWrapper.@Nullable Hand playerHand;
+    private @Nullable BlockHolder block;
+    private @Nullable BlockStateHolder replacedBlockState;
+    private @Nullable Item itemInHand;
 
     @Override
-    public Collection<BlockStateHolder> replacedBlockStates() {
+    public @NotNull Collection<@NotNull BlockStateHolder> replacedBlockStates() {
         if (replacedBlockStates == null) {
             if (event instanceof BlockMultiPlaceEvent) {
                 replacedBlockStates = new ImmutableCollectionLinkedToCollection<>(
@@ -80,7 +81,7 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
     }
 
     @Override
-    public PlayerWrapper.Hand playerHand() {
+    public PlayerWrapper.@NotNull Hand playerHand() {
         if (playerHand == null) {
             playerHand = PlayerMapper.wrapHand(event.getHand());
         }
@@ -88,7 +89,7 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
     }
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -96,7 +97,7 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
     }
 
     @Override
-    public BlockStateHolder replacedBlockState() {
+    public @NotNull BlockStateHolder replacedBlockState() {
         if (replacedBlockState == null) {
             replacedBlockState = BlockStateMapper.<BlockStateHolder>wrapBlockState(event.getBlockReplacedState()).orElseThrow();
         }
@@ -104,7 +105,7 @@ public class SBukkitPlayerBlockPlaceEvent implements SPlayerBlockPlaceEvent, Buk
     }
 
     @Override
-    public Item itemInHand() {
+    public @NotNull Item itemInHand() {
         if (itemInHand == null) {
             itemInHand = new BukkitItem(event.getItemInHand());
         }

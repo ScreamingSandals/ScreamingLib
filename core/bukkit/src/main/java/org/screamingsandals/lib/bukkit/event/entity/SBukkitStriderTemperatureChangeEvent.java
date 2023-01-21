@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.StriderTemperatureChangeEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityLiving;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SStriderTemperatureChangeEvent;
@@ -36,10 +37,10 @@ public class SBukkitStriderTemperatureChangeEvent implements SStriderTemperature
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final StriderTemperatureChangeEvent event;
+    private final @NotNull StriderTemperatureChangeEvent event;
 
     // Internal cache
-    private EntityLiving entity;
+    private @Nullable EntityLiving entity;
 
     @Override
     public @NotNull EntityLiving entity() {

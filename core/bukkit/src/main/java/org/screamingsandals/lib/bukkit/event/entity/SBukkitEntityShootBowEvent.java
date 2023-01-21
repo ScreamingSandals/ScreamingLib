@@ -41,15 +41,15 @@ public class SBukkitEntityShootBowEvent implements SEntityShootBowEvent, BukkitC
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityShootBowEvent event;
+    private final @NotNull EntityShootBowEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private Item bow;
+    private @Nullable EntityBasic entity;
+    private @Nullable Item bow;
     private boolean bowCached;
-    private Item consumable;
+    private @Nullable Item consumable;
     private boolean consumableCached;
-    private EquipmentSlotHolder hand;
+    private @Nullable EquipmentSlotHolder hand;
 
     @Override
     public @NotNull EntityBasic entity() {

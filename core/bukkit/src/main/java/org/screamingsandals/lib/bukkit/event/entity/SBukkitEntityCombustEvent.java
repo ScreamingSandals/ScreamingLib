@@ -25,6 +25,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -40,10 +41,10 @@ public class SBukkitEntityCombustEvent implements SEntityCombustEvent, BukkitCan
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityCombustEvent event;
+    private final @NotNull EntityCombustEvent event;
 
     // Internal cache
-    private EntityBasic entity;
+    private @Nullable EntityBasic entity;
 
     @Override
     public @NotNull EntityBasic entity() {

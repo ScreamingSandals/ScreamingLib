@@ -46,14 +46,14 @@ public class SBukkitEntityPlaceEvent implements SEntityPlaceEvent, BukkitCancell
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityPlaceEvent event;
+    private final @NotNull EntityPlaceEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private PlayerWrapper player;
+    private @Nullable EntityBasic entity;
+    private @Nullable PlayerWrapper player;
     private boolean playerCached;
-    private BlockHolder block;
-    private BlockFace blockFace;
+    private @Nullable BlockHolder block;
+    private @Nullable BlockFace blockFace;
 
     @Override
     public @NotNull EntityBasic entity() {

@@ -45,8 +45,8 @@ import java.util.regex.Pattern;
 @AbstractService
 public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> {
 
-    private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?::)?(?<durability>\\d+)?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
-    protected final BidirectionalConverter<ItemTypeHolder> itemTypeConverter = BidirectionalConverter.<ItemTypeHolder>build()
+    private static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?::)?(?<durability>\\d+)?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
+    protected final @NotNull BidirectionalConverter<ItemTypeHolder> itemTypeConverter = BidirectionalConverter.<ItemTypeHolder>build()
             .registerP2W(ItemTypeHolder.class, i -> i)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {
@@ -57,8 +57,8 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
                 }
             });
 
-    private static ItemTypeMapper itemTypeMapper;
-    private static ItemTypeHolder cachedAir;
+    private static @Nullable ItemTypeMapper itemTypeMapper;
+    private static @Nullable ItemTypeHolder cachedAir;
 
     @ApiStatus.Internal
     public ItemTypeMapper() {
@@ -142,7 +142,7 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
         return Collections.unmodifiableList(itemTypeMapper.values);
     }
 
-    public static ItemTypeHolder colorize(ItemTypeHolder holder, String color) {
+    public static @NotNull ItemTypeHolder colorize(@NotNull ItemTypeHolder holder, @NotNull String color) {
         if (itemTypeMapper == null) {
             throw new UnsupportedOperationException("ItemTypeMapper is not initialized yet.");
         }
@@ -154,17 +154,17 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
                 .orElse(holder);
     }
 
-    public Map<MappingKey, ItemTypeHolder> getUNSAFE_mapping() {
+    public @NotNull Map<@NotNull MappingKey, ItemTypeHolder> getUNSAFE_mapping() {
         return mapping;
     }
 
     @Override
-    public void mapAlias(String mappingKey, String alias) {
+    public void mapAlias(@NotNull String mappingKey, @NotNull String alias) {
         super.mapAlias(mappingKey, alias);
     }
 
     @OfMethodAlternative(value = ItemTypeHolder.class, methodName = "air")
-    public static ItemTypeHolder getCachedAir() {
+    public static @NotNull ItemTypeHolder getCachedAir() {
         if (cachedAir == null) {
             cachedAir = resolve("minecraft:air");
             Preconditions.checkNotNullIllegal(cachedAir, "Could not find item type: minecraft:air");

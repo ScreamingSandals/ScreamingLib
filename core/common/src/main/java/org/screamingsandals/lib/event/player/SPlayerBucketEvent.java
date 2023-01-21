@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
@@ -26,19 +27,19 @@ import org.screamingsandals.lib.block.BlockHolder;
 
 public interface SPlayerBucketEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    BlockHolder block();
+    @NotNull BlockHolder block();
 
-    BlockHolder blockClicked();
+    @NotNull BlockHolder blockClicked();
 
-    BlockFace blockFace();
+    @NotNull BlockFace blockFace();
 
-    ItemTypeHolder bucket();
+    @NotNull ItemTypeHolder bucket();
 
     @Nullable Item item();
 
     void item(@Nullable Item item);
 
-    Action action();
+    @NotNull Action action();
 
     enum Action {
         EMPTY,

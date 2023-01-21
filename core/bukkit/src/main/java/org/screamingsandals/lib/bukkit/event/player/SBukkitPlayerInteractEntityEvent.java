@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
@@ -40,12 +41,12 @@ public class SBukkitPlayerInteractEntityEvent implements SPlayerInteractEntityEv
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerInteractEntityEvent event;
+    private final @NotNull PlayerInteractEntityEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private EntityBasic clickedEntity;
-    private EquipmentSlotHolder hand;
+    private @Nullable PlayerWrapper player;
+    private @Nullable EntityBasic clickedEntity;
+    private @Nullable EquipmentSlotHolder hand;
 
     @Override
     public @NotNull PlayerWrapper player() {

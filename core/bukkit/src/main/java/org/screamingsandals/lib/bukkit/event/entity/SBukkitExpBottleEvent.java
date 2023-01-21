@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.entity.SExpBottleEvent;
 
 public class SBukkitExpBottleEvent extends SBukkitProjectileHitEvent implements SExpBottleEvent {
-    public SBukkitExpBottleEvent(ExpBottleEvent event) {
+    public SBukkitExpBottleEvent(@NotNull ExpBottleEvent event) {
         super(event);
     }
 

@@ -87,7 +87,7 @@ public class BukkitItemTypeLegacyHolder extends BasicWrapper<Pair<Material, Shor
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof Material && wrappedObject.second() == 0) {
             return wrappedObject.first() == object;
         }
@@ -105,7 +105,7 @@ public class BukkitItemTypeLegacyHolder extends BasicWrapper<Pair<Material, Shor
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 

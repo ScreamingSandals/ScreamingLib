@@ -18,18 +18,19 @@ package org.screamingsandals.lib.bukkit.event.entity;
 
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.entity.SCreatureSpawnEvent;
 
 import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
 public class SBukkitCreatureSpawnEvent extends SBukkitEntitySpawnEvent implements SCreatureSpawnEvent {
-    public SBukkitCreatureSpawnEvent(CreatureSpawnEvent event) {
+    public SBukkitCreatureSpawnEvent(@NotNull CreatureSpawnEvent event) {
         super(event);
     }
 
     // Internal cache
-    private SpawnReason spawnReason;
+    private @Nullable SpawnReason spawnReason;
 
     @Override
     public @NotNull SpawnReason spawnReason() {

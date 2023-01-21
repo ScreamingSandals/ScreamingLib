@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit;
 
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.ItemBlockIdsRemapper;
 import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.item.ItemTypeMapper;
@@ -29,7 +30,7 @@ public class BukkitItemBlockIdsRemapper extends ItemBlockIdsRemapper {
     @Getter
     private static final int versionNumber;
     @Getter
-    private static final Platform bPlatform;
+    private static final @NotNull Platform bPlatform;
 
     static {
         var bukkitVersion = Bukkit.getBukkitVersion().split("-")[0].split("\\.");
@@ -43,10 +44,8 @@ public class BukkitItemBlockIdsRemapper extends ItemBlockIdsRemapper {
         bPlatform = versionNumber < 113 ? Platform.JAVA_LEGACY : Platform.JAVA_FLATTENING;
     }
 
-    public BukkitItemBlockIdsRemapper(ItemTypeMapper itemTypeMapper, BlockTypeMapper blockTypeMapper) {
-        super(itemTypeMapper, blockTypeMapper);
-
-        super.platform = bPlatform;
+    public BukkitItemBlockIdsRemapper(@NotNull ItemTypeMapper itemTypeMapper, @NotNull BlockTypeMapper blockTypeMapper) {
+        super(itemTypeMapper, blockTypeMapper, bPlatform);
 
         if (versionNumber < 112) {
             mappingFlags.add(MappingFlags.NO_COLORED_BEDS);

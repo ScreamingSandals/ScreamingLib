@@ -22,7 +22,7 @@ import org.screamingsandals.lib.entity.EntityItem;
 import org.screamingsandals.lib.event.entity.SItemSpawnEvent;
 
 public class SBukkitItemSpawnEvent extends SBukkitEntitySpawnEvent implements SItemSpawnEvent {
-    public SBukkitItemSpawnEvent(ItemSpawnEvent event) {
+    public SBukkitItemSpawnEvent(@NotNull ItemSpawnEvent event) {
         super(event);
     }
 

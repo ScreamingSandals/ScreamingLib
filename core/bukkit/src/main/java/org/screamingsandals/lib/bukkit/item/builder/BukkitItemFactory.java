@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.item.builder;
 
 import org.bukkit.inventory.*;
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.bukkit.item.BukkitItemView;
 import org.screamingsandals.lib.item.Item;
@@ -35,12 +36,12 @@ public class BukkitItemFactory extends ItemFactory {
     }
 
     @Override
-    protected ItemBuilder builder0() {
+    protected @NotNull ItemBuilder builder0() {
         return new BukkitItemBuilder(null);
     }
 
     @Override
-    protected ItemView asView0(Item item) {
+    protected @NotNull ItemView asView0(@NotNull Item item) {
         return new BukkitItemView(item.as(ItemStack.class));
     }
 }

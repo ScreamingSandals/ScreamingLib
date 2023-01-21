@@ -23,7 +23,7 @@ import org.screamingsandals.lib.event.player.SPlayerProjectileLaunchEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 public class SBukkitPlayerProjectileLaunchEvent extends SBukkitProjectileLaunchEvent implements SPlayerProjectileLaunchEvent {
-    public SBukkitPlayerProjectileLaunchEvent(ProjectileLaunchEvent event) {
+    public SBukkitPlayerProjectileLaunchEvent(@NotNull ProjectileLaunchEvent event) {
         super(event);
     }
 

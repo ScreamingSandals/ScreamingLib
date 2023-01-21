@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerExpChangeEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -33,10 +34,10 @@ public class SBukkitPlayerExpChangeEvent implements SPlayerExpChangeEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerExpChangeEvent event;
+    private final @NotNull PlayerExpChangeEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {

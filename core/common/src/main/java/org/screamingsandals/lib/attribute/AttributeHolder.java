@@ -16,13 +16,14 @@
 
 package org.screamingsandals.lib.attribute;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.Wrapper;
 
 import java.util.List;
 
 public interface AttributeHolder extends Wrapper, RawValueHolder {
-    AttributeTypeHolder getAttributeType();
+    @NotNull AttributeTypeHolder getAttributeType();
 
     double getBaseValue();
 
@@ -32,9 +33,9 @@ public interface AttributeHolder extends Wrapper, RawValueHolder {
 
     double getValue();
 
-    List<AttributeModifierHolder> getModifiers();
+    @NotNull List<@NotNull AttributeModifierHolder> getModifiers();
 
-    void addModifier(AttributeModifierHolder modifier);
+    void addModifier(@NotNull AttributeModifierHolder modifier);
 
-    void removeModifier(AttributeModifierHolder modifier);
+    void removeModifier(@NotNull AttributeModifierHolder modifier);
 }

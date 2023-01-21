@@ -32,21 +32,21 @@ public interface SAsyncPlayerPreLoginEvent extends SAsyncEvent, PlatformEventWra
      *
      * @return {@link UUID} of the player.
      */
-    UUID uuid();
+    @NotNull UUID uuid();
 
     /**
      * Gets the address
      *
      * @return {@link InetAddress} of the player.
      */
-    InetAddress address();
+    @NotNull InetAddress address();
 
     /**
      * Gets the name
      *
      * @return name of the player
      */
-    String name();
+    @NotNull String name();
 
     /**
      * Sets the new name of the player
@@ -62,7 +62,7 @@ public interface SAsyncPlayerPreLoginEvent extends SAsyncEvent, PlatformEventWra
      *
      * @return {@link Result}
      */
-    Result result();
+    @NotNull Result result();
 
     /**
      * Sets new result for this event
@@ -76,7 +76,7 @@ public interface SAsyncPlayerPreLoginEvent extends SAsyncEvent, PlatformEventWra
      *
      * @return {@link Component}
      */
-    Component message();
+    @NotNull Component message();
 
     /**
      * Sets new message that is displayed if the {@link Result} is not {@link Result#ALLOWED}.

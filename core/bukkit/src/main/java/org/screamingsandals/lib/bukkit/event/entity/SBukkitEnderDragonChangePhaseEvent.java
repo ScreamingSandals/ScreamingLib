@@ -42,10 +42,10 @@ public class SBukkitEnderDragonChangePhaseEvent implements SEnderDragonChangePha
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EnderDragonChangePhaseEvent event;
+    private final @NotNull EnderDragonChangePhaseEvent event;
 
     // Internal cache
-    private EntityBasic entity;
+    private @Nullable EntityBasic entity;
     private @Nullable Phase currentPhase;
     private boolean currentPhaseCached;
 

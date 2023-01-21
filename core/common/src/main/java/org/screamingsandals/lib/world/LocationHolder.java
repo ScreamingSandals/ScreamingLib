@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
  * <img src="https://i.imgur.com/dpRCb53.png">
  */
 @Data
-@ConfigSerializable
 @Builder(toBuilder = true)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @With
@@ -69,7 +68,7 @@ public class LocationHolder implements Wrapper, Serializable {
     /**
      * The world of this location.
      */
-    private final WorldHolder world;
+    private final @NotNull WorldHolder world;
 
     /**
      * Clones the current location and increments the coordinates by the supplied values.

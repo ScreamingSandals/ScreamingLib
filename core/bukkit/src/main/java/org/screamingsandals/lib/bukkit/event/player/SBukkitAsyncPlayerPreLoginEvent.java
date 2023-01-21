@@ -40,25 +40,25 @@ public class SBukkitAsyncPlayerPreLoginEvent implements SAsyncPlayerPreLoginEven
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final AsyncPlayerPreLoginEvent event;
+    private final @NotNull AsyncPlayerPreLoginEvent event;
 
     @Override
-    public UUID uuid() {
+    public @NotNull UUID uuid() {
         return event.getUniqueId();
     }
 
     @Override
-    public InetAddress address() {
+    public @NotNull InetAddress address() {
         return event.getAddress();
     }
 
     @Override
-    public String name() {
+    public @NotNull String name() {
         return event.getName();
     }
 
     @Override
-    public Result result() {
+    public @NotNull Result result() {
         return Result.valueOf(event.getLoginResult().name());
     }
 
@@ -68,7 +68,7 @@ public class SBukkitAsyncPlayerPreLoginEvent implements SAsyncPlayerPreLoginEven
     }
 
     @Override
-    public Component message() {
+    public @NotNull Component message() {
         if (BukkitCore.getSpectatorBackend().hasAdventure()) {
             return AdventureBackend.wrapComponent(event.kickMessage());
         } else {

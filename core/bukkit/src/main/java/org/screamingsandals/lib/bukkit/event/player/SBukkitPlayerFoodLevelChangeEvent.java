@@ -38,11 +38,11 @@ public class SBukkitPlayerFoodLevelChangeEvent implements SPlayerFoodLevelChange
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final FoodLevelChangeEvent event;
+    private final @NotNull FoodLevelChangeEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private Item item;
+    private @Nullable PlayerWrapper player;
+    private @Nullable Item item;
     private boolean itemCached;
 
     @Override

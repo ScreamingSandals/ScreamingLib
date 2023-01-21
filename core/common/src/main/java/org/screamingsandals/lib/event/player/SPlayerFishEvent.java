@@ -77,7 +77,7 @@ public interface SPlayerFishEvent extends SCancellableEvent, SPlayerEvent, Platf
          */
         BITE;
 
-        public static State convert(String state) {
+        public static @NotNull State convert(@NotNull String state) {
             try {
                 return State.valueOf(state.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException ex) {

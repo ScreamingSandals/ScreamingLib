@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.EntityToggleSwimEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -37,10 +38,10 @@ public class SBukkitEntityToggleSwimEvent implements SEntityToggleSwimEvent, Buk
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityToggleSwimEvent event;
+    private final @NotNull EntityToggleSwimEvent event;
 
     // Internal cache
-    private EntityBasic entity;
+    private @Nullable EntityBasic entity;
 
     @Override
     public @NotNull EntityBasic entity() {

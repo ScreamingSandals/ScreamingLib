@@ -23,6 +23,8 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import org.bukkit.event.world.TimeSkipEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.world.STimeSkipEvent;
 import org.screamingsandals.lib.world.WorldHolder;
@@ -36,14 +38,14 @@ public class SBukkitTimeSkipEvent implements STimeSkipEvent, BukkitCancellable {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final TimeSkipEvent event;
+    private final @NotNull TimeSkipEvent event;
 
     // Internal cache
-    private WorldHolder world;
-    private Reason reason;
+    private @Nullable WorldHolder world;
+    private @Nullable Reason reason;
 
     @Override
-    public WorldHolder world() {
+    public @NotNull WorldHolder world() {
         if (world == null) {
             world = WorldMapper.wrapWorld(event.getWorld());
         }
@@ -51,7 +53,7 @@ public class SBukkitTimeSkipEvent implements STimeSkipEvent, BukkitCancellable {
     }
 
     @Override
-    public Reason reason() {
+    public @NotNull Reason reason() {
         if (reason == null) {
             reason = Reason.valueOf(event.getSkipReason().name());
         }

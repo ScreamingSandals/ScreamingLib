@@ -33,19 +33,19 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
 
     @Nullable ItemView item();
 
-    Action action();
+    @NotNull Action action();
 
     @Nullable BlockHolder clickedBlock();
 
-    BlockFace blockFace();
+    @NotNull BlockFace blockFace();
 
-    Result useClickedBlock();
+    @NotNull Result useClickedBlock();
 
-    void useClickedBlock(Result useClickedBlock);
+    void useClickedBlock(@NotNull Result useClickedBlock);
 
-    Result useItemInHand();
+    @NotNull Result useItemInHand();
 
-    void useItemInHand(Result useItemInHand);
+    void useItemInHand(@NotNull Result useItemInHand);
 
     @Nullable EquipmentSlotHolder hand();
 
@@ -90,11 +90,12 @@ public interface SPlayerInteractEvent extends SCancellableEvent, SPlayerEvent, P
      * @return Material the material of the item used
      */
     default @NotNull ItemTypeHolder material() {
-        if (!hasItem()) {
+        var item = item();
+        if (item == null) {
             return ItemTypeHolder.air();
         }
 
-        return item().getMaterial();
+        return item.getType();
     }
 
     /**

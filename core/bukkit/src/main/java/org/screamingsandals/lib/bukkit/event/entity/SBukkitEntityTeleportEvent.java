@@ -26,6 +26,7 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.Location;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -43,10 +44,10 @@ public class SBukkitEntityTeleportEvent implements SEntityTeleportEvent, BukkitC
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityTeleportEvent event;
+    private final @NotNull EntityTeleportEvent event;
 
     // Internal cache
-    private EntityBasic entity;
+    private @Nullable EntityBasic entity;
 
     @Override
     public @NotNull EntityBasic entity() {
@@ -67,12 +68,13 @@ public class SBukkitEntityTeleportEvent implements SEntityTeleportEvent, BukkitC
     }
 
     @Override
-    public @NotNull LocationHolder to() {
-        return LocationMapper.wrapLocation(event.getTo());
+    public @Nullable LocationHolder to() {
+        var loc = event.getTo();
+        return loc != null ? LocationMapper.wrapLocation(loc) : null;
     }
 
     @Override
-    public void to(@NotNull LocationHolder to) {
-        event.setFrom(to.as(Location.class));
+    public void to(@Nullable LocationHolder to) {
+        event.setTo(to != null ? to.as(Location.class) : null);
     }
 }

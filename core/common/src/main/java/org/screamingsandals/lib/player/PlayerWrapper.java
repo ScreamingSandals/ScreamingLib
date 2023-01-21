@@ -174,7 +174,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @param container the inventory container
      */
-    void openInventory(Openable container);
+    void openInventory(@NotNull Openable container);
 
     /**
      * Closes the inventory that the player has currently opened.
@@ -186,21 +186,21 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @param message the kick message
      */
-    void kick(Component message);
+    void kick(@Nullable Component message);
 
     /**
      * Kicks this player with a message.
      *
      * @param message the kick message
      */
-    void kick(ComponentLike message);
+    void kick(@Nullable ComponentLike message);
 
     /**
      * Gets the player's current gamemode.
      *
      * @return the player's gamemode
      */
-    GameModeHolder getGameMode();
+    @NotNull GameModeHolder getGameMode();
 
     /**
      * Sets the gamemode for this player.
@@ -270,21 +270,21 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      * @param particle the particle
      * @param location the location of the particle
      */
-    void sendParticle(ParticleHolder particle, LocationHolder location);
+    void sendParticle(@NotNull ParticleHolder particle, @NotNull LocationHolder location);
 
     /**
      * Gets the compass target location for this player.
      *
      * @return the compass target location
      */
-    LocationHolder getCompassTarget();
+    @NotNull LocationHolder getCompassTarget();
 
     /**
      * Sets the compass target for this player.
      *
      * @param location the compass target location
      */
-    void setCompassTarget(LocationHolder location);
+    void setCompassTarget(@NotNull LocationHolder location);
 
     /**
      * Resets the scoreboard for this player.
@@ -330,7 +330,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @param player the player who will not be visible by this player
      */
-    void hidePlayer(PlayerWrapper player);
+    void hidePlayer(@NotNull PlayerWrapper player);
 
     /**
      * Allows this player to see a player that was previously hidden.
@@ -340,7 +340,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @param player the player who will be visible by this player
      */
-    void showPlayer(PlayerWrapper player);
+    void showPlayer(@NotNull PlayerWrapper player);
 
     /**
      * Gets the player's {@link Channel}.
@@ -361,7 +361,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @return address
      */
-    InetSocketAddress getAddress();
+    @Nullable InetSocketAddress getAddress();
 
     /**
      * Launches the player in its facing direction.
@@ -388,7 +388,7 @@ public interface PlayerWrapper extends SenderWrapper, OfflinePlayerWrapper, Enti
      *
      * @param velocity the new velocity vector
      */
-    default void launch(Vector3D velocity) {
+    default void launch(@NotNull Vector3D velocity) {
         if (isOnline()) {
             setVelocity(velocity);
 

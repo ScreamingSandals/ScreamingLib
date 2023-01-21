@@ -18,23 +18,24 @@ package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.SPlayerArmorStandManipulateEvent;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 
 public class SBukkitPlayerArmorStandManipulateEvent extends SBukkitPlayerInteractEntityEvent implements SPlayerArmorStandManipulateEvent {
-    public SBukkitPlayerArmorStandManipulateEvent(PlayerArmorStandManipulateEvent event) {
+    public SBukkitPlayerArmorStandManipulateEvent(@NotNull PlayerArmorStandManipulateEvent event) {
         super(event);
     }
 
     // Internal cache
-    private Item playerItem;
-    private Item armorStandItem;
-    private EquipmentSlotHolder slot;
+    private @Nullable Item playerItem;
+    private @Nullable Item armorStandItem;
+    private @Nullable EquipmentSlotHolder slot;
 
     @Override
-    public Item playerItem() {
+    public @NotNull Item playerItem() {
         if (playerItem == null) {
             playerItem = new BukkitItem(event().getPlayerItem());
         }
@@ -42,7 +43,7 @@ public class SBukkitPlayerArmorStandManipulateEvent extends SBukkitPlayerInterac
     }
 
     @Override
-    public Item armorStandItem() {
+    public @NotNull Item armorStandItem() {
         if (armorStandItem == null) {
             armorStandItem = new BukkitItem(event().getArmorStandItem());
         }
@@ -50,7 +51,7 @@ public class SBukkitPlayerArmorStandManipulateEvent extends SBukkitPlayerInterac
     }
 
     @Override
-    public EquipmentSlotHolder slot() {
+    public @NotNull EquipmentSlotHolder slot() {
         if (slot == null) {
             slot = EquipmentSlotHolder.of(event().getSlot());
         }

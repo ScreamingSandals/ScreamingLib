@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.event.player.SPlayerLevelChangeEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
@@ -33,10 +34,10 @@ public class SBukkitPlayerLevelChangeEvent implements SPlayerLevelChangeEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerLevelChangeEvent event;
+    private final @NotNull PlayerLevelChangeEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {

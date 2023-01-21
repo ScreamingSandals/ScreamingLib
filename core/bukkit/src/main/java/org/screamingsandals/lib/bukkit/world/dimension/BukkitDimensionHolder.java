@@ -18,6 +18,7 @@ package org.screamingsandals.lib.bukkit.world.dimension;
 
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.world.dimension.DimensionHolder;
 
@@ -35,7 +36,7 @@ public class BukkitDimensionHolder extends BasicWrapper<World.Environment> imple
     }
 
     @Override
-    public boolean is(Object object) {
+    public boolean is(@Nullable Object object) {
         if (object instanceof World.Environment || object instanceof DimensionHolder) {
             return equals(object);
         }
@@ -43,7 +44,7 @@ public class BukkitDimensionHolder extends BasicWrapper<World.Environment> imple
     }
 
     @Override
-    public boolean is(Object... objects) {
+    public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
     }
 }

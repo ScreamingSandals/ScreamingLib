@@ -35,9 +35,9 @@ import java.util.List;
 
 @AbstractService
 public abstract class ParticleTypeMapping extends AbstractTypeMapper<ParticleTypeHolder> {
-    private static ParticleTypeMapping particleTypeMapping;
+    private static @Nullable ParticleTypeMapping particleTypeMapping;
 
-    protected final BidirectionalConverter<ParticleTypeHolder> particleTypeConverter = BidirectionalConverter.<ParticleTypeHolder>build()
+    protected final @NotNull BidirectionalConverter<ParticleTypeHolder> particleTypeConverter = BidirectionalConverter.<ParticleTypeHolder>build()
             .registerP2W(ParticleTypeHolder.class, d -> d)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {

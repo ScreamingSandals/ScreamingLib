@@ -38,10 +38,10 @@ public class SBukkitPlayerItemConsumeEvent implements SPlayerItemConsumeEvent, B
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerItemConsumeEvent event;
+    private final @NotNull PlayerItemConsumeEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {

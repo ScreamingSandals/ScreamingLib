@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.world.StructureGrowEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
 import org.screamingsandals.lib.block.state.BlockStateMapper;
@@ -45,16 +46,16 @@ public class SBukkitPlantGrowEvent implements SPlantGrowEvent, BukkitCancellable
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final StructureGrowEvent event;
+    private final @NotNull StructureGrowEvent event;
 
     // Internal cache
-    private Collection<BlockStateHolder> collection;
-    private LocationHolder location;
-    private PlayerWrapper player;
+    private @Nullable Collection<@NotNull BlockStateHolder> collection;
+    private @Nullable LocationHolder location;
+    private @Nullable PlayerWrapper player;
     private boolean playerCached;
 
     @Override
-    public Collection<BlockStateHolder> blockStates() {
+    public @NotNull Collection<@NotNull BlockStateHolder> blockStates() {
         if (collection == null) {
             collection = new CollectionLinkedToCollection<>(event.getBlocks(), o -> o.as(BlockState.class), o -> BlockStateMapper.<BlockStateHolder>wrapBlockState(o).orElseThrow());
         }
@@ -62,7 +63,7 @@ public class SBukkitPlantGrowEvent implements SPlantGrowEvent, BukkitCancellable
     }
 
     @Override
-    public LocationHolder getLocation() {
+    public @NotNull LocationHolder getLocation() {
         if (location == null) {
             location = LocationMapper.wrapLocation(event.getLocation());
         }

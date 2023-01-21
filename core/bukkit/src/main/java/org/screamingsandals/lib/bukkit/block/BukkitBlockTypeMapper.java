@@ -82,7 +82,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
         }
     }
 
-    protected Map<String, String> getDataFromString(String data) {
+    protected @NotNull Map<@NotNull String, String> getDataFromString(String data) {
         Preconditions.checkNotNull(data, "Data cannot be null!");
         if (data.contains("[") && data.contains("]")) {
             final var values = data.substring(data.indexOf("[") + 1, data.lastIndexOf("]"));
@@ -101,7 +101,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
         return !Server.isVersion(1, 13);
     }
 
-    public static boolean hasTagInBackPorts(Material material, String tag) {
+    public static boolean hasTagInBackPorts(@NotNull Material material, @NotNull String tag) {
         return tagBackPorts.containsKey(material) && tagBackPorts.get(material).contains(tag);
     }
 }

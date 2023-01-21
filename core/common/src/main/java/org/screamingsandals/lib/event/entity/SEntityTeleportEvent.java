@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.event.entity;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
@@ -29,7 +30,7 @@ public interface SEntityTeleportEvent extends SCancellableEvent, PlatformEventWr
 
     void from(@NotNull LocationHolder from);
 
-    @NotNull LocationHolder to();
+    @Nullable LocationHolder to();
 
-    void to(@NotNull LocationHolder to);
+    void to(@Nullable LocationHolder to);
 }

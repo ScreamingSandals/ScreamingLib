@@ -22,6 +22,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.FireworkExplodeEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityFirework;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -37,10 +38,10 @@ public class SBukkitFireworkExplodeEvent implements SFireworkExplodeEvent, Bukki
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final FireworkExplodeEvent event;
+    private final @NotNull FireworkExplodeEvent event;
 
     // Internal cache
-    private EntityFirework entity;
+    private @Nullable EntityFirework entity;
 
     @Override
     public @NotNull EntityFirework entity() {

@@ -36,9 +36,9 @@ import java.util.List;
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
 public abstract class GameModeMapping extends AbstractTypeMapper<GameModeHolder> {
-    private static GameModeMapping gameModeMapping;
+    private static @Nullable GameModeMapping gameModeMapping;
 
-    protected final BidirectionalConverter<GameModeHolder> gameModeConverter = BidirectionalConverter.<GameModeHolder>build()
+    protected final @NotNull BidirectionalConverter<GameModeHolder> gameModeConverter = BidirectionalConverter.<GameModeHolder>build()
             .registerP2W(GameModeHolder.class, g -> g)
             .registerP2W(ConfigurationNode.class, node -> {
                 try {

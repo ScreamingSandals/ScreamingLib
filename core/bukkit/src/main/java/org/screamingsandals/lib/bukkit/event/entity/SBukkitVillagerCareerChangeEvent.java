@@ -23,6 +23,7 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.entity.VillagerCareerChangeEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
@@ -38,11 +39,11 @@ public class SBukkitVillagerCareerChangeEvent implements SVillagerCareerChangeEv
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final VillagerCareerChangeEvent event;
+    private final @NotNull VillagerCareerChangeEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private ChangeReason reason;
+    private @Nullable EntityBasic entity;
+    private @Nullable ChangeReason reason;
 
     @Override
     public @NotNull EntityBasic entity() {

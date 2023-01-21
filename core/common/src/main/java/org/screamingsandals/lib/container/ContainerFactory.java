@@ -26,7 +26,7 @@ import org.screamingsandals.lib.utils.annotations.AbstractService;
 @AbstractService
 public abstract class ContainerFactory {
 
-    private static ContainerFactory factory;
+    private static @Nullable ContainerFactory factory;
 
     @ApiStatus.Internal
     public ContainerFactory() {

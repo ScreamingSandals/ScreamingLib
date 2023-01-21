@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerGameModeChangeEvent;
@@ -35,11 +36,11 @@ public class SBukkitPlayerGameModeChangeEvent implements SPlayerGameModeChangeEv
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerGameModeChangeEvent event;
+    private final @NotNull PlayerGameModeChangeEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private GameModeHolder gameMode;
+    private @Nullable PlayerWrapper player;
+    private @Nullable GameModeHolder gameMode;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -50,7 +51,7 @@ public class SBukkitPlayerGameModeChangeEvent implements SPlayerGameModeChangeEv
     }
 
     @Override
-    public GameModeHolder gameMode() {
+    public @NotNull GameModeHolder gameMode() {
         if (gameMode == null) {
             gameMode = GameModeHolder.of(event.getNewGameMode());
         }

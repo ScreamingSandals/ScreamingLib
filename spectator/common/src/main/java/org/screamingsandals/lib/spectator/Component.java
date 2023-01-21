@@ -195,7 +195,7 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
         return join(separator, components.toArray(Component[]::new));
     }
 
-    static @NotNull Component join(@NotNull Component separator, @NotNull Component @NotNull ... components) {
+    static @NotNull Component join(@NotNull Component separator, @NotNull Component @NotNull... components) {
         var finalComponents = new ArrayList<Component>();
 
         for (var comp : components) {

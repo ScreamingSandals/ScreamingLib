@@ -24,12 +24,12 @@ import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.event.entity.SEntityDamageByBlockEvent;
 
 public class SBukkitEntityDamageByBlockEvent extends SBukkitEntityDamageEvent implements SEntityDamageByBlockEvent {
-    public SBukkitEntityDamageByBlockEvent(EntityDamageByBlockEvent event) {
+    public SBukkitEntityDamageByBlockEvent(@NotNull EntityDamageByBlockEvent event) {
         super(event);
     }
 
     // Internal cache
-    private BlockHolder damager;
+    private @Nullable BlockHolder damager;
     private boolean damagerCached;
 
     @Override

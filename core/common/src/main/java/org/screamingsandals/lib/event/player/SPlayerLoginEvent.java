@@ -28,19 +28,19 @@ public interface SPlayerLoginEvent extends SPlayerEvent, PlatformEventWrapper {
 
     @NotNull PlayerWrapper player();
 
-    InetAddress address();
+    @NotNull InetAddress address();
 
-    String hostname();
+    @NotNull String hostname();
 
-    SAsyncPlayerPreLoginEvent.Result result();
+    SAsyncPlayerPreLoginEvent.@NotNull Result result();
 
-    void result(SAsyncPlayerPreLoginEvent.Result result);
+    void result(SAsyncPlayerPreLoginEvent.@NotNull Result result);
 
-    Component message();
+    @NotNull Component message();
 
-    void message(Component message);
+    void message(@NotNull Component message);
 
-    void message(ComponentLike message);
+    void message(@NotNull ComponentLike message);
 
     /**
      * Allows the player to log in

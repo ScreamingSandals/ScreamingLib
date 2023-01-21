@@ -27,6 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.event.entity.EntityPortalExitEvent;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SEntityPortalExitEvent;
@@ -44,11 +45,11 @@ public class SBukkitEntityPortalExitEvent implements SEntityPortalExitEvent {
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final EntityPortalExitEvent event;
+    private final @NotNull EntityPortalExitEvent event;
 
     // Internal cache
-    private EntityBasic entity;
-    private Vector3D before;
+    private @Nullable EntityBasic entity;
+    private @Nullable Vector3D before;
 
     @Override
     public @NotNull EntityBasic entity() {
@@ -69,13 +70,14 @@ public class SBukkitEntityPortalExitEvent implements SEntityPortalExitEvent {
     }
 
     @Override
-    public @NotNull LocationHolder to() {
-        return LocationMapper.wrapLocation(event.getTo());
+    public @Nullable LocationHolder to() {
+        var loc = event.getTo();
+        return loc != null ? LocationMapper.wrapLocation(loc) : null;
     }
 
     @Override
-    public void to(@NotNull LocationHolder location) {
-        event.setTo(location.as(Location.class));
+    public void to(@Nullable LocationHolder location) {
+        event.setTo(location != null ? location.as(Location.class) : null);
     }
 
     @Override

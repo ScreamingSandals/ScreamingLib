@@ -33,11 +33,11 @@ public class BlockHolder implements Wrapper {
     /**
      * The block location.
      */
-    private final LocationHolder location;
+    private final @NotNull LocationHolder location;
     /**
      * The block material.
      */
-    private BlockTypeHolder type;
+    private @NotNull BlockTypeHolder type;
 
     /**
      * Constructs a new BlockHolder.
@@ -49,7 +49,7 @@ public class BlockHolder implements Wrapper {
      * @param type the block's material
      */
     @ApiStatus.Internal
-    public BlockHolder(LocationHolder location, BlockTypeHolder type) {
+    public BlockHolder(@NotNull LocationHolder location, @NotNull BlockTypeHolder type) {
         this.location = location;
         this.type = type;
     }
@@ -59,7 +59,7 @@ public class BlockHolder implements Wrapper {
      *
      * @param type new material
      */
-    public void setType(BlockTypeHolder type) {
+    public void setType(@NotNull BlockTypeHolder type) {
         BlockMapper.setBlockAt(location, type, false);
         this.type = type;
     }
@@ -70,7 +70,7 @@ public class BlockHolder implements Wrapper {
      * @param type new material
      */
     @ApiStatus.Experimental
-    public void setTypeWithoutPhysics(BlockTypeHolder type) {
+    public void setTypeWithoutPhysics(@NotNull BlockTypeHolder type) {
         BlockMapper.setBlockAt(location, type, true);
         this.type = type;
     }
@@ -80,7 +80,7 @@ public class BlockHolder implements Wrapper {
      *
      * @return current material
      */
-    public BlockTypeHolder getCurrentType() {
+    public @NotNull BlockTypeHolder getCurrentType() {
         final var toReturn = BlockMapper.getBlockAt(location).getType();
         this.type = toReturn;
         return toReturn;

@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.Item;
@@ -26,12 +27,12 @@ public interface SPlayerBlockDamageEvent extends SCancellableEvent, SPlayerEvent
     /**
      * Damaged Block
      */
-    BlockHolder block();
+    @NotNull BlockHolder block();
 
     /**
      * Item which has been used to damage this block
      */
-    Item itemInHand();
+    @NotNull Item itemInHand();
 
     /**
      * If this damage should instantly break the block or not

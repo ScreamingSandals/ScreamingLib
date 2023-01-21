@@ -18,15 +18,16 @@ package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.player.SPlayerTeleportEvent;
 
 public class SBukkitPlayerTeleportEvent extends SBukkitPlayerMoveEvent implements SPlayerTeleportEvent {
-    public SBukkitPlayerTeleportEvent(PlayerTeleportEvent event) {
+    public SBukkitPlayerTeleportEvent(@NotNull PlayerTeleportEvent event) {
         super(event);
     }
 
     // Internal cache
-    private TeleportCause teleportCause;
+    private @Nullable TeleportCause teleportCause;
 
     @Override
     public @NotNull TeleportCause cause() {

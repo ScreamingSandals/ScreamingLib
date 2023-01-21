@@ -42,10 +42,10 @@ import java.util.regex.Pattern;
 @AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
 public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentHolder> {
 
-    private static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?<namespaced>[A-Za-z][A-Za-z0-9_.\\-/:]*)(\\s+(?<level>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
-    private static EnchantmentMapping enchantmentMapping;
+    private static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(?<namespaced>[A-Za-z][A-Za-z0-9_.\\-/:]*)(\\s+(?<level>(\\d+|(?=[MDCLXVI])M*(C[MD]|D?C*)(X[CL]|L?X*)(I[XV]|V?I*)))?)?$");
+    private static @Nullable EnchantmentMapping enchantmentMapping;
 
-    protected final BidirectionalConverter<EnchantmentHolder> enchantmentConverter = BidirectionalConverter.<EnchantmentHolder>build()
+    protected final @NotNull BidirectionalConverter<EnchantmentHolder> enchantmentConverter = BidirectionalConverter.<EnchantmentHolder>build()
             .registerP2W(EnchantmentHolder.class, e -> e)
             .registerP2W(Map.Entry.class, entry -> {
                 EnchantmentHolder holder = resolve(entry.getKey());

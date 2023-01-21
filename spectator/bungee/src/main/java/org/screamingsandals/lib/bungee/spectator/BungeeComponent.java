@@ -351,7 +351,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         }
 
         @Override
-        public @NotNull B append(@NotNull Component @NotNull ... components) {
+        public @NotNull B append(@NotNull Component @NotNull... components) {
             for (var component : components) {
                 append(component);
             }
@@ -359,7 +359,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         }
 
         @Override
-        public @NotNull B append(@NotNull ComponentLike @NotNull ... components) {
+        public @NotNull B append(@NotNull ComponentLike @NotNull... components) {
             for (var component : components) {
                 append(component);
             }

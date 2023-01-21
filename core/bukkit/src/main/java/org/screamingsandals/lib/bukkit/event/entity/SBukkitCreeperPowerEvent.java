@@ -42,13 +42,13 @@ public class SBukkitCreeperPowerEvent implements SCreeperPowerEvent, BukkitCance
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final CreeperPowerEvent event;
+    private final @NotNull CreeperPowerEvent event;
 
     // Internal cache
-    private EntityBasic entity;
+    private @Nullable EntityBasic entity;
     private @Nullable EntityLightning bolt;
     private boolean boltCached;
-    private PowerCause cause;
+    private @Nullable PowerCause cause;
 
     @Override
     public @NotNull EntityBasic entity() {

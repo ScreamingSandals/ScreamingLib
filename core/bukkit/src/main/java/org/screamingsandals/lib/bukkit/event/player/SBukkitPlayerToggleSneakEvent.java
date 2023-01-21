@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.SPlayerToggleSneakEvent;
@@ -34,10 +35,10 @@ public class SBukkitPlayerToggleSneakEvent implements SPlayerToggleSneakEvent, B
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerToggleSneakEvent event;
+    private final @NotNull PlayerToggleSneakEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {

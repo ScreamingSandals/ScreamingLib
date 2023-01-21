@@ -37,9 +37,9 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
     double getEyeHeight(boolean ignorePose);
 
-    LocationHolder getEyeLocation();
+    @NotNull LocationHolder getEyeLocation();
 
-    BlockHolder getTargetBlock(Collection<BlockTypeHolder> transparent, int maxDistance);
+    @NotNull BlockHolder getTargetBlock(@Nullable Collection<@NotNull BlockTypeHolder> transparent, int maxDistance);
 
     @Nullable BlockHolder getTargetBlock(int maxDistance);
 
@@ -73,16 +73,16 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
     @Nullable EntityHuman getHumanKiller();
 
-    boolean addPotionEffect(PotionEffectHolder effect);
+    boolean addPotionEffect(@NotNull PotionEffectHolder effect);
 
-    boolean addPotionEffects(Collection<PotionEffectHolder> effects);
+    boolean addPotionEffects(@NotNull Collection<@NotNull PotionEffectHolder> effects);
 
-    boolean hasPotionEffect(PotionEffectHolder type);
+    boolean hasPotionEffect(@NotNull PotionEffectHolder type);
 
     /* Currently removes all potion effects of this type, should be changed */
-    void removePotionEffect(PotionEffectHolder type);
+    void removePotionEffect(@NotNull PotionEffectHolder type);
 
-    List<PotionEffectHolder> getActivePotionEffects();
+    @NotNull List<@NotNull PotionEffectHolder> getActivePotionEffects();
 
     boolean getRemoveWhenFarAway();
 
@@ -96,7 +96,7 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
     @Nullable EntityBasic getLeashHolder();
 
-    boolean setLeashHolder(EntityBasic holder);
+    boolean setLeashHolder(@Nullable EntityBasic holder);
 
     boolean removeLeashHolder();
 
@@ -116,7 +116,7 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
     boolean hasAI();
 
-    void attack(EntityBasic target);
+    void attack(@NotNull EntityBasic target);
 
     void swingMainHand();
 
@@ -132,7 +132,7 @@ public interface EntityLiving extends EntityBasic, ProjectileShooter {
 
     void damage(double amount);
 
-    void damage(double amount, EntityBasic damageSource);
+    void damage(double amount, @Nullable EntityBasic damageSource);
 
     double getAbsorptionAmount();
 

@@ -18,18 +18,19 @@ package org.screamingsandals.lib.bukkit.event.player;
 
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.entity.SBukkitEntityUnleashEvent;
 import org.screamingsandals.lib.event.player.SPlayerUnleashEntityEvent;
 import org.screamingsandals.lib.player.PlayerWrapper;
 
 public class SBukkitPlayerUnleashEntityEvent extends SBukkitEntityUnleashEvent implements SPlayerUnleashEntityEvent {
-    public SBukkitPlayerUnleashEntityEvent(PlayerUnleashEntityEvent event) {
+    public SBukkitPlayerUnleashEntityEvent(@NotNull PlayerUnleashEntityEvent event) {
         super(event);
     }
 
     // Internal cache
-    private PlayerWrapper player;
+    private @Nullable PlayerWrapper player;
 
     @Override
     public @NotNull PlayerWrapper player() {

@@ -43,14 +43,14 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerBucketEvent event;
+    private final @NotNull PlayerBucketEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private BlockHolder block;
-    private BlockHolder blockClicked;
-    private BlockFace blockFace;
-    private ItemTypeHolder bucket;
+    private @Nullable PlayerWrapper player;
+    private @Nullable BlockHolder block;
+    private @Nullable BlockHolder blockClicked;
+    private @Nullable BlockFace blockFace;
+    private @Nullable ItemTypeHolder bucket;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -61,7 +61,7 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
     }
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -69,7 +69,7 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
     }
 
     @Override
-    public BlockHolder blockClicked() {
+    public @NotNull BlockHolder blockClicked() {
         if (blockClicked == null) {
             blockClicked = BlockMapper.wrapBlock(event.getBlockClicked());
         }
@@ -77,7 +77,7 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
     }
 
     @Override
-    public BlockFace blockFace() {
+    public @NotNull BlockFace blockFace() {
         if (blockFace == null) {
             blockFace = BlockFace.valueOf(event.getBlockFace().name());
         }
@@ -85,7 +85,7 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
     }
 
     @Override
-    public ItemTypeHolder bucket() {
+    public @NotNull ItemTypeHolder bucket() {
         if (bucket == null) {
             bucket = ItemTypeHolder.of(event.getBucket());
         }
@@ -103,7 +103,7 @@ public class SBukkitPlayerBucketEvent implements SPlayerBucketEvent, BukkitCance
     }
 
     @Override
-    public Action action() {
+    public @NotNull Action action() {
         return  event instanceof PlayerBucketFillEvent ? Action.FILL : Action.EMPTY;
     }
 }

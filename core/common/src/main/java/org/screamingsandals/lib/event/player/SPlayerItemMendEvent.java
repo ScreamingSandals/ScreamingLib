@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.event.player;
 
+import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.EntityExperience;
 import org.screamingsandals.lib.event.PlatformEventWrapper;
 import org.screamingsandals.lib.event.SCancellableEvent;
@@ -23,9 +24,9 @@ import org.screamingsandals.lib.item.Item;
 
 public interface SPlayerItemMendEvent extends SCancellableEvent, SPlayerEvent, PlatformEventWrapper {
 
-    Item item();
+    @NotNull Item item();
 
-    EntityExperience experienceOrb();
+    @NotNull EntityExperience experienceOrb();
 
     int repairAmount();
 

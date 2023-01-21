@@ -22,6 +22,8 @@ import lombok.experimental.Accessors;
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.block.SpongeAbsorbEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.block.state.BlockStateHolder;
@@ -42,14 +44,14 @@ public class SBukkitSpongeAbsorbEvent implements SSpongeAbsorbEvent, BukkitCance
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final SpongeAbsorbEvent event;
+    private final @NotNull SpongeAbsorbEvent event;
 
     // Internal cache
-    private BlockHolder block;
-    private Collection<BlockStateHolder> waterBlocks;
+    private @Nullable BlockHolder block;
+    private @Nullable Collection<@NotNull BlockStateHolder> waterBlocks;
 
     @Override
-    public BlockHolder block() {
+    public @NotNull BlockHolder block() {
         if (block == null) {
             block = BlockMapper.wrapBlock(event.getBlock());
         }
@@ -57,7 +59,7 @@ public class SBukkitSpongeAbsorbEvent implements SSpongeAbsorbEvent, BukkitCance
     }
 
     @Override
-    public Collection<BlockStateHolder> waterBlocks() {
+    public @NotNull Collection<@NotNull BlockStateHolder> waterBlocks() {
         if (waterBlocks == null) {
             waterBlocks = new CollectionLinkedToCollection<>(event.getBlocks(), o -> o.as(BlockState.class), o -> BlockStateMapper.<BlockStateHolder>wrapBlockState(o).orElseThrow());
         }

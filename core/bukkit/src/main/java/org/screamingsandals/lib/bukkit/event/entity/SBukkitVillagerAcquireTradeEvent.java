@@ -23,6 +23,7 @@ import lombok.experimental.ExtensionMethod;
 import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.inventory.MerchantRecipe;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.event.player.SBukkitPlayerCraftItemEvent;
 import org.screamingsandals.lib.entity.EntityBasic;
@@ -40,10 +41,10 @@ public class SBukkitVillagerAcquireTradeEvent implements SVillagerAcquireTradeEv
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final VillagerAcquireTradeEvent event;
+    private final @NotNull VillagerAcquireTradeEvent event;
 
     // Internal cache
-    private EntityBasic entity;
+    private @Nullable EntityBasic entity;
 
     @Override
     public @NotNull EntityBasic entity() {

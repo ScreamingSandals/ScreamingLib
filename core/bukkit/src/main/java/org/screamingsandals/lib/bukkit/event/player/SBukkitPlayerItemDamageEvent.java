@@ -21,6 +21,7 @@ import lombok.experimental.Accessors;
 
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
@@ -36,11 +37,11 @@ public class SBukkitPlayerItemDamageEvent implements SPlayerItemDamageEvent, Buk
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final PlayerItemDamageEvent event;
+    private final @NotNull PlayerItemDamageEvent event;
 
     // Internal cache
-    private PlayerWrapper player;
-    private Item item;
+    private @Nullable PlayerWrapper player;
+    private @Nullable Item item;
 
     @Override
     public @NotNull PlayerWrapper player() {
@@ -51,7 +52,7 @@ public class SBukkitPlayerItemDamageEvent implements SPlayerItemDamageEvent, Buk
     }
 
     @Override
-    public Item item() {
+    public @NotNull Item item() {
         if (item == null) {
             item = new BukkitItem(event.getItem());
         }
