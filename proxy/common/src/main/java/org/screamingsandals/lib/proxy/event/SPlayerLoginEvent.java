@@ -16,28 +16,15 @@
 
 package org.screamingsandals.lib.proxy.event;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.SCancellableAsyncEvent;
 import org.screamingsandals.lib.proxy.PendingConnection;
 import org.screamingsandals.lib.spectator.Component;
 
-@EqualsAndHashCode(callSuper = false)
-@Data
-public class SPlayerLoginEvent implements SCancellableAsyncEvent {
-    private final @NotNull PendingConnection player;
-    private @NotNull Result result = Result.ALLOW;
-    private @NotNull Component cancelMessage = Component.text("Nope.");
-    private boolean cancelled;
+public interface SPlayerLoginEvent extends SCancellableAsyncEvent {
+    @NotNull PendingConnection getPlayer();
 
-    @Override
-    public boolean cancelled() {
-        return cancelled;
-    }
+    @NotNull Component getCancelMessage();
 
-    @Override
-    public void cancelled(boolean cancel) {
-        this.cancelled = cancel;
-    }
+    void setCancelMessage(@NotNull Component cancelMessage);
 }

@@ -16,30 +16,16 @@
 
 package org.screamingsandals.lib.proxy.event;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 
-@EqualsAndHashCode(callSuper = false)
-@Data
-@AllArgsConstructor
-public class SPlayerChatEvent implements SCancellableEvent {
-    private final @NotNull ProxiedPlayerWrapper player;
-    private final boolean isCommand;
-    private @NotNull String message;
-    private boolean cancelled;
+public interface SPlayerChatEvent extends SCancellableEvent {
+    @NotNull ProxiedPlayerWrapper getPlayer();
 
-    @Override
-    public boolean cancelled() {
-        return cancelled;
-    }
+    boolean isCommand();
 
-    @Override
-    public void cancelled(boolean cancel) {
-        this.cancelled = cancel;
-    }
+    @NotNull String getMessage();
+
+    void setMessage(@NotNull String message);
 }

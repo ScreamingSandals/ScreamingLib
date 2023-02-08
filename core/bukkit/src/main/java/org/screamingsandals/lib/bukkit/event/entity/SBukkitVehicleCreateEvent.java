@@ -24,7 +24,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
+import org.screamingsandals.lib.event.NoAutoCancellable;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.entity.EntityMapper;
 import org.screamingsandals.lib.event.entity.SVehicleCreateEvent;

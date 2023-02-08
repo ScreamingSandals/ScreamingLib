@@ -16,8 +16,6 @@
 
 package org.screamingsandals.lib.proxy.event;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
@@ -25,13 +23,12 @@ import org.screamingsandals.lib.proxy.ProxiedPlayerWrapper;
 import java.util.Arrays;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = false)
-@Data
-public class SPlayerLeaveEvent implements SEvent {
-    private final @NotNull ProxiedPlayerWrapper player;
-    private final @NotNull LoginStatus status;
+public interface SPlayerLeaveEvent extends SEvent {
+    @NotNull LoginStatus getStatus();
 
-    public enum LoginStatus {
+    @NotNull ProxiedPlayerWrapper getPlayer();
+
+    enum LoginStatus {
         CANCELLED_BY_PROXY,
         CANCELLED_BY_USER,
         CANCELLED_BY_USER_BEFORE_COMPLETE,
@@ -39,9 +36,9 @@ public class SPlayerLeaveEvent implements SEvent {
         PRE_SERVER_JOIN,
         SUCCESSFUL_LOGIN;
 
-        public static final List<LoginStatus> VALUES = Arrays.asList(values());
+        public static final @NotNull List<@NotNull LoginStatus> VALUES = Arrays.asList(values());
 
-        public static LoginStatus convert(String name) {
+        public static @NotNull LoginStatus convert(@NotNull String name) {
             return VALUES.stream()
                     .filter(next -> next.name().equalsIgnoreCase(name))
                     .findFirst()

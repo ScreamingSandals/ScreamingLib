@@ -22,8 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bungee.event.AbstractEventListener;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.EventPriority;
-import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
-import org.screamingsandals.lib.proxy.event.SPlayerChatEvent;
 
 public class ChatEventListener extends AbstractEventListener<ChatEvent> {
 
@@ -33,15 +31,8 @@ public class ChatEventListener extends AbstractEventListener<ChatEvent> {
             return;
         }
 
-        var event = new SPlayerChatEvent(
-                ProxiedPlayerMapper.wrapPlayer(chatEvent.getSender()),
-                chatEvent.isCommand(),
-                chatEvent.getMessage(),
-                chatEvent.isCancelled()
-        );
+        var event = new BungeePlayerChatEvent(chatEvent);
 
         EventManager.getDefaultEventManager().fireEvent(event, eventPriority);
-        chatEvent.setCancelled(event.cancelled());
-        chatEvent.setMessage(event.getMessage());
     }
 }

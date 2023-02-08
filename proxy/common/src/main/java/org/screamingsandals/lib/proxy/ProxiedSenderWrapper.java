@@ -16,59 +16,26 @@
 
 package org.screamingsandals.lib.proxy;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
-import org.screamingsandals.lib.sender.permissions.Permission;
-import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.utils.Wrapper;
 
-import java.util.Locale;
+public interface ProxiedSenderWrapper extends Wrapper, CommandSenderWrapper {
 
-@Data
-@RequiredArgsConstructor
-public class ProxiedSenderWrapper implements Wrapper, CommandSenderWrapper {
-    private final @NotNull String name;
-    private final @NotNull Type type;
-
-    public void sendMessage(@NotNull String message) {
-        ProxiedPlayerMapper.sendMessage(this, message);
+    /**
+     * @deprecated Operators are not supported on Proxy servers.
+     */
+    @Override
+    @Deprecated
+    default boolean isOp() {
+        return this.getType() == Type.CONSOLE; // No OP on proxies
     }
 
+    /**
+     * @deprecated Operators are not supported on Proxy servers
+     */
     @Override
-    public boolean hasPermission(@NotNull Permission permission) {
-        return ProxiedPlayerMapper.hasPermission(this, permission);
-    }
-
-    @Override
-    public boolean isPermissionSet(@NotNull Permission permission) {
-        return ProxiedPlayerMapper.isPermissionSet(this, permission);
-    }
-
-    @Override
-    public @NotNull Locale getLocale() {
-        return ProxiedPlayerMapper.getLocale(this);
-    }
-
-
-    @Override
-    public <T> @NotNull T as(@NotNull Class<T> type) {
-        return ProxiedPlayerMapper.convertSenderWrapper(this, type);
-    }
-
-    @Override
-    public boolean isOp() {
-        return type == Type.CONSOLE; // No OP on proxies
-    }
-
-    @Override
-    public void setOp(boolean op) {
+    @Deprecated
+    default void setOp(boolean op) {
         // No OP on proxies
-    }
-
-    @Override
-    public @NotNull Adapter adapter() {
-        return ProxiedPlayerMapper.adapter(this);
     }
 }

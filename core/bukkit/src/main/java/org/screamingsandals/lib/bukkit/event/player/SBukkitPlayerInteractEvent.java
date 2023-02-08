@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.block.BlockMapper;
 import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
-import org.screamingsandals.lib.bukkit.event.NoAutoCancellable;
+import org.screamingsandals.lib.event.NoAutoCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItemView;
 import org.screamingsandals.lib.event.player.SPlayerInteractEvent;
 import org.screamingsandals.lib.item.ItemView;

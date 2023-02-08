@@ -16,8 +16,6 @@
 
 package org.screamingsandals.lib.proxy;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.Wrapper;
@@ -26,16 +24,17 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.List;
 
-@Data
-@RequiredArgsConstructor
-public class ServerWrapper implements Wrapper {
-    private final @NotNull String name;
-    private final @NotNull SocketAddress address;
+public interface ServerWrapper extends Wrapper {
+
+    @NotNull String getName();
+
+    @NotNull SocketAddress getSocketAddress();
 
     /**
      * @return optional containing InetSocketAddress or empty optional if connection is done by Unix domain socket
      */
-    public @Nullable InetSocketAddress getAddress() {
+    default @Nullable InetSocketAddress getAddress() {
+        var address = getSocketAddress();
         if (address instanceof InetSocketAddress) {
             return (InetSocketAddress) address;
         } else {
@@ -43,11 +42,7 @@ public class ServerWrapper implements Wrapper {
         }
     }
 
-    public @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers() {
+    default @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers() {
         return ProxiedPlayerMapper.getPlayers(this);
-    }
-
-    public <T> @NotNull T as(@NotNull Class<T> type) {
-        return ProxiedPlayerMapper.convertServerWrapper(this, type);
     }
 }

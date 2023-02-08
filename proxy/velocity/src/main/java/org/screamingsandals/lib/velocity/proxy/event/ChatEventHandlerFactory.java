@@ -20,7 +20,6 @@ import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.EventPriority;
-import org.screamingsandals.lib.proxy.ProxiedPlayerMapper;
 import org.screamingsandals.lib.proxy.event.SPlayerChatEvent;
 import org.screamingsandals.lib.velocity.event.AbstractVelocityEventHandlerFactory;
 
@@ -32,20 +31,6 @@ public class ChatEventHandlerFactory extends AbstractVelocityEventHandlerFactory
 
     @Override
     protected @NotNull SPlayerChatEvent wrapEvent(@NotNull PlayerChatEvent event, @NotNull EventPriority priority) {
-        return new SPlayerChatEvent(
-                ProxiedPlayerMapper.wrapPlayer(event.getPlayer()),
-                event.getMessage().startsWith("/"),
-                event.getResult().getMessage().orElse(event.getMessage()),
-                event.getResult().isAllowed()
-        );
-    }
-
-    @Override
-    protected void postProcess(@NotNull SPlayerChatEvent wrappedEvent, @NotNull PlayerChatEvent event) {
-        if (wrappedEvent.cancelled()) {
-            event.setResult(PlayerChatEvent.ChatResult.denied());
-        } else {
-            event.setResult(PlayerChatEvent.ChatResult.message(wrappedEvent.getMessage()));
-        }
+        return new VelocityPlayerChatEvent(event);
     }
 }

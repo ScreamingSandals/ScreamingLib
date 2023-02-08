@@ -19,22 +19,14 @@ package org.screamingsandals.lib.proxy;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
-import org.screamingsandals.lib.sender.permissions.Permission;
-import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
-import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 @AbstractService
 public abstract class ProxiedPlayerMapper {
 
-    protected final @NotNull BidirectionalConverter<ProxiedPlayerWrapper> playerConverter = BidirectionalConverter.build();
-    protected final @NotNull BidirectionalConverter<ProxiedSenderWrapper> senderConverter = BidirectionalConverter.build();
-    protected final @NotNull BidirectionalConverter<ServerWrapper> serverConverter = BidirectionalConverter.build();
     private static @Nullable ProxiedPlayerMapper proxiedPlayerMapper;
 
     @ApiStatus.Internal
@@ -45,66 +37,6 @@ public abstract class ProxiedPlayerMapper {
 
         proxiedPlayerMapper = this;
     }
-
-    public static <T> @NotNull ProxiedPlayerWrapper wrapPlayer(@NotNull T player) {
-        if (proxiedPlayerMapper == null) {
-            throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
-        }
-        return proxiedPlayerMapper.playerConverter.convert(player);
-    }
-
-    public static <T> @NotNull ProxiedSenderWrapper wrapSender(@NotNull T player) {
-        if (proxiedPlayerMapper == null) {
-            throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
-        }
-        return proxiedPlayerMapper.senderConverter.convert(player);
-    }
-
-    public static <T> @NotNull ServerWrapper wrapServer(@NotNull T server) {
-        if (proxiedPlayerMapper == null) {
-            throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
-        }
-        return proxiedPlayerMapper.serverConverter.convert(server);
-    }
-
-    public static <T> @NotNull T convertPlayerWrapper(@NotNull ProxiedPlayerWrapper player, @NotNull Class<T> type) {
-        if (proxiedPlayerMapper == null) {
-            throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
-        }
-        return proxiedPlayerMapper.playerConverter.convert(player, type);
-    }
-
-    public static <T> @NotNull T convertSenderWrapper(@NotNull ProxiedSenderWrapper sender, @NotNull Class<T> type) {
-        if (proxiedPlayerMapper == null) {
-            throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
-        }
-        return proxiedPlayerMapper.senderConverter.convert(sender, type);
-    }
-
-    public static <T> @NotNull T convertServerWrapper(@NotNull ServerWrapper server, @NotNull Class<T> type) {
-        if (proxiedPlayerMapper == null) {
-            throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
-        }
-        return proxiedPlayerMapper.serverConverter.convert(server, type);
-    }
-
-    public static void sendMessage(@NotNull ProxiedSenderWrapper playerWrapper, @NotNull String message) {
-        if (proxiedPlayerMapper == null) {
-            throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
-        }
-        proxiedPlayerMapper.sendMessage0(playerWrapper, message);
-    }
-
-    public abstract void sendMessage0(@NotNull ProxiedSenderWrapper playerWrapper, @NotNull String message);
-
-    public static void switchServer(@NotNull ProxiedPlayerWrapper playerWrapper, @NotNull ServerWrapper server) {
-        if (proxiedPlayerMapper == null) {
-            throw new UnsupportedOperationException("ProxiedPlayerMapper aren't initialized yet.");
-        }
-        proxiedPlayerMapper.switchServer0(playerWrapper, server);
-    }
-
-    public abstract void switchServer0(@NotNull ProxiedPlayerWrapper playerWrapper, @NotNull ServerWrapper server);
 
     public static @Nullable ServerWrapper getServer(@NotNull String name) {
         if (proxiedPlayerMapper == null) {
@@ -159,40 +91,4 @@ public abstract class ProxiedPlayerMapper {
     }
 
     public abstract @NotNull List<@NotNull ProxiedPlayerWrapper> getPlayers0(@NotNull ServerWrapper serverWrapper);
-
-    public static boolean hasPermission(@NotNull CommandSenderWrapper wrapper, @NotNull Permission permission) {
-        if (proxiedPlayerMapper == null) {
-            throw new UnsupportedOperationException("ProxiedPlayerMapper isn't initialized yet.");
-        }
-        return proxiedPlayerMapper.hasPermission0(wrapper, permission);
-    }
-
-    public abstract boolean hasPermission0(@NotNull CommandSenderWrapper wrapper, @NotNull Permission permission);
-
-    public static boolean isPermissionSet(@NotNull CommandSenderWrapper wrapper, @NotNull Permission permission) {
-        if (proxiedPlayerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return proxiedPlayerMapper.isPermissionSet0(wrapper, permission);
-    }
-
-    public abstract boolean isPermissionSet0(@NotNull CommandSenderWrapper wrapper, @NotNull Permission permission);
-
-    public static @NotNull Locale getLocale(@NotNull ProxiedSenderWrapper wrapper) {
-        if (proxiedPlayerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return proxiedPlayerMapper.getLocale0(wrapper);
-    }
-
-    public abstract @NotNull Locale getLocale0(@NotNull ProxiedSenderWrapper wrapper);
-
-    public static @NotNull Adapter adapter(@NotNull ProxiedSenderWrapper wrapper) {
-        if (proxiedPlayerMapper == null) {
-            throw new UnsupportedOperationException("ProxiedPlayerMapper isn't initialized yet.");
-        }
-        return proxiedPlayerMapper.adapter0(wrapper);
-    }
-
-    protected abstract @NotNull Adapter adapter0(@NotNull ProxiedSenderWrapper wrapper);
 }

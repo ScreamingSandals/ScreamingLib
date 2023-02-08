@@ -88,7 +88,7 @@ public abstract class AbstractVelocityEventHandlerFactory<T, SE extends SEvent> 
                         EventManager.getDefaultEventManager().fireEvent(wrapped, priority);
                     }
                     if (wrapped instanceof Cancellable
-                            && event instanceof ResultedEvent) {
+                            && event instanceof ResultedEvent && !(wrapped instanceof NoAutoCancellable)) {
                         final var isCancelled = ((Cancellable) wrapped).cancelled();
                         if (isCancelled) {
                             ((ResultedEvent<ResultedEvent.Result>) event).setResult(ResultedEvent.GenericResult.denied());
@@ -116,5 +116,6 @@ public abstract class AbstractVelocityEventHandlerFactory<T, SE extends SEvent> 
      * @param wrappedEvent wrapped event
      * @param event        velocity event
      */
-    protected abstract void postProcess(@NotNull SE wrappedEvent, @NotNull T event);
+    protected void postProcess(@NotNull SE wrappedEvent, @NotNull T event) {
+    }
 }

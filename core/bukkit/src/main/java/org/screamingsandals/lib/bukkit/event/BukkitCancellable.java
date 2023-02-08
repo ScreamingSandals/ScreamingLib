@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.bukkit.event;
 
 import org.bukkit.event.Cancellable;
+import org.screamingsandals.lib.event.NoAutoCancellable;
 
 public interface BukkitCancellable extends org.screamingsandals.lib.event.Cancellable, NoAutoCancellable {
     Cancellable event();

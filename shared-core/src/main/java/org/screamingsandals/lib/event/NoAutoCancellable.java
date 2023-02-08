@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.bukkit.event;
+package org.screamingsandals.lib.event;
 
+import org.jetbrains.annotations.ApiStatus;
+
+@ApiStatus.Internal
 public interface NoAutoCancellable {
 }
