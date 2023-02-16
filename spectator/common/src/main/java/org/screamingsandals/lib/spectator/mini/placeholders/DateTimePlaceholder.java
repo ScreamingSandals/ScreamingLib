@@ -17,31 +17,58 @@
 package org.screamingsandals.lib.spectator.mini.placeholders;
 
 import lombok.Data;
+import lombok.Getter;
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.spectator.Component;
-import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Data
-public class DateTimePlaceholder implements Placeholder {
+public abstract class DateTimePlaceholder implements StringLikePlaceholder {
     @Pattern("[a-z\\d_-]+")
     private final @NotNull String name;
-    private final @NotNull TemporalAccessor value;
 
-    @SuppressWarnings("unchecked")
+    public abstract @NotNull TemporalAccessor getValue();
+
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders) {
+    public @NotNull String getStringResult(@NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
+        var value = getValue();
+
         if (arguments.size() >= 1) {
             try {
-                return (B) Component.text().content(DateTimeFormatter.ofPattern(arguments.get(0)).format(value));
+                return DateTimeFormatter.ofPattern(arguments.get(0)).format(value);
             } catch (Throwable ignored) {
             }
         }
 
-        return (B) Component.text().content(DateTimeFormatter.ISO_DATE_TIME.format(value));
+        return DateTimeFormatter.ISO_DATE_TIME.format(value);
+    }
+
+    public static final class Constant extends DateTimePlaceholder {
+        @Getter
+        private final @NotNull TemporalAccessor value;
+
+        public Constant(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull TemporalAccessor value) {
+            super(name);
+            this.value = value;
+        }
+    }
+
+    public static final class Lazy extends DateTimePlaceholder {
+        @Getter
+        private final @NotNull Supplier<@NotNull TemporalAccessor> supplier;
+
+        public Lazy(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull TemporalAccessor> supplier) {
+            super(name);
+            this.supplier = supplier;
+        }
+
+        @Override
+        public @NotNull TemporalAccessor getValue() {
+            return supplier.get();
+        }
     }
 }

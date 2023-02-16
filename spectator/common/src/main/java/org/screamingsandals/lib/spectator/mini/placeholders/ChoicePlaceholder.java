@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.spectator.mini.placeholders;
 
 import lombok.Data;
+import lombok.Getter;
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
@@ -24,16 +25,20 @@ import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
 import java.text.ChoiceFormat;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Data
-public class ChoicePlaceholder implements Placeholder {
+public abstract class ChoicePlaceholder implements Placeholder {
     @Pattern("[a-z\\d_-]+")
     private final @NotNull String name;
-    private final @NotNull Number value;
+
+    public abstract @NotNull Number getValue();
 
     @SuppressWarnings("unchecked")
     @Override
     public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders) {
+        var value = getValue();
+
         if (arguments.size() == 1) {
             try {
                 return parser.parseIntoBuilder(new ChoiceFormat(arguments.get(0)).format(value), placeholders);
@@ -41,5 +46,30 @@ public class ChoicePlaceholder implements Placeholder {
         }
 
         return (B) Component.text().content(value);
+    }
+
+    public static final class Constant extends ChoicePlaceholder {
+        @Getter
+        private final @NotNull Number value;
+
+        public Constant(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Number value) {
+            super(name);
+            this.value = value;
+        }
+    }
+
+    public static final class Lazy extends ChoicePlaceholder {
+        @Getter
+        private final @NotNull Supplier<@NotNull Number> supplier;
+
+        public Lazy(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Number> supplier) {
+            super(name);
+            this.supplier = supplier;
+        }
+
+        @Override
+        public @NotNull Number getValue() {
+            return supplier.get();
+        }
     }
 }

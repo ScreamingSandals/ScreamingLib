@@ -17,22 +17,47 @@
 package org.screamingsandals.lib.spectator.mini.placeholders;
 
 import lombok.Data;
+import lombok.Getter;
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.spectator.Component;
-import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @Data
-public class CharPlaceholder implements Placeholder {
+public abstract class CharPlaceholder implements StringLikePlaceholder {
     @Pattern("[a-z\\d_-]+")
     private final @NotNull String name;
-    private final char value;
 
-    @SuppressWarnings("unchecked")
+    public abstract char getValue();
+
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders) {
-        return (B) Component.text().content(value);
+    public @NotNull String getStringResult(@NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
+        return String.valueOf(getValue());
+    }
+
+    public static final class Constant extends CharPlaceholder {
+        @Getter
+        private final char value;
+
+        public Constant(@Pattern("[a-z\\d_-]+") @NotNull String name, char value) {
+            super(name);
+            this.value = value;
+        }
+    }
+
+    public static final class Lazy extends CharPlaceholder {
+        @Getter
+        private final @NotNull Supplier<@NotNull Character> supplier;
+
+        public Lazy(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Character> supplier) {
+            super(name);
+            this.supplier = supplier;
+        }
+
+        @Override
+        public char getValue() {
+            return supplier.get();
+        }
     }
 }

@@ -17,22 +17,27 @@
 package org.screamingsandals.lib.spectator.mini.placeholders;
 
 import lombok.Data;
+import lombok.Getter;
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.*;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @Data
-public class ComponentPlaceholder implements Placeholder {
+public abstract class ComponentPlaceholder implements Placeholder {
     @Pattern("[a-z\\d_-]+")
     private final @NotNull String name;
-    private final @NotNull Component value;
+
+    public abstract @NotNull Component getValue();
 
     @SuppressWarnings("unchecked")
     @Override
     public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders) {
+        var value = getValue();
+
         if (value instanceof TextComponent) {
             return (B) ((TextComponent) value).toBuilder();
         } else if (value instanceof TranslatableComponent) {
@@ -53,5 +58,30 @@ public class ComponentPlaceholder implements Placeholder {
 
         // How did we get here?
         return (B) Component.text().append(value);
+    }
+
+    public static final class Constant extends ComponentPlaceholder {
+        @Getter
+        private final @NotNull Component value;
+
+        public Constant(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Component value) {
+            super(name);
+            this.value = value;
+        }
+    }
+
+    public static final class Lazy extends ComponentPlaceholder {
+        @Getter
+        private final @NotNull Supplier<@NotNull Component> supplier;
+
+        public Lazy(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Component> supplier) {
+            super(name);
+            this.supplier = supplier;
+        }
+
+        @Override
+        public @NotNull Component getValue() {
+            return supplier.get();
+        }
     }
 }

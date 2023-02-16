@@ -17,23 +17,28 @@
 package org.screamingsandals.lib.spectator.mini.placeholders;
 
 import lombok.Data;
+import lombok.Getter;
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 @Data
-public class BooleanPlaceholder implements Placeholder {
+public abstract class BooleanPlaceholder implements Placeholder {
     @Pattern("[a-z\\d_-]+")
     private final @NotNull String name;
-    private final boolean value;
+
+    public abstract boolean isValue();
 
     // addition: custom strings for true/false
     @SuppressWarnings("unchecked")
     @Override
     public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders) {
+        var value = isValue();
+
         if (arguments.size() == 2) {
             if (value) {
                 return parser.parseIntoBuilder(arguments.get(0), placeholders);
@@ -43,5 +48,30 @@ public class BooleanPlaceholder implements Placeholder {
         }
 
         return (B) Component.text().content(value);
+    }
+
+    public static final class Constant extends BooleanPlaceholder {
+        @Getter
+        private final boolean value;
+
+        public Constant(@Pattern("[a-z\\d_-]+") @NotNull String name, boolean value) {
+            super(name);
+            this.value = value;
+        }
+    }
+
+    public static final class Lazy extends BooleanPlaceholder {
+        @Getter
+        private final @NotNull BooleanSupplier supplier;
+
+        public Lazy(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull BooleanSupplier supplier) {
+            super(name);
+            this.supplier = supplier;
+        }
+
+        @Override
+        public boolean isValue() {
+            return supplier.getAsBoolean();
+        }
     }
 }

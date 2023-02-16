@@ -16,24 +16,21 @@
 
 package org.screamingsandals.lib.spectator.mini.placeholders;
 
-import lombok.Data;
-import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
 import java.util.List;
-import java.util.function.Supplier;
 
-@Data
-public class LazyStringPlaceholder implements Placeholder {
-    @Pattern("[a-z\\d_-]+")
-    private final @NotNull String name;
-    private final @NotNull Supplier<@NotNull String> supplier;
-
+/**
+ * {@link StringLikePlaceholder} is a placeholder which returns a value that can be represented by plain string without any styling.
+ */
+public interface StringLikePlaceholder extends Placeholder {
     @SuppressWarnings("unchecked")
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders) {
-        return (B) Component.text().content(supplier.get());
+    default  <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders) {
+        return (B) Component.text().content(getStringResult(arguments, placeholders));
     }
+
+    @NotNull String getStringResult(@NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders);
 }

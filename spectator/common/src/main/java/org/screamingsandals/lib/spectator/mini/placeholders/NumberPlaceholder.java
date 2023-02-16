@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.spectator.mini.placeholders;
 
 import lombok.Data;
+import lombok.Getter;
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.Component;
@@ -26,16 +27,20 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Supplier;
 
 @Data
-public class NumberPlaceholder implements Placeholder {
+public abstract class NumberPlaceholder implements Placeholder {
     @Pattern("[a-z\\d_-]+")
     private final @NotNull String name;
-    private final @NotNull Number value;
+
+    public abstract @NotNull Number getValue();
 
     @SuppressWarnings("unchecked")
     @Override
     public <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders) {
+        var value = getValue();
+
         if (arguments.size() == 1) {
             try {
                 // locale
@@ -60,5 +65,30 @@ public class NumberPlaceholder implements Placeholder {
         }
 
         return (B) Component.text().content(value);
+    }
+
+    public static final class Constant extends NumberPlaceholder {
+        @Getter
+        private final @NotNull Number value;
+
+        public Constant(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Number value) {
+            super(name);
+            this.value = value;
+        }
+    }
+
+    public static final class Lazy extends NumberPlaceholder {
+        @Getter
+        private final @NotNull Supplier<@NotNull Number> supplier;
+
+        public Lazy(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Number> supplier) {
+            super(name);
+            this.supplier = supplier;
+        }
+
+        @Override
+        public @NotNull Number getValue() {
+            return supplier.get();
+        }
     }
 }

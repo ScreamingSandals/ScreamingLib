@@ -442,11 +442,6 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public void setOp(boolean op) {
-        wrappedObject.setOp(op);
-    }
-
-    @Override
     public boolean isOnline() {
         return ((Player) wrappedObject).isOnline();
     }

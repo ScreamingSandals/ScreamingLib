@@ -58,11 +58,6 @@ public class GenericCommandSender extends BasicWrapper<CommandSender> implements
     }
 
     @Override
-    public void setOp(boolean op) {
-        wrappedObject.setOp(op);
-    }
-
-    @Override
     public void tryToDispatchCommand(@NotNull String command) {
         Bukkit.dispatchCommand(wrappedObject, command);
     }

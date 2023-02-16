@@ -40,79 +40,79 @@ public interface Placeholder extends ComponentBuilderResolver {
     }
 
     static @NotNull Placeholder component(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Component component) {
-        return new ComponentPlaceholder(name, component);
+        return new ComponentPlaceholder.Constant(name, component);
     }
 
     static @NotNull Placeholder lazyComponent(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Component> component) {
-        return new LazyComponentPlaceholder(name, component);
+        return new ComponentPlaceholder.Lazy(name, component);
     }
 
     static @NotNull Placeholder unparsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull String value) {
-        return new StringPlaceholder(name, value);
+        return new StringPlaceholder.Constant(name, value);
     }
 
     static @NotNull Placeholder lazyUnparsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull String> value) {
-        return new LazyStringPlaceholder(name, value);
+        return new StringPlaceholder.Lazy(name, value);
     }
 
     static @NotNull Placeholder parsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull String value) {
-        return new MiniPlaceholder(name, value);
+        return new MiniPlaceholder.Constant(name, value);
     }
 
     static @NotNull Placeholder lazyParsed(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull String> value) {
-        return new LazyMiniPlaceholder(name, value);
+        return new MiniPlaceholder.Lazy(name, value);
     }
 
     static @NotNull Placeholder number(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Number value) {
-        return new NumberPlaceholder(name, value);
+        return new NumberPlaceholder.Constant(name, value);
     }
 
     static @NotNull Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Number> value) {
-        return new LazyNumberPlaceholder(name, value);
+        return new NumberPlaceholder.Lazy(name, value);
     }
 
     static @NotNull Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull IntSupplier value) {
-        return new LazyNumberPlaceholder(name, value::getAsInt);
+        return new NumberPlaceholder.Lazy(name, value::getAsInt);
     }
 
     static @NotNull Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull LongSupplier value) {
-        return new LazyNumberPlaceholder(name, value::getAsLong);
+        return new NumberPlaceholder.Lazy(name, value::getAsLong);
     }
 
     static @NotNull Placeholder lazyNumber(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull DoubleSupplier value) {
-        return new LazyNumberPlaceholder(name, value::getAsDouble);
+        return new NumberPlaceholder.Lazy(name, value::getAsDouble);
     }
 
     static @NotNull Placeholder bool(@Pattern("[a-z\\d_-]+") @NotNull String name, boolean value) {
-        return new BooleanPlaceholder(name, value);
+        return new BooleanPlaceholder.Constant(name, value);
     }
 
     static @NotNull Placeholder lazyBool(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull BooleanSupplier value) {
-        return new LazyBooleanPlaceholder(name, value);
+        return new BooleanPlaceholder.Lazy(name, value);
     }
 
     static @NotNull Placeholder character(@Pattern("[a-z\\d_-]+") @NotNull String name, char value) {
-        return new CharPlaceholder(name, value);
+        return new CharPlaceholder.Constant(name, value);
     }
 
     static @NotNull Placeholder lazyCharacter(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Character> value) {
-        return new LazyCharPlaceholder(name, value);
+        return new CharPlaceholder.Lazy(name, value);
     }
 
     static @NotNull Placeholder dateTime(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull TemporalAccessor value) {
-        return new DateTimePlaceholder(name, value);
+        return new DateTimePlaceholder.Constant(name, value);
     }
 
     static @NotNull Placeholder lazyDateTime(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull TemporalAccessor> value) {
-        return new LazyDateTimePlaceholder(name, value);
+        return new DateTimePlaceholder.Lazy(name, value);
     }
 
     static @NotNull Placeholder choice(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Number value) {
-        return new ChoicePlaceholder(name, value);
+        return new ChoicePlaceholder.Constant(name, value);
     }
 
     static @NotNull Placeholder lazyChoice(@Pattern("[a-z\\d_-]+") @NotNull String name, @NotNull Supplier<@NotNull Number> value) {
-        return new LazyChoicePlaceholder(name, value);
+        return new ChoicePlaceholder.Lazy(name, value);
     }
 
 }

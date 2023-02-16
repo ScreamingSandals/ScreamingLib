@@ -18,6 +18,7 @@ package org.screamingsandals.lib.spectator.mini.resolvers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.minitag.MiniTagParser;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
@@ -36,7 +37,9 @@ public class ClickResolver implements StylingResolver {
 
         builder.clickEvent(ClickEvent.builder()
                 .action(ClickEvent.Action.valueOf(tag.getArgs().get(0).toUpperCase(Locale.ROOT)))
-                .value(tag.getArgs().get(1))
+                .value(
+                        parser.resolvePlaceholdersInString(tag.getArgs().get(1), parser.extractStringLikePlaceholders(placeholders))
+                )
                 .build()
         );
     }

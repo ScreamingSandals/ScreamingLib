@@ -80,11 +80,6 @@ public class BukkitOfflinePlayerWrapper extends BasicWrapper<OfflinePlayer> impl
     }
 
     @Override
-    public void setOp(boolean op) {
-        wrappedObject.setOp(op);
-    }
-
-    @Override
     public boolean isOnline() {
         return wrappedObject.isOnline();
     }

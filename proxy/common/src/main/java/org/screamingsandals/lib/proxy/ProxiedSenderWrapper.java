@@ -29,13 +29,4 @@ public interface ProxiedSenderWrapper extends Wrapper, CommandSenderWrapper {
     default boolean isOp() {
         return this.getType() == Type.CONSOLE; // No OP on proxies
     }
-
-    /**
-     * @deprecated Operators are not supported on Proxy servers
-     */
-    @Override
-    @Deprecated
-    default void setOp(boolean op) {
-        // No OP on proxies
-    }
 }
