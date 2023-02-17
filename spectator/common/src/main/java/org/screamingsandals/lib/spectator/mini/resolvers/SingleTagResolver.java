@@ -23,24 +23,10 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 
-import java.util.List;
+public interface SingleTagResolver {
+    <B extends Component.Builder<B,C>, C extends Component> @Nullable B resolve(@NotNull MiniMessageParser parser, @NotNull TagNode tag, @NotNull Placeholder @NotNull... placeholders);
 
-public class InsertionResolver implements StylingResolver {
-    @Override
-    public <B extends Component.Builder<B, C>, C extends Component> void applyStyle(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag, @NotNull Placeholder @NotNull... placeholders) {
-        if (tag.getArgs().isEmpty()) {
-            return;
-        }
-
-        builder.insertion(tag.getArgs().get(0));
-    }
-
-    @Override
-    public @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
-        var insertion = component.insertion();
-        if (insertion != null) {
-            return new TagNode(tagName, List.of(insertion));
-        }
+    default @Nullable TagNode serialize(@NotNull MiniMessageParser parser, @NotNull String tagName, @NotNull Component component) {
         return null;
     }
 }

@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 
 @Data
-public abstract class BooleanPlaceholder implements Placeholder {
+public abstract class BooleanPlaceholder implements Placeholder, StringLikePlaceholder {
     @Pattern("[a-z\\d_-]+")
     private final @NotNull String name;
 
@@ -48,6 +48,21 @@ public abstract class BooleanPlaceholder implements Placeholder {
         }
 
         return (B) Component.text().content(value);
+    }
+
+    @Override
+    public @NotNull String getStringResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
+        var value = isValue();
+
+        if (arguments.size() == 2) {
+            if (value) {
+                return parser.resolvePlaceholdersInString(arguments.get(0), placeholders);
+            } else {
+                return parser.resolvePlaceholdersInString(arguments.get(1), placeholders);
+            }
+        }
+
+        return String.valueOf(value);
     }
 
     public static final class Constant extends BooleanPlaceholder {

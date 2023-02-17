@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @Data
-public abstract class ChoicePlaceholder implements Placeholder {
+public abstract class ChoicePlaceholder implements Placeholder, StringLikePlaceholder {
     @Pattern("[a-z\\d_-]+")
     private final @NotNull String name;
 
@@ -46,6 +46,19 @@ public abstract class ChoicePlaceholder implements Placeholder {
         }
 
         return (B) Component.text().content(value);
+    }
+
+    @Override
+    public @NotNull String getStringResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
+        var value = getValue();
+
+        if (arguments.size() == 1) {
+            try {
+                return parser.resolvePlaceholdersInString(new ChoiceFormat(arguments.get(0)).format(value), placeholders);
+            } catch (Throwable ignored) {}
+        }
+
+        return String.valueOf(value);
     }
 
     public static final class Constant extends ChoicePlaceholder {

@@ -20,6 +20,7 @@ import lombok.Data;
 import lombok.Getter;
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
@@ -27,14 +28,14 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @Data
-public abstract class DateTimePlaceholder implements StringLikePlaceholder {
+public abstract class DateTimePlaceholder implements DefaultStringLikePlaceholder {
     @Pattern("[a-z\\d_-]+")
     private final @NotNull String name;
 
     public abstract @NotNull TemporalAccessor getValue();
 
     @Override
-    public @NotNull String getStringResult(@NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
+    public @NotNull String getStringResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
         var value = getValue();
 
         if (arguments.size() >= 1) {

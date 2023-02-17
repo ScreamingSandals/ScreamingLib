@@ -26,7 +26,7 @@ import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 
 import java.util.List;
 
-public class KeybindResolver implements ComponentBuilderResolver {
+public class KeybindResolver implements SingleTagResolver {
 
     @SuppressWarnings("unchecked")
     @Override

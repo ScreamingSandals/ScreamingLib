@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 @Data
-public abstract class ComponentPlaceholder implements Placeholder {
+public abstract class ComponentPlaceholder implements Placeholder, StringLikePlaceholder {
     @Pattern("[a-z\\d_-]+")
     private final @NotNull String name;
 
@@ -58,6 +58,11 @@ public abstract class ComponentPlaceholder implements Placeholder {
 
         // How did we get here?
         return (B) Component.text().append(value);
+    }
+
+    @Override
+    public @NotNull String getStringResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
+        return getResult(parser, arguments, placeholders).build().toPlainText();
     }
 
     public static final class Constant extends ComponentPlaceholder {

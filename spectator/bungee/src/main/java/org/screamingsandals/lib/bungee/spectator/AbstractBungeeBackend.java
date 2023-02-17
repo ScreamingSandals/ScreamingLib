@@ -182,6 +182,13 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public @Nullable Color named(@NotNull String name) {
+        // bri'ish
+        if ("grey".equalsIgnoreCase(name)) {
+            name = "gray";
+        } else if ("dark_grey".equalsIgnoreCase(name)) {
+            name = "dark_gray";
+        }
+
         try {
             return new BungeeColor(ChatColor.valueOf(name.toUpperCase(Locale.ROOT)));
         } catch (Throwable ignored) {
@@ -191,6 +198,13 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public @NotNull Color hexOrName(@NotNull String hexOrName) {
+        // bri'ish
+        if ("grey".equalsIgnoreCase(hexOrName)) {
+            hexOrName = "gray";
+        } else if ("dark_grey".equalsIgnoreCase(hexOrName)) {
+            hexOrName = "dark_gray";
+        }
+
         try {
             return new BungeeColor(ChatColor.of(hexOrName.toLowerCase(Locale.ROOT)));
         } catch (Throwable ignored) {

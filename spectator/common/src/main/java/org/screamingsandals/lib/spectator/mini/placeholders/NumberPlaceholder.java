@@ -30,7 +30,7 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 @Data
-public abstract class NumberPlaceholder implements Placeholder {
+public abstract class NumberPlaceholder implements Placeholder, StringLikePlaceholder {
     @Pattern("[a-z\\d_-]+")
     private final @NotNull String name;
 
@@ -65,6 +65,36 @@ public abstract class NumberPlaceholder implements Placeholder {
         }
 
         return (B) Component.text().content(value);
+    }
+
+    @Override
+    public @NotNull String getStringResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull ... placeholders) {
+        var value = getValue();
+
+        if (arguments.size() == 1) {
+            try {
+                // locale
+                var locale = Locale.forLanguageTag(arguments.get(0));
+                var format = DecimalFormat.getInstance(locale);
+                return format.format(value);
+            } catch (Throwable ignored) {
+                // format
+                try {
+                    var format = new DecimalFormat(arguments.get(0), DecimalFormatSymbols.getInstance());
+                    return parser.resolvePlaceholdersInString(format.format(value), placeholders);
+                } catch (Throwable ignored2) {}
+            }
+        } else if (arguments.size() == 2) {
+            try {
+                // locale & format
+                var locale = Locale.forLanguageTag(arguments.get(0));
+                var format = new DecimalFormat(arguments.get(1), new DecimalFormatSymbols(locale));
+                return parser.resolvePlaceholdersInString(format.format(value), placeholders);
+            } catch (Throwable ignored) {
+            }
+        }
+
+        return String.valueOf(value);
     }
 
     public static final class Constant extends NumberPlaceholder {

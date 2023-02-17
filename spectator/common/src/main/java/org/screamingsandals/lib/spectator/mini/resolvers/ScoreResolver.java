@@ -26,7 +26,7 @@ import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 
 import java.util.ArrayList;
 
-public class ScoreResolver implements ComponentBuilderResolver {
+public class ScoreResolver implements SingleTagResolver {
 
     // Exclusive: <score:name:objective[:value]>
     @SuppressWarnings("unchecked")

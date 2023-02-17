@@ -18,7 +18,6 @@ package org.screamingsandals.lib.spectator.mini.resolvers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.minitag.MiniTagParser;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.ClickEvent;
@@ -30,7 +29,7 @@ import java.util.Locale;
 
 public class ClickResolver implements StylingResolver {
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> void resolve(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag, @NotNull Placeholder @NotNull... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> void applyStyle(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag, @NotNull Placeholder @NotNull... placeholders) {
         if (tag.getArgs().size() < 2) {
             return;
         }
@@ -38,7 +37,7 @@ public class ClickResolver implements StylingResolver {
         builder.clickEvent(ClickEvent.builder()
                 .action(ClickEvent.Action.valueOf(tag.getArgs().get(0).toUpperCase(Locale.ROOT)))
                 .value(
-                        parser.resolvePlaceholdersInString(tag.getArgs().get(1), parser.extractStringLikePlaceholders(placeholders))
+                        parser.resolvePlaceholdersInString(tag.getArgs().get(1), placeholders)
                 )
                 .build()
         );

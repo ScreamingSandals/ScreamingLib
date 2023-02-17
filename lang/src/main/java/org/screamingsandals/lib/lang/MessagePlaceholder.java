@@ -25,12 +25,13 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.TextComponent;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
+import org.screamingsandals.lib.spectator.mini.placeholders.StringLikePlaceholder;
 
 import java.util.List;
 
 @Data
 @ApiStatus.Internal
-public class MessagePlaceholder implements Placeholder {
+public class MessagePlaceholder implements Placeholder, StringLikePlaceholder {
     private final @NotNull String name;
     private final @NotNull LangService service;
     private final @Nullable CommandSenderWrapper sender;
@@ -57,5 +58,10 @@ public class MessagePlaceholder implements Placeholder {
             return (B) ((TextComponent) msg).toBuilder();
         }
         return (B) Component.text().append(msg);
+    }
+
+    @Override
+    public @NotNull String getStringResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders) {
+        return getResult(parser, arguments, placeholders).build().toPlainText();
     }
 }

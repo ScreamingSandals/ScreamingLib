@@ -199,6 +199,13 @@ public class AdventureBackend implements SpectatorBackend {
 
     @Override
     public @Nullable Color named(@NotNull String name) {
+        // bri'ish
+        if ("grey".equalsIgnoreCase(name)) {
+            name = "gray";
+        } else if ("dark_grey".equalsIgnoreCase(name)) {
+            name = "dark_gray";
+        }
+
         var value = NamedTextColor.NAMES.value(name.toLowerCase(Locale.ROOT));
         if (value != null) {
             return new AdventureColor(value);
@@ -208,6 +215,13 @@ public class AdventureBackend implements SpectatorBackend {
 
     @Override
     public @NotNull Color hexOrName(@NotNull String hexName) {
+        // bri'ish
+        if ("grey".equalsIgnoreCase(hexName)) {
+            hexName = "gray";
+        } else if ("dark_grey".equalsIgnoreCase(hexName)) {
+            hexName = "dark_gray";
+        }
+
         var value = NamedTextColor.NAMES.value(hexName.toLowerCase(Locale.ROOT));
         if (value != null) {
             return new AdventureColor(value);

@@ -21,13 +21,13 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
-import org.screamingsandals.lib.spectator.mini.resolvers.ComponentBuilderResolver;
+import org.screamingsandals.lib.spectator.mini.resolvers.SingleTagResolver;
 
 import java.time.temporal.TemporalAccessor;
 import java.util.List;
 import java.util.function.*;
 
-public interface Placeholder extends ComponentBuilderResolver {
+public interface Placeholder extends SingleTagResolver {
 
     @Pattern("[a-z\\d_-]+")
     @NotNull String getName();

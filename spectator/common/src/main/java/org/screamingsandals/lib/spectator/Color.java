@@ -84,6 +84,21 @@ public interface Color extends Wrapper, ComponentBuilderApplicable, RawValueHold
         return Spectator.getBackend().nearestNamedTo(color);
     }
 
+    static @NotNull Color interpolate(float t, final @NotNull Color a, @NotNull Color b) {
+        float clampedT = Math.min(1.0f, Math.max(0.0f, t));
+        int ar = a.red();
+        int br = b.red();
+        int ag = a.green();
+        int bg = b.green();
+        int ab = a.blue();
+        int bb = b.blue();
+        return rgb(
+                Math.round(ar + clampedT * (br - ar)),
+                Math.round(ag + clampedT * (bg - ag)),
+                Math.round(ab + clampedT * (bb - ab))
+        );
+    }
+
     @Override
     default <C extends Component, B extends Component.Builder<B, C>> void apply(@NotNull B builder) {
         builder.color(this);

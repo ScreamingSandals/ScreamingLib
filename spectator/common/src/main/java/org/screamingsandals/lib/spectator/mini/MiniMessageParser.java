@@ -54,8 +54,8 @@ public final class MiniMessageParser {
             .build();
     private final @NotNull MiniTagParser parser;
     private final @NotNull MiniTagParser placeholderOnlyParser;
-    private final @NotNull Map<@NotNull String, ComponentBuilderResolver> componentTagResolvers;
-    private final @NotNull Map<@NotNull String, StylingResolver> componentStylingResolvers;
+    private final @NotNull Map<@NotNull String, SingleTagResolver> singleTagResolvers;
+    private final @NotNull Map<@NotNull String, DoubleTagResolver> doubleTagResolvers;
 
     public @NotNull Component parse(@NotNull String str, @NotNull Placeholder... placeholders) {
         if (str.isEmpty()) {
@@ -99,10 +99,13 @@ public final class MiniMessageParser {
         }
     }
 
-    public @NotNull StringLikePlaceholder @NotNull [] extractStringLikePlaceholders(@NotNull Placeholder @NotNull... placeholders) {
-        return Arrays.stream(placeholders)
+    @ApiStatus.Internal
+    public @NotNull String resolvePlaceholdersInString(@NotNull String str, @NotNull Placeholder @NotNull... placeholders) {
+        // ignore placeholders that can't be used in strings
+        var stringlikePlaceholders = Arrays.stream(placeholders)
                 .filter(placeholder -> placeholder instanceof StringLikePlaceholder)
                 .toArray(StringLikePlaceholder[]::new);
+        return resolvePlaceholdersInString(str, stringlikePlaceholders);
     }
 
     @ApiStatus.Internal
@@ -136,7 +139,7 @@ public final class MiniMessageParser {
             } else {
                 for (var p : placeholders) {
                     if (p.getName().equals(((TagNode) node).getTag())) {
-                        builder.append(p.getStringResult(((TagNode) node).getArgs(), placeholders));
+                        builder.append(p.getStringResult(this, ((TagNode) node).getArgs(), placeholders));
                         return;
                     }
                 }
@@ -156,17 +159,17 @@ public final class MiniMessageParser {
         if (node instanceof TextNode) {
             return (B) Component.text().content(((TextNode) node).getText());
         } else if (node instanceof TagNode) {
-            if (componentTagResolvers.containsKey(((TagNode) node).getTag().toLowerCase(Locale.ROOT))) {
+            if (singleTagResolvers.containsKey(((TagNode) node).getTag().toLowerCase(Locale.ROOT))) {
                 if (node.hasChildren()) {
                     throw new IllegalArgumentException("Tags defining non-text components can't be pair tags!");
                 }
-                B comp = componentTagResolvers.get(((TagNode) node).getTag().toLowerCase(Locale.ROOT)).resolve(this, (TagNode) node, placeholders);
+                B comp = singleTagResolvers.get(((TagNode) node).getTag().toLowerCase(Locale.ROOT)).resolve(this, (TagNode) node, placeholders);
                 if (comp != null) {
                     return comp;
                 }
                 // if null, fall into placeholders
-            } else if (componentStylingResolvers.containsKey(((TagNode) node).getTag().toLowerCase(Locale.ROOT))) {
-                var res = componentStylingResolvers.get(((TagNode) node).getTag().toLowerCase(Locale.ROOT));
+            } else if (doubleTagResolvers.containsKey(((TagNode) node).getTag().toLowerCase(Locale.ROOT))) {
+                var res = doubleTagResolvers.get(((TagNode) node).getTag().toLowerCase(Locale.ROOT));
 
                 if (node.hasChildren()) {
                     var resolved = node.children();
@@ -174,23 +177,23 @@ public final class MiniMessageParser {
                         var child = (B) resolveChildren(resolved.get(0), placeholders);
                         if (child.hasStyling()) {
                             var component = (B) Component.text();
-                            res.resolve(this, component, (TagNode) node, placeholders);
-                            return component.append(child);
+                            return Objects.requireNonNullElse(res.resolve(this, component, (TagNode) node, placeholders), component).append(child);
                         } else {
-                            res.resolve(this, child, (TagNode) node, placeholders);
-                            return child;
+                            return Objects.requireNonNullElse(res.resolve(this, child, (TagNode) node, placeholders), child);
                         }
                     } else {
                         var component = (B) Component.text();
-                        res.resolve(this, component, (TagNode) node, placeholders);
-                        return component
-                                .append(resolved.stream().map(n -> resolveChildren(n, placeholders).build())
-                                        .collect(Collectors.toList()));
+                        return Objects.requireNonNullElse(res.resolve(this, component, (TagNode) node, placeholders), component)
+                                .append(
+                                        resolved
+                                                .stream()
+                                                .map(n -> resolveChildren(n, placeholders).build())
+                                                .collect(Collectors.toList())
+                                );
                     }
                 } else {
                     var component = (B) Component.text();
-                    res.resolve(this, component, (TagNode) node);
-                    return component;
+                    return Objects.requireNonNullElse(res.resolve(this, component, (TagNode) node, placeholders), component);
                 }
                 // return
             }
@@ -231,7 +234,7 @@ public final class MiniMessageParser {
 
     private void visitComponent(@NotNull Node parent, @NotNull Component component) {
         TagNode tag = null;
-        for (var resolver : componentStylingResolvers.entrySet()) {
+        for (var resolver : doubleTagResolvers.entrySet()) {
             var t = resolver.getValue().serialize(this, resolver.getKey(), component);
             if (t != null) {
                 Objects.requireNonNullElse(tag, parent).putChildren(t);
@@ -239,7 +242,7 @@ public final class MiniMessageParser {
             }
         }
         var serialized = false;
-        for (var resolver : componentTagResolvers.entrySet()) {
+        for (var resolver : singleTagResolvers.entrySet()) {
             var t = resolver.getValue().serialize(this, resolver.getKey(), component);
             if (t != null) {
                 Objects.requireNonNullElse(tag, parent).putChildren(t);
@@ -271,8 +274,8 @@ public final class MiniMessageParser {
                 .escapeInvalidEndings(true)
                 .preTag(false)
                 .unknownTagType(TagType.SINGLE);
-        private final @NotNull Map<@NotNull String, ComponentBuilderResolver> componentTagResolvers = new HashMap<>();
-        private final @NotNull Map<@NotNull String, StylingResolver> componentStylingResolvers = new HashMap<>();
+        private final @NotNull Map<@NotNull String, SingleTagResolver> singleTagResolvers = new HashMap<>();
+        private final @NotNull Map<@NotNull String, DoubleTagResolver> doubleTagResolvers = new HashMap<>();
 
         @Contract("_ -> this")
         public @NotNull Builder strictClosing(boolean strictClosing) {
@@ -360,16 +363,16 @@ public final class MiniMessageParser {
         }
 
         @Contract("_, _, _ -> this")
-        public @NotNull Builder registerStylingTag(String name, StylingResolver resolver, String... aliases) {
+        public @NotNull Builder registerStylingTag(String name, DoubleTagResolver resolver, String... aliases) {
             miniTagParserBuilder.registerTag(name, TagType.PAIR, aliases);
-            componentStylingResolvers.put(name, resolver);
+            doubleTagResolvers.put(name, resolver);
             return this;
         }
 
         @Contract("_, _, _ -> this")
-        public @NotNull Builder registerComponentTag(String name, ComponentBuilderResolver resolver, String... aliases) {
+        public @NotNull Builder registerComponentTag(String name, SingleTagResolver resolver, String... aliases) {
             miniTagParserBuilder.registerTag(name, TagType.SINGLE, aliases);
-            componentTagResolvers.put(name, resolver);
+            singleTagResolvers.put(name, resolver);
             return this;
         }
 
@@ -446,9 +449,9 @@ public final class MiniMessageParser {
             registerStylingTag("click", new ClickResolver());
             registerStylingTag("hover", new HoverResolver());
             registerStylingTag("insertion", new InsertionResolver(), "insert");
-            //registerStylingTag("rainbow", new RainbowResolver()); // TODO
-            //registerStylingTag("gradient", new GradientResolver()); // TODO
-            //registerStylingTag("transition", new TransitionResolver()); // TODO
+            registerStylingTag("rainbow", new RainbowResolver());
+            registerStylingTag("gradient", new GradientResolver());
+            registerStylingTag("transition", new TransitionResolver());
             registerStylingTag("font", new FontResolver());
 
             return this;
@@ -458,6 +461,7 @@ public final class MiniMessageParser {
         public @NotNull Builder defaultComponentTags() {
             registerComponentTag("selector", new SelectorResolver(), "sel");
             registerComponentTag("lang", new TranslatableResolver(), "tr", "translate");
+            registerComponentTag("nbt", new NbtResolver(), "data");
             registerComponentTag("key", new KeybindResolver());
             registerComponentTag("score", new ScoreResolver());
             registerPlaceholder(Placeholder.component("newline", Component.newLine()), "br");
@@ -466,7 +470,7 @@ public final class MiniMessageParser {
 
         @Contract(value = "-> new", pure = true)
         public @NotNull MiniMessageParser build() {
-            return new MiniMessageParser(miniTagParserBuilder.build(), placeholderOnlyParserBuilder.build(), Map.copyOf(componentTagResolvers), Map.copyOf(componentStylingResolvers));
+            return new MiniMessageParser(miniTagParserBuilder.build(), placeholderOnlyParserBuilder.build(), Map.copyOf(singleTagResolvers), Map.copyOf(doubleTagResolvers));
         }
     }
 }

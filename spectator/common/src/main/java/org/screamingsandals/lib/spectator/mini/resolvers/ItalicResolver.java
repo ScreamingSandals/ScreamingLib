@@ -28,7 +28,7 @@ import java.util.List;
 
 public class ItalicResolver implements StylingResolver {
     @Override
-    public <B extends Component.Builder<B, C>, C extends Component> void resolve(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag, @NotNull Placeholder @NotNull... placeholders) {
+    public <B extends Component.Builder<B, C>, C extends Component> void applyStyle(@NotNull MiniMessageParser parser, @NotNull B builder, @NotNull TagNode tag, @NotNull Placeholder @NotNull... placeholders) {
         if (tag.getArgs().isEmpty()) {
             builder.italic();
         } else {

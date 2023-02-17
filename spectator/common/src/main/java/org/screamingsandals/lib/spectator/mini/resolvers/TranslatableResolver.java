@@ -26,7 +26,7 @@ import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 
 import java.util.ArrayList;
 
-public class TranslatableResolver implements ComponentBuilderResolver {
+public class TranslatableResolver implements SingleTagResolver {
 
     @SuppressWarnings("unchecked")
     @Override

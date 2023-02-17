@@ -17,13 +17,15 @@
 package org.screamingsandals.lib.spectator.mini.placeholders;
 
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
 import java.util.List;
 
-/**
- * {@link StringLikePlaceholder} is a placeholder which returns a value that can be represented by plain string without any styling.
- */
-public interface StringLikePlaceholder extends Placeholder {
-    @NotNull String getStringResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders);
+public interface DefaultStringLikePlaceholder extends StringLikePlaceholder {
+    @SuppressWarnings("unchecked")
+    @Override
+    default <B extends Component.Builder<B, C>, C extends Component> @NotNull B getResult(@NotNull MiniMessageParser parser, @NotNull List<@NotNull String> arguments, @NotNull Placeholder @NotNull... placeholders) {
+        return (B) Component.text().content(getStringResult(parser, arguments, placeholders));
+    }
 }
