@@ -35,7 +35,7 @@ public final class ListTag implements CollectionTag, Iterable<Tag> {
     private final @NotNull List<@NotNull Tag> tags;
 
     public ListTag(@NotNull List<@NotNull Tag> tags) {
-        this.tags = new ArrayList<@NotNull Tag>();
+        this.tags = new ArrayList<@NotNull Tag>(tags.size());
         Class<?> determinedType = null;
         for (var t : tags) {
             if (determinedType == null) {

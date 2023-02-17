@@ -65,7 +65,7 @@ public class SimpleTextReplacement {
         } else if (component instanceof TranslatableComponent) {
             var arguments = ((TranslatableComponent) component).args();
             if (!arguments.isEmpty()) {
-                var narguments = new ArrayList<Component>();
+                var narguments = new ArrayList<Component>(arguments.size());
                 for (var arg : arguments) {
                     narguments.add(replace(arg));
                 }
@@ -75,7 +75,7 @@ public class SimpleTextReplacement {
 
         var children = component.children();
         if (!children.isEmpty()) {
-            var newChildren = new ArrayList<Component>();
+            var newChildren = new ArrayList<Component>(children.size());
             for (var child : children) {
                 newChildren.add(replace(child));
             }

@@ -112,8 +112,9 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
             // TODO: find solution: missing Bukkit API for older versions
             if (Reflect.hasMethod(meta, "hasAttributeModifiers")) { // 1.13.1
                 if (meta.hasAttributeModifiers()) {
-                    var list = new ArrayList<ItemAttributeHolder>();
-                    meta.getAttributeModifiers()
+                    var bukkitModifiers = meta.getAttributeModifiers();
+                    var list = new ArrayList<ItemAttributeHolder>(bukkitModifiers.size());
+                    bukkitModifiers
                             .forEach((attribute, attributeModifier) ->
                                     AttributeMapping.wrapItemAttribute(new BukkitItemAttribute(attribute, attributeModifier))
                                             .ifNotNull(list::add)

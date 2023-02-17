@@ -63,7 +63,7 @@ public final class ByteArrayTag implements CollectionTag, Iterable<Byte> {
     }
 
     public @NotNull Stream<@NotNull Byte> stream() {
-        var byteList = new ArrayList<Byte>();
+        var byteList = new ArrayList<Byte>(value.length);
         for (var val : value) {
             byteList.add(val);
         }

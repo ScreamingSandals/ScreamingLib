@@ -27,6 +27,7 @@ import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
 import org.screamingsandals.lib.spectator.utils.ComponentUtils;
 import org.screamingsandals.lib.spectator.utils.SimpleTextReplacement;
+import org.screamingsandals.lib.spectator.utils.TextToComponentReplacement;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.TriState;
 import org.screamingsandals.lib.utils.Wrapper;
@@ -214,6 +215,11 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     @NotNull Component withChildren(@Nullable List<@NotNull Component> children);
 
     @Contract(value = "_ -> new", pure = true)
+    default @NotNull Component withAppendix(@NotNull String text) {
+        return withAppendix(Component.text(text));
+    }
+
+    @Contract(value = "_ -> new", pure = true)
     @NotNull Component withAppendix(@NotNull Component component);
 
     @Contract(value = "_ -> new", pure = true)
@@ -332,8 +338,18 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     }
 
     @Contract(pure = true)
+    default @NotNull Component replace(@NotNull Pattern pattern, @NotNull Component replacement) {
+        return TextToComponentReplacement.builder().matchPattern(pattern).replacement(matchResult -> replacement).build().replace(this);
+    }
+
+    @Contract(pure = true)
     default @NotNull Component replaceText(@NotNull Pattern pattern, @NotNull Function<@NotNull MatchResult, @Nullable String> replacement) {
         return SimpleTextReplacement.builder().matchPattern(pattern).replacement(replacement).build().replace(this);
+    }
+
+    @Contract(pure = true)
+    default @NotNull Component replace(@NotNull Pattern pattern, @NotNull Function<@NotNull MatchResult, @Nullable Component> replacement) {
+        return TextToComponentReplacement.builder().matchPattern(pattern).replacement(replacement).build().replace(this);
     }
 
     @Contract(pure = true)
@@ -342,8 +358,18 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     }
 
     @Contract(pure = true)
+    default @NotNull Component replace(@NotNull String literal, @NotNull Component replacement) {
+        return TextToComponentReplacement.builder().matchPattern(Pattern.compile(literal, Pattern.LITERAL)).replacement(matchResult -> replacement).build().replace(this);
+    }
+
+    @Contract(pure = true)
     default @NotNull Component replaceText(@NotNull String literal, @NotNull Function<@NotNull MatchResult, @Nullable String> replacement) {
         return SimpleTextReplacement.builder().matchPattern(Pattern.compile(literal, Pattern.LITERAL)).replacement(replacement).build().replace(this);
+    }
+
+    @Contract(pure = true)
+    default @NotNull Component replace(@NotNull String literal, @NotNull Function<@NotNull MatchResult, @Nullable Component> replacement) {
+        return TextToComponentReplacement.builder().matchPattern(Pattern.compile(literal, Pattern.LITERAL)).replacement(replacement).build().replace(this);
     }
 
     @Override

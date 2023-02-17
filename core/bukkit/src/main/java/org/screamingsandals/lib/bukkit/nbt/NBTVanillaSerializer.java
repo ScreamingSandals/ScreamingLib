@@ -55,9 +55,9 @@ public class NBTVanillaSerializer {
             }
             return new CompoundTag(map);
         } else if (ListTagAccessor.getType().isInstance(nmsTag)) {
-            var list = new ArrayList<Tag>();
-            var isJavaUtilList = nmsTag instanceof List;
             var size = (int) Reflect.fastInvoke(nmsTag, ListTagAccessor.getMethodSize1());
+            var list = new ArrayList<Tag>(size);
+            var isJavaUtilList = nmsTag instanceof List;
             for (var i = 0; i < size; i++) {
                 if (isJavaUtilList) {
                     list.add(deserialize(((List<?>) nmsTag).get(i)));
