@@ -16,8 +16,11 @@
 
 package org.screamingsandals.lib.bungee.spectator;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bungee.spectator.backports.SelectorPortedComponent;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.SelectorComponent;
 
@@ -41,22 +44,25 @@ public class BungeeSelectorComponent extends BungeeComponent implements Selector
     @Override
     public SelectorComponent.@NotNull Builder toBuilder() {
         var duplicate = (net.md_5.bungee.api.chat.SelectorComponent) wrappedObject.duplicate();
+        if (AbstractBungeeBackend.COMPONENTS_PORTED_SUCCESSFULLY) {
+            return new MultipleImplementationsBuilder(duplicate);
+        }
         return new BungeeSelectorBuilder(duplicate);
     }
 
     @Override
     public @Nullable Component separator() {
-        return null; // TODO: WHERE IS IT ???
+        return null; // WHERE IS IT ???
     }
 
     @Override
     public @NotNull SelectorComponent withSeparator(@Nullable Component separator) {
-        return this; // TODO: WHERE IS IT ???
+        return this; // WHERE IS IT ???
     }
 
     public static class BungeeSelectorBuilder extends BungeeBuilder<SelectorComponent, SelectorComponent.Builder, net.md_5.bungee.api.chat.SelectorComponent> implements SelectorComponent.Builder {
 
-        public BungeeSelectorBuilder(net.md_5.bungee.api.chat.SelectorComponent component) {
+        public BungeeSelectorBuilder(net.md_5.bungee.api.chat.@NotNull SelectorComponent component) {
             super(component);
         }
 
@@ -68,7 +74,43 @@ public class BungeeSelectorComponent extends BungeeComponent implements Selector
 
         @Override
         public SelectorComponent.@NotNull Builder separator(@Nullable Component separator) {
-            // TODO: Hey md_5, I hate you with all my hearth
+            // Hey md_5, I hate you with all my hearth
+            return this;
+        }
+    }
+
+    public static class MultipleImplementationsBuilder extends BungeeBuilder<SelectorComponent, SelectorComponent.Builder, BaseComponent> implements SelectorComponent.Builder {
+        public MultipleImplementationsBuilder(net.md_5.bungee.api.chat.@NotNull SelectorComponent component) {
+            super(component);
+        }
+
+        public MultipleImplementationsBuilder(@NotNull SelectorPortedComponent component) {
+            super(component);
+        }
+
+        @Override
+        public SelectorComponent.@NotNull Builder pattern(@NotNull String pattern) {
+            if (component instanceof net.md_5.bungee.api.chat.SelectorComponent) {
+                ((net.md_5.bungee.api.chat.SelectorComponent) component).setSelector(pattern);
+            } else if (component instanceof SelectorPortedComponent) {
+                ((SelectorPortedComponent) component).setSelector(pattern);
+            }
+            return this;
+        }
+
+        @Override
+        public SelectorComponent.@NotNull Builder separator(@Nullable Component separator) {
+            if (component instanceof net.md_5.bungee.api.chat.SelectorComponent && separator != null) {
+                // Separator is not supported yet by md_5's chat api, replace with ported selector
+                var old = (net.md_5.bungee.api.chat.SelectorComponent) component;
+                var newComponent = new SelectorPortedComponent(old.getSelector());
+                newComponent.copyFrom(old);
+                component = newComponent;
+            }
+
+            if (component instanceof SelectorPortedComponent) {
+                ((SelectorPortedComponent) component).setSeparator(separator == null ? null : separator.as(BaseComponent.class));
+            }
             return this;
         }
     }

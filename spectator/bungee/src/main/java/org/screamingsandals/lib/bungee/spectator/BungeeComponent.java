@@ -330,7 +330,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
 
     @Data
     public static class BungeeBuilder<C extends Component, B extends Component.Builder<B, C>, A extends BaseComponent> implements Component.Builder<B, C> {
-        protected final @NotNull A component;
+        protected @NotNull A component;
 
         @Override
         public @NotNull B color(@NotNull Color color) {

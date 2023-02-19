@@ -16,6 +16,7 @@
 
 package org.screamingsandals.lib.bungee.spectator;
 
+import com.google.gson.Gson;
 import lombok.Getter;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -25,6 +26,7 @@ import net.md_5.bungee.chat.ComponentSerializer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bungee.spectator.backports.*;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeClickEvent;
 import org.screamingsandals.lib.bungee.spectator.event.BungeeHoverEvent;
 import org.screamingsandals.lib.bungee.spectator.event.hover.BungeeEntityContent;
@@ -70,6 +72,17 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     private static final boolean scoreSupported = Reflect.has("net.md_5.bungee.api.chat.ScoreComponent");
     private static final boolean selectorSupported = Reflect.has("net.md_5.bungee.api.chat.SelectorComponent");
 
+    static final boolean COMPONENTS_PORTED_SUCCESSFULLY;
+
+    static {
+        var gson = Reflect.getField(ComponentSerializer.class, "gson");
+        if (gson instanceof Gson) {
+            COMPONENTS_PORTED_SUCCESSFULLY = Injector.injectGson((Gson) gson, gsonBuilder -> gsonBuilder.registerTypeHierarchyAdapter(BasePortedComponent.class, new PortedComponentSerializer()));
+        } else {
+            COMPONENTS_PORTED_SUCCESSFULLY = false;
+        }
+    }
+
     @Override
     public @NotNull Component empty() {
         return empty;
@@ -87,12 +100,20 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
 
     @Override
     public BlockNBTComponent.@NotNull Builder blockNBT() {
-        throw new UnsupportedOperationException("Not implemented for md_5 ChatComponent API yet!"); // TODO
+        if (COMPONENTS_PORTED_SUCCESSFULLY) {
+            return new PortedBungeeBlockNBTComponent.BungeeBlockNBTBuilder(new BlockNBTPortedComponent());
+        } else {
+            throw new UnsupportedOperationException("Not implemented for md_5 ChatComponent API!");
+        }
     }
 
     @Override
     public EntityNBTComponent.@NotNull Builder entityNBT() {
-        throw new UnsupportedOperationException("Not implemented for md_5 ChatComponent API yet!"); // TODO
+        if (COMPONENTS_PORTED_SUCCESSFULLY) {
+            return new PortedBungeeEntityNBTComponent.BungeeEntityNBTBuilder(new EntityNBTPortedComponent());
+        } else {
+            throw new UnsupportedOperationException("Not implemented for md_5 ChatComponent API!");
+        }
     }
 
     @Override
@@ -108,23 +129,35 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
     public ScoreComponent.@NotNull Builder score() {
         if (scoreSupported) {
             return new BungeeScoreComponent.BungeeScoreBuilder(new net.md_5.bungee.api.chat.ScoreComponent("", ""));
+        } else if (COMPONENTS_PORTED_SUCCESSFULLY) {
+            return new PortedBungeeScoreComponent.BungeeScoreBuilder(new ScorePortedComponent("", ""));
         } else {
-            throw new UnsupportedOperationException("Not implemented for this version of md_5 ChatComponent API yet!"); // TODO :sad:
+            throw new UnsupportedOperationException("Not implemented for this version of md_5 ChatComponent API!");
         }
     }
 
     @Override
     public SelectorComponent.@NotNull Builder selector() {
         if (selectorSupported) {
+            if (COMPONENTS_PORTED_SUCCESSFULLY) {
+                // We prefer using the original component, but because it does not support everything, we may need to switch the underlying component to our own
+                return new BungeeSelectorComponent.MultipleImplementationsBuilder(new net.md_5.bungee.api.chat.SelectorComponent(""));
+            }
             return new BungeeSelectorComponent.BungeeSelectorBuilder(new net.md_5.bungee.api.chat.SelectorComponent(""));
+        } else if (COMPONENTS_PORTED_SUCCESSFULLY) {
+            return new PortedBungeeSelectorComponent.BungeeSelectorBuilder(new SelectorPortedComponent(""));
         } else {
-            throw new UnsupportedOperationException("Not implemented for this version of md_5 ChatComponent API yet!"); // TODO :cry:
+            throw new UnsupportedOperationException("Not implemented for this version of md_5 ChatComponent API yet!");
         }
     }
 
     @Override
     public StorageNBTComponent.@NotNull Builder storageNBT() {
-        throw new UnsupportedOperationException("Not implemented for md_5 ChatComponent API yet!"); // TODO
+        if (COMPONENTS_PORTED_SUCCESSFULLY) {
+            return new PortedBungeeStorageNBTComponent.BungeeStorageNBTBuilder(new StorageNBTPortedComponent());
+        } else {
+            throw new UnsupportedOperationException("Not implemented for md_5 ChatComponent API!");
+        }
     }
 
     @Override
@@ -382,9 +415,32 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
             return null;
         }
 
-        // TODO: NBTComponent doesn't exist for some reason
+        // ported component, sadly this way we can only detect our own, we are unable to properly wrap custom components of different plugins
+        if (component instanceof BlockNBTPortedComponent) {
+            return new PortedBungeeBlockNBTComponent((BlockNBTPortedComponent) component);
+        }
 
-        // TODO: ScoreComponent added in a3b44aa612c629955195b4697641de1b1665a587 (Feb 2018 (1.12), but existed in MC 1.8+), SelectorComponent added in the same commit
+        if (component instanceof EntityNBTPortedComponent) {
+            return new PortedBungeeEntityNBTComponent((EntityNBTPortedComponent) component);
+        }
+
+        if (component instanceof StorageNBTPortedComponent) {
+            return new PortedBungeeStorageNBTComponent((StorageNBTPortedComponent) component);
+        }
+
+        if (component instanceof SelectorPortedComponent) {
+            return new PortedBungeeSelectorComponent((SelectorPortedComponent) component);
+        }
+
+        if (component instanceof ScorePortedComponent) {
+            return new PortedBungeeScoreComponent((ScorePortedComponent) component);
+        }
+
+        // native components
+
+        // there are no native components yet for nbt tags
+
+        // ScoreComponent added in a3b44aa612c629955195b4697641de1b1665a587 (Feb 2018 (1.12), but existed in MC 1.8+), SelectorComponent added in the same commit
         if (scoreSupported) {
             if (component instanceof net.md_5.bungee.api.chat.ScoreComponent) {
                 return new BungeeScoreComponent((net.md_5.bungee.api.chat.ScoreComponent) component);
@@ -396,7 +452,8 @@ public abstract class AbstractBungeeBackend implements SpectatorBackend {
             }
         }
 
-        // TODO: KeybindComponent added in fbc5f514e28dbfc3f85cb936ad95b1a979086ab6 (1.12 released on June, this is from Nov of the same year)
+        // KeybindComponent added in fbc5f514e28dbfc3f85cb936ad95b1a979086ab6 (1.12 released on June, this is from Nov of the same year)
+        // TODO: is it worth to backport it? if yes, we probably also want to replace it with text component for versions older than 1.12
         if (keybindSupported) {
             if (component instanceof net.md_5.bungee.api.chat.KeybindComponent) {
                 return new BungeeKeybindComponent((net.md_5.bungee.api.chat.KeybindComponent) component);

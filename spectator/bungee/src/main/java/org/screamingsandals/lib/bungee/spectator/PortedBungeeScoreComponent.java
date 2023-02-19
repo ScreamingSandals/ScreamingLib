@@ -18,59 +18,60 @@ package org.screamingsandals.lib.bungee.spectator;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bungee.spectator.backports.ScorePortedComponent;
 import org.screamingsandals.lib.spectator.ScoreComponent;
 
-public class BungeeScoreComponent extends BungeeComponent implements ScoreComponent {
-    protected BungeeScoreComponent(net.md_5.bungee.api.chat.@NotNull ScoreComponent wrappedObject) {
+public class PortedBungeeScoreComponent extends BungeeComponent implements ScoreComponent {
+    protected PortedBungeeScoreComponent(@NotNull ScorePortedComponent wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
     public @NotNull String name() {
-        return ((net.md_5.bungee.api.chat.ScoreComponent) wrappedObject).getName();
+        return ((ScorePortedComponent) wrappedObject).getName();
     }
 
     @Override
     public @NotNull ScoreComponent withName(@NotNull String name) {
-        var duplicate = (net.md_5.bungee.api.chat.ScoreComponent) wrappedObject.duplicate();
+        var duplicate = (ScorePortedComponent) wrappedObject.duplicate();
         duplicate.setName(name);
         return (ScoreComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
     public @NotNull String objective() {
-        return ((net.md_5.bungee.api.chat.ScoreComponent) wrappedObject).getObjective();
+        return ((ScorePortedComponent) wrappedObject).getObjective();
     }
 
     @Override
     public @NotNull ScoreComponent withObjective(@NotNull String objective) {
-        var duplicate = (net.md_5.bungee.api.chat.ScoreComponent) wrappedObject.duplicate();
+        var duplicate = (ScorePortedComponent) wrappedObject.duplicate();
         duplicate.setObjective(objective);
         return (ScoreComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
     public @Nullable String value() {
-        var value = ((net.md_5.bungee.api.chat.ScoreComponent) wrappedObject).getValue();
-        return value.isEmpty() ? null : value;
+        var value = ((ScorePortedComponent) wrappedObject).getValue();
+        return value == null || value.isEmpty() ? null : value;
     }
 
     @Override
     public @NotNull ScoreComponent withValue(@Nullable String value) {
-        var duplicate = (net.md_5.bungee.api.chat.ScoreComponent) wrappedObject.duplicate();
-        duplicate.setValue(value == null ? "" : value);
+        var duplicate = (ScorePortedComponent) wrappedObject.duplicate();
+        duplicate.setValue(value);
         return (ScoreComponent) AbstractBungeeBackend.wrapComponent(duplicate);
     }
 
     @Override
     public ScoreComponent.@NotNull Builder toBuilder() {
-        var duplicate = (net.md_5.bungee.api.chat.ScoreComponent) wrappedObject.duplicate();
+        var duplicate = (ScorePortedComponent) wrappedObject.duplicate();
         return new BungeeScoreBuilder(duplicate);
     }
 
-    public static class BungeeScoreBuilder extends BungeeBuilder<ScoreComponent, ScoreComponent.Builder, net.md_5.bungee.api.chat.ScoreComponent> implements ScoreComponent.Builder {
+    public static class BungeeScoreBuilder extends BungeeBuilder<ScoreComponent, ScoreComponent.Builder, ScorePortedComponent> implements ScoreComponent.Builder {
 
-        public BungeeScoreBuilder(net.md_5.bungee.api.chat.@NotNull ScoreComponent component) {
+        public BungeeScoreBuilder(@NotNull ScorePortedComponent component) {
             super(component);
         }
 
@@ -88,7 +89,7 @@ public class BungeeScoreComponent extends BungeeComponent implements ScoreCompon
 
         @Override
         public ScoreComponent.@NotNull Builder value(@Nullable String value) {
-            component.setValue(value == null ? "" : value);
+            component.setValue(value);
             return this;
         }
     }
