@@ -27,7 +27,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
@@ -180,12 +179,12 @@ public class BukkitEntityLiving extends BukkitEntityBasic implements EntityLivin
 
     @Override
     public boolean hasPotionEffect(@NotNull PotionEffectHolder type) {
-        return ((LivingEntity) wrappedObject).hasPotionEffect(type.as(PotionEffectType.class));
+        return ((LivingEntity) wrappedObject).hasPotionEffect(type.as(PotionEffect.class).getType());
     }
 
     @Override
     public void removePotionEffect(@NotNull PotionEffectHolder type) {
-        ((LivingEntity) wrappedObject).removePotionEffect(type.as(PotionEffectType.class));
+        ((LivingEntity) wrappedObject).removePotionEffect(type.as(PotionEffect.class).getType());
     }
 
     @Override
