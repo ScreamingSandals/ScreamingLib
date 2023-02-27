@@ -26,7 +26,7 @@ import java.util.List;
 
 @Data
 public class PluginDescription implements Wrapper {
-    private final @NotNull PluginKey pluginKey;
+    private final @NotNull String pluginKey;
     private final @NotNull String name;
     private final @NotNull String version;
     private final @Nullable String description;
@@ -36,11 +36,11 @@ public class PluginDescription implements Wrapper {
     private final @NotNull Path dataFolder;
 
     public @Nullable Object getInstance() {
-        return PluginManager.getPlatformClass(this.pluginKey);
+        return Plugins.getPlatformClass(this.pluginKey);
     }
 
     public boolean isEnabled() {
-        return PluginManager.isEnabled(this.pluginKey);
+        return Plugins.isEnabled(this.pluginKey);
     }
 
 
@@ -50,7 +50,7 @@ public class PluginDescription implements Wrapper {
     @SuppressWarnings("unchecked")
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
-        var instance = PluginManager.getPlatformClass(this.pluginKey);
+        var instance = Plugins.getPlatformClass(this.pluginKey);
         if (type.isInstance(instance)) {
             return (T) instance;
         }

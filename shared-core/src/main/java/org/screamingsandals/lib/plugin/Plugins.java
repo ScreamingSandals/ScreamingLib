@@ -26,11 +26,11 @@ import org.screamingsandals.lib.utils.annotations.AbstractService;
 import java.util.List;
 
 @AbstractService
-public abstract class PluginManager {
-    private static @Nullable PluginManager pluginManager;
+public abstract class Plugins {
+    private static @Nullable Plugins pluginManager;
 
     @ApiStatus.Internal
-    public PluginManager() {
+    public Plugins() {
         if (pluginManager != null) {
             throw new UnsupportedOperationException("PluginManager is already initialized.");
         }
@@ -38,32 +38,32 @@ public abstract class PluginManager {
         pluginManager = this;
     }
 
-    public static @Nullable Object getPlatformClass(@NotNull PluginKey pluginKey) {
+    public static @Nullable Object getPlatformClass(@NotNull String pluginKey) {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
         }
         return pluginManager.getPlatformClass0(pluginKey);
     }
 
-    protected abstract @Nullable Object getPlatformClass0(@NotNull PluginKey pluginKey);
+    protected abstract @Nullable Object getPlatformClass0(@NotNull String pluginKey);
 
-    public static boolean isEnabled(@NotNull PluginKey pluginKey) {
+    public static boolean isEnabled(@NotNull String pluginKey) {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
         }
         return pluginManager.isEnabled0(pluginKey);
     }
 
-    protected abstract boolean isEnabled0(@NotNull PluginKey pluginKey);
+    protected abstract boolean isEnabled0(@NotNull String pluginKey);
 
-    public static @Nullable PluginDescription getPlugin(@NotNull PluginKey pluginKey) {
+    public static @Nullable PluginDescription getPlugin(@NotNull String pluginKey) {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
         }
         return pluginManager.getPlugin0(pluginKey);
     }
 
-    protected abstract @Nullable PluginDescription getPlugin0(@NotNull PluginKey pluginKey);
+    protected abstract @Nullable PluginDescription getPlugin0(@NotNull String pluginKey);
 
     public static @NotNull List<@NotNull PluginDescription> getAllPlugins() {
         if (pluginManager == null) {
@@ -73,22 +73,6 @@ public abstract class PluginManager {
     }
 
     protected abstract @NotNull List<@NotNull PluginDescription> getAllPlugins0();
-
-    /**
-     * Creates key that can be used to access plugin.
-     * Any valid identifiers will create PluginKey, it doesn't matter, if the plugin really exists.
-     *
-     * @param identifier platform identifier
-     * @return PluginKey or null if identifier is invalid
-     */
-    public static @Nullable PluginKey createKey(@NotNull Object identifier) {
-        if (pluginManager == null) {
-            throw new UnsupportedOperationException("PluginManager is not initialized yet.");
-        }
-        return pluginManager.createKey0(identifier);
-    }
-
-    protected abstract @Nullable PluginKey createKey0(@NotNull Object identifier);
 
     public static @NotNull PlatformType getPlatformType() {
         if (pluginManager == null) {

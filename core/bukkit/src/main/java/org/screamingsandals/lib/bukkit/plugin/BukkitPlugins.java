@@ -23,10 +23,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.plugin.event.PluginDisabledEventListener;
 import org.screamingsandals.lib.bukkit.plugin.event.PluginEnabledEventListener;
+import org.screamingsandals.lib.plugin.Plugins;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
-import org.screamingsandals.lib.plugin.PluginKey;
-import org.screamingsandals.lib.plugin.PluginManager;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
@@ -37,7 +36,7 @@ import java.util.stream.Collectors;
 
 @Service
 @InternalEarlyInitialization
-public class BukkitPluginManager extends PluginManager {
+public class BukkitPlugins extends Plugins {
     @OnEnable
     public void onEnable(@NotNull JavaPlugin plugin) {
         new PluginEnabledEventListener(plugin);
@@ -45,18 +44,18 @@ public class BukkitPluginManager extends PluginManager {
     }
 
     @Override
-    protected @Nullable Object getPlatformClass0(@NotNull PluginKey pluginKey) {
-        return Bukkit.getPluginManager().getPlugin(pluginKey.as(String.class));
+    protected @Nullable Object getPlatformClass0(@NotNull String pluginKey) {
+        return Bukkit.getPluginManager().getPlugin(pluginKey);
     }
 
     @Override
-    protected boolean isEnabled0(@NotNull PluginKey pluginKey) {
-        return Bukkit.getPluginManager().isPluginEnabled(pluginKey.as(String.class));
+    protected boolean isEnabled0(@NotNull String pluginKey) {
+        return Bukkit.getPluginManager().isPluginEnabled(pluginKey);
     }
 
     @Override
-    protected @Nullable PluginDescription getPlugin0(@NotNull PluginKey pluginKey) {
-        var plugin = Bukkit.getPluginManager().getPlugin(pluginKey.as(String.class));
+    protected @Nullable PluginDescription getPlugin0(@NotNull String pluginKey) {
+        var plugin = Bukkit.getPluginManager().getPlugin(pluginKey);
         if (plugin != null) {
             return wrap(plugin);
         }
@@ -66,11 +65,6 @@ public class BukkitPluginManager extends PluginManager {
     @Override
     protected @NotNull List<@NotNull PluginDescription> getAllPlugins0() {
         return Arrays.stream(Bukkit.getPluginManager().getPlugins()).map(this::wrap).collect(Collectors.toList());
-    }
-
-    @Override
-    protected @Nullable PluginKey createKey0(@NotNull Object identifier) {
-        return BukkitPluginKey.of(identifier.toString());
     }
 
     @Override
@@ -90,7 +84,7 @@ public class BukkitPluginManager extends PluginManager {
     private @NotNull PluginDescription wrap(@NotNull Plugin plugin) {
         var description = plugin.getDescription();
         return new PluginDescription(
-                BukkitPluginKey.of(plugin.getName()),
+                plugin.getName(), // name and id is the same
                 plugin.getName(),
                 description.getVersion(),
                 description.getDescription(),

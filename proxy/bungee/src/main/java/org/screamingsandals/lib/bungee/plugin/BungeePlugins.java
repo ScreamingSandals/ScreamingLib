@@ -20,10 +20,9 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.plugin.Plugins;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
-import org.screamingsandals.lib.plugin.PluginKey;
-import org.screamingsandals.lib.plugin.PluginManager;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 
@@ -32,20 +31,20 @@ import java.util.stream.Collectors;
 
 @Service
 @InternalEarlyInitialization
-public class BungeePluginManager extends PluginManager {
+public class BungeePlugins extends Plugins {
     @Override
-    protected @Nullable Object getPlatformClass0(@NotNull PluginKey pluginKey) {
-        return ProxyServer.getInstance().getPluginManager().getPlugin(pluginKey.as(String.class));
+    protected @Nullable Object getPlatformClass0(@NotNull String pluginKey) {
+        return ProxyServer.getInstance().getPluginManager().getPlugin(pluginKey);
     }
 
     @Override
-    protected boolean isEnabled0(@NotNull PluginKey pluginKey) {
-        return ProxyServer.getInstance().getPluginManager().getPlugin(pluginKey.as(String.class)) != null;
+    protected boolean isEnabled0(@NotNull String pluginKey) {
+        return ProxyServer.getInstance().getPluginManager().getPlugin(pluginKey) != null;
     }
 
     @Override
-    protected @Nullable PluginDescription getPlugin0(@NotNull PluginKey pluginKey) {
-        var plugin = ProxyServer.getInstance().getPluginManager().getPlugin(pluginKey.as(String.class));
+    protected @Nullable PluginDescription getPlugin0(@NotNull String pluginKey) {
+        var plugin = ProxyServer.getInstance().getPluginManager().getPlugin(pluginKey);
         if (plugin != null) {
             return wrap(plugin);
         }
@@ -55,11 +54,6 @@ public class BungeePluginManager extends PluginManager {
     @Override
     protected @NotNull List<@NotNull PluginDescription> getAllPlugins0() {
         return ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(this::wrap).collect(Collectors.toList());
-    }
-
-    @Override
-    protected @Nullable PluginKey createKey0(@NotNull Object identifier) {
-        return BungeePluginKey.of(identifier.toString());
     }
 
     @Override
@@ -84,7 +78,7 @@ public class BungeePluginManager extends PluginManager {
         var version = description.getVersion();
         var author = description.getAuthor();
         return new PluginDescription(
-                BungeePluginKey.of(description.getName()),
+                description.getName(), // name and id is the same
                 description.getName(),
                 version != null ? version : "unknown",
                 description.getDescription(),

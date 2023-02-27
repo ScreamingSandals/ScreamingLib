@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.economy.EconomyManager;
 import org.screamingsandals.lib.economy.TransactionResult;
-import org.screamingsandals.lib.plugin.PluginManager;
+import org.screamingsandals.lib.plugin.Plugins;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
@@ -40,8 +40,7 @@ public class BukkitEconomyManager extends EconomyManager {
 
     @OnEnable
     public void onEnable() {
-        var key = PluginManager.createKey("Vault");
-        if (key != null && PluginManager.isEnabled(key)) {
+        if (Plugins.isEnabled("Vault")) {
             var econProvider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
             if (econProvider != null) {
                 vaultEcon = econProvider.getProvider();

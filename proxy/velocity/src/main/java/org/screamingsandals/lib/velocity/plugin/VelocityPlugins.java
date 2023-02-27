@@ -21,10 +21,9 @@ import com.velocitypowered.api.plugin.meta.PluginDependency;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.plugin.Plugins;
 import org.screamingsandals.lib.utils.PlatformType;
 import org.screamingsandals.lib.plugin.PluginDescription;
-import org.screamingsandals.lib.plugin.PluginKey;
-import org.screamingsandals.lib.plugin.PluginManager;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 
@@ -35,32 +34,27 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @InternalEarlyInitialization
-public class VelocityPluginManager extends PluginManager {
+public class VelocityPlugins extends Plugins {
     private final com.velocitypowered.api.plugin.@NotNull PluginManager pluginManager;
 
     @Override
-    protected @Nullable Object getPlatformClass0(@NotNull PluginKey pluginKey) {
-        return pluginManager.getPlugin(pluginKey.as(String.class)).orElse(null);
+    protected @Nullable Object getPlatformClass0(@NotNull String pluginKey) {
+        return pluginManager.getPlugin(pluginKey).orElse(null);
     }
 
     @Override
-    protected boolean isEnabled0(@NotNull PluginKey pluginKey) {
-        return pluginManager.isLoaded(pluginKey.as(String.class));
+    protected boolean isEnabled0(@NotNull String pluginKey) {
+        return pluginManager.isLoaded(pluginKey);
     }
 
     @Override
-    protected @Nullable PluginDescription getPlugin0(@NotNull PluginKey pluginKey) {
-        return pluginManager.getPlugin(pluginKey.as(String.class)).map(this::wrap).orElse(null);
+    protected @Nullable PluginDescription getPlugin0(@NotNull String pluginKey) {
+        return pluginManager.getPlugin(pluginKey).map(this::wrap).orElse(null);
     }
 
     @Override
     protected @NotNull List<@NotNull PluginDescription> getAllPlugins0() {
         return pluginManager.getPlugins().stream().map(this::wrap).collect(Collectors.toList());
-    }
-
-    @Override
-    protected @Nullable PluginKey createKey0(@NotNull Object identifier) {
-        return VelocityPluginKey.of(identifier.toString());
     }
 
     @Override
@@ -81,7 +75,7 @@ public class VelocityPluginManager extends PluginManager {
     private @NotNull PluginDescription wrap(@NotNull PluginContainer plugin) {
         var description = plugin.getDescription();
         return new PluginDescription(
-                VelocityPluginKey.of(description.getId()),
+                description.getId(),
                 description.getName().orElse(description.getId()),
                 description.getVersion().orElse("unknown"),
                 description.getDescription().orElse(""),
