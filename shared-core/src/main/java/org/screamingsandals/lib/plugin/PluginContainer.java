@@ -32,13 +32,13 @@ import java.nio.file.Path;
 
 @Getter
 public abstract class PluginContainer implements Wrapper {
-    private PluginDescription pluginDescription;
+    private Plugin pluginDescription;
     private LoggerWrapper logger;
 
     @ApiStatus.Internal
-    public void init(@NotNull PluginDescription pluginDescription, @NotNull LoggerWrapper logger) {
+    public void init(@NotNull Plugin pluginDescription, @NotNull LoggerWrapper logger) {
         if (this.pluginDescription != null) {
-            throw new UnsupportedOperationException(pluginDescription.getName() + " is already initialized!");
+            throw new UnsupportedOperationException(pluginDescription.name() + " is already initialized!");
         }
         this.pluginDescription = pluginDescription;
         this.logger = logger;
@@ -56,7 +56,7 @@ public abstract class PluginContainer implements Wrapper {
             throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found in classpath");
         }
 
-        var outFile = pluginDescription.getDataFolder().resolve(resourcePath).toFile();
+        var outFile = pluginDescription.dataFolder().resolve(resourcePath).toFile();
         var outDir = outFile.getParentFile();
 
         if (!outDir.exists()) {
@@ -82,7 +82,7 @@ public abstract class PluginContainer implements Wrapper {
     }
 
     public @NotNull Path getDataFolder() {
-        return getPluginDescription().getDataFolder();
+        return getPluginDescription().dataFolder();
     }
 
     @ApiStatus.Experimental

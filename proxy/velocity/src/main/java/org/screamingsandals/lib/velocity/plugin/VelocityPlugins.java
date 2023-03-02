@@ -16,18 +16,15 @@
 
 package org.screamingsandals.lib.velocity.plugin;
 
-import com.velocitypowered.api.plugin.PluginContainer;
-import com.velocitypowered.api.plugin.meta.PluginDependency;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.plugin.Plugins;
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.plugin.PluginDescription;
+import org.screamingsandals.lib.plugin.Plugin;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,51 +35,22 @@ public class VelocityPlugins extends Plugins {
     private final com.velocitypowered.api.plugin.@NotNull PluginManager pluginManager;
 
     @Override
-    protected @Nullable Object getPlatformClass0(@NotNull String pluginKey) {
-        return pluginManager.getPlugin(pluginKey).orElse(null);
-    }
-
-    @Override
     protected boolean isEnabled0(@NotNull String pluginKey) {
         return pluginManager.isLoaded(pluginKey);
     }
 
     @Override
-    protected @Nullable PluginDescription getPlugin0(@NotNull String pluginKey) {
-        return pluginManager.getPlugin(pluginKey).map(this::wrap).orElse(null);
+    protected @Nullable Plugin getPlugin0(@NotNull String pluginKey) {
+        return pluginManager.getPlugin(pluginKey).map(VelocityPlugin::new).orElse(null);
     }
 
     @Override
-    protected @NotNull List<@NotNull PluginDescription> getAllPlugins0() {
-        return pluginManager.getPlugins().stream().map(this::wrap).collect(Collectors.toList());
+    protected @NotNull List<@NotNull Plugin> getAllPlugins0() {
+        return pluginManager.getPlugins().stream().map(VelocityPlugin::new).collect(Collectors.toList());
     }
 
     @Override
     protected @NotNull PlatformType getPlatformType0() {
         return PlatformType.VELOCITY;
-    }
-
-    @Override
-    protected @Nullable PluginDescription getPluginFromPlatformObject0(@NotNull Object object) {
-        return  pluginManager.getPlugins()
-                .stream()
-                .filter(a -> a == object)
-                .findFirst()
-                .map(this::wrap)
-                .orElse(null);
-    }
-
-    private @NotNull PluginDescription wrap(@NotNull PluginContainer plugin) {
-        var description = plugin.getDescription();
-        return new PluginDescription(
-                description.getId(),
-                description.getName().orElse(description.getId()),
-                description.getVersion().orElse("unknown"),
-                description.getDescription().orElse(""),
-                description.getAuthors(),
-                description.getDependencies().stream().map(PluginDependency::getId).collect(Collectors.toList()),
-                List.of(),
-                description.getSource().map(path -> path.getParent().resolve(description.getId())).orElse(Path.of("."))
-        );
     }
 }

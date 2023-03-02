@@ -38,15 +38,6 @@ public abstract class Plugins {
         pluginManager = this;
     }
 
-    public static @Nullable Object getPlatformClass(@NotNull String pluginKey) {
-        if (pluginManager == null) {
-            throw new UnsupportedOperationException("PluginManager is not initialized yet.");
-        }
-        return pluginManager.getPlatformClass0(pluginKey);
-    }
-
-    protected abstract @Nullable Object getPlatformClass0(@NotNull String pluginKey);
-
     public static boolean isEnabled(@NotNull String pluginKey) {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
@@ -56,23 +47,23 @@ public abstract class Plugins {
 
     protected abstract boolean isEnabled0(@NotNull String pluginKey);
 
-    public static @Nullable PluginDescription getPlugin(@NotNull String pluginKey) {
+    public static @Nullable Plugin getPlugin(@NotNull String pluginKey) {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
         }
         return pluginManager.getPlugin0(pluginKey);
     }
 
-    protected abstract @Nullable PluginDescription getPlugin0(@NotNull String pluginKey);
+    protected abstract @Nullable Plugin getPlugin0(@NotNull String pluginKey);
 
-    public static @NotNull List<@NotNull PluginDescription> getAllPlugins() {
+    public static @NotNull List<@NotNull Plugin> getAllPlugins() {
         if (pluginManager == null) {
             throw new UnsupportedOperationException("PluginManager is not initialized yet.");
         }
         return pluginManager.getAllPlugins0();
     }
 
-    protected abstract @NotNull List<@NotNull PluginDescription> getAllPlugins0();
+    protected abstract @NotNull List<@NotNull Plugin> getAllPlugins0();
 
     public static @NotNull PlatformType getPlatformType() {
         if (pluginManager == null) {
@@ -82,17 +73,4 @@ public abstract class Plugins {
     }
 
     protected abstract @NotNull PlatformType getPlatformType0();
-
-    @Contract("null -> null")
-    public static @Nullable PluginDescription getPluginFromPlatformObject(@Nullable Object object) {
-        if (pluginManager == null) {
-            throw new UnsupportedOperationException("PluginManager is not initialized yet.");
-        }
-        if (object == null) {
-            return null;
-        }
-        return pluginManager.getPluginFromPlatformObject0(object);
-    }
-
-    protected abstract @Nullable PluginDescription getPluginFromPlatformObject0(@NotNull Object object);
 }

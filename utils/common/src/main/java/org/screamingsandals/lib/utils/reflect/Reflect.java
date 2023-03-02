@@ -17,6 +17,7 @@
 package org.screamingsandals.lib.utils.reflect;
 
 import lombok.experimental.UtilityClass;
+import org.intellij.lang.annotations.Language;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -420,7 +421,7 @@ public class Reflect {
         return clazz.isInstance(instance);
     }
 
-    public static boolean has(String className) {
+    public static boolean has(@Language(value = "JAVA", prefix = "class X { void m() { ", suffix = ".class; } }") String className) {
         return getClassSafe(className) != null;
     }
 

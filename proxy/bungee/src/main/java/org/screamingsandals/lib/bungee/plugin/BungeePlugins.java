@@ -17,12 +17,11 @@
 package org.screamingsandals.lib.bungee.plugin;
 
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.plugin.Plugins;
 import org.screamingsandals.lib.utils.PlatformType;
-import org.screamingsandals.lib.plugin.PluginDescription;
+import org.screamingsandals.lib.plugin.Plugin;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.internal.InternalEarlyInitialization;
 
@@ -33,59 +32,26 @@ import java.util.stream.Collectors;
 @InternalEarlyInitialization
 public class BungeePlugins extends Plugins {
     @Override
-    protected @Nullable Object getPlatformClass0(@NotNull String pluginKey) {
-        return ProxyServer.getInstance().getPluginManager().getPlugin(pluginKey);
-    }
-
-    @Override
     protected boolean isEnabled0(@NotNull String pluginKey) {
         return ProxyServer.getInstance().getPluginManager().getPlugin(pluginKey) != null;
     }
 
     @Override
-    protected @Nullable PluginDescription getPlugin0(@NotNull String pluginKey) {
+    protected @Nullable Plugin getPlugin0(@NotNull String pluginKey) {
         var plugin = ProxyServer.getInstance().getPluginManager().getPlugin(pluginKey);
         if (plugin != null) {
-            return wrap(plugin);
+            return new BungeePlugin(plugin);
         }
         return null;
     }
 
     @Override
-    protected @NotNull List<@NotNull PluginDescription> getAllPlugins0() {
-        return ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(this::wrap).collect(Collectors.toList());
+    protected @NotNull List<@NotNull Plugin> getAllPlugins0() {
+        return ProxyServer.getInstance().getPluginManager().getPlugins().stream().map(BungeePlugin::new).collect(Collectors.toList());
     }
 
     @Override
     protected @NotNull PlatformType getPlatformType0() {
         return PlatformType.BUNGEE;
-    }
-
-    @Override
-    protected @Nullable PluginDescription getPluginFromPlatformObject0(@NotNull Object object) {
-        return ProxyServer.getInstance()
-                .getPluginManager()
-                .getPlugins()
-                .stream()
-                .filter(a -> a == object)
-                .findFirst()
-                .map(this::wrap)
-                .orElse(null);
-    }
-
-    private @NotNull PluginDescription wrap(@NotNull Plugin plugin) {
-        var description = plugin.getDescription();
-        var version = description.getVersion();
-        var author = description.getAuthor();
-        return new PluginDescription(
-                description.getName(), // name and id is the same
-                description.getName(),
-                version != null ? version : "unknown",
-                description.getDescription(),
-                author != null ? List.of(author) : List.of(),
-                List.copyOf(description.getDepends()),
-                List.copyOf(description.getSoftDepends()),
-                plugin.getDataFolder().toPath().toAbsolutePath()
-        );
     }
 }

@@ -22,8 +22,8 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.event.AbstractBukkitEventHandlerFactory;
+import org.screamingsandals.lib.bukkit.plugin.BukkitPlugin;
 import org.screamingsandals.lib.event.EventPriority;
-import org.screamingsandals.lib.plugin.Plugins;
 import org.screamingsandals.lib.plugin.event.PluginDisabledEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
@@ -35,6 +35,6 @@ public class PluginDisabledEventListener extends AbstractBukkitEventHandlerFacto
 
     @Override
     protected @Nullable PluginDisabledEvent wrapEvent(@NotNull PluginDisableEvent event, @NotNull EventPriority priority) {
-        return new PluginDisabledEvent(Plugins.getPluginFromPlatformObject(event.getPlugin()).orElseThrow());
+        return () -> new BukkitPlugin(event.getPlugin());
     }
 }
