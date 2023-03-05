@@ -16,29 +16,36 @@
 
 package org.screamingsandals.lib.tasker;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.tasker.task.TaskBase;
-import org.screamingsandals.lib.tasker.task.TaskState;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
-import org.screamingsandals.lib.utils.annotations.ForwardToService;
+import org.screamingsandals.lib.utils.Preconditions;
+import org.screamingsandals.lib.utils.annotations.AbstractService;
+import org.screamingsandals.lib.utils.annotations.methods.OnDisable;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
-@ForwardToService(AbstractTaskInitializer.class)
-public interface Tasker {
+@AbstractService
+public abstract class Tasker {
+    private static @Nullable Tasker instance;
 
-    static @NotNull Tasker init(@NotNull Supplier<@NotNull AbstractTaskInitializer> taskInitializer) {
-        if (TaskerImpl.instance != null) {
+    private final @NotNull AtomicInteger counter = new AtomicInteger(0);
+    private final @NotNull Map<@NotNull Integer, TaskerTask> runningTasks = new ConcurrentHashMap<>();
+
+    @ApiStatus.Internal
+    protected Tasker() {
+        if (instance != null) {
             throw new UnsupportedOperationException("Tasker is already initialized!");
         }
 
-        TaskerImpl.instance = new TaskerImpl(taskInitializer.get());
-        return TaskerImpl.instance;
+        instance = this;
     }
 
     /**
@@ -47,25 +54,31 @@ public interface Tasker {
      * @param runnable the runnable to run
      * @return new TaskBuilder
      */
-    static @NotNull TaskBuilder build(@NotNull Runnable runnable) {
-        if (TaskerImpl.instance == null) {
+    public static @NotNull TaskBuilder build(@NotNull Runnable runnable) {
+        if (instance == null) {
             throw new UnsupportedOperationException("Tasker is not initialized yet!");
         }
-        return TaskerImpl.instance.build(runnable);
+        return new TaskBuilderImpl(runnable, instance.counter.incrementAndGet());
     }
 
     /**
      * Creates new TaskBuilder for given task and plugin wrapper
      * This task can cancel itself :)
      *
-     * @param runnable the runnable to run
+     * @param taskBase the runnable to run
      * @return new TaskBuilder
      */
-    static @NotNull TaskBuilder build(@NotNull Function<@NotNull TaskBase, @NotNull Runnable> runnable) {
-        if (TaskerImpl.instance == null) {
+    public static @NotNull TaskBuilder build(@NotNull Function<@NotNull TaskBase, @NotNull Runnable> taskBase) {
+        if (instance == null) {
             throw new UnsupportedOperationException("Tasker is not initialized yet!");
         }
-        return TaskerImpl.instance.build(runnable);
+        final var id = instance.counter.incrementAndGet();
+        return new TaskBuilderImpl(taskBase.apply(() -> {
+            final var task = instance.runningTasks.get(id);
+            if (task != null) {
+                task.cancel();
+            }
+        }), id);
     }
 
     /**
@@ -73,33 +86,23 @@ public interface Tasker {
      *
      * @return immutable map of active tasks.
      */
-    static @NotNull Map<@NotNull Integer, TaskerTask> getRunningTasks() {
-        if (TaskerImpl.instance == null) {
+    public static @NotNull Map<@NotNull Integer, TaskerTask> getRunningTasks() {
+        if (instance == null) {
             throw new UnsupportedOperationException("Tasker is not initialized yet!");
         }
-        return TaskerImpl.instance.getRunningTasks();
+        return Map.copyOf(instance.runningTasks);
     }
 
     /**
      * Cancels all tasks.
      */
-    static void cancelAll() {
-        if (TaskerImpl.instance == null) {
+    @OnDisable
+    public static void cancelAll() {
+        if (instance == null) {
             throw new UnsupportedOperationException("Tasker is not initialized yet!");
         }
-        TaskerImpl.instance.cancelAll();
-    }
-
-    /**
-     * Cancels given task
-     *
-     * @param taskerTask the task to cancel
-     */
-    static void cancel(@NotNull TaskerTask taskerTask) {
-        if (TaskerImpl.instance == null) {
-            throw new UnsupportedOperationException("Tasker is not initialized yet!");
-        }
-        TaskerImpl.instance.cancel(taskerTask);
+        final var tasks = getRunningTasks().values();
+        tasks.forEach(TaskerTask::cancel);
     }
 
     /**
@@ -108,28 +111,50 @@ public interface Tasker {
      * @param taskerTask task to register
      * @return true if task was registered
      */
-    static boolean register(@NotNull TaskerTask taskerTask) {
-        if (TaskerImpl.instance == null) {
+    public static boolean register(@NotNull TaskerTask taskerTask) {
+        if (instance == null) {
             throw new UnsupportedOperationException("Tasker is not initialized yet!");
         }
-        return TaskerImpl.instance.register(taskerTask);
+        final var id = taskerTask.getId();
+        if (instance.runningTasks.containsKey(id)) {
+            return false;
+        }
+
+        instance.runningTasks.putIfAbsent(id, taskerTask);
+        return true;
     }
 
-    /**
-     * @param taskerTask task to check
-     * @return Current state of the task
-     */
-    static @NotNull TaskState getState(@NotNull TaskerTask taskerTask) {
-        if (TaskerImpl.instance == null) {
+    @ApiStatus.Internal
+    public static boolean unregister(@NotNull TaskerTask taskerTask) {
+        if (instance == null) {
             throw new UnsupportedOperationException("Tasker is not initialized yet!");
         }
-        return TaskerImpl.instance.getState(taskerTask);
+        final var id = taskerTask.getId();
+        if (!instance.runningTasks.containsKey(id)) {
+            return false;
+        }
+
+        instance.runningTasks.remove(id);
+        return true;
     }
+
+    public static @NotNull TaskerTask startAndRegisterTask(@NotNull TaskBuilderImpl builder) {
+        if (instance == null) {
+            throw new UnsupportedOperationException("Tasker is not initialized yet!");
+        }
+        Preconditions.checkNotNull(builder, "Builder can't be null");
+        var task = instance.start0(builder);
+        Tasker.register(task);
+        builder.getStartEvent().forEach(h -> h.accept(task));
+        return task;
+    }
+
+    protected abstract @NotNull TaskerTask start0(@NotNull TaskBuilderImpl taskerBuilder);
 
     /**
      * Builder for tasks
      */
-    interface TaskBuilder {
+    public interface TaskBuilder {
 
         /**
          * Runs the task after 1 tick (50ms)
@@ -174,15 +199,6 @@ public interface Tasker {
          */
         @Contract("_ -> this")
         @NotNull TaskBuilder startEvent(@NotNull Consumer<@NotNull TaskerTask> handler);
-
-        /**
-         * Registers handler that will be used after ending the task.
-         *
-         * @param handler Handler
-         * @return current task builder
-         */
-        @Contract("_ -> this")
-        @NotNull TaskBuilder stopEvent(@NotNull Consumer<@NotNull TaskerTask> handler);
 
         /**
          * Starts the task

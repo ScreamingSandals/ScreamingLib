@@ -19,7 +19,6 @@ package org.screamingsandals.lib.tasker;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.tasker.initializer.AbstractTaskInitializer;
 import org.screamingsandals.lib.tasker.task.TaskerTask;
 import org.screamingsandals.lib.utils.Preconditions;
 
@@ -31,10 +30,8 @@ import java.util.function.Consumer;
 @Getter
 public class TaskBuilderImpl implements Tasker.TaskBuilder {
     private final @NotNull Runnable runnable;
-    private final @NotNull AbstractTaskInitializer initializer;
     private final @NotNull Integer taskId;
     private final @NotNull List<@NotNull Consumer<@NotNull TaskerTask>> startEvent = new LinkedList<>();
-    private final @NotNull List<@NotNull Consumer<@NotNull TaskerTask>> stopEvent = new LinkedList<>();
 
     private boolean afterOneTick;
     private boolean async;
@@ -85,19 +82,10 @@ public class TaskBuilderImpl implements Tasker.TaskBuilder {
     }
 
     @Override
-    public Tasker.@NotNull TaskBuilder stopEvent(@NotNull Consumer<@NotNull TaskerTask> handler) {
-        Preconditions.checkNotNull(handler, "Handler can't be null!");
-        this.stopEvent.add(handler);
-        return this;
-    }
-
-    @Override
     public @NotNull TaskerTask start() {
-        final var task = Preconditions.checkNotNull(
-                initializer.start(this),
-                "Error occurred while trying to run task number " + taskId);
-        Tasker.register(task);
-        this.startEvent.forEach(h -> h.accept(task));
-        return task;
+        return Preconditions.checkNotNull(
+                Tasker.startAndRegisterTask(this),
+                "Error occurred while trying to run task number " + taskId
+        );
     }
 }

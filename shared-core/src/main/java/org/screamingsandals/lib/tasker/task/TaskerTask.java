@@ -29,5 +29,5 @@ public interface TaskerTask extends TaskBase {
      */
     @NotNull TaskState getState();
 
-    <P> @NotNull P getTaskObject();
+    @NotNull Object getTaskObject();
 }
