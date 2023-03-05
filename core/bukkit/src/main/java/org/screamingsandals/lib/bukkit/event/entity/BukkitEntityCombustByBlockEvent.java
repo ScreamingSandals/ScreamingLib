@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.event.entity.EntityCombustByBlockEvent;
 
 public class BukkitEntityCombustByBlockEvent extends BukkitEntityCombustEvent implements EntityCombustByBlockEvent {
@@ -36,7 +36,7 @@ public class BukkitEntityCombustByBlockEvent extends BukkitEntityCombustEvent im
         if (!combusterCached) {
             var bukkitCombuster = ((org.bukkit.event.entity.EntityCombustByBlockEvent) event()).getCombuster();
             if (bukkitCombuster != null) {
-                combuster = Blocks.wrapBlock(bukkitCombuster);
+                combuster = new BukkitBlock(bukkitCombuster);
             }
             combusterCached = true;
         }

@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.world.chunk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -52,7 +52,7 @@ public class BukkitChunk extends BasicWrapper<org.bukkit.Chunk> implements Chunk
 
     @Override
     public @NotNull Block getBlock(@Range(from = 0, to = 15) int x, int y, @Range(from = 0, to = 15) int z) {
-        return Blocks.wrapBlock(wrappedObject.getBlock(x, y, z));
+        return new BukkitBlock(wrappedObject.getBlock(x, y, z));
     }
 
     @Override

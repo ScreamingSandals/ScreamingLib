@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
@@ -71,7 +71,7 @@ public class BukkitPlayerHarvestBlockEvent implements PlayerHarvestBlockEvent, B
     @Override
     public @NotNull Block harvestedBlock() {
         if (harvestedBlock == null) {
-            harvestedBlock = Blocks.wrapBlock(event.getHarvestedBlock());
+            harvestedBlock = new BukkitBlock(event.getHarvestedBlock());
         }
         return harvestedBlock;
     }

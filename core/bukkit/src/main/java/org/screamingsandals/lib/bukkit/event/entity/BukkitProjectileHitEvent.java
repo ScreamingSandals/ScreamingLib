@@ -23,7 +23,7 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
@@ -74,7 +74,7 @@ public class BukkitProjectileHitEvent implements ProjectileHitEvent, BukkitCance
     public @Nullable Block hitBlock() {
         if (!hitBlockCached) {
             if (event.getHitBlock() != null) {
-                hitBlock = Blocks.wrapBlock(event.getHitBlock());
+                hitBlock = new BukkitBlock(event.getHitBlock());
             }
             hitBlockCached = true;
         }

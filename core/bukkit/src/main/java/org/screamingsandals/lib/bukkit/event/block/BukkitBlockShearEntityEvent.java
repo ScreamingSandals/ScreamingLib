@@ -21,8 +21,9 @@ import lombok.experimental.Accessors;
 
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.BasicEntity;
@@ -40,17 +41,17 @@ public class BukkitBlockShearEntityEvent implements BlockShearEntityEvent, Bukki
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final org.bukkit.event.block.BlockShearEntityEvent event;
+    private final org.bukkit.event.block.@NotNull BlockShearEntityEvent event;
 
     // Internal cache
-    private Block block;
-    private BasicEntity entity;
-    private ItemStack tool;
+    private @Nullable Block block;
+    private @Nullable BasicEntity entity;
+    private @Nullable ItemStack tool;
 
     @Override
     public @NotNull Block block() {
         if (block == null) {
-            block = Blocks.wrapBlock(event.getBlock());
+            block = new BukkitBlock(event.getBlock());
         }
         return block;
     }

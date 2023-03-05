@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.event.entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.event.entity.EntityDamageByBlockEvent;
 
 public class BukkitEntityDamageByBlockEvent extends BukkitEntityDamageEvent implements EntityDamageByBlockEvent {
@@ -35,7 +35,7 @@ public class BukkitEntityDamageByBlockEvent extends BukkitEntityDamageEvent impl
     public @Nullable Block damager() {
         if (!damagerCached) {
             if (event().getDamager() != null) {
-                damager = Blocks.wrapBlock(event().getDamager());
+                damager = new BukkitBlock(event().getDamager());
             }
             damagerCached = true;
         }

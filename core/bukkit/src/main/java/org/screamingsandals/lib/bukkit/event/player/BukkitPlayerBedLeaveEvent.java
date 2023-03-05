@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.PlayerBedLeaveEvent;
@@ -53,7 +53,7 @@ public class BukkitPlayerBedLeaveEvent implements PlayerBedLeaveEvent, BukkitCan
     @Override
     public @NotNull Block bed() {
         if (bed == null) {
-            bed = Blocks.wrapBlock(event.getBed());
+            bed = new BukkitBlock(event.getBed());
         }
         return bed;
     }

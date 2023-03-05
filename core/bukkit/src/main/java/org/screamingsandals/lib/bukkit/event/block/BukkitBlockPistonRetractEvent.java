@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.event.block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.event.block.BlockPistonRetractEvent;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
 
@@ -36,7 +36,7 @@ public class BukkitBlockPistonRetractEvent extends BukkitBlockPistonEvent implem
     @Override
     public @NotNull Collection<@NotNull Block> pushedBlocks() {
         if (pushedBlocks == null) {
-            pushedBlocks = new CollectionLinkedToCollection<>(((org.bukkit.event.block.BlockPistonRetractEvent) event()).getBlocks(), o -> o.as(org.bukkit.block.Block.class), Blocks::wrapBlock);
+            pushedBlocks = new CollectionLinkedToCollection<>(((org.bukkit.event.block.BlockPistonRetractEvent) event()).getBlocks(), o -> o.as(org.bukkit.block.Block.class), BukkitBlock::new);
         }
         return pushedBlocks;
     }

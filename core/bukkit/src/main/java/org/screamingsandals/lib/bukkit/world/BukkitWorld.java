@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.particle.BukkitParticleConverter;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
@@ -193,7 +193,7 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
 
     @Override
     public @NotNull Block getHighestBlockAt(int x, int z) {
-        return Blocks.wrapBlock(wrappedObject.getHighestBlockAt(x, z));
+        return new BukkitBlock(wrappedObject.getHighestBlockAt(x, z));
     }
 
     @Override

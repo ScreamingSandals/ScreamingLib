@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.BlockExplodeEvent;
 import org.screamingsandals.lib.utils.CollectionLinkedToCollection;
@@ -46,7 +46,7 @@ public class BukkitBlockExplodeEvent implements BlockExplodeEvent, BukkitCancell
     @Override
     public @NotNull Block block() {
         if (block == null) {
-            block = Blocks.wrapBlock(event.getBlock());
+            block = new BukkitBlock(event.getBlock());
         }
         return block;
     }
@@ -54,7 +54,7 @@ public class BukkitBlockExplodeEvent implements BlockExplodeEvent, BukkitCancell
     @Override
     public @NotNull Collection<@NotNull Block> destroyedBlocks() {
         if (destroyed == null) {
-            destroyed = new CollectionLinkedToCollection<>(event.blockList(), o -> o.as(org.bukkit.block.Block.class), Blocks::wrapBlock);
+            destroyed = new CollectionLinkedToCollection<>(event.blockList(), o -> o.as(org.bukkit.block.Block.class), BukkitBlock::new);
         }
         return destroyed;
     }

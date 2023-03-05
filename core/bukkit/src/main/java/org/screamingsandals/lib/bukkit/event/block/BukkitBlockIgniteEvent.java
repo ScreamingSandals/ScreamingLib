@@ -23,7 +23,7 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
@@ -39,20 +39,20 @@ public class BukkitBlockIgniteEvent implements BlockIgniteEvent, BukkitCancellab
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final org.bukkit.event.block.BlockIgniteEvent event;
+    private final org.bukkit.event.block.@NotNull BlockIgniteEvent event;
 
     // Internal cache
-    private Block block;
-    private IgniteCause igniteCause;
-    private Block ignitingBlock;
+    private @Nullable Block block;
+    private @Nullable IgniteCause igniteCause;
+    private @Nullable Block ignitingBlock;
     private boolean ignitingBlockConverted;
-    private BasicEntity ignitingEntity;
+    private @Nullable BasicEntity ignitingEntity;
     private boolean ignitingEntityConverted;
 
     @Override
     public @NotNull Block block() {
         if (block == null) {
-            block = Blocks.wrapBlock(event.getBlock());
+            block = new BukkitBlock(event.getBlock());
         }
         return block;
     }
@@ -69,7 +69,7 @@ public class BukkitBlockIgniteEvent implements BlockIgniteEvent, BukkitCancellab
     public @Nullable Block ignitingBlock() {
         if (!ignitingBlockConverted) {
             if (event.getIgnitingBlock() != null) {
-                ignitingBlock = Blocks.wrapBlock(event.getIgnitingBlock());
+                ignitingBlock = new BukkitBlock(event.getIgnitingBlock());
             }
             ignitingBlockConverted = true;
         }

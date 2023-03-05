@@ -142,7 +142,7 @@ public abstract class AbstractSignManager {
     public void onRightClick(@NotNull PlayerInteractEvent event) {
         if (event.action() == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
                 && event.clickedBlock() != null) {
-            var state = event.clickedBlock().<BlockSnapshot>getBlockState().orElseThrow();
+            var state = event.clickedBlock().blockSnapshot().orElseThrow();
             if (state instanceof SignBlockSnapshot) {
                 var location = new SignLocation(state.getLocation());
                 var sign = getSign(location);
@@ -164,7 +164,7 @@ public abstract class AbstractSignManager {
         }
 
         var player = event.player();
-        var state = event.block().<BlockSnapshot>getBlockState().orElseThrow();
+        var state = event.block().blockSnapshot().orElseThrow();
         if (state instanceof SignBlockSnapshot) {
             var location = new SignLocation(state.getLocation());
             if (isSignRegistered(location)) {
@@ -186,7 +186,7 @@ public abstract class AbstractSignManager {
 
         var player = event.player();
         if (isAllowedToEdit(player) && isFirstLineValid(event.line(0))) {
-            if (registerSign(new SignLocation(event.block().getLocation()), event.line(1))) {
+            if (registerSign(new SignLocation(event.block().location()), event.line(1))) {
                 player.sendMessage(signCreatedMessage(player));
             } else {
                 player.sendMessage(signCannotBeCreatedMessage(player));

@@ -22,8 +22,8 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
 import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.FluidLevelChangeEvent;
 
@@ -44,7 +44,7 @@ public class BukkitFluidLevelChangeEvent implements FluidLevelChangeEvent, Bukki
     @Override
     public @NotNull Block block() {
         if (block == null) {
-            block = Blocks.wrapBlock(event.getBlock());
+            block = new BukkitBlock(event.getBlock());
         }
         return block;
     }

@@ -23,9 +23,9 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
 import org.screamingsandals.lib.block.state.BlockSnapshot;
 import org.screamingsandals.lib.block.state.BlockSnapshots;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.MoistureChangeEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -48,7 +48,7 @@ public class BukkitMoistureChangeEvent implements MoistureChangeEvent, BukkitCan
     @Override
     public @NotNull Block block() {
         if (block == null) {
-            block = Blocks.wrapBlock(event.getBlock());
+            block = new BukkitBlock(event.getBlock());
         }
         return block;
     }

@@ -27,6 +27,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 import org.screamingsandals.lib.block.BlockTypeHolder;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
@@ -74,7 +75,7 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
 
     @Override
     public @NotNull Block getTargetBlock(@Nullable Collection<@NotNull BlockTypeHolder> transparent, int maxDistance) {
-        return Blocks.wrapBlock(((org.bukkit.entity.LivingEntity) wrappedObject)
+        return new BukkitBlock(((org.bukkit.entity.LivingEntity) wrappedObject)
                 .getTargetBlock((transparent == null) ? null : transparent
                         .stream()
                         .map(material -> material.as(Material.class))
@@ -83,8 +84,8 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
 
     @Override
     public @Nullable Block getTargetBlock(int maxDistance) {
-        return Blocks.resolve(((org.bukkit.entity.LivingEntity) wrappedObject)
-                .getTargetBlockExact(maxDistance));
+        var targetBlock = ((org.bukkit.entity.LivingEntity) wrappedObject).getTargetBlockExact(maxDistance);
+        return targetBlock != null ? new BukkitBlock(targetBlock) : null;
     }
 
     @Override

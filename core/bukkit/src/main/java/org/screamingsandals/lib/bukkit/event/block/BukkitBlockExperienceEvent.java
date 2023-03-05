@@ -23,7 +23,7 @@ import org.bukkit.event.block.BlockExpEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.event.block.BlockExperienceEvent;
 
 @Accessors(fluent = true)
@@ -42,7 +42,7 @@ public class BukkitBlockExperienceEvent implements BlockExperienceEvent {
     @Override
     public @NotNull Block block() {
         if (block == null) {
-            block = Blocks.wrapBlock(event.getBlock());
+            block = new BukkitBlock(event.getBlock());
         }
         return block;
     }

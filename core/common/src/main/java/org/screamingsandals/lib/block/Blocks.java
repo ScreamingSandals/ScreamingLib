@@ -34,7 +34,8 @@ import org.screamingsandals.lib.world.Locations;
 })
 public abstract class Blocks {
     protected final @NotNull BidirectionalConverter<Block> converter = BidirectionalConverter.<Block>build()
-            .registerP2W(Block.class, e -> e);
+            .registerP2W(Block.class, e -> e)
+            .registerP2W(Location.class, this::getBlockAt0);
 
     private static @Nullable Blocks mapping;
 
@@ -49,29 +50,9 @@ public abstract class Blocks {
         return Preconditions.checkNotNull(mapping, "Blocks is not initialized yet!").converter.convertNullable(obj);
     }
 
-    public static <T> Block wrapBlock(@NotNull T block) {
-        return Preconditions.checkNotNull(mapping, "Blocks is not initialized yet!").converter.convert(block);
-    }
-
-    public static <T> T convert(@NotNull Block holder, @NotNull Class<T> newType) {
-        return Preconditions.checkNotNull(mapping, "Blocks is not initialized yet!").converter.convert(holder, newType);
-    }
-
     public static @NotNull Block getBlockAt(@NotNull Location location) {
         return Preconditions.checkNotNull(mapping, "Blocks is not initialized yet!").getBlockAt0(location);
     }
 
-    public static void setBlockAt(@NotNull Location location, @NotNull BlockTypeHolder material, boolean ignorePhysics) {
-        Preconditions.checkNotNull(mapping, "Blocks is not initialized yet!").setBlockAt0(location, material, ignorePhysics);
-    }
-
-    public static void breakNaturally(@NotNull Location location) {
-        Preconditions.checkNotNull(mapping, "Blocks is not initialized yet!").breakNaturally0(location);
-    }
-
     protected abstract @NotNull Block getBlockAt0(@NotNull Location location);
-
-    protected abstract void setBlockAt0(@NotNull Location location, @NotNull BlockTypeHolder material, boolean ignorePhysics);
-
-    protected abstract void breakNaturally0(@NotNull Location location);
 }

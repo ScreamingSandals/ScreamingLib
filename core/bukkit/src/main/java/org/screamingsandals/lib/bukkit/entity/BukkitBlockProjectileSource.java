@@ -22,6 +22,7 @@ import org.bukkit.projectiles.BlockProjectileSource;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.entity.BlockProjectileShooter;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.ProjectileEntity;
@@ -29,7 +30,6 @@ import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
 
 public class BukkitBlockProjectileSource extends BasicWrapper<BlockProjectileSource> implements BlockProjectileShooter {
     public BukkitBlockProjectileSource(@NotNull BlockProjectileSource wrappedObject) {
@@ -58,6 +58,6 @@ public class BukkitBlockProjectileSource extends BasicWrapper<BlockProjectileSou
 
     @Override
     public @NotNull Block getBlock() {
-        return Blocks.wrapBlock(wrappedObject.getBlock());
+        return new BukkitBlock(wrappedObject.getBlock());
     }
 }

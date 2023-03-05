@@ -27,6 +27,7 @@ import org.screamingsandals.lib.block.Block;
 import org.screamingsandals.lib.block.Blocks;
 import org.screamingsandals.lib.block.state.BlockSnapshot;
 import org.screamingsandals.lib.block.state.BlockSnapshots;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.BlockFertilizeEvent;
@@ -67,7 +68,7 @@ public class BukkitBlockFertilizeEvent implements BlockFertilizeEvent, BukkitCan
     @Override
     public @NotNull Block block() {
         if (block == null) {
-            block = Blocks.wrapBlock(event.getBlock());
+            block = new BukkitBlock(event.getBlock());
         }
         return block;
     }

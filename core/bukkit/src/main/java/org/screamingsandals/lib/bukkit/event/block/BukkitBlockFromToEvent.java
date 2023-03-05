@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.block.BlockFromToEvent;
 import org.screamingsandals.lib.utils.BlockFace;
@@ -45,7 +45,7 @@ public class BukkitBlockFromToEvent implements BlockFromToEvent, BukkitCancellab
     @Override
     public @NotNull Block sourceBlock() {
         if (sourceBlock == null) {
-            sourceBlock = Blocks.wrapBlock(event.getBlock());
+            sourceBlock = new BukkitBlock(event.getBlock());
         }
         return sourceBlock;
     }
@@ -53,7 +53,7 @@ public class BukkitBlockFromToEvent implements BlockFromToEvent, BukkitCancellab
     @Override
     public @NotNull Block facedBlock() {
         if (facedBlock == null) {
-            facedBlock = Blocks.wrapBlock(event.getToBlock());
+            facedBlock = new BukkitBlock(event.getToBlock());
         }
         return facedBlock;
     }

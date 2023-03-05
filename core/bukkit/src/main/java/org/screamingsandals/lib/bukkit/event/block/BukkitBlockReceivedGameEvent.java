@@ -24,7 +24,7 @@ import org.bukkit.event.block.BlockReceiveGameEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
@@ -41,18 +41,18 @@ public class BukkitBlockReceivedGameEvent implements BlockReceivedGameEvent, Buk
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final BlockReceiveGameEvent event;
+    private final @NotNull BlockReceiveGameEvent event;
 
     // Internal cache
-    private Block block;
-    private BasicEntity entity;
+    private @Nullable Block block;
+    private @Nullable BasicEntity entity;
     private boolean entityConverted;
-    private NamespacedMappingKey underlyingEvent;
+    private @Nullable NamespacedMappingKey underlyingEvent;
 
     @Override
     public @NotNull Block block() {
         if (block == null) {
-            block = Blocks.wrapBlock(event.getBlock());
+            block = new BukkitBlock(event.getBlock());
         }
         return block;
     }

@@ -23,7 +23,7 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
@@ -39,18 +39,18 @@ public class BukkitCauldronLevelChangeEvent implements CauldronLevelChangeEvent,
     @Getter
     @EqualsAndHashCode.Include
     @ToString.Include
-    private final org.bukkit.event.block.CauldronLevelChangeEvent event;
+    private final org.bukkit.event.block.@NotNull CauldronLevelChangeEvent event;
 
     // Internal cache
-    private Block block;
-    private BasicEntity entity;
+    private @Nullable Block block;
+    private @Nullable BasicEntity entity;
     private boolean entityConverted;
-    private Reason reason;
+    private @Nullable Reason reason;
 
     @Override
     public @NotNull Block block() {
         if (block == null) {
-            block = Blocks.wrapBlock(event.getBlock());
+            block = new BukkitBlock(event.getBlock());
         }
         return block;
     }

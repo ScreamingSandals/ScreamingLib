@@ -34,7 +34,7 @@ public interface BlockSnapshot extends Wrapper, ContainerHolder {
     @NotNull Location getLocation();
 
     default @NotNull Block getBlock() {
-        return Blocks.wrapBlock(getLocation());
+        return Blocks.getBlockAt(getLocation());
     }
 
     default boolean updateBlock() {

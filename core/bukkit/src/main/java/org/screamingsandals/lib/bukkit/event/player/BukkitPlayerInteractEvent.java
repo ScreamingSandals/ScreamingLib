@@ -23,7 +23,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.event.NoAutoCancellable;
 import org.screamingsandals.lib.bukkit.item.BukkitItemView;
@@ -85,7 +85,7 @@ public class BukkitPlayerInteractEvent implements PlayerInteractEvent, NoAutoCan
     public @Nullable Block clickedBlock() {
         if (!clickedBlockCached) {
             if (event.getClickedBlock() != null) {
-                clickedBlock = Blocks.wrapBlock(event.getClickedBlock());
+                clickedBlock = new BukkitBlock(event.getClickedBlock());
             }
             clickedBlockCached = true;
         }

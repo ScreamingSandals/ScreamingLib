@@ -23,7 +23,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.event.NoAutoCancellable;
 import org.screamingsandals.lib.event.player.PlayerBedEnterEvent;
@@ -55,7 +55,7 @@ public class BukkitPlayerBedEnterEvent implements PlayerBedEnterEvent, NoAutoCan
     @Override
     public @NotNull Block bed() {
         if (bed == null) {
-            bed = Blocks.wrapBlock(event.getBed());
+            bed = new BukkitBlock(event.getBed());
         }
         return bed;
     }
