@@ -25,9 +25,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.item.Item;
 import org.screamingsandals.lib.packet.AbstractPacket;
-import org.screamingsandals.lib.packet.SClientboundRemoveEntitiesPacket;
-import org.screamingsandals.lib.packet.SClientboundSetEntityDataPacket;
-import org.screamingsandals.lib.packet.SClientboundSetEquipmentPacket;
+import org.screamingsandals.lib.packet.ClientboundRemoveEntitiesPacket;
+import org.screamingsandals.lib.packet.ClientboundSetEntityDataPacket;
+import org.screamingsandals.lib.packet.ClientboundSetEquipmentPacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
@@ -324,19 +324,19 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
                 });
             }
 
-            final var destroyPacket = new SClientboundRemoveEntitiesPacket();
             int[] arr = toRemove
                     .stream()
                     .mapToInt(i -> i)
                     .toArray();
 
             if (arr != null && arr.length > 0) {
+                final var destroyPacket = ClientboundRemoveEntitiesPacket.builder();
                 destroyPacket.entityIds(toRemove
                         .stream()
                         .mapToInt(i -> i)
                         .toArray()
                 );
-                packets.add(p -> List.of(destroyPacket));
+                packets.add(p -> List.of(destroyPacket.build()));
             }
         } catch (Throwable t) {
             t.printStackTrace();
@@ -345,14 +345,14 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         viewers.forEach(viewer -> update(viewer, packets.stream().map(f -> f.apply(viewer)).flatMap(Collection::stream).collect(Collectors.toList()), true));
     }
 
-    private SClientboundSetEquipmentPacket getEquipmentPacket(@NotNull HologramPiece entity, @NotNull Item item) {
-        var packet = new SClientboundSetEquipmentPacket()
-                .entityId(entity.getId());
-        packet.slots().put(EquipmentSlotHolder.of("HEAD"), item);
-        return packet;
+    private ClientboundSetEquipmentPacket getEquipmentPacket(@NotNull HologramPiece entity, @NotNull Item item) {
+        return ClientboundSetEquipmentPacket.builder()
+                .entityId(entity.getId())
+                .slots(Map.of(EquipmentSlotHolder.of("HEAD"), item))
+                .build();
     }
 
-    private SClientboundRemoveEntitiesPacket getFullDestroyPacket() {
+    private ClientboundRemoveEntitiesPacket getFullDestroyPacket() {
         final var lines = entitiesOnLines.values()
                 .stream()
                 .map(HologramPiece::getId);
@@ -366,11 +366,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
             toRemove = lines.mapToInt(i -> i).toArray();
         }
 
-        final var destroyPacket = new SClientboundRemoveEntitiesPacket();
-        if (toRemove != null && toRemove.length > 0) {
-            destroyPacket.entityIds(toRemove);
-        }
-        return destroyPacket;
+        return ClientboundRemoveEntitiesPacket.builder().entityIds(toRemove).build();
     }
 
     private @NotNull List<@NotNull AbstractPacket> getAllSpawnPackets(@NotNull PlayerWrapper viewer) {
@@ -425,9 +421,10 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
                         }
 
                         itemEntity.setHeadRotation(checkAndAdd(itemEntity.getHeadRotation()));
-                        final var metadataPacket = new SClientboundSetEntityDataPacket()
-                                .entityId(itemEntity.getId());
-                        metadataPacket.metadata().addAll(itemEntity.getMetadataItems());
+                        final var metadataPacket = ClientboundSetEntityDataPacket.builder()
+                                .entityId(itemEntity.getId())
+                                .metadata(itemEntity.getMetadataItems())
+                                .build();
                         viewers.forEach(player -> update(player, List.of(metadataPacket), false));
                     })
                     .repeat(rotationTime.getFirst(), rotationTime.getSecond())

@@ -161,11 +161,6 @@ public class BukkitEntityPlayer extends BukkitEntityHuman implements PlayerWrapp
     }
 
     @Override
-    public void sendMessage(@NotNull String message) {
-        wrappedObject.sendMessage(message);
-    }
-
-    @Override
     public @NotNull String getName() {
         return wrappedObject.getName();
     }

@@ -19,6 +19,7 @@ package org.screamingsandals.lib.utils;
 import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.Wrapper;
 
 import java.util.HashMap;
 import java.util.Map;

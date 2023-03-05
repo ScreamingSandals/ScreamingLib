@@ -20,7 +20,7 @@ import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 
 import java.util.UUID;
 

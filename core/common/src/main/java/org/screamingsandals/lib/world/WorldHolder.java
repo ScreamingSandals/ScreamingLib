@@ -23,7 +23,7 @@ import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
 import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
 import org.screamingsandals.lib.world.dimension.DimensionHolder;

@@ -16,7 +16,7 @@
 
 package org.screamingsandals.lib.utils.mapper;
 
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.key.MappingKey;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 

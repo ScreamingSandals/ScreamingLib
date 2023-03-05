@@ -252,50 +252,54 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     }
     // INTERNAL METHODS
 
-    private @NotNull SClientboundSetObjectivePacket getCreateObjectivePacket(@NotNull PlayerWrapper player) {
-        var packet = getNotFinalObjectivePacket(player);
-        packet.mode(SClientboundSetObjectivePacket.Mode.CREATE);
-        return packet;
+    private @NotNull ClientboundSetObjectivePacket getCreateObjectivePacket(@NotNull PlayerWrapper player) {
+        return getNotFinalObjectivePacket(player)
+                .mode(ClientboundSetObjectivePacket.Mode.CREATE)
+                .build();
     }
 
-    private @NotNull SClientboundSetObjectivePacket getUpdateObjectivePacket(@NotNull PlayerWrapper player) {
-        var packet = getNotFinalObjectivePacket(player);
-        packet.mode(SClientboundSetObjectivePacket.Mode.UPDATE);
-        return packet;
+    private @NotNull ClientboundSetObjectivePacket getUpdateObjectivePacket(@NotNull PlayerWrapper player) {
+        return getNotFinalObjectivePacket(player)
+                .mode(ClientboundSetObjectivePacket.Mode.UPDATE)
+                .build();
     }
 
-    private @NotNull SClientboundSetObjectivePacket getNotFinalObjectivePacket(@NotNull PlayerWrapper player) {
-        return new SClientboundSetObjectivePacket()
+    private @NotNull ClientboundSetObjectivePacket.ClientboundSetObjectivePacketBuilder getNotFinalObjectivePacket(@NotNull PlayerWrapper player) {
+        return ClientboundSetObjectivePacket.builder()
                 .objectiveKey(objectiveKey)
                 .title(title.asComponent(player))
-                .criteriaType(SClientboundSetObjectivePacket.Type.INTEGER);
+                .criteriaType(ClientboundSetObjectivePacket.Type.INTEGER);
     }
 
-    private @NotNull SClientboundSetObjectivePacket getDestroyObjectivePacket() {
-        return new SClientboundSetObjectivePacket()
+    private @NotNull ClientboundSetObjectivePacket getDestroyObjectivePacket() {
+        return ClientboundSetObjectivePacket.builder()
                 .objectiveKey(objectiveKey)
-                .mode(SClientboundSetObjectivePacket.Mode.DESTROY);
+                .mode(ClientboundSetObjectivePacket.Mode.DESTROY)
+                .build();
     }
 
-    private @NotNull SClientboundSetDisplayObjectivePacket getDisplayObjectivePacket() {
-        return new SClientboundSetDisplayObjectivePacket()
+    private @NotNull ClientboundSetDisplayObjectivePacket getDisplayObjectivePacket() {
+        return ClientboundSetDisplayObjectivePacket.builder()
                 .objectiveKey(objectiveKey)
-                .slot(SClientboundSetDisplayObjectivePacket.DisplaySlot.SIDEBAR);
+                .slot(ClientboundSetDisplayObjectivePacket.DisplaySlot.SIDEBAR)
+                .build();
     }
 
-    private @NotNull SClientboundSetScorePacket getCreateScorePacket(int i, @NotNull String value) {
-        return new SClientboundSetScorePacket()
+    private @NotNull ClientboundSetScorePacket getCreateScorePacket(int i, @NotNull String value) {
+        return ClientboundSetScorePacket.builder()
                 .entityName(value)
                 .objectiveKey(objectiveKey)
                 .score(i)
-                .action(SClientboundSetScorePacket.ScoreboardAction.CHANGE);
+                .action(ClientboundSetScorePacket.ScoreboardAction.CHANGE)
+                .build();
     }
 
-    private @NotNull SClientboundSetScorePacket destroyScore(@NotNull String value) {
-        return new SClientboundSetScorePacket()
+    private @NotNull ClientboundSetScorePacket destroyScore(@NotNull String value) {
+        return ClientboundSetScorePacket.builder()
                 .entityName(value)
                 .objectiveKey(objectiveKey)
-                .action(SClientboundSetScorePacket.ScoreboardAction.REMOVE);
+                .action(ClientboundSetScorePacket.ScoreboardAction.REMOVE)
+                .build();
     }
 
     public @NotNull String makeUnique(@Nullable String toUnique, @NotNull List<@NotNull String> from) {

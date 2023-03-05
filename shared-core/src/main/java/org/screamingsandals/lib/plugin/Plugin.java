@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 import java.nio.file.Path;

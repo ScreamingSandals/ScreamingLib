@@ -19,7 +19,7 @@ package org.screamingsandals.lib.entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
 public interface ProjectileShooter extends Wrapper {

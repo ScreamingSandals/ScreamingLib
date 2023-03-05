@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
+@file:Suppress("NOTHING_TO_INLINE")
+
 package org.screamingsandals.lib.kotlin
 
-import org.jetbrains.annotations.ApiStatus
 import org.screamingsandals.lib.container.Container
 import org.screamingsandals.lib.entity.EntityBasic
 import org.screamingsandals.lib.event.Cancellable
@@ -26,11 +27,15 @@ import org.screamingsandals.lib.item.Item
 import org.screamingsandals.lib.player.PlayerWrapper
 import org.screamingsandals.lib.spectator.Component
 import org.screamingsandals.lib.utils.ComparableWrapper
-import org.screamingsandals.lib.utils.Wrapper
+import org.screamingsandals.lib.api.Wrapper
+import org.screamingsandals.lib.item.ItemTypeHolder
+import org.screamingsandals.lib.item.builder.ItemFactory
+import org.screamingsandals.lib.spectator.ComponentLike
 import org.screamingsandals.lib.utils.math.Vector2D
 import org.screamingsandals.lib.utils.math.Vector3D
 import org.screamingsandals.lib.utils.math.Vector3Df
 import org.screamingsandals.lib.utils.math.Vector3Di
+import org.screamingsandals.lib.utils.visual.TextEntry
 import org.screamingsandals.lib.visuals.LinedVisual
 import org.screamingsandals.lib.visuals.Visual
 import org.screamingsandals.lib.world.LocationHolder
@@ -38,61 +43,163 @@ import org.screamingsandals.lib.world.WorldHolder
 import java.util.concurrent.CompletableFuture
 import kotlin.reflect.KClass
 
-infix fun <T : Any> Wrapper.unwrap(type: KClass<T>): T = this.`as`(type.java)
-@ApiStatus.Experimental
-infix fun ComparableWrapper.compare(type: Any): Boolean = this.`is`(type)
-@ApiStatus.Experimental
-fun ComparableWrapper.compare(vararg type: Any): Boolean = this.`is`(type)
+// wrapper
+inline infix fun <T : Any> Wrapper.unwrap(type: KClass<T>): T = this.`as`(type.java)
 
-fun <K : SEvent> K.fire(): K = EventManager.fire(this)
-infix fun <K : SEvent> K.fire(manager: EventManager): K = manager.fireEvent(this)
+// comparableWrapper in stringArray|stringCollection|string|anotherComparableWrapper
 
-fun <K : SEvent> K.fireAsync(): CompletableFuture<K> = EventManager.fireAsync(this)
-infix fun <K : SEvent> K.fireAsync(manager: EventManager): CompletableFuture<K> = manager.fireEventAsync(this)
+inline operator fun Array<String>.contains(holder: ComparableWrapper): Boolean = holder.`is`(*this)
+inline operator fun Collection<String>.contains(holder: ComparableWrapper): Boolean = holder.`is`(*this.toTypedArray())
+inline operator fun String.contains(holder: ComparableWrapper): Boolean = holder.`is`(this)
+inline operator fun <T : ComparableWrapper> T.contains(holder: T): Boolean = holder == this
 
-operator fun Vector2D.unaryMinus(): Vector2D = this.clone().invert()
-operator fun Vector2D.plus(vec: Vector2D): Vector2D = this.clone().add(vec)
-operator fun Vector2D.minus(vec: Vector2D): Vector2D = this.clone().subtract(vec)
-operator fun Vector2D.times(multiplier: Double): Vector2D = this.clone().multiply(multiplier)
+// events
 
-operator fun Vector3D.unaryMinus(): Vector3D = this.clone().invert()
-operator fun Vector3D.plus(vec: Vector3D): Vector3D = this.clone().add(vec)
-operator fun Vector3D.minus(vec: Vector3D): Vector3D = this.clone().subtract(vec)
-operator fun Vector3D.times(multiplier: Double): Vector3D = this.clone().multiply(multiplier)
+inline fun <K : SEvent> K.fire(): K = EventManager.fire(this)
+inline infix fun <K : SEvent> K.fire(manager: EventManager): K = manager.fireEvent(this)
 
-operator fun Vector3Df.unaryMinus(): Vector3Df = this.clone().invert()
-operator fun Vector3Df.plus(vec: Vector3Df): Vector3Df = this.clone().add(vec)
-operator fun Vector3Df.minus(vec: Vector3Df): Vector3Df = this.clone().subtract(vec)
-operator fun Vector3Df.times(multiplier: Float): Vector3Df = this.clone().multiply(multiplier)
+inline fun <K : SEvent> K.fireAsync(): CompletableFuture<K> = EventManager.fireAsync(this)
+inline infix fun <K : SEvent> K.fireAsync(manager: EventManager): CompletableFuture<K> = manager.fireEventAsync(this)
 
-operator fun Vector3Di.unaryMinus(): Vector3Di = this.clone().invert()
-operator fun Vector3Di.plus(vec: Vector3Di): Vector3Di = this.clone().add(vec)
-operator fun Vector3Di.minus(vec: Vector3Di): Vector3Di = this.clone().subtract(vec)
-operator fun Vector3Di.times(multiplier: Int): Vector3Di = this.clone().multiply(multiplier)
+inline var Cancellable.cancelled: Boolean
+    get() = cancelled()
+    set(value) = cancelled(value)
 
-operator fun WorldHolder.contains(entity: EntityBasic): Boolean = this == entity.location.world
+// newVector = vector1 +|- vector2;
+// inverseVector = -vector3
 
-operator fun LocationHolder.minus(loc: LocationHolder): Double = this.getDistanceSquared(loc)
+inline operator fun Vector2D.unaryMinus(): Vector2D = this.clone().invert()
+inline operator fun Vector2D.plus(vec: Vector2D): Vector2D = this.clone().add(vec)
+inline operator fun Vector2D.minus(vec: Vector2D): Vector2D = this.clone().subtract(vec)
+inline operator fun Vector2D.times(multiplier: Double): Vector2D = this.clone().multiply(multiplier)
 
-operator fun Container.plusAssign(item: Item) {
+inline operator fun Vector3D.unaryMinus(): Vector3D = this.clone().invert()
+inline operator fun Vector3D.plus(vec: Vector3D): Vector3D = this.clone().add(vec)
+inline operator fun Vector3D.minus(vec: Vector3D): Vector3D = this.clone().subtract(vec)
+inline operator fun Vector3D.times(multiplier: Double): Vector3D = this.clone().multiply(multiplier)
+
+inline operator fun Vector3Df.unaryMinus(): Vector3Df = this.clone().invert()
+inline operator fun Vector3Df.plus(vec: Vector3Df): Vector3Df = this.clone().add(vec)
+inline operator fun Vector3Df.minus(vec: Vector3Df): Vector3Df = this.clone().subtract(vec)
+inline operator fun Vector3Df.times(multiplier: Float): Vector3Df = this.clone().multiply(multiplier)
+
+inline operator fun Vector3Di.unaryMinus(): Vector3Di = this.clone().invert()
+inline operator fun Vector3Di.plus(vec: Vector3Di): Vector3Di = this.clone().add(vec)
+inline operator fun Vector3Di.minus(vec: Vector3Di): Vector3Di = this.clone().subtract(vec)
+inline operator fun Vector3Di.times(multiplier: Int): Vector3Di = this.clone().multiply(multiplier)
+
+inline operator fun WorldHolder.contains(entity: EntityBasic): Boolean = this == entity.location.world
+
+// distance = location1 - location2
+
+inline operator fun LocationHolder.minus(loc: LocationHolder): Double = this.getDistanceSquared(loc)
+
+// newLocation = location +|- vector
+
+inline operator fun LocationHolder.plus(vec: Vector3D): LocationHolder = this.add(vec)
+inline operator fun LocationHolder.plus(vec: Vector3Df): LocationHolder = this.add(vec)
+inline operator fun LocationHolder.plus(vec: Vector3Di): LocationHolder = this.add(vec)
+inline operator fun LocationHolder.minus(vec: Vector3D): LocationHolder = this.subtract(vec)
+inline operator fun LocationHolder.minus(vec: Vector3Df): LocationHolder = this.subtract(vec)
+inline operator fun LocationHolder.minus(vec: Vector3Di): LocationHolder = this.subtract(vec)
+
+// container += item|items
+
+inline operator fun Container.plusAssign(type: String) {
+    this.addItem(ItemFactory.build(type)!!)
+}
+
+inline operator fun Container.plusAssign(item: Item) {
     this.addItem(item)
 }
-operator fun Container.minusAssign(item: Item) {
+
+inline operator fun Container.plusAssign(items: Array<Item>) {
+    this.addItem(*items)
+}
+
+inline operator fun Container.plusAssign(items: Collection<Item>) {
+    this.addItem(*items.toTypedArray())
+}
+
+inline operator fun Container.plusAssign(container: Container) {
+    container.contents?.forEach {
+        if (it != null) {
+            this.addItem(it)
+        }
+    }
+}
+
+// container -= item|items
+
+inline operator fun Container.minusAssign(type: String) {
+    this.removeItem(ItemFactory.build(type)!!)
+}
+
+inline operator fun Container.minusAssign(item: Item) {
     this.removeItem(item)
 }
 
-operator fun Visual<*>.plusAssign(viewer: PlayerWrapper) {
+inline operator fun Container.minusAssign(items: Array<Item>) {
+    this.removeItem(*items)
+}
+
+inline operator fun Container.minusAssign(items: Collection<Item>) {
+    this.removeItem(*items.toTypedArray())
+}
+
+// container[id] = string|Item
+
+inline operator fun Container.get(slot: Int): Item? = this.getItem(slot)
+inline operator fun Container.set(slot: Int, item: Item?) = this.setItem(slot, item)
+inline operator fun Container.set(slot: Int, type: String?) = this.setItem(slot, ItemFactory.build(type))
+inline operator fun Container.contains(type: String) = this.contains(ItemTypeHolder.of(type))
+
+// visual +=|-= viewer|viewers; viewer in visual
+
+inline operator fun Visual<*>.plusAssign(viewer: PlayerWrapper) {
     this.addViewer(viewer)
 }
-operator fun Visual<*>.minusAssign(viewer: PlayerWrapper) {
+inline operator fun Visual<*>.plusAssign(viewers: Collection<PlayerWrapper>) {
+    viewers.forEach { this.addViewer(it) }
+}
+inline operator fun Visual<*>.minusAssign(viewer: PlayerWrapper) {
     this.removeViewer(viewer)
 }
-operator fun Visual<*>.contains(viewer: PlayerWrapper) = this.visibleTo(viewer)
+inline operator fun Visual<*>.minusAssign(viewers: Collection<PlayerWrapper>) {
+    viewers.forEach { this.removeViewer(it) }
+}
+inline operator fun Visual<*>.contains(viewer: PlayerWrapper) = this.visibleTo(viewer)
 
-operator fun LinedVisual<*>.plusAssign(line: Component) {
+// linedVisual += componentLike; linedVisual[line]
+
+inline operator fun LinedVisual<*>.plusAssign(line: ComponentLike) {
     this.newLine(this.lines().size, line)
 }
+inline operator fun LinedVisual<*>.get(line: Int): TextEntry? = this.lines()[line]
+inline operator fun LinedVisual<*>.set(line: Int, entry: TextEntry) {
+    this.replaceLine(line, entry)
+}
+inline operator fun LinedVisual<*>.set(line: Int, text: Component) {
+    this.replaceLine(line, text)
+}
 
-var Cancellable.cancelled: Boolean
-    get() = cancelled()
-    set(value) = cancelled(value)
+// entity +=|-= passenger; passenger in entity
+
+inline operator fun EntityBasic.plusAssign(entity: EntityBasic) {
+    this.addPassenger(entity)
+}
+inline operator fun EntityBasic.minusAssign(entity: EntityBasic) {
+    this.removePassenger(entity)
+}
+inline operator fun EntityBasic.contains(entity: EntityBasic) = this.passengers.contains(entity)
+
+// entity tp location|anotherEntity
+
+inline infix fun EntityBasic.tp(loc: LocationHolder): CompletableFuture<Boolean> = this.teleport(loc)
+inline infix fun EntityBasic.tp(entity: EntityBasic): CompletableFuture<Boolean> = this.teleport(entity.location)
+
+// newItem = itemType * 5; newItem = newItem * 6; newItem++; newItem--
+inline operator fun ItemTypeHolder.times(amount: Int): Item = ItemFactory.builder().type(this).amount(amount).build()!!
+inline operator fun Item.times(amount: Int): Item = this.withAmount(amount)
+inline operator fun Item.inc(): Item = this.withAmount(amount + 1)
+inline operator fun Item.dec(): Item = this.withAmount(amount - 1)

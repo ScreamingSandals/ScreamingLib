@@ -18,7 +18,7 @@ package org.screamingsandals.lib.proxy;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;

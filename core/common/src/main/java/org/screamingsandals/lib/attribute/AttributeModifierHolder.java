@@ -18,7 +18,7 @@ package org.screamingsandals.lib.attribute;
 
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 
 import java.util.UUID;
 

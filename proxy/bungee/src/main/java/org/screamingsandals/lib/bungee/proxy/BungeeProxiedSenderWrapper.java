@@ -17,7 +17,6 @@
 package org.screamingsandals.lib.bungee.proxy;
 
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bungee.spectator.audience.adapter.BungeeAdapter;
@@ -39,11 +38,6 @@ public class BungeeProxiedSenderWrapper extends BasicWrapper<CommandSender> impl
     @Override
     public @NotNull Type getType() {
         return wrappedObject instanceof ProxiedPlayer ? Type.PLAYER : Type.UNKNOWN;
-    }
-
-    @Override
-    public void sendMessage(@NotNull String message) {
-        wrappedObject.sendMessage(TextComponent.fromLegacyText(message));
     }
 
     @Override

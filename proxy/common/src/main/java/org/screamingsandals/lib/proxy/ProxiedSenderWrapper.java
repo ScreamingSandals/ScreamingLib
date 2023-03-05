@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.proxy;
 
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 
 public interface ProxiedSenderWrapper extends Wrapper, CommandSenderWrapper {
 

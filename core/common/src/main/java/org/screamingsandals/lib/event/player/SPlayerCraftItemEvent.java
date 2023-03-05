@@ -17,9 +17,8 @@
 package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.utils.*;
 
 public interface SPlayerCraftItemEvent extends SPlayerInventoryClickEvent {

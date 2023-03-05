@@ -170,14 +170,15 @@ public class FakeEntity {
 
     public @NotNull List<@NotNull AbstractPacket> getSpawnPackets(@NotNull List<@NotNull MetadataItem> additionalMetadata) {
         final var toReturn = new LinkedList<AbstractPacket>();
-        final var spawnPacket = new SClientboundAddMobPacket()
+        final var spawnPacket = ClientboundAddMobPacket.builder()
                 .entityId(id)
                 .uuid(uuid)
                 .typeId(typeId)
                 .velocity(new Vector3D(0, 0, 0))
                 .headYaw((byte) 3.9f)
-                .location(location);
-        spawnPacket.metadata().addAll(metadataItems);
+                .location(location)
+                .metadata(metadataItems)
+                .build();
         additionalMetadata.forEach(metadataItem -> {
             spawnPacket.metadata().removeIf(metadataItem1 -> metadataItem1.getIndex() == metadataItem.getIndex());
             spawnPacket.metadata().add(metadataItem);
@@ -186,18 +187,19 @@ public class FakeEntity {
         return toReturn;
     }
 
-    public @NotNull SClientboundTeleportEntityPacket getTeleportPacket() {
-        return new SClientboundTeleportEntityPacket()
+    public @NotNull ClientboundTeleportEntityPacket getTeleportPacket() {
+        return ClientboundTeleportEntityPacket.builder()
                 .entityId(id)
                 .location(location)
-                .onGround(isOnGround);
+                .onGround(isOnGround)
+                .build();
     }
 
-    public @NotNull SClientboundSetEntityDataPacket getMetadataPacket() {
+    public @NotNull ClientboundSetEntityDataPacket getMetadataPacket() {
         return getMetadataPacket(List.of());
     }
 
-    public @NotNull SClientboundSetEntityDataPacket getMetadataPacket(@NotNull PlayerWrapper viewer) {
+    public @NotNull ClientboundSetEntityDataPacket getMetadataPacket(@NotNull PlayerWrapper viewer) {
         if (customNameSenderMessage != null) {
             if (Server.isVersion(1, 13)) {
                 return getMetadataPacket(List.of(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), customNameSenderMessage.asComponent(viewer))));
@@ -212,15 +214,16 @@ public class FakeEntity {
         return getMetadataPacket(List.of());
     }
 
-    public @NotNull SClientboundSetEntityDataPacket getMetadataPacket(@NotNull List<@NotNull MetadataItem> additionalMetadata) {
-        final var metadataPacket = new SClientboundSetEntityDataPacket()
-                .entityId(id);
-        metadataPacket.metadata().addAll(metadataItems);
+    public @NotNull ClientboundSetEntityDataPacket getMetadataPacket(@NotNull List<@NotNull MetadataItem> additionalMetadata) {
+        var newMetadataItems = new ArrayList<>(metadataItems);
         additionalMetadata.forEach(metadataItem -> {
-            metadataPacket.metadata().removeIf(metadataItem1 -> metadataItem1.getIndex() == metadataItem.getIndex());
-            metadataPacket.metadata().add(metadataItem);
+            newMetadataItems.removeIf(metadataItem1 -> metadataItem1.getIndex() == metadataItem.getIndex());
+            newMetadataItems.add(metadataItem);
         });
-        return metadataPacket;
+        return ClientboundSetEntityDataPacket.builder()
+                .entityId(id)
+                .metadata(newMetadataItems)
+                .build();
     }
 
     // TODO: Make this into a separate class

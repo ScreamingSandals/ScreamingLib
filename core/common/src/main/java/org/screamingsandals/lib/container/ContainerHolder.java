@@ -18,7 +18,7 @@ package org.screamingsandals.lib.container;
 
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 
 public interface ContainerHolder extends Wrapper, RawValueHolder {
     boolean holdsInventory();

@@ -24,9 +24,9 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.packet.AbstractPacket;
-import org.screamingsandals.lib.packet.SClientboundSetDisplayObjectivePacket;
-import org.screamingsandals.lib.packet.SClientboundSetObjectivePacket;
-import org.screamingsandals.lib.packet.SClientboundSetScorePacket;
+import org.screamingsandals.lib.packet.ClientboundSetDisplayObjectivePacket;
+import org.screamingsandals.lib.packet.ClientboundSetObjectivePacket;
+import org.screamingsandals.lib.packet.ClientboundSetScorePacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeamImpl;
@@ -261,53 +261,57 @@ public class ScoreSidebarImpl extends AbstractVisual<ScoreSidebar> implements Sc
 
     // INTERNAL METHODS
 
-    private @NotNull SClientboundSetObjectivePacket getCreateObjectivePacket(@NotNull PlayerWrapper player) {
-        var packet = notFinalObjectivePacket(player);
-        packet.mode(SClientboundSetObjectivePacket.Mode.CREATE);
-        return packet;
+    private @NotNull ClientboundSetObjectivePacket getCreateObjectivePacket(@NotNull PlayerWrapper player) {
+        return notFinalObjectivePacket(player)
+                .mode(ClientboundSetObjectivePacket.Mode.CREATE)
+                .build();
     }
 
-    private @NotNull SClientboundSetObjectivePacket getUpdateObjectivePacket(@NotNull PlayerWrapper player) {
-        var packet = notFinalObjectivePacket(player);
-        packet.mode(SClientboundSetObjectivePacket.Mode.UPDATE);
-        return packet;
+    private @NotNull ClientboundSetObjectivePacket getUpdateObjectivePacket(@NotNull PlayerWrapper player) {
+        return notFinalObjectivePacket(player)
+                .mode(ClientboundSetObjectivePacket.Mode.UPDATE)
+                .build();
     }
 
-    private @NotNull SClientboundSetObjectivePacket notFinalObjectivePacket(@NotNull PlayerWrapper player) {
-        return new SClientboundSetObjectivePacket()
+    private @NotNull ClientboundSetObjectivePacket.ClientboundSetObjectivePacketBuilder notFinalObjectivePacket(@NotNull PlayerWrapper player) {
+        return ClientboundSetObjectivePacket.builder()
                 .objectiveKey(objectiveKey)
                 .title(title.asComponent(player))
-                .criteriaType(SClientboundSetObjectivePacket.Type.INTEGER);
+                .criteriaType(ClientboundSetObjectivePacket.Type.INTEGER);
     }
 
-    private @NotNull SClientboundSetObjectivePacket getDestroyObjectivePacket() {
-        return new SClientboundSetObjectivePacket()
+    private @NotNull ClientboundSetObjectivePacket getDestroyObjectivePacket() {
+        return ClientboundSetObjectivePacket.builder()
                 .objectiveKey(objectiveKey)
-                .mode(SClientboundSetObjectivePacket.Mode.DESTROY);
+                .mode(ClientboundSetObjectivePacket.Mode.DESTROY)
+                .build();
     }
 
-    private @NotNull SClientboundSetDisplayObjectivePacket getDisplayObjectivePacket() {
-        return new SClientboundSetDisplayObjectivePacket()
-                .slot(SClientboundSetDisplayObjectivePacket.DisplaySlot.SIDEBAR)
-                .objectiveKey(objectiveKey);
+    private @NotNull ClientboundSetDisplayObjectivePacket getDisplayObjectivePacket() {
+        return ClientboundSetDisplayObjectivePacket.builder()
+                .slot(ClientboundSetDisplayObjectivePacket.DisplaySlot.SIDEBAR)
+                .objectiveKey(objectiveKey)
+                .build();
     }
 
-    private @NotNull SClientboundSetScorePacket createScorePacket(int i, @NotNull String value) {
-        return new SClientboundSetScorePacket()
+    private @NotNull ClientboundSetScorePacket createScorePacket(int i, @NotNull String value) {
+        return ClientboundSetScorePacket.builder()
                 .entityName(value)
                 .objectiveKey(objectiveKey)
                 .score(i)
-                .action(SClientboundSetScorePacket.ScoreboardAction.CHANGE);
+                .action(ClientboundSetScorePacket.ScoreboardAction.CHANGE)
+                .build();
     }
 
-    private @NotNull SClientboundSetScorePacket destroyScore(@NotNull String value) {
-        return new SClientboundSetScorePacket()
+    private @NotNull ClientboundSetScorePacket destroyScore(@NotNull String value) {
+        return ClientboundSetScorePacket.builder()
                 .entityName(value)
                 .objectiveKey(objectiveKey)
-                .action(SClientboundSetScorePacket.ScoreboardAction.REMOVE);
+                .action(ClientboundSetScorePacket.ScoreboardAction.REMOVE)
+                .build();
     }
 
-    private @NotNull List<@NotNull SClientboundSetScorePacket> allScores() {
+    private @NotNull List<@NotNull ClientboundSetScorePacket> allScores() {
         return lines
                 .stream()
                 .map(entry -> createScorePacket(entry.getScore(), entry.getCache()))

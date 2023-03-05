@@ -16,7 +16,7 @@
 
 package org.screamingsandals.lib.sidebar.team;
 
-import org.screamingsandals.lib.packet.SClientboundSetPlayerTeamPacket;
+import org.screamingsandals.lib.packet.ClientboundSetPlayerTeamPacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public interface ScoreboardTeam extends PlayerAudience.ForwardingToMulti {
 
-    ScoreboardTeam color(SClientboundSetPlayerTeamPacket.TeamColor color);
+    ScoreboardTeam color(ClientboundSetPlayerTeamPacket.TeamColor color);
 
     ScoreboardTeam displayName(Component component);
 
@@ -37,9 +37,9 @@ public interface ScoreboardTeam extends PlayerAudience.ForwardingToMulti {
 
     ScoreboardTeam seeInvisible(boolean seeInvisible);
 
-    ScoreboardTeam nameTagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility nameTagVisibility);
+    ScoreboardTeam nameTagVisibility(ClientboundSetPlayerTeamPacket.TagVisibility nameTagVisibility);
 
-    ScoreboardTeam collisionRule(SClientboundSetPlayerTeamPacket.CollisionRule collisionRule);
+    ScoreboardTeam collisionRule(ClientboundSetPlayerTeamPacket.CollisionRule collisionRule);
 
     ScoreboardTeam player(PlayerWrapper player);
 
@@ -47,7 +47,7 @@ public interface ScoreboardTeam extends PlayerAudience.ForwardingToMulti {
 
     String identifier();
 
-    SClientboundSetPlayerTeamPacket.TeamColor color();
+    ClientboundSetPlayerTeamPacket.TeamColor color();
 
     Component displayName();
 
@@ -59,9 +59,9 @@ public interface ScoreboardTeam extends PlayerAudience.ForwardingToMulti {
 
     boolean seeInvisible();
 
-    SClientboundSetPlayerTeamPacket.TagVisibility nameTagVisibility();
+    ClientboundSetPlayerTeamPacket.TagVisibility nameTagVisibility();
 
-    SClientboundSetPlayerTeamPacket.CollisionRule collisionRule();
+    ClientboundSetPlayerTeamPacket.CollisionRule collisionRule();
 
     List<PlayerWrapper> players();
 

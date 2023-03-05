@@ -20,6 +20,7 @@ import lombok.*;
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.block.BlockHolder;
 import org.screamingsandals.lib.entity.EntityBasic;
 import org.screamingsandals.lib.particle.ParticleHolder;
@@ -27,8 +28,8 @@ import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
+import org.screamingsandals.lib.utils.math.Vector3Di;
 import org.screamingsandals.lib.world.chunk.ChunkHolder;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -121,6 +122,17 @@ public class LocationHolder implements Wrapper, Serializable {
     }
 
     /**
+     * Clones the current location and increments the coordinates by the XYZ values of the supplied {@link Vector3Di}.
+     *
+     * @param vec the vector to add
+     * @return the new location
+     */
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull LocationHolder add(@NotNull Vector3Di vec) {
+        return add(vec.getX(), vec.getY(), vec.getZ());
+    }
+
+    /**
      * Clones the current location and increments the coordinates by the XYZ values of the supplied {@link BlockFace#getBlockDirection()}.
      *
      * @param blockFace the block face to add
@@ -190,6 +202,18 @@ public class LocationHolder implements Wrapper, Serializable {
      */
     @Contract(value = "_ -> new", pure = true)
     public @NotNull LocationHolder subtract(@NotNull Vector3Df vec) {
+        return subtract(vec.getX(), vec.getY(), vec.getZ());
+    }
+
+
+    /**
+     * Clones the current location and decrements the coordinates by the XYZ values of the supplied {@link Vector3Di}.
+     *
+     * @param vec the vector to subtract
+     * @return the new location
+     */
+    @Contract(value = "_ -> new", pure = true)
+    public @NotNull LocationHolder subtract(@NotNull Vector3Di vec) {
         return subtract(vec.getX(), vec.getY(), vec.getZ());
     }
 

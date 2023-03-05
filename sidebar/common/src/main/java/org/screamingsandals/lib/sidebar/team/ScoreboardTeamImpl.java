@@ -19,7 +19,7 @@ package org.screamingsandals.lib.sidebar.team;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.packet.SClientboundSetPlayerTeamPacket;
+import org.screamingsandals.lib.packet.ClientboundSetPlayerTeamPacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.sender.CommandSenderWrapper;
 import org.screamingsandals.lib.sidebar.TeamedSidebar;
@@ -36,14 +36,14 @@ import java.util.stream.Collectors;
 public class ScoreboardTeamImpl implements ScoreboardTeam {
     protected final TeamedSidebar<?> scoreboard;
     protected final String identifier;
-    protected SClientboundSetPlayerTeamPacket.TeamColor color = SClientboundSetPlayerTeamPacket.TeamColor.WHITE;
+    protected ClientboundSetPlayerTeamPacket.TeamColor color = ClientboundSetPlayerTeamPacket.TeamColor.WHITE;
     protected Component displayName = Component.empty();
     protected Component teamPrefix = Component.empty();
     protected Component teamSuffix = Component.empty();
     protected boolean friendlyFire = true;
     protected boolean seeInvisible = true;
-    protected SClientboundSetPlayerTeamPacket.TagVisibility nameTagVisibility = SClientboundSetPlayerTeamPacket.TagVisibility.ALWAYS;
-    protected SClientboundSetPlayerTeamPacket.CollisionRule collisionRule = SClientboundSetPlayerTeamPacket.CollisionRule.ALWAYS;
+    protected ClientboundSetPlayerTeamPacket.TagVisibility nameTagVisibility = ClientboundSetPlayerTeamPacket.TagVisibility.ALWAYS;
+    protected ClientboundSetPlayerTeamPacket.CollisionRule collisionRule = ClientboundSetPlayerTeamPacket.CollisionRule.ALWAYS;
     protected final List<PlayerWrapper> players = new LinkedList<>();
     private final String teamKey;
 
@@ -59,7 +59,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public ScoreboardTeam color(SClientboundSetPlayerTeamPacket.TeamColor color) {
+    public ScoreboardTeam color(ClientboundSetPlayerTeamPacket.TeamColor color) {
         this.color = color;
         updateInfo();
         return this;
@@ -101,14 +101,14 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public ScoreboardTeam nameTagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility nameTagVisibility) {
+    public ScoreboardTeam nameTagVisibility(ClientboundSetPlayerTeamPacket.TagVisibility nameTagVisibility) {
         this.nameTagVisibility = nameTagVisibility;
         updateInfo();
         return this;
     }
 
     @Override
-    public ScoreboardTeam collisionRule(SClientboundSetPlayerTeamPacket.CollisionRule collisionRule) {
+    public ScoreboardTeam collisionRule(ClientboundSetPlayerTeamPacket.CollisionRule collisionRule) {
         this.collisionRule = collisionRule;
         updateInfo();
         return this;
@@ -142,24 +142,24 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
         return players();
     }
 
-    public SClientboundSetPlayerTeamPacket constructDestructPacket() {
-        return getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.REMOVE);
+    public ClientboundSetPlayerTeamPacket constructDestructPacket() {
+        return getNotFinalScoreboardTeamPacket(ClientboundSetPlayerTeamPacket.Mode.REMOVE).build();
     }
 
-    private SClientboundSetPlayerTeamPacket getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode mode) {
-        return new SClientboundSetPlayerTeamPacket()
+    private ClientboundSetPlayerTeamPacket.ClientboundSetPlayerTeamPacketBuilder getNotFinalScoreboardTeamPacket(ClientboundSetPlayerTeamPacket.Mode mode) {
+        return ClientboundSetPlayerTeamPacket.builder()
                 .teamKey(teamKey)
                 .mode(mode);
     }
 
-    public SClientboundSetPlayerTeamPacket constructCreatePacket() {
-        var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.CREATE);
+    public ClientboundSetPlayerTeamPacket constructCreatePacket() {
+        var packet = getNotFinalScoreboardTeamPacket(ClientboundSetPlayerTeamPacket.Mode.CREATE);
         packInfo(packet);
         packPlayers(packet, players);
-        return packet;
+        return packet.build();
     }
 
-    private void packInfo(SClientboundSetPlayerTeamPacket packet) {
+    private void packInfo(ClientboundSetPlayerTeamPacket.ClientboundSetPlayerTeamPacketBuilder packet) {
         packet.displayName(displayName)
                 .friendlyFire(friendlyFire)
                 .seeInvisible(seeInvisible)
@@ -170,31 +170,31 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
                 .teamSuffix(teamSuffix);
     }
 
-    private void packPlayers(SClientboundSetPlayerTeamPacket packet, List<PlayerWrapper> players) {
+    private void packPlayers(ClientboundSetPlayerTeamPacket.ClientboundSetPlayerTeamPacketBuilder packet, List<PlayerWrapper> players) {
         packet.entities(players.stream().map(CommandSenderWrapper::getName).collect(Collectors.toList()));
     }
 
     protected void updateInfo() {
         if (scoreboard.shown() && scoreboard.hasViewers()) {
-            var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.UPDATE);
+            var packet = getNotFinalScoreboardTeamPacket(ClientboundSetPlayerTeamPacket.Mode.UPDATE);
             packInfo(packet);
-            packet.sendPacket(scoreboard.viewers());
+            packet.build().sendPacket(scoreboard.viewers());
         }
     }
 
     protected void sendAddPlayer(PlayerWrapper player) {
         if (scoreboard.shown() && scoreboard.hasViewers()) {
-            var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.ADD_ENTITY);
+            var packet = getNotFinalScoreboardTeamPacket(ClientboundSetPlayerTeamPacket.Mode.ADD_ENTITY);
             packPlayers(packet, List.of(player));
-            packet.sendPacket(scoreboard.viewers());
+            packet.build().sendPacket(scoreboard.viewers());
         }
     }
 
     protected void sendRemovePlayer(PlayerWrapper player) {
         if (scoreboard.shown() && scoreboard.hasViewers()) {
-            var packet = getNotFinalScoreboardTeamPacket(SClientboundSetPlayerTeamPacket.Mode.REMOVE_ENTITY);
+            var packet = getNotFinalScoreboardTeamPacket(ClientboundSetPlayerTeamPacket.Mode.REMOVE_ENTITY);
             packPlayers(packet, List.of(player));
-            packet.sendPacket(scoreboard.viewers());
+            packet.build().sendPacket(scoreboard.viewers());
         }
     }
 

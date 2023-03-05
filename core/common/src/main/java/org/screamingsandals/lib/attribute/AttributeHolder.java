@@ -18,7 +18,7 @@ package org.screamingsandals.lib.attribute;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 
 import java.util.List;
 

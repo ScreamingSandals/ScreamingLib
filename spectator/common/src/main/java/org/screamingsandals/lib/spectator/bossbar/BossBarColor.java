@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.spectator.bossbar;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 
 public enum BossBarColor implements Wrapper {
     PINK,

@@ -20,7 +20,6 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.permission.Tristate;
 import com.velocitypowered.api.proxy.ConsoleCommandSource;
 import com.velocitypowered.api.proxy.Player;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventureAdapter;
 import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventurePlayerAdapter;
@@ -41,11 +40,6 @@ public class VelocityProxiedSenderWrapper extends BasicWrapper<CommandSource> im
     @Override
     public @NotNull Type getType() {
         return wrappedObject instanceof Player ? Type.PLAYER : (wrappedObject instanceof ConsoleCommandSource ? Type.CONSOLE : Type.UNKNOWN);
-    }
-
-    @Override
-    public void sendMessage(@NotNull String message) {
-        wrappedObject.sendMessage(LegacyComponentSerializer.legacySection().deserialize(message));
     }
 
     @Override

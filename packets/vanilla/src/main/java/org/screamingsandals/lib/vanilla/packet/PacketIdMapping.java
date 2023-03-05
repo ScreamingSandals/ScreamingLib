@@ -33,43 +33,43 @@ public class PacketIdMapping {
     private static final @NotNull Map<@NotNull Class<? extends AbstractPacket>, Integer> ID_CACHE = new ConcurrentHashMap<>();
 
     static {
-        putTranslateSafely(SClientboundAddEntityPacket.class, ClientboundAddEntityPacketAccessor.getType());
-        putTranslateSafely(SClientboundAddMobPacket.class, ClientboundAddMobPacketAccessor.getType());
-        putTranslateSafely(SClientboundAddPlayerPacket.class, ClientboundAddPlayerPacketAccessor.getType());
-        putTranslateSafely(SClientboundAnimatePacket.class, ClientboundAnimatePacketAccessor.getType());
-        putTranslateSafely(SClientboundBlockDestructionPacket.class, ClientboundBlockDestructionPacketAccessor.getType());
-        putTranslateSafely(SClientboundBlockEventPacket.class, ClientboundBlockEventPacketAccessor.getType());
-        putTranslateSafely(SClientboundBlockUpdatePacket.class, ClientboundBlockUpdatePacketAccessor.getType());
-        putTranslateSafely(SClientboundContainerClosePacket.class, ClientboundContainerClosePacketAccessor.getType());
-        putTranslateSafely(SClientboundDisconnectPacket.class, ClientboundDisconnectPacketAccessor.getType());
-        putTranslateSafely(SClientboundEntityEventPacket.class, ClientboundEntityEventPacketAccessor.getType());
-        putTranslateSafely(SClientboundExplodePacket.class, ClientboundExplodePacketAccessor.getType());
-        putTranslateSafely(SClientboundForgetLevelChunkPacket.class, ClientboundForgetLevelChunkPacketAccessor.getType());
-        putTranslateSafely(SClientboundMoveEntityPacket.Rot.class, ClientboundMoveEntityPacket_i_RotAccessor.getType());
-        putTranslateSafely(SClientboundMoveEntityPacket.Pos.class, ClientboundMoveEntityPacket_i_PosAccessor.getType());
-        putTranslateSafely(SClientboundMoveEntityPacket.PosRot.class, ClientboundMoveEntityPacket_i_PosRotAccessor.getType());
-        putTranslateSafely(SClientboundPlayerAbilitiesPacket.class, ClientboundPlayerAbilitiesPacketAccessor.getType());
-        putTranslateSafely(SClientboundPlayerInfoPacket.class, ClientboundPlayerInfoPacketAccessor.getType()); // < 1.19.2
-        putTranslateSafely(SClientboundPlayerInfoPacket.class, ClientboundPlayerInfoUpdatePacketAccessor.getType()); // 1.19.3+
-        putTranslateSafely(SClientboundPlayerInfoPacket.PlayerInfoRemovePacket1_19_3.class, ClientboundPlayerInfoRemovePacketAccessor.getType()); // 1.19.3+
-        putTranslateSafely(SClientboundRemoveEntitiesPacket.class, ClientboundRemoveEntitiesPacketAccessor.getType());
-        putTranslateSafely(SClientboundRemoveMobEffectPacket.class, ClientboundRemoveMobEffectPacketAccessor.getType());
-        putTranslateSafely(SClientboundRotateHeadPacket.class, ClientboundRotateHeadPacketAccessor.getType());
-        putTranslateSafely(SClientboundSetCameraPacket.class, ClientboundSetCameraPacketAccessor.getType());
-        putTranslateSafely(SClientboundSetCarriedItemPacket.class, ClientboundSetCarriedItemPacketAccessor.getType());
-        putTranslateSafely(SClientboundSetDisplayObjectivePacket.class, ClientboundSetDisplayObjectivePacketAccessor.getType());
-        putTranslateSafely(SClientboundSetEntityDataPacket.class, ClientboundSetEntityDataPacketAccessor.getType());
-        putTranslateSafely(SClientboundSetEntityLinkPacket.class, ClientboundSetEntityLinkPacketAccessor.getType());
-        putTranslateSafely(SClientboundSetEntityMotionPacket.class, ClientboundSetEntityMotionPacketAccessor.getType());
-        putTranslateSafely(SClientboundSetEquipmentPacket.class, ClientboundSetEquipmentPacketAccessor.getType());
-        putTranslateSafely(SClientboundSetExperiencePacket.class, ClientboundSetExperiencePacketAccessor.getType());
-        putTranslateSafely(SClientboundSetObjectivePacket.class, ClientboundSetObjectivePacketAccessor.getType());
-        putTranslateSafely(SClientboundSetPlayerTeamPacket.class, ClientboundSetPlayerTeamPacketAccessor.getType());
-        putTranslateSafely(SClientboundSetScorePacket.class, ClientboundSetScorePacketAccessor.getType());
-        putTranslateSafely(SClientboundTabListPacket.class, ClientboundTabListPacketAccessor.getType());
-        putTranslateSafely(SClientboundTakeItemEntityPacket.class, ClientboundTakeItemEntityPacketAccessor.getType());
-        putTranslateSafely(SClientboundTeleportEntityPacket.class, ClientboundTeleportEntityPacketAccessor.getType());
-        putTranslateSafely(SClientboundUpdateMobEffectPacket.class, ClientboundUpdateMobEffectPacketAccessor.getType());
+        putTranslateSafely(ClientboundAddEntityPacket.class, ClientboundAddEntityPacketAccessor.getType());
+        putTranslateSafely(ClientboundAddMobPacket.class, ClientboundAddMobPacketAccessor.getType());
+        putTranslateSafely(ClientboundAddPlayerPacket.class, ClientboundAddPlayerPacketAccessor.getType());
+        putTranslateSafely(ClientboundAnimatePacket.class, ClientboundAnimatePacketAccessor.getType());
+        putTranslateSafely(ClientboundBlockDestructionPacket.class, ClientboundBlockDestructionPacketAccessor.getType());
+        putTranslateSafely(ClientboundBlockEventPacket.class, ClientboundBlockEventPacketAccessor.getType());
+        putTranslateSafely(ClientboundBlockUpdatePacket.class, ClientboundBlockUpdatePacketAccessor.getType());
+        putTranslateSafely(ClientboundContainerClosePacket.class, ClientboundContainerClosePacketAccessor.getType());
+        putTranslateSafely(ClientboundDisconnectPacket.class, ClientboundDisconnectPacketAccessor.getType());
+        putTranslateSafely(ClientboundEntityEventPacket.class, ClientboundEntityEventPacketAccessor.getType());
+        putTranslateSafely(ClientboundExplodePacket.class, ClientboundExplodePacketAccessor.getType());
+        putTranslateSafely(ClientboundForgetLevelChunkPacket.class, ClientboundForgetLevelChunkPacketAccessor.getType());
+        putTranslateSafely(ClientboundMoveEntityPacket.Rot.class, ClientboundMoveEntityPacket_i_RotAccessor.getType());
+        putTranslateSafely(ClientboundMoveEntityPacket.Pos.class, ClientboundMoveEntityPacket_i_PosAccessor.getType());
+        putTranslateSafely(ClientboundMoveEntityPacket.PosRot.class, ClientboundMoveEntityPacket_i_PosRotAccessor.getType());
+        putTranslateSafely(ClientboundPlayerAbilitiesPacket.class, ClientboundPlayerAbilitiesPacketAccessor.getType());
+        putTranslateSafely(ClientboundPlayerInfoPacket.class, ClientboundPlayerInfoPacketAccessor.getType()); // < 1.19.2
+        putTranslateSafely(ClientboundPlayerInfoPacket.class, ClientboundPlayerInfoUpdatePacketAccessor.getType()); // 1.19.3+
+        putTranslateSafely(ClientboundPlayerInfoPacket.PlayerInfoRemovePacket1_19_3.class, ClientboundPlayerInfoRemovePacketAccessor.getType()); // 1.19.3+
+        putTranslateSafely(ClientboundRemoveEntitiesPacket.class, ClientboundRemoveEntitiesPacketAccessor.getType());
+        putTranslateSafely(ClientboundRemoveMobEffectPacket.class, ClientboundRemoveMobEffectPacketAccessor.getType());
+        putTranslateSafely(ClientboundRotateHeadPacket.class, ClientboundRotateHeadPacketAccessor.getType());
+        putTranslateSafely(ClientboundSetCameraPacket.class, ClientboundSetCameraPacketAccessor.getType());
+        putTranslateSafely(ClientboundSetCarriedItemPacket.class, ClientboundSetCarriedItemPacketAccessor.getType());
+        putTranslateSafely(ClientboundSetDisplayObjectivePacket.class, ClientboundSetDisplayObjectivePacketAccessor.getType());
+        putTranslateSafely(ClientboundSetEntityDataPacket.class, ClientboundSetEntityDataPacketAccessor.getType());
+        putTranslateSafely(ClientboundSetEntityLinkPacket.class, ClientboundSetEntityLinkPacketAccessor.getType());
+        putTranslateSafely(ClientboundSetEntityMotionPacket.class, ClientboundSetEntityMotionPacketAccessor.getType());
+        putTranslateSafely(ClientboundSetEquipmentPacket.class, ClientboundSetEquipmentPacketAccessor.getType());
+        putTranslateSafely(ClientboundSetExperiencePacket.class, ClientboundSetExperiencePacketAccessor.getType());
+        putTranslateSafely(ClientboundSetObjectivePacket.class, ClientboundSetObjectivePacketAccessor.getType());
+        putTranslateSafely(ClientboundSetPlayerTeamPacket.class, ClientboundSetPlayerTeamPacketAccessor.getType());
+        putTranslateSafely(ClientboundSetScorePacket.class, ClientboundSetScorePacketAccessor.getType());
+        putTranslateSafely(ClientboundTabListPacket.class, ClientboundTabListPacketAccessor.getType());
+        putTranslateSafely(ClientboundTakeItemEntityPacket.class, ClientboundTakeItemEntityPacketAccessor.getType());
+        putTranslateSafely(ClientboundTeleportEntityPacket.class, ClientboundTeleportEntityPacketAccessor.getType());
+        putTranslateSafely(ClientboundUpdateMobEffectPacket.class, ClientboundUpdateMobEffectPacketAccessor.getType());
     }
 
     private static void putTranslateSafely(@NotNull Class<? extends AbstractPacket> packetClass, @Nullable Class<?> clazz) {

@@ -20,17 +20,13 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.sender.permissions.Permission;
 import org.screamingsandals.lib.sender.permissions.SimplePermission;
 import org.screamingsandals.lib.spectator.audience.Audience;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 
 import java.util.Locale;
 
 public interface CommandSenderWrapper extends Wrapper, Operator, Audience.ForwardingToAdapter {
 
     @NotNull Type getType();
-
-    @Deprecated // legacy message ew
-    void sendMessage(@NotNull String message);
-
     default boolean hasPermission(@NotNull String permission) {
         return hasPermission(SimplePermission.of(permission));
     }

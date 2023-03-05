@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 
 import java.util.Collection;
 import java.util.List;

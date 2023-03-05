@@ -19,7 +19,7 @@ package org.screamingsandals.lib.player;
 import lombok.experimental.Delegate;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.spectator.audience.adapter.PlayerAdapter;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 
 public class ExtendablePlayerWrapper implements PlayerWrapper {
     @Delegate(types = PlayerWrapper.class, excludes = Wrapper.class)

@@ -18,6 +18,7 @@ package org.screamingsandals.lib.utils;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.api.Wrapper;
 
 public interface ComparableWrapper extends Wrapper {
     /**

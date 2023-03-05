@@ -16,6 +16,8 @@
 
 package org.screamingsandals.lib.utils;
 
+import org.screamingsandals.lib.api.Wrapper;
+
 public interface NormalizableWrapper<N extends NormalizableWrapper<N>> extends Wrapper {
     /**
      * Normalizes the object by removing unsupported fields and converting deprecated.

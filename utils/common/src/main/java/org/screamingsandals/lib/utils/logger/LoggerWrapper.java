@@ -16,7 +16,7 @@
 
 package org.screamingsandals.lib.utils.logger;
 
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 
 public interface LoggerWrapper extends Wrapper {
 

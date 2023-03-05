@@ -30,7 +30,7 @@ import org.screamingsandals.lib.spectator.utils.SimpleTextReplacement;
 import org.screamingsandals.lib.spectator.utils.TextToComponentReplacement;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.TriState;
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 

@@ -27,7 +27,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.visuals.TouchableVisual;
 import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.packet.SClientboundSetPlayerTeamPacket;
+import org.screamingsandals.lib.packet.ClientboundSetPlayerTeamPacket;
 
 import java.util.List;
 
@@ -134,7 +134,7 @@ public interface NPC extends TouchableVisual<NPC> {
      */
     @NotNull NPC hologramElevation(double hologramElevation);
 
-    SClientboundSetPlayerTeamPacket.@NotNull CollisionRule collisionRule();
+    ClientboundSetPlayerTeamPacket.@NotNull CollisionRule collisionRule();
 
-    @NotNull NPC collisionRule(SClientboundSetPlayerTeamPacket.@NotNull CollisionRule collisionRule);
+    @NotNull NPC collisionRule(ClientboundSetPlayerTeamPacket.@NotNull CollisionRule collisionRule);
 }

@@ -64,11 +64,11 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     private final @NotNull String tabName16;
     private @NotNull Component tabListName;
     @Getter(AccessLevel.NONE)
-    private final @NotNull List<SClientboundPlayerInfoPacket. @NotNull Property> properties;
+    private final @NotNull List<ClientboundPlayerInfoPacket. @NotNull Property> properties;
     private @Nullable NPCSkin skin;
     private volatile boolean lookAtPlayer;
     private final @NotNull List<@NotNull MetadataItem> metadata;
-    private SClientboundSetPlayerTeamPacket.@NotNull CollisionRule collisionRule;
+    private ClientboundSetPlayerTeamPacket.@NotNull CollisionRule collisionRule;
     private final @NotNull Map<@NotNull UUID, TaskerTask> hiderTask;
     private double hologramElevation;
 
@@ -88,7 +88,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         this.metadata = new ArrayList<>();
         this.properties = new ArrayList<>();
         this.hiderTask = new ConcurrentHashMap<>();
-        this.collisionRule = SClientboundSetPlayerTeamPacket.CollisionRule.ALWAYS;
+        this.collisionRule = ClientboundSetPlayerTeamPacket.CollisionRule.ALWAYS;
         metadata.add(MetadataItem.of((byte) SkinLayerValues.findLayerByVersion(), (byte) 127));
     }
 
@@ -105,7 +105,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         properties.removeIf(property -> "textures".equals(property.name()));
         if (skin != null) {
             properties.add(
-                    new SClientboundPlayerInfoPacket.Property(
+                    new ClientboundPlayerInfoPacket.Property(
                             "textures",
                             skin.getValue(),
                             skin.getSignature()
@@ -137,8 +137,8 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     public void onViewerRemoved(@NotNull PlayerWrapper viewer, boolean checkDistance) {
         if (viewer.isOnline()) {
             hologram.removeViewer(viewer);
-            createPlayerTeamPacket(SClientboundSetPlayerTeamPacket.Mode.REMOVE).sendPacket(viewer);
-            createPlayerInfoPacket(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER).sendPacket(viewer);
+            createPlayerTeamPacket(ClientboundSetPlayerTeamPacket.Mode.REMOVE).sendPacket(viewer);
+            createPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.REMOVE_PLAYER).sendPacket(viewer);
             removeEntityPacket().sendPacket(viewer);
             cancelTabHide(viewer);
         }
@@ -147,16 +147,18 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     @Override
     public void lookAtLocation(@NotNull LocationHolder location, @NotNull PlayerWrapper player) {
         final var direction = location().setDirection(player.getLocation().subtract(location()).asVector());
-        new SClientboundMoveEntityPacket.Rot()
+        ClientboundMoveEntityPacket.Rot.builder()
                 .entityId(entityId())
                 .yaw((byte) (direction.getYaw() * 256.0F / 360.0F))
                 .pitch((byte) (direction.getPitch() * 256.0F / 360.0F))
                 .onGround(true)
+                .build()
                 .sendPacket(player);
 
-        new SClientboundRotateHeadPacket()
+        ClientboundRotateHeadPacket.builder()
                 .entityId(entityId())
                 .headYaw(direction.getYaw())
+                .build()
                 .sendPacket(player);
     }
 
@@ -184,10 +186,11 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                 case POSITION:
                     hologram.location(location().add(0.0D, 1.5D, 0.0D));
                     hologram.update(UpdateStrategy.POSITION);
-                    new SClientboundTeleportEntityPacket()
+                    ClientboundTeleportEntityPacket.builder()
                             .location(location())
                             .entityId(entityId)
                             .onGround(true)
+                            .build()
                             .sendPacket(viewers());
                     break;
                 case ALL:
@@ -261,9 +264,10 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
                 return;
             }
             //remove npc from TabList
-            new SClientboundPlayerInfoPacket()
-                    .action(SClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
+            ClientboundPlayerInfoPacket.builder()
+                    .action(ClientboundPlayerInfoPacket.Action.REMOVE_PLAYER)
                     .data(getNPCInfoData())
+                    .build()
                     .sendPacket(viewer);
         }).delay(6L, TaskerTime.SECONDS).start();
     }
@@ -273,71 +277,78 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
         if (IS_BUNGEE) {
             spawnPackets.add(
-                    createPlayerTeamPacket(SClientboundSetPlayerTeamPacket.Mode.REMOVE)
+                    createPlayerTeamPacket(ClientboundSetPlayerTeamPacket.Mode.REMOVE)
             );
         }
 
-        spawnPackets.add(createPlayerTeamPacket(SClientboundSetPlayerTeamPacket.Mode.CREATE));
-        spawnPackets.add(createPlayerInfoPacket(SClientboundPlayerInfoPacket.Action.ADD_PLAYER));
+        spawnPackets.add(createPlayerTeamPacket(ClientboundSetPlayerTeamPacket.Mode.CREATE));
+        spawnPackets.add(createPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER));
 
         // protocol < 550: sending metadata as part of AddPlayerPacket; protocol >= 550, packet lib will split this packet into to as supposed to be
         spawnPackets.add(
-                new SClientboundAddPlayerPacket()
+                ClientboundAddPlayerPacket.builder()
                         .entityId(entityId)
                         .uuid(uuid())
                         .location(location())
                         .metadata(metadata)
+                        .build()
         );
 
         spawnPackets.add(
-                new SClientboundMoveEntityPacket.Rot()
+                ClientboundMoveEntityPacket.Rot.builder()
                         .entityId(entityId())
                         .yaw((byte) (location().getYaw() * 256.0F / 360.0F))
                         .pitch((byte) (location().getPitch() * 256.0F / 360.0F))
                         .onGround(true)
+                        .build()
         );
 
         spawnPackets.add(
-                new SClientboundRotateHeadPacket()
+                ClientboundRotateHeadPacket.builder()
                         .entityId(entityId())
                         .headYaw(location().getYaw())
+                        .build()
         );
 
         return spawnPackets;
     }
 
-    private @NotNull SClientboundRemoveEntitiesPacket removeEntityPacket() {
-        return new SClientboundRemoveEntitiesPacket()
-                .entityIds(new int[]{entityId()});
+    private @NotNull ClientboundRemoveEntitiesPacket removeEntityPacket() {
+        return ClientboundRemoveEntitiesPacket.builder()
+                .entityIds(new int[]{entityId()})
+                .build();
     }
 
-    private @NotNull SClientboundPlayerInfoPacket createPlayerInfoPacket(
-            SClientboundPlayerInfoPacket.@NotNull Action action
+    private @NotNull ClientboundPlayerInfoPacket createPlayerInfoPacket(
+            ClientboundPlayerInfoPacket.@NotNull Action action
     ) {
-        return new SClientboundPlayerInfoPacket()
+        return ClientboundPlayerInfoPacket.builder()
                 .action(action)
-                .data(getNPCInfoData());
+                .data(getNPCInfoData())
+                .build();
     }
 
-    private @NotNull SClientboundSetPlayerTeamPacket createPlayerTeamPacket(
-            SClientboundSetPlayerTeamPacket.@NotNull Mode mode
+    private @NotNull ClientboundSetPlayerTeamPacket createPlayerTeamPacket(
+            ClientboundSetPlayerTeamPacket.@NotNull Mode mode
     ) {
-        return new SClientboundSetPlayerTeamPacket()
+        return ClientboundSetPlayerTeamPacket
+                .builder()
                 .teamKey(tabName16)
                 .mode(mode)
                 .displayName(tabListName)
                 .collisionRule(collisionRule)
-                .tagVisibility(SClientboundSetPlayerTeamPacket.TagVisibility.NEVER)
-                .teamColor(SClientboundSetPlayerTeamPacket.TeamColor.BLACK)
+                .tagVisibility(ClientboundSetPlayerTeamPacket.TagVisibility.NEVER)
+                .teamColor(ClientboundSetPlayerTeamPacket.TeamColor.BLACK)
                 .teamPrefix(Component.empty())
                 .teamSuffix(Component.empty())
                 .friendlyFire(false)
                 .seeInvisible(true)
-                .entities(Collections.singletonList(tabName16));
+                .entities(Collections.singletonList(tabName16))
+                .build();
     }
 
-    private @NotNull List<SClientboundPlayerInfoPacket.@NotNull PlayerInfoData> getNPCInfoData() {
-        return Collections.singletonList(new SClientboundPlayerInfoPacket.PlayerInfoData(
+    private @NotNull List<ClientboundPlayerInfoPacket.@NotNull PlayerInfoData> getNPCInfoData() {
+        return Collections.singletonList(new ClientboundPlayerInfoPacket.PlayerInfoData(
                 uuid(),
                 tabName16,
                 1,

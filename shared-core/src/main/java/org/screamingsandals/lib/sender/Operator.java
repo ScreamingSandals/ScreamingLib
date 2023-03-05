@@ -16,7 +16,7 @@
 
 package org.screamingsandals.lib.sender;
 
-import org.screamingsandals.lib.utils.Wrapper;
+import org.screamingsandals.lib.api.Wrapper;
 
 public interface Operator extends Wrapper {
     boolean isOp();

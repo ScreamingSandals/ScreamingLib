@@ -24,9 +24,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.EntityHuman;
 import org.screamingsandals.lib.packet.AbstractPacket;
-import org.screamingsandals.lib.packet.SClientboundSetDisplayObjectivePacket;
-import org.screamingsandals.lib.packet.SClientboundSetObjectivePacket;
-import org.screamingsandals.lib.packet.SClientboundSetScorePacket;
+import org.screamingsandals.lib.packet.ClientboundSetDisplayObjectivePacket;
+import org.screamingsandals.lib.packet.ClientboundSetObjectivePacket;
+import org.screamingsandals.lib.packet.ClientboundSetScorePacket;
 import org.screamingsandals.lib.player.PlayerWrapper;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -121,9 +121,9 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
 
             List.copyOf(values.keySet()).stream().filter(s -> trackedPlayers.stream().noneMatch(p -> p.getName().equals(s))).forEach(s -> {
                 values.remove(s);
-                packets.add(getDestroyScorePacket(s).objectiveKey(underNameTagKey));
+                packets.add(getDestroyScorePacket(s).objectiveKey(underNameTagKey).build());
                 if (healthInTabList) {
-                    packets.add(getDestroyScorePacket(s).objectiveKey(tabListKey));
+                    packets.add(getDestroyScorePacket(s).objectiveKey(tabListKey).build());
                 }
             });
 
@@ -137,9 +137,9 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
                 var key = playerWrapper.getName();
                 if (!values.containsKey(key) || values.get(key) != health) {
                     values.put(key, health);
-                    packets.add(createScorePacket(key, health).objectiveKey(underNameTagKey));
+                    packets.add(createScorePacket(key, health).objectiveKey(underNameTagKey).build());
                     if (healthInTabList) {
-                        packets.add(createScorePacket(key, health).objectiveKey(tabListKey));
+                        packets.add(createScorePacket(key, health).objectiveKey(tabListKey).build());
                     }
                 }
             });
@@ -202,11 +202,13 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
         if (visible) {
             getUpdateObjectivePacket()
                     .objectiveKey(underNameTagKey)
+                    .build()
                     .sendPacket(viewers);
 
             if (healthInTabList) {
                 getUpdateObjectivePacket()
                         .objectiveKey(tabListKey)
+                        .build()
                         .sendPacket(viewers);
             }
         }
@@ -217,26 +219,30 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
         if (visible) {
             getCreateObjectivePacket()
                     .objectiveKey(underNameTagKey)
+                    .build()
                     .sendPacket(player);
 
-            new SClientboundSetDisplayObjectivePacket()
+            ClientboundSetDisplayObjectivePacket.builder()
                     .objectiveKey(underNameTagKey)
-                    .slot(SClientboundSetDisplayObjectivePacket.DisplaySlot.BELOW_NAME)
+                    .slot(ClientboundSetDisplayObjectivePacket.DisplaySlot.BELOW_NAME)
+                    .build()
                     .sendPacket(player);
 
-            values.forEach((s, integer) -> createScorePacket(s, integer).objectiveKey(underNameTagKey).sendPacket(player));
+            values.forEach((s, integer) -> createScorePacket(s, integer).objectiveKey(underNameTagKey).build().sendPacket(player));
 
             if (healthInTabList) {
                 getCreateObjectivePacket()
                         .objectiveKey(tabListKey)
+                        .build()
                         .sendPacket(player);
 
-                new SClientboundSetDisplayObjectivePacket()
+                ClientboundSetDisplayObjectivePacket.builder()
                         .objectiveKey(tabListKey)
-                        .slot(SClientboundSetDisplayObjectivePacket.DisplaySlot.PLAYER_LIST)
+                        .slot(ClientboundSetDisplayObjectivePacket.DisplaySlot.PLAYER_LIST)
+                        .build()
                         .sendPacket(player);
 
-                values.forEach((s, integer) -> createScorePacket(s, integer).objectiveKey(tabListKey).sendPacket(player));
+                values.forEach((s, integer) -> createScorePacket(s, integer).objectiveKey(tabListKey).build().sendPacket(player));
             }
         }
     }
@@ -245,49 +251,47 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     public void onViewerRemoved(@NotNull PlayerWrapper player, boolean checkDistance) {
         getDestroyObjectivePacket()
                 .objectiveKey(underNameTagKey)
+                .build()
                 .sendPacket(player);
 
         if (healthInTabList) {
             getDestroyObjectivePacket()
                     .objectiveKey(tabListKey)
+                    .build()
                     .sendPacket(player);
         }
     }
 
-    private @NotNull SClientboundSetObjectivePacket getNotFinalObjectivePacket() {
-        return new SClientboundSetObjectivePacket()
+    private @NotNull ClientboundSetObjectivePacket.ClientboundSetObjectivePacketBuilder getNotFinalObjectivePacket() {
+        return ClientboundSetObjectivePacket.builder()
                 .title(symbol.asComponent())
-                .criteriaType(SClientboundSetObjectivePacket.Type.INTEGER);
+                .criteriaType(ClientboundSetObjectivePacket.Type.INTEGER);
     }
 
-    private @NotNull SClientboundSetObjectivePacket getCreateObjectivePacket() {
-        var packet = getNotFinalObjectivePacket();
-        packet.mode(SClientboundSetObjectivePacket.Mode.CREATE);
-        return packet;
+    private @NotNull ClientboundSetObjectivePacket.ClientboundSetObjectivePacketBuilder getCreateObjectivePacket() {
+        return getNotFinalObjectivePacket().mode(ClientboundSetObjectivePacket.Mode.CREATE);
     }
 
-    private @NotNull SClientboundSetObjectivePacket getUpdateObjectivePacket() {
-        var packet = getNotFinalObjectivePacket();
-        packet.mode(SClientboundSetObjectivePacket.Mode.UPDATE);
-        return packet;
+    private @NotNull ClientboundSetObjectivePacket.ClientboundSetObjectivePacketBuilder getUpdateObjectivePacket() {
+        return getNotFinalObjectivePacket().mode(ClientboundSetObjectivePacket.Mode.UPDATE);
     }
 
-    private @NotNull SClientboundSetObjectivePacket getDestroyObjectivePacket() {
-        return new SClientboundSetObjectivePacket()
-                .mode(SClientboundSetObjectivePacket.Mode.DESTROY);
+    private @NotNull ClientboundSetObjectivePacket.ClientboundSetObjectivePacketBuilder getDestroyObjectivePacket() {
+        return ClientboundSetObjectivePacket.builder()
+                .mode(ClientboundSetObjectivePacket.Mode.DESTROY);
     }
 
-    private @NotNull SClientboundSetScorePacket createScorePacket(@NotNull String key, int score) {
-        return new SClientboundSetScorePacket()
+    private @NotNull ClientboundSetScorePacket.ClientboundSetScorePacketBuilder createScorePacket(@NotNull String key, int score) {
+        return ClientboundSetScorePacket.builder()
                 .entityName(key)
                 .score(score)
-                .action(SClientboundSetScorePacket.ScoreboardAction.CHANGE);
+                .action(ClientboundSetScorePacket.ScoreboardAction.CHANGE);
     }
 
-    private @NotNull SClientboundSetScorePacket getDestroyScorePacket(@NotNull String key) {
-        return new SClientboundSetScorePacket()
+    private @NotNull ClientboundSetScorePacket.ClientboundSetScorePacketBuilder getDestroyScorePacket(@NotNull String key) {
+        return ClientboundSetScorePacket.builder()
                 .entityName(key)
-                .action(SClientboundSetScorePacket.ScoreboardAction.REMOVE);
+                .action(ClientboundSetScorePacket.ScoreboardAction.REMOVE);
     }
 
     private static String generateObjectiveKey() {
