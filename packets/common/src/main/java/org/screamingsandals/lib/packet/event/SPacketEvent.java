@@ -20,20 +20,20 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.SCancellableAsyncEvent;
-import org.screamingsandals.lib.event.player.SPlayerEvent;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.event.player.PlayerEvent;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.PacketMethod;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class SPacketEvent implements SPlayerEvent, SCancellableAsyncEvent {
-    private final @NotNull PlayerWrapper player;
+public class SPacketEvent implements PlayerEvent, SCancellableAsyncEvent {
+    private final @NotNull Player player;
     private final @NotNull PacketMethod method;
     private final @NotNull Object packet;
     private boolean cancelled;
 
     @Override
-    public @NotNull PlayerWrapper player() {
+    public @NotNull Player player() {
         return player;
     }
 

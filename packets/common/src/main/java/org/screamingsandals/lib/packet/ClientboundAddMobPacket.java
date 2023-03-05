@@ -22,7 +22,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.math.Vector3D;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +34,7 @@ import java.util.UUID;
 public class ClientboundAddMobPacket extends AbstractPacket {
     private final int entityId;
     private final @NotNull UUID uuid;
-    private final @NotNull LocationHolder location;
+    private final @NotNull Location location;
     private final @NotNull Vector3D velocity;
     private final int typeId;
     @Builder.Default private final @NotNull List<@NotNull MetadataItem> metadata = List.of();

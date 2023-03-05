@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.event.SCancellableAsyncEvent;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.visuals.Visual;
 
@@ -30,7 +30,7 @@ import org.screamingsandals.lib.visuals.Visual;
 @EqualsAndHashCode(callSuper = false)
 @Data
 public class VisualsTouchEvent<T extends Visual<T>> implements SCancellableAsyncEvent {
-    private final @NotNull PlayerWrapper player;
+    private final @NotNull Player player;
     private final @NotNull T visual;
     private final @NotNull InteractType interactType;
     private boolean cancelled;

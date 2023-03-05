@@ -23,12 +23,12 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.ClientboundRemoveEntitiesPacket;
 import org.screamingsandals.lib.packet.ClientboundSetEntityDataPacket;
 import org.screamingsandals.lib.packet.ClientboundSetEquipmentPacket;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.tasker.Tasker;
@@ -41,7 +41,7 @@ import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.visual.SimpleCLTextEntry;
 import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.visuals.impl.AbstractLinedVisual;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -57,8 +57,8 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     @Getter(AccessLevel.NONE)
     private volatile @Nullable HologramPiece itemEntity;
     private volatile @Nullable TaskerTask rotationTask;
-    private @NotNull LocationHolder cachedLocation;
-    private @NotNull LocationHolder location;
+    private @NotNull Location cachedLocation;
+    private @NotNull Location location;
     private int viewDistance;
     private boolean touchable;
     private boolean created;
@@ -66,11 +66,11 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     private float rotationIncrement;
     private @NotNull Pair<@NotNull Integer, @NotNull TaskerTime> rotationTime;
     private @NotNull RotationMode rotationMode;
-    private @Nullable Item item;
+    private @Nullable ItemStack item;
     private @NotNull ItemPosition itemPosition;
     private long clickCooldown;
 
-    public HologramImpl(@NotNull UUID uuid, @NotNull LocationHolder location, boolean touchable) {
+    public HologramImpl(@NotNull UUID uuid, @NotNull Location location, boolean touchable) {
         super(uuid);
         this.location = location;
         this.touchable = touchable;
@@ -88,7 +88,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public @NotNull Hologram location(@NotNull LocationHolder location) {
+    public @NotNull Hologram location(@NotNull Location location) {
         this.location = location;
         this.cachedLocation = location;
         return this;
@@ -170,7 +170,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public @NotNull Hologram item(@Nullable Item item) {
+    public @NotNull Hologram item(@Nullable ItemStack item) {
         this.item = item;
         update();
         restartRotationTask();
@@ -202,7 +202,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public void onViewerAdded(@NotNull PlayerWrapper viewer, boolean checkDistance) {
+    public void onViewerAdded(@NotNull Player viewer, boolean checkDistance) {
         if (!viewer.isOnline()) {
             return;
         }
@@ -214,7 +214,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     @Override
-    public void onViewerRemoved(@NotNull PlayerWrapper viewer, boolean checkDistance) {
+    public void onViewerRemoved(@NotNull Player viewer, boolean checkDistance) {
         if (!viewer.isOnline()) {
             return;
         }
@@ -226,7 +226,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         }
     }
 
-    private void update(PlayerWrapper player, @NotNull List<@NotNull AbstractPacket> packets, boolean checkDistance) {
+    private void update(Player player, @NotNull List<@NotNull AbstractPacket> packets, boolean checkDistance) {
         if (!player.getLocation().getWorld().equals(cachedLocation.getWorld())) {
             return;
         }
@@ -239,7 +239,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     }
 
     private void updateEntities() {
-        final var packets = new LinkedList<Function<PlayerWrapper, List<AbstractPacket>>>();
+        final var packets = new LinkedList<Function<Player, List<AbstractPacket>>>();
         if (visible && !viewers.isEmpty()) {
             if (lines.size() != originalLinesSize && itemEntity != null) {
                 itemEntity.setLocation(cachedLocation.clone().add(0, itemPosition == ItemPosition.BELOW
@@ -345,7 +345,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         viewers.forEach(viewer -> update(viewer, packets.stream().map(f -> f.apply(viewer)).flatMap(Collection::stream).collect(Collectors.toList()), true));
     }
 
-    private ClientboundSetEquipmentPacket getEquipmentPacket(@NotNull HologramPiece entity, @NotNull Item item) {
+    private ClientboundSetEquipmentPacket getEquipmentPacket(@NotNull HologramPiece entity, @NotNull ItemStack item) {
         return ClientboundSetEquipmentPacket.builder()
                 .entityId(entity.getId())
                 .slots(Map.of(EquipmentSlotHolder.of("HEAD"), item))
@@ -369,7 +369,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
         return ClientboundRemoveEntitiesPacket.builder().entityIds(toRemove).build();
     }
 
-    private @NotNull List<@NotNull AbstractPacket> getAllSpawnPackets(@NotNull PlayerWrapper viewer) {
+    private @NotNull List<@NotNull AbstractPacket> getAllSpawnPackets(@NotNull Player viewer) {
         final var packets = new ArrayList<AbstractPacket>();
         entitiesOnLines.forEach((line, entity) -> packets.addAll(entity.getSpawnPackets(viewer)));
         if (itemEntity != null && item != null) {

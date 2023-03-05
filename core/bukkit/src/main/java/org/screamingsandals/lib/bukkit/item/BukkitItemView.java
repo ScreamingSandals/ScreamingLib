@@ -17,26 +17,25 @@
 package org.screamingsandals.lib.bukkit.item;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.BukkitItemBlockIdsRemapper;
-import org.screamingsandals.lib.item.Item;
-import org.screamingsandals.lib.item.ItemView;
+import org.screamingsandals.lib.item.ItemStack;
+import org.screamingsandals.lib.item.ItemStackView;
 import org.screamingsandals.lib.utils.Platform;
 
-public class BukkitItemView extends BukkitItem implements ItemView {
-    public BukkitItemView(@NotNull ItemStack stack) {
+public class BukkitItemView extends BukkitItem implements ItemStackView {
+    public BukkitItemView(@NotNull org.bukkit.inventory.ItemStack stack) {
         super(stack);
     }
 
     @Override
-    public void replace(@Nullable Item replaceable) {
+    public void replace(@Nullable ItemStack replaceable) {
         if (replaceable == null) {
             wrappedObject.setType(Material.AIR);
             return;
         }
-        var stack = replaceable.as(ItemStack.class);
+        var stack = replaceable.as(org.bukkit.inventory.ItemStack.class);
         wrappedObject.setType(stack.getType());
         wrappedObject.setAmount(stack.getAmount());
         if (BukkitItemBlockIdsRemapper.getBPlatform() == Platform.JAVA_LEGACY) {

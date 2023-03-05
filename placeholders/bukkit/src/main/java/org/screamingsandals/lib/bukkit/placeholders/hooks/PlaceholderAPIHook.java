@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.placeholders.PlaceholderExpansion;
 import org.screamingsandals.lib.placeholders.hooks.Hook;
-import org.screamingsandals.lib.player.PlayerMapper;
+import org.screamingsandals.lib.player.Players;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 
 @RequiredArgsConstructor
@@ -64,7 +64,7 @@ public class PlaceholderAPIHook implements Hook {
 
         @Override
         public @Nullable String onRequest(@Nullable OfflinePlayer player, @NotNull String params) {
-            var result = placeholderExpansion.onRequest(player == null ? null : PlayerMapper.wrapOfflinePlayer(player), params);
+            var result = placeholderExpansion.onRequest(player == null ? null : Players.wrapOfflinePlayer(player), params);
             return result != null ? result.toLegacy() : null;
         }
 

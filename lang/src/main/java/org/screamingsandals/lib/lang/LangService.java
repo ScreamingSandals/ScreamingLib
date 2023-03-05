@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.lang.container.TranslationContainer;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.spectator.Component;
 
 import java.util.Locale;
@@ -50,12 +50,12 @@ public abstract class LangService {
     }
 
     /**
-     * Resolves a {@link TranslationContainer} for given {@link CommandSenderWrapper}.
+     * Resolves a {@link TranslationContainer} for given {@link CommandSender}.
      *
      * @param sender sender from who to resolve
      * @return a {@link TranslationContainer}
      */
-    public @NotNull TranslationContainer getFor(@Nullable CommandSenderWrapper sender) {
+    public @NotNull TranslationContainer getFor(@Nullable CommandSender sender) {
         /* SINGLE LANGUAGE */
         if (containers.isEmpty() || sender == null) {
             return fallbackContainer;
@@ -85,7 +85,7 @@ public abstract class LangService {
     }
 
     /**
-     * Tries to resolve prefix from given {@link CommandSenderWrapper}.
+     * Tries to resolve prefix from given {@link CommandSender}.
      * <p>
      * NOTE: default implementation is only getting {@link Lang#getDefaultPrefix()}.
      * This is here for abstraction.
@@ -93,20 +93,20 @@ public abstract class LangService {
      * @param sender from whom to resolve locale
      * @return resolved prefix
      */
-    public @NotNull Component resolvePrefix(@Nullable CommandSenderWrapper sender) {
+    public @NotNull Component resolvePrefix(@Nullable CommandSender sender) {
         return Lang.getDefaultPrefix();
     }
 
     /**
-     * Tries to resolve {@link Locale} from given {@link CommandSenderWrapper}.
+     * Tries to resolve {@link Locale} from given {@link CommandSender}.
      * <p>
-     * NOTE: default implementation is only getting {@link CommandSenderWrapper#getLocale()}.
+     * NOTE: default implementation is only getting {@link CommandSender#getLocale()}.
      * This is here for abstraction.
      *
      * @param sender from whom to resolve locale
      * @return resolved {@link Locale}
      */
-    protected @NotNull Locale resolveLocale(@NotNull CommandSenderWrapper sender) {
+    protected @NotNull Locale resolveLocale(@NotNull CommandSender sender) {
         return sender.getLocale();
     }
 

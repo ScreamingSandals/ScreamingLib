@@ -20,7 +20,7 @@ import lombok.Data;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.TextComponent;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
@@ -34,7 +34,7 @@ import java.util.List;
 public class MessagePlaceholder implements Placeholder, StringLikePlaceholder {
     private final @NotNull String name;
     private final @NotNull LangService service;
-    private final @Nullable CommandSenderWrapper sender;
+    private final @Nullable CommandSender sender;
 
     @SuppressWarnings("unchecked")
     @Override

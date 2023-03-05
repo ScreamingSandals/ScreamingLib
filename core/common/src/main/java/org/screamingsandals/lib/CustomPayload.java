@@ -19,7 +19,7 @@ package org.screamingsandals.lib;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -56,7 +56,7 @@ public abstract class CustomPayload {
         return Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").getRegisteredOutgoingChannels0();
     }
 
-    public static @NotNull Registration registerIncomingChannel(@NotNull String channel, @NotNull BiConsumer<@NotNull PlayerWrapper, byte @NotNull []> listener) {
+    public static @NotNull Registration registerIncomingChannel(@NotNull String channel, @NotNull BiConsumer<@NotNull Player, byte @NotNull []> listener) {
         return Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").registerIncomingChannel0(channel, listener);
     }
 
@@ -72,7 +72,7 @@ public abstract class CustomPayload {
         return Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").getRegisteredIncomingChannels0();
     }
 
-    public static void send(@NotNull PlayerWrapper player, @NotNull String channel, byte @NotNull [] payload) {
+    public static void send(@NotNull Player player, @NotNull String channel, byte @NotNull [] payload) {
         Preconditions.checkNotNull(customPayload, "CustomPayload is not initialized yet!").send0(player, channel, payload);
     }
 
@@ -88,7 +88,7 @@ public abstract class CustomPayload {
 
     protected abstract @NotNull Collection<@NotNull String> getRegisteredOutgoingChannels0();
 
-    protected abstract @NotNull Registration registerIncomingChannel0(@NotNull String channel, @NotNull BiConsumer<@NotNull PlayerWrapper, byte @NotNull[]> listener);
+    protected abstract @NotNull Registration registerIncomingChannel0(@NotNull String channel, @NotNull BiConsumer<@NotNull Player, byte @NotNull[]> listener);
 
     protected abstract void unregisterIncomingChannel0(@NotNull Registration registration);
 
@@ -96,7 +96,7 @@ public abstract class CustomPayload {
 
     protected abstract @NotNull Collection<@NotNull String> getRegisteredIncomingChannels0();
 
-    protected abstract void send0(@NotNull PlayerWrapper player, @NotNull String channel, byte @NotNull [] payload);
+    protected abstract void send0(@NotNull Player player, @NotNull String channel, byte @NotNull [] payload);
 
     protected abstract void send0(@NotNull String channel, byte @NotNull [] payload);
 

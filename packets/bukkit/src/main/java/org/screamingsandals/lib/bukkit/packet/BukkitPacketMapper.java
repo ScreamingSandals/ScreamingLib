@@ -28,7 +28,7 @@ import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.nms.accessors.ArmorStandAccessor;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.PacketMapper;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
@@ -38,7 +38,7 @@ import org.screamingsandals.lib.vanilla.packet.PacketIdMapping;
 public class BukkitPacketMapper extends PacketMapper {
 
     @Override
-    public void sendPacket0(@NotNull PlayerWrapper player, @NotNull AbstractPacket packet) {
+    public void sendPacket0(@NotNull Player player, @NotNull AbstractPacket packet) {
         Preconditions.checkNotNull(packet, "Packet cannot be null!, skipping packet...");
 
         final var buffer = Unpooled.buffer();
@@ -75,7 +75,7 @@ public class BukkitPacketMapper extends PacketMapper {
     }
 
     // TODO: Optimize: usage of write() instead and flushing manually at the end for multiple writes, also expose this method later on
-    protected void sendRawPacket(PlayerWrapper player, ByteBuf buffer) {
+    protected void sendRawPacket(Player player, ByteBuf buffer) {
         var channel = player.getChannel();
         if (channel.isActive()) {
             var ctx = channel.pipeline().context("encoder");

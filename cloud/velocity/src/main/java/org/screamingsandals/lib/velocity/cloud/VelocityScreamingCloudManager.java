@@ -25,13 +25,13 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.proxy.ProxiedSenderWrapper;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.velocity.proxy.VelocityProxiedPlayerWrapper;
 import org.screamingsandals.lib.velocity.proxy.VelocityProxiedSenderWrapper;
 
 import java.util.function.Function;
 
-public class VelocityScreamingCloudManager extends VelocityCommandManager<CommandSenderWrapper> {
+public class VelocityScreamingCloudManager extends VelocityCommandManager<CommandSender> {
 
     /**
      * Construct a new Velocity command manager
@@ -42,7 +42,7 @@ public class VelocityScreamingCloudManager extends VelocityCommandManager<Comman
      */
     public VelocityScreamingCloudManager(@NotNull PluginContainer plugin,
                                          @NotNull ProxyServer proxyServer,
-                                         @NotNull Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) {
+                                         @NotNull Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>> commandCoordinator) {
         super(plugin, proxyServer, commandCoordinator, sender -> {
             if (sender instanceof Player) {
                 return new VelocityProxiedPlayerWrapper((Player) sender);

@@ -21,16 +21,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.OnEvent;
-import org.screamingsandals.lib.event.player.SPlayerMoveEvent;
+import org.screamingsandals.lib.event.player.PlayerMoveEvent;
 import org.screamingsandals.lib.hologram.HologramManager;
 import org.screamingsandals.lib.npc.event.NPCInteractEvent;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.visuals.AbstractVisualsManager;
 import org.screamingsandals.lib.visuals.LocatableVisual;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 import java.util.Map;
 import java.util.UUID;
@@ -72,11 +72,11 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
         removeNPC(npc.uuid());
     }
 
-    public static @NotNull NPC npc(@NotNull LocationHolder holder) {
+    public static @NotNull NPC npc(@NotNull Location holder) {
         return npc(UUID.randomUUID(), holder, true);
     }
 
-    public static @NotNull NPC npc(@NotNull UUID uuid, @NotNull LocationHolder holder, boolean touchable) {
+    public static @NotNull NPC npc(@NotNull UUID uuid, @NotNull Location holder, boolean touchable) {
         Preconditions.checkNotNull(manager, "NPCManager is not initialized yet!");
         final var npc = new NPCImpl(uuid, holder, touchable);
         addNPC(npc);
@@ -84,7 +84,7 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
     }
 
     @OnEvent
-    public void onPlayerMove(@NotNull SPlayerMoveEvent event) {
+    public void onPlayerMove(@NotNull PlayerMoveEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
         }
@@ -101,7 +101,7 @@ public class NPCManager extends AbstractVisualsManager<NPC> {
     }
 
     @Override
-    public void fireVisualTouchEvent(@NotNull PlayerWrapper sender, @NotNull NPC visual, @NotNull InteractType interactType) {
+    public void fireVisualTouchEvent(@NotNull Player sender, @NotNull NPC visual, @NotNull InteractType interactType) {
         EventManager.fireAsync(new NPCInteractEvent(sender, visual, interactType));
     }
 }

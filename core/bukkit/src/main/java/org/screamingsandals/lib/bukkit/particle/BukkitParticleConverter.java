@@ -20,11 +20,10 @@ import lombok.experimental.UtilityClass;
 import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
-import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.particle.DustOptions;
 import org.screamingsandals.lib.particle.DustTransition;
@@ -40,9 +39,9 @@ public class BukkitParticleConverter {
                 return data.as(MaterialData.class);
             }
         } else if (data instanceof ItemTypeHolder) {
-            return data.as(ItemStack.class);
-        } else if (data instanceof Item) {
-            return data.as(ItemStack.class);
+            return data.as(org.bukkit.inventory.ItemStack.class);
+        } else if (data instanceof ItemStack) {
+            return data.as(org.bukkit.inventory.ItemStack.class);
         } else if (data instanceof DustOptions) {
             return new Particle.DustOptions(getBukkitColor(((DustOptions) data).color()), ((DustOptions) data).size());
         } else if (data instanceof DustTransition) {

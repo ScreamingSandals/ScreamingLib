@@ -22,12 +22,12 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.EntityHuman;
+import org.screamingsandals.lib.entity.HumanEntity;
 import org.screamingsandals.lib.packet.AbstractPacket;
 import org.screamingsandals.lib.packet.ClientboundSetDisplayObjectivePacket;
 import org.screamingsandals.lib.packet.ClientboundSetObjectivePacket;
 import org.screamingsandals.lib.packet.ClientboundSetScorePacket;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.tasker.Tasker;
@@ -44,7 +44,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     private final @NotNull String underNameTagKey;
     private final @NotNull String tabListKey;
     private final @NotNull ConcurrentSkipListMap<@NotNull String, Integer> values = new ConcurrentSkipListMap<>();
-    protected final @NotNull List<@NotNull PlayerWrapper> trackedPlayers = new ArrayList<>();
+    protected final @NotNull List<@NotNull Player> trackedPlayers = new ArrayList<>();
     @Accessors(chain = true, fluent = true)
     @Getter
     @Setter
@@ -61,7 +61,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     }
 
     @Override
-    public @NotNull HealthIndicator addTrackedPlayer(@NotNull PlayerWrapper player) {
+    public @NotNull HealthIndicator addTrackedPlayer(@NotNull Player player) {
         if (!trackedPlayers.contains(player)) {
             trackedPlayers.add(player);
             if (visible && ready && task == null) {
@@ -72,7 +72,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     }
 
     @Override
-    public @NotNull HealthIndicator removeTrackedPlayer(@NotNull PlayerWrapper player) {
+    public @NotNull HealthIndicator removeTrackedPlayer(@NotNull Player player) {
         if (trackedPlayers.contains(player)) {
             trackedPlayers.remove(player);
             if (visible && ready && task == null) {
@@ -133,7 +133,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
                     return;
                 }
 
-                var health = (int) Math.round(playerWrapper.as(EntityHuman.class).getHealth());
+                var health = (int) Math.round(playerWrapper.as(HumanEntity.class).getHealth());
                 var key = playerWrapper.getName();
                 if (!values.containsKey(key) || values.get(key) != health) {
                     values.put(key, health);
@@ -215,7 +215,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     }
 
     @Override
-    public void onViewerAdded(@NotNull PlayerWrapper player, boolean checkDistance) {
+    public void onViewerAdded(@NotNull Player player, boolean checkDistance) {
         if (visible) {
             getCreateObjectivePacket()
                     .objectiveKey(underNameTagKey)
@@ -248,7 +248,7 @@ public class HealthIndicatorImpl extends AbstractVisual<HealthIndicator> impleme
     }
 
     @Override
-    public void onViewerRemoved(@NotNull PlayerWrapper player, boolean checkDistance) {
+    public void onViewerRemoved(@NotNull Player player, boolean checkDistance) {
         getDestroyObjectivePacket()
                 .objectiveKey(underNameTagKey)
                 .build()

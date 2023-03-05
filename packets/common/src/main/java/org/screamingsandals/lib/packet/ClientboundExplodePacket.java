@@ -22,7 +22,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.math.Vector3Df;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class ClientboundExplodePacket extends AbstractPacket {
     private final @NotNull Vector3Df location;
     private final float strength;
     private final @NotNull Vector3Df knockBackVelocity;
-    @Builder.Default private final @NotNull List<@NotNull LocationHolder> blockLocations = List.of();
+    @Builder.Default private final @NotNull List<@NotNull Location> blockLocations = List.of();
 
     @Override
     public void write(@NotNull PacketWriter writer) {

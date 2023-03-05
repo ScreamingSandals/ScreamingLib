@@ -26,7 +26,6 @@ import org.bukkit.entity.*;
 import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.entity.minecart.PoweredMinecart;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
@@ -35,9 +34,9 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
-import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.entity.EntityMapper;
-import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entities;
+import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.api.Wrapper;
@@ -45,8 +44,8 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.LocationMapper;
+import org.screamingsandals.lib.world.Location;
+import org.screamingsandals.lib.world.Locations;
 
 import java.util.*;
 import java.util.function.*;
@@ -126,8 +125,8 @@ public class BukkitEntityMetadataMapper {
 
         if (Reflect.has("org.bukkit.entity.Bee")) {
             Builder.begin(Bee.class)
-                    .map("hive", Location.class, Bee::getHive, Bee::setHive)
-                    .map("flower", Location.class, Bee::getFlower, Bee::setFlower)
+                    .map("hive", org.bukkit.Location.class, Bee::getHive, Bee::setHive)
+                    .map("flower", org.bukkit.Location.class, Bee::getFlower, Bee::setFlower)
                     .map("has_nectar", Boolean.class, Bee::hasNectar, Bee::setHasNectar)
                     .when(() -> Reflect.hasMethod(Bee.class, "getCannotEnterHiveTicks"), b -> b
                             .map("remaining_anger_time", "data_remaining_anger_time", Integer.class, Bee::getAnger, Bee::setAnger)
@@ -167,7 +166,7 @@ public class BukkitEntityMetadataMapper {
 
         Builder.begin(EnderCrystal.class)
                 .map("showing_bottom", "data_show_bottom", Boolean.class, EnderCrystal::isShowingBottom, EnderCrystal::setShowingBottom)
-                .map("beam_target", "data_beam_target", Location.class, EnderCrystal::getBeamTarget, EnderCrystal::setBeamTarget);
+                .map("beam_target", "data_beam_target", org.bukkit.Location.class, EnderCrystal::getBeamTarget, EnderCrystal::setBeamTarget);
 
         Builder.begin(EnderDragon.class)
                 .map("phase", "data_phase", EnderDragon.Phase.class, EnderDragon::getPhase, EnderDragon::setPhase);
@@ -284,7 +283,7 @@ public class BukkitEntityMetadataMapper {
                 .map("is_player_created", Boolean.class, IronGolem::isPlayerCreated, IronGolem::setPlayerCreated);
 
         Builder.begin(ItemFrame.class)
-                .map("item", ItemStack.class, ItemFrame::getItem, ItemFrame::setItem)
+                .map("item", org.bukkit.inventory.ItemStack.class, ItemFrame::getItem, ItemFrame::setItem)
                 .map("rotation", Rotation.class, ItemFrame::getRotation, ItemFrame::setRotation)
                 .when(Reflect.hasMethod(ItemFrame.class, "isVisible"), b -> b
                         .map("visible", Boolean.class, ItemFrame::isVisible, ItemFrame::setVisible)
@@ -403,7 +402,7 @@ public class BukkitEntityMetadataMapper {
 
         if (Reflect.has("org.bukkit.entity.Raider")) {
             Builder.begin(Raider.class)
-                    .map("patrol_target", Location.class, raider -> {
+                    .map("patrol_target", org.bukkit.Location.class, raider -> {
                         var target = raider.getPatrolTarget();
                         if (target != null) {
                             return raider.getPatrolTarget().getLocation();
@@ -430,7 +429,7 @@ public class BukkitEntityMetadataMapper {
 
         if (Reflect.has("org.bukkit.entity.SizedFireball")) {
             Builder.begin(SizedFireball.class)
-                    .map("display_item", ItemStack.class, SizedFireball::getDisplayItem, SizedFireball::setDisplayItem);
+                    .map("display_item", org.bukkit.inventory.ItemStack.class, SizedFireball::getDisplayItem, SizedFireball::setDisplayItem);
         }
 
         Builder.begin(Skeleton.class)
@@ -698,13 +697,13 @@ public class BukkitEntityMetadataMapper {
             return (T) BlockTypeHolder.of(value);
         } else if (valueClass == ItemTypeHolder.class) {
             return (T) ItemTypeHolder.of(value);
-        } else if (EntityBasic.class.isAssignableFrom(valueClass) && value instanceof Entity) {
-            return (T) EntityMapper.wrapEntity(value).orElseThrow();
-        } else if (value instanceof ItemStack && valueClass == Item.class) {
-            return (T) new BukkitItem((ItemStack) value);
-        } else if (valueClass == LocationHolder.class) {
-            if (value instanceof Location) {
-                return (T) LocationMapper.wrapLocation(value);
+        } else if (BasicEntity.class.isAssignableFrom(valueClass) && value instanceof Entity) {
+            return (T) Entities.wrapEntity(value).orElseThrow();
+        } else if (value instanceof org.bukkit.inventory.ItemStack && valueClass == ItemStack.class) {
+            return (T) new BukkitItem((org.bukkit.inventory.ItemStack) value);
+        } else if (valueClass == Location.class) {
+            if (value instanceof org.bukkit.Location) {
+                return (T) Locations.wrapLocation(value);
             }
         } else if (valueClass == Component.class) {
             return (T) (value == null ? null : Component.fromLegacy(value.toString())); // TODO: converting platform component to component, not just strings

@@ -19,18 +19,17 @@ package org.screamingsandals.lib.bungee.cloud;
 import cloud.commandframework.CommandTree;
 import cloud.commandframework.bungee.BungeeCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
-import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bungee.proxy.BungeeProxiedPlayerWrapper;
 import org.screamingsandals.lib.bungee.proxy.BungeeProxiedSenderWrapper;
 import org.screamingsandals.lib.proxy.ProxiedSenderWrapper;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSender;
 
 import java.util.function.Function;
 
-public class BungeeScreamingCloudManager extends BungeeCommandManager<CommandSenderWrapper> {
+public class BungeeScreamingCloudManager extends BungeeCommandManager<CommandSender> {
     /**
      * Construct a new Bungee command manager
      *
@@ -38,7 +37,7 @@ public class BungeeScreamingCloudManager extends BungeeCommandManager<CommandSen
      * @param commandCoordinator Coordinator provider
      */
     public BungeeScreamingCloudManager(@NotNull Plugin owningPlugin,
-                                       @NotNull Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) {
+                                       @NotNull Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>> commandCoordinator) {
         super(owningPlugin, commandCoordinator, sender -> {
             if (sender instanceof ProxiedPlayer) {
                 return new BungeeProxiedPlayerWrapper((ProxiedPlayer) sender);
@@ -48,7 +47,7 @@ public class BungeeScreamingCloudManager extends BungeeCommandManager<CommandSen
             if (sender.getType() == ProxiedSenderWrapper.Type.PLAYER) {
                 return sender.as(ProxiedPlayer.class);
             }
-            return sender.as(CommandSender.class);
+            return sender.as(net.md_5.bungee.api.CommandSender.class);
         });
     }
 }

@@ -19,17 +19,17 @@
 package org.screamingsandals.lib.kotlin
 
 import org.screamingsandals.lib.container.Container
-import org.screamingsandals.lib.entity.EntityBasic
+import org.screamingsandals.lib.entity.BasicEntity
 import org.screamingsandals.lib.event.Cancellable
 import org.screamingsandals.lib.event.EventManager
 import org.screamingsandals.lib.event.SEvent
-import org.screamingsandals.lib.item.Item
-import org.screamingsandals.lib.player.PlayerWrapper
+import org.screamingsandals.lib.item.ItemStack
+import org.screamingsandals.lib.player.Player
 import org.screamingsandals.lib.spectator.Component
 import org.screamingsandals.lib.utils.ComparableWrapper
 import org.screamingsandals.lib.api.Wrapper
 import org.screamingsandals.lib.item.ItemTypeHolder
-import org.screamingsandals.lib.item.builder.ItemFactory
+import org.screamingsandals.lib.item.builder.ItemStackFactory
 import org.screamingsandals.lib.spectator.ComponentLike
 import org.screamingsandals.lib.utils.math.Vector2D
 import org.screamingsandals.lib.utils.math.Vector3D
@@ -38,8 +38,8 @@ import org.screamingsandals.lib.utils.math.Vector3Di
 import org.screamingsandals.lib.utils.visual.TextEntry
 import org.screamingsandals.lib.visuals.LinedVisual
 import org.screamingsandals.lib.visuals.Visual
-import org.screamingsandals.lib.world.LocationHolder
-import org.screamingsandals.lib.world.WorldHolder
+import org.screamingsandals.lib.world.Location
+import org.screamingsandals.lib.world.World
 import java.util.concurrent.CompletableFuture
 import kotlin.reflect.KClass
 
@@ -88,36 +88,36 @@ inline operator fun Vector3Di.plus(vec: Vector3Di): Vector3Di = this.clone().add
 inline operator fun Vector3Di.minus(vec: Vector3Di): Vector3Di = this.clone().subtract(vec)
 inline operator fun Vector3Di.times(multiplier: Int): Vector3Di = this.clone().multiply(multiplier)
 
-inline operator fun WorldHolder.contains(entity: EntityBasic): Boolean = this == entity.location.world
+inline operator fun World.contains(entity: BasicEntity): Boolean = this == entity.location.world
 
 // distance = location1 - location2
 
-inline operator fun LocationHolder.minus(loc: LocationHolder): Double = this.getDistanceSquared(loc)
+inline operator fun Location.minus(loc: Location): Double = this.getDistanceSquared(loc)
 
 // newLocation = location +|- vector
 
-inline operator fun LocationHolder.plus(vec: Vector3D): LocationHolder = this.add(vec)
-inline operator fun LocationHolder.plus(vec: Vector3Df): LocationHolder = this.add(vec)
-inline operator fun LocationHolder.plus(vec: Vector3Di): LocationHolder = this.add(vec)
-inline operator fun LocationHolder.minus(vec: Vector3D): LocationHolder = this.subtract(vec)
-inline operator fun LocationHolder.minus(vec: Vector3Df): LocationHolder = this.subtract(vec)
-inline operator fun LocationHolder.minus(vec: Vector3Di): LocationHolder = this.subtract(vec)
+inline operator fun Location.plus(vec: Vector3D): Location = this.add(vec)
+inline operator fun Location.plus(vec: Vector3Df): Location = this.add(vec)
+inline operator fun Location.plus(vec: Vector3Di): Location = this.add(vec)
+inline operator fun Location.minus(vec: Vector3D): Location = this.subtract(vec)
+inline operator fun Location.minus(vec: Vector3Df): Location = this.subtract(vec)
+inline operator fun Location.minus(vec: Vector3Di): Location = this.subtract(vec)
 
 // container += item|items
 
 inline operator fun Container.plusAssign(type: String) {
-    this.addItem(ItemFactory.build(type)!!)
+    this.addItem(ItemStackFactory.build(type)!!)
 }
 
-inline operator fun Container.plusAssign(item: Item) {
+inline operator fun Container.plusAssign(item: ItemStack) {
     this.addItem(item)
 }
 
-inline operator fun Container.plusAssign(items: Array<Item>) {
+inline operator fun Container.plusAssign(items: Array<ItemStack>) {
     this.addItem(*items)
 }
 
-inline operator fun Container.plusAssign(items: Collection<Item>) {
+inline operator fun Container.plusAssign(items: Collection<ItemStack>) {
     this.addItem(*items.toTypedArray())
 }
 
@@ -132,43 +132,43 @@ inline operator fun Container.plusAssign(container: Container) {
 // container -= item|items
 
 inline operator fun Container.minusAssign(type: String) {
-    this.removeItem(ItemFactory.build(type)!!)
+    this.removeItem(ItemStackFactory.build(type)!!)
 }
 
-inline operator fun Container.minusAssign(item: Item) {
+inline operator fun Container.minusAssign(item: ItemStack) {
     this.removeItem(item)
 }
 
-inline operator fun Container.minusAssign(items: Array<Item>) {
+inline operator fun Container.minusAssign(items: Array<ItemStack>) {
     this.removeItem(*items)
 }
 
-inline operator fun Container.minusAssign(items: Collection<Item>) {
+inline operator fun Container.minusAssign(items: Collection<ItemStack>) {
     this.removeItem(*items.toTypedArray())
 }
 
 // container[id] = string|Item
 
-inline operator fun Container.get(slot: Int): Item? = this.getItem(slot)
-inline operator fun Container.set(slot: Int, item: Item?) = this.setItem(slot, item)
-inline operator fun Container.set(slot: Int, type: String?) = this.setItem(slot, ItemFactory.build(type))
+inline operator fun Container.get(slot: Int): ItemStack? = this.getItem(slot)
+inline operator fun Container.set(slot: Int, item: ItemStack?) = this.setItem(slot, item)
+inline operator fun Container.set(slot: Int, type: String?) = this.setItem(slot, ItemStackFactory.build(type))
 inline operator fun Container.contains(type: String) = this.contains(ItemTypeHolder.of(type))
 
 // visual +=|-= viewer|viewers; viewer in visual
 
-inline operator fun Visual<*>.plusAssign(viewer: PlayerWrapper) {
+inline operator fun Visual<*>.plusAssign(viewer: Player) {
     this.addViewer(viewer)
 }
-inline operator fun Visual<*>.plusAssign(viewers: Collection<PlayerWrapper>) {
+inline operator fun Visual<*>.plusAssign(viewers: Collection<Player>) {
     viewers.forEach { this.addViewer(it) }
 }
-inline operator fun Visual<*>.minusAssign(viewer: PlayerWrapper) {
+inline operator fun Visual<*>.minusAssign(viewer: Player) {
     this.removeViewer(viewer)
 }
-inline operator fun Visual<*>.minusAssign(viewers: Collection<PlayerWrapper>) {
+inline operator fun Visual<*>.minusAssign(viewers: Collection<Player>) {
     viewers.forEach { this.removeViewer(it) }
 }
-inline operator fun Visual<*>.contains(viewer: PlayerWrapper) = this.visibleTo(viewer)
+inline operator fun Visual<*>.contains(viewer: Player) = this.visibleTo(viewer)
 
 // linedVisual += componentLike; linedVisual[line]
 
@@ -185,21 +185,21 @@ inline operator fun LinedVisual<*>.set(line: Int, text: Component) {
 
 // entity +=|-= passenger; passenger in entity
 
-inline operator fun EntityBasic.plusAssign(entity: EntityBasic) {
+inline operator fun BasicEntity.plusAssign(entity: BasicEntity) {
     this.addPassenger(entity)
 }
-inline operator fun EntityBasic.minusAssign(entity: EntityBasic) {
+inline operator fun BasicEntity.minusAssign(entity: BasicEntity) {
     this.removePassenger(entity)
 }
-inline operator fun EntityBasic.contains(entity: EntityBasic) = this.passengers.contains(entity)
+inline operator fun BasicEntity.contains(entity: BasicEntity) = this.passengers.contains(entity)
 
 // entity tp location|anotherEntity
 
-inline infix fun EntityBasic.tp(loc: LocationHolder): CompletableFuture<Boolean> = this.teleport(loc)
-inline infix fun EntityBasic.tp(entity: EntityBasic): CompletableFuture<Boolean> = this.teleport(entity.location)
+inline infix fun BasicEntity.tp(loc: Location): CompletableFuture<Boolean> = this.teleport(loc)
+inline infix fun BasicEntity.tp(entity: BasicEntity): CompletableFuture<Boolean> = this.teleport(entity.location)
 
 // newItem = itemType * 5; newItem = newItem * 6; newItem++; newItem--
-inline operator fun ItemTypeHolder.times(amount: Int): Item = ItemFactory.builder().type(this).amount(amount).build()!!
-inline operator fun Item.times(amount: Int): Item = this.withAmount(amount)
-inline operator fun Item.inc(): Item = this.withAmount(amount + 1)
-inline operator fun Item.dec(): Item = this.withAmount(amount - 1)
+inline operator fun ItemTypeHolder.times(amount: Int): ItemStack = ItemStackFactory.builder().type(this).amount(amount).build()!!
+inline operator fun ItemStack.times(amount: Int): ItemStack = this.withAmount(amount)
+inline operator fun ItemStack.inc(): ItemStack = this.withAmount(amount + 1)
+inline operator fun ItemStack.dec(): ItemStack = this.withAmount(amount - 1)

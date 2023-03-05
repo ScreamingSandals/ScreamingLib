@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.packet.PacketMapper;
-import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
+import org.screamingsandals.lib.event.player.PlayerLeaveEvent;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 import org.screamingsandals.lib.visuals.Visual;
@@ -110,7 +110,7 @@ public class HealthIndicatorManager {
     }
 
     @OnEvent
-    public void onLeave(@NotNull SPlayerLeaveEvent event) {
+    public void onLeave(@NotNull PlayerLeaveEvent event) {
         if (activeIndicators.isEmpty()) {
             return;
         }

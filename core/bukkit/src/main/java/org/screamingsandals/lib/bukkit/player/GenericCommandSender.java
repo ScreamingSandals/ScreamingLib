@@ -22,11 +22,11 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.bukkit.BukkitCore;
-import org.screamingsandals.lib.player.SenderWrapper;
+import org.screamingsandals.lib.player.Sender;
 import org.screamingsandals.lib.spectator.audience.adapter.Adapter;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
-public class GenericCommandSender extends BasicWrapper<CommandSender> implements SenderWrapper {
+public class GenericCommandSender extends BasicWrapper<CommandSender> implements Sender {
     public GenericCommandSender(@NotNull CommandSender wrappedObject) {
         super(wrappedObject);
     }

@@ -20,7 +20,7 @@ import org.bukkit.Particle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.particle.*;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
@@ -45,7 +45,7 @@ public class BukkitParticleTypeHolder extends BasicWrapper<Particle> implements 
                 case "BlockData":
                     return BlockTypeHolder.class;
                 case "ItemStack":
-                    return Item.class;
+                    return ItemStack.class;
                 case "DustOptions":
                     return DustOptions.class;
                 case "DustTransition":

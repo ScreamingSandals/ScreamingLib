@@ -18,8 +18,8 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.WorldMapper;
+import org.screamingsandals.lib.world.Location;
+import org.screamingsandals.lib.world.Worlds;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
@@ -27,7 +27,7 @@ import org.spongepowered.configurate.serialize.TypeSerializer;
 import java.lang.reflect.Type;
 import java.util.UUID;
 
-public class LocationHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<LocationHolder> {
+public class LocationHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<Location> {
     public static final @NotNull LocationHolderSerializer INSTANCE = new LocationHolderSerializer();
 
     private static final @NotNull String X_KEY = "x";
@@ -38,7 +38,7 @@ public class LocationHolderSerializer extends AbstractScreamingSerializer implem
     private static final @NotNull String WORLD_KEY = "world";
 
     @Override
-    public @NotNull LocationHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull Location deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             var x = node.node(X_KEY).getDouble();
             var y = node.node(Y_KEY).getDouble();
@@ -46,21 +46,21 @@ public class LocationHolderSerializer extends AbstractScreamingSerializer implem
             var yaw = (float) node.node(YAW_KEY).getDouble();
             var pitch = (float) node.node(PITCH_KEY).getDouble();
             var worldName = node.node(WORLD_KEY).getString();
-            var world = WorldMapper.getWorld(worldName);
+            var world = Worlds.getWorld(worldName);
             if (world == null && worldName != null) {
-                world = WorldMapper.getWorld(UUID.fromString(worldName));
+                world = Worlds.getWorld(UUID.fromString(worldName));
             }
             if (world == null) {
                 throw new SerializationException("Unknown world: " + worldName);
             }
-            return new LocationHolder(x, y, z, yaw, pitch, world);
+            return new Location(x, y, z, yaw, pitch, world);
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable LocationHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable Location obj, @NotNull ConfigurationNode node) throws SerializationException {
         if (obj == null) {
             node.set(null);
             return;

@@ -23,9 +23,9 @@ import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.item.HideFlags;
-import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
-import org.screamingsandals.lib.item.builder.ItemFactory;
+import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.item.builder.ShortStackDeserializer;
 import org.screamingsandals.lib.item.meta.*;
 import org.screamingsandals.lib.nbt.CompoundTag;
@@ -47,7 +47,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-public class ItemSerializer extends AbstractScreamingSerializer implements TypeSerializer<Item> {
+public class ItemSerializer extends AbstractScreamingSerializer implements TypeSerializer<ItemStack> {
     public static final @NotNull ItemSerializer INSTANCE = new ItemSerializer();
 
     private static final @NotNull SNBTSerializer internalSNBTSerializer = SNBTSerializer.builder().shouldSaveLongArraysDirectly(true).build();
@@ -76,17 +76,17 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
     private static final @NotNull String POWER_KEY = "power";
 
     @Override
-    public @NotNull Item deserialize(@NotNull Type classType, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull ItemStack deserialize(@NotNull Type classType, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             if (!node.isMap()) {
-                var builder = ItemFactory.builder();
+                var builder = ItemStackFactory.builder();
 
                 ShortStackDeserializer.deserializeShortStack(builder, node.getString());
 
                 return builder.build().orElseThrow();
             }
 
-            var builder = ItemFactory.builder();
+            var builder = ItemStackFactory.builder();
 
             var type = node.node(TYPE_KEY);
 
@@ -288,7 +288,7 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable Item obj, @NotNull ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable ItemStack obj, @NotNull ConfigurationNode node) throws SerializationException {
         node.set(null);
 
         if (obj != null) {

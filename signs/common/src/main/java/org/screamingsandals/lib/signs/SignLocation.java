@@ -23,8 +23,8 @@ import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.world.LocationHolder;
-import org.screamingsandals.lib.world.WorldMapper;
+import org.screamingsandals.lib.world.Location;
+import org.screamingsandals.lib.world.Worlds;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 @Data
@@ -38,7 +38,7 @@ public class SignLocation implements Wrapper {
     private double y;
     private double z;
 
-    public SignLocation(LocationHolder location) {
+    public SignLocation(Location location) {
         this.world = location.getWorld().getName();
         this.x = location.getX();
         this.y = location.getY();
@@ -48,8 +48,8 @@ public class SignLocation implements Wrapper {
     @SuppressWarnings("unchecked")
     @Override
     public <T> @NotNull T as(@NotNull Class<T> type) {
-        if (type == LocationHolder.class) {
-            return (T) new LocationHolder(x, y, z, 0, 0, WorldMapper.getWorld(world).orElseThrow());
+        if (type == Location.class) {
+            return (T) new Location(x, y, z, 0, 0, Worlds.getWorld(world).orElseThrow());
         }
         throw new UnsupportedOperationException("Unsupported type!");
     }

@@ -17,17 +17,15 @@
 package org.screamingsandals.lib.bukkit.container;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
-import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.container.Container;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.BasicWrapper;
 
 import java.util.Arrays;
@@ -41,28 +39,28 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public @Nullable Item getItem(int index) {
+    public @Nullable ItemStack getItem(int index) {
         var item = wrappedObject.getItem(index);
         return item == null ? null : new BukkitItem(item);
     }
 
     @Override
-    public void setItem(int index, @Nullable Item item) {
-        wrappedObject.setItem(index, item != null ? item.as(ItemStack.class) : null);
+    public void setItem(int index, @Nullable ItemStack item) {
+        wrappedObject.setItem(index, item != null ? item.as(org.bukkit.inventory.ItemStack.class) : null);
     }
 
     @Override
-    public @NotNull List<@NotNull Item> addItem(@NotNull Item @NotNull... items) {
-        return wrappedObject.addItem(Arrays.stream(items).map(item -> item.as(ItemStack.class)).toArray(ItemStack[]::new))
+    public @NotNull List<@NotNull ItemStack> addItem(@NotNull ItemStack @NotNull... items) {
+        return wrappedObject.addItem(Arrays.stream(items).map(item -> item.as(org.bukkit.inventory.ItemStack.class)).toArray(org.bukkit.inventory.ItemStack[]::new))
                 .values().stream().filter(Objects::nonNull).map(BukkitItem::new).collect(Collectors.toList());
     }
 
     @Override
-    public @NotNull List<@NotNull Item> removeItem(@NotNull Item @NotNull... items) {
+    public @NotNull List<@NotNull ItemStack> removeItem(@NotNull ItemStack @NotNull... items) {
         return wrappedObject.removeItem(
                 Arrays.stream(items)
-                        .map(item -> item.as(ItemStack.class))
-                        .toArray(ItemStack[]::new))
+                        .map(item -> item.as(org.bukkit.inventory.ItemStack.class))
+                        .toArray(org.bukkit.inventory.ItemStack[]::new))
                 .values()
                 .stream()
                 .filter(Objects::nonNull)
@@ -71,8 +69,8 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public @Nullable Item @NotNull [] getContents() {
-        var array = new Item[getSize()];
+    public @Nullable ItemStack @NotNull [] getContents() {
+        var array = new ItemStack[getSize()];
 
         var oldArray = wrappedObject.getContents();
         for (var i = 0; i < getSize(); i++) {
@@ -83,9 +81,9 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public @Nullable Item @NotNull [] getStorageContents() {
+    public @Nullable ItemStack @NotNull [] getStorageContents() {
         var oldArray = wrappedObject.getStorageContents();
-        var array = new Item[oldArray.length];
+        var array = new ItemStack[oldArray.length];
 
         for (var i = 0; i < oldArray.length; i++) {
             array[i] = oldArray[i] == null ? null : new BukkitItem(oldArray[i]);
@@ -95,25 +93,25 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public void setContents(@Nullable Item @NotNull [] items) throws IllegalArgumentException {
+    public void setContents(@Nullable ItemStack @NotNull [] items) throws IllegalArgumentException {
         if (items.length != getSize()) {
             throw new IllegalArgumentException("Wrong size of items array. Must be " + getSize());
         }
-        var array = new ItemStack[getSize()];
+        var array = new org.bukkit.inventory.ItemStack[getSize()];
         for (var i = 0; i < getSize(); i++) {
-            array[i] = items[i] != null ? items[i].as(ItemStack.class) : null;
+            array[i] = items[i] != null ? items[i].as(org.bukkit.inventory.ItemStack.class) : null;
         }
         wrappedObject.setContents(array);
     }
 
     @Override
-    public void setStorageContents(@Nullable Item @NotNull [] items) throws IllegalArgumentException {
+    public void setStorageContents(@Nullable ItemStack @NotNull [] items) throws IllegalArgumentException {
         if (items.length > getSize()) {
             throw new IllegalArgumentException("Wrong size of items array. Must be " + getSize());
         }
-        var array = new ItemStack[items.length];
+        var array = new org.bukkit.inventory.ItemStack[items.length];
         for (var i = 0; i < array.length; i++) {
-            array[i] = items[i] != null ? items[i].as(ItemStack.class) : null;
+            array[i] = items[i] != null ? items[i].as(org.bukkit.inventory.ItemStack.class) : null;
         }
         wrappedObject.setStorageContents(array);
     }
@@ -124,13 +122,13 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public boolean contains(@NotNull Item item) {
-        return wrappedObject.contains(item.as(ItemStack.class));
+    public boolean contains(@NotNull ItemStack item) {
+        return wrappedObject.contains(item.as(org.bukkit.inventory.ItemStack.class));
     }
 
     @Override
-    public boolean containsAtLeast(@NotNull Item item, int amount) {
-        return wrappedObject.containsAtLeast(item.as(ItemStack.class), amount);
+    public boolean containsAtLeast(@NotNull ItemStack item, int amount) {
+        return wrappedObject.containsAtLeast(item.as(org.bukkit.inventory.ItemStack.class), amount);
     }
 
     @Override
@@ -159,8 +157,8 @@ public class BukkitContainer extends BasicWrapper<Inventory> implements Containe
     }
 
     @Override
-    public void openInventory(@NotNull PlayerWrapper wrapper) {
-        wrapper.asOptional(Player.class).ifPresent(player ->
+    public void openInventory(@NotNull Player wrapper) {
+        wrapper.asOptional(org.bukkit.entity.Player.class).ifPresent(player ->
                 player.openInventory(wrappedObject)
         );
     }

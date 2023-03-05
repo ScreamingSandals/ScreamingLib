@@ -21,7 +21,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -29,7 +29,7 @@ import org.screamingsandals.lib.world.LocationHolder;
 @Builder(toBuilder = true)
 public class ClientboundBlockDestructionPacket extends AbstractPacket {
     private final int entityId;
-    private final @NotNull LocationHolder blockLocation;
+    private final @NotNull Location blockLocation;
     private final byte destroyStage;
 
     @Override

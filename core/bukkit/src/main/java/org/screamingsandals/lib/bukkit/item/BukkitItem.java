@@ -18,7 +18,6 @@ package org.screamingsandals.lib.bukkit.item;
 
 import lombok.experimental.ExtensionMethod;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.jetbrains.annotations.NotNull;
@@ -35,11 +34,11 @@ import org.screamingsandals.lib.bukkit.item.data.CraftBukkitItemData;
 import org.screamingsandals.lib.bukkit.nbt.NBTVanillaSerializer;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.HideFlags;
-import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
-import org.screamingsandals.lib.item.ItemView;
-import org.screamingsandals.lib.item.builder.ItemBuilder;
-import org.screamingsandals.lib.item.builder.ItemFactory;
+import org.screamingsandals.lib.item.ItemStackView;
+import org.screamingsandals.lib.item.builder.ItemStackBuilder;
+import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
@@ -56,10 +55,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @ExtensionMethod(value = NullableExtension.class, suppressBaseMethods = false)
-public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
+public class BukkitItem extends BasicWrapper<org.bukkit.inventory.ItemStack> implements ItemStack {
     private @Nullable CompoundTag tagCache;
 
-    public BukkitItem(@NotNull ItemStack wrappedObject) {
+    public BukkitItem(@NotNull org.bukkit.inventory.ItemStack wrappedObject) {
         super(wrappedObject);
     }
 
@@ -225,18 +224,18 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
     }
 
     @Override
-    public @NotNull ItemBuilder builder() {
+    public @NotNull ItemStackBuilder builder() {
         return new BukkitItemBuilder(wrappedObject.clone());
     }
 
     @Override
-    public boolean isSimilar(@NotNull Item item) {
-        return wrappedObject.isSimilar(item.as(ItemStack.class));
+    public boolean isSimilar(@NotNull ItemStack item) {
+        return wrappedObject.isSimilar(item.as(org.bukkit.inventory.ItemStack.class));
     }
 
     @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
-    public @NotNull Item clone() {
+    public @NotNull ItemStack clone() {
         return new BukkitItem(wrappedObject.clone());
     }
 
@@ -298,13 +297,13 @@ public class BukkitItem extends BasicWrapper<ItemStack> implements Item {
         try {
             return super.as(type);
         } catch (Throwable ignored) {
-            return ItemFactory.convertItem(this, type);
+            return ItemStackFactory.convertItem(this, type);
         }
     }
 
     @Override
     public @NotNull CompoundTag getTag() {
-        var isMutable = this instanceof ItemView; // ItemView is a mutable item, don't cache if the item can randomly change
+        var isMutable = this instanceof ItemStackView; // ItemView is a mutable item, don't cache if the item can randomly change
         if (!isMutable && tagCache != null) {
             return tagCache;
         }

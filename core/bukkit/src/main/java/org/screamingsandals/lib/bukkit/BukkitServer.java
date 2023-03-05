@@ -20,21 +20,22 @@ import io.netty.channel.ChannelFuture;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeHolder;
-import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
+import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
+import org.screamingsandals.lib.bukkit.player.GenericCommandSender;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.nms.accessors.*;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
+import org.screamingsandals.lib.player.Sender;
 import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import org.screamingsandals.lib.world.WorldHolder;
-import org.screamingsandals.lib.world.WorldMapper;
+import org.screamingsandals.lib.world.World;
+import org.screamingsandals.lib.world.Worlds;
 
 import java.util.HashMap;
 import java.util.List;
@@ -98,25 +99,25 @@ public class BukkitServer extends Server {
     }
 
     @Override
-    public @NotNull List<@NotNull PlayerWrapper> getConnectedPlayers0() {
+    public @NotNull List<@NotNull Player> getConnectedPlayers0() {
         return Bukkit.getOnlinePlayers()
                 .stream()
-                .map(BukkitEntityPlayer::new)
+                .map(BukkitPlayer::new)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public @NotNull List<@NotNull PlayerWrapper> getConnectedPlayersFromWorld0(@NotNull WorldHolder holder) {
-        return holder.as(World.class).getPlayers()
+    public @NotNull List<@NotNull Player> getConnectedPlayersFromWorld0(@NotNull World holder) {
+        return holder.as(org.bukkit.World.class).getPlayers()
                 .stream()
-                .map(BukkitEntityPlayer::new)
+                .map(BukkitPlayer::new)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public @NotNull List<@NotNull WorldHolder> getWorlds0() {
+    public @NotNull List<@NotNull World> getWorlds0() {
         return Bukkit.getWorlds().stream()
-                .map(WorldMapper::wrapWorld)
+                .map(Worlds::wrapWorld)
                 .collect(Collectors.toList());
     }
 
@@ -132,6 +133,11 @@ public class BukkitServer extends Server {
                 .getFieldResulted(MinecraftServerAccessor.getFieldConnection())
                 .getFieldResulted(ServerConnectionListenerAccessor.getFieldChannels())
                 .raw();
+    }
+
+    @Override
+    public @NotNull Sender getConsoleSender0() {
+        return new GenericCommandSender(Bukkit.getConsoleSender());
     }
 
     @Override

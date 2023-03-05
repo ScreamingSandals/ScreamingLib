@@ -18,7 +18,7 @@ package org.screamingsandals.lib.npc.event;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.npc.NPC;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.visuals.event.VisualsTouchEvent;
 
@@ -26,7 +26,7 @@ import org.screamingsandals.lib.visuals.event.VisualsTouchEvent;
  * An event signifying that a NPC has been interacted with.
  */
 public class NPCInteractEvent extends VisualsTouchEvent<NPC> {
-    public NPCInteractEvent(@NotNull PlayerWrapper player, @NotNull NPC visual, @NotNull InteractType interactType) {
+    public NPCInteractEvent(@NotNull Player player, @NotNull NPC visual, @NotNull InteractType interactType) {
         super(player, visual, interactType);
     }
 }

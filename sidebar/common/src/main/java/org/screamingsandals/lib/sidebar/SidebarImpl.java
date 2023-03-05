@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.packet.*;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeam;
 import org.screamingsandals.lib.sidebar.team.ScoreboardTeamImpl;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
@@ -161,7 +161,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     }
 
     @Override
-    public void onViewerAdded(@NotNull PlayerWrapper player, boolean checkDistance) {
+    public void onViewerAdded(@NotNull Player player, boolean checkDistance) {
         if (visible) {
             getCreateObjectivePacket(player).sendPacket(player);
             updateForPlayer(player);
@@ -173,7 +173,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     }
 
     @Override
-    public void onViewerRemoved(@NotNull PlayerWrapper player, boolean checkDistance) {
+    public void onViewerRemoved(@NotNull Player player, boolean checkDistance) {
         if (visible) {
             teams.forEach(scoreboardTeam ->
                     ((ScoreboardTeamImpl) scoreboardTeam).constructDestructPacket().sendPacket(player)
@@ -183,7 +183,7 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     }
 
     @SuppressWarnings("unchecked")
-    private void updateForPlayer(PlayerWrapper playerWrapper) {
+    private void updateForPlayer(Player playerWrapper) {
         var lines = this.lines.get(playerWrapper.getUuid());
         if (lines == null) {
             lines = new ConcurrentSkipListMap<>();
@@ -252,19 +252,19 @@ public class SidebarImpl extends AbstractLinedVisual<Sidebar> implements Sidebar
     }
     // INTERNAL METHODS
 
-    private @NotNull ClientboundSetObjectivePacket getCreateObjectivePacket(@NotNull PlayerWrapper player) {
+    private @NotNull ClientboundSetObjectivePacket getCreateObjectivePacket(@NotNull Player player) {
         return getNotFinalObjectivePacket(player)
                 .mode(ClientboundSetObjectivePacket.Mode.CREATE)
                 .build();
     }
 
-    private @NotNull ClientboundSetObjectivePacket getUpdateObjectivePacket(@NotNull PlayerWrapper player) {
+    private @NotNull ClientboundSetObjectivePacket getUpdateObjectivePacket(@NotNull Player player) {
         return getNotFinalObjectivePacket(player)
                 .mode(ClientboundSetObjectivePacket.Mode.UPDATE)
                 .build();
     }
 
-    private @NotNull ClientboundSetObjectivePacket.ClientboundSetObjectivePacketBuilder getNotFinalObjectivePacket(@NotNull PlayerWrapper player) {
+    private @NotNull ClientboundSetObjectivePacket.ClientboundSetObjectivePacketBuilder getNotFinalObjectivePacket(@NotNull Player player) {
         return ClientboundSetObjectivePacket.builder()
                 .objectiveKey(objectiveKey)
                 .title(title.asComponent(player))

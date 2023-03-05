@@ -21,13 +21,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.bukkit.BukkitCore;
-import org.screamingsandals.lib.bukkit.BukkitServer;
 import org.screamingsandals.lib.spectator.Component;
-import org.screamingsandals.lib.block.state.SignHolder;
+import org.screamingsandals.lib.block.state.SignBlockSnapshot;
 
 import java.util.Arrays;
 
-public class SignBlockStateHolder extends TileBlockStateHolder implements SignHolder {
+public class SignBlockStateHolder extends TileBlockStateHolder implements SignBlockSnapshot {
     protected SignBlockStateHolder(@NotNull Sign wrappedObject) {
         super(wrappedObject);
     }

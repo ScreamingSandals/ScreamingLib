@@ -18,13 +18,12 @@ package org.screamingsandals.lib.bukkit;
 
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.PluginMessageListenerRegistration;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.CustomPayload;
-import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.annotations.Service;
 
@@ -57,10 +56,10 @@ public class BukkitCustomPayload extends CustomPayload {
     }
 
     @Override
-    protected @NotNull Registration registerIncomingChannel0(@NotNull String channel, @NotNull BiConsumer<@NotNull PlayerWrapper, byte @NotNull []> listener) {
+    protected @NotNull Registration registerIncomingChannel0(@NotNull String channel, @NotNull BiConsumer<@NotNull Player, byte @NotNull []> listener) {
         return new BukkitRegistration(Bukkit.getMessenger().registerIncomingPluginChannel(plugin, channel, (channel1, player, message) -> {
             if (channel1.equals(channel)) {
-                listener.accept(new BukkitEntityPlayer(player), message);
+                listener.accept(new BukkitPlayer(player), message);
             }
         }));
     }
@@ -85,8 +84,8 @@ public class BukkitCustomPayload extends CustomPayload {
     }
 
     @Override
-    protected void send0(PlayerWrapper player, @NotNull String channel, byte @NotNull [] payload) {
-        player.as(Player.class).sendPluginMessage(plugin, channel, payload);
+    protected void send0(Player player, @NotNull String channel, byte @NotNull [] payload) {
+        player.as(org.bukkit.entity.Player.class).sendPluginMessage(plugin, channel, payload);
     }
 
     @Override

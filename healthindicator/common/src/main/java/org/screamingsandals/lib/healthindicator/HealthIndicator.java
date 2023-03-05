@@ -18,7 +18,7 @@ package org.screamingsandals.lib.healthindicator;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.tasker.TaskerTime;
@@ -42,10 +42,10 @@ public interface HealthIndicator extends DatableVisual<HealthIndicator> {
     @NotNull HealthIndicator startUpdateTask(long time, @NotNull TaskerTime unit);
 
     @Contract("_ -> this")
-    @NotNull HealthIndicator addTrackedPlayer(@NotNull PlayerWrapper player);
+    @NotNull HealthIndicator addTrackedPlayer(@NotNull Player player);
 
     @Contract("_ -> this")
-    @NotNull HealthIndicator removeTrackedPlayer(@NotNull PlayerWrapper player);
+    @NotNull HealthIndicator removeTrackedPlayer(@NotNull Player player);
 
     @Contract("_ -> this")
     default @NotNull HealthIndicator title(@NotNull Component component) {

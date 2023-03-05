@@ -18,7 +18,7 @@ package org.screamingsandals.lib.visuals;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 
@@ -40,7 +40,7 @@ public interface Visual<T> {
     /**
      * @return viewers that are currently looking and this visual.
      */
-    @NotNull Collection<@NotNull PlayerWrapper> viewers();
+    @NotNull Collection<@NotNull Player> viewers();
 
     @Contract("-> this")
     default @NotNull T update() {
@@ -56,10 +56,10 @@ public interface Visual<T> {
     @Contract("-> this")
     @NotNull T hide();
     @Contract("_ -> this")
-    @NotNull T addViewer(@NotNull PlayerWrapper viewer);
+    @NotNull T addViewer(@NotNull Player viewer);
 
     @Contract("_ -> this")
-    @NotNull T removeViewer(@NotNull PlayerWrapper viewer);
+    @NotNull T removeViewer(@NotNull Player viewer);
 
     @Contract("-> this")
     @NotNull T clearViewers();
@@ -87,17 +87,17 @@ public interface Visual<T> {
      */
     boolean destroyed();
 
-    boolean visibleTo(@NotNull PlayerWrapper player);
+    boolean visibleTo(@NotNull Player player);
 
-    void onViewerAdded(@NotNull PlayerWrapper viewer, boolean checkDistance);
+    void onViewerAdded(@NotNull Player viewer, boolean checkDistance);
 
-    void onViewerRemoved(@NotNull PlayerWrapper viewer, boolean checkDistance);
+    void onViewerRemoved(@NotNull Player viewer, boolean checkDistance);
 
-    default void onViewerAdded(@NotNull PlayerWrapper viewer) {
+    default void onViewerAdded(@NotNull Player viewer) {
         onViewerAdded(viewer, false);
     }
 
-    default void onViewerRemoved(@NotNull PlayerWrapper viewer) {
+    default void onViewerRemoved(@NotNull Player viewer) {
         onViewerRemoved(viewer, false);
     }
 }

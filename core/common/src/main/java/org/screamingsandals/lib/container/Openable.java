@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.container;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 
 /**
  * An interface representing an openable inventory.
@@ -28,5 +28,5 @@ public interface Openable {
      *
      * @param wrapper the player
      */
-    void openInventory(@NotNull PlayerWrapper wrapper);
+    void openInventory(@NotNull Player wrapper);
 }

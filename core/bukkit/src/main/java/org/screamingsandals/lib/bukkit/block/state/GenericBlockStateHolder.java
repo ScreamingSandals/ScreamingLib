@@ -28,9 +28,9 @@ import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.world.*;
-import org.screamingsandals.lib.block.state.BlockStateHolder;
+import org.screamingsandals.lib.block.state.BlockSnapshot;
 
-public class GenericBlockStateHolder extends BasicWrapper<BlockState> implements BlockStateHolder {
+public class GenericBlockStateHolder extends BasicWrapper<BlockState> implements BlockSnapshot {
     protected GenericBlockStateHolder(@NotNull BlockState wrappedObject) {
         super(wrappedObject);
     }
@@ -55,8 +55,8 @@ public class GenericBlockStateHolder extends BasicWrapper<BlockState> implements
     }
 
     @Override
-    public @NotNull LocationHolder getLocation() {
-        return LocationMapper.wrapLocation(wrappedObject.getLocation());
+    public @NotNull Location getLocation() {
+        return Locations.wrapLocation(wrappedObject.getLocation());
     }
 
     @Override

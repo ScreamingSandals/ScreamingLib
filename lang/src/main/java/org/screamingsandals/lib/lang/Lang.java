@@ -22,7 +22,7 @@ import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.lang.container.TranslationContainer;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 
@@ -49,7 +49,7 @@ public class Lang {
         Lang.defaultService = defaultService;
     }
 
-    public static @NotNull TranslationContainer getFor(@NotNull CommandSenderWrapper sender) {
+    public static @NotNull TranslationContainer getFor(@NotNull CommandSender sender) {
         if (defaultService == null) {
             throw new UnsupportedOperationException("Not initialized yet");
         }

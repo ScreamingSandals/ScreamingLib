@@ -19,17 +19,17 @@ package org.screamingsandals.lib.signs;
 import lombok.experimental.ExtensionMethod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.block.state.BlockStateHolder;
+import org.screamingsandals.lib.block.state.BlockSnapshot;
 import org.screamingsandals.lib.event.OnEvent;
-import org.screamingsandals.lib.event.player.SPlayerInteractEvent;
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.event.player.SPlayerBlockBreakEvent;
-import org.screamingsandals.lib.event.player.SPlayerUpdateSignEvent;
+import org.screamingsandals.lib.event.player.PlayerInteractEvent;
+import org.screamingsandals.lib.player.Player;
+import org.screamingsandals.lib.event.player.PlayerBlockBreakEvent;
+import org.screamingsandals.lib.event.player.PlayerUpdateSignEvent;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.methods.OnEnable;
 import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
-import org.screamingsandals.lib.block.state.SignHolder;
+import org.screamingsandals.lib.block.state.SignBlockSnapshot;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.loader.ConfigurationLoader;
@@ -139,11 +139,11 @@ public abstract class AbstractSignManager {
     }
 
     @OnEvent
-    public void onRightClick(@NotNull SPlayerInteractEvent event) {
-        if (event.action() == SPlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
+    public void onRightClick(@NotNull PlayerInteractEvent event) {
+        if (event.action() == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK
                 && event.clickedBlock() != null) {
-            var state = event.clickedBlock().<BlockStateHolder>getBlockState().orElseThrow();
-            if (state instanceof SignHolder) {
+            var state = event.clickedBlock().<BlockSnapshot>getBlockState().orElseThrow();
+            if (state instanceof SignBlockSnapshot) {
                 var location = new SignLocation(state.getLocation());
                 var sign = getSign(location);
                 if (sign != null) {
@@ -158,14 +158,14 @@ public abstract class AbstractSignManager {
     }
 
     @OnEvent
-    public void onBreak(@NotNull SPlayerBlockBreakEvent event) {
+    public void onBreak(@NotNull PlayerBlockBreakEvent event) {
         if (event.cancelled()) {
             return;
         }
 
         var player = event.player();
-        var state = event.block().<BlockStateHolder>getBlockState().orElseThrow();
-        if (state instanceof SignHolder) {
+        var state = event.block().<BlockSnapshot>getBlockState().orElseThrow();
+        if (state instanceof SignBlockSnapshot) {
             var location = new SignLocation(state.getLocation());
             if (isSignRegistered(location)) {
                 if (isAllowedToEdit(player)) {
@@ -179,7 +179,7 @@ public abstract class AbstractSignManager {
     }
 
     @OnEvent
-    public void onEdit(@NotNull SPlayerUpdateSignEvent event) {
+    public void onEdit(@NotNull PlayerUpdateSignEvent event) {
         if (event.cancelled()) {
             return;
         }
@@ -196,23 +196,23 @@ public abstract class AbstractSignManager {
         }
     }
 
-    protected abstract boolean isAllowedToUse(@NotNull PlayerWrapper player);
+    protected abstract boolean isAllowedToUse(@NotNull Player player);
 
-    protected abstract boolean isAllowedToEdit(@NotNull PlayerWrapper player);
+    protected abstract boolean isAllowedToEdit(@NotNull Player player);
 
     protected abstract @Nullable String normalizeKey(@NotNull Component key);
 
     protected abstract void updateSign(@NotNull ClickableSign sign);
 
-    protected abstract void onClick(@NotNull PlayerWrapper player, @NotNull ClickableSign sign);
+    protected abstract void onClick(@NotNull Player player, @NotNull ClickableSign sign);
 
     protected abstract boolean isFirstLineValid(@NotNull Component firstLine);
 
-    protected abstract @NotNull Component signCreatedMessage(@NotNull PlayerWrapper player);
+    protected abstract @NotNull Component signCreatedMessage(@NotNull Player player);
 
-    protected abstract @NotNull Component signCannotBeCreatedMessage(@NotNull PlayerWrapper player);
+    protected abstract @NotNull Component signCannotBeCreatedMessage(@NotNull Player player);
 
-    protected abstract @NotNull Component signCannotBeDestroyedMessage(@NotNull PlayerWrapper player);
+    protected abstract @NotNull Component signCannotBeDestroyedMessage(@NotNull Player player);
 
     protected abstract @NotNull ConfigurationLoader getLoader();
 }

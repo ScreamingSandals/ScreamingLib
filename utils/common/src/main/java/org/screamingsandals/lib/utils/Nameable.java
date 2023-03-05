@@ -18,13 +18,11 @@ package org.screamingsandals.lib.utils;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
-
 /**
  * Something that can have a name.
  */
 @FunctionalInterface
-public interface Nameable extends Serializable {
+public interface Nameable {
 
     /**
      * Creates new {@link Nameable}.

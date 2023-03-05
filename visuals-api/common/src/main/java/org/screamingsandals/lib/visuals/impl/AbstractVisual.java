@@ -20,7 +20,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.visuals.Visual;
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
-    protected final @NotNull List<@NotNull PlayerWrapper> viewers;
+    protected final @NotNull List<@NotNull Player> viewers;
     protected final @NotNull UUID uuid;
     protected volatile boolean visible;
     @Accessors(chain = true, fluent = true)
@@ -46,14 +46,14 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
     }
 
     @Override
-    public @NotNull Collection<@NotNull PlayerWrapper> viewers() {
+    public @NotNull Collection<@NotNull Player> viewers() {
         return List.copyOf(viewers);
     }
 
     @Contract("_ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public @NotNull T addViewer(@NotNull PlayerWrapper viewer) {
+    public @NotNull T addViewer(@NotNull Player viewer) {
         if (viewer.isOnline() && !viewers.contains(viewer)) {
             viewers.add(viewer);
             onViewerAdded(viewer, true);
@@ -64,7 +64,7 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
     @Contract("_ -> this")
     @SuppressWarnings("unchecked")
     @Override
-    public @NotNull T removeViewer(@NotNull PlayerWrapper viewer) {
+    public @NotNull T removeViewer(@NotNull Player viewer) {
         if (viewers.contains(viewer)) {
             viewers.remove(viewer);
             if (viewer.isOnline()) {
@@ -94,7 +94,7 @@ public abstract class AbstractVisual<T extends Visual<T>> implements Visual<T> {
     }
 
     @Override
-    public boolean visibleTo(@NotNull PlayerWrapper player) {
+    public boolean visibleTo(@NotNull Player player) {
         return viewers.contains(player);
     }
 }

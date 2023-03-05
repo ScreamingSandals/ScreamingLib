@@ -20,17 +20,16 @@ import cloud.commandframework.CommandTree;
 import cloud.commandframework.bukkit.CloudBukkitCapabilities;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.paper.PaperCommandManager;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.bukkit.entity.BukkitEntityPlayer;
-import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
+import org.screamingsandals.lib.player.Players;
+import org.screamingsandals.lib.sender.CommandSender;
 
 import java.util.function.Function;
 
-public class PaperScreamingCloudManager extends PaperCommandManager<CommandSenderWrapper> {
+public class PaperScreamingCloudManager extends PaperCommandManager<CommandSender> {
     /**
      * Construct a new Paper command manager
      *
@@ -38,18 +37,18 @@ public class PaperScreamingCloudManager extends PaperCommandManager<CommandSende
      * @param commandCoordinator Coordinator provider
      */
     public PaperScreamingCloudManager(@NotNull Plugin owningPlugin,
-                                      @NotNull Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) throws Exception {
+                                      @NotNull Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>> commandCoordinator) throws Exception {
         super(owningPlugin, commandCoordinator,
                 sender -> {
                     if (sender instanceof Player) {
-                        return new BukkitEntityPlayer((Player) sender);
+                        return new BukkitPlayer((Player) sender);
                     }
-                    return PlayerMapper.wrapSender(sender);
+                    return Players.wrapSender(sender);
                 }, sender -> {
-                    if (sender.getType() == CommandSenderWrapper.Type.PLAYER) {
+                    if (sender.getType() == CommandSender.Type.PLAYER) {
                         return sender.as(Player.class);
                     }
-                    return sender.as(CommandSender.class);
+                    return sender.as(org.bukkit.command.CommandSender.class);
                 });
 
         if (queryCapability(CloudBukkitCapabilities.BRIGADIER)) {

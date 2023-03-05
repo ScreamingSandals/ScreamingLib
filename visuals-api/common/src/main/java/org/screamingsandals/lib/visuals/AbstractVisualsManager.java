@@ -21,7 +21,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.event.OnEvent;
 import org.screamingsandals.lib.event.player.*;
 import org.screamingsandals.lib.packet.event.SPlayerServerboundInteractEvent;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.InteractType;
@@ -63,7 +63,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     }
 
     @OnEvent
-    public void onLeave(@NotNull SPlayerLeaveEvent event) {
+    public void onLeave(@NotNull PlayerLeaveEvent event) {
         coolDownMap.remove(event.player().getUuid());
         if (activeVisuals.isEmpty()) {
             return;
@@ -79,7 +79,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     }
 
     @OnEvent
-    public void onMove(@NotNull SPlayerMoveEvent event) {
+    public void onMove(@NotNull PlayerMoveEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
         }
@@ -110,7 +110,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     }
 
     @OnEvent
-    public void onRespawn(@NotNull SPlayerRespawnEvent event) {
+    public void onRespawn(@NotNull PlayerRespawnEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
         }
@@ -142,7 +142,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     }
 
     @OnEvent
-    public void onWorldChange(@NotNull SPlayerWorldChangeEvent event) {
+    public void onWorldChange(@NotNull PlayerWorldChangeEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
         }
@@ -178,7 +178,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
     }
 
     @OnEvent
-    public void onTeleport(@NotNull SPlayerTeleportEvent event) {
+    public void onTeleport(@NotNull PlayerTeleportEvent event) {
         if (activeVisuals.isEmpty()) {
             return;
         }
@@ -240,7 +240,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         }
     }
 
-    private void softAddViewer(@NotNull T visual, @NotNull PlayerWrapper player, long tickedDelay) {
+    private void softAddViewer(@NotNull T visual, @NotNull Player player, long tickedDelay) {
         Tasker.build(() -> {
             if (!player.isOnline()) {
                 return;
@@ -249,7 +249,7 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         }).delay(tickedDelay, TaskerTime.TICKS).async().start();
     }
 
-    private void softRemoveViewer(@NotNull T visual, @NotNull PlayerWrapper player, long tickedDelay) {
+    private void softRemoveViewer(@NotNull T visual, @NotNull Player player, long tickedDelay) {
         Tasker.build(() -> {
             if (!player.isOnline()) {
                 return;
@@ -258,5 +258,5 @@ public abstract class AbstractVisualsManager<T extends TouchableVisual<T>> {
         }).delay(tickedDelay, TaskerTime.TICKS).async().start();
     }
 
-    public abstract void fireVisualTouchEvent(@NotNull PlayerWrapper sender, @NotNull T visual, @NotNull InteractType interactType);
+    public abstract void fireVisualTouchEvent(@NotNull Player sender, @NotNull T visual, @NotNull InteractType interactType);
 }

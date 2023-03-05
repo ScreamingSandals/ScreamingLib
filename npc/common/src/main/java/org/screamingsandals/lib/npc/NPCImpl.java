@@ -25,13 +25,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.entity.EntityMapper;
+import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.hologram.HologramManager;
 import org.screamingsandals.lib.npc.skin.NPCSkin;
 import org.screamingsandals.lib.npc.skin.SkinLayerValues;
 import org.screamingsandals.lib.packet.*;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.player.gamemode.GameModeHolder;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -43,7 +43,7 @@ import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.visuals.UpdateStrategy;
 import org.screamingsandals.lib.visuals.impl.AbstractTouchableVisual;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,11 +72,11 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     private final @NotNull Map<@NotNull UUID, TaskerTask> hiderTask;
     private double hologramElevation;
 
-    public NPCImpl(@NotNull UUID uuid, @NotNull LocationHolder location, boolean touchable) {
+    public NPCImpl(@NotNull UUID uuid, @NotNull Location location, boolean touchable) {
         super(uuid, location, touchable);
 
         try {
-            this.entityId = EntityMapper.getNewEntityIdSynchronously().get();
+            this.entityId = Entities.getNewEntityIdSynchronously().get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -123,7 +123,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
 
 
     @Override
-    public void onViewerAdded(@NotNull PlayerWrapper viewer, boolean checkDistance) {
+    public void onViewerAdded(@NotNull Player viewer, boolean checkDistance) {
         if (shown() && viewer.isOnline()) {
             hologram.addViewer(viewer);
             createSpawnPackets().forEach(packet -> packet.sendPacket(viewer));
@@ -134,7 +134,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     }
 
     @Override
-    public void onViewerRemoved(@NotNull PlayerWrapper viewer, boolean checkDistance) {
+    public void onViewerRemoved(@NotNull Player viewer, boolean checkDistance) {
         if (viewer.isOnline()) {
             hologram.removeViewer(viewer);
             createPlayerTeamPacket(ClientboundSetPlayerTeamPacket.Mode.REMOVE).sendPacket(viewer);
@@ -145,7 +145,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
     }
 
     @Override
-    public void lookAtLocation(@NotNull LocationHolder location, @NotNull PlayerWrapper player) {
+    public void lookAtLocation(@NotNull Location location, @NotNull Player player) {
         final var direction = location().setDirection(player.getLocation().subtract(location()).asVector());
         ClientboundMoveEntityPacket.Rot.builder()
                 .entityId(entityId())
@@ -247,7 +247,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         hologram.title(title);
         return this;
     }
-    private void cancelTabHide(@NotNull PlayerWrapper viewer) {
+    private void cancelTabHide(@NotNull Player viewer) {
         hiderTask.computeIfPresent(viewer.getUuid(), (uuid, task) -> {
             if (task.getState() == TaskState.RUNNING
                     || task.getState() == TaskState.SCHEDULED) {
@@ -257,7 +257,7 @@ public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
         });
     }
 
-    private void scheduleTabHide(@NotNull PlayerWrapper viewer) {
+    private void scheduleTabHide(@NotNull Player viewer) {
         cancelTabHide(viewer);
         Tasker.build(() -> {
             if (!viewer.isOnline()) {

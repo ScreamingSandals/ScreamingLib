@@ -17,7 +17,7 @@
 package org.screamingsandals.lib.sidebar.team;
 
 import org.screamingsandals.lib.packet.ClientboundSetPlayerTeamPacket;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 
@@ -41,9 +41,9 @@ public interface ScoreboardTeam extends PlayerAudience.ForwardingToMulti {
 
     ScoreboardTeam collisionRule(ClientboundSetPlayerTeamPacket.CollisionRule collisionRule);
 
-    ScoreboardTeam player(PlayerWrapper player);
+    ScoreboardTeam player(Player player);
 
-    ScoreboardTeam removePlayer(PlayerWrapper player);
+    ScoreboardTeam removePlayer(Player player);
 
     String identifier();
 
@@ -63,7 +63,7 @@ public interface ScoreboardTeam extends PlayerAudience.ForwardingToMulti {
 
     ClientboundSetPlayerTeamPacket.CollisionRule collisionRule();
 
-    List<PlayerWrapper> players();
+    List<Player> players();
 
     void destroy();
 }

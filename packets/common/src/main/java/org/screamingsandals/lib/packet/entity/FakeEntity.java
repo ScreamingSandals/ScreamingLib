@@ -23,13 +23,13 @@ import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.entity.EntityMapper;
+import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.packet.*;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.math.Vector3D;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -40,7 +40,7 @@ import java.util.concurrent.ExecutionException;
 public class FakeEntity {
     private final int id;
     @Setter
-    private @NotNull LocationHolder location;
+    private @NotNull Location location;
     private final int typeId;
     private final @NotNull UUID uuid;
     private final @NotNull List<@NotNull MetadataItem> metadataItems;
@@ -52,16 +52,16 @@ public class FakeEntity {
     @Setter
     private boolean isOnGround;
 
-    public FakeEntity(@NotNull LocationHolder location, int typeId) {
+    public FakeEntity(@NotNull Location location, int typeId) {
         // default values
         if (!Server.isServerThread()) {
             try {
-                this.id = EntityMapper.getNewEntityIdSynchronously().get();
+                this.id = Entities.getNewEntityIdSynchronously().get();
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         } else {
-            this.id = EntityMapper.getNewEntityId();
+            this.id = Entities.getNewEntityId();
         }
         this.typeId = typeId;
         this.location = location;
@@ -141,11 +141,11 @@ public class FakeEntity {
         }
     }
 
-    public void spawn(@NotNull PlayerWrapper player) {
+    public void spawn(@NotNull Player player) {
         getSpawnPackets().forEach(packet -> packet.sendPacket(player));
     }
 
-    public void teleport(@NotNull PlayerWrapper player) {
+    public void teleport(@NotNull Player player) {
         getTeleportPacket().sendPacket(player);
     }
 
@@ -153,7 +153,7 @@ public class FakeEntity {
         return getSpawnPackets(List.of());
     }
 
-    public @NotNull List<@NotNull AbstractPacket> getSpawnPackets(@NotNull PlayerWrapper viewer) {
+    public @NotNull List<@NotNull AbstractPacket> getSpawnPackets(@NotNull Player viewer) {
         if (customNameSenderMessage != null) {
             if (Server.isVersion(1, 13)) {
                 return getSpawnPackets(List.of(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), customNameSenderMessage.asComponent(viewer))));
@@ -199,7 +199,7 @@ public class FakeEntity {
         return getMetadataPacket(List.of());
     }
 
-    public @NotNull ClientboundSetEntityDataPacket getMetadataPacket(@NotNull PlayerWrapper viewer) {
+    public @NotNull ClientboundSetEntityDataPacket getMetadataPacket(@NotNull Player viewer) {
         if (customNameSenderMessage != null) {
             if (Server.isVersion(1, 13)) {
                 return getMetadataPacket(List.of(MetadataItem.ofOpt(EntityMetadata.Registry.getId(EntityMetadata.CUSTOM_NAME), customNameSenderMessage.asComponent(viewer))));

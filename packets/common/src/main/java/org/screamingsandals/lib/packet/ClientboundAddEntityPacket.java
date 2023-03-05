@@ -21,7 +21,7 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.math.Vector3D;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 import java.util.UUID;
 
@@ -32,7 +32,7 @@ import java.util.UUID;
 public class ClientboundAddEntityPacket extends AbstractPacket {
     private final int entityId;
     private final @NotNull UUID uuid;
-    private final @NotNull LocationHolder location;
+    private final @NotNull Location location;
     private final @NotNull Vector3D velocity;
     private final int typeId;
     private final int data;

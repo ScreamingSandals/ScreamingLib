@@ -18,16 +18,16 @@ package org.screamingsandals.lib.sender.permissions;
 
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSender;
 
 import java.util.function.Predicate;
 
 @RequiredArgsConstructor(staticName = "of")
 public final class PredicatePermission implements Permission {
-    private final @NotNull Predicate<@NotNull CommandSenderWrapper> predicate;
+    private final @NotNull Predicate<@NotNull CommandSender> predicate;
 
     @Override
-    public boolean hasPermission(@NotNull CommandSenderWrapper commandSender) {
+    public boolean hasPermission(@NotNull CommandSender commandSender) {
         return predicate.test(commandSender);
     }
 }

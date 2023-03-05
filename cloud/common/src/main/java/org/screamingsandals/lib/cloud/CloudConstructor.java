@@ -22,7 +22,7 @@ import cloud.commandframework.execution.CommandExecutionCoordinator;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 
 import java.util.function.Function;
@@ -40,12 +40,12 @@ public abstract class CloudConstructor {
         cloudConstructor = this;
     }
 
-    public static @NotNull CommandManager<CommandSenderWrapper> construct(@NotNull Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) throws Exception {
+    public static @NotNull CommandManager<CommandSender> construct(@NotNull Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>> commandCoordinator) throws Exception {
         if (cloudConstructor == null) {
             throw new UnsupportedOperationException("CloudConstructor is not initialized yet!");
         }
         return cloudConstructor.construct0(commandCoordinator);
     }
 
-    public abstract @NotNull CommandManager<CommandSenderWrapper> construct0(@NotNull Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) throws Exception;
+    public abstract @NotNull CommandManager<CommandSender> construct0(@NotNull Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>> commandCoordinator) throws Exception;
 }

@@ -22,20 +22,20 @@ import cloud.commandframework.execution.CommandExecutionCoordinator;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.bukkit.player.BukkitPlayerMapper;
+import org.screamingsandals.lib.bukkit.player.BukkitPlayers;
 import org.screamingsandals.lib.cloud.CloudConstructor;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 import java.util.function.Function;
 
-@Service(dependsOn = BukkitPlayerMapper.class)
+@Service(dependsOn = BukkitPlayers.class)
 @RequiredArgsConstructor
 public class BukkitCloudConstructor extends CloudConstructor {
     private final @NotNull Plugin plugin;
 
     @Override
-    public @NotNull CommandManager<CommandSenderWrapper> construct0(@NotNull Function<CommandTree<CommandSenderWrapper>, CommandExecutionCoordinator<CommandSenderWrapper>> commandCoordinator) throws Exception {
+    public @NotNull CommandManager<CommandSender> construct0(@NotNull Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>> commandCoordinator) throws Exception {
         return new PaperScreamingCloudManager(plugin, commandCoordinator);
     }
 }

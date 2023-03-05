@@ -33,7 +33,7 @@ public class ShortStackDeserializer {
     public static final @NotNull Pattern SHORT_STACK_PATTERN = Pattern.compile("^(?<material>(?:(?!(?<!\\\\)(?:\\\\\\\\)*;).)+)(\\\\*)?(;(?<amount>(?:(?!(?<!\\\\)(?:\\\\\\\\)*;).)+)?(\\\\*)?(;(?<name>(\"((?!(?<!\\\\)(?:\\\\\\\\)*\").)+|(?:(?!(?<!\\\\)(?:\\\\\\\\)*;).)+))?(\\\\*)?(;(?<lore>.*))?)?)?$");
     public static final @NotNull Pattern LORE_SPLIT = Pattern.compile("((\"((?!(?<!\\\\)(?:\\\\\\\\)*\").)+\")|((?!(?<!\\\\)(?:\\\\\\\\)*;).)+)(?=($|;))");
 
-    public static void deserializeShortStack(@NotNull ItemBuilder builder, @Nullable Object shortStackObject) {
+    public static void deserializeShortStack(@NotNull ItemStackBuilder builder, @Nullable Object shortStackObject) {
         if (shortStackObject instanceof ConfigurationNode) {
             shortStackObject = ((ConfigurationNode) shortStackObject).getString();
         }

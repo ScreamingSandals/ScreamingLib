@@ -17,12 +17,12 @@
 package org.screamingsandals.lib.packet;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 
 import java.util.Collection;
 
 /**
- * Represents a packet which can be sent to a player using {@link PacketMapper#sendPacket(PlayerWrapper, AbstractPacket)} or {@link AbstractPacket#sendPacket(PlayerWrapper)}.
+ * Represents a packet which can be sent to a player using {@link PacketMapper#sendPacket(Player, AbstractPacket)} or {@link AbstractPacket#sendPacket(Player)}.
  */
 public abstract class AbstractPacket {
 
@@ -41,7 +41,7 @@ public abstract class AbstractPacket {
      *
      * @param player the player to send the packet to
      */
-    public void sendPacket(@NotNull PlayerWrapper player) {
+    public void sendPacket(@NotNull Player player) {
         PacketMapper.sendPacket(player, this);
     }
 
@@ -50,7 +50,7 @@ public abstract class AbstractPacket {
      *
      * @param players the players to send the packet to
      */
-    public void sendPacket(@NotNull Collection<@NotNull PlayerWrapper> players) {
+    public void sendPacket(@NotNull Collection<@NotNull Player> players) {
         PacketMapper.sendPacket(players, this);
     }
 

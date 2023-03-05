@@ -20,8 +20,8 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.packet.ClientboundSetPlayerTeamPacket;
-import org.screamingsandals.lib.player.PlayerWrapper;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.player.Player;
+import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.sidebar.TeamedSidebar;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
@@ -44,7 +44,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     protected boolean seeInvisible = true;
     protected ClientboundSetPlayerTeamPacket.TagVisibility nameTagVisibility = ClientboundSetPlayerTeamPacket.TagVisibility.ALWAYS;
     protected ClientboundSetPlayerTeamPacket.CollisionRule collisionRule = ClientboundSetPlayerTeamPacket.CollisionRule.ALWAYS;
-    protected final List<PlayerWrapper> players = new LinkedList<>();
+    protected final List<Player> players = new LinkedList<>();
     private final String teamKey;
 
     public ScoreboardTeamImpl(TeamedSidebar<?> scoreboard, String identifier) {
@@ -115,7 +115,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public ScoreboardTeam player(PlayerWrapper player) {
+    public ScoreboardTeam player(Player player) {
         if (!players.contains(player)) {
             players.add(player);
             sendAddPlayer(player);
@@ -124,7 +124,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public ScoreboardTeam removePlayer(PlayerWrapper player) {
+    public ScoreboardTeam removePlayer(Player player) {
         if (players.contains(player)) {
             players.remove(player);
             sendRemovePlayer(player);
@@ -133,7 +133,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public @NotNull List<@NotNull PlayerWrapper> players() {
+    public @NotNull List<@NotNull Player> players() {
         return List.copyOf(players);
     }
 
@@ -170,8 +170,8 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
                 .teamSuffix(teamSuffix);
     }
 
-    private void packPlayers(ClientboundSetPlayerTeamPacket.ClientboundSetPlayerTeamPacketBuilder packet, List<PlayerWrapper> players) {
-        packet.entities(players.stream().map(CommandSenderWrapper::getName).collect(Collectors.toList()));
+    private void packPlayers(ClientboundSetPlayerTeamPacket.ClientboundSetPlayerTeamPacketBuilder packet, List<Player> players) {
+        packet.entities(players.stream().map(CommandSender::getName).collect(Collectors.toList()));
     }
 
     protected void updateInfo() {
@@ -182,7 +182,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
         }
     }
 
-    protected void sendAddPlayer(PlayerWrapper player) {
+    protected void sendAddPlayer(Player player) {
         if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = getNotFinalScoreboardTeamPacket(ClientboundSetPlayerTeamPacket.Mode.ADD_ENTITY);
             packPlayers(packet, List.of(player));
@@ -190,7 +190,7 @@ public class ScoreboardTeamImpl implements ScoreboardTeam {
         }
     }
 
-    protected void sendRemovePlayer(PlayerWrapper player) {
+    protected void sendRemovePlayer(Player player) {
         if (scoreboard.shown() && scoreboard.hasViewers()) {
             var packet = getNotFinalScoreboardTeamPacket(ClientboundSetPlayerTeamPacket.Mode.REMOVE_ENTITY);
             packPlayers(packet, List.of(player));

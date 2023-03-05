@@ -23,11 +23,11 @@ import org.screamingsandals.lib.Core;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.hologram.event.HologramTouchEvent;
 import org.screamingsandals.lib.packet.PacketMapper;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.visuals.AbstractVisualsManager;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 import java.util.Map;
 import java.util.UUID;
@@ -46,19 +46,19 @@ public class HologramManager extends AbstractVisualsManager<Hologram> {
         manager = this;
     }
 
-    public static @NotNull Hologram hologram(@NotNull LocationHolder holder) {
+    public static @NotNull Hologram hologram(@NotNull Location holder) {
         return hologram(UUID.randomUUID(), holder, false);
     }
 
-    public static @NotNull Hologram hologram(@NotNull LocationHolder holder, boolean touchable) {
+    public static @NotNull Hologram hologram(@NotNull Location holder, boolean touchable) {
         return hologram(UUID.randomUUID(), holder, touchable);
     }
 
-    public static @NotNull Hologram hologram(@NotNull UUID uuid, @NotNull LocationHolder holder) {
+    public static @NotNull Hologram hologram(@NotNull UUID uuid, @NotNull Location holder) {
         return hologram(uuid, holder, false);
     }
 
-    public static @NotNull Hologram hologram(@NotNull UUID uuid, @NotNull LocationHolder holder, boolean touchable) {
+    public static @NotNull Hologram hologram(@NotNull UUID uuid, @NotNull Location holder, boolean touchable) {
         if (manager == null) {
             throw new UnsupportedOperationException("HologramManager is not initialized yet!");
         }
@@ -105,7 +105,7 @@ public class HologramManager extends AbstractVisualsManager<Hologram> {
     }
 
     @Override
-    public void fireVisualTouchEvent(@NotNull PlayerWrapper sender, @NotNull Hologram visual, @NotNull InteractType interactType) {
+    public void fireVisualTouchEvent(@NotNull Player sender, @NotNull Hologram visual, @NotNull InteractType interactType) {
         EventManager.fireAsync(new HologramTouchEvent(sender, visual, interactType));
     }
 }

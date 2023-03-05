@@ -21,12 +21,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.TaggableHolder;
-import org.screamingsandals.lib.entity.EntityBasic;
+import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 import java.util.List;
 
@@ -60,7 +60,7 @@ public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder, Tag
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
     boolean is(@Nullable Object @NotNull... entityTypes);
 
-    @Nullable EntityBasic spawn(@NotNull LocationHolder location);
+    @Nullable BasicEntity spawn(@NotNull Location location);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
     static @NotNull EntityTypeHolder of(@NotNull Object entityType) {

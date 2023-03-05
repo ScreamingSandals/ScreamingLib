@@ -20,10 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.packet.MetadataItem;
 import org.screamingsandals.lib.utils.math.Vector3Di;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 public class FakeLivingEntity extends FakeEntity {
-    public FakeLivingEntity(@NotNull LocationHolder location, int typeId) {
+    public FakeLivingEntity(@NotNull Location location, int typeId) {
         super(location, typeId);
     }
 

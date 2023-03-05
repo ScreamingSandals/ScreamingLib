@@ -23,7 +23,7 @@ import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
 public interface ProjectileShooter extends Wrapper {
-    default @Nullable EntityProjectile launchProjectile(@NotNull Object projectileType) {
+    default @Nullable ProjectileEntity launchProjectile(@NotNull Object projectileType) {
         if (projectileType instanceof EntityTypeHolder) {
             return launchProjectile(projectileType);
         } else {
@@ -35,9 +35,9 @@ public interface ProjectileShooter extends Wrapper {
         }
     }
 
-    @Nullable EntityProjectile launchProjectile(@NotNull EntityTypeHolder projectileType);
+    @Nullable ProjectileEntity launchProjectile(@NotNull EntityTypeHolder projectileType);
 
-    default @Nullable EntityProjectile launchProjectile(@NotNull Object projectileType, @NotNull Vector3D velocity) {
+    default @Nullable ProjectileEntity launchProjectile(@NotNull Object projectileType, @NotNull Vector3D velocity) {
         if (projectileType instanceof EntityTypeHolder) {
             return launchProjectile(projectileType, velocity);
         } else {
@@ -49,5 +49,5 @@ public interface ProjectileShooter extends Wrapper {
         }
     }
 
-    @Nullable EntityProjectile launchProjectile(@NotNull EntityTypeHolder projectileType, @NotNull Vector3D velocity);
+    @Nullable ProjectileEntity launchProjectile(@NotNull EntityTypeHolder projectileType, @NotNull Vector3D velocity);
 }

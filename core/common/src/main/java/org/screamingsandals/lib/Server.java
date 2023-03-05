@@ -20,11 +20,12 @@ import io.netty.channel.ChannelFuture;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
+import org.screamingsandals.lib.player.Sender;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
-import org.screamingsandals.lib.world.WorldHolder;
+import org.screamingsandals.lib.world.World;
 
 import java.util.List;
 
@@ -95,11 +96,11 @@ public abstract class Server {
      *
      * @return list of players currently connected to the server
      */
-    public static @NotNull List<@NotNull PlayerWrapper> getConnectedPlayers() {
+    public static @NotNull List<@NotNull Player> getConnectedPlayers() {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getConnectedPlayers0();
     }
 
-    public static @NotNull List<@NotNull WorldHolder> getWorlds() {
+    public static @NotNull List<@NotNull World> getWorlds() {
         return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getWorlds0();
     }
 
@@ -109,7 +110,7 @@ public abstract class Server {
      * @param world the world
      * @return list of players currently in the world
      */
-    public static @NotNull List<@NotNull PlayerWrapper> getConnectedPlayersFromWorld(@NotNull WorldHolder world) {
+    public static @NotNull List<@NotNull Player> getConnectedPlayersFromWorld(@NotNull World world) {
         Preconditions.checkNotNull(server, "Server has not yet been initialized!");
         Preconditions.checkNotNull(world, "Invalid world provided!");
         return server.getConnectedPlayersFromWorld0(world);
@@ -141,6 +142,10 @@ public abstract class Server {
         return PROTOCOL_VERSION;
     }
 
+    public static @NotNull Sender getConsoleSender() {
+        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getConsoleSender0();
+    }
+
     /**
      * <pre>
      *  O   This is Paul.
@@ -170,15 +175,17 @@ public abstract class Server {
 
     public abstract boolean isServerThread0();
 
-    public abstract @NotNull List<@NotNull PlayerWrapper> getConnectedPlayers0();
+    public abstract @NotNull List<@NotNull Player> getConnectedPlayers0();
 
-    public abstract @NotNull List<@NotNull PlayerWrapper> getConnectedPlayersFromWorld0(@NotNull WorldHolder world);
+    public abstract @NotNull List<@NotNull Player> getConnectedPlayersFromWorld0(@NotNull World world);
 
-    public abstract @NotNull List<@NotNull WorldHolder> getWorlds0();
+    public abstract @NotNull List<@NotNull World> getWorlds0();
 
     public abstract void runSynchronously0(@NotNull Runnable task);
 
     public abstract List<@NotNull ChannelFuture> getConnections0();
+
+    public abstract @NotNull Sender getConsoleSender0();
 
     public abstract void shutdown0();
 

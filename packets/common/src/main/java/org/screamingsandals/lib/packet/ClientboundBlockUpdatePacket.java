@@ -22,14 +22,14 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true, fluent = true)
 @Builder(toBuilder = true)
 public class ClientboundBlockUpdatePacket extends AbstractPacket {
-    private final @NotNull LocationHolder blockLocation;
+    private final @NotNull Location blockLocation;
     private final @NotNull BlockTypeHolder blockData;
 
     @Override

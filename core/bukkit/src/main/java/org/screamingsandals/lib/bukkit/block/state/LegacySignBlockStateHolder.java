@@ -19,12 +19,12 @@ package org.screamingsandals.lib.bukkit.block.state;
 import org.bukkit.block.Sign;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
-import org.screamingsandals.lib.block.state.SignHolder;
+import org.screamingsandals.lib.block.state.SignBlockSnapshot;
 import org.screamingsandals.lib.spectator.Component;
 
 import java.util.Arrays;
 
-public class LegacySignBlockStateHolder extends GenericBlockStateHolder implements SignHolder {
+public class LegacySignBlockStateHolder extends GenericBlockStateHolder implements SignBlockSnapshot {
     protected LegacySignBlockStateHolder(@NotNull Sign wrappedObject) {
         super(wrappedObject);
     }

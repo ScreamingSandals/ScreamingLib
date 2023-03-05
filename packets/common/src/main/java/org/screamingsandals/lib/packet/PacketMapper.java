@@ -18,7 +18,7 @@ package org.screamingsandals.lib.packet;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 
@@ -54,7 +54,7 @@ public abstract class PacketMapper {
      * @param player the player to send the packet to
      * @param packet the packet instance to send the player
      */
-    public static void sendPacket(@NotNull PlayerWrapper player, @NotNull AbstractPacket packet) {
+    public static void sendPacket(@NotNull Player player, @NotNull AbstractPacket packet) {
         if (packetMapper == null) {
             throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
         }
@@ -67,7 +67,7 @@ public abstract class PacketMapper {
      * @param player the player to send the packet to
      * @param packet the packet instance to send the player
      */
-    public abstract void sendPacket0(@NotNull PlayerWrapper player, @NotNull AbstractPacket packet);
+    public abstract void sendPacket0(@NotNull Player player, @NotNull AbstractPacket packet);
 
 
     /**
@@ -76,7 +76,7 @@ public abstract class PacketMapper {
      * @param players the players to send the packet to
      * @param packet the packet instance to send the players
      */
-    public static void sendPacket(@NotNull Collection<@NotNull PlayerWrapper> players, @NotNull AbstractPacket packet) {
+    public static void sendPacket(@NotNull Collection<@NotNull Player> players, @NotNull AbstractPacket packet) {
         if (packetMapper == null) {
             throw new UnsupportedOperationException("PacketMapper isn't initialized yet.");
         }

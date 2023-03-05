@@ -17,14 +17,14 @@
 package org.screamingsandals.lib.sender.permissions;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSender;
 
 public interface Permission {
-    default boolean hasPermission(@NotNull CommandSenderWrapper commandSender) {
+    default boolean hasPermission(@NotNull CommandSender commandSender) {
         return commandSender.hasPermission(this);
     }
 
-    default boolean isPermissionSet(@NotNull CommandSenderWrapper commandSender) {
+    default boolean isPermissionSet(@NotNull CommandSender commandSender) {
         return commandSender.isPermissionSet(this);
     }
 }

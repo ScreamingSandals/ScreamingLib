@@ -17,7 +17,6 @@
 package org.screamingsandals.lib.bukkit.spectator;
 
 import org.bukkit.SoundCategory;
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +33,7 @@ import org.screamingsandals.lib.bukkit.spectator.title.BukkitTitle;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.nbt.SNBTSerializer;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.spectator.*;
 import org.screamingsandals.lib.spectator.audience.ConsoleAudience;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
@@ -333,7 +332,7 @@ public class SpigotBackend extends AbstractBungeeBackend {
     }
 
     @SuppressWarnings("unchecked")
-    public <A extends Adapter> @NotNull A adapter(@NotNull CommandSenderWrapper wrapper, @NotNull CommandSender sender) {
+    public <A extends Adapter> @NotNull A adapter(@NotNull CommandSender wrapper, @NotNull org.bukkit.command.CommandSender sender) {
         if (adventureBackend != null) {
             return SpigotBackendAdventureExtension.adapter(wrapper, sender);
         }

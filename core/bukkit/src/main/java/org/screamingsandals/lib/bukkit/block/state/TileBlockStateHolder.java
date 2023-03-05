@@ -18,10 +18,10 @@ package org.screamingsandals.lib.bukkit.block.state;
 
 import org.bukkit.block.TileState;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.state.TileStateHolder;
+import org.screamingsandals.lib.block.state.BlockEntitySnapshot;
 
 // TODO: Persistent data container
-public class TileBlockStateHolder extends GenericBlockStateHolder implements TileStateHolder {
+public class TileBlockStateHolder extends GenericBlockStateHolder implements BlockEntitySnapshot {
     protected TileBlockStateHolder(@NotNull TileState wrappedObject) {
         super(wrappedObject);
     }

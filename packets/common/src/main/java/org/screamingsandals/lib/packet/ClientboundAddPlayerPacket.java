@@ -21,7 +21,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +33,7 @@ import java.util.UUID;
 public class ClientboundAddPlayerPacket extends AbstractPacket {
     private final int entityId;
     private final @NotNull UUID uuid;
-    private final @NotNull LocationHolder location;
+    private final @NotNull Location location;
     @Builder.Default private final @NotNull List<@NotNull MetadataItem> metadata = List.of();
 
     @Override

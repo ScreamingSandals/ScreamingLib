@@ -28,7 +28,6 @@ import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Entity;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.chat.ComponentSerializer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +38,7 @@ import org.screamingsandals.lib.adventure.spectator.audience.adapter.AdventurePl
 import org.screamingsandals.lib.bukkit.BukkitServer;
 import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.nbt.SNBTSerializer;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.spectator.SpectatorBackend;
 import org.screamingsandals.lib.spectator.audience.ConsoleAudience;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
@@ -180,7 +179,7 @@ class SpigotBackendAdventureExtension {
     }
 
     @SuppressWarnings("unchecked")
-    static <A extends Adapter> @NotNull A adapter(@NotNull CommandSenderWrapper wrapper, @NotNull CommandSender sender) {
+    static <A extends Adapter> @NotNull A adapter(@NotNull CommandSender wrapper, @NotNull org.bukkit.command.CommandSender sender) {
         if (sender instanceof Player && wrapper instanceof PlayerAudience) {
             return (A) new AdventurePlayerAdapter(sender, (PlayerAudience) wrapper);
         } else if (sender instanceof ConsoleCommandSender && wrapper instanceof ConsoleAudience) {

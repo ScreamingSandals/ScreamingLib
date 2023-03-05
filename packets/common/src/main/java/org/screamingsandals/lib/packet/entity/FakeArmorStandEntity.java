@@ -21,14 +21,14 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.packet.MetadataItem;
 import org.screamingsandals.lib.utils.math.Vector3Df;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 @Getter
 public class FakeArmorStandEntity extends FakeLivingEntity {
     private byte armorStandFlags;
     private @NotNull Vector3Df headRotation;
 
-    public FakeArmorStandEntity(@NotNull LocationHolder location, int typeId) {
+    public FakeArmorStandEntity(@NotNull Location location, int typeId) {
         super(location, typeId);
         this.armorStandFlags = 0;
         this.headRotation = new Vector3Df(0.0f, 0.0f, 0.0f);

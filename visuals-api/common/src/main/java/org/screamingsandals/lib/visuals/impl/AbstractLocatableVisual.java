@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.visuals.LocatableVisual;
 import org.screamingsandals.lib.visuals.UpdateStrategy;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -28,10 +28,10 @@ import java.util.UUID;
 @SuppressWarnings("unchecked") // this is just java being dum
 public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> extends AbstractVisual<T> implements LocatableVisual<T> {
     private volatile int viewDistance;
-    private volatile @NotNull LocationHolder location;
+    private volatile @NotNull Location location;
     private volatile boolean created;
 
-    public AbstractLocatableVisual(@NotNull UUID uuid, @NotNull LocationHolder location) {
+    public AbstractLocatableVisual(@NotNull UUID uuid, @NotNull Location location) {
         super(uuid);
         Objects.requireNonNull(location, "Location cannot be null!");
         this.viewDistance = LocatableVisual.DEFAULT_VIEW_DISTANCE;
@@ -56,12 +56,12 @@ public abstract class AbstractLocatableVisual<T extends LocatableVisual<T>> exte
     }
 
     @Override
-    public @NotNull LocationHolder location() {
+    public @NotNull Location location() {
         return location;
     }
 
     @Override
-    public @NotNull T location(@NotNull LocationHolder location) {
+    public @NotNull T location(@NotNull Location location) {
         Objects.requireNonNull(location, "Location cannot be null!");
         this.location = location;
         update(UpdateStrategy.POSITION);

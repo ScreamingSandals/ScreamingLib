@@ -19,13 +19,13 @@ package org.screamingsandals.lib.hologram;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.tasker.TaskerTime;
 import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.visuals.DatableVisual;
 import org.screamingsandals.lib.visuals.LinedVisual;
 import org.screamingsandals.lib.visuals.TouchableVisual;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 /**
  * Hologram that shows some text.
@@ -43,7 +43,7 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @return created hologram
      */
     @Contract("_ -> new")
-    static @NotNull Hologram of(@NotNull LocationHolder location) {
+    static @NotNull Hologram of(@NotNull Location location) {
         return HologramManager.hologram(location);
     }
 
@@ -54,7 +54,7 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @return created hologram
      */
     @Contract("_ -> new")
-    static @NotNull Hologram touchableOf(@NotNull LocationHolder location) {
+    static @NotNull Hologram touchableOf(@NotNull Location location) {
         return HologramManager.hologram(location, true);
     }
 
@@ -102,7 +102,7 @@ public interface Hologram extends LinedVisual<Hologram>, DatableVisual<Hologram>
      * @return this hologram
      */
     @Contract("_ -> this")
-    @NotNull Hologram item(@Nullable Item item);
+    @NotNull Hologram item(@Nullable ItemStack item);
 
     /**
      * Position of the item shown as hologram

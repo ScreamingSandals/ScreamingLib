@@ -19,7 +19,7 @@ package org.screamingsandals.lib.visuals.impl;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.visuals.TouchableVisual;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 import java.util.UUID;
 
@@ -27,7 +27,7 @@ public abstract class AbstractTouchableVisual<T extends TouchableVisual<T>> exte
     private volatile boolean touchable;
     private volatile long clickCoolDown;
 
-    public AbstractTouchableVisual(@NotNull UUID uuid, @NotNull LocationHolder location, boolean touchable) {
+    public AbstractTouchableVisual(@NotNull UUID uuid, @NotNull Location location, boolean touchable) {
         super(uuid, location);
         this.touchable = touchable;
         this.clickCoolDown = TouchableVisual.DEFAULT_CLICK_COOL_DOWN;

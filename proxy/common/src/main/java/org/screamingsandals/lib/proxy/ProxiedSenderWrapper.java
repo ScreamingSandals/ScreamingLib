@@ -16,10 +16,10 @@
 
 package org.screamingsandals.lib.proxy;
 
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.api.Wrapper;
 
-public interface ProxiedSenderWrapper extends Wrapper, CommandSenderWrapper {
+public interface ProxiedSenderWrapper extends Wrapper, CommandSender {
 
     /**
      * @deprecated Operators are not supported on Proxy servers.

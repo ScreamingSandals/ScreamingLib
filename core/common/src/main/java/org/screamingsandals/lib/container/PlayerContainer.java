@@ -18,7 +18,7 @@ package org.screamingsandals.lib.container;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemStack;
 
 /**
  * An interface representing a player's inventory.
@@ -32,98 +32,98 @@ public interface PlayerContainer extends Container {
      *
      * @return the armor items
      */
-    @Nullable Item @NotNull [] getArmorContents();
+    @Nullable ItemStack @NotNull [] getArmorContents();
 
     /**
      * Gets the item in the helmet slot.
      *
      * @return the item in the helmet slot, null if there is no item
      */
-    @Nullable Item getHelmet();
+    @Nullable ItemStack getHelmet();
 
     /**
      * Gets the item in the chestplate slot.
      *
      * @return the item in the chestplate slot, null if there is no item
      */
-    @Nullable Item getChestplate();
+    @Nullable ItemStack getChestplate();
 
     /**
      * Gets the item in the leggings slot.
      *
      * @return the item in the leggings slot, null if there is no item
      */
-    @Nullable Item getLeggings();
+    @Nullable ItemStack getLeggings();
 
     /**
      * Gets the item in the boots slot.
      *
      * @return the item in the boots slot, null if there is no item
      */
-    @Nullable Item getBoots();
+    @Nullable ItemStack getBoots();
 
     /**
      * Sets the armor slots to the supplied items.
      *
      * @param items the armor items
      */
-    void setArmorContents(@Nullable Item @Nullable [] items);
+    void setArmorContents(@Nullable ItemStack @Nullable [] items);
 
     /**
      * Sets the helmet slot to the supplied item.
      *
      * @param helmet the item
      */
-    void setHelmet(@Nullable Item helmet);
+    void setHelmet(@Nullable ItemStack helmet);
 
     /**
      * Sets the chestplate slot to the supplied item.
      *
      * @param chestplate the item
      */
-    void setChestplate(@Nullable Item chestplate);
+    void setChestplate(@Nullable ItemStack chestplate);
 
     /**
      * Sets the leggings slot to the supplied item.
      *
      * @param leggings the item
      */
-    void setLeggings(@Nullable Item leggings);
+    void setLeggings(@Nullable ItemStack leggings);
 
     /**
      * Sets the boots slot to the supplied item.
      *
      * @param boots the item
      */
-    void setBoots(@Nullable Item boots);
+    void setBoots(@Nullable ItemStack boots);
 
     /**
      * Gets a copy of the item in the main hand slot.
      *
      * @return the item
      */
-    @NotNull Item getItemInMainHand();
+    @NotNull ItemStack getItemInMainHand();
 
     /**
      * Sets the main hand slot to the supplied item.
      *
      * @param item the item
      */
-    void setItemInMainHand(@Nullable Item item);
+    void setItemInMainHand(@Nullable ItemStack item);
 
     /**
      * Gets a copy of the item in the offhand slot.
      *
      * @return the item
      */
-    @NotNull Item getItemInOffHand();
+    @NotNull ItemStack getItemInOffHand();
 
     /**
      * Sets the offhand slot to the supplied item.
      *
      * @param item the item
      */
-    void setItemInOffHand(@Nullable Item item);
+    void setItemInOffHand(@Nullable ItemStack item);
 
     /**
      * Gets the slot index of the currently held item.

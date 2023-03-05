@@ -24,7 +24,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.placeholders.PlaceholderManager;
-import org.screamingsandals.lib.sender.CommandSenderWrapper;
+import org.screamingsandals.lib.sender.CommandSender;
 import org.screamingsandals.lib.sender.MultiPlatformOfflinePlayer;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.Component;
@@ -55,7 +55,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
     private static final @NotNull Pattern EARLY_MINI_MESSAGE_PLACEHOLDERS = Pattern.compile("[<]([^>]+)[>]");
 
     private final @NotNull List<@NotNull Messageable> translations = new LinkedList<>();
-    private final @NotNull List<@NotNull Function<@Nullable CommandSenderWrapper, @NotNull Placeholder>> placeholders = new ArrayList<>();
+    private final @NotNull List<@NotNull Function<@Nullable CommandSender, @NotNull Placeholder>> placeholders = new ArrayList<>();
     private final @NotNull Map<@NotNull String, @NotNull String> earlyPlaceholders = new HashMap<>();
     @Accessors(chain = true)
     @Setter(onMethod_ = @ApiStatus.Internal)
@@ -1216,7 +1216,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param componentFunction function that returns a {@link Component} as the placeholder value.
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull Function<@Nullable CommandSenderWrapper, @NotNull Component> componentFunction) {
+    public @NotNull Message placeholder(@NotNull @org.intellij.lang.annotations.Pattern("[a-z\\d_-]+") String placeholder, @NotNull Function<@Nullable CommandSender, @NotNull Component> componentFunction) {
         placeholders.add(sender -> Placeholder.lazyComponent(placeholder, () -> componentFunction.apply(sender)));
         return this;
     }
@@ -1225,10 +1225,10 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * Registers new placeholder.
      * Used for replacing placeholders before constructing the message.
      *
-     * @param placeholderFunction function that returns a {@link Placeholder} for the specific {@link CommandSenderWrapper}.
+     * @param placeholderFunction function that returns a {@link Placeholder} for the specific {@link CommandSender}.
      * @return this message
      */
-    public @NotNull Message placeholder(@NotNull Function<@Nullable CommandSenderWrapper, @NotNull Placeholder> placeholderFunction) {
+    public @NotNull Message placeholder(@NotNull Function<@Nullable CommandSender, @NotNull Placeholder> placeholderFunction) {
         placeholders.add(placeholderFunction);
         return this;
     }
@@ -1357,7 +1357,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
 
     /**
      * Uses the {@link PrefixResolving#PER_PLAYER} prefix resolving policy.
-     * This means that the prefix is resolved per-player from {@link LangService#resolvePrefix(CommandSenderWrapper)}.
+     * This means that the prefix is resolved per-player from {@link LangService#resolvePrefix(CommandSender)}.
      *
      * @return self
      */
@@ -1381,7 +1381,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
 
     /**
      * Sets new prefix resolving policy.
-     * If the policy is {@link PrefixResolving#PER_PLAYER}, prefix is resolved per-player from {@link LangService#resolvePrefix(CommandSenderWrapper)}.
+     * If the policy is {@link PrefixResolving#PER_PLAYER}, prefix is resolved per-player from {@link LangService#resolvePrefix(CommandSender)}.
      *
      * @return self
      */
@@ -1551,7 +1551,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param sender sender to resolve the components for
      * @return list of components.
      */
-    public @NotNull List<@NotNull Component> getFor(@Nullable CommandSenderWrapper sender) {
+    public @NotNull List<@NotNull Component> getFor(@Nullable CommandSender sender) {
         final var prefixSetter = new AtomicBoolean(true);
         final var container = langService.getFor(sender);
 
@@ -1700,7 +1700,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * @param sender sender to resolve the components for
      * @return component
      */
-    public @NotNull Component getForJoined(@Nullable CommandSenderWrapper sender) {
+    public @NotNull Component getForJoined(@Nullable CommandSender sender) {
         return Component.join(Component.newLine(), getFor(sender));
     }
 
@@ -1725,26 +1725,26 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
         return Component.join(Component.newLine(), getForAnyone());
     }
 
-    public <W extends CommandSenderWrapper> @NotNull Message title(@NotNull W sender) {
+    public <W extends CommandSender> @NotNull Message title(@NotNull W sender) {
         if (sender instanceof PlayerAudience) {
             ((PlayerAudience) sender).showTitle(asTitle(sender));
         }
         return this;
     }
 
-    public <W extends CommandSenderWrapper> @NotNull Message title(@NotNull W @NotNull... senders) {
+    public <W extends CommandSender> @NotNull Message title(@NotNull W @NotNull... senders) {
         for (var sender : senders) {
             title(sender);
         }
         return this;
     }
 
-    public <W extends CommandSenderWrapper> @NotNull Message title(@NotNull Collection<@NotNull W> senders) {
+    public <W extends CommandSender> @NotNull Message title(@NotNull Collection<@NotNull W> senders) {
         senders.forEach(this::title);
         return this;
     }
 
-    public <W extends CommandSenderWrapper> Tasker.@NotNull TaskBuilder titleTask(@NotNull W sender) {
+    public <W extends CommandSender> Tasker.@NotNull TaskBuilder titleTask(@NotNull W sender) {
         return Tasker
                 .build(() -> {
                     if (sender instanceof PlayerAudience) {
@@ -1753,7 +1753,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
                 });
     }
 
-    public <W extends CommandSenderWrapper> Tasker.@NotNull TaskBuilder titleTask(@NotNull W @NotNull... senders) {
+    public <W extends CommandSender> Tasker.@NotNull TaskBuilder titleTask(@NotNull W @NotNull... senders) {
         return Tasker
                 .build(() -> {
                     for (var sender : senders) {
@@ -1762,26 +1762,26 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
                 });
     }
 
-    public <W extends CommandSenderWrapper> Tasker.@NotNull TaskBuilder titleTask(@NotNull Collection<@NotNull W> senders) {
+    public <W extends CommandSender> Tasker.@NotNull TaskBuilder titleTask(@NotNull Collection<@NotNull W> senders) {
         return Tasker
                 .build(() -> senders.forEach(this::title));
     }
 
-    public <W extends CommandSenderWrapper> @NotNull Message titleAsync(@NotNull W sender) {
+    public <W extends CommandSender> @NotNull Message titleAsync(@NotNull W sender) {
         titleTask(sender)
                 .async()
                 .start();
         return this;
     }
 
-    public <W extends CommandSenderWrapper> @NotNull Message titleAsync(@NotNull W @NotNull... senders) {
+    public <W extends CommandSender> @NotNull Message titleAsync(@NotNull W @NotNull... senders) {
         titleTask(senders)
                 .async()
                 .start();
         return this;
     }
 
-    public <W extends CommandSenderWrapper> @NotNull Message titleAsync(@NotNull Collection<@NotNull W> receivers) {
+    public <W extends CommandSender> @NotNull Message titleAsync(@NotNull Collection<@NotNull W> receivers) {
         titleTask(receivers)
                 .async()
                 .start();
@@ -1792,10 +1792,10 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * Sends this {@link Message} to defined receiver.
      *
      * @param receiver chosen one to receive the message.
-     * @param <W>      type for {@link CommandSenderWrapper}.
+     * @param <W>      type for {@link CommandSender}.
      * @return this message.
      */
-    public <W extends CommandSenderWrapper> @NotNull Message send(@NotNull W receiver) {
+    public <W extends CommandSender> @NotNull Message send(@NotNull W receiver) {
         getFor(receiver).forEach(receiver::sendMessage);
         return this;
     }
@@ -1804,10 +1804,10 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * Sends this {@link Message} to all given receivers.
      *
      * @param receivers array of receivers
-     * @param <W>       type for {@link CommandSenderWrapper}.
+     * @param <W>       type for {@link CommandSender}.
      * @return this message.
      */
-    public <W extends CommandSenderWrapper> @NotNull Message send(@NotNull W @NotNull... receivers) {
+    public <W extends CommandSender> @NotNull Message send(@NotNull W @NotNull... receivers) {
         for (var sender : receivers) {
             send(sender);
         }
@@ -1818,10 +1818,10 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * Sends this {@link Message} to all given receivers.
      *
      * @param receivers collection of receivers
-     * @param <W>       type for {@link CommandSenderWrapper}.
+     * @param <W>       type for {@link CommandSender}.
      * @return this message.
      */
-    public <W extends CommandSenderWrapper> @NotNull Message send(@NotNull Collection<@NotNull W> receivers) {
+    public <W extends CommandSender> @NotNull Message send(@NotNull Collection<@NotNull W> receivers) {
         receivers.forEach(this::send);
         return this;
     }
@@ -1830,10 +1830,10 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * Prepares a {@link Tasker.TaskBuilder} that will send this message.
      *
      * @param receiver receiver that will get the message
-     * @param <W>      type for {@link CommandSenderWrapper}.
+     * @param <W>      type for {@link CommandSender}.
      * @return prepared task for the sending.
      */
-    public <W extends CommandSenderWrapper> Tasker.@NotNull TaskBuilder sendTask(@NotNull W receiver) {
+    public <W extends CommandSender> Tasker.@NotNull TaskBuilder sendTask(@NotNull W receiver) {
         return Tasker
                 .build(() -> getFor(receiver).forEach(receiver::sendMessage));
     }
@@ -1842,10 +1842,10 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * Prepares a {@link Tasker.TaskBuilder} that will send this message.
      *
      * @param receivers array of receivers
-     * @param <W>       type for {@link CommandSenderWrapper}.
+     * @param <W>       type for {@link CommandSender}.
      * @return prepared task for the sending.
      */
-    public <W extends CommandSenderWrapper> Tasker.@NotNull TaskBuilder sendTask(@NotNull W @NotNull... receivers) {
+    public <W extends CommandSender> Tasker.@NotNull TaskBuilder sendTask(@NotNull W @NotNull... receivers) {
         return Tasker
                 .build(() -> {
                     for (var sender : receivers) {
@@ -1858,10 +1858,10 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * Prepares a {@link Tasker.TaskBuilder} that will send this message.
      *
      * @param receivers collection of receivers
-     * @param <W>       type for {@link CommandSenderWrapper}.
+     * @param <W>       type for {@link CommandSender}.
      * @return prepared task for the sending.
      */
-    public <W extends CommandSenderWrapper> Tasker.@NotNull TaskBuilder sendTask(@NotNull Collection<@NotNull W> receivers) {
+    public <W extends CommandSender> Tasker.@NotNull TaskBuilder sendTask(@NotNull Collection<@NotNull W> receivers) {
         return Tasker
                 .build(() -> receivers.forEach(this::send));
     }
@@ -1870,10 +1870,10 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * Sends this message asynchronously via {@link Tasker}.
      *
      * @param receiver receiver
-     * @param <W>      type for {@link CommandSenderWrapper}.
+     * @param <W>      type for {@link CommandSender}.
      * @return this message
      */
-    public <W extends CommandSenderWrapper> @NotNull Message sendAsync(@NotNull W receiver) {
+    public <W extends CommandSender> @NotNull Message sendAsync(@NotNull W receiver) {
         sendTask(receiver)
                 .async()
                 .start();
@@ -1884,10 +1884,10 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * Sends this message asynchronously via {@link Tasker}.
      *
      * @param receivers array of receivers
-     * @param <W>       type for {@link CommandSenderWrapper}.
+     * @param <W>       type for {@link CommandSender}.
      * @return this message
      */
-    public <W extends CommandSenderWrapper> @NotNull Message sendAsync(@NotNull W @NotNull... receivers) {
+    public <W extends CommandSender> @NotNull Message sendAsync(@NotNull W @NotNull... receivers) {
         sendTask(receivers)
                 .async()
                 .start();
@@ -1898,10 +1898,10 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      * Sends this message asynchronously via {@link Tasker}.
      *
      * @param receivers collection of receivers
-     * @param <W>       type for {@link CommandSenderWrapper}.
+     * @param <W>       type for {@link CommandSender}.
      * @return this message
      */
-    public <W extends CommandSenderWrapper> @NotNull Message sendAsync(@NotNull Collection<@NotNull W> receivers) {
+    public <W extends CommandSender> @NotNull Message sendAsync(@NotNull Collection<@NotNull W> receivers) {
         sendTask(receivers)
                 .async()
                 .start();
@@ -1917,12 +1917,12 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
      */
     @Override
     public @NotNull Component asComponent(@Nullable Audience audience) {
-        return getForJoined(audience instanceof CommandSenderWrapper ? (CommandSenderWrapper) audience : null);
+        return getForJoined(audience instanceof CommandSender ? (CommandSender) audience : null);
     }
 
     @Override
     public @NotNull List<Component> asComponentList(@Nullable Audience audience) {
-        return getFor(audience instanceof CommandSenderWrapper ? (CommandSenderWrapper) audience : null);
+        return getFor(audience instanceof CommandSender ? (CommandSender) audience : null);
     }
 
     @Override
@@ -1932,7 +1932,7 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
 
     @Override
     public @NotNull Title asTitle(@Nullable Audience sender, @Nullable TimesProvider times) {
-        var messages = getFor(sender instanceof CommandSenderWrapper ? (CommandSenderWrapper) sender : null);
+        var messages = getFor(sender instanceof CommandSender ? (CommandSender) sender : null);
         return Title.title(messages.size() >= 1 ? messages.get(0) : Component.empty(), messages.size() >= 2 ? messages.get(1) : Component.empty(), times);
     }
 
@@ -1951,11 +1951,11 @@ public class Message implements TitleableAudienceComponentLike, Cloneable {
         return asTitle(null, times);
     }
 
-    public @NotNull TextEntry asTextEntry(@Nullable CommandSenderWrapper wrapper) {
+    public @NotNull TextEntry asTextEntry(@Nullable CommandSender wrapper) {
         return TextEntry.of(asComponent(wrapper));
     }
 
-    public @NotNull TextEntry asTextEntry(@NotNull String identifier, @Nullable CommandSenderWrapper wrapper) {
+    public @NotNull TextEntry asTextEntry(@NotNull String identifier, @Nullable CommandSender wrapper) {
         return TextEntry.of(identifier, asComponent(wrapper));
     }
 

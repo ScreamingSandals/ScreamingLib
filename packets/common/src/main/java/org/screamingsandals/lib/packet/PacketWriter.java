@@ -23,13 +23,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeHolder;
-import org.screamingsandals.lib.item.Item;
+import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.slot.EquipmentSlotHolder;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -348,7 +348,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param location the location at which the block exists to write to the buffer
      */
-    public void writeBlockPosition(@NotNull LocationHolder location) {
+    public void writeBlockPosition(@NotNull Location location) {
         writeBlockPosition(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
@@ -391,7 +391,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param locationHolder the location to write
      */
-    public void writeVector(@NotNull LocationHolder locationHolder) {
+    public void writeVector(@NotNull Location locationHolder) {
         writeVector(locationHolder.asVector());
     }
 
@@ -400,7 +400,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param locationHolder the location to write the fixed point vector
      */
-    public void writeFixedPointVector(@NotNull LocationHolder locationHolder) {
+    public void writeFixedPointVector(@NotNull Location locationHolder) {
         writeFixedPointVector(locationHolder.asVector());
     }
 
@@ -420,7 +420,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param locationHolder the location from which to write the (yaw/pitch) from
      */
-    public void writeByteRotation(@NotNull LocationHolder locationHolder) {
+    public void writeByteRotation(@NotNull Location locationHolder) {
         writeByteRotation(locationHolder.getYaw(), locationHolder.getPitch());
     }
 
@@ -471,7 +471,7 @@ public abstract class PacketWriter extends OutputStream {
      *
      * @param item the item to write
      */
-    public void writeItem(@NotNull Item item) {
+    public void writeItem(@NotNull ItemStack item) {
         if (item.getMaterial().isAir()) {
             if (protocol() >= 402) {
                 writeBoolean(false);
@@ -529,7 +529,7 @@ public abstract class PacketWriter extends OutputStream {
     }
 
     // Platform classes must override this method
-    public void writeNBTFromItem(@NotNull Item item) {
+    public void writeNBTFromItem(@NotNull ItemStack item) {
         write(0);
     }
 

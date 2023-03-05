@@ -24,12 +24,12 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.EventPriority;
-import org.screamingsandals.lib.event.player.SPlayerJoinEvent;
-import org.screamingsandals.lib.event.player.SPlayerLeaveEvent;
-import org.screamingsandals.lib.event.player.SPlayerLoginEvent;
+import org.screamingsandals.lib.event.player.PlayerJoinEvent;
+import org.screamingsandals.lib.event.player.PlayerLeaveEvent;
+import org.screamingsandals.lib.event.player.PlayerLoginEvent;
 import org.screamingsandals.lib.packet.event.SPacketEvent;
-import org.screamingsandals.lib.player.PlayerMapper;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Players;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.PacketMethod;
 import org.screamingsandals.lib.utils.Preconditions;
@@ -41,7 +41,7 @@ import org.screamingsandals.lib.utils.annotations.methods.OnPreDisable;
 @Service(dependsOn = EventManager.class)
 @ServiceDependencies(dependsOn = {
         EventManager.class,
-        PlayerMapper.class,
+        Players.class,
 })
 public class ProtocolInjector {
     private static final @NotNull String CHANNEL_NAME = "SPacketHandler";
@@ -52,9 +52,9 @@ public class ProtocolInjector {
             throw new UnsupportedOperationException("Default EventManager is not initialized yet");
         }
 
-        EventManager.getDefaultEventManager().register(SPlayerLoginEvent.class, sPlayerLoginEvent -> addPlayer(sPlayerLoginEvent.player(), true), EventPriority.LOWEST);
-        EventManager.getDefaultEventManager().register(SPlayerJoinEvent.class, sPlayerJoinEvent -> addPlayer(sPlayerJoinEvent.player(), false), EventPriority.HIGH);
-        EventManager.getDefaultEventManager().register(SPlayerLeaveEvent.class, sPlayerLeaveEvent -> removePlayer(sPlayerLeaveEvent.player()), EventPriority.HIGHEST);
+        EventManager.getDefaultEventManager().register(PlayerLoginEvent.class, sPlayerLoginEvent -> addPlayer(sPlayerLoginEvent.player(), true), EventPriority.LOWEST);
+        EventManager.getDefaultEventManager().register(PlayerJoinEvent.class, sPlayerJoinEvent -> addPlayer(sPlayerJoinEvent.player(), false), EventPriority.HIGH);
+        EventManager.getDefaultEventManager().register(PlayerLeaveEvent.class, sPlayerLeaveEvent -> removePlayer(sPlayerLeaveEvent.player()), EventPriority.HIGHEST);
         Server.getConnectedPlayers().forEach(player -> addPlayer(player, false));
     }
 
@@ -63,7 +63,7 @@ public class ProtocolInjector {
         Server.getConnectedPlayers().forEach(this::removePlayer);
     }
 
-    public void addPlayer(@NotNull PlayerWrapper player, boolean onLogin) {
+    public void addPlayer(@NotNull Player player, boolean onLogin) {
         try {
             final var channel = player.getChannel();
             Preconditions.checkNotNull(channel, "Failed to find player channel!");
@@ -83,7 +83,7 @@ public class ProtocolInjector {
         }
     }
 
-    public void removePlayer(@NotNull PlayerWrapper player) {
+    public void removePlayer(@NotNull Player player) {
         try {
             final var channel = player.getChannel();
             if (channel != null && channel.pipeline().get(CHANNEL_NAME) != null) {
@@ -96,7 +96,7 @@ public class ProtocolInjector {
 
     @RequiredArgsConstructor
     private static class PacketHandler extends ChannelDuplexHandler {
-        private final @NotNull PlayerWrapper player;
+        private final @NotNull Player player;
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object packet) {

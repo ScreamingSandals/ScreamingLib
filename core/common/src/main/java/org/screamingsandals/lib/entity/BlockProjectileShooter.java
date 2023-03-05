@@ -17,8 +17,8 @@
 package org.screamingsandals.lib.entity;
 
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.block.BlockHolder;
+import org.screamingsandals.lib.block.Block;
 
 public interface BlockProjectileShooter extends ProjectileShooter {
-    @NotNull BlockHolder getBlock();
+    @NotNull Block getBlock();
 }

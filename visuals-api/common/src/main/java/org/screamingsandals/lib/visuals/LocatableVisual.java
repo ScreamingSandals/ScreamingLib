@@ -18,7 +18,7 @@ package org.screamingsandals.lib.visuals;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 /**
  * Represents a LocatableVisual that holds a location and can be seen by a Player. Examples:- Hologram, NPC etc.
@@ -42,10 +42,10 @@ public interface LocatableVisual<T> extends Visual<T> {
     @Contract("_ -> this")
     @NotNull T viewDistance(int viewDistance);
 
-    @NotNull LocationHolder location();
+    @NotNull Location location();
 
     @Contract("_ -> this")
-    @NotNull T location(@NotNull LocationHolder location);
+    @NotNull T location(@NotNull Location location);
 
     /**
      * Spawns the visual to all visible Players.

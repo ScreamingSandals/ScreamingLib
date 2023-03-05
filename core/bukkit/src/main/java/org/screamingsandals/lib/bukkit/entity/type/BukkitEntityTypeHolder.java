@@ -23,13 +23,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.tags.KeyedUtils;
-import org.screamingsandals.lib.entity.EntityBasic;
-import org.screamingsandals.lib.entity.EntityMapper;
+import org.screamingsandals.lib.entity.BasicEntity;
+import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
 import org.screamingsandals.lib.utils.reflect.Reflect;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 
 import java.util.Arrays;
 
@@ -94,7 +94,7 @@ public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements 
     }
 
     @Override
-    public @Nullable EntityBasic spawn(@NotNull LocationHolder location) {
-        return EntityMapper.spawn(this, location);
+    public @Nullable BasicEntity spawn(@NotNull Location location) {
+        return Entities.spawn(this, location);
     }
 }

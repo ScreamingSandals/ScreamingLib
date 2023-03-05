@@ -18,13 +18,13 @@ package org.screamingsandals.lib.hologram.event;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.hologram.Hologram;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.InteractType;
 import org.screamingsandals.lib.visuals.event.VisualsTouchEvent;
 
 public class HologramTouchEvent extends VisualsTouchEvent<Hologram> {
 
-    public HologramTouchEvent(@NotNull PlayerWrapper player, @NotNull Hologram visual, @NotNull InteractType interactType) {
+    public HologramTouchEvent(@NotNull Player player, @NotNull Hologram visual, @NotNull InteractType interactType) {
         super(player, visual, interactType);
     }
 }

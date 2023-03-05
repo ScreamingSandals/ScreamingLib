@@ -22,11 +22,11 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.screamingsandals.lib.hologram.Hologram;
 import org.screamingsandals.lib.npc.skin.NPCSkin;
-import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.visual.TextEntry;
 import org.screamingsandals.lib.visuals.TouchableVisual;
-import org.screamingsandals.lib.world.LocationHolder;
+import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.packet.ClientboundSetPlayerTeamPacket;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public interface NPC extends TouchableVisual<NPC> {
      * @return the created NPC
      */
     @Contract(value = "_ -> new", pure = true)
-    static @NotNull NPC of(@NotNull LocationHolder location) {
+    static @NotNull NPC of(@NotNull Location location) {
         return NPCManager.npc(location);
     }
 
@@ -93,7 +93,7 @@ public interface NPC extends TouchableVisual<NPC> {
      *
      * @param location the location
      */
-    void lookAtLocation(@NotNull LocationHolder location, @NotNull PlayerWrapper player);
+    void lookAtLocation(@NotNull Location location, @NotNull Player player);
 
     /**
      * Gets the entity name.

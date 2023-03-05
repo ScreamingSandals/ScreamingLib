@@ -19,7 +19,7 @@ package org.screamingsandals.lib;
 import org.screamingsandals.lib.block.BlockTypeMapper;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.container.type.InventoryTypeMapping;
-import org.screamingsandals.lib.entity.EntityMapper;
+import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.damage.DamageCauseMapping;
 import org.screamingsandals.lib.entity.pose.EntityPoseMapping;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
@@ -27,26 +27,26 @@ import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.item.ItemTypeMapper;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeTypeMapping;
-import org.screamingsandals.lib.item.builder.ItemFactory;
+import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.item.meta.EnchantmentMapping;
 import org.screamingsandals.lib.item.meta.PotionEffectMapping;
 import org.screamingsandals.lib.item.meta.PotionMapping;
 import org.screamingsandals.lib.particle.ParticleTypeMapping;
 import org.screamingsandals.lib.slot.EquipmentSlotMapping;
-import org.screamingsandals.lib.player.PlayerMapper;
+import org.screamingsandals.lib.player.Players;
 import org.screamingsandals.lib.player.gamemode.GameModeMapping;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
 import org.screamingsandals.lib.utils.annotations.internal.InternalCoreService;
-import org.screamingsandals.lib.block.BlockMapper;
-import org.screamingsandals.lib.world.LocationMapper;
-import org.screamingsandals.lib.world.WorldMapper;
-import org.screamingsandals.lib.world.chunk.ChunkMapper;
+import org.screamingsandals.lib.block.Blocks;
+import org.screamingsandals.lib.world.Locations;
+import org.screamingsandals.lib.world.Worlds;
+import org.screamingsandals.lib.world.chunk.Chunks;
 import org.screamingsandals.lib.world.difficulty.DifficultyMapping;
 import org.screamingsandals.lib.world.dimension.DimensionMapping;
-import org.screamingsandals.lib.block.state.BlockStateMapper;
+import org.screamingsandals.lib.block.state.BlockSnapshots;
 import org.screamingsandals.lib.world.gamerule.GameRuleMapping;
 import org.screamingsandals.lib.world.weather.WeatherMapping;
 
@@ -63,7 +63,7 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         EventManager.class,
         Tasker.class,
         EntityTypeMapping.class,
-        EntityMapper.class,
+        Entities.class,
         AttributeTypeMapping.class,
         AttributeMapping.class,
         FireworkEffectMapping.class,
@@ -74,23 +74,23 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         ItemTypeMapper.class,
         BlockTypeMapper.class,
         ItemBlockIdsRemapper.class,
-        ItemFactory.class,
-        PlayerMapper.class,
-        LocationMapper.class,
-        BlockMapper.class,
-        BlockStateMapper.class,
+        ItemStackFactory.class,
+        Players.class,
+        Locations.class,
+        Blocks.class,
+        BlockSnapshots.class,
         DamageCauseMapping.class,
         GameModeMapping.class,
         InventoryTypeMapping.class,
         EntityPoseMapping.class,
         DifficultyMapping.class,
         DimensionMapping.class,
-        ChunkMapper.class,
+        Chunks.class,
         GameRuleMapping.class,
         WeatherMapping.class,
         ParticleTypeMapping.class,
         GameRuleMapping.class,
-        WorldMapper.class,
+        Worlds.class,
         ContainerFactory.class
 })
 @InternalCoreService
