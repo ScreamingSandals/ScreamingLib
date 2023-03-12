@@ -30,7 +30,7 @@ import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.player.PlayerShearEntityEvent;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.player.Player;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
@@ -48,7 +48,7 @@ public class BukkitPlayerShearEntityEvent implements PlayerShearEntityEvent, Buk
     private @Nullable Player player;
     private @Nullable BasicEntity what;
     private @Nullable ItemStack item;
-    private @Nullable EquipmentSlotHolder hand;
+    private @Nullable EquipmentSlot hand;
 
     @Override
     public @NotNull Player player() {
@@ -75,9 +75,9 @@ public class BukkitPlayerShearEntityEvent implements PlayerShearEntityEvent, Buk
     }
 
     @Override
-    public @NotNull EquipmentSlotHolder hand() {
+    public @NotNull EquipmentSlot hand() {
         if (hand == null) {
-            hand = EquipmentSlotHolder.of(event.getHand());
+            hand = EquipmentSlot.of(event.getHand());
         }
         return hand;
     }

@@ -27,14 +27,14 @@ import org.screamingsandals.lib.entity.HumanEntity;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.event.entity.EntityDamageEvent;
 import org.screamingsandals.lib.particle.ParticleHolder;
-import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.world.Location;
-import org.screamingsandals.lib.world.weather.WeatherHolder;
+import org.screamingsandals.lib.world.weather.WeatherType;
 
 import java.net.InetSocketAddress;
 
@@ -200,14 +200,14 @@ public interface Player extends Sender, OfflinePlayer, HumanEntity, PlayerAudien
      *
      * @return the player's gamemode
      */
-    @NotNull GameModeHolder getGameMode();
+    @NotNull GameMode getGameMode();
 
     /**
      * Sets the gamemode for this player.
      *
      * @param gameMode the new gamemode holder
      */
-    void setGameMode(@NotNull GameModeHolder gameMode);
+    void setGameMode(@NotNull GameMode gameMode);
 
     /**
      * Gets the experience level of this player.
@@ -249,14 +249,14 @@ public interface Player extends Sender, OfflinePlayer, HumanEntity, PlayerAudien
      *
      * @return the weather for this player
      */
-    @Nullable WeatherHolder getPlayerWeather();
+    @Nullable WeatherType getPlayerWeather();
 
     /**
      * Sets the weather for this player.
      *
      * @param weather the weather
      */
-    void setPlayerWeather(@Nullable WeatherHolder weather);
+    void setPlayerWeather(@Nullable WeatherType weather);
 
     long getPlayerTime();
 

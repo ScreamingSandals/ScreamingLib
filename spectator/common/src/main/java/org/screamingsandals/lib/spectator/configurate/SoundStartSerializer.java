@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
@@ -40,7 +40,7 @@ public class SoundStartSerializer implements TypeSerializer<SoundStart> {
     public @NotNull SoundStart deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
             if (node.isMap()) {
-                final var name = NamespacedMappingKey.of(node.node(NAME_KEY).getString());
+                final var name = ResourceLocation.of(node.node(NAME_KEY).getString());
                 final var source = SoundSource.soundSource(node.node(SOURCE_KEY).getString("master").toLowerCase(Locale.ROOT));
                 final var pitch = node.node(PITCH_KEY).getFloat(1f);
                 final var volume = node.node(VOLUME_KEY).getFloat(1f);
@@ -53,7 +53,7 @@ public class SoundStartSerializer implements TypeSerializer<SoundStart> {
                         .build();
             } else {
                 return SoundStart.builder()
-                        .soundKey(NamespacedMappingKey.of(node.getString()))
+                        .soundKey(ResourceLocation.of(node.getString()))
                         .source(SoundSource.soundSource("master"))
                         .volume(1)
                         .pitch(1)

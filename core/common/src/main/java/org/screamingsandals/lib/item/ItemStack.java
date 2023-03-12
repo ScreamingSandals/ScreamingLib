@@ -32,7 +32,7 @@ import org.screamingsandals.lib.spectator.event.hover.ItemContentLike;
 import org.screamingsandals.lib.utils.*;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -186,7 +186,7 @@ public interface ItemStack extends ComparableWrapper, RawValueHolder, ParticleDa
     default @NotNull ItemContent asItemContent() {
         var tag = getTag();
         return ItemContent.builder()
-                .id(NamespacedMappingKey.of(getMaterial().platformName())) // TODO: implement namespaced holders and get the actual namespaced key
+                .id(ResourceLocation.of(getMaterial().platformName())) // TODO: implement namespaced holders and get the actual namespaced key
                 .count(getAmount())
                 .tag(tag.isEmpty() ? null : tag)
                 .build();

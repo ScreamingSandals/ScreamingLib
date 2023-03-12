@@ -19,10 +19,9 @@ package org.screamingsandals.lib.bukkit.attribute;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.attribute.*;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.utils.annotations.Service;
 
 @Service
@@ -55,7 +54,7 @@ public class BukkitAttributeMapping extends AttributeMapping {
                                 holder.getName(),
                                 holder.getAmount(),
                                 AttributeModifier.Operation.values()[holder.getOperation().ordinal()],
-                                holder.getSlot() != null ? holder.getSlot().as(EquipmentSlot.class) : null
+                                holder.getSlot() != null ? holder.getSlot().as(org.bukkit.inventory.EquipmentSlot.class) : null
                         );
                     } catch (Throwable throwable) {
                         modifier = new AttributeModifier(
@@ -75,7 +74,7 @@ public class BukkitAttributeMapping extends AttributeMapping {
                                 bukkitItemAttribute.getAttributeModifier().getName(),
                                 bukkitItemAttribute.getAttributeModifier().getAmount(),
                                 AttributeModifierHolder.Operation.values()[bukkitItemAttribute.getAttributeModifier().getOperation().ordinal()],
-                                EquipmentSlotHolder.ofNullable(bukkitItemAttribute.getAttributeModifier().getOperation())
+                                EquipmentSlot.ofNullable(bukkitItemAttribute.getAttributeModifier().getOperation())
                         );
                     } catch (Throwable throwable) {
                         return new ItemAttributeHolder(

@@ -25,7 +25,7 @@ import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.bukkit.event.BukkitCancellable;
 import org.screamingsandals.lib.event.player.PlayerGameModeChangeEvent;
 import org.screamingsandals.lib.player.Player;
-import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import org.screamingsandals.lib.player.gamemode.GameMode;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
@@ -39,7 +39,7 @@ public class BukkitPlayerGameModeChangeEvent implements PlayerGameModeChangeEven
 
     // Internal cache
     private @Nullable Player player;
-    private @Nullable GameModeHolder gameMode;
+    private @Nullable GameMode gameMode;
 
     @Override
     public @NotNull Player player() {
@@ -50,9 +50,9 @@ public class BukkitPlayerGameModeChangeEvent implements PlayerGameModeChangeEven
     }
 
     @Override
-    public @NotNull GameModeHolder gameMode() {
+    public @NotNull GameMode gameMode() {
         if (gameMode == null) {
-            gameMode = GameModeHolder.of(event.getNewGameMode());
+            gameMode = GameMode.of(event.getNewGameMode());
         }
         return gameMode;
     }

@@ -22,7 +22,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 
 import java.util.Map;
 
@@ -32,7 +32,7 @@ import java.util.Map;
 @Builder(toBuilder = true)
 public class ClientboundSetEquipmentPacket extends AbstractPacket {
     private final int entityId;
-    @Builder.Default private final @NotNull Map<@NotNull EquipmentSlotHolder, ItemStack> slots = Map.of();
+    @Builder.Default private final @NotNull Map<@NotNull EquipmentSlot, ItemStack> slots = Map.of();
 
     @Override
     public void write(@NotNull PacketWriter writer) {

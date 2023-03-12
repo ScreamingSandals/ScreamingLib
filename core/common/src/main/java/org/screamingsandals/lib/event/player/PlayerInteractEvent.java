@@ -23,7 +23,7 @@ import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.event.SEvent;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.ItemStackView;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.utils.BlockFace;
 import org.screamingsandals.lib.block.Block;
 
@@ -47,7 +47,7 @@ public interface PlayerInteractEvent extends SCancellableEvent, PlayerEvent, Pla
 
     void useItemInHand(@NotNull Result useItemInHand);
 
-    @Nullable EquipmentSlotHolder hand();
+    @Nullable EquipmentSlot hand();
 
     /**
      * Sets the cancellation state of this event. A canceled event will not be

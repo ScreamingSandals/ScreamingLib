@@ -26,7 +26,7 @@ import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +51,7 @@ public class HoverResolver implements StylingResolver {
             case "show_item":
             case "item":
                 var item = ItemContent.builder();
-                item.id(NamespacedMappingKey.of(tag.getArgs().get(1)));
+                item.id(ResourceLocation.of(tag.getArgs().get(1)));
                 if (tag.getArgs().size() > 2) {
                     try {
                         var count = Integer.parseInt(tag.getArgs().get(2));
@@ -68,7 +68,7 @@ public class HoverResolver implements StylingResolver {
             case "entity":
                 if (tag.getArgs().size() > 2) {
                     var entity = EntityContent.builder();
-                    entity.type(NamespacedMappingKey.of(tag.getArgs().get(1)));
+                    entity.type(ResourceLocation.of(tag.getArgs().get(1)));
                     entity.id(UUID.fromString(tag.getArgs().get(2)));
                     if (tag.getArgs().size() > 3) {
                         entity.name(parser.parse(tag.getArgs().get(3), placeholders));

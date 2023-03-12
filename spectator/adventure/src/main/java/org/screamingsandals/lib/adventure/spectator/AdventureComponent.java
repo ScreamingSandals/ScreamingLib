@@ -37,7 +37,7 @@ import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.TriState;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Arrays;
@@ -126,17 +126,17 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
     }
 
     @Override
-    public @Nullable NamespacedMappingKey font() {
+    public @Nullable ResourceLocation font() {
         var font = wrappedObject.style().font();
         if (font == null) {
             return null;
         }
-        return NamespacedMappingKey.of(font.asString());
+        return ResourceLocation.of(font.asString());
     }
 
     @SuppressWarnings("PatternValidation")
     @Override
-    public @NotNull Component withFont(@Nullable NamespacedMappingKey font) {
+    public @NotNull Component withFont(@Nullable ResourceLocation font) {
         return AdventureBackend.wrapComponent(wrappedObject.style(wrappedObject.style().font(font == null ? null : Key.key(font.toString()))));
     }
 
@@ -350,7 +350,7 @@ public class AdventureComponent extends BasicWrapper<net.kyori.adventure.text.Co
 
         @SuppressWarnings("PatternValidation")
         @Override
-        public @NotNull B font(@Nullable NamespacedMappingKey font) {
+        public @NotNull B font(@Nullable ResourceLocation font) {
             builder.font(font == null ? null : Key.key(font.toString()));
             return self();
         }

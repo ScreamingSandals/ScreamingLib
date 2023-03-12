@@ -32,7 +32,7 @@ import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.TriState;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -249,11 +249,11 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
     }
 
     @LimitedVersionSupport(">= 1.16")
-    @Nullable NamespacedMappingKey font();
+    @Nullable ResourceLocation font();
 
     @LimitedVersionSupport(">= 1.16")
     @Contract(pure = true)
-    @NotNull Component withFont(@Nullable NamespacedMappingKey font);
+    @NotNull Component withFont(@Nullable ResourceLocation font);
 
     @NotNull TriState bold();
 
@@ -434,7 +434,7 @@ public interface Component extends ComponentLike, Wrapper, Content, RawValueHold
 
         @LimitedVersionSupport(">= 1.16")
         @Contract("_ -> this")
-        @NotNull B font(@Nullable NamespacedMappingKey font);
+        @NotNull B font(@Nullable ResourceLocation font);
 
         @Contract("-> this")
         default @NotNull B bold() {

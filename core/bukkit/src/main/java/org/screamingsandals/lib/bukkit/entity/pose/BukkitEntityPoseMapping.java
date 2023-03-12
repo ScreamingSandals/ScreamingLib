@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.entity.pose;
 import org.bukkit.entity.Pose;
 import org.screamingsandals.lib.entity.pose.EntityPoseMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Arrays;
@@ -33,7 +33,7 @@ public class BukkitEntityPoseMapping extends EntityPoseMapping {
 
             Arrays.stream(Pose.values()).forEach(pose -> {
                 var holder = new BukkitEntityPoseHolder(pose);
-                mapping.put(NamespacedMappingKey.of(pose.name()), holder);
+                mapping.put(ResourceLocation.of(pose.name()), holder);
                 values.add(holder);
             });
         }

@@ -28,7 +28,7 @@ import org.screamingsandals.lib.bukkit.BukkitCore;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.utils.GsonUtils;
 import org.screamingsandals.lib.utils.Primitives;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.List;
 import java.util.Locale;
@@ -46,22 +46,22 @@ public class BukkitItemDataCustomTags implements ItemData {
     }
 
     @Override
-    public @NotNull Set<@NotNull NamespacedMappingKey> getKeys() {
+    public @NotNull Set<@NotNull ResourceLocation> getKeys() {
         throw new UnsupportedOperationException("Not implemented.");
     }
 
     @Override
     public <T> void set(@NotNull String key, @NotNull T data, @NotNull Class<T> tClass) {
-        set(NamespacedMappingKey.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), data, tClass);
+        set(ResourceLocation.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), data, tClass);
     }
 
     @Override
-    public <T> void set(@NotNull NamespacedMappingKey key, @NotNull T data, @NotNull Class<T> tClass) {
+    public <T> void set(@NotNull ResourceLocation key, @NotNull T data, @NotNull Class<T> tClass) {
         if (!Primitives.isWrapperType(tClass)) {
             tClass = Primitives.wrap(tClass); //Make sure we will always "switch" over the wrapper types
         }
 
-        final var namespacedKey = new NamespacedKey(key.namespace(), key.value());
+        final var namespacedKey = new NamespacedKey(key.namespace(), key.path());
         if (isWrapperType(tClass)) {
             if (data instanceof String) {
                 final var s = (String) data;
@@ -131,17 +131,17 @@ public class BukkitItemDataCustomTags implements ItemData {
 
     @Override
     public <T> @Nullable T get(@NotNull String key, @NotNull Class<T> tClass) {
-        return get(NamespacedMappingKey.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), tClass);
+        return get(ResourceLocation.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), tClass);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> @Nullable T get(@NotNull NamespacedMappingKey key, @NotNull Class<T> tClass) {
+    public <T> @Nullable T get(@NotNull ResourceLocation key, @NotNull Class<T> tClass) {
         if (!Primitives.isWrapperType(tClass)) {
             tClass = Primitives.wrap(tClass); //Make sure we will always "switch" over the wrapper types
         }
 
-        final var namespacedKey = new NamespacedKey(key.namespace(), key.value());
+        final var namespacedKey = new NamespacedKey(key.namespace(), key.path());
         if (isWrapperType(tClass)) {
             if (String.class.isAssignableFrom(tClass)) {
                 return (T) dataContainer.getCustomTag(namespacedKey, ItemTagType.STRING);
@@ -195,7 +195,7 @@ public class BukkitItemDataCustomTags implements ItemData {
     }
 
     @Override
-    public boolean contains(@NotNull NamespacedMappingKey key) {
+    public boolean contains(@NotNull ResourceLocation key) {
         throw new UnsupportedOperationException("Not implemented.");
     }
 

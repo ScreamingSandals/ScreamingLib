@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bungee.spectator.backports.StorageNBTPortedComponent;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.StorageNBTComponent;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 public class PortedBungeeStorageNBTComponent extends PortedBungeeNBTComponent implements StorageNBTComponent {
     protected PortedBungeeStorageNBTComponent(@NotNull StorageNBTPortedComponent wrappedObject) {
@@ -29,12 +29,12 @@ public class PortedBungeeStorageNBTComponent extends PortedBungeeNBTComponent im
     }
 
     @Override
-    public @NotNull NamespacedMappingKey storageKey() {
-        return NamespacedMappingKey.of(((StorageNBTPortedComponent) wrappedObject).getStorageKey());
+    public @NotNull ResourceLocation storageKey() {
+        return ResourceLocation.of(((StorageNBTPortedComponent) wrappedObject).getStorageKey());
     }
 
     @Override
-    public @NotNull StorageNBTComponent withStorageKey(@NotNull NamespacedMappingKey storageKey) {
+    public @NotNull StorageNBTComponent withStorageKey(@NotNull ResourceLocation storageKey) {
         var duplicate = ((StorageNBTPortedComponent) wrappedObject).duplicate();
         duplicate.setStorageKey(storageKey.asString());
         return (StorageNBTComponent) AbstractBungeeBackend.wrapComponent(duplicate);
@@ -67,7 +67,7 @@ public class PortedBungeeStorageNBTComponent extends PortedBungeeNBTComponent im
         }
 
         @Override
-        public StorageNBTComponent.@NotNull Builder storageKey(@NotNull NamespacedMappingKey storageKey) {
+        public StorageNBTComponent.@NotNull Builder storageKey(@NotNull ResourceLocation storageKey) {
             component.setStorageKey(storageKey.asString());
             return this;
         }

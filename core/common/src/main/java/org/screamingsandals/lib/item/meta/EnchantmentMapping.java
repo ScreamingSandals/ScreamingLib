@@ -27,7 +27,7 @@ import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -97,7 +97,7 @@ public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentH
 
             if (matcher.matches() && matcher.group("namespaced") != null) {
 
-                var namespaced = NamespacedMappingKey.of(matcher.group("namespaced"));
+                var namespaced = ResourceLocation.of(matcher.group("namespaced"));
 
                 String level_str = matcher.group("level");
 

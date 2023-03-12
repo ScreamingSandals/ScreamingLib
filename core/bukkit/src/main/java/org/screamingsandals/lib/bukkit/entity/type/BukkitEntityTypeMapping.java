@@ -25,7 +25,7 @@ import org.screamingsandals.lib.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.entity.type.EntityTypeMapping;
 import org.screamingsandals.lib.entity.type.EntityTypeTagBackPorts;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.*;
@@ -46,13 +46,13 @@ public class BukkitEntityTypeMapping extends EntityTypeMapping {
                 try {
                     namespaced = entityType.getKey();
 
-                    mapping.put(NamespacedMappingKey.of(namespaced.getNamespace(), namespaced.getKey()), holder);
+                    mapping.put(ResourceLocation.of(namespaced.getNamespace(), namespaced.getKey()), holder);
                     if (NamespacedKey.MINECRAFT.equals(namespaced.getNamespace()) && !entityType.name().equalsIgnoreCase(namespaced.getKey())) {
                         // Bukkit API is sus
-                        mapping.put(NamespacedMappingKey.of(entityType.name()), holder);
+                        mapping.put(ResourceLocation.of(entityType.name()), holder);
                     }
                 } catch (IllegalArgumentException ignored) { // excuse me Bukkit, wtf?
-                    mapping.put(NamespacedMappingKey.of(entityType.name()), holder);
+                    mapping.put(ResourceLocation.of(entityType.name()), holder);
                 }
                 values.add(holder);
                 /* we are probably not able to backport non-minecraft entity tags */
@@ -74,7 +74,7 @@ public class BukkitEntityTypeMapping extends EntityTypeMapping {
             Arrays.stream(EntityType.values()).forEach(entityType -> {
                 var holder = new BukkitEntityTypeHolder(entityType);
                 /* In legacy and 1.13 bukkit api we are not able to determine the namespace */
-                mapping.put(NamespacedMappingKey.of(entityType.name()), holder);
+                mapping.put(ResourceLocation.of(entityType.name()), holder);
                 values.add(holder);
             });
         }

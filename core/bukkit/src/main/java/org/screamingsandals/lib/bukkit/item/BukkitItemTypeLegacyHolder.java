@@ -25,7 +25,7 @@ import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeLegacyHolder;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Pair;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 
@@ -73,16 +73,16 @@ public class BukkitItemTypeLegacyHolder extends BasicWrapper<Pair<Material, Shor
 
     @Override
     public boolean hasTag(@NotNull Object tag) {
-        NamespacedMappingKey key;
-        if (tag instanceof NamespacedMappingKey) {
-            key = (NamespacedMappingKey) tag;
+        ResourceLocation key;
+        if (tag instanceof ResourceLocation) {
+            key = (ResourceLocation) tag;
         } else {
-            key = NamespacedMappingKey.of(tag.toString());
+            key = ResourceLocation.of(tag.toString());
         }
         if (!"minecraft".equals(key.namespace())) {
             return false;
         }
-        var value = key.value();
+        var value = key.path();
         return BukkitItemTypeMapper.hasTagInBackPorts(wrappedObject.first(), value);
     }
 

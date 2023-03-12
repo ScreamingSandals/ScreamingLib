@@ -19,13 +19,12 @@ package org.screamingsandals.lib.bukkit.packet;
 import io.netty.buffer.ByteBuf;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.item.ItemTypeHolder;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.nms.accessors.BlockAccessor;
 import org.screamingsandals.lib.nms.accessors.FriendlyByteBufAccessor;
@@ -39,8 +38,8 @@ public class CraftBukkitPacketWriter extends VanillaPacketWriter {
     }
 
     @Override
-    public int getEquipmentSlotId(@NotNull EquipmentSlotHolder equipmentSlotHolder) {
-        return equipmentSlotHolder.as(EquipmentSlot.class).ordinal();
+    public int getEquipmentSlotId(@NotNull EquipmentSlot equipmentSlotHolder) {
+        return equipmentSlotHolder.as(org.bukkit.inventory.EquipmentSlot.class).ordinal();
     }
 
     @Override

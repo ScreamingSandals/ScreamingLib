@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 /**
  * Special case of Namespaced ID
  */
-public class AttributeMappingKey extends NamespacedMappingKey {
+public class AttributeMappingKey extends ResourceLocation {
     public static final Pattern RESOLUTION_PATTERN = Pattern.compile("^(?:(?<namespace>[A-Za-z0-9_.\\-]*):)?((?<attributeGroup>[A-Za-z]+)\\.)?(?<key>[A-Za-z0-9_.\\-/ ]*)$");
 
     protected AttributeMappingKey(String namespace, String key) {
@@ -66,7 +66,7 @@ public class AttributeMappingKey extends NamespacedMappingKey {
     }
 
     @SuppressWarnings("unchecked")
-    public static Optional<NamespacedMappingKey> ofOptional(String combinedString) {
+    public static Optional<ResourceLocation> ofOptional(String combinedString) {
         return (Optional) ofAttributeOptional(combinedString); // Java is weird in some cases :)
     }
 
@@ -79,7 +79,7 @@ public class AttributeMappingKey extends NamespacedMappingKey {
     }
 
     @SuppressWarnings("unchecked")
-    public static Optional<NamespacedMappingKey> ofOptional(String namespace, String key) {
+    public static Optional<ResourceLocation> ofOptional(String namespace, String key) {
         return (Optional) ofAttributeOptional(namespace, key); // Java is weird in some cases :)
     }
 
@@ -92,7 +92,7 @@ public class AttributeMappingKey extends NamespacedMappingKey {
         if (object == null) {
             return false;
         }
-        if (object instanceof NamespacedMappingKey) {
+        if (object instanceof ResourceLocation) {
             return super.equals(object);
         }
 

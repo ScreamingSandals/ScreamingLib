@@ -24,7 +24,7 @@ import org.screamingsandals.lib.spectator.event.ClickEvent;
 import org.screamingsandals.lib.spectator.event.HoverEvent;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.TriState;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.ConfigurationOptions;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -168,7 +168,7 @@ public class ComponentSerializer implements TypeSerializer<Component> {
                     builder = Component.storageNBT()
                             .nbtPath(nbt)
                             .interpret(interpret)
-                            .storageKey(NamespacedMappingKey.of(node.node(STORAGE_KEY).getString()));
+                            .storageKey(ResourceLocation.of(node.node(STORAGE_KEY).getString()));
                 }
             }
 
@@ -194,7 +194,7 @@ public class ComponentSerializer implements TypeSerializer<Component> {
             }
 
             if (node.hasChild(FONT_KEY)) {
-                builder.font(NamespacedMappingKey.of(node.node(FONT_KEY).getString()));
+                builder.font(ResourceLocation.of(node.node(FONT_KEY).getString()));
             }
 
             if (node.hasChild(COLOR_KEY)) {

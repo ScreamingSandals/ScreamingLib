@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 @LimitedVersionSupport(">= 1.15")
 public interface StorageNBTComponent extends NBTComponent {
@@ -29,10 +29,10 @@ public interface StorageNBTComponent extends NBTComponent {
         return Spectator.getBackend().storageNBT();
     }
 
-    @NotNull NamespacedMappingKey storageKey();
+    @NotNull ResourceLocation storageKey();
 
     @Contract(pure = true)
-    @NotNull StorageNBTComponent withStorageKey(@NotNull NamespacedMappingKey storageKey);
+    @NotNull StorageNBTComponent withStorageKey(@NotNull ResourceLocation storageKey);
 
     @Contract(value = "-> new", pure = true)
     StorageNBTComponent.@NotNull Builder toBuilder();
@@ -60,6 +60,6 @@ public interface StorageNBTComponent extends NBTComponent {
 
     interface Builder extends NBTComponent.Builder<Builder, StorageNBTComponent> {
         @Contract("_ -> this")
-        @NotNull Builder storageKey(@NotNull NamespacedMappingKey storageKey);
+        @NotNull Builder storageKey(@NotNull ResourceLocation storageKey);
     }
 }

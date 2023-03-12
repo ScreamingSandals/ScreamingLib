@@ -38,20 +38,20 @@ public class BukkitBlockSnapshots extends BlockSnapshots {
 
         if (HAS_TILE_STATE) {
             if (blockState instanceof Sign) {
-                return (T) new SignBlockStateHolder((Sign) blockState);
+                return (T) new BukkitSignBlockSnapshot((Sign) blockState);
             }
 
             if (blockState instanceof TileState) {
-                return (T) new TileBlockStateHolder((TileState) blockState);
+                return (T) new BukkitBlockEntitySnapshot((TileState) blockState);
             }
         } else {
             if (blockState instanceof Sign) {
-                return (T) new LegacySignBlockStateHolder((Sign) blockState);
+                return (T) new BukkitLegacySignBlockSnapshot((Sign) blockState);
             }
         }
 
         if (blockState instanceof BlockState) {
-            return (T) new GenericBlockStateHolder((BlockState) blockState);
+            return (T) new BukkitBlockSnapshot((BlockState) blockState);
         }
 
         return null;

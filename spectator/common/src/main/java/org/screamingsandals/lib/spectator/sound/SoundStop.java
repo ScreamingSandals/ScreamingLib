@@ -23,7 +23,7 @@ import org.screamingsandals.lib.spectator.Spectator;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 public interface SoundStop extends Wrapper, RawValueHolder {
     @Contract(value = "-> new", pure = true)
@@ -32,7 +32,7 @@ public interface SoundStop extends Wrapper, RawValueHolder {
     }
 
     @Contract(value = "_ -> new", pure = true)
-    static @NotNull SoundStop named(@Nullable NamespacedMappingKey soundKey) {
+    static @NotNull SoundStop named(@Nullable ResourceLocation soundKey) {
         return builder().soundKey(soundKey).build();
     }
 
@@ -48,7 +48,7 @@ public interface SoundStop extends Wrapper, RawValueHolder {
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    static @NotNull SoundStop namedSourced(@Nullable NamespacedMappingKey soundKey, @Nullable SoundSource source) {
+    static @NotNull SoundStop namedSourced(@Nullable ResourceLocation soundKey, @Nullable SoundSource source) {
         return builder().soundKey(soundKey).source(source).build();
     }
 
@@ -63,12 +63,12 @@ public interface SoundStop extends Wrapper, RawValueHolder {
         return Spectator.getBackend().soundStop();
     }
 
-    @Nullable NamespacedMappingKey soundKey();
+    @Nullable ResourceLocation soundKey();
 
     @Nullable SoundSource source();
 
     @Contract(pure = true)
-    @NotNull SoundStop withSoundKey(@Nullable NamespacedMappingKey soundKey);
+    @NotNull SoundStop withSoundKey(@Nullable ResourceLocation soundKey);
 
     @Contract(pure = true)
     @NotNull SoundStop withSource(@Nullable SoundSource source);
@@ -78,12 +78,12 @@ public interface SoundStop extends Wrapper, RawValueHolder {
 
     interface Builder {
         @Contract("_ -> this")
-        @NotNull Builder soundKey(@Nullable NamespacedMappingKey key);
+        @NotNull Builder soundKey(@Nullable ResourceLocation key);
 
         @Contract("_ -> this")
         @CustomAutocompletion(CustomAutocompletion.Type.SOUND)
         default @NotNull Builder soundKey(@Nullable String key) {
-            return soundKey(key != null ? NamespacedMappingKey.of(key) : null);
+            return soundKey(key != null ? ResourceLocation.of(key) : null);
         }
 
         @Contract("_ -> this")

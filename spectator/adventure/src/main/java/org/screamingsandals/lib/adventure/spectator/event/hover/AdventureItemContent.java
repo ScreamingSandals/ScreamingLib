@@ -29,7 +29,7 @@ import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> implements ItemContent {
     public AdventureItemContent(HoverEvent.@NotNull ShowItem wrappedObject) {
@@ -37,13 +37,13 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
     }
 
     @Override
-    public @NotNull NamespacedMappingKey id() {
-        return NamespacedMappingKey.of(wrappedObject.item().asString());
+    public @NotNull ResourceLocation id() {
+        return ResourceLocation.of(wrappedObject.item().asString());
     }
 
     @SuppressWarnings("PatternValidation")
     @Override
-    public @NotNull ItemContent withId(@NotNull NamespacedMappingKey id) {
+    public @NotNull ItemContent withId(@NotNull ResourceLocation id) {
         return new AdventureItemContent(HoverEvent.ShowItem.of(Key.key(id.getNamespace(), id.getKey()), wrappedObject.count(), wrappedObject.nbt()));
     }
 
@@ -94,9 +94,9 @@ public class AdventureItemContent extends BasicWrapper<HoverEvent.ShowItem> impl
     @Accessors(fluent = true, chain = true)
     @Setter
     public static class AdventureItemContentBuilder implements ItemContent.Builder {
-        private static final @NotNull NamespacedMappingKey INVALID_KEY = NamespacedMappingKey.of("minecraft", "air");
+        private static final @NotNull ResourceLocation INVALID_KEY = ResourceLocation.of("minecraft", "air");
 
-        private @NotNull NamespacedMappingKey id = INVALID_KEY; // Should be air if not present
+        private @NotNull ResourceLocation id = INVALID_KEY; // Should be air if not present
         private int count = 1;
         private @Nullable CompoundTag tag;
 

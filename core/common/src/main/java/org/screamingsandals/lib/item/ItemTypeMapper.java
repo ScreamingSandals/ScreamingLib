@@ -29,7 +29,7 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.key.ComplexMappingKey;
 import org.screamingsandals.lib.utils.key.MappingKey;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.key.NumericMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.ConfigurationNode;
@@ -88,7 +88,7 @@ public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> 
             if (matcher.matches()) {
                 if (matcher.group("namespaced") != null) {
 
-                    var namespaced = NamespacedMappingKey.of(matcher.group("namespaced"));
+                    var namespaced = ResourceLocation.of(matcher.group("namespaced"));
 
                     Integer data = null;
                     try {

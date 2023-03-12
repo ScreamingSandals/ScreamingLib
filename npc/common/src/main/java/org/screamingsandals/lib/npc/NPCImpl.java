@@ -32,7 +32,7 @@ import org.screamingsandals.lib.npc.skin.NPCSkin;
 import org.screamingsandals.lib.npc.skin.SkinLayerValues;
 import org.screamingsandals.lib.packet.*;
 import org.screamingsandals.lib.player.Player;
-import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.tasker.Tasker;
@@ -56,7 +56,7 @@ import java.util.concurrent.ExecutionException;
 @Getter
 @Setter
 public class NPCImpl extends AbstractTouchableVisual<NPC> implements NPC {
-    private static final @NotNull GameModeHolder GAME_MODE = GameModeHolder.of("SURVIVAL");
+    private static final @NotNull GameMode GAME_MODE = GameMode.of("SURVIVAL");
     private static final boolean IS_BUNGEE = Server.getProxyType() == ProxyType.BUNGEE;
 
     private final int entityId;

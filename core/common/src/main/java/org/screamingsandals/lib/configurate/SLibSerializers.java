@@ -33,14 +33,14 @@ import org.screamingsandals.lib.item.meta.PotionHolder;
 import org.screamingsandals.lib.nbt.Tag;
 import org.screamingsandals.lib.nbt.configurate.TagSerializer;
 import org.screamingsandals.lib.particle.ParticleTypeHolder;
-import org.screamingsandals.lib.player.gamemode.GameModeHolder;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.player.gamemode.GameMode;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.spectator.configurate.SpectatorSerializers;
 import org.screamingsandals.lib.world.Location;
-import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
-import org.screamingsandals.lib.world.dimension.DimensionHolder;
-import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
-import org.screamingsandals.lib.world.weather.WeatherHolder;
+import org.screamingsandals.lib.world.difficulty.DifficultyType;
+import org.screamingsandals.lib.world.dimension.DimensionType;
+import org.screamingsandals.lib.world.gamerule.GameRuleType;
+import org.screamingsandals.lib.world.weather.WeatherType;
 import org.spongepowered.configurate.serialize.TypeSerializerCollection;
 
 @UtilityClass
@@ -50,22 +50,22 @@ public class SLibSerializers {
                 .register(Tag.class, TagSerializer.INSTANCE)
                 .register(AttributeTypeHolder.class, AttributeTypeHolderSerializer.INSTANCE)
                 .register(DamageCauseHolder.class, DamageCauseHolderSerializer.INSTANCE)
-                .register(DifficultyHolder.class, DifficultyHolderSerializer.INSTANCE)
-                .register(DimensionHolder.class, DimensionHolderSerializer.INSTANCE)
+                .register(DifficultyType.class, DifficultyHolderSerializer.INSTANCE)
+                .register(DimensionType.class, DimensionHolderSerializer.INSTANCE)
                 .register(EnchantmentHolder.class, EnchantmentHolderSerializer.INSTANCE)
                 .register(EntityPoseHolder.class, EntityPoseHolderSerializer.INSTANCE)
                 .register(EntityTypeHolder.class, EntityTypeHolderSerializer.INSTANCE)
-                .register(GameModeHolder.class, GameModeHolderSerializer.INSTANCE)
-                .register(GameRuleHolder.class, GameRuleHolderSerializer.INSTANCE)
+                .register(GameMode.class, GameModeHolderSerializer.INSTANCE)
+                .register(GameRuleType.class, GameRuleHolderSerializer.INSTANCE)
                 .register(InventoryTypeHolder.class, InventoryTypeHolderSerializer.INSTANCE)
                 .register(ParticleTypeHolder.class, ParticleTypeHolderSerializer.INSTANCE)
                 .register(PotionEffectHolder.class, PotionEffectHolderSerializer.INSTANCE)
                 .register(PotionHolder.class, PotionHolderSerializer.INSTANCE)
-                .register(WeatherHolder.class, WeatherHolderSerializer.INSTANCE)
+                .register(WeatherType.class, WeatherHolderSerializer.INSTANCE)
                 .register(FireworkEffectHolder.class, FireworkEffectHolderSerializer.INSTANCE)
                 .register(ItemTypeHolder.class, ItemTypeHolderSerializer.INSTANCE)
                 .register(BlockTypeHolder.class, BlockTypeHolderSerializer.INSTANCE)
-                .register(EquipmentSlotHolder.class, EquipmentSlotHolderSerializer.INSTANCE)
+                .register(EquipmentSlot.class, EquipmentSlotHolderSerializer.INSTANCE)
                 .register(ItemStack.class, ItemSerializer.INSTANCE)
                 .register(Location.class, LocationHolderSerializer.INSTANCE);
     }

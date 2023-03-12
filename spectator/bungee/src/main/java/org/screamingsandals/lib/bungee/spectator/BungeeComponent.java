@@ -34,7 +34,7 @@ import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.TriState;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Collection;
 import java.util.List;
@@ -119,9 +119,9 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public @Nullable NamespacedMappingKey font() {
+    public @Nullable ResourceLocation font() {
         try {
-            return NamespacedMappingKey.of(wrappedObject.getFontRaw());
+            return ResourceLocation.of(wrappedObject.getFontRaw());
         } catch (Throwable ignored) {
             // old version basically; or invalid font, thanks bungee for not checking the input
             return null;
@@ -129,7 +129,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
     }
 
     @Override
-    public @NotNull Component withFont(@Nullable NamespacedMappingKey font) {
+    public @NotNull Component withFont(@Nullable ResourceLocation font) {
         try {
             var duplicate = wrappedObject.duplicate();
             duplicate.setFont(font == null ? null : font.asString());
@@ -375,7 +375,7 @@ public class BungeeComponent extends BasicWrapper<BaseComponent> implements Comp
         }
 
         @Override
-        public @NotNull B font(@Nullable NamespacedMappingKey font) {
+        public @NotNull B font(@Nullable ResourceLocation font) {
             try {
                 component.setFont(font == null ? null : font.asString());
             } catch (Throwable ignored) {

@@ -19,7 +19,7 @@ package org.screamingsandals.lib.attribute;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.api.Wrapper;
 
 import java.util.UUID;
@@ -31,7 +31,7 @@ public class ItemAttributeHolder implements Wrapper {
     private final @NotNull String name;
     private final double amount;
     private final AttributeModifierHolder.@NotNull Operation operation;
-    private final @Nullable EquipmentSlotHolder slot;
+    private final @Nullable EquipmentSlot slot;
 
     /**
      * {@inheritDoc}

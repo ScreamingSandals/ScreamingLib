@@ -156,7 +156,7 @@ class SpigotBackendAdventureExtension {
                     }
                     //noinspection PatternValidation
                     return net.kyori.adventure.text.event.HoverEvent.ShowItem.of(
-                            Key.key(id.namespace(), id.value()),
+                            Key.key(id.namespace(), id.path()),
                             bungeeItemContent.count(),
                             value
                     ) ;
@@ -169,7 +169,7 @@ class SpigotBackendAdventureExtension {
                     var name = bungeeEntityContent.name();
                     //noinspection PatternValidation
                     return net.kyori.adventure.text.event.HoverEvent.ShowEntity.of(
-                            Key.key(type.namespace(), type.value()),
+                            Key.key(type.namespace(), type.path()),
                             bungeeEntityContent.id(),
                             name != null ? name.as(net.kyori.adventure.text.Component.class) : null
                     );

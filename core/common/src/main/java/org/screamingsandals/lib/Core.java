@@ -33,9 +33,9 @@ import org.screamingsandals.lib.item.meta.EnchantmentMapping;
 import org.screamingsandals.lib.item.meta.PotionEffectMapping;
 import org.screamingsandals.lib.item.meta.PotionMapping;
 import org.screamingsandals.lib.particle.ParticleTypeMapping;
-import org.screamingsandals.lib.slot.EquipmentSlotMapping;
+import org.screamingsandals.lib.slot.EquipmentSlotRegistry;
 import org.screamingsandals.lib.player.Players;
-import org.screamingsandals.lib.player.gamemode.GameModeMapping;
+import org.screamingsandals.lib.player.gamemode.GameModeRegistry;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
@@ -44,11 +44,11 @@ import org.screamingsandals.lib.block.Blocks;
 import org.screamingsandals.lib.world.Locations;
 import org.screamingsandals.lib.world.Worlds;
 import org.screamingsandals.lib.world.chunk.Chunks;
-import org.screamingsandals.lib.world.difficulty.DifficultyMapping;
-import org.screamingsandals.lib.world.dimension.DimensionMapping;
+import org.screamingsandals.lib.world.difficulty.DifficultyRegistry;
+import org.screamingsandals.lib.world.dimension.DimensionRegistry;
 import org.screamingsandals.lib.block.state.BlockSnapshots;
-import org.screamingsandals.lib.world.gamerule.GameRuleMapping;
-import org.screamingsandals.lib.world.weather.WeatherMapping;
+import org.screamingsandals.lib.world.gamerule.GameRuleRegistry;
+import org.screamingsandals.lib.world.weather.WeatherRegistry;
 
 /**
  * Main entry point of the core module.
@@ -70,7 +70,7 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         EnchantmentMapping.class,
         PotionEffectMapping.class,
         PotionMapping.class,
-        EquipmentSlotMapping.class,
+        EquipmentSlotRegistry.class,
         ItemTypeMapper.class,
         BlockTypeMapper.class,
         ItemBlockIdsRemapper.class,
@@ -80,16 +80,16 @@ import org.screamingsandals.lib.world.weather.WeatherMapping;
         Blocks.class,
         BlockSnapshots.class,
         DamageCauseMapping.class,
-        GameModeMapping.class,
+        GameModeRegistry.class,
         InventoryTypeMapping.class,
         EntityPoseMapping.class,
-        DifficultyMapping.class,
-        DimensionMapping.class,
+        DifficultyRegistry.class,
+        DimensionRegistry.class,
         Chunks.class,
-        GameRuleMapping.class,
-        WeatherMapping.class,
+        GameRuleRegistry.class,
+        WeatherRegistry.class,
         ParticleTypeMapping.class,
-        GameRuleMapping.class,
+        GameRuleRegistry.class,
         Worlds.class,
         ContainerFactory.class
 })

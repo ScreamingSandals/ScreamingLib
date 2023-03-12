@@ -22,7 +22,7 @@ import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class FontResolver implements StylingResolver {
             return;
         }
 
-        builder.font(NamespacedMappingKey.of(tag.getArgs().get(0)));
+        builder.font(ResourceLocation.of(tag.getArgs().get(0)));
     }
 
     @Override

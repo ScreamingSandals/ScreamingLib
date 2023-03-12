@@ -39,7 +39,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Collection;
 import java.util.List;
@@ -249,11 +249,11 @@ public interface ItemStackBuilder extends MetadataConsumer {
 
     @Contract("_ -> this")
     default @NotNull ItemStackBuilder recipe(@NotNull String key) {
-        return recipe(NamespacedMappingKey.of(key));
+        return recipe(ResourceLocation.of(key));
     }
 
     @Contract("_ -> this")
-    default @NotNull ItemStackBuilder recipe(@NotNull NamespacedMappingKey key) {
+    default @NotNull ItemStackBuilder recipe(@NotNull ResourceLocation key) {
         this.addToListMetadata(ItemMeta.RECIPES, key);
         return this;
     }

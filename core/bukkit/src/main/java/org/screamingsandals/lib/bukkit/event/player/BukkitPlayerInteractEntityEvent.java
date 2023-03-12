@@ -28,7 +28,7 @@ import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.player.PlayerInteractEntityEvent;
 import org.screamingsandals.lib.player.Player;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
@@ -45,7 +45,7 @@ public class BukkitPlayerInteractEntityEvent implements PlayerInteractEntityEven
     // Internal cache
     private @Nullable Player player;
     private @Nullable BasicEntity clickedEntity;
-    private @Nullable EquipmentSlotHolder hand;
+    private @Nullable EquipmentSlot hand;
 
     @Override
     public @NotNull Player player() {
@@ -64,9 +64,9 @@ public class BukkitPlayerInteractEntityEvent implements PlayerInteractEntityEven
     }
 
     @Override
-    public @NotNull EquipmentSlotHolder hand() {
+    public @NotNull EquipmentSlot hand() {
         if (hand == null) {
-            hand = EquipmentSlotHolder.of(event.getHand());
+            hand = EquipmentSlot.of(event.getHand());
         }
         return hand;
     }

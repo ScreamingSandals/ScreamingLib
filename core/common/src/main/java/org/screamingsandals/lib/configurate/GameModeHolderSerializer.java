@@ -18,27 +18,27 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class GameModeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<GameModeHolder> {
+public class GameModeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<GameMode> {
     public static final @NotNull GameModeHolderSerializer INSTANCE = new GameModeHolderSerializer();
 
     @Override
-    public @NotNull GameModeHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull GameMode deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return GameModeHolder.of(node.getString());
+            return GameMode.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable GameModeHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable GameMode obj, @NotNull ConfigurationNode node) throws SerializationException {
         node.set(obj == null ? null : obj.platformName());
     }
 }

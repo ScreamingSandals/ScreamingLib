@@ -29,7 +29,7 @@ import org.screamingsandals.lib.packet.ClientboundRemoveEntitiesPacket;
 import org.screamingsandals.lib.packet.ClientboundSetEntityDataPacket;
 import org.screamingsandals.lib.packet.ClientboundSetEquipmentPacket;
 import org.screamingsandals.lib.player.Player;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.tasker.Tasker;
 import org.screamingsandals.lib.tasker.TaskerTime;
@@ -348,7 +348,7 @@ public class HologramImpl extends AbstractLinedVisual<Hologram> implements Holog
     private ClientboundSetEquipmentPacket getEquipmentPacket(@NotNull HologramPiece entity, @NotNull ItemStack item) {
         return ClientboundSetEquipmentPacket.builder()
                 .entityId(entity.getId())
-                .slots(Map.of(EquipmentSlotHolder.of("HEAD"), item))
+                .slots(Map.of(EquipmentSlot.of("HEAD"), item))
                 .build();
     }
 

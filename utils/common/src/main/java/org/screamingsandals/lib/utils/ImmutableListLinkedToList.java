@@ -24,11 +24,11 @@ import java.util.ListIterator;
 import java.util.function.Function;
 
 public class ImmutableListLinkedToList<L, O> extends ImmutableCollectionLinkedToCollection<L, O> implements List<L> {
-    public ImmutableListLinkedToList(List<O> original, Function<L, O> linkToOriginal, Function<O, L> originalToLink) {
+    public ImmutableListLinkedToList(@NotNull List<O> original, @NotNull Function<L, O> linkToOriginal, @NotNull Function<O, L> originalToLink) {
         super(original, linkToOriginal, originalToLink);
     }
 
-    private List<O> original() {
+    private @NotNull List<O> original() {
         return (List<O>) original;
     }
 

@@ -18,7 +18,7 @@ package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 
 public interface PlayerArmorStandManipulateEvent extends PlayerInteractEntityEvent {
 
@@ -26,5 +26,5 @@ public interface PlayerArmorStandManipulateEvent extends PlayerInteractEntityEve
 
     @NotNull ItemStack armorStandItem();
 
-    @NotNull EquipmentSlotHolder slot();
+    @NotNull EquipmentSlot slot();
 }

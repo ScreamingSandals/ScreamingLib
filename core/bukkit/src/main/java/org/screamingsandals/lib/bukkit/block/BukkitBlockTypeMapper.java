@@ -29,7 +29,7 @@ import org.screamingsandals.lib.bukkit.block.tags.BukkitLegacyTagResolution;
 import org.screamingsandals.lib.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -50,7 +50,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                         var holder = new BukkitBlockTypeHolder(material);
                         var namespaced = material.getKey();
                         /* In case this is a hybrid server and it actually works correctly (unlike Mohist), we should not assume everything is in minecraft namespace */
-                        mapping.put(NamespacedMappingKey.of(namespaced.getNamespace(), namespaced.getKey()), holder);
+                        mapping.put(ResourceLocation.of(namespaced.getNamespace(), namespaced.getKey()), holder);
                         values.add(holder);
                         /* we are probably not able to backport non-minecraft block tags (probably except mineable/* and similar, but we are not able to backport them yet */
                         if (NamespacedKey.MINECRAFT.equals(namespaced.getNamespace())) {
@@ -72,7 +72,7 @@ public class BukkitBlockTypeMapper extends BlockTypeMapper {
                     .forEach(material -> {
                         var holder = new BukkitBlockTypeLegacyHolder(material);
                         /* In legacy we are not able to determine the namespace :( but hybrid servers require java 8 for 1.12.2 and less, so we can't run on them anyway */
-                        mapping.put(NamespacedMappingKey.of(material.name()), holder);
+                        mapping.put(ResourceLocation.of(material.name()), holder);
                         values.add(holder);
                         var backPorts = BukkitLegacyTagResolution.constructTags(material);
                         if (!backPorts.isEmpty()) {

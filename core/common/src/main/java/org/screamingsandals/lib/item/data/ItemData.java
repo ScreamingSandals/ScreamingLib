@@ -18,21 +18,21 @@ package org.screamingsandals.lib.item.data;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Set;
 import java.util.function.Supplier;
 
 public interface ItemData {
-    @NotNull Set<@NotNull NamespacedMappingKey> getKeys();
+    @NotNull Set<@NotNull ResourceLocation> getKeys();
 
     <T> void set(@NotNull String key, @NotNull T data, @NotNull Class<T> tClass);
 
-    <T> void set(@NotNull NamespacedMappingKey key, @NotNull T data, @NotNull Class<T> tClass);
+    <T> void set(@NotNull ResourceLocation key, @NotNull T data, @NotNull Class<T> tClass);
 
     <T> @Nullable T get(@NotNull String key, @NotNull Class<T> tClass);
 
-    <T> @Nullable T get(@NotNull NamespacedMappingKey key, @NotNull Class<T> tClass);
+    <T> @Nullable T get(@NotNull ResourceLocation key, @NotNull Class<T> tClass);
 
     default <T> @NotNull T getOrDefault(@NotNull String key, @NotNull Class<T> tClass, @NotNull Supplier<@NotNull T> def) {
         var value = get(key, tClass);
@@ -46,7 +46,7 @@ public interface ItemData {
 
     boolean contains(@NotNull String key);
 
-    boolean contains(@NotNull NamespacedMappingKey key);
+    boolean contains(@NotNull ResourceLocation key);
 
     boolean isEmpty();
 }

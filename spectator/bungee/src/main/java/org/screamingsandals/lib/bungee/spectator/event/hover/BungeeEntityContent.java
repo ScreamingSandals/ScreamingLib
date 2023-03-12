@@ -28,7 +28,7 @@ import org.screamingsandals.lib.bungee.spectator.AbstractBungeeBackend;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.UUID;
 
@@ -48,16 +48,16 @@ public class BungeeEntityContent extends BasicWrapper<Entity> implements EntityC
     }
 
     @Override
-    public @NotNull NamespacedMappingKey type() {
+    public @NotNull ResourceLocation type() {
         var type = wrappedObject.getType();
         if (type == null) {
-            return NamespacedMappingKey.of("minecraft:pig"); // md_5's nice api said: will be pig if null
+            return ResourceLocation.of("minecraft:pig"); // md_5's nice api said: will be pig if null
         }
-        return NamespacedMappingKey.of(type);
+        return ResourceLocation.of(type);
     }
 
     @Override
-    public @NotNull EntityContent withType(@NotNull NamespacedMappingKey type) {
+    public @NotNull EntityContent withType(@NotNull ResourceLocation type) {
         return new BungeeEntityContent(new Entity(type.asString(), wrappedObject.getId(), wrappedObject.getName()));
     }
 
@@ -95,7 +95,7 @@ public class BungeeEntityContent extends BasicWrapper<Entity> implements EntityC
     @Setter
     public static class BungeeEntityContentBuilder implements EntityContent.Builder {
         private UUID id;
-        private NamespacedMappingKey type;
+        private ResourceLocation type;
         private Component name;
 
         @Override

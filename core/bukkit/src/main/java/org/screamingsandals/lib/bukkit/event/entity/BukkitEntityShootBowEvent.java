@@ -28,7 +28,7 @@ import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.entity.EntityShootBowEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
 @Accessors(fluent = true)
@@ -48,7 +48,7 @@ public class BukkitEntityShootBowEvent implements EntityShootBowEvent, BukkitCan
     private boolean bowCached;
     private @Nullable ItemStack consumable;
     private boolean consumableCached;
-    private @Nullable EquipmentSlotHolder hand;
+    private @Nullable EquipmentSlot hand;
 
     @Override
     public @NotNull BasicEntity entity() {
@@ -86,9 +86,9 @@ public class BukkitEntityShootBowEvent implements EntityShootBowEvent, BukkitCan
     }
 
     @Override
-    public @NotNull EquipmentSlotHolder hand() {
+    public @NotNull EquipmentSlot hand() {
         if (hand == null) {
-            hand = EquipmentSlotHolder.of(event.getHand());
+            hand = EquipmentSlot.of(event.getHand());
         }
         return hand;
     }

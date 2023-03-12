@@ -28,12 +28,12 @@ import org.screamingsandals.lib.bukkit.BukkitServer;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 @Data
 @Accessors(fluent = true)
 public class BukkitSoundStart implements SoundStart {
-    private final @NotNull NamespacedMappingKey soundKey;
+    private final @NotNull ResourceLocation soundKey;
     private final @NotNull SoundSource source;
     private final float volume;
     private final float pitch;
@@ -54,7 +54,7 @@ public class BukkitSoundStart implements SoundStart {
     }
 
     @Override
-    public @NotNull SoundStart withSoundKey(@NotNull NamespacedMappingKey soundKey) {
+    public @NotNull SoundStart withSoundKey(@NotNull ResourceLocation soundKey) {
         return new BukkitSoundStart(soundKey, source, volume, pitch, seed);
     }
 
@@ -92,7 +92,7 @@ public class BukkitSoundStart implements SoundStart {
     @AllArgsConstructor
     @Setter
     public static class BukkitSoundStartBuilder implements SoundStart.Builder {
-        private @Nullable NamespacedMappingKey soundKey;
+        private @Nullable ResourceLocation soundKey;
         private @NotNull SoundSource source = SoundSource.soundSource("master");
         private float volume = 1;
         private float pitch = 1;
@@ -101,9 +101,9 @@ public class BukkitSoundStart implements SoundStart {
         @Tolerate
         @Override
         public @NotNull Builder soundKey(@NotNull String key) {
-            var k = NamespacedMappingKey.of(key);
+            var k = ResourceLocation.of(key);
             if ("minecraft".equals(k.namespace())) {
-                this.soundKey = NamespacedMappingKey.of("minecraft", BukkitServer.UNSAFE_normalizeSoundKey0(k.value()));
+                this.soundKey = ResourceLocation.of("minecraft", BukkitServer.UNSAFE_normalizeSoundKey0(k.path()));
             } else {
                 this.soundKey = k;
             }

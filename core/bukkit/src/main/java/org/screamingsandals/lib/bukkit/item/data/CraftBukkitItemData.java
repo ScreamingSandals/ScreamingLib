@@ -25,7 +25,7 @@ import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.utils.GsonUtils;
 import org.screamingsandals.lib.utils.Primitives;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.Locale;
@@ -39,17 +39,17 @@ public class CraftBukkitItemData implements ItemData {
     private final @NotNull Map<@NotNull String, Object> keyNBTMap;
 
     @Override
-    public @NotNull Set<@NotNull NamespacedMappingKey> getKeys() {
-        return keyNBTMap.keySet().stream().map(NamespacedMappingKey::of).collect(Collectors.toSet());
+    public @NotNull Set<@NotNull ResourceLocation> getKeys() {
+        return keyNBTMap.keySet().stream().map(ResourceLocation::of).collect(Collectors.toSet());
     }
 
     @Override
     public <T> void set(@NotNull String key, @NotNull T data, @NotNull Class<T> tClass) {
-        set(NamespacedMappingKey.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), data, tClass);
+        set(ResourceLocation.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), data, tClass);
     }
 
     @Override
-    public <T> void set(@NotNull NamespacedMappingKey key, @NotNull T data, @NotNull Class<T> tClass) {
+    public <T> void set(@NotNull ResourceLocation key, @NotNull T data, @NotNull Class<T> tClass) {
         if (!Primitives.isWrapperType(tClass)) {
             tClass = Primitives.wrap(tClass); //Make sure we will always "switch" over the wrapper types
         }
@@ -81,12 +81,12 @@ public class CraftBukkitItemData implements ItemData {
 
     @Override
     public <T> @Nullable T get(@NotNull String key, @NotNull Class<T> tClass) {
-        return get(NamespacedMappingKey.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), tClass);
+        return get(ResourceLocation.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)), tClass);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> @Nullable T get(@NotNull NamespacedMappingKey key, @NotNull Class<T> tClass) {
+    public <T> @Nullable T get(@NotNull ResourceLocation key, @NotNull Class<T> tClass) {
         if (!Primitives.isWrapperType(tClass)) {
             tClass = Primitives.wrap(tClass); //Make sure we will always "switch" over the wrapper types
         }
@@ -143,11 +143,11 @@ public class CraftBukkitItemData implements ItemData {
 
     @Override
     public boolean contains(@NotNull String key) {
-        return keyNBTMap.containsKey(NamespacedMappingKey.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)).asString());
+        return keyNBTMap.containsKey(ResourceLocation.of(BukkitCore.getPlugin().getName().toLowerCase(Locale.ROOT), key.toLowerCase(Locale.ROOT)).asString());
     }
 
     @Override
-    public boolean contains(@NotNull NamespacedMappingKey key) {
+    public boolean contains(@NotNull ResourceLocation key) {
         return keyNBTMap.containsKey(key.asString());
     }
 

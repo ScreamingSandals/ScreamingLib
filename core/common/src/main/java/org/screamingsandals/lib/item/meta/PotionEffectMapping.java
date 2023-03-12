@@ -27,7 +27,7 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
 import org.screamingsandals.lib.utils.key.MappingKey;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.key.NumericMappingKey;
 import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
 import org.spongepowered.configurate.BasicConfigurationNode;
@@ -89,7 +89,7 @@ public abstract class PotionEffectMapping extends AbstractTypeMapper<PotionEffec
                     var id = Integer.parseInt(matcher.group("namespaced"));
                     mappingKey = NumericMappingKey.of(id);
                 } catch (Throwable ignored) {
-                    mappingKey = NamespacedMappingKey.of(matcher.group("namespaced"));
+                    mappingKey = ResourceLocation.of(matcher.group("namespaced"));
                 }
 
                 var duration_str = matcher.group("duration");

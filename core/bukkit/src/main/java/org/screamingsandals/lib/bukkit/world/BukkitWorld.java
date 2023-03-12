@@ -34,9 +34,9 @@ import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.world.World;
 import org.screamingsandals.lib.world.chunk.Chunk;
 import org.screamingsandals.lib.world.chunk.Chunks;
-import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
-import org.screamingsandals.lib.world.dimension.DimensionHolder;
-import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
+import org.screamingsandals.lib.world.difficulty.DifficultyType;
+import org.screamingsandals.lib.world.dimension.DimensionType;
+import org.screamingsandals.lib.world.gamerule.GameRuleType;
 
 import java.util.List;
 import java.util.Objects;
@@ -72,13 +72,13 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
     }
 
     @Override
-    public @NotNull DifficultyHolder getDifficulty() {
-        return DifficultyHolder.of(wrappedObject.getDifficulty());
+    public @NotNull DifficultyType getDifficulty() {
+        return DifficultyType.of(wrappedObject.getDifficulty());
     }
 
     @Override
-    public @NotNull DimensionHolder getDimension() {
-        return DimensionHolder.of(wrappedObject.getEnvironment());
+    public @NotNull DimensionType getDimension() {
+        return DimensionType.of(wrappedObject.getEnvironment());
     }
 
     @Override
@@ -101,7 +101,7 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> @Nullable T getGameRuleValue(@NotNull GameRuleHolder holder) {
+    public <T> @Nullable T getGameRuleValue(@NotNull GameRuleType holder) {
         if (Reflect.has("org.bukkit.GameRule")) {
             return (T) wrappedObject.getGameRuleValue(holder.as(GameRule.class));
         } else {
@@ -123,7 +123,7 @@ public class BukkitWorld extends BasicWrapper<org.bukkit.World> implements World
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> void setGameRuleValue(@NotNull GameRuleHolder holder, @NotNull T value) {
+    public <T> void setGameRuleValue(@NotNull GameRuleType holder, @NotNull T value) {
         if (Reflect.has("org.bukkit.GameRule")) {
             wrappedObject.setGameRule((GameRule<T>) holder.as(GameRule.class), value);
         } else {

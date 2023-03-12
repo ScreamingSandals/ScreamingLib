@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.StorageNBTComponent;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 public class AdventureStorageNBTComponent extends AdventureNBTComponent<net.kyori.adventure.text.StorageNBTComponent> implements StorageNBTComponent {
     public AdventureStorageNBTComponent(net.kyori.adventure.text.@NotNull StorageNBTComponent wrappedObject) {
@@ -29,13 +29,13 @@ public class AdventureStorageNBTComponent extends AdventureNBTComponent<net.kyor
     }
 
     @Override
-    public @NotNull NamespacedMappingKey storageKey() {
-        return NamespacedMappingKey.of(((net.kyori.adventure.text.StorageNBTComponent) wrappedObject).storage().asString());
+    public @NotNull ResourceLocation storageKey() {
+        return ResourceLocation.of(((net.kyori.adventure.text.StorageNBTComponent) wrappedObject).storage().asString());
     }
 
     @SuppressWarnings("PatternValidation")
     @Override
-    public @NotNull StorageNBTComponent withStorageKey(@NotNull NamespacedMappingKey storageKey) {
+    public @NotNull StorageNBTComponent withStorageKey(@NotNull ResourceLocation storageKey) {
         return (StorageNBTComponent) AdventureBackend.wrapComponent(((net.kyori.adventure.text.StorageNBTComponent) wrappedObject).storage(Key.key(storageKey.asString())));
     }
 
@@ -72,7 +72,7 @@ public class AdventureStorageNBTComponent extends AdventureNBTComponent<net.kyor
 
         @SuppressWarnings("PatternValidation")
         @Override
-        public StorageNBTComponent.@NotNull Builder storageKey(@NotNull NamespacedMappingKey storageKey) {
+        public StorageNBTComponent.@NotNull Builder storageKey(@NotNull ResourceLocation storageKey) {
             getBuilder().storage(Key.key(storageKey.asString()));
             return self();
         }

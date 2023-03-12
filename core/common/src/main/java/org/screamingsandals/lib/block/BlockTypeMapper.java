@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
 public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder> {
     private static final @NotNull Pattern RESOLUTION_PATTERN = Pattern.compile("^(((?<namespaced>(?:([A-Za-z][A-Za-z0-9_.\\-]*):)?[A-Za-z][A-Za-z0-9_.\\-/ ]*)(?<blockState>:\\d*|\\[[^]]*])?)|((?<id>\\d+)(?::)?(?<data>\\d+)?))$");
     @Getter
-    protected final @NotNull Map<@NotNull Predicate<@NotNull NamespacedMappingKey>, Pair<Function<Byte, Map<String, String>>, Function<Map<String, String>, Byte>>> blockDataTranslators = new HashMap<>();
+    protected final @NotNull Map<@NotNull Predicate<@NotNull ResourceLocation>, Pair<Function<Byte, Map<String, String>>, Function<Map<String, String>, Byte>>> blockDataTranslators = new HashMap<>();
     protected final @NotNull BidirectionalConverter<BlockTypeHolder> blockTypeConverter = BidirectionalConverter.<BlockTypeHolder>build()
             .registerP2W(BlockTypeHolder.class, i -> i)
             .registerP2W(ConfigurationNode.class, node -> {
@@ -87,7 +87,7 @@ public abstract class BlockTypeMapper extends AbstractTypeMapper<BlockTypeHolder
             if (matcher.matches()) {
                 if (matcher.group("namespaced") != null) {
 
-                    var namespaced = NamespacedMappingKey.of(matcher.group("namespaced"));
+                    var namespaced = ResourceLocation.of(matcher.group("namespaced"));
 
                     Integer data = null;
                     Map<String, String> flatteningData = null;

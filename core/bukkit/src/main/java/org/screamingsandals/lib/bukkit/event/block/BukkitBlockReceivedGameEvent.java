@@ -30,7 +30,7 @@ import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.event.block.BlockReceivedGameEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
@@ -47,7 +47,7 @@ public class BukkitBlockReceivedGameEvent implements BlockReceivedGameEvent, Buk
     private @Nullable Block block;
     private @Nullable BasicEntity entity;
     private boolean entityConverted;
-    private @Nullable NamespacedMappingKey underlyingEvent;
+    private @Nullable ResourceLocation underlyingEvent;
 
     @Override
     public @NotNull Block block() {
@@ -69,9 +69,9 @@ public class BukkitBlockReceivedGameEvent implements BlockReceivedGameEvent, Buk
     }
 
     @Override
-    public @NotNull NamespacedMappingKey underlyingEvent() {
+    public @NotNull ResourceLocation underlyingEvent() {
         if (underlyingEvent == null) {
-            underlyingEvent = NamespacedMappingKey.of(event.getEvent().getKey().toString());
+            underlyingEvent = ResourceLocation.of(event.getEvent().getKey().toString());
         }
         return underlyingEvent;
     }

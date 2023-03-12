@@ -21,7 +21,8 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.slot.EquipmentSlotMapping;
+import org.screamingsandals.lib.slot.EquipmentSlot;
+import org.screamingsandals.lib.slot.EquipmentSlotRegistry;
 import org.screamingsandals.lib.utils.BidirectionalConverter;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
 import org.screamingsandals.lib.utils.annotations.ServiceDependencies;
@@ -41,7 +42,7 @@ import java.util.function.Supplier;
 @AbstractService
 @ServiceDependencies(dependsOn = {
         AttributeTypeMapping.class,
-        EquipmentSlotMapping.class
+        EquipmentSlotRegistry.class
 })
 public abstract class AttributeMapping {
     private static @Nullable AttributeMapping attributeMapping;
@@ -85,7 +86,7 @@ public abstract class AttributeMapping {
                     name.getString(""),
                     amount.getDouble(),
                     operation.get(AttributeModifierHolder.Operation.class),
-                    EquipmentSlotMapping.resolve(slot.raw())
+                    EquipmentSlot.ofNullable(slot.raw())
             );
         } catch (SerializationException e) {
             e.printStackTrace();

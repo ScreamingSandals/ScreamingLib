@@ -24,11 +24,11 @@ import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 public interface SoundStart extends Wrapper, RawValueHolder {
     @Contract(value = "_, _, _, _ -> new", pure = true)
-    static @NotNull SoundStart sound(@NotNull NamespacedMappingKey soundKey, @NotNull SoundSource soundSource, float volume, float pitch) {
+    static @NotNull SoundStart sound(@NotNull ResourceLocation soundKey, @NotNull SoundSource soundSource, float volume, float pitch) {
         return builder()
                 .soundKey(soundKey)
                 .source(soundSource)
@@ -53,10 +53,10 @@ public interface SoundStart extends Wrapper, RawValueHolder {
         return Spectator.getBackend().soundStart();
     }
 
-    @NotNull NamespacedMappingKey soundKey();
+    @NotNull ResourceLocation soundKey();
 
     @Contract(pure = true)
-    @NotNull SoundStart withSoundKey(@NotNull NamespacedMappingKey soundKey);
+    @NotNull SoundStart withSoundKey(@NotNull ResourceLocation soundKey);
 
     @NotNull SoundSource source();
 
@@ -85,12 +85,12 @@ public interface SoundStart extends Wrapper, RawValueHolder {
 
     interface Builder {
         @Contract("_ -> this")
-        @NotNull Builder soundKey(@NotNull NamespacedMappingKey key);
+        @NotNull Builder soundKey(@NotNull ResourceLocation key);
 
         @Contract("_ -> this")
         @CustomAutocompletion(CustomAutocompletion.Type.SOUND)
         default @NotNull Builder soundKey(@NotNull String key) {
-            return soundKey(NamespacedMappingKey.of(key));
+            return soundKey(ResourceLocation.of(key));
         }
 
         @Contract("_ -> this")

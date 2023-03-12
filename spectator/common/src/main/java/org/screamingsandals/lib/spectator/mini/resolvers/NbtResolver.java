@@ -22,7 +22,7 @@ import org.screamingsandals.lib.minitag.nodes.TagNode;
 import org.screamingsandals.lib.spectator.*;
 import org.screamingsandals.lib.spectator.mini.MiniMessageParser;
 import org.screamingsandals.lib.spectator.mini.placeholders.Placeholder;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -50,7 +50,7 @@ public class NbtResolver implements SingleTagResolver {
                 builder = Component.entityNBT().selector(secondArgument);
                 break;
             case "storage":
-                builder = Component.storageNBT().storageKey(NamespacedMappingKey.of(secondArgument));
+                builder = Component.storageNBT().storageKey(ResourceLocation.of(secondArgument));
                 break;
             default:
                 return null; // invalid

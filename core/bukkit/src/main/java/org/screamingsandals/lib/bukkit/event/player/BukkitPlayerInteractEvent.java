@@ -30,7 +30,7 @@ import org.screamingsandals.lib.bukkit.item.BukkitItemView;
 import org.screamingsandals.lib.event.player.PlayerInteractEvent;
 import org.screamingsandals.lib.item.ItemStackView;
 import org.screamingsandals.lib.player.Player;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.utils.BlockFace;
 
 @Accessors(fluent = true)
@@ -51,7 +51,7 @@ public class BukkitPlayerInteractEvent implements PlayerInteractEvent, NoAutoCan
     private @Nullable BlockFace blockFace;
     private @Nullable Block clickedBlock;
     private boolean clickedBlockCached;
-    private @Nullable EquipmentSlotHolder hand;
+    private @Nullable EquipmentSlot hand;
     private boolean handCached;
 
     @Override
@@ -121,10 +121,10 @@ public class BukkitPlayerInteractEvent implements PlayerInteractEvent, NoAutoCan
     }
 
     @Override
-    public @Nullable EquipmentSlotHolder hand() {
+    public @Nullable EquipmentSlot hand() {
         if (!handCached) {
             if (event.getHand() != null) {
-                hand = EquipmentSlotHolder.of(event.getHand());
+                hand = EquipmentSlot.of(event.getHand());
             }
             handCached = true;
         }

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.Spectator;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.UUID;
 
@@ -36,10 +36,10 @@ public interface EntityContent extends Content, EntityContentLike {
     @Contract(pure = true)
     @NotNull EntityContent withId(@NotNull UUID id);
 
-    @NotNull NamespacedMappingKey type();
+    @NotNull ResourceLocation type();
 
     @Contract(pure = true)
-    @NotNull EntityContent withType(@NotNull NamespacedMappingKey type);
+    @NotNull EntityContent withType(@NotNull ResourceLocation type);
 
     @Nullable Component name();
 
@@ -64,7 +64,7 @@ public interface EntityContent extends Content, EntityContentLike {
         @NotNull Builder id(@NotNull UUID id);
 
         @Contract("_ -> this")
-        @NotNull Builder type(@NotNull NamespacedMappingKey type);
+        @NotNull Builder type(@NotNull ResourceLocation type);
 
         @Contract("_ -> this")
         @NotNull Builder name(@Nullable Component name);

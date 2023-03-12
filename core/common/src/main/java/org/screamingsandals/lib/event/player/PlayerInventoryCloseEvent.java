@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 public interface PlayerInventoryCloseEvent extends PlayerEvent, PlatformEvent {
 
@@ -30,5 +30,5 @@ public interface PlayerInventoryCloseEvent extends PlayerEvent, PlatformEvent {
 
     // TODO: holder?
     @LimitedVersionSupport("Paper")
-    @NotNull NamespacedMappingKey reason();
+    @NotNull ResourceLocation reason();
 }

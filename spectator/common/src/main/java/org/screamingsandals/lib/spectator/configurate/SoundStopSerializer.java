@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
@@ -43,9 +43,9 @@ public class SoundStopSerializer implements TypeSerializer<SoundStop> {
             final var source = node.node(SOURCE_KEY).getString();
             if (sound != null) {
                 if (source == null) {
-                    return SoundStop.builder().soundKey(NamespacedMappingKey.of(sound)).build();
+                    return SoundStop.builder().soundKey(ResourceLocation.of(sound)).build();
                 } else {
-                    return SoundStop.builder().soundKey(NamespacedMappingKey.of(sound)).source(SoundSource.soundSource(source)).build();
+                    return SoundStop.builder().soundKey(ResourceLocation.of(sound)).source(SoundSource.soundSource(source)).build();
                 }
             } else if (source != null) {
                 return SoundStop.builder().source(SoundSource.soundSource(source)).build();

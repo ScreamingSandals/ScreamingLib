@@ -22,7 +22,7 @@ import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.block.Block;
 
 @LimitedVersionSupport(">= 1.17")
@@ -35,5 +35,5 @@ public interface BlockReceivedGameEvent extends SCancellableEvent, PlatformEvent
     /**
      * TODO: Create game event mapping
      */
-    @NotNull NamespacedMappingKey underlyingEvent();
+    @NotNull ResourceLocation underlyingEvent();
 }

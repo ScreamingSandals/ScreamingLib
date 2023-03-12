@@ -23,7 +23,7 @@ import org.screamingsandals.lib.item.meta.PotionHolder;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataKey;
 import org.screamingsandals.lib.spectator.Color;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 @UtilityClass
 @Deprecated
@@ -34,7 +34,7 @@ public class ItemMeta {
     public static final MetadataCollectionKey<PotionEffectHolder> CUSTOM_POTION_EFFECTS = MetadataCollectionKey.of("CustomPotionEffects", PotionEffectHolder.class);
 
     // Knowledge Book
-    public static final MetadataCollectionKey<NamespacedMappingKey> RECIPES = MetadataCollectionKey.of("Recipes", NamespacedMappingKey.class);
+    public static final MetadataCollectionKey<ResourceLocation> RECIPES = MetadataCollectionKey.of("Recipes", ResourceLocation.class);
 
     // Fireworks
     public static final MetadataCollectionKey<FireworkEffectHolder> FIREWORK_EFFECTS = MetadataCollectionKey.of("Fireworks.Explosions", FireworkEffectHolder.class);

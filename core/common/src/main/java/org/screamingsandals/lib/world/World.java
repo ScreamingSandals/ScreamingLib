@@ -25,9 +25,9 @@ import org.screamingsandals.lib.spectator.audience.PlayerAudience;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.world.chunk.Chunk;
-import org.screamingsandals.lib.world.difficulty.DifficultyHolder;
-import org.screamingsandals.lib.world.dimension.DimensionHolder;
-import org.screamingsandals.lib.world.gamerule.GameRuleHolder;
+import org.screamingsandals.lib.world.difficulty.DifficultyType;
+import org.screamingsandals.lib.world.dimension.DimensionType;
+import org.screamingsandals.lib.world.gamerule.GameRuleType;
 
 import java.util.List;
 import java.util.UUID;
@@ -70,14 +70,14 @@ public interface World extends Wrapper, RawValueHolder, PlayerAudience.Forwardin
      *
      * @return the world difficulty
      */
-    @NotNull DifficultyHolder getDifficulty();
+    @NotNull DifficultyType getDifficulty();
 
     /**
      * Gets the world dimension holder.
      *
      * @return the world dimension
      */
-    @NotNull DimensionHolder getDimension();
+    @NotNull DimensionType getDimension();
 
     /**
      * Gets the world's chunk at the supplied coordinates.
@@ -124,7 +124,7 @@ public interface World extends Wrapper, RawValueHolder, PlayerAudience.Forwardin
      * @param <T> the gamerule value type
      * @return the gamerule value
      */
-    <T> @Nullable T getGameRuleValue(@NotNull GameRuleHolder holder);
+    <T> @Nullable T getGameRuleValue(@NotNull GameRuleType holder);
 
     /**
      * Sets the value of the supplied gamerule holder in this world.
@@ -133,7 +133,7 @@ public interface World extends Wrapper, RawValueHolder, PlayerAudience.Forwardin
      * @param value the gamerule value
      * @param <T> the gamerule value type
      */
-    <T> void setGameRuleValue(@NotNull GameRuleHolder holder, @NotNull T value);
+    <T> void setGameRuleValue(@NotNull GameRuleType holder, @NotNull T value);
 
     /**
      * Gets the time in this world.

@@ -28,7 +28,7 @@ import org.screamingsandals.lib.nbt.NumericTag;
 import org.screamingsandals.lib.nbt.StringTag;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 public class BungeeLegacyItemContent extends BasicWrapper<CompoundTag> implements ItemContent {
 
@@ -49,18 +49,18 @@ public class BungeeLegacyItemContent extends BasicWrapper<CompoundTag> implement
     }
 
     @Override
-    public @NotNull NamespacedMappingKey id() {
+    public @NotNull ResourceLocation id() {
         if (wrappedObject != null) {
             var idTag = wrappedObject.tag("id");
             if (idTag instanceof StringTag) {
-                return NamespacedMappingKey.of(((StringTag) idTag).value());
+                return ResourceLocation.of(((StringTag) idTag).value());
             }
         }
-        return NamespacedMappingKey.of("minecraft", "air");
+        return ResourceLocation.of("minecraft", "air");
     }
 
     @Override
-    public @NotNull ItemContent withId(@NotNull NamespacedMappingKey id) {
+    public @NotNull ItemContent withId(@NotNull ResourceLocation id) {
         return new BungeeLegacyItemContent(wrappedObject.with("id", id.asString()));
     }
 
@@ -119,7 +119,7 @@ public class BungeeLegacyItemContent extends BasicWrapper<CompoundTag> implement
     @Accessors(fluent = true, chain = true)
     @Setter
     public static class BungeeLegacyItemContentBuilder implements ItemContent.Builder {
-        private @Nullable NamespacedMappingKey id;
+        private @Nullable ResourceLocation id;
         private int count = 1;
         private @Nullable CompoundTag tag;
 

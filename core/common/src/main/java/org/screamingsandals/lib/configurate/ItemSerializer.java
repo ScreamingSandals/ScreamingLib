@@ -36,7 +36,7 @@ import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.ConfigurateUtils;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
@@ -247,12 +247,12 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
                 if (recipes.isList()) {
                     attributes.childrenList().stream()
                             .map(ConfigurationNode::getString)
-                            .map(NamespacedMappingKey::ofOptional)
+                            .map(ResourceLocation::ofOptional)
                             .filter(Optional::isPresent)
                             .map(Optional::get)
                             .forEach(builder::recipe);
                 } else {
-                    NamespacedMappingKey.ofOptional(recipes.getString()).ifPresent(builder::recipe);
+                    ResourceLocation.ofOptional(recipes.getString()).ifPresent(builder::recipe);
                 }
             }
 

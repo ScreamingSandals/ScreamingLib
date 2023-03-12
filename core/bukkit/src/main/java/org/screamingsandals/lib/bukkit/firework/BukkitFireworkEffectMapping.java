@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.firework;
 import org.bukkit.FireworkEffect;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 
@@ -32,7 +32,7 @@ public class BukkitFireworkEffectMapping extends FireworkEffectMapping {
 
         Arrays.stream(FireworkEffect.Type.values()).forEach(fireworkEffectType -> {
             var holder = new BukkitFireworkEffectHolder(fireworkEffectType);
-            mapping.put(NamespacedMappingKey.of(fireworkEffectType.name()), holder);
+            mapping.put(ResourceLocation.of(fireworkEffectType.name()), holder);
             values.add(holder);
         });
     }

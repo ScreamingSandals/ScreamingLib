@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.adventure.spectator.AdventureBackend;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 public class AdventureSoundStop extends BasicWrapper<SoundStop> implements org.screamingsandals.lib.spectator.sound.SoundStop {
     public AdventureSoundStop(@NotNull SoundStop wrappedObject) {
@@ -37,12 +37,12 @@ public class AdventureSoundStop extends BasicWrapper<SoundStop> implements org.s
     }
 
     @Override
-    public @Nullable NamespacedMappingKey soundKey() {
+    public @Nullable ResourceLocation soundKey() {
         var sound = wrappedObject.sound();
         if (sound == null) {
             return null;
         }
-        return NamespacedMappingKey.of(sound.namespace(), sound.value());
+        return ResourceLocation.of(sound.namespace(), sound.value());
     }
 
     @Override
@@ -52,7 +52,7 @@ public class AdventureSoundStop extends BasicWrapper<SoundStop> implements org.s
     }
 
     @Override
-    public org.screamingsandals.lib.spectator.sound.@NotNull SoundStop withSoundKey(@Nullable NamespacedMappingKey soundKey) {
+    public org.screamingsandals.lib.spectator.sound.@NotNull SoundStop withSoundKey(@Nullable ResourceLocation soundKey) {
         return toBuilder().soundKey(soundKey).build();
     }
 
@@ -75,16 +75,16 @@ public class AdventureSoundStop extends BasicWrapper<SoundStop> implements org.s
     @Setter
     public static class AdventureSoundStopBuilder implements org.screamingsandals.lib.spectator.sound.SoundStop.Builder {
 
-        private @Nullable NamespacedMappingKey soundKey;
+        private @Nullable ResourceLocation soundKey;
 
         private @Nullable SoundSource source;
 
         @Tolerate
         @Override
         public @NotNull Builder soundKey(@Nullable String key) {
-            var k = NamespacedMappingKey.of(key);
+            var k = ResourceLocation.of(key);
             if ("minecraft".equals(k.namespace())) {
-                this.soundKey = NamespacedMappingKey.of("minecraft", AdventureBackend.getSoundKeyNormalizer().apply(k.value()));
+                this.soundKey = ResourceLocation.of("minecraft", AdventureBackend.getSoundKeyNormalizer().apply(k.path()));
             } else {
                 this.soundKey = k;
             }
@@ -98,7 +98,7 @@ public class AdventureSoundStop extends BasicWrapper<SoundStop> implements org.s
                 return new AdventureSoundStop(SoundStop.all());
             } else if (source == null) {
                 return new AdventureSoundStop(SoundStop.named(
-                        Key.key(soundKey.namespace(), soundKey.value())
+                        Key.key(soundKey.namespace(), soundKey.path())
                 ));
             } else if (soundKey == null) {
                 return new AdventureSoundStop(SoundStop.source(
@@ -106,7 +106,7 @@ public class AdventureSoundStop extends BasicWrapper<SoundStop> implements org.s
                 ));
             } else {
                 return new AdventureSoundStop(SoundStop.namedOnSource(
-                       Key.key(this.soundKey.namespace(), this.soundKey.value()),
+                       Key.key(this.soundKey.namespace(), this.soundKey.path()),
                        source.as(Sound.Source.class)
                 ));
             }

@@ -40,7 +40,7 @@ import org.screamingsandals.lib.nms.accessors.ServerPlayerAccessor;
 import org.screamingsandals.lib.particle.ParticleHolder;
 import org.screamingsandals.lib.player.Players;
 import org.screamingsandals.lib.player.Player;
-import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.screamingsandals.lib.spectator.AudienceComponentLike;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -49,7 +49,7 @@ import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.world.Locations;
-import org.screamingsandals.lib.world.weather.WeatherHolder;
+import org.screamingsandals.lib.world.weather.WeatherType;
 import protocolsupport.api.ProtocolSupportAPI;
 
 import java.net.InetSocketAddress;
@@ -229,13 +229,13 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
     }
 
     @Override
-    public @NotNull GameModeHolder getGameMode() {
-        return GameModeHolder.of(((org.bukkit.entity.Player) wrappedObject).getGameMode());
+    public @NotNull GameMode getGameMode() {
+        return GameMode.of(((org.bukkit.entity.Player) wrappedObject).getGameMode());
     }
 
     @Override
-    public void setGameMode(@NotNull GameModeHolder gameMode) {
-        ((org.bukkit.entity.Player) wrappedObject).setGameMode(gameMode.as(GameMode.class));
+    public void setGameMode(@NotNull GameMode gameMode) {
+        ((org.bukkit.entity.Player) wrappedObject).setGameMode(gameMode.as(org.bukkit.GameMode.class));
     }
 
     @Override
@@ -269,16 +269,16 @@ public class BukkitPlayer extends BukkitHumanEntity implements Player {
     }
 
     @Override
-    public @Nullable WeatherHolder getPlayerWeather() {
-        return WeatherHolder.ofNullable(((org.bukkit.entity.Player) wrappedObject).getPlayerWeather());
+    public @Nullable WeatherType getPlayerWeather() {
+        return WeatherType.ofNullable(((org.bukkit.entity.Player) wrappedObject).getPlayerWeather());
     }
 
     @Override
-    public void setPlayerWeather(@Nullable WeatherHolder weather) {
+    public void setPlayerWeather(@Nullable WeatherType weather) {
         if (weather == null) {
             ((org.bukkit.entity.Player) wrappedObject).resetPlayerWeather();
         } else {
-            ((org.bukkit.entity.Player) wrappedObject).setPlayerWeather(weather.as(WeatherType.class));
+            ((org.bukkit.entity.Player) wrappedObject).setPlayerWeather(weather.as(org.bukkit.WeatherType.class));
         }
     }
 

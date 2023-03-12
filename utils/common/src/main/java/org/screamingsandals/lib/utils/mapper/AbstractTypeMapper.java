@@ -18,7 +18,7 @@ package org.screamingsandals.lib.utils.mapper;
 
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.key.MappingKey;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.*;
 
@@ -28,7 +28,7 @@ public abstract class AbstractTypeMapper<T extends Wrapper> {
 
     protected Optional<T> resolveFromMapping(Object key) {
         var namespaced = !(key instanceof MappingKey) ?
-                NamespacedMappingKey.ofOptional(key.toString().trim()) : Optional.of((MappingKey) key);
+                ResourceLocation.ofOptional(key.toString().trim()) : Optional.of((MappingKey) key);
 
         if (namespaced.isPresent() && mapping.containsKey(namespaced.get())) {
             return Optional.ofNullable(mapping.get(namespaced.get()));
@@ -42,8 +42,8 @@ public abstract class AbstractTypeMapper<T extends Wrapper> {
             throw new IllegalArgumentException("Both mapping keys mustn't be null!");
         }
 
-        var mappingKeyNamespaced = NamespacedMappingKey.of(mappingKey);
-        var aliasNamespaced = NamespacedMappingKey.of(alias);
+        var mappingKeyNamespaced = ResourceLocation.of(mappingKey);
+        var aliasNamespaced = ResourceLocation.of(alias);
 
         if (mapping.containsKey(mappingKeyNamespaced) && !mapping.containsKey(aliasNamespaced)) {
             mapping.put(aliasNamespaced, mapping.get(mappingKeyNamespaced));

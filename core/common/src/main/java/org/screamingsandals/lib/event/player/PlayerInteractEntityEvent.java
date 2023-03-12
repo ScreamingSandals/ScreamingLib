@@ -20,11 +20,11 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 
 public interface PlayerInteractEntityEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
 
     @NotNull BasicEntity clickedEntity();
 
-    @NotNull EquipmentSlotHolder hand();
+    @NotNull EquipmentSlot hand();
 }

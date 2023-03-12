@@ -23,7 +23,7 @@ import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.item.meta.PotionHolder;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
 import java.util.List;
@@ -70,14 +70,14 @@ public class MetadataValuesRemapper {
                     FireworkEffectHolder::as
             ),
             new MetadataConverter<>(
-                    NamespacedMappingKey.class,
-                    value -> NamespacedMappingKey.of(value.toString()),
+                    ResourceLocation.class,
+                    value -> ResourceLocation.of(value.toString()),
                     (namespacedMappingKey, aClass) -> {
                         if (aClass == String.class) {
                             return namespacedMappingKey.asString();
                         } else if (Reflect.has("org.bukkit.NamespacedKey")) {
                             if (aClass == NamespacedKey.class) {
-                                return new NamespacedKey(namespacedMappingKey.namespace(), namespacedMappingKey.value());
+                                return new NamespacedKey(namespacedMappingKey.namespace(), namespacedMappingKey.path());
                             }
                         }
                         throw new UnsupportedOperationException("Can't remap NamespacedMappingKey to " + aClass.getName());

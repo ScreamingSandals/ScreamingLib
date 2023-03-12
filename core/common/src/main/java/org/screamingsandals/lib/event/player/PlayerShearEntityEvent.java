@@ -21,7 +21,7 @@ import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 
 public interface PlayerShearEntityEvent extends SCancellableEvent, PlayerEvent, PlatformEvent {
 
@@ -29,5 +29,5 @@ public interface PlayerShearEntityEvent extends SCancellableEvent, PlayerEvent, 
 
     @NotNull ItemStack item();
 
-    @NotNull EquipmentSlotHolder hand();
+    @NotNull EquipmentSlot hand();
 }

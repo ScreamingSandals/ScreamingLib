@@ -25,7 +25,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
@@ -554,5 +554,5 @@ public abstract class PacketWriter extends OutputStream {
 
     protected abstract int getBlockStateId(@NotNull BlockTypeHolder blockDataHolder);
 
-    public abstract int getEquipmentSlotId(@NotNull EquipmentSlotHolder equipmentSlotHolder);
+    public abstract int getEquipmentSlotId(@NotNull EquipmentSlot equipmentSlotHolder);
 }

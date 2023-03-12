@@ -22,7 +22,7 @@ import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SCancellableEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 
 public interface EntityShootBowEvent extends SCancellableEvent, PlatformEvent {
 
@@ -34,7 +34,7 @@ public interface EntityShootBowEvent extends SCancellableEvent, PlatformEvent {
 
     @NotNull BasicEntity projectile();
 
-    @NotNull EquipmentSlotHolder hand();
+    @NotNull EquipmentSlot hand();
 
     float force();
 

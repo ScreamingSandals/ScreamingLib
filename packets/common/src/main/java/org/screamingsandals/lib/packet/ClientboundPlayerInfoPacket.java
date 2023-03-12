@@ -24,7 +24,7 @@ import lombok.experimental.Accessors;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.screamingsandals.lib.spectator.Component;
 
 import java.util.*;
@@ -121,7 +121,7 @@ public class ClientboundPlayerInfoPacket extends AbstractPacket {
         private final @NotNull UUID uuid;
         private final @NotNull String realName;
         private final int latency;
-        private final @NotNull GameModeHolder gameMode;
+        private final @NotNull GameMode gameMode;
         private final @Nullable Component displayName;
         private final @NotNull List<@NotNull Property> properties;
         private final boolean listed;

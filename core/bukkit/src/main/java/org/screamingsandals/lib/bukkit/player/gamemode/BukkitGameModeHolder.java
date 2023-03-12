@@ -16,16 +16,16 @@
 
 package org.screamingsandals.lib.bukkit.player.gamemode;
 
-import org.bukkit.GameMode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.player.gamemode.GameModeHolder;
+import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitGameModeHolder extends BasicWrapper<GameMode> implements GameModeHolder {
-    public BukkitGameModeHolder(@NotNull GameMode wrappedObject) {
+public class BukkitGameModeHolder extends BasicWrapper<org.bukkit.GameMode> implements GameMode {
+    public BukkitGameModeHolder(@NotNull org.bukkit.GameMode wrappedObject) {
         super(wrappedObject);
     }
 
@@ -41,10 +41,10 @@ public class BukkitGameModeHolder extends BasicWrapper<GameMode> implements Game
 
     @Override
     public boolean is(@Nullable Object gameMode) {
-        if (gameMode instanceof GameMode || gameMode instanceof GameModeHolder) {
+        if (gameMode instanceof org.bukkit.GameMode || gameMode instanceof GameMode) {
             return equals(gameMode);
         }
-        return equals(GameModeHolder.ofNullable(gameMode));
+        return equals(GameMode.ofNullable(gameMode));
     }
 
     @Override
@@ -52,4 +52,8 @@ public class BukkitGameModeHolder extends BasicWrapper<GameMode> implements Game
         return Arrays.stream(gameModes).anyMatch(this::is);
     }
 
+    @Override
+    public @NotNull ResourceLocation location() {
+        return ResourceLocation.of(wrappedObject.name());
+    }
 }

@@ -28,7 +28,7 @@ import org.screamingsandals.lib.nbt.StringTag;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.UUID;
 
@@ -65,16 +65,16 @@ public class BungeeLegacyEntityContent extends BasicWrapper<CompoundTag> impleme
     }
 
     @Override
-    public @NotNull NamespacedMappingKey type() {
+    public @NotNull ResourceLocation type() {
         var string = wrappedObject.tag("type");
         if (string instanceof StringTag) {
-            return NamespacedMappingKey.of(((StringTag) string).value());
+            return ResourceLocation.of(((StringTag) string).value());
         }
-        return NamespacedMappingKey.of("minecraft", "pig");
+        return ResourceLocation.of("minecraft", "pig");
     }
 
     @Override
-    public @NotNull EntityContent withType(@NotNull NamespacedMappingKey type) {
+    public @NotNull EntityContent withType(@NotNull ResourceLocation type) {
         return new BungeeLegacyEntityContent(wrappedObject.with("type", type.asString()));
     }
 
@@ -120,7 +120,7 @@ public class BungeeLegacyEntityContent extends BasicWrapper<CompoundTag> impleme
     @Setter
     public static class BungeeLegacyEntityContentBuilder implements EntityContent.Builder {
         private @Nullable UUID id;
-        private @Nullable NamespacedMappingKey type;
+        private @Nullable ResourceLocation type;
         private @Nullable Component name;
 
         @Override

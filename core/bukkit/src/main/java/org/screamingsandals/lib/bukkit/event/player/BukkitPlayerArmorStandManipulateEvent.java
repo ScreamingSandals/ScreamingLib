@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.event.player.PlayerArmorStandManipulateEvent;
 import org.screamingsandals.lib.item.ItemStack;
-import org.screamingsandals.lib.slot.EquipmentSlotHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 
 public class BukkitPlayerArmorStandManipulateEvent extends BukkitPlayerInteractEntityEvent implements PlayerArmorStandManipulateEvent {
     public BukkitPlayerArmorStandManipulateEvent(@NotNull org.bukkit.event.player.PlayerArmorStandManipulateEvent event) {
@@ -31,7 +31,7 @@ public class BukkitPlayerArmorStandManipulateEvent extends BukkitPlayerInteractE
     // Internal cache
     private @Nullable ItemStack playerItem;
     private @Nullable ItemStack armorStandItem;
-    private @Nullable EquipmentSlotHolder slot;
+    private @Nullable EquipmentSlot slot;
 
     @Override
     public @NotNull ItemStack playerItem() {
@@ -50,9 +50,9 @@ public class BukkitPlayerArmorStandManipulateEvent extends BukkitPlayerInteractE
     }
 
     @Override
-    public @NotNull EquipmentSlotHolder slot() {
+    public @NotNull EquipmentSlot slot() {
         if (slot == null) {
-            slot = EquipmentSlotHolder.of(event().getSlot());
+            slot = EquipmentSlot.of(event().getSlot());
         }
         return slot;
     }

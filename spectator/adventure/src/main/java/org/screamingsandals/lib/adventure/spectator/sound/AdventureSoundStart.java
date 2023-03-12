@@ -30,7 +30,7 @@ import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStart;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.OptionalLong;
 
@@ -40,14 +40,14 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
     }
 
     @Override
-    public @NotNull NamespacedMappingKey soundKey() {
-        return NamespacedMappingKey.of(wrappedObject.name().namespace(), wrappedObject.name().value());
+    public @NotNull ResourceLocation soundKey() {
+        return ResourceLocation.of(wrappedObject.name().namespace(), wrappedObject.name().value());
     }
 
     @SuppressWarnings("PatternValidation")
     @Override
-    public @NotNull SoundStart withSoundKey(@NotNull NamespacedMappingKey soundKey) {
-        return new AdventureSoundStart(Sound.sound(Key.key(soundKey.namespace(), soundKey.value()), wrappedObject.source(), wrappedObject.volume(), wrappedObject.pitch()));
+    public @NotNull SoundStart withSoundKey(@NotNull ResourceLocation soundKey) {
+        return new AdventureSoundStart(Sound.sound(Key.key(soundKey.namespace(), soundKey.path()), wrappedObject.source(), wrappedObject.volume(), wrappedObject.pitch()));
     }
 
     @Override
@@ -119,7 +119,7 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
     public static class AdventureSoundStartBuilder implements SoundStart.Builder {
         private static final @NotNull SoundSource MASTER = SoundSource.soundSource("master");
 
-        private @Nullable NamespacedMappingKey soundKey;
+        private @Nullable ResourceLocation soundKey;
         private @NotNull SoundSource source = MASTER;
         private float volume = 1;
         private float pitch = 1;
@@ -128,9 +128,9 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
         @Tolerate
         @Override
         public @NotNull Builder soundKey(@NotNull String key) {
-            var k = NamespacedMappingKey.of(key);
+            var k = ResourceLocation.of(key);
             if ("minecraft".equals(k.namespace())) {
-                this.soundKey = NamespacedMappingKey.of("minecraft", AdventureBackend.getSoundKeyNormalizer().apply(k.value()));
+                this.soundKey = ResourceLocation.of("minecraft", AdventureBackend.getSoundKeyNormalizer().apply(k.path()));
             } else {
                 this.soundKey = k;
             }
@@ -145,7 +145,7 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
                 // Adventure 4.12.0+
                 return new AdventureSoundStart(
                         Sound.sound()
-                                .type(Key.key(soundKey.namespace(), soundKey.value()))
+                                .type(Key.key(soundKey.namespace(), soundKey.path()))
                                 .source(source.as(Sound.Source.class))
                                 .volume(volume)
                                 .pitch(pitch)
@@ -154,7 +154,7 @@ public class AdventureSoundStart extends BasicWrapper<Sound> implements SoundSta
                 );
             } catch (Throwable ignored) {
                 // Adventure <= 4.11.0
-                return new AdventureSoundStart(Sound.sound(Key.key(soundKey.namespace(), soundKey.value()), source.as(Sound.Source.class), volume, pitch));
+                return new AdventureSoundStart(Sound.sound(Key.key(soundKey.namespace(), soundKey.path()), source.as(Sound.Source.class), volume, pitch));
             }
         }
     }

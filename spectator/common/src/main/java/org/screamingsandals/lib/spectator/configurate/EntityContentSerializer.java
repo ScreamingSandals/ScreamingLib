@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
@@ -38,7 +38,7 @@ public class EntityContentSerializer implements TypeSerializer<EntityContent> {
     @Override
     public @NotNull EntityContent deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            var entityType = NamespacedMappingKey.of(node.node(TYPE_KEY).getString("minecraft:pig"));
+            var entityType = ResourceLocation.of(node.node(TYPE_KEY).getString("minecraft:pig"));
             var id = node.node(ID_KEY).get(UUID.class, UUID.randomUUID());
             @Nullable var name = node.node(NAME_KEY).get(Component.class);
 

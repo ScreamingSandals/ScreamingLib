@@ -19,7 +19,7 @@ package org.screamingsandals.lib.bukkit.particle;
 import org.bukkit.Particle;
 import org.screamingsandals.lib.particle.*;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 
@@ -33,7 +33,7 @@ public class BukkitParticleTypeMapping extends ParticleTypeMapping {
                 .filter(particle -> !particle.name().startsWith("LEGACY_"))
                 .forEach(particle -> {
                     var holder = new BukkitParticleTypeHolder(particle);
-                    mapping.put(NamespacedMappingKey.of(particle.name()), holder);
+                    mapping.put(ResourceLocation.of(particle.name()), holder);
                     values.add(holder);
                 });
     }

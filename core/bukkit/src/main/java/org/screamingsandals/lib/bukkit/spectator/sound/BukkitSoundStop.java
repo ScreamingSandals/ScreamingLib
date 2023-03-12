@@ -27,12 +27,12 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.BukkitServer;
 import org.screamingsandals.lib.spectator.sound.SoundSource;
 import org.screamingsandals.lib.spectator.sound.SoundStop;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 @Data
 @Accessors(fluent = true)
 public class BukkitSoundStop implements SoundStop {
-    private final @Nullable NamespacedMappingKey soundKey;
+    private final @Nullable ResourceLocation soundKey;
     private final @Nullable SoundSource source;
 
     @SuppressWarnings("unchecked")
@@ -50,7 +50,7 @@ public class BukkitSoundStop implements SoundStop {
     }
 
     @Override
-    public @NotNull SoundStop withSoundKey(@Nullable NamespacedMappingKey soundKey) {
+    public @NotNull SoundStop withSoundKey(@Nullable ResourceLocation soundKey) {
         return new BukkitSoundStop(soundKey, source);
     }
 
@@ -68,15 +68,15 @@ public class BukkitSoundStop implements SoundStop {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BukkitSoundStartBuilder implements Builder {
-        private @Nullable NamespacedMappingKey soundKey;
+        private @Nullable ResourceLocation soundKey;
         private @Nullable SoundSource source;
 
         @Tolerate
         @Override
         public @NotNull Builder soundKey(@Nullable String key) {
-            var k = NamespacedMappingKey.of(key);
+            var k = ResourceLocation.of(key);
             if ("minecraft".equals(k.namespace())) {
-                this.soundKey = NamespacedMappingKey.of("minecraft", BukkitServer.UNSAFE_normalizeSoundKey0(k.value()));
+                this.soundKey = ResourceLocation.of("minecraft", BukkitServer.UNSAFE_normalizeSoundKey0(k.path()));
             } else {
                 this.soundKey = k;
             }

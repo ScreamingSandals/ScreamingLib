@@ -27,7 +27,7 @@ import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.type.EntityTypeHolder;
 import org.screamingsandals.lib.utils.BasicWrapper;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.Location;
 
@@ -51,25 +51,25 @@ public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements 
 
     @Override
     public boolean hasTag(@NotNull Object tag) {
-        NamespacedMappingKey key;
-        if (tag instanceof NamespacedMappingKey) {
-            key = (NamespacedMappingKey) tag;
+        ResourceLocation key;
+        if (tag instanceof ResourceLocation) {
+            key = (ResourceLocation) tag;
         } else {
-            key = NamespacedMappingKey.of(tag.toString());
+            key = ResourceLocation.of(tag.toString());
         }
         // native tags (while they have been implemented in 1.14, Bukkit API didn't have them until late build of 1.17.1
         if (Server.isVersion(1, 13)) {
             if (Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null) {
-                KeyedUtils.isTagged(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey(key.namespace(), key.value()), EntityType.class, wrappedObject);
+                KeyedUtils.isTagged(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey(key.namespace(), key.path()), EntityType.class, wrappedObject);
             } else if (Reflect.getField(Tag.class, "REGISTRY_ENTITIES") != null) { // Paper implemented them earlier in 1.16.5
-                KeyedUtils.isTagged(Tag.REGISTRY_ENTITIES, new NamespacedKey(key.namespace(), key.value()), EntityType.class, wrappedObject);
+                KeyedUtils.isTagged(Tag.REGISTRY_ENTITIES, new NamespacedKey(key.namespace(), key.path()), EntityType.class, wrappedObject);
             } // TODO: else bypass using NMS on CB-like servers
         }
         // backported tags
         if (!"minecraft".equals(key.namespace())) {
             return false;
         }
-        var value = key.value();
+        var value = key.path();
         return BukkitEntityTypeMapping.hasTagInBackPorts(wrappedObject, value);
     }
 

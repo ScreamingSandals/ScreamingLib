@@ -29,7 +29,7 @@ import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.event.player.PlayerInventoryCloseEvent;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 @Accessors(fluent = true)
 @RequiredArgsConstructor
@@ -46,7 +46,7 @@ public class BukkitPlayerInventoryCloseEvent implements PlayerInventoryCloseEven
     private @Nullable Player player;
     private @Nullable Container topInventory;
     private @Nullable Container bottomInventory;
-    private @Nullable NamespacedMappingKey reason;
+    private @Nullable ResourceLocation reason;
 
     @Override
     public @NotNull Player player() {
@@ -73,9 +73,9 @@ public class BukkitPlayerInventoryCloseEvent implements PlayerInventoryCloseEven
     }
 
     @Override
-    public @NotNull NamespacedMappingKey reason() {
+    public @NotNull ResourceLocation reason() {
         if (reason == null) {
-            reason = NamespacedMappingKey.of(event.getReason().name());
+            reason = ResourceLocation.of(event.getReason().name());
         }
         return reason;
     }

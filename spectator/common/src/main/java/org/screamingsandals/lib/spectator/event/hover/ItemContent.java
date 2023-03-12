@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.nbt.CompoundTag;
 import org.screamingsandals.lib.spectator.Spectator;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 public interface ItemContent extends Content, ItemContentLike {
     @Contract(value = "-> new", pure = true)
@@ -29,10 +29,10 @@ public interface ItemContent extends Content, ItemContentLike {
         return Spectator.getBackend().itemContent();
     }
 
-    @NotNull NamespacedMappingKey id();
+    @NotNull ResourceLocation id();
 
     @Contract(pure = true)
-    @NotNull ItemContent withId(@NotNull NamespacedMappingKey id);
+    @NotNull ItemContent withId(@NotNull ResourceLocation id);
 
     int count();
 
@@ -59,7 +59,7 @@ public interface ItemContent extends Content, ItemContentLike {
 
     interface Builder {
         @Contract("_ -> this")
-        @NotNull Builder id(@NotNull NamespacedMappingKey id);
+        @NotNull Builder id(@NotNull ResourceLocation id);
 
         @Contract("_ -> this")
         @NotNull Builder count(int count);

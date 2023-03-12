@@ -29,7 +29,7 @@ import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.event.hover.EntityContent;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.UUID;
 
@@ -49,13 +49,13 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
     }
 
     @Override
-    public @NotNull NamespacedMappingKey type() {
-        return NamespacedMappingKey.of(wrappedObject.type().asString());
+    public @NotNull ResourceLocation type() {
+        return ResourceLocation.of(wrappedObject.type().asString());
     }
 
     @SuppressWarnings("PatternValidation")
     @Override
-    public @NotNull EntityContent withType(@NotNull NamespacedMappingKey type) {
+    public @NotNull EntityContent withType(@NotNull ResourceLocation type) {
         return new AdventureEntityContent(HoverEvent.ShowEntity.of(Key.key(type.getNamespace(), type.getKey()), wrappedObject.id(), wrappedObject.name()));
     }
 
@@ -92,10 +92,10 @@ public class AdventureEntityContent extends BasicWrapper<HoverEvent.ShowEntity> 
     @Accessors(fluent = true, chain = true)
     @Setter
     public static class AdventureEntityContentBuilder implements EntityContent.Builder {
-        private static final @NotNull NamespacedMappingKey INVALID_KEY = NamespacedMappingKey.of("minecraft", "pig");
+        private static final @NotNull ResourceLocation INVALID_KEY = ResourceLocation.of("minecraft", "pig");
 
         private @Nullable UUID id;
-        private @NotNull NamespacedMappingKey type = INVALID_KEY; // Should be pig if not present
+        private @NotNull ResourceLocation type = INVALID_KEY; // Should be pig if not present
         private @Nullable Component name;
 
         @SuppressWarnings("PatternValidation")

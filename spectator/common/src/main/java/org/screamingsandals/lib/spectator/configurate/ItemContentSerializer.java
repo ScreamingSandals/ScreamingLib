@@ -23,7 +23,7 @@ import org.screamingsandals.lib.nbt.SNBTSerializer;
 import org.screamingsandals.lib.nbt.Tag;
 import org.screamingsandals.lib.nbt.configurate.TagSerializer;
 import org.screamingsandals.lib.spectator.event.hover.ItemContent;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
@@ -41,7 +41,7 @@ public class ItemContentSerializer implements TypeSerializer<ItemContent> {
     @Override
     public @NotNull ItemContent deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            var id = NamespacedMappingKey.of(node.node(ID_KEY).getString("minecraft:air"));
+            var id = ResourceLocation.of(node.node(ID_KEY).getString("minecraft:air"));
             var count = node.node(COUNT_KEY).getInt(1);
             var tag = node.node(TAG_KEY);
             CompoundTag compoundTag;

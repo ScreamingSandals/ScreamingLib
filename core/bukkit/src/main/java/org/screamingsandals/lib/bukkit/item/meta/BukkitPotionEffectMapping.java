@@ -20,7 +20,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.screamingsandals.lib.item.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.annotations.Service;
-import org.screamingsandals.lib.utils.key.NamespacedMappingKey;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.key.NumericMappingKey;
 
 import java.util.Arrays;
@@ -36,7 +36,7 @@ public class BukkitPotionEffectMapping extends PotionEffectMapping {
         Arrays.stream(PotionEffectType.values()).forEach(potionEffectType -> {
             if (potionEffectType != null) { // Yeah, this is possible
                 var holder = new BukkitPotionEffectHolder(potionEffectType);
-                mapping.put(NamespacedMappingKey.of(potionEffectType.getName()), holder);
+                mapping.put(ResourceLocation.of(potionEffectType.getName()), holder);
                 mapping.put(NumericMappingKey.of(potionEffectType.getId()), holder); // compatibility with older bw shops
                 values.add(holder);
             }
