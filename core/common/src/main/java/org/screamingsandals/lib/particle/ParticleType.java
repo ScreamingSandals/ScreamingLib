@@ -16,20 +16,16 @@
 
 package org.screamingsandals.lib.particle;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
-import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
-
-import java.util.List;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface ParticleTypeHolder extends ComparableWrapper, RawValueHolder {
-
+public interface ParticleType extends RegistryItem, RawValueHolder {
+    @ApiStatus.Experimental
     @NotNull String platformName();
 
     @Nullable Class<? extends ParticleData> expectedDataClass();
@@ -46,7 +42,7 @@ public interface ParticleTypeHolder extends ComparableWrapper, RawValueHolder {
     boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    static @NotNull ParticleTypeHolder of(@NotNull Object particle) {
+    static @NotNull ParticleType of(@NotNull Object particle) {
         var result = ofNullable(particle);
         Preconditions.checkNotNullIllegal(result, "Could not find particle type: " + particle);
         return result;
@@ -54,14 +50,14 @@ public interface ParticleTypeHolder extends ComparableWrapper, RawValueHolder {
 
     @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
     @Contract("null -> null")
-    static @Nullable ParticleTypeHolder ofNullable(@Nullable Object particle) {
-        if (particle instanceof ParticleTypeHolder) {
-            return (ParticleTypeHolder) particle;
+    static @Nullable ParticleType ofNullable(@Nullable Object particle) {
+        if (particle instanceof ParticleType) {
+            return (ParticleType) particle;
         }
-        return ParticleTypeMapping.resolve(particle);
+        return ParticleTypeRegistry.getInstance().resolveMapping(particle);
     }
 
-    static @Unmodifiable @NotNull List<@NotNull ParticleTypeHolder> all() {
-        return ParticleTypeMapping.getValues();
+    static @NotNull RegistryItemStream<@NotNull ParticleType> all() {
+        return ParticleTypeRegistry.getInstance().getRegistryItemStream();
     }
 }

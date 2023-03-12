@@ -17,43 +17,26 @@
 package org.screamingsandals.lib.particle;
 
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.configurate.ParticleTypeHolderSerializer;
-import org.screamingsandals.lib.utils.BidirectionalConverter;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
-import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
-import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.serialize.SerializationException;
-
-import java.util.Collections;
-import java.util.List;
+import org.screamingsandals.lib.utils.registry.SimpleRegistry;
 
 @AbstractService
-public abstract class ParticleTypeMapping extends AbstractTypeMapper<ParticleTypeHolder> {
-    private static @Nullable ParticleTypeMapping particleTypeMapping;
+@ApiStatus.Internal
+public abstract class ParticleTypeRegistry extends SimpleRegistry<ParticleType> {
+    private static @Nullable ParticleTypeRegistry registry;
 
-    protected final @NotNull BidirectionalConverter<ParticleTypeHolder> particleTypeConverter = BidirectionalConverter.<ParticleTypeHolder>build()
-            .registerP2W(ParticleTypeHolder.class, d -> d)
-            .registerP2W(ConfigurationNode.class, node -> {
-                try {
-                    return ParticleTypeHolderSerializer.INSTANCE.deserialize(ParticleTypeHolder.class, node);
-                } catch (SerializationException ex) {
-                    ex.printStackTrace();
-                    return null;
-                }
-            });
+    public ParticleTypeRegistry() {
+        super(ParticleType.class);
+        Preconditions.checkArgument(registry == null, "ParticleTypeRegistry is already initialized!");
+        registry = this;
+    }
 
-    @ApiStatus.Internal
-    public ParticleTypeMapping() {
-        if (particleTypeMapping != null) {
-            throw new UnsupportedOperationException("ParticleTypeMapping is already initialized!");
-        }
-        particleTypeMapping = this;
+    public static @NotNull ParticleTypeRegistry getInstance() {
+        return Preconditions.checkNotNull(registry, "ParticleTypeRegistry is not initialized yet!");
     }
 
     @OnPostConstruct
@@ -94,28 +77,5 @@ public abstract class ParticleTypeMapping extends AbstractTypeMapper<ParticleTyp
 
         // REMOVED
         mapAlias("TAKE", "ITEM_TAKE");
-    }
-
-    @CustomAutocompletion(CustomAutocompletion.Type.PARTICLE_TYPE)
-    @OfMethodAlternative(value = ParticleTypeHolder.class, methodName = "ofNullable")
-    @Contract("null -> null")
-    public static @Nullable ParticleTypeHolder resolve(@Nullable Object particle) {
-        if (particleTypeMapping == null) {
-            throw new UnsupportedOperationException("ParticleTypeMapping is not initialized yet.");
-        }
-
-        if (particle == null) {
-            return null;
-        }
-
-        return particleTypeMapping.particleTypeConverter.convertOptional(particle).or(() -> particleTypeMapping.resolveFromMapping(particle)).orElse(null);
-    }
-
-    @OfMethodAlternative(value = ParticleTypeHolder.class, methodName = "all")
-    public static @NotNull List<@NotNull ParticleTypeHolder> getValues() {
-        if (particleTypeMapping == null) {
-            throw new UnsupportedOperationException("ParticleTypeMapping is not initialized yet.");
-        }
-        return Collections.unmodifiableList(particleTypeMapping.values);
     }
 }

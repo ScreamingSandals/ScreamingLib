@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.bukkit.slot;
+package org.screamingsandals.lib.bukkit.player.gamemode;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.slot.EquipmentSlot;
+import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitEquipmentSlotType extends BasicWrapper<org.bukkit.inventory.EquipmentSlot> implements EquipmentSlot {
-    public BukkitEquipmentSlotType(@NotNull org.bukkit.inventory.EquipmentSlot wrappedObject) {
+public class BukkitGameMode extends BasicWrapper<org.bukkit.GameMode> implements GameMode {
+    public BukkitGameMode(@NotNull org.bukkit.GameMode wrappedObject) {
         super(wrappedObject);
     }
 
@@ -35,16 +35,21 @@ public class BukkitEquipmentSlotType extends BasicWrapper<org.bukkit.inventory.E
     }
 
     @Override
-    public boolean is(@Nullable Object object) {
-        if (object instanceof org.bukkit.inventory.EquipmentSlot || object instanceof EquipmentSlot) {
-            return equals(object);
-        }
-        return equals(EquipmentSlot.ofNullable(object));
+    public int id() {
+        return wrappedObject.getValue();
     }
 
     @Override
-    public boolean is(@Nullable Object @NotNull... objects) {
-        return Arrays.stream(objects).anyMatch(this::is);
+    public boolean is(@Nullable Object gameMode) {
+        if (gameMode instanceof org.bukkit.GameMode || gameMode instanceof GameMode) {
+            return equals(gameMode);
+        }
+        return equals(GameMode.ofNullable(gameMode));
+    }
+
+    @Override
+    public boolean is(@Nullable Object @NotNull... gameModes) {
+        return Arrays.stream(gameModes).anyMatch(this::is);
     }
 
     @Override

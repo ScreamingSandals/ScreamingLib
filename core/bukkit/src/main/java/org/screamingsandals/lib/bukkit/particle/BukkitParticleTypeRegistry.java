@@ -14,52 +14,56 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.bukkit.world.weather;
+package org.screamingsandals.lib.bukkit.particle;
 
+import org.bukkit.Particle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.screamingsandals.lib.particle.*;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.utils.registry.SimpleRegistryItemStream;
-import org.screamingsandals.lib.world.weather.WeatherRegistry;
-import org.screamingsandals.lib.world.weather.WeatherType;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 @Service
-public class BukkitWeatherRegistry extends WeatherRegistry {
-    public BukkitWeatherRegistry() {
-        specialType(org.bukkit.WeatherType.class, BukkitWeatherType::new);
+public class BukkitParticleTypeRegistry extends ParticleTypeRegistry {
+    public BukkitParticleTypeRegistry() {
+        specialType(Particle.class, BukkitParticleType::new);
     }
 
     // TODO: is there any bukkit-like server supporting custom values for this registry?
-
     @Override
-    protected @Nullable WeatherType resolveMappingPlatform(@NotNull ResourceLocation location) {
+    protected @Nullable ParticleType resolveMappingPlatform(@NotNull ResourceLocation location) {
         if (!"minecraft".equals(location.namespace())) {
             return null;
         }
 
+        if (location.path().startsWith("LEGACY_")) {
+            return null; // filter out legacy
+        }
+
         try {
-            var value = org.bukkit.WeatherType.valueOf(location.path().toUpperCase(Locale.ROOT));
-            return new BukkitWeatherType(value);
+            var value = org.bukkit.Particle.valueOf(location.path().toUpperCase(Locale.ROOT));
+            return new BukkitParticleType(value);
         } catch (IllegalArgumentException ignored) {
         }
         return null;
     }
 
     @Override
-    protected @NotNull RegistryItemStream<@NotNull WeatherType> getRegistryItemStream0() {
+    protected @NotNull RegistryItemStream<@NotNull ParticleType> getRegistryItemStream0() {
         return new SimpleRegistryItemStream<>(
-                () -> Arrays.stream(org.bukkit.WeatherType.values()),
-                BukkitWeatherType::new,
-                weatherType -> ResourceLocation.of(weatherType.name()),
-                (weatherType, literal) -> weatherType.name().toLowerCase(Locale.ROOT).contains(literal),
-                (weatherType, namespace) -> "minecraft".equals(namespace),
+                () -> Arrays.stream(org.bukkit.Particle.values()).filter(particle -> !particle.name().startsWith("LEGACY_")),
+                BukkitParticleType::new,
+                particleType -> ResourceLocation.of(particleType.name()),
+                (particleType, literal) -> particleType.name().toLowerCase(Locale.ROOT).contains(literal),
+                (particleType, namespace) -> "minecraft".equals(namespace),
                 List.of()
         );
     }
+
 }

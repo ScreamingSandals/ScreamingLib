@@ -16,22 +16,19 @@
 
 package org.screamingsandals.lib.entity.type;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.TaggableHolder;
 import org.screamingsandals.lib.entity.BasicEntity;
-import org.screamingsandals.lib.utils.ComparableWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.world.Location;
 
-import java.util.List;
-
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder, TaggableHolder {
+public interface EntityType extends RegistryItem, RawValueHolder, TaggableHolder {
+    @ApiStatus.Experimental
     @NotNull String platformName();
 
     boolean isAlive();
@@ -63,7 +60,7 @@ public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder, Tag
     @Nullable BasicEntity spawn(@NotNull Location location);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
-    static @NotNull EntityTypeHolder of(@NotNull Object entityType) {
+    static @NotNull EntityType of(@NotNull Object entityType) {
         var result = ofNullable(entityType);
         Preconditions.checkNotNullIllegal(result, "Could not find entity type: " + entityType);
         return result;
@@ -71,14 +68,14 @@ public interface EntityTypeHolder extends ComparableWrapper, RawValueHolder, Tag
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
     @Contract("null -> null")
-    static @Nullable EntityTypeHolder ofNullable(@Nullable Object entityType) {
-        if (entityType instanceof EntityTypeHolder) {
-            return (EntityTypeHolder) entityType;
+    static @Nullable EntityType ofNullable(@Nullable Object entityType) {
+        if (entityType instanceof EntityType) {
+            return (EntityType) entityType;
         }
-        return EntityTypeMapping.resolve(entityType);
+        return EntityTypeRegistry.getInstance().resolveMapping(entityType);
     }
 
-    static @Unmodifiable @NotNull List<@NotNull EntityTypeHolder> all() {
-        return EntityTypeMapping.getValues();
+    static @NotNull RegistryItemStream<@NotNull EntityType> all() {
+        return EntityTypeRegistry.getInstance().getRegistryItemStream();
     }
 }

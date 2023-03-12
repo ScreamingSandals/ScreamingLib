@@ -16,39 +16,16 @@
 
 package org.screamingsandals.lib.item.meta;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
-import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
-
-import java.util.List;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
 @SuppressWarnings("AlternativeMethodAvailable")
-public interface PotionHolder extends ComparableWrapper {
+public interface Potion extends RegistryItem {
+    @ApiStatus.Experimental
     @NotNull String platformName();
-
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION)
-    static @NotNull PotionHolder of(@NotNull Object potion) {
-        var result = ofNullable(potion);
-        Preconditions.checkNotNullIllegal(result, "Could not find potion: " + potion);
-        return result;
-    }
-
-    @CustomAutocompletion(CustomAutocompletion.Type.POTION)
-    @Contract("null -> null")
-    static @Nullable PotionHolder ofNullable(@Nullable Object potion) {
-        if (potion instanceof PotionHolder) {
-            return (PotionHolder) potion;
-        }
-        return PotionMapping.resolve(potion);
-    }
-
-    static @Unmodifiable @NotNull List<@NotNull PotionHolder> all() {
-        return PotionMapping.getValues();
-    }
 
     @CustomAutocompletion(CustomAutocompletion.Type.POTION)
     @Override
@@ -57,4 +34,24 @@ public interface PotionHolder extends ComparableWrapper {
     @CustomAutocompletion(CustomAutocompletion.Type.POTION)
     @Override
     boolean is(@Nullable Object @NotNull... objects);
+
+    @CustomAutocompletion(CustomAutocompletion.Type.POTION)
+    static @NotNull Potion of(@NotNull Object potion) {
+        var result = ofNullable(potion);
+        Preconditions.checkNotNullIllegal(result, "Could not find potion: " + potion);
+        return result;
+    }
+
+    @CustomAutocompletion(CustomAutocompletion.Type.POTION)
+    @Contract("null -> null")
+    static @Nullable Potion ofNullable(@Nullable Object potion) {
+        if (potion instanceof Potion) {
+            return (Potion) potion;
+        }
+        return PotionRegistry.getInstance().resolveMapping(potion);
+    }
+
+    static @NotNull RegistryItemStream<@NotNull Potion> all() {
+        return PotionRegistry.getInstance().getRegistryItemStream();
+    }
 }

@@ -213,7 +213,7 @@ public class ItemSerializer extends AbstractScreamingSerializer implements TypeS
             var potionType = node.node(POTION_TYPE_KEY);
             if (!potionType.empty()) {
                 try {
-                    PotionHolder.ofNullable(potionType.get(Object.class)).ifNotNull(builder::potion);
+                    Potion.ofNullable(potionType.get(Object.class)).ifNotNull(builder::potion);
                 } catch (SerializationException e) {
                     e.printStackTrace();
                 }

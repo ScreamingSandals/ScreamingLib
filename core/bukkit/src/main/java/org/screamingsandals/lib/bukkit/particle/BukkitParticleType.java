@@ -23,11 +23,12 @@ import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.particle.*;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitParticleTypeHolder extends BasicWrapper<Particle> implements ParticleTypeHolder {
-    public BukkitParticleTypeHolder(@NotNull Particle wrappedObject) {
+public class BukkitParticleType extends BasicWrapper<Particle> implements ParticleType {
+    public BukkitParticleType(@NotNull Particle wrappedObject) {
         super(wrappedObject);
     }
 
@@ -57,14 +58,19 @@ public class BukkitParticleTypeHolder extends BasicWrapper<Particle> implements 
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof Particle || object instanceof ParticleTypeHolder) {
+        if (object instanceof Particle || object instanceof ParticleType) {
             return equals(object);
         }
-        return equals(ParticleTypeHolder.ofNullable(object));
+        return equals(ParticleType.ofNullable(object));
     }
 
     @Override
     public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
+    }
+
+    @Override
+    public @NotNull ResourceLocation location() {
+        return ResourceLocation.of(wrappedObject.name());
     }
 }

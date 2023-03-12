@@ -18,7 +18,7 @@ package org.screamingsandals.lib.event.player;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.BasicEntity;
-import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.event.PlatformEvent;
 
 public interface PlayerEggThrowEvent extends PlayerEvent, PlatformEvent {
@@ -29,9 +29,9 @@ public interface PlayerEggThrowEvent extends PlayerEvent, PlatformEvent {
 
     void hatching(boolean hatching);
 
-    @NotNull EntityTypeHolder hatchType();
+    @NotNull EntityType hatchType();
 
-    void hatchType(@NotNull EntityTypeHolder hatchType);
+    void hatchType(@NotNull EntityType hatchType);
 
     /**
      * //from bukkit

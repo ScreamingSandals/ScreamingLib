@@ -50,13 +50,15 @@ public class BukkitGameRuleRegistry extends GameRuleRegistry {
                     );
         } else {
             compat = List.of();
+
+            specialType(GameRule.class, BukkitGameRuleType::new);
         }
     }
 
     @Override
     protected @Nullable GameRuleType resolveMappingPlatform(@NotNull ResourceLocation location) {
         if (!"minecraft".equals(location.namespace())) {
-            return null; // non-minecraft game rules probably don't exist
+            return null; // non-minecraft game rules probably don't exist on this platform
         }
 
         if (hasGameRule) {

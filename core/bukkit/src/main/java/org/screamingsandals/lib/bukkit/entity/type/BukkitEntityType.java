@@ -18,14 +18,13 @@ package org.screamingsandals.lib.bukkit.entity.type;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
-import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
-import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -33,9 +32,9 @@ import org.screamingsandals.lib.world.Location;
 
 import java.util.Arrays;
 
-public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements EntityTypeHolder {
+public class BukkitEntityType extends BasicWrapper<org.bukkit.entity.EntityType> implements EntityType {
 
-    public BukkitEntityTypeHolder(@NotNull EntityType wrappedObject) {
+    public BukkitEntityType(@NotNull org.bukkit.entity.EntityType wrappedObject) {
         super(wrappedObject);
     }
 
@@ -60,9 +59,9 @@ public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements 
         // native tags (while they have been implemented in 1.14, Bukkit API didn't have them until late build of 1.17.1
         if (Server.isVersion(1, 13)) {
             if (Reflect.getField(Tag.class, "REGISTRY_ENTITY_TYPES") != null) {
-                KeyedUtils.isTagged(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey(key.namespace(), key.path()), EntityType.class, wrappedObject);
+                KeyedUtils.isTagged(Tag.REGISTRY_ENTITY_TYPES, new NamespacedKey(key.namespace(), key.path()), org.bukkit.entity.EntityType.class, wrappedObject);
             } else if (Reflect.getField(Tag.class, "REGISTRY_ENTITIES") != null) { // Paper implemented them earlier in 1.16.5
-                KeyedUtils.isTagged(Tag.REGISTRY_ENTITIES, new NamespacedKey(key.namespace(), key.path()), EntityType.class, wrappedObject);
+                KeyedUtils.isTagged(Tag.REGISTRY_ENTITIES, new NamespacedKey(key.namespace(), key.path()), org.bukkit.entity.EntityType.class, wrappedObject);
             } // TODO: else bypass using NMS on CB-like servers
         }
         // backported tags
@@ -75,7 +74,7 @@ public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements 
 
     @Override
     public boolean is(@Nullable Object entityType) {
-        if (entityType instanceof EntityType || entityType instanceof EntityTypeHolder) {
+        if (entityType instanceof org.bukkit.entity.EntityType || entityType instanceof EntityType) {
             return equals(entityType);
         }
         if (entityType instanceof String) {
@@ -85,7 +84,7 @@ public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements 
                 return hasTag(str.substring(1));
             }
         }
-        return equals(EntityTypeHolder.ofNullable(entityType));
+        return equals(EntityType.ofNullable(entityType));
     }
 
     @Override
@@ -96,5 +95,16 @@ public class BukkitEntityTypeHolder extends BasicWrapper<EntityType> implements 
     @Override
     public @Nullable BasicEntity spawn(@NotNull Location location) {
         return Entities.spawn(this, location);
+    }
+
+    @Override
+    public @NotNull ResourceLocation location() {
+        if (Server.isVersion(1, 14)) {
+            var namespaced = wrappedObject.getKey();
+            return ResourceLocation.of(namespaced.namespace(), namespaced.getKey());
+        } else {
+            // TODO: make correct translations
+            return ResourceLocation.of(wrappedObject.name());
+        }
     }
 }

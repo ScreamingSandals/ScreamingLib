@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
-import org.screamingsandals.lib.entity.type.EntityTypeHolder;
-import org.screamingsandals.lib.entity.type.EntityTypeMapping;
+import org.screamingsandals.lib.entity.type.EntityType;
+import org.screamingsandals.lib.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.meta.PotionEffectMapping;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -34,7 +34,7 @@ import java.util.concurrent.CompletableFuture;
 
 @AbstractService
 @ServiceDependencies(dependsOn = {
-        EntityTypeMapping.class,
+        EntityTypeRegistry.class,
         Locations.class,
         PotionEffectMapping.class
 })
@@ -141,10 +141,10 @@ public abstract class Entities {
         if (entityType == null) {
             return null;
         }
-        if (entityType instanceof EntityTypeHolder) {
-            return spawn((EntityTypeHolder) entityType, locationHolder);
+        if (entityType instanceof EntityType) {
+            return spawn((EntityType) entityType, locationHolder);
         } else {
-            var type = EntityTypeMapping.resolve(entityType);
+            var type = EntityTypeRegistry.resolve(entityType);
             if (type != null) {
                 return spawn(type, locationHolder);
             }
@@ -152,7 +152,7 @@ public abstract class Entities {
         }
     }
 
-    public static @Nullable BasicEntity spawn(@NotNull EntityTypeHolder entityType, @NotNull Location locationHolder) {
+    public static @Nullable BasicEntity spawn(@NotNull EntityType entityType, @NotNull Location locationHolder) {
         if (mapper == null) {
             throw new UnsupportedOperationException("EntityMapper is not initialized yet.");
         }
@@ -199,7 +199,7 @@ public abstract class Entities {
 
     protected abstract @Nullable BasicEntity wrapEntity0(@NotNull Object entity);
 
-    public abstract @Nullable BasicEntity spawn0(@NotNull EntityTypeHolder entityType, @NotNull Location locationHolder);
+    public abstract @Nullable BasicEntity spawn0(@NotNull EntityType entityType, @NotNull Location locationHolder);
 
     public abstract @Nullable ItemEntity dropItem0(@NotNull ItemStack item, @NotNull Location locationHolder);
 

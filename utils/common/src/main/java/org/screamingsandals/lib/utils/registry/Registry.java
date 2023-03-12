@@ -24,10 +24,15 @@ import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.utils.cache.Cache;
 import org.screamingsandals.lib.utils.cache.LFUCache;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
 @RequiredArgsConstructor
 public abstract class Registry<T extends RegistryItem> {
     protected final @NotNull Class<T> type;
     private final @NotNull Cache<@NotNull Object, @NotNull T> cache = new LFUCache<>(200);
+    private final @NotNull Map<@NotNull Class<?>, Function<@NotNull Object, @NotNull T>> specialMapping = new HashMap<>();
     private @Nullable RegistryItemStream<T> cachedBasicStream;
 
     @Contract("null -> null")
@@ -39,6 +44,14 @@ public abstract class Registry<T extends RegistryItem> {
         if (this.type.isInstance(object)) {
             //noinspection unchecked
             return (T) object;
+        }
+
+        if (!specialMapping.isEmpty()) {
+            for (var sm : specialMapping.entrySet()) {
+                if (sm.getKey().isInstance(object)) {
+                    return sm.getValue().apply(object);
+                }
+            }
         }
 
         var cachedRow = this.cache.get(object);
@@ -57,6 +70,12 @@ public abstract class Registry<T extends RegistryItem> {
 
     @ApiStatus.Internal
     protected abstract @Nullable T resolveMapping0(@NotNull Object object);
+
+    @SuppressWarnings("unchecked")
+    @ApiStatus.Internal
+    protected <E> void specialType(@NotNull Class<E> eClass, @NotNull Function<@NotNull E, @NotNull T> function) {
+        specialMapping.put(eClass, (Function<Object, T>) function);
+    }
 
     public @NotNull RegistryItemStream<@NotNull T> getRegistryItemStream() {
         if (cachedBasicStream == null) {

@@ -20,13 +20,12 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import lombok.experimental.ExtensionMethod;
-import org.bukkit.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.bukkit.entity.BukkitPlayer;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
-import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.event.player.PlayerEggThrowEvent;
 import org.screamingsandals.lib.player.Player;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
@@ -73,13 +72,13 @@ public class BukkitPlayerEggThrowEvent implements PlayerEggThrowEvent {
     }
 
     @Override
-    public @NotNull EntityTypeHolder hatchType() {
-        return EntityTypeHolder.of(event.getHatchingType());
+    public @NotNull EntityType hatchType() {
+        return EntityType.of(event.getHatchingType());
     }
 
     @Override
-    public void hatchType(@NotNull EntityTypeHolder hatchType) {
-        event.setHatchingType(hatchType.as(EntityType.class));
+    public void hatchType(@NotNull EntityType hatchType) {
+        event.setHatchingType(hatchType.as(org.bukkit.entity.EntityType.class));
     }
 
     @Override

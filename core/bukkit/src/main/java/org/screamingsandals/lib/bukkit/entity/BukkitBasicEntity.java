@@ -28,7 +28,7 @@ import org.screamingsandals.lib.container.Container;
 import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
-import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
@@ -49,8 +49,8 @@ public class BukkitBasicEntity extends BasicWrapper<Entity> implements BasicEnti
     }
 
     @Override
-    public @NotNull EntityTypeHolder getEntityType() {
-        return EntityTypeHolder.of(wrappedObject.getType());
+    public @NotNull EntityType getEntityType() {
+        return EntityType.of(wrappedObject.getType());
     }
 
     @Override

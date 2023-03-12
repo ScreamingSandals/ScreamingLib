@@ -18,28 +18,28 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.item.meta.PotionHolder;
+import org.screamingsandals.lib.item.meta.Potion;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class PotionHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<PotionHolder> {
+public class PotionHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<Potion> {
 
     public static final @NotNull PotionHolderSerializer INSTANCE = new PotionHolderSerializer();
 
     @Override
-    public @NotNull PotionHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull Potion deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return PotionHolder.of(node.getString());
+            return Potion.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable PotionHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable Potion obj, @NotNull ConfigurationNode node) throws SerializationException {
         node.set(obj == null ? null : obj.platformName());
     }
 }

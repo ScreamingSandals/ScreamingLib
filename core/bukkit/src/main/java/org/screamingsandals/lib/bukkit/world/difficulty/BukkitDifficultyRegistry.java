@@ -32,9 +32,17 @@ import java.util.Locale;
 
 @Service
 public class BukkitDifficultyRegistry extends DifficultyRegistry {
+    public BukkitDifficultyRegistry() {
+        specialType(Difficulty.class, BukkitDifficultyType::new);
+    }
+
     // TODO: is there any bukkit-like server supporting custom values for this registry?
     @Override
     protected @Nullable DifficultyType resolveMappingPlatform(@NotNull ResourceLocation location) {
+        if (!"minecraft".equals(location.namespace())) {
+            return null;
+        }
+
         try {
             var value = Difficulty.valueOf(location.path().toUpperCase(Locale.ROOT));
             return new BukkitDifficultyType(value);

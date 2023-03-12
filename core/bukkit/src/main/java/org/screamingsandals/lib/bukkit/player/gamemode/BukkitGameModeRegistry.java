@@ -31,12 +31,20 @@ import java.util.Locale;
 
 @Service
 public class BukkitGameModeRegistry extends GameModeRegistry {
+    public BukkitGameModeRegistry() {
+        specialType(org.bukkit.GameMode.class, BukkitGameMode::new);
+    }
+
     // TODO: is there any bukkit-like server supporting custom values for this registry?
     @Override
     protected @Nullable GameMode resolveMappingPlatform(@NotNull ResourceLocation location) {
+        if (!"minecraft".equals(location.namespace())) {
+            return null;
+        }
+
         try {
             var value = org.bukkit.GameMode.valueOf(location.path().toUpperCase(Locale.ROOT));
-            return new BukkitGameModeHolder(value);
+            return new BukkitGameMode(value);
         } catch (IllegalArgumentException ignored) {
         }
         return null;
@@ -46,7 +54,7 @@ public class BukkitGameModeRegistry extends GameModeRegistry {
     protected @NotNull RegistryItemStream<@NotNull GameMode> getRegistryItemStream0() {
         return new SimpleRegistryItemStream<>(
                 () -> Arrays.stream(org.bukkit.GameMode.values()),
-                BukkitGameModeHolder::new,
+                BukkitGameMode::new,
                 gameMode -> ResourceLocation.of(gameMode.name()),
                 (gameMode, literal) -> gameMode.name().toLowerCase(Locale.ROOT).contains(literal),
                 (gameMode, namespace) -> "minecraft".equals(namespace),

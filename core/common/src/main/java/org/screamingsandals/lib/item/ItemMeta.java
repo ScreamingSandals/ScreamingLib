@@ -19,7 +19,7 @@ package org.screamingsandals.lib.item;
 import lombok.experimental.UtilityClass;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
-import org.screamingsandals.lib.item.meta.PotionHolder;
+import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataKey;
 import org.screamingsandals.lib.spectator.Color;
@@ -29,7 +29,7 @@ import org.screamingsandals.lib.utils.key.ResourceLocation;
 @Deprecated
 public class ItemMeta {
     // Potions
-    public static final MetadataKey<PotionHolder> POTION_TYPE = MetadataKey.of("Potion", PotionHolder.class);
+    public static final MetadataKey<Potion> POTION_TYPE = MetadataKey.of("Potion", Potion.class);
     public static final MetadataKey<Color> CUSTOM_POTION_COLOR = MetadataKey.of("CustomPotionColor", Color.class);
     public static final MetadataCollectionKey<PotionEffectHolder> CUSTOM_POTION_EFFECTS = MetadataCollectionKey.of("CustomPotionEffects", PotionEffectHolder.class);
 

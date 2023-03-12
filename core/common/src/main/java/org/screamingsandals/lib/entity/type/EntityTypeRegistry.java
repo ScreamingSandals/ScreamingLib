@@ -17,69 +17,28 @@
 package org.screamingsandals.lib.entity.type;
 
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.configurate.EntityTypeHolderSerializer;
-import org.screamingsandals.lib.utils.BidirectionalConverter;
+import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
-import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
-import org.screamingsandals.lib.utils.annotations.ide.OfMethodAlternative;
 import org.screamingsandals.lib.utils.annotations.methods.OnPostConstruct;
-import org.screamingsandals.lib.utils.mapper.AbstractTypeMapper;
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.serialize.SerializationException;
-
-import java.util.Collections;
-import java.util.List;
+import org.screamingsandals.lib.utils.registry.SimpleRegistry;
 
 @AbstractService(
         pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$"
 )
-public abstract class EntityTypeMapping extends AbstractTypeMapper<EntityTypeHolder> {
-    private static @Nullable EntityTypeMapping entityTypeMapping;
-
-    protected final @NotNull BidirectionalConverter<EntityTypeHolder> entityTypeConverter = BidirectionalConverter.<EntityTypeHolder>build()
-            .registerP2W(EntityTypeHolder.class, e -> e)
-            .registerP2W(ConfigurationNode.class, node -> {
-                try {
-                    return EntityTypeHolderSerializer.INSTANCE.deserialize(EntityTypeHolder.class, node);
-                } catch (SerializationException ex) {
-                    ex.printStackTrace();
-                    return null;
-                }
-            });
+public abstract class EntityTypeRegistry extends SimpleRegistry<EntityType> {
+    private static @Nullable EntityTypeRegistry registry;
 
     @ApiStatus.Internal
-    public EntityTypeMapping() {
-        if (entityTypeMapping != null) {
-            throw new UnsupportedOperationException("EntityTypeMapping is already initialized.");
-        }
-
-        entityTypeMapping = this;
+    public EntityTypeRegistry() {
+        super(EntityType.class);
+        Preconditions.checkArgument(registry == null, "EntityTypeMapping is already initialized!");
+        registry = this;
     }
 
-    @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_TYPE)
-    @OfMethodAlternative(value = EntityTypeHolder.class, methodName = "ofNullable")
-    @Contract("null -> null")
-    public static @Nullable EntityTypeHolder resolve(@Nullable Object entity) {
-        if (entityTypeMapping == null) {
-            throw new UnsupportedOperationException("EntityTypeMapping is not initialized yet.");
-        }
-
-        if (entity == null) {
-            return null;
-        }
-
-        return entityTypeMapping.entityTypeConverter.convertOptional(entity).or(() -> entityTypeMapping.resolveFromMapping(entity)).orElse(null);
-    }
-
-    @OfMethodAlternative(value = EntityTypeHolder.class, methodName = "all")
-    public static @NotNull List<@NotNull EntityTypeHolder> getValues() {
-        if (entityTypeMapping == null) {
-            throw new UnsupportedOperationException("EntityTypeMapping is not initialized yet.");
-        }
-        return Collections.unmodifiableList(entityTypeMapping.values);
+    public static @NotNull EntityTypeRegistry getInstance() {
+        return Preconditions.checkNotNull(registry, "EntityTypeRegistry is not initialized yet!");
     }
 
     @OnPostConstruct

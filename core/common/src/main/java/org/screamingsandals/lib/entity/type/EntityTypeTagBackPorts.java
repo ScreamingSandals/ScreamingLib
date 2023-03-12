@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 @ApiStatus.Internal
 @UtilityClass
 public class EntityTypeTagBackPorts {
-    public static @Nullable List<@NotNull String> getPortedTags(@NotNull EntityTypeHolder entityType, @NotNull Predicate<@NotNull String> nativeTagChecker, boolean platformSupportsTags) {
+    public static @Nullable List<@NotNull String> getPortedTags(@NotNull EntityType entityType, @NotNull Predicate<@NotNull String> nativeTagChecker, boolean platformSupportsTags) {
         var helper = new TagPortHelper(nativeTagChecker);
 
         /*

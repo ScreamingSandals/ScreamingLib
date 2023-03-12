@@ -19,7 +19,7 @@ package org.screamingsandals.lib.entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.container.ContainerHolder;
-import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.spectator.ComponentLike;
@@ -34,7 +34,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public interface BasicEntity extends Wrapper, RawValueHolder, ContainerHolder {
-    @NotNull EntityTypeHolder getEntityType();
+    @NotNull EntityType getEntityType();
 
     @NotNull Location getLocation();
 

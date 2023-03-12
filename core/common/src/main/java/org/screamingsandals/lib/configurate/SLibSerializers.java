@@ -23,16 +23,16 @@ import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.entity.damage.DamageCauseHolder;
 import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
-import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
-import org.screamingsandals.lib.item.meta.PotionHolder;
+import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.nbt.Tag;
 import org.screamingsandals.lib.nbt.configurate.TagSerializer;
-import org.screamingsandals.lib.particle.ParticleTypeHolder;
+import org.screamingsandals.lib.particle.ParticleType;
 import org.screamingsandals.lib.player.gamemode.GameMode;
 import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.spectator.configurate.SpectatorSerializers;
@@ -54,13 +54,13 @@ public class SLibSerializers {
                 .register(DimensionType.class, DimensionHolderSerializer.INSTANCE)
                 .register(EnchantmentHolder.class, EnchantmentHolderSerializer.INSTANCE)
                 .register(EntityPoseHolder.class, EntityPoseHolderSerializer.INSTANCE)
-                .register(EntityTypeHolder.class, EntityTypeHolderSerializer.INSTANCE)
+                .register(EntityType.class, EntityTypeHolderSerializer.INSTANCE)
                 .register(GameMode.class, GameModeHolderSerializer.INSTANCE)
                 .register(GameRuleType.class, GameRuleHolderSerializer.INSTANCE)
                 .register(InventoryTypeHolder.class, InventoryTypeHolderSerializer.INSTANCE)
-                .register(ParticleTypeHolder.class, ParticleTypeHolderSerializer.INSTANCE)
+                .register(ParticleType.class, ParticleTypeHolderSerializer.INSTANCE)
                 .register(PotionEffectHolder.class, PotionEffectHolderSerializer.INSTANCE)
-                .register(PotionHolder.class, PotionHolderSerializer.INSTANCE)
+                .register(Potion.class, PotionHolderSerializer.INSTANCE)
                 .register(WeatherType.class, WeatherHolderSerializer.INSTANCE)
                 .register(FireworkEffectHolder.class, FireworkEffectHolderSerializer.INSTANCE)
                 .register(ItemTypeHolder.class, ItemTypeHolderSerializer.INSTANCE)

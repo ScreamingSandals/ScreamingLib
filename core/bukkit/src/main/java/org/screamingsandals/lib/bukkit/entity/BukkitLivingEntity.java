@@ -22,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Projectile;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
@@ -30,7 +29,7 @@ import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.bukkit.item.BukkitItem;
 import org.screamingsandals.lib.entity.*;
-import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.attribute.AttributeHolder;
 import org.screamingsandals.lib.attribute.AttributeMapping;
 import org.screamingsandals.lib.attribute.AttributeTypeHolder;
@@ -39,7 +38,6 @@ import org.screamingsandals.lib.item.meta.PotionEffectHolder;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.block.Block;
-import org.screamingsandals.lib.block.Blocks;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.world.Locations;
 
@@ -488,8 +486,8 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
 
     @SuppressWarnings({"ConstantConditions", "unchecked"})
     @Override
-    public @Nullable ProjectileEntity launchProjectile(@NotNull EntityTypeHolder projectileType) {
-        var projectileBukkit = projectileType.as(EntityType.class).getEntityClass();
+    public @Nullable ProjectileEntity launchProjectile(@NotNull EntityType projectileType) {
+        var projectileBukkit = projectileType.as(org.bukkit.entity.EntityType.class).getEntityClass();
         if (!Projectile.class.isAssignableFrom(projectileBukkit)) {
             return null;
         }
@@ -498,8 +496,8 @@ public class BukkitLivingEntity extends BukkitBasicEntity implements LivingEntit
 
     @SuppressWarnings({"ConstantConditions", "unchecked"})
     @Override
-    public @Nullable ProjectileEntity launchProjectile(@NotNull EntityTypeHolder projectileType, @NotNull Vector3D velocity) {
-        var projectileBukkit = projectileType.as(EntityType.class).getEntityClass();
+    public @Nullable ProjectileEntity launchProjectile(@NotNull EntityType projectileType, @NotNull Vector3D velocity) {
+        var projectileBukkit = projectileType.as(org.bukkit.entity.EntityType.class).getEntityClass();
         if (!Projectile.class.isAssignableFrom(projectileBukkit)) {
             return null;
         }

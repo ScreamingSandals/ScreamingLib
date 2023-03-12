@@ -24,7 +24,7 @@ import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.ExperienceOrb;
 import org.screamingsandals.lib.entity.LightningStrike;
-import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.item.ItemStack;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.utils.annotations.Service;
@@ -95,8 +95,8 @@ public class BukkitEntities extends Entities {
     }
 
     @Override
-    public @Nullable BasicEntity spawn0(@NotNull EntityTypeHolder entityType, @NotNull Location locationHolder) {
-        return entityType.asNullable(EntityType.class).mapOrNull(entityType1 -> {
+    public @Nullable BasicEntity spawn0(@NotNull EntityType entityType, @NotNull Location locationHolder) {
+        return entityType.asNullable(org.bukkit.entity.EntityType.class).mapOrNull(entityType1 -> {
             var bukkitLoc = locationHolder.as(org.bukkit.Location.class);
             var world = bukkitLoc.getWorld();
             if (world != null) {
@@ -118,7 +118,7 @@ public class BukkitEntities extends Entities {
     @Override
     public @Nullable ExperienceOrb dropExperience0(int experience, @NotNull Location locationHolder) {
         var bukkitLoc = locationHolder.as(org.bukkit.Location.class);
-        var orb = (org.bukkit.entity.ExperienceOrb) bukkitLoc.getWorld().spawnEntity(bukkitLoc, EntityType.EXPERIENCE_ORB);
+        var orb = (org.bukkit.entity.ExperienceOrb) bukkitLoc.getWorld().spawnEntity(bukkitLoc, org.bukkit.entity.EntityType.EXPERIENCE_ORB);
         orb.setExperience(experience);
         return new BukkitExperienceOrb(orb);
     }

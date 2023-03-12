@@ -22,7 +22,7 @@ import org.bukkit.NamespacedKey;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
-import org.screamingsandals.lib.item.meta.PotionHolder;
+import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
 
@@ -31,9 +31,9 @@ import java.util.List;
 public class MetadataValuesRemapper {
     private static final List<MetadataConverter<?>> CONVERTERS = List.of(
             new MetadataConverter<>(
-                    PotionHolder.class,
-                    PotionHolder::of,
-                    PotionHolder::as
+                    Potion.class,
+                    Potion::of,
+                    Potion::as
             ),
             new MetadataConverter<>(
                     org.screamingsandals.lib.spectator.Color.class,

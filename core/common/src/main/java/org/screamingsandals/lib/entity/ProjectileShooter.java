@@ -18,16 +18,16 @@ package org.screamingsandals.lib.entity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.api.Wrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 
 public interface ProjectileShooter extends Wrapper {
     default @Nullable ProjectileEntity launchProjectile(@NotNull Object projectileType) {
-        if (projectileType instanceof EntityTypeHolder) {
+        if (projectileType instanceof EntityType) {
             return launchProjectile(projectileType);
         } else {
-            var projectile = EntityTypeHolder.ofNullable(projectileType);
+            var projectile = EntityType.ofNullable(projectileType);
             if (projectile != null) {
                 return this.launchProjectile(projectile);
             }
@@ -35,13 +35,13 @@ public interface ProjectileShooter extends Wrapper {
         }
     }
 
-    @Nullable ProjectileEntity launchProjectile(@NotNull EntityTypeHolder projectileType);
+    @Nullable ProjectileEntity launchProjectile(@NotNull EntityType projectileType);
 
     default @Nullable ProjectileEntity launchProjectile(@NotNull Object projectileType, @NotNull Vector3D velocity) {
-        if (projectileType instanceof EntityTypeHolder) {
+        if (projectileType instanceof EntityType) {
             return launchProjectile(projectileType, velocity);
         } else {
-            var projectile = EntityTypeHolder.ofNullable(projectileType);
+            var projectile = EntityType.ofNullable(projectileType);
             if (projectile != null) {
                 return this.launchProjectile(projectile, velocity);
             }
@@ -49,5 +49,5 @@ public interface ProjectileShooter extends Wrapper {
         }
     }
 
-    @Nullable ProjectileEntity launchProjectile(@NotNull EntityTypeHolder projectileType, @NotNull Vector3D velocity);
+    @Nullable ProjectileEntity launchProjectile(@NotNull EntityType projectileType, @NotNull Vector3D velocity);
 }

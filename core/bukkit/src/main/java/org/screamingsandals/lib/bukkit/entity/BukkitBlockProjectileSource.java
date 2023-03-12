@@ -16,7 +16,6 @@
 
 package org.screamingsandals.lib.bukkit.entity;
 
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.BlockProjectileSource;
 import org.bukkit.util.Vector;
@@ -26,7 +25,7 @@ import org.screamingsandals.lib.bukkit.block.BukkitBlock;
 import org.screamingsandals.lib.entity.BlockProjectileShooter;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.ProjectileEntity;
-import org.screamingsandals.lib.entity.type.EntityTypeHolder;
+import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.block.Block;
@@ -38,8 +37,8 @@ public class BukkitBlockProjectileSource extends BasicWrapper<BlockProjectileSou
 
     @SuppressWarnings({"ConstantConditions", "unchecked"})
     @Override
-    public @Nullable ProjectileEntity launchProjectile(@NotNull EntityTypeHolder projectileType) {
-        var projectileBukkit = projectileType.as(EntityType.class).getEntityClass();
+    public @Nullable ProjectileEntity launchProjectile(@NotNull EntityType projectileType) {
+        var projectileBukkit = projectileType.as(org.bukkit.entity.EntityType.class).getEntityClass();
         if (!Projectile.class.isAssignableFrom(projectileBukkit)) {
             return null;
         }
@@ -48,8 +47,8 @@ public class BukkitBlockProjectileSource extends BasicWrapper<BlockProjectileSou
 
     @SuppressWarnings({"ConstantConditions", "unchecked"})
     @Override
-    public @Nullable ProjectileEntity launchProjectile(@NotNull EntityTypeHolder projectileType, @NotNull Vector3D velocity) {
-        var projectileBukkit = projectileType.as(EntityType.class).getEntityClass();
+    public @Nullable ProjectileEntity launchProjectile(@NotNull EntityType projectileType, @NotNull Vector3D velocity) {
+        var projectileBukkit = projectileType.as(org.bukkit.entity.EntityType.class).getEntityClass();
         if (!Projectile.class.isAssignableFrom(projectileBukkit)) {
             return null;
         }

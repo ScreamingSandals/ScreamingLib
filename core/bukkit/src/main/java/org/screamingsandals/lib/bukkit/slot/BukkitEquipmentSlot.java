@@ -14,43 +14,32 @@
  * limitations under the License.
  */
 
-package org.screamingsandals.lib.bukkit.item.meta;
+package org.screamingsandals.lib.bukkit.slot;
 
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.item.meta.PotionHolder;
+import org.screamingsandals.lib.slot.EquipmentSlot;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitPotionHolder extends BasicWrapper<PotionData> implements PotionHolder {
-
-    public BukkitPotionHolder(@NotNull PotionType type) {
-        this(new PotionData(type));
-    }
-
-    public BukkitPotionHolder(@NotNull PotionData wrappedObject) {
+public class BukkitEquipmentSlot extends BasicWrapper<org.bukkit.inventory.EquipmentSlot> implements EquipmentSlot {
+    public BukkitEquipmentSlot(@NotNull org.bukkit.inventory.EquipmentSlot wrappedObject) {
         super(wrappedObject);
     }
 
     @Override
     public @NotNull String platformName() {
-        if (wrappedObject.isExtended()) {
-            return "LONG_" + wrappedObject.getType().name();
-        } else if (wrappedObject.isUpgraded()) {
-            return "STRONG_" + wrappedObject.getType().name();
-        }
-        return wrappedObject.getType().name();
+        return wrappedObject.name();
     }
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof PotionData || object instanceof PotionHolder) {
+        if (object instanceof org.bukkit.inventory.EquipmentSlot || object instanceof EquipmentSlot) {
             return equals(object);
         }
-        return equals(PotionHolder.ofNullable(object));
+        return equals(EquipmentSlot.ofNullable(object));
     }
 
     @Override
@@ -58,12 +47,8 @@ public class BukkitPotionHolder extends BasicWrapper<PotionData> implements Poti
         return Arrays.stream(objects).anyMatch(this::is);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public <T> @NotNull T as(@NotNull Class<T> type) {
-        if (type == PotionType.class) {
-            return (T) wrappedObject.getType();
-        }
-        return super.as(type);
+    public @NotNull ResourceLocation location() {
+        return ResourceLocation.of(wrappedObject.name());
     }
 }

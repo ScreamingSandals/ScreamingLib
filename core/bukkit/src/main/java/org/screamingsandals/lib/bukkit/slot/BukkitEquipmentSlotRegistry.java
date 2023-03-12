@@ -31,12 +31,20 @@ import java.util.Locale;
 
 @Service
 public class BukkitEquipmentSlotRegistry extends EquipmentSlotRegistry {
+    public BukkitEquipmentSlotRegistry() {
+        specialType(org.bukkit.inventory.EquipmentSlot.class, BukkitEquipmentSlot::new);
+    }
+
     // TODO: is there any bukkit-like server supporting custom values for this registry?
     @Override
     protected @Nullable EquipmentSlot resolveMappingPlatform(@NotNull ResourceLocation location) {
+        if (!"minecraft".equals(location.namespace())) {
+            return null;
+        }
+
         try {
             var value = org.bukkit.inventory.EquipmentSlot.valueOf(location.path().toUpperCase(Locale.ROOT));
-            return new BukkitEquipmentSlotType(value);
+            return new BukkitEquipmentSlot(value);
         } catch (IllegalArgumentException ignored) {
         }
         return null;
@@ -46,7 +54,7 @@ public class BukkitEquipmentSlotRegistry extends EquipmentSlotRegistry {
     protected @NotNull RegistryItemStream<@NotNull EquipmentSlot> getRegistryItemStream0() {
         return new SimpleRegistryItemStream<>(
                 () -> Arrays.stream(org.bukkit.inventory.EquipmentSlot.values()),
-                BukkitEquipmentSlotType::new,
+                BukkitEquipmentSlot::new,
                 equipmentSlot -> ResourceLocation.of(equipmentSlot.name()),
                 (equipmentSlot, literal) -> equipmentSlot.name().toLowerCase(Locale.ROOT).contains(literal),
                 (equipmentSlot, namespace) -> "minecraft".equals(namespace),

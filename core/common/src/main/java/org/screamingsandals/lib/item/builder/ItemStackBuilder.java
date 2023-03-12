@@ -29,7 +29,7 @@ import org.screamingsandals.lib.item.ItemTypeHolder;
 import org.screamingsandals.lib.item.data.ItemData;
 import org.screamingsandals.lib.item.meta.EnchantmentHolder;
 import org.screamingsandals.lib.item.meta.PotionEffectHolder;
-import org.screamingsandals.lib.item.meta.PotionHolder;
+import org.screamingsandals.lib.item.meta.Potion;
 import org.screamingsandals.lib.metadata.MetadataCollectionKey;
 import org.screamingsandals.lib.metadata.MetadataConsumer;
 import org.screamingsandals.lib.metadata.MetadataKey;
@@ -220,7 +220,7 @@ public interface ItemStackBuilder extends MetadataConsumer {
     @CustomAutocompletion(CustomAutocompletion.Type.POTION)
     @Contract("_ -> this")
     default @NotNull ItemStackBuilder potion(@NotNull Object potion) {
-        NullableExtension.ifNotNull(PotionHolder.ofNullable(potion), potionHolder -> this.setMetadata(ItemMeta.POTION_TYPE, potionHolder));
+        NullableExtension.ifNotNull(Potion.ofNullable(potion), potionHolder -> this.setMetadata(ItemMeta.POTION_TYPE, potionHolder));
         return this;
     }
 

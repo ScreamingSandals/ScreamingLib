@@ -22,7 +22,7 @@ import org.screamingsandals.lib.container.type.InventoryTypeMapping;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.damage.DamageCauseMapping;
 import org.screamingsandals.lib.entity.pose.EntityPoseMapping;
-import org.screamingsandals.lib.entity.type.EntityTypeMapping;
+import org.screamingsandals.lib.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.item.ItemTypeMapper;
 import org.screamingsandals.lib.attribute.AttributeMapping;
@@ -31,8 +31,8 @@ import org.screamingsandals.lib.item.builder.ItemStackFactory;
 import org.screamingsandals.lib.firework.FireworkEffectMapping;
 import org.screamingsandals.lib.item.meta.EnchantmentMapping;
 import org.screamingsandals.lib.item.meta.PotionEffectMapping;
-import org.screamingsandals.lib.item.meta.PotionMapping;
-import org.screamingsandals.lib.particle.ParticleTypeMapping;
+import org.screamingsandals.lib.item.meta.PotionRegistry;
+import org.screamingsandals.lib.particle.ParticleTypeRegistry;
 import org.screamingsandals.lib.slot.EquipmentSlotRegistry;
 import org.screamingsandals.lib.player.Players;
 import org.screamingsandals.lib.player.gamemode.GameModeRegistry;
@@ -62,14 +62,14 @@ import org.screamingsandals.lib.world.weather.WeatherRegistry;
         CustomPayload.class,
         EventManager.class,
         Tasker.class,
-        EntityTypeMapping.class,
+        EntityTypeRegistry.class,
         Entities.class,
         AttributeTypeMapping.class,
         AttributeMapping.class,
         FireworkEffectMapping.class,
         EnchantmentMapping.class,
         PotionEffectMapping.class,
-        PotionMapping.class,
+        PotionRegistry.class,
         EquipmentSlotRegistry.class,
         ItemTypeMapper.class,
         BlockTypeMapper.class,
@@ -88,7 +88,7 @@ import org.screamingsandals.lib.world.weather.WeatherRegistry;
         Chunks.class,
         GameRuleRegistry.class,
         WeatherRegistry.class,
-        ParticleTypeMapping.class,
+        ParticleTypeRegistry.class,
         GameRuleRegistry.class,
         Worlds.class,
         ContainerFactory.class

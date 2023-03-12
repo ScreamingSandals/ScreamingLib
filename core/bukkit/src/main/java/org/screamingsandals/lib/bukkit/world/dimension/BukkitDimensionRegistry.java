@@ -32,9 +32,17 @@ import java.util.Locale;
 
 @Service
 public class BukkitDimensionRegistry extends DimensionRegistry {
+    public BukkitDimensionRegistry() {
+        specialType(World.Environment.class, BukkitDimensionType::new);
+    }
+
     // TODO: is there any bukkit-like server supporting custom values for this registry?
     @Override
     protected @Nullable DimensionType resolveMappingPlatform(@NotNull ResourceLocation location) {
+        if (!"minecraft".equals(location.namespace())) {
+            return null;
+        }
+
         try {
             var value = World.Environment.valueOf(location.path().toUpperCase(Locale.ROOT));
             return new BukkitDimensionType(value);

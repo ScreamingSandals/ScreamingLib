@@ -18,27 +18,27 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.particle.ParticleTypeHolder;
+import org.screamingsandals.lib.particle.ParticleType;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class ParticleTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<ParticleTypeHolder> {
+public class ParticleTypeHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<ParticleType> {
     public static final @NotNull ParticleTypeHolderSerializer INSTANCE = new ParticleTypeHolderSerializer();
 
     @Override
-    public @NotNull ParticleTypeHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull ParticleType deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return ParticleTypeHolder.of(node.getString());
+            return ParticleType.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable ParticleTypeHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable ParticleType obj, @NotNull ConfigurationNode node) throws SerializationException {
         node.set(obj == null ? null : obj.platformName());
     }
 }
