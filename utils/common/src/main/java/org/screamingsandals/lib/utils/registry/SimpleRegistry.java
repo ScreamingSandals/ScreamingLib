@@ -78,6 +78,16 @@ public abstract class SimpleRegistry<T extends RegistryItem> extends Registry<T>
             this.aliasMap.put(location, alias);
         } else if (locT != null && aliasT == null) {
             this.aliasMap.put(alias, location);
+        } else {
+            // Also map alias to alias
+            var locA = this.aliasMap.get(location);
+            var aliasA = this.aliasMap.get(alias);
+
+            if (locA == null && aliasA != null) {
+                this.aliasMap.put(location, aliasA);
+            } else if (locA != null && aliasA == null) {
+                this.aliasMap.put(alias, locA);
+            }
         }
     }
 

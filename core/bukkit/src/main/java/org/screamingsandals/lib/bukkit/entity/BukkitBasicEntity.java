@@ -16,9 +16,12 @@
 
 package org.screamingsandals.lib.bukkit.entity;
 
+import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
+import org.screamingsandals.lib.Server;
+import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityType;
+import org.screamingsandals.lib.bukkit.entity.type.InternalEntityLegacyConstants;
 import org.screamingsandals.lib.ext.paperlib.PaperLib;
-import org.bukkit.entity.Entity;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +53,37 @@ public class BukkitBasicEntity extends BasicWrapper<Entity> implements BasicEnti
 
     @Override
     public @NotNull EntityType getEntityType() {
-        return EntityType.of(wrappedObject.getType());
+        if (!Server.isVersion(1, 11)) {
+            if (wrappedObject instanceof Horse) {
+                var variant = ((Horse) wrappedObject).getVariant();
+                switch (variant) {
+                    case DONKEY:
+                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.HORSE_VARIANT_DONKEY);
+                    case MULE:
+                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.HORSE_VARIANT_MULE);
+                    case SKELETON_HORSE:
+                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.HORSE_VARIANT_SKELETON);
+                    case UNDEAD_HORSE:
+                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.HORSE_VARIANT_ZOMBIE);
+                }
+            } else if (wrappedObject instanceof Zombie) {
+                if (((Zombie) wrappedObject).isVillager()) {
+                    return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_VILLAGER);
+                }
+                // TODO: use NMS to check for Husk
+            } else if (wrappedObject instanceof Skeleton) {
+                var variant = ((Skeleton) wrappedObject).getSkeletonType();
+                switch (variant.name()) {
+                    case "WITHER":
+                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.SKELETON_VARIANT_WITHER);
+                    case "STRAY": // not present in 1.8-1.9
+                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.SKELETON_VARIANT_STRAY);
+                }
+            } else if (wrappedObject instanceof Guardian && ((Guardian) wrappedObject).isElder()) {
+                return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.ELDER_GUARDIAN);
+            }
+        }
+        return new BukkitEntityType(wrappedObject.getType());
     }
 
     @Override
