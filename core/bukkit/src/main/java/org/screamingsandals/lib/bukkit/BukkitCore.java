@@ -67,7 +67,9 @@ public class BukkitCore extends Core {
     @OnEnable
     public void onEnable() {
         // entity
-        constructDefaultListener(AreaEffectCloudApplyEvent.class, SAreaEffectCloudApplyEvent.class, SBukkitAreaEffectCloudApplyEvent::new);
+        if (has("org.bukkit.event.entity.AreaCloudApplyEvent")) {
+            constructDefaultListener(AreaEffectCloudApplyEvent.class, SAreaEffectCloudApplyEvent.class, SBukkitAreaEffectCloudApplyEvent::new);
+        }
         if (has("org.bukkit.event.entity.ArrowBodyCountChangeEvent")) {
             constructDefaultListener(ArrowBodyCountChangeEvent.class, SArrowBodyCountChangeEvent.class, SBukkitArrowBodyCountChangeEvent::new);
         }
@@ -75,7 +77,9 @@ public class BukkitCore extends Core {
             constructDefaultListener(BatToggleSleepEvent.class, SBatToggleSleepEvent.class, SBukkitBatToggleSleepEvent::new);
         }
         constructDefaultListener(CreeperPowerEvent.class, SCreeperPowerEvent.class, SBukkitCreeperPowerEvent::new);
-        constructDefaultListener(EnderDragonChangePhaseEvent.class, SEnderDragonChangePhaseEvent.class, SBukkitEnderDragonChangePhaseEvent::new);
+        if (has("org.bukkit.event.entity.EnderDragonChangePhaseEvent")) {
+            constructDefaultListener(EnderDragonChangePhaseEvent.class, SEnderDragonChangePhaseEvent.class, SBukkitEnderDragonChangePhaseEvent::new);
+        }
         if (has("org.bukkit.event.entity.EntityAirChangeEvent")) {
             constructDefaultListener(EntityAirChangeEvent.class, SEntityAirChangeEvent.class, SBukkitEntityAirChangeEvent::new);
         }
@@ -171,12 +175,18 @@ public class BukkitCore extends Core {
         if (has("org.bukkit.event.entity.StriderTemperatureChangeEvent")) {
             constructDefaultListener(StriderTemperatureChangeEvent.class, SStriderTemperatureChangeEvent.class, SBukkitStriderTemperatureChangeEvent::new);
         }
-        constructDefaultListener(VillagerAcquireTradeEvent.class, SVillagerAcquireTradeEvent.class, SBukkitVillagerAcquireTradeEvent::new);
+        if (has("org.bukkit.event.entity.VillagerAcquireTradeEvent")) {
+            constructDefaultListener(VillagerAcquireTradeEvent.class, SVillagerAcquireTradeEvent.class, SBukkitVillagerAcquireTradeEvent::new);
+        }
         if (has("org.bukkit.event.entity.VillagerCareerChangeEvent")) {
             constructDefaultListener(VillagerCareerChangeEvent.class, SVillagerCareerChangeEvent.class, SBukkitVillagerCareerChangeEvent::new);
         }
-        constructDefaultListener(VillagerReplenishTradeEvent.class, SVillagerReplenishTradeEvent.class, SBukkitVillagerReplenishTradeEvent::new);
-        constructDefaultListener(EntityToggleGlideEvent.class, SEntityToggleGlideEvent.class, SBukkitEntityToggleGlideEvent::new);
+        if (has("org.bukkit.event.entity.VillagerReplenishTradeEvent")) {
+            constructDefaultListener(VillagerReplenishTradeEvent.class, SVillagerReplenishTradeEvent.class, SBukkitVillagerReplenishTradeEvent::new);
+        }
+        if (has("org.bukkit.event.entity.EntityToggleGlideEvent")) {
+            constructDefaultListener(EntityToggleGlideEvent.class, SEntityToggleGlideEvent.class, SBukkitEntityToggleGlideEvent::new);
+        }
         if (has("org.bukkit.event.entity.EntityToggleSwimEvent")) {
             constructDefaultListener(EntityToggleSwimEvent.class, SEntityToggleSwimEvent.class, SBukkitEntityToggleSwimEvent::new);
         }
@@ -301,7 +311,9 @@ public class BukkitCore extends Core {
         if (has("org.bukkit.event.block.BlockShearEntityEvent")) {
             constructDefaultListener(BlockShearEntityEvent.class, SBlockShearEntityEvent.class, SBukkitBlockShearEntityEvent::new);
         }
-        constructDefaultListener(CauldronLevelChangeEvent.class, SCauldronLevelChangeEvent.class, SBukkitCauldronLevelChangeEvent::new);
+        if (has("org.bukkit.event.block.CauldronLevelChangeEvent")) {
+            constructDefaultListener(CauldronLevelChangeEvent.class, SCauldronLevelChangeEvent.class, SBukkitCauldronLevelChangeEvent::new);
+        }
         if (has("org.bukkit.event.block.FluidLevelChangeEvent")) {
             constructDefaultListener(FluidLevelChangeEvent.class, SFluidLevelChangeEvent.class, SBukkitFluidLevelChangeEvent::new);
         }
