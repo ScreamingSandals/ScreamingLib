@@ -385,6 +385,16 @@ nmsGen {
         reqField('protocolVersion')
         reqField('intention')
     }
+
+    // 1.10.x compat
+    reqClass('spigot:EnumZombieType') {
+        reqEnumField('spigot:HUSK')
+    }
+
+    reqClass('net.minecraft.world.entity.monster.Zombie') {
+        reqMethod('spigot:setVillagerType', '@EnumZombieType')
+        reqMethod('spigot:getVillagerType')
+    }
 }
 
 tasks.getByName('compileJava').dependsOn('generateNmsComponents')

@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityType;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.entity.*;
 import org.screamingsandals.lib.entity.ExperienceOrb;
 import org.screamingsandals.lib.entity.LightningStrike;
@@ -146,7 +147,8 @@ public class BukkitEntities extends Entities {
                                 break;
                             case InternalEntityLegacyConstants.ZOMBIE_VARIANT_HUSK:
                                 if (Server.isVersion(1, 10)) {
-                                    // TODO: we need NMS to spawn Husk on 1.10, thank you md_5 -_-
+                                    // we need NMS to spawn Husk on 1.10, thank you md_5 -_-
+                                    Reflect.fastInvoke(ZombieAccessor.getMethodSetVillagerType1(), ClassStorage.getHandle(entity), EnumZombieTypeAccessor.getFieldHUSK());
                                 }
                                 break;
                         }

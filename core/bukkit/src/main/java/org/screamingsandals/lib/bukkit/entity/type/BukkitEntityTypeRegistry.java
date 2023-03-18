@@ -26,6 +26,7 @@ import org.screamingsandals.lib.bukkit.tags.KeyedUtils;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.entity.type.EntityTypeTagBackPorts;
+import org.screamingsandals.lib.utils.Pair;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -33,6 +34,7 @@ import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.utils.registry.SimpleRegistryItemStream;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 public class BukkitEntityTypeRegistry extends EntityTypeRegistry {
@@ -300,13 +302,62 @@ public class BukkitEntityTypeRegistry extends EntityTypeRegistry {
                     (entityType, namespace) -> entityType.getKey().getNamespace().equals(namespace),
                     List.of()
             );
-        } else {
+        } else if (Server.isVersion(1, 11)) {
             return new SimpleRegistryItemStream<>(
                     () -> Arrays.stream(org.bukkit.entity.EntityType.values()).filter(e -> e != org.bukkit.entity.EntityType.UNKNOWN),
                     BukkitEntityType::new,
-                    entityType -> BukkitEntityType.translateLegacyName(entityType, (byte) 0), // TODO: include horse variants, skeleton variants, zombie variants and elder guardian
+                    entityType -> BukkitEntityType.translateLegacyName(entityType, (byte) 0),
                     (entityType, literal) -> BukkitEntityType.translateLegacyName(entityType, (byte) 0).path().contains(literal),
                     (entityType, namespace) -> "minecraft".equals(namespace),
+                    List.of()
+            );
+        } else {
+            return new SimpleRegistryItemStream<>(
+                    () -> Arrays.stream(org.bukkit.entity.EntityType.values()).filter(e -> e != org.bukkit.entity.EntityType.UNKNOWN).flatMap(type1 -> {
+                        switch (type1) {
+                            case ZOMBIE:
+                                if (Server.isVersion(1, 10)) {
+                                    return Stream.of(
+                                            Pair.of(type1, 0),
+                                            Pair.of(type1, InternalEntityLegacyConstants.ZOMBIE_VARIANT_VILLAGER),
+                                            Pair.of(type1, InternalEntityLegacyConstants.ZOMBIE_VARIANT_HUSK)
+                                    );
+                                } else {
+                                    return Stream.of(
+                                            Pair.of(type1, 0),
+                                            Pair.of(type1, InternalEntityLegacyConstants.ZOMBIE_VARIANT_VILLAGER)
+                                    );
+                                }
+                            case SKELETON:
+                                if (Server.isVersion(1, 10)) {
+                                    return Stream.of(
+                                            Pair.of(type1, 0),
+                                            Pair.of(type1, InternalEntityLegacyConstants.SKELETON_VARIANT_WITHER),
+                                            Pair.of(type1, InternalEntityLegacyConstants.SKELETON_VARIANT_STRAY)
+                                    );
+                                } else {
+                                    return Stream.of(
+                                            Pair.of(type1, 0),
+                                            Pair.of(type1, InternalEntityLegacyConstants.SKELETON_VARIANT_WITHER)
+                                    );
+                                }
+                            case HORSE:
+                                return Stream.of(
+                                        Pair.of(type1, 0),
+                                        Pair.of(type1, InternalEntityLegacyConstants.HORSE_VARIANT_DONKEY),
+                                        Pair.of(type1, InternalEntityLegacyConstants.HORSE_VARIANT_MULE),
+                                        Pair.of(type1, InternalEntityLegacyConstants.HORSE_VARIANT_SKELETON),
+                                        Pair.of(type1, InternalEntityLegacyConstants.HORSE_VARIANT_ZOMBIE)
+                                );
+                            case GUARDIAN:
+                                return Stream.of(Pair.of(type1, 0), Pair.of(type1, InternalEntityLegacyConstants.ELDER_GUARDIAN));
+                        }
+                        return Stream.of(Pair.of(type1, 0));
+                    }),
+                    pair -> new BukkitEntityType(pair.first(), pair.second().byteValue()),
+                    pair -> BukkitEntityType.translateLegacyName(pair.first(), pair.second().byteValue()),
+                    (pair, literal) -> BukkitEntityType.translateLegacyName(pair.first(), pair.second().byteValue()).path().contains(literal),
+                    (pair, namespace) -> "minecraft".equals(namespace),
                     List.of()
             );
         }

@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.entity.type.BukkitEntityType;
 import org.screamingsandals.lib.bukkit.entity.type.InternalEntityLegacyConstants;
+import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.ext.paperlib.PaperLib;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.util.Vector;
@@ -32,11 +33,14 @@ import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.type.EntityType;
+import org.screamingsandals.lib.nms.accessors.EnumZombieTypeAccessor;
+import org.screamingsandals.lib.nms.accessors.ZombieAccessor;
 import org.screamingsandals.lib.spectator.Color;
 import org.screamingsandals.lib.spectator.Component;
 import org.screamingsandals.lib.utils.BasicWrapper;
 import org.screamingsandals.lib.utils.math.Vector3D;
 import org.screamingsandals.lib.utils.math.Vector3Df;
+import org.screamingsandals.lib.utils.reflect.Reflect;
 import org.screamingsandals.lib.world.Location;
 import org.screamingsandals.lib.world.Locations;
 
@@ -70,7 +74,12 @@ public class BukkitBasicEntity extends BasicWrapper<Entity> implements BasicEnti
                 if (((Zombie) wrappedObject).isVillager()) {
                     return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_VILLAGER);
                 }
-                // TODO: use NMS to check for Husk
+                if (Server.isVersion(1, 10)) {
+                    var villager = Reflect.fastInvoke(ZombieAccessor.getMethodGetVillagerType1(), ClassStorage.getHandle(wrappedObject));
+                    if (villager != null && villager == EnumZombieTypeAccessor.getFieldHUSK()) {
+                        return new BukkitEntityType(wrappedObject.getType(), InternalEntityLegacyConstants.ZOMBIE_VARIANT_HUSK);
+                    }
+                }
             } else if (wrappedObject instanceof Skeleton) {
                 var variant = ((Skeleton) wrappedObject).getSkeletonType();
                 switch (variant.name()) {

@@ -144,7 +144,7 @@ public abstract class Entities {
         if (entityType instanceof EntityType) {
             return spawn((EntityType) entityType, locationHolder);
         } else {
-            var type = EntityTypeRegistry.resolve(entityType);
+            var type = EntityType.ofNullable(entityType);
             if (type != null) {
                 return spawn(type, locationHolder);
             }
