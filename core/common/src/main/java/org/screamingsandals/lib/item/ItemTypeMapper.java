@@ -41,7 +41,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-@SuppressWarnings("AlternativeMethodAvailable")
 @AbstractService
 public abstract class ItemTypeMapper extends AbstractTypeMapper<ItemTypeHolder> {
 

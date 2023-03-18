@@ -23,7 +23,6 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-@SuppressWarnings("AlternativeMethodAvailable")
 public interface EquipmentSlot extends RegistryItem, RawValueHolder {
     @ApiStatus.Experimental
     @NotNull String platformName();

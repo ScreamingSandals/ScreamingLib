@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.screamingsandals.lib.entity.BasicEntity;
 import org.screamingsandals.lib.entity.Entities;
-import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
+import org.screamingsandals.lib.entity.pose.EntityPose;
 import org.screamingsandals.lib.event.entity.EntityPoseChangeEvent;
 import org.screamingsandals.lib.utils.extensions.NullableExtension;
 
@@ -44,7 +44,7 @@ public class BukkitEntityPoseChangeEvent implements EntityPoseChangeEvent {
 
     // Internal cache
     private @Nullable BasicEntity entity;
-    private @Nullable EntityPoseHolder pose;
+    private @Nullable EntityPose pose;
 
     @Override
     public @NotNull BasicEntity entity() {
@@ -55,9 +55,9 @@ public class BukkitEntityPoseChangeEvent implements EntityPoseChangeEvent {
     }
 
     @Override
-    public @NotNull EntityPoseHolder pose() {
+    public @NotNull EntityPose pose() {
         if (pose == null) {
-            pose = EntityPoseHolder.of(event.getPose());
+            pose = EntityPose.of(event.getPose());
         }
         return pose;
     }

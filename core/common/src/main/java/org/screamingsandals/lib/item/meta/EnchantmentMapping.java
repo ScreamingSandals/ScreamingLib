@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-@SuppressWarnings("AlternativeMethodAvailable")
 @AbstractService(pattern = "^(?<basePackage>.+)\\.(?<subPackage>[^\\.]+\\.[^\\.]+)\\.(?<className>.+)$")
 public abstract class EnchantmentMapping extends AbstractTypeMapper<EnchantmentHolder> {
 

@@ -21,7 +21,7 @@ import org.screamingsandals.lib.container.ContainerFactory;
 import org.screamingsandals.lib.container.type.InventoryTypeMapping;
 import org.screamingsandals.lib.entity.Entities;
 import org.screamingsandals.lib.entity.damage.DamageCauseMapping;
-import org.screamingsandals.lib.entity.pose.EntityPoseMapping;
+import org.screamingsandals.lib.entity.pose.EntityPoseRegistry;
 import org.screamingsandals.lib.entity.type.EntityTypeRegistry;
 import org.screamingsandals.lib.event.EventManager;
 import org.screamingsandals.lib.item.ItemTypeMapper;
@@ -82,7 +82,7 @@ import org.screamingsandals.lib.world.weather.WeatherRegistry;
         DamageCauseMapping.class,
         GameModeRegistry.class,
         InventoryTypeMapping.class,
-        EntityPoseMapping.class,
+        EntityPoseRegistry.class,
         DifficultyRegistry.class,
         DimensionRegistry.class,
         Chunks.class,

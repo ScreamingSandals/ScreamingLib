@@ -18,12 +18,12 @@ package org.screamingsandals.lib.event.entity;
 
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.entity.BasicEntity;
-import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
+import org.screamingsandals.lib.entity.pose.EntityPose;
 import org.screamingsandals.lib.event.PlatformEvent;
 import org.screamingsandals.lib.event.SEvent;
 
 public interface EntityPoseChangeEvent extends SEvent, PlatformEvent {
     @NotNull BasicEntity entity();
 
-    @NotNull EntityPoseHolder pose();
+    @NotNull EntityPose pose();
 }

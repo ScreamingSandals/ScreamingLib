@@ -33,7 +33,6 @@ import java.util.*;
  *
  * Use {@link org.screamingsandals.lib.item.ItemTypeHolder} for item materials.
  */
-@SuppressWarnings("AlternativeMethodAvailable")
 public interface BlockTypeHolder extends ComparableWrapper, ParticleData, TaggableHolder {
 
     @NotNull String platformName();

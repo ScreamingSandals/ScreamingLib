@@ -26,7 +26,6 @@ import org.screamingsandals.lib.utils.registry.RegistryItem;
 import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 import org.screamingsandals.lib.world.Location;
 
-@SuppressWarnings("AlternativeMethodAvailable")
 public interface EntityType extends RegistryItem, RawValueHolder, TaggableHolder {
     @ApiStatus.Experimental
     @NotNull String platformName();

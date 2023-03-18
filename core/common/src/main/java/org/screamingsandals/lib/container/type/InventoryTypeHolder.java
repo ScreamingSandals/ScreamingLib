@@ -31,7 +31,6 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
 
-@SuppressWarnings("AlternativeMethodAvailable")
 public interface InventoryTypeHolder extends ComparableWrapper, RawValueHolder {
     @NotNull String platformName();
 

@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.BiPredicate;
@@ -53,6 +54,17 @@ public final class SimpleRegistryItemStream<O, T extends RegistryItem> implement
         this.literalInLocationPathChecker = literalInLocationPathChecker;
         this.namespaceEqualityChecker = namespaceChecker;
         this.operations = List.copyOf(operations);
+    }
+
+    public static <T extends RegistryItem> @NotNull SimpleRegistryItemStream<?, T> createDummy() {
+        return new SimpleRegistryItemStream<>(
+                Stream::empty,
+                o -> null,
+                a -> null,
+                (o, literal) -> false,
+                (o, namespace) -> false,
+                List.of()
+        );
     }
 
     @Override

@@ -26,7 +26,6 @@ import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 
 import java.util.List;
 
-@SuppressWarnings("AlternativeMethodAvailable")
 public interface EnchantmentHolder extends ComparableWrapper {
 
     @NotNull String platformName();

@@ -31,7 +31,6 @@ import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
 
 import java.util.List;
 
-@SuppressWarnings("AlternativeMethodAvailable")
 @Accessors(fluent = true)
 public interface ItemTypeHolder extends ComparableWrapper, ParticleData, TaggableHolder {
     @NotNull String platformName();

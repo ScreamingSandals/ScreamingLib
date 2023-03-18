@@ -33,7 +33,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.util.*;
 
-@SuppressWarnings("AlternativeMethodAvailable")
 @AbstractService
 public abstract class FireworkEffectMapping extends AbstractTypeMapper<FireworkEffectHolder> {
     private static @Nullable FireworkEffectMapping fireworkEffectMapping;

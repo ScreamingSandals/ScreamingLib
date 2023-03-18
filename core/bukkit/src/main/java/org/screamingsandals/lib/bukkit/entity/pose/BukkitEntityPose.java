@@ -19,14 +19,15 @@ package org.screamingsandals.lib.bukkit.entity.pose;
 import org.bukkit.entity.Pose;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
+import org.screamingsandals.lib.entity.pose.EntityPose;
 import org.screamingsandals.lib.utils.BasicWrapper;
+import org.screamingsandals.lib.utils.key.ResourceLocation;
 
 import java.util.Arrays;
 
-public class BukkitEntityPoseHolder extends BasicWrapper<Pose> implements EntityPoseHolder {
+public class BukkitEntityPose extends BasicWrapper<Pose> implements EntityPose {
 
-    public BukkitEntityPoseHolder(@NotNull Pose wrappedObject) {
+    public BukkitEntityPose(@NotNull Pose wrappedObject) {
         super(wrappedObject);
     }
 
@@ -37,14 +38,22 @@ public class BukkitEntityPoseHolder extends BasicWrapper<Pose> implements Entity
 
     @Override
     public boolean is(@Nullable Object object) {
-        if (object instanceof Pose || object instanceof EntityPoseHolder) {
+        if (object instanceof Pose || object instanceof EntityPose) {
             return equals(object);
         }
-        return equals(EntityPoseHolder.ofNullable(object));
+        return equals(EntityPose.ofNullable(object));
     }
 
     @Override
     public boolean is(@Nullable Object @NotNull... objects) {
         return Arrays.stream(objects).anyMatch(this::is);
+    }
+
+    @Override
+    public @NotNull ResourceLocation location() {
+        if ("SNEAKING".equals(wrappedObject.name())) {
+            return ResourceLocation.of("crouching");
+        }
+        return ResourceLocation.of(wrappedObject.name());
     }
 }

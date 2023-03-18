@@ -16,21 +16,17 @@
 
 package org.screamingsandals.lib.entity.pose;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
-import org.screamingsandals.lib.utils.ComparableWrapper;
+import org.jetbrains.annotations.*;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.RawValueHolder;
 import org.screamingsandals.lib.utils.annotations.ide.CustomAutocompletion;
 import org.screamingsandals.lib.utils.annotations.ide.LimitedVersionSupport;
+import org.screamingsandals.lib.utils.registry.RegistryItem;
+import org.screamingsandals.lib.utils.registry.RegistryItemStream;
 
-import java.util.List;
-
-@SuppressWarnings("AlternativeMethodAvailable")
 @LimitedVersionSupport("Bukkit >= 1.17")
-public interface EntityPoseHolder extends ComparableWrapper, RawValueHolder {
+public interface EntityPose extends RegistryItem, RawValueHolder {
+    @ApiStatus.Experimental
     @NotNull String platformName();
 
     /**
@@ -45,7 +41,7 @@ public interface EntityPoseHolder extends ComparableWrapper, RawValueHolder {
     boolean is(@Nullable Object @NotNull... objects);
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_POSE)
-    static @NotNull EntityPoseHolder of(@NotNull Object entityPose) {
+    static @NotNull EntityPose of(@NotNull Object entityPose) {
         var result = ofNullable(entityPose);
         Preconditions.checkNotNullIllegal(result, "Could not find entity pose: " + entityPose);
         return result;
@@ -53,14 +49,14 @@ public interface EntityPoseHolder extends ComparableWrapper, RawValueHolder {
 
     @CustomAutocompletion(CustomAutocompletion.Type.ENTITY_POSE)
     @Contract("null -> null")
-    static @Nullable EntityPoseHolder ofNullable(@Nullable Object entityPose) {
-        if (entityPose instanceof EntityPoseHolder) {
-            return (EntityPoseHolder) entityPose;
+    static @Nullable EntityPose ofNullable(@Nullable Object entityPose) {
+        if (entityPose instanceof EntityPose) {
+            return (EntityPose) entityPose;
         }
-        return EntityPoseMapping.resolve(entityPose);
+        return EntityPoseRegistry.getInstance().resolveMapping(entityPose);
     }
 
-    static @Unmodifiable @NotNull List<@NotNull EntityPoseHolder> all() {
-        return EntityPoseMapping.getValues();
+    static @NotNull RegistryItemStream<@NotNull EntityPose> all() {
+        return EntityPoseRegistry.getInstance().getRegistryItemStream();
     }
 }

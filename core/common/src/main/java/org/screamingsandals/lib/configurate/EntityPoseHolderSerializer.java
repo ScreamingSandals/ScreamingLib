@@ -18,27 +18,27 @@ package org.screamingsandals.lib.configurate;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
+import org.screamingsandals.lib.entity.pose.EntityPose;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
 
-public class EntityPoseHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<EntityPoseHolder> {
+public class EntityPoseHolderSerializer extends AbstractScreamingSerializer implements TypeSerializer<EntityPose> {
     public static final @NotNull EntityPoseHolderSerializer INSTANCE = new EntityPoseHolderSerializer();
 
     @Override
-    public @NotNull EntityPoseHolder deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
+    public @NotNull EntityPose deserialize(@NotNull Type type, @NotNull ConfigurationNode node) throws SerializationException {
         try {
-            return EntityPoseHolder.of(node.getString());
+            return EntityPose.of(node.getString());
         } catch (Throwable t) {
             throw new SerializationException(t);
         }
     }
 
     @Override
-    public void serialize(@NotNull Type type, @Nullable EntityPoseHolder obj, @NotNull ConfigurationNode node) throws SerializationException {
+    public void serialize(@NotNull Type type, @Nullable EntityPose obj, @NotNull ConfigurationNode node) throws SerializationException {
         node.set(obj == null ? null : obj.platformName());
     }
 }

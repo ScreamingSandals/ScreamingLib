@@ -22,7 +22,7 @@ import org.screamingsandals.lib.attribute.AttributeTypeHolder;
 import org.screamingsandals.lib.block.BlockTypeHolder;
 import org.screamingsandals.lib.container.type.InventoryTypeHolder;
 import org.screamingsandals.lib.entity.damage.DamageCauseHolder;
-import org.screamingsandals.lib.entity.pose.EntityPoseHolder;
+import org.screamingsandals.lib.entity.pose.EntityPose;
 import org.screamingsandals.lib.entity.type.EntityType;
 import org.screamingsandals.lib.firework.FireworkEffectHolder;
 import org.screamingsandals.lib.item.ItemStack;
@@ -53,7 +53,7 @@ public class SLibSerializers {
                 .register(DifficultyType.class, DifficultyHolderSerializer.INSTANCE)
                 .register(DimensionType.class, DimensionHolderSerializer.INSTANCE)
                 .register(EnchantmentHolder.class, EnchantmentHolderSerializer.INSTANCE)
-                .register(EntityPoseHolder.class, EntityPoseHolderSerializer.INSTANCE)
+                .register(EntityPose.class, EntityPoseHolderSerializer.INSTANCE)
                 .register(EntityType.class, EntityTypeHolderSerializer.INSTANCE)
                 .register(GameMode.class, GameModeHolderSerializer.INSTANCE)
                 .register(GameRuleType.class, GameRuleHolderSerializer.INSTANCE)
