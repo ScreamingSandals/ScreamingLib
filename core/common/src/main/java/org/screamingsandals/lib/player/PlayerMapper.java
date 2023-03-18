@@ -144,13 +144,6 @@ public abstract class PlayerMapper {
         return playerMapper.getPlayerExact0(name);
     }
 
-    public static SenderWrapper getConsoleSender() {
-        if (playerMapper == null) {
-            throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
-        }
-        return playerMapper.getConsoleSender0();
-    }
-
     public static boolean hasPermission(CommandSenderWrapper wrapper, Permission permission) {
         if (playerMapper == null) {
             throw new UnsupportedOperationException("PlayerMapper isn't initialized yet.");
@@ -254,8 +247,6 @@ public abstract class PlayerMapper {
     // abstract methods for implementations
 
     protected abstract <T> CommandSenderWrapper wrapSender0(T sender);
-
-    public abstract SenderWrapper getConsoleSender0();
 
     public abstract Optional<LocationHolder> getBedLocation0(OfflinePlayerWrapper playerWrapper);
 

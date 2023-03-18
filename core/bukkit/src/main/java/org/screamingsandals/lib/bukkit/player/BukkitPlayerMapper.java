@@ -81,11 +81,6 @@ public class BukkitPlayerMapper extends PlayerMapper {
     }
 
     @Override
-    public SenderWrapper getConsoleSender0() {
-        return new GenericCommandSender(Bukkit.getConsoleSender());
-    }
-
-    @Override
     public Optional<LocationHolder> getBedLocation0(OfflinePlayerWrapper playerWrapper) {
         return LocationMapper.resolve(playerWrapper.as(OfflinePlayer.class).getBedSpawnLocation());
     }

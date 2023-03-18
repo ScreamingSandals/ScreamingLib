@@ -24,11 +24,13 @@ import org.bukkit.World;
 import org.bukkit.plugin.Plugin;
 import org.screamingsandals.lib.Server;
 import org.screamingsandals.lib.bukkit.block.BukkitBlockTypeHolder;
+import org.screamingsandals.lib.bukkit.player.GenericCommandSender;
 import org.screamingsandals.lib.bukkit.utils.nms.ClassStorage;
 import org.screamingsandals.lib.bukkit.utils.nms.Version;
 import org.screamingsandals.lib.nms.accessors.*;
 import org.screamingsandals.lib.player.PlayerMapper;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.annotations.Service;
 import org.screamingsandals.lib.utils.reflect.Reflect;
@@ -160,6 +162,11 @@ public class BukkitServer extends Server {
                 .fastInvokeResulted(ServerStatusAccessor.getMethodGetVersion1())
                 .fastInvokeResulted(ServerStatus_i_VersionAccessor.getMethodGetProtocol1())
                 .as(Integer.class);
+    }
+
+    @Override
+    public SenderWrapper getConsoleSender0() {
+        return new GenericCommandSender(Bukkit.getConsoleSender());
     }
 
     @Override

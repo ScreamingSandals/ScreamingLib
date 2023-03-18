@@ -20,6 +20,7 @@ import io.netty.channel.ChannelFuture;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.screamingsandals.lib.player.PlayerWrapper;
+import org.screamingsandals.lib.player.SenderWrapper;
 import org.screamingsandals.lib.utils.Preconditions;
 import org.screamingsandals.lib.utils.ProxyType;
 import org.screamingsandals.lib.utils.annotations.AbstractService;
@@ -146,6 +147,10 @@ public abstract class Server {
         return PROTOCOL_VERSION;
     }
 
+    public static SenderWrapper getConsoleSender() {
+        return Preconditions.checkNotNull(server, "Server has not yet been initialized!").getConsoleSender0();
+    }
+
     /**
      * <pre>
      *  O   This is Paul.
@@ -190,6 +195,8 @@ public abstract class Server {
     public abstract ProxyType getProxyType0();
 
     public abstract Integer getProtocolVersion0();
+
+    public abstract SenderWrapper getConsoleSender0();
 
     public String UNSAFE_normalizeSoundKey0(String s) {
         return s;
